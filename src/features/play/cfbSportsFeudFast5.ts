@@ -6,11 +6,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "clutch",
     prompts: [
-      "Name a college football player you associate with clutch moments.",
-      "Name a player you would trust with one final college drive.",
-      "Name a college star who seemed built for the biggest moment.",
-      "Name a player whose college legacy includes huge late-game plays.",
-      "Name a college football legend you would want with the game on the line.",
+      {
+        prompt: "Name a college football player you associate with clutch moments.",
+        answers: ["Vince Young","Tim Tebow","Cam Newton","Joe Burrow","Deshaun Watson","Baker Mayfield","Johnny Manziel","Reggie Bush"],
+        alsoAcceptedAnswers: ["Stetson Bennett","Trevor Lawrence","Jalen Hurts","Tua Tagovailoa","Matt Leinart","Tommie Frazier","Doug Flutie","Caleb Williams"],
+      },
+      {
+        prompt: "Name a player you would trust with one final college drive.",
+        answers: ["Vince Young","Joe Burrow","Deshaun Watson","Tim Tebow","Baker Mayfield","Jalen Hurts","Cam Newton","Trevor Lawrence"],
+        alsoAcceptedAnswers: ["Johnny Manziel","Stetson Bennett","Tua Tagovailoa","Matt Leinart","Tommie Frazier","Doug Flutie","Caleb Williams"],
+      },
+      {
+        prompt: "Name a college star who seemed built for the biggest moment.",
+        answers: ["Vince Young","Tim Tebow","Cam Newton","Joe Burrow","Deshaun Watson","Stetson Bennett","Trevor Lawrence","Tua Tagovailoa"],
+        alsoAcceptedAnswers: ["Baker Mayfield","Johnny Manziel","Jalen Hurts","Matt Leinart","Tommie Frazier","Doug Flutie","Reggie Bush"],
+      },
+      {
+        prompt: "Name a player whose college legacy includes huge late-game plays.",
+        answers: ["Vince Young","Deshaun Watson","Tua Tagovailoa","Doug Flutie","Baker Mayfield","Johnny Manziel","Joe Burrow","Matt Leinart"],
+        alsoAcceptedAnswers: ["Tim Tebow","Cam Newton","Stetson Bennett","Trevor Lawrence","Jalen Hurts","Tommie Frazier","Caleb Williams"],
+      },
+      {
+        prompt: "Name a college football legend you would want with the game on the line.",
+        answers: ["Vince Young","Tim Tebow","Cam Newton","Joe Burrow","Deshaun Watson","Doug Flutie","Baker Mayfield","Trevor Lawrence"],
+        alsoAcceptedAnswers: ["Johnny Manziel","Stetson Bennett","Jalen Hurts","Tua Tagovailoa","Matt Leinart","Tommie Frazier","Caleb Williams"],
+      },
     ],
     answers: [
       "Vince Young",
@@ -38,11 +58,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "speed",
     prompts: [
-      "Name a college football player known for elite speed.",
-      "Name a college star you remember simply running away from people.",
-      "Name a player whose speed jumped off the screen on Saturdays.",
-      "Name a college football player defenders hated chasing.",
-      "Name a player you would pick for a college football footrace.",
+      {
+        prompt: "Name a college football player known for elite speed.",
+        answers: ["Reggie Bush","De'Anthony Thomas","Ted Ginn Jr.","Jaylen Waddle","Percy Harvin","CJ Spiller","Xavier Worthy","Chris Johnson"],
+        alsoAcceptedAnswers: ["Tavon Austin","Marquise Goodwin","Henry Ruggs III","Raheem Mostert","Jacoby Ford","Dri Archer","Jeff Demps","Tyreek Hill"],
+      },
+      {
+        prompt: "Name a college star you remember simply running away from people.",
+        answers: ["Reggie Bush","Chris Johnson","De'Anthony Thomas","Ted Ginn Jr.","Percy Harvin","CJ Spiller","Jaylen Waddle","Tavon Austin"],
+        alsoAcceptedAnswers: ["Xavier Worthy","Marquise Goodwin","Henry Ruggs III","Raheem Mostert","Jacoby Ford","Dri Archer","Jeff Demps","Tyreek Hill"],
+      },
+      {
+        prompt: "Name a player whose speed jumped off the screen on Saturdays.",
+        answers: ["Reggie Bush","Ted Ginn Jr.","De'Anthony Thomas","Percy Harvin","Jaylen Waddle","Tavon Austin","Xavier Worthy","CJ Spiller"],
+        alsoAcceptedAnswers: ["Chris Johnson","Marquise Goodwin","Henry Ruggs III","Raheem Mostert","Jacoby Ford","Dri Archer","Jeff Demps","Tyreek Hill"],
+      },
+      {
+        prompt: "Name a college football player defenders hated chasing.",
+        answers: ["Reggie Bush","Chris Johnson","CJ Spiller","Percy Harvin","De'Anthony Thomas","Jaylen Waddle","Tavon Austin","Ted Ginn Jr."],
+        alsoAcceptedAnswers: ["Xavier Worthy","Marquise Goodwin","Henry Ruggs III","Raheem Mostert","Jacoby Ford","Dri Archer","Jeff Demps","Tyreek Hill"],
+      },
+      {
+        prompt: "Name a player you would pick for a college football footrace.",
+        answers: ["Xavier Worthy","Marquise Goodwin","Jeff Demps","Henry Ruggs III","Dri Archer","Ted Ginn Jr.","Chris Johnson","Raheem Mostert"],
+        alsoAcceptedAnswers: ["Reggie Bush","De'Anthony Thomas","Jaylen Waddle","Percy Harvin","CJ Spiller","Tavon Austin","Jacoby Ford","Tyreek Hill"],
+      },
     ],
     answers: [
       "Reggie Bush",
@@ -70,11 +110,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "power",
     prompts: [
-      "Name a college running back known for power.",
-      "Name a back you would least want to tackle in the fourth quarter.",
-      "Name a college running back who could run through contact.",
-      "Name a power back whose college highlights look painful for defenders.",
-      "Name a college back you associate with downhill running.",
+      {
+        prompt: "Name a college running back known for power.",
+        answers: ["Derrick Henry","Bo Jackson","Herschel Walker","Earl Campbell","Ron Dayne","Jonathan Taylor","Nick Chubb","Leonard Fournette"],
+        alsoAcceptedAnswers: ["Eddie George","Adrian Peterson","Marshawn Lynch","Jerome Bettis","Najee Harris","Trent Richardson","Beanie Wells"],
+      },
+      {
+        prompt: "Name a back you would least want to tackle in the fourth quarter.",
+        answers: ["Derrick Henry","Earl Campbell","Bo Jackson","Jerome Bettis","Herschel Walker","Nick Chubb","Leonard Fournette","Eddie George"],
+        alsoAcceptedAnswers: ["Ron Dayne","Jonathan Taylor","Adrian Peterson","Marshawn Lynch","Najee Harris","Trent Richardson","Beanie Wells"],
+      },
+      {
+        prompt: "Name a college running back who could run through contact.",
+        answers: ["Derrick Henry","Bo Jackson","Earl Campbell","Herschel Walker","Nick Chubb","Leonard Fournette","Adrian Peterson","Marshawn Lynch"],
+        alsoAcceptedAnswers: ["Ron Dayne","Jonathan Taylor","Eddie George","Jerome Bettis","Najee Harris","Trent Richardson","Beanie Wells"],
+      },
+      {
+        prompt: "Name a power back whose college highlights look painful for defenders.",
+        answers: ["Derrick Henry","Earl Campbell","Bo Jackson","Leonard Fournette","Herschel Walker","Nick Chubb","Jerome Bettis","Adrian Peterson"],
+        alsoAcceptedAnswers: ["Ron Dayne","Jonathan Taylor","Eddie George","Marshawn Lynch","Najee Harris","Trent Richardson","Beanie Wells"],
+      },
+      {
+        prompt: "Name a college back you associate with downhill running.",
+        answers: ["Derrick Henry","Earl Campbell","Herschel Walker","Ron Dayne","Eddie George","Nick Chubb","Leonard Fournette","Jonathan Taylor"],
+        alsoAcceptedAnswers: ["Bo Jackson","Adrian Peterson","Marshawn Lynch","Jerome Bettis","Najee Harris","Trent Richardson","Beanie Wells"],
+      },
     ],
     answers: [
       "Derrick Henry",
@@ -101,11 +161,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
-      "Name a famous dual-threat college quarterback.",
-      "Name a college quarterback who could beat you with his legs.",
-      "Name a quarterback whose rushing ability changed the game plan.",
-      "Name a college QB you remember as a true run-pass threat.",
-      "Name a quarterback defenders had to account for as a runner.",
+      {
+        prompt: "Name a famous dual-threat college quarterback.",
+        answers: ["Cam Newton","Lamar Jackson","Tim Tebow","Vince Young","Johnny Manziel","Michael Vick","Pat White","Denard Robinson"],
+        alsoAcceptedAnswers: ["Kyler Murray","Robert Griffin III","Jalen Hurts","Marcus Mariota","Terrelle Pryor","Colin Kaepernick","Antwaan Randle El"],
+      },
+      {
+        prompt: "Name a college quarterback who could beat you with his legs.",
+        answers: ["Lamar Jackson","Michael Vick","Cam Newton","Vince Young","Johnny Manziel","Denard Robinson","Pat White","Kyler Murray"],
+        alsoAcceptedAnswers: ["Tim Tebow","Robert Griffin III","Jalen Hurts","Marcus Mariota","Terrelle Pryor","Colin Kaepernick","Antwaan Randle El"],
+      },
+      {
+        prompt: "Name a quarterback whose rushing ability changed the game plan.",
+        answers: ["Lamar Jackson","Cam Newton","Michael Vick","Vince Young","Tim Tebow","Robert Griffin III","Kyler Murray","Johnny Manziel"],
+        alsoAcceptedAnswers: ["Pat White","Denard Robinson","Jalen Hurts","Marcus Mariota","Terrelle Pryor","Colin Kaepernick","Antwaan Randle El"],
+      },
+      {
+        prompt: "Name a college QB you remember as a true run-pass threat.",
+        answers: ["Cam Newton","Lamar Jackson","Vince Young","Michael Vick","Johnny Manziel","Robert Griffin III","Marcus Mariota","Kyler Murray"],
+        alsoAcceptedAnswers: ["Tim Tebow","Pat White","Denard Robinson","Jalen Hurts","Terrelle Pryor","Colin Kaepernick","Antwaan Randle El"],
+      },
+      {
+        prompt: "Name a quarterback defenders had to account for as a runner.",
+        answers: ["Lamar Jackson","Cam Newton","Michael Vick","Vince Young","Tim Tebow","Johnny Manziel","Denard Robinson","Pat White"],
+        alsoAcceptedAnswers: ["Kyler Murray","Robert Griffin III","Jalen Hurts","Marcus Mariota","Terrelle Pryor","Colin Kaepernick","Antwaan Randle El"],
+      },
     ],
     answers: [
       "Cam Newton",
@@ -132,11 +212,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
-      "Name a college quarterback known more for passing than running.",
-      "Name a classic pocket-passing college quarterback.",
-      "Name a quarterback whose college game was built around throwing the ball.",
-      "Name a college QB you remember for command from the pocket.",
-      "Name a passer whose college highlights are mostly throws, not scrambles.",
+      {
+        prompt: "Name a college quarterback known more for passing than running.",
+        answers: ["Joe Burrow","Matt Leinart","Sam Bradford","Mac Jones","Carson Palmer","Andrew Luck","Philip Rivers","Tua Tagovailoa"],
+        alsoAcceptedAnswers: ["Peyton Manning","Tom Brady","Drew Brees","Eli Manning","Brady Quinn","Kellen Moore","Colt Brennan","Graham Harrell"],
+      },
+      {
+        prompt: "Name a classic pocket-passing college quarterback.",
+        answers: ["Peyton Manning","Matt Leinart","Carson Palmer","Sam Bradford","Philip Rivers","Eli Manning","Brady Quinn","Mac Jones"],
+        alsoAcceptedAnswers: ["Joe Burrow","Andrew Luck","Tua Tagovailoa","Tom Brady","Drew Brees","Kellen Moore","Colt Brennan","Graham Harrell"],
+      },
+      {
+        prompt: "Name a quarterback whose college game was built around throwing the ball.",
+        answers: ["Joe Burrow","Sam Bradford","Matt Leinart","Carson Palmer","Colt Brennan","Graham Harrell","Kellen Moore","Philip Rivers"],
+        alsoAcceptedAnswers: ["Mac Jones","Andrew Luck","Tua Tagovailoa","Peyton Manning","Tom Brady","Drew Brees","Eli Manning","Brady Quinn"],
+      },
+      {
+        prompt: "Name a college QB you remember for command from the pocket.",
+        answers: ["Joe Burrow","Peyton Manning","Matt Leinart","Andrew Luck","Carson Palmer","Sam Bradford","Mac Jones","Philip Rivers"],
+        alsoAcceptedAnswers: ["Tua Tagovailoa","Tom Brady","Drew Brees","Eli Manning","Brady Quinn","Kellen Moore","Colt Brennan","Graham Harrell"],
+      },
+      {
+        prompt: "Name a passer whose college highlights are mostly throws, not scrambles.",
+        answers: ["Joe Burrow","Matt Leinart","Sam Bradford","Carson Palmer","Mac Jones","Colt Brennan","Graham Harrell","Kellen Moore"],
+        alsoAcceptedAnswers: ["Andrew Luck","Philip Rivers","Tua Tagovailoa","Peyton Manning","Tom Brady","Drew Brees","Eli Manning","Brady Quinn"],
+      },
     ],
     answers: [
       "Joe Burrow",
@@ -164,11 +264,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "pass-rushers",
     prompts: [
-      "Name a college pass rusher who became a national star.",
-      "Name a defender quarterbacks hated seeing off the edge.",
-      "Name a college defensive end or edge player known for getting after the quarterback.",
-      "Name a pass rusher whose college tape screamed first-round talent.",
-      "Name a college defender you associate with sacks and pressure.",
+      {
+        prompt: "Name a college pass rusher who became a national star.",
+        answers: ["Chase Young","Myles Garrett","Jadeveon Clowney","Joey Bosa","Nick Bosa","Will Anderson Jr.","Aidan Hutchinson","Von Miller"],
+        alsoAcceptedAnswers: ["Khalil Mack","Terrell Suggs","Dwight Freeney","Derrick Thomas","Julius Peppers","Brian Orakpo","Kayvon Thibodeaux"],
+      },
+      {
+        prompt: "Name a defender quarterbacks hated seeing off the edge.",
+        answers: ["Jadeveon Clowney","Myles Garrett","Chase Young","Von Miller","Terrell Suggs","Will Anderson Jr.","Joey Bosa","Khalil Mack"],
+        alsoAcceptedAnswers: ["Nick Bosa","Aidan Hutchinson","Dwight Freeney","Derrick Thomas","Julius Peppers","Brian Orakpo","Kayvon Thibodeaux"],
+      },
+      {
+        prompt: "Name a college defensive end or edge player known for getting after the quarterback.",
+        answers: ["Chase Young","Myles Garrett","Jadeveon Clowney","Terrell Suggs","Von Miller","Joey Bosa","Will Anderson Jr.","Khalil Mack"],
+        alsoAcceptedAnswers: ["Nick Bosa","Aidan Hutchinson","Dwight Freeney","Derrick Thomas","Julius Peppers","Brian Orakpo","Kayvon Thibodeaux"],
+      },
+      {
+        prompt: "Name a pass rusher whose college tape screamed first-round talent.",
+        answers: ["Myles Garrett","Jadeveon Clowney","Chase Young","Will Anderson Jr.","Aidan Hutchinson","Joey Bosa","Nick Bosa","Kayvon Thibodeaux"],
+        alsoAcceptedAnswers: ["Von Miller","Khalil Mack","Terrell Suggs","Dwight Freeney","Derrick Thomas","Julius Peppers","Brian Orakpo"],
+      },
+      {
+        prompt: "Name a college defender you associate with sacks and pressure.",
+        answers: ["Chase Young","Terrell Suggs","Myles Garrett","Von Miller","Jadeveon Clowney","Will Anderson Jr.","Khalil Mack","Joey Bosa"],
+        alsoAcceptedAnswers: ["Nick Bosa","Aidan Hutchinson","Dwight Freeney","Derrick Thomas","Julius Peppers","Brian Orakpo","Kayvon Thibodeaux"],
+      },
     ],
     answers: [
       "Chase Young",
@@ -195,11 +315,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "returners",
     prompts: [
-      "Name a college football player known for dangerous returns.",
-      "Name a return man who made punts or kickoffs feel exciting.",
-      "Name a college star you would avoid kicking to.",
-      "Name a player remembered for electric special-teams returns.",
-      "Name a college returner who could flip a game in seconds.",
+      {
+        prompt: "Name a college football player known for dangerous returns.",
+        answers: ["Devin Hester","Ted Ginn Jr.","Reggie Bush","Dante Hall","Desmond Howard","Christian McCaffrey","De'Anthony Thomas","Antonio Brown"],
+        alsoAcceptedAnswers: ["Tavon Austin","Rocket Ismail","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
+      },
+      {
+        prompt: "Name a return man who made punts or kickoffs feel exciting.",
+        answers: ["Devin Hester","Ted Ginn Jr.","Desmond Howard","Rocket Ismail","Dante Hall","Reggie Bush","De'Anthony Thomas","Tavon Austin"],
+        alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
+      },
+      {
+        prompt: "Name a college star you would avoid kicking to.",
+        answers: ["Devin Hester","Ted Ginn Jr.","Rocket Ismail","Reggie Bush","Desmond Howard","De'Anthony Thomas","Tavon Austin","Dante Hall"],
+        alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
+      },
+      {
+        prompt: "Name a player remembered for electric special-teams returns.",
+        answers: ["Devin Hester","Ted Ginn Jr.","Desmond Howard","Rocket Ismail","Dante Hall","Reggie Bush","Tavon Austin","De'Anthony Thomas"],
+        alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
+      },
+      {
+        prompt: "Name a college returner who could flip a game in seconds.",
+        answers: ["Devin Hester","Ted Ginn Jr.","Reggie Bush","Rocket Ismail","De'Anthony Thomas","Tavon Austin","Dante Hall","Desmond Howard"],
+        alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
+      },
     ],
     answers: [
       "Devin Hester",
@@ -225,11 +365,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "person",
     collisionGroup: "young-stars",
     prompts: [
-      "Name a college football player who became a star very early in his career.",
-      "Name a player who looked ready for the spotlight almost immediately in college.",
-      "Name a college star who made a huge impact as a freshman or young player.",
-      "Name a player fans knew was special before he was an upperclassman.",
-      "Name a college player whose breakout came almost right away.",
+      {
+        prompt: "Name a college football player who became a star very early in his career.",
+        answers: ["Adrian Peterson","Trevor Lawrence","Caleb Williams","Sammy Watkins","Marcus Lattimore","Jadeveon Clowney","Derek Stingley Jr.","Maurice Clarett"],
+        alsoAcceptedAnswers: ["Jameis Winston","Brock Bowers","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper","Jeremiah Smith"],
+      },
+      {
+        prompt: "Name a player who looked ready for the spotlight almost immediately in college.",
+        answers: ["Adrian Peterson","Trevor Lawrence","Jameis Winston","Caleb Williams","Jadeveon Clowney","Sammy Watkins","Brock Bowers","Jeremiah Smith"],
+        alsoAcceptedAnswers: ["Marcus Lattimore","Derek Stingley Jr.","Maurice Clarett","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper"],
+      },
+      {
+        prompt: "Name a college star who made a huge impact as a freshman or young player.",
+        answers: ["Adrian Peterson","Trevor Lawrence","Maurice Clarett","Sammy Watkins","Marcus Lattimore","Jadeveon Clowney","Derek Stingley Jr.","Brock Bowers"],
+        alsoAcceptedAnswers: ["Caleb Williams","Jameis Winston","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper","Jeremiah Smith"],
+      },
+      {
+        prompt: "Name a player fans knew was special before he was an upperclassman.",
+        answers: ["Adrian Peterson","Trevor Lawrence","Caleb Williams","Jadeveon Clowney","Sammy Watkins","Brock Bowers","Derek Stingley Jr.","Saquon Barkley"],
+        alsoAcceptedAnswers: ["Marcus Lattimore","Maurice Clarett","Jameis Winston","Johnny Manziel","Todd Gurley","Amari Cooper","Jeremiah Smith"],
+      },
+      {
+        prompt: "Name a college player whose breakout came almost right away.",
+        answers: ["Adrian Peterson","Trevor Lawrence","Sammy Watkins","Marcus Lattimore","Maurice Clarett","Jadeveon Clowney","Brock Bowers","Jeremiah Smith"],
+        alsoAcceptedAnswers: ["Caleb Williams","Derek Stingley Jr.","Jameis Winston","Johnny Manziel","Saquon Barkley","Todd Gurley","Amari Cooper"],
+      },
     ],
     answers: [
       "Adrian Peterson",
@@ -256,11 +416,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "school",
     collisionGroup: "programs",
     prompts: [
-      "Name a college football program famous for a giant-killing upset.",
-      "Name a school that makes you think of a memorable underdog win.",
-      "Name a program that has crashed a bigger team's party.",
-      "Name a college team fans remember for an upset that shocked the country.",
-      "Name an underdog program that has had a Cinderella football moment.",
+      {
+        prompt: "Name a college football program famous for a giant-killing upset.",
+        answers: ["Appalachian State","Boise State","UCF","TCU","Utah","Cincinnati","Houston","James Madison"],
+        alsoAcceptedAnswers: ["Northern Illinois","Fresno State","Marshall","Louisiana-Monroe","Troy","Georgia Southern","Tulane"],
+      },
+      {
+        prompt: "Name a school that makes you think of a memorable underdog win.",
+        answers: ["Appalachian State","Boise State","James Madison","Louisiana-Monroe","Troy","Utah","UCF","Northern Illinois"],
+        alsoAcceptedAnswers: ["TCU","Cincinnati","Houston","Fresno State","Marshall","Georgia Southern","Tulane"],
+      },
+      {
+        prompt: "Name a program that has crashed a bigger team's party.",
+        answers: ["Boise State","Appalachian State","TCU","Utah","UCF","Cincinnati","Houston","James Madison"],
+        alsoAcceptedAnswers: ["Northern Illinois","Fresno State","Marshall","Louisiana-Monroe","Troy","Georgia Southern","Tulane"],
+      },
+      {
+        prompt: "Name a college team fans remember for an upset that shocked the country.",
+        answers: ["Appalachian State","Boise State","James Madison","Louisiana-Monroe","Troy","Northern Illinois","UCF","Utah"],
+        alsoAcceptedAnswers: ["TCU","Cincinnati","Houston","Fresno State","Marshall","Georgia Southern","Tulane"],
+      },
+      {
+        prompt: "Name an underdog program that has had a Cinderella football moment.",
+        answers: ["Boise State","Appalachian State","UCF","TCU","Cincinnati","Utah","Houston","Northern Illinois"],
+        alsoAcceptedAnswers: ["James Madison","Fresno State","Marshall","Louisiana-Monroe","Troy","Georgia Southern","Tulane"],
+      },
     ],
     answers: [
       { name: "Boise State", aliases: ["Broncos"] },
@@ -287,11 +467,31 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     entityKind: "school",
     collisionGroup: "culture",
     prompts: [
-      "Name a college football program known for great uniforms.",
-      "Name a school whose football look gets fans talking.",
-      "Name a program with an instantly recognizable uniform identity.",
-      "Name a college team whose uniform reveal can become an event.",
-      "Name a program you would put in a best-uniforms conversation.",
+      {
+        prompt: "Name a college football program known for great uniforms.",
+        answers: ["Oregon","Notre Dame","Michigan","Penn State","USC","Texas","LSU","Miami"],
+        alsoAcceptedAnswers: ["Ohio State","Florida State","Georgia","Tennessee","Clemson","UCLA","North Carolina"],
+      },
+      {
+        prompt: "Name a school whose football look gets fans talking.",
+        answers: ["Oregon","Notre Dame","Miami","UCLA","North Carolina","Tennessee","LSU","Florida State"],
+        alsoAcceptedAnswers: ["Michigan","Penn State","USC","Texas","Ohio State","Georgia","Clemson"],
+      },
+      {
+        prompt: "Name a program with an instantly recognizable uniform identity.",
+        answers: ["Penn State","Notre Dame","Michigan","USC","Texas","Alabama","Ohio State","LSU"],
+        alsoAcceptedAnswers: ["Oregon","Miami","Florida State","Georgia","Tennessee","Clemson","UCLA","North Carolina"],
+      },
+      {
+        prompt: "Name a college team whose uniform reveal can become an event.",
+        answers: ["Oregon","Miami","UCLA","Tennessee","North Carolina","Florida State","Notre Dame","LSU"],
+        alsoAcceptedAnswers: ["Michigan","Penn State","USC","Texas","Ohio State","Georgia","Clemson"],
+      },
+      {
+        prompt: "Name a program you would put in a best-uniforms conversation.",
+        answers: ["Oregon","Notre Dame","Michigan","Penn State","USC","Texas","LSU","Miami"],
+        alsoAcceptedAnswers: ["Ohio State","Florida State","Georgia","Tennessee","Clemson","UCLA","North Carolina"],
+      },
     ],
     answers: [
       { name: "Oregon", aliases: ["Ducks"] },
