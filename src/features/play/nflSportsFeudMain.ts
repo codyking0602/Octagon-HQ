@@ -412,8 +412,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
         answers: ["Arrowhead Stadium", "Lumen Field", "Lambeau Field", "Highmark Stadium", "Superdome", "Lincoln Financial Field", "M&T Bank Stadium", "Empower Field at Mile High"],
         alsoAcceptedAnswers: ["U.S. Bank Stadium", "Ford Field", "Acrisure Stadium", "Gillette Stadium"],
       },
-      "Name an NFL stadium famous for crowd noise.",
-      "Name a road environment that can make an offense miserable.",
+      {
+        prompt: "Name an NFL stadium famous for crowd noise.",
+        answers: ["Arrowhead Stadium", "Lumen Field", "Superdome", "Highmark Stadium", "U.S. Bank Stadium", "Ford Field", "Lincoln Financial Field", "Lambeau Field"],
+        alsoAcceptedAnswers: ["M&T Bank Stadium", "Empower Field at Mile High", "Acrisure Stadium"],
+      },
+      {
+        prompt: "Name a road environment that can make an offense miserable.",
+        answers: ["Arrowhead Stadium", "Lumen Field", "Superdome", "Highmark Stadium", "Lincoln Financial Field", "M&T Bank Stadium", "U.S. Bank Stadium", "Empower Field at Mile High"],
+        alsoAcceptedAnswers: ["Lambeau Field", "Ford Field", "Acrisure Stadium", "Gillette Stadium"],
+      },
       "Name an NFL venue where home-field advantage feels real.",
       "Name an NFL stadium widely known for a difficult road atmosphere.",
     ],
