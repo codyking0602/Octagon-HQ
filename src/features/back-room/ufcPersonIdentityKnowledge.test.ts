@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { footballPersonIdentityKnowledgeRecords } from "./footballPersonIdentityKnowledge";
 import { ufcFactualLedgerSubjects } from "./ufcFactualLedger";
+import { ufcWhoAmIAuthoredCanonicalExpansion } from "./ufcWhoAmIAuthoredCanonicalExpansion";
 import {
   getUfcPersonIdentityFactSources,
   getUfcPersonIdentityKnowledge,
@@ -117,12 +118,23 @@ function normalize(value: string) {
 }
 
 describe("Who Am I PR10 UFC person identity knowledge", () => {
-  it("locks the exact current 100-subject UFC launch population without changing recognizability", () => {
+  it("keeps the original PR10 research population while the canonical universe expands to 133", () => {
     const ledgerIds = ufcFactualLedgerSubjects.map((subject) => subject.id).sort();
     const universeIds = getUfcWhoAmIUniverse().candidates.map((candidate) => candidate.id).sort();
+    const authoredIds = ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => subject.id).sort();
 
-    expect(ledgerIds).toEqual([...EXPECTED_UFC_PR10_SUBJECT_IDS]);
-    expect(universeIds).toEqual([...EXPECTED_UFC_PR10_SUBJECT_IDS]);
+    expect(ledgerIds).toHaveLength(133);
+    expect(universeIds).toHaveLength(133);
+    for (const subjectId of EXPECTED_UFC_PR10_SUBJECT_IDS) {
+      expect(ledgerIds).toContain(subjectId);
+      expect(universeIds).toContain(subjectId);
+    }
+    expect(
+      ufcFactualLedgerSubjects
+        .filter((subject) => subject.scope === "authored-who-am-i-expansion")
+        .map((subject) => subject.id)
+        .sort(),
+    ).toEqual(authoredIds);
     expect(ufcFactualLedgerSubjects.filter((subject) => subject.scope === "ranked-core")).toHaveLength(81);
 
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
@@ -130,7 +142,7 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
     expect(expansion.every((subject) => subject.recognizabilityTier === "A")).toBe(true);
   });
 
-  it("covers every canonical UFC launch identity exactly once with exactly five retained concepts", () => {
+  it("preserves the original PR10 identity research exactly once with exactly five retained concepts", () => {
     const recordIds = ufcPersonIdentityKnowledgeRecords.map((record) => record.subjectId).sort();
     expect(ufcPersonIdentityKnowledgeRecords).toHaveLength(100);
     expect(new Set(recordIds).size).toBe(100);
@@ -195,6 +207,6 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
     expect(getUfcPersonIdentityKnowledge("ufc:not-a-real-launch-id")).toBeNull();
 
     expect(footballPersonIdentityKnowledgeRecords.length).toBeGreaterThan(0);
-    expect(getUfcWhoAmIUniverse().candidates).toHaveLength(100);
+    expect(getUfcWhoAmIUniverse().candidates).toHaveLength(133);
   });
 });
