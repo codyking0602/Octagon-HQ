@@ -213,6 +213,12 @@ describe("NFL Sports Feud authored answer quality", () => {
     expect(matchedDisplayName("nfl-fast4-06-1", "PA")).toBe("Play-action");
     expect(matchedDisplayName("nfl-fast4-06-1", "run pass option")).toBe("RPO");
     expect(matchedDisplayName("nfl-fast4-06-1", "four verts")).toBe("Four verticals");
+    expect(matchedDisplayName("nfl-fast4-01-1", "RB")).toBe("Running back");
+    expect(matchedDisplayName("nfl-fast4-02-1", "TD")).toBe("Touchdown");
+    expect(matchedDisplayName("nfl-fast4-02-1", "FG")).toBe("Field goal");
+    expect(matchedDisplayName("nfl-fast4-02-1", "PAT")).toBe("Extra point");
+    expect(matchedDisplayName("nfl-fast4-04-1", "YPA")).toBe("Yards per attempt");
+    expect(matchedDisplayName("nfl-fast4-05-1", "TFL")).toBe("Tackles for loss");
   });
 
   it("keeps the NFL division universe exact and Fast Money answers easy to enter", () => {
