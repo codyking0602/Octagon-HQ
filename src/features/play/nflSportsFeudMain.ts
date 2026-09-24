@@ -176,8 +176,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
-      "Name an all-time iconic NFL quarterback.",
-      "Name a quarterback almost every NFL fan would put in a legends conversation.",
+      {
+        prompt: "Name an all-time iconic NFL quarterback.",
+        answers: ["Tom Brady", "Joe Montana", "Peyton Manning", "Patrick Mahomes", "Dan Marino", "Aaron Rodgers", "Brett Favre", "John Elway"],
+        alsoAcceptedAnswers: ["Johnny Unitas", "Steve Young", "Drew Brees", "Roger Staubach", "Troy Aikman", "Terry Bradshaw", "Kurt Warner", "Fran Tarkenton", "Ben Roethlisberger", "Lamar Jackson"],
+      },
+      {
+        prompt: "Name a quarterback almost every NFL fan would put in a legends conversation.",
+        answers: ["Tom Brady", "Joe Montana", "Peyton Manning", "Patrick Mahomes", "Johnny Unitas", "Aaron Rodgers", "Dan Marino", "Steve Young"],
+        alsoAcceptedAnswers: ["John Elway", "Brett Favre", "Drew Brees", "Roger Staubach", "Kurt Warner", "Fran Tarkenton", "Troy Aikman", "Terry Bradshaw", "Ben Roethlisberger"],
+      },
       "Name an NFL quarterback whose career defines an era.",
       "Name a quarterback you would expect on an all-time NFL highlight reel.",
       "Name a quarterback whose name alone sounds like NFL history.",
