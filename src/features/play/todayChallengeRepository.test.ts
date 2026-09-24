@@ -190,7 +190,7 @@ describe("Today’s Challenge runtime repository", () => {
       error: null,
     });
 
-    const repository = createTodayChallengeRepository(client as never)!;
+    const repository = createTodayChallengeRepository(client as never, "football")!;
     const leaderboard = await repository.loadDailyLeaderboard(
       "2026-09-24",
       "football-daily-v15-weighted-sep24",
@@ -206,7 +206,7 @@ describe("Today’s Challenge runtime repository", () => {
     expect(client.rpc).toHaveBeenCalledWith("get_daily_challenge_leaderboard", {
       p_day: "2026-09-24",
       p_schedule_version: "football-daily-v15-weighted-sep24",
-      p_sport: "ufc",
+      p_sport: "football",
     });
   });
 
