@@ -317,27 +317,27 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
     prompts: [
       {
         prompt: "Name a college football player known for dangerous returns.",
-        answers: ["Devin Hester","Ted Ginn Jr.","Reggie Bush","Dante Hall","Desmond Howard","Christian McCaffrey","De'Anthony Thomas","Antonio Brown"],
+        answers: ["Devin Hester","Ted Ginn Jr.","Reggie Bush","Dante Pettis","Desmond Howard","Christian McCaffrey","De'Anthony Thomas","Antonio Brown"],
         alsoAcceptedAnswers: ["Tavon Austin","Rocket Ismail","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
       },
       {
         prompt: "Name a return man who made punts or kickoffs feel exciting.",
-        answers: ["Devin Hester","Ted Ginn Jr.","Desmond Howard","Rocket Ismail","Dante Hall","Reggie Bush","De'Anthony Thomas","Tavon Austin"],
+        answers: ["Devin Hester","Ted Ginn Jr.","Desmond Howard","Rocket Ismail","Dante Pettis","Reggie Bush","De'Anthony Thomas","Tavon Austin"],
         alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
       },
       {
         prompt: "Name a college star you would avoid kicking to.",
-        answers: ["Devin Hester","Ted Ginn Jr.","Rocket Ismail","Reggie Bush","Desmond Howard","De'Anthony Thomas","Tavon Austin","Dante Hall"],
+        answers: ["Devin Hester","Ted Ginn Jr.","Rocket Ismail","Reggie Bush","Desmond Howard","De'Anthony Thomas","Tavon Austin","Dante Pettis"],
         alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
       },
       {
         prompt: "Name a player remembered for electric special-teams returns.",
-        answers: ["Devin Hester","Ted Ginn Jr.","Desmond Howard","Rocket Ismail","Dante Hall","Reggie Bush","Tavon Austin","De'Anthony Thomas"],
+        answers: ["Devin Hester","Ted Ginn Jr.","Desmond Howard","Rocket Ismail","Dante Pettis","Reggie Bush","Tavon Austin","De'Anthony Thomas"],
         alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
       },
       {
         prompt: "Name a college returner who could flip a game in seconds.",
-        answers: ["Devin Hester","Ted Ginn Jr.","Reggie Bush","Rocket Ismail","De'Anthony Thomas","Tavon Austin","Dante Hall","Desmond Howard"],
+        answers: ["Devin Hester","Ted Ginn Jr.","Reggie Bush","Rocket Ismail","De'Anthony Thomas","Tavon Austin","Dante Pettis","Desmond Howard"],
         alsoAcceptedAnswers: ["Christian McCaffrey","Antonio Brown","Johnny Rodgers","Javier Arenas","Tyrann Mathieu","Leodis McKelvin"],
       },
     ],
@@ -345,7 +345,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
       "Devin Hester",
       "Ted Ginn Jr.",
       "Reggie Bush",
-      "Dante Hall",
+      "Dante Pettis",
       "Desmond Howard",
       "Christian McCaffrey",
       "De'Anthony Thomas",
