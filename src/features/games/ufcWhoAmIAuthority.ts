@@ -126,7 +126,7 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   };
 }
 
-const ufcUniverse: WhoAmIUniverse = {
+const canonicalUfcUniverse: WhoAmIUniverse = {
   sport: "ufc",
   league: "UFC",
   candidates: ufcFactualLedgerSubjects.map(ufcCandidate),
@@ -142,7 +142,11 @@ const legacyUfcUniverse: WhoAmIUniverse = {
 };
 
 export function getUfcWhoAmIUniverse() {
-  return ufcUniverse;
+  return legacyUfcUniverse;
+}
+
+export function getCanonicalUfcWhoAmIUniverse() {
+  return canonicalUfcUniverse;
 }
 
 export function createUfcWhoAmIRound(
