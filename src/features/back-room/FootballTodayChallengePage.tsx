@@ -7,9 +7,12 @@ import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyVi
 import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
 import {
   createTodayChallengeRepository,
-  TodayChallengeRepositoryError,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
+import {
+  useTodayChallengeRuntime,
+  type TodayChallengeAdvanceOptions,
+} from "../play/useTodayChallengeRuntime";
 import {
   createFootballWeeklyAuctionRepository,
   type FootballWeeklyAuctionState,
@@ -507,49 +510,39 @@ export default function FootballTodayChallengePage() {
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const repository = useMemo(() => createTodayChallengeRepository(undefined, "football"), []);
   const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
-  const [projection, setProjection] = useState<TodayChallengeProjection | null>(null);
   const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
   const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
-  const [busy, setBusy] = useState(false);
   const [weeklyBusy, setWeeklyBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [weeklyError, setWeeklyError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
+  const weeklyGateActive = Boolean(
+    weeklyState?.available
+    && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
+  );
+  const dailyRuntime = useTodayChallengeRuntime({
+    profileId: identity.profile?.id ?? "signed-out",
+    enabled: signedIn && weeklyState !== null && !weeklyGateActive,
+    repository,
+    sport: "football",
+  });
+  const projection = dailyRuntime.projection;
+  const busy = dailyRuntime.busy;
+  const error = dailyRuntime.error instanceof Error
+    ? dailyRuntime.error.message
+    : dailyRuntime.error
+      ? "Could not sync today’s football board."
+      : null;
 
-  async function loadDaily() {
-    if (!repository) {
-      setError("Football Today’s Challenge is unavailable on this build.");
-      return;
-    }
-    setBusy(true);
-    setError(null);
-    try {
-      setProjection(await repository.loadToday());
-      setShowWeeklyAuction(false);
-    } catch (reason) {
-      if (reason instanceof TodayChallengeRepositoryError && reason.code === "WEEKLY_AUCTION_REQUIRED") {
-        if (weeklyRepository) {
-          const nextWeekly = await weeklyRepository.load();
-          setWeeklyState(nextWeekly);
-          setShowWeeklyAuction(nextWeekly.available);
-        }
-      } else {
-        setError(reason instanceof Error ? reason.message : "Could not load today’s football board.");
-      }
-    } finally {
-      setBusy(false);
-    }
+  function loadDaily() {
+    setShowWeeklyAuction(false);
   }
 
   useEffect(() => {
     let active = true;
     if (!signedIn) {
-      setProjection(null);
       setWeeklyState(null);
       setShowWeeklyAuction(false);
-      setBusy(false);
       setWeeklyBusy(false);
-      setError(null);
       setWeeklyError(null);
       return () => { active = false; };
     }
@@ -561,7 +554,7 @@ export default function FootballTodayChallengePage() {
     setWeeklyBusy(true);
     setWeeklyError(null);
     weeklyRepository.load()
-      .then(async (nextWeekly) => {
+      .then((nextWeekly) => {
         if (!active) return;
         setWeeklyState(nextWeekly);
         if (
@@ -569,28 +562,6 @@ export default function FootballTodayChallengePage() {
           && (nextWeekly.previous_final || !nextWeekly.submitted_today || editWeeklyAuction)
         ) {
           setShowWeeklyAuction(true);
-          return;
-        }
-        if (!repository) {
-          setError("Football Today’s Challenge is unavailable on this build.");
-          return;
-        }
-        setBusy(true);
-        try {
-          const nextDaily = await repository.loadToday();
-          if (active) setProjection(nextDaily);
-        } catch (reason) {
-          if (!active) return;
-          if (reason instanceof TodayChallengeRepositoryError && reason.code === "WEEKLY_AUCTION_REQUIRED") {
-            const refreshed = await weeklyRepository.load();
-            if (!active) return;
-            setWeeklyState(refreshed);
-            setShowWeeklyAuction(refreshed.available);
-          } else {
-            setError(reason instanceof Error ? reason.message : "Could not load today’s football board.");
-          }
-        } finally {
-          if (active) setBusy(false);
         }
       })
       .catch((reason) => {
@@ -599,7 +570,7 @@ export default function FootballTodayChallengePage() {
       .finally(() => { if (active) setWeeklyBusy(false); });
 
     return () => { active = false; };
-  }, [editWeeklyAuction, repository, signedIn, weeklyRepository]);
+  }, [editWeeklyAuction, signedIn, weeklyRepository]);
 
   async function submitWeeklyBids(bids: Record<number, number>) {
     if (!weeklyRepository || weeklyBusy) return;
@@ -631,22 +602,8 @@ export default function FootballTodayChallengePage() {
     }
   }
 
-  async function advance(action: JsonRecord) {
-    if (!repository || !projection || busy || projection.officialAttempt) return;
-    setBusy(true);
-    setError(null);
-    try {
-      const next = await repository.advance(projection, action);
-      setProjection(next);
-    } catch (reason) {
-      if (reason instanceof TodayChallengeRepositoryError && reason.stale) {
-        setProjection(await repository.loadToday());
-      } else {
-        setError(reason instanceof Error ? reason.message : "That football daily action could not be locked.");
-      }
-    } finally {
-      setBusy(false);
-    }
+  function advance(action: JsonRecord, options?: TodayChallengeAdvanceOptions) {
+    void dailyRuntime.advance(action, options);
   }
 
   async function shareResult() {
@@ -680,7 +637,7 @@ export default function FootballTodayChallengePage() {
             if (projection) {
               setShowWeeklyAuction(false);
             } else {
-              void loadDaily();
+              loadDaily();
             }
           }}
         />
