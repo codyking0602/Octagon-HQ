@@ -2838,14 +2838,14 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "The O2",
           "Etihad Arena",
           "Fight Island",
-          "Las Vegas"
+          "Honda Center"
         ],
         "alsoAcceptedAnswers": [
-          "Honda Center",
           "Abu Dhabi",
           "London",
           "Anaheim",
-          "New York City"
+          "New York City",
+          "Las Vegas"
         ]
       },
       {
