@@ -186,29 +186,29 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
     collisionGroup: "achievements",
     prompts: [
       {
-        prompt: "Name a program that won a college football national championship from 2000 through 2024.",
+        prompt: "Name a program that won a college football national championship from 2000 through 2025.",
         answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","Florida","USC","Texas"],
-        alsoAcceptedAnswers: ["Auburn","Florida State","Miami","Michigan","Oklahoma"],
+        alsoAcceptedAnswers: ["Auburn","Florida State","Miami","Michigan","Oklahoma","Indiana"],
       },
       {
-        prompt: "Name a national champion in college football from the 2000 through 2024 seasons.",
+        prompt: "Name a national champion in college football from the 2000 through 2025 seasons.",
         answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","Florida","USC","Oklahoma"],
-        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Michigan"],
+        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Michigan","Indiana"],
       },
       {
-        prompt: "Name a school that celebrated a college football national title between 2000 and 2024.",
+        prompt: "Name a school that celebrated a college football national title between 2000 and 2025.",
         answers: ["Alabama","Georgia","LSU","Ohio State","Clemson","Florida","USC","Michigan"],
-        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Oklahoma"],
+        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Oklahoma","Indiana"],
       },
       {
-        prompt: "Name a program that reached the top of college football between 2000 and 2024.",
+        prompt: "Name a program that reached the top of college football between 2000 and 2025.",
         answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","USC","Florida","Oklahoma"],
-        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Michigan"],
+        alsoAcceptedAnswers: ["Texas","Auburn","Florida State","Miami","Michigan","Indiana"],
       },
       {
-        prompt: "Name a college football champion from the 2000 through 2024 seasons.",
+        prompt: "Name a college football champion from the 2000 through 2025 seasons.",
         answers: ["Alabama","Georgia","Ohio State","LSU","Clemson","Florida","Texas","Michigan"],
-        alsoAcceptedAnswers: ["USC","Auburn","Florida State","Miami","Oklahoma"],
+        alsoAcceptedAnswers: ["USC","Auburn","Florida State","Miami","Oklahoma","Indiana"],
       },
     ],
     answers: [
@@ -222,7 +222,7 @@ export const CFB_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("cfb-fast1", [
       { name: "Texas", aliases: ["Longhorns", "UT"] },
     ],
     alsoAcceptedAnswers: [
-      { name: "Auburn", aliases: ["Auburn Tigers"] },
+      { name: "Auburn", aliases: ["Auburn Tigers",{ name: "Indiana", aliases: ["Hoosiers"] }] },
       { name: "Florida State", aliases: ["FSU", "Seminoles"] },
       { name: "Miami", aliases: ["The U", "Hurricanes", "Miami Hurricanes"] },
       { name: "Michigan", aliases: ["Wolverines"] },
