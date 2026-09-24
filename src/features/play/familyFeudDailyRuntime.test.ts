@@ -202,20 +202,20 @@ describe("Family Feud V2 Daily persistence contract", () => {
       points: null,
     });
 
-    for (const remaining of [
-      ["Bravo Two", 40_000],
-      ["Charlie Three", 35_000],
-      ["Delta Four", 30_000],
-      ["Echo Five", 25_000],
+    for (const [answer, timeRemaining, questionIndex] of [
+      ["Bravo Two", 40_000, 1],
+      ["Charlie Three", 35_000, 2],
+      ["Delta Four", 30_000, 3],
+      ["Echo Five", 25_000, 4],
     ] as const) {
       result = advanceFamilyFeudDailyRuntime(
         context(publication, submission),
         {
           type: "answer",
-          answer: remaining[0],
-          question_id: "fast-" + (Number(result.publicState.fast_money.question_index ?? 0) + 1),
-          question_index: Number(result.publicState.fast_money.question_index ?? 0),
-          time_remaining_ms: remaining[1],
+          answer,
+          question_id: "fast-" + (questionIndex + 1),
+          question_index: questionIndex,
+          time_remaining_ms: timeRemaining,
         },
       );
       submission = result.submissionState;
