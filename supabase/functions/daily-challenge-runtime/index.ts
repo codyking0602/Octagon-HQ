@@ -820,6 +820,26 @@ Deno.serve(async (request) => {
     }
 
     const materialized = await materializeToday(admin);
+
+    // Temporary September 24 release hold while the UFC Sports Feud authored bank is repaired.
+    // Keep the already-materialized Daily identity intact so releasing later today only requires
+    // removing this gate; no Daily row/result rewrite is needed.
+    if (
+      materialized.centralDay === "2026-09-24"
+      && materialized.gameType === "sports_feud"
+    ) {
+      return safeError(
+        503,
+        "DAILY_RELEASE_HELD",
+        "Today’s Sports Feud will be available later today.",
+        {
+          central_day: materialized.centralDay,
+          schedule_version: materialized.scheduleVersion,
+          game_type: materialized.gameType,
+        },
+      );
+    }
+
     let context = await getContext(admin, materialized.dailyChallengeId, profileId);
     context = await finalizePending(userClient, admin, context, profileId);
 

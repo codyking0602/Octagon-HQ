@@ -89,9 +89,9 @@ declare
     'hit_the_number'
   ]::text[];
 begin
-  if private.daily_challenge_central_day(now()) is distinct from date '2026-09-23' then
-    raise exception 'weighted Daily rotation cutover must deploy on September 23 Central';
-  end if;
+  -- The one-time Sep 23 deployment window is now historical. Keep this migration
+  -- replayable for fresh-database verification; the source-identity and
+  -- already-materialized-content guards below remain the production safety boundary.
 
   -- Prove the temporary v169 future schedule is still the thing being superseded.
   if private.daily_challenge_schedule_for_day(date '2026-09-24', 'ufc')

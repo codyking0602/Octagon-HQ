@@ -38,9 +38,9 @@ declare
     'sports_feud','find_leader','wavelength','millionaire','sports_feud'
   ]::text[];
 begin
-  if private.daily_challenge_central_day(now()) is distinct from date '2026-09-23' then
-    raise exception 'September 24 Daily insertion must deploy on September 23 Central';
-  end if;
+  -- The one-time Sep 23 deployment window is now historical. Keep this migration
+  -- replayable for fresh-database verification; the source-identity and
+  -- already-materialized-content guards below remain the production safety boundary.
 
   if private.daily_challenge_schedule_for_day(date '2026-09-23', 'ufc') is distinct from v_ufc_source
     or private.daily_challenge_expected_game(v_ufc_source, date '2026-09-23') is distinct from 'sports_feud'

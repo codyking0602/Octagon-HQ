@@ -51,21 +51,22 @@ describe("Millionaire official Daily runtime", () => {
   it("debuts CFB for Football and UFC for UFC on September 19", () => {
     expect(millionaireDailyLeague("football", "2026-09-19")).toBe("cfb");
     expect(millionaireDailyLeague("ufc", "2026-09-19")).toBe("ufc");
-    expect(millionaireFootballDailyLeague("2026-09-28")).toBe("nfl");
+    expect(millionaireFootballDailyLeague("2026-09-24")).toBe("nfl");
+    expect(millionaireFootballDailyLeague("2026-09-29")).toBe("cfb");
   });
 
   it("rotates ten league-specific runs before repeating and advances hosts 1-2-3 by appearance", () => {
     const ufcDays = [
-      "2026-09-19", "2026-09-29", "2026-10-08", "2026-10-16", "2026-10-22",
-      "2026-10-29", "2026-11-07", "2026-11-15", "2026-11-21", "2026-11-28",
+      "2026-09-19", "2026-09-26", "2026-10-01", "2026-10-07", "2026-10-14",
+      "2026-10-21", "2026-10-26", "2026-10-31", "2026-11-06", "2026-11-13",
     ];
     const cfbDays = [
-      "2026-09-19", "2026-10-06", "2026-10-18", "2026-11-01", "2026-11-13",
-      "2026-11-27", "2026-12-09", "2026-12-23", "2027-01-04", "2027-01-18",
+      "2026-09-19", "2026-09-29", "2026-10-10", "2026-10-20", "2026-10-31",
+      "2026-11-10", "2026-11-20", "2026-12-01", "2026-12-11", "2026-12-22",
     ];
     const nflDays = [
-      "2026-09-28", "2026-10-14", "2026-10-24", "2026-11-09", "2026-11-19",
-      "2026-12-05", "2026-12-15", "2026-12-31", "2027-01-10", "2027-01-26",
+      "2026-09-24", "2026-10-05", "2026-10-15", "2026-10-25", "2026-11-05",
+      "2026-11-15", "2026-11-26", "2026-12-06", "2026-12-16", "2026-12-27",
     ];
 
     expect(ufcDays.map((day) => millionaireDailyRunIndex("ufc", day))).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -82,6 +83,19 @@ describe("Millionaire official Daily runtime", () => {
     expect(tenth.publicSetup).toMatchObject({ league: "cfb", run_number: 10, host_number: 1 });
     expect((debut.publicSetup.questions as Record<string, unknown>[])[0]!.id)
       .not.toBe((tenth.publicSetup.questions as Record<string, unknown>[])[0]!.id);
+  });
+
+  it("accepts the weighted September 24/26 launch slots", () => {
+    expect(() => buildMillionaireDailySetup(
+      "football",
+      "2026-09-24",
+      "football-daily-v15-weighted-sep24",
+    )).not.toThrow();
+    expect(() => buildMillionaireDailySetup(
+      "ufc",
+      "2026-09-26",
+      "play-rotation-v15-weighted-sep25",
+    )).not.toThrow();
   });
 
   it("publishes two answers in each A/B/C/D slot", () => {
