@@ -552,11 +552,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "achievements",
     prompts: [
-      "Name an accomplishment that can make an NFL season legendary.",
-      "Name something an NFL player or team can do that fans remember for decades.",
-      "Name a milestone that can turn a great season into an historic one.",
-      "Name an achievement that makes a football résumé jump off the page.",
-      "Name something every NFL star would love attached to one season.",
+      {
+        prompt: "Name an accomplishment that can make an NFL season legendary.",
+        answers: ["Win the Super Bowl", "Win league MVP", "Go undefeated", "Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Score 20 touchdowns", "Set an NFL record"],
+        alsoAcceptedAnswers: ["Win Super Bowl MVP", "Win Offensive Player of the Year", "Win Defensive Player of the Year", "Make first-team All-Pro", "Win the receiving triple crown"],
+      },
+      {
+        prompt: "Name something an NFL player or team can do in one season that fans remember for decades.",
+        answers: ["Win the Super Bowl", "Go undefeated", "Set an NFL record", "Win league MVP", "Win Super Bowl MVP", "Rush for 2,000 yards", "Record 20 sacks", "Pass for 5,000 yards"],
+        alsoAcceptedAnswers: ["Score 20 touchdowns", "Throw 50 touchdown passes", "Win the receiving triple crown", "Win Defensive Player of the Year", "Win Offensive Player of the Year"],
+      },
+      {
+        prompt: "Name a single-season statistical milestone that can turn a great NFL year into a historic one.",
+        answers: ["Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Score 20 touchdowns", "Throw 50 touchdown passes", "Set an NFL record", "Win the receiving triple crown", "Record 10 interceptions"],
+        alsoAcceptedAnswers: ["Rush for 20 touchdowns", "Record 2,000 scrimmage yards", "Lead the NFL in a major statistic"],
+      },
+      {
+        prompt: "Name an achievement that makes an NFL player's résumé jump off the page.",
+        answers: ["Win the Super Bowl", "Win league MVP", "Make first-team All-Pro", "Win Super Bowl MVP", "Win Defensive Player of the Year", "Win Offensive Player of the Year", "Set an NFL record", "Make the Pro Bowl"],
+        alsoAcceptedAnswers: ["Win Offensive Rookie of the Year", "Win Defensive Rookie of the Year", "Lead the NFL in a major statistic", "Win Comeback Player of the Year"],
+      },
+      {
+        prompt: "Name an achievement every NFL star would love attached to one season.",
+        answers: ["Win the Super Bowl", "Win league MVP", "Make first-team All-Pro", "Win Super Bowl MVP", "Win Offensive Player of the Year", "Win Defensive Player of the Year", "Set an NFL record", "Lead the NFL in a major statistic"],
+        alsoAcceptedAnswers: ["Make the Pro Bowl", "Go undefeated", "Win the receiving triple crown", "Win Comeback Player of the Year"],
+      },
     ],
     answers: ["Win the Super Bowl", "Win league MVP", "Go undefeated", "Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Score 20 touchdowns", "Set an NFL record"],
     alsoAcceptedAnswers: ["Win Super Bowl MVP", "Win Offensive Player of the Year", "Win Defensive Player of the Year", "Make first-team All-Pro", "Lead the NFL in a major statistic"],
