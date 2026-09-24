@@ -172,11 +172,11 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
     entityKind: "other",
     collisionGroup: "weight-cutting",
     prompts: [
-      "Name something that can happen during a difficult UFC weight cut.",
-      "Name a problem a fighter can have during a hard weight cut.",
-      "Name a symptom or outcome of a rough UFC weight cut.",
-      "Name something a fighter might deal with while cutting a lot of weight.",
-      "Name something fans worry about when a UFC weight cut goes badly.",
+      "Name something a fighter may deal with during or immediately after a difficult UFC weight cut.",
+      "Name a symptom, problem, or recovery step tied to a hard UFC weight cut.",
+      "Name a symptom, outcome, or recovery need after a rough UFC weight cut.",
+      "Name something a fighter might deal with while cutting a lot of weight or rehydrating afterward.",
+      "Name something fans watch for when a UFC weight cut goes badly or recovery begins.",
     ],
     answers: [
       { name: "Dehydration", aliases: ["Dehydrated"] },
