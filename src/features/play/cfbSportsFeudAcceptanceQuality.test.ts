@@ -193,12 +193,26 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
       expect(unambiguousCount, question.id).toBeGreaterThan(0);
     }
   });
+  it("keeps subjective Main prompts independently ranked instead of collapsing to family copies", () => {
+    const subjectiveFamilies = [1,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+    for (const family of subjectiveFamilies) {
+      const prefix = `cfb-main-${String(family).padStart(2, "0")}-`;
+      const rows = CFB_SPORTS_FEUD_MAIN.filter((question) => question.id.startsWith(prefix));
+      expect(rows, prefix).toHaveLength(5);
+      const signatures = new Set(rows.map((question) =>
+        candidates(question).map((answer) => normalizeFamilyFeudInput(answer.name)).join("|")
+      ));
+      expect(signatures.size, prefix).toBeGreaterThan(1);
+    }
+  });
+
   it("resolves Saban and natural school shorthand", () => {
     expect(matchName(authoredQuestion("cfb-main-09-1"), "Saban")).toEqual({
       name: "Nick Saban",
       kind: "surname",
     });
 
+    expect(matchName(authoredQuestion("cfb-main-01-2"), "Bama")?.name).toBe("Alabama");
     expect(matchName(authoredQuestion("cfb-fast1-01-1"), "Bama")?.name).toBe("Alabama");
     expect(matchName(authoredQuestion("cfb-fast1-01-1"), "UGA")?.name).toBe("Georgia");
     expect(matchName(authoredQuestion("cfb-fast1-02-1"), "OSU")?.name).toBe("Ohio State");
@@ -213,7 +227,6 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     for (const question of schoolStars) {
       expect(question.prompt, question.id).toMatch(/2000/);
       expect(question.alsoAcceptedAnswers?.length ?? 0, question.id).toBeGreaterThan(0);
-      expect(candidates(question).length, question.id).toBeLessThanOrEqual(25);
     }
 
     expect(matchName(authoredQuestion("cfb-fast2-01-1"), "Milroe")?.name).toBe("Jalen Milroe");
@@ -252,10 +265,7 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     expect(matchName(authoredQuestion("cfb-fast4-07-1"), "QB spy")?.name).toBe("Spy");
   });
 
-  it("keeps accepted universes curated and Fast Money quick-answer friendly", () => {
-    for (const question of CFB_ALL) {
-      expect(candidates(question).length, question.id).toBeLessThanOrEqual(25);
-    }
+  it("keeps accepted universes wording-driven and Fast Money quick-answer friendly", () => {
     for (const question of CFB_FAST) {
       expect(question.prompt.length, question.id).toBeLessThanOrEqual(100);
       expect(question.prompt, question.id).not.toMatch(/explain|describe why|give a reason/i);

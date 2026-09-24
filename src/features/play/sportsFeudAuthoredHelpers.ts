@@ -68,13 +68,19 @@ export function expandSportsFeudFamilies(
     if (family.answers.length < 8) {
       throw new Error(prefix + " family " + (familyIndex + 1) + " must contain at least eight answers.");
     }
+    const familyAnswerByName = new Map(
+      [...family.answers, ...(family.alsoAcceptedAnswers ?? [])].map((value) => [answerName(value), value] as const),
+    );
+    const resolveFamilyAnswer = (value: string | SportsFeudAuthoredAnswer) =>
+      typeof value === "string" ? (familyAnswerByName.get(answerName(value)) ?? value) : value;
+
     family.prompts.forEach((promptValue, promptIndex) => {
       const variant = typeof promptValue === "string" ? null : promptValue;
       const prompt = typeof promptValue === "string" ? promptValue : promptValue.prompt;
-      const rankedAnswers = variant?.answers ?? family.answers;
-      const acceptedAnswers = variant?.alsoAcceptedAnswers !== undefined
+      const rankedAnswers = (variant?.answers ?? family.answers).map(resolveFamilyAnswer);
+      const acceptedAnswers = (variant?.alsoAcceptedAnswers !== undefined
         ? variant.alsoAcceptedAnswers
-        : family.alsoAcceptedAnswers;
+        : family.alsoAcceptedAnswers)?.map(resolveFamilyAnswer);
 
       if (rankedAnswers.length < 8) {
         throw new Error(

@@ -6,11 +6,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "school",
     collisionGroup: "programs",
     prompts: [
-      "Name a college football program known for producing great running backs.",
-      "Name a school you associate with elite college running backs.",
-      "Name a program where great running back play feels like part of the brand.",
-      "Name a college team that seems to keep finding star running backs.",
-      "Name a school a top running back recruit would love to join.",
+      {
+        prompt: "Name a college football program known for producing great running backs.",
+        answers: ["Alabama","Georgia","Ohio State","USC","Texas","Oklahoma","Wisconsin","Penn State"],
+        alsoAcceptedAnswers: ["Auburn","LSU","Michigan","Nebraska","Tennessee","Florida State","Miami","Notre Dame"],
+      },
+      {
+        prompt: "Name a school you associate with elite college running backs.",
+        answers: ["Georgia","Alabama","Wisconsin","USC","Texas","Ohio State","Auburn","Oklahoma"],
+        alsoAcceptedAnswers: ["Penn State","LSU","Michigan","Nebraska","Tennessee","Florida State","Miami","Notre Dame"],
+      },
+      {
+        prompt: "Name a program where great running back play feels like part of the brand.",
+        answers: ["Wisconsin","Georgia","Alabama","USC","Texas","Penn State","Auburn","Ohio State"],
+        alsoAcceptedAnswers: ["Oklahoma","LSU","Michigan","Nebraska","Tennessee","Notre Dame","Miami"],
+      },
+      {
+        prompt: "Name a college team that seems to keep finding star running backs.",
+        answers: ["Alabama","Georgia","Ohio State","Wisconsin","Penn State","Texas","Oklahoma","LSU"],
+        alsoAcceptedAnswers: ["USC","Auburn","Michigan","Tennessee","Notre Dame","Florida State"],
+      },
+      {
+        prompt: "Name a school a top running back recruit would love to join.",
+        answers: ["Alabama","Georgia","Ohio State","Texas","USC","Penn State","LSU","Oklahoma"],
+        alsoAcceptedAnswers: ["Auburn","Michigan","Tennessee","Florida State","Notre Dame","Wisconsin"],
+      },
     ],
     answers: [
       { name: "Alabama", aliases: ["Bama", "Crimson Tide"] },
@@ -38,11 +58,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "school",
     collisionGroup: "programs",
     prompts: [
-      "Name a college football program famous for producing quarterbacks.",
-      "Name a school you associate with big-name college quarterbacks.",
-      "Name a program where quarterback play is a major part of the identity.",
-      "Name a school that always seems to have a recognizable quarterback.",
-      "Name a program a blue-chip quarterback recruit would notice immediately.",
+      {
+        prompt: "Name a college football program famous for producing quarterbacks.",
+        answers: ["USC","Oklahoma","Alabama","Ohio State","LSU","Clemson","Miami","Michigan"],
+        alsoAcceptedAnswers: ["Texas","Florida State","Florida","Oregon","Notre Dame","Penn State","Washington","Texas Tech"],
+      },
+      {
+        prompt: "Name a school you associate with big-name college quarterbacks.",
+        answers: ["USC","Oklahoma","Alabama","LSU","Ohio State","Clemson","Texas","Florida State"],
+        alsoAcceptedAnswers: ["Miami","Michigan","Florida","Oregon","Notre Dame","Penn State","Washington"],
+      },
+      {
+        prompt: "Name a program where quarterback play is a major part of the identity.",
+        answers: ["USC","Oklahoma","Miami","Florida State","Florida","Texas","Clemson","Ohio State"],
+        alsoAcceptedAnswers: ["Alabama","LSU","Michigan","Oregon","Notre Dame","Penn State","Washington","Texas Tech"],
+      },
+      {
+        prompt: "Name a school that always seems to have a recognizable quarterback.",
+        answers: ["Oklahoma","USC","Ohio State","Alabama","Clemson","Texas","Oregon","LSU"],
+        alsoAcceptedAnswers: ["Florida State","Florida","Miami","Michigan","Notre Dame","Washington","Texas Tech"],
+      },
+      {
+        prompt: "Name a program a blue-chip quarterback recruit would notice immediately.",
+        answers: ["USC","Ohio State","Alabama","Texas","Oklahoma","LSU","Clemson","Oregon"],
+        alsoAcceptedAnswers: ["Florida State","Florida","Miami","Michigan","Notre Dame","Penn State","Washington"],
+      },
     ],
     answers: [
       { name: "USC", aliases: ["Southern Cal", "Trojans"] },
@@ -70,11 +110,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "school",
     collisionGroup: "programs",
     prompts: [
-      "Name a college football program you associate with elite defense.",
-      "Name a school that makes you think of dominant college defenses.",
-      "Name a program known for sending scary defenders to the NFL.",
-      "Name a college team whose identity often starts on defense.",
-      "Name a program you would hate to face with a freshman quarterback.",
+      {
+        prompt: "Name a college football program you associate with elite defense.",
+        answers: ["Alabama","Georgia","Ohio State","LSU","Michigan","Clemson","Penn State","Miami"],
+        alsoAcceptedAnswers: ["Iowa","Wisconsin","Notre Dame","Florida State","Auburn","Virginia Tech","Tennessee","Texas A&M"],
+      },
+      {
+        prompt: "Name a school that makes you think of dominant college defenses.",
+        answers: ["Alabama","Georgia","Michigan","Ohio State","LSU","Clemson","Penn State","Iowa"],
+        alsoAcceptedAnswers: ["Wisconsin","Notre Dame","Florida State","Auburn","Virginia Tech","Miami","Tennessee"],
+      },
+      {
+        prompt: "Name a program known for sending scary defenders to the NFL.",
+        answers: ["Alabama","Georgia","Ohio State","LSU","Miami","Penn State","Florida State","Clemson"],
+        alsoAcceptedAnswers: ["Michigan","Auburn","Virginia Tech","Notre Dame","Texas A&M","Tennessee"],
+      },
+      {
+        prompt: "Name a college team whose identity often starts on defense.",
+        answers: ["Alabama","Georgia","Iowa","Wisconsin","Penn State","Michigan","Virginia Tech","Clemson"],
+        alsoAcceptedAnswers: ["Ohio State","LSU","Notre Dame","Florida State","Auburn","Miami"],
+      },
+      {
+        prompt: "Name a program you would hate to face with a freshman quarterback.",
+        answers: ["Georgia","Alabama","Penn State","LSU","Tennessee","Texas A&M","Clemson","Ohio State"],
+        alsoAcceptedAnswers: ["Michigan","Iowa","Wisconsin","Auburn","Virginia Tech","Florida State","Miami"],
+      },
     ],
     answers: [
       { name: "Alabama", aliases: ["Bama", "Crimson Tide"] },
@@ -102,11 +162,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "school",
     collisionGroup: "programs",
     prompts: [
-      "Name a college football program you associate with explosive offense.",
-      "Name a school that makes you think of points, tempo, and big plays.",
-      "Name a program famous for making offense look fast.",
-      "Name a college team you expect to have creative offensive wrinkles.",
-      "Name a program that has helped shape modern college offense.",
+      {
+        prompt: "Name a college football program you associate with explosive offense.",
+        answers: ["Oregon","Oklahoma","USC","LSU","Ohio State","Tennessee","Ole Miss","Texas Tech"],
+        alsoAcceptedAnswers: ["Florida","Baylor","West Virginia","UCF","Alabama","Clemson","Washington","TCU"],
+      },
+      {
+        prompt: "Name a school that makes you think of points, tempo, and big plays.",
+        answers: ["Oregon","Tennessee","Ole Miss","UCF","Oklahoma","Baylor","Texas Tech","Washington"],
+        alsoAcceptedAnswers: ["USC","Florida","West Virginia","Ohio State","LSU","Clemson","TCU"],
+      },
+      {
+        prompt: "Name a program famous for making offense look fast.",
+        answers: ["Oregon","Tennessee","UCF","Baylor","Oklahoma","Ole Miss","USC","TCU"],
+        alsoAcceptedAnswers: ["Texas Tech","West Virginia","Ohio State","LSU","Clemson","Washington"],
+      },
+      {
+        prompt: "Name a college team you expect to have creative offensive wrinkles.",
+        answers: ["Oregon","Oklahoma","USC","Ole Miss","Tennessee","Texas Tech","UCF","Baylor"],
+        alsoAcceptedAnswers: ["Florida","West Virginia","Ohio State","Clemson","Washington","TCU","Alabama"],
+      },
+      {
+        prompt: "Name a program that has helped shape modern college offense.",
+        answers: ["Florida","Texas Tech","Oregon","West Virginia","Oklahoma","Baylor","UCF","USC"],
+        alsoAcceptedAnswers: ["Tennessee","Ole Miss","Washington","TCU","Ohio State","Clemson"],
+      },
     ],
     answers: [
       { name: "Oregon", aliases: ["Ducks"] },
@@ -156,11 +236,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
-      "Name a quarterback you immediately associate with winning the Heisman Trophy.",
-      "Name a Heisman-winning college quarterback almost every football fan remembers.",
-      "Name a quarterback whose Heisman season became part of college football history.",
-      "Name a college quarterback who felt larger than life during his Heisman run.",
-      "Name a Heisman quarterback you would expect to get named quickly in a sports bar.",
+      {
+        prompt: "Name a quarterback you immediately associate with winning the Heisman Trophy.",
+        answers: ["Tim Tebow","Cam Newton","Joe Burrow","Johnny Manziel","Lamar Jackson","Baker Mayfield","Marcus Mariota","Jameis Winston"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+      },
+      {
+        prompt: "Name a Heisman-winning college quarterback almost every football fan remembers.",
+        answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Matt Leinart","Robert Griffin III"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Jayden Daniels"],
+      },
+      {
+        prompt: "Name a quarterback whose Heisman season became part of college football history.",
+        answers: ["Cam Newton","Joe Burrow","Tim Tebow","Lamar Jackson","Johnny Manziel","Robert Griffin III","Baker Mayfield","Marcus Mariota"],
+        alsoAcceptedAnswers: ["Jameis Winston","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jayden Daniels"],
+      },
+      {
+        prompt: "Name a college quarterback who felt larger than life during his Heisman run.",
+        answers: ["Cam Newton","Johnny Manziel","Tim Tebow","Lamar Jackson","Joe Burrow","Robert Griffin III","Baker Mayfield","Jameis Winston"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart"],
+      },
+      {
+        prompt: "Name a Heisman quarterback you would expect to get named quickly in a sports bar.",
+        answers: ["Tim Tebow","Cam Newton","Johnny Manziel","Joe Burrow","Lamar Jackson","Baker Mayfield","Caleb Williams","Kyler Murray"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+      },
     ],
     answers: [
       "Tim Tebow",
@@ -188,11 +288,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "person",
     collisionGroup: "players",
     prompts: [
-      "Name a player who had one of the most dominant individual college football seasons ever.",
-      "Name a college player whose peak season felt almost unfair.",
-      "Name a player remembered for taking over an entire college football season.",
-      "Name a college star whose best year still gets brought up in all-time season debates.",
-      "Name a player whose single-season college peak became legendary.",
+      {
+        prompt: "Name a player who had one of the most dominant individual college football seasons ever.",
+        answers: ["Barry Sanders","Joe Burrow","Cam Newton","Reggie Bush","Derrick Henry","Lamar Jackson","Ndamukong Suh","Tim Tebow"],
+        alsoAcceptedAnswers: ["Vince Young","Charles Woodson","Adrian Peterson","Ricky Williams","Herschel Walker","Bo Jackson","Marcus Mariota","Caleb Williams"],
+      },
+      {
+        prompt: "Name a college player whose peak season felt almost unfair.",
+        answers: ["Barry Sanders","Ndamukong Suh","Reggie Bush","Cam Newton","Joe Burrow","Derrick Henry","Lamar Jackson","Adrian Peterson"],
+        alsoAcceptedAnswers: ["Tim Tebow","Vince Young","Charles Woodson","Ricky Williams","Herschel Walker","Bo Jackson","Marcus Mariota"],
+      },
+      {
+        prompt: "Name a player remembered for taking over an entire college football season.",
+        answers: ["Cam Newton","Joe Burrow","Barry Sanders","Reggie Bush","Lamar Jackson","Derrick Henry","Tim Tebow","Ndamukong Suh"],
+        alsoAcceptedAnswers: ["Vince Young","Charles Woodson","Adrian Peterson","Ricky Williams","Herschel Walker","Bo Jackson","Marcus Mariota","Caleb Williams"],
+      },
+      {
+        prompt: "Name a college star whose best year still gets brought up in all-time season debates.",
+        answers: ["Barry Sanders","Joe Burrow","Cam Newton","Ndamukong Suh","Reggie Bush","Derrick Henry","Lamar Jackson","Vince Young"],
+        alsoAcceptedAnswers: ["Tim Tebow","Charles Woodson","Adrian Peterson","Ricky Williams","Herschel Walker","Bo Jackson","Marcus Mariota"],
+      },
+      {
+        prompt: "Name a player whose single-season college peak became legendary.",
+        answers: ["Barry Sanders","Cam Newton","Joe Burrow","Reggie Bush","Derrick Henry","Tim Tebow","Lamar Jackson","Vince Young"],
+        alsoAcceptedAnswers: ["Ndamukong Suh","Charles Woodson","Adrian Peterson","Ricky Williams","Herschel Walker","Bo Jackson","Marcus Mariota","Caleb Williams"],
+      },
     ],
     answers: [
       "Barry Sanders",
@@ -220,11 +340,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
-      "Name an iconic college quarterback from the 2000s or later.",
-      "Name a college quarterback whose name instantly takes you back to a great season.",
-      "Name a modern-era college quarterback fans still talk about constantly.",
-      "Name a quarterback whose college career created unforgettable Saturdays.",
-      "Name a quarterback you would put in a modern college football time capsule.",
+      {
+        prompt: "Name an iconic college quarterback from the 2000s or later.",
+        answers: ["Tim Tebow","Vince Young","Cam Newton","Joe Burrow","Johnny Manziel","Lamar Jackson","Trevor Lawrence","Matt Leinart"],
+        alsoAcceptedAnswers: ["Baker Mayfield","Marcus Mariota","Jameis Winston","Kyler Murray","Caleb Williams","Sam Bradford","Robert Griffin III","Andrew Luck"],
+      },
+      {
+        prompt: "Name a college quarterback whose name instantly takes you back to a great season.",
+        answers: ["Joe Burrow","Cam Newton","Vince Young","Johnny Manziel","Tim Tebow","Baker Mayfield","Lamar Jackson","Matt Leinart"],
+        alsoAcceptedAnswers: ["Trevor Lawrence","Marcus Mariota","Jameis Winston","Kyler Murray","Caleb Williams","Sam Bradford","Robert Griffin III","Andrew Luck"],
+      },
+      {
+        prompt: "Name a modern-era college quarterback fans still talk about constantly.",
+        answers: ["Tim Tebow","Cam Newton","Johnny Manziel","Joe Burrow","Lamar Jackson","Vince Young","Baker Mayfield","Caleb Williams"],
+        alsoAcceptedAnswers: ["Trevor Lawrence","Matt Leinart","Marcus Mariota","Jameis Winston","Kyler Murray","Sam Bradford","Robert Griffin III","Andrew Luck"],
+      },
+      {
+        prompt: "Name a quarterback whose college career created unforgettable Saturdays.",
+        answers: ["Vince Young","Tim Tebow","Cam Newton","Johnny Manziel","Lamar Jackson","Baker Mayfield","Joe Burrow","Trevor Lawrence"],
+        alsoAcceptedAnswers: ["Matt Leinart","Marcus Mariota","Jameis Winston","Kyler Murray","Caleb Williams","Sam Bradford","Robert Griffin III","Andrew Luck"],
+      },
+      {
+        prompt: "Name a quarterback you would put in a modern college football time capsule.",
+        answers: ["Tim Tebow","Cam Newton","Vince Young","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Trevor Lawrence"],
+        alsoAcceptedAnswers: ["Matt Leinart","Marcus Mariota","Jameis Winston","Kyler Murray","Caleb Williams","Sam Bradford","Robert Griffin III","Andrew Luck"],
+      },
     ],
     answers: [
       "Tim Tebow",
@@ -252,11 +392,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
-      "Name a college football coach strongly associated with a dynasty.",
-      "Name a coach whose program dominated college football for a sustained stretch.",
-      "Name a coach you think of when someone says college football dynasty.",
-      "Name a college coach who built a championship machine.",
-      "Name a coach whose era changed the national title picture.",
+      {
+        prompt: "Name a college football coach strongly associated with a dynasty.",
+        answers: ["Nick Saban","Bear Bryant","Bobby Bowden","Pete Carroll","Urban Meyer","Tom Osborne","Dabo Swinney","Bud Wilkinson"],
+        alsoAcceptedAnswers: ["Kirby Smart","Woody Hayes","Knute Rockne","John McKay","Barry Switzer","Jimmy Johnson"],
+      },
+      {
+        prompt: "Name a coach whose program dominated college football for a sustained stretch.",
+        answers: ["Nick Saban","Bear Bryant","Tom Osborne","Bobby Bowden","Bud Wilkinson","Pete Carroll","Urban Meyer","Dabo Swinney"],
+        alsoAcceptedAnswers: ["Kirby Smart","Woody Hayes","Knute Rockne","Barry Switzer","John McKay"],
+      },
+      {
+        prompt: "Name a coach you think of when someone says college football dynasty.",
+        answers: ["Nick Saban","Bear Bryant","Pete Carroll","Tom Osborne","Bobby Bowden","Dabo Swinney","Urban Meyer","Bud Wilkinson"],
+        alsoAcceptedAnswers: ["Kirby Smart","Woody Hayes","Knute Rockne","Barry Switzer","Jimmy Johnson"],
+      },
+      {
+        prompt: "Name a college coach who built a championship machine.",
+        answers: ["Nick Saban","Bear Bryant","Urban Meyer","Pete Carroll","Tom Osborne","Dabo Swinney","Bobby Bowden","Bud Wilkinson"],
+        alsoAcceptedAnswers: ["Kirby Smart","Woody Hayes","Knute Rockne","John McKay","Barry Switzer","Jimmy Johnson"],
+      },
+      {
+        prompt: "Name a coach whose era changed the national title picture.",
+        answers: ["Nick Saban","Bear Bryant","Pete Carroll","Urban Meyer","Bobby Bowden","Tom Osborne","Dabo Swinney","Kirby Smart"],
+        alsoAcceptedAnswers: ["Bud Wilkinson","Woody Hayes","Knute Rockne","John McKay","Barry Switzer","Jimmy Johnson"],
+      },
     ],
     answers: [
       "Nick Saban",
@@ -275,11 +435,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
-      "Name a college football coach known for offensive innovation.",
-      "Name a coach whose offense changed how people talked about college football.",
-      "Name a college coach associated with a distinctive offensive system.",
-      "Name a coach who made opposing defensive coordinators lose sleep.",
-      "Name an offensive-minded college coach whose scheme became part of his identity.",
+      {
+        prompt: "Name a college football coach known for offensive innovation.",
+        answers: ["Steve Spurrier","Mike Leach","Chip Kelly","Lincoln Riley","Hal Mumme","Gus Malzahn","Rich Rodriguez","Dana Holgorsen"],
+        alsoAcceptedAnswers: ["Lane Kiffin","Kliff Kingsbury","Josh Heupel","Jeff Brohm","Paul Johnson","June Jones"],
+      },
+      {
+        prompt: "Name a coach whose offense changed how people talked about college football.",
+        answers: ["Steve Spurrier","Mike Leach","Chip Kelly","Hal Mumme","Rich Rodriguez","Gus Malzahn","Lincoln Riley","June Jones"],
+        alsoAcceptedAnswers: ["Lane Kiffin","Kliff Kingsbury","Josh Heupel","Jeff Brohm","Paul Johnson","Dana Holgorsen"],
+      },
+      {
+        prompt: "Name a college coach associated with a distinctive offensive system.",
+        answers: ["Mike Leach","Hal Mumme","Chip Kelly","Paul Johnson","Rich Rodriguez","Gus Malzahn","Steve Spurrier","Lincoln Riley"],
+        alsoAcceptedAnswers: ["Lane Kiffin","Kliff Kingsbury","Josh Heupel","Jeff Brohm","June Jones","Dana Holgorsen"],
+      },
+      {
+        prompt: "Name a coach who made opposing defensive coordinators lose sleep.",
+        answers: ["Mike Leach","Chip Kelly","Steve Spurrier","Lincoln Riley","Gus Malzahn","Lane Kiffin","Rich Rodriguez","Josh Heupel"],
+        alsoAcceptedAnswers: ["Hal Mumme","Kliff Kingsbury","Jeff Brohm","Paul Johnson","June Jones","Dana Holgorsen"],
+      },
+      {
+        prompt: "Name an offensive-minded college coach whose scheme became part of his identity.",
+        answers: ["Mike Leach","Chip Kelly","Steve Spurrier","Hal Mumme","Lincoln Riley","Rich Rodriguez","Gus Malzahn","Paul Johnson"],
+        alsoAcceptedAnswers: ["Lane Kiffin","Kliff Kingsbury","Josh Heupel","Jeff Brohm","June Jones","Dana Holgorsen"],
+      },
     ],
     answers: [
       "Steve Spurrier",
@@ -298,11 +478,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
-      "Name a college football rivalry almost every fan knows.",
-      "Name a rivalry game that feels bigger than an ordinary Saturday.",
-      "Name a college rivalry you would explain to a new fan first.",
-      "Name a rivalry where the records almost stop mattering.",
-      "Name a college football matchup with instant rivalry energy.",
+      {
+        prompt: "Name a college football rivalry almost every fan knows.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","Army-Navy","Florida-Georgia","USC-Notre Dame","Florida State-Miami","Oregon-Washington"],
+        alsoAcceptedAnswers: ["Georgia-Auburn","Clemson-South Carolina","Michigan-Michigan State","BYU-Utah","Washington-Washington State","Ole Miss-Mississippi State","Iowa-Iowa State","Harvard-Yale"],
+      },
+      {
+        prompt: "Name a rivalry game that feels bigger than an ordinary Saturday.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","Army-Navy","Florida-Georgia","USC-Notre Dame","Florida State-Miami","Georgia-Auburn"],
+        alsoAcceptedAnswers: ["Oregon-Washington","Clemson-South Carolina","Michigan-Michigan State","BYU-Utah","Washington-Washington State","Ole Miss-Mississippi State"],
+      },
+      {
+        prompt: "Name a college rivalry you would explain to a new fan first.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","Army-Navy","Florida-Georgia","USC-Notre Dame","Florida State-Miami","Clemson-South Carolina"],
+        alsoAcceptedAnswers: ["Oregon-Washington","Georgia-Auburn","Michigan-Michigan State","BYU-Utah","Ole Miss-Mississippi State","Harvard-Yale"],
+      },
+      {
+        prompt: "Name a rivalry where the records almost stop mattering.",
+        answers: ["Alabama-Auburn","Ohio State-Michigan","Florida-Georgia","Texas-Oklahoma","Army-Navy","Clemson-South Carolina","Michigan-Michigan State","Florida State-Miami"],
+        alsoAcceptedAnswers: ["USC-Notre Dame","Oregon-Washington","Georgia-Auburn","BYU-Utah","Washington-Washington State","Ole Miss-Mississippi State","Iowa-Iowa State"],
+      },
+      {
+        prompt: "Name a college football matchup with instant rivalry energy.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","Florida-Georgia","Florida State-Miami","Oregon-Washington","USC-Notre Dame","Clemson-South Carolina"],
+        alsoAcceptedAnswers: ["Army-Navy","Georgia-Auburn","Michigan-Michigan State","BYU-Utah","Washington-Washington State","Ole Miss-Mississippi State","Iowa-Iowa State"],
+      },
     ],
     answers: [
       { name: "Ohio State-Michigan", aliases: ["The Game", "Michigan-Ohio State", "Ohio State vs Michigan", "Michigan vs Ohio State"] },
@@ -330,11 +530,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "school",
     collisionGroup: "venues",
     prompts: [
-      "Name one of the toughest places to play a road game in college football.",
-      "Name a college stadium where the crowd can become part of the game.",
-      "Name a road environment that can rattle even a ranked team.",
-      "Name a college football venue famous for being intimidating.",
-      "Name a stadium you would least want to visit with a freshman quarterback.",
+      {
+        prompt: "Name one of the toughest places to play a road game in college football.",
+        answers: ["LSU","Penn State","Tennessee","Texas A&M","Ohio State","Oregon","Georgia","Alabama"],
+        alsoAcceptedAnswers: ["Clemson","Michigan","Auburn","Florida","Virginia Tech","Washington","Iowa"],
+      },
+      {
+        prompt: "Name a college stadium where the crowd can become part of the game.",
+        answers: ["Penn State","LSU","Tennessee","Texas A&M","Oregon","Virginia Tech","Ohio State","Auburn"],
+        alsoAcceptedAnswers: ["Georgia","Alabama","Clemson","Michigan","Florida","Washington","Iowa"],
+      },
+      {
+        prompt: "Name a road environment that can rattle even a ranked team.",
+        answers: ["LSU","Penn State","Tennessee","Oregon","Texas A&M","Auburn","Florida","Virginia Tech"],
+        alsoAcceptedAnswers: ["Ohio State","Georgia","Alabama","Clemson","Michigan","Washington","Iowa"],
+      },
+      {
+        prompt: "Name a college football venue famous for being intimidating.",
+        answers: ["LSU","Penn State","Texas A&M","Tennessee","Oregon","Ohio State","Clemson","Auburn"],
+        alsoAcceptedAnswers: ["Georgia","Alabama","Michigan","Florida","Virginia Tech","Washington","Iowa"],
+      },
+      {
+        prompt: "Name a stadium you would least want to visit with a freshman quarterback.",
+        answers: ["Penn State","LSU","Tennessee","Texas A&M","Oregon","Virginia Tech","Ohio State","Auburn"],
+        alsoAcceptedAnswers: ["Georgia","Alabama","Clemson","Michigan","Florida","Washington","Iowa"],
+      },
     ],
     answers: [
       { name: "LSU", aliases: ["Tiger Stadium", "Death Valley LSU", "Louisiana State", "LSU Tigers"] },
@@ -361,11 +581,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "traditions",
     prompts: [
-      "Name a college football tradition even casual fans recognize.",
-      "Name a Saturday tradition that instantly tells you which school you are watching.",
-      "Name a pregame or in-game college tradition with national recognition.",
-      "Name a college football ritual fans would hate to lose.",
-      "Name a school tradition that belongs on a college football bucket list.",
+      {
+        prompt: "Name a college football tradition even casual fans recognize.",
+        answers: ["Ohio State dotting the i","Clemson running down the hill","Virginia Tech Enter Sandman","Wisconsin Jump Around","Texas A&M 12th Man","Florida State spear plant","Notre Dame Play Like a Champion Today","Oklahoma Sooner Schooner"],
+        alsoAcceptedAnswers: ["Penn State White Out","Iowa Wave","Tennessee running through the T","Michigan touching the banner","Alabama Rammer Jammer","Army-Navy March On"],
+      },
+      {
+        prompt: "Name a Saturday tradition that instantly tells you which school you are watching.",
+        answers: ["Ohio State dotting the i","Clemson running down the hill","Florida State spear plant","Oklahoma Sooner Schooner","Tennessee running through the T","Michigan touching the banner","Texas A&M 12th Man","Virginia Tech Enter Sandman"],
+        alsoAcceptedAnswers: ["Wisconsin Jump Around","Notre Dame Play Like a Champion Today","Penn State White Out","Iowa Wave","Alabama Rammer Jammer"],
+      },
+      {
+        prompt: "Name a pregame or in-game college tradition with national recognition.",
+        answers: ["Virginia Tech Enter Sandman","Clemson running down the hill","Ohio State dotting the i","Wisconsin Jump Around","Penn State White Out","Iowa Wave","Florida State spear plant","Tennessee running through the T"],
+        alsoAcceptedAnswers: ["Texas A&M 12th Man","Notre Dame Play Like a Champion Today","Oklahoma Sooner Schooner","Michigan touching the banner","Alabama Rammer Jammer","Army-Navy March On"],
+      },
+      {
+        prompt: "Name a college football ritual fans would hate to lose.",
+        answers: ["Ohio State dotting the i","Clemson running down the hill","Virginia Tech Enter Sandman","Wisconsin Jump Around","Texas A&M 12th Man","Oklahoma Sooner Schooner","Tennessee running through the T","Michigan touching the banner"],
+        alsoAcceptedAnswers: ["Florida State spear plant","Notre Dame Play Like a Champion Today","Penn State White Out","Iowa Wave","Alabama Rammer Jammer","Army-Navy March On"],
+      },
+      {
+        prompt: "Name a school tradition that belongs on a college football bucket list.",
+        answers: ["Clemson running down the hill","Virginia Tech Enter Sandman","Ohio State dotting the i","Penn State White Out","Wisconsin Jump Around","Iowa Wave","Tennessee running through the T","Michigan touching the banner"],
+        alsoAcceptedAnswers: ["Texas A&M 12th Man","Florida State spear plant","Notre Dame Play Like a Champion Today","Oklahoma Sooner Schooner","Alabama Rammer Jammer","Army-Navy March On"],
+      },
     ],
     answers: [
       "Ohio State dotting the i",
@@ -391,11 +631,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "bowls",
     prompts: [
-      "Name a college football bowl game almost every fan knows.",
-      "Name a bowl that sounds prestigious before you even know the matchup.",
-      "Name a bowl game tied to college football history.",
-      "Name a postseason bowl you would expect a casual fan to recognize.",
-      "Name a bowl that has hosted major national-title-level stakes.",
+      {
+        prompt: "Name a college football bowl game almost every fan knows.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Citrus Bowl","Gator Bowl"],
+        alsoAcceptedAnswers: ["Alamo Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
+      },
+      {
+        prompt: "Name a bowl that sounds prestigious before you even know the matchup.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Citrus Bowl","Alamo Bowl"],
+        alsoAcceptedAnswers: ["Gator Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
+      },
+      {
+        prompt: "Name a bowl game tied to college football history.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Gator Bowl","Sun Bowl"],
+        alsoAcceptedAnswers: ["Citrus Bowl","Alamo Bowl","Holiday Bowl","Liberty Bowl","Independence Bowl","Music City Bowl"],
+      },
+      {
+        prompt: "Name a postseason bowl you would expect a casual fan to recognize.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Citrus Bowl","Alamo Bowl"],
+        alsoAcceptedAnswers: ["Gator Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl"],
+      },
+      {
+        prompt: "Name a bowl that has hosted major national-title-level stakes.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Fiesta Bowl","Cotton Bowl","Peach Bowl","Citrus Bowl","Gator Bowl"],
+        alsoAcceptedAnswers: ["Alamo Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl"],
+      },
     ],
     answers: ["Rose Bowl", "Sugar Bowl", "Orange Bowl", "Cotton Bowl", "Fiesta Bowl", "Peach Bowl", "Citrus Bowl", "Gator Bowl"],
     alsoAcceptedAnswers: ["Alamo Bowl", "Holiday Bowl", "Sun Bowl", "Liberty Bowl", "Music City Bowl", "Independence Bowl"],
@@ -405,11 +665,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "conferences",
     prompts: [
-      "Name a conference that has played a major role in college football history.",
-      "Name a conference brand college football fans instantly recognize.",
-      "Name a league that has shaped the national college football conversation.",
-      "Name a conference whose old standings can trigger instant nostalgia.",
-      "Name a conference name that belongs in college football history.",
+      {
+        prompt: "Name a conference that has played a major role in college football history.",
+        answers: ["SEC","Big Ten","ACC","Big 12","Pac-12","Southwest Conference","Big East","WAC"],
+        alsoAcceptedAnswers: ["Mountain West","Conference USA","AAC","MAC","Ivy League"],
+      },
+      {
+        prompt: "Name a conference brand college football fans instantly recognize.",
+        answers: ["SEC","Big Ten","ACC","Big 12","Pac-12","Big East","Mountain West","AAC"],
+        alsoAcceptedAnswers: ["Southwest Conference","WAC","Conference USA","MAC","Ivy League"],
+      },
+      {
+        prompt: "Name a league that has shaped the national college football conversation.",
+        answers: ["SEC","Big Ten","ACC","Big 12","Pac-12","Big East","Southwest Conference","AAC"],
+        alsoAcceptedAnswers: ["Mountain West","WAC","Conference USA","MAC","Ivy League"],
+      },
+      {
+        prompt: "Name a conference whose old standings can trigger instant nostalgia.",
+        answers: ["Pac-12","Southwest Conference","Big East","WAC","Big 12","Big Ten","SEC","ACC"],
+        alsoAcceptedAnswers: ["Mountain West","Conference USA","AAC","MAC","Ivy League"],
+      },
+      {
+        prompt: "Name a conference name that belongs in college football history.",
+        answers: ["SEC","Big Ten","Pac-12","Southwest Conference","Big East","ACC","Big 12","WAC"],
+        alsoAcceptedAnswers: ["Mountain West","Conference USA","AAC","MAC","Ivy League"],
+      },
     ],
     answers: [
       { name: "SEC", aliases: ["Southeastern Conference"] },
@@ -434,11 +714,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "moments",
     prompts: [
-      "Name an iconic college football play or moment from the modern era.",
-      "Name a college football moment that still gets replayed years later.",
-      "Name a single play that instantly identifies a famous college football game.",
-      "Name a college football ending fans remember by a nickname.",
-      "Name a moment that can make a fan remember exactly where they were.",
+      {
+        prompt: "Name an iconic college football play or moment from the modern era.",
+        answers: ["Kick Six","Boise State Statue of Liberty","Vince Young 4th-and-5","Prayer at Jordan-Hare","Michigan State trouble with the snap","Bush Push","Bluegrass Miracle","Appalachian State blocks Michigan field goal"],
+        alsoAcceptedAnswers: ["Tua 2nd-and-26","Crabtree catch vs Texas","Clowney hit","Miami lateral return vs Duke","Miracle on Techwood Drive"],
+      },
+      {
+        prompt: "Name a college football moment that still gets replayed years later.",
+        answers: ["Kick Six","Boise State Statue of Liberty","Vince Young 4th-and-5","Michigan State trouble with the snap","Clowney hit","Bush Push","Prayer at Jordan-Hare","Tua 2nd-and-26"],
+        alsoAcceptedAnswers: ["Bluegrass Miracle","Appalachian State blocks Michigan field goal","Crabtree catch vs Texas","Miami lateral return vs Duke","Miracle on Techwood Drive"],
+      },
+      {
+        prompt: "Name a single play that instantly identifies a famous college football game.",
+        answers: ["Kick Six","Boise State Statue of Liberty","Vince Young 4th-and-5","Michigan State trouble with the snap","Bush Push","Tua 2nd-and-26","Prayer at Jordan-Hare","Crabtree catch vs Texas"],
+        alsoAcceptedAnswers: ["Bluegrass Miracle","Appalachian State blocks Michigan field goal","Clowney hit","Miami lateral return vs Duke","Miracle on Techwood Drive"],
+      },
+      {
+        prompt: "Name a college football ending fans remember by a nickname.",
+        answers: ["Kick Six","Prayer at Jordan-Hare","Bluegrass Miracle","Michigan State trouble with the snap","Boise State Statue of Liberty","Tua 2nd-and-26","Miracle on Techwood Drive","Bush Push"],
+        alsoAcceptedAnswers: ["Vince Young 4th-and-5","Appalachian State blocks Michigan field goal","Crabtree catch vs Texas","Miami lateral return vs Duke"],
+      },
+      {
+        prompt: "Name a moment that can make a fan remember exactly where they were.",
+        answers: ["Kick Six","Vince Young 4th-and-5","Boise State Statue of Liberty","Michigan State trouble with the snap","Prayer at Jordan-Hare","Tua 2nd-and-26","Appalachian State blocks Michigan field goal","Bush Push"],
+        alsoAcceptedAnswers: ["Bluegrass Miracle","Crabtree catch vs Texas","Clowney hit","Miami lateral return vs Duke","Miracle on Techwood Drive"],
+      },
     ],
     answers: [
       "Kick Six",
@@ -463,11 +763,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "achievements",
     prompts: [
-      "Name something that can make a college football season legendary.",
-      "Name an accomplishment that can define a college football season.",
-      "Name something fans dream about before a college season starts.",
-      "Name an achievement that can turn a good season into an all-time one.",
-      "Name something a team can accomplish that fans will talk about for decades.",
+      {
+        prompt: "Name something that can make a college football season legendary.",
+        answers: ["National championship","Undefeated season","Heisman winner","Rivalry win","Playoff run","Conference title","Iconic bowl win","Finish ranked No. 1"],
+        alsoAcceptedAnswers: ["Beat the No. 1 team","Historic comeback","Record-setting season","School-record win total","Beat several ranked teams"],
+      },
+      {
+        prompt: "Name an accomplishment that can define a college football season.",
+        answers: ["National championship","Undefeated season","Conference title","Playoff run","Finish ranked No. 1","Heisman winner","Iconic bowl win","Rivalry win"],
+        alsoAcceptedAnswers: ["Beat the No. 1 team","Record-setting season","School-record win total","Beat several ranked teams","Historic comeback"],
+      },
+      {
+        prompt: "Name something fans dream about before a college season starts.",
+        answers: ["National championship","Undefeated season","Conference title","Playoff run","Heisman winner","Rivalry win","Iconic bowl win","Finish ranked No. 1"],
+        alsoAcceptedAnswers: ["Beat the No. 1 team","School-record win total","Beat several ranked teams","Record-setting season"],
+      },
+      {
+        prompt: "Name an achievement that can turn a good season into an all-time one.",
+        answers: ["National championship","Undefeated season","Finish ranked No. 1","Playoff run","Conference title","Heisman winner","Beat the No. 1 team","Record-setting season"],
+        alsoAcceptedAnswers: ["Iconic bowl win","Rivalry win","Historic comeback","School-record win total","Beat several ranked teams"],
+      },
+      {
+        prompt: "Name something a team can accomplish that fans will talk about for decades.",
+        answers: ["National championship","Undefeated season","Beat the No. 1 team","Historic comeback","Iconic bowl win","Rivalry win","Record-setting season","Finish ranked No. 1"],
+        alsoAcceptedAnswers: ["Conference title","Playoff run","School-record win total","Beat several ranked teams"],
+      },
     ],
     answers: [
       { name: "National championship", aliases: ["National title", "Natty", "Championship"] },
@@ -492,11 +812,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "positions",
     prompts: [
-      "Name a college football position fans love to watch.",
-      "Name a position that can produce the biggest Saturday stars.",
-      "Name a position recruits often become household names playing.",
-      "Name a football position that can take over a college game.",
-      "Name a position group that can become the identity of a team.",
+      {
+        prompt: "Name a college football position fans love to watch.",
+        answers: ["Quarterback","Running back","Wide receiver","Linebacker","Defensive end","Cornerback","Safety","Tight end"],
+        alsoAcceptedAnswers: ["Offensive tackle","Guard","Center","Defensive tackle","Kicker","Punter","Long snapper"],
+      },
+      {
+        prompt: "Name a position that can produce the biggest Saturday stars.",
+        answers: ["Quarterback","Running back","Wide receiver","Defensive end","Cornerback","Linebacker","Tight end","Safety"],
+        alsoAcceptedAnswers: ["Defensive tackle","Offensive tackle","Kicker","Guard","Center","Punter"],
+      },
+      {
+        prompt: "Name a position recruits often become household names playing.",
+        answers: ["Quarterback","Wide receiver","Running back","Defensive end","Cornerback","Linebacker","Tight end","Safety"],
+        alsoAcceptedAnswers: ["Defensive tackle","Offensive tackle","Guard","Center","Kicker","Punter"],
+      },
+      {
+        prompt: "Name a football position that can take over a college game.",
+        answers: ["Quarterback","Running back","Wide receiver","Defensive end","Linebacker","Cornerback","Safety","Defensive tackle"],
+        alsoAcceptedAnswers: ["Tight end","Offensive tackle","Kicker","Guard","Center","Punter"],
+      },
+      {
+        prompt: "Name a position group that can become the identity of a team.",
+        answers: ["Quarterback","Running back","Wide receiver","Linebacker","Defensive end","Defensive tackle","Cornerback","Offensive tackle"],
+        alsoAcceptedAnswers: ["Safety","Tight end","Guard","Center","Kicker","Punter"],
+      },
     ],
     answers: [
       { name: "Quarterback", aliases: ["QB"] },
@@ -523,11 +863,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "other",
     collisionGroup: "traits",
     prompts: [
-      "Name a trait every college football coach wants in a quarterback.",
-      "Name a quarterback trait that can separate a star from an average starter.",
-      "Name something scouts notice quickly when evaluating a college quarterback.",
-      "Name a quarterback quality that matters late in a close game.",
-      "Name a trait fans brag about when they love their quarterback.",
+      {
+        prompt: "Name a trait every college football coach wants in a quarterback.",
+        answers: ["Accuracy","Decision-making","Poise","Leadership","Arm strength","Processing","Toughness","Mobility"],
+        alsoAcceptedAnswers: ["Anticipation","Pocket awareness","Footwork","Vision","Ball security"],
+      },
+      {
+        prompt: "Name a quarterback trait that can separate a star from an average starter.",
+        answers: ["Processing","Accuracy","Anticipation","Decision-making","Arm strength","Poise","Mobility","Pocket awareness"],
+        alsoAcceptedAnswers: ["Leadership","Toughness","Footwork","Vision","Ball security"],
+      },
+      {
+        prompt: "Name something scouts notice quickly when evaluating a college quarterback.",
+        answers: ["Arm strength","Accuracy","Mobility","Footwork","Processing","Decision-making","Pocket awareness","Anticipation"],
+        alsoAcceptedAnswers: ["Poise","Leadership","Vision","Toughness","Ball security"],
+      },
+      {
+        prompt: "Name a quarterback quality that matters late in a close game.",
+        answers: ["Poise","Decision-making","Accuracy","Leadership","Toughness","Processing","Ball security","Anticipation"],
+        alsoAcceptedAnswers: ["Arm strength","Mobility","Pocket awareness","Footwork","Vision"],
+      },
+      {
+        prompt: "Name a trait fans brag about when they love their quarterback.",
+        answers: ["Arm strength","Accuracy","Leadership","Mobility","Poise","Toughness","Decision-making","Processing"],
+        alsoAcceptedAnswers: ["Anticipation","Pocket awareness","Footwork","Vision","Ball security"],
+      },
     ],
     answers: ["Accuracy", "Arm strength", "Processing", "Mobility", "Poise", "Leadership", "Anticipation", "Toughness"],
     alsoAcceptedAnswers: ["Decision-making", "Pocket awareness", "Footwork", "Vision", "Ball security"],
@@ -537,11 +897,31 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
     entityKind: "school",
     collisionGroup: "culture",
     prompts: [
-      "Name a college football program known for an iconic uniform look.",
-      "Name a school whose football uniform is recognizable immediately.",
-      "Name a program with a uniform fans argue about in a good way.",
-      "Name a school whose colors look unmistakably college football.",
-      "Name a program you would include in a college football uniform conversation.",
+      {
+        prompt: "Name a college football program known for an iconic uniform look.",
+        answers: ["Oregon","Penn State","Notre Dame","Michigan","Alabama","LSU","USC","Texas"],
+        alsoAcceptedAnswers: ["Ohio State","Florida State","Georgia","Tennessee","Clemson","Miami","UCLA","North Carolina"],
+      },
+      {
+        prompt: "Name a school whose football uniform is recognizable immediately.",
+        answers: ["Penn State","Notre Dame","Michigan","Alabama","USC","Texas","Ohio State","LSU"],
+        alsoAcceptedAnswers: ["Oregon","Florida State","Georgia","Tennessee","Clemson","Miami","UCLA","North Carolina"],
+      },
+      {
+        prompt: "Name a program with a uniform fans argue about in a good way.",
+        answers: ["Oregon","Notre Dame","Miami","UCLA","North Carolina","Florida State","LSU","Tennessee"],
+        alsoAcceptedAnswers: ["Penn State","Michigan","Alabama","USC","Texas","Ohio State","Georgia","Clemson"],
+      },
+      {
+        prompt: "Name a school whose colors look unmistakably college football.",
+        answers: ["Alabama","Michigan","Notre Dame","Texas","USC","LSU","Tennessee","Ohio State"],
+        alsoAcceptedAnswers: ["Penn State","Oregon","Florida State","Georgia","Clemson","Miami","UCLA","North Carolina"],
+      },
+      {
+        prompt: "Name a program you would include in a college football uniform conversation.",
+        answers: ["Oregon","Notre Dame","Penn State","Michigan","USC","Texas","LSU","Miami"],
+        alsoAcceptedAnswers: ["Alabama","Ohio State","Florida State","Georgia","Tennessee","Clemson","UCLA","North Carolina"],
+      },
     ],
     answers: [
       { name: "Oregon", aliases: ["Ducks"] },
