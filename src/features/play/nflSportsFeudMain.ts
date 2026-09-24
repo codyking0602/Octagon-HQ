@@ -6,11 +6,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
-      "Name an NFL franchise famous for great quarterbacks.",
-      "Name a team you associate with a long line of notable quarterbacks.",
-      "Name an NFL franchise where quarterback history is part of the brand.",
-      "Name a team whose fans can argue about multiple great quarterbacks.",
-      "Name a franchise a quarterback would love to join because of its history.",
+      {
+        prompt: "Name an NFL franchise famous for great quarterbacks.",
+        answers: ["Green Bay Packers", "San Francisco 49ers", "Indianapolis Colts", "Dallas Cowboys", "New England Patriots", "Denver Broncos", "Pittsburgh Steelers", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["Kansas City Chiefs", "Los Angeles Chargers", "New Orleans Saints", "Los Angeles Rams", "Philadelphia Eagles", "Cincinnati Bengals", "Buffalo Bills", "Minnesota Vikings", "Las Vegas Raiders", "New York Giants", "Washington Commanders"],
+      },
+      {
+        prompt: "Name a team you associate with a long line of notable quarterbacks.",
+        answers: ["Green Bay Packers", "San Francisco 49ers", "Dallas Cowboys", "Indianapolis Colts", "Los Angeles Rams", "Los Angeles Chargers", "Philadelphia Eagles", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Pittsburgh Steelers", "Miami Dolphins", "Las Vegas Raiders", "Minnesota Vikings", "New England Patriots", "Kansas City Chiefs", "Cincinnati Bengals", "Buffalo Bills"],
+      },
+      {
+        prompt: "Name an NFL franchise where quarterback history is part of the brand.",
+        answers: ["Green Bay Packers", "San Francisco 49ers", "Indianapolis Colts", "Dallas Cowboys", "New England Patriots", "Denver Broncos", "Pittsburgh Steelers", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["Kansas City Chiefs", "Los Angeles Chargers", "New Orleans Saints", "Cincinnati Bengals", "Philadelphia Eagles", "Los Angeles Rams", "Minnesota Vikings", "Las Vegas Raiders", "Buffalo Bills"],
+      },
+      {
+        prompt: "Name a team whose fans can argue about multiple great quarterbacks.",
+        answers: ["Green Bay Packers", "San Francisco 49ers", "Indianapolis Colts", "Dallas Cowboys", "Pittsburgh Steelers", "Los Angeles Chargers", "Los Angeles Rams", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "Miami Dolphins", "Minnesota Vikings", "Cincinnati Bengals", "Kansas City Chiefs", "Las Vegas Raiders", "Buffalo Bills"],
+      },
+      {
+        prompt: "Name an NFL franchise where becoming the starting quarterback comes with major historical expectations.",
+        answers: ["Green Bay Packers", "Dallas Cowboys", "San Francisco 49ers", "New England Patriots", "Indianapolis Colts", "Pittsburgh Steelers", "Denver Broncos", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["Kansas City Chiefs", "Philadelphia Eagles", "Las Vegas Raiders", "New York Giants", "Los Angeles Chargers", "Los Angeles Rams", "Cincinnati Bengals", "Buffalo Bills"],
+      },
     ],
     answers: ["Green Bay Packers", "San Francisco 49ers", "Indianapolis Colts", "Dallas Cowboys", "New England Patriots", "Pittsburgh Steelers", "Denver Broncos", "Miami Dolphins"],
     alsoAcceptedAnswers: ["New Orleans Saints", "Los Angeles Chargers", "Cincinnati Bengals", "Las Vegas Raiders", "Buffalo Bills", "Philadelphia Eagles", "Los Angeles Rams", "Minnesota Vikings"],
