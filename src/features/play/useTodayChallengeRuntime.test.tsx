@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { PropsWithChildren } from "react";
 import {
   TodayChallengeRepositoryError,
@@ -82,10 +82,6 @@ function repositoryWith(
     loadDailyLeaderboard: vi.fn().mockResolvedValue({ unlocked: false, playerCount: 0, entries: [] }),
   };
 }
-
-afterEach(() => {
-  vi.useRealTimers();
-});
 
 describe("useTodayChallengeRuntime", () => {
   it("keeps UFC and Football daily runtime caches isolated under the shared owner", () => {
@@ -217,7 +213,6 @@ describe("useTodayChallengeRuntime", () => {
   });
 
   it("retries a transient failure with the same idempotency key before advancing the queue", async () => {
-    vi.useFakeTimers();
     const first = projection(1);
     const second = projection(2);
     const advance = vi.fn<TodayChallengeRepository["advance"]>()
@@ -231,9 +226,6 @@ describe("useTodayChallengeRuntime", () => {
       repository,
     }), { wrapper: wrapper(client) });
 
-    await act(async () => {
-      await vi.runOnlyPendingTimersAsync();
-    });
     await waitFor(() => expect(result.current.projection?.progressRevision).toBe(1));
 
     let pending!: Promise<TodayChallengeProjection | null>;
@@ -244,7 +236,6 @@ describe("useTodayChallengeRuntime", () => {
     const firstId = advance.mock.calls[0]?.[2];
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(120);
       await pending;
     });
 
