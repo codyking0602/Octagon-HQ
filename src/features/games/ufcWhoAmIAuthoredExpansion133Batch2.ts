@@ -637,7 +637,7 @@ export const ufcWhoAmIAuthoredExpansion133Batch2: readonly UfcWhoAmIAuthoredIden
           },
           {
             "id": "ufc-frank-mir-b-10",
-            "text": "Few UFC heavyweights combined title success and high-level submission wins the way I did.",
+            "text": "Few UFC heavyweights paired championship success with so many memorable high-level submissions.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -1635,7 +1635,7 @@ export const ufcWhoAmIAuthoredExpansion133Batch2: readonly UfcWhoAmIAuthoredIden
           },
           {
             "id": "ufc-luke-rockhold-b-3",
-            "text": "I joined American Kickboxing Academy early enough that the gym became central to my development.",
+            "text": "A leading California MMA gym became central to my development early in my professional career.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [
@@ -1891,7 +1891,7 @@ export const ufcWhoAmIAuthoredExpansion133Batch2: readonly UfcWhoAmIAuthoredIden
           },
           {
             "id": "ufc-yoel-romero-b-7",
-            "text": "I later won close fights with Ronaldo Souza and Chris Weidman during my contender run.",
+            "text": "I beat Ronaldo Souza by split decision and later stopped Chris Weidman with a flying knee.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
