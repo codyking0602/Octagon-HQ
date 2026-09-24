@@ -12,6 +12,7 @@ import { UFC_SPORTS_FEUD_FAST_2 } from "./ufcSportsFeudFast2";
 import { UFC_SPORTS_FEUD_FAST_3 } from "./ufcSportsFeudFast3";
 import { UFC_SPORTS_FEUD_FAST_4 } from "./ufcSportsFeudFast4";
 import { UFC_SPORTS_FEUD_FAST_5 } from "./ufcSportsFeudFast5";
+import { UFC_SPORTS_FEUD_SEP24_PROTOTYPE } from "./ufcSportsFeudSep24Prototype";
 import {
   buildSportsFeudPack,
   sportsFeudQuestionIdsForDay,
@@ -153,9 +154,14 @@ describe("UFC Sports Feud answer-acceptance hardening", () => {
     }
   });
 
-  it("materializes every authored UFC question with unique aliases and safe person surnames", () => {
+  it("materializes every authored UFC question plus the isolated Sept. 24 prototype", () => {
     const selected = materializedQuestions();
-    expect(selected.size).toBe(350);
+    const prototypeIds = new Set([
+      ...UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main,
+      ...UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney,
+    ].map((question) => question.id));
+    expect(selected.size).toBe(UFC_ALL.length + prototypeIds.size);
+    for (const id of prototypeIds) expect(selected.has(id), id).toBe(true);
 
     for (const authored of UFC_ALL) {
       const { pack, question } = materializedQuestion(authored.id);
