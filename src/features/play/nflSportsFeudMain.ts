@@ -142,11 +142,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "franchises",
     prompts: [
-      "Name an NFL franchise with an iconic all-time brand.",
-      "Name a team that belongs in almost any NFL history conversation.",
-      "Name a franchise whose logo and colors feel instantly important.",
-      "Name an NFL team with a huge historical footprint.",
-      "Name a franchise you would include in an NFL blue-blood debate.",
+      {
+        prompt: "Name an NFL franchise with an iconic all-time brand.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "San Francisco 49ers", "New England Patriots", "Las Vegas Raiders", "New York Giants", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Philadelphia Eagles", "Buffalo Bills", "Washington Commanders", "Indianapolis Colts", "Los Angeles Rams", "Cleveland Browns"],
+      },
+      {
+        prompt: "Name a team that belongs in almost any NFL history conversation.",
+        answers: ["Green Bay Packers", "Chicago Bears", "New York Giants", "Pittsburgh Steelers", "Dallas Cowboys", "San Francisco 49ers", "New England Patriots", "Las Vegas Raiders"],
+        alsoAcceptedAnswers: ["Cleveland Browns", "Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Washington Commanders", "Indianapolis Colts", "Los Angeles Rams", "Philadelphia Eagles", "Buffalo Bills"],
+      },
+      {
+        prompt: "Name an NFL franchise whose logo and colors are instantly recognizable.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Chicago Bears", "Kansas City Chiefs", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Los Angeles Chargers", "Cleveland Browns", "New Orleans Saints", "Los Angeles Rams", "Philadelphia Eagles", "Denver Broncos", "Indianapolis Colts"],
+      },
+      {
+        prompt: "Name an NFL team with a huge historical footprint.",
+        answers: ["Green Bay Packers", "Chicago Bears", "New York Giants", "Pittsburgh Steelers", "Dallas Cowboys", "San Francisco 49ers", "New England Patriots", "Las Vegas Raiders"],
+        alsoAcceptedAnswers: ["Cleveland Browns", "Washington Commanders", "Miami Dolphins", "Kansas City Chiefs", "Denver Broncos", "Indianapolis Colts", "Los Angeles Rams", "Philadelphia Eagles", "Buffalo Bills"],
+      },
+      {
+        prompt: "Name a franchise you would include in an NFL blue-blood debate.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "San Francisco 49ers", "New England Patriots", "New York Giants", "Las Vegas Raiders", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Washington Commanders", "Los Angeles Rams", "Indianapolis Colts", "Cleveland Browns", "Philadelphia Eagles"],
+      },
     ],
     answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "San Francisco 49ers", "New England Patriots", "New York Giants", "Las Vegas Raiders", "Chicago Bears"],
     alsoAcceptedAnswers: ["Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Philadelphia Eagles", "Buffalo Bills", "Washington Commanders", "Indianapolis Colts", "Los Angeles Rams"],
@@ -156,11 +176,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "quarterbacks",
     prompts: [
-      "Name an all-time iconic NFL quarterback.",
-      "Name a quarterback almost every NFL fan would put in a legends conversation.",
-      "Name an NFL quarterback whose career defines an era.",
-      "Name a quarterback you would expect on an all-time NFL highlight reel.",
-      "Name a quarterback whose name alone sounds like NFL history.",
+      {
+        prompt: "Name an all-time iconic NFL quarterback.",
+        answers: ["Tom Brady", "Joe Montana", "Peyton Manning", "Patrick Mahomes", "Dan Marino", "Aaron Rodgers", "Brett Favre", "John Elway"],
+        alsoAcceptedAnswers: ["Johnny Unitas", "Steve Young", "Drew Brees", "Roger Staubach", "Troy Aikman", "Terry Bradshaw", "Kurt Warner", "Fran Tarkenton", "Ben Roethlisberger", "Lamar Jackson"],
+      },
+      {
+        prompt: "Name a quarterback almost every NFL fan would put in a legends conversation.",
+        answers: ["Tom Brady", "Joe Montana", "Peyton Manning", "Patrick Mahomes", "Johnny Unitas", "Aaron Rodgers", "Dan Marino", "Steve Young"],
+        alsoAcceptedAnswers: ["John Elway", "Brett Favre", "Drew Brees", "Roger Staubach", "Kurt Warner", "Fran Tarkenton", "Troy Aikman", "Terry Bradshaw", "Ben Roethlisberger"],
+      },
+      {
+        prompt: "Name an NFL quarterback whose career defines an era.",
+        answers: ["Tom Brady", "Joe Montana", "Peyton Manning", "Patrick Mahomes", "Brett Favre", "Aaron Rodgers", "Dan Marino", "Johnny Unitas"],
+        alsoAcceptedAnswers: ["Steve Young", "John Elway", "Drew Brees", "Roger Staubach", "Terry Bradshaw", "Troy Aikman", "Kurt Warner", "Fran Tarkenton", "Lamar Jackson"],
+      },
+      {
+        prompt: "Name a quarterback you would expect on an all-time NFL highlight reel.",
+        answers: ["Patrick Mahomes", "Joe Montana", "Tom Brady", "Dan Marino", "Aaron Rodgers", "Brett Favre", "John Elway", "Steve Young"],
+        alsoAcceptedAnswers: ["Peyton Manning", "Michael Vick", "Lamar Jackson", "Cam Newton", "Roger Staubach", "Kurt Warner", "Drew Brees", "Fran Tarkenton", "Randall Cunningham", "Troy Aikman"],
+      },
+      {
+        prompt: "Name a quarterback whose name alone sounds like NFL history.",
+        answers: ["Tom Brady", "Joe Montana", "Johnny Unitas", "Dan Marino", "Peyton Manning", "Brett Favre", "John Elway", "Roger Staubach"],
+        alsoAcceptedAnswers: ["Terry Bradshaw", "Joe Namath", "Steve Young", "Troy Aikman", "Drew Brees", "Fran Tarkenton", "Aaron Rodgers", "Patrick Mahomes", "Bart Starr"],
+      },
     ],
     answers: ["Tom Brady", "Joe Montana", "Peyton Manning", "Patrick Mahomes", "Aaron Rodgers", "John Elway", "Dan Marino", "Brett Favre"],
     alsoAcceptedAnswers: ["Drew Brees", "Steve Young", "Johnny Unitas", "Roger Staubach", "Kurt Warner", "Fran Tarkenton", "Troy Aikman", "Ben Roethlisberger"],
@@ -170,9 +210,21 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
-      "Name an all-time great NFL running back.",
-      "Name a running back whose highlights still look special decades later.",
-      "Name an NFL back you would put in a legends conversation.",
+      {
+        prompt: "Name an all-time great NFL running back.",
+        answers: ["Barry Sanders", "Walter Payton", "Emmitt Smith", "Jim Brown", "Adrian Peterson", "LaDainian Tomlinson", "Eric Dickerson", "Marshall Faulk"],
+        alsoAcceptedAnswers: ["Derrick Henry", "Earl Campbell", "Gale Sayers", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore", "Terrell Davis"],
+      },
+      {
+        prompt: "Name a running back whose highlights still look special decades later.",
+        answers: ["Barry Sanders", "Gale Sayers", "Walter Payton", "Bo Jackson", "Earl Campbell", "Eric Dickerson", "Jim Brown", "Tony Dorsett"],
+        alsoAcceptedAnswers: ["Adrian Peterson", "LaDainian Tomlinson", "Marcus Allen", "Marshall Faulk", "Thurman Thomas", "Emmitt Smith", "Derrick Henry", "Terrell Davis"],
+      },
+      {
+        prompt: "Name an NFL back you would put in a legends conversation.",
+        answers: ["Jim Brown", "Walter Payton", "Barry Sanders", "Emmitt Smith", "LaDainian Tomlinson", "Eric Dickerson", "Adrian Peterson", "Marshall Faulk"],
+        alsoAcceptedAnswers: ["Gale Sayers", "Earl Campbell", "Derrick Henry", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore", "Terrell Davis"],
+      },
       {
         prompt: "Name a running back who became the identity of an offense.",
         answers: [
@@ -205,7 +257,11 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
           "Frank Gore",
         ],
       },
-      "Name a back defenders would hate to tackle all afternoon.",
+      {
+        prompt: "Name a back defenders would hate to tackle all afternoon.",
+        answers: ["Derrick Henry", "Earl Campbell", "Marshawn Lynch", "Jim Brown", "Adrian Peterson", "Jerome Bettis", "Walter Payton", "Nick Chubb"],
+        alsoAcceptedAnswers: ["Christian Okoye", "Larry Csonka", "Jamal Lewis", "Bo Jackson", "Eddie George", "Steven Jackson", "Mike Alstott", "Ricky Williams", "Emmitt Smith"],
+      },
     ],
     answers: ["Barry Sanders", "Walter Payton", "Emmitt Smith", "Jim Brown", "Adrian Peterson", "LaDainian Tomlinson", "Eric Dickerson", "Derrick Henry"],
     alsoAcceptedAnswers: ["Marshall Faulk", "Earl Campbell", "Gale Sayers", "OJ Simpson", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore"],
@@ -215,11 +271,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "receivers",
     prompts: [
-      "Name an all-time great NFL wide receiver.",
-      "Name a receiver whose career belongs in any NFL legends discussion.",
-      "Name an NFL wideout whose highlights still get replayed.",
-      "Name a receiver who changed how defenses had to line up.",
-      "Name a wide receiver almost every football fan recognizes.",
+      {
+        prompt: "Name an all-time great NFL wide receiver.",
+        answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Calvin Johnson", "Larry Fitzgerald", "Marvin Harrison", "Cris Carter", "Steve Largent"],
+        alsoAcceptedAnswers: ["Julio Jones", "Andre Johnson", "Isaac Bruce", "Torry Holt", "Don Hutson", "Lance Alworth", "Antonio Brown", "Tyreek Hill"],
+      },
+      {
+        prompt: "Name a receiver whose career belongs in any NFL legends discussion.",
+        answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Larry Fitzgerald", "Calvin Johnson", "Marvin Harrison", "Steve Largent", "Cris Carter"],
+        alsoAcceptedAnswers: ["Don Hutson", "Lance Alworth", "Julio Jones", "Andre Johnson", "Isaac Bruce", "Torry Holt", "Antonio Brown", "Tyreek Hill"],
+      },
+      {
+        prompt: "Name an NFL wideout whose highlights still get replayed.",
+        answers: ["Randy Moss", "Calvin Johnson", "Jerry Rice", "Terrell Owens", "Julio Jones", "Odell Beckham Jr.", "Tyreek Hill", "Antonio Brown"],
+        alsoAcceptedAnswers: ["Larry Fitzgerald", "Marvin Harrison", "Steve Smith Sr.", "DeSean Jackson", "Cris Carter", "Andre Johnson", "Isaac Bruce", "Justin Jefferson"],
+      },
+      {
+        prompt: "Name a receiver who changed how defenses had to line up.",
+        answers: ["Randy Moss", "Jerry Rice", "Calvin Johnson", "Tyreek Hill", "Terrell Owens", "Julio Jones", "Antonio Brown", "Marvin Harrison"],
+        alsoAcceptedAnswers: ["Larry Fitzgerald", "Cris Carter", "Andre Johnson", "Steve Largent", "Lance Alworth", "Don Hutson", "Justin Jefferson", "Ja'Marr Chase"],
+      },
+      {
+        prompt: "Name a wide receiver almost every football fan recognizes.",
+        answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Calvin Johnson", "Larry Fitzgerald", "Julio Jones", "Tyreek Hill", "Odell Beckham Jr."],
+        alsoAcceptedAnswers: ["Marvin Harrison", "Cris Carter", "Antonio Brown", "Steve Smith Sr.", "Andre Johnson", "Justin Jefferson", "Ja'Marr Chase", "Steve Largent"],
+      },
     ],
     answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Calvin Johnson", "Larry Fitzgerald", "Marvin Harrison", "Cris Carter", "Tyreek Hill"],
     alsoAcceptedAnswers: ["Steve Largent", "Julio Jones", "Andre Johnson", "Isaac Bruce", "Torry Holt", "Don Hutson", "Lance Alworth", "Antonio Brown"],
