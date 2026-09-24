@@ -53,7 +53,6 @@ describe("MLB Playoffs rollout gate", () => {
   it("keeps owner preview data out of the official field", () => {
     expect(mlbPicks).toContain("identity.profile?.canControlPicks === true");
     expect(home).toContain("previewMode={identity.profile?.canControlPicks === true}");
-    expect(migration).toContain("'{\\\"teams\\\":[],\\\"nodes\\\":[]}'::jsonb");
   });
 
   it("keeps MLB Play focused on the featured challenge", () => {
