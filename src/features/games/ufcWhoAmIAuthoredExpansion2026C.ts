@@ -168,7 +168,7 @@ export const ufcWhoAmIAuthoredExpansion2026C: readonly UfcWhoAmIAuthoredIdentity
     ["Before the UFC, I had already fought professionally in EliteXC.",["profile"]],
     ["My fame originally exploded through widely circulated backyard and street-fight videos.",["profile"]],
     ["After the UFC, I returned to high-profile MMA competition with Bellator.",["profile"]],
-    ["Born Kevin Ferguson, I became famous worldwide under the fighting name Kimbo Slice.",["profile"]],
+    ["Born Kevin Ferguson, I became famous worldwide under a fighting nickname rather than my legal name.",["profile"]],
   ],[
     ["I arrived in mainstream MMA with celebrity that was unusual for someone with so few professional fights.",["profile"]],
     ["My UFC route came through reality television rather than a traditional contender climb.",["profile"]],
@@ -179,7 +179,7 @@ export const ufcWhoAmIAuthoredExpansion2026C: readonly UfcWhoAmIAuthoredIdentity
     ["I had previously headlined cards for EliteXC because of my drawing power.",["profile"]],
     ["That drawing power came from internet videos of unsanctioned fights that spread widely before my MMA career.",["profile"]],
     ["My legal name was Kevin Ferguson, but almost no fight fan knew me by that name first.",["profile"]],
-    ["The bearded heavyweight internet sensation known as Kimbo Slice became one of MMA’s earliest viral crossover stars.",["profile"]],
+    ["The bearded heavyweight internet sensation became one of MMA’s earliest viral crossover stars.",["profile"]],
   ]),
   identity("ufc:cm-punk","CM Punk",{
     stats:"https://ufcstats.com/statistics/fighters",
@@ -206,7 +206,7 @@ export const ufcWhoAmIAuthoredExpansion2026C: readonly UfcWhoAmIAuthoredIdentity
     ["That result was ultimately recorded as a no contest rather than a loss.",["stats","profile"]],
     ["My pre-UFC fame came from years as one of WWE’s biggest stars.",["wwe"]],
     ["The phrase “Best in the World” and a long WWE championship reign were part of my identity before MMA.",["wwe"]],
-    ["The professional-wrestling superstar CM Punk made one of the UFC’s most unusual celebrity transitions.",["wwe","profile"]],
+    ["The professional-wrestling superstar made one of the UFC’s most unusual celebrity transitions.",["wwe","profile"]],
   ]),
   identity("ufc:mike-perry","Mike Perry",{
     stats:"https://ufcstats.com/statistics/fighters",
