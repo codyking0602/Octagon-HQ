@@ -176,8 +176,12 @@ export function IdentityProvider({
   return <IdentityContext.Provider value={value}>{children}</IdentityContext.Provider>;
 }
 
+export function useOptionalIdentity() {
+  return useContext(IdentityContext);
+}
+
 export function useIdentity() {
-  const value = useContext(IdentityContext);
+  const value = useOptionalIdentity();
   if (!value) throw new Error("useIdentity must be used inside IdentityProvider");
   return value;
 }
