@@ -55,6 +55,6 @@ describe("Sports Feud presentation assets", () => {
 
     expect(sportsFeudHostNumber("nfl", "2026-09-25")).toBe(1);
     expect(sportsFeudHostNumber("nfl", "2026-10-06")).toBe(2);
-    expect(sportsFeudHostNumber("nfl", "2026-10-20")).toBe(3);
+    expect(sportsFeudHostNumber("nfl", "2026-10-21")).toBe(3);
   });
 });
