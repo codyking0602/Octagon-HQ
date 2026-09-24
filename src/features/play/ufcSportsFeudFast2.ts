@@ -34,14 +34,14 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Jorge Masvidal",
           "Kayla Harrison",
           "Joanna Jedrzejczyk",
-          "Thiago Alves",
-          "Yoel Romero",
-          "Junior dos Santos"
-        ],
-        "alsoAcceptedAnswers": [
           "Robbie Lawler",
           "Colby Covington",
-          "Alexandre Pantoja",
+          "Alexandre Pantoja"
+        ],
+        "alsoAcceptedAnswers": [
+          "Thiago Alves",
+          "Yoel Romero",
+          "Junior dos Santos",
           "Gleison Tibau",
           "Renato Moicano"
         ]
@@ -49,18 +49,18 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
       {
         "prompt": "Name a UFC name you connect with ATT.",
         "answers": [
-          "Dustin Poirier",
           "Amanda Nunes",
+          "Dustin Poirier",
           "Jorge Masvidal",
-          "Colby Covington",
           "Joanna Jedrzejczyk",
           "Kayla Harrison",
-          "Thiago Alves",
-          "Yoel Romero"
+          "Colby Covington",
+          "Robbie Lawler",
+          "Thiago Alves"
         ],
         "alsoAcceptedAnswers": [
+          "Yoel Romero",
           "Junior dos Santos",
-          "Robbie Lawler",
           "Alexandre Pantoja",
           "Gleison Tibau",
           "Renato Moicano"
@@ -69,14 +69,14 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
       {
         "prompt": "Name a fighter whose career has included American Top Team.",
         "answers": [
-          "Amanda Nunes",
           "Dustin Poirier",
+          "Amanda Nunes",
           "Jorge Masvidal",
-          "Robbie Lawler",
           "Joanna Jedrzejczyk",
           "Kayla Harrison",
           "Thiago Alves",
-          "Yoel Romero"
+          "Yoel Romero",
+          "Robbie Lawler"
         ],
         "alsoAcceptedAnswers": [
           "Junior dos Santos",
@@ -92,16 +92,16 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Amanda Nunes",
           "Dustin Poirier",
           "Jorge Masvidal",
-          "Alexandre Pantoja",
           "Joanna Jedrzejczyk",
           "Kayla Harrison",
           "Thiago Alves",
-          "Yoel Romero"
+          "Alexandre Pantoja",
+          "Colby Covington"
         ],
         "alsoAcceptedAnswers": [
+          "Yoel Romero",
           "Junior dos Santos",
           "Robbie Lawler",
-          "Colby Covington",
           "Gleison Tibau",
           "Renato Moicano"
         ]
@@ -223,12 +223,12 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Cain Velasquez",
           "Islam Makhachev",
           "Luke Rockhold",
+          "Umar Nurmagomedov",
           "Josh Thomson",
-          "Jon Fitch",
-          "Josh Koscheck"
+          "Jon Fitch"
         ],
         "alsoAcceptedAnswers": [
-          "Umar Nurmagomedov",
+          "Josh Koscheck",
           "Abubakar Nurmagomedov",
           "Mike Swick",
           "Gray Maynard"
@@ -240,14 +240,14 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Khabib Nurmagomedov",
           "Daniel Cormier",
           "Islam Makhachev",
-          "Luke Rockhold",
           "Cain Velasquez",
+          "Luke Rockhold",
+          "Umar Nurmagomedov",
           "Josh Thomson",
-          "Jon Fitch",
-          "Josh Koscheck"
+          "Jon Fitch"
         ],
         "alsoAcceptedAnswers": [
-          "Umar Nurmagomedov",
+          "Josh Koscheck",
           "Abubakar Nurmagomedov",
           "Mike Swick",
           "Gray Maynard"
@@ -259,8 +259,8 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Khabib Nurmagomedov",
           "Daniel Cormier",
           "Cain Velasquez",
-          "Luke Rockhold",
           "Islam Makhachev",
+          "Luke Rockhold",
           "Josh Thomson",
           "Jon Fitch",
           "Josh Koscheck"
@@ -280,13 +280,13 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Islam Makhachev",
           "Cain Velasquez",
           "Luke Rockhold",
-          "Josh Thomson",
-          "Jon Fitch",
-          "Josh Koscheck"
-        ],
-        "alsoAcceptedAnswers": [
           "Umar Nurmagomedov",
           "Abubakar Nurmagomedov",
+          "Josh Thomson"
+        ],
+        "alsoAcceptedAnswers": [
+          "Jon Fitch",
+          "Josh Koscheck",
           "Mike Swick",
           "Gray Maynard"
         ]
@@ -361,9 +361,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Quick"
         ]
       },
-      {
-        "name": "Gray Maynard"
-      }
+      "Gray Maynard"
     ]
   },
   {
@@ -397,12 +395,12 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Kai Kara-France",
           "Carlos Ulberg",
           "Brad Riddell",
-          "Shane Young",
-          "Blood Diamond"
-        ],
-        "alsoAcceptedAnswers": [
           "Kevin Jousset",
           "Navajo Stirling"
+        ],
+        "alsoAcceptedAnswers": [
+          "Shane Young",
+          "Blood Diamond"
         ]
       },
       {
@@ -411,14 +409,14 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Israel Adesanya",
           "Alexander Volkanovski",
           "Dan Hooker",
-          "Carlos Ulberg",
           "Kai Kara-France",
+          "Carlos Ulberg",
           "Brad Riddell",
-          "Shane Young",
-          "Blood Diamond"
+          "Blood Diamond",
+          "Kevin Jousset"
         ],
         "alsoAcceptedAnswers": [
-          "Kevin Jousset",
+          "Shane Young",
           "Navajo Stirling"
         ]
       },
@@ -432,11 +430,11 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Carlos Ulberg",
           "Brad Riddell",
           "Shane Young",
-          "Blood Diamond"
+          "Navajo Stirling"
         ],
         "alsoAcceptedAnswers": [
-          "Kevin Jousset",
-          "Navajo Stirling"
+          "Blood Diamond",
+          "Kevin Jousset"
         ]
       },
       {
@@ -445,15 +443,15 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Israel Adesanya",
           "Alexander Volkanovski",
           "Dan Hooker",
-          "Carlos Ulberg",
           "Kai Kara-France",
+          "Carlos Ulberg",
           "Brad Riddell",
-          "Shane Young",
-          "Blood Diamond"
-        ],
-        "alsoAcceptedAnswers": [
           "Kevin Jousset",
           "Navajo Stirling"
+        ],
+        "alsoAcceptedAnswers": [
+          "Shane Young",
+          "Blood Diamond"
         ]
       }
     ],
@@ -495,9 +493,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Quake"
         ]
       },
-      {
-        "name": "Shane Young"
-      },
+      "Shane Young",
       {
         "name": "Blood Diamond",
         "aliases": [
@@ -552,9 +548,9 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Cody Garbrandt",
           "Chad Mendes",
           "Joseph Benavidez",
-          "Paige VanZant",
           "Andre Fili",
-          "Song Yadong"
+          "Song Yadong",
+          "Paige VanZant"
         ],
         "alsoAcceptedAnswers": [
           "Sage Northcutt",
@@ -567,13 +563,13 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         "prompt": "Name a UFC name you connect with Team Alpha Male.",
         "answers": [
           "Urijah Faber",
-          "Cody Garbrandt",
           "TJ Dillashaw",
-          "Joseph Benavidez",
+          "Cody Garbrandt",
           "Chad Mendes",
-          "Paige VanZant",
+          "Joseph Benavidez",
+          "Song Yadong",
           "Andre Fili",
-          "Song Yadong"
+          "Paige VanZant"
         ],
         "alsoAcceptedAnswers": [
           "Sage Northcutt",
@@ -586,13 +582,13 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         "prompt": "Name a fighter whose career included the Sacramento-based camp.",
         "answers": [
           "Urijah Faber",
+          "TJ Dillashaw",
           "Cody Garbrandt",
           "Chad Mendes",
-          "Song Yadong",
-          "TJ Dillashaw",
           "Joseph Benavidez",
+          "Andre Fili",
           "Paige VanZant",
-          "Andre Fili"
+          "Song Yadong"
         ],
         "alsoAcceptedAnswers": [
           "Sage Northcutt",
@@ -609,12 +605,12 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Cody Garbrandt",
           "Chad Mendes",
           "Joseph Benavidez",
-          "Paige VanZant",
+          "Song Yadong",
           "Andre Fili",
-          "Song Yadong"
+          "Sage Northcutt"
         ],
         "alsoAcceptedAnswers": [
-          "Sage Northcutt",
+          "Paige VanZant",
           "Cynthia Calvillo",
           "Alex Perez",
           "Darren Elkins"
@@ -690,9 +686,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Perez"
         ]
       },
-      {
-        "name": "Darren Elkins"
-      }
+      "Darren Elkins"
     ]
   },
   {
@@ -709,8 +703,8 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Rashad Evans",
           "Donald Cerrone",
           "Diego Sanchez",
-          "Michelle Waterson-Gomez",
-          "Andrei Arlovski"
+          "Andrei Arlovski",
+          "Michelle Waterson-Gomez"
         ],
         "alsoAcceptedAnswers": [
           "Alistair Overeem",
@@ -728,11 +722,11 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Rashad Evans",
           "Donald Cerrone",
           "Diego Sanchez",
-          "Michelle Waterson-Gomez",
-          "Andrei Arlovski"
+          "Andrei Arlovski",
+          "Alistair Overeem"
         ],
         "alsoAcceptedAnswers": [
-          "Alistair Overeem",
+          "Michelle Waterson-Gomez",
           "Travis Browne",
           "John Dodson",
           "Tim Kennedy"
@@ -744,8 +738,8 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Jon Jones",
           "Holly Holm",
           "Carlos Condit",
-          "Donald Cerrone",
           "Rashad Evans",
+          "Donald Cerrone",
           "Diego Sanchez",
           "Michelle Waterson-Gomez",
           "Andrei Arlovski"
@@ -763,11 +757,11 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Jon Jones",
           "Holly Holm",
           "Carlos Condit",
-          "Diego Sanchez",
           "Rashad Evans",
           "Donald Cerrone",
-          "Michelle Waterson-Gomez",
-          "Andrei Arlovski"
+          "Diego Sanchez",
+          "Andrei Arlovski",
+          "Michelle Waterson-Gomez"
         ],
         "alsoAcceptedAnswers": [
           "Alistair Overeem",
@@ -785,11 +779,11 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Rashad Evans",
           "Donald Cerrone",
           "Diego Sanchez",
-          "Michelle Waterson-Gomez",
-          "Andrei Arlovski"
+          "Andrei Arlovski",
+          "Alistair Overeem"
         ],
         "alsoAcceptedAnswers": [
-          "Alistair Overeem",
+          "Michelle Waterson-Gomez",
           "Travis Browne",
           "John Dodson",
           "Tim Kennedy"
@@ -855,9 +849,7 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "The Reem"
         ]
       },
-      {
-        "name": "Travis Browne"
-      },
+      "Travis Browne",
       {
         "name": "John Dodson",
         "aliases": [
@@ -884,22 +876,22 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Jose Aldo",
           "Amanda Nunes",
           "Charles Oliveira",
+          "Alex Pereira",
           "Fabricio Werdum",
           "Junior dos Santos",
-          "Lyoto Machida",
-          "Vitor Belfort"
+          "Lyoto Machida"
         ],
         "alsoAcceptedAnswers": [
+          "Vitor Belfort",
           "Mauricio Rua",
           "Wanderlei Silva",
           "Glover Teixeira",
-          "Alex Pereira",
           "Deiveson Figueiredo",
           "Paulo Costa",
-          "Alexandre Pantoja",
-          "Renato Moicano",
           "Edson Barboza",
-          "Ronaldo Souza"
+          "Ronaldo Souza",
+          "Renato Moicano",
+          "Alexandre Pantoja"
         ]
       },
       {
@@ -909,22 +901,22 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Jose Aldo",
           "Amanda Nunes",
           "Charles Oliveira",
+          "Alex Pereira",
           "Fabricio Werdum",
           "Junior dos Santos",
-          "Lyoto Machida",
           "Vitor Belfort"
         ],
         "alsoAcceptedAnswers": [
+          "Lyoto Machida",
           "Mauricio Rua",
           "Wanderlei Silva",
           "Glover Teixeira",
-          "Alex Pereira",
           "Deiveson Figueiredo",
           "Paulo Costa",
-          "Alexandre Pantoja",
-          "Renato Moicano",
           "Edson Barboza",
-          "Ronaldo Souza"
+          "Ronaldo Souza",
+          "Renato Moicano",
+          "Alexandre Pantoja"
         ]
       },
       {
@@ -933,23 +925,23 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Anderson Silva",
           "Jose Aldo",
           "Amanda Nunes",
-          "Alex Pereira",
           "Charles Oliveira",
-          "Fabricio Werdum",
-          "Junior dos Santos",
+          "Vitor Belfort",
+          "Wanderlei Silva",
+          "Mauricio Rua",
           "Lyoto Machida"
         ],
         "alsoAcceptedAnswers": [
-          "Vitor Belfort",
-          "Mauricio Rua",
-          "Wanderlei Silva",
+          "Fabricio Werdum",
+          "Junior dos Santos",
           "Glover Teixeira",
+          "Alex Pereira",
           "Deiveson Figueiredo",
           "Paulo Costa",
-          "Alexandre Pantoja",
-          "Renato Moicano",
           "Edson Barboza",
-          "Ronaldo Souza"
+          "Ronaldo Souza",
+          "Renato Moicano",
+          "Alexandre Pantoja"
         ]
       },
       {
@@ -959,22 +951,22 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Jose Aldo",
           "Amanda Nunes",
           "Charles Oliveira",
-          "Alexandre Pantoja",
-          "Fabricio Werdum",
-          "Junior dos Santos",
-          "Lyoto Machida"
+          "Alex Pereira",
+          "Glover Teixeira",
+          "Deiveson Figueiredo",
+          "Paulo Costa"
         ],
         "alsoAcceptedAnswers": [
+          "Fabricio Werdum",
+          "Junior dos Santos",
+          "Lyoto Machida",
           "Vitor Belfort",
           "Mauricio Rua",
           "Wanderlei Silva",
-          "Glover Teixeira",
-          "Alex Pereira",
-          "Deiveson Figueiredo",
-          "Paulo Costa",
-          "Renato Moicano",
           "Edson Barboza",
-          "Ronaldo Souza"
+          "Ronaldo Souza",
+          "Renato Moicano",
+          "Alexandre Pantoja"
         ]
       },
       {
@@ -983,23 +975,23 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Anderson Silva",
           "Jose Aldo",
           "Amanda Nunes",
-          "Charles Oliveira",
+          "Vitor Belfort",
+          "Wanderlei Silva",
           "Fabricio Werdum",
           "Junior dos Santos",
-          "Lyoto Machida",
-          "Vitor Belfort"
+          "Charles Oliveira"
         ],
         "alsoAcceptedAnswers": [
+          "Lyoto Machida",
           "Mauricio Rua",
-          "Wanderlei Silva",
           "Glover Teixeira",
           "Alex Pereira",
           "Deiveson Figueiredo",
           "Paulo Costa",
-          "Alexandre Pantoja",
-          "Renato Moicano",
           "Edson Barboza",
-          "Ronaldo Souza"
+          "Ronaldo Souza",
+          "Renato Moicano",
+          "Alexandre Pantoja"
         ]
       }
     ],
@@ -1093,18 +1085,6 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         ]
       },
       {
-        "name": "Alexandre Pantoja",
-        "aliases": [
-          "Pantoja"
-        ]
-      },
-      {
-        "name": "Renato Moicano",
-        "aliases": [
-          "Moicano"
-        ]
-      },
-      {
         "name": "Edson Barboza",
         "aliases": [
           "Barboza"
@@ -1115,6 +1095,18 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         "aliases": [
           "Jacare",
           "Jacaré"
+        ]
+      },
+      {
+        "name": "Renato Moicano",
+        "aliases": [
+          "Moicano"
+        ]
+      },
+      {
+        "name": "Alexandre Pantoja",
+        "aliases": [
+          "Pantoja"
         ]
       }
     ]
@@ -1149,15 +1141,15 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         "answers": [
           "Conor McGregor",
           "Michael Bisping",
-          "Tom Aspinall",
           "Leon Edwards",
+          "Tom Aspinall",
           "Paddy Pimblett",
           "Darren Till",
-          "Molly McCann",
+          "Ian Machado Garry",
           "Dan Hardy"
         ],
         "alsoAcceptedAnswers": [
-          "Ian Machado Garry",
+          "Molly McCann",
           "Arnold Allen",
           "Paul Craig",
           "Michael Page",
@@ -1170,14 +1162,14 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Conor McGregor",
           "Michael Bisping",
           "Leon Edwards",
-          "Paddy Pimblett",
           "Tom Aspinall",
+          "Paddy Pimblett",
           "Darren Till",
           "Molly McCann",
-          "Dan Hardy"
+          "Ian Machado Garry"
         ],
         "alsoAcceptedAnswers": [
-          "Ian Machado Garry",
+          "Dan Hardy",
           "Arnold Allen",
           "Paul Craig",
           "Michael Page",
@@ -1189,16 +1181,16 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         "answers": [
           "Conor McGregor",
           "Michael Bisping",
-          "Tom Aspinall",
-          "Ian Machado Garry",
           "Leon Edwards",
+          "Tom Aspinall",
           "Paddy Pimblett",
           "Darren Till",
-          "Molly McCann"
+          "Ian Machado Garry",
+          "Arnold Allen"
         ],
         "alsoAcceptedAnswers": [
+          "Molly McCann",
           "Dan Hardy",
-          "Arnold Allen",
           "Paul Craig",
           "Michael Page",
           "Nathaniel Wood"
@@ -1209,18 +1201,18 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         "answers": [
           "Conor McGregor",
           "Michael Bisping",
-          "Tom Aspinall",
           "Leon Edwards",
+          "Tom Aspinall",
           "Paddy Pimblett",
+          "Ian Machado Garry",
           "Darren Till",
-          "Molly McCann",
-          "Dan Hardy"
+          "Michael Page"
         ],
         "alsoAcceptedAnswers": [
-          "Ian Machado Garry",
+          "Molly McCann",
+          "Dan Hardy",
           "Arnold Allen",
           "Paul Craig",
-          "Michael Page",
           "Nathaniel Wood"
         ]
       }
@@ -1323,10 +1315,10 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Islam Makhachev",
           "Umar Nurmagomedov",
           "Magomed Ankalaev",
+          "Zabit Magomedsharipov",
           "Said Nurmagomedov",
-          "Abubakar Nurmagomedov",
           "Tagir Ulanbekov",
-          "Zabit Magomedsharipov"
+          "Abubakar Nurmagomedov"
         ],
         "alsoAcceptedAnswers": [
           "Sharabutdin Magomedov",
@@ -1342,15 +1334,15 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Islam Makhachev",
           "Umar Nurmagomedov",
           "Magomed Ankalaev",
-          "Said Nurmagomedov",
+          "Zabit Magomedsharipov",
           "Abubakar Nurmagomedov",
           "Tagir Ulanbekov",
-          "Zabit Magomedsharipov"
+          "Ramazan Emeev"
         ],
         "alsoAcceptedAnswers": [
+          "Said Nurmagomedov",
           "Sharabutdin Magomedov",
           "Muslim Salikhov",
-          "Ramazan Emeev",
           "Abus Magomedov"
         ]
       },
@@ -1360,14 +1352,14 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Khabib Nurmagomedov",
           "Islam Makhachev",
           "Umar Nurmagomedov",
-          "Zabit Magomedsharipov",
           "Magomed Ankalaev",
+          "Zabit Magomedsharipov",
+          "Sharabutdin Magomedov",
           "Said Nurmagomedov",
-          "Abubakar Nurmagomedov",
           "Tagir Ulanbekov"
         ],
         "alsoAcceptedAnswers": [
-          "Sharabutdin Magomedov",
+          "Abubakar Nurmagomedov",
           "Muslim Salikhov",
           "Ramazan Emeev",
           "Abus Magomedov"
@@ -1380,15 +1372,15 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Islam Makhachev",
           "Umar Nurmagomedov",
           "Magomed Ankalaev",
+          "Zabit Magomedsharipov",
+          "Sharabutdin Magomedov",
+          "Ramazan Emeev",
+          "Muslim Salikhov"
+        ],
+        "alsoAcceptedAnswers": [
           "Said Nurmagomedov",
           "Abubakar Nurmagomedov",
           "Tagir Ulanbekov",
-          "Zabit Magomedsharipov"
-        ],
-        "alsoAcceptedAnswers": [
-          "Sharabutdin Magomedov",
-          "Muslim Salikhov",
-          "Ramazan Emeev",
           "Abus Magomedov"
         ]
       },
@@ -1398,14 +1390,14 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Khabib Nurmagomedov",
           "Islam Makhachev",
           "Umar Nurmagomedov",
-          "Zabit Magomedsharipov",
           "Magomed Ankalaev",
+          "Zabit Magomedsharipov",
+          "Sharabutdin Magomedov",
           "Said Nurmagomedov",
-          "Abubakar Nurmagomedov",
           "Tagir Ulanbekov"
         ],
         "alsoAcceptedAnswers": [
-          "Sharabutdin Magomedov",
+          "Abubakar Nurmagomedov",
           "Muslim Salikhov",
           "Ramazan Emeev",
           "Abus Magomedov"
@@ -1502,75 +1494,9 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Ronda Rousey",
           "Valentina Shevchenko",
           "Joanna Jedrzejczyk",
-          "Rose Namajunas",
           "Zhang Weili",
-          "Holly Holm",
-          "Cris Cyborg"
-        ],
-        "alsoAcceptedAnswers": [
-          "Miesha Tate",
-          "Julianna Pena",
-          "Alexa Grasso",
-          "Jessica Andrade",
-          "Carla Esparza",
-          "Kayla Harrison",
-          "Mackenzie Dern"
-        ]
-      },
-      {
-        "prompt": "Name a female fighter who became a major UFC star.",
-        "answers": [
-          "Amanda Nunes",
-          "Ronda Rousey",
-          "Valentina Shevchenko",
-          "Joanna Jedrzejczyk",
           "Rose Namajunas",
-          "Zhang Weili",
-          "Holly Holm",
-          "Cris Cyborg"
-        ],
-        "alsoAcceptedAnswers": [
-          "Miesha Tate",
-          "Julianna Pena",
-          "Alexa Grasso",
-          "Jessica Andrade",
-          "Carla Esparza",
           "Kayla Harrison",
-          "Mackenzie Dern"
-        ]
-      },
-      {
-        "prompt": "Name a women's champion or contender almost every MMA fan knows.",
-        "answers": [
-          "Ronda Rousey",
-          "Amanda Nunes",
-          "Holly Holm",
-          "Valentina Shevchenko",
-          "Joanna Jedrzejczyk",
-          "Rose Namajunas",
-          "Zhang Weili",
-          "Cris Cyborg"
-        ],
-        "alsoAcceptedAnswers": [
-          "Miesha Tate",
-          "Julianna Pena",
-          "Alexa Grasso",
-          "Jessica Andrade",
-          "Carla Esparza",
-          "Kayla Harrison",
-          "Mackenzie Dern"
-        ]
-      },
-      {
-        "prompt": "Name a fighter who helped shape women's MMA in the UFC.",
-        "answers": [
-          "Ronda Rousey",
-          "Amanda Nunes",
-          "Joanna Jedrzejczyk",
-          "Kayla Harrison",
-          "Valentina Shevchenko",
-          "Rose Namajunas",
-          "Zhang Weili",
           "Holly Holm"
         ],
         "alsoAcceptedAnswers": [
@@ -1584,6 +1510,72 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         ]
       },
       {
+        "prompt": "Name a female fighter who became a major UFC star.",
+        "answers": [
+          "Ronda Rousey",
+          "Amanda Nunes",
+          "Valentina Shevchenko",
+          "Joanna Jedrzejczyk",
+          "Zhang Weili",
+          "Rose Namajunas",
+          "Kayla Harrison",
+          "Holly Holm"
+        ],
+        "alsoAcceptedAnswers": [
+          "Cris Cyborg",
+          "Miesha Tate",
+          "Julianna Pena",
+          "Alexa Grasso",
+          "Jessica Andrade",
+          "Carla Esparza",
+          "Mackenzie Dern"
+        ]
+      },
+      {
+        "prompt": "Name a women's champion or contender almost every MMA fan knows.",
+        "answers": [
+          "Ronda Rousey",
+          "Amanda Nunes",
+          "Valentina Shevchenko",
+          "Zhang Weili",
+          "Rose Namajunas",
+          "Joanna Jedrzejczyk",
+          "Holly Holm",
+          "Kayla Harrison"
+        ],
+        "alsoAcceptedAnswers": [
+          "Cris Cyborg",
+          "Miesha Tate",
+          "Julianna Pena",
+          "Alexa Grasso",
+          "Jessica Andrade",
+          "Carla Esparza",
+          "Mackenzie Dern"
+        ]
+      },
+      {
+        "prompt": "Name a fighter who helped shape women's MMA in the UFC.",
+        "answers": [
+          "Ronda Rousey",
+          "Amanda Nunes",
+          "Joanna Jedrzejczyk",
+          "Valentina Shevchenko",
+          "Miesha Tate",
+          "Holly Holm",
+          "Rose Namajunas",
+          "Zhang Weili"
+        ],
+        "alsoAcceptedAnswers": [
+          "Cris Cyborg",
+          "Julianna Pena",
+          "Alexa Grasso",
+          "Jessica Andrade",
+          "Carla Esparza",
+          "Kayla Harrison",
+          "Mackenzie Dern"
+        ]
+      },
+      {
         "prompt": "Name a woman you would expect in a UFC history conversation.",
         "answers": [
           "Amanda Nunes",
@@ -1592,16 +1584,16 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Joanna Jedrzejczyk",
           "Zhang Weili",
           "Rose Namajunas",
-          "Holly Holm",
-          "Cris Cyborg"
+          "Kayla Harrison",
+          "Miesha Tate"
         ],
         "alsoAcceptedAnswers": [
-          "Miesha Tate",
+          "Holly Holm",
+          "Cris Cyborg",
           "Julianna Pena",
           "Alexa Grasso",
           "Jessica Andrade",
           "Carla Esparza",
-          "Kayla Harrison",
           "Mackenzie Dern"
         ]
       }
@@ -1713,22 +1705,22 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
         "answers": [
           "Stipe Miocic",
           "Francis Ngannou",
+          "Brock Lesnar",
           "Cain Velasquez",
           "Daniel Cormier",
+          "Jon Jones",
           "Randy Couture",
-          "Junior dos Santos",
-          "Derrick Lewis",
-          "Brock Lesnar"
+          "Derrick Lewis"
         ],
         "alsoAcceptedAnswers": [
+          "Junior dos Santos",
           "Fabricio Werdum",
           "Andrei Arlovski",
           "Frank Mir",
           "Mark Hunt",
           "Alistair Overeem",
           "Tom Aspinall",
-          "Ciryl Gane",
-          "Jon Jones"
+          "Ciryl Gane"
         ]
       },
       {
@@ -1737,44 +1729,44 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Stipe Miocic",
           "Francis Ngannou",
           "Cain Velasquez",
-          "Randy Couture",
+          "Brock Lesnar",
           "Daniel Cormier",
+          "Jon Jones",
           "Junior dos Santos",
-          "Derrick Lewis",
-          "Brock Lesnar"
+          "Tom Aspinall"
         ],
         "alsoAcceptedAnswers": [
+          "Randy Couture",
+          "Derrick Lewis",
           "Fabricio Werdum",
           "Andrei Arlovski",
           "Frank Mir",
           "Mark Hunt",
           "Alistair Overeem",
-          "Tom Aspinall",
-          "Ciryl Gane",
-          "Jon Jones"
+          "Ciryl Gane"
         ]
       },
       {
         "prompt": "Name a big man whose UFC fights drew major attention.",
         "answers": [
-          "Stipe Miocic",
-          "Francis Ngannou",
           "Brock Lesnar",
+          "Francis Ngannou",
+          "Jon Jones",
+          "Stipe Miocic",
+          "Daniel Cormier",
           "Derrick Lewis",
           "Cain Velasquez",
-          "Daniel Cormier",
-          "Randy Couture",
-          "Junior dos Santos"
+          "Tom Aspinall"
         ],
         "alsoAcceptedAnswers": [
+          "Randy Couture",
+          "Junior dos Santos",
           "Fabricio Werdum",
           "Andrei Arlovski",
           "Frank Mir",
           "Mark Hunt",
           "Alistair Overeem",
-          "Tom Aspinall",
-          "Ciryl Gane",
-          "Jon Jones"
+          "Ciryl Gane"
         ]
       },
       {
@@ -1784,13 +1776,13 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Francis Ngannou",
           "Stipe Miocic",
           "Jon Jones",
-          "Cain Velasquez",
           "Daniel Cormier",
-          "Randy Couture",
-          "Junior dos Santos"
+          "Derrick Lewis",
+          "Cain Velasquez",
+          "Randy Couture"
         ],
         "alsoAcceptedAnswers": [
-          "Derrick Lewis",
+          "Junior dos Santos",
           "Fabricio Werdum",
           "Andrei Arlovski",
           "Frank Mir",
@@ -1807,20 +1799,20 @@ export const UFC_SPORTS_FEUD_FAST_2 = expandSportsFeudFamilies("ufc-fast2", [
           "Randy Couture",
           "Cain Velasquez",
           "Francis Ngannou",
-          "Jon Jones",
-          "Ciryl Gane",
           "Daniel Cormier",
-          "Junior dos Santos"
+          "Jon Jones",
+          "Junior dos Santos",
+          "Fabricio Werdum"
         ],
         "alsoAcceptedAnswers": [
           "Derrick Lewis",
           "Brock Lesnar",
-          "Fabricio Werdum",
           "Andrei Arlovski",
           "Frank Mir",
           "Mark Hunt",
           "Alistair Overeem",
-          "Tom Aspinall"
+          "Tom Aspinall",
+          "Ciryl Gane"
         ]
       }
     ],
