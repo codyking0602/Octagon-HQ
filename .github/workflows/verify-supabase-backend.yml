@@ -122,7 +122,8 @@ jobs:
             supabase/tests/stage22_draft_room_launch_notification.sql \
             supabase/tests/stage23_ty_miller_contender_notification.sql \
             supabase/tests/pick_monitoring_truthful_decisions.sql \
-            supabase/tests/home_football_spotlight_media.sql
+            supabase/tests/home_football_spotlight_media.sql \
+            supabase/tests/mlb_playoffs_foundation.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
