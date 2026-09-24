@@ -6,11 +6,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
-      "Name a coach who won a college football national championship from 2000 through 2024.",
-      "Name a national-title-winning college football coach from the 2000 through 2024 seasons.",
-      "Name a coach you remember winning a college football championship between 2000 and 2024.",
-      "Name a college coach whose résumé includes a national title from 2000 through 2024.",
-      "Name a championship coach from the 2000 through 2024 college football seasons.",
+      {
+        prompt: "Name a coach who won a college football national championship from 2000 through 2024.",
+        answers: ["Nick Saban","Kirby Smart","Urban Meyer","Dabo Swinney","Pete Carroll","Jim Harbaugh","Mack Brown","Bob Stoops"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+      },
+      {
+        prompt: "Name a national-title-winning college football coach from the 2000 through 2024 seasons.",
+        answers: ["Nick Saban","Urban Meyer","Kirby Smart","Dabo Swinney","Pete Carroll","Bob Stoops","Mack Brown","Jim Harbaugh"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+      },
+      {
+        prompt: "Name a coach you remember winning a college football championship between 2000 and 2024.",
+        answers: ["Nick Saban","Kirby Smart","Urban Meyer","Dabo Swinney","Pete Carroll","Jim Harbaugh","Les Miles","Jimbo Fisher"],
+        alsoAcceptedAnswers: ["Mack Brown","Bob Stoops","Larry Coker","Jim Tressel","Gene Chizik","Ed Orgeron","Ryan Day"],
+      },
+      {
+        prompt: "Name a college coach whose résumé includes a national title from 2000 through 2024.",
+        answers: ["Nick Saban","Urban Meyer","Kirby Smart","Dabo Swinney","Pete Carroll","Mack Brown","Bob Stoops","Jim Harbaugh"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+      },
+      {
+        prompt: "Name a championship coach from the 2000 through 2024 college football seasons.",
+        answers: ["Nick Saban","Kirby Smart","Urban Meyer","Dabo Swinney","Pete Carroll","Jim Harbaugh","Bob Stoops","Mack Brown"],
+        alsoAcceptedAnswers: ["Larry Coker","Jim Tressel","Les Miles","Gene Chizik","Jimbo Fisher","Ed Orgeron","Ryan Day"],
+      },
     ],
     answers: [
       "Nick Saban",
@@ -29,11 +49,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
-      "Name an offensive-minded college football coach.",
-      "Name a college coach known for creative offense.",
-      "Name a coach whose scheme became part of his reputation.",
-      "Name a college coach you associate with explosive offense.",
-      "Name a coach whose playbook changed how people talked about offense.",
+      {
+        prompt: "Name an offensive-minded college football coach.",
+        answers: ["Steve Spurrier","Mike Leach","Chip Kelly","Lincoln Riley","Gus Malzahn","Lane Kiffin","Hal Mumme","Rich Rodriguez"],
+        alsoAcceptedAnswers: ["Josh Heupel","Kliff Kingsbury","Jeff Brohm","Paul Johnson","June Jones","Bobby Petrino","Kevin Sumlin"],
+      },
+      {
+        prompt: "Name a college coach known for creative offense.",
+        answers: ["Mike Leach","Chip Kelly","Lincoln Riley","Steve Spurrier","Lane Kiffin","Gus Malzahn","Josh Heupel","Rich Rodriguez"],
+        alsoAcceptedAnswers: ["Hal Mumme","Kliff Kingsbury","Jeff Brohm","Paul Johnson","June Jones","Bobby Petrino","Kevin Sumlin"],
+      },
+      {
+        prompt: "Name a coach whose scheme became part of his reputation.",
+        answers: ["Mike Leach","Chip Kelly","Hal Mumme","Paul Johnson","Steve Spurrier","Rich Rodriguez","Gus Malzahn","Lincoln Riley"],
+        alsoAcceptedAnswers: ["Lane Kiffin","Josh Heupel","Kliff Kingsbury","Jeff Brohm","June Jones","Bobby Petrino","Kevin Sumlin"],
+      },
+      {
+        prompt: "Name a college coach you associate with explosive offense.",
+        answers: ["Chip Kelly","Lincoln Riley","Mike Leach","Steve Spurrier","Lane Kiffin","Josh Heupel","Gus Malzahn","Bobby Petrino"],
+        alsoAcceptedAnswers: ["Hal Mumme","Rich Rodriguez","Kliff Kingsbury","Jeff Brohm","Paul Johnson","June Jones","Kevin Sumlin"],
+      },
+      {
+        prompt: "Name a coach whose playbook changed how people talked about offense.",
+        answers: ["Steve Spurrier","Mike Leach","Chip Kelly","Hal Mumme","Rich Rodriguez","Paul Johnson","Gus Malzahn","Lincoln Riley"],
+        alsoAcceptedAnswers: ["Lane Kiffin","Josh Heupel","Kliff Kingsbury","Jeff Brohm","June Jones","Bobby Petrino","Kevin Sumlin"],
+      },
     ],
     answers: [
       "Steve Spurrier",
@@ -52,11 +92,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     entityKind: "person",
     collisionGroup: "coaches",
     prompts: [
-      "Name a college football coach strongly associated with defense.",
-      "Name a coach whose teams were known for being hard to score on.",
-      "Name a college coach with a defensive identity.",
-      "Name a coach you would trust to build an elite college defense.",
-      "Name a coach whose best teams were famous for physical defense.",
+      {
+        prompt: "Name a college football coach strongly associated with defense.",
+        answers: ["Nick Saban","Kirby Smart","Jim Tressel","Mark Dantonio","Pat Narduzzi","Brent Venables","Dave Aranda","Bud Foster"],
+        alsoAcceptedAnswers: ["Frank Beamer","Will Muschamp","Dan Lanning","Marcus Freeman","Manny Diaz","Charlie Strong"],
+      },
+      {
+        prompt: "Name a coach whose teams were known for being hard to score on.",
+        answers: ["Nick Saban","Kirby Smart","Jim Tressel","Mark Dantonio","Brent Venables","Bud Foster","Dave Aranda","Pat Narduzzi"],
+        alsoAcceptedAnswers: ["Frank Beamer","Will Muschamp","Dan Lanning","Marcus Freeman","Manny Diaz","Charlie Strong"],
+      },
+      {
+        prompt: "Name a college coach with a defensive identity.",
+        answers: ["Nick Saban","Kirby Smart","Brent Venables","Pat Narduzzi","Mark Dantonio","Dave Aranda","Will Muschamp","Bud Foster"],
+        alsoAcceptedAnswers: ["Jim Tressel","Frank Beamer","Dan Lanning","Marcus Freeman","Manny Diaz","Charlie Strong"],
+      },
+      {
+        prompt: "Name a coach you would trust to build an elite college defense.",
+        answers: ["Nick Saban","Kirby Smart","Brent Venables","Bud Foster","Dave Aranda","Pat Narduzzi","Marcus Freeman","Dan Lanning"],
+        alsoAcceptedAnswers: ["Jim Tressel","Mark Dantonio","Frank Beamer","Will Muschamp","Manny Diaz","Charlie Strong"],
+      },
+      {
+        prompt: "Name a coach whose best teams were famous for physical defense.",
+        answers: ["Nick Saban","Kirby Smart","Jim Tressel","Mark Dantonio","Frank Beamer","Bud Foster","Brent Venables","Will Muschamp"],
+        alsoAcceptedAnswers: ["Pat Narduzzi","Dave Aranda","Dan Lanning","Marcus Freeman","Manny Diaz","Charlie Strong"],
+      },
     ],
     answers: [
       "Nick Saban",
@@ -75,11 +135,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
-      "Name a famous college football rivalry.",
-      "Name a rivalry game that can split a state or region.",
-      "Name a college matchup fans circle months in advance.",
-      "Name a rivalry where bragging rights last all year.",
-      "Name a college football rivalry a casual fan might recognize.",
+      {
+        prompt: "Name a famous college football rivalry.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","Army-Navy","USC-Notre Dame","Florida-Georgia","Florida State-Miami","Oregon-Washington"],
+        alsoAcceptedAnswers: ["Georgia-Auburn","Clemson-South Carolina","Michigan-Michigan State","BYU-Utah","Washington-Washington State","Ole Miss-Mississippi State","Iowa-Iowa State","Harvard-Yale"],
+      },
+      {
+        prompt: "Name a rivalry game that can split a state or region.",
+        answers: ["Alabama-Auburn","Clemson-South Carolina","Michigan-Michigan State","Florida-Georgia","Florida State-Miami","Oregon-Washington","BYU-Utah","Iowa-Iowa State"],
+        alsoAcceptedAnswers: ["Ohio State-Michigan","Texas-Oklahoma","Army-Navy","USC-Notre Dame","Georgia-Auburn","Washington-Washington State","Ole Miss-Mississippi State","Harvard-Yale"],
+      },
+      {
+        prompt: "Name a college matchup fans circle months in advance.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","USC-Notre Dame","Florida-Georgia","Florida State-Miami","Oregon-Washington","Army-Navy"],
+        alsoAcceptedAnswers: ["Georgia-Auburn","Clemson-South Carolina","Michigan-Michigan State","BYU-Utah","Washington-Washington State","Ole Miss-Mississippi State","Iowa-Iowa State"],
+      },
+      {
+        prompt: "Name a rivalry where bragging rights last all year.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","Clemson-South Carolina","Michigan-Michigan State","Florida-Georgia","Oregon-Washington","BYU-Utah"],
+        alsoAcceptedAnswers: ["Army-Navy","USC-Notre Dame","Florida State-Miami","Georgia-Auburn","Washington-Washington State","Ole Miss-Mississippi State","Iowa-Iowa State","Harvard-Yale"],
+      },
+      {
+        prompt: "Name a college football rivalry a casual fan might recognize.",
+        answers: ["Ohio State-Michigan","Alabama-Auburn","Texas-Oklahoma","Army-Navy","USC-Notre Dame","Florida-Georgia","Florida State-Miami","Oregon-Washington"],
+        alsoAcceptedAnswers: ["Georgia-Auburn","Clemson-South Carolina","Michigan-Michigan State","BYU-Utah","Ole Miss-Mississippi State","Harvard-Yale"],
+      },
     ],
     answers: [
       "Ohio State-Michigan",
@@ -108,10 +188,26 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     collisionGroup: "venues",
     prompts: [
       "Name a college football stadium known for being loud.",
-      "Name a stadium where a road offense can barely hear itself.",
-      "Name a college venue famous for a hostile atmosphere.",
-      "Name a stadium you would expect on a loudest-in-college-football list.",
-      "Name a home field where crowd noise feels like a real advantage.",
+      {
+        prompt: "Name a stadium where a road offense can barely hear itself.",
+        answers: ["Tiger Stadium","Beaver Stadium","Neyland Stadium","Kyle Field","Autzen Stadium","Ohio Stadium","Memorial Stadium Clemson","Jordan-Hare Stadium"],
+        alsoAcceptedAnswers: ["Sanford Stadium","Michigan Stadium","Ben Hill Griffin Stadium","Lane Stadium","Husky Stadium","Memorial Stadium Nebraska","Kinnick Stadium"],
+      },
+      {
+        prompt: "Name a college venue famous for a hostile atmosphere.",
+        answers: ["Tiger Stadium","Beaver Stadium","Kyle Field","Neyland Stadium","Autzen Stadium","Jordan-Hare Stadium","Ben Hill Griffin Stadium","Lane Stadium"],
+        alsoAcceptedAnswers: ["Ohio Stadium","Sanford Stadium","Memorial Stadium Clemson","Michigan Stadium","Husky Stadium","Memorial Stadium Nebraska","Kinnick Stadium"],
+      },
+      {
+        prompt: "Name a stadium you would expect on a loudest-in-college-football list.",
+        answers: ["Tiger Stadium","Beaver Stadium","Neyland Stadium","Kyle Field","Autzen Stadium","Ohio Stadium","Husky Stadium","Memorial Stadium Clemson"],
+        alsoAcceptedAnswers: ["Sanford Stadium","Michigan Stadium","Jordan-Hare Stadium","Ben Hill Griffin Stadium","Lane Stadium","Memorial Stadium Nebraska","Kinnick Stadium"],
+      },
+      {
+        prompt: "Name a home field where crowd noise feels like a real advantage.",
+        answers: ["Tiger Stadium","Beaver Stadium","Neyland Stadium","Kyle Field","Autzen Stadium","Lane Stadium","Jordan-Hare Stadium","Husky Stadium"],
+        alsoAcceptedAnswers: ["Ohio Stadium","Sanford Stadium","Memorial Stadium Clemson","Michigan Stadium","Ben Hill Griffin Stadium","Memorial Stadium Nebraska","Kinnick Stadium"],
+      },
     ],
     answers: [
       { name: "Tiger Stadium", aliases: ["LSU", "LSU Tigers", "Tiger Stadium LSU"] },
@@ -138,11 +234,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     entityKind: "other",
     collisionGroup: "bowls",
     prompts: [
-      "Name a college football bowl game.",
-      "Name a bowl every college football fan has heard of.",
-      "Name a postseason bowl with a long football history.",
-      "Name a bowl you would expect to host a major matchup.",
-      "Name a bowl game that sounds like a big deal on the schedule.",
+      {
+        prompt: "Name a college football bowl game.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Citrus Bowl","Gator Bowl"],
+        alsoAcceptedAnswers: ["Alamo Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
+      },
+      {
+        prompt: "Name a bowl every college football fan has heard of.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Citrus Bowl","Alamo Bowl"],
+        alsoAcceptedAnswers: ["Gator Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
+      },
+      {
+        prompt: "Name a postseason bowl with a long football history.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Gator Bowl","Sun Bowl","Fiesta Bowl","Peach Bowl"],
+        alsoAcceptedAnswers: ["Citrus Bowl","Alamo Bowl","Holiday Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
+      },
+      {
+        prompt: "Name a bowl you would expect to host a major matchup.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Citrus Bowl","Alamo Bowl"],
+        alsoAcceptedAnswers: ["Gator Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
+      },
+      {
+        prompt: "Name a bowl game that sounds like a big deal on the schedule.",
+        answers: ["Rose Bowl","Sugar Bowl","Orange Bowl","Cotton Bowl","Fiesta Bowl","Peach Bowl","Alamo Bowl","Citrus Bowl"],
+        alsoAcceptedAnswers: ["Gator Bowl","Holiday Bowl","Sun Bowl","Liberty Bowl","Music City Bowl","Independence Bowl"],
+      },
     ],
     answers: ["Rose Bowl", "Sugar Bowl", "Orange Bowl", "Cotton Bowl", "Fiesta Bowl", "Peach Bowl", "Citrus Bowl", "Gator Bowl"],
     alsoAcceptedAnswers: ["Alamo Bowl", "Holiday Bowl", "Sun Bowl", "Liberty Bowl", "Music City Bowl", "Independence Bowl"],
@@ -152,11 +268,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     entityKind: "other",
     collisionGroup: "traditions",
     prompts: [
-      "Name a famous college football mascot or live mascot.",
-      "Name a mascot strongly tied to a college football program.",
-      "Name a college mascot fans would recognize without the school name.",
-      "Name a mascot that adds to the Saturday atmosphere.",
-      "Name a college football mascot that feels iconic.",
+      {
+        prompt: "Name a famous college football mascot or live mascot.",
+        answers: ["Uga","Bevo","Mike the Tiger","Traveler","Ralphie","Sooner Schooner","Brutus Buckeye","The Oregon Duck"],
+        alsoAcceptedAnswers: ["Smokey","Reveille","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
+      },
+      {
+        prompt: "Name a mascot strongly tied to a college football program.",
+        answers: ["Uga","Bevo","Mike the Tiger","Ralphie","Smokey","Reveille","Brutus Buckeye","The Oregon Duck"],
+        alsoAcceptedAnswers: ["Traveler","Sooner Schooner","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
+      },
+      {
+        prompt: "Name a college mascot fans would recognize without the school name.",
+        answers: ["Uga","Bevo","Brutus Buckeye","Mike the Tiger","Ralphie","Sparty","The Oregon Duck","Smokey"],
+        alsoAcceptedAnswers: ["Traveler","Sooner Schooner","Reveille","Aubie","Cocky","Nittany Lion","Big Al","Hairy Dawg"],
+      },
+      {
+        prompt: "Name a mascot that adds to the Saturday atmosphere.",
+        answers: ["Bevo","Uga","Ralphie","Mike the Tiger","Traveler","Smokey","Reveille","Sooner Schooner"],
+        alsoAcceptedAnswers: ["Brutus Buckeye","The Oregon Duck","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
+      },
+      {
+        prompt: "Name a college football mascot that feels iconic.",
+        answers: ["Uga","Bevo","Brutus Buckeye","Mike the Tiger","Ralphie","The Oregon Duck","Traveler","Smokey"],
+        alsoAcceptedAnswers: ["Sooner Schooner","Reveille","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
+      },
     ],
     answers: ["Uga", "Bevo", "Mike the Tiger", "Traveler", "Ralphie", "Sooner Schooner", "Brutus Buckeye", "The Oregon Duck"],
     alsoAcceptedAnswers: ["Smokey", "Reveille", "Aubie", "Cocky", "Sparty", "Nittany Lion", "Big Al", "Hairy Dawg"],
@@ -167,10 +303,26 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     collisionGroup: "awards",
     prompts: [
       "Name a major college football individual award.",
-      "Name a college football award players can win.",
-      "Name an award given to a standout college football player.",
-      "Name a trophy or award college football stars chase.",
-      "Name a well-known individual award in college football.",
+      {
+        prompt: "Name a college football award players can win.",
+        answers: ["Heisman Trophy","Maxwell Award","Doak Walker Award","Biletnikoff Award","Bednarik Award","Butkus Award","Outland Trophy","Davey O'Brien Award"],
+        alsoAcceptedAnswers: ["Lou Groza Award","Jim Thorpe Award","Lombardi Award","Ray Guy Award","John Mackey Award","Rimington Trophy","Walter Camp Award"],
+      },
+      {
+        prompt: "Name an award given to a standout college football player.",
+        answers: ["Heisman Trophy","Maxwell Award","Walter Camp Award","Bednarik Award","Biletnikoff Award","Doak Walker Award","Butkus Award","Davey O'Brien Award"],
+        alsoAcceptedAnswers: ["Outland Trophy","Lou Groza Award","Jim Thorpe Award","Lombardi Award","Ray Guy Award","John Mackey Award","Rimington Trophy"],
+      },
+      {
+        prompt: "Name a trophy or award college football stars chase.",
+        answers: ["Heisman Trophy","Maxwell Award","Walter Camp Award","Biletnikoff Award","Doak Walker Award","Bednarik Award","Butkus Award","Outland Trophy"],
+        alsoAcceptedAnswers: ["Lou Groza Award","Davey O'Brien Award","Jim Thorpe Award","Lombardi Award","Ray Guy Award","John Mackey Award","Rimington Trophy"],
+      },
+      {
+        prompt: "Name a well-known individual award in college football.",
+        answers: ["Heisman Trophy","Maxwell Award","Doak Walker Award","Biletnikoff Award","Bednarik Award","Butkus Award","Davey O'Brien Award","Walter Camp Award"],
+        alsoAcceptedAnswers: ["Outland Trophy","Lou Groza Award","Jim Thorpe Award","Lombardi Award","Ray Guy Award","John Mackey Award","Rimington Trophy"],
+      },
     ],
     answers: [
       { name: "Heisman Trophy", aliases: ["Heisman"] },
@@ -198,10 +350,26 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     collisionGroup: "conferences",
     prompts: [
       "Name a major college football conference.",
-      "Name a conference you hear about constantly during college football season.",
-      "Name an FBS conference a casual college football fan would recognize.",
-      "Name a conference that sends teams into major college football games.",
-      "Name a college football conference.",
+      {
+        prompt: "Name a conference you hear about constantly during college football season.",
+        answers: ["SEC","Big Ten","Big 12","ACC","Pac-12","AAC","Mountain West","Sun Belt"],
+        alsoAcceptedAnswers: ["Conference USA","MAC"],
+      },
+      {
+        prompt: "Name an FBS conference a casual college football fan would recognize.",
+        answers: ["SEC","Big Ten","Big 12","ACC","Pac-12","AAC","Mountain West","Sun Belt"],
+        alsoAcceptedAnswers: ["Conference USA","MAC"],
+      },
+      {
+        prompt: "Name a conference that sends teams into major college football games.",
+        answers: ["SEC","Big Ten","Big 12","ACC","Pac-12","Mountain West","AAC","Sun Belt"],
+        alsoAcceptedAnswers: ["Conference USA","MAC"],
+      },
+      {
+        prompt: "Name a college football conference.",
+        answers: ["SEC","Big Ten","Big 12","ACC","Pac-12","AAC","Mountain West","Sun Belt"],
+        alsoAcceptedAnswers: ["Conference USA","MAC"],
+      },
     ],
     answers: [
       { name: "SEC", aliases: ["Southeastern Conference"] },
@@ -223,11 +391,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     entityKind: "school",
     collisionGroup: "schools",
     prompts: [
-      "Name a college football school whose primary look features red.",
-      "Name a major program you associate with the color red.",
-      "Name a school whose football crowd can turn a stadium red.",
-      "Name a college team with red as a signature football color.",
-      "Name a red-wearing college football program almost everyone recognizes.",
+      {
+        prompt: "Name a college football school whose primary look features red.",
+        answers: ["Alabama","Ohio State","Georgia","Oklahoma","USC","Nebraska","Wisconsin","Arkansas"],
+        alsoAcceptedAnswers: ["Utah","Texas Tech","NC State","Louisville","Rutgers","South Carolina","Stanford","Indiana"],
+      },
+      {
+        prompt: "Name a major program you associate with the color red.",
+        answers: ["Alabama","Ohio State","Georgia","Oklahoma","USC","Nebraska","Wisconsin","Utah"],
+        alsoAcceptedAnswers: ["Arkansas","Texas Tech","NC State","Louisville","Rutgers","South Carolina","Stanford","Indiana"],
+      },
+      {
+        prompt: "Name a school whose football crowd can turn a stadium red.",
+        answers: ["Nebraska","Georgia","Wisconsin","Ohio State","Oklahoma","Alabama","Utah","Arkansas"],
+        alsoAcceptedAnswers: ["USC","Texas Tech","NC State","Louisville","Rutgers","South Carolina","Stanford","Indiana"],
+      },
+      {
+        prompt: "Name a college team with red as a signature football color.",
+        answers: ["Alabama","Ohio State","Georgia","Oklahoma","Nebraska","Wisconsin","Arkansas","Utah"],
+        alsoAcceptedAnswers: ["USC","Texas Tech","NC State","Louisville","Rutgers","South Carolina","Stanford","Indiana"],
+      },
+      {
+        prompt: "Name a red-wearing college football program almost everyone recognizes.",
+        answers: ["Alabama","Ohio State","Georgia","Oklahoma","USC","Nebraska","Wisconsin","Arkansas"],
+        alsoAcceptedAnswers: ["Utah","Texas Tech","NC State","Louisville","Rutgers","South Carolina","Stanford","Indiana"],
+      },
     ],
     answers: [
       { name: "Alabama", aliases: ["Bama", "Crimson Tide"] },
