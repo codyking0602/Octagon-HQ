@@ -59641,7 +59641,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jermaine-gresham-b-9",
-            "text": "I played tight end for Oklahoma during its 2008 run to the Big 12 championship and national title game.",
+            "text": "At Oklahoma, my nine-catch, 158-yard Bedlam performance came against No. 11 Oklahoma State.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -61000,7 +61000,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jalen-carter-a-9",
-            "text": "I wore No. 88 on Georgia's defensive line during consecutive national championship seasons.",
+            "text": "I wore No. 88 and recorded two tackles plus two quarterback hurries in the CFP National Championship Game.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -61009,7 +61009,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jalen-carter-a-10",
-            "text": "I was Georgia's No. 88 All-America defensive tackle and Lombardi finalist on the 2022 national champions.",
+            "text": "I was Georgia's No. 88 first-team All-America defensive tackle and a Lombardi Award finalist with 31 quarterback hurries in 2022.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -61104,7 +61104,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jalen-carter-b-10",
-            "text": "My Bulldog career ended with first-team All-America honors and a second straight national championship.",
+            "text": "My final Georgia season ended with first-team All-America honors after I logged two tackles and two hurries in the CFP National Championship Game.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -61197,7 +61197,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-joey-bosa-a-8",
-            "text": "I helped my team win the first College Football Playoff national championship.",
+            "text": "As a junior, I was the nation's active career leader with 50.5 tackles for loss.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
@@ -61518,7 +61518,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-jonathan-allen-b-10",
-            "text": "My Crimson Tide career paired a national championship with 28.5 sacks and a three-award sweep as a senior.",
+            "text": "My Crimson Tide career finished with 28.5 sacks and, as a senior, a three-award sweep of the Nagurski, Bednarik and Hendricks.",
             "band": "giveaway",
             "verification": "verified",
             "sourceIds": [
@@ -61911,7 +61911,7 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
           },
           {
             "id": "cfb-devin-white-b-8",
-            "text": "My final college game against Texas A&M included a career-high 17 tackles and four tackles for loss.",
+            "text": "Against Texas A&M in 2018, I set career highs with 17 tackles and four tackles for loss.",
             "band": "strong",
             "verification": "verified",
             "sourceIds": [
