@@ -190,7 +190,7 @@ begin
   -- have an active slot; later drift is natural because the cycles are different lengths.
   if exists (
     select 1
-    from generate_series(0, 29) offset_days
+    from generate_series(0, 29) as series(offset_days)
     where v_ufc_cycle[(offset_days % 30) + 1]
       = v_football_cycle[(offset_days % 26) + 1]
   ) then
