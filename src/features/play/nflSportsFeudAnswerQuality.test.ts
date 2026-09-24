@@ -208,6 +208,9 @@ describe("NFL Sports Feud authored answer quality", () => {
     expect(matchedDisplayName("nfl-fast3-05-1", "Chiefs")).toBe("Arrowhead Stadium");
     expect(matchedDisplayName("nfl-fast3-05-1", "Arrowhead")).toBe("Arrowhead Stadium");
     expect(matchedDisplayName("nfl-fast3-07-1", "DPOY")).toBe("Defensive Player of the Year");
+    expect(matchedDisplayName("nfl-fast3-07-1", "All-Pro")).toBe("First-team All-Pro");
+    expect(matchedDisplayName("nfl-fast4-03-1", "DPI")).toBe("Pass interference");
+    expect(matchedDisplayName("nfl-fast4-03-1", "Unnecessary roughness")).toBe("Personal foul");
     expect(matchedDisplayName("nfl-fast4-09-1", "BPA")).toBe("Best player available");
     expect(matchedDisplayName("nfl-fast4-07-1", "Blitz")).toBe("Blitz");
     expect(matchedDisplayName("nfl-fast4-06-1", "PA")).toBe("Play-action");
