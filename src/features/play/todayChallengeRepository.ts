@@ -342,6 +342,7 @@ export interface TodayChallengeRepository {
   advance(
     projection: Pick<TodayChallengeProjection, "id" | "progressRevision" | "actionHistory">,
     action: Record<string, unknown>,
+    clientActionId?: string,
   ): Promise<TodayChallengeProjection>;
   loadHistory(): Promise<TodayChallengeHistoryRow[]>;
   loadStreak(): Promise<TodayChallengeStreak>;
@@ -365,13 +366,14 @@ export function createTodayChallengeRepository(
     async loadToday() {
       return parseProjection(await invokeRuntime(client, { mode: "get-today", sport }));
     },
-    async advance(projection, action) {
+    async advance(projection, action, clientActionId) {
       return parseProjection(await invokeRuntime(client, {
         mode: "advance",
         sport,
         daily_challenge_id: projection.id,
         revision: projection.progressRevision,
         action,
+        ...(clientActionId ? { client_action_id: clientActionId } : {}),
       }));
     },
     async loadHistory() {
