@@ -79,6 +79,12 @@ function candidateAnswers(question: SportsFeudAuthoredQuestion) {
   return [...question.answers, ...(question.alsoAcceptedAnswers ?? [])];
 }
 
+function firstName(answer: SportsFeudAuthoredAnswer) {
+  const tokens = normalizeFamilyFeudInput(answer.name).split(" ").filter(Boolean);
+  const first = tokens[0] ?? "";
+  return first === "the" ? "" : first;
+}
+
 function surname(answer: SportsFeudAuthoredAnswer) {
   const tokens = normalizeFamilyFeudInput(answer.name).split(" ").filter(Boolean);
   while (
@@ -197,34 +203,52 @@ describe("Sports Feud global semantic guard", () => {
     }
   });
 
-  it("makes every person surname-capable while preserving real surname ambiguity", () => {
+  it("accepts unique person short names while preserving first-name/surname ambiguity", () => {
     for (const domain of Object.keys(BANKS) as Domain[]) {
       const people = [...BANKS[domain].main, ...BANKS[domain].fast]
         .filter((question) => question.entityKind === "person");
 
       for (const question of people) {
         const rows = candidateAnswers(question);
+        const byFirstName = new Map<string, SportsFeudAuthoredAnswer[]>();
         const bySurname = new Map<string, SportsFeudAuthoredAnswer[]>();
         for (const answer of rows) {
-          const key = surname(answer);
-          if (!key) continue;
-          const group = bySurname.get(key) ?? [];
-          group.push(answer);
-          bySurname.set(key, group);
+          const first = firstName(answer);
+          if (first) {
+            const group = byFirstName.get(first) ?? [];
+            group.push(answer);
+            byFirstName.set(first, group);
+          }
+          const last = surname(answer);
+          if (last) {
+            const group = bySurname.get(last) ?? [];
+            group.push(answer);
+            bySurname.set(last, group);
+          }
         }
 
         const { pack, runtimeQuestion } = materializeForGuard(domain, question);
-        for (const [key, group] of bySurname) {
-          const match = matchFamilyFeudAnswer(pack, runtimeQuestion, key);
-          if (group.length === 1) {
-            expect(match, `${question.id} surname ${key}`).toMatchObject({
-              status: "matched",
-              kind: "surname",
-            });
-          } else {
-            expect(match, `${question.id} surname ${key} ambiguity`).toMatchObject({
-              status: "ambiguous",
-            });
+        for (const answer of rows) {
+          const terms = [
+            ["first-name", firstName(answer)],
+            ["surname", surname(answer)],
+          ] as const;
+          for (const [kind, key] of terms) {
+            if (!key) continue;
+            const owners = new Set([
+              ...(byFirstName.get(key) ?? []),
+              ...(bySurname.get(key) ?? []),
+            ].map((row) => row.name));
+            const match = matchFamilyFeudAnswer(pack, runtimeQuestion, key);
+            if (owners.size === 1) {
+              expect(match, question.id + " " + kind + " " + key).toMatchObject({
+                status: "matched",
+              });
+            } else {
+              expect(match, question.id + " short-name " + key + " ambiguity").toMatchObject({
+                status: "ambiguous",
+              });
+            }
           }
         }
       }
