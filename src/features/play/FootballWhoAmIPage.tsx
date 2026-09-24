@@ -2,7 +2,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { WhoAmIRound } from "../games/whoAmIEngine";
-import { createFootballWhoAmIRound } from "../games/whoAmIAuthority";
+import {
+  createFootballWhoAmIAuthoredCasualRound,
+  rememberFootballWhoAmIAuthoredCasualRound,
+} from "./footballWhoAmIAuthoredCasual";
 import WhoAmIPage from "./WhoAmIPage";
 import {
   sharedWhoAmIRound,
@@ -84,11 +87,12 @@ export default function FootballWhoAmIPage() {
       onChallenge={challengeSomeone}
       onAllGames={() => navigate("/football")}
       onComplete={recordChallengeResult}
+      onRoundShown={rememberFootballWhoAmIAuthoredCasualRound}
       createRound={(excludedSubjectIdsByLeague) => (
-        createFootballWhoAmIRound(Math.random, {
-        NFL: excludedSubjectIdsByLeague.NFL,
-        CFB: excludedSubjectIdsByLeague.CFB,
-      })
+        createFootballWhoAmIAuthoredCasualRound(Math.random, {
+          NFL: excludedSubjectIdsByLeague.NFL,
+          CFB: excludedSubjectIdsByLeague.CFB,
+        })
       )}
     />
   );
