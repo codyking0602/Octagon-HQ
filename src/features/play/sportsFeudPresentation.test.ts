@@ -39,22 +39,22 @@ describe("Sports Feud presentation assets", () => {
     expect(sportsFeudHostAsset("cfb", "2026-09-23")).toBe("/assets/3cfb.png");
   });
 
-  it("advances UFC one host per UFC Sports Feud appearance, not per calendar day", () => {
+  it("advances UFC one host per actual UFC Sports Feud appearance", () => {
     expect(sportsFeudHostAppearanceIndex("ufc", "2026-09-23")).toBe(0);
     expect(sportsFeudHostNumber("ufc", "2026-09-23")).toBe(1);
-    expect(sportsFeudHostNumber("ufc", "2026-09-24")).toBe(1);
-    expect(sportsFeudHostNumber("ufc", "2026-10-02")).toBe(2);
-    expect(sportsFeudHostNumber("ufc", "2026-10-10")).toBe(3);
-    expect(sportsFeudHostNumber("ufc", "2026-10-18")).toBe(1);
+    expect(sportsFeudHostNumber("ufc", "2026-09-24")).toBe(2);
+    expect(sportsFeudHostNumber("ufc", "2026-10-02")).toBe(3);
+    expect(sportsFeudHostNumber("ufc", "2026-10-10")).toBe(1);
+    expect(sportsFeudHostNumber("ufc", "2026-10-18")).toBe(2);
   });
 
-  it("advances CFB and NFL hosts independently on their own Football Sports Feud appearances", () => {
+  it("advances CFB and NFL hosts independently on actual Football Sports Feud appearances", () => {
     expect(sportsFeudHostNumber("cfb", "2026-09-23")).toBe(3);
-    expect(sportsFeudHostNumber("cfb", "2026-10-08")).toBe(1);
-    expect(sportsFeudHostNumber("cfb", "2026-10-19")).toBe(2);
+    expect(sportsFeudHostNumber("cfb", "2026-09-30")).toBe(1);
+    expect(sportsFeudHostNumber("cfb", "2026-10-14")).toBe(2);
 
-    expect(sportsFeudHostNumber("nfl", "2026-10-01")).toBe(1);
-    expect(sportsFeudHostNumber("nfl", "2026-10-15")).toBe(2);
-    expect(sportsFeudHostNumber("nfl", "2026-10-27")).toBe(3);
+    expect(sportsFeudHostNumber("nfl", "2026-09-25")).toBe(1);
+    expect(sportsFeudHostNumber("nfl", "2026-10-06")).toBe(2);
+    expect(sportsFeudHostNumber("nfl", "2026-10-20")).toBe(3);
   });
 });
