@@ -63,18 +63,18 @@ function balanceRun(run: MillionaireRun, runIndex: number): MillionaireRun {
   }) as unknown as MillionaireRun;
 }
 
-const SPORTS_FEUD_DAILY_CUTOVER = "2026-09-23";
-const PRE_SPORTS_FEUD_MILLIONAIRE_APPEARANCES = 1;
+const WEIGHTED_DAILY_CUTOVER = "2026-09-24";
+const PRE_WEIGHTED_MILLIONAIRE_APPEARANCES = 1;
 
 const FOOTBALL_MILLIONAIRE_LEGACY_CYCLE_LENGTH = 22;
 const FOOTBALL_MILLIONAIRE_LEGACY_SLOTS = [0, 7, 13, 19] as const;
 const FOOTBALL_MILLIONAIRE_CYCLE_LENGTH = 26;
-const FOOTBALL_MILLIONAIRE_SLOTS = [5, 13, 21, 25] as const;
+const FOOTBALL_MILLIONAIRE_SLOTS = [0, 5, 11, 16, 21] as const;
 
 const UFC_MILLIONAIRE_LEGACY_CYCLE_LENGTH = 26;
 const UFC_MILLIONAIRE_LEGACY_SLOTS = [0, 8, 15, 23] as const;
 const UFC_MILLIONAIRE_CYCLE_LENGTH = 30;
-const UFC_MILLIONAIRE_SLOTS = [6, 15, 23, 29] as const;
+const UFC_MILLIONAIRE_SLOTS = [2, 7, 13, 20, 27] as const;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -116,7 +116,7 @@ function appearanceIndex(
 }
 
 export function millionaireFootballDailyAppearance(day: string) {
-  if (day < SPORTS_FEUD_DAILY_CUTOVER) {
+  if (day < WEIGHTED_DAILY_CUTOVER) {
     return appearanceIndex(
       day,
       FOOTBALL_MILLIONAIRE_DAILY_ANCHOR,
@@ -125,9 +125,9 @@ export function millionaireFootballDailyAppearance(day: string) {
       "Football",
     );
   }
-  return PRE_SPORTS_FEUD_MILLIONAIRE_APPEARANCES + appearanceIndex(
+  return PRE_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
     day,
-    SPORTS_FEUD_DAILY_CUTOVER,
+    WEIGHTED_DAILY_CUTOVER,
     FOOTBALL_MILLIONAIRE_CYCLE_LENGTH,
     FOOTBALL_MILLIONAIRE_SLOTS,
     "Football",
@@ -135,7 +135,7 @@ export function millionaireFootballDailyAppearance(day: string) {
 }
 
 export function millionaireUfcDailyAppearance(day: string) {
-  if (day < SPORTS_FEUD_DAILY_CUTOVER) {
+  if (day < WEIGHTED_DAILY_CUTOVER) {
     return appearanceIndex(
       day,
       MILLIONAIRE_DAILY_ANCHOR,
@@ -144,9 +144,9 @@ export function millionaireUfcDailyAppearance(day: string) {
       "UFC",
     );
   }
-  return PRE_SPORTS_FEUD_MILLIONAIRE_APPEARANCES + appearanceIndex(
+  return PRE_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
     day,
-    SPORTS_FEUD_DAILY_CUTOVER,
+    WEIGHTED_DAILY_CUTOVER,
     UFC_MILLIONAIRE_CYCLE_LENGTH,
     UFC_MILLIONAIRE_SLOTS,
     "UFC",
