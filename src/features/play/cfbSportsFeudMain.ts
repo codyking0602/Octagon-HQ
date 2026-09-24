@@ -239,27 +239,27 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       {
         prompt: "Name a quarterback you immediately associate with winning the Heisman Trophy.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Johnny Manziel","Lamar Jackson","Baker Mayfield","Marcus Mariota","Jameis Winston"],
-        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Fernando Mendoza"],
       },
       {
         prompt: "Name a Heisman-winning college quarterback almost every football fan remembers.",
         answers: ["Tim Tebow","Cam Newton","Joe Burrow","Lamar Jackson","Johnny Manziel","Baker Mayfield","Matt Leinart","Robert Griffin III"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Jayden Daniels","Fernando Mendoza"],
       },
       {
         prompt: "Name a quarterback whose Heisman season became part of college football history.",
         answers: ["Cam Newton","Joe Burrow","Tim Tebow","Lamar Jackson","Johnny Manziel","Robert Griffin III","Baker Mayfield","Marcus Mariota"],
-        alsoAcceptedAnswers: ["Jameis Winston","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Jameis Winston","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Jayden Daniels","Fernando Mendoza"],
       },
       {
         prompt: "Name a college quarterback who felt larger than life during his Heisman run.",
         answers: ["Cam Newton","Johnny Manziel","Tim Tebow","Lamar Jackson","Joe Burrow","Robert Griffin III","Baker Mayfield","Jameis Winston"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Caleb Williams","Kyler Murray","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Fernando Mendoza"],
       },
       {
         prompt: "Name a Heisman quarterback you would expect to get named quickly in a sports bar.",
         answers: ["Tim Tebow","Cam Newton","Johnny Manziel","Joe Burrow","Lamar Jackson","Baker Mayfield","Caleb Williams","Kyler Murray"],
-        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels"],
+        alsoAcceptedAnswers: ["Marcus Mariota","Jameis Winston","Sam Bradford","Troy Smith","Carson Palmer","Matt Leinart","Robert Griffin III","Jayden Daniels","Fernando Mendoza"],
       },
     ],
     answers: [
@@ -281,7 +281,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       "Matt Leinart",
       "Robert Griffin III",
       "Jayden Daniels",
-    ],
+    ,"Fernando Mendoza"],
   },
   {
     category: "player-identity",
@@ -815,27 +815,27 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       {
         prompt: "Name a college football position fans love to watch.",
         answers: ["Quarterback","Running back","Wide receiver","Linebacker","Defensive end","Cornerback","Safety","Tight end"],
-        alsoAcceptedAnswers: ["Offensive tackle","Guard","Center","Defensive tackle","Kicker","Punter","Long snapper"],
+        alsoAcceptedAnswers: ["Offensive tackle","Guard","Center","Defensive tackle","Kicker","Punter","Long snapper","Fullback"],
       },
       {
         prompt: "Name a position that can produce the biggest Saturday stars.",
         answers: ["Quarterback","Running back","Wide receiver","Defensive end","Cornerback","Linebacker","Tight end","Safety"],
-        alsoAcceptedAnswers: ["Defensive tackle","Offensive tackle","Kicker","Guard","Center","Punter"],
+        alsoAcceptedAnswers: ["Defensive tackle","Offensive tackle","Kicker","Guard","Center","Punter","Fullback"],
       },
       {
         prompt: "Name a position recruits often become household names playing.",
         answers: ["Quarterback","Wide receiver","Running back","Defensive end","Cornerback","Linebacker","Tight end","Safety"],
-        alsoAcceptedAnswers: ["Defensive tackle","Offensive tackle","Guard","Center","Kicker","Punter"],
+        alsoAcceptedAnswers: ["Defensive tackle","Offensive tackle","Guard","Center","Kicker","Punter","Fullback"],
       },
       {
         prompt: "Name a football position that can take over a college game.",
         answers: ["Quarterback","Running back","Wide receiver","Defensive end","Linebacker","Cornerback","Safety","Defensive tackle"],
-        alsoAcceptedAnswers: ["Tight end","Offensive tackle","Kicker","Guard","Center","Punter"],
+        alsoAcceptedAnswers: ["Tight end","Offensive tackle","Kicker","Guard","Center","Punter","Fullback"],
       },
       {
         prompt: "Name a position group that can become the identity of a team.",
         answers: ["Quarterback","Running back","Wide receiver","Linebacker","Defensive end","Defensive tackle","Cornerback","Offensive tackle"],
-        alsoAcceptedAnswers: ["Safety","Tight end","Guard","Center","Kicker","Punter"],
+        alsoAcceptedAnswers: ["Safety","Tight end","Guard","Center","Kicker","Punter","Fullback"],
       },
     ],
     answers: [
@@ -849,7 +849,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       { name: "Tight end", aliases: ["TE"] },
     ],
     alsoAcceptedAnswers: [
-      { name: "Offensive tackle", aliases: ["OT"] },
+      { name: "Offensive tackle", aliases: ["OT",{ name: "Fullback", aliases: ["FB"] }] },
       { name: "Guard", aliases: ["OG"] },
       { name: "Center", aliases: ["C"] },
       { name: "Defensive tackle", aliases: ["DT"] },
