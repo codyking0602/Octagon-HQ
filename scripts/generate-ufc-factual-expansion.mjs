@@ -22,6 +22,7 @@ const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
   ["mirkofilipovic", "mirkocrocop"],
   ["janbachowicz", "janblachowicz"],
+  ["kimboslice", "kevinferguson"],
   ["ronaldosouza", "jacaresouza"],
   ["mauricioshogunrua", "mauriciorua"],
   ["criscyborg", "cristianejustino"],
