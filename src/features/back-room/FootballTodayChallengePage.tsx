@@ -64,6 +64,34 @@ function strings(value: unknown) {
   return Array.isArray(value) ? value.filter((row): row is string => typeof row === "string") : [];
 }
 
+function optimisticFootballHitNumberToggle(
+  projection: TodayChallengeProjection,
+  fighterId: string,
+) {
+  const setup = projection.publicSetup;
+  // Progression boards expose only the current slot's eligible universe. The
+  // next slot is server-owned, so those boards intentionally wait for the
+  // authoritative response rather than guessing the next candidate set.
+  if (records(setup.slots).length > 0) return projection;
+
+  const selected = strings(projection.publicState.selected_ids);
+  const pickCount = Number(setup.pick_count ?? 0);
+  const alreadySelected = selected.includes(fighterId);
+  if (!alreadySelected && selected.length >= pickCount) return projection;
+  const next = alreadySelected
+    ? selected.filter((id) => id !== fighterId)
+    : [...selected, fighterId];
+
+  return {
+    ...projection,
+    publicState: {
+      ...projection.publicState,
+      complete: false,
+      selected_ids: next,
+    },
+  };
+}
+
 function item(value: unknown): PublicItem | null {
   const row = record(value);
   return typeof row.id === "string" && typeof row.name === "string"
@@ -458,7 +486,19 @@ function HitTheNumber({ projection, advance }: GameProps) {
           score: projection.officialAttempt.normalizedScore,
         } : null}
         formatValue={formatValue}
-        onToggle={projection.officialAttempt ? null : (id) => advance({ fighter_id: id })}
+        onToggle={projection.officialAttempt ? null : (id) => {
+          const progression = slots.length > 0;
+          const selected = selectedIds.includes(id);
+          advance(
+            { fighter_id: id },
+            progression
+              ? undefined
+              : {
+                  dedupeKey: `football-hit-number:${id}:${selected ? "remove" : "add"}`,
+                  optimisticUpdate: (current) => optimisticFootballHitNumberToggle(current, id),
+                },
+          );
+        }}
         onRewind={projection.officialAttempt ? null : (index) => advance({ rewind_to: index })}
         onLock={projection.officialAttempt ? null : () => advance({ lock: true })}
       />
@@ -468,7 +508,7 @@ function HitTheNumber({ projection, advance }: GameProps) {
 
 type GameProps = {
   projection: TodayChallengeProjection;
-  advance: (action: JsonRecord) => void;
+  advance: (action: JsonRecord, options?: TodayChallengeAdvanceOptions) => void;
 };
 
 export function FootballTodayChallengeResult({
