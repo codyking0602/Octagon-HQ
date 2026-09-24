@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
-import { ufcWhoAmIAuthoredCanonicalExpansion } from "../back-room/ufcWhoAmIAuthoredCanonicalExpansion";
+import { ufcWhoAmIAuthoredExpansion133Batch1 } from "./ufcWhoAmIAuthoredExpansion133Batch1";
+import { ufcWhoAmIAuthoredExpansion133Batch2 } from "./ufcWhoAmIAuthoredExpansion133Batch2";
+import { ufcWhoAmIAuthoredExpansion133Batch3 } from "./ufcWhoAmIAuthoredExpansion133Batch3";
 import { ufcWhoAmIAuthoredLaunchPool } from "./ufcWhoAmIAuthoredLaunchPool";
+
+const UFC_AUTHORED_EXPANSION = [
+  ...ufcWhoAmIAuthoredExpansion133Batch1,
+  ...ufcWhoAmIAuthoredExpansion133Batch2,
+  ...ufcWhoAmIAuthoredExpansion133Batch3,
+] as const;
 
 const EXPECTED_BANDS = [
   "broad",
@@ -165,13 +173,16 @@ describe("UFC Who Am I authored launch pool", () => {
     expect(ufcWhoAmIAuthoredLaunchPool).toHaveLength(133);
     expect(new Set(ufcWhoAmIAuthoredLaunchPool.map((identity) => identity.subjectId)).size).toBe(133);
 
+    let scriptCount = 0;
     let clueCount = 0;
     for (const identity of ufcWhoAmIAuthoredLaunchPool) {
       const canonical = getUfcFactualSubject(identity.subjectId);
       expect(canonical?.name).toBe(identity.name);
       expect(Object.keys(identity.scripts).sort()).toEqual(["A", "B"]);
+      scriptCount += Object.keys(identity.scripts).length;
       clueCount += identity.scripts.A!.clues.length + identity.scripts.B!.clues.length;
     }
+    expect(scriptCount).toBe(266);
     expect(clueCount).toBe(2_660);
   });
 
@@ -208,7 +219,7 @@ describe("UFC Who Am I authored launch pool", () => {
   });
 
   it("keeps all 33 expansion fighters away from mass-authoring templates", () => {
-    const expansionIds = new Set(ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => subject.id));
+    const expansionIds = new Set(UFC_AUTHORED_EXPANSION.map((identity) => identity.subjectId));
     const expansion = ufcWhoAmIAuthoredLaunchPool.filter((identity) => expansionIds.has(identity.subjectId));
 
     expect(expansion).toHaveLength(33);
@@ -216,6 +227,25 @@ describe("UFC Who Am I authored launch pool", () => {
       for (const scriptId of ["A", "B"] as const) {
         for (const clue of identity.scripts[scriptId]!.clues) {
           expect(MASS_TEMPLATE_PATTERNS.some((pattern) => pattern.test(clue.text))).toBe(false);
+        }
+      }
+    }
+  });
+
+  it("keeps crossover shortcuts out of the first four expansion clues", () => {
+    const crossoverShortcuts = [
+      /\bWWE\b/i,
+      /\bNFL\b/i,
+      /Dancing with the Stars/i,
+      /street[- ]fight/i,
+      /viral/i,
+      /podcast/i,
+      /comedy/i,
+    ];
+    for (const identity of UFC_AUTHORED_EXPANSION) {
+      for (const scriptId of ["A", "B"] as const) {
+        for (const clue of identity.scripts[scriptId]!.clues.slice(0, 4)) {
+          expect(crossoverShortcuts.some((pattern) => pattern.test(clue.text))).toBe(false);
         }
       }
     }
