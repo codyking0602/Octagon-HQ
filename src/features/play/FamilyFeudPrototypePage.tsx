@@ -16,6 +16,7 @@ import {
   FAMILY_FEUD_FAST_MONEY_RAW_MAX,
   FAMILY_FEUD_STRIKES_PER_BOARD,
   createFamilyFeudState,
+  familyFeudMainAnswerPoints,
   familyFeudMainBoardScore,
   familyFeudScore,
   submitFamilyFeudFastMoneyAnswer,
@@ -442,7 +443,10 @@ function FamilyFeudPrototypeExperience({ scope, qaReplayDay }: FamilyFeudPrototy
   const mainBoardPoints = familyFeudMainBoardScore(pack, state, displayBoardIndex);
   const foundIds = new Set(mainBoardState.revealedEntityIds);
   const foundMainAnswers = mainBoardState.revealedEntityIds
-    .map((entityId) => mainQuestion.answers.find((row) => row.entityId === entityId))
+    .map((entityId) => {
+      const points = familyFeudMainAnswerPoints(mainQuestion, entityId);
+      return points == null ? null : { entityId, points };
+    })
     .filter((row): row is FamilyFeudRankedAnswer => Boolean(row));
   const mainDisplayAnswers = foundMainAnswers;
   const newlyRevealedEntityId = mainReveal.phase === "correct"
