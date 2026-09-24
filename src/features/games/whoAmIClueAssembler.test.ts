@@ -282,7 +282,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     const researchedUfcCandidates = ufcCandidates.filter((candidate) =>
       Boolean(getUfcPersonIdentityKnowledge(candidate.id)),
     );
-    expect(ufcCandidates).toHaveLength(133);
+    expect(ufcCandidates).toHaveLength(100);
     expect(researchedUfcCandidates).toHaveLength(100);
 
     for (const candidate of researchedUfcCandidates) {
@@ -437,7 +437,7 @@ describe("Who Am I football scope-aware clue aggregation", () => {
       ["CFB", getFootballWhoAmIUniverse("CFB")],
     ] as const;
 
-    expect(universes[0][1].candidates).toHaveLength(133);
+    expect(universes[0][1].candidates).toHaveLength(100);
     expect(universes[1][1].candidates).toHaveLength(200);
     expect(universes[2][1].candidates).toHaveLength(200);
 
