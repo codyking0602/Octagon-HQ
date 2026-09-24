@@ -211,6 +211,8 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
       name: "Nick Saban",
       kind: "surname",
     });
+    expect(matchName(authoredQuestion("cfb-main-06-1"), "Mendoza")?.name).toBe("Fernando Mendoza");
+    expect(matchName(authoredQuestion("cfb-main-18-3"), "FB")?.name).toBe("Fullback");
 
     expect(matchName(authoredQuestion("cfb-main-01-2"), "Bama")?.name).toBe("Alabama");
     expect(matchName(authoredQuestion("cfb-fast1-01-1"), "Bama")?.name).toBe("Alabama");
