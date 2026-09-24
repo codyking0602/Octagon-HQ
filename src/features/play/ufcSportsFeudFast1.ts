@@ -778,7 +778,8 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Kevin Randleman",
           "Mark Coleman",
           "Ricco Rodriguez",
-          "Maurice Smith"
+          "Maurice Smith",
+          "Ciryl Gane"
         ]
       },
       {
@@ -789,11 +790,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Francis Ngannou",
           "Daniel Cormier",
           "Randy Couture",
-          "Junior dos Santos",
-          "Brock Lesnar",
+          "Jon Jones",
+          "Ciryl Gane",
           "Tom Aspinall"
         ],
         "alsoAcceptedAnswers": [
+          "Junior dos Santos",
+          "Brock Lesnar",
           "Fabricio Werdum",
           "Frank Mir",
           "Andrei Arlovski",
@@ -803,25 +806,25 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Kevin Randleman",
           "Mark Coleman",
           "Ricco Rodriguez",
-          "Maurice Smith",
-          "Jon Jones"
+          "Maurice Smith"
         ]
       },
       {
         "prompt": "Name a former or current undisputed UFC heavyweight champion.",
         "answers": [
+          "Ciryl Gane",
           "Tom Aspinall",
           "Jon Jones",
           "Francis Ngannou",
           "Stipe Miocic",
           "Daniel Cormier",
           "Cain Velasquez",
-          "Fabricio Werdum",
           "Junior dos Santos"
         ],
         "alsoAcceptedAnswers": [
           "Randy Couture",
           "Brock Lesnar",
+          "Fabricio Werdum",
           "Frank Mir",
           "Andrei Arlovski",
           "Tim Sylvia",
@@ -843,7 +846,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Randy Couture",
           "Brock Lesnar",
           "Jon Jones",
-          "Tom Aspinall"
+          "Ciryl Gane"
         ],
         "alsoAcceptedAnswers": [
           "Junior dos Santos",
@@ -852,6 +855,7 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Andrei Arlovski",
           "Tim Sylvia",
           "Josh Barnett",
+          "Tom Aspinall",
           "Bas Rutten",
           "Kevin Randleman",
           "Mark Coleman",
@@ -868,11 +872,12 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Francis Ngannou",
           "Daniel Cormier",
           "Jon Jones",
-          "Tom Aspinall",
-          "Brock Lesnar"
+          "Ciryl Gane",
+          "Tom Aspinall"
         ],
         "alsoAcceptedAnswers": [
           "Junior dos Santos",
+          "Brock Lesnar",
           "Fabricio Werdum",
           "Frank Mir",
           "Andrei Arlovski",
@@ -1003,6 +1008,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "aliases": [
           "Jones",
           "Bones"
+        ]
+      },
+      {
+        "name": "Ciryl Gane",
+        "aliases": [
+          "Gane",
+          "Bon Gamin"
         ]
       }
     ]
