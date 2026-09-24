@@ -1655,7 +1655,8 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         "name": "Takedown accuracy",
         "aliases": [
           "TD accuracy",
-          "Takedown %"
+          "Takedown percentage",
+          "Takedown pct"
         ]
       },
       {
