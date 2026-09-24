@@ -249,6 +249,53 @@ describe("NFL Sports Feud authored answer quality", () => {
     }
   });
 
+  it("keeps NFL Main questions 81-100 independently authored after review", () => {
+    for (const familyNumber of [17, 18, 19, 20]) {
+      const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
+      const rows = NFL_SPORTS_FEUD_MAIN.filter((question) => question.id.startsWith(prefix));
+      expect(rows).toHaveLength(5);
+
+      const universeSignatures = rows.map((question) =>
+        [
+          ...question.answers,
+          ...(question.alsoAcceptedAnswers ?? []),
+        ].map((answer) => normalizeFamilyFeudInput(answer.name)).join("|"),
+      );
+      expect(new Set(universeSignatures).size, prefix + " independent universes").toBe(5);
+    }
+
+    const casualPositions = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-17-3")!;
+    expect(casualPositions.answers.map((answer) => answer.name)).toContain("Kicker");
+
+    const scoutTraits = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-18-3")!;
+    expect(scoutTraits.prompt).toContain("evaluate quickly");
+    expect(scoutTraits.answers.slice(0, 3).map((answer) => answer.name)).toEqual([
+      "Arm strength",
+      "Accuracy",
+      "Mobility",
+    ]);
+
+    const playoffDefense = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-19-5")!;
+    expect(playoffDefense.answers.slice(0, 4).map((answer) => answer.name)).toEqual([
+      "Pass rush",
+      "Run defense",
+      "Tackling",
+      "Coverage",
+    ]);
+
+    const classicUniforms = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-20-4")!;
+    expect(classicUniforms.answers.slice(0, 3).map((answer) => answer.name)).toEqual([
+      "Green Bay Packers",
+      "Las Vegas Raiders",
+      "Chicago Bears",
+    ]);
+
+    const sep25Visual = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-20-2")!;
+    expect(sep25Visual.prompt).toBe(
+      "Name an NFL franchise with a classic visual identity that has stayed recognizable for decades.",
+    );
+  });
+
   it("keeps NFL Main questions 61-80 independently authored after review", () => {
     for (const familyNumber of [13, 14, 15, 16]) {
       const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
