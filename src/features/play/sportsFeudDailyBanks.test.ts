@@ -265,6 +265,43 @@ describe("Sports Feud authored Daily banks", () => {
       .toMatchObject({ status: "matched", kind: "surname" });
   });
 
+  it("locks the audited September 24 UFC prototype and forgiving human-name matching", () => {
+    const pack = buildSportsFeudPack("ufc", "2026-09-24");
+
+    expect(pack.mainBoards.map((question) => question.prompt)).toEqual([
+      "Name a UFC star you associate with relentless grappling pressure.",
+      "Name a fighter who helped make women's MMA a major part of the UFC.",
+    ]);
+    expect(pack.fastMoney.map((question) => question.prompt)).toEqual([
+      "Name a submission you might see finish a UFC fight.",
+      "Name a UFC fighter famous for trash talk.",
+      "Name a UFC weight class.",
+      "Name a UFC star you would pick for a striking showcase.",
+      "Name an MMA referee you have seen inside the Octagon.",
+    ]);
+
+    const matchedName = (questionIndex: number, input: string, fast = false) => {
+      const question = fast ? pack.fastMoney[questionIndex]! : pack.mainBoards[questionIndex]!;
+      const match = matchFamilyFeudAnswer(pack, question, input);
+      expect(match.status, input).toBe("matched");
+      if (match.status !== "matched") return null;
+      return pack.entities.find((entity) => entity.id === match.entityId)?.displayName ?? null;
+    };
+
+    expect(matchedName(0, "Khamzat Chimaev")).toBe("Khamzat Chimaev");
+    expect(matchedName(0, "Cain Velasquez")).toBe("Cain Velasquez");
+    expect(matchedName(0, "Islam")).toBe("Islam Makhachev");
+    expect(matchedName(0, "Geroege St Lierre")).toBe("Georges St-Pierre");
+
+    expect(matchedName(1, "Valentina")).toBe("Valentina Shevchenko");
+    expect(matchedName(1, "Joana")).toBe("Joanna Jedrzejczyk");
+    expect(matchedName(1, "Joanna Jeddecici")).toBe("Joanna Jedrzejczyk");
+    expect(matchedName(1, "Cat Zigano")).toBe("Cat Zingano");
+
+    expect(matchedName(4, "Herb", true)).toBe("Herb Dean");
+    expect(matchedName(1, "Conor", true)).toBe("Conor McGregor");
+  });
+
   it("never mixes question identities across the three source banks", () => {
     const cfb = new Set([...CFB_SPORTS_FEUD_MAIN, ...CFB_FAST].map((question) => question.id));
     const nfl = new Set([...NFL_SPORTS_FEUD_MAIN, ...NFL_FAST].map((question) => question.id));
