@@ -620,8 +620,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "traits",
     prompts: [
-      "Name a trait every NFL coach wants in a quarterback.",
-      "Name a quarterback trait that separates stars from average starters.",
+      {
+        prompt: "Name a trait every NFL coach wants in a quarterback.",
+        answers: ["Accuracy", "Decision-making", "Processing", "Leadership", "Poise", "Arm strength", "Toughness", "Pocket presence"],
+        alsoAcceptedAnswers: ["Mobility", "Anticipation", "Footwork", "Field vision", "Mechanics", "Ball security", "Quick release", "Timing"],
+      },
+      {
+        prompt: "Name a quarterback trait that separates stars from average starters.",
+        answers: ["Processing", "Accuracy", "Anticipation", "Decision-making", "Pocket presence", "Poise", "Arm strength", "Mobility"],
+        alsoAcceptedAnswers: ["Leadership", "Quick release", "Footwork", "Timing", "Toughness", "Field vision", "Mechanics", "Ball security"],
+      },
       "Name something scouts notice immediately in an NFL quarterback.",
       "Name a quarterback quality that matters late in a close game.",
       "Name a trait fans brag about when they love their quarterback.",
