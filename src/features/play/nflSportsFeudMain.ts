@@ -586,8 +586,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "positions",
     prompts: [
-      "Name an NFL position fans love to watch.",
-      "Name a position that can produce the biggest Sunday stars.",
+      {
+        prompt: "Name an NFL position fans love to watch.",
+        answers: ["Quarterback", "Wide receiver", "Running back", "Pass rusher", "Cornerback", "Tight end", "Linebacker", "Safety"],
+        alsoAcceptedAnswers: ["Defensive tackle", "Kicker", "Punter", "Center", "Guard", "Offensive tackle", "Fullback", "Long snapper", "Nose tackle"],
+      },
+      {
+        prompt: "Name an NFL position that can produce the biggest Sunday stars.",
+        answers: ["Quarterback", "Wide receiver", "Running back", "Pass rusher", "Cornerback", "Tight end", "Linebacker", "Safety"],
+        alsoAcceptedAnswers: ["Defensive tackle", "Kicker", "Offensive tackle", "Guard", "Center", "Punter", "Fullback", "Nose tackle"],
+      },
       "Name a football position casual fans recognize immediately.",
       "Name a position group that can become a team's identity.",
       "Name a position that can change a game with one play.",
