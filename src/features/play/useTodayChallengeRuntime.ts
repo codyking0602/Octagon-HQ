@@ -219,6 +219,11 @@ export function useTodayChallengeRuntime({
           setQueueDepth(queueRef.current.length);
           publishOfficialProjection(next);
           releaseItem(item, next);
+          if (next.officialAttempt) {
+            discardQueue(null);
+            rebuildOptimisticProjection(next);
+            break;
+          }
           rebuildOptimisticProjection(next);
           continue;
         }
