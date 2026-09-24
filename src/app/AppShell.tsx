@@ -4,6 +4,7 @@ import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
 import { useIdentity } from "../features/identity/IdentityProvider";
+import { canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
 import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
@@ -39,8 +40,10 @@ export type HqThemeScope = "neutral" | SelectedSport;
 function sportContextForPath(pathname: string): SportContext | null {
   if (pathname === "/picks") return { sport: "ufc", section: "PICKS", switchable: true };
   if (pathname === "/football/picks") return { sport: "football", section: "PICKS", switchable: true };
+  if (pathname === "/mlb/picks") return { sport: "mlb", section: "PICKS", switchable: true };
   if (pathname === "/play") return { sport: "ufc", section: "PLAY", switchable: true };
   if (pathname === "/football") return { sport: "football", section: "PLAY", switchable: true };
+  if (pathname === "/mlb") return { sport: "mlb", section: "PLAY", switchable: true };
   if (pathname === "/rankings") return { sport: "ufc", section: "RANKINGS", switchable: false };
   if (pathname === "/intelligence") return { sport: "ufc", section: "INTELLIGENCE", switchable: false };
   return null;
@@ -63,33 +66,44 @@ function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqTh
   }
 
   if (pathname === "/football" || pathname.startsWith("/football/")) return "football";
+  if (pathname === "/mlb" || pathname.startsWith("/mlb/")) return "mlb";
 
   return "ufc";
 }
 
 function sportSectionDestination(section: SportContextSection, sport: SelectedSport) {
-  if (section === "PICKS") return sport === "football" ? "/football/picks" : "/picks";
-  if (section === "PLAY") return sport === "football" ? "/football" : "/play";
+  if (section === "PICKS") {
+    if (sport === "football") return "/football/picks";
+    if (sport === "mlb") return "/mlb/picks";
+    return "/picks";
+  }
+  if (section === "PLAY") {
+    if (sport === "football") return "/football";
+    if (sport === "mlb") return "/mlb";
+    return "/play";
+  }
   return null;
 }
 
 function SportContextRow({
   context,
   onSelectSport,
+  showMlb,
 }: {
   context: SportContext;
   onSelectSport: (sport: SelectedSport) => void;
+  showMlb: boolean;
 }) {
   const sectionLabel = context.section[0] + context.section.slice(1).toLowerCase();
 
   return (
     <div className="sport-context-row" data-testid="sport-context-row" aria-label="Sport context">
       <strong className="sport-context-row__label">
-        {context.sport.toUpperCase()} {context.section}
+        {context.sport === "mlb" ? "MLB PLAYOFFS" : context.sport.toUpperCase()} {context.section}
       </strong>
       {context.switchable ? (
         <div className="sport-context-row__switch" role="group" aria-label={`${sectionLabel} sport`}>
-          {(["ufc", "football"] as const).map((sport) => (
+          {(["ufc", "football", ...(showMlb ? ["mlb"] as const : [])] as SelectedSport[]).map((sport) => (
             <button
               key={sport}
               type="button"
@@ -97,7 +111,7 @@ function SportContextRow({
               aria-pressed={context.sport === sport}
               onClick={() => onSelectSport(sport)}
             >
-              {sport === "ufc" ? "UFC" : "Football"}
+              {sport === "ufc" ? "UFC" : sport === "football" ? "Football" : "MLB"}
             </button>
           ))}
         </div>
@@ -129,14 +143,19 @@ export function AppShell() {
   const isPlayGame = Boolean(gameTitle);
   const isFootballGame = Boolean(footballGameTitle);
   const isMillionaireGame = location.pathname === "/play/millionaire" || location.pathname === "/football/millionaire";
-  const isGame = isPlayGame || isFootballGame || isMillionaireGame;
+  const isMlbGame = location.pathname === "/mlb/challenge";
+  const isGame = isPlayGame || isFootballGame || isMillionaireGame || isMlbGame;
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
+  const isMlb = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
+  const mlbVisible = canViewMlbPlayoffs(identity.profile);
+  const effectiveSelectedSport = selectedSport === "mlb" && !mlbVisible ? "ufc" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
-  const themeScope = themeScopeForPath(location.pathname, selectedSport);
+  const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
 
   function selectSport(sport: SelectedSport) {
     if (!sportContext?.switchable) return;
+    if (sport === "mlb" && !mlbVisible) return;
 
     setSelectedSport(sport);
     const destination = sportSectionDestination(sportContext.section, sport);
@@ -145,12 +164,19 @@ export function AppShell() {
 
   return (
     <div
-      className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}`}
+      className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${isMlb ? " app-shell--mlb-room" : ""}`}
       data-hq-theme={themeScope}
     >
       <RouteScrollManager />
 
-      {isMillionaireGame ? null : isFootballGame ? (
+      {isMillionaireGame ? null : isMlbGame ? (
+        <header className="app-header app-header--game">
+          <Link className="game-header__back" to="/mlb" aria-label="Return to MLB Playoffs">
+            <span aria-hidden="true">←</span>
+            <span><small>MLB PLAYOFFS</small><strong>Featured Challenge</strong></span>
+          </Link>
+        </header>
+      ) : isFootballGame ? (
         <header className="app-header app-header--game app-header--football-game">
           <Link className="game-header__back" to="/football" aria-label="Return to Football HQ">
             <span aria-hidden="true">←</span>
@@ -197,7 +223,7 @@ export function AppShell() {
             <IdentityControl />
           </div>
           {sportContext ? (
-            <SportContextRow context={sportContext} onSelectSport={selectSport} />
+            <SportContextRow context={sportContext} onSelectSport={selectSport} showMlb={mlbVisible} />
           ) : null}
         </header>
       )}
