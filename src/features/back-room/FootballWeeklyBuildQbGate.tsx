@@ -134,22 +134,59 @@ function PriorResults({ results }: { results: FootballWeeklyBuildQbPriorResult[]
   );
 }
 
+const QUARTERBACK_NAME_SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
+
+function quarterbackSurname(displayName: string) {
+  const parts = displayName.trim().split(/\s+/).filter(Boolean);
+  while (
+    parts.length > 1
+    && QUARTERBACK_NAME_SUFFIXES.has((parts.at(-1) ?? "").replace(/\./g, "").toLowerCase())
+  ) {
+    parts.pop();
+  }
+  return parts.at(-1) ?? displayName;
+}
+
+function compactQuarterbackSlotName(displayName: string, collectionNames: readonly string[]) {
+  const surname = quarterbackSurname(displayName);
+  const matchingSurnames = collectionNames.filter(
+    (name) => quarterbackSurname(name).toLowerCase() === surname.toLowerCase(),
+  ).length;
+  if (matchingSurnames <= 1) return surname;
+
+  const firstInitial = displayName.trim().charAt(0).toUpperCase();
+  return firstInitial ? `${firstInitial}. ${surname}` : surname;
+}
+
 function TraitSlots({ state }: { state: FootballWeeklyBuildQbState }) {
   const won = new Map(state.collection.map((item) => [item.trait, item]));
+  const collectionNames = state.collection.map((item) => item.display_name);
   return (
     <div className="football-weekly-build-qb__slots" aria-label="Your Build a QB traits">
       {TRAITS.map((trait) => {
         const item = won.get(trait);
         const passUsed = state.trait_passes[trait] === true;
+        const identity = item ? buildQbTeamVisualIdentity(item.team_code) : null;
         return (
-          <article className={item ? "is-filled" : ""} key={trait}>
+          <article
+            className={item ? "is-filled" : ""}
+            key={trait}
+            style={identity ? {
+              "--weekly-qb-primary": identity.primary,
+              "--weekly-qb-rgb": identity.primaryRgb,
+              "--weekly-qb-secondary": identity.secondary,
+            } as React.CSSProperties : undefined}
+          >
             <small>{trait}</small>
             {item ? (
-              <div><TeamMark teamCode={item.team_code} /><strong>{item.display_name}</strong></div>
+              <div>
+                <TeamMark teamCode={item.team_code} />
+                <strong>{compactQuarterbackSlotName(item.display_name, collectionNames)}</strong>
+              </div>
             ) : (
               <strong>OPEN</strong>
             )}
-            {!item ? <span>{passUsed ? "PASS USED · $1 MIN" : "FREE PASS AVAILABLE"}</span> : <span>LOCKED IN</span>}
+            {!item ? <span>{passUsed ? "PASS USED" : "FREE PASS"}</span> : null}
           </article>
         );
       })}
@@ -412,8 +449,8 @@ export function FootballWeeklyBuildQbGate({
             </button>
           </div>
           <div className="football-weekly-build-qb__lock-copy">
-            <span>Bids lock · results reveal at midnight CT</span>
-            <span>$0 uses your free pass for that trait.</span>
+            <span>Bids lock at midnight CT</span>
+            <span>$0 bid = pass</span>
           </div>
         </div>
 
