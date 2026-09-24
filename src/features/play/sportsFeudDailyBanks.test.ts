@@ -193,7 +193,7 @@ describe("Sports Feud authored Daily banks", () => {
     ]);
     expect(aliases(UFC_FAST, "ufc-fast4-02-1", "Rear-naked choke")).toContain("RNC");
     expect(aliases(UFC_FAST, "ufc-fast4-05-1", "Ground-and-pound")).toContain("GNP");
-    expect(aliases(UFC_FAST, "ufc-fast4-06-1", "Knee to a grounded opponent")).toContain("Illegal knee");
+    expect(aliases(UFC_FAST, "ufc-fast4-06-1", "Knee to the head of a grounded opponent")).toContain("Illegal knee");
     expect(aliases(UFC_FAST, "ufc-fast4-07-1", "Effective striking")).toContain("Significant strikes");
     expect(aliases(UFC_FAST, "ufc-fast4-10-1", "Give instructions")).toContain("Coaching");
   });
@@ -224,7 +224,7 @@ describe("Sports Feud authored Daily banks", () => {
     };
 
     expect(matchedName(ufc, ufcQuestion("ufc-fast3-10-1"), "New York"))
-      .toBe("Madison Square Garden");
+      .toBe("New York City");
     expect(matchedName(ufc, ufcQuestion("ufc-fast3-10-1"), "MSG"))
       .toBe("Madison Square Garden");
     expect(matchedName(ufc, ufcQuestion("ufc-fast4-09-3"), "faint"))

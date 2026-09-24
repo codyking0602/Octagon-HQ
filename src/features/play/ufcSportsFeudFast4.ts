@@ -2,215 +2,2149 @@ import { expandSportsFeudFamilies } from "./sportsFeudAuthoredHelpers";
 
 export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
   {
-    category: "rules",
-    entityKind: "other",
-    collisionGroup: "finishes",
-    prompts: [
-      "Name a broad way a UFC fight can end.",
-      "Name a basic result type you can see on a UFC fight result.",
-      "Name a common official outcome for an MMA fight.",
-      "Name a broad finish or result type in the UFC.",
-      "Name a simple UFC fight outcome.",
+    "category": "rules",
+    "entityKind": "other",
+    "collisionGroup": "finishes",
+    "prompts": [
+      {
+        "prompt": "Name a broad way a UFC fight can end.",
+        "answers": [
+          "Knockout",
+          "TKO",
+          "Submission",
+          "Decision",
+          "Doctor stoppage",
+          "Disqualification",
+          "No contest",
+          "Corner stoppage"
+        ],
+        "alsoAcceptedAnswers": [
+          "Draw",
+          "Technical decision",
+          "Technical draw"
+        ]
+      },
+      {
+        "prompt": "Name a basic result type you can see on a UFC fight result.",
+        "answers": [
+          "Decision",
+          "Knockout",
+          "TKO",
+          "Submission",
+          "No contest",
+          "Draw",
+          "Disqualification",
+          "Doctor stoppage"
+        ],
+        "alsoAcceptedAnswers": [
+          "Corner stoppage",
+          "Technical decision",
+          "Technical draw"
+        ]
+      },
+      {
+        "prompt": "Name a common official outcome for an MMA fight.",
+        "answers": [
+          "Decision",
+          "Knockout",
+          "TKO",
+          "Submission",
+          "No contest",
+          "Draw",
+          "Disqualification",
+          "Doctor stoppage"
+        ],
+        "alsoAcceptedAnswers": [
+          "Corner stoppage",
+          "Technical decision",
+          "Technical draw"
+        ]
+      },
+      {
+        "prompt": "Name a broad finish or result type in the UFC.",
+        "answers": [
+          "Knockout",
+          "TKO",
+          "Submission",
+          "Decision",
+          "Doctor stoppage",
+          "Corner stoppage",
+          "Disqualification",
+          "No contest"
+        ],
+        "alsoAcceptedAnswers": [
+          "Draw",
+          "Technical decision",
+          "Technical draw"
+        ]
+      },
+      {
+        "prompt": "Name a simple UFC fight outcome.",
+        "answers": [
+          "Decision",
+          "Knockout",
+          "TKO",
+          "Submission",
+          "No contest",
+          "Draw",
+          "Doctor stoppage",
+          "Disqualification"
+        ],
+        "alsoAcceptedAnswers": [
+          "Corner stoppage",
+          "Technical decision",
+          "Technical draw"
+        ]
+      }
     ],
-    answers: [
-      { name: "Knockout", aliases: ["KO"] },
-      { name: "TKO", aliases: ["Technical knockout", "Technical KO"] },
-      { name: "Submission", aliases: ["Sub"] },
-      { name: "Decision", aliases: ["Dec"] },
-      { name: "Doctor stoppage", aliases: ["Doctor", "Medical stoppage"] },
-      { name: "Disqualification", aliases: ["DQ", "Disqualified"] },
-      { name: "No contest", aliases: ["NC", "No-contest"] },
-      { name: "Corner stoppage", aliases: ["Corner", "Corner stop", "Corner throws in towel", "Towel"] },
+    "answers": [
+      {
+        "name": "Knockout",
+        "aliases": [
+          "KO",
+          "K.O."
+        ]
+      },
+      {
+        "name": "TKO",
+        "aliases": [
+          "Technical knockout",
+          "Technical KO"
+        ]
+      },
+      {
+        "name": "Submission",
+        "aliases": [
+          "Sub",
+          "Tapout",
+          "Tap out"
+        ]
+      },
+      {
+        "name": "Decision",
+        "aliases": [
+          "Dec",
+          "Judges decision"
+        ]
+      },
+      {
+        "name": "Doctor stoppage",
+        "aliases": [
+          "Doctor",
+          "Medical stoppage",
+          "Doctor stop",
+          "Doctor's stoppage"
+        ]
+      },
+      {
+        "name": "Disqualification",
+        "aliases": [
+          "DQ",
+          "Disqualified",
+          "D.Q."
+        ]
+      },
+      {
+        "name": "No contest",
+        "aliases": [
+          "NC",
+          "No-contest"
+        ]
+      },
+      {
+        "name": "Corner stoppage",
+        "aliases": [
+          "Corner",
+          "Corner stop",
+          "Corner throws in towel",
+          "Towel",
+          "Throw in towel"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: [
-      { name: "Draw", aliases: ["Split draw", "Majority draw"] },
-    ],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Draw",
+        "aliases": [
+          "Split draw",
+          "Majority draw",
+          "Tie"
+        ]
+      },
+      {
+        "name": "Technical decision",
+        "aliases": [
+          "Tech decision",
+          "Technical dec"
+        ]
+      },
+      {
+        "name": "Technical draw",
+        "aliases": [
+          "Tech draw"
+        ]
+      }
+    ]
   },
   {
-    category: "techniques",
-    entityKind: "other",
-    collisionGroup: "submissions",
-    prompts: [
-      "Name a common MMA submission.",
-      "Name a submission you might see finish a UFC fight.",
-      "Name a grappling hold MMA fans recognize.",
-      "Name a submission fighters drill constantly.",
-      "Name a tap-out technique used in the UFC.",
+    "category": "techniques",
+    "entityKind": "other",
+    "collisionGroup": "submissions",
+    "prompts": [
+      {
+        "prompt": "Name a common MMA submission.",
+        "answers": [
+          "Rear-naked choke",
+          "Guillotine",
+          "Armbar",
+          "Triangle choke",
+          "Kimura",
+          "Arm-triangle choke",
+          "Heel hook",
+          "D'Arce choke"
+        ],
+        "alsoAcceptedAnswers": [
+          "Americana",
+          "Anaconda choke",
+          "Kneebar",
+          "Neck crank",
+          "Twister",
+          "Calf slicer",
+          "Von Flue choke",
+          "Peruvian necktie"
+        ]
+      },
+      {
+        "prompt": "Name a submission you might see finish a UFC fight.",
+        "answers": [
+          "Rear-naked choke",
+          "Guillotine",
+          "Armbar",
+          "Triangle choke",
+          "Arm-triangle choke",
+          "D'Arce choke",
+          "Heel hook",
+          "Kimura"
+        ],
+        "alsoAcceptedAnswers": [
+          "Americana",
+          "Anaconda choke",
+          "Kneebar",
+          "Neck crank",
+          "Twister",
+          "Calf slicer",
+          "Von Flue choke",
+          "Peruvian necktie"
+        ]
+      },
+      {
+        "prompt": "Name a grappling hold MMA fans recognize.",
+        "answers": [
+          "Rear-naked choke",
+          "Guillotine",
+          "Armbar",
+          "Triangle choke",
+          "Kimura",
+          "Americana",
+          "Heel hook",
+          "D'Arce choke"
+        ],
+        "alsoAcceptedAnswers": [
+          "Arm-triangle choke",
+          "Anaconda choke",
+          "Kneebar",
+          "Neck crank",
+          "Twister",
+          "Calf slicer",
+          "Von Flue choke",
+          "Peruvian necktie"
+        ]
+      },
+      {
+        "prompt": "Name a submission fighters drill constantly.",
+        "answers": [
+          "Rear-naked choke",
+          "Guillotine",
+          "Armbar",
+          "Triangle choke",
+          "Kimura",
+          "Arm-triangle choke",
+          "D'Arce choke",
+          "Anaconda choke"
+        ],
+        "alsoAcceptedAnswers": [
+          "Americana",
+          "Heel hook",
+          "Kneebar",
+          "Neck crank",
+          "Twister",
+          "Calf slicer",
+          "Von Flue choke",
+          "Peruvian necktie"
+        ]
+      },
+      {
+        "prompt": "Name a tap-out technique used in the UFC.",
+        "answers": [
+          "Rear-naked choke",
+          "Guillotine",
+          "Armbar",
+          "Triangle choke",
+          "Arm-triangle choke",
+          "D'Arce choke",
+          "Heel hook",
+          "Kimura"
+        ],
+        "alsoAcceptedAnswers": [
+          "Americana",
+          "Anaconda choke",
+          "Kneebar",
+          "Neck crank",
+          "Twister",
+          "Calf slicer",
+          "Von Flue choke",
+          "Peruvian necktie"
+        ]
+      }
     ],
-    answers: [
-      { name: "Rear-naked choke", aliases: ["RNC", "Rear naked", "Rear naked choke"] },
-      { name: "Guillotine", aliases: ["Guillotine choke"] },
-      { name: "Armbar", aliases: ["Arm bar"] },
-      { name: "Triangle choke", aliases: ["Triangle"] },
-      { name: "Kimura", aliases: ["Kimura lock"] },
-      { name: "Americana", aliases: ["Americana lock"] },
-      { name: "Arm-triangle choke", aliases: ["Arm triangle", "Arm-triangle"] },
-      { name: "Heel hook", aliases: ["Heelhook"] },
+    "answers": [
+      {
+        "name": "Rear-naked choke",
+        "aliases": [
+          "RNC",
+          "Rear naked",
+          "Rear naked choke"
+        ]
+      },
+      {
+        "name": "Guillotine",
+        "aliases": [
+          "Guillotine choke"
+        ]
+      },
+      {
+        "name": "Armbar",
+        "aliases": [
+          "Arm bar"
+        ]
+      },
+      {
+        "name": "Triangle choke",
+        "aliases": [
+          "Triangle"
+        ]
+      },
+      {
+        "name": "Kimura",
+        "aliases": [
+          "Kimura lock"
+        ]
+      },
+      {
+        "name": "Americana",
+        "aliases": [
+          "Americana lock",
+          "Keylock",
+          "Key lock"
+        ]
+      },
+      {
+        "name": "Arm-triangle choke",
+        "aliases": [
+          "Arm triangle",
+          "Arm-triangle",
+          "Arm triangle choke"
+        ]
+      },
+      {
+        "name": "Heel hook",
+        "aliases": [
+          "Heelhook"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: ["D'Arce choke", "Anaconda choke", "Kneebar", "Neck crank", "Twister", "Calf slicer"],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "D'Arce choke",
+        "aliases": [
+          "Darce",
+          "D Arce",
+          "Brabo choke"
+        ]
+      },
+      {
+        "name": "Anaconda choke",
+        "aliases": [
+          "Anaconda"
+        ]
+      },
+      {
+        "name": "Kneebar",
+        "aliases": [
+          "Knee bar"
+        ]
+      },
+      {
+        "name": "Neck crank",
+        "aliases": [
+          "Crank"
+        ]
+      },
+      {
+        "name": "Twister",
+        "aliases": [
+          "The Twister"
+        ]
+      },
+      {
+        "name": "Calf slicer",
+        "aliases": [
+          "Calf slice"
+        ]
+      },
+      {
+        "name": "Von Flue choke",
+        "aliases": [
+          "Von Flue",
+          "Von Flue submission"
+        ]
+      },
+      {
+        "name": "Peruvian necktie",
+        "aliases": [
+          "Peruvian neck tie"
+        ]
+      }
+    ]
   },
   {
-    category: "techniques",
-    entityKind: "other",
-    collisionGroup: "strikes",
-    prompts: [
-      "Name a strike you can use in MMA.",
-      "Name a striking technique you might see in the UFC.",
-      "Name a legal attack fighters throw on the feet.",
-      "Name a basic strike MMA athletes train.",
-      "Name a strike that can hurt an opponent in the Octagon.",
+    "category": "techniques",
+    "entityKind": "other",
+    "collisionGroup": "strikes",
+    "prompts": [
+      {
+        "prompt": "Name a strike you can use in MMA.",
+        "answers": [
+          "Jab",
+          "Cross",
+          "Hook",
+          "Uppercut",
+          "Elbow",
+          "Knee",
+          "Body kick",
+          "Head kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Overhand",
+          "Low kick",
+          "Front kick",
+          "Spinning backfist",
+          "Hammerfist",
+          "Spinning elbow",
+          "Superman punch",
+          "Spinning kick"
+        ]
+      },
+      {
+        "prompt": "Name a striking technique you might see in the UFC.",
+        "answers": [
+          "Jab",
+          "Cross",
+          "Hook",
+          "Uppercut",
+          "Elbow",
+          "Knee",
+          "Head kick",
+          "Low kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Body kick",
+          "Overhand",
+          "Front kick",
+          "Spinning backfist",
+          "Hammerfist",
+          "Spinning elbow",
+          "Superman punch",
+          "Spinning kick"
+        ]
+      },
+      {
+        "prompt": "Name a legal attack fighters throw on the feet.",
+        "answers": [
+          "Jab",
+          "Cross",
+          "Hook",
+          "Uppercut",
+          "Elbow",
+          "Knee",
+          "Body kick",
+          "Head kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Overhand",
+          "Low kick",
+          "Front kick",
+          "Spinning backfist",
+          "Hammerfist",
+          "Spinning elbow",
+          "Superman punch",
+          "Spinning kick"
+        ]
+      },
+      {
+        "prompt": "Name a basic strike MMA athletes train.",
+        "answers": [
+          "Jab",
+          "Cross",
+          "Hook",
+          "Uppercut",
+          "Elbow",
+          "Knee",
+          "Low kick",
+          "Front kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Body kick",
+          "Head kick",
+          "Overhand",
+          "Spinning backfist",
+          "Hammerfist",
+          "Spinning elbow",
+          "Superman punch",
+          "Spinning kick"
+        ]
+      },
+      {
+        "prompt": "Name a strike that can hurt an opponent in the Octagon.",
+        "answers": [
+          "Hook",
+          "Uppercut",
+          "Elbow",
+          "Knee",
+          "Head kick",
+          "Body kick",
+          "Overhand",
+          "Cross"
+        ],
+        "alsoAcceptedAnswers": [
+          "Jab",
+          "Low kick",
+          "Front kick",
+          "Spinning backfist",
+          "Hammerfist",
+          "Spinning elbow",
+          "Superman punch",
+          "Spinning kick"
+        ]
+      }
     ],
-    answers: ["Jab", "Cross", "Hook", "Uppercut", "Elbow", "Knee", "Body kick", "Head kick"],
-    alsoAcceptedAnswers: ["Overhand", "Low kick", "Front kick", "Spinning backfist", "Hammerfist", "Spinning elbow"],
+    "answers": [
+      {
+        "name": "Jab",
+        "aliases": [
+          "Jab punch"
+        ]
+      },
+      {
+        "name": "Cross",
+        "aliases": [
+          "Straight",
+          "Straight right",
+          "Straight left"
+        ]
+      },
+      {
+        "name": "Hook",
+        "aliases": [
+          "Hook punch"
+        ]
+      },
+      {
+        "name": "Uppercut",
+        "aliases": [
+          "Upper cut"
+        ]
+      },
+      {
+        "name": "Elbow",
+        "aliases": [
+          "Elbow strike",
+          "Elbows"
+        ]
+      },
+      {
+        "name": "Knee",
+        "aliases": [
+          "Knee strike",
+          "Knees"
+        ]
+      },
+      {
+        "name": "Body kick",
+        "aliases": [
+          "Kick to body"
+        ]
+      },
+      {
+        "name": "Head kick",
+        "aliases": [
+          "High kick",
+          "Kick to head"
+        ]
+      }
+    ],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Overhand",
+        "aliases": [
+          "Overhand right",
+          "Overhand left"
+        ]
+      },
+      {
+        "name": "Low kick",
+        "aliases": [
+          "Leg kick"
+        ]
+      },
+      {
+        "name": "Front kick",
+        "aliases": [
+          "Push kick"
+        ]
+      },
+      {
+        "name": "Spinning backfist",
+        "aliases": [
+          "Spinning back fist"
+        ]
+      },
+      {
+        "name": "Hammerfist",
+        "aliases": [
+          "Hammer fist"
+        ]
+      },
+      {
+        "name": "Spinning elbow",
+        "aliases": [
+          "Spin elbow"
+        ]
+      },
+      {
+        "name": "Superman punch",
+        "aliases": [
+          "Superman"
+        ]
+      },
+      {
+        "name": "Spinning kick",
+        "aliases": [
+          "Spin kick"
+        ]
+      }
+    ]
   },
   {
-    category: "techniques",
-    entityKind: "other",
-    collisionGroup: "kicks",
-    prompts: [
-      "Name a type of kick used in MMA.",
-      "Name a kicking technique you might see in the UFC.",
-      "Name a kick fighters use to attack at range.",
-      "Name a kick commentators identify during UFC fights.",
-      "Name a striking weapon that comes from the legs.",
+    "category": "techniques",
+    "entityKind": "other",
+    "collisionGroup": "kicks",
+    "prompts": [
+      {
+        "prompt": "Name a type of kick used in MMA.",
+        "answers": [
+          "Low kick",
+          "Head kick",
+          "Body kick",
+          "Front kick",
+          "Side kick",
+          "Spinning back kick",
+          "Calf kick",
+          "Oblique kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Roundhouse kick",
+          "Teep",
+          "Wheel kick",
+          "Question-mark kick",
+          "Axe kick",
+          "Switch kick"
+        ]
+      },
+      {
+        "prompt": "Name a kicking technique you might see in the UFC.",
+        "answers": [
+          "Low kick",
+          "Head kick",
+          "Body kick",
+          "Front kick",
+          "Calf kick",
+          "Spinning back kick",
+          "Roundhouse kick",
+          "Teep"
+        ],
+        "alsoAcceptedAnswers": [
+          "Side kick",
+          "Oblique kick",
+          "Wheel kick",
+          "Question-mark kick",
+          "Axe kick",
+          "Switch kick"
+        ]
+      },
+      {
+        "prompt": "Name a kick fighters use to attack at range.",
+        "answers": [
+          "Front kick",
+          "Low kick",
+          "Body kick",
+          "Side kick",
+          "Calf kick",
+          "Teep",
+          "Oblique kick",
+          "Roundhouse kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Head kick",
+          "Spinning back kick",
+          "Wheel kick",
+          "Question-mark kick",
+          "Axe kick",
+          "Switch kick"
+        ]
+      },
+      {
+        "prompt": "Name a kick commentators identify during UFC fights.",
+        "answers": [
+          "Low kick",
+          "Head kick",
+          "Body kick",
+          "Front kick",
+          "Calf kick",
+          "Teep",
+          "Wheel kick",
+          "Question-mark kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Side kick",
+          "Spinning back kick",
+          "Oblique kick",
+          "Roundhouse kick",
+          "Axe kick",
+          "Switch kick"
+        ]
+      },
+      {
+        "prompt": "Name a striking weapon that comes from the legs.",
+        "answers": [
+          "Head kick",
+          "Low kick",
+          "Body kick",
+          "Front kick",
+          "Calf kick",
+          "Side kick",
+          "Spinning back kick",
+          "Roundhouse kick"
+        ],
+        "alsoAcceptedAnswers": [
+          "Oblique kick",
+          "Teep",
+          "Wheel kick",
+          "Question-mark kick",
+          "Axe kick",
+          "Switch kick"
+        ]
+      }
     ],
-    answers: ["Low kick", "Head kick", "Body kick", "Front kick", "Side kick", "Spinning back kick", "Calf kick", "Oblique kick"],
-    alsoAcceptedAnswers: ["Roundhouse kick", "Teep", "Wheel kick", "Question-mark kick", "Axe kick"],
+    "answers": [
+      {
+        "name": "Low kick",
+        "aliases": [
+          "Leg kick"
+        ]
+      },
+      {
+        "name": "Head kick",
+        "aliases": [
+          "High kick",
+          "Kick to head"
+        ]
+      },
+      {
+        "name": "Body kick",
+        "aliases": [
+          "Kick to body"
+        ]
+      },
+      "Front kick",
+      {
+        "name": "Side kick",
+        "aliases": [
+          "Sidekick"
+        ]
+      },
+      {
+        "name": "Spinning back kick",
+        "aliases": [
+          "Spin back kick"
+        ]
+      },
+      {
+        "name": "Calf kick",
+        "aliases": [
+          "Calf kicks"
+        ]
+      },
+      {
+        "name": "Oblique kick",
+        "aliases": [
+          "Oblique"
+        ]
+      }
+    ],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Roundhouse kick",
+        "aliases": [
+          "Roundhouse"
+        ]
+      },
+      {
+        "name": "Teep",
+        "aliases": [
+          "Front push kick"
+        ]
+      },
+      {
+        "name": "Wheel kick",
+        "aliases": [
+          "Spinning wheel kick"
+        ]
+      },
+      {
+        "name": "Question-mark kick",
+        "aliases": [
+          "Question mark kick",
+          "Question kick"
+        ]
+      },
+      {
+        "name": "Axe kick",
+        "aliases": [
+          "Ax kick"
+        ]
+      },
+      {
+        "name": "Switch kick",
+        "aliases": [
+          "Switchkick"
+        ]
+      }
+    ]
   },
   {
-    category: "grappling",
-    entityKind: "other",
-    collisionGroup: "grappling",
-    prompts: [
-      "Name a wrestling or grappling position, action, or control term used in MMA.",
-      "Name a wrestling or grappling action a fighter might use after closing distance.",
-      "Name a wrestling or grappling position, action, or control term commentators mention in UFC fights.",
-      "Name a position, action, or control term from the wrestling or grappling side of MMA.",
-      "Name a wrestling or grappling term associated with controlling an opponent.",
+    "category": "grappling",
+    "entityKind": "other",
+    "collisionGroup": "grappling",
+    "prompts": [
+      {
+        "prompt": "Name a wrestling or grappling position, action, or control term used in MMA.",
+        "answers": [
+          "Takedown",
+          "Double-leg",
+          "Single-leg",
+          "Clinch",
+          "Back control",
+          "Mount",
+          "Half guard",
+          "Ground-and-pound"
+        ],
+        "alsoAcceptedAnswers": [
+          "Guard",
+          "Side control",
+          "Sprawl",
+          "Sweep",
+          "Body lock",
+          "Underhook",
+          "Rear body lock",
+          "Mat return"
+        ]
+      },
+      {
+        "prompt": "Name a wrestling or grappling action a fighter might use after closing distance.",
+        "answers": [
+          "Takedown",
+          "Double-leg",
+          "Single-leg",
+          "Clinch",
+          "Body lock",
+          "Underhook",
+          "Ground-and-pound",
+          "Sprawl"
+        ],
+        "alsoAcceptedAnswers": [
+          "Back control",
+          "Mount",
+          "Half guard",
+          "Guard",
+          "Side control",
+          "Sweep",
+          "Rear body lock",
+          "Mat return"
+        ]
+      },
+      {
+        "prompt": "Name a wrestling or grappling position, action, or control term commentators mention in UFC fights.",
+        "answers": [
+          "Takedown",
+          "Clinch",
+          "Back control",
+          "Mount",
+          "Half guard",
+          "Guard",
+          "Side control",
+          "Ground-and-pound"
+        ],
+        "alsoAcceptedAnswers": [
+          "Double-leg",
+          "Single-leg",
+          "Sprawl",
+          "Sweep",
+          "Body lock",
+          "Underhook",
+          "Rear body lock",
+          "Mat return"
+        ]
+      },
+      {
+        "prompt": "Name a position, action, or control term from the wrestling or grappling side of MMA.",
+        "answers": [
+          "Takedown",
+          "Double-leg",
+          "Single-leg",
+          "Clinch",
+          "Mount",
+          "Guard",
+          "Side control",
+          "Back control"
+        ],
+        "alsoAcceptedAnswers": [
+          "Half guard",
+          "Ground-and-pound",
+          "Sprawl",
+          "Sweep",
+          "Body lock",
+          "Underhook",
+          "Rear body lock",
+          "Mat return"
+        ]
+      },
+      {
+        "prompt": "Name a wrestling or grappling term associated with controlling an opponent.",
+        "answers": [
+          "Back control",
+          "Mount",
+          "Side control",
+          "Half guard",
+          "Clinch",
+          "Body lock",
+          "Underhook",
+          "Ground-and-pound"
+        ],
+        "alsoAcceptedAnswers": [
+          "Takedown",
+          "Double-leg",
+          "Single-leg",
+          "Guard",
+          "Sprawl",
+          "Sweep",
+          "Rear body lock",
+          "Mat return"
+        ]
+      }
     ],
-    answers: [
-      { name: "Takedown", aliases: ["Take down"] },
-      { name: "Double-leg", aliases: ["Double leg"] },
-      { name: "Single-leg", aliases: ["Single leg"] },
-      { name: "Clinch", aliases: ["Clinch work"] },
-      { name: "Back control", aliases: ["Back", "Take the back"] },
-      { name: "Mount", aliases: ["Full mount"] },
-      { name: "Half guard", aliases: ["Half-guard"] },
-      { name: "Ground-and-pound", aliases: ["Ground and pound", "GNP"] },
+    "answers": [
+      {
+        "name": "Takedown",
+        "aliases": [
+          "Take down",
+          "TD"
+        ]
+      },
+      {
+        "name": "Double-leg",
+        "aliases": [
+          "Double leg",
+          "Double-leg takedown"
+        ]
+      },
+      {
+        "name": "Single-leg",
+        "aliases": [
+          "Single leg",
+          "Single-leg takedown"
+        ]
+      },
+      {
+        "name": "Clinch",
+        "aliases": [
+          "Clinch work",
+          "Clinch fighting"
+        ]
+      },
+      {
+        "name": "Back control",
+        "aliases": [
+          "Back",
+          "Take the back",
+          "Back mount"
+        ]
+      },
+      {
+        "name": "Mount",
+        "aliases": [
+          "Full mount"
+        ]
+      },
+      {
+        "name": "Half guard",
+        "aliases": [
+          "Half-guard"
+        ]
+      },
+      {
+        "name": "Ground-and-pound",
+        "aliases": [
+          "Ground and pound",
+          "GNP",
+          "Ground pound"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: ["Guard", "Side control", "Sprawl", "Sweep", "Body lock", "Underhook"],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Guard",
+        "aliases": [
+          "Full guard"
+        ]
+      },
+      {
+        "name": "Side control",
+        "aliases": [
+          "Side-control"
+        ]
+      },
+      {
+        "name": "Sprawl",
+        "aliases": [
+          "Sprawling"
+        ]
+      },
+      {
+        "name": "Sweep",
+        "aliases": [
+          "Sweeps"
+        ]
+      },
+      {
+        "name": "Body lock",
+        "aliases": [
+          "Bodylock"
+        ]
+      },
+      {
+        "name": "Underhook",
+        "aliases": [
+          "Under hook"
+        ]
+      },
+      {
+        "name": "Rear body lock",
+        "aliases": [
+          "Rear bodylock"
+        ]
+      },
+      {
+        "name": "Mat return",
+        "aliases": [
+          "Mat returns"
+        ]
+      }
+    ]
   },
   {
-    category: "rules",
-    entityKind: "other",
-    collisionGroup: "fouls",
-    prompts: [
-      "Name a foul in MMA.",
-      "Name something illegal inside the UFC Octagon.",
-      "Name an action that can draw a warning or point deduction.",
-      "Name a foul referees watch for in a UFC fight.",
-      "Name an illegal technique under the unified MMA rules.",
+    "category": "rules",
+    "entityKind": "other",
+    "collisionGroup": "fouls",
+    "prompts": [
+      {
+        "prompt": "Name a foul in MMA.",
+        "answers": [
+          "Eye poke",
+          "Groin strike",
+          "Fence grab",
+          "Headbutt",
+          "Biting",
+          "Hair pulling",
+          "Back-of-head strike",
+          "Knee to the head of a grounded opponent"
+        ],
+        "alsoAcceptedAnswers": [
+          "Grabbing shorts or gloves",
+          "Throat attack",
+          "Small-joint manipulation",
+          "Fish-hooking",
+          "Spiking on the head or neck",
+          "Attacking the spine",
+          "Knee to the head of a grounded opponent"
+        ]
+      },
+      {
+        "prompt": "Name something illegal inside the UFC Octagon.",
+        "answers": [
+          "Eye poke",
+          "Groin strike",
+          "Fence grab",
+          "Headbutt",
+          "Back-of-head strike",
+          "Knee to the head of a grounded opponent",
+          "Grabbing shorts or gloves",
+          "Throat attack"
+        ],
+        "alsoAcceptedAnswers": [
+          "Biting",
+          "Hair pulling",
+          "Small-joint manipulation",
+          "Fish-hooking",
+          "Spiking on the head or neck",
+          "Attacking the spine",
+          "Knee to the head of a grounded opponent"
+        ]
+      },
+      {
+        "prompt": "Name an action that can draw a warning or point deduction.",
+        "answers": [
+          "Eye poke",
+          "Groin strike",
+          "Fence grab",
+          "Knee to the head of a grounded opponent",
+          "Back-of-head strike",
+          "Grabbing shorts or gloves",
+          "Hair pulling",
+          "Headbutt"
+        ],
+        "alsoAcceptedAnswers": [
+          "Biting",
+          "Throat attack",
+          "Small-joint manipulation",
+          "Fish-hooking",
+          "Spiking on the head or neck",
+          "Attacking the spine",
+          "Knee to the head of a grounded opponent"
+        ]
+      },
+      {
+        "prompt": "Name a foul referees watch for in a UFC fight.",
+        "answers": [
+          "Eye poke",
+          "Groin strike",
+          "Fence grab",
+          "Headbutt",
+          "Back-of-head strike",
+          "Knee to the head of a grounded opponent",
+          "Grabbing shorts or gloves",
+          "Small-joint manipulation"
+        ],
+        "alsoAcceptedAnswers": [
+          "Biting",
+          "Hair pulling",
+          "Throat attack",
+          "Fish-hooking",
+          "Spiking on the head or neck",
+          "Attacking the spine",
+          "Knee to the head of a grounded opponent"
+        ]
+      },
+      {
+        "prompt": "Name an illegal technique under the unified MMA rules.",
+        "answers": [
+          "Eye poke",
+          "Groin strike",
+          "Headbutt",
+          "Biting",
+          "Hair pulling",
+          "Back-of-head strike",
+          "Knee to the head of a grounded opponent",
+          "Small-joint manipulation"
+        ],
+        "alsoAcceptedAnswers": [
+          "Fence grab",
+          "Grabbing shorts or gloves",
+          "Throat attack",
+          "Fish-hooking",
+          "Spiking on the head or neck",
+          "Attacking the spine",
+          "Knee to the head of a grounded opponent"
+        ]
+      }
     ],
-    answers: [
-      { name: "Eye poke", aliases: ["Eye poking", "Poke the eye"] },
-      { name: "Groin strike", aliases: ["Low blow", "Groin shot"] },
-      { name: "Fence grab", aliases: ["Grab the fence", "Cage grab"] },
-      { name: "Headbutt", aliases: ["Head butt"] },
-      { name: "Biting", aliases: ["Bite"] },
-      { name: "Hair pulling", aliases: ["Pull hair", "Hair pull"] },
-      { name: "Back-of-head strike", aliases: ["Back of head", "Hit back of head", "Rabbit punch"] },
-      { name: "Knee to a grounded opponent", aliases: ["Illegal knee", "Grounded knee", "Knee grounded opponent"] },
+    "answers": [
+      {
+        "name": "Eye poke",
+        "aliases": [
+          "Eye poking",
+          "Poke the eye",
+          "Poke eye"
+        ]
+      },
+      {
+        "name": "Groin strike",
+        "aliases": [
+          "Low blow",
+          "Groin shot"
+        ]
+      },
+      {
+        "name": "Fence grab",
+        "aliases": [
+          "Grab the fence",
+          "Cage grab",
+          "Grab fence",
+          "Fence grabbing"
+        ]
+      },
+      {
+        "name": "Headbutt",
+        "aliases": [
+          "Head butt",
+          "Headbutting"
+        ]
+      },
+      {
+        "name": "Biting",
+        "aliases": [
+          "Bite"
+        ]
+      },
+      {
+        "name": "Hair pulling",
+        "aliases": [
+          "Pull hair",
+          "Hair pull"
+        ]
+      },
+      {
+        "name": "Back-of-head strike",
+        "aliases": [
+          "Back of head",
+          "Hit back of head",
+          "Rabbit punch",
+          "Back of head strike"
+        ]
+      },
+      "Knee to the head of a grounded opponent"
     ],
-    alsoAcceptedAnswers: [
-      { name: "Grabbing shorts or gloves", aliases: ["Grab shorts", "Grab gloves", "Shorts grab", "Glove grab"] },
-      { name: "Throat attack", aliases: ["Throat strike", "Strike to throat"] },
-      { name: "Small-joint manipulation", aliases: ["Small joint manipulation", "Finger bending", "Toe bending"] },
-      { name: "Fish-hooking", aliases: ["Fish hook", "Fish hooking"] },
-      { name: "Spiking on the head or neck", aliases: ["Spiking", "Spike on head", "Spike on neck"] },
-      { name: "Attacking the spine", aliases: ["Spine strike", "Strike to spine"] },
-    ],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Grabbing shorts or gloves",
+        "aliases": [
+          "Grab shorts",
+          "Grab gloves",
+          "Shorts grab",
+          "Glove grab"
+        ]
+      },
+      {
+        "name": "Throat attack",
+        "aliases": [
+          "Throat strike",
+          "Strike to throat"
+        ]
+      },
+      {
+        "name": "Small-joint manipulation",
+        "aliases": [
+          "Small joint manipulation",
+          "Finger bending",
+          "Toe bending"
+        ]
+      },
+      {
+        "name": "Fish-hooking",
+        "aliases": [
+          "Fish hook",
+          "Fish hooking"
+        ]
+      },
+      {
+        "name": "Spiking on the head or neck",
+        "aliases": [
+          "Spiking",
+          "Spike on head",
+          "Spike on neck",
+          "Piledriver"
+        ]
+      },
+      {
+        "name": "Attacking the spine",
+        "aliases": [
+          "Spine strike",
+          "Strike to spine",
+          "Strike spine"
+        ]
+      },
+      {
+        "name": "Knee to the head of a grounded opponent",
+        "aliases": [
+          "Illegal knee",
+          "Knee to grounded opponent",
+          "Knee on grounded opponent",
+          "Grounded head knee",
+          "Knee to grounded head"
+        ]
+      }
+    ]
   },
   {
-    category: "judging",
-    entityKind: "other",
-    collisionGroup: "judging",
-    prompts: [
-      "Name something judges or fans look at when deciding who won a round.",
-      "Name a factor that can influence how an MMA round is scored.",
-      "Name something that helps a fighter make a round look convincing.",
-      "Name a performance area people debate on UFC scorecards.",
-      "Name something that can matter when comparing two close MMA rounds.",
+    "category": "judging",
+    "entityKind": "other",
+    "collisionGroup": "judging",
+    "prompts": [
+      {
+        "prompt": "Name something judges or fans look at when deciding who won a round.",
+        "answers": [
+          "Effective striking",
+          "Effective grappling",
+          "Damage",
+          "Takedowns",
+          "Submission attempts",
+          "Control",
+          "Aggression",
+          "Cage pressure"
+        ],
+        "alsoAcceptedAnswers": [
+          "Knockdowns",
+          "Positional advancement",
+          "Near submissions",
+          "Clean strikes",
+          "Ground strikes"
+        ]
+      },
+      {
+        "prompt": "Name a factor that can influence how an MMA round is scored.",
+        "answers": [
+          "Effective striking",
+          "Effective grappling",
+          "Damage",
+          "Control",
+          "Aggression",
+          "Cage pressure",
+          "Takedowns",
+          "Submission attempts"
+        ],
+        "alsoAcceptedAnswers": [
+          "Knockdowns",
+          "Positional advancement",
+          "Near submissions",
+          "Clean strikes",
+          "Ground strikes"
+        ]
+      },
+      {
+        "prompt": "Name something that helps a fighter make a round look convincing.",
+        "answers": [
+          "Damage",
+          "Effective striking",
+          "Knockdowns",
+          "Takedowns",
+          "Control",
+          "Aggression",
+          "Cage pressure",
+          "Ground strikes"
+        ],
+        "alsoAcceptedAnswers": [
+          "Effective grappling",
+          "Submission attempts",
+          "Positional advancement",
+          "Near submissions",
+          "Clean strikes"
+        ]
+      },
+      {
+        "prompt": "Name a performance area people debate on UFC scorecards.",
+        "answers": [
+          "Effective striking",
+          "Effective grappling",
+          "Damage",
+          "Control",
+          "Aggression",
+          "Cage pressure",
+          "Takedowns",
+          "Submission attempts"
+        ],
+        "alsoAcceptedAnswers": [
+          "Knockdowns",
+          "Positional advancement",
+          "Near submissions",
+          "Clean strikes",
+          "Ground strikes"
+        ]
+      },
+      {
+        "prompt": "Name something that can matter when comparing two close MMA rounds.",
+        "answers": [
+          "Damage",
+          "Effective striking",
+          "Effective grappling",
+          "Knockdowns",
+          "Control",
+          "Takedowns",
+          "Near submissions",
+          "Clean strikes"
+        ],
+        "alsoAcceptedAnswers": [
+          "Submission attempts",
+          "Aggression",
+          "Cage pressure",
+          "Positional advancement",
+          "Ground strikes"
+        ]
+      }
     ],
-    answers: [
-      { name: "Effective striking", aliases: ["Striking", "Significant strikes", "Strikes"] },
-      { name: "Effective grappling", aliases: ["Grappling"] },
-      { name: "Damage", aliases: ["Visible damage"] },
-      { name: "Takedowns", aliases: ["Takedown"] },
-      { name: "Submission attempts", aliases: ["Submissions", "Submission attempt", "Sub attempts"] },
-      { name: "Control", aliases: ["Control time", "Octagon control"] },
-      { name: "Aggression", aliases: ["Aggressive", "Effective aggression"] },
-      { name: "Cage pressure", aliases: ["Pressure", "Forward pressure"] },
+    "answers": [
+      {
+        "name": "Effective striking",
+        "aliases": [
+          "Striking",
+          "Significant strikes",
+          "Strikes",
+          "Effective strikes"
+        ]
+      },
+      {
+        "name": "Effective grappling",
+        "aliases": [
+          "Grappling"
+        ]
+      },
+      {
+        "name": "Damage",
+        "aliases": [
+          "Visible damage"
+        ]
+      },
+      {
+        "name": "Takedowns",
+        "aliases": [
+          "Takedown",
+          "TDs",
+          "Take downs"
+        ]
+      },
+      {
+        "name": "Submission attempts",
+        "aliases": [
+          "Submissions",
+          "Submission attempt",
+          "Sub attempts",
+          "Subs attempted"
+        ]
+      },
+      {
+        "name": "Control",
+        "aliases": [
+          "Control time",
+          "Octagon control"
+        ]
+      },
+      {
+        "name": "Aggression",
+        "aliases": [
+          "Aggressive",
+          "Effective aggression"
+        ]
+      },
+      {
+        "name": "Cage pressure",
+        "aliases": [
+          "Pressure",
+          "Forward pressure"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: ["Knockdowns", "Positional advancement", "Near submissions", "Clean strikes", "Ground strikes"],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Knockdowns",
+        "aliases": [
+          "KDs",
+          "Knock downs"
+        ]
+      },
+      {
+        "name": "Positional advancement",
+        "aliases": [
+          "Advance position",
+          "Position advancement"
+        ]
+      },
+      {
+        "name": "Near submissions",
+        "aliases": [
+          "Near subs",
+          "Submission threats"
+        ]
+      },
+      {
+        "name": "Clean strikes",
+        "aliases": [
+          "Clean shots"
+        ]
+      },
+      {
+        "name": "Ground strikes",
+        "aliases": [
+          "Ground striking"
+        ]
+      }
+    ]
   },
   {
-    category: "stats",
-    entityKind: "other",
-    collisionGroup: "stats",
-    prompts: [
-      "Name a UFC fight statistic.",
-      "Name a number shown during or after an MMA fight.",
-      "Name a stat fans use to describe what happened in a bout.",
-      "Name a fight metric you might see on a UFC broadcast.",
-      "Name a statistic analysts use when breaking down a UFC fight.",
+    "category": "stats",
+    "entityKind": "other",
+    "collisionGroup": "stats",
+    "prompts": [
+      {
+        "prompt": "Name a UFC fight statistic.",
+        "answers": [
+          "Significant strikes",
+          "Total strikes",
+          "Takedowns",
+          "Takedown accuracy",
+          "Control time",
+          "Knockdowns",
+          "Submission attempts",
+          "Head strikes"
+        ],
+        "alsoAcceptedAnswers": [
+          "Body strikes",
+          "Leg strikes",
+          "Distance strikes",
+          "Clinch strikes",
+          "Ground strikes",
+          "Striking accuracy",
+          "Striking differential",
+          "Takedown defense"
+        ]
+      },
+      {
+        "prompt": "Name a number shown during or after an MMA fight.",
+        "answers": [
+          "Significant strikes",
+          "Total strikes",
+          "Takedowns",
+          "Control time",
+          "Knockdowns",
+          "Striking accuracy",
+          "Takedown accuracy",
+          "Submission attempts"
+        ],
+        "alsoAcceptedAnswers": [
+          "Head strikes",
+          "Body strikes",
+          "Leg strikes",
+          "Distance strikes",
+          "Clinch strikes",
+          "Ground strikes",
+          "Striking differential",
+          "Takedown defense"
+        ]
+      },
+      {
+        "prompt": "Name a stat fans use to describe what happened in a bout.",
+        "answers": [
+          "Significant strikes",
+          "Total strikes",
+          "Takedowns",
+          "Control time",
+          "Knockdowns",
+          "Head strikes",
+          "Body strikes",
+          "Leg strikes"
+        ],
+        "alsoAcceptedAnswers": [
+          "Takedown accuracy",
+          "Submission attempts",
+          "Distance strikes",
+          "Clinch strikes",
+          "Ground strikes",
+          "Striking accuracy",
+          "Striking differential",
+          "Takedown defense"
+        ]
+      },
+      {
+        "prompt": "Name a fight metric you might see on a UFC broadcast.",
+        "answers": [
+          "Significant strikes",
+          "Total strikes",
+          "Takedowns",
+          "Control time",
+          "Knockdowns",
+          "Striking accuracy",
+          "Distance strikes",
+          "Clinch strikes"
+        ],
+        "alsoAcceptedAnswers": [
+          "Takedown accuracy",
+          "Submission attempts",
+          "Head strikes",
+          "Body strikes",
+          "Leg strikes",
+          "Ground strikes",
+          "Striking differential",
+          "Takedown defense"
+        ]
+      },
+      {
+        "prompt": "Name a statistic analysts use when breaking down a UFC fight.",
+        "answers": [
+          "Significant strikes",
+          "Total strikes",
+          "Takedowns",
+          "Takedown accuracy",
+          "Control time",
+          "Knockdowns",
+          "Submission attempts",
+          "Striking accuracy"
+        ],
+        "alsoAcceptedAnswers": [
+          "Head strikes",
+          "Body strikes",
+          "Leg strikes",
+          "Distance strikes",
+          "Clinch strikes",
+          "Ground strikes",
+          "Striking differential",
+          "Takedown defense"
+        ]
+      }
     ],
-    answers: ["Significant strikes", "Total strikes", "Takedowns", "Takedown accuracy", "Control time", "Knockdowns", "Submission attempts", "Head strikes"],
-    alsoAcceptedAnswers: ["Body strikes", "Leg strikes", "Distance strikes", "Clinch strikes", "Ground strikes", "Striking accuracy"],
+    "answers": [
+      {
+        "name": "Significant strikes",
+        "aliases": [
+          "Sig strikes",
+          "Sig. strikes",
+          "Significant strike"
+        ]
+      },
+      {
+        "name": "Total strikes",
+        "aliases": [
+          "All strikes"
+        ]
+      },
+      {
+        "name": "Takedowns",
+        "aliases": [
+          "TDs",
+          "Take downs"
+        ]
+      },
+      {
+        "name": "Takedown accuracy",
+        "aliases": [
+          "TD accuracy",
+          "Takedown percentage",
+          "Takedown pct"
+        ]
+      },
+      {
+        "name": "Control time",
+        "aliases": [
+          "Control"
+        ]
+      },
+      {
+        "name": "Knockdowns",
+        "aliases": [
+          "KDs",
+          "Knock downs"
+        ]
+      },
+      {
+        "name": "Submission attempts",
+        "aliases": [
+          "Sub attempts",
+          "Subs attempted"
+        ]
+      },
+      {
+        "name": "Head strikes",
+        "aliases": [
+          "Strikes to head"
+        ]
+      }
+    ],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Body strikes",
+        "aliases": [
+          "Strikes to body"
+        ]
+      },
+      {
+        "name": "Leg strikes",
+        "aliases": [
+          "Strikes to legs"
+        ]
+      },
+      {
+        "name": "Distance strikes",
+        "aliases": [
+          "Range strikes"
+        ]
+      },
+      {
+        "name": "Clinch strikes",
+        "aliases": [
+          "Clinch striking"
+        ]
+      },
+      {
+        "name": "Ground strikes",
+        "aliases": [
+          "Ground striking"
+        ]
+      },
+      {
+        "name": "Striking accuracy",
+        "aliases": [
+          "Strike accuracy",
+          "Striking %"
+        ]
+      },
+      {
+        "name": "Striking differential",
+        "aliases": [
+          "Strike differential"
+        ]
+      },
+      {
+        "name": "Takedown defense",
+        "aliases": [
+          "TDD",
+          "Takedown D"
+        ]
+      }
+    ]
   },
   {
-    category: "weight-cutting",
-    entityKind: "other",
-    collisionGroup: "weight-cutting",
-    prompts: [
-      "Name something a fighter may deal with during or immediately after a difficult UFC weight cut.",
-      "Name a symptom, problem, or recovery step tied to a hard UFC weight cut.",
-      "Name a symptom, outcome, or recovery need after a rough UFC weight cut.",
-      "Name something a fighter might deal with while cutting a lot of weight or rehydrating afterward.",
-      "Name something fans watch for when a UFC weight cut goes badly or recovery begins.",
+    "category": "weight-cutting",
+    "entityKind": "other",
+    "collisionGroup": "weight-cutting",
+    "prompts": [
+      {
+        "prompt": "Name something a fighter may deal with during or immediately after a difficult UFC weight cut.",
+        "answers": [
+          "Dehydration",
+          "Missed weight",
+          "Dizziness",
+          "Cramping",
+          "Fainting",
+          "Vomiting",
+          "Exhaustion",
+          "Rehydration"
+        ],
+        "alsoAcceptedAnswers": [
+          "Headache",
+          "Weakness",
+          "Nausea",
+          "Low energy",
+          "Poor sleep"
+        ]
+      },
+      {
+        "prompt": "Name a symptom, problem, or recovery step tied to a hard UFC weight cut.",
+        "answers": [
+          "Dehydration",
+          "Dizziness",
+          "Cramping",
+          "Fainting",
+          "Vomiting",
+          "Exhaustion",
+          "Rehydration",
+          "Nausea"
+        ],
+        "alsoAcceptedAnswers": [
+          "Missed weight",
+          "Headache",
+          "Weakness",
+          "Low energy",
+          "Poor sleep"
+        ]
+      },
+      {
+        "prompt": "Name a symptom, outcome, or recovery need after a rough UFC weight cut.",
+        "answers": [
+          "Dehydration",
+          "Missed weight",
+          "Dizziness",
+          "Fainting",
+          "Exhaustion",
+          "Rehydration",
+          "Weakness",
+          "Nausea"
+        ],
+        "alsoAcceptedAnswers": [
+          "Cramping",
+          "Vomiting",
+          "Headache",
+          "Low energy",
+          "Poor sleep"
+        ]
+      },
+      {
+        "prompt": "Name something a fighter might deal with while cutting a lot of weight or rehydrating afterward.",
+        "answers": [
+          "Dehydration",
+          "Dizziness",
+          "Cramping",
+          "Exhaustion",
+          "Rehydration",
+          "Weakness",
+          "Low energy",
+          "Poor sleep"
+        ],
+        "alsoAcceptedAnswers": [
+          "Missed weight",
+          "Fainting",
+          "Vomiting",
+          "Headache",
+          "Nausea"
+        ]
+      },
+      {
+        "prompt": "Name something fans watch for when a UFC weight cut goes badly or recovery begins.",
+        "answers": [
+          "Missed weight",
+          "Dehydration",
+          "Dizziness",
+          "Fainting",
+          "Vomiting",
+          "Exhaustion",
+          "Rehydration",
+          "Weakness"
+        ],
+        "alsoAcceptedAnswers": [
+          "Cramping",
+          "Headache",
+          "Nausea",
+          "Low energy",
+          "Poor sleep"
+        ]
+      }
     ],
-    answers: [
-      { name: "Dehydration", aliases: ["Dehydrated"] },
-      { name: "Missed weight", aliases: ["Miss weight", "Misses weight", "Overweight"] },
-      { name: "Dizziness", aliases: ["Dizzy", "Lightheaded", "Lightheadedness"] },
-      { name: "Cramping", aliases: ["Cramps", "Cramp"] },
-      { name: "Fainting", aliases: ["Faint", "Pass out", "Passing out", "Passed out"] },
-      { name: "Vomiting", aliases: ["Vomit", "Throw up", "Throwing up"] },
-      { name: "Exhaustion", aliases: ["Exhausted", "Fatigue"] },
-      { name: "Rehydration", aliases: ["Rehydrate", "Rehydrating"] },
+    "answers": [
+      {
+        "name": "Dehydration",
+        "aliases": [
+          "Dehydrated"
+        ]
+      },
+      {
+        "name": "Missed weight",
+        "aliases": [
+          "Miss weight",
+          "Misses weight",
+          "Overweight",
+          "Missed the weight",
+          "Weight miss"
+        ]
+      },
+      {
+        "name": "Dizziness",
+        "aliases": [
+          "Dizzy",
+          "Lightheaded",
+          "Lightheadedness"
+        ]
+      },
+      {
+        "name": "Cramping",
+        "aliases": [
+          "Cramps",
+          "Cramp"
+        ]
+      },
+      {
+        "name": "Fainting",
+        "aliases": [
+          "Faint",
+          "Pass out",
+          "Passing out",
+          "Passed out"
+        ]
+      },
+      {
+        "name": "Vomiting",
+        "aliases": [
+          "Vomit",
+          "Throw up",
+          "Throwing up"
+        ]
+      },
+      {
+        "name": "Exhaustion",
+        "aliases": [
+          "Exhausted",
+          "Fatigue"
+        ]
+      },
+      {
+        "name": "Rehydration",
+        "aliases": [
+          "Rehydrate",
+          "Rehydrating",
+          "Hydrate",
+          "Hydration"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: ["Headache", "Weakness", "Nausea", "Low energy", "Poor sleep"],
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Headache",
+        "aliases": [
+          "Headaches"
+        ]
+      },
+      {
+        "name": "Weakness",
+        "aliases": [
+          "Weak"
+        ]
+      },
+      {
+        "name": "Nausea",
+        "aliases": [
+          "Nauseous"
+        ]
+      },
+      {
+        "name": "Low energy",
+        "aliases": [
+          "No energy"
+        ]
+      },
+      {
+        "name": "Poor sleep",
+        "aliases": [
+          "Can't sleep",
+          "Bad sleep"
+        ]
+      }
+    ]
   },
   {
-    category: "corner",
-    entityKind: "other",
-    collisionGroup: "corner",
-    prompts: [
-      "Name something a fighter's corner does between rounds.",
-      "Name a job performed by a UFC corner team.",
-      "Name something coaches might do during the one-minute break.",
-      "Name a responsibility of the people in a fighter's corner.",
-      "Name something that can happen on the stool between rounds.",
+    "category": "corner",
+    "entityKind": "other",
+    "collisionGroup": "corner",
+    "prompts": [
+      {
+        "prompt": "Name something a fighter's corner does between rounds.",
+        "answers": [
+          "Give instructions",
+          "Apply ice",
+          "Reduce swelling",
+          "Stop bleeding",
+          "Give water",
+          "Control breathing",
+          "Encourage the fighter",
+          "Adjust the game plan"
+        ],
+        "alsoAcceptedAnswers": [
+          "Apply petroleum jelly",
+          "Check a cut",
+          "Clean the fighter",
+          "Calm the fighter down"
+        ]
+      },
+      {
+        "prompt": "Name a job performed by a UFC corner team.",
+        "answers": [
+          "Give instructions",
+          "Apply ice",
+          "Stop bleeding",
+          "Give water",
+          "Adjust the game plan",
+          "Encourage the fighter",
+          "Check a cut",
+          "Calm the fighter down"
+        ],
+        "alsoAcceptedAnswers": [
+          "Reduce swelling",
+          "Control breathing",
+          "Apply petroleum jelly",
+          "Clean the fighter"
+        ]
+      },
+      {
+        "prompt": "Name something coaches might do during the one-minute break.",
+        "answers": [
+          "Give instructions",
+          "Apply ice",
+          "Give water",
+          "Control breathing",
+          "Adjust the game plan",
+          "Stop bleeding",
+          "Reduce swelling",
+          "Encourage the fighter"
+        ],
+        "alsoAcceptedAnswers": [
+          "Apply petroleum jelly",
+          "Check a cut",
+          "Clean the fighter",
+          "Calm the fighter down"
+        ]
+      },
+      {
+        "prompt": "Name a responsibility of the people in a fighter's corner.",
+        "answers": [
+          "Give instructions",
+          "Stop bleeding",
+          "Apply ice",
+          "Give water",
+          "Adjust the game plan",
+          "Encourage the fighter",
+          "Check a cut",
+          "Apply petroleum jelly"
+        ],
+        "alsoAcceptedAnswers": [
+          "Reduce swelling",
+          "Control breathing",
+          "Clean the fighter",
+          "Calm the fighter down"
+        ]
+      },
+      {
+        "prompt": "Name something that can happen on the stool between rounds.",
+        "answers": [
+          "Give instructions",
+          "Give water",
+          "Apply ice",
+          "Stop bleeding",
+          "Control breathing",
+          "Adjust the game plan",
+          "Encourage the fighter",
+          "Calm the fighter down"
+        ],
+        "alsoAcceptedAnswers": [
+          "Reduce swelling",
+          "Apply petroleum jelly",
+          "Check a cut",
+          "Clean the fighter"
+        ]
+      }
     ],
-    answers: [
-      { name: "Give instructions", aliases: ["Instructions", "Coaching", "Coach"] },
-      { name: "Apply ice", aliases: ["Ice", "Ice the fighter"] },
-      { name: "Reduce swelling", aliases: ["Swelling", "Reduce swelling"] },
-      { name: "Stop bleeding", aliases: ["Bleeding", "Cut", "Cuts", "Stop the cut"] },
-      { name: "Give water", aliases: ["Water", "Hydrate", "Hydration"] },
-      { name: "Control breathing", aliases: ["Breathing", "Breathe"] },
-      { name: "Encourage the fighter", aliases: ["Encourage", "Motivate", "Motivation"] },
-      { name: "Adjust the game plan", aliases: ["Game plan", "Gameplan", "Adjust strategy"] },
+    "answers": [
+      {
+        "name": "Give instructions",
+        "aliases": [
+          "Instructions",
+          "Coaching",
+          "Coach"
+        ]
+      },
+      {
+        "name": "Apply ice",
+        "aliases": [
+          "Ice",
+          "Ice the fighter",
+          "Ice them"
+        ]
+      },
+      {
+        "name": "Reduce swelling",
+        "aliases": [
+          "Swelling",
+          "Reduce swelling",
+          "Reduce inflammation"
+        ]
+      },
+      {
+        "name": "Stop bleeding",
+        "aliases": [
+          "Bleeding",
+          "Cut",
+          "Cuts",
+          "Stop the cut",
+          "Stop the blood"
+        ]
+      },
+      {
+        "name": "Give water",
+        "aliases": [
+          "Water",
+          "Hydrate",
+          "Hydration"
+        ]
+      },
+      {
+        "name": "Control breathing",
+        "aliases": [
+          "Breathing",
+          "Breathe",
+          "Slow breathing"
+        ]
+      },
+      {
+        "name": "Encourage the fighter",
+        "aliases": [
+          "Encourage",
+          "Motivate",
+          "Motivation"
+        ]
+      },
+      {
+        "name": "Adjust the game plan",
+        "aliases": [
+          "Game plan",
+          "Gameplan",
+          "Adjust strategy",
+          "Adjustments",
+          "Make adjustments"
+        ]
+      }
     ],
-    alsoAcceptedAnswers: ["Apply petroleum jelly", "Check a cut", "Clean the fighter", "Calm the fighter down"],
-  },
+    "alsoAcceptedAnswers": [
+      {
+        "name": "Apply petroleum jelly",
+        "aliases": [
+          "Vaseline",
+          "Petroleum jelly"
+        ]
+      },
+      {
+        "name": "Check a cut",
+        "aliases": [
+          "Check cut",
+          "Cut check"
+        ]
+      },
+      {
+        "name": "Clean the fighter",
+        "aliases": [
+          "Clean them",
+          "Wipe down"
+        ]
+      },
+      {
+        "name": "Calm the fighter down",
+        "aliases": [
+          "Calm them",
+          "Calm down"
+        ]
+      }
+    ]
+  }
 ] as const);
