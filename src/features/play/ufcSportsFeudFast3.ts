@@ -1089,7 +1089,6 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "Mark Hunt",
           "Alistair Overeem",
           "Nick Diaz",
-          "Kazushi Sakuraba",
           "Ryo Chonan"
         ]
       },
@@ -1122,12 +1121,11 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "Dan Henderson",
           "Quinton Jackson",
           "Antonio Rodrigo Nogueira",
-          "Kazushi Sakuraba",
-          "Mark Hunt"
+          "Anderson Silva",
+          "Fabricio Werdum"
         ],
         "alsoAcceptedAnswers": [
-          "Anderson Silva",
-          "Fabricio Werdum",
+          "Mark Hunt",
           "Alistair Overeem",
           "Nick Diaz",
           "Ryo Chonan"
@@ -2139,14 +2137,14 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "The O2",
           "Etihad Arena",
           "Fight Island",
-          "Las Vegas"
+          "Honda Center"
         ],
         "alsoAcceptedAnswers": [
-          "Honda Center",
           "Abu Dhabi",
           "London",
           "Anaheim",
-          "New York City"
+          "New York City",
+          "Las Vegas"
         ]
       },
       {
