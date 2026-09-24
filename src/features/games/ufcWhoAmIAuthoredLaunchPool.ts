@@ -8,17 +8,9 @@ import { ufcWhoAmIAuthoredBatch5 } from "./ufcWhoAmIAuthoredBatch5";
 import { ufcWhoAmIAuthoredBatch6 } from "./ufcWhoAmIAuthoredBatch6";
 import { ufcWhoAmIAuthoredBatch7 } from "./ufcWhoAmIAuthoredBatch7";
 import { ufcWhoAmIAuthoredBatch8 } from "./ufcWhoAmIAuthoredBatch8";
-import { ufcWhoAmIAuthoredRosterExpansion1 } from "./ufcWhoAmIAuthoredRosterExpansion1";
-import { ufcWhoAmIAuthoredRosterExpansion2 } from "./ufcWhoAmIAuthoredRosterExpansion2";
-import { ufcWhoAmIAuthoredRosterExpansion3 } from "./ufcWhoAmIAuthoredRosterExpansion3";
-import { ufcWhoAmIAuthoredRosterExpansion4 } from "./ufcWhoAmIAuthoredRosterExpansion4";
-import { ufcWhoAmIAuthoredRosterExpansion5 } from "./ufcWhoAmIAuthoredRosterExpansion5";
-import { ufcWhoAmIAuthoredRosterExpansion6 } from "./ufcWhoAmIAuthoredRosterExpansion6";
-import { ufcWhoAmIAuthoredRosterExpansion7 } from "./ufcWhoAmIAuthoredRosterExpansion7";
-import { ufcWhoAmIAuthoredRosterExpansion8 } from "./ufcWhoAmIAuthoredRosterExpansion8";
-import { ufcWhoAmIAuthoredRosterExpansion9 } from "./ufcWhoAmIAuthoredRosterExpansion9";
-import { ufcWhoAmIAuthoredRosterExpansion10 } from "./ufcWhoAmIAuthoredRosterExpansion10";
-import { ufcWhoAmIAuthoredRosterExpansion11 } from "./ufcWhoAmIAuthoredRosterExpansion11";
+import { ufcWhoAmIAuthoredExpansion133Batch1 } from "./ufcWhoAmIAuthoredExpansion133Batch1";
+import { ufcWhoAmIAuthoredExpansion133Batch2 } from "./ufcWhoAmIAuthoredExpansion133Batch2";
+import { ufcWhoAmIAuthoredExpansion133Batch3 } from "./ufcWhoAmIAuthoredExpansion133Batch3";
 
 export const ufcWhoAmIAuthoredLaunchPool = [
   ...ufcWhoAmIAuthoredIdentities,
@@ -31,17 +23,9 @@ export const ufcWhoAmIAuthoredLaunchPool = [
   ...ufcWhoAmIAuthoredBatch6,
   ...ufcWhoAmIAuthoredBatch7,
   ...ufcWhoAmIAuthoredBatch8,
-  ...ufcWhoAmIAuthoredRosterExpansion1,
-  ...ufcWhoAmIAuthoredRosterExpansion2,
-  ...ufcWhoAmIAuthoredRosterExpansion3,
-  ...ufcWhoAmIAuthoredRosterExpansion4,
-  ...ufcWhoAmIAuthoredRosterExpansion5,
-  ...ufcWhoAmIAuthoredRosterExpansion6,
-  ...ufcWhoAmIAuthoredRosterExpansion7,
-  ...ufcWhoAmIAuthoredRosterExpansion8,
-  ...ufcWhoAmIAuthoredRosterExpansion9,
-  ...ufcWhoAmIAuthoredRosterExpansion10,
-  ...ufcWhoAmIAuthoredRosterExpansion11,
+  ...ufcWhoAmIAuthoredExpansion133Batch1,
+  ...ufcWhoAmIAuthoredExpansion133Batch2,
+  ...ufcWhoAmIAuthoredExpansion133Batch3,
 ] as const;
 
 const bySubjectId = new Map(
