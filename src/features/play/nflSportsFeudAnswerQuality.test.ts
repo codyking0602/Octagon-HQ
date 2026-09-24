@@ -249,6 +249,40 @@ describe("NFL Sports Feud authored answer quality", () => {
     }
   });
 
+  it("keeps NFL Main questions 21-40 independently authored after review", () => {
+    for (const familyNumber of [5, 6, 7, 8]) {
+      const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
+      const rows = NFL_SPORTS_FEUD_MAIN.filter((question) => question.id.startsWith(prefix));
+      expect(rows).toHaveLength(5);
+
+      const universeSignatures = rows.map((question) =>
+        [
+          ...question.answers,
+          ...(question.alsoAcceptedAnswers ?? []),
+        ].map((answer) => normalizeFamilyFeudInput(answer.name)).join("|"),
+      );
+      expect(new Set(universeSignatures).size, prefix + " independent universes").toBe(5);
+    }
+
+    const highlightQb = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-06-4")!;
+    expect(highlightQb.alsoAcceptedAnswers?.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining(["Michael Vick", "Lamar Jackson", "Cam Newton"]),
+    );
+
+    const historyQb = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-06-5")!;
+    expect(historyQb.alsoAcceptedAnswers?.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining(["Joe Namath", "Bart Starr"]),
+    );
+
+    const physicalBack = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-07-5")!;
+    expect(physicalBack.answers[0]?.name).toBe("Derrick Henry");
+    expect(physicalBack.answers.map((answer) => answer.name)).toContain("Marshawn Lynch");
+
+    const highlightReceiver = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-08-3")!;
+    expect(highlightReceiver.answers[0]?.name).toBe("Randy Moss");
+    expect(highlightReceiver.answers.map((answer) => answer.name)).toContain("Odell Beckham Jr.");
+  });
+
   it("keeps NFL Main questions 1-20 independently authored after review", () => {
     for (const familyNumber of [1, 2, 3, 4]) {
       const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
