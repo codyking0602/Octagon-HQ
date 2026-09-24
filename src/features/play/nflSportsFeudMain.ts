@@ -723,8 +723,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
         answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "Las Vegas Raiders", "San Francisco 49ers", "Chicago Bears", "Kansas City Chiefs", "Miami Dolphins"],
         alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Indianapolis Colts", "Cleveland Browns", "Philadelphia Eagles", "New Orleans Saints", "Los Angeles Chargers", "Denver Broncos"],
       },
-      "Name an NFL franchise you would include in a classic-uniform conversation.",
-      "Name a team whose visual identity barely needs an introduction.",
+      {
+        prompt: "Name an NFL franchise you would include in a classic-uniform conversation.",
+        answers: ["Green Bay Packers", "Las Vegas Raiders", "Chicago Bears", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Indianapolis Colts", "Miami Dolphins"],
+        alsoAcceptedAnswers: ["New York Giants", "Cleveland Browns", "Kansas City Chiefs", "New Orleans Saints", "Buffalo Bills", "Los Angeles Chargers", "Philadelphia Eagles", "Minnesota Vikings"],
+      },
+      {
+        prompt: "Name an NFL team whose visual identity barely needs an introduction.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Chicago Bears", "Kansas City Chiefs", "Philadelphia Eagles"],
+        alsoAcceptedAnswers: ["Miami Dolphins", "New York Giants", "Buffalo Bills", "Indianapolis Colts", "Cleveland Browns", "New Orleans Saints", "Los Angeles Chargers", "Los Angeles Rams"],
+      },
     ],
     answers: ["Green Bay Packers", "Dallas Cowboys", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Kansas City Chiefs", "Chicago Bears", "Miami Dolphins"],
     alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Indianapolis Colts", "Los Angeles Chargers", "Los Angeles Rams", "Cleveland Browns", "Philadelphia Eagles", "New Orleans Saints"],
