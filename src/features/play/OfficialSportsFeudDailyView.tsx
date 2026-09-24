@@ -526,6 +526,7 @@ export function OfficialSportsFeudDailyView({
         type: "answer",
         answer: value,
         question_id: questionId,
+        question_index: questionIndex,
         time_remaining_ms: capturedTimeRemainingMs,
       },
       {
