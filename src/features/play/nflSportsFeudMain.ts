@@ -210,7 +210,11 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "running-backs",
     prompts: [
-      "Name an all-time great NFL running back.",
+      {
+        prompt: "Name an all-time great NFL running back.",
+        answers: ["Barry Sanders", "Walter Payton", "Emmitt Smith", "Jim Brown", "Adrian Peterson", "LaDainian Tomlinson", "Eric Dickerson", "Marshall Faulk"],
+        alsoAcceptedAnswers: ["Derrick Henry", "Earl Campbell", "Gale Sayers", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore", "Terrell Davis"],
+      },
       "Name a running back whose highlights still look special decades later.",
       "Name an NFL back you would put in a legends conversation.",
       {
