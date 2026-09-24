@@ -35,8 +35,8 @@ const EXPECTED_BANDS = [
 ] as const;
 
 describe("Football Who Am I authored scripts", () => {
-  it("tracks the authored migration with 274 completed identities", () => {
-    expect(footballWhoAmIAuthoredIdentities).toHaveLength(274);
+  it("tracks the authored migration with 333 completed identities", () => {
+    expect(footballWhoAmIAuthoredIdentities).toHaveLength(333);
   });
 
   it("keeps league/name and canonical stage ownership unique", () => {
