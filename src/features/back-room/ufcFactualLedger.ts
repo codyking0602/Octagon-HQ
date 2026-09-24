@@ -1,7 +1,6 @@
 import { z } from "zod";
 import expansionJson from "../../../data/generated/ufc/factual-expansion-v1.json";
 import { canonicalRankingInputs } from "../rankings/data/rankingInputs";
-import { ufcWhoAmIAuthoredCanonicalExpansion } from "./ufcWhoAmIAuthoredCanonicalExpansion";
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 const resultSchema = z.enum(["win", "loss", "draw", "no-contest"]);
@@ -61,14 +60,13 @@ export type UfcFactualSubject = {
   id: string;
   name: string;
   slug: string;
-  scope: "ranked-core" | "recognizable-expansion" | "authored-who-am-i-expansion";
+  scope: "ranked-core" | "recognizable-expansion";
   recognizabilityTier: "A" | null;
   primaryDivision: string;
   secondaryDivisions: readonly string[];
   activeFrom: string;
   activeTo: string;
   fights: readonly UfcFactualFight[];
-  identitySourceUrl?: string;
 };
 
 function normalizeMethodCategory(value: string): UfcFactualFight["methodCategory"] {
@@ -123,20 +121,12 @@ function expansionSubjects(): UfcFactualSubject[] {
   }));
 }
 
-function authoredWhoAmIExpansionSubjects(): UfcFactualSubject[] {
-  return ufcWhoAmIAuthoredCanonicalExpansion.map((subject) => ({
-    ...subject,
-    scope: "authored-who-am-i-expansion",
-    fights: [],
-  }));
-}
-
 function normalizeIdentity(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 }
 
 function buildLedger() {
-  const subjects = [...rankedSubjects(), ...expansionSubjects(), ...authoredWhoAmIExpansionSubjects()];
+  const subjects = [...rankedSubjects(), ...expansionSubjects()];
   const ids = new Set<string>();
   const slugs = new Set<string>();
   const identities = new Set<string>();
@@ -149,9 +139,8 @@ function buildLedger() {
     slugs.add(subject.slug);
     identities.add(identity);
   }
-  const expectedTotal = ufcFactualExpansion.targetTotalSubjects + ufcWhoAmIAuthoredCanonicalExpansion.length;
-  if (subjects.length !== expectedTotal) {
-    throw new Error(`UFC factual ledger has ${subjects.length} subjects; expected ${expectedTotal}.`);
+  if (subjects.length !== ufcFactualExpansion.targetTotalSubjects) {
+    throw new Error(`UFC factual ledger has ${subjects.length} subjects; expected ${ufcFactualExpansion.targetTotalSubjects}.`);
   }
   return subjects;
 }
@@ -160,8 +149,6 @@ function buildLedger() {
  * Canonical UFC factual subject universe for factual Games. Ranked fighters are
  * projected from the ranking ledger; recognizable non-ranked subjects are sourced
  * from the same pinned UFCStats evidence pipeline without becoming ranking inputs.
- * The authored Who Am I expansion adds canonical identity bindings without inventing
- * incomplete fight ledgers; those subjects are authored-clue-only at runtime.
  */
 export const ufcFactualLedgerSubjects: readonly UfcFactualSubject[] = buildLedger();
 
