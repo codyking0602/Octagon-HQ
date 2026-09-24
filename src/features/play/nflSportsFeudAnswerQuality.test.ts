@@ -249,6 +249,36 @@ describe("NFL Sports Feud authored answer quality", () => {
     }
   });
 
+  it("keeps NFL Main questions 1-20 independently authored after review", () => {
+    for (const familyNumber of [1, 2, 3, 4]) {
+      const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
+      const rows = NFL_SPORTS_FEUD_MAIN.filter((question) => question.id.startsWith(prefix));
+      expect(rows).toHaveLength(5);
+
+      const universeSignatures = rows.map((question) =>
+        [
+          ...question.answers,
+          ...(question.alsoAcceptedAnswers ?? []),
+        ].map((answer) => normalizeFamilyFeudInput(answer.name)).join("|"),
+      );
+      expect(new Set(universeSignatures).size, prefix + " independent universes").toBe(5);
+    }
+
+    expect(NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-01-5")?.prompt)
+      .toBe("Name an NFL franchise where becoming the starting quarterback comes with major historical expectations.");
+    expect(NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-02-5")?.prompt)
+      .toBe("Name an NFL franchise with more than one running back worthy of an all-time-team debate.");
+    expect(NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-04-4")?.prompt)
+      .toBe("Name an NFL franchise that has had elite wide receiver talent in multiple eras.");
+
+    const groundGame = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-02-3")!;
+    expect(groundGame.answers.map((answer) => answer.name)).toContain("Baltimore Ravens");
+
+    const passCatchers = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-04-2")!;
+    expect(passCatchers.answers.map((answer) => answer.name)).toContain("Kansas City Chiefs");
+    expect(passCatchers.answers.map((answer) => answer.name)).toContain("New England Patriots");
+  });
+
   it("locks the September 25 NFL slate to seven reviewed prompts", () => {
     expect(footballSportsFeudDomainForDay("2026-09-25")).toBe("nfl");
 
