@@ -3,6 +3,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { MLB_ROUND_LABELS, type MlbPlayoffRound } from "./mlbPlayoffsConfig";
 import { bracketComplete, nodeParticipants, sanitizeBracketPicks, teamById } from "./mlbBracket";
 import type { MlbBracketEntry, MlbBracketNode } from "./mlbPlayoffsRepository";
+import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import "../../styles/mlb-playoffs.css";
 
@@ -38,9 +39,15 @@ function nodeResultClass(node: MlbBracketNode, pick: string | undefined, winners
 export default function MlbPicksPage() {
   const identity = useIdentity();
   const signedIn = Boolean(identity.profile);
-  const { hub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn);
+  const { hub: liveHub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn);
+  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
+  const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [viewedProfileId, setViewedProfileId] = useState("");
+  const [previewBracketSaved, setPreviewBracketSaved] = useState(false);
+  const [previewSeriesPicks, setPreviewSeriesPicks] = useState<Record<string, string>>(() => Object.fromEntries(
+    MLB_OWNER_PREVIEW_HUB.ownRoundPicks.map((pick) => [pick.series_id, pick.winner_team_id]),
+  ));
 
   useEffect(() => {
     if (!hub) return;
@@ -57,7 +64,11 @@ export default function MlbPicksPage() {
   const ownEntry = hub?.brackets.find((entry) => entry.is_current_user) ?? null;
   const ownRank = hub && ownEntry ? bracketRank(hub.brackets, ownEntry.profile_id) : null;
   const roundSeries = hub?.series.filter((series) => series.round === hub.currentRound) ?? [];
-  const ownSeriesPicks = new Map(hub?.ownRoundPicks.map((pick) => [pick.series_id, pick.winner_team_id]) ?? []);
+  const ownSeriesPicks = new Map(
+    previewMode
+      ? Object.entries(previewSeriesPicks)
+      : hub?.ownRoundPicks.map((pick) => [pick.series_id, pick.winner_team_id]) ?? [],
+  );
 
   if (!signedIn) {
     return (
@@ -95,10 +106,17 @@ export default function MlbPicksPage() {
         <p>One bracket before first pitch. Fresh series picks every round.</p>
       </section>
 
+      {previewMode ? (
+        <div className="mlb-preview-banner" role="note">
+          <strong>OWNER PREVIEW</strong>
+          <span>Mock bracket using real 2026 contenders. Nothing here writes to official playoff data.</span>
+        </div>
+      ) : null}
+
       <section id="mlb-bracket" className="mlb-bracket" aria-labelledby="mlb-bracket-title">
         <header className="mlb-section-heading">
           <div><p className="eyebrow">PLAYOFF BRACKET</p><h2 id="mlb-bracket-title">Your postseason path</h2></div>
-          <small>{hub.bracketLocked ? "LOCKED" : hub.fieldReady ? `LOCKS ${dateTime(hub.bracketLockAt).toUpperCase()}` : "FIELD PENDING"}</small>
+          <small>{previewMode ? "MOCK FIELD" : hub.bracketLocked ? "LOCKED" : hub.fieldReady ? `LOCKS ${dateTime(hub.bracketLockAt).toUpperCase()}` : "FIELD PENDING"}</small>
         </header>
 
         {!hub.fieldReady ? (
@@ -166,10 +184,15 @@ export default function MlbPicksPage() {
                 <button
                   className="primary-action"
                   type="button"
-                  disabled={!complete || saving === "bracket"}
-                  onClick={() => void saveBracket(draft)}
+                  disabled={!complete || (!previewMode && saving === "bracket")}
+                  onClick={() => {
+                    if (previewMode) setPreviewBracketSaved(true);
+                    else void saveBracket(draft);
+                  }}
                 >
-                  {saving === "bracket" ? "SAVING BRACKET…" : hub.ownBracket ? "UPDATE FULL BRACKET" : "SUBMIT FULL BRACKET"}
+                  {previewMode
+                    ? previewBracketSaved ? "PREVIEW BRACKET SAVED" : "SAVE PREVIEW BRACKET"
+                    : saving === "bracket" ? "SAVING BRACKET…" : hub.ownBracket ? "UPDATE FULL BRACKET" : "SUBMIT FULL BRACKET"}
                 </button>
               </div>
             ) : null}
@@ -260,9 +283,15 @@ export default function MlbPicksPage() {
                     key={teamId}
                     type="button"
                     className={`mlb-team-choice${selected === teamId ? " is-selected" : ""}${series.winner_team_id && series.winner_team_id !== teamId ? " is-eliminated" : ""}`}
-                    disabled={locked || saving === series.series_id}
+                    disabled={locked || (!previewMode && saving === series.series_id)}
                     aria-pressed={selected === teamId}
-                    onClick={() => void saveSeriesPick(series.series_id, teamId)}
+                    onClick={() => {
+                      if (previewMode) {
+                        setPreviewSeriesPicks((current) => ({ ...current, [series.series_id]: teamId }));
+                      } else {
+                        void saveSeriesPick(series.series_id, teamId);
+                      }
+                    }}
                   >
                     <span>{teamName}</span>
                     <small>{selected === teamId ? "YOUR PICK" : "PICK SERIES WINNER"}</small>
@@ -281,7 +310,7 @@ export default function MlbPicksPage() {
         })}
       </section>
 
-      {error ? <p className="picks-error" role="status">{error}</p> : null}
+      {error && !previewMode ? <p className="picks-error" role="status">{error}</p> : null}
     </div>
   );
 }
