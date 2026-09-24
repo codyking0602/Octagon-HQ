@@ -281,7 +281,8 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       "Matt Leinart",
       "Robert Griffin III",
       "Jayden Daniels",
-    ,"Fernando Mendoza"],
+      "Fernando Mendoza",
+    ],
   },
   {
     category: "player-identity",
@@ -849,7 +850,8 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       { name: "Tight end", aliases: ["TE"] },
     ],
     alsoAcceptedAnswers: [
-      { name: "Offensive tackle", aliases: ["OT",{ name: "Fullback", aliases: ["FB"] }] },
+      { name: "Offensive tackle", aliases: ["OT"] },
+      { name: "Fullback", aliases: ["FB"] },
       { name: "Guard", aliases: ["OG"] },
       { name: "Center", aliases: ["C"] },
       { name: "Defensive tackle", aliases: ["DT"] },
