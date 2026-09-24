@@ -137,6 +137,7 @@ function ProfilePushSettingRoute() {
 export function AppShell() {
   const location = useLocation();
   const navigate = useNavigate();
+  const identity = useIdentity();
   const { selectedSport, setSelectedSport } = useSport();
   const gameTitle = PLAY_GAME_TITLES[location.pathname];
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
