@@ -73,9 +73,9 @@ export const CFB_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("cfb-fast4", [
         alsoAcceptedAnswers: ["Fumble return touchdown","Blocked kick return touchdown"],
       },
       {
-        prompt: "Name a way an offense or special teams unit can score.",
-        answers: ["Touchdown","Field goal","Extra point","Two-point conversion","Kick return touchdown","Punt return touchdown","Blocked kick return touchdown","Safety"],
-        alsoAcceptedAnswers: [],
+        prompt: "Name a way an offense, defense, or special teams unit can score.",
+        answers: ["Touchdown","Field goal","Extra point","Two-point conversion","Kick return touchdown","Punt return touchdown","Pick-six","Safety"],
+        alsoAcceptedAnswers: ["Fumble return touchdown","Blocked kick return touchdown"],
       },
       {
         prompt: "Name something that changes the score in a football game.",
