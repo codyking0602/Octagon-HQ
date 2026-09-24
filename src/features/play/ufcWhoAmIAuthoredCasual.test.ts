@@ -62,6 +62,25 @@ describe("UFC authored Who Am I Casual", () => {
     expect(restored?.clues).toEqual(round.clues);
   });
 
+  it("selects expansion fighters normally and reconstructs their shared authored board", () => {
+    const expansionIndex = 100;
+    let calls = 0;
+    const round = createUfcWhoAmIAuthoredCasualRound(() => {
+      calls += 1;
+      return calls === 1 ? (expansionIndex + 0.1) / ufcWhoAmIAuthoredLaunchPool.length : 0;
+    });
+    const identity = ufcWhoAmIAuthoredLaunchPool[expansionIndex]!;
+
+    expect(identity.subjectId).toBe("ufc:jiri-prochazka");
+    expect(round.hiddenSubject.id).toBe(identity.subjectId);
+    expect(round.clues).toEqual(identity.scripts.A!.clues.map(({ id, text, band }) => ({ id, text, band })));
+
+    const url = whoAmISharedChallengeUrl(round, "https://octagon.example");
+    const restored = sharedWhoAmIRound(new URL(url).searchParams, "ufc");
+    expect(restored?.hiddenSubject.id).toBe(round.hiddenSubject.id);
+    expect(restored?.clues).toEqual(round.clues);
+  });
+
   it("keeps legacy shared UFC boards reconstructable", () => {
     const round = createUfcWhoAmIRound(() => 0.5, new Set());
     const url = whoAmISharedChallengeUrl(round, "https://octagon.example");
