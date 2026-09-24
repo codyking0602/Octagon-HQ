@@ -794,7 +794,7 @@ export const ufcWhoAmIAuthoredBatch1: readonly UfcWhoAmIAuthoredIdentity[] = [
           },
           {
             "id": "ufc-aljamain-sterling-b-3",
-            "text": "I earned a Brazilian jiu-jitsu black belt under former UFC champion Matt Serra.",
+            "text": "I earned a Brazilian jiu-jitsu black belt under a former UFC welterweight champion.",
             "band": "helpful",
             "verification": "verified",
             "sourceIds": [

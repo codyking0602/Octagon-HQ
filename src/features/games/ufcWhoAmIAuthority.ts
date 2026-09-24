@@ -126,19 +126,32 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
   };
 }
 
-const ufcUniverse: WhoAmIUniverse = {
+const canonicalUfcUniverse: WhoAmIUniverse = {
   sport: "ufc",
   league: "UFC",
   candidates: ufcFactualLedgerSubjects.map(ufcCandidate),
 };
 
+// The authored cutover expanded the canonical universe from 100 to 133. Keep
+// the legacy generated selector pinned to the original first 100 subjects so
+// pre-cutover Daily materializations and legacy Casual boards do not drift.
+const legacyUfcUniverse: WhoAmIUniverse = {
+  sport: "ufc",
+  league: "UFC",
+  candidates: ufcFactualLedgerSubjects.slice(0, 100).map(ufcCandidate),
+};
+
 export function getUfcWhoAmIUniverse() {
-  return ufcUniverse;
+  return legacyUfcUniverse;
+}
+
+export function getCanonicalUfcWhoAmIUniverse() {
+  return canonicalUfcUniverse;
 }
 
 export function createUfcWhoAmIRound(
   random: () => number = Math.random,
   excludedSubjectIds: ReadonlySet<string> = new Set(),
 ): WhoAmIRound {
-  return createWhoAmIRound(ufcUniverse, random, excludedSubjectIds);
+  return createWhoAmIRound(legacyUfcUniverse, random, excludedSubjectIds);
 }

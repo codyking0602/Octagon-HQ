@@ -1,55 +1,173 @@
 {
   "schemaVersion": 1,
-  "targetTotalSubjects": 100,
+  "targetTotalSubjects": 133,
   "policy": {
     "recognizabilityTier": "A",
     "modernActivityYear": 2016,
     "minimumModernShare": 0.75,
-    "maximumLegacySubjects": 4
+    "maximumLegacySubjects": 5
   },
   "priority": [
-    { "name": "Jorge Masvidal" },
-    { "name": "Nate Diaz" },
-    { "name": "Tony Ferguson" },
-    { "name": "Donald Cerrone" },
-    { "name": "Michael Chandler" },
-    { "name": "Paddy Pimblett" },
-    { "name": "Khamzat Chimaev" },
-    { "name": "Sean O'Malley" },
-    { "name": "Colby Covington" },
-    { "name": "Stephen Thompson" },
-    { "name": "Brian Ortega" },
-    { "name": "Yair Rodriguez" },
-    { "name": "Derrick Lewis" },
-    { "name": "Ciryl Gane" },
-    { "name": "Kevin Holland" },
-    { "name": "Paulo Costa" },
-    { "name": "Marlon Vera" },
-    { "name": "Gilbert Burns" },
-    { "name": "Tai Tuivasa" },
-    { "name": "Dominick Reyes" },
-    { "name": "Nick Diaz" },
-    { "name": "Holly Holm" },
-    { "name": "Kayla Harrison" },
-    { "name": "Diego Lopes" },
-    { "name": "Dan Hooker" },
-    { "name": "Edson Barboza" },
-    { "name": "Darren Till" },
-    { "name": "Belal Muhammad" },
-    { "name": "Petr Yan" },
-    { "name": "Deiveson Figueiredo" },
-    { "name": "Cody Garbrandt" },
-    { "name": "Kelvin Gastelum" },
-    { "name": "Renato Moicano" },
-    { "name": "Junior dos Santos" },
-    { "name": "Alistair Overeem" },
-    { "name": "Vitor Belfort" },
-    { "name": "Lyoto Machida" },
-    { "name": "Rashad Evans" },
-    { "name": "Frank Mir" },
-    { "name": "Brock Lesnar" },
-    { "name": "Chael Sonnen", "legacyA": true },
-    { "name": "Quinton Jackson", "legacyA": true },
-    { "name": "Ken Shamrock", "legacyA": true }
+    {
+      "name": "Jorge Masvidal"
+    },
+    {
+      "name": "Nate Diaz"
+    },
+    {
+      "name": "Donald Cerrone"
+    },
+    {
+      "name": "Michael Chandler"
+    },
+    {
+      "name": "Colby Covington"
+    },
+    {
+      "name": "Stephen Thompson"
+    },
+    {
+      "name": "Brian Ortega"
+    },
+    {
+      "name": "Yair Rodriguez"
+    },
+    {
+      "name": "Derrick Lewis"
+    },
+    {
+      "name": "Ciryl Gane"
+    },
+    {
+      "name": "Kevin Holland"
+    },
+    {
+      "name": "Paulo Costa"
+    },
+    {
+      "name": "Marlon Vera"
+    },
+    {
+      "name": "Gilbert Burns"
+    },
+    {
+      "name": "Tai Tuivasa"
+    },
+    {
+      "name": "Dominick Reyes"
+    },
+    {
+      "name": "Nick Diaz"
+    },
+    {
+      "name": "Diego Lopes"
+    },
+    {
+      "name": "Dan Hooker"
+    },
+    {
+      "name": "Jiří Procházka"
+    },
+    {
+      "name": "Magomed Ankalaev"
+    },
+    {
+      "name": "Jan Błachowicz"
+    },
+    {
+      "name": "Jamahal Hill"
+    },
+    {
+      "name": "Carlos Ulberg"
+    },
+    {
+      "name": "Arman Tsarukyan"
+    },
+    {
+      "name": "Cory Sandhagen"
+    },
+    {
+      "name": "Umar Nurmagomedov"
+    },
+    {
+      "name": "Belal Muhammad"
+    },
+    {
+      "name": "Jack Della Maddalena"
+    },
+    {
+      "name": "Ian Machado Garry"
+    },
+    {
+      "name": "Shavkat Rakhmonov"
+    },
+    {
+      "name": "Urijah Faber"
+    },
+    {
+      "name": "Frank Mir"
+    },
+    {
+      "name": "Alistair Overeem"
+    },
+    {
+      "name": "Rich Franklin",
+      "legacyA": true
+    },
+    {
+      "name": "Carlos Condit"
+    },
+    {
+      "name": "Matt Serra",
+      "legacyA": true
+    },
+    {
+      "name": "Luke Rockhold"
+    },
+    {
+      "name": "Yoel Romero"
+    },
+    {
+      "name": "Ken Shamrock",
+      "legacyA": true
+    },
+    {
+      "name": "Joshua Van"
+    },
+    {
+      "name": "Brandon Royval"
+    },
+    {
+      "name": "Michael Morales"
+    },
+    {
+      "name": "Carlos Prates"
+    },
+    {
+      "name": "Tim Kennedy"
+    },
+    {
+      "name": "Brendan Schaub",
+      "legacyA": true
+    },
+    {
+      "name": "Kimbo Slice",
+      "legacyA": true
+    },
+    {
+      "name": "CM Punk"
+    },
+    {
+      "name": "Mike Perry"
+    },
+    {
+      "name": "Paige VanZant"
+    },
+    {
+      "name": "Greg Hardy"
+    },
+    {
+      "name": "Darren Till"
+    }
   ]
 }

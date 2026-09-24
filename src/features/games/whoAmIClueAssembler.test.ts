@@ -277,8 +277,15 @@ describe("Who Am I football scope-aware clue aggregation", () => {
     }
   });
 
-  it("feeds completed canonical person-identity knowledge into the actual UFC and football clue candidates", () => {
-    for (const candidate of getUfcWhoAmIUniverse().candidates) {
+  it("feeds completed canonical person-identity knowledge into the researched UFC and football clue candidates", () => {
+    const ufcCandidates = getUfcWhoAmIUniverse().candidates;
+    const researchedUfcCandidates = ufcCandidates.filter((candidate) =>
+      Boolean(getUfcPersonIdentityKnowledge(candidate.id)),
+    );
+    expect(ufcCandidates).toHaveLength(100);
+    expect(researchedUfcCandidates).toHaveLength(100);
+
+    for (const candidate of researchedUfcCandidates) {
       const source = getUfcPersonIdentityKnowledge(candidate.id);
       expect(source?.facts).toHaveLength(5);
 

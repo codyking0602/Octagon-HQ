@@ -22,6 +22,7 @@ const NAME_ALIASES = new Map([
   ["bobbygreen", "kinggreen"],
   ["mirkofilipovic", "mirkocrocop"],
   ["janbachowicz", "janblachowicz"],
+  ["kimboslice", "kevinferguson"],
   ["ronaldosouza", "jacaresouza"],
   ["mauricioshogunrua", "mauriciorua"],
   ["criscyborg", "cristianejustino"],
@@ -78,7 +79,7 @@ function nameKey(value) {
 
 function slugify(value) {
   return clean(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
-    .replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    .replace(/ł/g, "l").replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 function splitBout(value) {

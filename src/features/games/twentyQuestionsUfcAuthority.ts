@@ -566,18 +566,22 @@ function buildUfcQuestions(subjects: readonly TwentyQuestionsSubject[]): TwentyQ
 
 let cachedUniverse: TwentyQuestionsUniverse | null = null;
 
-/** Canonical UFC Games factual universe. Rankings remain separate from the 100-subject launch ledger. */
+/** UFC 20 Questions remains pinned to its established 100-subject launch universe. */
 export function getUfcTwentyQuestionsUniverse(): TwentyQuestionsUniverse {
   if (cachedUniverse) return cachedUniverse;
 
-  const subjects: TwentyQuestionsSubject[] = ufcFactualLedgerSubjects.map((fighter) => ({
-    id: fighter.id,
-    name: fighter.name,
-    kind: "fighter",
-    league: "UFC",
-  }));
+  // Who Am I now uses the broader canonical UFC ledger, but 20 Questions
+  // intentionally stays on its established 100-subject launch population.
+  const subjects: TwentyQuestionsSubject[] = ufcFactualLedgerSubjects
+    .slice(0, UFC_TWENTY_QUESTIONS_SUBJECT_COUNT)
+    .map((fighter) => ({
+      id: fighter.id,
+      name: fighter.name,
+      kind: "fighter",
+      league: "UFC",
+    }));
   if (subjects.length !== UFC_TWENTY_QUESTIONS_SUBJECT_COUNT) {
-    throw new Error(`UFC 20 Questions expected ${UFC_TWENTY_QUESTIONS_SUBJECT_COUNT} canonical factual subjects; found ${subjects.length}.`);
+    throw new Error(`UFC 20 Questions expected ${UFC_TWENTY_QUESTIONS_SUBJECT_COUNT} launch subjects; found ${subjects.length}.`);
   }
 
   cachedUniverse = {

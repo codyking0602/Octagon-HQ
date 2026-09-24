@@ -162,6 +162,11 @@ export function sharedWhoAmIRound(
     if (authoredRound) return authoredRound;
   }
 
+  if (expectedSport === "ufc" && shared.league === "UFC") {
+    const authoredRound = resolveUfcWhoAmIAuthoredSharedRound(shared.answerId, shared.clueIds);
+    if (authoredRound) return authoredRound;
+  }
+
   const universe = expectedSport === "ufc"
     ? shared.league === "UFC" ? getUfcWhoAmIUniverse() : null
     : shared.league === "NFL" || shared.league === "CFB" ? getFootballWhoAmIUniverse(shared.league) : null;

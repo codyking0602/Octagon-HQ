@@ -8,6 +8,9 @@ import { ufcWhoAmIAuthoredBatch5 } from "./ufcWhoAmIAuthoredBatch5";
 import { ufcWhoAmIAuthoredBatch6 } from "./ufcWhoAmIAuthoredBatch6";
 import { ufcWhoAmIAuthoredBatch7 } from "./ufcWhoAmIAuthoredBatch7";
 import { ufcWhoAmIAuthoredBatch8 } from "./ufcWhoAmIAuthoredBatch8";
+import { ufcWhoAmIAuthoredExpansion133Batch1 } from "./ufcWhoAmIAuthoredExpansion133Batch1";
+import { ufcWhoAmIAuthoredExpansion133Batch2 } from "./ufcWhoAmIAuthoredExpansion133Batch2";
+import { ufcWhoAmIAuthoredExpansion133Batch3 } from "./ufcWhoAmIAuthoredExpansion133Batch3";
 
 export const ufcWhoAmIAuthoredLaunchPool = [
   ...ufcWhoAmIAuthoredIdentities,
@@ -20,6 +23,9 @@ export const ufcWhoAmIAuthoredLaunchPool = [
   ...ufcWhoAmIAuthoredBatch6,
   ...ufcWhoAmIAuthoredBatch7,
   ...ufcWhoAmIAuthoredBatch8,
+  ...ufcWhoAmIAuthoredExpansion133Batch1,
+  ...ufcWhoAmIAuthoredExpansion133Batch2,
+  ...ufcWhoAmIAuthoredExpansion133Batch3,
 ] as const;
 
 const bySubjectId = new Map(

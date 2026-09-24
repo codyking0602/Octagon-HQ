@@ -6,11 +6,11 @@ import type {
   UfcWhoAmIAuthoredIdentity,
   UfcWhoAmIAuthoredScriptId,
 } from "../games/ufcWhoAmIAuthoredScripts";
-import { getUfcWhoAmIUniverse } from "../games/ufcWhoAmIAuthority";
+import { getCanonicalUfcWhoAmIUniverse } from "../games/ufcWhoAmIAuthority";
 import type { WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
 
 function subjectFromCandidate(
-  candidate: ReturnType<typeof getUfcWhoAmIUniverse>["candidates"][number],
+  candidate: ReturnType<typeof getCanonicalUfcWhoAmIUniverse>["candidates"][number],
 ): WhoAmISubject {
   const { id, name, kind, eraBand, rescueGroup } = candidate;
   return {
@@ -23,7 +23,7 @@ function subjectFromCandidate(
 }
 
 export function ufcWhoAmIAuthoredSubject(identity: UfcWhoAmIAuthoredIdentity): WhoAmISubject {
-  const existing = getUfcWhoAmIUniverse().candidates.find(
+  const existing = getCanonicalUfcWhoAmIUniverse().candidates.find(
     (candidate) => candidate.id === identity.subjectId,
   );
   if (!existing) {
@@ -59,7 +59,7 @@ export function buildUfcWhoAmIAuthoredRound(
   return {
     sport: "ufc",
     league: "UFC",
-    subjects: getUfcWhoAmIUniverse().candidates.map(subjectFromCandidate),
+    subjects: getCanonicalUfcWhoAmIUniverse().candidates.map(subjectFromCandidate),
     hiddenSubject: ufcWhoAmIAuthoredSubject(identity),
     clues: script.clues.map((clue) => ({
       id: clue.id,
