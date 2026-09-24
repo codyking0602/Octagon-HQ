@@ -8,9 +8,21 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     prompts: [
       "Name an NFC team.",
       "Name a franchise from the NFC.",
-      "Name an NFC team with a major national fan base.",
-      "Name a team you think of when someone says the NFC.",
-      "Name an NFC franchise almost every football fan recognizes.",
+      {
+        prompt: "Name an NFC team with a major national fan base.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "San Francisco 49ers", "Philadelphia Eagles", "Chicago Bears", "New York Giants", "Seattle Seahawks", "Minnesota Vikings"],
+        alsoAcceptedAnswers: ["Washington Commanders", "Detroit Lions", "Tampa Bay Buccaneers", "Atlanta Falcons", "New Orleans Saints", "Carolina Panthers", "Arizona Cardinals", "Los Angeles Rams"],
+      },
+      {
+        prompt: "Name a team you think of when someone says the NFC.",
+        answers: ["Dallas Cowboys", "San Francisco 49ers", "Green Bay Packers", "Philadelphia Eagles", "New York Giants", "Seattle Seahawks", "Los Angeles Rams", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Washington Commanders", "Detroit Lions", "Tampa Bay Buccaneers", "Atlanta Falcons", "New Orleans Saints", "Carolina Panthers", "Arizona Cardinals"],
+      },
+      {
+        prompt: "Name an NFC franchise almost every football fan recognizes.",
+        answers: ["Dallas Cowboys", "Green Bay Packers", "San Francisco 49ers", "Philadelphia Eagles", "New York Giants", "Chicago Bears", "Seattle Seahawks", "Los Angeles Rams"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Washington Commanders", "Detroit Lions", "Tampa Bay Buccaneers", "Atlanta Falcons", "New Orleans Saints", "Carolina Panthers", "Arizona Cardinals"],
+      },
     ],
     answers: [
       { name: "Dallas Cowboys", aliases: ["Cowboys", "Dallas"] },
@@ -40,9 +52,21 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     prompts: [
       "Name an AFC team.",
       "Name a franchise from the AFC.",
-      "Name an AFC team with a major national brand.",
-      "Name a team you think of when someone says the AFC.",
-      "Name an AFC franchise almost every football fan recognizes.",
+      {
+        prompt: "Name an AFC team with a major national brand.",
+        answers: ["Kansas City Chiefs", "Pittsburgh Steelers", "New England Patriots", "Las Vegas Raiders", "Buffalo Bills", "Denver Broncos", "Miami Dolphins", "Baltimore Ravens"],
+        alsoAcceptedAnswers: ["New York Jets", "Cincinnati Bengals", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
+      },
+      {
+        prompt: "Name a team you think of when someone says the AFC.",
+        answers: ["Kansas City Chiefs", "Pittsburgh Steelers", "New England Patriots", "Buffalo Bills", "Baltimore Ravens", "Denver Broncos", "Las Vegas Raiders", "Cincinnati Bengals"],
+        alsoAcceptedAnswers: ["Miami Dolphins", "New York Jets", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
+      },
+      {
+        prompt: "Name an AFC franchise almost every football fan recognizes.",
+        answers: ["Pittsburgh Steelers", "Kansas City Chiefs", "New England Patriots", "Las Vegas Raiders", "Buffalo Bills", "Denver Broncos", "Miami Dolphins", "New York Jets"],
+        alsoAcceptedAnswers: ["Baltimore Ravens", "Cincinnati Bengals", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
+      },
     ],
     answers: [
       { name: "Kansas City Chiefs", aliases: ["Chiefs", "Kansas City", "KC"] },
@@ -71,10 +95,26 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     collisionGroup: "teams",
     prompts: [
       "Name an NFL team you associate with cold-weather football.",
-      "Name a franchise whose home games can feel brutally cold.",
-      "Name an NFL team that looks natural playing in snow.",
-      "Name a team you picture in a freezing late-season game.",
-      "Name a franchise whose fans know how to handle cold football weather.",
+      {
+        prompt: "Name a franchise whose outdoor home games can feel brutally cold.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Pittsburgh Steelers", "Denver Broncos", "New England Patriots", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
+      },
+      {
+        prompt: "Name an NFL team that looks natural playing in snow.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Denver Broncos", "Pittsburgh Steelers", "New England Patriots", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens", "Minnesota Vikings"],
+      },
+      {
+        prompt: "Name a team you picture in a freezing late-season game.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Pittsburgh Steelers", "New England Patriots", "Denver Broncos", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
+      },
+      {
+        prompt: "Name a franchise whose fans know how to handle cold football weather.",
+        answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Cleveland Browns", "Pittsburgh Steelers", "Denver Broncos", "New England Patriots", "Kansas City Chiefs"],
+        alsoAcceptedAnswers: ["Minnesota Vikings", "Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
+      },
     ],
     answers: ["Green Bay Packers", "Buffalo Bills", "Chicago Bears", "Pittsburgh Steelers", "New England Patriots", "Cleveland Browns", "Minnesota Vikings", "Denver Broncos"],
     alsoAcceptedAnswers: ["Kansas City Chiefs", "Philadelphia Eagles", "New York Giants", "New York Jets", "Cincinnati Bengals", "Baltimore Ravens"],
@@ -84,11 +124,31 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
     entityKind: "team",
     collisionGroup: "teams",
     prompts: [
-      "Name an AFC franchise with a strong historical identity.",
-      "Name an AFC team with decades of recognizable football history.",
-      "Name a franchise that belongs in an AFC history conversation.",
-      "Name an AFC team whose past includes famous players or playoff runs.",
-      "Name an AFC franchise almost every generation of fans recognizes.",
+      {
+        prompt: "Name an AFC franchise with a strong historical identity.",
+        answers: ["Pittsburgh Steelers", "Las Vegas Raiders", "Miami Dolphins", "New England Patriots", "Kansas City Chiefs", "Denver Broncos", "Buffalo Bills", "Cleveland Browns"],
+        alsoAcceptedAnswers: ["New York Jets", "Indianapolis Colts", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name an AFC team with decades of recognizable football history.",
+        answers: ["Pittsburgh Steelers", "Las Vegas Raiders", "Miami Dolphins", "Denver Broncos", "Kansas City Chiefs", "New England Patriots", "Cleveland Browns", "Indianapolis Colts"],
+        alsoAcceptedAnswers: ["Buffalo Bills", "New York Jets", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name a franchise that belongs in an AFC history conversation.",
+        answers: ["Pittsburgh Steelers", "New England Patriots", "Las Vegas Raiders", "Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Buffalo Bills", "Indianapolis Colts"],
+        alsoAcceptedAnswers: ["Cleveland Browns", "New York Jets", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name an AFC team whose past includes famous players or playoff runs.",
+        answers: ["Pittsburgh Steelers", "New England Patriots", "Kansas City Chiefs", "Las Vegas Raiders", "Denver Broncos", "Miami Dolphins", "Buffalo Bills", "Indianapolis Colts"],
+        alsoAcceptedAnswers: ["Baltimore Ravens", "Cincinnati Bengals", "Cleveland Browns", "New York Jets", "Los Angeles Chargers", "Tennessee Titans", "Jacksonville Jaguars", "Houston Texans"],
+      },
+      {
+        prompt: "Name an AFC franchise almost every generation of fans recognizes.",
+        answers: ["Pittsburgh Steelers", "Las Vegas Raiders", "Miami Dolphins", "Kansas City Chiefs", "Denver Broncos", "New England Patriots", "Cleveland Browns", "New York Jets"],
+        alsoAcceptedAnswers: ["Buffalo Bills", "Indianapolis Colts", "Cincinnati Bengals", "Los Angeles Chargers", "Tennessee Titans", "Baltimore Ravens", "Jacksonville Jaguars", "Houston Texans"],
+      },
     ],
     answers: ["Pittsburgh Steelers", "New England Patriots", "Kansas City Chiefs", "Las Vegas Raiders", "Denver Broncos", "Miami Dolphins", "Buffalo Bills", "Baltimore Ravens"],
     alsoAcceptedAnswers: ["New York Jets", "Cincinnati Bengals", "Cleveland Browns", "Houston Texans", "Indianapolis Colts", "Jacksonville Jaguars", "Tennessee Titans", "Los Angeles Chargers"],
@@ -119,7 +179,7 @@ export const NFL_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("nfl-fast1", [
       "Name an NFL quarterback fans remember as a league MVP.",
     ],
     answers: ["Tom Brady", "Peyton Manning", "Patrick Mahomes", "Aaron Rodgers", "Lamar Jackson", "Brett Favre", "Steve Young", "Cam Newton"],
-    alsoAcceptedAnswers: ["Matthew Stafford", "Josh Allen", "Joe Montana", "Dan Marino", "Johnny Unitas", "Kurt Warner", "Matt Ryan", "Rich Gannon", "Joe Theismann", "Ken Anderson", "Boomer Esiason", "Brian Sipe", "Roman Gabriel", "John Brodie"],
+    alsoAcceptedAnswers: ["Matthew Stafford", "Josh Allen", "Joe Montana", "Dan Marino", "Johnny Unitas", "Kurt Warner", "Matt Ryan", "Rich Gannon", "Joe Theismann", "Ken Anderson", "Boomer Esiason", "Brian Sipe", "Roman Gabriel", "John Brodie", "Steve McNair", "John Elway", "Terry Bradshaw", "Bert Jones", "Fran Tarkenton", "Ken Stabler", "Earl Morrall", "Bart Starr", "Y.A. Tittle"],
   },
   {
     category: "players",
