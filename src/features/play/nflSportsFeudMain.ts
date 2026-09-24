@@ -373,11 +373,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "other",
     collisionGroup: "rivalries",
     prompts: [
-      "Name an NFL rivalry almost every football fan knows.",
-      "Name a rivalry game that feels bigger than an ordinary Sunday.",
-      "Name an NFL matchup where the fan bases genuinely dislike each other.",
-      "Name a division rivalry you would circle before the season starts.",
-      "Name an NFL rivalry that has produced memorable games for years.",
+      {
+        prompt: "Name an NFL rivalry almost every football fan knows.",
+        answers: ["Packers-Bears", "Cowboys-Eagles", "Steelers-Ravens", "49ers-Cowboys", "Raiders-Chiefs", "Giants-Eagles", "Packers-Vikings", "Cowboys-Commanders"],
+        alsoAcceptedAnswers: ["Patriots-Colts", "49ers-Seahawks", "Browns-Steelers", "Saints-Falcons", "Chiefs-Broncos", "Bears-Vikings", "Bengals-Steelers", "Jets-Patriots", "Bills-Dolphins"],
+      },
+      {
+        prompt: "Name a rivalry game that feels bigger than an ordinary Sunday.",
+        answers: ["Cowboys-Eagles", "Steelers-Ravens", "Packers-Bears", "49ers-Cowboys", "Raiders-Chiefs", "Giants-Eagles", "Packers-Vikings", "Cowboys-Commanders"],
+        alsoAcceptedAnswers: ["Saints-Falcons", "49ers-Seahawks", "Chiefs-Broncos", "Browns-Steelers", "Bengals-Steelers", "Bills-Dolphins", "Jets-Patriots"],
+      },
+      {
+        prompt: "Name an NFL matchup where the fan bases genuinely dislike each other.",
+        answers: ["Cowboys-Eagles", "Steelers-Ravens", "Raiders-Chiefs", "Packers-Bears", "Giants-Eagles", "Cowboys-Commanders", "Saints-Falcons", "Packers-Vikings"],
+        alsoAcceptedAnswers: ["49ers-Cowboys", "Browns-Steelers", "Bengals-Steelers", "Chiefs-Broncos", "Jets-Patriots", "49ers-Seahawks", "Bills-Dolphins"],
+      },
+      {
+        prompt: "Name a division rivalry you would circle before the season starts.",
+        answers: ["Steelers-Ravens", "Cowboys-Eagles", "Packers-Bears", "Raiders-Chiefs", "Giants-Eagles", "Packers-Vikings", "Saints-Falcons", "Browns-Steelers"],
+        alsoAcceptedAnswers: ["Bengals-Steelers", "Chiefs-Broncos", "Cowboys-Commanders", "Bills-Dolphins", "Jets-Patriots", "49ers-Seahawks", "Bears-Vikings", "Ravens-Bengals"],
+      },
+      {
+        prompt: "Name an NFL rivalry that has produced memorable games for years.",
+        answers: ["49ers-Cowboys", "Packers-Bears", "Cowboys-Eagles", "Steelers-Ravens", "Raiders-Chiefs", "Giants-Eagles", "Cowboys-Commanders", "Patriots-Colts"],
+        alsoAcceptedAnswers: ["Packers-Vikings", "49ers-Seahawks", "Saints-Falcons", "Chiefs-Broncos", "Browns-Steelers", "Jets-Patriots", "Bills-Dolphins"],
+      },
     ],
     answers: ["Packers-Bears", "Cowboys-Eagles", "Steelers-Ravens", "49ers-Cowboys", "Raiders-Chiefs", "Giants-Eagles", "Packers-Vikings", "Jets-Patriots"],
     alsoAcceptedAnswers: ["Cowboys-Commanders", "Patriots-Colts", "49ers-Seahawks", "Browns-Steelers", "Saints-Falcons", "Chiefs-Broncos", "Bears-Vikings", "Bengals-Steelers"],
