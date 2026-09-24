@@ -60076,6 +60076,1044 @@ export const footballWhoAmIAuthoredIdentities: readonly FootballWhoAmIAuthoredId
         ]
       }
     }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-joe-alt",
+    "name": "Joe Alt",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "nd": "https://fightingirish.com/sports/football/roster/player/joe-alt",
+      "unanimous": "https://fightingirish.com/news/2023/12/14/joe-alt-and-xavier-watts-earn-unanimous-all-america-status",
+      "ap": "https://fightingirish.com/news/2023/12/11/alt-watts-cross-iii-and-estime-earn-associated-press-all-america-honors"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-joe-alt-a-1",
+            "text": "I arrived in college as a tall, athletic offensive-line prospect who had also played other positions in high school.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-2",
+            "text": "As a freshman, I appeared in every game and worked my way into the starting lineup late in the season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-3",
+            "text": "I became a full-time starter at left tackle by my sophomore season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-4",
+            "text": "That sophomore year ended with first-team All-America recognition from the Associated Press.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-5",
+            "text": "I repeated as an Associated Press first-team All-American the following season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ap"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-6",
+            "text": "As a junior, I served as a team captain and was named my program's Offensive Lineman of the Year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-7",
+            "text": "I finished that year as a finalist for both the Lombardi Award and the Outland Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "nd",
+              "unanimous"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-8",
+            "text": "I swept first-team honors from all five selectors used to determine unanimous All-America status.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "unanimous"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-9",
+            "text": "I wore No. 76 while anchoring Notre Dame's line from left tackle.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-a-10",
+            "text": "I was Notre Dame's 2023 unanimous All-American left tackle and an Outland Trophy finalist.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nd",
+              "unanimous"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-joe-alt-b-1",
+            "text": "I entered college after playing both tight end and defensive line in high school.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-2",
+            "text": "During my freshman college season, I saw action at both tight end and offensive line.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-3",
+            "text": "I started the final eight games of that freshman season, including the Fiesta Bowl.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-4",
+            "text": "By the end of my second season, I had already collected first-team All-America honors from multiple outlets.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-5",
+            "text": "I became one of only two players to repeat as an AP first-team All-American in 2022 and 2023.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "ap"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-6",
+            "text": "My final regular-season offense averaged 39.1 points per game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "unanimous"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-7",
+            "text": "That scoring average was the program's best since 1912 and second-best in school history at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "ap"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-8",
+            "text": "My 2023 season made me the 35th unanimous All-American in Notre Dame history.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "unanimous"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-9",
+            "text": "Notre Dame fans knew me as the 6-foot-8, No. 76 tackle protecting the left side.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nd"
+            ]
+          },
+          {
+            "id": "cfb-joe-alt-b-10",
+            "text": "My Fighting Irish career culminated with unanimous All-America honors plus Lombardi and Outland finalist status.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "nd",
+              "unanimous"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-joe-thomas",
+    "name": "Joe Thomas",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "hof": "https://uwbadgers.com/honors/university-of-wisconsin-athletic-hall-of-fame/joe-thomas/251",
+      "cfbhof": "https://uwbadgers.com/sports/2015/8/21/GEN_20140101422",
+      "honors": "https://uwbadgers.com/sports/2015/8/21/GEN_20140101436"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-joe-thomas-a-1",
+            "text": "I played four college football seasons from 2003 through 2006.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-2",
+            "text": "I became the starting left tackle for each of my final three seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-3",
+            "text": "I earned first-team All-America honors in both of my last two years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-4",
+            "text": "I also received first-team all-conference honors in those same two seasons.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-5",
+            "text": "My college career included 39 starts at left tackle.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-6",
+            "text": "As a senior, I became a unanimous consensus first-team All-American.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-7",
+            "text": "That season, I won the Outland Trophy as the nation's top interior lineman.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-8",
+            "text": "I became the first player from my school ever to win the Outland Trophy.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof",
+              "honors"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-9",
+            "text": "I was Wisconsin's senior captain and co-MVP while starring at left tackle in 2006.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-a-10",
+            "text": "I was the Badgers left tackle who became a unanimous All-American and won the 2006 Outland Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "cfbhof"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-joe-thomas-b-1",
+            "text": "I paired high-level line play with a long list of academic honors.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-2",
+            "text": "I was an Academic All-Big Ten selection in three consecutive seasons.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-3",
+            "text": "I also earned academic all-district recognition in each of those three years.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-4",
+            "text": "As a senior, I was named a National Football Foundation National Scholar-Athlete.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-5",
+            "text": "That same year, I earned second-team Academic All-America recognition.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-6",
+            "text": "I later received the Big Ten Medal of Honor.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-7",
+            "text": "On the field, I was a two-time Lombardi Award semifinalist.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-8",
+            "text": "Over my three seasons as the starting left tackle, Wisconsin went 31-7 and featured two 1,000-yard running backs.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "honors"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-9",
+            "text": "My final Wisconsin season combined team captaincy, co-MVP honors and the program's first Outland Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "cfbhof"
+            ]
+          },
+          {
+            "id": "cfb-joe-thomas-b-10",
+            "text": "I was Wisconsin's decorated 2006 left tackle before becoming the No. 3 overall pick in the following NFL Draft.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-gerald-mccoy",
+    "name": "Gerald McCoy",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "freshman": "https://soonersports.com/news/2007/11/28/208406853",
+      "aa08": "https://soonersports.com/news/2009/4/28/208395803",
+      "aa09": "https://soonersports.com/news/2009/12/15/208403217",
+      "graduate": "https://soonersports.com/news/2009/12/18/208367194"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-gerald-mccoy-a-1",
+            "text": "I redshirted my first year before becoming an immediate starter on the defensive line.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "graduate"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-2",
+            "text": "In my first playing season, conference coaches named me their Defensive Freshman of the Year.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "graduate"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-3",
+            "text": "I also earned Freshman All-America recognition that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-4",
+            "text": "As a sophomore, I recorded 30 tackles, 11 tackles for loss and 6.5 sacks.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa08"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-5",
+            "text": "Conference coaches named me their Defensive Player of the Year after that season.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa08"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-6",
+            "text": "I collected All-America honors from multiple selectors in 2008.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa08"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-7",
+            "text": "In that season's national championship game, I made my first career interception and returned it 12 yards.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa08"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-8",
+            "text": "I also matched my career high with two sacks against Texas that year.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa08"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-9",
+            "text": "I wore No. 93 while becoming a multi-year All-American defensive tackle at Oklahoma.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-a-10",
+            "text": "I was Oklahoma's No. 93 interior defender who won conference freshman and defensive player-of-the-year honors in successive seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "freshman",
+              "aa08"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-gerald-mccoy-b-1",
+            "text": "I faced frequent double teams during my final college season.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-2",
+            "text": "Even so, I finished that year with 31 tackles and 14.5 tackles for loss.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-3",
+            "text": "I added five sacks and a team-high 10 quarterback hurries.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-4",
+            "text": "I also broke up two passes, forced a fumble and recovered a fumble.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-5",
+            "text": "During that season, I broke the school record for consecutive starts by a defensive lineman.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-6",
+            "text": "I reached 38 consecutive starts before the bowl game.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-7",
+            "text": "Walter Camp, the FWAA and Sporting News all placed me on their 2009 All-America first teams.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-8",
+            "text": "I became the 37th Oklahoma player to earn All-America honors in more than one season.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-9",
+            "text": "My Oklahoma career ended after I completed my degree and prepared for the Sun Bowl against Stanford.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "graduate"
+            ]
+          },
+          {
+            "id": "cfb-gerald-mccoy-b-10",
+            "text": "I was the Sooners defensive tackle whose final season paired 14.5 tackles for loss with another wave of first-team All-America honors.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "aa09"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jj-watt",
+    "name": "J.J. Watt",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "wis": "https://uwbadgers.com/sports/football/roster/j-j-watt/771",
+      "lott": "https://uwbadgers.com/news/2010/12/13/Watt_wins_Lott_IMPACT_Trophy",
+      "journey": "https://uwbadgers.com/news/2010/10/8/Journey_has_shaped_Watt_on_and_off_the_field",
+      "hof": "https://uwbadgers.com/honors/uw-athletic-hall-of-fame/j-j-watt/304"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jj-watt-a-1",
+            "text": "I began my college career at a different school and initially played tight end.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-2",
+            "text": "After one season there, I left a scholarship and eventually walked on at my home-state program.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-3",
+            "text": "I earned a scholarship before ever playing a regular-season snap for that new team.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-4",
+            "text": "By my final college season, I was a defensive end who led my team in tackles for loss, sacks and quarterback hurries.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "wis"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-5",
+            "text": "I recorded 21 tackles for loss, ranking among the national leaders.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "wis",
+              "lott"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-6",
+            "text": "That season also included seven sacks, three forced fumbles and three blocked kicks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "wis",
+              "lott"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-7",
+            "text": "I won the Lott IMPACT Trophy as the nation's top defensive IMPACT player.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lott"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-8",
+            "text": "I was the team MVP on a Big Ten championship squad.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-9",
+            "text": "I wore No. 99 for Wisconsin while earning first-team All-America recognition in 2010.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "wis",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-a-10",
+            "text": "I was Wisconsin's No. 99 defensive end who won the 2010 Lott IMPACT Trophy after beginning college as a tight end elsewhere.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "wis",
+              "journey",
+              "lott"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jj-watt-b-1",
+            "text": "My route to major-college defense included a stretch delivering pizzas while taking community-college classes.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-2",
+            "text": "I arrived at my eventual program as a walk-on after asking for a chance to join the team.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "journey"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-3",
+            "text": "I gained roughly 40 pounds between leaving my first college and arriving at the next one.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "journey"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-4",
+            "text": "As a junior, I earned Academic All-Big Ten honors for a second consecutive year.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "wis",
+              "hof"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-5",
+            "text": "I became a consensus first-team all-conference selection.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "wis",
+              "lott"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-6",
+            "text": "In an upset of the nation's No. 1 team, I recorded three tackles for loss and two sacks.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "wis"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-7",
+            "text": "I finished the season with an interception in addition to my pass-rush production.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "lott"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-8",
+            "text": "My four career blocked kicks ranked third in Wisconsin history at the time.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "wis"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-9",
+            "text": "The Badgers knew me as the home-state walk-on who became their 2010 team MVP and a first-team All-American.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "hof",
+              "journey"
+            ]
+          },
+          {
+            "id": "cfb-jj-watt-b-10",
+            "text": "My Wisconsin career was defined by No. 99, a Big Ten championship and the 2010 Lott IMPACT Trophy.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "wis",
+              "hof",
+              "lott"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "league": "CFB",
+    "subjectId": "cfb-jalen-carter",
+    "name": "Jalen Carter",
+    "stageFocus": "CFB-career-forward",
+    "earlyRotation": "normal",
+    "sources": {
+      "uga": "https://georgiadogs.com/sports/football/roster/jalen-carter/6403"
+    },
+    "scripts": {
+      "A": {
+        "id": "A",
+        "clues": [
+          {
+            "id": "cfb-jalen-carter-a-1",
+            "text": "I played along the defensive line for three college seasons and became a starter later in my career.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-2",
+            "text": "My junior year included 13 games and nine starts.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-3",
+            "text": "I finished that season with 32 tackles and 31 quarterback hurries.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-4",
+            "text": "Both the conference coaches and Associated Press named me first-team all-conference.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-5",
+            "text": "I also landed on first-team All-America squads from the AP, FWAA, Walter Camp and Sporting News.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-6",
+            "text": "I became a finalist for the Lombardi Award as the nation's top lineman.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-7",
+            "text": "In the conference championship game, I produced four tackles, a sack and six quarterback pressures.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-8",
+            "text": "I added four quarterback hurries in the playoff semifinal against Ohio State.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-9",
+            "text": "I wore No. 88 on Georgia's defensive line during consecutive national championship seasons.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-a-10",
+            "text": "I was Georgia's No. 88 All-America defensive tackle and Lombardi finalist on the 2022 national champions.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          }
+        ]
+      },
+      "B": {
+        "id": "B",
+        "clues": [
+          {
+            "id": "cfb-jalen-carter-b-1",
+            "text": "As a freshman defensive lineman, I occasionally lined up on offense in goal-line situations.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-2",
+            "text": "I became the only defender on my team that season to score an offensive touchdown.",
+            "band": "broad",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-3",
+            "text": "The score came on a one-yard touchdown reception against Tennessee.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-4",
+            "text": "As a sophomore, I finished with 37 tackles and 33 quarterback pressures.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-5",
+            "text": "That season also included two blocked kicks, one in the national championship game.",
+            "band": "helpful",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-6",
+            "text": "I set a career high with eight quarterback pressures in a win at Auburn.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-7",
+            "text": "Against Kentucky, I recorded 2.5 tackles for loss and earned conference defensive-lineman-of-the-week honors.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-8",
+            "text": "The following year, I forced two fumbles in a win over top-ranked Tennessee.",
+            "band": "strong",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-9",
+            "text": "At Georgia, the No. 88 defensive lineman mixed rare goal-line offense with elite interior disruption.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          },
+          {
+            "id": "cfb-jalen-carter-b-10",
+            "text": "My Bulldog career ended with first-team All-America honors and a second straight national championship.",
+            "band": "giveaway",
+            "verification": "verified",
+            "sourceIds": [
+              "uga"
+            ]
+          }
+        ]
+      }
+    }
   }
 ] as const;
 
