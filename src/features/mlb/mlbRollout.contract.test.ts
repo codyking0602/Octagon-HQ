@@ -19,7 +19,7 @@ describe("MLB Playoffs rollout gate", () => {
 
   it("uses the same capability at every visible entry point", () => {
     expect(appShell).toContain("canViewMlbPlayoffs(identity.profile)");
-    expect(bottomNav).toContain("canViewMlbPlayoffs(identity.profile)");
+    expect(bottomNav).toContain("canViewMlbPlayoffs(identity?.profile)");
     expect(home).toContain("canViewMlbPlayoffs(identity.profile)");
     expect(router.match(/<MlbGate/g) ?? []).toHaveLength(3);
   });
