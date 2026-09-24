@@ -8,6 +8,8 @@ const home = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
 const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_foundation.sql", "utf8");
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
+const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
+const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
   it("stays owner-only until the explicit public release", () => {
@@ -46,6 +48,23 @@ describe("MLB Playoffs rollout gate", () => {
     const teamRule = styles.match(/\.mlb-team-choice span \{[\s\S]*?\}/)?.[0] ?? "";
     expect(teamRule).not.toContain("text-overflow: ellipsis");
     expect(teamRule).not.toContain("white-space: nowrap");
+  });
+
+  it("keeps owner preview data out of the official field", () => {
+    expect(mlbPicks).toContain("identity.profile?.canControlPicks === true");
+    expect(home).toContain("previewMode={identity.profile?.canControlPicks === true}");
+    expect(migration).toContain("'{" + "\\" + ""teams\\\":[],\\\"nodes\\\":[]}'::jsonb".replace(/\\\\/g, ""));
+  });
+
+  it("keeps MLB Play focused on the featured challenge", () => {
+    expect(mlbPlay).toContain("Featured Challenge");
+    expect(mlbPlay).toContain('to="/mlb/challenge"');
+    expect(mlbPlay).not.toContain("MlbHomeHq");
+  });
+
+  it("uses a distinct green MLB identity", () => {
+    expect(styles).toContain("--mlb-green:");
+    expect(styles).toContain("--home-sport-accent: var(--mlb-green)");
   });
 
   it("keeps bracket scoring progressive and simple", () => {
