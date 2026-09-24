@@ -80,10 +80,16 @@ export function MlbHomeHq({ enabled, signedIn }: { enabled: boolean; signedIn: b
                 <h3>{hub.spotlight.title}</h3>
                 <p>{hub.spotlight.status}</p>
                 <p>{hub.spotlight.overview}</p>
+                {hub.spotlight.keys.length ? (
+                  <div className="mlb-spotlight__keys" aria-label="Keys to the series">
+                    {hub.spotlight.keys.slice(0, 2).map((key) => <span key={key}>{key}</span>)}
+                  </div>
+                ) : null}
                 <div className="mlb-spotlight__watch">
                   <span>PLAYER TO WATCH</span>
                   <strong>{hub.spotlight.player_to_watch}</strong>
                   <small>{hub.spotlight.player_context}</small>
+                  {hub.spotlight.stats[0] ? <small>{hub.spotlight.stats[0]}</small> : null}
                 </div>
               </>
             ) : (
