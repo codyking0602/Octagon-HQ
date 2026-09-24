@@ -484,11 +484,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "team",
     collisionGroup: "champions",
     prompts: [
-      "Name an NFL franchise you associate with Super Bowl success.",
-      "Name a team with a major Super Bowl legacy.",
-      "Name a franchise fans expect in a championship-history conversation.",
-      "Name an NFL team whose trophy case helps define the brand.",
-      "Name a franchise with memorable Super Bowl wins.",
+      {
+        prompt: "Name an NFL franchise you associate with Super Bowl success.",
+        answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Philadelphia Eagles", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts"],
+      },
+      {
+        prompt: "Name a team with a major Super Bowl legacy.",
+        answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Green Bay Packers", "Kansas City Chiefs", "New York Giants", "Las Vegas Raiders"],
+        alsoAcceptedAnswers: ["Denver Broncos", "Washington Commanders", "Miami Dolphins", "Baltimore Ravens", "Los Angeles Rams", "Indianapolis Colts", "Tampa Bay Buccaneers", "Philadelphia Eagles"],
+      },
+      {
+        prompt: "Name a franchise fans expect in an NFL championship-history conversation.",
+        answers: ["Green Bay Packers", "Pittsburgh Steelers", "New England Patriots", "Dallas Cowboys", "San Francisco 49ers", "New York Giants", "Kansas City Chiefs", "Chicago Bears"],
+        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Denver Broncos", "Cleveland Browns", "Philadelphia Eagles", "Los Angeles Rams", "Indianapolis Colts", "Baltimore Ravens"],
+      },
+      {
+        prompt: "Name an NFL team whose Super Bowl trophy case helps define the brand.",
+        answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
+        alsoAcceptedAnswers: ["Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Philadelphia Eagles", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts"],
+      },
+      {
+        prompt: "Name a franchise with memorable Super Bowl wins.",
+        answers: ["New England Patriots", "New York Giants", "Pittsburgh Steelers", "San Francisco 49ers", "Kansas City Chiefs", "Dallas Cowboys", "Philadelphia Eagles", "Green Bay Packers"],
+        alsoAcceptedAnswers: ["Denver Broncos", "Las Vegas Raiders", "Washington Commanders", "Miami Dolphins", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Indianapolis Colts", "Seattle Seahawks", "New Orleans Saints", "Chicago Bears"],
+      },
     ],
     answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
     alsoAcceptedAnswers: ["Las Vegas Raiders", "Miami Dolphins", "Washington Commanders", "Indianapolis Colts", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Philadelphia Eagles", "Seattle Seahawks"],
