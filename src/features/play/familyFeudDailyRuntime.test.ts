@@ -263,7 +263,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     )).toThrow("Fast Money question changed before this answer could sync.");
   });
 
-  it("consumes ambiguous Daily Fast Money answers as zero and preserves per-answer timing evidence", () => {
+  it("consumes zero-point Daily Fast Money answers and preserves per-answer timing evidence", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const { submission } = strikeOutBothBoards(publication);
 
@@ -271,7 +271,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
       context(publication, submission),
       {
         type: "answer",
-        answer: "One",
+        answer: "India Nine",
         question_id: "fast-1",
         question_index: 0,
         time_remaining_ms: 37_250,
@@ -288,7 +288,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
     };
     expect(engineState.fastMoneyResults[0]).toMatchObject({
       questionId: "fast-1",
-      submittedText: "One",
+      submittedText: "India Nine",
       points: 0,
       timeRemainingMs: 37_250,
     });
