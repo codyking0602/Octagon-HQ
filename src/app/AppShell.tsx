@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
@@ -153,6 +153,10 @@ export function AppShell() {
   const effectiveSelectedSport = selectedSport === "mlb" && !mlbVisible ? "ufc" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
+
+  if (isMlb && !mlbVisible) {
+    return <Navigate to="/" replace />;
+  }
 
   function selectSport(sport: SelectedSport) {
     if (!sportContext?.switchable) return;
