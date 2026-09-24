@@ -54,7 +54,7 @@ const bundles = [
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationMillionaire.ts"),
     fileName: "football-publication-millionaire.generated.mjs",
     requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-19", gameType: "millionaire" },
+    smoke: { day: "2026-09-24", gameType: "millionaire" },
   },
   {
     label: "Football Daily Sports Feud publication runtime",
