@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "targetTotalSubjects": 133,
   "rankedSubjectCountAtGeneration": 81,
-  "expansionSubjectCount": 52,
+  "expansionSubjectCount": 85,
   "recognizabilityTier": "A",
   "policy": {
     "recognizabilityTier": "A",
     "modernActivityYear": 2016,
     "minimumModernShare": 0.75,
-    "maximumLegacySubjects": 5
+    "maximumLegacySubjects": 10
   },
   "provenance": {
     "provider": "ufcstats",
@@ -8219,6 +8219,4661 @@
       "secondaryDivisions": [
         "Catch Weight"
       ],
+      "activeFrom": "2009-12-05",
+      "activeTo": "2010-05-08",
+      "fights": [
+        {
+          "id": "de2328aa13e5ecdc",
+          "date": "2009-12-05",
+          "opponent": "Houston Alexander",
+          "division": "Catch Weight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "19425b506594d5c7",
+          "date": "2010-05-08",
+          "opponent": "Matt Mitrione",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:cm-punk",
+      "name": "CM Punk",
+      "slug": "cm-punk",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2016-09-10",
+      "activeTo": "2018-06-09",
+      "fights": [
+        {
+          "id": "26e6a2705a1e9e72",
+          "date": "2016-09-10",
+          "opponent": "Mickey Gall",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "64756e0f4b305da8",
+          "date": "2018-06-09",
+          "opponent": "Mike Jackson",
+          "division": "Welterweight",
+          "result": "no-contest",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:mike-perry",
+      "name": "Mike Perry",
+      "slug": "mike-perry",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2016-08-20",
+      "activeTo": "2021-04-10",
+      "fights": [
+        {
+          "id": "70f08a4771138817",
+          "date": "2016-08-20",
+          "opponent": "Hyun Gyu Lim",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "85bec51d0bdf511f",
+          "date": "2016-10-08",
+          "opponent": "Danny Roberts",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "473b9b56cdaedba3",
+          "date": "2016-12-17",
+          "opponent": "Alan Jouban",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3905e5dc489811d6",
+          "date": "2017-04-22",
+          "opponent": "Jake Ellenberger",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3dd22a9a0ea68cc6",
+          "date": "2017-09-16",
+          "opponent": "Alex Reyes",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "11b8d7e801713abc",
+          "date": "2017-12-16",
+          "opponent": "Santiago Ponzinibbio",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "424a20da52b4f956",
+          "date": "2018-02-24",
+          "opponent": "Max Griffin",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7a3947a0e7bc3558",
+          "date": "2018-07-07",
+          "opponent": "Paul Felder",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "46cfd4aaa02ce202",
+          "date": "2018-11-10",
+          "opponent": "Donald Cerrone",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3286d8406eff5c85",
+          "date": "2019-04-27",
+          "opponent": "Alex Oliveira",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7feadf01c5920285",
+          "date": "2019-08-10",
+          "opponent": "Vicente Luque",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ad5ef8d8678ff97f",
+          "date": "2019-12-14",
+          "opponent": "Geoff Neal",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f2d9814936a6eb35",
+          "date": "2020-06-27",
+          "opponent": "Mickey Gall",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2b13651b97f57b6c",
+          "date": "2020-11-21",
+          "opponent": "Tim Means",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ac9a8b73e58f3d71",
+          "date": "2021-04-10",
+          "opponent": "Daniel Rodriguez",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:paige-vanzant",
+      "name": "Paige VanZant",
+      "slug": "paige-vanzant",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Women's Strawweight",
+      "secondaryDivisions": [
+        "Women's Flyweight"
+      ],
+      "activeFrom": "2014-11-22",
+      "activeTo": "2020-07-11",
+      "fights": [
+        {
+          "id": "e7859b4e70d4a9c1",
+          "date": "2014-11-22",
+          "opponent": "Kailin Curran",
+          "division": "Women's Strawweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e2b4130c7b1ff8bc",
+          "date": "2015-04-18",
+          "opponent": "Felice Herrig",
+          "division": "Women's Strawweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "05d2534e0f2d5042",
+          "date": "2015-09-05",
+          "opponent": "Alex Chambers",
+          "division": "Women's Strawweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d8fe965281e2e312",
+          "date": "2015-12-10",
+          "opponent": "Rose Namajunas",
+          "division": "Women's Strawweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0bf8bb9b4ef329f9",
+          "date": "2016-08-27",
+          "opponent": "Bec Rawlings",
+          "division": "Women's Strawweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5840527835a8ffb2",
+          "date": "2016-12-17",
+          "opponent": "Michelle Waterson-Gomez",
+          "division": "Women's Strawweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0820a29a03d58282",
+          "date": "2018-01-14",
+          "opponent": "Jessica-Rose Clark",
+          "division": "Women's Flyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7ddd21d48e3b34b9",
+          "date": "2019-01-19",
+          "opponent": "Rachael Ostovich",
+          "division": "Women's Flyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6e0c1faaf40caf9a",
+          "date": "2020-07-11",
+          "opponent": "Amanda Ribas",
+          "division": "Women's Flyweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:greg-hardy",
+      "name": "Greg Hardy",
+      "slug": "greg-hardy",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2019-01-19",
+      "activeTo": "2022-03-05",
+      "fights": [
+        {
+          "id": "8da2c348ba6001a0",
+          "date": "2019-01-19",
+          "opponent": "Allen Crowder",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c68e57c19c82d500",
+          "date": "2019-04-27",
+          "opponent": "Dmitrii Smoliakov",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "88b1d4f951070f83",
+          "date": "2019-07-20",
+          "opponent": "Juan Adams",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0019ec81fd706ade",
+          "date": "2019-10-18",
+          "opponent": "Ben Sosoli",
+          "division": "Heavyweight",
+          "result": "no-contest",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3cd1f2c31b4e325a",
+          "date": "2019-11-09",
+          "opponent": "Alexander Volkov",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f0d4652f8edfbe6d",
+          "date": "2020-05-09",
+          "opponent": "Yorgan De Castro",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d763ad79532b27ff",
+          "date": "2020-10-31",
+          "opponent": "Maurice Greene",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "cd150cd28738a7c5",
+          "date": "2020-12-19",
+          "opponent": "Marcin Tybura",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "53b480b44b0b51f1",
+          "date": "2021-07-10",
+          "opponent": "Tai Tuivasa",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "cda06ff86cfe4f5f",
+          "date": "2022-03-05",
+          "opponent": "Serghei Spivac",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:darren-till",
+      "name": "Darren Till",
+      "slug": "darren-till",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [
+        "Middleweight"
+      ],
+      "activeFrom": "2015-05-30",
+      "activeTo": "2022-12-10",
+      "fights": [
+        {
+          "id": "61d6b591430b6e25",
+          "date": "2015-05-30",
+          "opponent": "Wendell Oliveira Marques",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2e0ae17a22a6f824",
+          "date": "2015-10-24",
+          "opponent": "Nicolas Dalby",
+          "division": "Welterweight",
+          "result": "draw",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1ed9dbbe604654b9",
+          "date": "2017-05-28",
+          "opponent": "Jessin Ayari",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b1f7bc82f7dce1b9",
+          "date": "2017-09-02",
+          "opponent": "Bojan Velickovic",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "aa7b1fca60a21f3a",
+          "date": "2017-10-21",
+          "opponent": "Donald Cerrone",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "cd117bfce747184f",
+          "date": "2018-05-27",
+          "opponent": "Stephen Thompson",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b66ac52bfb217761",
+          "date": "2018-09-08",
+          "opponent": "Tyron Woodley",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c6dd17ab89437805",
+          "date": "2019-03-16",
+          "opponent": "Jorge Masvidal",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7c40aa2cb6883a91",
+          "date": "2019-11-02",
+          "opponent": "Kelvin Gastelum",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "11f715fa5e825e51",
+          "date": "2020-07-25",
+          "opponent": "Robert Whittaker",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "14f2bb86fd888e91",
+          "date": "2021-09-04",
+          "opponent": "Derek Brunson",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ecab8b8b36727b8d",
+          "date": "2022-12-10",
+          "opponent": "Dricus Du Plessis",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:jiri-prochazka",
+      "name": "Jiří Procházka",
+      "slug": "jiri-prochazka",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Light Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2020-07-11",
+      "activeTo": "2026-04-11",
+      "fights": [
+        {
+          "id": "cd8cdb539deaa47f",
+          "date": "2020-07-11",
+          "opponent": "Volkan Oezdemir",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "394802bb096b403e",
+          "date": "2021-05-01",
+          "opponent": "Dominick Reyes",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "fd49f89b9d97566b",
+          "date": "2022-06-11",
+          "opponent": "Glover Teixeira",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b1f2ec122beda7a5",
+          "date": "2023-11-11",
+          "opponent": "Alex Pereira",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "eda1e8c285a0a788",
+          "date": "2024-04-13",
+          "opponent": "Aleksandar Rakic",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "bca5d01f8775f852",
+          "date": "2024-06-29",
+          "opponent": "Alex Pereira",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "959fea398ffa5778",
+          "date": "2025-01-18",
+          "opponent": "Jamahal Hill",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2560ea97b2cce4ef",
+          "date": "2025-10-04",
+          "opponent": "Khalil Rountree Jr.",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a031f062b7ffefee",
+          "date": "2026-04-11",
+          "opponent": "Carlos Ulberg",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:magomed-ankalaev",
+      "name": "Magomed Ankalaev",
+      "slug": "magomed-ankalaev",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Light Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2018-03-17",
+      "activeTo": "2026-07-25",
+      "fights": [
+        {
+          "id": "714d6fc1eaca9624",
+          "date": "2018-03-17",
+          "opponent": "Paul Craig",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1687e2cd061b7aec",
+          "date": "2018-09-15",
+          "opponent": "Marcin Prachnio",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "14c505d7ad55883c",
+          "date": "2019-02-23",
+          "opponent": "Klidson Abreu",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "343749a2f7c5d78b",
+          "date": "2019-11-09",
+          "opponent": "Dalcha Lungiambula",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f5b49f4c5a27e53b",
+          "date": "2020-02-29",
+          "opponent": "Ion Cutelaba",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "eedcb6c5d163e581",
+          "date": "2020-10-24",
+          "opponent": "Ion Cutelaba",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3a4e2dffcdd1c838",
+          "date": "2021-02-27",
+          "opponent": "Nikita Krylov",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "58b19ba734fe93a3",
+          "date": "2021-10-30",
+          "opponent": "Volkan Oezdemir",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8aa16cc1ba99aac1",
+          "date": "2022-03-12",
+          "opponent": "Thiago Santos",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "058c2724dec1add1",
+          "date": "2022-07-30",
+          "opponent": "Anthony Smith",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3c3a9c1ec0604fc2",
+          "date": "2022-12-10",
+          "opponent": "Jan Blachowicz",
+          "division": "Light Heavyweight",
+          "result": "draw",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "821960adf5bfa15c",
+          "date": "2023-10-21",
+          "opponent": "Johnny Walker",
+          "division": "Light Heavyweight",
+          "result": "no-contest",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f2b407019b2a5c15",
+          "date": "2024-01-13",
+          "opponent": "Johnny Walker",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b09f54654b0f95f5",
+          "date": "2024-10-26",
+          "opponent": "Aleksandar Rakic",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9e05fe95a4fc63bc",
+          "date": "2025-03-08",
+          "opponent": "Alex Pereira",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0de1ef0b9f3a79c0",
+          "date": "2025-10-04",
+          "opponent": "Alex Pereira",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9009ec7b91f2be14",
+          "date": "2026-07-25",
+          "opponent": "Bogdan Guskov",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:jan-b-achowicz",
+      "name": "Jan Błachowicz",
+      "slug": "jan-b-achowicz",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Light Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2014-10-04",
+      "activeTo": "2026-08-01",
+      "fights": [
+        {
+          "id": "699a70c8fb3c0273",
+          "date": "2014-10-04",
+          "opponent": "Ilir Latifi",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b2bb725b17ab51b8",
+          "date": "2015-04-11",
+          "opponent": "Jimi Manuwa",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7e1ae27779ac6ba5",
+          "date": "2015-09-05",
+          "opponent": "Corey Anderson",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "26779cfb01372664",
+          "date": "2016-04-10",
+          "opponent": "Igor Pokrajac",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0549b655619774c5",
+          "date": "2016-09-03",
+          "opponent": "Alexander Gustafsson",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e7ad1c3a763c7cae",
+          "date": "2017-04-08",
+          "opponent": "Patrick Cummins",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6a315ef5bf22af29",
+          "date": "2017-10-21",
+          "opponent": "Devin Clark",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "01619207a811ef01",
+          "date": "2017-12-16",
+          "opponent": "Jared Cannonier",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5f19b0135414b454",
+          "date": "2018-03-17",
+          "opponent": "Jimi Manuwa",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "880f2bb0a639a5a0",
+          "date": "2018-09-15",
+          "opponent": "Nikita Krylov",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "cb010b41cd20a1ed",
+          "date": "2019-02-23",
+          "opponent": "Thiago Santos",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "531d9676d767da66",
+          "date": "2019-07-06",
+          "opponent": "Luke Rockhold",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c04274c8caa505dd",
+          "date": "2019-11-16",
+          "opponent": "Jacare Souza",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "801b3f24c670f19a",
+          "date": "2020-02-15",
+          "opponent": "Corey Anderson",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4c12c9085200121f",
+          "date": "2020-09-26",
+          "opponent": "Dominick Reyes",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7de9867b7cc2b1b1",
+          "date": "2021-03-06",
+          "opponent": "Israel Adesanya",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "919fb76d2f3e5827",
+          "date": "2021-10-30",
+          "opponent": "Glover Teixeira",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5c281439d20184f1",
+          "date": "2022-05-14",
+          "opponent": "Aleksandar Rakic",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3c3a9c1ec0604fc2",
+          "date": "2022-12-10",
+          "opponent": "Magomed Ankalaev",
+          "division": "Light Heavyweight",
+          "result": "draw",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "800a35b3a7e52308",
+          "date": "2023-07-29",
+          "opponent": "Alex Pereira",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6d9ea9f436ed354d",
+          "date": "2025-03-22",
+          "opponent": "Carlos Ulberg",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6d6ab10cbaa45e8c",
+          "date": "2025-12-06",
+          "opponent": "Bogdan Guskov",
+          "division": "Light Heavyweight",
+          "result": "draw",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0c3c835e681972d3",
+          "date": "2026-08-01",
+          "opponent": "Navajo Stirling",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:jamahal-hill",
+      "name": "Jamahal Hill",
+      "slug": "jamahal-hill",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Light Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2020-01-25",
+      "activeTo": "2025-06-21",
+      "fights": [
+        {
+          "id": "6195d3e7c412c8a2",
+          "date": "2020-01-25",
+          "opponent": "Darko Stosic",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0fcf42b68f2f0fa3",
+          "date": "2020-05-30",
+          "opponent": "Klidson Abreu",
+          "division": "Light Heavyweight",
+          "result": "no-contest",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8d4a475e48722fea",
+          "date": "2020-12-05",
+          "opponent": "Ovince Saint Preux",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4560734220b96851",
+          "date": "2021-06-12",
+          "opponent": "Paul Craig",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b3847772199e2639",
+          "date": "2021-12-04",
+          "opponent": "Jimmy Crute",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f7865e5a6d009a87",
+          "date": "2022-02-19",
+          "opponent": "Johnny Walker",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a8bc6e005077bb0b",
+          "date": "2022-08-06",
+          "opponent": "Thiago Santos",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dde7d29cc443e263",
+          "date": "2023-01-21",
+          "opponent": "Glover Teixeira",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e4931f3ab3bf4141",
+          "date": "2024-04-13",
+          "opponent": "Alex Pereira",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "959fea398ffa5778",
+          "date": "2025-01-18",
+          "opponent": "Jiri Prochazka",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "03bc32bdb5a33496",
+          "date": "2025-06-21",
+          "opponent": "Khalil Rountree Jr.",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:carlos-ulberg",
+      "name": "Carlos Ulberg",
+      "slug": "carlos-ulberg",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Light Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2021-03-06",
+      "activeTo": "2026-04-11",
+      "fights": [
+        {
+          "id": "d170f6580e1c244f",
+          "date": "2021-03-06",
+          "opponent": "Kennedy Nzechukwu",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3bebd99d5f94bec7",
+          "date": "2022-02-12",
+          "opponent": "Fabio Cherant",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "28be3fbe5c377380",
+          "date": "2022-06-25",
+          "opponent": "Tafon Nchukwi",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "db026ff6eee4d174",
+          "date": "2022-11-12",
+          "opponent": "Nicolae Negumereanu",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dae2484418631ff5",
+          "date": "2023-05-13",
+          "opponent": "Ihor Potieria",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a3d75cc363a6544b",
+          "date": "2023-09-09",
+          "opponent": "Da Woon Jung",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a049c12f43914449",
+          "date": "2024-05-11",
+          "opponent": "Alonzo Menifield",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "02ec66f311dce539",
+          "date": "2024-11-23",
+          "opponent": "Volkan Oezdemir",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6d9ea9f436ed354d",
+          "date": "2025-03-22",
+          "opponent": "Jan Blachowicz",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a3ee907c77544cde",
+          "date": "2025-09-27",
+          "opponent": "Dominick Reyes",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a031f062b7ffefee",
+          "date": "2026-04-11",
+          "opponent": "Jiri Prochazka",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:arman-tsarukyan",
+      "name": "Arman Tsarukyan",
+      "slug": "arman-tsarukyan",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Lightweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2019-04-20",
+      "activeTo": "2025-11-22",
+      "fights": [
+        {
+          "id": "103a7d8c4f17714b",
+          "date": "2019-04-20",
+          "opponent": "Islam Makhachev",
+          "division": "Lightweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7ed98f8d1ffae082",
+          "date": "2019-07-27",
+          "opponent": "Olivier Aubin-Mercier",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ecb24300bb3bef8c",
+          "date": "2020-07-18",
+          "opponent": "Davi Ramos",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "99dbe9669f31ed91",
+          "date": "2021-01-23",
+          "opponent": "Matt Frevola",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "13a8ddb1c3f55ed4",
+          "date": "2021-09-18",
+          "opponent": "Christos Giagos",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8515f07911765f89",
+          "date": "2022-02-26",
+          "opponent": "Joel Alvarez",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1f5f59924b59408b",
+          "date": "2022-06-25",
+          "opponent": "Mateusz Gamrot",
+          "division": "Lightweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ce7744d45a698aa6",
+          "date": "2022-12-17",
+          "opponent": "Damir Ismagulov",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6c2199524d762b11",
+          "date": "2023-06-17",
+          "opponent": "Joaquim Silva",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9feb9500b0fedfcd",
+          "date": "2023-12-02",
+          "opponent": "Beneil Dariush",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "01f7c28804746979",
+          "date": "2024-04-13",
+          "opponent": "Charles Oliveira",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5f5b626e67529056",
+          "date": "2025-11-22",
+          "opponent": "Dan Hooker",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:cory-sandhagen",
+      "name": "Cory Sandhagen",
+      "slug": "cory-sandhagen",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Bantamweight",
+      "secondaryDivisions": [
+        "Featherweight",
+        "Interim Bantamweight"
+      ],
+      "activeFrom": "2018-01-27",
+      "activeTo": "2026-07-11",
+      "fights": [
+        {
+          "id": "fa7cde1e2d3ae338",
+          "date": "2018-01-27",
+          "opponent": "Austin Arnett",
+          "division": "Featherweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3e0090669d51415f",
+          "date": "2018-08-25",
+          "opponent": "Iuri Alcantara",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "efbab76bedbfb65d",
+          "date": "2019-01-19",
+          "opponent": "Mario Bautista",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "bcb697c4317f0997",
+          "date": "2019-04-27",
+          "opponent": "John Lineker",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "fba7d6a42f137938",
+          "date": "2019-08-17",
+          "opponent": "Raphael Assuncao",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c03b6b6ce5d03276",
+          "date": "2020-06-06",
+          "opponent": "Aljamain Sterling",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "727ecd251325b6a8",
+          "date": "2020-10-10",
+          "opponent": "Marlon Moraes",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9ef858837dfc65eb",
+          "date": "2021-02-06",
+          "opponent": "Frankie Edgar",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "214b268e4a92f950",
+          "date": "2021-07-24",
+          "opponent": "TJ Dillashaw",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "18edff5447989b3f",
+          "date": "2021-10-30",
+          "opponent": "Petr Yan",
+          "division": "Interim Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": true
+        },
+        {
+          "id": "df370b97ea49e6b4",
+          "date": "2022-09-17",
+          "opponent": "Song Yadong",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "33fa6793a7f984ac",
+          "date": "2023-03-25",
+          "opponent": "Marlon Vera",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "554163b1c8c05522",
+          "date": "2023-08-05",
+          "opponent": "Rob Font",
+          "division": "Catch Weight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "33655fd07cfbe034",
+          "date": "2024-08-03",
+          "opponent": "Umar Nurmagomedov",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9b3bade95e1dd484",
+          "date": "2025-05-03",
+          "opponent": "Deiveson Figueiredo",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a8511df8285f5c91",
+          "date": "2025-10-04",
+          "opponent": "Merab Dvalishvili",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c572daedf2012a49",
+          "date": "2026-07-11",
+          "opponent": "Mario Bautista",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:umar-nurmagomedov",
+      "name": "Umar Nurmagomedov",
+      "slug": "umar-nurmagomedov",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Bantamweight",
+      "secondaryDivisions": [
+        "Featherweight"
+      ],
+      "activeFrom": "2021-01-20",
+      "activeTo": "2026-01-24",
+      "fights": [
+        {
+          "id": "11558384f80f6506",
+          "date": "2021-01-20",
+          "opponent": "Sergey Morozov",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "59d44b6888885500",
+          "date": "2022-03-05",
+          "opponent": "Brian Kelleher",
+          "division": "Featherweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "28bd070f7ab0a0b9",
+          "date": "2022-06-25",
+          "opponent": "Nate Maness",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a4c7d59d340794c0",
+          "date": "2023-01-14",
+          "opponent": "Raoni Barcelos",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dcf5014e56649c2f",
+          "date": "2024-03-02",
+          "opponent": "Bekzat Almakhan",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "33655fd07cfbe034",
+          "date": "2024-08-03",
+          "opponent": "Cory Sandhagen",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f39941b3743bf18c",
+          "date": "2025-01-18",
+          "opponent": "Merab Dvalishvili",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e69f9b4b9cae12a4",
+          "date": "2025-10-25",
+          "opponent": "Mario Bautista",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6c9f4799990c3c33",
+          "date": "2026-01-24",
+          "opponent": "Deiveson Figueiredo",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:belal-muhammad",
+      "name": "Belal Muhammad",
+      "slug": "belal-muhammad",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2016-07-07",
+      "activeTo": "2026-06-06",
+      "fights": [
+        {
+          "id": "420f4e4dc341eb57",
+          "date": "2016-07-07",
+          "opponent": "Alan Jouban",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4df1d3183929d021",
+          "date": "2016-09-17",
+          "opponent": "Augusto Montano",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "14477908199435e1",
+          "date": "2016-11-12",
+          "opponent": "Vicente Luque",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f680e6ebe3bdfe3e",
+          "date": "2017-02-11",
+          "opponent": "Randy Brown",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9298175cb2ad7d41",
+          "date": "2017-07-08",
+          "opponent": "Jordan Mein",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5ebe8d3849273776",
+          "date": "2017-11-18",
+          "opponent": "Tim Means",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "026c4a26106cc158",
+          "date": "2018-06-01",
+          "opponent": "Chance Rencountre",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2cc1fe3570999428",
+          "date": "2019-01-19",
+          "opponent": "Geoff Neal",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "23fd92555246d61e",
+          "date": "2019-04-13",
+          "opponent": "Curtis Millender",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "18aff757c54687f1",
+          "date": "2019-09-07",
+          "opponent": "Takashi Sato",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f00921c62315be96",
+          "date": "2020-06-20",
+          "opponent": "Lyman Good",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8cf076524cad5a55",
+          "date": "2021-02-13",
+          "opponent": "Dhiego Lima",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2c13b938e0f8190b",
+          "date": "2021-03-13",
+          "opponent": "Leon Edwards",
+          "division": "Welterweight",
+          "result": "no-contest",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "43dfb2c1e5fecac9",
+          "date": "2021-06-12",
+          "opponent": "Demian Maia",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8b3b38167060b1d7",
+          "date": "2021-12-18",
+          "opponent": "Stephen Thompson",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6d4b6224f26572f9",
+          "date": "2022-04-16",
+          "opponent": "Vicente Luque",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d325a1483d78ae75",
+          "date": "2022-10-22",
+          "opponent": "Sean Brady",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ed707998b13d0101",
+          "date": "2023-05-06",
+          "opponent": "Gilbert Burns",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ec5163539a133f17",
+          "date": "2024-07-27",
+          "opponent": "Leon Edwards",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b873c116e39c9920",
+          "date": "2025-05-10",
+          "opponent": "Jack Della Maddalena",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b2218930b982d9b6",
+          "date": "2025-11-22",
+          "opponent": "Ian Machado Garry",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5c69b019e6deee41",
+          "date": "2026-06-06",
+          "opponent": "Gabriel Bonfim",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:jack-della-maddalena",
+      "name": "Jack Della Maddalena",
+      "slug": "jack-della-maddalena",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2022-01-22",
+      "activeTo": "2026-05-02",
+      "fights": [
+        {
+          "id": "0669231ebe3dd560",
+          "date": "2022-01-22",
+          "opponent": "Pete Rodriguez",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f115a91066a77ee7",
+          "date": "2022-06-11",
+          "opponent": "Ramazan Emeev",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d0c01840c72429c6",
+          "date": "2022-11-19",
+          "opponent": "Danny Roberts",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4f672dd40867d8c6",
+          "date": "2023-02-11",
+          "opponent": "Randy Brown",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3352c65f3f6d9b2a",
+          "date": "2023-07-15",
+          "opponent": "Bassil Hafez",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "697efaf0d162e877",
+          "date": "2023-09-16",
+          "opponent": "Kevin Holland",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "68f7f992603192c6",
+          "date": "2024-03-09",
+          "opponent": "Gilbert Burns",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b873c116e39c9920",
+          "date": "2025-05-10",
+          "opponent": "Belal Muhammad",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "856f6ee049373843",
+          "date": "2025-11-15",
+          "opponent": "Islam Makhachev",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "eb6d9fef6c374830",
+          "date": "2026-05-02",
+          "opponent": "Carlos Prates",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:ian-machado-garry",
+      "name": "Ian Machado Garry",
+      "slug": "ian-machado-garry",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2021-11-06",
+      "activeTo": "2026-08-15",
+      "fights": [
+        {
+          "id": "733dcfec0cc9b439",
+          "date": "2021-11-06",
+          "opponent": "Jordan Williams",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "313b85fe82b2ba80",
+          "date": "2022-04-09",
+          "opponent": "Darian Weeks",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4d8d1701c43c5fea",
+          "date": "2022-07-02",
+          "opponent": "Gabe Green",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ed9f8f702585ed44",
+          "date": "2023-03-04",
+          "opponent": "Song Kenan",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b0f4c7788782e26e",
+          "date": "2023-05-13",
+          "opponent": "Daniel Rodriguez",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "78d2c01dc963f204",
+          "date": "2023-08-19",
+          "opponent": "Neil Magny",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8fb0092430448368",
+          "date": "2024-02-17",
+          "opponent": "Geoff Neal",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "fbf77262d8da342b",
+          "date": "2024-06-29",
+          "opponent": "Michael Page",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1569186ee820ea87",
+          "date": "2024-12-07",
+          "opponent": "Shavkat Rakhmonov",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "633f4b5ec767769d",
+          "date": "2025-04-26",
+          "opponent": "Carlos Prates",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b2218930b982d9b6",
+          "date": "2025-11-22",
+          "opponent": "Belal Muhammad",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "365fd759c03e93cf",
+          "date": "2026-08-15",
+          "opponent": "Islam Makhachev",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:shavkat-rakhmonov",
+      "name": "Shavkat Rakhmonov",
+      "slug": "shavkat-rakhmonov",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2020-10-24",
+      "activeTo": "2024-12-07",
+      "fights": [
+        {
+          "id": "5b062be91c65fb73",
+          "date": "2020-10-24",
+          "opponent": "Alex Oliveira",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "086c2a0cae0835c4",
+          "date": "2021-06-26",
+          "opponent": "Michel Prazeres",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6b4c2cc27855506a",
+          "date": "2022-02-05",
+          "opponent": "Carlston Harris",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3c98739eb42f96bf",
+          "date": "2022-06-25",
+          "opponent": "Neil Magny",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "22fc6b3f4e48cfa3",
+          "date": "2023-03-04",
+          "opponent": "Geoff Neal",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1efc813ccd7a5aba",
+          "date": "2023-12-16",
+          "opponent": "Stephen Thompson",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1569186ee820ea87",
+          "date": "2024-12-07",
+          "opponent": "Ian Machado Garry",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:urijah-faber",
+      "name": "Urijah Faber",
+      "slug": "urijah-faber",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Bantamweight",
+      "secondaryDivisions": [
+        "Interim Bantamweight",
+        "Featherweight"
+      ],
+      "activeFrom": "2011-03-19",
+      "activeTo": "2019-12-14",
+      "fights": [
+        {
+          "id": "dd3ea525fe1898f1",
+          "date": "2011-03-19",
+          "opponent": "Eddie Wineland",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8f4a445ccb548f15",
+          "date": "2011-07-02",
+          "opponent": "Dominick Cruz",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "73fd4982ef7aae44",
+          "date": "2011-11-19",
+          "opponent": "Brian Bowles",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "50a381c1eb88dbb0",
+          "date": "2012-07-21",
+          "opponent": "Renan Barao",
+          "division": "Interim Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": true
+        },
+        {
+          "id": "785c0e68b34ea383",
+          "date": "2013-02-23",
+          "opponent": "Ivan Menjivar",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b4d0659f60c8aa7c",
+          "date": "2013-04-13",
+          "opponent": "Scott Jorgensen",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "751f2796809d2a6f",
+          "date": "2013-08-17",
+          "opponent": "Iuri Alcantara",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "00566b4d89565373",
+          "date": "2013-12-14",
+          "opponent": "Michael McDonald",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4c9047d1c1bc1e29",
+          "date": "2014-02-01",
+          "opponent": "Renan Barao",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "27c34f7a7e1c4d67",
+          "date": "2014-07-05",
+          "opponent": "Alex Caceres",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c5ae278a05b73db9",
+          "date": "2014-12-06",
+          "opponent": "Francisco Rivera",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7d60cb78ea70fae0",
+          "date": "2015-05-16",
+          "opponent": "Frankie Edgar",
+          "division": "Featherweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c4fd59db24f978ec",
+          "date": "2015-12-12",
+          "opponent": "Frankie Saenz",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9c884cbc3791bf60",
+          "date": "2016-06-04",
+          "opponent": "Dominick Cruz",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "971d9fa5947a4bb7",
+          "date": "2016-09-10",
+          "opponent": "Jimmie Rivera",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2cdf841a057d9039",
+          "date": "2016-12-17",
+          "opponent": "Brad Pickett",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "75b1533cc3cafae9",
+          "date": "2019-07-13",
+          "opponent": "Ricky Simon",
+          "division": "Bantamweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a0c82ba11a373008",
+          "date": "2019-12-14",
+          "opponent": "Petr Yan",
+          "division": "Bantamweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:frank-mir",
+      "name": "Frank Mir",
+      "slug": "frank-mir",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Heavyweight",
+      "secondaryDivisions": [
+        "Interim Heavyweight"
+      ],
+      "activeFrom": "2001-11-02",
+      "activeTo": "2016-03-19",
+      "fights": [
+        {
+          "id": "586635087cdfbbcc",
+          "date": "2001-11-02",
+          "opponent": "Roberto Traven",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7468f870b08aaccc",
+          "date": "2002-03-22",
+          "opponent": "Pete Williams",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2a2f50039ac636d0",
+          "date": "2002-07-13",
+          "opponent": "Ian Freeman",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a85a0831580696ff",
+          "date": "2003-02-28",
+          "opponent": "David Abbott",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b5854feb57f40bb4",
+          "date": "2003-06-06",
+          "opponent": "Wes Sims",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "476548ca3d8cf0ee",
+          "date": "2004-01-31",
+          "opponent": "Wes Sims",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dffef4343e822399",
+          "date": "2004-06-19",
+          "opponent": "Tim Sylvia",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "44592a74cda71275",
+          "date": "2006-02-04",
+          "opponent": "Marcio Cruz",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9ce2d0b880e88934",
+          "date": "2006-07-08",
+          "opponent": "Dan Christison",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ba0a3a4b80418db9",
+          "date": "2006-11-18",
+          "opponent": "Brandon Vera",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e7ff18a0cfa09702",
+          "date": "2007-08-25",
+          "opponent": "Antoni Hardonk",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f0b42c9e55025ad3",
+          "date": "2008-02-02",
+          "opponent": "Brock Lesnar",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "02c54d382fb1c347",
+          "date": "2008-12-27",
+          "opponent": "Antonio Rodrigo Nogueira",
+          "division": "Interim Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": true
+        },
+        {
+          "id": "8df2751dcbfa0fa2",
+          "date": "2009-07-11",
+          "opponent": "Brock Lesnar",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a9bc7915974b7d15",
+          "date": "2009-12-12",
+          "opponent": "Cheick Kongo",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5755a68d39867abc",
+          "date": "2010-03-27",
+          "opponent": "Shane Carwin",
+          "division": "Interim Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": true
+        },
+        {
+          "id": "301b145c186635de",
+          "date": "2010-09-25",
+          "opponent": "Mirko Filipovic",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c553753c64379c39",
+          "date": "2011-05-28",
+          "opponent": "Roy Nelson",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "92d0c39f0df77c7e",
+          "date": "2011-12-10",
+          "opponent": "Antonio Rodrigo Nogueira",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "41e6ace08a2679e1",
+          "date": "2012-05-26",
+          "opponent": "Junior Dos Santos",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4dd561df1ca58ab8",
+          "date": "2013-04-20",
+          "opponent": "Daniel Cormier",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "aac887ea8a83d7a4",
+          "date": "2013-08-31",
+          "opponent": "Josh Barnett",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "651bdd9e17a58c5d",
+          "date": "2014-02-01",
+          "opponent": "Alistair Overeem",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "223f9a750428e1d0",
+          "date": "2015-02-22",
+          "opponent": "Antonio Silva",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3b83ec99accfd271",
+          "date": "2015-07-15",
+          "opponent": "Todd Duffee",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6f5f4b256f643ffb",
+          "date": "2015-09-05",
+          "opponent": "Andrei Arlovski",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "fb98219ce569b384",
+          "date": "2016-03-19",
+          "opponent": "Mark Hunt",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:alistair-overeem",
+      "name": "Alistair Overeem",
+      "slug": "alistair-overeem",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2011-12-30",
+      "activeTo": "2021-02-06",
+      "fights": [
+        {
+          "id": "5c3325b7da3f7828",
+          "date": "2011-12-30",
+          "opponent": "Brock Lesnar",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "21419797f539de5e",
+          "date": "2013-02-02",
+          "opponent": "Antonio Silva",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "eefc526e320524e6",
+          "date": "2013-08-17",
+          "opponent": "Travis Browne",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "651bdd9e17a58c5d",
+          "date": "2014-02-01",
+          "opponent": "Frank Mir",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1520290d28b75b53",
+          "date": "2014-09-05",
+          "opponent": "Ben Rothwell",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "002921976d27b7da",
+          "date": "2014-12-13",
+          "opponent": "Stefan Struve",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7685da6f627bd98f",
+          "date": "2015-03-14",
+          "opponent": "Roy Nelson",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1f0254eeb2025e4f",
+          "date": "2015-12-19",
+          "opponent": "Junior Dos Santos",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5838305c25a54ea1",
+          "date": "2016-05-08",
+          "opponent": "Andrei Arlovski",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "19df0d0cb1269fa7",
+          "date": "2016-09-10",
+          "opponent": "Stipe Miocic",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c79b862be039d9f0",
+          "date": "2017-03-04",
+          "opponent": "Mark Hunt",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b67229e7675eed24",
+          "date": "2017-07-08",
+          "opponent": "Fabricio Werdum",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4712708adb1507aa",
+          "date": "2017-12-02",
+          "opponent": "Francis Ngannou",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7fd0f7b3866b2c75",
+          "date": "2018-06-09",
+          "opponent": "Curtis Blaydes",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1c43b38c1f4bdbe2",
+          "date": "2018-11-24",
+          "opponent": "Sergei Pavlovich",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "470a3c1b89504258",
+          "date": "2019-04-20",
+          "opponent": "Aleksei Oleinik",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e91f289f1b9f9519",
+          "date": "2019-12-07",
+          "opponent": "Jairzinho Rozenstruik",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ce0748519d5ea5c6",
+          "date": "2020-05-16",
+          "opponent": "Walt Harris",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "24341a8cf1152c5c",
+          "date": "2020-09-05",
+          "opponent": "Augusto Sakai",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8b9bdacca749ec90",
+          "date": "2021-02-06",
+          "opponent": "Alexander Volkov",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:rich-franklin",
+      "name": "Rich Franklin",
+      "slug": "rich-franklin",
+      "recognizabilityTier": "A",
+      "legacyA": true,
+      "primaryDivision": "Middleweight",
+      "secondaryDivisions": [
+        "Light Heavyweight"
+      ],
+      "activeFrom": "2003-04-25",
+      "activeTo": "2012-11-10",
+      "fights": [
+        {
+          "id": "af59e32a5b3f6065",
+          "date": "2003-04-25",
+          "opponent": "Evan Tanner",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "180128adae7897db",
+          "date": "2003-09-26",
+          "opponent": "Edwin DeWees",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b76a722dd429612e",
+          "date": "2004-10-22",
+          "opponent": "Jorge Rivera",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c50a3025d1519fc8",
+          "date": "2005-04-09",
+          "opponent": "Ken Shamrock",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "98cc8f5dd64895c4",
+          "date": "2005-06-04",
+          "opponent": "Evan Tanner",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "other",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2dfda46cbc17bc99",
+          "date": "2005-11-19",
+          "opponent": "Nate Quarry",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "002cb1bb411c5f60",
+          "date": "2006-03-04",
+          "opponent": "David Loiseau",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "84efac79989f4d0a",
+          "date": "2006-10-14",
+          "opponent": "Anderson Silva",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3404f9095676a556",
+          "date": "2007-03-03",
+          "opponent": "Jason MacDonald",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dbc30717a3efba58",
+          "date": "2007-06-16",
+          "opponent": "Yushin Okami",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3fe3208df1098fdc",
+          "date": "2007-10-20",
+          "opponent": "Anderson Silva",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6ae2cd7feede5a33",
+          "date": "2008-04-19",
+          "opponent": "Travis Lutter",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c5574b79e31a1b2b",
+          "date": "2008-09-06",
+          "opponent": "Matt Hamill",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "cb7cfa8b9900878f",
+          "date": "2009-01-17",
+          "opponent": "Dan Henderson",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "fcf3b0d21df10f56",
+          "date": "2009-06-13",
+          "opponent": "Wanderlei Silva",
+          "division": "Catch Weight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ec271393bc31ab72",
+          "date": "2009-09-19",
+          "opponent": "Vitor Belfort",
+          "division": "Catch Weight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8c3179f0fd62af14",
+          "date": "2010-06-12",
+          "opponent": "Chuck Liddell",
+          "division": "Light Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d2246624da1c4e38",
+          "date": "2011-02-05",
+          "opponent": "Forrest Griffin",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1b80d5696c2dc640",
+          "date": "2012-06-23",
+          "opponent": "Wanderlei Silva",
+          "division": "Catch Weight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1a113ac3255f3ac3",
+          "date": "2012-11-10",
+          "opponent": "Cung Le",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:carlos-condit",
+      "name": "Carlos Condit",
+      "slug": "carlos-condit",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [
+        "Interim Welterweight"
+      ],
+      "activeFrom": "2009-04-01",
+      "activeTo": "2021-07-10",
+      "fights": [
+        {
+          "id": "ae68274ab6f78cd8",
+          "date": "2009-04-01",
+          "opponent": "Martin Kampmann",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "aceaa32be99719b0",
+          "date": "2009-09-16",
+          "opponent": "Jake Ellenberger",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0031c043c9f14eb8",
+          "date": "2010-06-12",
+          "opponent": "Rory MacDonald",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9984333d8933dd58",
+          "date": "2010-10-16",
+          "opponent": "Dan Hardy",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d5d6ae85ebcfd160",
+          "date": "2011-07-02",
+          "opponent": "Dong Hyun Kim",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "09a2909e1848be52",
+          "date": "2012-02-04",
+          "opponent": "Nick Diaz",
+          "division": "Interim Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": true
+        },
+        {
+          "id": "8d12287f672cabd8",
+          "date": "2012-11-17",
+          "opponent": "Georges St-Pierre",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "29398b15b94c3847",
+          "date": "2013-03-16",
+          "opponent": "Johny Hendricks",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "bfef39e6493f6487",
+          "date": "2013-08-28",
+          "opponent": "Martin Kampmann",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ba38b96f39db78c0",
+          "date": "2014-03-15",
+          "opponent": "Tyron Woodley",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8801fbb87bdedbe3",
+          "date": "2015-05-30",
+          "opponent": "Thiago Alves",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "other",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f079cb2db8dbbf04",
+          "date": "2016-01-02",
+          "opponent": "Robbie Lawler",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f19d1c8ca5660240",
+          "date": "2016-08-27",
+          "opponent": "Demian Maia",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c381ad2c0bf34dd9",
+          "date": "2017-12-30",
+          "opponent": "Neil Magny",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e18a8b333529cc09",
+          "date": "2018-04-14",
+          "opponent": "Alex Oliveira",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "1ca41d3b11d88b36",
+          "date": "2018-12-29",
+          "opponent": "Michael Chiesa",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "24ff0bb908095565",
+          "date": "2020-10-03",
+          "opponent": "Court McGee",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6b0da0b1cda7799f",
+          "date": "2021-01-16",
+          "opponent": "Matt Brown",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7070abfa26c079b8",
+          "date": "2021-07-10",
+          "opponent": "Max Griffin",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:matt-serra",
+      "name": "Matt Serra",
+      "slug": "matt-serra",
+      "recognizabilityTier": "A",
+      "legacyA": true,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [
+        "Lightweight"
+      ],
+      "activeFrom": "2001-05-04",
+      "activeTo": "2010-09-25",
+      "fights": [
+        {
+          "id": "0434a68809885ea1",
+          "date": "2001-05-04",
+          "opponent": "Shonie Carter",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3b63f4fb24694d74",
+          "date": "2001-09-28",
+          "opponent": "Yves Edwards",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ef83377d584ec055",
+          "date": "2002-03-22",
+          "opponent": "Kelly Dullanty",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b0ed7f6450ad33c5",
+          "date": "2002-09-27",
+          "opponent": "BJ Penn",
+          "division": "Lightweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6a0c5b9079a4128e",
+          "date": "2003-02-28",
+          "opponent": "Din Thomas",
+          "division": "Lightweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5bdaa71a5daebcb5",
+          "date": "2004-01-31",
+          "opponent": "Jeff Curran",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "41222c4fab03d6f8",
+          "date": "2004-06-19",
+          "opponent": "Ivan Menjivar",
+          "division": "Lightweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d80b07269dd36aad",
+          "date": "2005-06-04",
+          "opponent": "Karo Parisyan",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "71900a1af85710a9",
+          "date": "2006-11-11",
+          "opponent": "Chris Lytle",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9f60dd19c5705d45",
+          "date": "2007-04-07",
+          "opponent": "Georges St-Pierre",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "67948da92e6c9bdc",
+          "date": "2008-04-19",
+          "opponent": "Georges St-Pierre",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d1e144ce44599f3a",
+          "date": "2009-05-23",
+          "opponent": "Matt Hughes",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2bf24d9c33bb4d49",
+          "date": "2010-02-06",
+          "opponent": "Frank Trigg",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5b986cd7289a0884",
+          "date": "2010-09-25",
+          "opponent": "Chris Lytle",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:luke-rockhold",
+      "name": "Luke Rockhold",
+      "slug": "luke-rockhold",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Middleweight",
+      "secondaryDivisions": [
+        "Light Heavyweight"
+      ],
+      "activeFrom": "2013-05-18",
+      "activeTo": "2022-08-20",
+      "fights": [
+        {
+          "id": "110d18c0953bde1d",
+          "date": "2013-05-18",
+          "opponent": "Vitor Belfort",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0f3e6876516edeaf",
+          "date": "2014-01-15",
+          "opponent": "Constantinos Philippou",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9b10db4499b211b7",
+          "date": "2014-04-26",
+          "opponent": "Tim Boetsch",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3d741cee0dffe165",
+          "date": "2014-11-07",
+          "opponent": "Michael Bisping",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5965800d88e0677c",
+          "date": "2015-04-18",
+          "opponent": "Lyoto Machida",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ff389a4326fc9255",
+          "date": "2015-12-12",
+          "opponent": "Chris Weidman",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "812ff38f0ed409ca",
+          "date": "2016-06-04",
+          "opponent": "Michael Bisping",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "24438a644b975751",
+          "date": "2017-09-16",
+          "opponent": "David Branch",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9444cfe0c7c0f6a7",
+          "date": "2018-02-10",
+          "opponent": "Yoel Romero",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "531d9676d767da66",
+          "date": "2019-07-06",
+          "opponent": "Jan Blachowicz",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2de6652160cc7b9f",
+          "date": "2022-08-20",
+          "opponent": "Paulo Costa",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:yoel-romero",
+      "name": "Yoel Romero",
+      "slug": "yoel-romero",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Middleweight",
+      "secondaryDivisions": [
+        "Interim Middleweight"
+      ],
+      "activeFrom": "2013-04-20",
+      "activeTo": "2020-03-07",
+      "fights": [
+        {
+          "id": "c8a48abe3263f796",
+          "date": "2013-04-20",
+          "opponent": "Clifford Starks",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b35f2071e6dd4b12",
+          "date": "2013-11-06",
+          "opponent": "Ronny Markes",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "7e3609b672c7ecf9",
+          "date": "2014-01-15",
+          "opponent": "Derek Brunson",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f5445d367e7dbb2b",
+          "date": "2014-04-19",
+          "opponent": "Brad Tavares",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3e3db8c37096c260",
+          "date": "2014-09-27",
+          "opponent": "Tim Kennedy",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "42d09ca167ecae07",
+          "date": "2015-06-27",
+          "opponent": "Lyoto Machida",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f83c6bdd553b5851",
+          "date": "2015-12-12",
+          "opponent": "Jacare Souza",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f37d18b5c35145bf",
+          "date": "2016-11-12",
+          "opponent": "Chris Weidman",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "06cd9812e2b9b747",
+          "date": "2017-07-08",
+          "opponent": "Robert Whittaker",
+          "division": "Interim Middleweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": true
+        },
+        {
+          "id": "9444cfe0c7c0f6a7",
+          "date": "2018-02-10",
+          "opponent": "Luke Rockhold",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "5a09fd7cb3db9705",
+          "date": "2018-06-09",
+          "opponent": "Robert Whittaker",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3e16a71836e85212",
+          "date": "2019-08-17",
+          "opponent": "Paulo Costa",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b46f2f007b622bce",
+          "date": "2020-03-07",
+          "opponent": "Israel Adesanya",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:ken-shamrock",
+      "name": "Ken Shamrock",
+      "slug": "ken-shamrock",
+      "recognizabilityTier": "A",
+      "legacyA": true,
+      "primaryDivision": "Heavyweight",
+      "secondaryDivisions": [
+        "Light Heavyweight"
+      ],
+      "activeFrom": "1994-09-09",
+      "activeTo": "2006-10-10",
+      "fights": [
+        {
+          "id": "5167a5aec41f8b6d",
+          "date": "1994-09-09",
+          "opponent": "Felix Lee Mitchell",
+          "division": "Open Weight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "56315d5ac11594a5",
+          "date": "1994-09-09",
+          "opponent": "Christophe Leninger",
+          "division": "Open Weight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "db8df615610f3632",
+          "date": "1995-04-07",
+          "opponent": "Royce Gracie",
+          "division": "Superfight Championship",
+          "result": "draw",
+          "methodCategory": "other",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d62aec55bc142346",
+          "date": "1995-07-14",
+          "opponent": "Dan Severn",
+          "division": "Superfight Championship",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3932f8e9a74f3d11",
+          "date": "1995-09-08",
+          "opponent": "Oleg Taktarov",
+          "division": "Superfight Championship",
+          "result": "draw",
+          "methodCategory": "other",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "16b4a0b06427f1ac",
+          "date": "1996-02-16",
+          "opponent": "Kimo Leopoldo",
+          "division": "Superfight Championship",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "6a060498e60756af",
+          "date": "1996-05-17",
+          "opponent": "Dan Severn",
+          "division": "Superfight Championship",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "fa48320affd3b2b4",
+          "date": "1996-12-07",
+          "opponent": "Brian Johnston",
+          "division": "Open Weight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9e6f956caa7b549b",
+          "date": "2002-11-22",
+          "opponent": "Tito Ortiz",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "66eaf9f4a2cd67d8",
+          "date": "2004-06-19",
+          "opponent": "Kimo Leopoldo",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c50a3025d1519fc8",
+          "date": "2005-04-09",
+          "opponent": "Rich Franklin",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ee6000812e2b9f9d",
+          "date": "2006-07-08",
+          "opponent": "Tito Ortiz",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "2cbba9394114edb5",
+          "date": "2006-10-10",
+          "opponent": "Tito Ortiz",
+          "division": "Light Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:joshua-van",
+      "name": "Joshua Van",
+      "slug": "joshua-van",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Flyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2023-06-24",
+      "activeTo": "2026-05-09",
+      "fights": [
+        {
+          "id": "c2cdeb207cce5ceb",
+          "date": "2023-06-24",
+          "opponent": "Zhalgas Zhumagulov",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8a0fc4624578a7e4",
+          "date": "2023-11-11",
+          "opponent": "Kevin Borjas",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "fd29123ff92789e4",
+          "date": "2024-01-13",
+          "opponent": "Felipe Bunes",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "80108a70c4afa6c2",
+          "date": "2024-07-13",
+          "opponent": "Charles Johnson",
+          "division": "Flyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dae8ad2e03aa4a9a",
+          "date": "2024-09-14",
+          "opponent": "Edgar Chairez",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "d38029cf47e54cf7",
+          "date": "2024-12-07",
+          "opponent": "Cody Durden",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "af3e43049bc86fe9",
+          "date": "2025-03-08",
+          "opponent": "Rei Tsuruya",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "b6a87389bdc36a00",
+          "date": "2025-06-07",
+          "opponent": "Bruno Silva",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f722b96ae6862843",
+          "date": "2025-06-28",
+          "opponent": "Brandon Royval",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dfa692db6d39330c",
+          "date": "2025-12-06",
+          "opponent": "Alexandre Pantoja",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c85b530861145935",
+          "date": "2026-05-09",
+          "opponent": "Tatsuro Taira",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:brandon-royval",
+      "name": "Brandon Royval",
+      "slug": "brandon-royval",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Flyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2020-05-30",
+      "activeTo": "2026-07-11",
+      "fights": [
+        {
+          "id": "0170db5fad04e4d0",
+          "date": "2020-05-30",
+          "opponent": "Tim Elliott",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9e674a02db6c03c8",
+          "date": "2020-09-26",
+          "opponent": "Kai Kara-France",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8d5ea3bf3be7cb91",
+          "date": "2020-11-21",
+          "opponent": "Brandon Moreno",
+          "division": "Flyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0b47788da6de735e",
+          "date": "2021-08-21",
+          "opponent": "Alexandre Pantoja",
+          "division": "Flyweight",
+          "result": "loss",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8d89f3b8798f444d",
+          "date": "2022-01-15",
+          "opponent": "Rogerio Bontorin",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "80ac36a9dbc4b1a1",
+          "date": "2022-05-07",
+          "opponent": "Matt Schnell",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "bbde45b2c766bb67",
+          "date": "2023-04-15",
+          "opponent": "Matheus Nicolau",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "4896b36f1333d25c",
+          "date": "2023-12-16",
+          "opponent": "Alexandre Pantoja",
+          "division": "Flyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "74f5cbecac011abb",
+          "date": "2024-02-24",
+          "opponent": "Brandon Moreno",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "998bde5639c61adb",
+          "date": "2024-10-12",
+          "opponent": "Tatsuro Taira",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f722b96ae6862843",
+          "date": "2025-06-28",
+          "opponent": "Joshua Van",
+          "division": "Flyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a5a81a39ccf9b680",
+          "date": "2025-12-13",
+          "opponent": "Manel Kape",
+          "division": "Flyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a3ab1979192b647c",
+          "date": "2026-07-11",
+          "opponent": "Lone'er Kavanagh",
+          "division": "Flyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:michael-morales",
+      "name": "Michael Morales",
+      "slug": "michael-morales",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2022-01-22",
+      "activeTo": "2025-11-15",
+      "fights": [
+        {
+          "id": "453283e947919ff7",
+          "date": "2022-01-22",
+          "opponent": "Trevin Giles",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "e492dc60d8e44866",
+          "date": "2022-07-30",
+          "opponent": "Adam Fugitt",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "0548a24a9bf8d7a0",
+          "date": "2023-07-01",
+          "opponent": "Max Griffin",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "73ebbfb998edc1f1",
+          "date": "2023-11-18",
+          "opponent": "Jake Matthews",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "ae50a1a655b1a8f6",
+          "date": "2024-08-24",
+          "opponent": "Neil Magny",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "a81ad236a2f221f2",
+          "date": "2025-05-17",
+          "opponent": "Gilbert Burns",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "477af74ea3cbba8b",
+          "date": "2025-11-15",
+          "opponent": "Sean Brady",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:carlos-prates",
+      "name": "Carlos Prates",
+      "slug": "carlos-prates",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Welterweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2024-02-10",
+      "activeTo": "2026-05-02",
+      "fights": [
+        {
+          "id": "246fef4b19c3a7ed",
+          "date": "2024-02-10",
+          "opponent": "Trevin Giles",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8afe89f5c451b372",
+          "date": "2024-06-08",
+          "opponent": "Charles Radtke",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3c319d4659e6c8fd",
+          "date": "2024-08-17",
+          "opponent": "Li Jingliang",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "73f451d894a1d4ca",
+          "date": "2024-11-09",
+          "opponent": "Neil Magny",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "633f4b5ec767769d",
+          "date": "2025-04-26",
+          "opponent": "Ian Machado Garry",
+          "division": "Welterweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "42585ce706c086de",
+          "date": "2025-08-16",
+          "opponent": "Geoff Neal",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3c60884853766487",
+          "date": "2025-11-15",
+          "opponent": "Leon Edwards",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "eb6d9fef6c374830",
+          "date": "2026-05-02",
+          "opponent": "Jack Della Maddalena",
+          "division": "Welterweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:tim-kennedy",
+      "name": "Tim Kennedy",
+      "slug": "tim-kennedy",
+      "recognizabilityTier": "A",
+      "legacyA": false,
+      "primaryDivision": "Middleweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2013-07-06",
+      "activeTo": "2016-12-10",
+      "fights": [
+        {
+          "id": "b57f68fa967fa59e",
+          "date": "2013-07-06",
+          "opponent": "Roger Gracie",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "26e876df6d498657",
+          "date": "2013-11-06",
+          "opponent": "Rafael Natal",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3a5b53d1123d9f7e",
+          "date": "2014-04-16",
+          "opponent": "Michael Bisping",
+          "division": "Middleweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "3e3db8c37096c260",
+          "date": "2014-09-27",
+          "opponent": "Yoel Romero",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "07b98dbf5d2c62a2",
+          "date": "2016-12-10",
+          "opponent": "Kelvin Gastelum",
+          "division": "Middleweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:brendan-schaub",
+      "name": "Brendan Schaub",
+      "slug": "brendan-schaub",
+      "recognizabilityTier": "A",
+      "legacyA": true,
+      "primaryDivision": "Heavyweight",
+      "secondaryDivisions": [],
+      "activeFrom": "2009-12-05",
+      "activeTo": "2014-12-06",
+      "fights": [
+        {
+          "id": "e246b6a8cd7853de",
+          "date": "2009-12-05",
+          "opponent": "Roy Nelson",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": true,
+          "interimTitleFight": false
+        },
+        {
+          "id": "dd56acbfb08aa6b2",
+          "date": "2010-03-21",
+          "opponent": "Chase Gormley",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "07ba406a1d0a5a71",
+          "date": "2010-07-03",
+          "opponent": "Chris Tuchscherer",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "8787d56f59bfb4c3",
+          "date": "2010-10-23",
+          "opponent": "Gabriel Gonzaga",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "077667e3aaf314db",
+          "date": "2011-03-19",
+          "opponent": "Mirko Filipovic",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c8fbe7ade97e2055",
+          "date": "2011-08-27",
+          "opponent": "Antonio Rodrigo Nogueira",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "41d170c5da83c8be",
+          "date": "2012-04-21",
+          "opponent": "Ben Rothwell",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "50eb4822a74a417e",
+          "date": "2013-02-23",
+          "opponent": "Lavar Johnson",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "c0a5eeb0be0049bb",
+          "date": "2013-09-21",
+          "opponent": "Matt Mitrione",
+          "division": "Heavyweight",
+          "result": "win",
+          "methodCategory": "submission",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "f3ebce624bb154ae",
+          "date": "2014-06-14",
+          "opponent": "Andrei Arlovski",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "decision",
+          "titleFight": false,
+          "interimTitleFight": false
+        },
+        {
+          "id": "9b1e3d99fffb9c10",
+          "date": "2014-12-06",
+          "opponent": "Travis Browne",
+          "division": "Heavyweight",
+          "result": "loss",
+          "methodCategory": "ko-tko",
+          "titleFight": false,
+          "interimTitleFight": false
+        }
+      ]
+    },
+    {
+      "id": "ufc:kimbo-slice",
+      "name": "Kimbo Slice",
+      "slug": "kimbo-slice",
+      "recognizabilityTier": "A",
+      "legacyA": true,
+      "primaryDivision": "Heavyweight",
+      "secondaryDivisions": [],
       "activeFrom": "2009-12-05",
       "activeTo": "2010-05-08",
       "fights": [
