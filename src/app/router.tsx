@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { createBrowserRouter, Navigate, type RouteObject } from "react-router-dom";
 import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
+import { MlbGate } from "../features/mlb/MlbGate";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ShanesWatchlistPage = lazy(() => import("../features/home/ShanesWatchlistPage"));
@@ -42,6 +43,9 @@ const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPr
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
+const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
+const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
+const MlbFeaturedChallengePage = lazy(() => import("../features/mlb/MlbFeaturedChallengePage"));
 const WhatsNewPage = lazy(() => import("../features/whats-new/WhatsNewPage"));
 
 export const appRoutes: RouteObject[] = [
@@ -95,6 +99,9 @@ export const appRoutes: RouteObject[] = [
       { path: "football/millionaire", element: <MillionaireCasualPage scope="football" /> },
       { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
       { path: "picks", element: <PicksPage /> },
+      { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
+      { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
+      { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
       { path: "picks/monitoring", element: <Navigate to="/picks/control#monitoring" replace /> },
