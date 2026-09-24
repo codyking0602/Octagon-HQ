@@ -113,16 +113,6 @@ const EXPECTED_UFC_PR10_SUBJECT_IDS = [
 ] as const;
 
 
-const EXPECTED_UFC_2026_EXPANSION_IDS = [
-  "ufc:jiri-prochazka","ufc:magomed-ankalaev","ufc:jan-blachowicz","ufc:jamahal-hill",
-  "ufc:carlos-ulberg","ufc:arman-tsarukyan","ufc:cory-sandhagen","ufc:umar-nurmagomedov",
-  "ufc:belal-muhammad","ufc:jack-della-maddalena","ufc:ian-machado-garry","ufc:shavkat-rakhmonov",
-  "ufc:urijah-faber","ufc:frank-mir","ufc:alistair-overeem","ufc:rich-franklin","ufc:carlos-condit",
-  "ufc:matt-serra","ufc:luke-rockhold","ufc:yoel-romero","ufc:ken-shamrock","ufc:joshua-van",
-  "ufc:brandon-royval","ufc:michael-morales","ufc:carlos-prates","ufc:tim-kennedy",
-  "ufc:brendan-schaub","ufc:kimbo-slice","ufc:cm-punk","ufc:mike-perry","ufc:paige-vanzant",
-  "ufc:greg-hardy","ufc:darren-till",
-] as const;
 
 function normalize(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
