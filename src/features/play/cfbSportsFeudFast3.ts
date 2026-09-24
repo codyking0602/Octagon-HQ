@@ -270,31 +270,31 @@ export const CFB_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("cfb-fast3", [
     prompts: [
       {
         prompt: "Name a famous college football mascot or live mascot.",
-        answers: ["Uga","Bevo","Mike the Tiger","Traveler","Ralphie","Sooner Schooner","Brutus Buckeye","The Oregon Duck"],
+        answers: ["Uga","Bevo","Mike the Tiger","Traveler","Ralphie","Boomer and Sooner","Brutus Buckeye","The Oregon Duck"],
         alsoAcceptedAnswers: ["Smokey","Reveille","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
       },
       {
         prompt: "Name a mascot strongly tied to a college football program.",
         answers: ["Uga","Bevo","Mike the Tiger","Ralphie","Smokey","Reveille","Brutus Buckeye","The Oregon Duck"],
-        alsoAcceptedAnswers: ["Traveler","Sooner Schooner","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
+        alsoAcceptedAnswers: ["Traveler","Boomer and Sooner","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
       },
       {
         prompt: "Name a college mascot fans would recognize without the school name.",
         answers: ["Uga","Bevo","Brutus Buckeye","Mike the Tiger","Ralphie","Sparty","The Oregon Duck","Smokey"],
-        alsoAcceptedAnswers: ["Traveler","Sooner Schooner","Reveille","Aubie","Cocky","Nittany Lion","Big Al","Hairy Dawg"],
+        alsoAcceptedAnswers: ["Traveler","Boomer and Sooner","Reveille","Aubie","Cocky","Nittany Lion","Big Al","Hairy Dawg"],
       },
       {
         prompt: "Name a mascot that adds to the Saturday atmosphere.",
-        answers: ["Bevo","Uga","Ralphie","Mike the Tiger","Traveler","Smokey","Reveille","Sooner Schooner"],
+        answers: ["Bevo","Uga","Ralphie","Mike the Tiger","Traveler","Smokey","Reveille","Boomer and Sooner"],
         alsoAcceptedAnswers: ["Brutus Buckeye","The Oregon Duck","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
       },
       {
         prompt: "Name a college football mascot that feels iconic.",
         answers: ["Uga","Bevo","Brutus Buckeye","Mike the Tiger","Ralphie","The Oregon Duck","Traveler","Smokey"],
-        alsoAcceptedAnswers: ["Sooner Schooner","Reveille","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
+        alsoAcceptedAnswers: ["Boomer and Sooner","Reveille","Aubie","Cocky","Sparty","Nittany Lion","Big Al","Hairy Dawg"],
       },
     ],
-    answers: ["Uga", "Bevo", "Mike the Tiger", "Traveler", "Ralphie", "Sooner Schooner", "Brutus Buckeye", "The Oregon Duck"],
+    answers: ["Uga", "Bevo", "Mike the Tiger", "Traveler", "Ralphie", "Boomer and Sooner", "Brutus Buckeye", "The Oregon Duck"],
     alsoAcceptedAnswers: ["Smokey", "Reveille", "Aubie", "Cocky", "Sparty", "Nittany Lion", "Big Al", "Hairy Dawg"],
   },
   {
