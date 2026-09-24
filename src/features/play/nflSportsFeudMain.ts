@@ -271,8 +271,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "receivers",
     prompts: [
-      "Name an all-time great NFL wide receiver.",
-      "Name a receiver whose career belongs in any NFL legends discussion.",
+      {
+        prompt: "Name an all-time great NFL wide receiver.",
+        answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Calvin Johnson", "Larry Fitzgerald", "Marvin Harrison", "Cris Carter", "Steve Largent"],
+        alsoAcceptedAnswers: ["Julio Jones", "Andre Johnson", "Isaac Bruce", "Torry Holt", "Don Hutson", "Lance Alworth", "Antonio Brown", "Tyreek Hill"],
+      },
+      {
+        prompt: "Name a receiver whose career belongs in any NFL legends discussion.",
+        answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Larry Fitzgerald", "Calvin Johnson", "Marvin Harrison", "Steve Largent", "Cris Carter"],
+        alsoAcceptedAnswers: ["Don Hutson", "Lance Alworth", "Julio Jones", "Andre Johnson", "Isaac Bruce", "Torry Holt", "Antonio Brown", "Tyreek Hill"],
+      },
       "Name an NFL wideout whose highlights still get replayed.",
       "Name a receiver who changed how defenses had to line up.",
       "Name a wide receiver almost every football fan recognizes.",
