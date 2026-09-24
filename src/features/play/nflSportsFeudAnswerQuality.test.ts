@@ -249,6 +249,44 @@ describe("NFL Sports Feud authored answer quality", () => {
     }
   });
 
+  it("keeps NFL Main questions 41-60 independently authored after review", () => {
+    for (const familyNumber of [9, 10, 11, 12]) {
+      const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
+      const rows = NFL_SPORTS_FEUD_MAIN.filter((question) => question.id.startsWith(prefix));
+      expect(rows).toHaveLength(5);
+
+      const universeSignatures = rows.map((question) =>
+        [
+          ...question.answers,
+          ...(question.alsoAcceptedAnswers ?? []),
+        ].map((answer) => normalizeFamilyFeudInput(answer.name)).join("|"),
+      );
+      expect(new Set(universeSignatures).size, prefix + " independent universes").toBe(5);
+    }
+
+    const highlightDefender = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-09-4")!;
+    expect(highlightDefender.answers.map((answer) => answer.name)).toContain("Ed Reed");
+    expect(highlightDefender.alsoAcceptedAnswers?.map((answer) => answer.name)).toContain("Troy Polamalu");
+
+    const dynasty = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-10-3")!;
+    expect(dynasty.answers.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining(["Bill Belichick", "Vince Lombardi", "Chuck Noll", "Bill Walsh", "Andy Reid"]),
+    );
+
+    const fanHate = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-11-3")!;
+    expect(fanHate.answers.slice(0, 3).map((answer) => answer.name)).toEqual([
+      "Cowboys-Eagles",
+      "Steelers-Ravens",
+      "Raiders-Chiefs",
+    ]);
+
+    const crowdNoise = NFL_SPORTS_FEUD_MAIN.find((question) => question.id === "nfl-main-12-2")!;
+    expect(crowdNoise.answers[0]?.name).toBe("Arrowhead Stadium");
+    expect(crowdNoise.answers.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining(["Lumen Field", "Superdome", "Highmark Stadium", "U.S. Bank Stadium"]),
+    );
+  });
+
   it("keeps NFL Main questions 21-40 independently authored after review", () => {
     for (const familyNumber of [5, 6, 7, 8]) {
       const prefix = "nfl-main-" + String(familyNumber).padStart(2, "0") + "-";
