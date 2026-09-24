@@ -305,11 +305,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
     entityKind: "person",
     collisionGroup: "defenders",
     prompts: [
-      "Name an all-time great NFL defensive player.",
-      "Name a defender whose reputation could change a game plan.",
-      "Name an NFL defensive star who belongs in a legends conversation.",
-      "Name a defender whose highlights make offense look miserable.",
-      "Name a defensive player almost every NFL fan recognizes.",
+      {
+        prompt: "Name an all-time great NFL defensive player.",
+        answers: ["Lawrence Taylor", "Reggie White", "Ray Lewis", "Deion Sanders", "Aaron Donald", "Bruce Smith", "Ronnie Lott", "Joe Greene"],
+        alsoAcceptedAnswers: ["Ed Reed", "JJ Watt", "Dick Butkus", "Deacon Jones", "Junior Seau", "Mike Singletary", "Champ Bailey", "Charles Woodson"],
+      },
+      {
+        prompt: "Name a defender whose reputation could change a game plan.",
+        answers: ["Lawrence Taylor", "Reggie White", "Deion Sanders", "Aaron Donald", "Ray Lewis", "JJ Watt", "Ed Reed", "Bruce Smith"],
+        alsoAcceptedAnswers: ["Ronnie Lott", "Charles Woodson", "Champ Bailey", "Deacon Jones", "Joe Greene", "Dick Butkus", "Myles Garrett", "Brian Urlacher"],
+      },
+      {
+        prompt: "Name an NFL defensive star who belongs in a legends conversation.",
+        answers: ["Lawrence Taylor", "Reggie White", "Ray Lewis", "Deion Sanders", "Ronnie Lott", "Bruce Smith", "Aaron Donald", "Joe Greene"],
+        alsoAcceptedAnswers: ["Ed Reed", "Dick Butkus", "Deacon Jones", "Junior Seau", "Mike Singletary", "Champ Bailey", "Charles Woodson", "JJ Watt"],
+      },
+      {
+        prompt: "Name a defender whose highlights make offense look miserable.",
+        answers: ["Lawrence Taylor", "Ray Lewis", "Ed Reed", "Reggie White", "Aaron Donald", "Deion Sanders", "JJ Watt", "Ronnie Lott"],
+        alsoAcceptedAnswers: ["Troy Polamalu", "Brian Dawkins", "Dick Butkus", "Deacon Jones", "Bruce Smith", "Champ Bailey", "Charles Woodson", "Myles Garrett"],
+      },
+      {
+        prompt: "Name a defensive player almost every NFL fan recognizes.",
+        answers: ["Lawrence Taylor", "Deion Sanders", "Ray Lewis", "Aaron Donald", "JJ Watt", "Reggie White", "Ed Reed", "Troy Polamalu"],
+        alsoAcceptedAnswers: ["Ronnie Lott", "Champ Bailey", "Charles Woodson", "Brian Urlacher", "Bruce Smith", "Dick Butkus", "Myles Garrett", "Michael Strahan"],
+      },
     ],
     answers: ["Lawrence Taylor", "Reggie White", "Ray Lewis", "Deion Sanders", "Aaron Donald", "JJ Watt", "Ed Reed", "Bruce Smith"],
     alsoAcceptedAnswers: ["Ronnie Lott", "Dick Butkus", "Deacon Jones", "Joe Greene", "Junior Seau", "Mike Singletary", "Champ Bailey", "Charles Woodson"],
