@@ -77,10 +77,28 @@ describe("OfficialHitTheNumberDailyView formats", () => {
     expect(fighter).not.toBeNull();
     fireEvent.click(fighter);
 
-    expect(onAdvance).toHaveBeenCalledWith({
-      fighter_id: fighter.dataset.fighterId,
-      slot_index: 2,
-    });
+    expect(onAdvance).toHaveBeenCalledWith(
+      {
+        fighter_id: fighter.dataset.fighterId,
+        slot_index: 2,
+      },
+      expect.objectContaining({
+        dedupeKey: expect.stringContaining("hit-number:slot:2"),
+        optimisticUpdate: expect.any(Function),
+      }),
+    );
+
+    const optimisticUpdate = onAdvance.mock.calls[0]![1].optimisticUpdate as (
+      value: TodayChallengeProjection,
+    ) => TodayChallengeProjection;
+    const optimistic = optimisticUpdate(projection(day, setup));
+    expect(optimistic.publicState.slot_assignments).toEqual([
+      null,
+      null,
+      fighter.dataset.fighterId,
+      null,
+      null,
+    ]);
   });
 
   it("renders an already-materialized board without format metadata as legacy Classic", () => {
