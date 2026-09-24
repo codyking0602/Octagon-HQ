@@ -608,7 +608,10 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        "name": "Front kick"
+        "name": "Front kick",
+        "aliases": [
+          "Push kick"
+        ]
       },
       {
         "name": "Spinning backfist",
@@ -1652,7 +1655,10 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         ]
       },
       {
-        "name": "Control time"
+        "name": "Control time",
+        "aliases": [
+          "Control"
+        ]
       },
       {
         "name": "Knockdowns",
