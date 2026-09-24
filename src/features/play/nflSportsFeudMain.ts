@@ -13,6 +13,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a franchise a quarterback would love to join because of its history.",
     ],
     answers: ["Green Bay Packers", "San Francisco 49ers", "Indianapolis Colts", "Dallas Cowboys", "New England Patriots", "Pittsburgh Steelers", "Denver Broncos", "Miami Dolphins"],
+    alsoAcceptedAnswers: ["New Orleans Saints", "Los Angeles Chargers", "Cincinnati Bengals", "Las Vegas Raiders", "Buffalo Bills", "Philadelphia Eagles", "Los Angeles Rams", "Minnesota Vikings"],
   },
   {
     category: "franchise-identity",
@@ -26,6 +27,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a franchise that belongs in a great-running-backs conversation.",
     ],
     answers: ["Dallas Cowboys", "Chicago Bears", "Pittsburgh Steelers", "Buffalo Bills", "Los Angeles Rams", "Minnesota Vikings", "Tennessee Titans", "Cleveland Browns"],
+    alsoAcceptedAnswers: ["Detroit Lions", "Las Vegas Raiders", "Kansas City Chiefs", "Los Angeles Chargers", "New York Giants", "Indianapolis Colts", "San Francisco 49ers"],
   },
   {
     category: "franchise-identity",
@@ -39,6 +41,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name an NFL franchise you would hate to face in a defensive slugfest.",
     ],
     answers: ["Pittsburgh Steelers", "Baltimore Ravens", "Chicago Bears", "Seattle Seahawks", "Tampa Bay Buccaneers", "New York Giants", "Denver Broncos", "San Francisco 49ers"],
+    alsoAcceptedAnswers: ["Minnesota Vikings", "Dallas Cowboys", "Las Vegas Raiders", "Philadelphia Eagles", "New England Patriots", "Los Angeles Rams", "Kansas City Chiefs", "Miami Dolphins"],
   },
   {
     category: "franchise-identity",
@@ -52,6 +55,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a franchise where fans can name several memorable wideouts.",
     ],
     answers: ["San Francisco 49ers", "Minnesota Vikings", "Pittsburgh Steelers", "Dallas Cowboys", "Indianapolis Colts", "Los Angeles Rams", "Las Vegas Raiders", "Miami Dolphins"],
+    alsoAcceptedAnswers: ["Cincinnati Bengals", "Detroit Lions", "Arizona Cardinals", "Atlanta Falcons", "Buffalo Bills", "Philadelphia Eagles", "Green Bay Packers", "Tampa Bay Buccaneers"],
   },
   {
     category: "history-legacy",
@@ -65,6 +69,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a franchise you would include in an NFL blue-blood debate.",
     ],
     answers: ["Dallas Cowboys", "Green Bay Packers", "Pittsburgh Steelers", "San Francisco 49ers", "New England Patriots", "New York Giants", "Las Vegas Raiders", "Chicago Bears"],
+    alsoAcceptedAnswers: ["Kansas City Chiefs", "Miami Dolphins", "Denver Broncos", "Philadelphia Eagles", "Buffalo Bills", "Washington Commanders", "Indianapolis Colts", "Los Angeles Rams"],
   },
   {
     category: "player-identity",
@@ -78,6 +83,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a quarterback whose name alone sounds like NFL history.",
     ],
     answers: ["Tom Brady", "Joe Montana", "Peyton Manning", "Patrick Mahomes", "Aaron Rodgers", "John Elway", "Dan Marino", "Brett Favre"],
+    alsoAcceptedAnswers: ["Drew Brees", "Steve Young", "Johnny Unitas", "Roger Staubach", "Kurt Warner", "Fran Tarkenton", "Troy Aikman", "Ben Roethlisberger"],
   },
   {
     category: "player-identity",
@@ -91,6 +97,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a back defenders would hate to tackle all afternoon.",
     ],
     answers: ["Barry Sanders", "Walter Payton", "Emmitt Smith", "Jim Brown", "Adrian Peterson", "LaDainian Tomlinson", "Eric Dickerson", "Derrick Henry"],
+    alsoAcceptedAnswers: ["Marshall Faulk", "Earl Campbell", "Gale Sayers", "OJ Simpson", "Marcus Allen", "Tony Dorsett", "Thurman Thomas", "Frank Gore"],
   },
   {
     category: "player-identity",
@@ -104,6 +111,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a wide receiver almost every football fan recognizes.",
     ],
     answers: ["Jerry Rice", "Randy Moss", "Terrell Owens", "Calvin Johnson", "Larry Fitzgerald", "Marvin Harrison", "Cris Carter", "Tyreek Hill"],
+    alsoAcceptedAnswers: ["Steve Largent", "Julio Jones", "Andre Johnson", "Isaac Bruce", "Torry Holt", "Don Hutson", "Lance Alworth", "Antonio Brown"],
   },
   {
     category: "player-identity",
@@ -117,6 +125,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a defensive player almost every NFL fan recognizes.",
     ],
     answers: ["Lawrence Taylor", "Reggie White", "Ray Lewis", "Deion Sanders", "Aaron Donald", "JJ Watt", "Ed Reed", "Bruce Smith"],
+    alsoAcceptedAnswers: ["Ronnie Lott", "Dick Butkus", "Deacon Jones", "Joe Greene", "Junior Seau", "Mike Singletary", "Champ Bailey", "Charles Woodson"],
   },
   {
     category: "coach-legacy",
@@ -130,6 +139,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a coach whose era changed the NFL title picture.",
     ],
     answers: ["Bill Belichick", "Vince Lombardi", "Chuck Noll", "Bill Walsh", "Joe Gibbs", "Tom Landry", "Andy Reid", "Don Shula"],
+    alsoAcceptedAnswers: ["Jimmy Johnson", "George Seifert", "Paul Brown", "George Halas", "Curly Lambeau"],
   },
   {
     category: "rivalries",
@@ -143,6 +153,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name an NFL rivalry that has produced memorable games for years.",
     ],
     answers: ["Packers-Bears", "Cowboys-Eagles", "Steelers-Ravens", "49ers-Cowboys", "Raiders-Chiefs", "Giants-Eagles", "Packers-Vikings", "Jets-Patriots"],
+    alsoAcceptedAnswers: ["Cowboys-Commanders", "Patriots-Colts", "49ers-Seahawks", "Browns-Steelers", "Saints-Falcons", "Chiefs-Broncos", "Bears-Vikings", "Bengals-Steelers"],
   },
   {
     category: "venues",
@@ -153,9 +164,10 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name an NFL stadium famous for crowd noise.",
       "Name a road environment that can make an offense miserable.",
       "Name an NFL venue where home-field advantage feels real.",
-      "Name a stadium you would least want to visit on a must-win Sunday.",
+      "Name an NFL stadium widely known for a difficult road atmosphere.",
     ],
     answers: ["Arrowhead Stadium", "Lambeau Field", "Lumen Field", "Superdome", "Highmark Stadium", "Lincoln Financial Field", "Acrisure Stadium", "M&T Bank Stadium"],
+    alsoAcceptedAnswers: ["U.S. Bank Stadium", "Ford Field"],
   },
   {
     category: "moments",
@@ -169,6 +181,16 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a play that can make an NFL fan remember exactly where they were.",
     ],
     answers: ["Immaculate Reception", "Helmet Catch", "Minneapolis Miracle", "Music City Miracle", "Philly Special", "Beast Quake", "Malcolm Butler goal-line interception", "Santonio Holmes toe-tap"],
+    alsoAcceptedAnswers: [
+      { name: "The Catch", aliases: ["Montana to Clark"] },
+      "Tuck Rule",
+      "Mile High Miracle",
+      "Double Doink",
+      "Wide Right",
+      "28-3 comeback",
+      "13 Seconds",
+      "James Harrison 100-yard interception return",
+    ],
   },
   {
     category: "history-legacy",
@@ -182,6 +204,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a franchise with memorable Super Bowl wins.",
     ],
     answers: ["New England Patriots", "Pittsburgh Steelers", "San Francisco 49ers", "Dallas Cowboys", "Kansas City Chiefs", "Green Bay Packers", "New York Giants", "Denver Broncos"],
+    alsoAcceptedAnswers: ["Las Vegas Raiders", "Miami Dolphins", "Washington Commanders", "Indianapolis Colts", "Baltimore Ravens", "Tampa Bay Buccaneers", "Los Angeles Rams", "Philadelphia Eagles", "Seattle Seahawks"],
   },
   {
     category: "awards",
@@ -195,6 +218,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name an award that can become part of a player's legacy.",
     ],
     answers: ["NFL MVP", "Super Bowl MVP", "Defensive Player of the Year", "Offensive Player of the Year", "Offensive Rookie of the Year", "Defensive Rookie of the Year", "Comeback Player of the Year", "Walter Payton Man of the Year"],
+    alsoAcceptedAnswers: ["First-team All-Pro", "Pro Bowl selection"],
   },
   {
     category: "achievements",
@@ -208,6 +232,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name something every NFL star would love attached to one season.",
     ],
     answers: ["Win the Super Bowl", "Win league MVP", "Go undefeated", "Rush for 2,000 yards", "Pass for 5,000 yards", "Record 20 sacks", "Score 20 touchdowns", "Set an NFL record"],
+    alsoAcceptedAnswers: ["Win Super Bowl MVP", "Win Offensive Player of the Year", "Win Defensive Player of the Year", "Make first-team All-Pro", "Lead the NFL in a major statistic"],
   },
   {
     category: "positions",
@@ -221,6 +246,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a position that can change a game with one play.",
     ],
     answers: ["Quarterback", "Running back", "Wide receiver", "Pass rusher", "Cornerback", "Linebacker", "Tight end", "Safety"],
+    alsoAcceptedAnswers: ["Defensive tackle", "Center", "Guard", "Kicker", "Punter", "Fullback", "Long snapper", "Nose tackle"],
   },
   {
     category: "traits",
@@ -234,6 +260,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a trait fans brag about when they love their quarterback.",
     ],
     answers: ["Accuracy", "Processing", "Arm strength", "Poise", "Mobility", "Anticipation", "Leadership", "Toughness"],
+    alsoAcceptedAnswers: ["Pocket presence", "Footwork", "Decision-making", "Field vision", "Mechanics", "Ball security", "Quick release", "Timing"],
   },
   {
     category: "traits",
@@ -247,6 +274,7 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a defensive trait that can travel in the playoffs.",
     ],
     answers: ["Pass rush", "Tackling", "Turnovers", "Coverage", "Physicality", "Communication", "Speed", "Discipline"],
+    alsoAcceptedAnswers: ["Run defense", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning"],
   },
   {
     category: "culture",
@@ -260,5 +288,6 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       "Name a team whose visual identity barely needs an introduction.",
     ],
     answers: ["Green Bay Packers", "Dallas Cowboys", "Las Vegas Raiders", "Pittsburgh Steelers", "San Francisco 49ers", "Kansas City Chiefs", "Chicago Bears", "Miami Dolphins"],
+    alsoAcceptedAnswers: ["New York Giants", "Buffalo Bills", "Indianapolis Colts", "Los Angeles Chargers", "Los Angeles Rams", "Cleveland Browns", "Philadelphia Eagles", "New Orleans Saints"],
   },
 ] as const);
