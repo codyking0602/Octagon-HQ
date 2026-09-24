@@ -59,6 +59,8 @@ function ufcDivision(value: string) {
 }
 
 function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
+  const debutYear = Number(subject.activeFrom.slice(0, 4));
+  const lastYear = Number(subject.activeTo.slice(0, 4));
 
   if (subject.scope === "authored-who-am-i-expansion") {
     return {
@@ -83,8 +85,6 @@ function ufcCandidate(subject: UfcFactualSubject): WhoAmICandidate {
     [subject.primaryDivision, ...subject.secondaryDivisions, ...subject.fights.map((fight) => fight.division)]
       .filter((division) => !division.trim().toLowerCase().startsWith("catchweight")),
   )];
-  const debutYear = Number(subject.activeFrom.slice(0, 4));
-  const lastYear = Number(subject.activeTo.slice(0, 4));
   const activeDecades = [...new Set(subject.fights.map((fight) => Math.floor(Number(fight.date.slice(0, 4)) / 10) * 10))].sort();
   const recognizableNames = new Set(ufcFactualLedgerSubjects.map((fighter) => fighter.name.toLowerCase()));
   const recognizableFights = subject.fights.filter((fight) => recognizableNames.has(fight.opponent.toLowerCase()));
