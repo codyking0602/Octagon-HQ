@@ -22,6 +22,9 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       { name: "No contest", aliases: ["NC", "No-contest"] },
       { name: "Corner stoppage", aliases: ["Corner", "Corner stop", "Corner throws in towel", "Towel"] },
     ],
+    alsoAcceptedAnswers: [
+      { name: "Draw", aliases: ["Split draw", "Majority draw"] },
+    ],
   },
   {
     category: "techniques",
@@ -44,6 +47,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       { name: "Arm-triangle choke", aliases: ["Arm triangle", "Arm-triangle"] },
       { name: "Heel hook", aliases: ["Heelhook"] },
     ],
+    alsoAcceptedAnswers: ["D'Arce choke", "Anaconda choke", "Kneebar", "Neck crank", "Twister", "Calf slicer"],
   },
   {
     category: "techniques",
@@ -57,6 +61,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a strike that can hurt an opponent in the Octagon.",
     ],
     answers: ["Jab", "Cross", "Hook", "Uppercut", "Elbow", "Knee", "Body kick", "Head kick"],
+    alsoAcceptedAnswers: ["Overhand", "Low kick", "Front kick", "Spinning backfist", "Hammerfist", "Spinning elbow"],
   },
   {
     category: "techniques",
@@ -70,17 +75,18 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a striking weapon that comes from the legs.",
     ],
     answers: ["Low kick", "Head kick", "Body kick", "Front kick", "Side kick", "Spinning back kick", "Calf kick", "Oblique kick"],
+    alsoAcceptedAnswers: ["Roundhouse kick", "Teep", "Wheel kick", "Question-mark kick", "Axe kick"],
   },
   {
     category: "grappling",
     entityKind: "other",
     collisionGroup: "grappling",
     prompts: [
-      "Name a wrestling or grappling term used in MMA.",
-      "Name something a fighter might do after closing distance.",
-      "Name a grappling concept commentators mention in UFC fights.",
-      "Name a position or action from the wrestling side of MMA.",
-      "Name a term associated with controlling an opponent on the mat.",
+      "Name a wrestling or grappling position, action, or control term used in MMA.",
+      "Name a wrestling or grappling action a fighter might use after closing distance.",
+      "Name a wrestling or grappling position, action, or control term commentators mention in UFC fights.",
+      "Name a position, action, or control term from the wrestling or grappling side of MMA.",
+      "Name a wrestling or grappling term associated with controlling an opponent.",
     ],
     answers: [
       { name: "Takedown", aliases: ["Take down"] },
@@ -92,6 +98,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       { name: "Half guard", aliases: ["Half-guard"] },
       { name: "Ground-and-pound", aliases: ["Ground and pound", "GNP"] },
     ],
+    alsoAcceptedAnswers: ["Guard", "Side control", "Sprawl", "Sweep", "Body lock", "Underhook"],
   },
   {
     category: "rules",
@@ -113,6 +120,14 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       { name: "Hair pulling", aliases: ["Pull hair", "Hair pull"] },
       { name: "Back-of-head strike", aliases: ["Back of head", "Hit back of head", "Rabbit punch"] },
       { name: "Knee to a grounded opponent", aliases: ["Illegal knee", "Grounded knee", "Knee grounded opponent"] },
+    ],
+    alsoAcceptedAnswers: [
+      { name: "Grabbing shorts or gloves", aliases: ["Grab shorts", "Grab gloves", "Shorts grab", "Glove grab"] },
+      { name: "Throat attack", aliases: ["Throat strike", "Strike to throat"] },
+      { name: "Small-joint manipulation", aliases: ["Small joint manipulation", "Finger bending", "Toe bending"] },
+      { name: "Fish-hooking", aliases: ["Fish hook", "Fish hooking"] },
+      { name: "Spiking on the head or neck", aliases: ["Spiking", "Spike on head", "Spike on neck"] },
+      { name: "Attacking the spine", aliases: ["Spine strike", "Strike to spine"] },
     ],
   },
   {
@@ -136,6 +151,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       { name: "Aggression", aliases: ["Aggressive", "Effective aggression"] },
       { name: "Cage pressure", aliases: ["Pressure", "Forward pressure"] },
     ],
+    alsoAcceptedAnswers: ["Knockdowns", "Positional advancement", "Near submissions", "Clean strikes", "Ground strikes"],
   },
   {
     category: "stats",
@@ -149,6 +165,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       "Name a statistic analysts use when breaking down a UFC fight.",
     ],
     answers: ["Significant strikes", "Total strikes", "Takedowns", "Takedown accuracy", "Control time", "Knockdowns", "Submission attempts", "Head strikes"],
+    alsoAcceptedAnswers: ["Body strikes", "Leg strikes", "Distance strikes", "Clinch strikes", "Ground strikes", "Striking accuracy"],
   },
   {
     category: "weight-cutting",
@@ -171,6 +188,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       { name: "Exhaustion", aliases: ["Exhausted", "Fatigue"] },
       { name: "Rehydration", aliases: ["Rehydrate", "Rehydrating"] },
     ],
+    alsoAcceptedAnswers: ["Headache", "Weakness", "Nausea", "Low energy", "Poor sleep"],
   },
   {
     category: "corner",
@@ -193,5 +211,6 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       { name: "Encourage the fighter", aliases: ["Encourage", "Motivate", "Motivation"] },
       { name: "Adjust the game plan", aliases: ["Game plan", "Gameplan", "Adjust strategy"] },
     ],
+    alsoAcceptedAnswers: ["Apply petroleum jelly", "Check a cut", "Clean the fighter", "Calm the fighter down"],
   },
 ] as const);
