@@ -12,7 +12,7 @@ const fixture = readFileSync(
 const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 describe("MMA Mania card parser to monitoring integration", () => {
-  it("turns the current nine-fight UFC 330 source into one real missing-fight owner decision", () => {
+  it("turns the current nine-fight UFC 330 source into guarded add-and-order decisions", () => {
     const parsed = parseMmaManiaCard(
       fixture,
       "https://www.mmamania.com/ufc-fight-cards/451594/ufc-330-fight-card-start-time-date-location-islam-makhachev-ian-machado-garry",
@@ -59,8 +59,12 @@ describe("MMA Mania card parser to monitoring integration", () => {
     });
 
     expect(canonicalBouts).toHaveLength(8);
-    expect(findings).toHaveLength(1);
-    expect(findings[0]).toMatchObject({
+    expect(findings).toHaveLength(2);
+
+    const addFinding = findings.find((finding) => (
+      (finding.source_details?.approval_proposal as { action?: string } | undefined)?.action === "add_bout"
+    ));
+    expect(addFinding).toMatchObject({
       finding_type: "card_change",
       bout_id: missing!.bout_id,
       summary: "Add Chidi Njokuani vs. Joel Alvarez to Picks.",
@@ -73,6 +77,22 @@ describe("MMA Mania card parser to monitoring integration", () => {
           card_segment: "prelim",
           segment_sequence: 4,
           expected_bout_ids: canonicalBouts.map((bout) => bout.bout_id),
+        },
+      },
+    });
+
+    const reorderFinding = findings.find((finding) => (
+      (finding.source_details?.approval_proposal as { action?: string } | undefined)?.action === "reorder_card"
+    ));
+    expect(reorderFinding).toMatchObject({
+      finding_type: "card_change",
+      summary: "Apply the detected fight order.",
+      source_details: {
+        change_field: "fight_order",
+        approval_proposal: {
+          action: "reorder_card",
+          expected_bout_ids: [...canonicalBouts.map((bout) => bout.bout_id), missing!.bout_id],
+          proposed_bout_ids: sourceBouts.map((bout) => bout.bout_id),
         },
       },
     });
