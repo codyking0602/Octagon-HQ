@@ -68,6 +68,8 @@ describe("Sports Feud authored alias contract", () => {
       ["nfl-fast4-08-1", "Cover Punts", "Punt coverage"],
       ["nfl-fast4-08-1", "Punt Cover", "Punt coverage"],
       ["nfl-fast4-08-1", "Cover Kicks", "Kick coverage"],
+      ["nfl-fast4-08-1", "Return Kicks", "Kick return"],
+      ["nfl-fast4-08-1", "Return Kick", "Kick return"],
       ["nfl-fast3-05-4", "Seattle", "Lumen Field"],
       ["nfl-fast3-05-4", "Seahawks", "Lumen Field"],
       ["nfl-fast3-05-4", "Seattle Seahawks", "Lumen Field"],
