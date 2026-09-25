@@ -6,27 +6,20 @@ const dailySource = readFileSync("src/features/play/OfficialMillionaireDailyView
 const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "utf8");
 
 describe("Millionaire fixed-stage presentation contract", () => {
-  it("keeps assembled sport backgrounds while composing MLB's cutout into the same fixed studio", () => {
-    expect(pageSource).toContain("const stageHostAsset = millionaireHostAsset(league);");
-    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_FIXED_STUDIO_BACKGROUND : stageHostAsset;');
-    expect(pageSource).toContain('"/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png"');
+  it("uses the uploaded composed MLB stage plate exactly like the existing sport plates", () => {
+    expect(pageSource).toContain('const MILLIONAIRE_MLB_STAGE_PLATE = "/assets/millionaire/ABD98D28-955F-4D95-B067-89E3D512952C.png";');
+    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);');
     expect(pageSource).toContain('className="millionaire-stage-background"');
-    expect(pageSource).toContain('className="millionaire-stage-host-slot millionaire-stage-host-slot--mlb"');
-    expect(pageSource).toContain('className="millionaire-stage-host" src={stageHostAsset}');
-    expect(pageSource).not.toContain("millionaire-locked-stage");
-    expect(pageSource).not.toContain("stagePlate");
-    expect(pageSource).not.toContain("usesCleanProductionPlate");
+    expect(pageSource).not.toContain("millionaire-stage-host-slot");
+    expect(pageSource).not.toContain("millionaire-stage-host");
+    expect(pageSource).not.toContain("MILLIONAIRE_FIXED_STUDIO_BACKGROUND");
   });
 
-  it("keeps the standalone MLB host transparent in the approved host bay behind the fixed game chrome", () => {
-    // Keep mask/background assertions scoped to the host-slot declaration blocks.
-    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot \{[^}]*z-index: 4;[^}]*left: 198px;[^}]*bottom: 247px;[^}]*width: 509px;[^}]*height: 554px;[^}]*overflow: visible;[^}]*background: transparent;[^}]*box-shadow: none;/);
-    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot::before,\s*\.millionaire-stage-host-slot::after \{[^}]*content: none;[^}]*\}/);
-    expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot \{[^}]*#01040b/);
-    expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot::before \{[^}]*background:/);
-    expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot::after \{[^}]*background:/);
-    expect(fixedCss).toMatch(/\.millionaire-stage-host \{[\s\S]*?left: -7%;[\s\S]*?bottom: -1\.5%;[\s\S]*?width: 114%;[\s\S]*?height: 105%;[\s\S]*?object-fit: cover;[\s\S]*?object-position: center 38%;/);
-    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot--mlb \.millionaire-stage-host \{[^}]*left: 54%;[^}]*bottom: -2%;[^}]*width: auto;[^}]*height: 108%;[^}]*object-fit: contain;[^}]*object-position: center bottom;[^}]*transform: translateX\(-50%\);/);
+  it("does not reintroduce a separately positioned MLB host layer", () => {
+    expect(fixedCss).not.toContain(".millionaire-stage-host-slot");
+    expect(fixedCss).not.toContain(".millionaire-stage-host");
+    expect(fixedCss).not.toContain("object-position: center 38%");
+    expect(fixedCss).not.toContain("transform: translateX(-50%)");
   });
 
   it("renders gameplay on a single fixed 1600x900 coordinate system", () => {
