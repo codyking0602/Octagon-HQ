@@ -17,7 +17,7 @@ function blockAfter(marker: string, length = 900) {
 describe("automatic Picks monitoring lifecycle", () => {
   it("checks official UFC card truth on the existing scheduler before deciding whether paid odds are due", () => {
     const cardCheckAt = runner.indexOf("shouldRunScheduledCardSourceCheck");
-    const scheduleDecisionAt = runner.indexOf("decideScheduledMonitoring");
+    const scheduleDecisionAt = runner.indexOf("const decision = decideScheduledMonitoring({");
     const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey)");
     expect(cardCheckAt).toBeGreaterThanOrEqual(0);
     expect(scheduleDecisionAt).toBeGreaterThan(cardCheckAt);
