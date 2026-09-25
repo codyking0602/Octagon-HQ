@@ -18,8 +18,13 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(pageSource).not.toContain("usesCleanProductionPlate");
   });
 
-  it("keeps the standalone MLB host in the approved host bay behind the fixed game chrome", () => {
-    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot \{[\s\S]*?z-index: 4;[\s\S]*?left: 198px;[\s\S]*?bottom: 247px;[\s\S]*?width: 509px;[\s\S]*?height: 554px;/);
+  it("keeps the standalone MLB host transparent in the approved host bay behind the fixed game chrome", () => {
+    // Keep mask/background assertions scoped to the host-slot declaration blocks.
+    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot \{[^}]*z-index: 4;[^}]*left: 198px;[^}]*bottom: 247px;[^}]*width: 509px;[^}]*height: 554px;[^}]*overflow: visible;[^}]*background: transparent;[^}]*box-shadow: none;/);
+    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot::before,\s*\.millionaire-stage-host-slot::after \{[^}]*content: none;[^}]*\}/);
+    expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot \{[^}]*#01040b/);
+    expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot::before \{[^}]*background:/);
+    expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot::after \{[^}]*background:/);
     expect(fixedCss).toMatch(/\.millionaire-stage-host \{[\s\S]*?left: -7%;[\s\S]*?bottom: -1\.5%;[\s\S]*?width: 114%;[\s\S]*?height: 105%;[\s\S]*?object-fit: cover;[\s\S]*?object-position: center 38%;/);
   });
 
