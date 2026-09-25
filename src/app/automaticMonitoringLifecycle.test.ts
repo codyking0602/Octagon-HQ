@@ -18,38 +18,49 @@ describe("automatic Picks monitoring lifecycle", () => {
   it("checks official UFC card truth on the existing scheduler before deciding whether paid odds are due", () => {
     const cardCheckAt = runner.indexOf("shouldRunScheduledCardSourceCheck(resolved.selected");
     const scheduleDecisionAt = runner.indexOf("const decision = decideScheduledMonitoring({");
-    const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey)");
+    const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)");
     expect(cardCheckAt).toBeGreaterThanOrEqual(0);
     expect(scheduleDecisionAt).toBeGreaterThan(cardCheckAt);
     expect(providerAt).toBeGreaterThan(scheduleDecisionAt);
     expect(runner).toContain("forceCardRefresh");
     expect(runner).toContain("!decision.due && !forceCardRefresh");
-    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey\)/g)).toHaveLength(1);
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
+  });
+
+  it("uses quota-free MMA event discovery before the one paid odds request", () => {
+    const discoveryAt = runner.indexOf("buildTheOddsApiEventsUrl(providerKey)");
+    const paidAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)");
+    expect(discoveryAt).toBeGreaterThanOrEqual(0);
+    expect(paidAt).toBeGreaterThan(discoveryAt);
+    expect(runner).toContain("providerEventIdsNearMonitoredStart");
+    expect(runner.match(/buildTheOddsApiEventsUrl\(providerKey\)/g)).toHaveLength(1);
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
+    expect(runner).not.toMatch(/events\/\$\{[^}]+\}\/odds/);
   });
 
   it("converges several trusted card mutations without paying for another odds response", () => {
     expect(runner).toContain("for (let attempt = 0; attempt < 8; attempt += 1)");
     expect(runner).toContain("remainingCardFindings");
     expect(runner).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
-    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey\)/g)).toHaveLength(1);
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
     expect(runner).toContain("Reusing the one odds response");
   });
 
   it("claims due scheduled work before the one configured odds-provider request", () => {
     const claimAt = runner.indexOf('admin.rpc("claim_pick_monitoring_schedule"');
-    const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey)");
+    const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)");
     expect(claimAt).toBeGreaterThanOrEqual(0);
     expect(providerAt).toBeGreaterThan(claimAt);
-    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey\)/g)).toHaveLength(1);
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey,/g)).toHaveLength(1);
     expect(runner.match(/claim_pick_monitoring_schedule/g)).toHaveLength(1);
   });
 
   it("returns not-due and already-claimed decisions before any provider request", () => {
     expect(runner.indexOf('reason: decision.reason')).toBeLessThan(
-      runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
     );
     expect(runner.indexOf('reason: "already_claimed"')).toBeLessThan(
-      runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
     );
   });
 
@@ -77,7 +88,7 @@ describe("automatic Picks monitoring lifecycle", () => {
     expect(runner.match(/admin\.rpc\("dispatch_due_in_app_notifications"/g)).toHaveLength(2);
     expect(runner).not.toMatch(/publish_pick_event_draft|record_pick_result|setInterval/);
     expect(runner.indexOf('admin.rpc("stage_pick_event_draft"')).toBeLessThan(
-      runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
     );
   });
 
@@ -85,7 +96,7 @@ describe("automatic Picks monitoring lifecycle", () => {
     const sourceFailure = blockAfter('reason: "source_preview_failed"');
     expect(sourceFailure).toContain("providerCalled: false");
     expect(runner.indexOf('reason: "source_preview_failed"')).toBeLessThan(
-      runner.indexOf("buildTheOddsApiRequestUrl(providerKey)"),
+      runner.indexOf("buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds)"),
     );
   });
 
