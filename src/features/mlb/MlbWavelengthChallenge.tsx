@@ -8,6 +8,7 @@ import {
 import {
   MLB_PLAY_NEXT_CHALLENGE_KEY,
   loadMlbPlayPreviewResult,
+  recordMlbPlayChallengeResult,
   saveMlbPlayPreviewResult,
   type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
@@ -17,23 +18,36 @@ import {
   mlbWavelengthCategoryLabel,
   mlbWavelengthClueDescriptor,
   nextMlbWavelengthClue,
-  type MlbWavelengthClue,
 } from "./mlbWavelength";
+import {
+  createMlbProductionWavelengthRound,
+  mlbProductionWavelengthCategoryLabel,
+  mlbProductionWavelengthClueDescriptor,
+  mlbProductionWavelengthGamesForDate,
+  nextMlbProductionWavelengthClue,
+} from "./mlbWavelengthProduction";
+import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
+
+type DisplayClue = {
+  id: string;
+  category: string;
+  text: string;
+  rating: number;
+};
 
 type CompletedRound = {
   score: number;
   target: number;
   finalGuess: number;
   guesses: number[];
-  clues: MlbWavelengthClue[];
+  clues: DisplayClue[];
 };
 
-const presentationCopy = {
-  resultEyebrow: "MLB WAVELENGTH · FINAL SCORE",
-  progressAriaLabel: "MLB Wavelength clue progress",
-  guessAriaLabel: "MLB Wavelength guess from 1 to 100",
-  categoryLabel: mlbWavelengthCategoryLabel,
-  clueDescriptor: mlbWavelengthClueDescriptor,
+type MlbWavelengthChallengeProps = {
+  mode?: "owner_review" | "production";
+  challengeKey?: string;
+  challengeDate?: string | null;
+  season?: number;
 };
 
 function storedRoundScores(result: MlbPlayChallengeResult | null) {
@@ -44,44 +58,97 @@ function storedRoundScores(result: MlbPlayChallengeResult | null) {
     : [];
 }
 
-export default function MlbWavelengthChallenge() {
+export default function MlbWavelengthChallenge({
+  mode = "owner_review",
+  challengeKey = MLB_PLAY_NEXT_CHALLENGE_KEY,
+  challengeDate = null,
+  season = 2026,
+}: MlbWavelengthChallengeProps) {
   const navigate = useNavigate();
-  const [savedResult, setSavedResult] = useState<MlbPlayChallengeResult | null>(() => (
-    loadMlbPlayPreviewResult(MLB_PLAY_NEXT_CHALLENGE_KEY)
+  const productionMode = mode === "production";
+  const productionGames = productionMode
+    ? mlbProductionWavelengthGamesForDate(challengeDate ?? "")
+    : [];
+  const gameCount = productionMode ? productionGames.length : MLB_WAVELENGTH_OWNER_ROUNDS.length;
+  const validProduction = !productionMode || gameCount === 2;
+
+  function createRoundForIndex(index: number) {
+    if (productionMode) {
+      const definition = productionGames[index];
+      if (!definition) return { target: 50, clues: [] as DisplayClue[] };
+      const round = createMlbProductionWavelengthRound(definition);
+      return { target: round.target, clues: [...round.clues] as DisplayClue[] };
+    }
+
+    const definition = MLB_WAVELENGTH_OWNER_ROUNDS[index] ?? MLB_WAVELENGTH_OWNER_ROUNDS[0]!;
+    const round = createMlbWavelengthRound(definition);
+    return { target: round.target, clues: [...round.clues] as DisplayClue[] };
+  }
+
+  const {
+    overview,
+    loading: overviewLoading,
+    reload: reloadOverview,
+  } = useMlbPlayChallengeOverview({
+    enabled: productionMode && Boolean(challengeKey),
+    season,
+    challengeKey,
+  });
+
+  const [previewSavedResult, setPreviewSavedResult] = useState<MlbPlayChallengeResult | null>(() => (
+    productionMode ? null : loadMlbPlayPreviewResult(challengeKey)
   ));
   const [practiceMode, setPracticeMode] = useState(false);
   const [roundIndex, setRoundIndex] = useState(0);
-  const [round, setRound] = useState(() => createMlbWavelengthRound(MLB_WAVELENGTH_OWNER_ROUNDS[0]!));
+  const [round, setRound] = useState(() => createRoundForIndex(0));
   const [guess, setGuess] = useState(50);
   const [guesses, setGuesses] = useState<number[]>([]);
   const [roundComplete, setRoundComplete] = useState(false);
   const [completedRounds, setCompletedRounds] = useState<CompletedRound[]>([]);
+  const [recording, setRecording] = useState(false);
+  const [recordError, setRecordError] = useState("");
 
-  const definition = MLB_WAVELENGTH_OWNER_ROUNDS[roundIndex] ?? MLB_WAVELENGTH_OWNER_ROUNDS[0]!;
   const currentScore = roundComplete && guesses.length === 4
     ? wavelengthScore(guesses[3]!, round.target)
     : null;
-  const isLastRound = roundIndex === MLB_WAVELENGTH_OWNER_ROUNDS.length - 1;
-  const finalScore = completedRounds.length === MLB_WAVELENGTH_OWNER_ROUNDS.length
+  const isLastRound = roundIndex === gameCount - 1;
+  const finalScore = completedRounds.length === gameCount && gameCount > 0
     ? Math.round(completedRounds.reduce((sum, item) => sum + item.score, 0) / completedRounds.length)
     : null;
+  const savedResult = productionMode ? overview?.ownResult ?? null : previewSavedResult;
+  const presentationCopy = productionMode ? {
+    resultEyebrow: "MLB WAVELENGTH · FINAL SCORE",
+    progressAriaLabel: "MLB Wavelength clue progress",
+    guessAriaLabel: "MLB Wavelength guess from 1 to 100",
+    categoryLabel: mlbProductionWavelengthCategoryLabel,
+    clueDescriptor: mlbProductionWavelengthClueDescriptor,
+  } : {
+    resultEyebrow: "MLB WAVELENGTH · FINAL SCORE",
+    progressAriaLabel: "MLB Wavelength clue progress",
+    guessAriaLabel: "MLB Wavelength guess from 1 to 100",
+    categoryLabel: mlbWavelengthCategoryLabel,
+    clueDescriptor: mlbWavelengthClueDescriptor,
+  };
 
   function resetRound(nextRoundIndex: number) {
     setRoundIndex(nextRoundIndex);
-    setRound(createMlbWavelengthRound(MLB_WAVELENGTH_OWNER_ROUNDS[nextRoundIndex]!));
+    setRound(createRoundForIndex(nextRoundIndex));
     setGuess(50);
     setGuesses([]);
     setRoundComplete(false);
+    setRecordError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function resetChallenge(asPractice: boolean) {
     setPracticeMode(asPractice);
     setCompletedRounds([]);
+    setRecordError("");
     resetRound(0);
   }
 
-  function saveChallenge(rounds: CompletedRound[]) {
+  async function saveChallenge(rounds: CompletedRound[]) {
+    if (!rounds.length || recording) return;
     const score = Math.round(rounds.reduce((sum, item) => sum + item.score, 0) / rounds.length);
     const completed: MlbPlayChallengeResult = {
       rawScore: score,
@@ -107,11 +174,34 @@ export default function MlbWavelengthChallenge() {
       },
       completedAt: new Date().toISOString(),
     };
-    setSavedResult(saveMlbPlayPreviewResult(MLB_PLAY_NEXT_CHALLENGE_KEY, completed));
+
+    setRecording(true);
+    setRecordError("");
+    try {
+      if (productionMode) {
+        await recordMlbPlayChallengeResult({
+          season,
+          challengeKey,
+          rawScore: completed.rawScore,
+          gameType: completed.gameType,
+          publicResult: completed.publicResult,
+          resultDetail: completed.resultDetail,
+        });
+        await reloadOverview();
+      } else {
+        setPreviewSavedResult(saveMlbPlayPreviewResult(challengeKey, completed));
+      }
+    } catch (nextError) {
+      setRecordError(nextError instanceof Error
+        ? nextError.message
+        : "Your official MLB Play result could not be recorded.");
+    } finally {
+      setRecording(false);
+    }
   }
 
   function lockGuess() {
-    if (roundComplete) return;
+    if (roundComplete || !validProduction) return;
 
     const locked = clampWavelength(guess);
     const nextGuesses = [...guesses, locked];
@@ -128,13 +218,53 @@ export default function MlbWavelengthChallenge() {
       const nextRounds = [...completedRounds.slice(0, roundIndex), completed];
       setCompletedRounds(nextRounds);
       setRoundComplete(true);
-      if (isLastRound && !practiceMode) saveChallenge(nextRounds);
+      if (isLastRound && !practiceMode) void saveChallenge(nextRounds);
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
-    const nextClue = nextMlbWavelengthClue(definition, locked, nextGuesses.length);
+    let nextClue: DisplayClue;
+    if (productionMode) {
+      const definition = productionGames[roundIndex]!;
+      const unavailable = completedRounds.flatMap((item) => item.clues.map((clue) => clue.id));
+      nextClue = nextMlbProductionWavelengthClue(
+        definition,
+        locked,
+        nextGuesses.length,
+        round.clues.map((clue) => clue.id),
+        unavailable,
+      );
+    } else {
+      const definition = MLB_WAVELENGTH_OWNER_ROUNDS[roundIndex] ?? MLB_WAVELENGTH_OWNER_ROUNDS[0]!;
+      nextClue = nextMlbWavelengthClue(definition, locked, nextGuesses.length);
+    }
     setRound((current) => ({ ...current, clues: [...current.clues, nextClue] }));
+  }
+
+  if (!validProduction) {
+    return (
+      <div className="page football-debate-page football-wavelength-page wavelength-page--mlb mlb-wavelength-page">
+        <section className="mlb-find-saved-result">
+          <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+          <h1>Challenge coming soon.</h1>
+          <p>This scheduled challenge is not ready for play yet.</p>
+          <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+            MLB PLAY
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  if (productionMode && overviewLoading && !overview && completedRounds.length === 0 && !practiceMode) {
+    return (
+      <div className="page football-debate-page football-wavelength-page wavelength-page--mlb mlb-wavelength-page">
+        <section className="mlb-find-saved-result">
+          <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+          <h1>Loading your challenge…</h1>
+        </section>
+      </div>
+    );
   }
 
   if (savedResult && !practiceMode && completedRounds.length === 0) {
@@ -172,9 +302,9 @@ export default function MlbWavelengthChallenge() {
   if (roundComplete && currentScore !== null) {
     return (
       <div className="page football-debate-page football-wavelength-page wavelength-page--mlb mlb-wavelength-page">
-        <div className="mlb-find-series-progress" aria-label={`Game ${roundIndex + 1} of ${MLB_WAVELENGTH_OWNER_ROUNDS.length}`}>
+        <div className="mlb-find-series-progress" aria-label={`Game ${roundIndex + 1} of ${gameCount}`}>
           <span>WAVELENGTH</span>
-          <strong>GAME {roundIndex + 1} OF {MLB_WAVELENGTH_OWNER_ROUNDS.length}</strong>
+          <strong>GAME {roundIndex + 1} OF {gameCount}</strong>
         </div>
 
         <FootballWavelengthPresentation
@@ -204,10 +334,28 @@ export default function MlbWavelengthChallenge() {
               <span>GAME 1 <b>{completedRounds[0]?.score ?? "—"}</b></span>
               <span>GAME 2 <b>{completedRounds[1]?.score ?? "—"}</b></span>
             </div>
-            <p>Final score is the average of both Wavelength games.</p>
+            <p>
+              {practiceMode
+                ? "Replay complete. Your locked official result does not change."
+                : recording
+                  ? "Saving your official postseason result…"
+                  : recordError
+                    ? recordError
+                    : "Final score is the average of both Wavelength games."}
+            </p>
             <div className="mlb-find-final-actions">
-              <button className="primary-action" type="button" onClick={() => resetChallenge(true)}>
-                PLAY AGAIN
+              <button
+                className="primary-action"
+                type="button"
+                onClick={() => {
+                  if (recordError) {
+                    void saveChallenge(completedRounds);
+                    return;
+                  }
+                  resetChallenge(true);
+                }}
+              >
+                {recordError ? "RETRY SAVE" : "PLAY AGAIN"}
               </button>
               <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
                 MLB PLAY
@@ -221,9 +369,9 @@ export default function MlbWavelengthChallenge() {
 
   return (
     <div className="page football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--mlb mlb-wavelength-page">
-      <div className="mlb-find-series-progress" aria-label={`Game ${roundIndex + 1} of ${MLB_WAVELENGTH_OWNER_ROUNDS.length}`}>
+      <div className="mlb-find-series-progress" aria-label={`Game ${roundIndex + 1} of ${gameCount}`}>
         <span>WAVELENGTH</span>
-        <strong>GAME {roundIndex + 1} OF {MLB_WAVELENGTH_OWNER_ROUNDS.length}</strong>
+        <strong>GAME {roundIndex + 1} OF {gameCount}</strong>
       </div>
 
       <FootballWavelengthPresentation
