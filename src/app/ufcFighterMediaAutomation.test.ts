@@ -21,6 +21,7 @@ describe("automatic UFC fighter media", () => {
   it("reuses the existing scheduler/card-check owner instead of adding another scheduler", () => {
     expect(runner).toContain("shouldRunScheduledCardSourceCheck");
     expect(runner).toContain("syncScheduledFighterMedia");
+    expect(runner).toContain("fighter_media_sync: fighterMediaSync");
     expect(migration).not.toMatch(/cron[.]schedule|net[.]http_post/);
   });
 
