@@ -91,10 +91,15 @@ function gameRows(entry: MlbPlayChallengeLeaderboardEntry) {
     const game = value && typeof value === "object" && !Array.isArray(value)
       ? value as Record<string, unknown>
       : {};
+    const score = Number(game.score ?? 0);
+    const perfect = game.perfect === true;
+    const inferredSafe = perfect ? 9 : Math.max(0, Math.round(score / 10) - 1);
     return {
       game: Number(game.game ?? index + 1),
-      score: Number(game.score ?? 0),
-      perfect: game.perfect === true,
+      score,
+      perfect,
+      safeCount: Number(game.safe_count ?? inferredSafe),
+      fatalName: typeof game.fatal_name === "string" ? game.fatal_name : null,
     };
   });
 }
@@ -144,7 +149,11 @@ function MlbPlayResultDetail({
                 <article key={game.game}>
                   <span>GAME {game.game}</span>
                   <strong>{game.score}<small>/100</small></strong>
-                  <small>{game.perfect ? "PERFECT BOARD" : `RUN ENDED · ROUND ${Math.max(1, Math.round(game.score / 10))}`}</small>
+                  <small>
+                    {game.perfect
+                      ? "9 SAFE · PERFECT BOARD"
+                      : `${game.safeCount} SAFE · LEADER PICKED${game.fatalName ? ` · ${game.fatalName}` : ""}`}
+                  </small>
                 </article>
               ))}
             </div>
