@@ -1305,11 +1305,10 @@
 
 .mlb-bracket-node .mlb-team-choice__main > span:last-child {
   min-height: 0;
-  overflow: hidden;
   font-size: .65rem;
   line-height: 1.08;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .mlb-bracket-node .mlb-team-choice > small {
@@ -1528,11 +1527,10 @@
 }
 
 .mlb-race-bracket__pick b {
-  overflow: hidden;
   font-size: .56rem;
   line-height: 1.05;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .mlb-round-picks {
