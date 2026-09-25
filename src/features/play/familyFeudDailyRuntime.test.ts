@@ -159,9 +159,12 @@ describe("Family Feud V2 Daily persistence contract", () => {
 
   it("hydrates current person typing and authored aliases into legacy persisted fighter candidates", () => {
     const base = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
-    const legacyId = "ufc-fast5-08-5:a1";
 
-    for (const input of ["Khabib", "Habib"]) {
+    for (const [legacyId, displayName, kind, input] of [
+      ["ufc-fast5-08-5:a1", "Khabib Nurmagomedov", "other", "Khabib"],
+      ["ufc-fast5-08-5:a1", "Khabib Nurmagomedov", "other", "Habib"],
+      ["ufc-main-03-1:a2", "Demian Maia", "person", "Maya"],
+    ] as const) {
       const persistedPack = structuredClone(
         base.privateSetupEvidence.pack as FamilyFeudPack,
       );
@@ -171,8 +174,8 @@ describe("Family Feud V2 Daily persistence contract", () => {
           ? {
               ...entity,
               id: legacyId,
-              displayName: "Khabib Nurmagomedov",
-              kind: "other",
+              displayName,
+              kind,
               aliases: [],
             }
           : entity
@@ -211,7 +214,7 @@ describe("Family Feud V2 Daily persistence contract", () => {
       const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
       const slots = boards[0]!.slots as Array<Record<string, unknown>>;
       expect(slots[0], input).toMatchObject({
-        entity: { id: legacyId, display_name: "Khabib Nurmagomedov" },
+        entity: { id: legacyId, display_name: displayName },
         found: true,
       });
     }
