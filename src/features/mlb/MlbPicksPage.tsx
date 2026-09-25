@@ -595,11 +595,11 @@ export default function MlbPicksPage() {
                   total: roundSeries.length,
                   wins: 0,
                   losses: 0,
-                  picks: {},
+                  picks: {} as Record<string, string>,
                 } satisfies MlbRoundPickEntry))).map((member) => {
                   const isSelected = selectedRoundProfileId === member.profile_id;
                   const bracketStanding = bracketStandings.find((standing) => standing.entry.profile_id === member.profile_id);
-                  const memberPicks = member.is_current_user
+                  const memberPicks: Record<string, string> = member.is_current_user
                     ? Object.fromEntries(ownSeriesPicks)
                     : member.picks;
                   const revealedPicks = roundSeries.filter((series) => Boolean(memberPicks[series.series_id]));
@@ -788,7 +788,7 @@ export default function MlbPicksPage() {
                           ), 0),
                         })).sort((left, right) => right.score - left.score || left.entry.display_name.localeCompare(right.entry.display_name));
                         return (
-                          <details className="mlb-round-archive" key={round} open={round === hub.currentRound}>
+                          <details className="mlb-round-archive" key={round} defaultOpen={round === hub.currentRound}>
                             <summary>
                               <div><span>{roundDisplayLabel(round)}</span><strong>{roundResults.length} / {nodes.length} FINAL</strong></div>
                               <small>+{pointsEach} EACH</small>
