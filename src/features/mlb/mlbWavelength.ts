@@ -1,7 +1,4 @@
-import {
-  desiredWavelengthCorrection,
-  type WavelengthRound,
-} from "../play/wavelengthEngine";
+import { desiredWavelengthCorrection } from "../play/wavelengthEngine";
 
 export type MlbWavelengthCategory =
   | "STAR POWER"
@@ -17,6 +14,11 @@ export type MlbWavelengthClue = {
   category: MlbWavelengthCategory;
   text: string;
   rating: number;
+};
+
+export type MlbWavelengthRound = {
+  target: number;
+  clues: MlbWavelengthClue[];
 };
 
 type MlbWavelengthStage = {
@@ -147,7 +149,7 @@ function nearest(clues: readonly MlbWavelengthClue[], desiredRating: number) {
   ))[0]!;
 }
 
-export function createMlbWavelengthRound(definition: MlbWavelengthRoundDefinition): WavelengthRound {
+export function createMlbWavelengthRound(definition: MlbWavelengthRoundDefinition): MlbWavelengthRound {
   return {
     target: definition.target,
     clues: [nearest(definition.stages[0].clues, definition.target)],
