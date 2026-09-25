@@ -7,6 +7,7 @@ const bottomNav = readFileSync("src/components/BottomNavigation.tsx", "utf8");
 const home = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
 const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_foundation.sql", "utf8");
+const picksParityMigration = readFileSync("supabase/migrations/202612310181_mlb_picks_football_parity.sql", "utf8");
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
@@ -71,10 +72,37 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPicks).toContain("SWIPE BRACKETS");
     expect(mlbPicks).toContain("nextBracketGuideNode");
     expect(mlbPicks).not.toContain('id="mlb-bracket-race"');
-    expect(mlbPicks).toContain("mlb-round-series-card");
+    expect(mlbPicks).toContain("football-pick-game mlb-series-pick-card");
+    expect(mlbPicks).toContain("PICKS &amp; STANDINGS");
+    expect(mlbPicks).toContain("POSTSEASON BRACKET");
+    expect(mlbPicks).toContain("COMPLETED SERIES");
+    expect(mlbPicks).toContain("SCORING &amp; GRADING");
     expect(styles).toContain('[data-focus-zone="al-wc"]');
     expect(styles).toContain(".mlb-bracket-mini-team.is-picked");
-    expect(styles).toContain(".mlb-round-team.is-selected");
+    expect(styles).toContain("--football-picks-accent: var(--mlb-green-strong)");
+  });
+
+  it("matches the established Football Picks hierarchy below the bracket", () => {
+    const group = mlbPicks.indexOf('className="surface-card football-group-hub');
+    const slate = mlbPicks.indexOf('className="football-picks-slate football-picks-slate--current');
+    const grading = mlbPicks.indexOf('className="surface-card football-picks-grading');
+    expect(group).toBeGreaterThan(-1);
+    expect(slate).toBeGreaterThan(group);
+    expect(grading).toBeGreaterThan(slate);
+    expect(mlbPicks).toContain("STANDINGS &amp; ROUNDS");
+    expect(mlbPicks).toContain("SERIES ML");
+    expect(mlbPicks).toContain("ROUND-BY-ROUND SERIES PICKS");
+    expect(mlbOwnerFixture).toContain('display_name: "Troy"');
+    expect(mlbOwnerFixture).toContain('display_name: "Tyler"');
+  });
+
+  it("keeps other members' open series picks private outside owner control", () => {
+    expect(picksParityMigration).toContain("profile.id = v_profile_id");
+    expect(picksParityMigration).toContain("or v_is_owner");
+    expect(picksParityMigration).toContain("now() >= series_row.starts_at");
+    expect(picksParityMigration).toContain("'round_pick_entries', v_round_pick_entries");
+    expect(picksParityMigration).toContain("team_a_moneyline");
+    expect(picksParityMigration).toContain("team_b_moneyline");
   });
 
   it("keeps the finished MLB bracket compact and readable on phones", () => {
