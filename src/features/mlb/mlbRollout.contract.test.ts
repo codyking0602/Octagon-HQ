@@ -10,6 +10,8 @@ const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_fo
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
+const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
+const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
   it("stays owner-only until the explicit public release", () => {
@@ -23,7 +25,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(appShell).toContain("canViewMlbPlayoffs(identity.profile)");
     expect(bottomNav).toContain("canViewMlbPlayoffs(identity?.profile)");
     expect(home).toContain("canViewMlbPlayoffs(identity.profile)");
-    expect(router.match(/<MlbGate/g) ?? []).toHaveLength(3);
+    expect(router.match(/<MlbGate/g) ?? []).toHaveLength(4);
   });
 
   it("does not add a fifth permanent bottom navigation tab", () => {
@@ -61,9 +63,27 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).not.toContain("MlbHomeHq");
   });
 
-  it("uses a distinct green MLB identity", () => {
-    expect(styles).toContain("--mlb-green:");
+  it("uses a distinct muted green MLB identity", () => {
+    expect(styles).toContain("--mlb-green: #2f855f");
     expect(styles).toContain("--home-sport-accent: var(--mlb-green)");
+  });
+
+  it("matches the Football-style Home hierarchy", () => {
+    const picks = mlbHome.indexOf('aria-label="MLB Picks and bracket standing"');
+    const challenge = mlbHome.indexOf("mlb-hq-card--challenge");
+    const player = mlbHome.indexOf("<MlbPlayerSpotlight");
+    const series = mlbHome.indexOf('aria-label="MLB Series Spotlight"');
+    expect(picks).toBeGreaterThan(-1);
+    expect(challenge).toBeGreaterThan(picks);
+    expect(player).toBeGreaterThan(challenge);
+    expect(series).toBeGreaterThan(player);
+    expect(mlbHome).toContain("OPEN BREAKDOWN →");
+  });
+
+  it("provides a gated visual series breakdown", () => {
+    expect(router).toContain('path: "mlb/series/:seriesId"');
+    expect(mlbSeries).toContain("KEYS TO THE SERIES");
+    expect(mlbSeries).toContain("<MlbPlayerSpotlight");
   });
 
   it("keeps bracket scoring progressive and simple", () => {
