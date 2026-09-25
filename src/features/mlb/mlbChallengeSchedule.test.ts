@@ -20,6 +20,14 @@ describe("MLB postseason challenge schedule", () => {
       "2026-10-27",
     ]);
     expect(new Set(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.id)).size).toBe(10);
+    expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE
+      .filter((challenge) => challenge.ready)
+      .map((challenge) => challenge.id)).toEqual([
+        "mlb-2026-play-01",
+        "mlb-2026-play-02",
+        "mlb-2026-play-10",
+      ]);
+    expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
   });
 
   it("uses the America/Chicago calendar boundary", () => {
