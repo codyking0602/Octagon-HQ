@@ -16,6 +16,13 @@ describe("UFC odds identity continuity migration", () => {
     expect(sql).toContain("private.apply_pick_fighter_identity_correction");
   });
 
+  it("uses the stable UFC athlete slug before requiring a pre-registered name alias", () => {
+    expect(sql).toContain("A stable UFC athlete profile slug is the strongest same-person evidence");
+    expect(sql).toContain("v_replacement_slug is distinct from v_old_slug");
+    expect(sql).toContain("private.pick_fighter_person_key(v_old_name)");
+    expect(sql).toContain("private.pick_fighter_person_key(v_replacement_name)");
+  });
+
   it("preserves picks, locks, and odds for identity corrections", () => {
     expect(sql).toContain("update public.profile_event_picks");
     expect(sql).toContain("update public.profile_event_underdog_locks");
