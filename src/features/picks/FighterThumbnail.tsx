@@ -100,11 +100,16 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
   const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
   const staticSource = fighterThumbnailPath(canonicalSlug);
   const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
-  const [failed, setFailed] = useState(false);
+  const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
   const shaneContender = shanesWatchlist.fighters.find((fighter) => fighter.id === slug) ?? null;
+  const source = staticSource && !failedSources.has(staticSource)
+    ? staticSource
+    : runtimeSource && !failedSources.has(runtimeSource)
+      ? runtimeSource
+      : null;
 
   useEffect(() => {
-    if (staticSource || runtimeSource) return;
+    if (source) return;
     let active = true;
     void loadRuntimeFighterMedia().then(() => {
       if (!active) return;
@@ -113,11 +118,9 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
     return () => {
       active = false;
     };
-  }, [canonicalSlug, runtimeSource, staticSource]);
+  }, [canonicalSlug, source]);
 
-  const source = staticSource ?? runtimeSource;
-
-  const photo = !source || failed ? (
+  const photo = !source ? (
     <i
       className="pick-fighter-thumbnail pick-fighter-thumbnail--fallback"
       aria-label={`${name} photo unavailable`}
@@ -139,7 +142,7 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
       alt=""
       loading="lazy"
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={() => setFailedSources((current) => new Set(current).add(source))}
     />
   );
 
