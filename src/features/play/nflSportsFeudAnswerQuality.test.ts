@@ -504,6 +504,34 @@ describe("NFL Sports Feud authored answer quality", () => {
     expect(visual.answers[1]?.name).toBe("Las Vegas Raiders");
   });
 
+  it("protects natural Sep. 25 Fast Money shorthand and nearby stadium/team inputs", () => {
+    const pack = buildSportsFeudPack("nfl", "2026-09-25");
+    const byId = new Map(pack.entities.map((entity) => [entity.id, entity]));
+
+    const specialTeams = pack.fastMoney.find((question) => question.id === "nfl-fast4-08-1")!;
+    const coverPunts = matchFamilyFeudAnswer(pack, specialTeams, "Cover Punts");
+    expect(coverPunts.status).toBe("matched");
+    if (coverPunts.status === "matched") {
+      expect(byId.get(coverPunts.entityId)?.displayName).toBe("Punt coverage");
+      expect(specialTeams.alsoAcceptedEntityIds).toContain(coverPunts.entityId);
+    }
+
+    const loudStadium = pack.fastMoney.find((question) => question.id === "nfl-fast3-05-4")!;
+    for (const input of ["Seahawks", "Seattle Seahawks", "Seattle Seahwaks"]) {
+      const match = matchFamilyFeudAnswer(pack, loudStadium, input);
+      expect(match.status, input).toBe("matched");
+      if (match.status === "matched") {
+        expect(byId.get(match.entityId)?.displayName, input).toBe("Lumen Field");
+        expect(loudStadium.answers.find((answer) => answer.entityId === match.entityId)?.points, input).toBe(7);
+      }
+    }
+
+    expect(matchedDisplayName("nfl-fast3-05-1", "Buffalo Bills")).toBe("Highmark Stadium");
+    expect(matchedDisplayName("nfl-fast3-05-1", "New Orleans Saints")).toBe("Superdome");
+    expect(matchedDisplayName("nfl-fast3-05-1", "Minnesota Vikings")).toBe("U.S. Bank Stadium");
+    expect(matchedDisplayName("nfl-fast3-05-1", "Green Bay Packers")).toBe("Lambeau Field");
+  });
+
   it("leaves the September 23 Football Daily routed to CFB", () => {
     expect(footballSportsFeudDomainForDay("2026-09-23")).toBe("cfb");
   });
