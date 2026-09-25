@@ -73,7 +73,7 @@ describe("MLB production Wavelength challenge", () => {
       gameType: "wavelength",
     }));
 
-    const call = recordMock.mock.calls[0]![0] as {
+    const call = recordMock.mock.calls[0]![0] as unknown as {
       publicResult: { round_scores: number[] };
       resultDetail: { rounds: Array<{ clues: Array<{ id: string }> }> };
     };
