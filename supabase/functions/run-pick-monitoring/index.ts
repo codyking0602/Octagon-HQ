@@ -4,6 +4,13 @@ import { adaptTheOddsApiResponse, buildTheOddsApiRequestUrl } from "../../../src
 import { buildManualMonitoringPayload, monitoringSummary, resolveMonitoringEvent, sourceMatchesMonitoredEvent, type CardScope, type MonitoringEvent, type SourcePreview } from "../../../src/features/picks-monitoring/manualMonitoringRunner.ts";
 import { buildCardChangeFindings } from "../../../src/features/picks-monitoring/cardChangeApproval.ts";
 import {
+  adaptEspnUfcFighterMedia,
+  espnUfcMediaScoreboardUrl,
+  parseUfcAthletePhoto,
+  ufcAthletePageUrl,
+  type UfcFighterMediaCandidate,
+} from "../../../src/features/picks-monitoring/ufcFighterMedia.ts";
+import {
   decideScheduledMonitoring,
   eventIsInAutomaticStagingWindow,
   shouldAttemptAutomaticEventStaging,
@@ -252,6 +259,75 @@ Deno.serve(async (request) => {
     });
   }
 
+  const syncScheduledFighterMedia = async (event: MonitoringEvent) => {
+    const currentMediaResponse = await admin.rpc("get_ufc_fighter_media_map");
+    const currentMedia = currentMediaResponse.error ? null : asRecord(currentMediaResponse.data);
+    if (currentMediaResponse.error) return { status: "read_error" };
+
+    const fighters = new Map<string, string>();
+    for (const bout of event.bouts) {
+      fighters.set(bout.red_fighter_slug, bout.red_fighter_name);
+      fighters.set(bout.blue_fighter_slug, bout.blue_fighter_name);
+    }
+    const missing = [...fighters.entries()]
+      .filter(([slug]) => typeof currentMedia?.[slug] !== "string")
+      .slice(0, 20);
+    if (!missing.length) return { status: "complete", missing: 0, inserted: 0 };
+
+    const candidates = new Map<string, UfcFighterMediaCandidate>();
+    try {
+      const espnResponse = await fetch(espnUfcMediaScoreboardUrl(event), {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(10_000),
+      });
+      if (espnResponse.ok) {
+        for (const candidate of adaptEspnUfcFighterMedia({
+          body: await espnResponse.json().catch(() => null),
+          event,
+        })) {
+          if (fighters.has(candidate.fighter_slug)) candidates.set(candidate.fighter_slug, candidate);
+        }
+      }
+    } catch {
+      // ESPN media enrichment is best-effort; official UFC remains the fallback.
+    }
+
+    const ufcTargets = missing.filter(([slug]) => !candidates.has(slug));
+    const ufcResults = await Promise.all(ufcTargets.map(async ([slug, displayName]) => {
+      const sourcePageUrl = ufcAthletePageUrl(slug);
+      if (!sourcePageUrl) return null;
+      try {
+        const response = await fetch(sourcePageUrl, {
+          headers: {
+            Accept: "text/html,application/xhtml+xml",
+            "User-Agent": "Mozilla/5.0 (compatible; OctagonHQ/1.0)",
+          },
+          signal: AbortSignal.timeout(10_000),
+        });
+        if (!response.ok) return null;
+        const html = await response.text();
+        if (!html || new TextEncoder().encode(html).byteLength > 3_000_000) return null;
+        return parseUfcAthletePhoto({ html, fighterSlug: slug, displayName, sourcePageUrl });
+      } catch {
+        return null;
+      }
+    }));
+
+    for (const candidate of ufcResults) {
+      if (candidate) candidates.set(candidate.fighter_slug, candidate);
+    }
+    if (!candidates.size) {
+      return { status: "no_media_found", missing: missing.length, inserted: 0 };
+    }
+
+    const persisted = await admin.rpc("sync_ufc_fighter_media", {
+      p_candidates: [...candidates.values()],
+    });
+    return persisted.error
+      ? { status: "write_error", missing: missing.length, candidates: candidates.size }
+      : { status: "synced", missing: missing.length, candidates: candidates.size, persistence: persisted.data };
+  };
+
   let liveStateSync: Record<string, unknown> | null = null;
   const liveStateNow = new Date();
   if (
@@ -297,6 +373,7 @@ Deno.serve(async (request) => {
   }
 
   let scheduledCardPreview: { event_preview?: SourcePreview; effective_scope?: CardScope } | null = null;
+  let fighterMediaSync: unknown = null;
   let forceCardRefresh = false;
 
   if (
@@ -343,6 +420,8 @@ Deno.serve(async (request) => {
         response: safeError(409, "EVENT_IDENTITY_MISMATCH", "The official UFC card check did not match the monitored event."),
       });
     }
+
+    fighterMediaSync = await syncScheduledFighterMedia(scheduledCardPreview.event_preview);
 
     const ignored = new Set(resolved.ignoredBoutIds);
     const comparisonSource = ignored.size
@@ -645,5 +724,6 @@ Deno.serve(async (request) => {
     notification_dispatch: notificationDispatch,
     live_state_sync: liveStateSync,
     trusted_auto_apply: trustedAutoApply,
+    fighter_media_sync: fighterMediaSync,
   });
 });

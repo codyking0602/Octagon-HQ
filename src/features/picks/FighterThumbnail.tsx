@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getSupabaseClient } from "../../lib/supabase";
 import { shanesWatchlist } from "../home/shanesWatchlist";
 import { ShaneContenderBadge } from "./ShaneContenderSpotlight";
 
@@ -56,6 +57,35 @@ const remotePhotoBySlug = new Map([
   ["david-martinez", "https://a.espncdn.com/i/headshots/mma/players/full/4503229.png"],
 ]);
 
+const runtimePhotoBySlug = new Map<string, string>();
+let runtimeMediaLoad: Promise<void> | null = null;
+
+export function normalizeRuntimeFighterMediaMap(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {} as Record<string, string>;
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).filter(([slug, url]) => (
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)
+      && typeof url === "string"
+      && /^https:\/\//i.test(url)
+    )),
+  ) as Record<string, string>;
+}
+
+async function loadRuntimeFighterMedia() {
+  if (runtimeMediaLoad) return runtimeMediaLoad;
+  runtimeMediaLoad = (async () => {
+    const client = getSupabaseClient();
+    if (!client) return;
+    const { data, error } = await client.rpc("get_ufc_fighter_media_map");
+    if (error) return;
+    for (const [slug, url] of Object.entries(normalizeRuntimeFighterMediaMap(data))) {
+      runtimePhotoBySlug.set(slug, url);
+    }
+  })();
+  return runtimeMediaLoad;
+}
+
+
 export function fighterRemotePhotoPath(slug: string) {
   const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
   return remotePhotoBySlug.get(canonicalSlug) ?? null;
@@ -67,11 +97,30 @@ export function fighterThumbnailPath(slug: string) {
 }
 
 export function FighterThumbnail({ name, slug }: { name: string; slug: string }) {
-  const source = fighterThumbnailPath(slug);
-  const [failed, setFailed] = useState(false);
+  const canonicalSlug = thumbnailSlugAliases.get(slug) ?? slug;
+  const staticSource = fighterThumbnailPath(canonicalSlug);
+  const [runtimeSource, setRuntimeSource] = useState(() => runtimePhotoBySlug.get(canonicalSlug) ?? null);
+  const [failedSources, setFailedSources] = useState<Set<string>>(() => new Set());
   const shaneContender = shanesWatchlist.fighters.find((fighter) => fighter.id === slug) ?? null;
+  const source = staticSource && !failedSources.has(staticSource)
+    ? staticSource
+    : runtimeSource && !failedSources.has(runtimeSource)
+      ? runtimeSource
+      : null;
 
-  const photo = !source || failed ? (
+  useEffect(() => {
+    if (source) return;
+    let active = true;
+    void loadRuntimeFighterMedia().then(() => {
+      if (!active) return;
+      setRuntimeSource(runtimePhotoBySlug.get(canonicalSlug) ?? null);
+    });
+    return () => {
+      active = false;
+    };
+  }, [canonicalSlug, source]);
+
+  const photo = !source ? (
     <i
       className="pick-fighter-thumbnail pick-fighter-thumbnail--fallback"
       aria-label={`${name} photo unavailable`}
@@ -93,7 +142,7 @@ export function FighterThumbnail({ name, slug }: { name: string; slug: string })
       alt=""
       loading="lazy"
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={() => setFailedSources((current) => new Set(current).add(source))}
     />
   );
 
