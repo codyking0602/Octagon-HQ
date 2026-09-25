@@ -25,7 +25,7 @@ export interface SportsFeudQuestionFamily {
 const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Arrowhead Stadium": ["Arrowhead", "Chiefs", "Kansas City", "Kansas City Chiefs"],
   "Lumen Field": ["Lumen", "Seahawks", "Seattle", "Seattle Seahawks"],
-  "Lambeau Field": ["Lambeau", "Packers", "Green Bay", "Green Bay Packers"],
+  "Lambeau Field": ["Lambeau", "Lambo Field", "Lambo", "Packers", "Green Bay", "Green Bay Packers"],
   "Highmark Stadium": ["Highmark", "Bills", "Buffalo", "Buffalo Bills"],
   "Superdome": ["Caesars Superdome", "Saints", "New Orleans", "New Orleans Saints"],
   "Lincoln Financial Field": ["The Linc", "Linc", "Eagles", "Philadelphia", "Philadelphia Eagles"],
