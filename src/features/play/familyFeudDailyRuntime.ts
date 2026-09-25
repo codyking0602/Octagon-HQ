@@ -20,6 +20,7 @@ import {
   type FamilyFeudState,
 } from "../games/familyFeudEngine";
 import { standardSportsFeudAliases } from "./sportsFeudAuthoredHelpers";
+import { sportsFeudCurrentEntityMetadata } from "./sportsFeudDailyBanks";
 
 export const FAMILY_FEUD_DAILY_CONTENT_VERSION = "family-feud-daily-v2" as const;
 export const FAMILY_FEUD_DAILY_SCORING_VERSION = "family-feud-score-v2" as const;
@@ -356,11 +357,18 @@ function privatePack(context: FamilyFeudDailyRuntimeContext) {
   const pack: FamilyFeudPack = {
     ...persisted,
     entities: persisted.entities.map((entity) => {
-      const standardAliases = standardSportsFeudAliases(entity.displayName);
-      if (!standardAliases.length) return entity;
+      const current = sportsFeudCurrentEntityMetadata(entity.id, entity.displayName);
+      const aliases = [
+        ...new Set([
+          ...(entity.aliases ?? []),
+          ...standardSportsFeudAliases(entity.displayName),
+          ...(current?.aliases ?? []),
+        ]),
+      ];
       return {
         ...entity,
-        aliases: [...new Set([...(entity.aliases ?? []), ...standardAliases])],
+        kind: current?.kind ?? entity.kind,
+        aliases,
       };
     }),
   };
