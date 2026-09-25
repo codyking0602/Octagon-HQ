@@ -3,8 +3,10 @@ import type { MonitoringEvent } from "./manualMonitoringRunner";
 import {
   decideScheduledMonitoring,
   eventIsInAutomaticStagingWindow,
+  scheduledCardCheckIntervalMs,
   scheduledMonitoringIntervalMs,
   shouldAttemptAutomaticEventStaging,
+  shouldRunScheduledCardCheck,
 } from "./scheduledMonitoring";
 
 const now = new Date("2026-08-10T12:00:00Z");
@@ -43,7 +45,17 @@ describe("automatic Event Setup staging cadence", () => {
 });
 
 describe("scheduled monitoring cadence", () => {
-  it("stays twice daily through fight week and escalates only inside the final 48 hours", () => {
+  it("checks the official UFC card more aggressively than paid odds as fight time approaches", () => {
+    expect(scheduledCardCheckIntervalMs(event("2026-08-15T12:00:01Z"), now)).toBe(12 * 60 * 60 * 1000);
+    expect(scheduledCardCheckIntervalMs(event("2026-08-13T12:00:00Z"), now)).toBe(3 * 60 * 60 * 1000);
+    expect(scheduledCardCheckIntervalMs(event("2026-08-12T12:00:00Z"), now)).toBe(60 * 60 * 1000);
+    expect(scheduledCardCheckIntervalMs(event("2026-08-11T12:00:00Z"), now)).toBe(15 * 60 * 1000);
+
+    expect(shouldRunScheduledCardCheck(event("2026-08-11T12:00:00Z"), new Date("2026-08-10T12:15:00Z"))).toBe(true);
+    expect(shouldRunScheduledCardCheck(event("2026-08-11T12:00:00Z"), new Date("2026-08-10T12:20:00Z"))).toBe(false);
+  });
+
+  it("keeps the paid odds cadence twice daily through fight week and escalates only inside the final 48 hours", () => {
     expect(scheduledMonitoringIntervalMs(event("2026-08-25T12:00:01Z"), now)).toBe(24 * 60 * 60 * 1000);
     expect(scheduledMonitoringIntervalMs(event("2026-08-20T12:00:00Z"), now)).toBe(12 * 60 * 60 * 1000);
     expect(scheduledMonitoringIntervalMs(event("2026-08-15T12:00:00Z"), now)).toBe(12 * 60 * 60 * 1000);
