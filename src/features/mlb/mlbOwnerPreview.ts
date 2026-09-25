@@ -337,6 +337,9 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     description: "Two games. Four adaptive clues each.",
     route: "/mlb/challenge",
     date: "2026-10-01",
+    game_type: "wavelength",
+    ready: true,
+    is_live: true,
   },
 };
 

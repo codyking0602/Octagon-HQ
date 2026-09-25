@@ -39,6 +39,9 @@ describe("MLB owner preview", () => {
       title: "Wavelength",
       date: "2026-10-01",
       route: "/mlb/challenge",
+      game_type: "wavelength",
+      ready: true,
+      is_live: true,
     });
     expect(MLB_OWNER_PREVIEW_HUB.featuredChallenge?.description).not.toMatch(/preview|demo|test|tuning|prototype/i);
   });

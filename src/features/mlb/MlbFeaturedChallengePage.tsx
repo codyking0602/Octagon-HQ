@@ -8,10 +8,7 @@ import {
   type MlbFindLeaderBoard,
 } from "./mlbFindLeaderProduction";
 import {
-  MLB_PLAY_CURRENT_CHALLENGE_KEY,
-  loadMlbPlayPreviewResult,
   recordMlbPlayChallengeResult,
-  saveMlbPlayPreviewResult,
   type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
@@ -96,18 +93,21 @@ export default function MlbFeaturedChallengePage() {
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const { hub: liveHub } = useMlbPlayoffs(signedIn);
   const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
+  const challenge = liveHub?.featuredChallenge ?? null;
+  const challengeKey = challenge?.id ?? "";
   const {
     overview,
     loading: overviewLoading,
     reload: reloadOverview,
   } = useMlbPlayChallengeOverview({
-    enabled: signedIn && !previewMode,
-    season: 2026,
-    challengeKey: MLB_PLAY_CURRENT_CHALLENGE_KEY,
+    enabled: signedIn
+      && !previewMode
+      && challenge?.ready === true
+      && challenge?.is_live === true
+      && challenge?.game_type === "find_leader",
+    season: liveHub?.season ?? 2026,
+    challengeKey,
   });
-  const [previewSavedResult, setPreviewSavedResult] = useState<MlbPlayChallengeResult | null>(() => (
-    previewMode ? loadMlbPlayPreviewResult(MLB_PLAY_CURRENT_CHALLENGE_KEY) : null
-  ));
   const [practiceMode, setPracticeMode] = useState(false);
   const [boardIndex, setBoardIndex] = useState(0);
   const [eliminated, setEliminated] = useState<string[]>([]);
@@ -161,20 +161,15 @@ export default function MlbFeaturedChallengePage() {
         completedAt: new Date().toISOString(),
       };
 
-      if (previewMode) {
-        const stored = saveMlbPlayPreviewResult(MLB_PLAY_CURRENT_CHALLENGE_KEY, completed);
-        setPreviewSavedResult(stored);
-      } else {
-        await recordMlbPlayChallengeResult({
-          season: 2026,
-          challengeKey: MLB_PLAY_CURRENT_CHALLENGE_KEY,
-          rawScore: completed.rawScore,
-          gameType: completed.gameType,
-          publicResult: completed.publicResult,
-          resultDetail: completed.resultDetail,
-        });
-        await reloadOverview();
-      }
+      await recordMlbPlayChallengeResult({
+        season: liveHub?.season ?? 2026,
+        challengeKey,
+        rawScore: completed.rawScore,
+        gameType: completed.gameType,
+        publicResult: completed.publicResult,
+        resultDetail: completed.resultDetail,
+      });
+      await reloadOverview();
     } catch (nextError) {
       setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Play result could not be recorded.");
     } finally {
@@ -224,11 +219,55 @@ export default function MlbFeaturedChallengePage() {
   }
 
   const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
-  const savedResult = previewMode ? previewSavedResult : overview?.ownResult ?? null;
+  const savedResult = overview?.ownResult ?? null;
 
   if (previewMode) return <MlbWavelengthChallenge />;
 
-  if (!previewMode && overviewLoading && !overview && !practiceMode) {
+  if (!challenge || !challenge.is_live || !challenge.ready) {
+    return (
+      <div className="page mlb-find-leader-page">
+        <section className="mlb-find-saved-result">
+          <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+          <h1>{challenge?.title ?? "Next challenge coming soon."}</h1>
+          <p>{challenge?.is_live && !challenge.ready
+            ? "This scheduled challenge is not ready for play yet."
+            : "The next postseason challenge will unlock on its scheduled date."}</p>
+          <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+            MLB PLAY
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  if (challenge.game_type === "wavelength") {
+    return (
+      <MlbWavelengthChallenge
+        key={challenge.id}
+        mode="production"
+        season={liveHub?.season ?? 2026}
+        challengeKey={challenge.id}
+        challengeDate={challenge.date}
+      />
+    );
+  }
+
+  if (challenge.game_type !== "find_leader") {
+    return (
+      <div className="page mlb-find-leader-page">
+        <section className="mlb-find-saved-result">
+          <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+          <h1>{challenge.title}</h1>
+          <p>This challenge is scheduled, but its game experience has not been activated yet.</p>
+          <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+            MLB PLAY
+          </button>
+        </section>
+      </div>
+    );
+  }
+
+  if (overviewLoading && !overview && !practiceMode) {
     return (
       <div className="page mlb-find-leader-page">
         <section className="mlb-find-saved-result">

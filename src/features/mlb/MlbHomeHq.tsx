@@ -62,6 +62,8 @@ export function MlbHomeHq({
   const hub = previewActive ? MLB_OWNER_PREVIEW_HUB : liveHub;
   const championship = previewActive ? MLB_OWNER_PREVIEW_CHAMPIONSHIP : liveChampionship;
   const ownChampionship = championship?.own ?? null;
+  const featuredChallenge = hub?.featuredChallenge ?? null;
+  const challengePlayable = featuredChallenge?.ready === true && featuredChallenge?.is_live === true;
   const championshipPlayerCount = championship?.standings.length ?? 0;
   const roundSeries = hub?.series.filter((series) => series.round === hub.currentRound) ?? [];
   const submittedSeries = new Set(hub?.ownRoundPicks.map((pick) => pick.series_id) ?? []);
@@ -200,19 +202,19 @@ export function MlbHomeHq({
           <Link
             className="home-challenge-card"
             data-sport="mlb"
-            to={hub.featuredChallenge?.route ?? "/mlb"}
+            to={challengePlayable ? featuredChallenge?.route ?? "/mlb" : "/mlb"}
             aria-label="Open MLB Playoff Challenge"
           >
             <div className="home-challenge-card__copy">
               <div className="home-challenge-card__topline">
                 <span>MLB PLAYOFF CHALLENGE</span>
-                <small>{hub.featuredChallenge ? "READY" : "COMING SOON"}</small>
+                <small>{challengePlayable ? "READY" : "COMING SOON"}</small>
               </div>
-              <h3>{hub.featuredChallenge?.title ?? "Playoff Challenge"}</h3>
-              <p>{hub.featuredChallenge?.description ?? "A new challenge arrives during the postseason."}</p>
+              <h3>{featuredChallenge?.title ?? "Playoff Challenge"}</h3>
+              <p>{featuredChallenge?.description ?? "A new challenge arrives during the postseason."}</p>
             </div>
             <div className="home-challenge-card__result">
-              <strong>{hub.featuredChallenge ? "PLAY NOW" : "SOON"}</strong>
+              <strong>{challengePlayable ? "PLAY NOW" : "SOON"}</strong>
               <span>OPEN <b aria-hidden="true">→</b></span>
             </div>
           </Link>

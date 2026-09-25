@@ -27,6 +27,7 @@ vi.mock("./useMlbPlayChallengeOverview", () => ({
 
 vi.mock("./mlbPlayChallenge", () => ({
   MLB_PLAY_CURRENT_CHALLENGE_KEY: "mlb-2026-play-01",
+  MLB_PLAY_NEXT_CHALLENGE_KEY: "mlb-2026-play-02",
   loadMlbPlayPreviewResult: vi.fn(() => null),
   saveMlbPlayPreviewResult: vi.fn((_key, result) => result),
   recordMlbPlayChallengeResult: vi.fn(async () => ({
@@ -39,7 +40,23 @@ vi.mock("./mlbPlayChallenge", () => ({
 }));
 
 vi.mock("./useMlbPlayoffs", () => ({
-  useMlbPlayoffs: () => ({ hub: null }),
+  useMlbPlayoffs: () => ({
+    hub: {
+      season: 2026,
+      fieldReady: true,
+      featuredChallenge: {
+        id: "mlb-2026-play-01",
+        title: "Find the Leader",
+        kicker: "FIND THE LEADER",
+        description: "Two boards.",
+        route: "/mlb/challenge",
+        date: "2026-09-29",
+        game_type: "find_leader",
+        ready: true,
+        is_live: true,
+      },
+    },
+  }),
 }));
 
 function renderPage() {

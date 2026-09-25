@@ -10,6 +10,9 @@ const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_fo
 const picksParityMigration = readFileSync("supabase/migrations/202612310181_mlb_picks_football_parity.sql", "utf8");
 const championshipMigration = readFileSync("supabase/migrations/202612310182_mlb_postseason_championship.sql", "utf8");
 const playLeaderboardMigration = readFileSync("supabase/migrations/202612310183_mlb_play_challenge_leaderboard.sql", "utf8");
+const playScheduleMigration = readFileSync("supabase/migrations/202612310184_mlb_play_challenge_schedule.sql", "utf8");
+const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
+const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
 const championshipSummary = readFileSync("src/features/mlb/MlbChampionshipSummary.tsx", "utf8");
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
@@ -138,6 +141,23 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).not.toMatch(/DEMO|OWNER DESIGN|DISPOSABLE/);
     expect(styles).toContain('.today-hub[data-sport="mlb"]');
     expect(styles).toContain(".mlb-play-standings");
+  });
+
+  it("automatically schedules MLB Play in Central time and protects future results", () => {
+    expect(playScheduleMigration).toContain("America/Chicago");
+    expect(playScheduleMigration).toContain("date '2026-09-29'");
+    expect(playScheduleMigration).toContain("date '2026-10-01'");
+    expect(playScheduleMigration).toContain("date '2026-10-27'");
+    expect(playScheduleMigration).toContain("content_ready = slot in (1, 2, 10)");
+    expect(playScheduleMigration).toContain("get_mlb_postseason_active_challenge");
+    expect(playScheduleMigration).toContain("mlb_play_challenge_not_active");
+    expect(playScheduleMigration).toContain("mlb_play_challenge_not_ready");
+    expect(playScheduleMigration).toContain("mlb_play_challenge_game_type_mismatch");
+    expect(challengeSchedule).toContain('"2026-09-29"');
+    expect(challengeSchedule).toContain('"2026-10-01"');
+    expect(challengeSchedule).toContain('"2026-10-27"');
+    expect(mlbRepository).toContain('rpc("get_mlb_postseason_active_challenge"');
+    expect(mlbRepository).toContain("resolveMlbFeaturedChallenge()");
   });
 
   it("uses a distinct muted green MLB identity without changing Football geometry", () => {

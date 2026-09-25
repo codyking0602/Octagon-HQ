@@ -263,6 +263,7 @@ export default function MlbPlayoffsPage() {
   const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
   const championship = previewMode ? MLB_OWNER_PREVIEW_CHAMPIONSHIP : liveChampionship;
   const challenge = hub?.featuredChallenge ?? null;
+  const challengePlayable = challenge?.ready === true && challenge?.is_live === true;
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [panel, setPanel] = useState<"challenge" | "leaderboard">("challenge");
@@ -271,7 +272,7 @@ export default function MlbPlayoffsPage() {
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!challenge || !identity.profile) {
+    if (!challenge || !identity.profile || !challengePlayable) {
       setOverview(null);
       return;
     }
@@ -297,7 +298,7 @@ export default function MlbPlayoffsPage() {
     return () => {
       active = false;
     };
-  }, [challenge, hub?.season, identity.profile, previewMode]);
+  }, [challenge, challengePlayable, hub?.season, identity.profile, previewMode]);
 
   const selectedEntry = overview?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;
   const completed = Boolean(overview?.ownResult);
@@ -348,7 +349,10 @@ export default function MlbPlayoffsPage() {
             <button
               className="today-hub-card"
               type="button"
-              onClick={() => navigate(challenge.route)}
+              disabled={!challengePlayable}
+              onClick={() => {
+                if (challengePlayable) navigate(challenge.route);
+              }}
             >
               <div className="today-hub-card__topline">
                 <span>MLB PLAYOFF CHALLENGE</span>
@@ -357,11 +361,17 @@ export default function MlbPlayoffsPage() {
               <div className="today-hub-card__body">
                 <small>{completed && overview?.ownResult
                   ? `OFFICIAL RESULT · ${overview.ownResult.rawScore}`
-                  : "OFFICIAL PLAYOFF CHALLENGE"}</small>
+                  : !challenge.is_live
+                    ? `OPENS ${challengeDateLabel(challenge.date)}`
+                    : !challenge.ready
+                      ? "COMING SOON"
+                      : "OFFICIAL PLAYOFF CHALLENGE"}</small>
                 <h2>{challenge.title}</h2>
                 <p>{challenge.description}</p>
               </div>
-              <em>{completed ? "VIEW CHALLENGE" : "PLAY CHALLENGE"} →</em>
+              <em>{challengePlayable
+                ? completed ? "VIEW CHALLENGE" : "PLAY CHALLENGE"
+                : "COMING SOON"} →</em>
               <span className="today-hub-card__swipe">SWIPE FOR CHALLENGE LEADERBOARD →</span>
             </button>
 
@@ -374,7 +384,9 @@ export default function MlbPlayoffsPage() {
                 <span>{overview?.unlocked ? `${overview.playerCount} PLAYERS` : "LOCKED"}</span>
               </header>
 
-              {overviewLoading && !overview ? (
+              {!challengePlayable ? (
+                <p className="today-hub-empty">This challenge unlocks on its scheduled date.</p>
+              ) : overviewLoading && !overview ? (
                 <p className="today-hub-empty">Loading challenge leaderboard…</p>
               ) : !overview?.unlocked ? (
                 <p className="today-hub-empty">Finish this challenge to unlock the leaderboard and everyone’s completed result.</p>
