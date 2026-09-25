@@ -508,7 +508,7 @@ export default function MlbPicksPage() {
                   <div className="mlb-bracket-focus" aria-live="polite">
                     <div className="mlb-bracket-focus__topline">
                       <span>{focusedNode.league ? `${focusedNode.league} · ` : ""}{roundLabel(focusedNode)}</span>
-                      <strong>{focusedNode.points} PT{focusedNode.points === 1 ? "" : "S"}</strong>
+                      <strong>{MLB_CHAMPIONSHIP_SCORING.bracketRound[focusedNode.round]} PT{MLB_CHAMPIONSHIP_SCORING.bracketRound[focusedNode.round] === 1 ? "" : "S"}</strong>
                     </div>
                     <div className="mlb-bracket-focus__teams">
                       {[left, right].map((team) => team ? (
