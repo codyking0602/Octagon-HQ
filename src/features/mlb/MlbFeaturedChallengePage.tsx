@@ -1,18 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useIdentity } from "../identity/IdentityProvider";
 import {
   FootballFindLeaderPresentation,
   type FootballFindLeaderPresentationCandidate,
 } from "../back-room/FootballFindLeaderPresentation";
-import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import { useIdentity } from "../identity/IdentityProvider";
 import {
+  MLB_PLAY_CURRENT_CHALLENGE_KEY,
   recordMlbPlayChallengeResult,
-  saveMlbPlayPreviewResult,
-  type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
-import { useMlbPlayoffs } from "./useMlbPlayoffs";
+import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -36,8 +34,13 @@ interface ResultState {
   fatalId: string | null;
 }
 
-type CompletedGameResult = ResultState & {
+type CompletedGame = {
+  score: number;
+  perfect: boolean;
+  fatalId: string | null;
+  fatalName: string | null;
   eliminatedIds: string[];
+  safeCount: number;
 };
 
 const BOARD_ONE: MlbFindLeaderBoard = {
@@ -103,6 +106,12 @@ function boardLeader(board: MlbFindLeaderBoard) {
   ));
 }
 
+function storedGameScores(publicResult: Record<string, unknown>) {
+  const scores = publicResult.game_scores;
+  if (!Array.isArray(scores)) return [];
+  return scores.filter((score): score is number => typeof score === "number");
+}
+
 function MlbFindLeaderVisual({
   board,
   candidateId,
@@ -144,24 +153,31 @@ function MlbFindLeaderVisual({
 }
 
 export default function MlbFeaturedChallengePage() {
-  const navigate = useNavigate();
   const identity = useIdentity();
-  const signedIn = Boolean(identity.profile);
-  const { hub: liveHub } = useMlbPlayoffs(signedIn);
-  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
-  const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
-  const challengeKey = hub?.featuredChallenge?.id ?? MLB_OWNER_PREVIEW_HUB.featuredChallenge?.id ?? "mlb-2026-play-01";
-
+  const navigate = useNavigate();
+  const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
+  const {
+    overview,
+    loading: overviewLoading,
+    reload: reloadOverview,
+  } = useMlbPlayChallengeOverview({
+    enabled: signedIn,
+    season: 2026,
+    challengeKey: MLB_PLAY_CURRENT_CHALLENGE_KEY,
+  });
+  const [practiceMode, setPracticeMode] = useState(false);
   const [boardIndex, setBoardIndex] = useState(0);
   const [eliminated, setEliminated] = useState<string[]>([]);
   const [result, setResult] = useState<ResultState | null>(null);
-  const [completedGames, setCompletedGames] = useState<CompletedGameResult[]>([]);
-  const [saveStatus, setSaveStatus] = useState("");
+  const [completedScores, setCompletedScores] = useState<number[]>([]);
+  const [completedGames, setCompletedGames] = useState<CompletedGame[]>([]);
+  const [recording, setRecording] = useState(false);
+  const [recordError, setRecordError] = useState("");
   const board = MLB_FIND_LEADER_PREVIEW_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PREVIEW_BOARDS[0];
   const leader = boardLeader(board);
   const eliminatedSet = useMemo(() => new Set(eliminated), [eliminated]);
-  const finalScore = completedGames.length === MLB_FIND_LEADER_PREVIEW_BOARDS.length
-    ? Math.round(completedGames.reduce((sum, game) => sum + game.score, 0) / completedGames.length)
+  const finalScore = completedScores.length === MLB_FIND_LEADER_PREVIEW_BOARDS.length
+    ? Math.round(completedScores.reduce((sum, score) => sum + score, 0) / completedScores.length)
     : null;
 
   function resetBoard(nextBoardIndex = boardIndex) {
@@ -172,62 +188,66 @@ export default function MlbFeaturedChallengePage() {
   }
 
   function resetChallenge() {
+    setCompletedScores([]);
     setCompletedGames([]);
-    setSaveStatus("");
+    setRecordError("");
     resetBoard(0);
   }
 
-  async function persistCompletedChallenge(games: CompletedGameResult[]) {
-    const average = Math.round(games.reduce((sum, game) => sum + game.score, 0) / games.length);
-    const completed: MlbPlayChallengeResult = {
-      rawScore: average,
-      gameType: "find_leader",
-      publicResult: {
-        game_scores: games.map((game) => game.score),
-        average_score: average,
-      },
-      resultDetail: {
-        games: games.map((game, index) => ({
-          game: index + 1,
-          score: game.score,
-          perfect: game.perfect,
-          fatal_id: game.fatalId,
-          eliminated_ids: game.eliminatedIds,
-        })),
-      },
-      completedAt: new Date().toISOString(),
-    };
-
+  async function saveOfficialResult(score: number, games: CompletedGame[]) {
+    setRecording(true);
+    setRecordError("");
     try {
-      setSaveStatus("SAVING RESULT");
-      if (previewMode) {
-        saveMlbPlayPreviewResult(challengeKey, completed);
-      } else {
-        await recordMlbPlayChallengeResult({
-          season: 2026,
-          challengeKey,
-          rawScore: completed.rawScore,
-          gameType: completed.gameType,
-          publicResult: completed.publicResult,
-          resultDetail: completed.resultDetail,
-        });
-      }
-      setSaveStatus("RESULT SAVED");
-    } catch {
-      setSaveStatus("RESULT WILL RETRY");
+      await recordMlbPlayChallengeResult({
+        season: 2026,
+        challengeKey: MLB_PLAY_CURRENT_CHALLENGE_KEY,
+        rawScore: score,
+        gameType: "find_leader",
+        publicResult: {
+          game_scores: games.map((game) => game.score),
+          average_score: score,
+        },
+        resultDetail: {
+          games: games.map((game) => ({
+            score: game.score,
+            perfect: game.perfect,
+            safe_count: game.safeCount,
+            fatal_id: game.fatalId,
+            fatal_name: game.fatalName,
+            eliminated_ids: game.eliminatedIds,
+          })),
+        },
+      });
+      await reloadOverview();
+    } catch (nextError) {
+      setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Play result could not be recorded.");
+    } finally {
+      setRecording(false);
     }
   }
 
-  function finishBoard(nextResult: ResultState, nextEliminated: string[]) {
-    setResult(nextResult);
-    const completed: CompletedGameResult = {
-      ...nextResult,
-      eliminatedIds: nextEliminated,
+  function finishBoard(nextResult: ResultState, eliminatedIds: string[]) {
+    const fatal = nextResult.fatalId
+      ? board.candidates.find((candidate) => candidate.id === nextResult.fatalId) ?? null
+      : null;
+    const game: CompletedGame = {
+      score: nextResult.score,
+      perfect: nextResult.perfect,
+      fatalId: nextResult.fatalId,
+      fatalName: fatal?.name ?? null,
+      eliminatedIds,
+      safeCount: nextResult.perfect ? 9 : Math.max(0, eliminatedIds.length - 1),
     };
-    const nextGames = [...completedGames.slice(0, boardIndex), completed];
+    const nextScores = [...completedScores.slice(0, boardIndex), nextResult.score];
+    const nextGames = [...completedGames.slice(0, boardIndex), game];
+    setResult(nextResult);
+    setCompletedScores(nextScores);
     setCompletedGames(nextGames);
-    if (boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1) {
-      void persistCompletedChallenge(nextGames);
+
+    const isLastBoard = boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1;
+    if (isLastBoard && !practiceMode) {
+      const score = Math.round(nextScores.reduce((sum, value) => sum + value, 0) / nextScores.length);
+      void saveOfficialResult(score, nextGames);
     }
   }
 
@@ -248,6 +268,57 @@ export default function MlbFeaturedChallengePage() {
   }
 
   const isLastBoard = boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1;
+  const savedResult = overview?.ownResult ?? null;
+
+  if (overviewLoading && !overview && !practiceMode) {
+    return (
+      <div className="page mlb-find-leader-page">
+        <section className="mlb-find-saved-result">
+          <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+          <h1>Loading your challenge…</h1>
+        </section>
+      </div>
+    );
+  }
+
+  if (savedResult && !practiceMode) {
+    const scores = storedGameScores(savedResult.publicResult);
+    return (
+      <div className="page mlb-find-leader-page">
+        <section className="mlb-find-saved-result">
+          <p className="eyebrow">OFFICIAL RESULT</p>
+          <h1>Find the Leader</h1>
+          <strong>{savedResult.rawScore}<small>/100</small></strong>
+          {scores.length ? (
+            <div className="mlb-find-saved-result__games">
+              {scores.map((score, index) => (
+                <span key={index}>
+                  <small>GAME {index + 1}</small>
+                  <b>{score}</b>
+                </span>
+              ))}
+            </div>
+          ) : null}
+          <p>Your official score is locked. Replays do not change the postseason standings.</p>
+          <div className="mlb-find-final-actions">
+            <button
+              className="primary-action"
+              type="button"
+              onClick={() => {
+                setPracticeMode(true);
+                resetChallenge();
+              }}
+            >
+              PLAY AGAIN
+            </button>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="page football-find-leader-page mlb-find-leader-page">
@@ -295,16 +366,24 @@ export default function MlbFeaturedChallengePage() {
 
       {result && isLastBoard && finalScore !== null ? (
         <section className="mlb-find-final-score">
-          <p className="eyebrow">FINAL SCORE</p>
+          <p className="eyebrow">{practiceMode ? "REPLAY SCORE" : "FINAL SCORE"}</p>
           <strong>{finalScore}<small>/100</small></strong>
           <div>
-            <span>GAME 1 <b>{completedGames[0]?.score}</b></span>
-            <span>GAME 2 <b>{completedGames[1]?.score}</b></span>
+            <span>GAME 1 <b>{completedScores[0]}</b></span>
+            <span>GAME 2 <b>{completedScores[1]}</b></span>
           </div>
-          <p>Final score is the average of both Find the Leader boards.{saveStatus ? ` · ${saveStatus}` : ""}</p>
+          <p>
+            {practiceMode
+              ? "Replay complete. Your locked official result does not change."
+              : recording
+                ? "Saving your official postseason result…"
+                : recordError
+                  ? recordError
+                  : "Final score is the average of both Find the Leader boards."}
+          </p>
           <div className="mlb-find-final-actions">
             <button className="primary-action" type="button" onClick={resetChallenge}>PLAY AGAIN</button>
-            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>MLB PLAYOFFS</button>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>MLB PLAY</button>
           </div>
         </section>
       ) : null}
