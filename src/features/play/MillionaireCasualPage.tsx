@@ -162,6 +162,7 @@ function useFullscreenGameChrome() {
 
 const MILLIONAIRE_STAGE_WIDTH = 1600;
 const MILLIONAIRE_STAGE_HEIGHT = 900;
+const MILLIONAIRE_FIXED_STUDIO_BACKGROUND = "/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png";
 
 function useMillionaireStageScale() {
   const [scale, setScale] = useState(1);
@@ -216,7 +217,8 @@ function MillionaireGame({
   const levelNumber = gameState.currentQuestionIndex + 1;
   const q8 = level === "Q8";
   const stageScale = useMillionaireStageScale();
-  const stageBackground = millionaireHostAsset(league);
+  const stageHostAsset = millionaireHostAsset(league);
+  const stageBackground = league === "mlb" ? MILLIONAIRE_FIXED_STUDIO_BACKGROUND : stageHostAsset;
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
 
   function schedule(callback: () => void, delay: number) {
@@ -345,6 +347,11 @@ function MillionaireGame({
         style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
       >
       <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
+      {league === "mlb" ? (
+        <div className="millionaire-stage-host-slot millionaire-stage-host-slot--mlb" aria-hidden="true">
+          <img className="millionaire-stage-host" src={stageHostAsset} alt="" />
+        </div>
+      ) : null}
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
