@@ -1,11 +1,13 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import { adaptEspnUfcLiveFightState, ESPN_UFC_SCOREBOARD_URL, shouldPollEspnLiveFightState } from "../../../src/features/picks-monitoring/espnLiveFightState.ts";
 import { adaptTheOddsApiResponse, buildTheOddsApiRequestUrl } from "../../../src/features/picks-monitoring/theOddsApi.ts";
-import { buildManualMonitoringPayload, monitoringSummary, resolveMonitoringEvent, type CardScope, type MonitoringEvent, type SourcePreview } from "../../../src/features/picks-monitoring/manualMonitoringRunner.ts";
+import { buildManualMonitoringPayload, monitoringSummary, resolveMonitoringEvent, sourceMatchesMonitoredEvent, type CardScope, type MonitoringEvent, type SourcePreview } from "../../../src/features/picks-monitoring/manualMonitoringRunner.ts";
+import { buildCardChangeFindings } from "../../../src/features/picks-monitoring/cardChangeApproval.ts";
 import {
   decideScheduledMonitoring,
   eventIsInAutomaticStagingWindow,
   shouldAttemptAutomaticEventStaging,
+  shouldRunScheduledCardSourceCheck,
   type ScheduledMonitoringState,
 } from "../../../src/features/picks-monitoring/scheduledMonitoring.ts";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
@@ -294,6 +296,74 @@ Deno.serve(async (request) => {
     }
   }
 
+  let scheduledCardPreview: { event_preview?: SourcePreview; effective_scope?: CardScope } | null = null;
+  let forceCardRefresh = false;
+
+  if (
+    scheduled
+    && resolved.kind === "current"
+    && shouldRunScheduledCardSourceCheck(resolved.selected, new Date())
+  ) {
+    const selectedEvent = asRecord(resolved.selected);
+    const sourceUrl = typeof selectedEvent?.source_url === "string"
+      ? selectedEvent.source_url.trim()
+      : "";
+    const sourceEventKey = typeof selectedEvent?.source_event_key === "string"
+      ? selectedEvent.source_event_key.trim()
+      : "";
+    const previewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: serviceKey },
+      body: JSON.stringify({
+        mode: "monitoring-preview",
+        ...(sourceUrl ? { source_url: sourceUrl } : {}),
+        ...(sourceEventKey ? { source_event_key: sourceEventKey } : {}),
+      }),
+    });
+    scheduledCardPreview = await previewResponse.json().catch(() => null) as {
+      event_preview?: SourcePreview;
+      effective_scope?: CardScope;
+    } | null;
+
+    if (!previewResponse.ok || !scheduledCardPreview?.event_preview || !scheduledCardPreview.effective_scope) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "source_preview_failed",
+        identity: resolved.identity,
+        providerCalled: false,
+        response: safeError(502, "SOURCE_PREVIEW_FAILED", "The official UFC card check failed safely."),
+      });
+    }
+    if (!sourceMatchesMonitoredEvent(scheduledCardPreview.event_preview, resolved.selected)) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "event_identity_mismatch",
+        identity: resolved.identity,
+        providerCalled: false,
+        response: safeError(409, "EVENT_IDENTITY_MISMATCH", "The official UFC card check did not match the monitored event."),
+      });
+    }
+
+    const ignored = new Set(resolved.ignoredBoutIds);
+    const comparisonSource = ignored.size
+      ? {
+          ...scheduledCardPreview.event_preview,
+          bouts: scheduledCardPreview.event_preview.bouts.filter((bout) => !ignored.has(bout.bout_id)),
+        }
+      : scheduledCardPreview.event_preview;
+    const cardFindings = buildCardChangeFindings({
+      identity: resolved.identity,
+      kind: resolved.kind,
+      eventId: resolved.storageEventId,
+      canonical: resolved.selected,
+      source: comparisonSource,
+      scope: scheduledCardPreview.effective_scope,
+      detectedAt: new Date().toISOString(),
+      allBoutIds: resolved.allBoutIds,
+    });
+    forceCardRefresh = cardFindings.length > 0;
+  }
+
   let suppressFindingKeys = new Set<string>();
   let scheduledClaimedAt: string | null = null;
   let scheduledNextEligibleAt: string | null = null;
@@ -309,7 +379,7 @@ Deno.serve(async (request) => {
     }
     const scheduleState = asRecord(scheduleStateResponse.data) as ScheduledMonitoringState & { existing_finding_keys?: unknown } | null;
     const decision = decideScheduledMonitoring({ event: resolved.selected, now: new Date(), state: scheduleState });
-    if (!decision.due) {
+    if (!decision.due && !forceCardRefresh) {
       return finishScheduledDecision({
         outcome: "skipped",
         reason: decision.reason,
@@ -319,28 +389,30 @@ Deno.serve(async (request) => {
       });
     }
 
-    scheduledClaimedAt = new Date().toISOString();
-    scheduledNextEligibleAt = decision.next_eligible_at;
-    const claim = await admin.rpc("claim_pick_monitoring_schedule", {
-      p_source_event_identity: resolved.identity,
-      p_now: scheduledClaimedAt,
-    });
-    if (claim.error) {
-      return finishScheduledDecision({
-        outcome: "failed",
-        reason: "schedule_claim_failed",
-        identity: resolved.identity,
-        nextEligibleAt: scheduledNextEligibleAt,
-        response: safeError(503, "SCHEDULE_CLAIM_FAILED", "Monitoring schedule could not be claimed safely."),
+    if (decision.due) {
+      scheduledClaimedAt = new Date().toISOString();
+      scheduledNextEligibleAt = decision.next_eligible_at;
+      const claim = await admin.rpc("claim_pick_monitoring_schedule", {
+        p_source_event_identity: resolved.identity,
+        p_now: scheduledClaimedAt,
       });
-    }
-    if (claim.data !== true) {
-      return finishScheduledDecision({
-        outcome: "skipped",
-        reason: "already_claimed",
-        identity: resolved.identity,
-        response: noOp("already_claimed", resolved.identity, undefined, notificationDispatch, liveStateSync),
-      });
+      if (claim.error) {
+        return finishScheduledDecision({
+          outcome: "failed",
+          reason: "schedule_claim_failed",
+          identity: resolved.identity,
+          nextEligibleAt: scheduledNextEligibleAt,
+          response: safeError(503, "SCHEDULE_CLAIM_FAILED", "Monitoring schedule could not be claimed safely."),
+        });
+      }
+      if (claim.data !== true) {
+        return finishScheduledDecision({
+          outcome: "skipped",
+          reason: "already_claimed",
+          identity: resolved.identity,
+          response: noOp("already_claimed", resolved.identity, undefined, notificationDispatch, liveStateSync),
+        });
+      }
     }
     suppressFindingKeys = new Set(Array.isArray(scheduleState?.existing_finding_keys)
       ? scheduleState.existing_finding_keys.filter((value): value is string => typeof value === "string")
@@ -378,17 +450,22 @@ Deno.serve(async (request) => {
   const sourceEventKey = typeof selectedEvent?.source_event_key === "string"
     ? selectedEvent.source_event_key.trim()
     : "";
-  const previewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", apikey: serviceKey },
-    body: JSON.stringify({
-      mode: "monitoring-preview",
-      ...(sourceUrl ? { source_url: sourceUrl } : {}),
-      ...(sourceEventKey ? { source_event_key: sourceEventKey } : {}),
-    }),
-  });
-  const previewBody = await previewResponse.json().catch(() => null) as { event_preview?: SourcePreview; effective_scope?: CardScope } | null;
-  if (!previewResponse.ok || !previewBody?.event_preview || !previewBody.effective_scope) {
+  let previewBody = scheduledCardPreview;
+  let previewResponseOk = Boolean(previewBody?.event_preview && previewBody?.effective_scope);
+  if (!previewResponseOk) {
+    const previewResponse = await fetch(`${url}/functions/v1/sync-next-ufc-event`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: serviceKey },
+      body: JSON.stringify({
+        mode: "monitoring-preview",
+        ...(sourceUrl ? { source_url: sourceUrl } : {}),
+        ...(sourceEventKey ? { source_event_key: sourceEventKey } : {}),
+      }),
+    });
+    previewResponseOk = previewResponse.ok;
+    previewBody = await previewResponse.json().catch(() => null) as { event_preview?: SourcePreview; effective_scope?: CardScope } | null;
+  }
+  if (!previewResponseOk || !previewBody?.event_preview || !previewBody.effective_scope) {
     const retryAt = retryInOneHour();
     await releaseSchedule(retryAt);
     return finishScheduledDecision({
@@ -429,7 +506,7 @@ Deno.serve(async (request) => {
     });
   }
 
-  const recorded = scheduled
+  const recorded = scheduled && scheduledClaimedAt && scheduledNextEligibleAt
     ? await admin.rpc("record_scheduled_pick_monitoring_run", {
         p_payload: payload,
         p_claimed_at: scheduledClaimedAt,
