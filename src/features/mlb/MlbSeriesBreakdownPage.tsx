@@ -54,7 +54,7 @@ export default function MlbSeriesBreakdownPage() {
     <div className="page mlb-series-breakdown-page">
       <section className="page-heading mlb-series-breakdown-page__heading">
         <p className="eyebrow">MLB PLAYOFFS · SERIES BREAKDOWN</p>
-        <h1>{spotlight?.title ?? ${series.team_a_name} vs. ${series.team_b_name}}</h1>
+        <h1>{spotlight?.title ?? `${series.team_a_name} vs. ${series.team_b_name}`}</h1>
         <p>{spotlight?.status ?? series.label}</p>
       </section>
 
