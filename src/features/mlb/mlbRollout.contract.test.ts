@@ -122,10 +122,12 @@ describe("MLB Playoffs rollout gate", () => {
     expect(styles).toContain("--bracket-zoom: 1.72");
   });
 
-  it("keeps MLB Play focused on the featured challenge", () => {
-    expect(mlbPlay).toContain("Featured Challenge");
+  it("keeps MLB Play focused on the current playoff challenge", () => {
+    expect(mlbPlay).toContain("MLB PLAYOFF CHALLENGE");
+    expect(mlbPlay).toContain("Two boards. One final score.");
     expect(mlbPlay).toContain('to="/mlb/challenge"');
     expect(mlbPlay).not.toContain("MlbHomeHq");
+    expect(mlbPlay).not.toMatch(/DEMO|OWNER DESIGN|DISPOSABLE/);
   });
 
   it("uses a distinct muted green MLB identity without changing Football geometry", () => {
@@ -160,10 +162,10 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbHome).toContain("SERIES PICKS STANDING");
     expect(mlbHome).toContain("ownChampionship.series_rank");
     expect(mlbHome).toContain("ownChampionship.bracket_rank");
-    expect(mlbHome).toContain("ownChampionship.play_rank");
+    expect(mlbHome).toContain("MLB PLAYOFF CHALLENGE");
+    expect(mlbHome).not.toContain("ownChampionship.play_rank");
     expect(mlbHome).toContain("championship.seriesMax");
     expect(mlbHome).toContain("championship.bracketMax");
-    expect(mlbHome).toContain("championship.playMax");
     expect(styles).toContain(".mlb-home-championship-trigger");
     expect(styles).toContain(".mlb-home-championship-summary");
   });
