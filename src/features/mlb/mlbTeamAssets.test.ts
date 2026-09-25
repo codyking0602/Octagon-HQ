@@ -23,5 +23,6 @@ describe("MLB team visual assets", () => {
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Aaron Judge");
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("592450");
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.stats).toHaveLength(4);
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toContain("mlb.com/video/");
   });
 });
