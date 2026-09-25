@@ -39,7 +39,23 @@ vi.mock("./mlbPlayChallenge", () => ({
 }));
 
 vi.mock("./useMlbPlayoffs", () => ({
-  useMlbPlayoffs: () => ({ hub: null }),
+  useMlbPlayoffs: () => ({
+    hub: {
+      season: 2026,
+      fieldReady: true,
+      featuredChallenge: {
+        id: "mlb-2026-play-01",
+        title: "Find the Leader",
+        kicker: "FIND THE LEADER",
+        description: "Two boards.",
+        route: "/mlb/challenge",
+        date: "2026-09-29",
+        game_type: "find_leader",
+        ready: true,
+        is_live: true,
+      },
+    },
+  }),
 }));
 
 function renderPage() {
