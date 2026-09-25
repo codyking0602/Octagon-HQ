@@ -21,6 +21,21 @@ import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
+interface ResultState {
+  score: number;
+  perfect: boolean;
+  fatalId: string | null;
+}
+
+type CompletedGame = {
+  score: number;
+  perfect: boolean;
+  fatalId: string | null;
+  fatalName: string | null;
+  eliminatedIds: string[];
+  safeCount: number;
+};
+
 function boardLeader(board: MlbFindLeaderBoard) {
   return board.candidates.reduce((leader, candidate) => (
     (candidate.value ?? Number.NEGATIVE_INFINITY) > (leader.value ?? Number.NEGATIVE_INFINITY)
@@ -101,7 +116,7 @@ export default function MlbFeaturedChallengePage() {
   const [completedGames, setCompletedGames] = useState<CompletedGame[]>([]);
   const [recording, setRecording] = useState(false);
   const [recordError, setRecordError] = useState("");
-  const board = MLB_FIND_LEADER_PRODUCTION_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PRODUCTION_BOARDS[0];
+  const board = MLB_FIND_LEADER_PRODUCTION_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PRODUCTION_BOARDS[0]!;
   const leader = boardLeader(board);
   const eliminatedSet = useMemo(() => new Set(eliminated), [eliminated]);
   const finalScore = completedScores.length === MLB_FIND_LEADER_PRODUCTION_BOARDS.length
