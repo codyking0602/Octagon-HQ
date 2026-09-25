@@ -91,4 +91,5 @@ export const MLB_OWNER_PLAYER_SPOTLIGHT = {
     { label: "OPS", value: ".871" },
   ],
   meta: "2026 REGULAR SEASON",
+  highlightUrl: "https://www.mlb.com/video/aaron-judge-homers-7-on-a-fly-ball-to-right-field",
 } as const;
