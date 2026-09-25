@@ -9,6 +9,7 @@ const router = readFileSync("src/app/router.tsx", "utf8");
 const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_foundation.sql", "utf8");
 const picksParityMigration = readFileSync("supabase/migrations/202612310181_mlb_picks_football_parity.sql", "utf8");
 const championshipMigration = readFileSync("supabase/migrations/202612310182_mlb_postseason_championship.sql", "utf8");
+const playLeaderboardMigration = readFileSync("supabase/migrations/202612310183_mlb_play_challenge_leaderboard.sql", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
 const championshipSummary = readFileSync("src/features/mlb/MlbChampionshipSummary.tsx", "utf8");
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
