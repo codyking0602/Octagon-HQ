@@ -118,8 +118,8 @@ function selectBouts(card: UfcEventCard, scope: EffectiveScope) {
 
 function toStagedBouts(bouts: Array<ParsedCardBout & SequencedBoutMetadata>) {
   return bouts.map((bout, index): StagedBout => {
-    const redSlug = slugify(bout.red_fighter_name);
-    const blueSlug = slugify(bout.blue_fighter_name);
+    const redSlug = bout.red_fighter_source_id || slugify(bout.red_fighter_name);
+    const blueSlug = bout.blue_fighter_source_id || slugify(bout.blue_fighter_name);
     return {
       bout_id: `${bout.section}-${redSlug}-${blueSlug}`,
       position: index + 1,
