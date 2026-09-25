@@ -66,11 +66,14 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbSeries).not.toContain("mlb-preview-banner");
     expect(mlbSeries).not.toContain('"OWNER PREVIEW"');
     expect(mlbOwnerFixture).not.toContain("Preview matchup");
-    expect(mlbPicks).toContain('className="mlb-league-bracket"');
-    expect(mlbPicks).toContain('className="mlb-world-series-stage"');
-    expect(mlbPicks).toContain('className="surface-card mlb-race-bracket"');
+    expect(mlbPicks).toContain('className="mlb-full-bracket__canvas"');
+    expect(mlbPicks).toContain('className="mlb-bracket-focus"');
+    expect(mlbPicks).toContain("SWIPE BRACKETS");
+    expect(mlbPicks).toContain("nextBracketGuideNode");
+    expect(mlbPicks).not.toContain('id="mlb-bracket-race"');
     expect(mlbPicks).toContain("mlb-round-series-card");
-    expect(styles).toContain("scroll-snap-type: x proximity");
+    expect(styles).toContain('[data-focus-zone="al-wc"]');
+    expect(styles).toContain(".mlb-bracket-mini-team.is-picked");
     expect(styles).toContain(".mlb-round-team.is-selected");
   });
 
