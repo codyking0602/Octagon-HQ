@@ -145,7 +145,8 @@ export function AppShell() {
   const isFootballGame = Boolean(footballGameTitle);
   const isMillionaireGame = location.pathname === "/play/millionaire" || location.pathname === "/football/millionaire";
   const isMlbGame = location.pathname === "/mlb/challenge";
-  const isGame = isPlayGame || isFootballGame || isMillionaireGame || isMlbGame;
+  const isMlbSeries = location.pathname.startsWith("/mlb/series/");
+  const isGame = isPlayGame || isFootballGame || isMillionaireGame || isMlbGame || isMlbSeries;
   const isBackRoom = location.pathname === "/back-room" || location.pathname.startsWith("/back-room/");
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const isMlb = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
@@ -174,7 +175,14 @@ export function AppShell() {
     >
       <RouteScrollManager />
 
-      {isMillionaireGame ? null : isMlbGame ? (
+      {isMillionaireGame ? null : isMlbSeries ? (
+        <header className="app-header app-header--game">
+          <Link className="game-header__back" to="/" aria-label="Return to Home">
+            <span aria-hidden="true">←</span>
+            <span><small>MLB PLAYOFFS</small><strong>Series Breakdown</strong></span>
+          </Link>
+        </header>
+      ) : isMlbGame ? (
         <header className="app-header app-header--game">
           <Link className="game-header__back" to="/mlb" aria-label="Return to MLB Playoffs">
             <span aria-hidden="true">←</span>
