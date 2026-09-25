@@ -92,6 +92,20 @@ body.millionaire-daily-active .bottom-nav {
   user-select: none;
 }
 
+/* MLB uses a portrait transparent cutout. Preserve its intrinsic ratio instead
+   of cropping it into the generic near-square host image box. */
+.millionaire-stage-host-slot--mlb .millionaire-stage-host {
+  left: 54%;
+  right: auto;
+  top: auto;
+  bottom: -2%;
+  width: auto;
+  height: 108%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: translateX(-50%);
+}
+
 /* Keep the photographic background visible; old synthetic stage layers do not participate. */
 .millionaire-shell--fixed-stage .millionaire-arena,
 .millionaire-shell--fixed-stage .millionaire-crowd,

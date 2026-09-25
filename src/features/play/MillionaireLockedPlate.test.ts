@@ -26,6 +26,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
     expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot::before \{[^}]*background:/);
     expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot::after \{[^}]*background:/);
     expect(fixedCss).toMatch(/\.millionaire-stage-host \{[\s\S]*?left: -7%;[\s\S]*?bottom: -1\.5%;[\s\S]*?width: 114%;[\s\S]*?height: 105%;[\s\S]*?object-fit: cover;[\s\S]*?object-position: center 38%;/);
+    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot--mlb \.millionaire-stage-host \{[^}]*left: 54%;[^}]*bottom: -2%;[^}]*width: auto;[^}]*height: 108%;[^}]*object-fit: contain;[^}]*object-position: center bottom;[^}]*transform: translateX\(-50%\);/);
   });
 
   it("renders gameplay on a single fixed 1600x900 coordinate system", () => {
