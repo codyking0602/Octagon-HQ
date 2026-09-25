@@ -23,7 +23,18 @@ export interface SportsFeudQuestionFamily {
 }
 
 const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
-  "Arrowhead Stadium": ["Arrowhead", "Chiefs", "Kansas City"],
+  "Arrowhead Stadium": ["Arrowhead", "Chiefs", "Kansas City", "Kansas City Chiefs"],
+  "Lumen Field": ["Lumen", "Seahawks", "Seattle", "Seattle Seahawks"],
+  "Lambeau Field": ["Lambeau", "Packers", "Green Bay", "Green Bay Packers"],
+  "Highmark Stadium": ["Highmark", "Bills", "Buffalo", "Buffalo Bills"],
+  "Superdome": ["Caesars Superdome", "Saints", "New Orleans", "New Orleans Saints"],
+  "Lincoln Financial Field": ["The Linc", "Linc", "Eagles", "Philadelphia", "Philadelphia Eagles"],
+  "M&T Bank Stadium": ["M and T", "Ravens", "Baltimore", "Baltimore Ravens"],
+  "U.S. Bank Stadium": ["US Bank", "Vikings", "Minnesota", "Minnesota Vikings"],
+  "Ford Field": ["Lions", "Detroit", "Detroit Lions"],
+  "Empower Field at Mile High": ["Mile High", "Broncos", "Denver", "Denver Broncos"],
+  "Punt coverage": ["Cover punt", "Cover punts", "Punt cover", "Punt team"],
+  "Kick coverage": ["Cover kick", "Cover kicks", "Kick cover", "Kickoff coverage"],
   "Defensive Player of the Year": ["DPOY"],
   "Offensive Player of the Year": ["OPOY"],
   "Offensive Rookie of the Year": ["OROY"],
