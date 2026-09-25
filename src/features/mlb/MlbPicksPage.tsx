@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useIdentity } from "../identity/IdentityProvider";
 import { MLB_ROUND_LABELS } from "./mlbPlayoffsConfig";
 import {
@@ -376,7 +376,12 @@ export default function MlbPicksPage() {
                 type="button"
                 key={team.id}
                 aria-pressed={isSelected}
+                aria-label={`${team.name} ${team.side === "away" ? "away" : "home"}`}
                 className={`football-pick-team is-${team.side}${isSelected ? " is-selected" : ""}${eliminated ? " is-eliminated" : ""}`}
+                style={{ "--football-pick-team-color": mlbTeamColor(
+                  team.id === series.team_a_id ? assetA?.abbreviation : assetB?.abbreviation,
+                  team.name,
+                ) } as CSSProperties}
                 disabled={locked || completeSeries || (!previewMode && saving === series.series_id)}
                 onClick={() => {
                   if (previewMode) {
