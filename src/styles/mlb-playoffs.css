@@ -3453,3 +3453,64 @@
   }
 }
 
+
+
+/* MLB Wavelength — shared Football Wavelength structure with MLB identity */
+.wavelength-page--mlb {
+  --wavelength-accent: var(--mlb-green);
+  --wavelength-accent-strong: var(--mlb-green-strong);
+  --wavelength-accent-rgb: var(--mlb-green-rgb);
+}
+
+.app-shell--mlb-room .mlb-wavelength-page .wavelength-guess-panel .primary-action,
+.app-shell--mlb-room .mlb-wavelength-page .mlb-find-between-games .primary-action,
+.app-shell--mlb-room .mlb-wavelength-page .mlb-find-final-actions .primary-action {
+  border-color: var(--mlb-green);
+  background: var(--mlb-green);
+  color: #fff;
+}
+
+.app-shell--mlb-room .mlb-wavelength-page .wavelength-guess-panel input[type="range"] {
+  accent-color: var(--mlb-green);
+}
+
+.app-shell--mlb-room .mlb-wavelength-page :is(
+  .football-debate-result-hero,
+  .football-wavelength-final-numbers,
+  .football-wavelength-reveal,
+  .football-wavelength-path
+) {
+  border-color: rgba(var(--mlb-green-rgb), .34);
+  background:
+    radial-gradient(circle at 100% 0, rgba(var(--mlb-green-rgb), .10), transparent 42%),
+    #0c0f15;
+  box-shadow: none;
+}
+
+.app-shell--mlb-room .mlb-wavelength-page .football-debate-result-hero > .eyebrow,
+.app-shell--mlb-room .mlb-wavelength-page .football-wavelength-reveal .eyebrow {
+  color: var(--mlb-green-strong);
+}
+
+.app-shell--mlb-room .mlb-wavelength-page .football-wavelength-reveal article {
+  border-color: rgba(var(--mlb-green-rgb), .18);
+  background: rgba(var(--mlb-green-rgb), .025);
+}
+
+.app-shell--mlb-room .mlb-wavelength-page .football-wavelength-rules {
+  color: var(--text-muted);
+}
+
+.app-shell--mlb-room .mlb-wavelength-page .find-secondary-action {
+  border-color: rgba(var(--mlb-green-rgb), .32);
+}
+
+@media (max-width: 430px) {
+  .app-shell--mlb-room .mlb-wavelength-page {
+    padding-top: .5rem;
+  }
+
+  .app-shell--mlb-room .mlb-wavelength-page .football-debate-result-hero {
+    padding: 1.2rem;
+  }
+}
