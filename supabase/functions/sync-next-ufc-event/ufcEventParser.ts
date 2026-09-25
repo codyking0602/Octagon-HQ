@@ -93,10 +93,25 @@ function metaContent(html: string, key: string) {
 function classText(html: string, className: string) {
   const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const pattern = new RegExp(
-    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
+    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["\'][^"\']*\\b${escaped}\\b[^"\']*["\'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
     "i",
   );
   return visibleText(pattern.exec(html)?.[3] ?? "");
+}
+
+function classTexts(html: string, className: string) {
+  const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(
+    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["\'][^"\']*\\b${escaped}\\b[^"\']*["\'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
+    "gi",
+  );
+  const values: string[] = [];
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(html))) {
+    const value = visibleText(match[3] ?? "");
+    if (value) values.push(value);
+  }
+  return values;
 }
 
 function firstTagText(html: string, tag: string) {
@@ -204,9 +219,21 @@ function namesFromRow(row: string) {
   const blue = canonicalName(classBlockText(row, "c-listing-fight__corner-name--blue"));
   if (red && blue) return [red, blue];
 
-  const title = classBlockText(row, "field--name-node-title");
-  const titlePair = splitVersus(title).map(canonicalName).filter(Boolean);
-  if (titlePair.length === 2) return titlePair;
+  const titles = classTexts(row, "field--name-node-title");
+  for (const title of titles) {
+    const titlePair = splitVersus(title).map(canonicalName).filter(Boolean);
+    if (titlePair.length === 2) return titlePair;
+  }
+
+  // Late UFC replacements can arrive before the newcomer has a canonical athlete
+  // page. In that markup UFC emits one node-title block per fighter instead of the
+  // normal red/blue corner wrappers. Accept only an exact two-name set so a stray
+  // CMS title can never turn into a synthetic matchup.
+  const titleNames = titles.map(canonicalName).filter(Boolean);
+  const uniqueTitleNames = [...new Map(
+    titleNames.map((name) => [normalizeText(name), name] as const),
+  ).values()];
+  if (uniqueTitleNames.length === 2) return uniqueTitleNames;
 
   const linked = anchorFighterNames(row);
   return linked.length === 2 ? linked : [];
