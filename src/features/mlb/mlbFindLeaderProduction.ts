@@ -42,6 +42,28 @@ export const MLB_FIND_LEADER_BURNED_CONTENT = {
     "john-smoltz",
     "sandy-koufax",
   ],
+  candidateNames: [
+    "Ken Griffey Jr.",
+    "Cal Ripken Jr.",
+    "David Ortiz",
+    "Tony Gwynn",
+    "Stan Musial",
+    "Derek Jeter",
+    "Miguel Cabrera",
+    "Barry Bonds",
+    "Hank Aaron",
+    "Albert Pujols",
+    "Randy Johnson",
+    "Roger Clemens",
+    "Steve Carlton",
+    "Tom Seaver",
+    "Greg Maddux",
+    "Pedro Martinez",
+    "Bob Gibson",
+    "Curt Schilling",
+    "John Smoltz",
+    "Sandy Koufax",
+  ],
 } as const;
 
 /**
