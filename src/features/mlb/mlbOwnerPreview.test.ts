@@ -33,13 +33,13 @@ describe("MLB owner preview", () => {
     expect(MLB_OWNER_PREVIEW_HUB.spotlight?.series_id).toBe("al-wc-2");
     expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.teams.every((team) => Boolean(team.logo_url))).toBe(true);
   });
-  it("presents the October 1 Wavelength card exactly as a live challenge", () => {
+  it("presents the October 3 Millionaire card exactly as a live challenge", () => {
     expect(MLB_OWNER_PREVIEW_HUB.featuredChallenge).toMatchObject({
-      id: "mlb-2026-play-02",
-      title: "Wavelength",
-      date: "2026-10-01",
+      id: "mlb-2026-play-03",
+      title: "Who Wants to Be a Millionaire?",
+      date: "2026-10-03",
       route: "/mlb/challenge",
-      game_type: "wavelength",
+      game_type: "millionaire",
       ready: true,
       is_live: true,
     });
