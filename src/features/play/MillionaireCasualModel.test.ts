@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertMillionaireRun, advanceMillionaireRuntime, createMillionaireState } from "../games/millionaireEngine";
 import {
+  MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS,
   MILLIONAIRE_REVEAL_DELAY_MS,
   MILLIONAIRE_TIME_BANK_MS,
   millionaireCasualRun,
@@ -11,7 +12,7 @@ import {
   type MillionaireLeague,
 } from "./MillionaireCasualModel";
 
-const leagues: readonly MillionaireLeague[] = ["ufc", "nfl", "cfb"];
+const leagues: readonly MillionaireLeague[] = ["ufc", "nfl", "cfb", "mlb"];
 
 function answerCorrectly(league: MillionaireLeague, count: number) {
   const run = millionaireCasualRun(league);
@@ -85,7 +86,7 @@ describe("Millionaire private casual runtime", () => {
     expect(numbers[3]).toBe(numbers[0]);
   });
 
-  it("uses the nine approved sport-scoped background hosts", () => {
+  it("uses the approved sport-scoped background hosts including the MLB owner plate", () => {
     expect([
       millionaireHostAsset("cfb", "2026-09-17"),
       millionaireHostAsset("cfb", "2026-09-18"),
@@ -115,6 +116,17 @@ describe("Millionaire private casual runtime", () => {
       "/assets/millionaire/Ufc2.png",
       "/assets/millionaire/Ufc3.png",
     ].sort());
+
+    expect(millionaireHostAsset("mlb", "2026-10-03")).toBe("/assets/millionaire/1mlb.webp");
+  });
+
+  it("locks the MLB owner run as eight permanently burned review questions", () => {
+    const run = millionaireCasualRun("mlb");
+    expect(run.map((question) => question.prompt)).toEqual(MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS);
+    expect(new Set(run.map((question) => question.prompt)).size).toBe(8);
+    expect(run.slice(0, 7).every((question) => Boolean(question.statSheet))).toBe(true);
+    expect(run[7].statSheet).toBeNull();
+    expect(run.map((question) => question.correctChoiceId)).toEqual(["B", "D", "A", "C", "B", "D", "C", "A"]);
   });
 
   it("settles a timeout to the latest checkpoint", () => {
