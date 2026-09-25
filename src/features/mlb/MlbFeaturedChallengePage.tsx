@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FootballFindLeaderPresentation,
-  type FootballFindLeaderPresentationCandidate,
-} from "../back-room/FootballFindLeaderPresentation";
+import { FootballFindLeaderPresentation } from "../back-room/FootballFindLeaderPresentation";
 import { useIdentity } from "../identity/IdentityProvider";
+import {
+  MLB_FIND_LEADER_PRODUCTION_BOARDS,
+  formatMlbFindLeaderValue,
+  type MlbFindLeaderBoard,
+} from "./mlbFindLeaderProduction";
 import {
   MLB_PLAY_CURRENT_CHALLENGE_KEY,
   loadMlbPlayPreviewResult,
@@ -18,90 +20,6 @@ import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
-
-type MlbFindLeaderCandidate = FootballFindLeaderPresentationCandidate & {
-  teamAbbreviation: string;
-};
-
-type MlbFindLeaderBoard = {
-  id: string;
-  question: string;
-  context: string;
-  categoryLabel: string;
-  statLabel: string;
-  shortLabel: string;
-  candidates: readonly MlbFindLeaderCandidate[];
-};
-
-interface ResultState {
-  score: number;
-  perfect: boolean;
-  fatalId: string | null;
-}
-
-type CompletedGame = {
-  score: number;
-  perfect: boolean;
-  fatalId: string | null;
-  fatalName: string | null;
-  eliminatedIds: string[];
-  safeCount: number;
-};
-
-const BOARD_ONE: MlbFindLeaderBoard = {
-  id: "mlb-preview-career-doubles",
-  question: "Who has the most career MLB doubles?",
-  context: "Career regular-season doubles.",
-  categoryLabel: "MLB · CAREER DOUBLES",
-  statLabel: "career MLB doubles",
-  shortLabel: "2B",
-  candidates: [
-    { id: "ken-griffey-jr", name: "Ken Griffey Jr.", subtitle: "CF", value: 524, teamAbbreviation: "SEA" },
-    { id: "cal-ripken-jr", name: "Cal Ripken Jr.", subtitle: "SS", value: 603, teamAbbreviation: "BAL" },
-    { id: "david-ortiz", name: "David Ortiz", subtitle: "DH", value: 632, teamAbbreviation: "BOS" },
-    { id: "tony-gwynn", name: "Tony Gwynn", subtitle: "RF", value: 543, teamAbbreviation: "SD" },
-    { id: "stan-musial", name: "Stan Musial", subtitle: "OF / 1B", value: 725, teamAbbreviation: "STL" },
-    { id: "derek-jeter", name: "Derek Jeter", subtitle: "SS", value: 544, teamAbbreviation: "NYY" },
-    { id: "miguel-cabrera", name: "Miguel Cabrera", subtitle: "1B / 3B", value: 627, teamAbbreviation: "DET" },
-    { id: "barry-bonds", name: "Barry Bonds", subtitle: "LF", value: 601, teamAbbreviation: "SF" },
-    { id: "hank-aaron", name: "Hank Aaron", subtitle: "RF", value: 624, teamAbbreviation: "ATL" },
-    { id: "albert-pujols", name: "Albert Pujols", subtitle: "1B", value: 686, teamAbbreviation: "STL" },
-  ],
-};
-
-const BOARD_TWO: MlbFindLeaderBoard = {
-  id: "mlb-preview-career-pitching-strikeouts",
-  question: "Who has the most career MLB strikeouts?",
-  context: "Career regular-season pitching strikeouts.",
-  categoryLabel: "MLB · PITCHING STRIKEOUTS",
-  statLabel: "career MLB strikeouts",
-  shortLabel: "K",
-  candidates: [
-    { id: "randy-johnson", name: "Randy Johnson", subtitle: "LHP", value: 4875, teamAbbreviation: "ARI" },
-    { id: "roger-clemens", name: "Roger Clemens", subtitle: "RHP", value: 4672, teamAbbreviation: "BOS" },
-    { id: "steve-carlton", name: "Steve Carlton", subtitle: "LHP", value: 4136, teamAbbreviation: "PHI" },
-    { id: "tom-seaver", name: "Tom Seaver", subtitle: "RHP", value: 3640, teamAbbreviation: "NYM" },
-    { id: "greg-maddux", name: "Greg Maddux", subtitle: "RHP", value: 3371, teamAbbreviation: "ATL" },
-    { id: "pedro-martinez", name: "Pedro Martinez", subtitle: "RHP", value: 3154, teamAbbreviation: "BOS" },
-    { id: "bob-gibson", name: "Bob Gibson", subtitle: "RHP", value: 3117, teamAbbreviation: "STL" },
-    { id: "curt-schilling", name: "Curt Schilling", subtitle: "RHP", value: 3116, teamAbbreviation: "ARI" },
-    { id: "john-smoltz", name: "John Smoltz", subtitle: "RHP", value: 3084, teamAbbreviation: "ATL" },
-    { id: "sandy-koufax", name: "Sandy Koufax", subtitle: "LHP", value: 2396, teamAbbreviation: "LAD" },
-  ],
-};
-
-export const MLB_FIND_LEADER_PREVIEW_BOARDS = [BOARD_ONE, BOARD_TWO] as const;
-
-/**
- * Everything shown while tuning the format is burned content. Scheduled MLB
- * challenges must use different questions and different player pools.
- */
-export const MLB_FIND_LEADER_BURNED_CONTENT = {
-  questionIds: MLB_FIND_LEADER_PREVIEW_BOARDS.map((board) => board.id),
-  candidateIds: [...new Set(MLB_FIND_LEADER_PREVIEW_BOARDS.flatMap((board) => (
-    board.candidates.map((candidate) => candidate.id)
-  )))],
-} as const;
 
 function boardLeader(board: MlbFindLeaderBoard) {
   return board.candidates.reduce((leader, candidate) => (
@@ -183,10 +101,10 @@ export default function MlbFeaturedChallengePage() {
   const [completedGames, setCompletedGames] = useState<CompletedGame[]>([]);
   const [recording, setRecording] = useState(false);
   const [recordError, setRecordError] = useState("");
-  const board = MLB_FIND_LEADER_PREVIEW_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PREVIEW_BOARDS[0];
+  const board = MLB_FIND_LEADER_PRODUCTION_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PRODUCTION_BOARDS[0];
   const leader = boardLeader(board);
   const eliminatedSet = useMemo(() => new Set(eliminated), [eliminated]);
-  const finalScore = completedScores.length === MLB_FIND_LEADER_PREVIEW_BOARDS.length
+  const finalScore = completedScores.length === MLB_FIND_LEADER_PRODUCTION_BOARDS.length
     ? Math.round(completedScores.reduce((sum, score) => sum + score, 0) / completedScores.length)
     : null;
 
@@ -267,7 +185,7 @@ export default function MlbFeaturedChallengePage() {
     setCompletedScores(nextScores);
     setCompletedGames(nextGames);
 
-    const isLastBoard = boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1;
+    const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
     if (isLastBoard && !practiceMode) {
       const score = Math.round(nextScores.reduce((sum, value) => sum + value, 0) / nextScores.length);
       void saveOfficialResult(score, nextGames);
@@ -290,7 +208,7 @@ export default function MlbFeaturedChallengePage() {
     }
   }
 
-  const isLastBoard = boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1;
+  const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
   const savedResult = previewMode ? previewSavedResult : overview?.ownResult ?? null;
 
   if (previewMode) return <MlbWavelengthChallenge />;
@@ -347,9 +265,9 @@ export default function MlbFeaturedChallengePage() {
 
   return (
     <div className="page football-find-leader-page mlb-find-leader-page">
-      <div className="mlb-find-series-progress" aria-label={`Game ${boardIndex + 1} of ${MLB_FIND_LEADER_PREVIEW_BOARDS.length}`}>
+      <div className="mlb-find-series-progress" aria-label={`Game ${boardIndex + 1} of ${MLB_FIND_LEADER_PRODUCTION_BOARDS.length}`}>
         <span>FIND THE LEADER</span>
-        <strong>GAME {boardIndex + 1} OF {MLB_FIND_LEADER_PREVIEW_BOARDS.length}</strong>
+        <strong>GAME {boardIndex + 1} OF {MLB_FIND_LEADER_PRODUCTION_BOARDS.length}</strong>
       </div>
 
       <FootballFindLeaderPresentation
@@ -366,6 +284,7 @@ export default function MlbFeaturedChallengePage() {
         intro="Eliminate nine decoys until only the leader remains."
         onNewLineup={null}
         onEliminate={eliminate}
+        formatValue={(value) => formatMlbFindLeaderValue(board, value)}
         renderVisual={(candidate, compact) => (
           <MlbFindLeaderVisual
             board={board}
