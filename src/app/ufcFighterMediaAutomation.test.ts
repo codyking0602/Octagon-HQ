@@ -16,6 +16,8 @@ describe("automatic UFC fighter media", () => {
     expect(migration).toContain("Existing approved photos are never replaced automatically");
     expect(migration).toContain("on conflict (fighter_slug) do nothing");
     expect(runner).toContain("adaptEspnUfcFighterMedia");
+    expect(runner).toContain('Range: "bytes=0-0"');
+    expect(runner).toContain('^image\\/');
     expect(runner).toContain("ufcAthletePageUrl");
   });
 

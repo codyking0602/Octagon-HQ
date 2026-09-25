@@ -1,4 +1,4 @@
-import { fighterMatch } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
+import { fighterMatch, normalizeFighter } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import type { MonitoringEvent } from "./manualMonitoringRunner.ts";
 
 export interface UfcFighterMediaCandidate {
@@ -27,8 +27,23 @@ function canonicalFighters(event: MonitoringEvent) {
   ]);
 }
 
+const mediaNameAliases = new Map([
+  ["mehemmedeli osmanli", "mahammadali osmanli"],
+  ["valesca machado", "tina black"],
+]);
+
+function canonicalMediaName(value: string) {
+  const normalized = normalizeFighter(value);
+  return mediaNameAliases.get(normalized) ?? normalized;
+}
+
+function mediaNameMatch(expected: string, actual: string) {
+  return fighterMatch(expected, actual)
+    || canonicalMediaName(expected) === canonicalMediaName(actual);
+}
+
 function canonicalFighterForName(event: MonitoringEvent, sourceName: string) {
-  const matches = canonicalFighters(event).filter((fighter) => fighterMatch(fighter.name, sourceName));
+  const matches = canonicalFighters(event).filter((fighter) => mediaNameMatch(fighter.name, sourceName));
   return matches.length === 1 ? matches[0] : null;
 }
 
@@ -49,6 +64,21 @@ export function espnUfcMediaScoreboardUrl(event: MonitoringEvent) {
 function espnAthleteName(competitor: UnknownRecord) {
   const athlete = asRecord(competitor.athlete);
   return text(athlete?.fullName) || text(athlete?.displayName);
+}
+
+function espnAthleteId(competitor: UnknownRecord) {
+  const athlete = asRecord(competitor.athlete);
+  return text(athlete?.id) || text(competitor.id);
+}
+
+function espnHeadshotUrl(competitor: UnknownRecord, athleteId: string) {
+  const athlete = asRecord(competitor.athlete);
+  const headshot = asRecord(athlete?.headshot);
+  const embedded = text(headshot?.href);
+  if (/^https:\/\/a\.espncdn\.com\//i.test(embedded)) return embedded;
+  return /^\d+$/.test(athleteId)
+    ? `https://a.espncdn.com/i/headshots/mma/players/full/${athleteId}.png`
+    : "";
 }
 
 function eventStartMs(event: UnknownRecord) {
@@ -94,12 +124,10 @@ export function adaptEspnUfcFighterMedia(input: {
   const selected = best[0]!.sourceEvent;
   for (const competition of asArray(selected.competitions).map(asRecord).filter((item): item is UnknownRecord => Boolean(item))) {
     for (const competitor of asArray(competition.competitors).map(asRecord).filter((item): item is UnknownRecord => Boolean(item))) {
-      const athlete = asRecord(competitor.athlete);
       const sourceName = espnAthleteName(competitor);
       const canonical = canonicalFighterForName(input.event, sourceName);
-      const athleteId = text(athlete?.id);
-      const headshot = asRecord(athlete?.headshot);
-      const photoUrl = text(headshot?.href);
+      const athleteId = espnAthleteId(competitor);
+      const photoUrl = espnHeadshotUrl(competitor, athleteId);
       if (!canonical || !/^\d+$/.test(athleteId)) continue;
       if (!/^https:\/\/a\.espncdn\.com\//i.test(photoUrl)) continue;
       if (/(silhouette|placeholder|default[-_]?avatar)/i.test(photoUrl)) continue;
@@ -141,9 +169,15 @@ function metaImage(html: string) {
   return "";
 }
 
+const ufcAthleteSlugAliases = new Map([
+  ["tina-black", "valesca-machado"],
+  ["mahammadali-osmanli", "mehemmedeli-osmanli"],
+]);
+
 export function ufcAthletePageUrl(fighterSlug: string) {
-  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(fighterSlug)
-    ? `https://www.ufc.com/athlete/${fighterSlug}`
+  const sourceSlug = ufcAthleteSlugAliases.get(fighterSlug) ?? fighterSlug;
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(sourceSlug)
+    ? `https://www.ufc.com/athlete/${sourceSlug}`
     : null;
 }
 
