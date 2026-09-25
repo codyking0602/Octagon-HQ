@@ -1,4 +1,5 @@
 import type { MlbPlayoffsHub } from "./mlbPlayoffsRepository";
+import { mlbTeamLogoUrl } from "./mlbTeamAssets";
 
 export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
   season: 2026,
@@ -9,18 +10,18 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
   bracketLocked: false,
   bracketTemplate: {
     teams: [
-      { id: "tb", name: "Tampa Bay Rays", abbreviation: "TB", seed: 1, league: "AL", logo_url: null },
-      { id: "cle", name: "Cleveland Guardians", abbreviation: "CLE", seed: 2, league: "AL", logo_url: null },
-      { id: "hou", name: "Houston Astros", abbreviation: "HOU", seed: 3, league: "AL", logo_url: null },
-      { id: "nyy", name: "New York Yankees", abbreviation: "NYY", seed: 4, league: "AL", logo_url: null },
-      { id: "bos", name: "Boston Red Sox", abbreviation: "BOS", seed: 5, league: "AL", logo_url: null },
-      { id: "cws", name: "Chicago White Sox", abbreviation: "CWS", seed: 6, league: "AL", logo_url: null },
-      { id: "mil", name: "Milwaukee Brewers", abbreviation: "MIL", seed: 1, league: "NL", logo_url: null },
-      { id: "lad", name: "Los Angeles Dodgers", abbreviation: "LAD", seed: 2, league: "NL", logo_url: null },
-      { id: "atl", name: "Atlanta Braves", abbreviation: "ATL", seed: 3, league: "NL", logo_url: null },
-      { id: "sd", name: "San Diego Padres", abbreviation: "SD", seed: 4, league: "NL", logo_url: null },
-      { id: "chc", name: "Chicago Cubs", abbreviation: "CHC", seed: 5, league: "NL", logo_url: null },
-      { id: "phi", name: "Philadelphia Phillies", abbreviation: "PHI", seed: 6, league: "NL", logo_url: null },
+      { id: "tb", name: "Tampa Bay Rays", abbreviation: "TB", seed: 1, league: "AL", logo_url: mlbTeamLogoUrl("TB", "Tampa Bay Rays") },
+      { id: "cle", name: "Cleveland Guardians", abbreviation: "CLE", seed: 2, league: "AL", logo_url: mlbTeamLogoUrl("CLE", "Cleveland Guardians") },
+      { id: "hou", name: "Houston Astros", abbreviation: "HOU", seed: 3, league: "AL", logo_url: mlbTeamLogoUrl("HOU", "Houston Astros") },
+      { id: "nyy", name: "New York Yankees", abbreviation: "NYY", seed: 4, league: "AL", logo_url: mlbTeamLogoUrl("NYY", "New York Yankees") },
+      { id: "bos", name: "Boston Red Sox", abbreviation: "BOS", seed: 5, league: "AL", logo_url: mlbTeamLogoUrl("BOS", "Boston Red Sox") },
+      { id: "cws", name: "Chicago White Sox", abbreviation: "CWS", seed: 6, league: "AL", logo_url: mlbTeamLogoUrl("CWS", "Chicago White Sox") },
+      { id: "mil", name: "Milwaukee Brewers", abbreviation: "MIL", seed: 1, league: "NL", logo_url: mlbTeamLogoUrl("MIL", "Milwaukee Brewers") },
+      { id: "lad", name: "Los Angeles Dodgers", abbreviation: "LAD", seed: 2, league: "NL", logo_url: mlbTeamLogoUrl("LAD", "Los Angeles Dodgers") },
+      { id: "atl", name: "Atlanta Braves", abbreviation: "ATL", seed: 3, league: "NL", logo_url: mlbTeamLogoUrl("ATL", "Atlanta Braves") },
+      { id: "sd", name: "San Diego Padres", abbreviation: "SD", seed: 4, league: "NL", logo_url: mlbTeamLogoUrl("SD", "San Diego Padres") },
+      { id: "chc", name: "Chicago Cubs", abbreviation: "CHC", seed: 5, league: "NL", logo_url: mlbTeamLogoUrl("CHC", "Chicago Cubs") },
+      { id: "phi", name: "Philadelphia Phillies", abbreviation: "PHI", seed: 6, league: "NL", logo_url: mlbTeamLogoUrl("PHI", "Philadelphia Phillies") },
     ],
     nodes: [
       {
@@ -264,6 +265,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     { series_id: "al-wc-2", winner_team_id: "nyy", picked_at: "2026-09-24T18:00:00-05:00" },
   ],
   spotlight: {
+    series_id: "al-wc-2",
     title: "Yankees vs. Red Sox",
     round: "WILD CARD",
     status: "Preview matchup · best of three",
