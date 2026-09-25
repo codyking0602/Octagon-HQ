@@ -3,6 +3,8 @@ import { getSupabaseClient } from "../../lib/supabase";
 
 export const MLB_PLAY_CURRENT_CHALLENGE_KEY = "mlb-2026-play-01";
 export const MLB_PLAY_CURRENT_CHALLENGE_DATE = "2026-09-29";
+export const MLB_PLAY_NEXT_CHALLENGE_KEY = "mlb-2026-play-02";
+export const MLB_PLAY_NEXT_CHALLENGE_DATE = "2026-10-01";
 
 const jsonRecord = z.record(z.string(), z.unknown());
 

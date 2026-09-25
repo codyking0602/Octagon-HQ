@@ -33,6 +33,16 @@ describe("MLB owner preview", () => {
     expect(MLB_OWNER_PREVIEW_HUB.spotlight?.series_id).toBe("al-wc-2");
     expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.teams.every((team) => Boolean(team.logo_url))).toBe(true);
   });
+  it("presents the October 1 Wavelength card exactly as a live challenge", () => {
+    expect(MLB_OWNER_PREVIEW_HUB.featuredChallenge).toMatchObject({
+      id: "mlb-2026-play-02",
+      title: "Wavelength",
+      date: "2026-10-01",
+      route: "/mlb/challenge",
+    });
+    expect(MLB_OWNER_PREVIEW_HUB.featuredChallenge?.description).not.toMatch(/preview|demo|test|tuning|prototype/i);
+  });
+
   it("previews one calibrated MLB Championship without exposing challenge content", () => {
     expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.totalMax).toBe(100);
     expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.seriesMax).toBe(43);
