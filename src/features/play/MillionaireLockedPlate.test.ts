@@ -39,7 +39,8 @@ describe("Millionaire fixed-stage presentation contract", () => {
   });
 
   it("keeps all changing content live in React", () => {
-    expect(pageSource).toContain("{millionaireLeagueLabel(league)} DAILY");
+    expect(pageSource).toContain("`${millionaireLeagueLabel(league)} DAILY`");
+    expect(pageSource).toContain('league === "mlb" ? "MLB PLAYOFF CHALLENGE"');
     expect(pageSource).toContain("millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)");
     expect(pageSource).toContain("millionaireTimeLabel(timeRemainingMs)");
     expect(pageSource).toContain("{currentQuestion?.prompt}");
