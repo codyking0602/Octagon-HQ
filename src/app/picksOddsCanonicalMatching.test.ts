@@ -226,6 +226,32 @@ describe("Picks odds canonical fighter matching", () => {
     ]));
   });
 
+  it("matches an unknown future provider name through the stable UFC athlete slug", () => {
+    const renamedEvent: MonitoringEvent = {
+      ...event,
+      bouts: [{
+        bout_id: "future-rename",
+        red_fighter_slug: "original-provider-name",
+        red_fighter_name: "Completely New Public Name",
+        blue_fighter_slug: "billy-quarantillo",
+        blue_fighter_name: "Billy Quarantillo",
+      }],
+    };
+    const filtered = filterOddsToMonitoredEvent(oddsResult([
+      snapshot("future-rename-provider", "Original Provider Name", -145, "Billy Quarantillo", 125),
+    ]), renamedEvent);
+
+    expect(filtered.coverage).toEqual({ providerEvents: 1, completeSnapshots: 1, missingSnapshots: 0 });
+    expect(filtered.diagnostics).toEqual([]);
+    expect(filtered.snapshots[0]).toMatchObject({
+      matchupIdentity: fighterOddsIdentity("Billy Quarantillo") + "|" + fighterOddsIdentity("Completely New Public Name"),
+      prices: expect.arrayContaining([
+        expect.objectContaining({ fighterName: "Completely New Public Name", americanOdds: -145 }),
+        expect.objectContaining({ fighterName: "Billy Quarantillo", americanOdds: 125 }),
+      ]),
+    });
+  });
+
   it("uses quota-free event discovery to constrain the same single odds request", () => {
     const eventsUrl = buildTheOddsApiEventsUrl("secret", "https://example.test");
     expect(eventsUrl.pathname).toBe("/v4/sports/mma_mixed_martial_arts/events");
