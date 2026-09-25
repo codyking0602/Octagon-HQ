@@ -181,10 +181,10 @@ function identityCorrectionProposal(
   current: ApprovalMonitoringBout,
   proposed: ApprovalMonitoringBout,
 ): CardChangeApprovalProposal | null {
-  const sameRedPerson = fighterOddsIdentity(current.red_fighter_name)
-    === fighterOddsIdentity(proposed.red_fighter_name);
-  const sameBluePerson = fighterOddsIdentity(current.blue_fighter_name)
-    === fighterOddsIdentity(proposed.blue_fighter_name);
+  const sameRedPerson = current.red_fighter_slug === proposed.red_fighter_slug
+    || fighterOddsIdentity(current.red_fighter_name) === fighterOddsIdentity(proposed.red_fighter_name);
+  const sameBluePerson = current.blue_fighter_slug === proposed.blue_fighter_slug
+    || fighterOddsIdentity(current.blue_fighter_name) === fighterOddsIdentity(proposed.blue_fighter_name);
   if (!sameRedPerson || !sameBluePerson) return null;
 
   const redChanged = current.red_fighter_slug !== proposed.red_fighter_slug
@@ -220,10 +220,10 @@ function replacementProposal(
   current: ApprovalMonitoringBout,
   proposed: ApprovalMonitoringBout,
 ): CardChangeApprovalProposal | null {
-  const sameRed = fighterOddsIdentity(current.red_fighter_name)
-    === fighterOddsIdentity(proposed.red_fighter_name);
-  const sameBlue = fighterOddsIdentity(current.blue_fighter_name)
-    === fighterOddsIdentity(proposed.blue_fighter_name);
+  const sameRed = current.red_fighter_slug === proposed.red_fighter_slug
+    || fighterOddsIdentity(current.red_fighter_name) === fighterOddsIdentity(proposed.red_fighter_name);
+  const sameBlue = current.blue_fighter_slug === proposed.blue_fighter_slug
+    || fighterOddsIdentity(current.blue_fighter_name) === fighterOddsIdentity(proposed.blue_fighter_name);
 
   if (sameRed === sameBlue) return null;
   const corner = sameRed ? "blue" : "red";
