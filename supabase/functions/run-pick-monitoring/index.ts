@@ -527,6 +527,8 @@ Deno.serve(async (request) => {
   }
 
   let trustedAutoApply: unknown = null;
+  let finalRunId = String(recorded.data);
+  let finalPayload = payload;
   const sourcePreview = asRecord(previewBody.event_preview);
   const sourceWarnings = Array.isArray(sourcePreview?.warnings)
     ? sourcePreview.warnings.filter((warning): warning is string => typeof warning === "string" && Boolean(warning.trim()))
@@ -538,12 +540,96 @@ Deno.serve(async (request) => {
     && sourceWarnings.length === 0;
 
   if (trustedOfficialCard) {
-    const autoApplied = await admin.rpc("auto_apply_trusted_pick_monitoring_changes", {
-      p_run_id: recorded.data,
-    });
-    trustedAutoApply = autoApplied.error
-      ? { status: "failed", error: autoApplied.error.message }
-      : autoApplied.data;
+    const attempts: unknown[] = [];
+    let convergenceRunId = finalRunId;
+
+    // One official UFC fetch can contain several independent changes. Apply the
+    // exact stale-guarded proposals, reload canonical state, and recompute against
+    // the same trusted source until the card converges or no safe progress remains.
+    // Reusing the one odds response avoids paying for each convergence pass.
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const autoApplied = await admin.rpc("auto_apply_trusted_pick_monitoring_changes", {
+        p_run_id: convergenceRunId,
+      });
+      if (autoApplied.error) {
+        attempts.push({ status: "failed", run_id: convergenceRunId, error: autoApplied.error.message });
+        break;
+      }
+
+      const autoApplyData = asRecord(autoApplied.data);
+      attempts.push(autoApplied.data);
+      const applied = Array.isArray(autoApplyData?.applied) ? autoApplyData.applied : [];
+      if (applied.length === 0) break;
+
+      const refreshedStateResponse = await admin.rpc("get_pick_monitoring_event_state");
+      if (refreshedStateResponse.error) {
+        attempts.push({ status: "failed", reason: "refresh_failed" });
+        break;
+      }
+
+      const refreshedState = asRecord(refreshedStateResponse.data);
+      try {
+        resolved = resolveMonitoringEvent(
+          asEvent(refreshedState?.staged),
+          asEvent(refreshedState?.current),
+        );
+      } catch {
+        attempts.push({ status: "failed", reason: "event_resolution_failed" });
+        break;
+      }
+
+      const ignored = new Set(resolved.ignoredBoutIds);
+      const comparisonSource = ignored.size
+        ? {
+            ...previewBody.event_preview,
+            bouts: previewBody.event_preview.bouts.filter((bout) => !ignored.has(bout.bout_id)),
+          }
+        : previewBody.event_preview;
+      const remainingCardFindings = buildCardChangeFindings({
+        identity: resolved.identity,
+        kind: resolved.kind,
+        eventId: resolved.storageEventId,
+        canonical: resolved.selected,
+        source: comparisonSource,
+        scope: previewBody.effective_scope,
+        detectedAt: new Date().toISOString(),
+        allBoutIds: resolved.allBoutIds,
+      });
+      if (remainingCardFindings.length === 0) break;
+
+      let convergencePayload;
+      try {
+        convergencePayload = buildManualMonitoringPayload({
+          resolved,
+          source: previewBody.event_preview,
+          scope: previewBody.effective_scope,
+          odds,
+          startedAt,
+          completedAt: new Date().toISOString(),
+          triggerKind: "scheduled",
+        });
+      } catch {
+        attempts.push({ status: "failed", reason: "event_identity_mismatch" });
+        break;
+      }
+
+      const convergenceRecorded = await admin.rpc("record_pick_monitoring_run_and_apply_odds", {
+        p_payload: convergencePayload,
+      });
+      if (convergenceRecorded.error || !convergenceRecorded.data) {
+        attempts.push({ status: "failed", reason: "monitoring_record_failed" });
+        break;
+      }
+
+      convergenceRunId = String(convergenceRecorded.data);
+      finalRunId = convergenceRunId;
+      finalPayload = convergencePayload;
+    }
+
+    trustedAutoApply = {
+      status: attempts.some((item) => asRecord(item)?.status === "failed") ? "needs_review" : "applied",
+      attempts,
+    };
   } else if (scheduled) {
     trustedAutoApply = {
       status: "not_eligible",
@@ -553,8 +639,8 @@ Deno.serve(async (request) => {
   }
 
   return json({
-    ...monitoringSummary(String(recorded.data), payload),
-    trigger_kind: payload.trigger_kind,
+    ...monitoringSummary(finalRunId, finalPayload),
+    trigger_kind: finalPayload.trigger_kind,
     provider_called: true,
     notification_dispatch: notificationDispatch,
     live_state_sync: liveStateSync,
