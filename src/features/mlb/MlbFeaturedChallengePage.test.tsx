@@ -25,6 +25,8 @@ vi.mock("./useMlbPlayChallengeOverview", () => ({
 
 vi.mock("./mlbPlayChallenge", () => ({
   MLB_PLAY_CURRENT_CHALLENGE_KEY: "mlb-2026-play-01",
+  loadMlbPlayPreviewResult: vi.fn(() => null),
+  saveMlbPlayPreviewResult: vi.fn((_key, result) => result),
   recordMlbPlayChallengeResult: vi.fn(async () => ({
     rawScore: 10,
     gameType: "find_leader",
@@ -32,6 +34,10 @@ vi.mock("./mlbPlayChallenge", () => ({
     resultDetail: {},
     completedAt: "2026-09-29T12:00:00-05:00",
   })),
+}));
+
+vi.mock("./useMlbPlayoffs", () => ({
+  useMlbPlayoffs: () => ({ hub: null }),
 }));
 
 function renderPage() {
