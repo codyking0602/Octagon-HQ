@@ -268,7 +268,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     series_id: "al-wc-2",
     title: "Yankees vs. Red Sox",
     round: "WILD CARD",
-    status: "Preview matchup · best of three",
+    status: "Wild Card · best of three",
     overview: "A short-series rivalry built around power, bullpen leverage, and zero room for a slow start.",
     keys: ["Yankees power vs. Boston relief depth", "Game 1 leverage from the first inning"],
     player_to_watch: "Aaron Judge",
