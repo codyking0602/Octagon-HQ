@@ -120,7 +120,7 @@ export function buildWhoAmILeaderboardRounds(
     const detail = detailRounds[index] ?? (index === 0 ? resultDetail : {});
     const identity = record(reveal.identity);
     const identityId = String(result.subject_id ?? identity.id ?? "");
-    const identityName = String(identity.name ?? identityId || "Identity revealed");
+    const identityName = String(identity.name ?? "") || identityId || "Identity revealed";
     const names = whoAmISubjectNames(setup);
     if (identityId && identityName) names.set(identityId, identityName);
 
