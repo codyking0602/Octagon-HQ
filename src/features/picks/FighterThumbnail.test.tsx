@@ -1,8 +1,21 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { FighterThumbnail, fighterThumbnailPath } from "./FighterThumbnail";
+import { FighterThumbnail, fighterThumbnailPath, normalizeRuntimeFighterMediaMap } from "./FighterThumbnail";
 
 afterEach(cleanup);
+
+describe("runtime fighter media", () => {
+  it("accepts only slug-keyed HTTPS runtime photos", () => {
+    expect(normalizeRuntimeFighterMediaMap({
+      "melissa-amaya": "https://dmxg5wxfqgb4u.cloudfront.net/styles/card/s3/melissa.png",
+      "bad slug": "https://example.test/bad.png",
+      "ilimbek-akylbek": "http://example.test/not-secure.png",
+      "mehemmedeli-osmanli": 42,
+    })).toEqual({
+      "melissa-amaya": "https://dmxg5wxfqgb4u.cloudfront.net/styles/card/s3/melissa.png",
+    });
+  });
+});
 
 describe("fighterThumbnailPath", () => {
   it("resolves Jan Błachowicz's canonical ASCII asset", () => {
