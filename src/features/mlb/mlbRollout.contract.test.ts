@@ -122,12 +122,21 @@ describe("MLB Playoffs rollout gate", () => {
     expect(styles).toContain("--bracket-zoom: 1.72");
   });
 
-  it("keeps MLB Play focused on the current playoff challenge", () => {
+  it("gives MLB Play the Daily challenge carousel, result drilldown, and Play-only standings", () => {
     expect(mlbPlay).toContain("MLB PLAYOFF CHALLENGE");
-    expect(mlbPlay).toContain("Two boards. One final score.");
-    expect(mlbPlay).toContain('to="/mlb/challenge"');
+    expect(mlbPlay).toContain("CHALLENGE LEADERBOARD");
+    expect(mlbPlay).toContain("SWIPE FOR CHALLENGE LEADERBOARD");
+    expect(mlbPlay).toContain("PLAY STANDINGS");
+    expect(mlbPlay).toContain("Postseason Challenge Race");
+    expect(mlbPlay).toContain("entry.play_points");
+    expect(mlbPlay).toContain("entry.play_rank");
+    expect(mlbPlay).toContain("navigate(challengeRoute)");
+    expect(mlbPlay).not.toContain("SERIES PICKS STANDING");
+    expect(mlbPlay).not.toContain("BRACKET");
     expect(mlbPlay).not.toContain("MlbHomeHq");
     expect(mlbPlay).not.toMatch(/DEMO|OWNER DESIGN|DISPOSABLE/);
+    expect(styles).toContain('.today-hub[data-sport="mlb"]');
+    expect(styles).toContain(".mlb-play-standings");
   });
 
   it("uses a distinct muted green MLB identity without changing Football geometry", () => {
