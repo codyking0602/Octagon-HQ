@@ -548,6 +548,45 @@ describe("monitoring card-change approval proposals", () => {
     ]));
   });
 
+  it("treats an unknown future display-name change as an identity correction when UFC keeps the athlete slug", () => {
+    const currentBout = {
+      ...first,
+      bout_id: "main-athlete-profile-beta",
+      red_fighter_slug: "athlete-profile",
+      red_fighter_name: "Original Public Name",
+      blue_fighter_slug: "beta",
+      blue_fighter_name: "Beta",
+    };
+    const sourceBout = {
+      ...currentBout,
+      red_fighter_name: "Completely New Public Name",
+    };
+    const result = findings(
+      { ...source, bouts: [sourceBout, second] },
+      "current",
+      { ...canonical, bouts: [currentBout, second] },
+    );
+
+    expect(result).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        bout_id: currentBout.bout_id,
+        summary: "Correct Original Public Name identity to Completely New Public Name.",
+        source_details: expect.objectContaining({
+          approval_proposal: expect.objectContaining({
+            action: "replace_fighter",
+            corner: "red",
+            identity_correction: true,
+            expected_red_fighter_slug: "athlete-profile",
+            replacement_fighter_slug: "athlete-profile",
+          }),
+        }),
+      }),
+    ]));
+    expect(result.some((item) => (
+      item.summary === "Replace Original Public Name with Completely New Public Name."
+    ))).toBe(false);
+  });
+
   it("reconciles multiple simultaneous UFC card changes instead of dropping to generic review", () => {
     const amayaReplacement = {
       bout_id: "main-melissa-amaya-tina-black",
