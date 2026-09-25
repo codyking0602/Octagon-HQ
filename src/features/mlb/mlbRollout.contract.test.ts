@@ -146,6 +146,22 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbHome).toContain("OPEN BREAKDOWN →");
   });
 
+  it("surfaces the same MLB Championship race on Home", () => {
+    expect(mlbHome).toContain("useMlbChampionship");
+    expect(mlbHome).toContain("MLB_OWNER_PREVIEW_CHAMPIONSHIP");
+    expect(mlbHome).toContain('className="mlb-home-championship-trigger"');
+    expect(mlbHome).toContain("<MlbChampionshipSummary");
+    expect(mlbHome).toContain("SERIES PICKS STANDING");
+    expect(mlbHome).toContain("ownChampionship.series_rank");
+    expect(mlbHome).toContain("ownChampionship.bracket_rank");
+    expect(mlbHome).toContain("ownChampionship.play_rank");
+    expect(mlbHome).toContain("championship.seriesMax");
+    expect(mlbHome).toContain("championship.bracketMax");
+    expect(mlbHome).toContain("championship.playMax");
+    expect(styles).toContain(".mlb-home-championship-trigger");
+    expect(styles).toContain(".mlb-home-championship-summary");
+  });
+
   it("provides a gated visual series breakdown", () => {
     expect(router).toContain('path: "mlb/series/:seriesId"');
     expect(mlbSeries).toContain("KEYS TO THE SERIES");

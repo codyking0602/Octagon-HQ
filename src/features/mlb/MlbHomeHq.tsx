@@ -1,10 +1,13 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { MLB_ROUND_LABELS } from "./mlbPlayoffsConfig";
-import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import { MLB_OWNER_PREVIEW_CHAMPIONSHIP, MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import MlbChampionshipSummary from "./MlbChampionshipSummary";
+import { formatChampionshipPoints } from "./mlbChampionship";
 import { MlbPlayerSpotlight } from "./MlbPlayerSpotlight";
 import { mlbTeamAssetByName, mlbTeamColor, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
+import { useMlbChampionship } from "./useMlbChampionship";
 import "../../styles/mlb-playoffs.css";
 
 function seriesDateTimeLabel(value: string | null) {
@@ -51,15 +54,15 @@ export function MlbHomeHq({
   previewMode?: boolean;
 }) {
   const { hub: liveHub, loading, error } = useMlbPlayoffs(enabled && signedIn);
+  const { championship: liveChampionship } = useMlbChampionship(enabled && signedIn);
+  const [showChampionship, setShowChampionship] = useState(false);
   if (!enabled) return null;
 
   const previewActive = previewMode && (!liveHub || !liveHub.fieldReady);
   const hub = previewActive ? MLB_OWNER_PREVIEW_HUB : liveHub;
-
-  const ownEntry = hub?.brackets.find((entry) => entry.is_current_user) ?? null;
-  const ownRank = ownEntry && hub
-    ? hub.brackets.findIndex((entry) => entry.profile_id === ownEntry.profile_id) + 1
-    : null;
+  const championship = previewActive ? MLB_OWNER_PREVIEW_CHAMPIONSHIP : liveChampionship;
+  const ownChampionship = championship?.own ?? null;
+  const championshipPlayerCount = championship?.standings.length ?? 0;
   const roundSeries = hub?.series.filter((series) => series.round === hub.currentRound) ?? [];
   const submittedSeries = new Set(hub?.ownRoundPicks.map((pick) => pick.series_id) ?? []);
   const completedRoundPicks = roundSeries.filter((series) => submittedSeries.has(series.series_id)).length;
@@ -85,7 +88,9 @@ export function MlbHomeHq({
       ? "PICKS READY"
       : `${roundPicksRemaining} PICK${roundPicksRemaining === 1 ? "" : "S"} LEFT`;
   const bracketSummary = bracketTotal
-    ? `${bracketCompleted === bracketTotal ? "Bracket ready" : "Bracket in progress"} · ${bracketCompleted} of ${bracketTotal}`
+    ? bracketCompleted === bracketTotal
+      ? "Bracket ready"
+      : `Bracket ${bracketCompleted} of ${bracketTotal}`
     : "Bracket pending";
 
   return (
@@ -99,8 +104,28 @@ export function MlbHomeHq({
           <p className="eyebrow">MLB PLAYOFFS</p>
           <h2>{roundTitle}</h2>
         </div>
-        <small>PICKS · BRACKET · SERIES</small>
+        {ownChampionship ? (
+          <button
+            className="mlb-home-championship-trigger"
+            type="button"
+            aria-expanded={showChampionship}
+            aria-controls="mlb-home-championship-breakdown"
+            onClick={() => setShowChampionship((current) => !current)}
+          >
+            <span>MLB CHAMPIONSHIP</span>
+            <strong>#{ownChampionship.overall_rank} OF {championshipPlayerCount}</strong>
+            <small>{formatChampionshipPoints(ownChampionship.total_points)} PTS →</small>
+          </button>
+        ) : (
+          <small>MLB CHAMPIONSHIP</small>
+        )}
       </header>
+
+      {showChampionship && championship ? (
+        <div id="mlb-home-championship-breakdown">
+          <MlbChampionshipSummary championship={championship} className="mlb-home-championship-summary" />
+        </div>
+      ) : null}
 
       {!signedIn ? (
         <section className="surface-card mlb-state-card">
@@ -136,12 +161,16 @@ export function MlbHomeHq({
 
               <Link
                 className="home-event-card__standing"
-                to="/mlb/picks#mlb-bracket-race"
-                aria-label="Open MLB Playoffs standings"
+                to="/mlb/picks#mlb-round-picks"
+                aria-label="Open MLB Series Picks standing"
               >
-                <span>{hub.season} PLAYOFFS STANDING</span>
-                <b>{ownRank ? `#${ownRank} OF ${hub.brackets.length}` : "—"}</b>
-                <small>{hub.ownBracketScore} PTS</small>
+                <span>SERIES PICKS STANDING</span>
+                <b>{ownChampionship ? `#${ownChampionship.series_rank} OF ${championshipPlayerCount}` : "—"}</b>
+                <small>
+                  {ownChampionship && championship
+                    ? `${formatChampionshipPoints(ownChampionship.series_points)} / ${championship.seriesMax} PTS`
+                    : "—"}
+                </small>
               </Link>
             </div>
 
@@ -154,8 +183,16 @@ export function MlbHomeHq({
             aria-label="View MLB Playoff Bracket"
           >
             <span className="home-weekly-games-row__copy">
-              <small>PLAYOFF BRACKET</small>
-              <strong>{bracketSummary}</strong>
+              <small>
+                PLAYOFF BRACKET
+                {ownChampionship ? ` · #${ownChampionship.bracket_rank} OF ${championshipPlayerCount}` : ""}
+              </small>
+              <strong>
+                {bracketSummary}
+                {ownChampionship && championship
+                  ? ` · ${formatChampionshipPoints(ownChampionship.bracket_points)} / ${championship.bracketMax} PTS`
+                  : ""}
+              </strong>
             </span>
             <b>VIEW →</b>
           </Link>
@@ -169,7 +206,11 @@ export function MlbHomeHq({
             <div className="home-challenge-card__copy">
               <div className="home-challenge-card__topline">
                 <span>FEATURED CHALLENGE</span>
-                <small>{hub.featuredChallenge?.kicker ?? "PLAYOFF GAME"}</small>
+                <small>
+                  {ownChampionship && championship
+                    ? `PLAY #${ownChampionship.play_rank} · ${formatChampionshipPoints(ownChampionship.play_points)}/${championship.playMax}`
+                    : hub.featuredChallenge?.kicker ?? "PLAYOFF GAME"}
+                </small>
               </div>
               <h3>{hub.featuredChallenge?.title ?? "Coming with the postseason"}</h3>
               <p>{hub.featuredChallenge?.description ?? "Handcrafted MLB playoff challenges live here."}</p>

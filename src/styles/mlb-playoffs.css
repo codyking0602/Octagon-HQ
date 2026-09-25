@@ -2845,3 +2845,110 @@
     font-size: .44rem;
   }
 }
+
+
+/* MLB Home — surface the same 100-point championship used on Picks */
+.home-sport-hq--mlb .mlb-home-championship-trigger {
+  display: grid;
+  min-width: 104px;
+  justify-items: end;
+  gap: 1px;
+  padding: 3px 0 2px 7px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: right;
+  cursor: pointer;
+}
+
+.home-sport-hq--mlb .mlb-home-championship-trigger > span {
+  color: var(--mlb-green-strong);
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .09em;
+  white-space: nowrap;
+}
+
+.home-sport-hq--mlb .mlb-home-championship-trigger > strong {
+  font-size: 12px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.home-sport-hq--mlb .mlb-home-championship-trigger > small {
+  color: var(--text-secondary);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.home-sport-hq--mlb .mlb-home-championship-trigger:hover > small,
+.home-sport-hq--mlb .mlb-home-championship-trigger:focus-visible > small,
+.home-sport-hq--mlb .mlb-home-championship-trigger[aria-expanded="true"] > small {
+  color: var(--mlb-green-strong);
+}
+
+.home-sport-hq--mlb .mlb-home-championship-trigger:focus-visible {
+  outline: 2px solid var(--mlb-green);
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+
+.home-sport-hq--mlb #mlb-home-championship-breakdown {
+  margin-top: -3px;
+}
+
+.home-sport-hq--mlb .mlb-home-championship-summary {
+  border-color: rgba(var(--mlb-green-rgb), .24);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(var(--mlb-green-rgb), .09), transparent 40%),
+    rgba(255, 255, 255, .018);
+}
+
+.home-sport-hq--mlb .mlb-home-championship-summary > header {
+  min-height: 43px;
+  padding: 6px 9px;
+}
+
+.home-sport-hq--mlb .mlb-home-championship-summary__lanes > span {
+  padding: 6px 8px 7px;
+}
+
+.home-sport-hq--mlb .home-event-card__standing > span {
+  color: var(--mlb-green-strong);
+}
+
+.home-sport-hq--mlb .home-weekly-games-row__copy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-sport-hq--mlb .home-challenge-card__topline > small {
+  color: var(--mlb-green-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 430px) {
+  .home-sport-hq--mlb .mlb-home-championship-trigger {
+    min-width: 94px;
+  }
+
+  .home-sport-hq--mlb .mlb-home-championship-trigger > span,
+  .home-sport-hq--mlb .mlb-home-championship-trigger > small {
+    font-size: 6px;
+  }
+
+  .home-sport-hq--mlb .mlb-home-championship-trigger > strong {
+    font-size: 11px;
+  }
+
+  .home-sport-hq--mlb .mlb-home-championship-summary > header {
+    min-height: 40px;
+  }
+
+  .home-sport-hq--mlb .mlb-home-championship-summary__lanes > span {
+    padding: 6px 5px;
+  }
+}
