@@ -63,20 +63,27 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).not.toContain("MlbHomeHq");
   });
 
-  it("uses a distinct muted green MLB identity", () => {
+  it("uses a distinct muted green MLB identity without changing Football geometry", () => {
     expect(styles).toContain("--mlb-green: #2f855f");
     expect(styles).toContain("--home-sport-accent: var(--mlb-green)");
+    expect(styles).toContain("--home-football-blue: var(--mlb-green)");
+    expect(styles).toContain('.home-challenge-card[data-sport="mlb"]');
+    expect(styles).not.toContain(".mlb-player-spotlight {");
   });
 
-  it("matches the Football-style Home hierarchy", () => {
-    const picks = mlbHome.indexOf('aria-label="MLB Picks and bracket standing"');
-    const challenge = mlbHome.indexOf("mlb-hq-card--challenge");
+  it("reuses the Football Home module geometry in the same order", () => {
+    const picks = mlbHome.indexOf('className="surface-card home-event-card home-event-card--compact"');
+    const bracket = mlbHome.indexOf('className="home-weekly-games-row"');
+    const challenge = mlbHome.indexOf('className="home-challenge-card"');
     const player = mlbHome.indexOf("<MlbPlayerSpotlight");
-    const series = mlbHome.indexOf('aria-label="MLB Series Spotlight"');
+    const series = mlbHome.indexOf('className="football-hq-games mlb-hq-games"');
     expect(picks).toBeGreaterThan(-1);
-    expect(challenge).toBeGreaterThan(picks);
+    expect(bracket).toBeGreaterThan(picks);
+    expect(challenge).toBeGreaterThan(bracket);
     expect(player).toBeGreaterThan(challenge);
     expect(series).toBeGreaterThan(player);
+    expect(mlbHome).toContain('className="home-event-card__standing"');
+    expect(mlbHome).toContain('className="football-hq-game-row"');
     expect(mlbHome).toContain("OPEN BREAKDOWN →");
   });
 
