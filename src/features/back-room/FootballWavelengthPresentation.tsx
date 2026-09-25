@@ -11,6 +11,15 @@ export interface FootballWavelengthPresentationClue {
   rating?: number;
 }
 
+type WavelengthCopy = {
+  resultEyebrow?: string;
+  progressAriaLabel?: string;
+  guessAriaLabel?: string;
+  categoryLabel?: (category: string) => string;
+  clueDescriptor?: (category: string) => string;
+  disclosure?: string;
+};
+
 export function FootballWavelengthPresentation({
   clues,
   guesses,
@@ -19,6 +28,7 @@ export function FootballWavelengthPresentation({
   onLock,
   busy = false,
   result,
+  copy,
 }: {
   clues: readonly FootballWavelengthPresentationClue[];
   guesses: readonly number[];
@@ -27,9 +37,12 @@ export function FootballWavelengthPresentation({
   onLock?: () => void;
   busy?: boolean;
   result?: { score: number; target: number } | null;
+  copy?: WavelengthCopy;
 }) {
   const clueIndex = Math.max(0, Math.min(3, guesses.length));
   const clue = clues[Math.min(clueIndex, Math.max(0, clues.length - 1))];
+  const categoryLabel = copy?.categoryLabel ?? ((category: string) => footballWavelengthCategoryLabel(category as never));
+  const clueDescriptor = copy?.clueDescriptor ?? ((category: string) => footballWavelengthClueDescriptor(category as never));
 
   if (result) {
     const finalGuess = guesses[3] ?? guess;
@@ -37,7 +50,7 @@ export function FootballWavelengthPresentation({
     return (
       <>
         <section className="football-debate-result-hero">
-          <p className="eyebrow">FOOTBALL WAVELENGTH · FINAL SCORE</p>
+          <p className="eyebrow">{copy?.resultEyebrow ?? "FOOTBALL WAVELENGTH · FINAL SCORE"}</p>
           <strong>{result.score}<small>/100</small></strong>
           <span>{wavelengthDistanceCopy(distance)}</span>
         </section>
@@ -58,14 +71,14 @@ export function FootballWavelengthPresentation({
               <article key={item.id}>
                 <b>{index + 1}</b>
                 <span>
-                  <small>{footballWavelengthCategoryLabel(item.category as never)}</small>
+                  <small>{categoryLabel(item.category)}</small>
                   <strong>{item.text}</strong>
                 </span>
                 <em>{item.rating ?? "—"}</em>
               </article>
             ))}
           </div>
-          <p className="football-wavelength-rules">{WAVELENGTH_OPINION_DISCLOSURE}</p>
+          <p className="football-wavelength-rules">{copy?.disclosure ?? WAVELENGTH_OPINION_DISCLOSURE}</p>
         </section>
       </>
     );
@@ -83,7 +96,7 @@ export function FootballWavelengthPresentation({
         <strong>Find the hidden 1–100 number.</strong>
         <span>Each clue reacts to your last guess. Only your fourth guess scores.</span>
       </section>
-      <div className="wavelength-progress" aria-label="Football Wavelength clue progress">
+      <div className="wavelength-progress" aria-label={copy?.progressAriaLabel ?? "Football Wavelength clue progress"}>
         {[0, 1, 2, 3].map((index) => (
           <i className={`${index < clueIndex ? "is-complete" : ""}${index === clueIndex ? " is-current" : ""}`} key={index} />
         ))}
@@ -92,14 +105,14 @@ export function FootballWavelengthPresentation({
       <section className="wavelength-clue wavelength-clue--hero" aria-live="polite">
         <h1>
           {clue.text}
-          <span className="wavelength-clue__descriptor">{footballWavelengthClueDescriptor(clue.category as never)}</span>
+          <span className="wavelength-clue__descriptor">{clueDescriptor(clue.category)}</span>
         </h1>
       </section>
 
       <section className="wavelength-guess-panel">
         <div><span>{clueIndex === 3 ? "FINAL GUESS" : "YOUR GUESS"}</span><strong>{guess}</strong></div>
         <input
-          aria-label="Football Wavelength guess from 1 to 100"
+          aria-label={copy?.guessAriaLabel ?? "Football Wavelength guess from 1 to 100"}
           type="range"
           min="1"
           max="100"
