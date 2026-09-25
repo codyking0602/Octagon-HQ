@@ -17,6 +17,13 @@
 .home-sport-hq--mlb {
   --home-sport-accent: var(--mlb-green);
   --home-sport-accent-rgb: var(--mlb-green-rgb);
+  --home-football-blue: var(--mlb-green-strong);
+  --home-football-blue-rgb: var(--mlb-green-rgb);
+}
+
+.home-sport-hq--mlb .home-challenge-card[data-sport="mlb"] {
+  --challenge-accent: var(--mlb-green);
+  --challenge-accent-strong: var(--mlb-green-strong);
 }
 
 .home-section--mlb-hq {
