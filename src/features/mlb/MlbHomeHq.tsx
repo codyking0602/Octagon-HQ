@@ -119,7 +119,7 @@ export function MlbHomeHq({
           <section className="surface-card home-event-card home-event-card--compact" aria-label="MLB Picks and standing">
             <div className="home-event-card__topline">
               <p className="eyebrow">{MLB_ROUND_LABELS[hub.currentRound]} PICKS</p>
-              <span>{previewActive ? "OWNER PREVIEW" : hub.bracketLocked ? "LOCKED" : "ACTIVE"}</span>
+              <span>{hub.bracketLocked ? "LOCKED" : "ACTIVE"}</span>
             </div>
 
             <div className="home-event-card__picks-grid">

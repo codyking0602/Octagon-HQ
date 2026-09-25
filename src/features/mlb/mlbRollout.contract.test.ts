@@ -12,6 +12,7 @@ const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
 const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
 const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
+const mlbOwnerFixture = readFileSync("src/features/mlb/mlbOwnerPreview.ts", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
   it("stays owner-only until the explicit public release", () => {
@@ -55,6 +56,22 @@ describe("MLB Playoffs rollout gate", () => {
   it("keeps owner preview data out of the official field", () => {
     expect(mlbPicks).toContain("identity.profile?.canControlPicks === true");
     expect(home).toContain("previewMode={identity.profile?.canControlPicks === true}");
+  });
+
+  it("renders owner-only MLB with production-facing chrome", () => {
+    expect(mlbPicks).not.toContain("OWNER PREVIEW");
+    expect(mlbPicks).not.toContain("MOCK FIELD");
+    expect(mlbPicks).not.toContain("SAVE PREVIEW BRACKET");
+    expect(mlbHome).not.toContain('"OWNER PREVIEW"');
+    expect(mlbSeries).not.toContain("mlb-preview-banner");
+    expect(mlbSeries).not.toContain('"OWNER PREVIEW"');
+    expect(mlbOwnerFixture).not.toContain("Preview matchup");
+    expect(mlbPicks).toContain('className="mlb-league-bracket"');
+    expect(mlbPicks).toContain('className="mlb-world-series-stage"');
+    expect(mlbPicks).toContain('className="surface-card mlb-race-bracket"');
+    expect(mlbPicks).toContain("mlb-round-series-card");
+    expect(styles).toContain("scroll-snap-type: x proximity");
+    expect(styles).toContain(".mlb-round-team.is-selected");
   });
 
   it("keeps MLB Play focused on the featured challenge", () => {
