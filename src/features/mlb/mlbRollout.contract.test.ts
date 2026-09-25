@@ -62,6 +62,12 @@ describe("MLB Playoffs rollout gate", () => {
     expect(home).toContain("previewMode={identity.profile?.canControlPicks === true}");
   });
 
+  it("uses MLB team identity colors for selected series picks", () => {
+    expect(mlbPicks).toContain("--football-pick-team-color");
+    expect(mlbPicks).toContain("mlbTeamColor(");
+    expect(mlbPicks).toContain('aria-label={`${team.name} ${team.side === "away" ? "away" : "home"}`}');
+  });
+
   it("renders owner-only MLB with production-facing chrome", () => {
     expect(mlbPicks).not.toContain("OWNER PREVIEW");
     expect(mlbPicks).not.toContain("MOCK FIELD");
