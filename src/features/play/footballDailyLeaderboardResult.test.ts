@@ -8,9 +8,9 @@ const footballDaily = readFileSync(
 );
 
 describe("Football Daily leaderboard result renderer", () => {
-  it("routes Millionaire and Sports Feud through the read-only leaderboard viewer", () => {
+  it("routes Millionaire, Sports Feud, and Who Am I through the read-only leaderboard viewer", () => {
     expect(hub).toContain("DailyLeaderboardGameResult");
-    expect(hub).toContain('entry.gameType === "millionaire" || entry.gameType === "sports_feud"');
+    expect(hub).toContain('entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i"');
     expect(hub).toContain("resultDetail={entry.resultDetail}");
   });
 
