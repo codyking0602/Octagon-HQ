@@ -119,6 +119,15 @@ export function isStrongLateAnchor(clue: WhoAmIClue) {
     && LATE_ANCHOR_CATEGORIES.has(whoAmIRevealProfile(clue).category);
 }
 
+function isNearGiveawayAnchor(clue: WhoAmIClue) {
+  const profile = whoAmIRevealProfile(clue);
+  return clue.band === "giveaway"
+    || profile.identifyingPower === "signature"
+    || profile.category === "signature-moment"
+    || profile.category === "jersey-number"
+    || profile.category === "nickname-persona";
+}
+
 export function whoAmIRevealCoordinateWindowSatisfied(clues: readonly WhoAmIClue[]) {
   const exposed = new Set<WhoAmIRevealCoordinate>();
   for (let index = 0; index < clues.length; index += 1) {
@@ -534,7 +543,8 @@ function scheduleRevealArchitecture(
   }
 
   const isCfbPool = clues.some((clue) => clue.revealCoordinates?.includes("school"));
-  const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"));
+  const isNflPool = clues.some((clue) => clue.revealCoordinates?.includes("franchise"))
+    || clues.some((clue) => clue.id === "pr4:role");
 
   // A ten-clue board cannot repair set-level composition by reordering. Reject
   // impossible selected boards before entering the permutation search so the
@@ -595,6 +605,9 @@ function scheduleRevealArchitecture(
         return null;
       }
       if (isFootballPool && !isStrongLateAnchor(ordered.at(-1)!)) {
+        return null;
+      }
+      if (isNflPool && !ordered.slice(-2).some(isNearGiveawayAnchor)) {
         return null;
       }
       if (isCfbPool && ordered.filter((clue) => whoAmIClueFacet(clue) === "production").length > 4) {
@@ -671,6 +684,14 @@ function scheduleRevealArchitecture(
 
     const lateStrongCount = lateChosen.filter((clue) => clue.band === "strong" || clue.band === "giveaway").length;
     const lateAnchorCount = lateChosen.filter(isStrongLateAnchor).length;
+    if (
+      isNflPool
+      && position >= 9
+      && !chosen.slice(8).some((entry) => isNearGiveawayAnchor(entry.clue))
+      && !semanticallyAvailable.some(({ clue }) => isNearGiveawayAnchor(clue))
+    ) {
+      return null;
+    }
     const stateKey = [
       position,
       lateStrongCount,
@@ -697,6 +718,12 @@ function scheduleRevealArchitecture(
         || isStrongLateAnchor(clue)
       ))
       .filter(({ clue }) => (
+        !isNflPool
+        || position !== targetLength
+        || chosen.slice(8).some((entry) => isNearGiveawayAnchor(entry.clue))
+        || isNearGiveawayAnchor(clue)
+      ))
+      .filter(({ clue }) => (
         position < 7
         || strongLateNeeded < lateSlotsRemaining
         || clue.band === "strong"
@@ -711,6 +738,28 @@ function scheduleRevealArchitecture(
         const leftProfile = whoAmIRevealProfile(left.clue);
         const rightProfile = whoAmIRevealProfile(right.clue);
         const powerRank = { broad: 0, specific: 1, signature: 2 } as const;
+        const openingRolePreference = isNflPool && position <= 2
+          ? Number(rightProfile.category === "role") - Number(leftProfile.category === "role")
+          : 0;
+        const leftOpeningFoundation = (
+          leftProfile.category === "era"
+          || leftProfile.category === "school"
+          || leftProfile.category === "sports-biography"
+          || leftProfile.category === "draft-entry"
+          || leftProfile.category === "team-path"
+          || leftProfile.category === "style"
+        );
+        const rightOpeningFoundation = (
+          rightProfile.category === "era"
+          || rightProfile.category === "school"
+          || rightProfile.category === "sports-biography"
+          || rightProfile.category === "draft-entry"
+          || rightProfile.category === "team-path"
+          || rightProfile.category === "style"
+        );
+        const openingFoundationPreference = isNflPool && position >= 2 && position <= 4
+          ? Number(rightOpeningFoundation) - Number(leftOpeningFoundation)
+          : 0;
         const coordinatePreference = position <= 4
           ? (left.clue.revealCoordinates?.length ?? 0) - (right.clue.revealCoordinates?.length ?? 0)
           : 0;
@@ -720,7 +769,9 @@ function scheduleRevealArchitecture(
         const powerPreference = position >= 7
           ? powerRank[rightProfile.identifyingPower] - powerRank[leftProfile.identifyingPower]
           : powerRank[leftProfile.identifyingPower] - powerRank[rightProfile.identifyingPower];
-        return coordinatePreference
+        return openingRolePreference
+          || openingFoundationPreference
+          || coordinatePreference
           || lateAnchorPreference
           || preferredBandRank(position, left.clue.band) - preferredBandRank(position, right.clue.band)
           || powerPreference

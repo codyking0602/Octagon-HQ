@@ -25,7 +25,7 @@
     "pretest": "npm run generate:football-recognizability && npm run generate:football-cfb-player-seasons && npm run generate:football-career-media-context && npm run generate:football-factual-universe && npm run generate:football-ledger-audit && npm run verify:football-ledger-audit && npm run generate:football-who-am-i-daily-universes",
     "test": "vitest run",
     "typecheck:whoami:fast": "tsc --noEmit",
-    "test:whoami:fast": "vitest run src/features/games/whoAmISemanticQuality.test.ts src/features/games/whoAmIRevealArchitecture.test.ts src/features/games/whoAmIFastQualityGate.test.ts src/features/games/whoAmICfbPr3PopulationQuality.test.ts src/features/games/whoAmIFootballRevealCoordinateQuality.test.ts src/app/fastPrFeedbackWorkflow.contract.test.ts",
+    "test:whoami:fast": "vitest run src/features/games/whoAmISemanticQuality.test.ts src/features/games/whoAmIRevealArchitecture.test.ts src/features/games/whoAmIFastQualityGate.test.ts src/features/games/whoAmICfbPr3PopulationQuality.test.ts src/features/games/whoAmINflPr4PopulationQuality.test.ts src/features/games/whoAmIFootballRevealCoordinateQuality.test.ts src/features/games/whoAmINflBatch1Audit.test.ts src/features/games/whoAmINflBatch2Audit.test.ts src/features/games/whoAmINflBatch3Audit.test.ts src/features/games/whoAmINflBatch4Audit.test.ts src/features/games/whoAmIClueAssembler.test.ts src/features/games/whoAmISimulation.test.ts src/app/fastPrFeedbackWorkflow.contract.test.ts",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
     "export:verdict": "node scripts/export-octagon-verdict.mjs",
     "generate:football-who-am-i-daily-universes": "node scripts/generate-football-who-am-i-daily-universes.mjs"

@@ -170,8 +170,11 @@ export function whoAmIClueInformationKeys(clue: WhoAmIClue) {
   const haystack = `${clue.conceptId ?? ""} ${clue.id} ${clue.text}`;
 
   for (const key of structuralKeys(clue)) keys.add(key);
+  // Award names in clue IDs/concept IDs can also be a subject's surname
+  // (for example Fred Biletnikoff or Chuck Bednarik). Only visible clue copy
+  // establishes an award claim; source identifiers must not manufacture one.
   for (const [pattern, key] of AWARD_KEYS) {
-    if (pattern.test(haystack)) keys.add(key);
+    if (pattern.test(clue.text)) keys.add(key);
   }
   for (const key of numericMetricKeys(clue.text)) keys.add(key);
 

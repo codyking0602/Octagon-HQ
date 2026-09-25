@@ -1,5 +1,6 @@
 import type { FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import { refineCfbWhoAmIContent } from "./whoAmICfbPr3Curation";
+import { refineNflWhoAmIContent } from "./whoAmINflPr4Curation";
 import { whoAmIClueFacet, whoAmIClueSelectionClass } from "./whoAmIClueAssembler";
 import type { WhoAmIClue, WhoAmIClueFacet } from "./whoAmIEngine";
 
@@ -137,19 +138,19 @@ const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["tom-brady", keep("identity:baseball-draft-option", "identity:michigan-backup-to-griese", "identity:michigan-henson-competition", "identity:late-draft-roster-survival")],
   ["troy-aikman", keep("identity:oklahoma-position-flexibility", "identity:wishbone-mismatch-transfer", "identity:jimmy-johnson-recruiting-connection", "identity:oklahoma-to-ucla-reinvention")],
   ["nfl-ya-tittle", keep("identity:pro-bowls", "identity:all-nfl-selections", "identity:1962-touchdown-record", "identity:1963-touchdown-record", "identity:three-giants-division-titles", "identity:nfl-mvp-1961")],
-  ["nfl-alex-smith", keep("identity:reggie-bush-run-first-high-school", "identity:constant-offensive-system-turnover", "identity:catastrophic-leg-injury-comeback")],
+  ["nfl-alex-smith", keep("identity:reggie-bush-run-first-high-school", "identity:lightly-recruited-late-developer", "identity:constant-offensive-system-turnover", "identity:catastrophic-leg-injury-comeback")],
   ["andrew-luck", keep("identity:pain-rehab-cycle-retirement", "identity:cfb-andrew-luck--oliver-luck-football-family")],
   ["adrian-peterson", keep("identity:ad-all-day-nickname", "identity:sprinter-speed-deeper-alignment", "identity:vikings-draft-collarbone-concern", "identity:walkthrough-full-speed-habit", "identity:acl-mcl-rapid-comeback")],
   ["barry-sanders", keep("identity:late-high-school-position-opportunity", "identity:college-backup-to-thurman-thomas", "identity:college-return-specialist-breakthrough", "identity:historic-lone-starting-season", "identity:skipped-college-senior-season", "identity:oklahoma-state-campus-honor")],
   ["nfl-bronko-nagurski", keep("identity:five-positions-one-college-game", "identity:left-nfl-for-pro-wrestling", "identity:wartime-nfl-comeback", "identity:five-all-nfl-selections")],
   ["nfl-doak-walker", keep("identity:five-sport-high-school-athlete", "identity:bobby-layne-lifelong-football-link", "identity:merchant-marine-college-interruption", "identity:house-that-doak-built", "identity:pro-bowls")],
-  ["earl-campbell", keep("identity:tyler-rose-family-origin", "identity:luv-ya-blue-monday-night-breakout")],
+  ["earl-campbell", keep("identity:tyler-rose-family-origin", "identity:mother-controlled-recruiting", "identity:summer-construction-before-heisman", "identity:luv-ya-blue-monday-night-breakout")],
   ["emmitt-smith", keep("identity:historic-high-school-rushing", "identity:florida-record-book-takeover", "identity:super-bowl-champion-holdout", "identity:1993-giants-injury-game")],
-  ["eric-dickerson", keep("identity:prescription-sports-goggles", "identity:pony-express-backfield", "identity:halloween-three-way-trade")],
+  ["eric-dickerson", keep("identity:prescription-sports-goggles", "identity:neck-roll-full-pads-look", "identity:adoptive-mother-smu-influence", "identity:pony-express-backfield", "identity:halloween-three-way-trade")],
   ["nfl-frank-gifford", keep("identity:junior-college-to-usc-path", "identity:pro-bowl-offense-and-defense", "identity:halfback-option-passer", "identity:bednarik-hit-hiatus", "identity:monday-night-football-second-career", "identity:pro-bowls")],
   ["gale-sayers", keep("identity:kansas-comet-nickname", "identity:piccolo-interracial-roommates", "identity:piccolo-knee-rehab-support", "identity:halas-award-given-to-piccolo")],
   ["nfl-harold-red-grange", keep("identity:1924-michigan-breakout", "identity:ten-days-college-to-pro", "identity:nfl-barnstorming-attraction", "identity:early-player-agent-celebrity-brand", "identity:nfl-championship-1933")],
-  ["jim-brown", keep("identity:syracuse-four-sport-profile", "identity:dual-sport-hall-of-fame", "identity:early-retirement-acting-career")],
+  ["jim-brown", keep("identity:prep-basketball-dominance", "identity:syracuse-four-sport-profile", "identity:dual-sport-hall-of-fame", "identity:early-retirement-acting-career")],
   ["nfl-jim-thorpe", keep("identity:wa-tho-huk-bright-path", "identity:carlisle-multisport-development", "identity:olympic-pentathlon-decathlon-double", "identity:major-league-baseball-crossover", "identity:first-apfa-president-player", "identity:twelve-pro-seasons")],
   ["ladainian-tomlinson", keep("identity:late-high-school-running-back-move", "identity:tcu-position-change", "identity:historic-406-yard-game", "identity:nfl-draft-2001")],
   ["marcus-allen", keep("identity:high-school-quarterback-defensive-back", "identity:recruited-as-defensive-back", "identity:charles-white-fullback-apprenticeship", "identity:super-bowl-reverse-field-run", "identity:raiders-rift-to-chiefs-second-act", "identity:damon-allen-quarterback-brother")],
@@ -157,9 +158,9 @@ const retainedIdentityConcepts = new Map<string, ReadonlySet<string>>([
   ["nfl-oj-simpson", keep("identity:junior-college-to-usc-route", "identity:usc-world-record-relay", "identity:juice-electric-company-wordplay", "identity:usc-ucla-breakaway-touchdown", "identity:pro-bowls")],
   ["nfl-paul-hornung", keep("identity:three-sport-high-school-letterman", "identity:losing-team-heisman", "identity:notre-dame-everything-role", "identity:1963-gambling-suspension-return")],
   ["nfl-reggie-bush", keep("identity:helix-teammate-alex-smith", "identity:bush-push", "identity:heisman-vacated-and-restored", "identity:texans-passed-at-number-one", "identity:post-katrina-new-orleans-arrival")],
-  ["tony-dorsett", keep("identity:undersized-local-pitt-recruit", "identity:cowboys-four-pick-trade-up", "identity:ninety-nine-yard-run-ten-men", "identity:cfb-tony-dorsett--hawk-nickname-origin")],
-  ["walter-payton", keep("identity:first-football-play-touchdown", "identity:segregation-era-recruiting-path", "identity:sweetness-nickname-origin")],
-  ["nfl-ahman-green", keep("identity:state-champion-sprinter", "identity:high-school-baseball-center-fielder")],
+  ["tony-dorsett", keep("identity:late-high-school-running-back-switch", "identity:undersized-local-pitt-recruit", "identity:cowboys-four-pick-trade-up", "identity:ninety-nine-yard-run-ten-men", "identity:cfb-tony-dorsett--hawk-nickname-origin")],
+  ["walter-payton", keep("identity:first-football-play-touchdown", "identity:brother-college-path", "identity:segregation-era-recruiting-path", "identity:sweetness-nickname-origin")],
+  ["nfl-ahman-green", keep("identity:state-champion-sprinter", "identity:high-school-baseball-center-fielder", "identity:seattle-fumble-stigma-reset")],
 ]);
 
 const facetOverrides = new Map<string, WhoAmIClueFacet>([
@@ -241,6 +242,12 @@ const clueTextOverrides = new Map<string, Pick<WhoAmIClue, "text" | "band" | "fa
     facet: "accomplishments",
     revealPriority: 14,
   }],
+  ["nfl-alex-smith:identity:catastrophic-leg-injury-comeback", {
+    text: "I returned to NFL action after a 2018 compound leg fracture led to severe infection and roughly 17 surgeries.",
+    band: "giveaway",
+    facet: "career-path",
+    revealPriority: 7,
+  }],
   ["earl-campbell:identity:tyler-rose-family-origin", {
     text: "I was known as the 'Tyler Rose.'",
     band: "giveaway",
@@ -264,8 +271,14 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:three-straight-mvps", conceptId: "curated:three-straight-mvps", text: "I won the AP NFL MVP award three straight seasons from 1995 through 1997.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:green-bay-ironman", conceptId: "curated:green-bay-ironman", text: "I became Green Bay's defining quarterback while building an NFL-record streak of 297 consecutive regular-season starts.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
   ]],
-  ["cam-newton", [{ id: "curated:2015-mvp", conceptId: "curated:2015-mvp", text: "I was the 2015 AP NFL MVP after leading Carolina to a 15-1 regular season.", band: "giveaway", facet: "accomplishments", revealPriority: 12 }]],
-  ["drew-brees", [{ id: "curated:super-bowl-xliv-mvp", conceptId: "curated:super-bowl-xliv-mvp", text: "I was Super Bowl XLIV MVP after leading New Orleans to the first championship in franchise history.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["cam-newton", [
+    { id: "curated:2015-mvp", conceptId: "curated:2015-mvp", text: "I was the 2015 AP NFL MVP after leading Carolina to a 15-1 regular season.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
+    { id: "curated:2015-45-total-td", conceptId: "curated:2015-45-total-td", text: "In 2015 I led the NFL with 45 total touchdowns, throwing 35 and rushing for 10.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
+  ["drew-brees", [
+    { id: "curated:super-bowl-xliv-mvp", conceptId: "curated:super-bowl-xliv-mvp", text: "I was Super Bowl XLIV MVP after leading New Orleans to the first championship in franchise history.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:two-opoy", conceptId: "curated:two-opoy", text: "I was AP NFL Offensive Player of the Year twice, in 2008 and 2011.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
   ["nfl-fran-tarkenton", [
     { id: "curated:1975-mvp", conceptId: "curated:1975-mvp", text: "I was named the NFL's Most Valuable Player in 1975.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
     { id: "curated:retirement-record-book", conceptId: "curated:retirement-record-book", text: "When I retired, I ranked first in NFL history in career completions, passing yards and touchdown passes.", band: "strong", facet: "accomplishments", revealPriority: 18 },
@@ -307,13 +320,55 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:thirteen-second-drive", conceptId: "curated:thirteen-second-drive", text: "With 13 seconds left against Buffalo in the 2021 divisional round, I completed two passes to set up the tying field goal before winning in overtime.", band: "giveaway", facet: "accomplishments", revealPriority: 12 },
     { id: "curated:youngest-mvp-and-super-bowl", conceptId: "curated:youngest-mvp-and-super-bowl", text: "At 24, I became the youngest player to win both an NFL MVP award and a Super Bowl title.", band: "strong", facet: "accomplishments", revealPriority: 18 },
   ]],
-  ["steve-young", [{ id: "curated:montana-to-super-bowl-mvp", conceptId: "curated:montana-to-super-bowl-mvp", text: "I succeeded Joe Montana in San Francisco and later threw six touchdown passes as Super Bowl XXIX MVP.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["steve-young", [
+    { id: "curated:montana-to-super-bowl-mvp", conceptId: "curated:montana-to-super-bowl-mvp", text: "I succeeded Joe Montana in San Francisco and later threw six touchdown passes as Super Bowl XXIX MVP.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:six-passer-rating-titles", conceptId: "curated:six-passer-rating-titles", text: "I led the NFL in passer rating six times, including five of my first seven seasons as San Francisco's primary starter.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+    { id: "curated:two-league-mvps", conceptId: "curated:two-league-mvps", text: "I won two NFL Most Valuable Player awards.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
   ["nfl-terry-bradshaw", [
     { id: "curated:four-super-bowls", conceptId: "curated:four-super-bowls", text: "I quarterbacked Pittsburgh to four Super Bowl championships in six seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:1978-mvp", conceptId: "curated:1978-mvp", text: "I was the NFL's Most Valuable Player in 1978.", band: "strong", facet: "accomplishments", revealPriority: 16 },
   ]],
-  ["tom-brady", [{ id: "curated:seven-super-bowls", conceptId: "curated:seven-super-bowls", text: "I won seven Super Bowl championships as a starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
-  ["troy-aikman", [{ id: "curated:three-super-bowls", conceptId: "curated:three-super-bowls", text: "I quarterbacked Dallas to three Super Bowl championships in four seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
+  ["tom-brady", [
+    { id: "curated:seven-super-bowls", conceptId: "curated:seven-super-bowls", text: "I won seven Super Bowl championships as a starting quarterback.", band: "giveaway", facet: "accomplishments", revealPriority: 8 },
+    { id: "curated:three-ap-mvps", conceptId: "curated:three-ap-mvps", text: "I won three AP NFL MVP awards.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
+  ["troy-aikman", [
+    { id: "curated:three-super-bowls", conceptId: "curated:three-super-bowls", text: "I quarterbacked Dallas to three Super Bowl championships in four seasons.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:sb27-mvp", conceptId: "curated:sb27-mvp", text: "I was Super Bowl XXVII MVP after throwing four touchdown passes in Dallas's win over Buffalo.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:six-pro-bowls", conceptId: "curated:six-pro-bowls", text: "I was selected to six Pro Bowls.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
+  ["joe-namath", [
+    { id: "curated:namath-4000", conceptId: "curated:namath-4000", text: "In 1967 I became the first professional quarterback to throw for more than 4,000 yards in a season.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+  ]],
+  ["nfl-sid-luckman", [
+    { id: "curated:luckman-seven-td", conceptId: "curated:luckman-seven-td", text: "In 1943 I tied the NFL record by throwing seven touchdown passes in a game against the Giants.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+  ]],
+  ["nfl-alex-smith", [
+    { id: "curated:smith-comeback-2020", conceptId: "curated:smith-comeback-2020", text: "I was named the 2020 AP NFL Comeback Player of the Year after returning from my severe leg injury.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:smith-three-pro-bowls", conceptId: "curated:smith-three-pro-bowls", text: "I earned three Pro Bowl selections during my five seasons with Kansas City.", band: "strong", facet: "accomplishments", revealPriority: 18 },
+  ]],
+  ["earl-campbell", [
+    { id: "curated:campbell-three-rushing-titles", conceptId: "curated:campbell-three-rushing-titles", text: "I led the NFL in rushing in each of my first three seasons.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+    { id: "curated:campbell-back-to-back-mvp", conceptId: "curated:campbell-back-to-back-mvp", text: "I earned NFL MVP honors in both 1979 and 1980.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+  ]],
+  ["emmitt-smith", [
+    { id: "curated:smith-rushing-record", conceptId: "curated:smith-rushing-record", text: "I retired as the NFL's all-time rushing leader with 18,355 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+  ]],
+  ["gale-sayers", [
+    { id: "curated:sayers-six-td", conceptId: "curated:sayers-six-td", text: "As a rookie I scored six touchdowns in one game against San Francisco.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:sayers-comeback", conceptId: "curated:sayers-comeback", text: "After major knee surgery, I returned in 1969 to win the NFL rushing title and Comeback Player of the Year honors.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
+  ["marshall-faulk", [
+    { id: "curated:faulk-1000-1000", conceptId: "curated:faulk-1000-1000", text: "In my first season with St. Louis, I became the second player in NFL history to top 1,000 yards both rushing and receiving.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
+    { id: "curated:faulk-2000-mvp", conceptId: "curated:faulk-2000-mvp", text: "I was named NFL Most Valuable Player in 2000 after setting a then-record with 26 total touchdowns.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+  ]],
+  ["nfl-reggie-bush", [
+    { id: "curated:bush-sb44", conceptId: "curated:bush-sb44", text: "I was part of New Orleans's Super Bowl XLIV championship team.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
+  ["tony-dorsett", [
+    { id: "curated:dorsett-rookie-title", conceptId: "curated:dorsett-rookie-title", text: "As a rookie in 1977, I won NFL Offensive Rookie of the Year and helped Dallas win Super Bowl XII.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+  ]],
   ["andrew-luck", [
     { id: "curated:stanford", conceptId: "curated:stanford", text: "I played college football at Stanford.", band: "helpful", facet: "background", revealPriority: 20 },
     { id: "curated:first-overall-2012", conceptId: "curated:first-overall-2012", text: "Indianapolis selected me No. 1 overall in the 2012 NFL Draft.", band: "giveaway", facet: "career-path", revealPriority: 12 },
@@ -324,7 +379,23 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
     { id: "curated:bears-title-impact", conceptId: "curated:bears-title-impact", text: "I made defining plays for Chicago's 1932 and 1933 league titles and returned to score in the 1943 NFL Championship Game.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
   ]],
   ["nfl-doak-walker", [{ id: "curated:1948-heisman", conceptId: "curated:1948-heisman", text: "I won the 1948 Heisman Trophy at SMU.", band: "giveaway", facet: "accomplishments", revealPriority: 10 }]],
-  ["eric-dickerson", [{ id: "curated:2105-rushing", conceptId: "curated:2105-rushing", text: "I set the NFL single-season rushing record with 2,105 yards in 1984.", band: "giveaway", facet: "accomplishments", revealPriority: 8 }]],
+  ["eric-dickerson", [
+    { id: "curated:2105-rushing", conceptId: "curated:2105-rushing", text: "I set the NFL single-season rushing record with 2,105 yards in 1984.", band: "giveaway", facet: "accomplishments", revealPriority: 8 },
+    { id: "curated:four-rushing-titles", conceptId: "curated:four-rushing-titles", text: "I won four NFL rushing titles and earned five first-team All-Pro selections.", band: "strong", facet: "accomplishments", revealPriority: 14 },
+    { id: "curated:rookie-record", conceptId: "curated:rookie-record", text: "As a rookie in 1983, I rushed for a rookie-record 1,808 yards and earned NFL Offensive Rookie of the Year honors.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+    { id: "curated:1983-second-overall", conceptId: "curated:1983-second-overall", text: "The Los Angeles Rams selected me No. 2 overall in the 1983 NFL Draft.", band: "strong", facet: "career-path", revealPriority: 18 },
+    { id: "curated:1999-hof", conceptId: "curated:1999-hof", text: "I was inducted into the Pro Football Hall of Fame in 1999.", band: "strong", facet: "accomplishments", revealPriority: 20 },
+    { id: "curated:six-pro-bowls", conceptId: "curated:six-pro-bowls", text: "I was selected to six Pro Bowls during my NFL career.", band: "strong", facet: "accomplishments", revealPriority: 22 },
+  ]],
+  ["jim-brown", [
+    { id: "curated:brown-three-mvps", conceptId: "curated:brown-three-mvps", text: "I won three AP NFL MVP awards during my nine-season career.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:brown-eight-rushing-titles", conceptId: "curated:brown-eight-rushing-titles", text: "I led the NFL in rushing in eight of my nine seasons.", band: "strong", facet: "accomplishments", revealPriority: 14 },
+    { id: "curated:brown-never-missed", conceptId: "curated:brown-never-missed", text: "I never missed a game during my nine NFL seasons.", band: "strong", facet: "accomplishments", revealPriority: 20 },
+  ]],
+  ["walter-payton", [
+    { id: "curated:payton-rushing-record", conceptId: "curated:payton-rushing-record", text: "I retired as the NFL's all-time leading rusher with 16,726 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 9 },
+    { id: "curated:payton-1977-mvp", conceptId: "curated:payton-1977-mvp", text: "I was named the NFL's Most Valuable Player in 1977.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+  ]],
   ["nfl-harold-red-grange", [{ id: "curated:galloping-ghost", conceptId: "curated:galloping-ghost", text: "I was famously nicknamed the 'Galloping Ghost.'", band: "giveaway", facet: "nickname", revealPriority: 8 }]],
   ["nfl-jim-thorpe", [
     { id: "curated:carlisle-all-american", conceptId: "curated:carlisle-all-american", text: "I was a consensus All-American at Carlisle in both 1911 and 1912.", band: "strong", facet: "accomplishments", revealPriority: 15 },
@@ -340,6 +411,7 @@ const supplementalClues = new Map<string, readonly WhoAmIClue[]>([
   ["nfl-ahman-green", [
     { id: "curated:packers-rushing-leader", conceptId: "curated:packers-rushing-leader", text: "I finished as the Packers' all-time leading rusher with 8,322 yards.", band: "giveaway", facet: "accomplishments", revealPriority: 10 },
     { id: "curated:2003-packers-record", conceptId: "curated:2003-packers-record", text: "I set Green Bay's single-season rushing record with 1,883 yards in 2003.", band: "strong", facet: "accomplishments", revealPriority: 16 },
+    { id: "curated:green-four-pro-bowls", conceptId: "curated:green-four-pro-bowls", text: "I made four straight Pro Bowls with Green Bay from 2001 through 2004.", band: "strong", facet: "accomplishments", revealPriority: 18 },
   ]],
 ]);
 
@@ -544,6 +616,7 @@ const batch2TextOverrides = new Map<string, Partial<WhoAmIClue>>([
   ["nfl-dave-casper:identity:pr7-dave-casper-holy-roller-rule-change", { text: "I recovered the final fumble in the end zone on the Raiders' game-winning 1978 'Holy Roller,' a play that helped trigger a rule change.", facet: "accomplishments" }],
   ["jason-witten:identity:pr7-jason-witten-parcells-bavaro-mentor", { text: "Bill Parcells coached me early in Dallas and repeatedly used former Giants tight end Mark Bavaro as my toughness standard.", facet: "relationships" }],
   ["nfl-kellen-winslow:identity:pr7-kellen-winslow-basketball-box-out", { facet: "style" }],
+  ["nfl-kellen-winslow:identity:pr7-kellen-winslow-epic-in-miami", { band: "giveaway", facet: "accomplishments", revealPriority: 7 }],
   ["nfl-tony-gonzalez:identity:pr7-tony-gonzalez-kansas-city-contender-choice", { facet: "career-path" }],
   ["nfl-bijan-robinson:identity:signature-juke-craft", { band: "helpful", facet: "style" }],
   ["nfl-jerry-rice:identity:overlooked-by-big-programs", { band: "helpful", facet: "background" }],
@@ -2441,6 +2514,18 @@ function batch4ApplyOverrides(subject: FootballSubjectProfile, clue: WhoAmIClue)
     && clue.conceptId === "identity:super-bowl-onside-kick-gamble"
   ) {
     return { ...clue, band: "strong", facet: "accomplishments", revealPriority: 16 };
+  }
+  if (
+    subject.id === "don-shula"
+    && clue.conceptId === "identity:coached-before-playing-pro"
+  ) {
+    return { ...clue, band: "helpful", facet: "background", revealPriority: 18 };
+  }
+  if (
+    subject.id === "don-shula"
+    && clue.conceptId === "identity:pro-playing-career"
+  ) {
+    return { ...clue, band: "helpful", facet: "role", revealPriority: 20 };
   }
   if (subject.id === "pete-carroll" && clue.id === "era") {
     return { ...clue, text: "I was an NFL head coach in the 1990s, 2010s and 2020s." };
@@ -5197,10 +5282,10 @@ export function curateFootballWhoAmIClues(
     return refineCfbWhoAmIContent(subject, curateCfbBatch4Clues(subject, rawClues));
   }
   if (subject.league !== "NFL") return [...rawClues];
-  if (batch4SubjectIds.has(subject.id)) return curateNflBatch4Clues(subject, rawClues);
-  if (batch3SubjectIds.has(subject.id)) return curateNflBatch3Clues(subject, rawClues);
-  if (batch2SubjectIds.has(subject.id)) return curateNflBatch2Clues(subject, rawClues);
-  if (!batchSubjectIds.has(subject.id)) return [...rawClues];
+  if (batch4SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch4Clues(subject, rawClues), rawClues);
+  if (batch3SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch3Clues(subject, rawClues), rawClues);
+  if (batch2SubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, curateNflBatch2Clues(subject, rawClues), rawClues);
+  if (!batchSubjectIds.has(subject.id)) return refineNflWhoAmIContent(subject, rawClues, rawClues);
 
   const retained = retainedIdentityConcepts.get(subject.id);
   let colorUsed = false;
@@ -5238,5 +5323,8 @@ export function curateFootballWhoAmIClues(
   }
 
   curated.push(...(supplementalClues.get(subject.id) ?? []));
-  return trimDeepPool(subject, curated);
+  // PR4 owns the final NFL editorial/depth pass. Give it the full curated
+  // batch-1 source pool so it can replace generic stat volume with useful
+  // identity/foundation facts instead of inheriting a pre-trimmed thin pool.
+  return refineNflWhoAmIContent(subject, curated, rawClues);
 }
