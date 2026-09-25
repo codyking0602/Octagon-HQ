@@ -4,6 +4,7 @@ import { MLB_ROUND_LABELS, type MlbPlayoffRound } from "./mlbPlayoffsConfig";
 import { bracketComplete, nodeParticipants, sanitizeBracketPicks, teamById } from "./mlbBracket";
 import type { MlbBracketEntry, MlbBracketNode } from "./mlbPlayoffsRepository";
 import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import { mlbTeamAssetByName, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import "../../styles/mlb-playoffs.css";
 
@@ -158,7 +159,17 @@ export default function MlbPicksPage() {
                                 setDraft(next);
                               }}
                             >
-                              <span>{team.name}</span>
+                              <div className="mlb-team-choice__main">
+                                {(team.logo_url ?? mlbTeamLogoUrl(team.abbreviation, team.name)) ? (
+                                  <img
+                                    className="mlb-team-choice__logo"
+                                    src={team.logo_url ?? mlbTeamLogoUrl(team.abbreviation, team.name) ?? undefined}
+                                    alt=""
+                                    loading="lazy"
+                                  />
+                                ) : null}
+                                <span>{team.name}</span>
+                              </div>
                               <small>{team.seed ? `#${team.seed} ` : ""}{team.league ?? node.league ?? ""}</small>
                             </button>
                           ) : (
@@ -278,25 +289,32 @@ export default function MlbPicksPage() {
                 {[
                   [series.team_a_id, series.team_a_name],
                   [series.team_b_id, series.team_b_name],
-                ].map(([teamId, teamName]) => (
-                  <button
-                    key={teamId}
-                    type="button"
-                    className={`mlb-team-choice${selected === teamId ? " is-selected" : ""}${series.winner_team_id && series.winner_team_id !== teamId ? " is-eliminated" : ""}`}
-                    disabled={locked || (!previewMode && saving === series.series_id)}
-                    aria-pressed={selected === teamId}
-                    onClick={() => {
-                      if (previewMode) {
-                        setPreviewSeriesPicks((current) => ({ ...current, [series.series_id]: teamId }));
-                      } else {
-                        void saveSeriesPick(series.series_id, teamId);
-                      }
-                    }}
-                  >
-                    <span>{teamName}</span>
-                    <small>{selected === teamId ? "YOUR PICK" : "PICK SERIES WINNER"}</small>
-                  </button>
-                ))}
+                ].map(([teamId, teamName]) => {
+                  const asset = mlbTeamAssetByName(teamName);
+                  const logo = mlbTeamLogoUrl(asset?.abbreviation, teamName);
+                  return (
+                    <button
+                      key={teamId}
+                      type="button"
+                      className={`mlb-team-choice${selected === teamId ? " is-selected" : ""}${series.winner_team_id && series.winner_team_id !== teamId ? " is-eliminated" : ""}`}
+                      disabled={locked || (!previewMode && saving === series.series_id)}
+                      aria-pressed={selected === teamId}
+                      onClick={() => {
+                        if (previewMode) {
+                          setPreviewSeriesPicks((current) => ({ ...current, [series.series_id]: teamId }));
+                        } else {
+                          void saveSeriesPick(series.series_id, teamId);
+                        }
+                      }}
+                    >
+                      <div className="mlb-team-choice__main">
+                        {logo ? <img className="mlb-team-choice__logo" src={logo} alt="" loading="lazy" /> : null}
+                        <span>{teamName}</span>
+                      </div>
+                      <small>{selected === teamId ? "YOUR PICK" : "PICK SERIES WINNER"}</small>
+                    </button>
+                  );
+                })}
               </div>
               <p className="mlb-series-card__result">
                 {series.series_score
