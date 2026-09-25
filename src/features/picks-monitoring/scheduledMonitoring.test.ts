@@ -3,8 +3,10 @@ import type { MonitoringEvent } from "./manualMonitoringRunner";
 import {
   decideScheduledMonitoring,
   eventIsInAutomaticStagingWindow,
+  scheduledCardSourceIntervalMs,
   scheduledMonitoringIntervalMs,
   shouldAttemptAutomaticEventStaging,
+  shouldRunScheduledCardSourceCheck,
 } from "./scheduledMonitoring";
 
 const now = new Date("2026-08-10T12:00:00Z");
@@ -103,5 +105,23 @@ describe("scheduled monitoring cadence", () => {
       now,
       state: { provider_requests_remaining: 6 },
     }).due).toBe(true);
+  });
+});
+
+
+describe("official UFC card-source cadence", () => {
+  it("escalates independently from the paid odds-provider cadence", () => {
+    expect(scheduledCardSourceIntervalMs(event("2026-08-15T12:00:01Z"), now)).toBe(12 * 60 * 60 * 1000);
+    expect(scheduledCardSourceIntervalMs(event("2026-08-13T12:00:00Z"), now)).toBe(3 * 60 * 60 * 1000);
+    expect(scheduledCardSourceIntervalMs(event("2026-08-12T12:00:00Z"), now)).toBe(60 * 60 * 1000);
+    expect(scheduledCardSourceIntervalMs(event("2026-08-11T12:00:00Z"), now)).toBe(15 * 60 * 1000);
+  });
+
+  it("uses deterministic five-minute scheduler slots without creating another cron", () => {
+    const finalDay = event("2026-08-11T12:00:00Z");
+    expect(shouldRunScheduledCardSourceCheck(finalDay, new Date("2026-08-10T12:00:00Z"))).toBe(true);
+    expect(shouldRunScheduledCardSourceCheck(finalDay, new Date("2026-08-10T12:05:00Z"))).toBe(false);
+    expect(shouldRunScheduledCardSourceCheck(finalDay, new Date("2026-08-10T12:15:00Z"))).toBe(true);
+    expect(shouldRunScheduledCardSourceCheck(event("2026-08-10T11:59:59Z"), now)).toBe(false);
   });
 });
