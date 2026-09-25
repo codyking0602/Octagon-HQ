@@ -15,6 +15,26 @@ function blockAfter(marker: string, length = 900) {
 }
 
 describe("automatic Picks monitoring lifecycle", () => {
+  it("checks official UFC card truth on the existing scheduler before deciding whether paid odds are due", () => {
+    const cardCheckAt = runner.indexOf("shouldRunScheduledCardSourceCheck");
+    const scheduleDecisionAt = runner.indexOf("decideScheduledMonitoring");
+    const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey)");
+    expect(cardCheckAt).toBeGreaterThanOrEqual(0);
+    expect(scheduleDecisionAt).toBeGreaterThan(cardCheckAt);
+    expect(providerAt).toBeGreaterThan(scheduleDecisionAt);
+    expect(runner).toContain("forceCardRefresh");
+    expect(runner).toContain("!decision.due && !forceCardRefresh");
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey\)/g)).toHaveLength(1);
+  });
+
+  it("converges several trusted card mutations without paying for another odds response", () => {
+    expect(runner).toContain("for (let attempt = 0; attempt < 8; attempt += 1)");
+    expect(runner).toContain("remainingCardFindings");
+    expect(runner).toContain('admin.rpc("record_pick_monitoring_run_and_apply_odds"');
+    expect(runner.match(/buildTheOddsApiRequestUrl\(providerKey\)/g)).toHaveLength(1);
+    expect(runner).toContain("Reusing the one odds response");
+  });
+
   it("claims due scheduled work before the one configured odds-provider request", () => {
     const claimAt = runner.indexOf('admin.rpc("claim_pick_monitoring_schedule"');
     const providerAt = runner.indexOf("buildTheOddsApiRequestUrl(providerKey)");
