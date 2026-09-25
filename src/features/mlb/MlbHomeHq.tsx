@@ -138,7 +138,7 @@ export function MlbHomeHq({
 
           <Link
             className="home-weekly-games-row"
-            to="/mlb/picks#mlb-playoff-bracket"
+            to="/mlb/picks#mlb-bracket"
             aria-label="View MLB Playoff Bracket"
           >
             <span className="home-weekly-games-row__copy">
