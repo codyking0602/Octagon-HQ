@@ -180,30 +180,48 @@ function replacementProposal(
   current: ApprovalMonitoringBout,
   proposed: ApprovalMonitoringBout,
 ): CardChangeApprovalProposal | null {
-  const sameRed = fighterOddsIdentity(current.red_fighter_name)
-    === fighterOddsIdentity(proposed.red_fighter_name);
-  const sameBlue = fighterOddsIdentity(current.blue_fighter_name)
-    === fighterOddsIdentity(proposed.blue_fighter_name);
+  const currentFighters = [
+    {
+      corner: "red" as const,
+      identity: fighterOddsIdentity(current.red_fighter_name),
+      name: current.red_fighter_name,
+    },
+    {
+      corner: "blue" as const,
+      identity: fighterOddsIdentity(current.blue_fighter_name),
+      name: current.blue_fighter_name,
+    },
+  ];
+  const proposedFighters = [
+    {
+      identity: fighterOddsIdentity(proposed.red_fighter_name),
+      slug: proposed.red_fighter_slug,
+      name: proposed.red_fighter_name,
+    },
+    {
+      identity: fighterOddsIdentity(proposed.blue_fighter_name),
+      slug: proposed.blue_fighter_slug,
+      name: proposed.blue_fighter_name,
+    },
+  ];
+  const shared = currentFighters.filter((fighter) => (
+    proposedFighters.some((candidate) => candidate.identity === fighter.identity)
+  ));
+  if (shared.length !== 1) return null;
 
-  if (sameRed === sameBlue) return null;
-  const corner = sameRed ? "blue" : "red";
-  const replacementName = corner === "red"
-    ? proposed.red_fighter_name
-    : proposed.blue_fighter_name;
-  const replacementSlug = corner === "red"
-    ? proposed.red_fighter_slug
-    : proposed.blue_fighter_slug;
-  if (!replacementName.trim() || !replacementSlug.trim()) return null;
+  const departing = currentFighters.find((fighter) => fighter.identity !== shared[0]!.identity);
+  const replacement = proposedFighters.find((fighter) => fighter.identity !== shared[0]!.identity);
+  if (!departing || !replacement?.name.trim() || !replacement.slug.trim()) return null;
 
   return {
     action: "replace_fighter",
     event_id: eventId,
     bout_id: current.bout_id,
-    corner,
+    corner: departing.corner,
     expected_red_fighter_slug: current.red_fighter_slug,
     expected_blue_fighter_slug: current.blue_fighter_slug,
-    replacement_fighter_slug: replacementSlug,
-    replacement_fighter_name: replacementName,
+    replacement_fighter_slug: replacement.slug,
+    replacement_fighter_name: replacement.name,
   };
 }
 
@@ -259,42 +277,53 @@ export function buildCardChangeFindings(input: {
   const consumedSource = new Set<string>();
   const handledSummaries = new Set<string>();
 
-  if (unmatchedCurrent.length === 1 && unmatchedSource.length === 1
-    && canonicalBouts.indexOf(unmatchedCurrent[0]) === sourceBouts.indexOf(unmatchedSource[0])) {
-    const proposal = replacementProposal(input.eventId, unmatchedCurrent[0], unmatchedSource[0]);
-    if (proposal?.action === "replace_fighter") {
-      const current = unmatchedCurrent[0];
-      const proposed = unmatchedSource[0];
-      consumedCurrent.add(matchup(current));
-      consumedSource.add(matchup(proposed));
-      const beforeName = proposal.corner === "red"
-        ? current.red_fighter_name
-        : current.blue_fighter_name;
-      result.push(finding({
-        identity: input.identity,
-        kind: input.kind,
-        detectedAt: input.detectedAt,
-        summary: `Replace ${beforeName} with ${proposal.replacement_fighter_name}.`,
-        subjectKey: `bout:${current.bout_id}:fighters`,
-        field: "fighters",
-        beforeValue: {
-          red_fighter_name: current.red_fighter_name,
-          blue_fighter_name: current.blue_fighter_name,
-        },
-        afterValue: {
-          red_fighter_name: proposed.red_fighter_name,
-          blue_fighter_name: proposed.blue_fighter_name,
-        },
-        boutId: current.bout_id,
-        matchupIdentity: matchup(current),
-        proposal,
-      }));
-    }
+  for (const current of unmatchedCurrent) {
+    const candidates = unmatchedSource.filter((proposed) => (
+      replacementProposal(input.eventId!, current, proposed)?.action === "replace_fighter"
+    ));
+    if (candidates.length !== 1) continue;
+
+    const proposed = candidates[0]!;
+    const reverseCandidates = unmatchedCurrent.filter((candidate) => (
+      replacementProposal(input.eventId!, candidate, proposed)?.action === "replace_fighter"
+    ));
+    if (reverseCandidates.length !== 1) continue;
+
+    const proposal = replacementProposal(input.eventId, current, proposed);
+    if (proposal?.action !== "replace_fighter") continue;
+
+    consumedCurrent.add(matchup(current));
+    consumedSource.add(matchup(proposed));
+    const beforeName = proposal.corner === "red"
+      ? current.red_fighter_name
+      : current.blue_fighter_name;
+    result.push(finding({
+      identity: input.identity,
+      kind: input.kind,
+      detectedAt: input.detectedAt,
+      summary: `Replace ${beforeName} with ${proposal.replacement_fighter_name}.`,
+      subjectKey: `bout:${current.bout_id}:fighters`,
+      field: "fighters",
+      beforeValue: {
+        red_fighter_name: current.red_fighter_name,
+        blue_fighter_name: current.blue_fighter_name,
+      },
+      afterValue: {
+        red_fighter_name: proposed.red_fighter_name,
+        blue_fighter_name: proposed.blue_fighter_name,
+      },
+      boutId: current.bout_id,
+      matchupIdentity: matchup(current),
+      proposal,
+    }));
   }
 
-  const safeAddedFight = unmatchedCurrent.length === 0 && unmatchedSource.length === 1
-    ? unmatchedSource[0]
-    : null;
+  const remainingCurrent = unmatchedCurrent.filter((bout) => !consumedCurrent.has(matchup(bout)));
+  const remainingSource = unmatchedSource.filter((bout) => !consumedSource.has(matchup(bout)));
+  const safeAddedFight = remainingSource.find((proposed) => (
+    !remainingCurrent.some((current) => replacementProposal(input.eventId!, current, proposed))
+  )) ?? null;
+  let addProposed = false;
   const addedWeightClass = textValue(safeAddedFight?.weight_class);
   const addedCardSegment = safeAddedFight?.card_segment === "main" || safeAddedFight?.card_segment === "prelim"
     ? safeAddedFight.card_segment
@@ -310,6 +339,7 @@ export function buildCardChangeFindings(input: {
     && safeAddedFight.red_fighter_name.trim()
     && safeAddedFight.blue_fighter_slug.trim()
     && safeAddedFight.blue_fighter_name.trim()) {
+    addProposed = true;
     consumedSource.add(matchup(safeAddedFight));
     const expectedBoutIds = canonicalBouts.map((bout) => bout.bout_id);
     result.push(finding({
@@ -345,9 +375,8 @@ export function buildCardChangeFindings(input: {
   }
 
   const hasUnresolvedAddedFight = unmatchedSource.some((bout) => !consumedSource.has(matchup(bout)));
-  if (!hasUnresolvedAddedFight) {
-    for (const current of unmatchedCurrent) {
-      if (consumedCurrent.has(matchup(current))) continue;
+  if (!addProposed && !hasUnresolvedAddedFight) {
+    for (const current of remainingCurrent) {
       result.push(finding({
         identity: input.identity,
         kind: input.kind,
@@ -546,7 +575,7 @@ export function buildCardChangeFindings(input: {
         consumedCurrent.has(matchup(bout))
         && summary.includes(`${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)
       ));
-      const proposedRemoval = !hasUnresolvedAddedFight && unmatchedCurrent.some((bout) => (
+      const proposedRemoval = !addProposed && !hasUnresolvedAddedFight && unmatchedCurrent.some((bout) => (
         summary.includes(`${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`)
       ));
       if (consumed || proposedRemoval) continue;
