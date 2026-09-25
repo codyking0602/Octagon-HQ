@@ -2952,3 +2952,25 @@
     padding: 6px 5px;
   }
 }
+
+/* MLB Find the Leader — Football presentation parity */
+.mlb-find-leader-page {
+  --football-accent: var(--mlb-green);
+  --football-accent-rgb: var(--mlb-green-rgb);
+  --football-logo-backplate: #e7e1d7;
+  --football-logo-backplate-border: rgba(74, 63, 49, .22);
+}
+
+.mlb-find-leader-page .football-find-hero,
+.mlb-find-leader-page .football-find-grid,
+.mlb-find-leader-page .football-find-result,
+.mlb-find-leader-page .football-find-order,
+.mlb-find-leader-page .football-find-reveal {
+  border-color: rgba(var(--mlb-green-rgb), .28);
+}
+
+.mlb-find-leader-page .game-result-actions .primary-action {
+  border-color: var(--mlb-green);
+  background: var(--mlb-green);
+}
+
