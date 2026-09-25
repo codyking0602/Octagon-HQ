@@ -55,6 +55,7 @@ const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Extra point": ["PAT", "Point after", "Point after touchdown"],
   "Yards per attempt": ["YPA"],
   "Tackles for loss": ["TFL", "TFLs"],
+  "Demian Maia": ["Maya"],
 };
 
 export function standardSportsFeudAliases(name: string): readonly string[] {

@@ -157,6 +157,69 @@ describe("Family Feud V2 Daily persistence contract", () => {
     }
   });
 
+  it("hydrates current person typing and authored aliases into legacy persisted fighter candidates", () => {
+    const base = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
+
+    for (const [legacyId, displayName, kind, input] of [
+      ["ufc-fast5-08-5:a1", "Khabib Nurmagomedov", "other", "Khabib"],
+      ["ufc-fast5-08-5:a1", "Khabib Nurmagomedov", "other", "Habib"],
+      ["ufc-main-03-1:a2", "Demian Maia", "person", "Maya"],
+    ] as const) {
+      const persistedPack = structuredClone(
+        base.privateSetupEvidence.pack as FamilyFeudPack,
+      );
+      const remap = (entityId: string) => entityId === "entity-1" ? legacyId : entityId;
+      persistedPack.entities = persistedPack.entities.map((entity) =>
+        entity.id === "entity-1"
+          ? {
+              ...entity,
+              id: legacyId,
+              displayName,
+              kind,
+              aliases: [],
+            }
+          : entity
+      );
+      const remapQuestion = (question: (typeof persistedPack.mainBoards)[number]) => ({
+        ...question,
+        candidateIds: question.candidateIds.map(remap),
+        answers: question.answers.map((answer) => ({
+          ...answer,
+          entityId: remap(answer.entityId),
+        })),
+        ...(question.alsoAcceptedEntityIds
+          ? { alsoAcceptedEntityIds: question.alsoAcceptedEntityIds.map(remap) }
+          : {}),
+      });
+      persistedPack.mainBoards = persistedPack.mainBoards.map(remapQuestion);
+      persistedPack.fastMoney = persistedPack.fastMoney.map(remapQuestion);
+
+      const publication = {
+        ...base,
+        privateSetupEvidence: {
+          ...base.privateSetupEvidence,
+          pack: persistedPack,
+        },
+      };
+
+      const result = advanceFamilyFeudDailyRuntime(
+        context(publication),
+        { type: "answer", answer: input },
+      );
+
+      expect(result.publicState.last_feedback, input).toMatchObject({
+        type: "correct",
+        points: 10,
+      });
+      const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
+      const slots = boards[0]!.slots as Array<Record<string, unknown>>;
+      expect(slots[0], input).toMatchObject({
+        entity: { id: legacyId, display_name: displayName },
+        found: true,
+      });
+    }
+  });
+
   it("reveals a found answer in the next visible slot while the remaining three stay hidden", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const result = advanceFamilyFeudDailyRuntime(
