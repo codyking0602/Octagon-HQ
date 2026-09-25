@@ -36,7 +36,38 @@
   cursor: pointer;
 }
 
-.today-hub-official-result__header > span {
+.today-hub-official-result__identity {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  min-width: 0;
+}
+
+.today-hub-official-result__avatar {
+  display: grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-raised);
+}
+
+.today-hub-official-result__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.today-hub-official-result__avatar b {
+  font-size: 0.64rem;
+  letter-spacing: 0.04em;
+}
+
+.today-hub-official-result__identity-copy {
   display: grid;
   justify-items: end;
   gap: 2px;
