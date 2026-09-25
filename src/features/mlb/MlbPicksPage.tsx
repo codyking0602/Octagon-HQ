@@ -11,9 +11,12 @@ import {
   sanitizeBracketPicks,
 } from "./mlbBracket";
 import type { MlbBracketEntry, MlbBracketNode, MlbPlayoffSeries, MlbRoundPickEntry, MlbTeam } from "./mlbPlayoffsRepository";
-import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import { MLB_OWNER_PREVIEW_CHAMPIONSHIP, MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import MlbChampionshipSummary from "./MlbChampionshipSummary";
+import { MLB_CHAMPIONSHIP_SCORING, formatChampionshipPoints } from "./mlbChampionship";
 import { mlbTeamAssetByName, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
+import { useMlbChampionship } from "./useMlbChampionship";
 import "../../styles/mlb-playoffs.css";
 
 function dateTime(value: string | null) {
@@ -101,8 +104,10 @@ export default function MlbPicksPage() {
   const identity = useIdentity();
   const signedIn = Boolean(identity.profile);
   const { hub: liveHub, loading, error, saving, saveBracket, saveSeriesPick } = useMlbPlayoffs(signedIn);
+  const { championship: liveChampionship, error: championshipError } = useMlbChampionship(signedIn);
   const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
   const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
+  const championship = previewMode ? MLB_OWNER_PREVIEW_CHAMPIONSHIP : liveChampionship;
 
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [viewedProfileId, setViewedProfileId] = useState("");
