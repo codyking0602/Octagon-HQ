@@ -37,7 +37,8 @@ describe("trusted automatic UFC Picks card synchronization", () => {
     expect(proposals).toContain("expected_segments");
     expect(proposals).toContain("proposed_segments");
     expect(proposals).toContain('summary: "Apply the detected main/prelim placement."');
-    expect(proposals).toContain("unmatchedCurrent.length === 0 && unmatchedSource.length === 0");
+    expect(proposals).toContain("const exactSegmentSet = !structuralSetChanged");
+    expect(proposals).toContain("sourceMappedBoutId.size === sourceBouts.length");
   });
 
   it("records automated review evidence and preserves owner review as the failure fallback", () => {
