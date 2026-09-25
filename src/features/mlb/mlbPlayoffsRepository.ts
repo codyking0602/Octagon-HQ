@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type { MlbPlayoffRound } from "./mlbPlayoffsConfig";
+import { resolveMlbFeaturedChallenge } from "./mlbChallengeSchedule";
 
 const teamSchema = z.object({
   id: z.string(),
@@ -95,6 +96,9 @@ const challengeSchema = z.object({
   description: z.string(),
   route: z.string(),
   date: z.string().nullable().optional().default(null),
+  game_type: z.string().nullable().optional().default(null),
+  ready: z.boolean().optional().default(true),
+  is_live: z.boolean().optional().default(true),
 }).nullable();
 
 const hubSchema = z.object({
@@ -199,7 +203,15 @@ function mapHub(value: unknown): MlbPlayoffsHub {
 }
 
 export async function loadMlbPlayoffsHub(season: number) {
-  return mapHub(await rpc("get_mlb_playoffs_hub", { p_season: season }));
+  const hub = mapHub(await rpc("get_mlb_playoffs_hub", { p_season: season }));
+  try {
+    const scheduled = challengeSchema.parse(await rpc("get_mlb_postseason_active_challenge", {
+      p_season: season,
+    }));
+    return { ...hub, featuredChallenge: scheduled ?? resolveMlbFeaturedChallenge() };
+  } catch {
+    return { ...hub, featuredChallenge: resolveMlbFeaturedChallenge() ?? hub.featuredChallenge };
+  }
 }
 
 export async function saveMlbPlayoffBracket(season: number, picks: Record<string, string>) {
