@@ -6,26 +6,26 @@ export function MlbPlayerSpotlight() {
 
   return (
     <article
-      className="mlb-player-spotlight"
+      className="football-player-spotlight mlb-player-spotlight"
       aria-label="MLB Player Spotlight"
-      style={{ "--mlb-player-team-color": player.teamColor } as CSSProperties}
+      style={{ "--player-team-color": player.teamColor } as CSSProperties}
     >
-      <div className="mlb-player-spotlight__media">
+      <div className="football-player-spotlight__media">
         <img src={player.photoUrl} alt={player.name} loading="lazy" />
       </div>
-      <div className="mlb-player-spotlight__copy">
+      <div className="football-player-spotlight__copy">
         <span>PLAYER SPOTLIGHT</span>
         <h3>{player.name}</h3>
         <strong>{player.team.toUpperCase()} · {player.position}</strong>
-        <div className="mlb-player-spotlight__stats" aria-label={`${player.name} 2026 season stats`}>
+        <div className="football-player-spotlight__stats" aria-label={`${player.name} 2026 season stats`}>
           {player.stats.map((stat) => (
-            <span key={stat.label}>
-              <b>{stat.value}</b>
-              <small>{stat.label}</small>
-            </span>
+            <span key={stat.label}><b>{stat.value}</b><small>{stat.label}</small></span>
           ))}
         </div>
-        <p className="mlb-player-spotlight__meta">{player.meta}</p>
+        <p className="football-player-spotlight__meta">{player.meta}</p>
+        <a href={player.highlightUrl} target="_blank" rel="noreferrer">
+          WATCH HIGHLIGHT ↗
+        </a>
       </div>
     </article>
   );
