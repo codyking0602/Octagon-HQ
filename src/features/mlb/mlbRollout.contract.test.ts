@@ -94,7 +94,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(grading).toBeGreaterThan(slate);
     expect(mlbPicks).toContain("STANDINGS &amp; ROUNDS");
     expect(mlbPicks).toContain("SERIES ML");
-    expect(mlbPicks).toContain("ROUND-BY-ROUND SERIES PICKS");
+    expect(mlbPicks).toContain("SERIES PICKS · 43 PTS");
     expect(mlbOwnerFixture).toContain('display_name: "Troy"');
     expect(mlbOwnerFixture).toContain('display_name: "Tyler"');
   });
