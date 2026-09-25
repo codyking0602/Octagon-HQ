@@ -35,6 +35,7 @@ const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Empower Field at Mile High": ["Mile High", "Broncos", "Denver", "Denver Broncos"],
   "Punt coverage": ["Cover punt", "Cover punts", "Punt cover", "Punt team"],
   "Kick coverage": ["Cover kick", "Cover kicks", "Kick cover", "Kickoff coverage"],
+  "Kick return": ["Return kick", "Return kicks", "Kick returns"],
   "Defensive Player of the Year": ["DPOY"],
   "Offensive Player of the Year": ["OPOY"],
   "Offensive Rookie of the Year": ["OROY"],
