@@ -39,17 +39,15 @@ describe("UFC fighter media discovery", () => {
           competitions: [{
             competitors: [
               {
+                id: "123",
                 athlete: {
-                  id: "123",
                   fullName: "Alpha Fighter",
-                  headshot: { href: "https://a.espncdn.com/i/headshots/mma/players/full/123.png" },
                 },
               },
               {
+                id: "456",
                 athlete: {
-                  id: "456",
                   fullName: "Beta Fighter",
-                  headshot: { href: "https://a.espncdn.com/i/headshots/mma/players/full/456.png" },
                 },
               },
             ],
@@ -76,6 +74,66 @@ describe("UFC fighter media discovery", () => {
         source_fighter_id: "456",
       },
     ]);
+  });
+
+
+  it("handles current ESPN/UFC identity aliases without weakening generic fighter matching", () => {
+    const aliasEvent: MonitoringEvent = {
+      ...event,
+      bouts: [{
+        bout_id: "main-osmanli-black",
+        red_fighter_slug: "mahammadali-osmanli",
+        red_fighter_name: "Mahammadali Osmanli",
+        blue_fighter_slug: "tina-black",
+        blue_fighter_name: "Tina Black",
+      }],
+    };
+
+    const result = adaptEspnUfcFighterMedia({
+      event: aliasEvent,
+      body: {
+        events: [{
+          id: "600061266",
+          date: "2026-09-26T21:00:00Z",
+          competitions: [{
+            competitors: [
+              {
+                id: "5345640",
+                athlete: { fullName: "Mehemmedeli Osmanli" },
+              },
+              {
+                id: "4836549",
+                athlete: { fullName: "Valesca Machado" },
+              },
+            ],
+          }],
+        }],
+      },
+    });
+
+    expect(result).toEqual([
+      {
+        fighter_slug: "mahammadali-osmanli",
+        display_name: "Mahammadali Osmanli",
+        photo_url: "https://a.espncdn.com/i/headshots/mma/players/full/5345640.png",
+        source: "espn",
+        source_page_url: "https://www.espn.com/mma/fighter/_/id/5345640",
+        source_fighter_id: "5345640",
+      },
+      {
+        fighter_slug: "tina-black",
+        display_name: "Tina Black",
+        photo_url: "https://a.espncdn.com/i/headshots/mma/players/full/4836549.png",
+        source: "espn",
+        source_page_url: "https://www.espn.com/mma/fighter/_/id/4836549",
+        source_fighter_id: "4836549",
+      },
+    ]);
+
+    expect(ufcAthletePageUrl("mahammadali-osmanli"))
+      .toBe("https://www.ufc.com/athlete/mehemmedeli-osmanli");
+    expect(ufcAthletePageUrl("tina-black"))
+      .toBe("https://www.ufc.com/athlete/valesca-machado");
   });
 
   it("accepts official UFC athlete-page social imagery and rejects placeholders", () => {
