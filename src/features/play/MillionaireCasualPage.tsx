@@ -95,7 +95,7 @@ function LeagueChooser({ onChoose, onBack }: { onChoose: (league: "nfl" | "cfb")
 }
 
 function millionaireSurfaceLabel(league: MillionaireLeague): string {
-  return league === "mlb" ? "MLB PLAYOFF CHALLENGE" : `${millionaireSurfaceLabel(league)}`;
+  return league === "mlb" ? "MLB PLAYOFF CHALLENGE" : `${millionaireLeagueLabel(league)} DAILY`;
 }
 
 function MillionaireRulesIntro({ league, onStart, onBack }: { league: MillionaireLeague; onStart: () => void; onBack: () => void }) {
