@@ -28,11 +28,10 @@ describe("MLB Millionaire owner run", () => {
     fireEvent.click(screen.getByRole("button", { name: /start game/i }));
 
     const stage = document.body.querySelector<HTMLImageElement>(".millionaire-stage-background");
-    const host = document.body.querySelector<HTMLImageElement>(".millionaire-stage-host");
     expect(stage).toBeTruthy();
-    expect(stage?.getAttribute("src")).toBe("/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png");
-    expect(host?.getAttribute("src")).toBe("/assets/millionaire/1mlb.webp");
-    expect(document.body.querySelector(".millionaire-stage-host-slot--mlb")).toBeTruthy();
+    expect(stage?.getAttribute("src")).toBe("/assets/millionaire/ABD98D28-955F-4D95-B067-89E3D512952C.png");
+    expect(document.body.querySelector(".millionaire-stage-host")).toBeNull();
+    expect(document.body.querySelector(".millionaire-stage-host-slot--mlb")).toBeNull();
     expect(document.body.querySelector(".millionaire-shell--fixed-stage")).toBeTruthy();
     expect(document.body.textContent).toContain("MLB PLAYOFF CHALLENGE");
   });
