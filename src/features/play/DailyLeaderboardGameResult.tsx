@@ -433,6 +433,139 @@ function SportsFeudLeaderboardResult({
   );
 }
 
+function WhoAmILeaderboardResult({
+  projection,
+  resultDetail,
+}: {
+  projection: TodayChallengeProjection;
+  resultDetail: JsonRecord;
+}) {
+  const rounds = buildWhoAmILeaderboardRounds(projection, resultDetail);
+  const score = projection.officialAttempt?.normalizedScore ?? 0;
+  const naturalSolves = rounds.filter((round) => round.outcome === "natural").length;
+  const recoverySolves = rounds.filter((round) => round.outcome === "recovered").length;
+  const totalMisses = rounds.reduce(
+    (sum, round) => sum + round.wrongGuesses + round.recoveryMisses,
+    0,
+  );
+
+  return (
+    <div className="leaderboard-game-result leaderboard-game-result--whoami">
+      <section className="leaderboard-game-result__hero">
+        <div>
+          <span>WHO AM I?</span>
+          <strong>{score}</strong>
+          <small>DAILY SCORE</small>
+        </div>
+        <dl>
+          <div><dt>Rounds</dt><dd>{rounds.length}</dd></div>
+          <div><dt>Natural solves</dt><dd>{naturalSolves}</dd></div>
+          <div><dt>Recovery solves</dt><dd>{recoverySolves}</dd></div>
+          <div><dt>Total misses</dt><dd>{totalMisses}</dd></div>
+        </dl>
+      </section>
+
+      <div className="leaderboard-whoami-rounds">
+        {rounds.map((round) => {
+          const outcomeLabel = whoAmIOutcomeLabel(round.outcome);
+          const recoveryAttempts = round.recoveryChoices
+            .filter((choice) => choice.guessed)
+            .sort((a, b) => (a.guessOrder ?? 99) - (b.guessOrder ?? 99));
+          return (
+            <details className="leaderboard-whoami-round" key={round.index}>
+              <summary>
+                <div className="leaderboard-whoami-round__topline">
+                  <span>
+                    ROUND {round.index + 1}
+                    {round.league ? " · " + round.league : ""}
+                  </span>
+                  <strong>{round.score}/100</strong>
+                </div>
+                <h3>{round.identityName}</h3>
+                <div className="leaderboard-whoami-round__meta">
+                  <span className={"is-" + (round.outcome || "miss")}>{outcomeLabel}</span>
+                  <span>{round.revealedCount} CLUES</span>
+                  <span>{round.wrongGuesses} NATURAL {round.wrongGuesses === 1 ? "MISS" : "MISSES"}</span>
+                  {round.recoveryChoices.length ? (
+                    <span>{round.recoveryMisses} RECOVERY {round.recoveryMisses === 1 ? "MISS" : "MISSES"}</span>
+                  ) : null}
+                </div>
+                <small>VIEW CLUES &amp; GUESSES</small>
+              </summary>
+
+              <div className="leaderboard-whoami-round__detail">
+                <section>
+                  <header>
+                    <span>NATURAL GUESSES</span>
+                    <small>{round.naturalGuesses.length || "NO"} ATTEMPT{round.naturalGuesses.length === 1 ? "" : "S"}</small>
+                  </header>
+                  {round.naturalGuesses.length ? (
+                    <div className="leaderboard-whoami-guesses">
+                      {round.naturalGuesses.map((guess, guessIndex) => (
+                        <div className={guess.correct ? "is-correct" : "is-wrong"} key={guess.id + "-" + guessIndex}>
+                          <b>{guessIndex + 1}</b>
+                          <strong>{guess.name}</strong>
+                          <em>{guess.correct ? "SOLVED" : "MISS"}</em>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="leaderboard-whoami-empty">No natural guess was recorded.</p>
+                  )}
+                </section>
+
+                {round.recoveryChoices.length ? (
+                  <section>
+                    <header>
+                      <span>RECOVERY BOARD</span>
+                      <small>{recoveryAttempts.length} ATTEMPT{recoveryAttempts.length === 1 ? "" : "S"}</small>
+                    </header>
+                    <div className="leaderboard-whoami-recovery">
+                      {round.recoveryChoices.map((choice) => (
+                        <div
+                          className={[
+                            choice.guessed ? "is-guessed" : "",
+                            choice.correct ? "is-identity" : "",
+                          ].filter(Boolean).join(" ")}
+                          key={choice.id}
+                        >
+                          <strong>{choice.name}</strong>
+                          <small>
+                            {choice.guessOrder
+                              ? "PICK " + choice.guessOrder + (choice.correct ? " · SOLVED" : " · MISS")
+                              : choice.correct
+                                ? "IDENTITY"
+                                : "NOT PICKED"}
+                          </small>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
+                <section>
+                  <header>
+                    <span>ALL CLUES</span>
+                    <small>{round.revealedCount} OF {round.clues.length || 10} SEEN</small>
+                  </header>
+                  <div className="leaderboard-whoami-clues">
+                    {round.clues.map((clue, clueIndex) => (
+                      <div className={clue.seen ? "is-seen" : "is-unseen"} key={clue.id}>
+                        <b>{clueIndex + 1}</b>
+                        <span>{clue.text}</span>
+                        <small>{clue.seen ? "SEEN" : "NOT SEEN"}</small>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            </details>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 function MillionaireLeaderboardResult({
   projection,
   resultDetail,
@@ -551,6 +684,9 @@ export function DailyLeaderboardGameResult({
   }
   if (projection.gameType === "millionaire") {
     return <MillionaireLeaderboardResult projection={projection} resultDetail={resultDetail} />;
+  }
+  if (projection.gameType === "who_am_i") {
+    return <WhoAmILeaderboardResult projection={projection} resultDetail={resultDetail} />;
   }
   return null;
 }
