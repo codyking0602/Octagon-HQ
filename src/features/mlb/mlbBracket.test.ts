@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bracketComplete, sanitizeBracketPicks } from "./mlbBracket";
+import { bracketComplete, bracketGuideNodes, firstBracketGuideNode, nextBracketGuideNode, previousBracketGuideNode, sanitizeBracketPicks } from "./mlbBracket";
 import type { MlbBracketTemplate } from "./mlbPlayoffsRepository";
 
 const template: MlbBracketTemplate = {
@@ -39,5 +39,18 @@ describe("MLB bracket path", () => {
   it("requires every matchup to have a valid winner", () => {
     expect(bracketComplete(template, { wc: "b" })).toBe(false);
     expect(bracketComplete(template, { wc: "b", ds: "a" })).toBe(true);
+  });
+  it("walks a guided bracket in league-path order", () => {
+    expect(bracketGuideNodes(template).map((node) => node.id)).toEqual(["wc", "ds"]);
+    expect(firstBracketGuideNode(template, {} )?.id).toBe("wc");
+    expect(nextBracketGuideNode(template, { wc: "b" }, "wc")?.id).toBe("ds");
+    expect(previousBracketGuideNode(template, { wc: "b" }, "ds")?.id).toBe("wc");
+  });
+
+  it("can review an already-complete bracket one matchup at a time", () => {
+    const picks = { wc: "b", ds: "a" };
+    expect(firstBracketGuideNode(template, picks, true)?.id).toBe("wc");
+    expect(nextBracketGuideNode(template, picks, "wc", true)?.id).toBe("ds");
+    expect(nextBracketGuideNode(template, picks, "ds", true)).toBeNull();
   });
 });
