@@ -27,6 +27,7 @@ vi.mock("./useMlbPlayChallengeOverview", () => ({
 
 vi.mock("./mlbPlayChallenge", () => ({
   MLB_PLAY_CURRENT_CHALLENGE_KEY: "mlb-2026-play-01",
+  MLB_PLAY_NEXT_CHALLENGE_KEY: "mlb-2026-play-02",
   loadMlbPlayPreviewResult: vi.fn(() => null),
   saveMlbPlayPreviewResult: vi.fn((_key, result) => result),
   recordMlbPlayChallengeResult: vi.fn(async () => ({
