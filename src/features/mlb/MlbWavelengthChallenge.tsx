@@ -172,7 +172,7 @@ export default function MlbWavelengthChallenge() {
   if (roundComplete && currentScore !== null) {
     return (
       <div className="page football-debate-page football-wavelength-page wavelength-page--mlb mlb-wavelength-page">
-        <div className="mlb-wavelength-series-progress" aria-label={`Game ${roundIndex + 1} of ${MLB_WAVELENGTH_OWNER_ROUNDS.length}`}>
+        <div className="mlb-find-series-progress" aria-label={`Game ${roundIndex + 1} of ${MLB_WAVELENGTH_OWNER_ROUNDS.length}`}>
           <span>WAVELENGTH</span>
           <strong>GAME {roundIndex + 1} OF {MLB_WAVELENGTH_OWNER_ROUNDS.length}</strong>
         </div>
@@ -186,7 +186,7 @@ export default function MlbWavelengthChallenge() {
         />
 
         {!isLastRound ? (
-          <section className="mlb-wavelength-between-games">
+          <section className="mlb-find-between-games">
             <div>
               <span>GAME 1 COMPLETE</span>
               <strong>{currentScore}<small>/100</small></strong>
@@ -221,7 +221,7 @@ export default function MlbWavelengthChallenge() {
 
   return (
     <div className="page football-debate-page football-wavelength-page wavelength-page wavelength-page--playing wavelength-page--mlb mlb-wavelength-page">
-      <div className="mlb-wavelength-series-progress" aria-label={`Game ${roundIndex + 1} of ${MLB_WAVELENGTH_OWNER_ROUNDS.length}`}>
+      <div className="mlb-find-series-progress" aria-label={`Game ${roundIndex + 1} of ${MLB_WAVELENGTH_OWNER_ROUNDS.length}`}>
         <span>WAVELENGTH</span>
         <strong>GAME {roundIndex + 1} OF {MLB_WAVELENGTH_OWNER_ROUNDS.length}</strong>
       </div>
