@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "../../styles/home-challenges.css";
+import "../../styles/play-landing-shared.css";
 import "../../styles/mlb-playoffs.css";
 
 export default function MlbPlayoffsPage() {
