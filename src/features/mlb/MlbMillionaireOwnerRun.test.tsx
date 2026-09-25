@@ -12,6 +12,7 @@ vi.mock("../identity/IdentityProvider", () => ({
 
 afterEach(() => cleanup());
 
+// Anything exercised here is owner-review content and must stay out of the production bank.
 describe("MLB Millionaire owner run", () => {
   it("uses the live Millionaire wrapper with MLB playoff identity and no review language", () => {
     render(
