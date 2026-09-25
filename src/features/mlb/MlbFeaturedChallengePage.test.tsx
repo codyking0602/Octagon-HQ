@@ -95,6 +95,6 @@ describe("MLB Find the Leader format preview", () => {
     expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("10/100");
     expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("GAME 1 10");
     expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("GAME 2 10");
-    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("average");
+    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("FINAL SCORE");
   });
 });
