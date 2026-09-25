@@ -44,6 +44,37 @@ select
 from generate_series(1, 10) as slot
 on conflict do nothing;
 
+-- If an owner has already loaded a temporary bracket field, keep its visible
+-- node weights aligned with the canonical 32-point bracket scorer.
+update public.mlb_playoff_seasons season_row
+set bracket_template = jsonb_set(
+  season_row.bracket_template,
+  '{nodes}',
+  coalesce((
+    select jsonb_agg(
+      jsonb_set(
+        node,
+        '{points}',
+        to_jsonb(
+          case node ->> 'round'
+            when 'wild_card' then 1
+            when 'division_series' then 2
+            when 'championship_series' then 5
+            when 'world_series' then 10
+            else coalesce((node ->> 'points')::integer, 0)
+          end
+        )
+      )
+      order by ordinal
+    )
+    from jsonb_array_elements(coalesce(season_row.bracket_template -> 'nodes', '[]'::jsonb))
+      with ordinality as nodes(node, ordinal)
+  ), '[]'::jsonb)
+)
+where season_row.season = 2026
+  and jsonb_typeof(season_row.bracket_template -> 'nodes') = 'array'
+  and jsonb_array_length(season_row.bracket_template -> 'nodes') > 0;
+
 create or replace function public.score_mlb_playoff_bracket(
   p_season integer,
   p_picks jsonb
