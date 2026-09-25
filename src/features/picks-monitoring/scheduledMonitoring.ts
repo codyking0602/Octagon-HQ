@@ -1,5 +1,7 @@
 import type { MonitoringEvent } from "./manualMonitoringRunner";
 
+const FIVE_MINUTES_MS = 5 * 60 * 1000;
+const FIFTEEN_MINUTES_MS = 15 * 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
 const AUTOMATIC_STAGE_MAX_LEAD_MS = 6 * DAY_MS;
@@ -70,8 +72,38 @@ export function eventIsInAutomaticStagingWindow(startsAt: string | null | undefi
 }
 
 /**
- * Provider cadence is based on canonical server-owned event and lock timestamps.
- * The hourly scheduler may wake up more often than this function allows a provider call.
+ * Official UFC card checks are independent from paid odds polling. The existing
+ * five-minute scheduler wake gets progressively more aggressive through fight week.
+ */
+export function scheduledCardCheckIntervalMs(event: MonitoringEvent, now: Date) {
+  const startsAt = parsedTime(event.starts_at);
+  const locksAt = parsedTime(event.locks_at);
+  if (startsAt === null || locksAt === null) return null;
+
+  const nowMs = now.getTime();
+  const monitoringStopsAt = Math.min(startsAt, locksAt);
+  if (monitoringStopsAt <= nowMs) return 0;
+
+  const remaining = monitoringStopsAt - nowMs;
+  if (remaining > 72 * HOUR_MS) return 12 * HOUR_MS;
+  if (remaining > 48 * HOUR_MS) return 3 * HOUR_MS;
+  if (remaining > 24 * HOUR_MS) return HOUR_MS;
+  return FIFTEEN_MINUTES_MS;
+}
+
+/**
+ * Align cheap source checks to stable wall-clock buckets so the existing five-minute
+ * cron stays the single scheduler owner without another persistence/lease system.
+ */
+export function shouldRunScheduledCardCheck(event: MonitoringEvent, now: Date) {
+  const interval = scheduledCardCheckIntervalMs(event, now);
+  if (interval === null || interval === 0) return false;
+  return now.getTime() % interval < FIVE_MINUTES_MS;
+}
+
+/**
+ * Paid odds-provider cadence remains quota-aware and slower than the free card-source
+ * check. The scheduler may wake up more often than this function allows an odds call.
  */
 export function scheduledMonitoringIntervalMs(event: MonitoringEvent, now: Date) {
   const startsAt = parsedTime(event.starts_at);
