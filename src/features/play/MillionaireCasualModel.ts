@@ -14,7 +14,7 @@ import {
   type MillionaireTransitionResult,
 } from "../games/millionaireEngine";
 
-export type MillionaireLeague = "ufc" | "nfl" | "cfb";
+export type MillionaireLeague = "ufc" | "nfl" | "cfb" | "mlb";
 
 export const MILLIONAIRE_TIME_BANK_MS = 120_000;
 
@@ -59,6 +59,11 @@ export const MILLIONAIRE_HOSTS: Record<MillionaireLeague, readonly [string, stri
     "/assets/millionaire/Ufc2.png",
     "/assets/millionaire/Ufc3.png",
   ],
+  mlb: [
+    "/assets/millionaire/1mlb.webp",
+    "/assets/millionaire/1mlb.webp",
+    "/assets/millionaire/1mlb.webp",
+  ],
 };
 
 export function millionaireCentralDateKey(now = new Date()) {
@@ -75,7 +80,7 @@ export function millionaireCentralDateKey(now = new Date()) {
 export function millionaireHostNumber(league: MillionaireLeague, dateKey = millionaireCentralDateKey()) {
   const [year, month, day] = dateKey.split("-").map(Number);
   const epochDay = Math.floor(Date.UTC(year || 1970, Math.max(0, (month || 1) - 1), day || 1) / 86_400_000);
-  const offset = league === "cfb" ? 0 : league === "nfl" ? 1 : 2;
+  const offset = league === "cfb" ? 0 : league === "nfl" ? 1 : league === "ufc" ? 2 : 0;
   return ((epochDay + offset) % 3 + 3) % 3 + 1;
 }
 
@@ -233,7 +238,94 @@ const ufcSeeds: readonly QuestionSeed[] = [
   { prompt: "Which champion did T.J. Dillashaw defeat at UFC 173 to win the bantamweight title?", choices: ["Renan Barao", "Dominick Cruz", "Cody Garbrandt", "Urijah Faber"], correct: "A", explanation: "T.J. Dillashaw stopped Renan Barao at UFC 173 to capture the bantamweight championship.", statSheet: null, fiftyFifty: ["A", "B"], type: "title-fight-history" },
 ];
 
-const seedsByLeague: Record<MillionaireLeague, readonly QuestionSeed[]> = { cfb: cfbSeeds, nfl: nflSeeds, ufc: ufcSeeds };
+
+export const MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS = [
+  "Which MLB team plays its home games at Fenway Park?",
+  "Which baseball legend was nicknamed the Great Bambino?",
+  "Which franchise ended an 86-year World Series championship drought in 2004?",
+  "Who holds MLB's career home run record?",
+  "Whose 56-game hitting streak in 1941 remains the MLB record?",
+  "Who became the first unanimous selection to the Baseball Hall of Fame?",
+  "Which player was the first to win league MVP honors in both the American and National Leagues?",
+  "Which pitcher won Cy Young Awards in both leagues and later threw a perfect game at age 40?",
+] as const;
+
+const mlbSeeds: readonly QuestionSeed[] = [
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[0],
+    choices: ["New York Yankees", "Boston Red Sox", "Chicago Cubs", "Los Angeles Dodgers"],
+    correct: "B",
+    explanation: "Fenway Park has been the home of the Boston Red Sox since 1912.",
+    statSheet: "The ballpark is famous for the Green Monster in left field.",
+    fiftyFifty: ["A", "B"],
+    type: "ballpark",
+  },
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[1],
+    choices: ["Willie Mays", "Lou Gehrig", "Hank Aaron", "Babe Ruth"],
+    correct: "D",
+    explanation: "Babe Ruth was famously known as the Great Bambino.",
+    statSheet: "The player starred for both Boston and New York and became baseball's first great home run icon.",
+    fiftyFifty: ["B", "D"],
+    type: "nickname",
+  },
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[2],
+    choices: ["Boston Red Sox", "Chicago Cubs", "Cleveland Guardians", "San Francisco Giants"],
+    correct: "A",
+    explanation: "Boston swept St. Louis in the 2004 World Series to end its championship drought.",
+    statSheet: "The title came after the club rallied from a 3-0 ALCS deficit against New York.",
+    fiftyFifty: ["A", "B"],
+    type: "championship-history",
+  },
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[3],
+    choices: ["Hank Aaron", "Babe Ruth", "Barry Bonds", "Albert Pujols"],
+    correct: "C",
+    explanation: "Barry Bonds finished his career with 762 home runs, the MLB record.",
+    statSheet: "The record holder passed Hank Aaron's career total during the 2007 season.",
+    fiftyFifty: ["A", "C"],
+    type: "career-record",
+  },
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[4],
+    choices: ["Ted Williams", "Joe DiMaggio", "Pete Rose", "Ty Cobb"],
+    correct: "B",
+    explanation: "Joe DiMaggio hit safely in 56 consecutive games for the Yankees in 1941.",
+    statSheet: "The record was set by a Yankees center fielder during the same season Ted Williams hit .406.",
+    fiftyFifty: ["A", "B"],
+    type: "record-history",
+  },
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[5],
+    choices: ["Derek Jeter", "Ken Griffey Jr.", "Greg Maddux", "Mariano Rivera"],
+    correct: "D",
+    explanation: "Mariano Rivera became the first player elected unanimously to the Hall of Fame in 2019.",
+    statSheet: "The answer is MLB's career saves leader and spent his entire career with the Yankees.",
+    fiftyFifty: ["A", "D"],
+    type: "hall-of-fame",
+  },
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[6],
+    choices: ["Reggie Jackson", "Pete Rose", "Frank Robinson", "Rickey Henderson"],
+    correct: "C",
+    explanation: "Frank Robinson won the NL MVP with Cincinnati and later the AL MVP with Baltimore.",
+    statSheet: "The answer won the Triple Crown in his first season with Baltimore.",
+    fiftyFifty: ["A", "C"],
+    type: "awards-history",
+  },
+  {
+    prompt: MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS[7],
+    choices: ["Randy Johnson", "Roger Clemens", "Pedro Martinez", "Max Scherzer"],
+    correct: "A",
+    explanation: "Randy Johnson won Cy Young Awards in both leagues and threw a perfect game for Arizona in 2004 at age 40.",
+    statSheet: null,
+    fiftyFifty: ["A", "B"],
+    type: "pitching-history",
+  },
+];
+
+const seedsByLeague: Record<MillionaireLeague, readonly QuestionSeed[]> = { cfb: cfbSeeds, nfl: nflSeeds, ufc: ufcSeeds, mlb: mlbSeeds };
 
 export function millionaireCasualRun(league: MillionaireLeague): MillionaireRun {
   return seedsByLeague[league].map((seed, index) => question(league, index, seed)) as unknown as MillionaireRun;
