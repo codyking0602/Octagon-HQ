@@ -11,6 +11,8 @@
   --hq-context-accent-rgb: var(--mlb-green-rgb);
   --hq-context-accent-soft: rgba(var(--mlb-green-rgb), .13);
   --hq-context-accent-border: rgba(var(--mlb-green-rgb), .38);
+  --home-football-blue: var(--mlb-green-strong);
+  --home-football-blue-rgb: var(--mlb-green-rgb);
 }
 
 
