@@ -1,5 +1,6 @@
 import type { MlbPlayoffsHub } from "./mlbPlayoffsRepository";
 import type { MlbChampionship } from "./mlbChampionship";
+import type { MlbPlayChallengeLeaderboardEntry } from "./mlbPlayChallenge";
 import { mlbTeamLogoUrl } from "./mlbTeamAssets";
 
 export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
@@ -335,6 +336,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     kicker: "READY",
     description: "Two boards. One final score.",
     route: "/mlb/challenge",
+    date: "2026-09-29",
   },
 };
 
@@ -439,3 +441,85 @@ export const MLB_OWNER_PREVIEW_CHAMPIONSHIP: MlbChampionship = {
     },
   ],
 };
+
+
+export const MLB_OWNER_PREVIEW_PLAY_LEADERBOARD: MlbPlayChallengeLeaderboardEntry[] = [
+  {
+    rank: 1,
+    profileId: "preview-shane",
+    displayName: "Shane",
+    initials: "SH",
+    avatarPhotoData: null,
+    rawScore: 95,
+    gameType: "find_leader",
+    publicResult: { game_scores: [90, 100], average_score: 95 },
+    resultDetail: { games: [{ score: 90, perfect: false }, { score: 100, perfect: true }] },
+    completedAt: "2026-09-29T13:20:00-05:00",
+    isCurrentUser: false,
+  },
+  {
+    rank: 2,
+    profileId: "preview-you",
+    displayName: "Cody",
+    initials: "CK",
+    avatarPhotoData: null,
+    rawScore: 90,
+    gameType: "find_leader",
+    publicResult: { game_scores: [80, 100], average_score: 90 },
+    resultDetail: { games: [{ score: 80, perfect: false }, { score: 100, perfect: true }] },
+    completedAt: "2026-09-29T13:22:00-05:00",
+    isCurrentUser: true,
+  },
+  {
+    rank: 3,
+    profileId: "preview-troy",
+    displayName: "Troy",
+    initials: "TR",
+    avatarPhotoData: null,
+    rawScore: 85,
+    gameType: "find_leader",
+    publicResult: { game_scores: [90, 80], average_score: 85 },
+    resultDetail: { games: [{ score: 90, perfect: false }, { score: 80, perfect: false }] },
+    completedAt: "2026-09-29T13:25:00-05:00",
+    isCurrentUser: false,
+  },
+  {
+    rank: 4,
+    profileId: "preview-lib",
+    displayName: "Lib",
+    initials: "LB",
+    avatarPhotoData: null,
+    rawScore: 80,
+    gameType: "find_leader",
+    publicResult: { game_scores: [70, 90], average_score: 80 },
+    resultDetail: { games: [{ score: 70, perfect: false }, { score: 90, perfect: false }] },
+    completedAt: "2026-09-29T13:30:00-05:00",
+    isCurrentUser: false,
+  },
+  {
+    rank: 5,
+    profileId: "preview-tyler",
+    displayName: "Tyler",
+    initials: "TY",
+    avatarPhotoData: null,
+    rawScore: 75,
+    gameType: "find_leader",
+    publicResult: { game_scores: [80, 70], average_score: 75 },
+    resultDetail: { games: [{ score: 80, perfect: false }, { score: 70, perfect: false }] },
+    completedAt: "2026-09-29T13:35:00-05:00",
+    isCurrentUser: false,
+  },
+  {
+    rank: 6,
+    profileId: "preview-chody",
+    displayName: "Chody",
+    initials: "CH",
+    avatarPhotoData: null,
+    rawScore: 65,
+    gameType: "find_leader",
+    publicResult: { game_scores: [60, 70], average_score: 65 },
+    resultDetail: { games: [{ score: 60, perfect: false }, { score: 70, perfect: false }] },
+    completedAt: "2026-09-29T13:40:00-05:00",
+    isCurrentUser: false,
+  },
+];
