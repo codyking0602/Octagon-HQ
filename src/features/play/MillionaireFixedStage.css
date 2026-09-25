@@ -57,6 +57,63 @@ body.millionaire-daily-active .bottom-nav {
   user-select: none;
 }
 
+/* MLB's host source is a transparent cutout, not a composed 16:9 stage.
+   Reuse the approved host bay geometry from the Millionaire studio treatment:
+   the studio remains the fixed background while only the host occupies this slot. */
+.millionaire-stage-host-slot {
+  z-index: 4;
+  left: 198px;
+  bottom: 247px;
+  width: 509px;
+  height: 554px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 86%, rgba(18, 79, 174, 0.22), transparent 48%),
+    #01040b;
+  box-shadow:
+    -36px 0 64px rgba(2, 31, 79, 0.9),
+    36px 0 64px rgba(2, 31, 79, 0.9),
+    0 28px 42px rgba(0, 0, 0, 0.52);
+  pointer-events: none;
+}
+
+.millionaire-stage-host-slot::before,
+.millionaire-stage-host-slot::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  width: 23%;
+  pointer-events: none;
+}
+
+.millionaire-stage-host-slot::before {
+  left: 0;
+  background: linear-gradient(90deg, #01040b 10%, rgba(1, 4, 11, 0.72) 42%, rgba(1, 4, 11, 0));
+}
+
+.millionaire-stage-host-slot::after {
+  right: 0;
+  background: linear-gradient(270deg, #01040b 10%, rgba(1, 4, 11, 0.72) 42%, rgba(1, 4, 11, 0));
+}
+
+.millionaire-stage-host {
+  position: absolute;
+  z-index: 2;
+  left: -7%;
+  right: auto;
+  top: auto;
+  bottom: -1.5%;
+  width: 114%;
+  height: 105%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center 38%;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Keep the photographic background visible; old synthetic stage layers do not participate. */
 .millionaire-shell--fixed-stage .millionaire-arena,
 .millionaire-shell--fixed-stage .millionaire-crowd,
