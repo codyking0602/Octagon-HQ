@@ -330,10 +330,10 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     stats: ["Power · on-base · short-series leverage"],
   },
   featuredChallenge: {
-    id: "2026-october-legend-rivera",
-    title: "October Legend",
-    kicker: "WHO AM I",
-    description: "Four clues. One postseason icon.",
+    id: "2026-find-leader-owner-demo",
+    title: "Find the Leader",
+    kicker: "OWNER DESIGN DEMO",
+    description: "Disposable MLB content in the locked Football game treatment.",
     route: "/mlb/challenge",
   },
 };
