@@ -472,9 +472,8 @@ describe("monitoring card-change approval proposals", () => {
     };
     const result = findings({ ...source, bouts: [second, replacement] });
     const actions = result
-      .map((item) => item.source_details?.approval_proposal)
-      .filter(Boolean)
-      .map((proposal) => proposal?.action);
+      .map(proposalAction)
+      .filter(Boolean);
 
     expect(actions).toEqual(expect.arrayContaining(["remove_bout", "add_bout", "reorder_card"]));
     expect(result).toEqual(expect.arrayContaining([
@@ -525,9 +524,8 @@ describe("monitoring card-change approval proposals", () => {
 
     const result = findings(liveSource, "current", liveCanonical);
     const actions = result
-      .map((item) => item.source_details?.approval_proposal)
-      .filter(Boolean)
-      .map((proposal) => proposal?.action);
+      .map(proposalAction)
+      .filter(Boolean);
 
     expect(actions.filter((action) => action === "replace_fighter")).toHaveLength(1);
     expect(actions.filter((action) => action === "add_bout")).toHaveLength(2);
