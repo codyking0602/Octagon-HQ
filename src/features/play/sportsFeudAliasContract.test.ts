@@ -76,6 +76,8 @@ describe("Sports Feud authored alias contract", () => {
       ["nfl-fast3-05-4", "Seattle Seahwaks", "Lumen Field"],
       ["nfl-fast3-05-4", "Buffalo Bills", "Highmark Stadium"],
       ["nfl-fast3-05-4", "Green Bay Packers", "Lambeau Field"],
+      ["nfl-fast3-05-4", "Lambo Field", "Lambeau Field"],
+      ["nfl-fast3-05-4", "Lambo", "Lambeau Field"],
       ["nfl-fast3-05-4", "Minnesota Vikings", "U.S. Bank Stadium"],
       ["nfl-fast3-05-4", "Philadelphia Eagles", "Lincoln Financial Field"],
     ] as const;
