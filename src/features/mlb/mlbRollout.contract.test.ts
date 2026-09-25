@@ -77,6 +77,14 @@ describe("MLB Playoffs rollout gate", () => {
     expect(styles).toContain(".mlb-round-team.is-selected");
   });
 
+  it("keeps the finished MLB bracket compact and readable on phones", () => {
+    expect(styles).toContain("aspect-ratio: 700 / 326");
+    expect(styles).toContain("width: 26px");
+    expect(styles).toContain("height: 26px");
+    expect(styles).toContain("min-height: 21px");
+    expect(styles).toContain("--bracket-zoom: 1.72");
+  });
+
   it("keeps MLB Play focused on the featured challenge", () => {
     expect(mlbPlay).toContain("Featured Challenge");
     expect(mlbPlay).toContain('to="/mlb/challenge"');
