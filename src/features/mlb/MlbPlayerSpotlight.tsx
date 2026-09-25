@@ -6,7 +6,7 @@ export function MlbPlayerSpotlight() {
 
   return (
     <article
-      className="football-player-spotlight mlb-player-spotlight"
+      className="football-player-spotlight"
       aria-label="MLB Player Spotlight"
       style={{ "--player-team-color": player.teamColor } as CSSProperties}
     >
