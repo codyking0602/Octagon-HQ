@@ -57,6 +57,10 @@ const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Tackles for loss": ["TFL", "TFLs"],
 };
 
+export function standardSportsFeudAliases(name: string): readonly string[] {
+  return STANDARD_ALIASES[name] ?? [];
+}
+
 function answer(value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer {
   if (typeof value !== "string") return value;
   const aliases = STANDARD_ALIASES[value];

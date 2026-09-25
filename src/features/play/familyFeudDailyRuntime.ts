@@ -19,6 +19,7 @@ import {
   type FamilyFeudRankedAnswer,
   type FamilyFeudState,
 } from "../games/familyFeudEngine";
+import { standardSportsFeudAliases } from "./sportsFeudAuthoredHelpers";
 
 export const FAMILY_FEUD_DAILY_CONTENT_VERSION = "family-feud-daily-v2" as const;
 export const FAMILY_FEUD_DAILY_SCORING_VERSION = "family-feud-score-v2" as const;
@@ -351,7 +352,18 @@ function stateFromSubmission(context: FamilyFeudDailyRuntimeContext) {
 
 function privatePack(context: FamilyFeudDailyRuntimeContext) {
   const raw = context.privateSetupEvidence.pack;
-  const pack = asRecord(raw, "Family Feud private pack") as unknown as FamilyFeudPack;
+  const persisted = asRecord(raw, "Family Feud private pack") as unknown as FamilyFeudPack;
+  const pack: FamilyFeudPack = {
+    ...persisted,
+    entities: persisted.entities.map((entity) => {
+      const standardAliases = standardSportsFeudAliases(entity.displayName);
+      if (!standardAliases.length) return entity;
+      return {
+        ...entity,
+        aliases: [...new Set([...(entity.aliases ?? []), ...standardAliases])],
+      };
+    }),
+  };
   assertFamilyFeudPack(pack);
   return pack;
 }

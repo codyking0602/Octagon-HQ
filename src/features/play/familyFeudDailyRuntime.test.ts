@@ -116,6 +116,47 @@ describe("Family Feud V2 Daily persistence contract", () => {
     )).toBe(true);
   });
 
+  it("hydrates current natural aliases into already-persisted Daily packs", () => {
+    const base = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
+
+    for (const [displayName, input] of [
+      ["Lumen Field", "Seattle Seahwaks"],
+      ["Punt coverage", "Cover Punts"],
+    ] as const) {
+      const persistedPack = structuredClone(
+        base.privateSetupEvidence.pack as FamilyFeudPack,
+      );
+      persistedPack.entities = persistedPack.entities.map((entity) =>
+        entity.id === "entity-1"
+          ? { ...entity, displayName, aliases: [] }
+          : entity
+      );
+      const publication = {
+        ...base,
+        privateSetupEvidence: {
+          ...base.privateSetupEvidence,
+          pack: persistedPack,
+        },
+      };
+
+      const result = advanceFamilyFeudDailyRuntime(
+        context(publication),
+        { type: "answer", answer: input },
+      );
+
+      expect(result.publicState.last_feedback, input).toMatchObject({
+        type: "correct",
+        points: 10,
+      });
+      const boards = result.publicState.main_boards as Array<Record<string, unknown>>;
+      const slots = boards[0]!.slots as Array<Record<string, unknown>>;
+      expect(slots[0], input).toMatchObject({
+        entity: { id: "entity-1", display_name: displayName },
+        found: true,
+      });
+    }
+  });
+
   it("reveals a found answer in the next visible slot while the remaining three stay hidden", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const result = advanceFamilyFeudDailyRuntime(
