@@ -7,6 +7,7 @@ import {
   MLB_FIND_LEADER_PRODUCTION_BOARDS,
 } from "./mlbFindLeaderProduction";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
+import { MLB_WAVELENGTH_OWNER_EXCLUSIONS } from "./mlbWavelength";
 
 vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: () => ({
@@ -61,10 +62,14 @@ describe("MLB Find the Leader scheduled challenge", () => {
     expect(MLB_FIND_LEADER_PRODUCTION_BOARDS.every((board) => board.candidates.length === 10)).toBe(true);
 
     const ids = MLB_FIND_LEADER_PRODUCTION_BOARDS.flatMap((board) => board.candidates.map((candidate) => candidate.id));
-    const burnedIds = new Set(MLB_FIND_LEADER_BURNED_CONTENT.candidateIds);
-    const burnedQuestions = new Set(MLB_FIND_LEADER_BURNED_CONTENT.questionIds);
-    expect(ids.every((id) => !burnedIds.has(id as never))).toBe(true);
-    expect(MLB_FIND_LEADER_PRODUCTION_BOARDS.every((board) => !burnedQuestions.has(board.id as never))).toBe(true);
+    const burnedIds = new Set<string>(MLB_FIND_LEADER_BURNED_CONTENT.candidateIds);
+    const burnedQuestions = new Set<string>(MLB_FIND_LEADER_BURNED_CONTENT.questionIds);
+    const burnedWavelengthSubjects = new Set<string>(MLB_WAVELENGTH_OWNER_EXCLUSIONS.subjects);
+    expect(ids.every((id) => !burnedIds.has(id))).toBe(true);
+    expect(MLB_FIND_LEADER_PRODUCTION_BOARDS.every((board) => !burnedQuestions.has(board.id))).toBe(true);
+    expect(MLB_FIND_LEADER_PRODUCTION_BOARDS.every((board) => board.candidates.every((candidate) => (
+      !burnedWavelengthSubjects.has(candidate.name)
+    )))).toBe(true);
     expect(MLB_FIND_LEADER_PRODUCTION_BOARDS.every((board) => board.candidates.every((candidate) => (
       Boolean(mlbTeamAssetByAbbreviation(candidate.teamAbbreviation))
     )))).toBe(true);
