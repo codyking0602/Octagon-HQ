@@ -57,6 +57,18 @@ describe("MLB Playoffs rollout gate", () => {
     expect(home).toContain("previewMode={identity.profile?.canControlPicks === true}");
   });
 
+  it("renders owner-only MLB Picks with production-facing bracket chrome", () => {
+    expect(mlbPicks).not.toContain("OWNER PREVIEW");
+    expect(mlbPicks).not.toContain("MOCK FIELD");
+    expect(mlbPicks).not.toContain("SAVE PREVIEW BRACKET");
+    expect(mlbPicks).toContain('className="mlb-league-bracket"');
+    expect(mlbPicks).toContain('className="mlb-world-series-stage"');
+    expect(mlbPicks).toContain('className="surface-card mlb-race-bracket"');
+    expect(mlbPicks).toContain("mlb-round-series-card");
+    expect(styles).toContain("scroll-snap-type: x proximity");
+    expect(styles).toContain(".mlb-round-team.is-selected");
+  });
+
   it("keeps MLB Play focused on the featured challenge", () => {
     expect(mlbPlay).toContain("Featured Challenge");
     expect(mlbPlay).toContain('to="/mlb/challenge"');
