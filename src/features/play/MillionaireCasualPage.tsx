@@ -107,7 +107,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
       <HQMark onClick={onBack} />
       <section className="millionaire-rules" aria-labelledby="millionaire-rules-title">
         <header>
-          <span>{millionaireSurfaceLabel(league)}</span>
+          <span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span>
           <h1 id="millionaire-rules-title">MILLIONAIRE</h1>
           <p>8 questions. $500 to $1,000,000.</p>
         </header>
@@ -346,7 +346,7 @@ function MillionaireGame({
       >
       <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
       <HQMark onClick={onBack} />
-      <header className="millionaire-title"><span>{millionaireSurfaceLabel(league)}</span><strong>MILLIONAIRE</strong></header>
+      <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
       <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}><div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div></div>
 
