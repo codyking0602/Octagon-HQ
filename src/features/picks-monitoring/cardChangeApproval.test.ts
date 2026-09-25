@@ -43,6 +43,10 @@ const source: ApprovalMonitoringEvent & {
   source: "UFC.com + MMA Mania",
 };
 
+function proposalAction(item: ReturnType<typeof buildCardChangeFindings>[number]) {
+  return (item.source_details?.approval_proposal as { action?: string } | undefined)?.action;
+}
+
 function findings(
   nextSource: typeof source,
   kind: "current" | "staged" = "current",
@@ -91,12 +95,13 @@ describe("monitoring card-change approval proposals", () => {
 
   it("creates explicit removal, reorder, and deadline proposals", () => {
     const removal = findings({ ...source, bouts: [second] });
-    expect(removal).toHaveLength(1);
-    expect(removal[0]!.source_details?.approval_proposal).toMatchObject({
+    const removalProposal = removal.find((item) => proposalAction(item) === "remove_bout");
+    expect(removalProposal?.source_details?.approval_proposal).toMatchObject({
       action: "remove_bout",
       bout_id: first.bout_id,
       expected_included_in_picks: true,
     });
+    expect(removal.some((item) => proposalAction(item) === "reorder_card")).toBe(true);
 
     const reorder = findings({ ...source, bouts: [second, first] });
     expect(reorder).toHaveLength(1);
@@ -233,8 +238,8 @@ describe("monitoring card-change approval proposals", () => {
       "full",
     );
 
-    expect(result).toHaveLength(1);
-    expect(result[0]!.source_details?.approval_proposal).toEqual({
+    const addProposal = result.find((item) => proposalAction(item) === "add_bout");
+    expect(addProposal?.source_details?.approval_proposal).toEqual({
       action: "add_bout",
       event_id: canonical.event_id,
       bout_id: added.bout_id,
@@ -248,6 +253,7 @@ describe("monitoring card-change approval proposals", () => {
       locks_at: canonical.locks_at,
       expected_bout_ids: [first.bout_id, second.bout_id, prelim.bout_id],
     });
+    expect(result.some((item) => proposalAction(item) === "reorder_card")).toBe(true);
   });
 
   it("creates one complete add proposal for a missing Late Prelim during full-card monitoring", () => {
@@ -455,7 +461,82 @@ describe("monitoring card-change approval proposals", () => {
     })).toEqual([]);
   });
 
-  it("fails closed for staged cards and ambiguous source changes", () => {
+  it("turns a complete full-matchup swap into guarded remove/add/order work", () => {
+    const replacement = {
+      ...first,
+      bout_id: "main-replacement-red-replacement-blue",
+      red_fighter_slug: "replacement-red",
+      red_fighter_name: "Replacement Red",
+      blue_fighter_slug: "replacement-blue",
+      blue_fighter_name: "Replacement Blue",
+    };
+    const result = findings({ ...source, bouts: [second, replacement] });
+    const actions = result
+      .map(proposalAction)
+      .filter(Boolean);
+
+    expect(actions).toEqual(expect.arrayContaining(["remove_bout", "add_bout", "reorder_card"]));
+    expect(result).toEqual(expect.arrayContaining([
+      expect.objectContaining({ summary: "Remove Alpha vs. Beta from Picks." }),
+      expect.objectContaining({ summary: "Add Replacement Red vs. Replacement Blue to Picks." }),
+    ]));
+  });
+
+  it("reconciles multiple simultaneous UFC card changes instead of dropping to generic review", () => {
+    const amayaReplacement = {
+      bout_id: "main-melissa-amaya-tina-black",
+      red_fighter_slug: "melissa-amaya",
+      red_fighter_name: "Melissa Amaya",
+      blue_fighter_slug: "tina-black",
+      blue_fighter_name: "Tina Black",
+      weight_class: "Strawweight",
+      card_segment: "main" as const,
+      segment_sequence: 2,
+    };
+    const hernandezDumas = {
+      bout_id: "main-luis-hernandez-sedriques-dumas",
+      red_fighter_slug: "luis-hernandez",
+      red_fighter_name: "Luis Hernandez",
+      blue_fighter_slug: "sedriques-dumas",
+      blue_fighter_name: "Sedriques Dumas",
+      weight_class: "Light Heavyweight",
+      card_segment: "main" as const,
+      segment_sequence: 4,
+    };
+    const dumontPerez = {
+      bout_id: "main-norma-dumont-ailin-perez",
+      red_fighter_slug: "norma-dumont",
+      red_fighter_name: "Norma Dumont",
+      blue_fighter_slug: "ailin-perez",
+      blue_fighter_name: "Ailin Perez",
+      weight_class: "Bantamweight",
+      card_segment: "main" as const,
+      segment_sequence: 5,
+    };
+    const rosBar = { ...first, red_fighter_name: "Raul Rosas Jr", red_fighter_slug: "raul-rosas-jr", blue_fighter_name: "Raoni Barcelos", blue_fighter_slug: "raoni-barcelos", bout_id: "main-event-raul-rosas-jr-raoni-barcelos", segment_sequence: 6 };
+    const vieira = { ...second, red_fighter_name: "Rodolfo Vieira", red_fighter_slug: "rodolfo-vieira", blue_fighter_name: "Robert Bryczek", blue_fighter_slug: "robert-bryczek", bout_id: "main-rodolfo-vieira-robert-bryczek", segment_sequence: 5 };
+    const hiestand = { ...first, red_fighter_name: "Brady Hiestand", red_fighter_slug: "brady-hiestand", blue_fighter_name: "Rinya Nakamura", blue_fighter_slug: "rinya-nakamura", bout_id: "main-brady-hiestand-rinya-nakamura", segment_sequence: 4 };
+    const osmanli = { ...second, red_fighter_name: "Mehemmedeli Osmanli", red_fighter_slug: "mehemmedeli-osmanli", blue_fighter_name: "Ilimbek Akylbek", blue_fighter_slug: "ilimbek-akylbek", bout_id: "main-mehemmedeli-osmanli-ilimbek-akylbek", segment_sequence: 3 };
+    const amaya = { ...first, red_fighter_name: "Melissa Amaya", red_fighter_slug: "melissa-amaya", blue_fighter_name: "Valesca Machado", blue_fighter_slug: "valesca-machado", bout_id: "main-melissa-amaya-valesca-machado", segment_sequence: 2 };
+    const harrell = { ...second, red_fighter_name: "Josiah Harrell", red_fighter_slug: "josiah-harrell", blue_fighter_name: "Elves Brener", blue_fighter_slug: "elves-brener", bout_id: "main-josiah-harrell-elves-brener", segment_sequence: 1 };
+    const liveCanonical = { ...canonical, bouts: [rosBar, vieira, hiestand, osmanli, amaya, harrell] };
+    const liveSource = { ...source, bouts: [rosBar, dumontPerez, hernandezDumas, osmanli, amayaReplacement] };
+
+    const result = findings(liveSource, "current", liveCanonical);
+    const actions = result
+      .map(proposalAction)
+      .filter(Boolean);
+
+    expect(actions.filter((action) => action === "replace_fighter")).toHaveLength(1);
+    expect(actions.filter((action) => action === "add_bout")).toHaveLength(2);
+    expect(actions.filter((action) => action === "remove_bout")).toHaveLength(3);
+    expect(actions).toContain("reorder_card");
+    expect(result.some((item) => item.summary === "Replace Valesca Machado with Tina Black.")).toBe(true);
+    expect(result.some((item) => item.summary.startsWith("Added main card:"))).toBe(false);
+    expect(result.some((item) => item.summary.startsWith("Removed main card:"))).toBe(false);
+  });
+
+  it("fails closed for staged cards and event-time ambiguity", () => {
     const staged = findings({ ...source, bouts: [second, first] }, "staged");
     expect(staged.some((item) => item.source_details?.approval_proposal)).toBe(false);
     expect(staged[0]).toMatchObject({
@@ -463,22 +544,6 @@ describe("monitoring card-change approval proposals", () => {
       before_value: ["Alpha vs. Beta", "Gamma vs. Delta"],
       after_value: ["Gamma vs. Delta", "Alpha vs. Beta"],
     });
-
-    const ambiguousReplacement = findings({
-      ...source,
-      bouts: [second, {
-        ...first,
-        red_fighter_slug: "replacement-red",
-        red_fighter_name: "Replacement Red",
-        blue_fighter_slug: "replacement-blue",
-        blue_fighter_name: "Replacement Blue",
-      }],
-    });
-    expect(ambiguousReplacement.map((item) => item.summary)).toEqual(expect.arrayContaining([
-      "Removed main event: Alpha vs. Beta.",
-      "Added main event: Replacement Red vs. Replacement Blue.",
-    ]));
-    expect(ambiguousReplacement.some((item) => item.source_details?.approval_proposal)).toBe(false);
 
     const movedEvent = findings({
       ...source,
