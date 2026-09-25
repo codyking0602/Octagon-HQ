@@ -98,7 +98,7 @@ describe("provider selection and deterministic evidence", () => {
       odds: odds([...fixture, missingProviderEvent]),
     });
 
-    expect(payload.coverage.missingSnapshots).toBe(1);
+    expect(payload.coverage.missing_snapshots).toBe(1);
     expect(payload.findings.some((finding) => (
       finding.bout_id === "main-2"
       && (finding.finding_type === "unmatched_fight" || finding.finding_type === "provider_error")
