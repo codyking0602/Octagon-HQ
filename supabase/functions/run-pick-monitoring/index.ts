@@ -281,11 +281,31 @@ Deno.serve(async (request) => {
         signal: AbortSignal.timeout(10_000),
       });
       if (espnResponse.ok) {
-        for (const candidate of adaptEspnUfcFighterMedia({
+        const discovered = adaptEspnUfcFighterMedia({
           body: await espnResponse.json().catch(() => null),
           event,
-        })) {
-          if (fighters.has(candidate.fighter_slug)) candidates.set(candidate.fighter_slug, candidate);
+        });
+        const verified = await Promise.all(discovered.map(async (candidate) => {
+          try {
+            const response = await fetch(candidate.photo_url, {
+              headers: {
+                Accept: "image/*",
+                Range: "bytes=0-0",
+              },
+              signal: AbortSignal.timeout(8_000),
+            });
+            const contentType = response.headers.get("content-type") ?? "";
+            const acceptable = response.ok && /^image\//i.test(contentType);
+            if (response.body) await response.body.cancel().catch(() => undefined);
+            return acceptable ? candidate : null;
+          } catch {
+            return null;
+          }
+        }));
+        for (const candidate of verified) {
+          if (candidate && fighters.has(candidate.fighter_slug)) {
+            candidates.set(candidate.fighter_slug, candidate);
+          }
         }
       }
     } catch {
