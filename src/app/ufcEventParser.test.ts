@@ -16,6 +16,15 @@ function fight(red: string, blue: string, weight = "Middleweight", cancelled = f
     </li>`;
 }
 
+function splitTitleFight(red: string, blue: string, weight = "Light Heavyweight") {
+  return `
+    <li class="l-listing__item c-listing-fight">
+      <div class="c-listing-fight__class-text">${weight} Bout</div>
+      <div class="field field--name-node-title">${red}</div>
+      <div class="field field--name-node-title"><a href="/athlete/${blue.toLowerCase().replace(/\s+/g, "-")}">${blue}</a></div>
+    </li>`;
+}
+
 const html = `<!doctype html>
 <html>
 <head>
@@ -100,6 +109,23 @@ describe("official UFC event parser", () => {
       section: "prelim",
       red_fighter_name: "Jamall Emmers",
       blue_fighter_name: "Lerryan Douglas",
+    });
+  });
+
+  it("parses late-added UFC rows when the two fighter names are split across node-title blocks", () => {
+    const lateReplacementMarkup = html.replace(
+      fight("Roman Dolidze", "Reinier de Ridder"),
+      `${splitTitleFight("Luis Hernandez", "Sedriques Dumas")}${fight("Roman Dolidze", "Reinier de Ridder")}`,
+    );
+
+    const card = parseUfcFightCard(lateReplacementMarkup, sourceUrl);
+    expect(card.bouts.map((bout) => `${bout.red_fighter_name} vs ${bout.blue_fighter_name}`)).toContain(
+      "Luis Hernandez vs Sedriques Dumas",
+    );
+    expect(card.bouts.find((bout) => bout.red_fighter_name === "Luis Hernandez")).toMatchObject({
+      section: "main",
+      blue_fighter_name: "Sedriques Dumas",
+      weight_class: "Light Heavyweight",
     });
   });
 
