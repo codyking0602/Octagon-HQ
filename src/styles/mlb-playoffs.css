@@ -2670,3 +2670,178 @@
     font-size: .42rem;
   }
 }
+
+
+/* MLB Championship — one 100-point postseason race */
+.mlb-championship-summary {
+  overflow: hidden;
+  border: 1px solid rgba(var(--mlb-green-rgb), .3);
+  border-radius: 11px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(var(--mlb-green-rgb), .12), transparent 42%),
+    #111412;
+}
+
+.mlb-championship-summary > header {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #29302c;
+}
+
+.mlb-championship-summary > header > div {
+  display: grid;
+  gap: 2px;
+}
+
+.mlb-championship-summary > header span,
+.mlb-championship-summary > header small {
+  color: #858d88;
+  font-size: .48rem;
+  font-weight: 950;
+  letter-spacing: .09em;
+}
+
+.mlb-championship-summary > header > div > span {
+  color: var(--mlb-green-strong);
+}
+
+.mlb-championship-summary > header strong {
+  font-size: .78rem;
+}
+
+.mlb-championship-summary > header > b {
+  color: #f2f5f3;
+  font-size: .9rem;
+  white-space: nowrap;
+}
+
+.mlb-championship-summary > header > b small {
+  margin-left: 2px;
+  color: #7f8782;
+  font-size: .46rem;
+}
+
+.mlb-championship-summary__lanes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mlb-championship-summary__lanes > span {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+  padding: 8px 9px 9px;
+  border-right: 1px solid #29302c;
+}
+
+.mlb-championship-summary__lanes > span:last-child {
+  border-right: 0;
+}
+
+.mlb-championship-summary__lanes small {
+  overflow: hidden;
+  color: #7f8782;
+  font-size: .43rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mlb-championship-summary__lanes strong {
+  font-size: .67rem;
+  white-space: nowrap;
+}
+
+.mlb-championship-summary__lanes em {
+  color: var(--mlb-green-strong);
+  font-size: .46rem;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .06em;
+}
+
+.mlb-championship-standing__score small {
+  display: block;
+  max-width: 190px;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+.mlb-series-pick-card > footer {
+  min-height: 27px;
+  color: #747b77;
+  font-size: .47rem;
+  font-weight: 800;
+  letter-spacing: .045em;
+}
+
+.mlb-series-pick-card > footer > strong {
+  color: #6f7772;
+  font-size: .42rem;
+  opacity: .82;
+}
+
+.mlb-picks-grading > div {
+  padding: 8px 10px 10px;
+}
+
+.mlb-picks-grading .football-picks-grading__body {
+  gap: 7px;
+}
+
+.mlb-picks-grading .football-picks-grading__scores {
+  gap: 5px;
+}
+
+.mlb-picks-grading .football-picks-grading__scores > span {
+  min-height: 34px;
+  padding: 6px 8px;
+}
+
+.mlb-picks-grading .football-picks-grading__rule {
+  gap: 2px;
+  padding-top: 6px;
+}
+
+.mlb-picks-grading .football-picks-grading__rule p {
+  font-size: .58rem;
+  line-height: 1.28;
+}
+
+.mlb-championship-scoring__lanes strong {
+  color: var(--mlb-green-strong);
+}
+
+@media (max-width: 430px) {
+  .mlb-championship-summary > header {
+    min-height: 45px;
+    padding: 7px 8px;
+  }
+
+  .mlb-championship-summary__lanes > span {
+    padding: 7px 6px 8px;
+  }
+
+  .mlb-championship-summary__lanes small {
+    font-size: .39rem;
+  }
+
+  .mlb-championship-summary__lanes strong {
+    font-size: .62rem;
+  }
+
+  .mlb-championship-standing__score small {
+    max-width: 160px;
+    font-size: .43rem;
+  }
+
+  .mlb-series-pick-card > footer {
+    font-size: .44rem;
+  }
+}
