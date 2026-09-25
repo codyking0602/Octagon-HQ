@@ -1,4 +1,5 @@
 import type { MlbPlayoffsHub } from "./mlbPlayoffsRepository";
+import type { MlbChampionship } from "./mlbChampionship";
 import { mlbTeamLogoUrl } from "./mlbTeamAssets";
 
 export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
@@ -101,7 +102,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
         round: "championship_series",
         league: "AL",
         label: "ALCS",
-        points: 4,
+        points: 5,
         left: { teamId: null, sourceNodeId: "al-ds-1" },
         right: { teamId: null, sourceNodeId: "al-ds-2" },
       },
@@ -110,7 +111,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
         round: "championship_series",
         league: "NL",
         label: "NLCS",
-        points: 4,
+        points: 5,
         left: { teamId: null, sourceNodeId: "nl-ds-1" },
         right: { teamId: null, sourceNodeId: "nl-ds-2" },
       },
@@ -119,7 +120,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
         round: "world_series",
         league: null,
         label: "WORLD SERIES",
-        points: 8,
+        points: 10,
         left: { teamId: null, sourceNodeId: "al-cs" },
         right: { teamId: null, sourceNodeId: "nl-cs" },
       },
@@ -138,12 +139,12 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     "nl-cs": "lad",
     "ws": "lad",
   },
-  ownBracketScore: 12,
+  ownBracketScore: 14,
   brackets: [
     {
       profile_id: "preview-shane",
       display_name: "Shane",
-      score: 14,
+      score: 17,
       is_current_user: false,
       picks: {
         "al-wc-1": "hou", "al-wc-2": "nyy", "nl-wc-1": "atl", "nl-wc-2": "sd",
@@ -154,7 +155,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     {
       profile_id: "preview-you",
       display_name: "Cody",
-      score: 12,
+      score: 14,
       is_current_user: true,
       picks: {
         "al-wc-1": "hou", "al-wc-2": "nyy", "nl-wc-1": "atl", "nl-wc-2": "chc",
@@ -165,7 +166,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     {
       profile_id: "preview-tyler",
       display_name: "Tyler",
-      score: 11,
+      score: 15,
       is_current_user: false,
       picks: {
         "al-wc-1": "hou", "al-wc-2": "bos", "nl-wc-1": "atl", "nl-wc-2": "chc",
@@ -176,7 +177,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     {
       profile_id: "preview-troy",
       display_name: "Troy",
-      score: 10,
+      score: 11,
       is_current_user: false,
       picks: {
         "al-wc-1": "hou", "al-wc-2": "nyy", "nl-wc-1": "phi", "nl-wc-2": "sd",
@@ -187,7 +188,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     {
       profile_id: "preview-lib",
       display_name: "Lib",
-      score: 9,
+      score: 12,
       is_current_user: false,
       picks: {
         "al-wc-1": "cws", "al-wc-2": "bos", "nl-wc-1": "atl", "nl-wc-2": "chc",
@@ -198,7 +199,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     {
       profile_id: "preview-chody",
       display_name: "Chody",
-      score: 8,
+      score: 10,
       is_current_user: false,
       picks: {
         "al-wc-1": "cws", "al-wc-2": "nyy", "nl-wc-1": "phi", "nl-wc-2": "sd",
@@ -335,4 +336,106 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     description: "Four clues. One postseason icon.",
     route: "/mlb/challenge",
   },
+};
+
+
+export const MLB_OWNER_PREVIEW_CHAMPIONSHIP: MlbChampionship = {
+  season: 2026,
+  totalMax: 100,
+  seriesMax: 43,
+  bracketMax: 32,
+  playMax: 25,
+  own: {
+    profile_id: "preview-you",
+    display_name: "Cody",
+    is_current_user: true,
+    overall_rank: 2,
+    total_points: 49.5,
+    series_points: 23,
+    series_rank: 2,
+    bracket_points: 14,
+    bracket_rank: 3,
+    play_points: 12.5,
+    play_rank: 1,
+  },
+  standings: [
+    {
+      profile_id: "preview-shane",
+      display_name: "Shane",
+      is_current_user: false,
+      overall_rank: 1,
+      total_points: 52.25,
+      series_points: 24,
+      series_rank: 1,
+      bracket_points: 17,
+      bracket_rank: 1,
+      play_points: 11.25,
+      play_rank: 2,
+    },
+    {
+      profile_id: "preview-you",
+      display_name: "Cody",
+      is_current_user: true,
+      overall_rank: 2,
+      total_points: 49.5,
+      series_points: 23,
+      series_rank: 2,
+      bracket_points: 14,
+      bracket_rank: 3,
+      play_points: 12.5,
+      play_rank: 1,
+    },
+    {
+      profile_id: "preview-tyler",
+      display_name: "Tyler",
+      is_current_user: false,
+      overall_rank: 3,
+      total_points: 46,
+      series_points: 21,
+      series_rank: 4,
+      bracket_points: 15,
+      bracket_rank: 2,
+      play_points: 10,
+      play_rank: 6,
+    },
+    {
+      profile_id: "preview-troy",
+      display_name: "Troy",
+      is_current_user: false,
+      overall_rank: 4,
+      total_points: 43.75,
+      series_points: 22,
+      series_rank: 3,
+      bracket_points: 11,
+      bracket_rank: 5,
+      play_points: 10.75,
+      play_rank: 3,
+    },
+    {
+      profile_id: "preview-lib",
+      display_name: "Lib",
+      is_current_user: false,
+      overall_rank: 5,
+      total_points: 40.5,
+      series_points: 18,
+      series_rank: 5,
+      bracket_points: 12,
+      bracket_rank: 4,
+      play_points: 10.5,
+      play_rank: 5,
+    },
+    {
+      profile_id: "preview-chody",
+      display_name: "Chody",
+      is_current_user: false,
+      overall_rank: 6,
+      total_points: 37.75,
+      series_points: 17,
+      series_rank: 6,
+      bracket_points: 10,
+      bracket_rank: 6,
+      play_points: 10.75,
+      play_rank: 3,
+    },
+  ],
 };

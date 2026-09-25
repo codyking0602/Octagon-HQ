@@ -53,10 +53,28 @@ begin
     into v_score_definition;
   if position('when ''wild_card'' then 1' in v_score_definition) = 0
     or position('when ''division_series'' then 2' in v_score_definition) = 0
-    or position('when ''championship_series'' then 4' in v_score_definition) = 0
-    or position('when ''world_series'' then 8' in v_score_definition) = 0
+    or position('when ''championship_series'' then 5' in v_score_definition) = 0
+    or position('when ''world_series'' then 10' in v_score_definition) = 0
   then
     raise exception 'MLB progressive bracket scoring drifted';
+  end if;
+  if to_regclass('public.mlb_postseason_challenges') is null then
+    raise exception 'MLB championship challenge slots table is missing';
+  end if;
+  if to_regclass('public.mlb_postseason_challenge_results') is null then
+    raise exception 'MLB championship challenge result table is missing';
+  end if;
+  if to_regprocedure('public.score_mlb_series_picks(integer,uuid)') is null then
+    raise exception 'MLB series-pick championship scorer is missing';
+  end if;
+  if to_regprocedure('public.score_mlb_postseason_play(integer,uuid)') is null then
+    raise exception 'MLB Play championship scorer is missing';
+  end if;
+  if to_regprocedure('public.get_mlb_postseason_championship(integer)') is null then
+    raise exception 'MLB Championship projection is missing';
+  end if;
+  if (select count(*) from public.mlb_postseason_challenges where season = 2026) <> 10 then
+    raise exception '2026 MLB Championship must have exactly ten Play scoring slots';
   end if;
 end;
 $mlb_playoffs_contract$;

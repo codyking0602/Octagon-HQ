@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { bracketComplete } from "./mlbBracket";
-import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import { MLB_OWNER_PREVIEW_CHAMPIONSHIP, MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
 
 describe("MLB owner preview", () => {
   it("renders a complete 12-team postseason bracket without touching public rollout", () => {
@@ -32,5 +32,15 @@ describe("MLB owner preview", () => {
     expect(MLB_OWNER_PREVIEW_HUB.spotlight?.title).toBe("Yankees vs. Red Sox");
     expect(MLB_OWNER_PREVIEW_HUB.spotlight?.series_id).toBe("al-wc-2");
     expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.teams.every((team) => Boolean(team.logo_url))).toBe(true);
+  });
+  it("previews one calibrated MLB Championship without exposing challenge content", () => {
+    expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.totalMax).toBe(100);
+    expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.seriesMax).toBe(43);
+    expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.bracketMax).toBe(32);
+    expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.playMax).toBe(25);
+    expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.standings).toHaveLength(6);
+    expect(MLB_OWNER_PREVIEW_CHAMPIONSHIP.own?.overall_rank).toBe(2);
+    expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.nodes.find((node) => node.round === "championship_series")?.points).toBe(5);
+    expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.nodes.find((node) => node.round === "world_series")?.points).toBe(10);
   });
 });
