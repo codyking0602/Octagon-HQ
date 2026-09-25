@@ -577,18 +577,17 @@ export default function MlbPicksPage() {
           </div>
           <div className="football-group-hub__summary-meta">
             <strong>
-              {bracketStandings.find((standing) => standing.entry.is_current_user)
-                ? `YOU · ${ordinalPlace(
-                    bracketStandings.find((standing) => standing.entry.is_current_user)!.rank,
-                    bracketStandings.find((standing) => standing.entry.is_current_user)!.tied,
-                  )} · ${hub.ownBracketScore} PTS`
+              {ownChampionship
+                ? `YOU · #${ownChampionship.overall_rank} · ${formatChampionshipPoints(ownChampionship.total_points)} PTS`
                 : `${hub.ownBracketScore} PTS`}
             </strong>
-            <small>{Math.max(hub.roundPickEntries.length, bracketStandings.length)} PLAYERS</small>
+            <small>{championshipPlayerCount} PLAYERS</small>
           </div>
         </summary>
 
         <div className="football-group-hub__body">
+          {championship ? <MlbChampionshipSummary championship={championship} /> : null}
+
           <section className="football-group-hub__week mlb-group-picks" aria-label="Current round group picks">
             <details className="surface-card picks-group-progress" open>
               <summary>
@@ -607,12 +606,11 @@ export default function MlbPicksPage() {
                   picks: {} as Record<string, string>,
                 } satisfies MlbRoundPickEntry))).map((member) => {
                   const isSelected = selectedRoundProfileId === member.profile_id;
-                  const bracketStanding = bracketStandings.find((standing) => standing.entry.profile_id === member.profile_id);
+                  const laneStanding = championshipStandings.find((standing) => standing.profile_id === member.profile_id);
                   const memberPicks: Record<string, string> = member.is_current_user
                     ? Object.fromEntries(ownSeriesPicks)
                     : member.picks;
                   const revealedPicks = roundSeries.filter((series) => Boolean(memberPicks[series.series_id]));
-                  const settled = member.wins + member.losses;
                   const completeMember = member.total > 0 && member.completed === member.total;
 
                   return (
@@ -629,11 +627,9 @@ export default function MlbPicksPage() {
                         <strong>{member.display_name}{member.is_current_user ? " · YOU" : ""}</strong>
                         <span className="football-group-live">
                           <b>
-                            {settled
-                              ? `${member.wins}-${member.losses}`
-                              : bracketStanding
-                                ? `${bracketStanding.entry.score} PTS · ${ordinalPlace(bracketStanding.rank, bracketStanding.tied)}`
-                                : `${member.completed}/${member.total}`}
+                            {laneStanding
+                              ? `${formatChampionshipPoints(laneStanding.series_points)} / ${championship?.seriesMax ?? MLB_CHAMPIONSHIP_SCORING.seriesMax} · #${laneStanding.series_rank}`
+                              : `${member.completed}/${member.total}`}
                           </b>
                           <small>{member.completed}/{member.total} SERIES</small>
                         </span>
@@ -645,8 +641,8 @@ export default function MlbPicksPage() {
                             <div>
                               <span>{member.display_name.toUpperCase()}'S PICKS</span>
                               <strong>
-                                {settled
-                                  ? `${member.wins}-${member.losses} · ${member.completed}/${member.total} PICKED`
+                                {laneStanding
+                                  ? `SERIES PICKS · ${formatChampionshipPoints(laneStanding.series_points)} / ${championship?.seriesMax ?? MLB_CHAMPIONSHIP_SCORING.seriesMax} PTS`
                                   : `${member.completed}/${member.total} PICKED`}
                               </strong>
                             </div>
@@ -699,21 +695,21 @@ export default function MlbPicksPage() {
             </details>
           </section>
 
-          <section className="football-group-hub__season" aria-label="MLB postseason standings">
+          <section className="football-group-hub__season" aria-label="MLB postseason championship standings">
             <section className="picks-history picks-season-section">
               <details className="surface-card picks-season-hub" open>
                 <summary className="picks-season-hub__summary">
                   <div className="picks-season-hub__identity">
                     <span>{hub.season} MLB POSTSEASON</span>
-                    <strong>
-                      {bracketStandings.find((standing) => standing.entry.is_current_user)
-                        ? `${bracketStandings.find((standing) => standing.entry.is_current_user)!.rank} OF ${bracketStandings.length}`
-                        : `— OF ${bracketStandings.length}`}
-                    </strong>
-                    <small>{hub.ownBracketScore} PTS · BRACKET</small>
+                    <strong>{ownChampionship ? `${ownChampionship.overall_rank} OF ${championshipPlayerCount}` : `— OF ${championshipPlayerCount}`}</strong>
+                    <small>
+                      {ownChampionship
+                        ? `${formatChampionshipPoints(ownChampionship.total_points)} / ${championship?.totalMax ?? 100} PTS · MLB CHAMPIONSHIP`
+                        : "MLB CHAMPIONSHIP"}
+                    </small>
                   </div>
                   <div className="picks-season-hub__meta">
-                    <span>{bracketStandings.length} PLAYERS</span>
+                    <span>{championshipPlayerCount} PLAYERS</span>
                     <em>STANDINGS &amp; ROUNDS</em>
                   </div>
                 </summary>
@@ -737,58 +733,68 @@ export default function MlbPicksPage() {
                   </div>
 
                   {standingsTab === "standings" ? (
-                    <section className="picks-season-standings" role="tabpanel" aria-label="MLB postseason standings">
+                    <section className="picks-season-standings" role="tabpanel" aria-label="MLB Championship standings">
                       <div className="picks-season-panel-heading">
-                        <div><span>GROUP STANDINGS</span><strong>Postseason leaderboard</strong></div>
-                        <small>{bracketStandings.length} PLAYERS</small>
+                        <div><span>MLB CHAMPIONSHIP</span><strong>Postseason leaderboard</strong></div>
+                        <small>100 PTS MAX</small>
                       </div>
-                      <div className="picks-season-standing-list">
-                        {bracketStandings.map(({ entry, rank, tied }) => {
-                          const leaderScore = bracketStandings[0]?.entry.score ?? 0;
-                          const gap = Math.max(0, leaderScore - entry.score);
-                          const progress = leaderScore > 0 ? Math.round((entry.score / leaderScore) * 100) : 0;
-                          return (
-                            <article
-                              className={[
-                                "picks-season-standing",
-                                rank === 1 ? "is-leader" : "",
-                                rank === 2 ? "is-second" : "",
-                                rank === 3 ? "is-third" : "",
-                                entry.is_current_user ? "is-current-user" : "",
-                              ].filter(Boolean).join(" ")}
-                              key={entry.profile_id}
-                            >
-                              <div className="picks-season-standing__progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>
-                              <span className="picks-season-standing__rank">
-                                <b>{ordinalPlace(rank, tied)}</b>
-                                {rank <= 3 ? <small>{rank === 1 ? "LEADER" : rank === 2 ? "2ND" : "3RD"}</small> : null}
-                              </span>
-                              <div className="picks-season-standing__identity">
-                                <div className="picks-season-standing__name">
-                                  <strong>{entry.display_name}</strong>
-                                  {entry.is_current_user ? <em>YOU</em> : null}
+                      {championshipStandings.length ? (
+                        <div className="picks-season-standing-list">
+                          {championshipStandings.map((entry) => {
+                            const leaderScore = championshipStandings[0]?.total_points ?? 0;
+                            const gap = Math.max(0, leaderScore - entry.total_points);
+                            const progress = Math.min(100, Math.round((entry.total_points / (championship?.totalMax ?? 100)) * 100));
+                            return (
+                              <article
+                                className={[
+                                  "picks-season-standing",
+                                  entry.overall_rank === 1 ? "is-leader" : "",
+                                  entry.overall_rank === 2 ? "is-second" : "",
+                                  entry.overall_rank === 3 ? "is-third" : "",
+                                  entry.is_current_user ? "is-current-user" : "",
+                                ].filter(Boolean).join(" ")}
+                                key={entry.profile_id}
+                              >
+                                <div className="picks-season-standing__progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>
+                                <span className="picks-season-standing__rank">
+                                  <b>{ordinalPlace(entry.overall_rank)}</b>
+                                  {entry.overall_rank <= 3 ? <small>{entry.overall_rank === 1 ? "LEADER" : entry.overall_rank === 2 ? "2ND" : "3RD"}</small> : null}
+                                </span>
+                                <div className="picks-season-standing__identity">
+                                  <div className="picks-season-standing__name">
+                                    <strong>{entry.display_name}</strong>
+                                    {entry.is_current_user ? <em>YOU</em> : null}
+                                  </div>
+                                  <small>SERIES #{entry.series_rank} · BRACKET #{entry.bracket_rank} · PLAY #{entry.play_rank}</small>
                                 </div>
-                                <small>POSTSEASON BRACKET</small>
-                              </div>
-                              <div className="picks-season-standing__score">
-                                <b>{entry.score} PTS</b>
-                                <em>{gap === 0 ? "LEADER" : `${gap} PTS BACK`}</em>
-                                <small>WC · DS · LCS · WS</small>
-                              </div>
-                            </article>
-                          );
-                        })}
-                      </div>
+                                <div className="picks-season-standing__score mlb-championship-standing__score">
+                                  <b>{formatChampionshipPoints(entry.total_points)} PTS</b>
+                                  <em>{gap === 0 ? "LEADER" : `${formatChampionshipPoints(gap)} PTS BACK`}</em>
+                                  <small>
+                                    S {formatChampionshipPoints(entry.series_points)}/{championship?.seriesMax ?? 43}
+                                    {" · "}B {formatChampionshipPoints(entry.bracket_points)}/{championship?.bracketMax ?? 32}
+                                    {" · "}P {formatChampionshipPoints(entry.play_points)}/{championship?.playMax ?? 25}
+                                  </small>
+                                </div>
+                              </article>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="surface-card football-picks-empty">
+                          {championshipError ? "CHAMPIONSHIP STANDINGS UNAVAILABLE" : "CHAMPIONSHIP STANDINGS LOADING"}
+                        </div>
+                      )}
                     </section>
                   ) : (
-                    <section className="mlb-postseason-rounds" role="tabpanel" aria-label="MLB postseason rounds">
+                    <section className="mlb-postseason-rounds" role="tabpanel" aria-label="MLB bracket rounds">
                       <div className="picks-season-panel-heading">
-                        <div><span>ROUND ARCHIVE</span><strong>Bracket performance</strong></div>
-                        <small>1 · 2 · 4 · 8</small>
+                        <div><span>BRACKET ROUNDS</span><strong>One-time bracket scoring</strong></div>
+                        <small>1 · 2 · 5 · 10</small>
                       </div>
                       {MLB_ROUND_ORDER.map((round) => {
                         const nodes = hub.bracketTemplate.nodes.filter((node) => node.round === round);
-                        const pointsEach = nodes[0]?.points ?? 0;
+                        const pointsEach = MLB_CHAMPIONSHIP_SCORING.bracketRound[round];
                         const roundResults = hub.series.filter((series) => series.round === round && series.winner_team_id);
                         const roundRows = bracketStandings.map(({ entry }) => ({
                           entry,
@@ -847,21 +853,25 @@ export default function MlbPicksPage() {
       </section>
 
       <details className="surface-card football-picks-grading mlb-picks-grading" data-mlb-section="grading">
-        <summary><span>SCORING &amp; GRADING</span><strong>HOW IT WORKS</strong></summary>
+        <summary><span>SCORING &amp; GRADING</span><strong>100-POINT CHAMPIONSHIP</strong></summary>
         <div className="football-picks-grading__body">
-          <div className="football-picks-grading__scores" aria-label="MLB playoff bracket scoring">
-            <span><b>WILD CARD</b><strong>+1</strong></span>
-            <span><b>DIVISION</b><strong>+2</strong></span>
-            <span><b>LCS</b><strong>+4</strong></span>
-            <span><b>WORLD SERIES</b><strong>+8</strong></span>
+          <div className="football-picks-grading__scores mlb-championship-scoring__lanes" aria-label="MLB Championship scoring">
+            <span><b>SERIES PICKS</b><strong>43</strong></span>
+            <span><b>BRACKET</b><strong>32</strong></span>
+            <span><b>PLAY</b><strong>25</strong></span>
+            <span><b>TOTAL</b><strong>100</strong></span>
           </div>
           <section className="football-picks-grading__rule">
-            <b>ONE-TIME BRACKET</b>
-            <p>Your bracket locks before the postseason begins. Correct winners score more as the rounds get deeper.</p>
+            <b>SERIES PICKS · 43 PTS</b>
+            <p>WC +2 each · DS +4 · LCS +5 · World Series +9. Fresh series-winner picks lock independently.</p>
           </section>
           <section className="football-picks-grading__rule">
-            <b>ROUND-BY-ROUND SERIES PICKS</b>
-            <p>Fresh series-winner picks lock independently and stay separate from your one-time bracket.</p>
+            <b>ONE-TIME BRACKET · 32 PTS</b>
+            <p>WC +1 each · DS +2 · LCS +5 · World Series +10. Your full bracket locks before the postseason.</p>
+          </section>
+          <section className="football-picks-grading__rule">
+            <b>PLAY · 25 PTS</b>
+            <p>Ten challenges. Each awards 2.5 / 2 / 1.5 / 1 / 0.5 championship points for 1st through 5th. Ties split the occupied places.</p>
           </section>
         </div>
       </details>
