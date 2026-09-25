@@ -6,13 +6,15 @@ export const MLB_PLAY_CURRENT_CHALLENGE_DATE = "2026-09-29";
 
 const jsonRecord = z.record(z.string(), z.unknown());
 
-const ownResultSchema = z.object({
+const resultSchema = z.object({
   raw_score: z.number(),
   game_type: z.string(),
   public_result: jsonRecord,
   result_detail: jsonRecord,
   completed_at: z.string(),
-}).nullable();
+});
+
+const ownResultSchema = resultSchema.nullable();
 
 const leaderboardEntrySchema = z.object({
   rank: z.number().int().positive(),
@@ -121,7 +123,7 @@ export async function recordMlbPlayChallengeResult({
   publicResult: Record<string, unknown>;
   resultDetail: Record<string, unknown>;
 }) {
-  const value = ownResultSchema.unwrap().parse(await rpc("record_mlb_postseason_challenge_result", {
+  const value = resultSchema.parse(await rpc("record_mlb_postseason_challenge_result", {
     p_season: season,
     p_challenge_key: challengeKey,
     p_raw_score: rawScore,
