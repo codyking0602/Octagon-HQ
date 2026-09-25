@@ -32,7 +32,7 @@ export interface MonitoringEvent {
   bouts: MonitoringBout[];
 }
 export interface SourcePreview extends MonitoringEvent { source: string; source_url: string; source_event_key: string; warnings?: string[] }
-export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredBoutIds: string[] }
+export interface ResolvedMonitoringEvent { selected: MonitoringEvent; kind: "staged" | "current"; storageEventId?: string; identity: string; ignoredBoutIds: string[]; allBoutIds: string[] }
 
 function normalizedEventName(value: string) {
   return value
@@ -121,12 +121,14 @@ export function resolveMonitoringEvent(staged?: MonitoringEvent | null, current?
     storageEventId: current.event_id,
     identity: `ufc:${current.source_event_key || current.starts_at.slice(0, 10)}`,
     ignoredBoutIds: current.bouts.filter((bout) => bout.included_in_picks === false).map((bout) => bout.bout_id),
+    allBoutIds: current.bouts.map((bout) => bout.bout_id),
   };
   if (staged) return {
     selected: { ...staged, bouts: includedBouts(staged) },
     kind: "staged",
     identity: `ufc:${staged.source_event_key || staged.starts_at.slice(0, 10)}`,
     ignoredBoutIds: [],
+    allBoutIds: staged.bouts.map((bout) => bout.bout_id),
   };
   throw new Error("No monitorable staged or current Picks event exists.");
 }
@@ -213,6 +215,7 @@ export function buildManualMonitoringPayload(input: {
     source: comparisonSource,
     scope,
     detectedAt: completedAt,
+    allBoutIds: resolved.allBoutIds,
   });
   const matchedMatchups = new Set(odds.snapshots.map((snapshot) => snapshot.matchupIdentity));
   for (const snapshot of odds.snapshots) {
