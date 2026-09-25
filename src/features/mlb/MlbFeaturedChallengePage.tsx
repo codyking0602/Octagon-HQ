@@ -1,10 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useIdentity } from "../identity/IdentityProvider";
 import {
   FootballFindLeaderPresentation,
   type FootballFindLeaderPresentationCandidate,
 } from "../back-room/FootballFindLeaderPresentation";
+import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import {
+  recordMlbPlayChallengeResult,
+  saveMlbPlayPreviewResult,
+  type MlbPlayChallengeResult,
+} from "./mlbPlayChallenge";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
+import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -27,6 +35,10 @@ interface ResultState {
   perfect: boolean;
   fatalId: string | null;
 }
+
+type CompletedGameResult = ResultState & {
+  eliminatedIds: string[];
+};
 
 const BOARD_ONE: MlbFindLeaderBoard = {
   id: "mlb-preview-career-doubles",
@@ -133,15 +145,23 @@ function MlbFindLeaderVisual({
 
 export default function MlbFeaturedChallengePage() {
   const navigate = useNavigate();
+  const identity = useIdentity();
+  const signedIn = Boolean(identity.profile);
+  const { hub: liveHub } = useMlbPlayoffs(signedIn);
+  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
+  const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
+  const challengeKey = hub?.featuredChallenge?.id ?? MLB_OWNER_PREVIEW_HUB.featuredChallenge?.id ?? "mlb-2026-play-01";
+
   const [boardIndex, setBoardIndex] = useState(0);
   const [eliminated, setEliminated] = useState<string[]>([]);
   const [result, setResult] = useState<ResultState | null>(null);
-  const [completedScores, setCompletedScores] = useState<number[]>([]);
+  const [completedGames, setCompletedGames] = useState<CompletedGameResult[]>([]);
+  const [saveStatus, setSaveStatus] = useState("");
   const board = MLB_FIND_LEADER_PREVIEW_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PREVIEW_BOARDS[0];
   const leader = boardLeader(board);
   const eliminatedSet = useMemo(() => new Set(eliminated), [eliminated]);
-  const finalScore = completedScores.length === MLB_FIND_LEADER_PREVIEW_BOARDS.length
-    ? Math.round(completedScores.reduce((sum, score) => sum + score, 0) / completedScores.length)
+  const finalScore = completedGames.length === MLB_FIND_LEADER_PREVIEW_BOARDS.length
+    ? Math.round(completedGames.reduce((sum, game) => sum + game.score, 0) / completedGames.length)
     : null;
 
   function resetBoard(nextBoardIndex = boardIndex) {
@@ -152,13 +172,63 @@ export default function MlbFeaturedChallengePage() {
   }
 
   function resetChallenge() {
-    setCompletedScores([]);
+    setCompletedGames([]);
+    setSaveStatus("");
     resetBoard(0);
   }
 
-  function finishBoard(nextResult: ResultState) {
+  async function persistCompletedChallenge(games: CompletedGameResult[]) {
+    const average = Math.round(games.reduce((sum, game) => sum + game.score, 0) / games.length);
+    const completed: MlbPlayChallengeResult = {
+      rawScore: average,
+      gameType: "find_leader",
+      publicResult: {
+        game_scores: games.map((game) => game.score),
+        average_score: average,
+      },
+      resultDetail: {
+        games: games.map((game, index) => ({
+          game: index + 1,
+          score: game.score,
+          perfect: game.perfect,
+          fatal_id: game.fatalId,
+          eliminated_ids: game.eliminatedIds,
+        })),
+      },
+      completedAt: new Date().toISOString(),
+    };
+
+    try {
+      setSaveStatus("SAVING RESULT");
+      if (previewMode) {
+        saveMlbPlayPreviewResult(challengeKey, completed);
+      } else {
+        await recordMlbPlayChallengeResult({
+          season: 2026,
+          challengeKey,
+          rawScore: completed.rawScore,
+          gameType: completed.gameType,
+          publicResult: completed.publicResult,
+          resultDetail: completed.resultDetail,
+        });
+      }
+      setSaveStatus("RESULT SAVED");
+    } catch {
+      setSaveStatus("RESULT WILL RETRY");
+    }
+  }
+
+  function finishBoard(nextResult: ResultState, nextEliminated: string[]) {
     setResult(nextResult);
-    setCompletedScores((scores) => [...scores.slice(0, boardIndex), nextResult.score]);
+    const completed: CompletedGameResult = {
+      ...nextResult,
+      eliminatedIds: nextEliminated,
+    };
+    const nextGames = [...completedGames.slice(0, boardIndex), completed];
+    setCompletedGames(nextGames);
+    if (boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1) {
+      void persistCompletedChallenge(nextGames);
+    }
   }
 
   function eliminate(id: string) {
@@ -168,12 +238,12 @@ export default function MlbFeaturedChallengePage() {
     setEliminated(next);
 
     if (id === leader.id) {
-      finishBoard({ score: round * 10, perfect: false, fatalId: id });
+      finishBoard({ score: round * 10, perfect: false, fatalId: id }, next);
       return;
     }
 
     if (next.length === 9) {
-      finishBoard({ score: 100, perfect: true, fatalId: null });
+      finishBoard({ score: 100, perfect: true, fatalId: null }, next);
     }
   }
 
@@ -228,10 +298,10 @@ export default function MlbFeaturedChallengePage() {
           <p className="eyebrow">FINAL SCORE</p>
           <strong>{finalScore}<small>/100</small></strong>
           <div>
-            <span>GAME 1 <b>{completedScores[0]}</b></span>
-            <span>GAME 2 <b>{completedScores[1]}</b></span>
+            <span>GAME 1 <b>{completedGames[0]?.score}</b></span>
+            <span>GAME 2 <b>{completedGames[1]?.score}</b></span>
           </div>
-          <p>Final score is the average of both Find the Leader boards.</p>
+          <p>Final score is the average of both Find the Leader boards.{saveStatus ? ` · ${saveStatus}` : ""}</p>
           <div className="mlb-find-final-actions">
             <button className="primary-action" type="button" onClick={resetChallenge}>PLAY AGAIN</button>
             <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>MLB PLAYOFFS</button>
