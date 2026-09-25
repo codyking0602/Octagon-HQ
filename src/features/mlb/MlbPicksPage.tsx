@@ -193,6 +193,10 @@ export default function MlbPicksPage() {
     });
   }, [hub?.brackets]);
 
+  const championshipStandings = championship?.standings ?? [];
+  const ownChampionship = championship?.own ?? null;
+  const championshipPlayerCount = championshipStandings.length || Math.max(hub?.roundPickEntries.length ?? 0, bracketStandings.length);
+
   if (!signedIn) {
     return (
       <div className="page mlb-picks-page">
