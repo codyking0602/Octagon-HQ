@@ -12,6 +12,7 @@ const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
 const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
 const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
+const mlbPlayer = readFileSync("src/features/mlb/MlbPlayerSpotlight.tsx", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
   it("stays owner-only until the explicit public release", () => {
@@ -68,16 +69,25 @@ describe("MLB Playoffs rollout gate", () => {
     expect(styles).toContain("--home-sport-accent: var(--mlb-green)");
   });
 
-  it("matches the Football-style Home hierarchy", () => {
-    const picks = mlbHome.indexOf('aria-label="MLB Picks and bracket standing"');
-    const challenge = mlbHome.indexOf("mlb-hq-card--challenge");
+  it("reuses the Football Home module geometry in the same order", () => {
+    const picks = mlbHome.indexOf("home-event-card home-event-card--compact");
+    const bracket = mlbHome.indexOf("home-weekly-games-row");
+    const challenge = mlbHome.indexOf('className="home-challenge-card"');
     const player = mlbHome.indexOf("<MlbPlayerSpotlight");
-    const series = mlbHome.indexOf('aria-label="MLB Series Spotlight"');
+    const series = mlbHome.indexOf('className="football-hq-games"');
     expect(picks).toBeGreaterThan(-1);
-    expect(challenge).toBeGreaterThan(picks);
+    expect(bracket).toBeGreaterThan(picks);
+    expect(challenge).toBeGreaterThan(bracket);
     expect(player).toBeGreaterThan(challenge);
     expect(series).toBeGreaterThan(player);
     expect(mlbHome).toContain("OPEN BREAKDOWN →");
+    expect(mlbHome).toContain("football-hq-game-row");
+  });
+
+  it("reuses the Football player spotlight card and adds the highlight CTA", () => {
+    expect(mlbPlayer).toContain('className="football-player-spotlight"');
+    expect(mlbPlayer).toContain('className="football-player-spotlight__media"');
+    expect(mlbPlayer).toContain("WATCH HIGHLIGHT ↗");
   });
 
   it("provides a gated visual series breakdown", () => {
