@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.110.7";
 import { adaptEspnUfcLiveFightState, ESPN_UFC_SCOREBOARD_URL, shouldPollEspnLiveFightState } from "../../../src/features/picks-monitoring/espnLiveFightState.ts";
-import { adaptTheOddsApiResponse, buildTheOddsApiRequestUrl } from "../../../src/features/picks-monitoring/theOddsApi.ts";
+import { adaptTheOddsApiResponse, buildTheOddsApiEventsUrl, buildTheOddsApiRequestUrl, providerEventIdsNearMonitoredStart } from "../../../src/features/picks-monitoring/theOddsApi.ts";
 import { buildManualMonitoringPayload, monitoringSummary, resolveMonitoringEvent, sourceMatchesMonitoredEvent, type CardScope, type MonitoringEvent, type SourcePreview } from "../../../src/features/picks-monitoring/manualMonitoringRunner.ts";
 import { buildCardChangeFindings } from "../../../src/features/picks-monitoring/cardChangeApproval.ts";
 import {
@@ -578,8 +578,30 @@ Deno.serve(async (request) => {
   }
 
   const fetchedAt = new Date().toISOString();
+
+  // The provider's events listing is quota-free. Use it to constrain the normal
+  // single-credit odds request to every MMA event near this UFC card so a
+  // provider-list omission cannot silently hide a late-added or renamed fight.
+  let discoveredEventIds: string[] = [];
+  try {
+    const eventsResponse = await fetch(buildTheOddsApiEventsUrl(providerKey));
+    if (eventsResponse.ok) {
+      discoveredEventIds = providerEventIdsNearMonitoredStart(
+        await eventsResponse.json().catch(() => null),
+        resolved.selected.starts_at,
+      );
+    }
+  } catch {
+    // Discovery is an optimization and coverage guard. Fall back to the same
+    // one paid sport-level request if the free endpoint is temporarily unavailable.
+  }
+
   let oddsResponse: Response;
-  try { oddsResponse = await fetch(buildTheOddsApiRequestUrl(providerKey)); } catch { oddsResponse = new Response(null, { status: 502 }); }
+  try {
+    oddsResponse = await fetch(buildTheOddsApiRequestUrl(providerKey, undefined, discoveredEventIds));
+  } catch {
+    oddsResponse = new Response(null, { status: 502 });
+  }
   const odds = adaptTheOddsApiResponse({ status: oddsResponse.status, body: await oddsResponse.json().catch(() => null), headers: oddsResponse.headers }, fetchedAt);
   let payload;
   try {
