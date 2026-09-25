@@ -131,3 +131,42 @@ export async function recordMlbPlayChallengeResult({
   }));
   return mapResult(value)!;
 }
+
+
+const PREVIEW_STORAGE_PREFIX = "octagon:mlb-play-preview:";
+
+export function loadMlbPlayPreviewResult(challengeKey: string): MlbPlayChallengeResult | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(`${PREVIEW_STORAGE_PREFIX}${challengeKey}`);
+    if (!raw) return null;
+    const parsed = ownResultSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? mapResult(parsed.data) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveMlbPlayPreviewResult(
+  challengeKey: string,
+  result: MlbPlayChallengeResult,
+): MlbPlayChallengeResult {
+  if (typeof window === "undefined") return result;
+  const existing = loadMlbPlayPreviewResult(challengeKey);
+  if (existing) return existing;
+  try {
+    window.localStorage.setItem(
+      `${PREVIEW_STORAGE_PREFIX}${challengeKey}`,
+      JSON.stringify({
+        raw_score: result.rawScore,
+        game_type: result.gameType,
+        public_result: result.publicResult,
+        result_detail: result.resultDetail,
+        completed_at: result.completedAt,
+      }),
+    );
+  } catch {
+    // Preview persistence is best-effort only. Production uses the canonical RPC.
+  }
+  return result;
+}
