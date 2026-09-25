@@ -137,7 +137,7 @@ export default function MlbFeaturedChallengePage() {
   const [eliminated, setEliminated] = useState<string[]>([]);
   const [result, setResult] = useState<ResultState | null>(null);
   const [completedScores, setCompletedScores] = useState<number[]>([]);
-  const board = MLB_FIND_LEADER_PREVIEW_BOARDS[boardIndex];
+  const board = MLB_FIND_LEADER_PREVIEW_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PREVIEW_BOARDS[0];
   const leader = boardLeader(board);
   const eliminatedSet = useMemo(() => new Set(eliminated), [eliminated]);
   const finalScore = completedScores.length === MLB_FIND_LEADER_PREVIEW_BOARDS.length
