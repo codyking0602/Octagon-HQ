@@ -1,33 +1,35 @@
 import { Link } from "react-router-dom";
+import "../../styles/home-challenges.css";
+import "../../styles/play-landing-shared.css";
 import "../../styles/mlb-playoffs.css";
 
 export default function MlbPlayoffsPage() {
   return (
     <div className="page mlb-play-page">
-      <section className="page-heading mlb-play-page__heading">
-        <p className="eyebrow">MLB PLAYOFFS · PLAY</p>
-        <h1>Featured Challenge</h1>
-        <p>One handcrafted postseason game at a time.</p>
+      <section className="play-landing-heading mlb-play-page__heading">
+        <h1>Play</h1>
+        <p>Postseason challenges.</p>
       </section>
 
-      <section className="surface-card mlb-play-feature">
-        <div className="mlb-play-feature__topline">
-          <span>FIND THE LEADER</span>
-          <small>OWNER DESIGN DEMO</small>
-        </div>
-        <div className="mlb-play-feature__body">
-          <div>
-            <p className="eyebrow">FEATURED CHALLENGE</p>
-            <h2>Find the Leader</h2>
-            <p>Same game loop and presentation as Football, rebuilt with a disposable MLB board.</p>
+      <Link
+        className="home-challenge-card mlb-play-challenge-card"
+        data-sport="mlb"
+        to="/mlb/challenge"
+        aria-label="Open MLB Find the Leader challenge"
+      >
+        <div className="home-challenge-card__copy">
+          <div className="home-challenge-card__topline">
+            <span>MLB PLAYOFF CHALLENGE</span>
+            <small>READY</small>
           </div>
-          <div className="mlb-play-feature__meta">
-            <span><b>10</b><small>PLAYERS</small></span>
-            <span><b>1</b><small>LEADER</small></span>
-          </div>
+          <h3>Find the Leader</h3>
+          <p>Two boards. One final score.</p>
         </div>
-        <Link className="primary-action" to="/mlb/challenge">PLAY DEMO →</Link>
-      </section>
+        <div className="home-challenge-card__result">
+          <strong>PLAY NOW</strong>
+          <span>OPEN <b aria-hidden="true">→</b></span>
+        </div>
+      </Link>
     </div>
   );
 }

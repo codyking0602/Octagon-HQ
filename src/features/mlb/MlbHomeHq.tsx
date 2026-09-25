@@ -201,22 +201,18 @@ export function MlbHomeHq({
             className="home-challenge-card"
             data-sport="mlb"
             to={hub.featuredChallenge?.route ?? "/mlb"}
-            aria-label="Open MLB Featured Challenge"
+            aria-label="Open MLB Playoff Challenge"
           >
             <div className="home-challenge-card__copy">
               <div className="home-challenge-card__topline">
-                <span>FEATURED CHALLENGE</span>
-                <small>
-                  {ownChampionship && championship
-                    ? `PLAY #${ownChampionship.play_rank} · ${formatChampionshipPoints(ownChampionship.play_points)}/${championship.playMax}`
-                    : hub.featuredChallenge?.kicker ?? "PLAYOFF GAME"}
-                </small>
+                <span>MLB PLAYOFF CHALLENGE</span>
+                <small>{hub.featuredChallenge ? "READY" : "COMING SOON"}</small>
               </div>
-              <h3>{hub.featuredChallenge?.title ?? "Coming with the postseason"}</h3>
-              <p>{hub.featuredChallenge?.description ?? "Handcrafted MLB playoff challenges live here."}</p>
+              <h3>{hub.featuredChallenge?.title ?? "Playoff Challenge"}</h3>
+              <p>{hub.featuredChallenge?.description ?? "A new challenge arrives during the postseason."}</p>
             </div>
             <div className="home-challenge-card__result">
-              <strong>PLAY NOW</strong>
+              <strong>{hub.featuredChallenge ? "PLAY NOW" : "SOON"}</strong>
               <span>OPEN <b aria-hidden="true">→</b></span>
             </div>
           </Link>
