@@ -5,12 +5,17 @@ import {
   type FootballFindLeaderPresentationCandidate,
 } from "../back-room/FootballFindLeaderPresentation";
 import { useIdentity } from "../identity/IdentityProvider";
+import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
 import {
   MLB_PLAY_CURRENT_CHALLENGE_KEY,
+  loadMlbPlayPreviewResult,
   recordMlbPlayChallengeResult,
+  saveMlbPlayPreviewResult,
+  type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
+import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -156,15 +161,20 @@ export default function MlbFeaturedChallengePage() {
   const identity = useIdentity();
   const navigate = useNavigate();
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
+  const { hub: liveHub } = useMlbPlayoffs(signedIn);
+  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
   const {
     overview,
     loading: overviewLoading,
     reload: reloadOverview,
   } = useMlbPlayChallengeOverview({
-    enabled: signedIn,
+    enabled: signedIn && !previewMode,
     season: 2026,
     challengeKey: MLB_PLAY_CURRENT_CHALLENGE_KEY,
   });
+  const [previewSavedResult, setPreviewSavedResult] = useState<MlbPlayChallengeResult | null>(() => (
+    previewMode ? loadMlbPlayPreviewResult(MLB_PLAY_CURRENT_CHALLENGE_KEY) : null
+  ));
   const [practiceMode, setPracticeMode] = useState(false);
   const [boardIndex, setBoardIndex] = useState(0);
   const [eliminated, setEliminated] = useState<string[]>([]);
@@ -198,9 +208,7 @@ export default function MlbFeaturedChallengePage() {
     setRecording(true);
     setRecordError("");
     try {
-      await recordMlbPlayChallengeResult({
-        season: 2026,
-        challengeKey: MLB_PLAY_CURRENT_CHALLENGE_KEY,
+      const completed: MlbPlayChallengeResult = {
         rawScore: score,
         gameType: "find_leader",
         publicResult: {
@@ -217,8 +225,23 @@ export default function MlbFeaturedChallengePage() {
             eliminated_ids: game.eliminatedIds,
           })),
         },
-      });
-      await reloadOverview();
+        completedAt: new Date().toISOString(),
+      };
+
+      if (previewMode) {
+        const stored = saveMlbPlayPreviewResult(MLB_PLAY_CURRENT_CHALLENGE_KEY, completed);
+        setPreviewSavedResult(stored);
+      } else {
+        await recordMlbPlayChallengeResult({
+          season: 2026,
+          challengeKey: MLB_PLAY_CURRENT_CHALLENGE_KEY,
+          rawScore: completed.rawScore,
+          gameType: completed.gameType,
+          publicResult: completed.publicResult,
+          resultDetail: completed.resultDetail,
+        });
+        await reloadOverview();
+      }
     } catch (nextError) {
       setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Play result could not be recorded.");
     } finally {
@@ -268,9 +291,9 @@ export default function MlbFeaturedChallengePage() {
   }
 
   const isLastBoard = boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1;
-  const savedResult = overview?.ownResult ?? null;
+  const savedResult = previewMode ? previewSavedResult : overview?.ownResult ?? null;
 
-  if (overviewLoading && !overview && !practiceMode) {
+  if (!previewMode && overviewLoading && !overview && !practiceMode) {
     return (
       <div className="page mlb-find-leader-page">
         <section className="mlb-find-saved-result">
