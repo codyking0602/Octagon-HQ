@@ -1,5 +1,6 @@
 import type {
   FamilyFeudEntity,
+  FamilyFeudEntityKind,
   FamilyFeudPack,
   FamilyFeudQuestion,
 } from "../games/familyFeudEngine";
@@ -174,6 +175,52 @@ function answerAliases(domain: SportsFeudBankDomain, answer: SportsFeudAuthoredA
     ...(ALIAS_INDEX[domain].get(answer.name) ?? []),
     ...automaticAliases(answer.name),
   ]).filter((alias) => alias.trim() && alias !== answer.name);
+}
+
+export interface SportsFeudCurrentEntityMetadata {
+  kind: FamilyFeudEntityKind;
+  aliases: readonly string[];
+}
+
+const CURRENT_QUESTION_INDEX = new Map<
+  string,
+  { domain: SportsFeudBankDomain; question: SportsFeudAuthoredQuestion }
+>();
+
+for (const domain of ["cfb", "nfl", "ufc"] as const) {
+  for (const question of [...BANKS[domain].main, ...BANKS[domain].fast]) {
+    CURRENT_QUESTION_INDEX.set(question.id, { domain, question });
+  }
+}
+for (const question of [
+  ...UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main,
+  ...UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney,
+]) {
+  CURRENT_QUESTION_INDEX.set(question.id, { domain: "ufc", question });
+}
+
+export function sportsFeudCurrentEntityMetadata(
+  entityId: string,
+  displayName: string,
+): SportsFeudCurrentEntityMetadata | null {
+  const separator = entityId.lastIndexOf(":");
+  if (separator <= 0) return null;
+
+  const questionId = entityId.slice(0, separator);
+  const current = CURRENT_QUESTION_INDEX.get(questionId);
+  if (!current) return null;
+
+  const normalizedName = displayName.trim().toLowerCase();
+  const answer = [
+    ...current.question.answers,
+    ...(current.question.alsoAcceptedAnswers ?? []),
+  ].find((candidate) => candidate.name.trim().toLowerCase() === normalizedName);
+  if (!answer) return null;
+
+  return {
+    kind: current.question.entityKind,
+    aliases: answerAliases(current.domain, answer),
+  };
 }
 
 function materializeQuestion(
