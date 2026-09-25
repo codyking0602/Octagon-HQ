@@ -1,5 +1,4 @@
 import {
-  canonicalFightPair,
   canonicalFighterDisplay,
   normalizeFighter,
 } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
@@ -65,12 +64,22 @@ export interface OddsAdapterResult {
   quota: OddsProviderQuota;
 }
 
+const fighterOddsIdentityAliases = new Map([
+  ["mehemmedeli osmanli", "mahammadali osmanli"],
+  ["valesca machado", "tina black"],
+]);
+
 export function fighterOddsIdentity(value: string) {
-  return normalizeFighter(value);
+  const normalized = normalizeFighter(value);
+  return fighterOddsIdentityAliases.get(normalized) ?? normalized;
+}
+
+export function sameOddsFighterIdentity(left: string, right: string) {
+  return fighterOddsIdentity(left) === fighterOddsIdentity(right);
 }
 
 export function fightOddsMatchupIdentity(left: string, right: string) {
-  return canonicalFightPair(left, right);
+  return [fighterOddsIdentity(left), fighterOddsIdentity(right)].sort().join("|");
 }
 
 export function normalizedOddsPrice(name: string, americanOdds: number): NormalizedOddsPrice {
