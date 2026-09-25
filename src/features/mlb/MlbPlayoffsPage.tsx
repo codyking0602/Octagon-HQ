@@ -12,21 +12,21 @@ export default function MlbPlayoffsPage() {
 
       <section className="surface-card mlb-play-feature">
         <div className="mlb-play-feature__topline">
-          <span>WHO AM I</span>
-          <small>POSTSEASON EDITION</small>
+          <span>FIND THE LEADER</span>
+          <small>OWNER DESIGN DEMO</small>
         </div>
         <div className="mlb-play-feature__body">
           <div>
             <p className="eyebrow">FEATURED CHALLENGE</p>
-            <h2>October Legend</h2>
-            <p>Four clues. One postseason icon.</p>
+            <h2>Find the Leader</h2>
+            <p>Same game loop and presentation as Football, rebuilt with a disposable MLB board.</p>
           </div>
           <div className="mlb-play-feature__meta">
-            <span><b>4</b><small>CLUES</small></span>
-            <span><b>1</b><small>ANSWER</small></span>
+            <span><b>10</b><small>PLAYERS</small></span>
+            <span><b>1</b><small>LEADER</small></span>
           </div>
         </div>
-        <Link className="primary-action" to="/mlb/challenge">PLAY CHALLENGE →</Link>
+        <Link className="primary-action" to="/mlb/challenge">PLAY DEMO →</Link>
       </section>
     </div>
   );
