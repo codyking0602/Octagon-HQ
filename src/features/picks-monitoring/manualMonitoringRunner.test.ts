@@ -9,6 +9,8 @@ const source = { ...event, event_id: "generated-source-id", source: "UFC.com met
 const fixture = JSON.parse(readFileSync("src/features/picks-monitoring/__fixtures__/draftkings-primary.json", "utf8"));
 const odds = (body = fixture, remaining = "100") => adaptTheOddsApiResponse({ status: 200, body, headers: { "x-requests-remaining": remaining } }, observed);
 const build = (overrides: Partial<Parameters<typeof buildManualMonitoringPayload>[0]> = {}) => buildManualMonitoringPayload({ resolved: resolveMonitoringEvent(null, event), source, scope: "full", odds: odds(), startedAt: observed, completedAt: observed, ...overrides });
+const proposalAction = (finding: ReturnType<typeof buildManualMonitoringPayload>["findings"][number]) =>
+  (finding.source_details?.approval_proposal as { action?: string } | undefined)?.action;
 
 function unrelatedProviderFight() {
   const unrelated = structuredClone(fixture[0]);
@@ -147,7 +149,7 @@ describe("removed-bout comparison identity", () => {
     });
     const cardChanges = payload.findings.filter((finding) => finding.finding_type === "card_change");
 
-    const addFinding = cardChanges.find((finding) => finding.source_details?.approval_proposal?.action === "add_bout");
+    const addFinding = cardChanges.find((finding) => proposalAction(finding) === "add_bout");
     expect(addFinding).toMatchObject({
       bout_id: promoted.bout_id,
       summary: "Add Vicente Luque vs. Tresean Gore to Picks.",
@@ -161,7 +163,7 @@ describe("removed-bout comparison identity", () => {
         },
       },
     });
-    expect(cardChanges.some((finding) => finding.source_details?.approval_proposal?.action === "reorder_card")).toBe(true);
+    expect(cardChanges.some((finding) => proposalAction(finding) === "reorder_card")).toBe(true);
   });
 });
 
