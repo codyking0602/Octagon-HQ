@@ -122,6 +122,11 @@ describe("official UFC event parser", () => {
     expect(card.bouts.map((bout) => `${bout.red_fighter_name} vs ${bout.blue_fighter_name}`)).toContain(
       "Luis Hernandez vs Sedriques Dumas",
     );
+    expect(card.bouts.find((bout) => bout.red_fighter_name === "Luis Hernandez")).toMatchObject({
+      section: "main",
+      blue_fighter_name: "Sedriques Dumas",
+      weight_class: "Light Heavyweight",
+    });
   });
 
   it("rejects a non-UFC source URL", () => {
