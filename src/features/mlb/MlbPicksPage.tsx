@@ -788,7 +788,7 @@ export default function MlbPicksPage() {
                           ), 0),
                         })).sort((left, right) => right.score - left.score || left.entry.display_name.localeCompare(right.entry.display_name));
                         return (
-                          <details className="mlb-round-archive" key={round} defaultOpen={round === hub.currentRound}>
+                          <details className="mlb-round-archive" key={round} open={round === hub.currentRound ? true : undefined}>
                             <summary>
                               <div><span>{roundDisplayLabel(round)}</span><strong>{roundResults.length} / {nodes.length} FINAL</strong></div>
                               <small>+{pointsEach} EACH</small>
