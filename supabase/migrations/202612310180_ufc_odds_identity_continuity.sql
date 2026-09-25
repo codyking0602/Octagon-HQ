@@ -183,8 +183,12 @@ begin
   if v_replacement_slug = v_old_slug and v_replacement_name = v_old_name then
     raise exception 'STALE_STATE: corrected fighter identity is unchanged';
   end if;
-  if private.pick_fighter_person_key(v_old_name)
-    is distinct from private.pick_fighter_person_key(v_replacement_name) then
+  -- A stable UFC athlete profile slug is the strongest same-person evidence.
+  -- The alias table is the fallback for legacy cards that were staged before
+  -- source-owned athlete slugs were preserved.
+  if v_replacement_slug is distinct from v_old_slug
+    and private.pick_fighter_person_key(v_old_name)
+      is distinct from private.pick_fighter_person_key(v_replacement_name) then
     raise exception 'PROHIBITED: fighter identity correction must resolve to the same person';
   end if;
   if exists (
