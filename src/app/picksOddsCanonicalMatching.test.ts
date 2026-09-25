@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { canonicalFightPair, fighterMatch } from "../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import { filterOddsToMonitoredEvent, type MonitoringEvent } from "../features/picks-monitoring/manualMonitoringRunner.ts";
-import type { NormalizedFightOddsSnapshot, OddsAdapterResult } from "../features/picks-monitoring/oddsModel.ts";
-import { adaptTheOddsApiResponse } from "../features/picks-monitoring/theOddsApi.ts";
+import { fighterOddsIdentity, type NormalizedFightOddsSnapshot, type OddsAdapterResult } from "../features/picks-monitoring/oddsModel.ts";
+import { adaptTheOddsApiResponse, buildTheOddsApiEventsUrl, buildTheOddsApiRequestUrl, providerEventIdsNearMonitoredStart } from "../features/picks-monitoring/theOddsApi.ts";
 
 const event: MonitoringEvent = {
   event_id: "ufc-fight-night-gamrot-vs-salkilld-2026-08-09",
@@ -142,7 +142,7 @@ describe("Picks odds canonical fighter matching", () => {
     ], [{
       code: "missing_complete_bookmaker",
       severity: "warning",
-      message: "Neither DraftKings nor FanDuel supplied one complete two-fighter moneyline snapshot.",
+      message: "No configured sportsbook supplied one complete two-fighter moneyline snapshot.",
       sourceEventId: "elkins-provider",
       matchupIdentity: canonicalFightPair("Darren Elkins", "Yadier Delvalle"),
     }]), event);
@@ -151,6 +151,99 @@ describe("Picks odds canonical fighter matching", () => {
       code: "missing_complete_bookmaker",
       matchupIdentity: canonicalFightPair("Darren Elkins", "Yadier del Valle"),
     }));
+  });
+
+
+
+  it("treats official same-person UFC name corrections as one odds identity", () => {
+    expect(fighterOddsIdentity("Valesca Machado")).toBe(fighterOddsIdentity("Tina Black"));
+    expect(fighterOddsIdentity("Mehemmedeli Osmanli")).toBe(fighterOddsIdentity("Mahammadali Osmanli"));
+
+    const correctedEvent: MonitoringEvent = {
+      ...event,
+      starts_at: "2026-09-27T00:00:00Z",
+      bouts: [
+        {
+          bout_id: "amaya-black",
+          red_fighter_slug: "melissa-amaya",
+          red_fighter_name: "Melissa Amaya",
+          blue_fighter_slug: "tina-black",
+          blue_fighter_name: "Tina Black",
+        },
+        {
+          bout_id: "osmanli-akylbek",
+          red_fighter_slug: "mahammadali-osmanli",
+          red_fighter_name: "Mahammadali Osmanli",
+          blue_fighter_slug: "ilimbek-akylbek",
+          blue_fighter_name: "Ilimbek Akylbek",
+        },
+      ],
+    };
+    const adapted = adaptTheOddsApiResponse({
+      status: 200,
+      body: [
+        {
+          id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          sport_key: "mma_mixed_martial_arts",
+          commence_time: "2026-09-26T21:00:00Z",
+          home_team: "Melissa Amaya",
+          away_team: "Valesca Machado",
+          bookmakers: [{
+            key: "draftkings",
+            title: "DraftKings",
+            last_update: "2026-09-25T12:00:00Z",
+            markets: [{ key: "h2h", outcomes: [
+              { name: "Melissa Amaya", price: 180 },
+              { name: "Valesca Machado", price: -218 },
+            ] }],
+          }],
+        },
+        {
+          id: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          sport_key: "mma_mixed_martial_arts",
+          commence_time: "2026-09-26T21:00:00Z",
+          home_team: "Mehemmedeli Osmanli",
+          away_team: "Ilimbek Akylbek Uulu",
+          bookmakers: [{
+            key: "draftkings",
+            title: "DraftKings",
+            last_update: "2026-09-25T12:00:00Z",
+            markets: [{ key: "h2h", outcomes: [
+              { name: "Mehemmedeli Osmanli", price: -290 },
+              { name: "Ilimbek Akylbek Uulu", price: 235 },
+            ] }],
+          }],
+        },
+      ],
+    }, "2026-09-25T12:01:00Z");
+
+    const filtered = filterOddsToMonitoredEvent(adapted, correctedEvent);
+    expect(filtered.snapshots).toHaveLength(2);
+    expect(filtered.coverage).toEqual({ providerEvents: 2, completeSnapshots: 2, missingSnapshots: 0 });
+    expect(filtered.snapshots.flatMap((item) => item.prices)).toEqual(expect.arrayContaining([
+      expect.objectContaining({ fighterName: "Tina Black", americanOdds: -218 }),
+      expect.objectContaining({ fighterName: "Mahammadali Osmanli", americanOdds: -290 }),
+    ]));
+  });
+
+  it("uses quota-free event discovery to constrain the same single odds request", () => {
+    const eventsUrl = buildTheOddsApiEventsUrl("secret", "https://example.test");
+    expect(eventsUrl.pathname).toBe("/v4/sports/mma_mixed_martial_arts/events");
+
+    const ids = providerEventIdsNearMonitoredStart([
+      { id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", sport_key: "mma_mixed_martial_arts", commence_time: "2026-09-26T21:00:00Z" },
+      { id: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", sport_key: "mma_mixed_martial_arts", commence_time: "2026-09-27T01:00:00Z" },
+      { id: "cccccccccccccccccccccccccccccccc", sport_key: "mma_mixed_martial_arts", commence_time: "2026-10-03T21:00:00Z" },
+    ], "2026-09-27T00:00:00Z");
+
+    expect(ids).toEqual([
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    ]);
+    const oddsUrl = buildTheOddsApiRequestUrl("secret", "https://example.test", ids);
+    expect(oddsUrl.searchParams.get("eventIds")).toBe(ids.join(","));
+    expect(oddsUrl.searchParams.get("markets")).toBe("h2h");
+    expect(oddsUrl.searchParams.get("bookmakers")).toBe("draftkings,fanduel,betmgm,caesars");
   });
 
   it("fails closed when multiple provider aliases map to the same canonical bout", () => {
