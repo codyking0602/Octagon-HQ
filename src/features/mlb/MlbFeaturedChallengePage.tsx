@@ -15,6 +15,7 @@ import {
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
+import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -291,6 +292,8 @@ export default function MlbFeaturedChallengePage() {
 
   const isLastBoard = boardIndex === MLB_FIND_LEADER_PREVIEW_BOARDS.length - 1;
   const savedResult = previewMode ? previewSavedResult : overview?.ownResult ?? null;
+
+  if (previewMode) return <MlbWavelengthChallenge />;
 
   if (!previewMode && overviewLoading && !overview && !practiceMode) {
     return (
