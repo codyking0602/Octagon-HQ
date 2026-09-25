@@ -114,10 +114,18 @@ function DailyAnswerDetail({
     >
       <header className="today-hub-official-result__header">
         <button type="button" onClick={onClose}>← LEADERBOARD</button>
-        <span><strong>{entry.displayName}</strong><small>#{entry.rank} · {entry.normalizedScore}/100</small></span>
+        <span className="today-hub-official-result__identity">
+          <span className="today-hub-official-result__avatar" aria-hidden="true">
+            {entry.avatarPhotoData ? <img src={entry.avatarPhotoData} alt="" /> : <b>{entry.initials}</b>}
+          </span>
+          <span className="today-hub-official-result__identity-copy">
+            <strong>{entry.displayName}</strong>
+            <small>#{entry.rank} · {entry.normalizedScore}/100</small>
+          </span>
+        </span>
       </header>
       <div className="today-hub-official-result__body official-daily-page">
-        {entry.gameType === "millionaire" || entry.gameType === "sports_feud" ? (
+        {entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" ? (
           <DailyLeaderboardGameResult
             projection={resultProjection}
             resultDetail={entry.resultDetail}

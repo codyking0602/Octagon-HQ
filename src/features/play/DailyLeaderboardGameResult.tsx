@@ -22,6 +22,27 @@ type FeudAnswerRow = {
   acceptedVariant: boolean;
 };
 
+export type WhoAmILeaderboardRound = {
+  index: number;
+  league: string;
+  identityId: string;
+  identityName: string;
+  score: number;
+  outcome: string;
+  revealedCount: number;
+  wrongGuesses: number;
+  recoveryMisses: number;
+  naturalGuesses: Array<{ id: string; name: string; correct: boolean }>;
+  recoveryChoices: Array<{
+    id: string;
+    name: string;
+    guessed: boolean;
+    correct: boolean;
+    guessOrder: number | null;
+  }>;
+  clues: Array<{ id: string; text: string; seen: boolean }>;
+};
+
 function record(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value as JsonRecord
@@ -64,6 +85,94 @@ function lifelineLabel(value: string) {
 
 const MONEY_LADDER = [500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000];
 
+
+function whoAmIOutcomeLabel(outcome: string) {
+  if (outcome === "natural") return "NATURAL SOLVE";
+  if (outcome === "recovered") return "RECOVERY SOLVE";
+  return "MISS";
+}
+
+function whoAmISubjectNames(setup: JsonRecord) {
+  return new Map(
+    records(setup.subjects).map((candidate) => [
+      String(candidate.id ?? ""),
+      String(candidate.name ?? ""),
+    ]),
+  );
+}
+
+export function buildWhoAmILeaderboardRounds(
+  projection: TodayChallengeProjection,
+  resultDetail: JsonRecord,
+): WhoAmILeaderboardRound[] {
+  const setupRounds = records(projection.publicSetup.rounds);
+  const revealRoot = record(projection.revealSetup);
+  const revealRounds = records(revealRoot.rounds);
+  const resultRoot = projection.officialAttempt?.publicResult ?? {};
+  const resultRounds = records(resultRoot.rounds);
+  const detailRounds = records(resultDetail.rounds);
+  const roundCount = Math.max(1, setupRounds.length, revealRounds.length, resultRounds.length, detailRounds.length);
+
+  return Array.from({ length: roundCount }, (_, index) => {
+    const setup = setupRounds[index] ?? projection.publicSetup;
+    const reveal = revealRounds[index] ?? revealRoot;
+    const result = resultRounds[index] ?? (index === 0 ? resultRoot : {});
+    const detail = detailRounds[index] ?? (index === 0 ? resultDetail : {});
+    const identity = record(reveal.identity);
+    const identityId = String(result.subject_id ?? identity.id ?? "");
+    const identityName = String(identity.name ?? "") || identityId || "Identity revealed";
+    const names = whoAmISubjectNames(setup);
+    if (identityId && identityName) names.set(identityId, identityName);
+
+    const naturalGuessIds = strings(detail.natural_guesses);
+    const recoveryChoiceIds = strings(detail.recovery_choices);
+    const recoveryGuessIds = strings(detail.recovery_guesses);
+    const outcome = String(result.outcome ?? detail.outcome ?? "");
+    const revealedCount = Math.max(0, Number(result.revealed_count ?? detail.revealed_count ?? 0));
+    const wrongGuesses = Number(
+      result.wrong_guesses ?? Math.max(0, naturalGuessIds.length - (outcome === "natural" ? 1 : 0)),
+    );
+    const recoveryMisses = Number(
+      result.recovery_misses
+        ?? result.recovery_wrong_guesses
+        ?? Math.max(0, recoveryGuessIds.length - (outcome === "recovered" ? 1 : 0)),
+    );
+
+    const naturalGuesses = naturalGuessIds.map((id) => ({
+      id,
+      name: names.get(id) || id,
+      correct: Boolean(identityId && id === identityId),
+    }));
+    const recoveryGuesses = new Map(recoveryGuessIds.map((id, guessIndex) => [id, guessIndex + 1]));
+    const recoveryChoices = recoveryChoiceIds.map((id) => ({
+      id,
+      name: names.get(id) || id,
+      guessed: recoveryGuesses.has(id),
+      correct: Boolean(identityId && id === identityId),
+      guessOrder: recoveryGuesses.get(id) ?? null,
+    }));
+    const clues = records(reveal.clues).map((clue, clueIndex) => ({
+      id: String(clue.id ?? ("clue-" + (clueIndex + 1))),
+      text: String(clue.text ?? ""),
+      seen: clueIndex < revealedCount,
+    }));
+
+    return {
+      index,
+      league: String(result.league ?? reveal.league ?? setup.league ?? ""),
+      identityId,
+      identityName,
+      score: Number(result.score ?? (roundCount === 1 ? projection.officialAttempt?.normalizedScore ?? 0 : 0)),
+      outcome,
+      revealedCount,
+      wrongGuesses,
+      recoveryMisses,
+      naturalGuesses,
+      recoveryChoices,
+      clues,
+    };
+  });
+}
 export function buildMillionaireLeaderboardQuestions(
   projection: TodayChallengeProjection,
   resultDetail: JsonRecord,
@@ -324,6 +433,139 @@ function SportsFeudLeaderboardResult({
   );
 }
 
+function WhoAmILeaderboardResult({
+  projection,
+  resultDetail,
+}: {
+  projection: TodayChallengeProjection;
+  resultDetail: JsonRecord;
+}) {
+  const rounds = buildWhoAmILeaderboardRounds(projection, resultDetail);
+  const score = projection.officialAttempt?.normalizedScore ?? 0;
+  const naturalSolves = rounds.filter((round) => round.outcome === "natural").length;
+  const recoverySolves = rounds.filter((round) => round.outcome === "recovered").length;
+  const totalMisses = rounds.reduce(
+    (sum, round) => sum + round.wrongGuesses + round.recoveryMisses,
+    0,
+  );
+
+  return (
+    <div className="leaderboard-game-result leaderboard-game-result--whoami">
+      <section className="leaderboard-game-result__hero">
+        <div>
+          <span>WHO AM I?</span>
+          <strong>{score}</strong>
+          <small>DAILY SCORE</small>
+        </div>
+        <dl>
+          <div><dt>Rounds</dt><dd>{rounds.length}</dd></div>
+          <div><dt>Natural solves</dt><dd>{naturalSolves}</dd></div>
+          <div><dt>Recovery solves</dt><dd>{recoverySolves}</dd></div>
+          <div><dt>Total misses</dt><dd>{totalMisses}</dd></div>
+        </dl>
+      </section>
+
+      <div className="leaderboard-whoami-rounds">
+        {rounds.map((round) => {
+          const outcomeLabel = whoAmIOutcomeLabel(round.outcome);
+          const recoveryAttempts = round.recoveryChoices
+            .filter((choice) => choice.guessed)
+            .sort((a, b) => (a.guessOrder ?? 99) - (b.guessOrder ?? 99));
+          return (
+            <details className="leaderboard-whoami-round" key={round.index}>
+              <summary>
+                <div className="leaderboard-whoami-round__topline">
+                  <span>
+                    ROUND {round.index + 1}
+                    {round.league ? " · " + round.league : ""}
+                  </span>
+                  <strong>{round.score}/100</strong>
+                </div>
+                <h3>{round.identityName}</h3>
+                <div className="leaderboard-whoami-round__meta">
+                  <span className={"is-" + (round.outcome || "miss")}>{outcomeLabel}</span>
+                  <span>{round.revealedCount} CLUES</span>
+                  <span>{round.wrongGuesses} NATURAL {round.wrongGuesses === 1 ? "MISS" : "MISSES"}</span>
+                  {round.recoveryChoices.length ? (
+                    <span>{round.recoveryMisses} RECOVERY {round.recoveryMisses === 1 ? "MISS" : "MISSES"}</span>
+                  ) : null}
+                </div>
+                <small>VIEW CLUES &amp; GUESSES</small>
+              </summary>
+
+              <div className="leaderboard-whoami-round__detail">
+                <section>
+                  <header>
+                    <span>NATURAL GUESSES</span>
+                    <small>{round.naturalGuesses.length || "NO"} ATTEMPT{round.naturalGuesses.length === 1 ? "" : "S"}</small>
+                  </header>
+                  {round.naturalGuesses.length ? (
+                    <div className="leaderboard-whoami-guesses">
+                      {round.naturalGuesses.map((guess, guessIndex) => (
+                        <div className={guess.correct ? "is-correct" : "is-wrong"} key={guess.id + "-" + guessIndex}>
+                          <b>{guessIndex + 1}</b>
+                          <strong>{guess.name}</strong>
+                          <em>{guess.correct ? "SOLVED" : "MISS"}</em>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="leaderboard-whoami-empty">No natural guess was recorded.</p>
+                  )}
+                </section>
+
+                {round.recoveryChoices.length ? (
+                  <section>
+                    <header>
+                      <span>RECOVERY BOARD</span>
+                      <small>{recoveryAttempts.length} ATTEMPT{recoveryAttempts.length === 1 ? "" : "S"}</small>
+                    </header>
+                    <div className="leaderboard-whoami-recovery">
+                      {round.recoveryChoices.map((choice) => (
+                        <div
+                          className={[
+                            choice.guessed ? "is-guessed" : "",
+                            choice.correct ? "is-identity" : "",
+                          ].filter(Boolean).join(" ")}
+                          key={choice.id}
+                        >
+                          <strong>{choice.name}</strong>
+                          <small>
+                            {choice.guessOrder
+                              ? "PICK " + choice.guessOrder + (choice.correct ? " · SOLVED" : " · MISS")
+                              : choice.correct
+                                ? "IDENTITY"
+                                : "NOT PICKED"}
+                          </small>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
+                <section>
+                  <header>
+                    <span>ALL CLUES</span>
+                    <small>{round.revealedCount} OF {round.clues.length || 10} SEEN</small>
+                  </header>
+                  <div className="leaderboard-whoami-clues">
+                    {round.clues.map((clue, clueIndex) => (
+                      <div className={clue.seen ? "is-seen" : "is-unseen"} key={clue.id}>
+                        <b>{clueIndex + 1}</b>
+                        <span>{clue.text}</span>
+                        <small>{clue.seen ? "SEEN" : "NOT SEEN"}</small>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            </details>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 function MillionaireLeaderboardResult({
   projection,
   resultDetail,
@@ -442,6 +684,9 @@ export function DailyLeaderboardGameResult({
   }
   if (projection.gameType === "millionaire") {
     return <MillionaireLeaderboardResult projection={projection} resultDetail={resultDetail} />;
+  }
+  if (projection.gameType === "who_am_i") {
+    return <WhoAmILeaderboardResult projection={projection} resultDetail={resultDetail} />;
   }
   return null;
 }

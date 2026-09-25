@@ -2,18 +2,23 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202612310174_daily_leaderboard_game_result_details.sql",
+  "supabase/migrations/202612310179_who_am_i_leaderboard_result_details.sql",
   "utf8",
 );
 
 describe("Daily leaderboard completed-game detail migration", () => {
-  it("exposes only the sanitized replay fields for Millionaire and Sports Feud", () => {
+  it("exposes only the sanitized replay fields for Millionaire, Sports Feud, and Who Am I", () => {
     expect(migration).toContain("'result_detail', ranked.result_detail");
     expect(migration).toContain("'action_history'");
     expect(migration).toContain("'choice_id'");
     expect(migration).toContain("'lifeline'");
     expect(migration).toContain("'fast_money_results'");
     expect(migration).toContain("'submitted_text'");
+    expect(migration).toContain("when history.game_type = 'who_am_i'");
+    expect(migration).toContain("'natural_guesses'");
+    expect(migration).toContain("'recovery_choices'");
+    expect(migration).toContain("'recovery_guesses'");
+    expect(migration).toContain("progress.submission_state #> '{final_submission,rounds}'");
     expect(migration).not.toContain("'submission_state', progress.submission_state");
   });
 
