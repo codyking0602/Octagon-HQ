@@ -129,3 +129,41 @@ export function decideScheduledMonitoring(input: {
     next_eligible_at: new Date(nowMs + interval).toISOString(),
   };
 }
+
+
+const CARD_SOURCE_BASE_TICK_MS = 5 * 60 * 1000;
+
+/**
+ * Official UFC card truth is cheaper than the paid odds provider, so it gets its
+ * own fight-week cadence on the existing five-minute scheduler wake.
+ *
+ * More than 72h out: every 12h
+ * Final 72-48h: every 3h
+ * Final 48-24h: hourly
+ * Final 24h: every 15m
+ */
+export function scheduledCardSourceIntervalMs(event: MonitoringEvent, now: Date) {
+  const startsAt = parsedTime(event.starts_at);
+  if (startsAt === null) return null;
+
+  const remaining = startsAt - now.getTime();
+  if (remaining <= 0) return 0;
+  if (remaining > 3 * DAY_MS) return 12 * HOUR_MS;
+  if (remaining > 2 * DAY_MS) return 3 * HOUR_MS;
+  if (remaining > DAY_MS) return HOUR_MS;
+  return 15 * 60 * 1000;
+}
+
+/**
+ * The existing scheduler wakes every five minutes. Align the cheap official-card
+ * check to deterministic scheduler slots so no second cron or durable lease owner
+ * is required.
+ */
+export function shouldRunScheduledCardSourceCheck(event: MonitoringEvent, now: Date) {
+  const interval = scheduledCardSourceIntervalMs(event, now);
+  if (interval === null || interval === 0) return false;
+
+  const ticksPerInterval = Math.max(1, Math.round(interval / CARD_SOURCE_BASE_TICK_MS));
+  const currentTick = Math.floor(now.getTime() / CARD_SOURCE_BASE_TICK_MS);
+  return currentTick % ticksPerInterval === 0;
+}
