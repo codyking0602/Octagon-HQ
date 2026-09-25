@@ -19,6 +19,7 @@ describe("Millionaire fixed-stage presentation contract", () => {
   });
 
   it("keeps the standalone MLB host transparent in the approved host bay behind the fixed game chrome", () => {
+    // Keep mask/background assertions scoped to the host-slot declaration blocks.
     expect(fixedCss).toMatch(/\.millionaire-stage-host-slot \{[^}]*z-index: 4;[^}]*left: 198px;[^}]*bottom: 247px;[^}]*width: 509px;[^}]*height: 554px;[^}]*overflow: visible;[^}]*background: transparent;[^}]*box-shadow: none;/);
     expect(fixedCss).toMatch(/\.millionaire-stage-host-slot::before,\s*\.millionaire-stage-host-slot::after \{[^}]*content: none;[^}]*\}/);
     expect(fixedCss).not.toMatch(/\.millionaire-stage-host-slot \{[^}]*#01040b/);
