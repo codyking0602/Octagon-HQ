@@ -60,7 +60,9 @@ describe("observable Picks monitoring architecture", () => {
 
   it("uses the same event state, provider, comparison, and persistence owner for scheduled and manual checks", () => {
     expect(monitoringRunner).toContain("Manual CHECK NOW and the scheduler resolve the same canonical monitoring state.");
-    expect(occurrences(monitoringRunner, /get_pick_monitoring_event_state/g)).toBe(2);
+    // Scheduled/manual resolution share the same owner; trusted card convergence
+    // may reload that owner once after applying a batch of official UFC changes.
+    expect(occurrences(monitoringRunner, /get_pick_monitoring_event_state/g)).toBe(3);
     expect(occurrences(monitoringRunner, /THE_ODDS_API_KEY/g)).toBe(1);
     expect(occurrences(monitoringRunner, /buildTheOddsApiRequestUrl/g)).toBeGreaterThanOrEqual(1);
     expect(occurrences(monitoringRunner, /buildManualMonitoringPayload/g)).toBeGreaterThanOrEqual(1);
