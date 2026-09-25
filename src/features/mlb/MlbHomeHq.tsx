@@ -1,6 +1,9 @@
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { MLB_ROUND_LABELS } from "./mlbPlayoffsConfig";
 import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
+import { MlbPlayerSpotlight } from "./MlbPlayerSpotlight";
+import { mlbTeamAssetByName, mlbTeamColor, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import "../../styles/mlb-playoffs.css";
 
@@ -12,6 +15,19 @@ function nextLockLabel(value: string | null) {
     hour: "numeric",
     minute: "2-digit",
   }).format(new Date(value)).toUpperCase();
+}
+
+function MlbSeriesTeam({ name }: { name: string }) {
+  const asset = mlbTeamAssetByName(name);
+  const color = mlbTeamColor(asset?.abbreviation, name);
+  const logo = mlbTeamLogoUrl(asset?.abbreviation, name);
+
+  return (
+    <div className="mlb-home-series__team" style={{ "--series-team-color": color } as CSSProperties}>
+      <span>{logo ? <img src={logo} alt="" loading="lazy" /> : null}</span>
+      <strong>{name}</strong>
+    </div>
+  );
 }
 
 export function MlbHomeHq({
@@ -43,6 +59,9 @@ export function MlbHomeHq({
   const bracketCompleted = hub?.ownBracket ? Object.keys(hub.ownBracket).length : 0;
   const bracketTotal = hub?.bracketTemplate.nodes.length ?? 0;
   const bracketPercent = bracketTotal ? Math.round((bracketCompleted / bracketTotal) * 100) : 0;
+  const spotlightSeries = hub?.spotlight?.series_id
+    ? roundSeries.find((series) => series.series_id === hub.spotlight?.series_id) ?? null
+    : roundSeries[0] ?? null;
   const roundTitle = hub ? ({
     wild_card: "Wild Card",
     division_series: "Division Series",
@@ -78,10 +97,10 @@ export function MlbHomeHq({
         </section>
       ) : hub ? (
         <>
-          <section className="surface-card mlb-home-primary" aria-label="MLB playoff bracket status">
+          <section className="surface-card mlb-home-primary" aria-label="MLB Picks and bracket standing">
             <div className="mlb-home-primary__topline">
-              <span>PLAYOFF BRACKET</span>
-              <small>{previewActive ? "OWNER PREVIEW" : hub.bracketLocked ? "LIVE" : "OPEN"}</small>
+              <span>MLB PICKS</span>
+              <small>{previewActive ? "OWNER PREVIEW" : hub.bracketLocked ? "LIVE" : "ACTIVE"}</small>
             </div>
             <div className="mlb-home-primary__grid">
               <div className="mlb-home-progress">
@@ -100,16 +119,17 @@ export function MlbHomeHq({
                 <small>{hub.ownBracketScore} PTS</small>
               </Link>
             </div>
-            <Link className="secondary-action" to="/mlb/picks">OPEN BRACKET →</Link>
-          </section>
 
-          <Link className="mlb-home-row" to="/mlb/picks#mlb-round-picks">
-            <div>
-              <small>{MLB_ROUND_LABELS[hub.currentRound]} PICKS</small>
-              <strong>{roundSeries.length ? `${completedRoundPicks} OF ${roundSeries.length} READY` : "MATCHUPS PENDING"}</strong>
-            </div>
-            <b>{nextSeriesLock ? `LOCKS ${nextLockLabel(nextSeriesLock)}` : "VIEW →"}</b>
-          </Link>
+            <Link className="mlb-home-round-picks" to="/mlb/picks#mlb-round-picks">
+              <div>
+                <small>{MLB_ROUND_LABELS[hub.currentRound]} PICKS</small>
+                <strong>{roundSeries.length ? `${completedRoundPicks} OF ${roundSeries.length} READY` : "MATCHUPS PENDING"}</strong>
+              </div>
+              <b>{nextSeriesLock ? `LOCKS ${nextLockLabel(nextSeriesLock)}` : "VIEW →"}</b>
+            </Link>
+
+            <Link className="secondary-action" to="/mlb/picks">OPEN PICKS →</Link>
+          </section>
 
           <Link className="surface-card mlb-hq-card mlb-hq-card--challenge" to={hub.featuredChallenge?.route ?? "/mlb"}>
             <div className="mlb-hq-card__topline">
@@ -118,35 +138,37 @@ export function MlbHomeHq({
             </div>
             <h3>{hub.featuredChallenge?.title ?? "Coming with the postseason"}</h3>
             <p>{hub.featuredChallenge?.description ?? "Handcrafted MLB playoff challenges live here."}</p>
+            <b className="mlb-hq-card__cta">PLAY →</b>
           </Link>
 
-          <section className="surface-card mlb-hq-card mlb-hq-card--spotlight">
-            <div className="mlb-hq-card__topline">
-              <span>SERIES SPOTLIGHT</span>
+          <MlbPlayerSpotlight />
+
+          <section className="mlb-home-series" aria-label="MLB Series Spotlight">
+            <header>
+              <span>SPOTLIGHT SERIES</span>
               <small>{hub.spotlight?.round ?? MLB_ROUND_LABELS[hub.currentRound]}</small>
-            </div>
-            {hub.spotlight ? (
-              <>
-                <h3>{hub.spotlight.title}</h3>
-                <p>{hub.spotlight.status}</p>
-                <p>{hub.spotlight.overview}</p>
-                {hub.spotlight.keys.length ? (
-                  <div className="mlb-spotlight__keys" aria-label="Keys to the series">
-                    {hub.spotlight.keys.slice(0, 2).map((key) => <span key={key}>{key}</span>)}
-                  </div>
-                ) : null}
-                <div className="mlb-spotlight__watch">
-                  <span>PLAYER TO WATCH</span>
-                  <strong>{hub.spotlight.player_to_watch}</strong>
-                  <small>{hub.spotlight.player_context}</small>
-                  {hub.spotlight.stats[0] ? <small>{hub.spotlight.stats[0]}</small> : null}
+            </header>
+            {spotlightSeries ? (
+              <Link
+                className="mlb-home-series__row"
+                to={`/mlb/series/${spotlightSeries.series_id}`}
+                aria-label={`Open series breakdown for ${spotlightSeries.team_a_name} vs. ${spotlightSeries.team_b_name}`}
+              >
+                <div className="mlb-home-series__matchup">
+                  <MlbSeriesTeam name={spotlightSeries.team_a_name} />
+                  <b>VS</b>
+                  <MlbSeriesTeam name={spotlightSeries.team_b_name} />
                 </div>
-              </>
+                <div className="mlb-home-series__meta">
+                  <strong>{hub.spotlight?.status ?? spotlightSeries.label}</strong>
+                  <b>OPEN BREAKDOWN →</b>
+                </div>
+              </Link>
             ) : (
-              <>
-                <h3>Series matchup pending</h3>
-                <p>The featured series will publish when the bracket is set.</p>
-              </>
+              <div className="mlb-home-series__pending">
+                <strong>Series matchup pending</strong>
+                <span>The featured series will publish when the bracket is set.</span>
+              </div>
             )}
           </section>
         </>

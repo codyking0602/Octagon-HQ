@@ -62,6 +62,7 @@ const roundPickSchema = z.object({
 });
 
 const spotlightSchema = z.object({
+  series_id: z.string().nullable().optional().default(null),
   title: z.string(),
   round: z.string(),
   status: z.string(),

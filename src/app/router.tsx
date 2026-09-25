@@ -46,6 +46,7 @@ const PicksControlCenterPage = lazy(() => import("../features/picks-control/Pick
 const MlbPlayoffsPage = lazy(() => import("../features/mlb/MlbPlayoffsPage"));
 const MlbPicksPage = lazy(() => import("../features/mlb/MlbPicksPage"));
 const MlbFeaturedChallengePage = lazy(() => import("../features/mlb/MlbFeaturedChallengePage"));
+const MlbSeriesBreakdownPage = lazy(() => import("../features/mlb/MlbSeriesBreakdownPage"));
 const WhatsNewPage = lazy(() => import("../features/whats-new/WhatsNewPage"));
 
 export const appRoutes: RouteObject[] = [
@@ -102,6 +103,7 @@ export const appRoutes: RouteObject[] = [
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
       { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },
+      { path: "mlb/series/:seriesId", element: <MlbGate fallback="/"><MlbSeriesBreakdownPage /></MlbGate> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },
       { path: "picks/monitoring", element: <Navigate to="/picks/control#monitoring" replace /> },

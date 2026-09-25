@@ -30,5 +30,7 @@ describe("MLB owner preview", () => {
     expect(MLB_OWNER_PREVIEW_HUB.series).toHaveLength(4);
     expect(MLB_OWNER_PREVIEW_HUB.series.every((series) => series.round === "wild_card")).toBe(true);
     expect(MLB_OWNER_PREVIEW_HUB.spotlight?.title).toBe("Yankees vs. Red Sox");
+    expect(MLB_OWNER_PREVIEW_HUB.spotlight?.series_id).toBe("al-wc-2");
+    expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.teams.every((team) => Boolean(team.logo_url))).toBe(true);
   });
 });
