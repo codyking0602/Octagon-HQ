@@ -14,7 +14,7 @@ import type { MlbBracketEntry, MlbBracketNode, MlbPlayoffSeries, MlbRoundPickEnt
 import { MLB_OWNER_PREVIEW_CHAMPIONSHIP, MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
 import MlbChampionshipSummary from "./MlbChampionshipSummary";
 import { MLB_CHAMPIONSHIP_SCORING, formatChampionshipPoints } from "./mlbChampionship";
-import { mlbTeamAssetByName, mlbTeamLogoUrl } from "./mlbTeamAssets";
+import { mlbTeamAssetByName, mlbTeamColor, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import { useMlbChampionship } from "./useMlbChampionship";
 import "../../styles/mlb-playoffs.css";
