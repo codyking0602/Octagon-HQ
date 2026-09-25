@@ -45,6 +45,10 @@ const seriesSchema = z.object({
   winner_team_id: z.string().nullable(),
   series_score: z.string().nullable(),
   schedule: z.array(z.string()).default([]),
+  team_a_moneyline: z.number().int().nullable().optional().default(null),
+  team_b_moneyline: z.number().int().nullable().optional().default(null),
+  odds_source: z.string().nullable().optional().default(null),
+  odds_updated_at: z.string().nullable().optional().default(null),
 });
 
 const bracketEntrySchema = z.object({
@@ -59,6 +63,17 @@ const roundPickSchema = z.object({
   series_id: z.string(),
   winner_team_id: z.string(),
   picked_at: z.string(),
+});
+
+const roundPickEntrySchema = z.object({
+  profile_id: z.string(),
+  display_name: z.string(),
+  is_current_user: z.boolean(),
+  completed: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
+  wins: z.number().int().nonnegative(),
+  losses: z.number().int().nonnegative(),
+  picks: z.record(z.string(), z.string()),
 });
 
 const spotlightSchema = z.object({
@@ -94,6 +109,7 @@ const hubSchema = z.object({
   brackets: z.array(bracketEntrySchema),
   series: z.array(seriesSchema),
   own_round_picks: z.array(roundPickSchema),
+  round_pick_entries: z.array(roundPickEntrySchema).default([]),
   spotlight: spotlightSchema,
   featured_challenge: challengeSchema,
 });
@@ -118,6 +134,7 @@ export type MlbBracketTemplate = {
 };
 export type MlbPlayoffSeries = z.infer<typeof seriesSchema>;
 export type MlbBracketEntry = z.infer<typeof bracketEntrySchema>;
+export type MlbRoundPickEntry = z.infer<typeof roundPickEntrySchema>;
 export type MlbPlayoffsHub = {
   season: number;
   publicEnabled: boolean;
@@ -131,6 +148,7 @@ export type MlbPlayoffsHub = {
   brackets: MlbBracketEntry[];
   series: MlbPlayoffSeries[];
   ownRoundPicks: z.infer<typeof roundPickSchema>[];
+  roundPickEntries: MlbRoundPickEntry[];
   spotlight: z.infer<typeof spotlightSchema>;
   featuredChallenge: z.infer<typeof challengeSchema>;
 };
@@ -173,6 +191,7 @@ function mapHub(value: unknown): MlbPlayoffsHub {
     brackets: parsed.brackets,
     series: parsed.series,
     ownRoundPicks: parsed.own_round_picks,
+    roundPickEntries: parsed.round_pick_entries,
     spotlight: parsed.spotlight,
     featuredChallenge: parsed.featured_challenge,
   };

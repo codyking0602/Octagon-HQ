@@ -10,7 +10,7 @@ import {
   previousBracketGuideNode,
   sanitizeBracketPicks,
 } from "./mlbBracket";
-import type { MlbBracketEntry, MlbBracketNode, MlbTeam } from "./mlbPlayoffsRepository";
+import type { MlbBracketEntry, MlbBracketNode, MlbPlayoffSeries, MlbRoundPickEntry, MlbTeam } from "./mlbPlayoffsRepository";
 import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
 import { mlbTeamAssetByName, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
@@ -65,6 +65,38 @@ function TeamMark({ team, compact = false }: { team: MlbTeam; compact?: boolean 
   );
 }
 
+
+const MLB_ROUND_ORDER = ["wild_card", "division_series", "championship_series", "world_series"] as const;
+
+function ordinalPlace(rank: number, tied = false) {
+  const mod100 = rank % 100;
+  const suffix = mod100 >= 11 && mod100 <= 13
+    ? "TH"
+    : rank % 10 === 1 ? "ST"
+      : rank % 10 === 2 ? "ND"
+        : rank % 10 === 3 ? "RD"
+          : "TH";
+  return `${tied ? "T-" : ""}${rank}${suffix}`;
+}
+
+function moneylineLabel(value: number | null | undefined) {
+  if (value == null) return "TBD";
+  return value > 0 ? `+${value}` : String(value);
+}
+
+function seriesLengthLabel(round: MlbBracketNode["round"]) {
+  if (round === "wild_card") return "BEST OF 3";
+  if (round === "division_series") return "BEST OF 5";
+  return "BEST OF 7";
+}
+
+function roundDisplayLabel(round: MlbBracketNode["round"]) {
+  if (round === "wild_card") return "WILD CARD";
+  if (round === "division_series") return "DIVISION SERIES";
+  if (round === "championship_series") return "LCS";
+  return "WORLD SERIES";
+}
+
 export default function MlbPicksPage() {
   const identity = useIdentity();
   const signedIn = Boolean(identity.profile);
@@ -78,6 +110,8 @@ export default function MlbPicksPage() {
   const [activeNodeId, setActiveNodeId] = useState("");
   const [reviewExisting, setReviewExisting] = useState(false);
   const [previewBracketSaved, setPreviewBracketSaved] = useState(false);
+  const [selectedRoundProfileId, setSelectedRoundProfileId] = useState("");
+  const [standingsTab, setStandingsTab] = useState<"standings" | "rounds">("standings");
   const [previewSeriesPicks, setPreviewSeriesPicks] = useState<Record<string, string>>(() => Object.fromEntries(
     MLB_OWNER_PREVIEW_HUB.ownRoundPicks.map((pick) => [pick.series_id, pick.winner_team_id]),
   ));
@@ -131,6 +165,28 @@ export default function MlbPicksPage() {
       ? Object.entries(previewSeriesPicks)
       : hub?.ownRoundPicks.map((pick) => [pick.series_id, pick.winner_team_id]) ?? [],
   );
+
+  const bracketStandings = useMemo(() => {
+    const entries = (hub?.brackets ?? []).slice().sort((left, right) => (
+      right.score - left.score
+      || left.display_name.localeCompare(right.display_name)
+    ));
+    let priorScore: number | null = null;
+    let priorRank = 0;
+    const ranks = new Map<string, number>();
+    entries.forEach((entry, index) => {
+      const rank = priorScore === entry.score ? priorRank : index + 1;
+      ranks.set(entry.profile_id, rank);
+      priorScore = entry.score;
+      priorRank = rank;
+    });
+    const rankCounts = new Map<number, number>();
+    ranks.forEach((rank) => rankCounts.set(rank, (rankCounts.get(rank) ?? 0) + 1));
+    return entries.map((entry) => {
+      const rank = ranks.get(entry.profile_id) ?? 0;
+      return { entry, rank, tied: (rankCounts.get(rank) ?? 0) > 1 };
+    });
+  }, [hub?.brackets]);
 
   if (!signedIn) {
     return (
@@ -269,6 +325,78 @@ export default function MlbPicksPage() {
         <span className="mlb-full-bracket__stage-label">{label}</span>
         <div>{nodes.map(renderMiniNode)}</div>
       </div>
+    );
+  };
+
+  const renderSeriesCard = (series: MlbPlayoffSeries) => {
+    const selected = ownSeriesPicks.get(series.series_id) ?? "";
+    const locked = series.starts_at ? Date.now() >= Date.parse(series.starts_at) : true;
+    const completeSeries = series.status === "complete" || Boolean(series.winner_team_id);
+    const assetA = mlbTeamAssetByName(series.team_a_name);
+    const assetB = mlbTeamAssetByName(series.team_b_name);
+    const logoA = mlbTeamLogoUrl(assetA?.abbreviation, series.team_a_name);
+    const logoB = mlbTeamLogoUrl(assetB?.abbreviation, series.team_b_name);
+    const abbrA = assetA?.abbreviation ?? series.team_a_name.split(" ").map((part) => part[0]).join("").slice(0, 3).toUpperCase();
+    const abbrB = assetB?.abbreviation ?? series.team_b_name.split(" ").map((part) => part[0]).join("").slice(0, 3).toUpperCase();
+    const oddsKnown = series.team_a_moneyline != null && series.team_b_moneyline != null;
+    const lineLabel = oddsKnown
+      ? `${abbrA} ${moneylineLabel(series.team_a_moneyline)} · ${abbrB} ${moneylineLabel(series.team_b_moneyline)}`
+      : "ODDS TBD";
+    const footerLabel = series.series_score
+      ? `FINAL · ${series.series_score}`
+      : locked
+        ? "SERIES STARTED · PICK LOCKED"
+        : dateTime(series.starts_at).toUpperCase();
+    const statusLabel = completeSeries ? "FINAL" : locked ? "LOCKED" : "OPEN";
+
+    return (
+      <article className={`football-pick-game mlb-series-pick-card${locked ? " is-locked" : ""}`} key={series.series_id}>
+        <header>
+          <strong>{series.league ?? "MLB"} · {roundDisplayLabel(series.round)}</strong>
+          <b className={`football-pick-game__status is-${completeSeries ? "final" : locked ? "locked" : "open"}`}>{statusLabel}</b>
+        </header>
+        <div className="football-pick-game__matchup">
+          {([
+            { id: series.team_a_id, name: series.team_a_name, logo: logoA, side: "away" as const },
+            { id: series.team_b_id, name: series.team_b_name, logo: logoB, side: "home" as const },
+          ]).map((team) => {
+            const isSelected = selected === team.id;
+            const eliminated = Boolean(series.winner_team_id && series.winner_team_id !== team.id);
+            return (
+              <button
+                type="button"
+                key={team.id}
+                aria-pressed={isSelected}
+                className={`football-pick-team is-${team.side}${isSelected ? " is-selected" : ""}${eliminated ? " is-eliminated" : ""}`}
+                disabled={locked || completeSeries || (!previewMode && saving === series.series_id)}
+                onClick={() => {
+                  if (previewMode) {
+                    setPreviewSeriesPicks((current) => ({ ...current, [series.series_id]: team.id }));
+                  } else {
+                    void saveSeriesPick(series.series_id, team.id);
+                  }
+                }}
+              >
+                <span className={`football-pick-team-mark${team.logo ? "" : " is-empty"}`} aria-hidden="true">
+                  {team.logo ? <img src={team.logo} alt="" loading="lazy" /> : null}
+                </span>
+                <span className="football-pick-team-copy">
+                  <strong>{team.name}</strong>
+                  <small>{isSelected ? "✓ YOUR PICK" : "PICK SERIES WINNER"}</small>
+                </span>
+              </button>
+            );
+          })}
+          <div className="football-pick-game__line">
+            <small>SERIES ML</small>
+            <strong>{lineLabel}</strong>
+          </div>
+        </div>
+        <footer>
+          <span>{footerLabel} · {seriesLengthLabel(series.round)}</span>
+          {series.odds_source && !completeSeries ? <strong>{series.odds_source.toUpperCase()}</strong> : null}
+        </footer>
+      </article>
     );
   };
 
@@ -430,75 +558,304 @@ export default function MlbPicksPage() {
         )}
       </section>
 
-      <section id="mlb-round-picks" className="mlb-round-picks" aria-labelledby="mlb-round-picks-title">
-        <header className="mlb-section-heading">
-          <div><p className="eyebrow">CURRENT ROUND PICKS</p><h2 id="mlb-round-picks-title">{MLB_ROUND_LABELS[hub.currentRound]}</h2></div>
-          <small>SEPARATE FROM BRACKET</small>
-        </header>
+      <details className="surface-card football-group-hub mlb-picks-group-hub" data-mlb-section="group">
+        <summary className="football-group-hub__summary">
+          <div className="football-group-hub__summary-copy">
+            <span>PICKS &amp; STANDINGS</span>
+            <small>
+              {roundSeries.filter((series) => ownSeriesPicks.has(series.series_id)).length} / {roundSeries.length} SERIES PICKED
+            </small>
+          </div>
+          <div className="football-group-hub__summary-meta">
+            <strong>
+              {bracketStandings.find((standing) => standing.entry.is_current_user)
+                ? `YOU · ${ordinalPlace(
+                    bracketStandings.find((standing) => standing.entry.is_current_user)!.rank,
+                    bracketStandings.find((standing) => standing.entry.is_current_user)!.tied,
+                  )} · ${hub.ownBracketScore} PTS`
+                : `${hub.ownBracketScore} PTS`}
+            </strong>
+            <small>{Math.max(hub.roundPickEntries.length, bracketStandings.length)} PLAYERS</small>
+          </div>
+        </summary>
 
-        {!roundSeries.length ? (
-          <section className="surface-card mlb-state-card">
-            <strong>Series picks are waiting on the field.</strong>
-            <p>Each matchup locks independently before that series starts.</p>
-          </section>
-        ) : roundSeries.map((series) => {
-          const selected = ownSeriesPicks.get(series.series_id) ?? "";
-          const locked = series.starts_at ? Date.now() >= Date.parse(series.starts_at) : true;
-          const scheduleLabel = series.series_score
-            ? `${series.series_score}${series.winner_team_id ? " · FINAL" : ""}`
-            : series.schedule.length
-              ? series.schedule.join(" · ")
-              : "Schedule coming with the official matchup.";
+        <div className="football-group-hub__body">
+          <section className="football-group-hub__week mlb-group-picks" aria-label="Current round group picks">
+            <details className="surface-card picks-group-progress" open>
+              <summary>
+                <span>GROUP PICKS</span>
+                <strong>{MLB_ROUND_LABELS[hub.currentRound]}</strong>
+              </summary>
+              <div className="picks-group-progress__members">
+                {(hub.roundPickEntries.length ? hub.roundPickEntries : bracketStandings.map(({ entry }) => ({
+                  profile_id: entry.profile_id,
+                  display_name: entry.display_name,
+                  is_current_user: entry.is_current_user,
+                  completed: 0,
+                  total: roundSeries.length,
+                  wins: 0,
+                  losses: 0,
+                  picks: {} as Record<string, string>,
+                } satisfies MlbRoundPickEntry))).map((member) => {
+                  const isSelected = selectedRoundProfileId === member.profile_id;
+                  const bracketStanding = bracketStandings.find((standing) => standing.entry.profile_id === member.profile_id);
+                  const memberPicks: Record<string, string> = member.is_current_user
+                    ? Object.fromEntries(ownSeriesPicks)
+                    : member.picks;
+                  const revealedPicks = roundSeries.filter((series) => Boolean(memberPicks[series.series_id]));
+                  const settled = member.wins + member.losses;
+                  const completeMember = member.total > 0 && member.completed === member.total;
 
-          return (
-            <article className={`mlb-round-series-card${locked ? " is-locked" : ""}`} key={series.series_id}>
-              <header>
-                <strong>{series.label}</strong>
-                <b className={`mlb-round-series-card__status${locked ? " is-locked" : ""}`}>
-                  {series.status === "complete" ? "FINAL" : locked ? "LOCKED" : `LOCKS ${dateTime(series.starts_at).toUpperCase()}`}
-                </b>
-              </header>
-
-              <div className="mlb-round-series-card__matchup">
-                {([
-                  [series.team_a_id, series.team_a_name],
-                  [series.team_b_id, series.team_b_name],
-                ] as const).map(([teamId, teamName]) => {
-                  const asset = mlbTeamAssetByName(teamName);
-                  const logo = mlbTeamLogoUrl(asset?.abbreviation, teamName);
-                  const isSelected = selected === teamId;
                   return (
-                    <button
-                      key={teamId}
-                      type="button"
-                      className={`mlb-round-team${isSelected ? " is-selected" : ""}${series.winner_team_id && series.winner_team_id !== teamId ? " is-eliminated" : ""}`}
-                      disabled={locked || (!previewMode && saving === series.series_id)}
-                      aria-pressed={isSelected}
-                      onClick={() => {
-                        if (previewMode) {
-                          setPreviewSeriesPicks((current) => ({ ...current, [series.series_id]: teamId }));
-                        } else {
-                          void saveSeriesPick(series.series_id, teamId);
-                        }
-                      }}
-                    >
-                      <span className={`mlb-round-team__mark${logo ? "" : " is-empty"}`} aria-hidden="true">
-                        {logo ? <img src={logo} alt="" loading="lazy" /> : null}
-                      </span>
-                      <span className="mlb-round-team__copy">
-                        <strong>{teamName}</strong>
-                        <small>{isSelected ? "✓ YOUR PICK" : "PICK SERIES WINNER"}</small>
-                      </span>
-                    </button>
+                    <div className="picks-group-progress__member" key={member.profile_id}>
+                      <button
+                        type="button"
+                        className={`${member.is_current_user ? "is-current-user " : ""}${completeMember ? "is-complete" : ""}`}
+                        aria-expanded={isSelected}
+                        onClick={() => setSelectedRoundProfileId(isSelected ? "" : member.profile_id)}
+                      >
+                        <span className="picks-group-progress__member-status" aria-hidden="true">
+                          {completeMember ? "✓" : member.display_name.trim().charAt(0).toUpperCase()}
+                        </span>
+                        <strong>{member.display_name}{member.is_current_user ? " · YOU" : ""}</strong>
+                        <span className="football-group-live">
+                          <b>
+                            {settled
+                              ? `${member.wins}-${member.losses}`
+                              : bracketStanding
+                                ? `${bracketStanding.entry.score} PTS · ${ordinalPlace(bracketStanding.rank, bracketStanding.tied)}`
+                                : `${member.completed}/${member.total}`}
+                          </b>
+                          <small>{member.completed}/{member.total} SERIES</small>
+                        </span>
+                      </button>
+
+                      {isSelected ? (
+                        <section className="picks-group-progress__comparison" aria-label={`${member.display_name} series picks`}>
+                          <header className="picks-group-progress__comparison-header">
+                            <div>
+                              <span>{member.display_name.toUpperCase()}'S PICKS</span>
+                              <strong>
+                                {settled
+                                  ? `${member.wins}-${member.losses} · ${member.completed}/${member.total} PICKED`
+                                  : `${member.completed}/${member.total} PICKED`}
+                              </strong>
+                            </div>
+                          </header>
+                          {!revealedPicks.length ? (
+                            <div className="picks-group-progress__privacy">
+                              <strong>PICKS HIDDEN</strong>
+                              <p>Series picks reveal when each matchup locks.</p>
+                            </div>
+                          ) : (
+                            <div className="picks-group-progress__comparison-list">
+                              {revealedPicks.map((series, index) => {
+                                const memberPickId = memberPicks[series.series_id] ?? "";
+                                const myPickId = ownSeriesPicks.get(series.series_id) ?? "";
+                                const memberPickName = memberPickId === series.team_a_id
+                                  ? series.team_a_name
+                                  : memberPickId === series.team_b_id ? series.team_b_name : "No pick";
+                                const myPickName = myPickId === series.team_a_id
+                                  ? series.team_a_name
+                                  : myPickId === series.team_b_id ? series.team_b_name : "No pick";
+                                const same = Boolean(memberPickId && myPickId && memberPickId === myPickId);
+                                return (
+                                  <article className={`picks-group-progress__fight ${same ? "is-same" : "is-different"}`} key={series.series_id}>
+                                    <div className="picks-group-progress__matchup">
+                                      <b>{index + 1}</b>
+                                      <span>{series.team_a_name} vs {series.team_b_name}</span>
+                                    </div>
+                                    <div className="picks-group-progress__choices">
+                                      <div>
+                                        <small>{member.display_name}</small>
+                                        <strong>{memberPickName}</strong>
+                                      </div>
+                                      <em>{same ? "SAME" : "DIFF"}</em>
+                                      <div className="is-you">
+                                        <small>YOU</small>
+                                        <strong>{myPickName}</strong>
+                                      </div>
+                                    </div>
+                                  </article>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </section>
+                      ) : null}
+                    </div>
                   );
                 })}
               </div>
+            </details>
+          </section>
 
-              <footer><span>{scheduleLabel}</span></footer>
-            </article>
-          );
-        })}
+          <section className="football-group-hub__season" aria-label="MLB postseason standings">
+            <section className="picks-history picks-season-section">
+              <details className="surface-card picks-season-hub" open>
+                <summary className="picks-season-hub__summary">
+                  <div className="picks-season-hub__identity">
+                    <span>{hub.season} MLB POSTSEASON</span>
+                    <strong>
+                      {bracketStandings.find((standing) => standing.entry.is_current_user)
+                        ? `${bracketStandings.find((standing) => standing.entry.is_current_user)!.rank} OF ${bracketStandings.length}`
+                        : `— OF ${bracketStandings.length}`}
+                    </strong>
+                    <small>{hub.ownBracketScore} PTS · BRACKET</small>
+                  </div>
+                  <div className="picks-season-hub__meta">
+                    <span>{bracketStandings.length} PLAYERS</span>
+                    <em>STANDINGS &amp; ROUNDS</em>
+                  </div>
+                </summary>
+
+                <div className="picks-season-hub__body">
+                  <div className="picks-season-tabs" role="tablist" aria-label="MLB postseason views">
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={standingsTab === "standings"}
+                      className={standingsTab === "standings" ? "is-active" : ""}
+                      onClick={() => setStandingsTab("standings")}
+                    >STANDINGS</button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={standingsTab === "rounds"}
+                      className={standingsTab === "rounds" ? "is-active" : ""}
+                      onClick={() => setStandingsTab("rounds")}
+                    >ROUNDS</button>
+                  </div>
+
+                  {standingsTab === "standings" ? (
+                    <section className="picks-season-standings" role="tabpanel" aria-label="MLB postseason standings">
+                      <div className="picks-season-panel-heading">
+                        <div><span>GROUP STANDINGS</span><strong>Postseason leaderboard</strong></div>
+                        <small>{bracketStandings.length} PLAYERS</small>
+                      </div>
+                      <div className="picks-season-standing-list">
+                        {bracketStandings.map(({ entry, rank, tied }) => {
+                          const leaderScore = bracketStandings[0]?.entry.score ?? 0;
+                          const gap = Math.max(0, leaderScore - entry.score);
+                          const progress = leaderScore > 0 ? Math.round((entry.score / leaderScore) * 100) : 0;
+                          return (
+                            <article
+                              className={[
+                                "picks-season-standing",
+                                rank === 1 ? "is-leader" : "",
+                                rank === 2 ? "is-second" : "",
+                                rank === 3 ? "is-third" : "",
+                                entry.is_current_user ? "is-current-user" : "",
+                              ].filter(Boolean).join(" ")}
+                              key={entry.profile_id}
+                            >
+                              <div className="picks-season-standing__progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>
+                              <span className="picks-season-standing__rank">
+                                <b>{ordinalPlace(rank, tied)}</b>
+                                {rank <= 3 ? <small>{rank === 1 ? "LEADER" : rank === 2 ? "2ND" : "3RD"}</small> : null}
+                              </span>
+                              <div className="picks-season-standing__identity">
+                                <div className="picks-season-standing__name">
+                                  <strong>{entry.display_name}</strong>
+                                  {entry.is_current_user ? <em>YOU</em> : null}
+                                </div>
+                                <small>POSTSEASON BRACKET</small>
+                              </div>
+                              <div className="picks-season-standing__score">
+                                <b>{entry.score} PTS</b>
+                                <em>{gap === 0 ? "LEADER" : `${gap} PTS BACK`}</em>
+                                <small>WC · DS · LCS · WS</small>
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  ) : (
+                    <section className="mlb-postseason-rounds" role="tabpanel" aria-label="MLB postseason rounds">
+                      <div className="picks-season-panel-heading">
+                        <div><span>ROUND ARCHIVE</span><strong>Bracket performance</strong></div>
+                        <small>1 · 2 · 4 · 8</small>
+                      </div>
+                      {MLB_ROUND_ORDER.map((round) => {
+                        const nodes = hub.bracketTemplate.nodes.filter((node) => node.round === round);
+                        const pointsEach = nodes[0]?.points ?? 0;
+                        const roundResults = hub.series.filter((series) => series.round === round && series.winner_team_id);
+                        const roundRows = bracketStandings.map(({ entry }) => ({
+                          entry,
+                          score: roundResults.reduce((sum, series) => (
+                            sum + (entry.picks[series.series_id] === series.winner_team_id ? pointsEach : 0)
+                          ), 0),
+                        })).sort((left, right) => right.score - left.score || left.entry.display_name.localeCompare(right.entry.display_name));
+                        return (
+                          <details className="mlb-round-archive" key={round} open={round === hub.currentRound ? true : undefined}>
+                            <summary>
+                              <div><span>{roundDisplayLabel(round)}</span><strong>{roundResults.length} / {nodes.length} FINAL</strong></div>
+                              <small>+{pointsEach} EACH</small>
+                            </summary>
+                            <div>
+                              {roundRows.map(({ entry, score }, index) => (
+                                <span key={entry.profile_id} className={entry.is_current_user ? "is-you" : ""}>
+                                  <b>{index + 1}</b>
+                                  <strong>{entry.display_name}{entry.is_current_user ? " · YOU" : ""}</strong>
+                                  <em>{score} PTS</em>
+                                </span>
+                              ))}
+                            </div>
+                          </details>
+                        );
+                      })}
+                    </section>
+                  )}
+                </div>
+              </details>
+            </section>
+          </section>
+        </div>
+      </details>
+
+      <section id="mlb-round-picks" className="football-picks-slate football-picks-slate--current mlb-series-slate" data-mlb-section="current" aria-labelledby="mlb-round-picks-title">
+        <header className="football-picks-section-header">
+          <p className="eyebrow" id="mlb-round-picks-title">{MLB_ROUND_LABELS[hub.currentRound]} SERIES</p>
+          <strong>{roundSeries.filter((series) => series.status !== "complete" && !series.winner_team_id).length} OPEN</strong>
+        </header>
+        {roundSeries.filter((series) => series.status !== "complete" && !series.winner_team_id).map(renderSeriesCard)}
+        {!roundSeries.filter((series) => series.status !== "complete" && !series.winner_team_id).length ? (
+          <div className="surface-card football-picks-empty">ALL SERIES IN THIS ROUND ARE FINAL</div>
+        ) : null}
+
+        {hub.series.some((series) => series.status === "complete" || series.winner_team_id) ? (
+          <details className="football-picks-completed-drawer" data-mlb-subsection="completed">
+            <summary>
+              <span>COMPLETED SERIES</span>
+              <strong>{hub.series.filter((series) => series.status === "complete" || series.winner_team_id).length} FINAL</strong>
+            </summary>
+            <div className="football-picks-completed-drawer__body">
+              {hub.series.filter((series) => series.status === "complete" || series.winner_team_id).map(renderSeriesCard)}
+            </div>
+          </details>
+        ) : null}
       </section>
+
+      <details className="surface-card football-picks-grading mlb-picks-grading" data-mlb-section="grading">
+        <summary><span>SCORING &amp; GRADING</span><strong>HOW IT WORKS</strong></summary>
+        <div className="football-picks-grading__body">
+          <div className="football-picks-grading__scores" aria-label="MLB playoff bracket scoring">
+            <span><b>WILD CARD</b><strong>+1</strong></span>
+            <span><b>DIVISION</b><strong>+2</strong></span>
+            <span><b>LCS</b><strong>+4</strong></span>
+            <span><b>WORLD SERIES</b><strong>+8</strong></span>
+          </div>
+          <section className="football-picks-grading__rule">
+            <b>ONE-TIME BRACKET</b>
+            <p>Your bracket locks before the postseason begins. Correct winners score more as the rounds get deeper.</p>
+          </section>
+          <section className="football-picks-grading__rule">
+            <b>ROUND-BY-ROUND SERIES PICKS</b>
+            <p>Fresh series-winner picks lock independently and stay separate from your one-time bracket.</p>
+          </section>
+        </div>
+      </details>
 
       {error && !previewMode ? <p className="picks-error" role="status">{error}</p> : null}
     </div>
