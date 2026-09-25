@@ -8,6 +8,9 @@ const home = readFileSync("src/features/home/HomePage.tsx", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
 const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_foundation.sql", "utf8");
 const picksParityMigration = readFileSync("supabase/migrations/202612310181_mlb_picks_football_parity.sql", "utf8");
+const championshipMigration = readFileSync("supabase/migrations/202612310182_mlb_postseason_championship.sql", "utf8");
+const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
+const championshipSummary = readFileSync("src/features/mlb/MlbChampionshipSummary.tsx", "utf8");
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
@@ -74,7 +77,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPicks).not.toContain('id="mlb-bracket-race"');
     expect(mlbPicks).toContain("football-pick-game mlb-series-pick-card");
     expect(mlbPicks).toContain("PICKS &amp; STANDINGS");
-    expect(mlbPicks).toContain("POSTSEASON BRACKET");
+    expect(mlbPicks).toContain("MLB CHAMPIONSHIP");
     expect(mlbPicks).toContain("COMPLETED SERIES");
     expect(mlbPicks).toContain("SCORING &amp; GRADING");
     expect(styles).toContain('[data-focus-zone="al-wc"]');
@@ -149,10 +152,22 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbSeries).toContain("<MlbPlayerSpotlight");
   });
 
-  it("keeps bracket scoring progressive and simple", () => {
-    expect(migration).toContain("when 'wild_card' then 1");
-    expect(migration).toContain("when 'division_series' then 2");
-    expect(migration).toContain("when 'championship_series' then 4");
-    expect(migration).toContain("when 'world_series' then 8");
+  it("uses one calibrated 100-point MLB Championship", () => {
+    expect(championshipMigration).toContain("43 points from round-by-round series picks");
+    expect(championshipMigration).toContain("32 points from the one-time bracket");
+    expect(championshipMigration).toContain("25 points from ten featured Play challenges");
+    expect(championshipMigration).toContain("when 'wild_card' then 2");
+    expect(championshipMigration).toContain("when 'division_series' then 4");
+    expect(championshipMigration).toContain("when 'championship_series' then 5");
+    expect(championshipMigration).toContain("when 'world_series' then 9");
+    expect(championshipMigration).toContain("when 'wild_card' then 1");
+    expect(championshipMigration).toContain("when 'division_series' then 2");
+    expect(championshipMigration).toContain("when 'championship_series' then 5");
+    expect(championshipMigration).toContain("when 'world_series' then 10");
+    expect(championshipModel).toContain("seriesMax: 43");
+    expect(championshipModel).toContain("bracketMax: 32");
+    expect(championshipModel).toContain("playMax: 25");
+    expect(championshipSummary).toContain("MLB CHAMPIONSHIP");
+    expect(mlbPicks).toContain("100-POINT CHAMPIONSHIP");
   });
 });
