@@ -91,4 +91,5 @@ export const MLB_OWNER_PLAYER_SPOTLIGHT = {
     { label: "OPS", value: ".871" },
   ],
   meta: "2026 REGULAR SEASON",
+  highlightUrl: "https://www.mlb.com/video/search?query=aaron%20judge",
 } as const;
