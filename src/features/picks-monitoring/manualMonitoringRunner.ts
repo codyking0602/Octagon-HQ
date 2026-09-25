@@ -71,13 +71,18 @@ function oddsFighterMatch(left: string, right: string) {
     || fighterMatch(right, left);
 }
 
+function oddsFighterMatchesSide(name: string, stableSlug: string, providerName: string) {
+  return oddsFighterMatch(name, providerName)
+    || oddsFighterMatch(stableSlug.replace(/-/g, " "), providerName);
+}
+
 function pairMatchesBout(left: string, right: string, bout: MonitoringBout) {
   return (
-    oddsFighterMatch(bout.red_fighter_name, left)
-    && oddsFighterMatch(bout.blue_fighter_name, right)
+    oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, left)
+    && oddsFighterMatchesSide(bout.blue_fighter_name, bout.blue_fighter_slug, right)
   ) || (
-    oddsFighterMatch(bout.red_fighter_name, right)
-    && oddsFighterMatch(bout.blue_fighter_name, left)
+    oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, right)
+    && oddsFighterMatchesSide(bout.blue_fighter_name, bout.blue_fighter_slug, left)
   );
 }
 
@@ -90,9 +95,10 @@ function canonicalizeSnapshot(snapshot: NormalizedFightOddsSnapshot, event: Moni
   const [first, second] = snapshot.prices;
   const bout = matchingCanonicalBout(first.fighterName, second.fighterName, event);
   if (!bout) return null;
-  const red = oddsFighterMatch(bout.red_fighter_name, first.fighterName) ? first : second;
+  const red = oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, first.fighterName) ? first : second;
   const blue = red === first ? second : first;
-  if (!oddsFighterMatch(bout.red_fighter_name, red.fighterName) || !oddsFighterMatch(bout.blue_fighter_name, blue.fighterName)) return null;
+  if (!oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, red.fighterName)
+    || !oddsFighterMatchesSide(bout.blue_fighter_name, bout.blue_fighter_slug, blue.fighterName)) return null;
   return {
     ...snapshot,
     matchupIdentity: matchupIdentity(bout),
