@@ -9,6 +9,7 @@ const router = readFileSync("src/app/router.tsx", "utf8");
 const migration = readFileSync("supabase/migrations/202612310175_mlb_playoffs_foundation.sql", "utf8");
 const picksParityMigration = readFileSync("supabase/migrations/202612310181_mlb_picks_football_parity.sql", "utf8");
 const championshipMigration = readFileSync("supabase/migrations/202612310182_mlb_postseason_championship.sql", "utf8");
+const playLeaderboardMigration = readFileSync("supabase/migrations/202612310183_mlb_play_challenge_leaderboard.sql", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
 const championshipSummary = readFileSync("src/features/mlb/MlbChampionshipSummary.tsx", "utf8");
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
@@ -122,12 +123,21 @@ describe("MLB Playoffs rollout gate", () => {
     expect(styles).toContain("--bracket-zoom: 1.72");
   });
 
-  it("keeps MLB Play focused on the current playoff challenge", () => {
+  it("gives MLB Play the Daily challenge carousel, result drilldown, and Play-only standings", () => {
     expect(mlbPlay).toContain("MLB PLAYOFF CHALLENGE");
-    expect(mlbPlay).toContain("Two boards. One final score.");
-    expect(mlbPlay).toContain('to="/mlb/challenge"');
+    expect(mlbPlay).toContain("CHALLENGE LEADERBOARD");
+    expect(mlbPlay).toContain("SWIPE FOR CHALLENGE LEADERBOARD");
+    expect(mlbPlay).toContain("PLAY STANDINGS");
+    expect(mlbPlay).toContain("Postseason challenge race");
+    expect(mlbPlay).toContain("entry.play_points");
+    expect(mlbPlay).toContain("entry.play_rank");
+    expect(mlbPlay).toContain("navigate(challenge.route)");
+    expect(mlbPlay).not.toContain("SERIES PICKS STANDING");
+    expect(mlbPlay).not.toContain("BRACKET");
     expect(mlbPlay).not.toContain("MlbHomeHq");
     expect(mlbPlay).not.toMatch(/DEMO|OWNER DESIGN|DISPOSABLE/);
+    expect(styles).toContain('.today-hub[data-sport="mlb"]');
+    expect(styles).toContain(".mlb-play-standings");
   });
 
   it("uses a distinct muted green MLB identity without changing Football geometry", () => {

@@ -1,11 +1,44 @@
 import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import MlbFeaturedChallengePage, {
   MLB_FIND_LEADER_BURNED_CONTENT,
   MLB_FIND_LEADER_PREVIEW_BOARDS,
 } from "./MlbFeaturedChallengePage";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
+
+vi.mock("../identity/IdentityProvider", () => ({
+  useIdentity: () => ({
+    status: "ready",
+    profile: { id: "test-profile", displayName: "CODY", initials: "C", canControlPicks: true },
+  }),
+}));
+
+vi.mock("./useMlbPlayChallengeOverview", () => ({
+  useMlbPlayChallengeOverview: () => ({
+    overview: { unlocked: false, playerCount: 0, ownResult: null, entries: [] },
+    loading: false,
+    error: "",
+    reload: vi.fn(async () => undefined),
+  }),
+}));
+
+vi.mock("./mlbPlayChallenge", () => ({
+  MLB_PLAY_CURRENT_CHALLENGE_KEY: "mlb-2026-play-01",
+  loadMlbPlayPreviewResult: vi.fn(() => null),
+  saveMlbPlayPreviewResult: vi.fn((_key, result) => result),
+  recordMlbPlayChallengeResult: vi.fn(async () => ({
+    rawScore: 10,
+    gameType: "find_leader",
+    publicResult: { game_scores: [10, 10], average_score: 10 },
+    resultDetail: {},
+    completedAt: "2026-09-29T12:00:00-05:00",
+  })),
+}));
+
+vi.mock("./useMlbPlayoffs", () => ({
+  useMlbPlayoffs: () => ({ hub: null }),
+}));
 
 function renderPage() {
   return render(
@@ -68,6 +101,6 @@ describe("MLB Find the Leader format preview", () => {
     expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("10/100");
     expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("GAME 1 10");
     expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("GAME 2 10");
-    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("average");
+    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("FINAL SCORE");
   });
 });

@@ -94,6 +94,7 @@ const challengeSchema = z.object({
   kicker: z.string(),
   description: z.string(),
   route: z.string(),
+  date: z.string().nullable().optional().default(null),
 }).nullable();
 
 const hubSchema = z.object({
