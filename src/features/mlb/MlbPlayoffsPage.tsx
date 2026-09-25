@@ -104,6 +104,25 @@ function gameRows(entry: MlbPlayChallengeLeaderboardEntry) {
   });
 }
 
+function wavelengthRows(entry: MlbPlayChallengeLeaderboardEntry) {
+  const rounds = Array.isArray(entry.resultDetail.rounds) ? entry.resultDetail.rounds : [];
+  return rounds.map((value, index) => {
+    const round = value && typeof value === "object" && !Array.isArray(value)
+      ? value as Record<string, unknown>
+      : {};
+    const guesses = Array.isArray(round.guesses)
+      ? round.guesses.filter((guess): guess is number => typeof guess === "number")
+      : [];
+    return {
+      round: Number(round.round ?? index + 1),
+      score: Number(round.score ?? 0),
+      target: Number(round.target ?? 0),
+      finalGuess: Number(round.final_guess ?? guesses.at(-1) ?? 0),
+      guesses,
+    };
+  });
+}
+
 function MlbPlayResultDetail({
   entry,
   challengeTitle,
@@ -114,6 +133,8 @@ function MlbPlayResultDetail({
   onClose: () => void;
 }) {
   const games = gameRows(entry);
+  const wavelengthRounds = wavelengthRows(entry);
+  const isWavelength = entry.gameType === "wavelength";
 
   return (
     <div
@@ -143,7 +164,18 @@ function MlbPlayResultDetail({
             <strong>{entry.rawScore}<small>/100</small></strong>
           </div>
 
-          {games.length ? (
+          {isWavelength && wavelengthRounds.length ? (
+            <div className="mlb-play-result-card__games">
+              {wavelengthRounds.map((round) => (
+                <article key={round.round}>
+                  <span>GAME {round.round}</span>
+                  <strong>{round.score}<small>/100</small></strong>
+                  <small>HIDDEN {round.target} · FINAL {round.finalGuess}</small>
+                  {round.guesses.length ? <small>PATH {round.guesses.join(" → ")}</small> : null}
+                </article>
+              ))}
+            </div>
+          ) : games.length ? (
             <div className="mlb-play-result-card__games">
               {games.map((game) => (
                 <article key={game.game}>
@@ -159,7 +191,11 @@ function MlbPlayResultDetail({
             </div>
           ) : null}
 
-          <p>The challenge score is the average of both Find the Leader boards.</p>
+          <p>
+            {isWavelength
+              ? "The challenge score is the average of both Wavelength games."
+              : "The challenge score is the average of both Find the Leader boards."}
+          </p>
         </section>
       </div>
     </div>
