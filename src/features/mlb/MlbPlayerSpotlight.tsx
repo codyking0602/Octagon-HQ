@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { MLB_OWNER_PLAYER_SPOTLIGHT } from "./mlbTeamAssets";
+import "../../styles/home-football-hq.css";
 
 export function MlbPlayerSpotlight() {
   const player = MLB_OWNER_PLAYER_SPOTLIGHT;
