@@ -148,6 +148,17 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ]],
   ["cfb-a-j-brown", [
     pr3Clue("aj-brown-2018-all-sec", "In 2018 I earned first-team All-SEC honors after breaking my own Ole Miss single-season receiving-yardage record.", "strong", "accomplishments"),
+    pr3Clue("aj-brown-ole-miss-career-leader", "I left Ole Miss as the program's career leader with 2,984 receiving yards and a school-record 12 games with at least 100 receiving yards.", "strong", "accomplishments", 15),
+  ]],
+  ["cfb-c-j-stroud", [
+    pr3Clue("stroud-rose-bowl-record", "In the 2022 Rose Bowl I threw for an Ohio State-record 573 yards and six touchdowns in a 48-45 comeback win over Utah.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-caleb-williams", [
+    pr3Clue("caleb-usc-records", "In 2022 I set USC single-season records with 4,537 passing yards and 42 touchdown passes.", "giveaway", "accomplishments", 8),
+  ]],
+  ["cfb-fernando-mendoza", [
+    pr3Clue("mendoza-cal-indiana-path", "I played 20 games over three seasons at California before transferring to Indiana.", "strong", "career-path", 15),
+    pr3Clue("mendoza-big-ten-title-mvp", "I was MVP of Indiana's first Big Ten Championship Game victory as the Hoosiers secured their first outright conference title since 1945.", "giveaway", "accomplishments", 8),
   ]],
   ["cfb-aaron-ross", [
     pr3Clue("aaron-ross-thorpe", "I won the 2006 Jim Thorpe Award as college football's top defensive back.", "giveaway", "accomplishments", 9),
@@ -166,6 +177,9 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-dalvin-cook", [
     pr3Clue("cook-orange-bowl-mvp", "I was Orange Bowl MVP after rushing for 145 yards against Michigan in my final college game.", "strong", "accomplishments"),
     pr3Clue("cook-fsu-rushing-record", "I broke Florida State's 20-year-old career rushing record and finished as the program's all-time leading rusher.", "giveaway", "identity", 9),
+    pr3Clue("cook-unanimous-all-american", "I was a unanimous All-American in 2016 and a finalist for the Doak Walker Award.", "strong", "accomplishments", 14),
+    pr3Clue("cook-usf-267", "I set my college career high with 267 rushing yards against South Florida in 2016.", "strong", "accomplishments", 16),
+    pr3Clue("cook-100-100-game", "Against North Carolina in 2016 I became the first Florida State running back in 10 years with a 100-yard receiving game and just the second Seminole ever to top 100 rushing and receiving yards in the same game.", "strong", "style", 15),
   ]],
   ["cfb-darqueze-dennard", [
     pr3Clue("dennard-thorpe", "In 2013 I became the first Michigan State player to win the Jim Thorpe Award.", "giveaway", "accomplishments", 9),
@@ -199,6 +213,12 @@ const CFB_PR3_SUPPLEMENTAL = new Map<string, readonly WhoAmIClue[]>([
   ["cfb-mike-evans", [
     pr3Clue("evans-bama-record", "I broke Texas A&M's long-standing single-game receiving record with 279 yards against Alabama in 2013.", "strong", "identity"),
     pr3Clue("evans-auburn-record", "Later that season I reset the school single-game receiving record with 287 yards against Auburn and tied the school mark with four touchdown catches.", "strong", "accomplishments", 15),
+    pr3Clue("evans-2013-all-american", "In 2013 I was a first-team AP All-American and a finalist for the Biletnikoff Award.", "strong", "accomplishments", 14),
+    pr3Clue("evans-freshman-records", "As a freshman I earned Freshman All-SEC honors after setting Texas A&M freshman records with 82 catches and 1,105 receiving yards.", "strong", "accomplishments", 16),
+  ]],
+  ["cfb-antoine-winfield-jr", [
+    pr3Clue("winfield-2019-all-american", "In 2019 I was a unanimous All-American and the Big Ten Defensive Back of the Year.", "strong", "accomplishments", 14),
+    pr3Clue("winfield-seven-picks", "I tied Minnesota's modern-era single-season record with seven interceptions in 2019.", "strong", "accomplishments", 16),
   ]],
   ["cfb-minkah-fitzpatrick", [
     pr3Clue("minkah-double-awards", "In 2017 I became just the third player in NCAA history to win the Bednarik and Jim Thorpe awards in the same season.", "giveaway", "accomplishments", 8),
@@ -575,12 +595,22 @@ export function refineCfbWhoAmIContent(
     ...clues,
     ...(CFB_PR3_SUPPLEMENTAL.get(subject.id) ?? []),
   ];
-  const subjectAdjusted = (subject.id === "cfb-ernie-davis" || subject.id === "cfb-lamichael-james")
+  const subjectAdjusted = (
+    subject.id === "cfb-ernie-davis"
+    || subject.id === "cfb-lamichael-james"
+    || subject.id === "cfb-jalen-ramsey"
+  )
     ? withSupplemental.map((clue) => {
       if (subject.id === "cfb-ernie-davis" && clue.text.includes("while wearing the program's famous No. 44")) {
         return { ...clue, text: clue.text.replace(" while wearing the program's famous No. 44", "") };
       }
       if (subject.id === "cfb-lamichael-james" && whoAmIRevealProfile(clue).category === "jersey-number") {
+        return null;
+      }
+      if (
+        subject.id === "cfb-jalen-ramsey"
+        && (clue.conceptId ?? clue.id).includes("first-freshman-corner-start-since-deion")
+      ) {
         return null;
       }
       return clue;

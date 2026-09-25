@@ -45,7 +45,6 @@ const FOOTBALL_WHO_AM_I_METRICS = new Set<FootballFactMetricId>(
     .filter((metricId) => (
       metricId.startsWith("nfl-career-")
       || metricId.startsWith("cfb-career-")
-      || metricId.startsWith("cfb-best-season-")
       || metricId === "cfb-all-america-selections"
       || metricId === "cfb-first-team-all-conference-selections"
       || metricId === "cfb-nfl-draft-overall-pick"
@@ -452,6 +451,19 @@ function footballWhoAmIPlayerMetricMatchesRole(
 export function footballWhoAmIMetricFactIsPlayable(subject: FootballSubjectProfile, fact: FootballFactValue) {
   const value = Number(fact.value);
   if (!Number.isFinite(value)) return false;
+
+  // The normalized cfbfastR factual-universe projection can split one player's
+  // season across multiple team-labelled rows. Those aggregates remain useful
+  // for data-audit work, but they are not authoritative enough for Who Am I.
+  // Reviewed/source-bound CFB career facts remain eligible. Generic best-season
+  // metrics are not Who Am I clues: peak-season clues must be explicitly authored
+  // against one named, reviewed season so every value belongs to the same year.
+  if (
+    subject.league === "CFB"
+    && subject.kind === "player-career"
+    && (fact.metricId.startsWith("cfb-career-") || fact.metricId.startsWith("cfb-best-season-"))
+    && fact.evidence.sourceIds.includes("cfbfast-r-factual-universe")
+  ) return false;
   if (
     subject.league === "CFB"
     && subject.kind === "player-career"
