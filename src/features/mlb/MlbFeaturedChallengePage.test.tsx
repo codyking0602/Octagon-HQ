@@ -2,9 +2,8 @@ import { fireEvent, render } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import MlbFeaturedChallengePage, {
-  MLB_FIND_LEADER_DEMO_BURNED_CONTENT,
-  MLB_FIND_LEADER_DEMO_CANDIDATES,
-  MLB_FIND_LEADER_DEMO_QUESTION_ID,
+  MLB_FIND_LEADER_BURNED_CONTENT,
+  MLB_FIND_LEADER_PREVIEW_BOARDS,
 } from "./MlbFeaturedChallengePage";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 
@@ -16,21 +15,28 @@ function renderPage() {
   );
 }
 
-describe("MLB Find the Leader owner demo", () => {
-  it("locks all demo content as burned and keeps a ten-player MLB board", () => {
-    expect(MLB_FIND_LEADER_DEMO_QUESTION_ID).toContain("demo");
-    expect(MLB_FIND_LEADER_DEMO_CANDIDATES).toHaveLength(10);
-    expect(new Set(MLB_FIND_LEADER_DEMO_CANDIDATES.map((candidate) => candidate.id)).size).toBe(10);
-    expect(MLB_FIND_LEADER_DEMO_BURNED_CONTENT.candidateIds).toEqual(
-      MLB_FIND_LEADER_DEMO_CANDIDATES.map((candidate) => candidate.id),
+function leaderFor(board: (typeof MLB_FIND_LEADER_PREVIEW_BOARDS)[number]) {
+  return board.candidates.reduce((leader, candidate) => (
+    (candidate.value ?? 0) > (leader.value ?? 0) ? candidate : leader
+  ));
+}
+
+describe("MLB Find the Leader format preview", () => {
+  it("locks both tuning boards as burned content and keeps ten players per board", () => {
+    expect(MLB_FIND_LEADER_PREVIEW_BOARDS).toHaveLength(2);
+    expect(MLB_FIND_LEADER_PREVIEW_BOARDS.every((board) => board.candidates.length === 10)).toBe(true);
+
+    const ids = MLB_FIND_LEADER_PREVIEW_BOARDS.flatMap((board) => board.candidates.map((candidate) => candidate.id));
+    expect(MLB_FIND_LEADER_BURNED_CONTENT.questionIds).toEqual(
+      MLB_FIND_LEADER_PREVIEW_BOARDS.map((board) => board.id),
     );
-    expect(MLB_FIND_LEADER_DEMO_BURNED_CONTENT.questionIds).toEqual([MLB_FIND_LEADER_DEMO_QUESTION_ID]);
-    expect(MLB_FIND_LEADER_DEMO_CANDIDATES.every((candidate) => (
+    expect(MLB_FIND_LEADER_BURNED_CONTENT.candidateIds).toEqual([...new Set(ids)]);
+    expect(MLB_FIND_LEADER_PREVIEW_BOARDS.every((board) => board.candidates.every((candidate) => (
       Boolean(mlbTeamAssetByAbbreviation(candidate.teamAbbreviation))
-    ))).toBe(true);
+    )))).toBe(true);
   });
 
-  it("reuses the locked Football Find the Leader presentation structure", () => {
+  it("reuses the locked Football presentation without visible prototype language", () => {
     const { container } = renderPage();
 
     expect(container.querySelector(".football-find-hero")).toBeTruthy();
@@ -38,24 +44,30 @@ describe("MLB Find the Leader owner demo", () => {
     expect(container.querySelector(".football-find-grid")).toBeTruthy();
     expect(container.querySelectorAll(".football-find-card")).toHaveLength(10);
     expect(container.querySelector(".mlb-find-leader-page")).toBeTruthy();
+    expect(container.textContent).toContain("GAME 1 OF 2");
+    expect(container.textContent).not.toMatch(/demo|owner design|disposable/i);
   });
 
-  it("reveals safe values and ends the run when the demo leader is eliminated", () => {
-    const { container } = renderPage();
-    const sorted = [...MLB_FIND_LEADER_DEMO_CANDIDATES]
-      .sort((left, right) => (left.value ?? 0) - (right.value ?? 0));
-    const safe = sorted[0]!;
-    const leader = sorted.at(-1)!;
+  it("runs two boards back to back and averages their scores", () => {
+    const { container, getByRole } = renderPage();
+    const firstLeader = leaderFor(MLB_FIND_LEADER_PREVIEW_BOARDS[0]);
 
-    const buttonFor = (name: string) => [...container.querySelectorAll<HTMLButtonElement>(".football-find-card")]
+    const playerButton = (name: string) => [...container.querySelectorAll<HTMLButtonElement>(".football-find-card")]
       .find((button) => button.textContent?.includes(name));
 
-    fireEvent.click(buttonFor(safe.name)!);
-    expect(buttonFor(safe.name)?.textContent).toContain(`SAFE · ${safe.value} 2B`);
+    fireEvent.click(playerButton(firstLeader.name)!);
+    expect(container.textContent).toContain("GAME 1 COMPLETE");
+    expect(container.textContent).toContain("10/100");
 
-    fireEvent.click(buttonFor(leader.name)!);
-    expect(container.querySelector(".football-find-result")?.textContent).toContain("RUN ENDED");
-    expect(container.querySelector(".football-find-order")).toBeTruthy();
-    expect(container.querySelector(".football-find-reveal")).toBeTruthy();
+    fireEvent.click(getByRole("button", { name: /next game/i }));
+    expect(container.textContent).toContain("GAME 2 OF 2");
+
+    const secondLeader = leaderFor(MLB_FIND_LEADER_PREVIEW_BOARDS[1]);
+    fireEvent.click(playerButton(secondLeader.name)!);
+
+    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("10/100");
+    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("GAME 1 10");
+    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("GAME 2 10");
+    expect(container.querySelector(".mlb-find-final-score")?.textContent).toContain("average");
   });
 });
