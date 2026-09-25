@@ -896,6 +896,8 @@
 }
 
 .mlb-series-breakdown-page {
+  --home-football-blue: var(--mlb-green);
+  --home-football-blue-rgb: var(--mlb-green-rgb);
   display: grid;
   gap: 14px;
 }
