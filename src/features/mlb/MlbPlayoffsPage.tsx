@@ -58,22 +58,23 @@ function previewOverview(
     isCurrentUser: true,
   };
 
-  const ranked = [
+  const sorted = [
     current,
     ...MLB_OWNER_PREVIEW_PLAY_LEADERBOARD.filter((entry) => !entry.isCurrentUser),
-  ]
-    .sort((left, right) => (
-      right.rawScore - left.rawScore
-      || Date.parse(left.completedAt) - Date.parse(right.completedAt)
-      || left.displayName.localeCompare(right.displayName)
-    ))
-    .map((entry, index, rows) => {
-      const previous = rows[index - 1];
-      const rank = previous && previous.rawScore === entry.rawScore
-        ? previous.rank
-        : index + 1;
-      return { ...entry, rank };
-    });
+  ].sort((left, right) => (
+    right.rawScore - left.rawScore
+    || Date.parse(left.completedAt) - Date.parse(right.completedAt)
+    || left.displayName.localeCompare(right.displayName)
+  ));
+
+  let previousScore: number | null = null;
+  let previousRank = 0;
+  const ranked = sorted.map((entry, index) => {
+    const rank = previousScore === entry.rawScore ? previousRank : index + 1;
+    previousScore = entry.rawScore;
+    previousRank = rank;
+    return { ...entry, rank };
+  });
 
   return {
     unlocked: true,
