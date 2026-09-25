@@ -57,6 +57,7 @@ export type CardChangeApprovalProposal =
       expected_blue_fighter_slug: string;
       replacement_fighter_slug: string;
       replacement_fighter_name: string;
+      identity_correction?: true;
     }
   | {
       action: "reorder_card";
@@ -175,6 +176,45 @@ function finding(input: {
   };
 }
 
+function identityCorrectionProposal(
+  eventId: string,
+  current: ApprovalMonitoringBout,
+  proposed: ApprovalMonitoringBout,
+): CardChangeApprovalProposal | null {
+  const sameRedPerson = fighterOddsIdentity(current.red_fighter_name)
+    === fighterOddsIdentity(proposed.red_fighter_name);
+  const sameBluePerson = fighterOddsIdentity(current.blue_fighter_name)
+    === fighterOddsIdentity(proposed.blue_fighter_name);
+  if (!sameRedPerson || !sameBluePerson) return null;
+
+  const redChanged = current.red_fighter_slug !== proposed.red_fighter_slug
+    || current.red_fighter_name !== proposed.red_fighter_name;
+  const blueChanged = current.blue_fighter_slug !== proposed.blue_fighter_slug
+    || current.blue_fighter_name !== proposed.blue_fighter_name;
+  if (redChanged === blueChanged) return null;
+
+  const corner = redChanged ? "red" : "blue";
+  const replacementName = corner === "red"
+    ? proposed.red_fighter_name
+    : proposed.blue_fighter_name;
+  const replacementSlug = corner === "red"
+    ? proposed.red_fighter_slug
+    : proposed.blue_fighter_slug;
+  if (!replacementName.trim() || !replacementSlug.trim()) return null;
+
+  return {
+    action: "replace_fighter",
+    event_id: eventId,
+    bout_id: current.bout_id,
+    corner,
+    expected_red_fighter_slug: current.red_fighter_slug,
+    expected_blue_fighter_slug: current.blue_fighter_slug,
+    replacement_fighter_slug: replacementSlug,
+    replacement_fighter_name: replacementName,
+    identity_correction: true,
+  };
+}
+
 function replacementProposal(
   eventId: string,
   current: ApprovalMonitoringBout,
@@ -269,18 +309,65 @@ export function buildCardChangeFindings(input: {
     if (current) sourceMappedBoutId.set(matchup(sourceBout), current.bout_id);
   }
 
-  // Multiple simultaneous opponent swaps are safe when each unmatched source bout
-  // has exactly one one-fighter-overlap candidate and that candidate is mutual.
-  // Anything less specific remains review-only.
+  // Same-person display/slug corrections are not opponent replacements. Preserve the
+  // canonical bout identity so the backend can update the fighter label without
+  // invalidating picks, locks, or already verified odds.
   for (const current of unmatchedCurrent) {
     const candidates = unmatchedSource.filter((proposed) => (
-      replacementProposal(input.eventId!, current, proposed)?.action === "replace_fighter"
+      identityCorrectionProposal(input.eventId!, current, proposed)?.action === "replace_fighter"
     ));
     if (candidates.length !== 1) continue;
 
     const proposed = candidates[0]!;
     const reverseCandidates = unmatchedCurrent.filter((candidate) => (
-      replacementProposal(input.eventId!, candidate, proposed)?.action === "replace_fighter"
+      identityCorrectionProposal(input.eventId!, candidate, proposed)?.action === "replace_fighter"
+    ));
+    if (reverseCandidates.length !== 1) continue;
+
+    const proposal = identityCorrectionProposal(input.eventId!, current, proposed);
+    if (proposal?.action !== "replace_fighter" || !proposal.identity_correction) continue;
+
+    consumedCurrent.add(matchup(current));
+    consumedSource.add(matchup(proposed));
+    sourceMappedBoutId.set(matchup(proposed), current.bout_id);
+    const beforeName = proposal.corner === "red"
+      ? current.red_fighter_name
+      : current.blue_fighter_name;
+    result.push(finding({
+      identity: input.identity,
+      kind: input.kind,
+      detectedAt: input.detectedAt,
+      summary: `Correct ${beforeName} identity to ${proposal.replacement_fighter_name}.`,
+      subjectKey: `bout:${current.bout_id}:fighters`,
+      field: "fighters",
+      beforeValue: {
+        red_fighter_name: current.red_fighter_name,
+        blue_fighter_name: current.blue_fighter_name,
+      },
+      afterValue: {
+        red_fighter_name: proposed.red_fighter_name,
+        blue_fighter_name: proposed.blue_fighter_name,
+      },
+      boutId: current.bout_id,
+      matchupIdentity: matchup(current),
+      proposal,
+    }));
+  }
+
+  // Multiple simultaneous opponent swaps are safe when each unmatched source bout
+  // has exactly one one-fighter-overlap candidate and that candidate is mutual.
+  // Anything less specific remains review-only.
+  for (const current of unmatchedCurrent.filter((bout) => !consumedCurrent.has(matchup(bout)))) {
+    const candidates = unmatchedSource.filter((proposed) => (
+      !consumedSource.has(matchup(proposed))
+      && replacementProposal(input.eventId!, current, proposed)?.action === "replace_fighter"
+    ));
+    if (candidates.length !== 1) continue;
+
+    const proposed = candidates[0]!;
+    const reverseCandidates = unmatchedCurrent.filter((candidate) => (
+      !consumedCurrent.has(matchup(candidate))
+      && replacementProposal(input.eventId!, candidate, proposed)?.action === "replace_fighter"
     ));
     if (reverseCandidates.length !== 1) continue;
 
