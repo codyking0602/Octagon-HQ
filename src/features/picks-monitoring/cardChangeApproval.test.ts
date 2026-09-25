@@ -43,6 +43,10 @@ const source: ApprovalMonitoringEvent & {
   source: "UFC.com + MMA Mania",
 };
 
+function proposalAction(item: ReturnType<typeof buildCardChangeFindings>[number]) {
+  return (item.source_details?.approval_proposal as { action?: string } | undefined)?.action;
+}
+
 function findings(
   nextSource: typeof source,
   kind: "current" | "staged" = "current",
@@ -91,13 +95,13 @@ describe("monitoring card-change approval proposals", () => {
 
   it("creates explicit removal, reorder, and deadline proposals", () => {
     const removal = findings({ ...source, bouts: [second] });
-    const removalProposal = removal.find((item) => item.source_details?.approval_proposal?.action === "remove_bout");
+    const removalProposal = removal.find((item) => proposalAction(item) === "remove_bout");
     expect(removalProposal?.source_details?.approval_proposal).toMatchObject({
       action: "remove_bout",
       bout_id: first.bout_id,
       expected_included_in_picks: true,
     });
-    expect(removal.some((item) => item.source_details?.approval_proposal?.action === "reorder_card")).toBe(true);
+    expect(removal.some((item) => proposalAction(item) === "reorder_card")).toBe(true);
 
     const reorder = findings({ ...source, bouts: [second, first] });
     expect(reorder).toHaveLength(1);
@@ -234,7 +238,7 @@ describe("monitoring card-change approval proposals", () => {
       "full",
     );
 
-    const addProposal = result.find((item) => item.source_details?.approval_proposal?.action === "add_bout");
+    const addProposal = result.find((item) => proposalAction(item) === "add_bout");
     expect(addProposal?.source_details?.approval_proposal).toEqual({
       action: "add_bout",
       event_id: canonical.event_id,
@@ -249,7 +253,7 @@ describe("monitoring card-change approval proposals", () => {
       locks_at: canonical.locks_at,
       expected_bout_ids: [first.bout_id, second.bout_id, prelim.bout_id],
     });
-    expect(result.some((item) => item.source_details?.approval_proposal?.action === "reorder_card")).toBe(true);
+    expect(result.some((item) => proposalAction(item) === "reorder_card")).toBe(true);
   });
 
   it("creates one complete add proposal for a missing Late Prelim during full-card monitoring", () => {
