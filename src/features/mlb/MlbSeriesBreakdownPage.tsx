@@ -58,13 +58,6 @@ export default function MlbSeriesBreakdownPage() {
         <p>{spotlight?.status ?? series.label}</p>
       </section>
 
-      {previewMode ? (
-        <div className="mlb-preview-banner" role="note">
-          <strong>OWNER PREVIEW</strong>
-          <span>Visual preview only. Official postseason matchups will replace this content when the field is final.</span>
-        </div>
-      ) : null}
-
       <section className="surface-card mlb-series-breakdown">
         <div className="mlb-series-breakdown__matchup">
           <TeamPanel name={series.team_a_name} />
