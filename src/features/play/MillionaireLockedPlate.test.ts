@@ -6,12 +6,21 @@ const dailySource = readFileSync("src/features/play/OfficialMillionaireDailyView
 const fixedCss = readFileSync("src/features/play/MillionaireFixedStage.css", "utf8");
 
 describe("Millionaire fixed-stage presentation contract", () => {
-  it("uses the sport-scoped rotating background host without changing fixed-stage geometry", () => {
-    expect(pageSource).toContain("const stageBackground = millionaireHostAsset(league);");
+  it("keeps assembled sport backgrounds while composing MLB's cutout into the same fixed studio", () => {
+    expect(pageSource).toContain("const stageHostAsset = millionaireHostAsset(league);");
+    expect(pageSource).toContain('const stageBackground = league === "mlb" ? MILLIONAIRE_FIXED_STUDIO_BACKGROUND : stageHostAsset;');
+    expect(pageSource).toContain('"/assets/millionaire/wide_cinematic_studio_shot_of_a_game_show_set_with.png"');
     expect(pageSource).toContain('className="millionaire-stage-background"');
+    expect(pageSource).toContain('className="millionaire-stage-host-slot millionaire-stage-host-slot--mlb"');
+    expect(pageSource).toContain('className="millionaire-stage-host" src={stageHostAsset}');
     expect(pageSource).not.toContain("millionaire-locked-stage");
     expect(pageSource).not.toContain("stagePlate");
     expect(pageSource).not.toContain("usesCleanProductionPlate");
+  });
+
+  it("keeps the standalone MLB host in the approved host bay behind the fixed game chrome", () => {
+    expect(fixedCss).toMatch(/\.millionaire-stage-host-slot \{[\s\S]*?z-index: 4;[\s\S]*?left: 198px;[\s\S]*?bottom: 247px;[\s\S]*?width: 509px;[\s\S]*?height: 554px;/);
+    expect(fixedCss).toMatch(/\.millionaire-stage-host \{[\s\S]*?left: -7%;[\s\S]*?bottom: -1\.5%;[\s\S]*?width: 114%;[\s\S]*?height: 105%;[\s\S]*?object-fit: cover;[\s\S]*?object-position: center 38%;/);
   });
 
   it("renders gameplay on a single fixed 1600x900 coordinate system", () => {
