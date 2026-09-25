@@ -90,6 +90,34 @@ describe("official UFC event parser", () => {
     expect(parsed.card.bouts.some((bout) => bout.red_fighter_name === "Removed Fighter")).toBe(false);
   });
 
+  it("keeps numbered-event main start distinct from the prelim Picks lock", () => {
+    const numbered = html
+      .replace('<meta property="og:title" content="UFC Fight Night | UFC">', '<meta property="og:title" content="UFC 330 | UFC">')
+      .replace("UFC Fight Night: Anthony Hernandez vs Gregory Rodrigues", "UFC 330: Anthony Hernandez vs Gregory Rodrigues")
+      .replace('<div class="c-hero__headline-prefix">UFC Fight Night</div>', '<div class="c-hero__headline-prefix">UFC 330</div>')
+      .replace('<time datetime="2026-08-22T12:00:00-07:00"></time>', '<time datetime="2026-08-16T01:00:00Z"></time>')
+      .replace("Sat, Aug 22 / 5:00 PM PDT / Main Card", "Sat, Aug 15 / 9:00 PM EDT / Main Card")
+      .replace('data-timestamp="1787443200"', 'data-timestamp="1786842000"')
+      .replace('data-timestamp="1787432400"', 'data-timestamp="1786834800"');
+
+    const parsed = parseUfcEventPage(
+      numbered,
+      "https://www.ufc.com/event/ufc-330",
+      "",
+      new Date("2026-08-10T12:00:00.000Z"),
+    );
+
+    expect(parsed.metadata).toMatchObject({
+      eventType: "numbered",
+      localEventDate: "2026-08-15",
+      starts_at: "2026-08-16T01:00:00.000Z",
+      prelims_starts_at: "2026-08-15T23:00:00.000Z",
+      locks_at: "2026-08-15T23:00:00.000Z",
+    });
+    expect(Date.parse(parsed.metadata.prelims_starts_at)).toBeLessThan(Date.parse(parsed.metadata.starts_at));
+    expect(parsed.metadata.locks_at).toBe(parsed.metadata.prelims_starts_at);
+  });
+
   it("parses canonical UFC fight blocks when section instances use suffixed ids and div rows", () => {
     const currentMarkup = html
       .replace('id="main-card"', 'id="main-card-1"')

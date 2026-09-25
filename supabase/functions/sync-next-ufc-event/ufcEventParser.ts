@@ -418,7 +418,8 @@ export function parseUfcEventPage(
     : canonicalUfcEventKey(sourceUrl);
   if (!sourceEventKey) throw new Error("Official UFC did not produce a stable event identity.");
   const subtitle = orderedSubtitle(html, mainEvent);
-  const startsAt = eventType === "numbered" ? times.prelimsStartsAt : times.mainCardStartsAt;
+  const startsAt = times.mainCardStartsAt;
+  const locksAt = eventType === "numbered" ? times.prelimsStartsAt : times.mainCardStartsAt;
   const eventId = normalizeText(`${name} ${subtitle} ${times.localEventDate}`).replace(/\s+/g, "-");
 
   return {
@@ -432,7 +433,7 @@ export function parseUfcEventPage(
       location: place.location,
       starts_at: startsAt,
       prelims_starts_at: eventType === "numbered" ? times.prelimsStartsAt : "",
-      locks_at: startsAt,
+      locks_at: locksAt,
       season: Number(times.localEventDate.slice(0, 4)),
       eventType,
       localEventDate: times.localEventDate,
