@@ -224,6 +224,7 @@ export function buildCardChangeFindings(input: {
   source: ApprovalSourceEvent;
   scope: "main" | "full";
   detectedAt: string;
+  allBoutIds?: string[];
 }): MonitoringFindingInput[] {
   const canonicalBouts = input.canonical.bouts.filter((bout) => inScope(bout, input.scope));
   const sourceBouts = input.source.bouts.filter((bout) => inScope(bout, input.scope));
@@ -258,96 +259,120 @@ export function buildCardChangeFindings(input: {
   const consumedCurrent = new Set<string>();
   const consumedSource = new Set<string>();
   const handledSummaries = new Set<string>();
+  const allBoutIds = input.allBoutIds?.length
+    ? [...input.allBoutIds]
+    : canonicalBouts.map((bout) => bout.bout_id);
+  const sourceMappedBoutId = new Map<string, string>();
 
-  if (unmatchedCurrent.length === 1 && unmatchedSource.length === 1
-    && canonicalBouts.indexOf(unmatchedCurrent[0]) === sourceBouts.indexOf(unmatchedSource[0])) {
-    const proposal = replacementProposal(input.eventId, unmatchedCurrent[0], unmatchedSource[0]);
-    if (proposal?.action === "replace_fighter") {
-      const current = unmatchedCurrent[0];
-      const proposed = unmatchedSource[0];
-      consumedCurrent.add(matchup(current));
-      consumedSource.add(matchup(proposed));
-      const beforeName = proposal.corner === "red"
-        ? current.red_fighter_name
-        : current.blue_fighter_name;
-      result.push(finding({
-        identity: input.identity,
-        kind: input.kind,
-        detectedAt: input.detectedAt,
-        summary: `Replace ${beforeName} with ${proposal.replacement_fighter_name}.`,
-        subjectKey: `bout:${current.bout_id}:fighters`,
-        field: "fighters",
-        beforeValue: {
-          red_fighter_name: current.red_fighter_name,
-          blue_fighter_name: current.blue_fighter_name,
-        },
-        afterValue: {
-          red_fighter_name: proposed.red_fighter_name,
-          blue_fighter_name: proposed.blue_fighter_name,
-        },
-        boutId: current.bout_id,
-        matchupIdentity: matchup(current),
-        proposal,
-      }));
-    }
+  for (const sourceBout of sourceBouts) {
+    const current = currentByMatchup.get(matchup(sourceBout));
+    if (current) sourceMappedBoutId.set(matchup(sourceBout), current.bout_id);
   }
 
-  const safeAddedFight = unmatchedCurrent.length === 0 && unmatchedSource.length === 1
-    ? unmatchedSource[0]
-    : null;
-  const addedWeightClass = textValue(safeAddedFight?.weight_class);
-  const addedCardSegment = safeAddedFight?.card_segment === "main" || safeAddedFight?.card_segment === "prelim"
-    ? safeAddedFight.card_segment
-    : null;
-  const addedSegmentSequence = safeAddedFight && addedCardSegment
-    && Number.isInteger(safeAddedFight.segment_sequence)
-    && (safeAddedFight.segment_sequence ?? 0) > 0
-    ? safeAddedFight.segment_sequence!
-    : null;
-  if (safeAddedFight && addedWeightClass && addedCardSegment && addedSegmentSequence
-    && safeAddedFight.bout_id.trim()
-    && safeAddedFight.red_fighter_slug.trim()
-    && safeAddedFight.red_fighter_name.trim()
-    && safeAddedFight.blue_fighter_slug.trim()
-    && safeAddedFight.blue_fighter_name.trim()) {
-    consumedSource.add(matchup(safeAddedFight));
-    const expectedBoutIds = canonicalBouts.map((bout) => bout.bout_id);
+  // Multiple simultaneous opponent swaps are safe when each unmatched source bout
+  // has exactly one one-fighter-overlap candidate and that candidate is mutual.
+  // Anything less specific remains review-only.
+  for (const current of unmatchedCurrent) {
+    const candidates = unmatchedSource.filter((proposed) => (
+      replacementProposal(input.eventId!, current, proposed)?.action === "replace_fighter"
+    ));
+    if (candidates.length !== 1) continue;
+
+    const proposed = candidates[0]!;
+    const reverseCandidates = unmatchedCurrent.filter((candidate) => (
+      replacementProposal(input.eventId!, candidate, proposed)?.action === "replace_fighter"
+    ));
+    if (reverseCandidates.length !== 1) continue;
+
+    const proposal = replacementProposal(input.eventId!, current, proposed);
+    if (proposal?.action !== "replace_fighter") continue;
+
+    consumedCurrent.add(matchup(current));
+    consumedSource.add(matchup(proposed));
+    sourceMappedBoutId.set(matchup(proposed), current.bout_id);
+    const beforeName = proposal.corner === "red"
+      ? current.red_fighter_name
+      : current.blue_fighter_name;
     result.push(finding({
       identity: input.identity,
       kind: input.kind,
       detectedAt: input.detectedAt,
-      summary: `Add ${safeAddedFight.red_fighter_name} vs. ${safeAddedFight.blue_fighter_name} to Picks.`,
-      subjectKey: `bout:${safeAddedFight.bout_id}:included_in_picks`,
+      summary: `Replace ${beforeName} with ${proposal.replacement_fighter_name}.`,
+      subjectKey: `bout:${current.bout_id}:fighters`,
+      field: "fighters",
+      beforeValue: {
+        red_fighter_name: current.red_fighter_name,
+        blue_fighter_name: current.blue_fighter_name,
+      },
+      afterValue: {
+        red_fighter_name: proposed.red_fighter_name,
+        blue_fighter_name: proposed.blue_fighter_name,
+      },
+      boutId: current.bout_id,
+      matchupIdentity: matchup(current),
+      proposal,
+    }));
+  }
+
+  const remainingSource = unmatchedSource.filter((bout) => !consumedSource.has(matchup(bout)));
+  for (const addedFight of remainingSource) {
+    const addedWeightClass = textValue(addedFight.weight_class);
+    const addedCardSegment = addedFight.card_segment === "main" || addedFight.card_segment === "prelim"
+      ? addedFight.card_segment
+      : null;
+    const addedSegmentSequence = addedCardSegment
+      && Number.isInteger(addedFight.segment_sequence)
+      && (addedFight.segment_sequence ?? 0) > 0
+      ? addedFight.segment_sequence!
+      : null;
+
+    if (!addedWeightClass || !addedCardSegment || !addedSegmentSequence
+      || !addedFight.bout_id.trim()
+      || !addedFight.red_fighter_slug.trim()
+      || !addedFight.red_fighter_name.trim()
+      || !addedFight.blue_fighter_slug.trim()
+      || !addedFight.blue_fighter_name.trim()) {
+      continue;
+    }
+
+    consumedSource.add(matchup(addedFight));
+    sourceMappedBoutId.set(matchup(addedFight), addedFight.bout_id);
+    result.push(finding({
+      identity: input.identity,
+      kind: input.kind,
+      detectedAt: input.detectedAt,
+      summary: `Add ${addedFight.red_fighter_name} vs. ${addedFight.blue_fighter_name} to Picks.`,
+      subjectKey: `bout:${addedFight.bout_id}:included_in_picks`,
       field: "included_in_picks",
       beforeValue: null,
       afterValue: {
-        red_fighter_name: safeAddedFight.red_fighter_name,
-        blue_fighter_name: safeAddedFight.blue_fighter_name,
+        red_fighter_name: addedFight.red_fighter_name,
+        blue_fighter_name: addedFight.blue_fighter_name,
         weight_class: addedWeightClass,
       },
-      boutId: safeAddedFight.bout_id,
-      matchupIdentity: matchup(safeAddedFight),
+      boutId: addedFight.bout_id,
+      matchupIdentity: matchup(addedFight),
       proposal: {
         action: "add_bout",
         event_id: input.eventId,
-        bout_id: safeAddedFight.bout_id,
+        bout_id: addedFight.bout_id,
         weight_class: addedWeightClass,
-        red_fighter_slug: safeAddedFight.red_fighter_slug,
-        red_fighter_name: safeAddedFight.red_fighter_name,
-        blue_fighter_slug: safeAddedFight.blue_fighter_slug,
-        blue_fighter_name: safeAddedFight.blue_fighter_name,
+        red_fighter_slug: addedFight.red_fighter_slug,
+        red_fighter_name: addedFight.red_fighter_name,
+        blue_fighter_slug: addedFight.blue_fighter_slug,
+        blue_fighter_name: addedFight.blue_fighter_name,
         card_segment: addedCardSegment,
         segment_sequence: addedSegmentSequence,
         locks_at: input.canonical.locks_at,
-        expected_bout_ids: expectedBoutIds,
+        expected_bout_ids: allBoutIds,
       },
     }));
   }
 
-  const hasUnresolvedAddedFight = unmatchedSource.some((bout) => !consumedSource.has(matchup(bout)));
+  const hasUnresolvedAddedFight = remainingSource.some((bout) => !consumedSource.has(matchup(bout)));
+  const remainingCurrent = unmatchedCurrent.filter((bout) => !consumedCurrent.has(matchup(bout)));
   if (!hasUnresolvedAddedFight) {
-    for (const current of unmatchedCurrent) {
-      if (consumedCurrent.has(matchup(current))) continue;
+    for (const current of remainingCurrent) {
       result.push(finding({
         identity: input.identity,
         kind: input.kind,
@@ -371,7 +396,9 @@ export function buildCardChangeFindings(input: {
     }
   }
 
-  const exactSegmentSet = unmatchedCurrent.length === 0 && unmatchedSource.length === 0
+  const structuralSetChanged = remainingCurrent.length > 0 || remainingSource.length > 0;
+  const exactSegmentSet = !structuralSetChanged
+    && sourceMappedBoutId.size === sourceBouts.length
     && canonicalBouts.length === sourceBouts.length;
   const expectedSegments = canonicalBouts.map((bout) => ({
     bout_id: bout.bout_id,
@@ -383,14 +410,11 @@ export function buildCardChangeFindings(input: {
       : null,
   }));
   const proposedSegments = exactSegmentSet
-    ? sourceBouts.map((sourceBout) => {
-        const currentBout = currentByMatchup.get(matchup(sourceBout))!;
-        return {
-          bout_id: currentBout.bout_id,
-          card_segment: sourceBout.card_segment,
-          segment_sequence: sourceBout.segment_sequence,
-        };
-      })
+    ? sourceBouts.map((sourceBout) => ({
+        bout_id: sourceMappedBoutId.get(matchup(sourceBout))!,
+        card_segment: sourceBout.card_segment,
+        segment_sequence: sourceBout.segment_sequence,
+      }))
     : [];
   const validProposedSegments = exactSegmentSet
     && proposedSegments.every((item) => (
@@ -430,12 +454,19 @@ export function buildCardChangeFindings(input: {
     }));
   }
 
-  const expectedOrder = canonicalBouts.map((bout) => bout.bout_id);
-  const proposedOrder = sourceBouts
-    .map((bout) => currentByMatchup.get(matchup(bout))?.bout_id ?? null)
+  const eventualActiveIds = sourceBouts
+    .map((bout) => sourceMappedBoutId.get(matchup(bout)) ?? null)
     .filter((boutId): boutId is string => Boolean(boutId));
-  const canReorder = proposedOrder.length === expectedOrder.length
-    && proposedOrder.every((boutId) => expectedOrder.includes(boutId));
+  const addedIds = eventualActiveIds.filter((boutId) => !allBoutIds.includes(boutId));
+  const expectedOrder = [...allBoutIds, ...addedIds.filter((boutId, index) => addedIds.indexOf(boutId) === index)];
+  const proposedOrder = [
+    ...eventualActiveIds,
+    ...expectedOrder.filter((boutId) => !eventualActiveIds.includes(boutId)),
+  ];
+  const canReorder = !hasUnresolvedAddedFight
+    && eventualActiveIds.length === sourceBouts.length
+    && proposedOrder.length === expectedOrder.length
+    && new Set(proposedOrder).size === proposedOrder.length;
   if (canReorder && proposedOrder.some((boutId, index) => boutId !== expectedOrder[index])) {
     result.push(finding({
       identity: input.identity,
