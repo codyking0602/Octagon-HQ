@@ -26,8 +26,9 @@ describe("automatic UFC fighter media", () => {
 
   it("loads verified runtime photos only when the existing thumbnail resolver has no source", () => {
     expect(thumbnail).toContain('client.rpc("get_ufc_fighter_media_map")');
-    expect(thumbnail).toContain("const source = staticSource ?? runtimeSource");
-    expect(thumbnail).toContain("if (staticSource || runtimeSource) return");
+    expect(thumbnail).toContain("staticSource && !failedSources.has(staticSource)");
+    expect(thumbnail).toContain("runtimeSource && !failedSources.has(runtimeSource)");
+    expect(thumbnail).toContain("if (source) return");
   });
 
   it("does not automate or mutate event header artwork", () => {
