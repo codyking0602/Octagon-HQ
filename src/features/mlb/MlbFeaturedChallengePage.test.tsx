@@ -10,7 +10,7 @@ import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: () => ({
     status: "ready",
-    profile: { id: "test-profile", displayName: "CODY", initials: "C", canControlPicks: true },
+    profile: { id: "test-profile", displayName: "CODY", initials: "C", canControlPicks: false },
   }),
 }));
 
@@ -54,7 +54,7 @@ function leaderFor(board: (typeof MLB_FIND_LEADER_PREVIEW_BOARDS)[number]) {
   ));
 }
 
-describe("MLB Find the Leader format preview", () => {
+describe("MLB Find the Leader scheduled challenge", () => {
   it("locks both tuning boards as burned content and keeps ten players per board", () => {
     expect(MLB_FIND_LEADER_PREVIEW_BOARDS).toHaveLength(2);
     expect(MLB_FIND_LEADER_PREVIEW_BOARDS.every((board) => board.candidates.length === 10)).toBe(true);
