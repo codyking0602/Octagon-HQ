@@ -281,7 +281,7 @@ export default function MlbFeaturedChallengePage() {
     );
   }
 
-  if (savedResult && !practiceMode) {
+  if (savedResult && !practiceMode && completedScores.length === 0) {
     const scores = storedGameScores(savedResult.publicResult);
     return (
       <div className="page mlb-find-leader-page">
@@ -382,7 +382,20 @@ export default function MlbFeaturedChallengePage() {
                   : "Final score is the average of both Find the Leader boards."}
           </p>
           <div className="mlb-find-final-actions">
-            <button className="primary-action" type="button" onClick={resetChallenge}>PLAY AGAIN</button>
+            <button
+              className="primary-action"
+              type="button"
+              onClick={() => {
+                if (recordError) {
+                  void saveOfficialResult(finalScore, completedGames);
+                  return;
+                }
+                if (!practiceMode) setPracticeMode(true);
+                resetChallenge();
+              }}
+            >
+              {recordError ? "RETRY SAVE" : "PLAY AGAIN"}
+            </button>
             <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>MLB PLAY</button>
           </div>
         </section>
