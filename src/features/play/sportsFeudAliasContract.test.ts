@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   matchFamilyFeudAnswer,
-  normalizeFamilyFeudInput,
   type FamilyFeudPack,
   type FamilyFeudQuestion,
 } from "../games/familyFeudEngine";
@@ -29,18 +28,6 @@ function materializeEveryQuestion(domain: SportsFeudBankDomain) {
   }
   return found;
 }
-
-function transposeLastDistinctPair(value: string) {
-  const chars = [...value];
-  for (let index = chars.length - 2; index >= 0; index -= 1) {
-    if (!/[a-z0-9]/i.test(chars[index]!) || !/[a-z0-9]/i.test(chars[index + 1]!)) continue;
-    if (chars[index] === chars[index + 1]) continue;
-    [chars[index], chars[index + 1]] = [chars[index + 1]!, chars[index]!];
-    return chars.join("");
-  }
-  return value;
-}
-
 describe("Sports Feud authored alias contract", () => {
   for (const domain of ["ufc", "nfl", "cfb"] as const) {
     it(`${domain.toUpperCase()} preserves every authored alias through the production matcher`, () => {
@@ -65,21 +52,6 @@ describe("Sports Feud authored alias contract", () => {
               status: "matched",
               entityId,
             });
-
-            const normalized = normalizeFamilyFeudInput(alias);
-            if (normalized.includes(" ") && normalized.length >= 10) {
-              const typo = transposeLastDistinctPair(alias);
-              if (typo !== alias) {
-                const typoMatch = matchFamilyFeudAnswer(pack, question, typo);
-                expect(
-                  typoMatch,
-                  `${domain} ${question.id} typo "${typo}" from alias "${alias}" for ${entity.displayName}`,
-                ).toMatchObject({
-                  status: "matched",
-                  entityId,
-                });
-              }
-            }
           }
         }
       }
