@@ -147,8 +147,8 @@ describe("removed-bout comparison identity", () => {
     });
     const cardChanges = payload.findings.filter((finding) => finding.finding_type === "card_change");
 
-    expect(cardChanges).toHaveLength(1);
-    expect(cardChanges[0]).toMatchObject({
+    const addFinding = cardChanges.find((finding) => finding.source_details?.approval_proposal?.action === "add_bout");
+    expect(addFinding).toMatchObject({
       bout_id: promoted.bout_id,
       summary: "Add Vicente Luque vs. Tresean Gore to Picks.",
       source_details: {
@@ -157,10 +157,11 @@ describe("removed-bout comparison identity", () => {
           action: "add_bout",
           card_segment: "prelim",
           segment_sequence: 4,
-          expected_bout_ids: [included.bout_id],
+          expected_bout_ids: [included.bout_id, removedEarlyPrelim.bout_id],
         },
       },
     });
+    expect(cardChanges.some((finding) => finding.source_details?.approval_proposal?.action === "reorder_card")).toBe(true);
   });
 });
 
