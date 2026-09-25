@@ -331,7 +331,7 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     stats: ["Power · on-base · short-series leverage"],
   },
   featuredChallenge: {
-    id: "2026-find-leader-preview",
+    id: "mlb-2026-play-01",
     title: "Find the Leader",
     kicker: "READY",
     description: "Two boards. One final score.",
