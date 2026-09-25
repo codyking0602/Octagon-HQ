@@ -91,34 +91,18 @@ function metaContent(html: string, key: string) {
 }
 
 function classText(html: string, className: string) {
-  const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\function classText(html: string, className: string) {
   const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const pattern = new RegExp(
-    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
-    "i",
-  );
-  return visibleText(pattern.exec(html)?.[3] ?? "");
-}
-");
-  const pattern = new RegExp(
-    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
+    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["\'][^"\']*\\b${escaped}\\b[^"\']*["\'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
     "i",
   );
   return visibleText(pattern.exec(html)?.[3] ?? "");
 }
 
 function classTexts(html: string, className: string) {
-  const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\function classText(html: string, className: string) {
   const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const pattern = new RegExp(
-    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
-    "i",
-  );
-  return visibleText(pattern.exec(html)?.[3] ?? "");
-}
-");
-  const pattern = new RegExp(
-    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
+    `<([a-z0-9]+)\\b([^>]*\\bclass\\s*=\\s*["\'][^"\']*\\b${escaped}\\b[^"\']*["\'][^>]*)>([\\s\\S]*?)<\\/\\1>`,
     "gi",
   );
   const values: string[] = [];
