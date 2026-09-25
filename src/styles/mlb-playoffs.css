@@ -17,6 +17,13 @@
 .home-sport-hq--mlb {
   --home-sport-accent: var(--mlb-green);
   --home-sport-accent-rgb: var(--mlb-green-rgb);
+  --home-football-blue: var(--mlb-green);
+  --home-football-blue-rgb: var(--mlb-green-rgb);
+}
+
+.home-challenge-card[data-sport="mlb"] {
+  --challenge-accent: var(--mlb-green);
+  --challenge-accent-strong: var(--mlb-green-strong);
 }
 
 .home-section--mlb-hq {
@@ -758,106 +765,6 @@
   letter-spacing: .08em;
 }
 
-.mlb-player-spotlight {
-  display: grid;
-  grid-template-columns: minmax(110px, .68fr) minmax(0, 1.32fr);
-  min-height: 176px;
-  overflow: hidden;
-  border: 1px solid rgba(var(--mlb-green-rgb), .34);
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at 14% 30%, rgba(var(--mlb-green-rgb), .14), transparent 42%),
-    linear-gradient(135deg, #07110c, #090b0a 66%);
-}
-
-.mlb-player-spotlight__media {
-  position: relative;
-  min-width: 0;
-  overflow: hidden;
-  background: #101713;
-}
-
-.mlb-player-spotlight__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 58%, rgba(7, 11, 9, .92));
-  pointer-events: none;
-}
-
-.mlb-player-spotlight__media img {
-  width: 100%;
-  height: 100%;
-  min-height: 176px;
-  object-fit: cover;
-  object-position: 50% 28%;
-}
-
-.mlb-player-spotlight__copy {
-  display: grid;
-  align-content: center;
-  gap: 4px;
-  min-width: 0;
-  padding: 11px 11px 11px 8px;
-}
-
-.mlb-player-spotlight__copy > span {
-  color: var(--mlb-green-strong);
-  font-size: 8px;
-  font-weight: 950;
-  letter-spacing: .13em;
-}
-
-.mlb-player-spotlight__copy h3 {
-  margin: 0;
-  font-size: clamp(22px, 5.9vw, 31px);
-  line-height: .95;
-  letter-spacing: -.045em;
-}
-
-.mlb-player-spotlight__copy > strong {
-  overflow: hidden;
-  color: #d5ddd8;
-  font-size: 9px;
-  letter-spacing: .08em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.mlb-player-spotlight__stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 5px;
-  margin: 5px 0 2px;
-}
-
-.mlb-player-spotlight__stats > span {
-  display: grid;
-  gap: 1px;
-  min-width: 0;
-}
-
-.mlb-player-spotlight__stats b {
-  font-size: 11px;
-  line-height: 1;
-}
-
-.mlb-player-spotlight__stats small {
-  color: #a8b3ac;
-  font-size: 6px;
-  font-weight: 900;
-  white-space: nowrap;
-}
-
-.mlb-player-spotlight__meta {
-  margin: 1px 0 0;
-  color: #a8b3ac;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: .035em;
-  line-height: 1.15;
-}
-
 .mlb-home-series {
   display: grid;
   gap: 9px;
@@ -1135,11 +1042,4 @@
     border-left: 0;
   }
 
-  .mlb-player-spotlight {
-    grid-template-columns: 102px minmax(0, 1fr);
-  }
-
-  .mlb-player-spotlight__media img {
-    min-height: 168px;
-  }
 }
