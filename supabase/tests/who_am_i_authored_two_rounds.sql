@@ -193,11 +193,11 @@ begin
     now(),
     now(),
     now(),
-    jsonb_build_object('display_name', 'WHO AM I TWO ROUND SUBMIT', 'historical_unclaimed', true)
+    jsonb_build_object('display_name', 'WAI TEST', 'historical_unclaimed', true)
   )
   on conflict (id) do nothing;
 
-  perform public.register_unclaimed_pin_profile(v_user, 'Who Am I Two Round Submit', 'WA');
+  perform public.register_unclaimed_pin_profile(v_user, 'WAI Test', 'WT');
 
   insert into private.daily_challenge_schedule_versions (
     version,
