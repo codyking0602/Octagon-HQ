@@ -18,6 +18,7 @@ import {
 } from "./mlbPlayChallenge";
 import { useMlbChampionship } from "./useMlbChampionship";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
+import { millionaireMoneyLabel, millionaireTimeLabel } from "../play/MillionaireCasualModel";
 import "../../styles/play-landing-shared.css";
 import "../../styles/today-challenge-hub.css";
 import "../../styles/daily-leaderboard-result-page.css";
@@ -123,6 +124,18 @@ function wavelengthRows(entry: MlbPlayChallengeLeaderboardEntry) {
   });
 }
 
+function millionaireResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
+  const detail = entry.resultDetail;
+  const publicResult = entry.publicResult;
+  return {
+    outcome: String(detail.outcome ?? publicResult.outcome ?? "lost"),
+    finalMoney: Number(detail.final_money ?? publicResult.final_money ?? 0),
+    completedQuestions: Number(detail.completed_questions ?? publicResult.completed_questions ?? 0),
+    lifelinesUsed: Number(detail.lifelines_used ?? publicResult.lifelines_used ?? 0),
+    timeRemainingMs: Number(detail.time_remaining_ms ?? publicResult.time_remaining_ms ?? 0),
+  };
+}
+
 function MlbPlayResultDetail({
   entry,
   challengeTitle,
@@ -135,6 +148,8 @@ function MlbPlayResultDetail({
   const games = gameRows(entry);
   const wavelengthRounds = wavelengthRows(entry);
   const isWavelength = entry.gameType === "wavelength";
+  const isMillionaire = entry.gameType === "millionaire";
+  const millionaire = millionaireResultSummary(entry);
 
   return (
     <div
@@ -164,7 +179,20 @@ function MlbPlayResultDetail({
             <strong>{entry.rawScore}<small>/100</small></strong>
           </div>
 
-          {isWavelength && wavelengthRounds.length ? (
+          {isMillionaire ? (
+            <div className="mlb-play-result-card__games">
+              <article>
+                <span>FINAL MONEY</span>
+                <strong>{millionaireMoneyLabel(millionaire.finalMoney)}</strong>
+                <small>{millionaire.completedQuestions} / 8 QUESTIONS CORRECT</small>
+              </article>
+              <article>
+                <span>RUN DETAILS</span>
+                <strong>{millionaire.lifelinesUsed}<small> LIFELINES</small></strong>
+                <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
+              </article>
+            </div>
+          ) : isWavelength && wavelengthRounds.length ? (
             <div className="mlb-play-result-card__games">
               {wavelengthRounds.map((round) => (
                 <article key={round.round}>
@@ -192,9 +220,11 @@ function MlbPlayResultDetail({
           ) : null}
 
           <p>
-            {isWavelength
-              ? "The challenge score is the average of both Wavelength games."
-              : "The challenge score is the average of both Find the Leader boards."}
+            {isMillionaire
+              ? "Millionaire score follows the eight-question ladder with a 2-point deduction for each lifeline used."
+              : isWavelength
+                ? "The challenge score is the average of both Wavelength games."
+                : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>

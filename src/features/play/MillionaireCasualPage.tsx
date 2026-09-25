@@ -32,7 +32,19 @@ import "./MillionairePortrait.css";
 import "./MillionairePortraitRefine.css";
 import "./MillionaireFixedStage.css";
 
-type MillionaireCasualPageProps = { scope: "ufc" | "football" };
+export type MillionaireCasualSettledResult = {
+  outcome: "won" | "lost" | "walked-away";
+  finalMoney: number;
+  score: number;
+  completedQuestions: number;
+  lifelinesUsed: number;
+  timeRemainingMs: number;
+};
+
+type MillionaireCasualPageProps = {
+  scope: "ufc" | "football" | "mlb";
+  onSettled?: (result: MillionaireCasualSettledResult) => void;
+};
 type PlayPhase = "answering" | "locked" | "revealed" | "settled";
 type RevealState = { result: MillionaireTransitionResult; selectedChoiceId: MillionaireChoiceId | null } | null;
 
@@ -82,6 +94,10 @@ function LeagueChooser({ onChoose, onBack }: { onChoose: (league: "nfl" | "cfb")
   );
 }
 
+function millionaireSurfaceLabel(league: MillionaireLeague): string {
+  return league === "mlb" ? "MLB PLAYOFF CHALLENGE" : `${millionaireLeagueLabel(league)} DAILY`;
+}
+
 function MillionaireRulesIntro({ league, onStart, onBack }: { league: MillionaireLeague; onStart: () => void; onBack: () => void }) {
   const run = useMemo(() => millionaireCasualRun(league), [league]);
 
@@ -91,7 +107,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
       <HQMark onClick={onBack} />
       <section className="millionaire-rules" aria-labelledby="millionaire-rules-title">
         <header>
-          <span>{millionaireLeagueLabel(league)} DAILY</span>
+          <span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span>
           <h1 id="millionaire-rules-title">MILLIONAIRE</h1>
           <p>8 questions. $500 to $1,000,000.</p>
         </header>
@@ -169,7 +185,17 @@ function useMillionaireStageScale() {
   return scale;
 }
 
-function MillionaireGame({ league, onBack, onChangeLeague }: { league: MillionaireLeague; onBack: () => void; onChangeLeague?: () => void }) {
+function MillionaireGame({
+  league,
+  onBack,
+  onChangeLeague,
+  onSettled,
+}: {
+  league: MillionaireLeague;
+  onBack: () => void;
+  onChangeLeague?: () => void;
+  onSettled?: (result: MillionaireCasualSettledResult) => void;
+}) {
   const run = useMemo(() => millionaireCasualRun(league), [league]);
   const [gameState, setGameState] = useState<MillionaireState>(() => createMillionaireState(run));
   const [timeRemainingMs, setTimeRemainingMs] = useState(MILLIONAIRE_TIME_BANK_MS);
@@ -213,6 +239,18 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
     return () => window.clearInterval(interval);
   }, [phase, gameState.status, gameState.currentQuestionIndex]);
 
+  function emitSettled(nextState: MillionaireState) {
+    if (nextState.status === "playing") return;
+    onSettled?.({
+      outcome: nextState.status,
+      finalMoney: nextState.finalMoney ?? 0,
+      score: nextState.score,
+      completedQuestions: nextState.completedQuestions,
+      lifelinesUsed: Object.values(nextState.lifelinesUsed).filter(Boolean).length,
+      timeRemainingMs: Math.max(0, Math.floor(timeRemainingMs)),
+    });
+  }
+
   function settleAfterReveal(result: MillionaireTransitionResult) {
     setGameState(result.state);
     setReveal(null);
@@ -224,6 +262,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
     if (result.state.status !== "playing") {
       setWalkPromptOpen(false);
       setPhase("settled");
+      emitSettled(result.state);
       return;
     }
     setPhase("answering");
@@ -276,6 +315,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
     setGameState(result.state);
     setWalkPromptOpen(false);
     setPhase("settled");
+    emitSettled(result.state);
   }
 
   function restart() {
@@ -306,7 +346,7 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
       >
       <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
       <HQMark onClick={onBack} />
-      <header className="millionaire-title"><span>{millionaireLeagueLabel(league)} DAILY</span><strong>MILLIONAIRE</strong></header>
+      <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
       <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
       <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}><div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div></div>
 
@@ -383,12 +423,12 @@ function MillionaireGame({ league, onBack, onChangeLeague }: { league: Millionai
   );
 }
 
-export default function MillionaireCasualPage({ scope }: MillionaireCasualPageProps) {
+export default function MillionaireCasualPage({ scope, onSettled }: MillionaireCasualPageProps) {
   const identity = useIdentity();
   const navigate = useNavigate();
   const [footballLeague, setFootballLeague] = useState<"nfl" | "cfb" | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
-  const backRoute = scope === "ufc" ? "/play" : "/football";
+  const backRoute = scope === "ufc" ? "/play" : scope === "mlb" ? "/mlb" : "/football";
 
   if (!identity.profile?.canControlPicks) return <Navigate to={backRoute} replace />;
 
@@ -396,11 +436,11 @@ export default function MillionaireCasualPage({ scope }: MillionaireCasualPagePr
   if (scope === "football" && footballLeague === null) {
     content = <LeagueChooser onChoose={(league) => { setFootballLeague(league); setGameStarted(false); }} onBack={() => navigate(backRoute)} />;
   } else {
-    const league: MillionaireLeague = scope === "ufc" ? "ufc" : footballLeague!;
+    const league: MillionaireLeague = scope === "ufc" ? "ufc" : scope === "mlb" ? "mlb" : footballLeague!;
     const introBack = scope === "football" ? () => setFootballLeague(null) : () => navigate(backRoute);
     const changeLeague = scope === "football" ? () => { setGameStarted(false); setFootballLeague(null); } : undefined;
     content = gameStarted
-      ? <MillionaireGame key={league} league={league} onBack={() => navigate(backRoute)} onChangeLeague={changeLeague} />
+      ? <MillionaireGame key={league} league={league} onBack={() => navigate(backRoute)} onChangeLeague={changeLeague} onSettled={onSettled} />
       : <MillionaireRulesIntro league={league} onStart={() => setGameStarted(true)} onBack={introBack} />;
   }
 

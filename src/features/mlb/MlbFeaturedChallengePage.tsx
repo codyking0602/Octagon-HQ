@@ -8,13 +8,16 @@ import {
   type MlbFindLeaderBoard,
 } from "./mlbFindLeaderProduction";
 import {
+  MLB_PLAY_MILLIONAIRE_REVIEW_CHALLENGE_KEY,
   recordMlbPlayChallengeResult,
+  saveMlbPlayPreviewResult,
   type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
+import MillionaireCasualPage from "../play/MillionaireCasualPage";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -221,7 +224,35 @@ export default function MlbFeaturedChallengePage() {
   const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
   const savedResult = overview?.ownResult ?? null;
 
-  if (previewMode) return <MlbWavelengthChallenge />;
+  if (previewMode) {
+    return (
+      <MillionaireCasualPage
+        scope="mlb"
+        onSettled={(result) => {
+          saveMlbPlayPreviewResult(MLB_PLAY_MILLIONAIRE_REVIEW_CHALLENGE_KEY, {
+            rawScore: result.score,
+            gameType: "millionaire",
+            publicResult: {
+              outcome: result.outcome,
+              final_money: result.finalMoney,
+              completed_questions: result.completedQuestions,
+              lifelines_used: result.lifelinesUsed,
+              time_remaining_ms: result.timeRemainingMs,
+              score: result.score,
+            },
+            resultDetail: {
+              outcome: result.outcome,
+              final_money: result.finalMoney,
+              completed_questions: result.completedQuestions,
+              lifelines_used: result.lifelinesUsed,
+              time_remaining_ms: result.timeRemainingMs,
+            },
+            completedAt: new Date().toISOString(),
+          });
+        }}
+      />
+    );
+  }
 
   if (!challenge || !challenge.is_live || !challenge.ready) {
     return (
