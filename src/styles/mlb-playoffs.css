@@ -2307,3 +2307,150 @@
     transition: none;
   }
 }
+
+
+/* MLB bracket polish — denser overview, stronger legibility, quieter browse controls */
+.mlb-bracket-shell__person {
+  min-height: 48px;
+  padding: 7px 9px;
+}
+
+.mlb-bracket-shell__viewer-controls {
+  gap: 4px;
+}
+
+.mlb-bracket-shell__viewer-controls button {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  font-size: .9rem;
+}
+
+.mlb-bracket-shell__viewer-controls span {
+  min-width: 27px;
+  font-size: .48rem;
+}
+
+.mlb-full-bracket__viewport {
+  aspect-ratio: 700 / 326;
+}
+
+.mlb-full-bracket__stage {
+  grid-template-rows: 18px 1fr;
+  padding: 4px 3px;
+}
+
+.mlb-full-bracket__stage-label {
+  font-size: clamp(.37rem, 1.52vw, .51rem);
+}
+
+.mlb-bracket-mini-node {
+  gap: 2px;
+  padding: 3px;
+}
+
+.mlb-bracket-mini-node > small {
+  font-size: clamp(.33rem, 1.24vw, .45rem);
+}
+
+.mlb-bracket-mini-team {
+  min-height: 21px;
+  grid-template-columns: 16px 9px minmax(0, 1fr);
+  gap: 2px;
+  padding: 1px 2px;
+}
+
+.mlb-bracket-team-mark.is-compact {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+}
+
+.mlb-bracket-mini-team > b {
+  font-size: clamp(.31rem, 1.12vw, .42rem);
+}
+
+.mlb-bracket-mini-team > strong {
+  font-size: clamp(.37rem, 1.36vw, .49rem);
+}
+
+.mlb-bracket-shell__dots {
+  min-height: 22px;
+  gap: 4px;
+  padding: 3px 8px;
+}
+
+.mlb-bracket-shell__dots small {
+  font-size: .42rem;
+}
+
+.mlb-full-bracket__canvas {
+  transition: transform .22s cubic-bezier(.2, .7, .2, 1);
+}
+
+.mlb-full-bracket.is-guided {
+  --bracket-zoom: 1.72;
+}
+
+.mlb-bracket-mini-node.is-active {
+  box-shadow:
+    0 0 0 1px rgba(var(--mlb-green-rgb), .28),
+    0 5px 14px rgba(0, 0, 0, .22);
+}
+
+@media (min-width: 700px) {
+  .mlb-full-bracket__viewport {
+    aspect-ratio: 700 / 300;
+  }
+
+  .mlb-bracket-mini-team {
+    min-height: 24px;
+    grid-template-columns: 19px 11px minmax(0, 1fr);
+  }
+
+  .mlb-bracket-team-mark.is-compact {
+    width: 19px;
+    height: 19px;
+    min-width: 19px;
+  }
+
+  .mlb-bracket-mini-team > strong {
+    font-size: .55rem;
+  }
+
+  .mlb-bracket-mini-team > b {
+    font-size: .46rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .mlb-bracket-shell__person {
+    min-height: 46px;
+    padding: 6px 8px;
+  }
+
+  .mlb-bracket-shell__viewer-controls button {
+    width: 25px;
+    height: 25px;
+  }
+
+  .mlb-full-bracket__viewport {
+    aspect-ratio: 700 / 332;
+  }
+
+  .mlb-full-bracket__stage {
+    grid-template-rows: 18px 1fr;
+    padding: 4px 2px;
+  }
+
+  .mlb-bracket-mini-team {
+    min-height: 18px;
+    grid-template-columns: 14px 7px minmax(0, 1fr);
+  }
+
+  .mlb-bracket-team-mark.is-compact {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+  }
+}
