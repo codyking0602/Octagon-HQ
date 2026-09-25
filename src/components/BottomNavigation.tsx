@@ -28,7 +28,8 @@ function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
       || pathname === "/football/picks"
       || pathname.startsWith("/football/picks/")
       || pathname === "/mlb/picks"
-      || pathname.startsWith("/mlb/picks/");
+      || pathname.startsWith("/mlb/picks/")
+      || pathname.startsWith("/mlb/series/");
   }
   if (icon === "play") {
     return pathname === "/play"
@@ -36,7 +37,9 @@ function routeOwnsNavigationItem(icon: NavigationIconName, pathname: string) {
       || pathname === "/football"
       || (pathname.startsWith("/football/") && !pathname.startsWith("/football/picks"))
       || pathname === "/mlb"
-      || (pathname.startsWith("/mlb/") && !pathname.startsWith("/mlb/picks"));
+      || (pathname.startsWith("/mlb/")
+        && !pathname.startsWith("/mlb/picks")
+        && !pathname.startsWith("/mlb/series/"));
   }
   return pathname === "/rankings" || pathname.startsWith("/rankings/");
 }
