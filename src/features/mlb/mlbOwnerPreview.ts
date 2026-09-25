@@ -330,10 +330,10 @@ export const MLB_OWNER_PREVIEW_HUB: MlbPlayoffsHub = {
     stats: ["Power · on-base · short-series leverage"],
   },
   featuredChallenge: {
-    id: "2026-find-leader-owner-demo",
+    id: "2026-find-leader-preview",
     title: "Find the Leader",
-    kicker: "OWNER DESIGN DEMO",
-    description: "Disposable MLB content in the locked Football game treatment.",
+    kicker: "READY",
+    description: "Two boards. One final score.",
     route: "/mlb/challenge",
   },
 };
