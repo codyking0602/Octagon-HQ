@@ -8,6 +8,7 @@ import {
   fighterOddsIdentity,
   isValidAmericanOdds,
   normalizedOddsPrice,
+  sameOddsFighterIdentity,
   type NormalizedFightOddsSnapshot,
   type OddsAdapterDiagnostic,
   type OddsAdapterResult,
@@ -58,7 +59,9 @@ function validIsoTimestamp(value: unknown) {
 }
 
 function sameFighterName(left: string, right: string) {
-  return fighterMatch(left, right) || fighterMatch(right, left);
+  return sameOddsFighterIdentity(left, right)
+    || fighterMatch(left, right)
+    || fighterMatch(right, left);
 }
 
 function headerValue(headers: HeaderSource | undefined, key: string) {
@@ -93,7 +96,41 @@ export function readTheOddsApiQuota(headers?: HeaderSource): OddsProviderQuota {
   };
 }
 
-export function buildTheOddsApiRequestUrl(apiKey: string, origin = DEFAULT_API_ORIGIN) {
+export function buildTheOddsApiEventsUrl(apiKey: string, origin = DEFAULT_API_ORIGIN) {
+  if (!apiKey.trim()) throw new Error("The Odds API key is required.");
+  const url = new URL(`/v4/sports/${MMA_ODDS_SPORT_KEY}/events`, origin);
+  url.searchParams.set("apiKey", apiKey.trim());
+  url.searchParams.set("dateFormat", "iso");
+  return url;
+}
+
+export function providerEventIdsNearMonitoredStart(
+  payload: unknown,
+  monitoredStartsAt: string,
+  windowHours = 18,
+) {
+  const target = Date.parse(monitoredStartsAt);
+  if (!Array.isArray(payload) || !Number.isFinite(target) || !Number.isFinite(windowHours) || windowHours <= 0) {
+    return [] as string[];
+  }
+
+  const windowMs = windowHours * 60 * 60 * 1000;
+  const ids = payload.flatMap((value) => {
+    const event = asRecord(value);
+    const id = nonEmptyString(event?.id);
+    const commenceTime = validIsoTimestamp(event?.commence_time);
+    const sportKey = nonEmptyString(event?.sport_key);
+    if (!id || sportKey !== MMA_ODDS_SPORT_KEY || !commenceTime) return [];
+    return Math.abs(Date.parse(commenceTime) - target) <= windowMs ? [id] : [];
+  });
+  return [...new Set(ids)];
+}
+
+export function buildTheOddsApiRequestUrl(
+  apiKey: string,
+  origin = DEFAULT_API_ORIGIN,
+  eventIds: readonly string[] = [],
+) {
   if (!apiKey.trim()) throw new Error("The Odds API key is required.");
   const url = new URL(`/v4/sports/${MMA_ODDS_SPORT_KEY}/odds`, origin);
   url.searchParams.set("apiKey", apiKey.trim());
@@ -101,6 +138,8 @@ export function buildTheOddsApiRequestUrl(apiKey: string, origin = DEFAULT_API_O
   url.searchParams.set("bookmakers", PREFERRED_ODDS_BOOKMAKERS.join(","));
   url.searchParams.set("oddsFormat", "american");
   url.searchParams.set("dateFormat", "iso");
+  const uniqueEventIds = [...new Set(eventIds.map((id) => id.trim()).filter(Boolean))];
+  if (uniqueEventIds.length) url.searchParams.set("eventIds", uniqueEventIds.join(","));
   return url;
 }
 
@@ -195,7 +234,7 @@ function missingSnapshotDiagnostic(event: EventCandidate): OddsAdapterDiagnostic
   return {
     code: "missing_complete_bookmaker",
     severity: "warning",
-    message: "Neither DraftKings nor FanDuel supplied one complete two-fighter moneyline snapshot.",
+    message: "No configured sportsbook supplied one complete two-fighter moneyline snapshot.",
     sourceEventId: event.sourceEventId,
     matchupIdentity: event.matchupIdentity,
   };

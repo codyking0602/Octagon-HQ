@@ -17,6 +17,8 @@ export interface ParsedUfcBout {
   weight_class: string;
   red_fighter_name: string;
   blue_fighter_name: string;
+  red_fighter_source_id?: string;
+  blue_fighter_source_id?: string;
 }
 
 export interface UfcEventCard {
@@ -197,21 +199,26 @@ function classBlockText(html: string, className: string) {
   return classText(html, className);
 }
 
-function anchorFighterNames(row: string) {
-  const names: string[] = [];
+function athleteLinksFromRow(row: string) {
+  const fighters: Array<{ name: string; sourceId: string }> = [];
   const identities = new Set<string>();
   const pattern = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
   let match: RegExpExecArray | null;
   while ((match = pattern.exec(row))) {
     const href = attrValue(match[1] ?? "", "href");
-    if (!/\/(?:athlete|fighter)\//i.test(href)) continue;
+    const sourceId = href.match(/\/(?:athlete|fighter)\/([a-z0-9-]+)/i)?.[1]?.toLowerCase() ?? "";
+    if (!sourceId) continue;
     const name = canonicalName(visibleText(match[2] ?? ""));
     const identity = normalizeText(name);
     if (!identity || identities.has(identity)) continue;
     identities.add(identity);
-    names.push(name);
+    fighters.push({ name, sourceId });
   }
-  return names;
+  return fighters;
+}
+
+function anchorFighterNames(row: string) {
+  return athleteLinksFromRow(row).map((fighter) => fighter.name);
 }
 
 function namesFromRow(row: string) {
@@ -294,11 +301,18 @@ function appendSectionBouts(
     const pair = canonicalFightPair(fighters[0]!, fighters[1]!);
     if (!pair || seen.has(pair)) continue;
     seen.add(pair);
+    const athleteLinks = athleteLinksFromRow(row);
+    const sourceIdFor = (name: string) => {
+      const matches = athleteLinks.filter((fighter) => fighterMatch(name, fighter.name));
+      return matches.length === 1 ? matches[0]!.sourceId : undefined;
+    };
     bouts.push({
       section: segment === "main" ? (mainIndex++ === 0 ? "main-event" : "main") : segment,
       weight_class: weightClass(row),
       red_fighter_name: fighters[0]!,
       blue_fighter_name: fighters[1]!,
+      red_fighter_source_id: sourceIdFor(fighters[0]!),
+      blue_fighter_source_id: sourceIdFor(fighters[1]!),
     });
   }
 }

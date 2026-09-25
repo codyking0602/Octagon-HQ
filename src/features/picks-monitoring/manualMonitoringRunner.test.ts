@@ -71,6 +71,76 @@ describe("provider selection and deterministic evidence", () => {
     expect(unmatched[0].bout_id).toBe("main-2");
     expect(JSON.stringify(payload)).not.toContain("unrelated-same-time-fight");
   });
+  it("keeps recent stored odds quiet when the provider temporarily omits one monitored fight", () => {
+    const secondBout = {
+      bout_id: "main-2",
+      red_fighter_slug: "missing-one",
+      red_fighter_name: "Missing One",
+      blue_fighter_slug: "missing-two",
+      blue_fighter_name: "Missing Two",
+      red_american_odds: -150,
+      blue_american_odds: 130,
+      odds_source: "DraftKings",
+      odds_updated_at: "2026-08-10T11:06:00Z",
+    };
+    const monitored = { ...event, bouts: [...event.bouts, secondBout] };
+    const missingProviderEvent = {
+      id: "22222222222222222222222222222222",
+      sport_key: "mma_mixed_martial_arts",
+      commence_time: event.starts_at,
+      home_team: "Missing One",
+      away_team: "Missing Two",
+      bookmakers: [],
+    };
+    const payload = build({
+      resolved: resolveMonitoringEvent(null, monitored),
+      source: { ...source, bouts: monitored.bouts },
+      odds: odds([...fixture, missingProviderEvent]),
+    });
+
+    expect(payload.coverage.missing_snapshots).toBe(1);
+    expect(payload.findings.some((finding) => (
+      finding.bout_id === "main-2"
+      && (finding.finding_type === "unmatched_fight" || finding.finding_type === "provider_error")
+    ))).toBe(false);
+  });
+
+  it("still warns when a provider miss has no recent complete stored odds", () => {
+    const secondBout = {
+      bout_id: "main-2",
+      red_fighter_slug: "missing-one",
+      red_fighter_name: "Missing One",
+      blue_fighter_slug: "missing-two",
+      blue_fighter_name: "Missing Two",
+      red_american_odds: -150,
+      blue_american_odds: 130,
+      odds_source: "DraftKings",
+      odds_updated_at: "2026-08-09T20:00:00Z",
+    };
+    const monitored = { ...event, bouts: [...event.bouts, secondBout] };
+    const missingProviderEvent = {
+      id: "22222222222222222222222222222222",
+      sport_key: "mma_mixed_martial_arts",
+      commence_time: event.starts_at,
+      home_team: "Missing One",
+      away_team: "Missing Two",
+      bookmakers: [],
+    };
+    const payload = build({
+      resolved: resolveMonitoringEvent(null, monitored),
+      source: { ...source, bouts: monitored.bouts },
+      odds: odds([...fixture, missingProviderEvent]),
+    });
+
+    expect(payload.findings).toEqual(expect.arrayContaining([
+      expect.objectContaining({ finding_type: "unmatched_fight", bout_id: "main-2" }),
+      expect.objectContaining({
+        finding_type: "provider_error",
+        summary: "No configured sportsbook supplied one complete two-fighter moneyline snapshot.",
+      }),
+    ]));
+  });
+
   it("orients complete provider prices to the canonical red and blue corners", () => {
     expect(build().odds_snapshots[0]).toMatchObject({
       bout_id: "main-event-1",

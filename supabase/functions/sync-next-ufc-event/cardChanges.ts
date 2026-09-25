@@ -7,7 +7,9 @@ type CardSection = "main-event" | "main" | "prelim" | "early-prelim";
 interface SourceBout {
   bout_id: string;
   weight_class: string;
+  red_fighter_slug?: string;
   red_fighter_name: string;
+  blue_fighter_slug?: string;
   blue_fighter_name: string;
 }
 
@@ -75,6 +77,16 @@ function boutLabel(bout: Pick<SourceBout, "red_fighter_name" | "blue_fighter_nam
   return `${bout.red_fighter_name} vs. ${bout.blue_fighter_name}`;
 }
 
+function boutIdentity(bout: Record<string, unknown> | SourceBout) {
+  const redSlug = clean((bout as Record<string, unknown>).red_fighter_slug);
+  const blueSlug = clean((bout as Record<string, unknown>).blue_fighter_slug);
+  if (redSlug && blueSlug) return [redSlug, blueSlug].sort().join("|");
+  return canonicalFightPair(
+    String((bout as Record<string, unknown>).red_fighter_name ?? ""),
+    String((bout as Record<string, unknown>).blue_fighter_name ?? ""),
+  );
+}
+
 function discoveredOrChanged(label: string, beforeValue: unknown) {
   return `${label} ${beforeValue === null ? "found" : "changed"}.`;
 }
@@ -139,17 +151,8 @@ export function sourceChangeDetails(currentValue: unknown, event: SourceEvent, e
   const currentBouts = Array.isArray(current.bouts)
     ? current.bouts.map(asRecord).filter(Boolean) as Record<string, unknown>[]
     : [];
-  const currentMap = new Map(currentBouts.map((bout) => [
-    canonicalFightPair(
-      String(bout.red_fighter_name ?? ""),
-      String(bout.blue_fighter_name ?? ""),
-    ),
-    bout,
-  ]));
-  const sourceMap = new Map(event.bouts.map((bout) => [
-    canonicalFightPair(bout.red_fighter_name, bout.blue_fighter_name),
-    bout,
-  ]));
+  const currentMap = new Map(currentBouts.map((bout) => [boutIdentity(bout), bout]));
+  const sourceMap = new Map(event.bouts.map((bout) => [boutIdentity(bout), bout]));
 
   for (const [key, bout] of sourceMap) {
     const existing = currentMap.get(key);
@@ -194,21 +197,18 @@ export function sourceChangeDetails(currentValue: unknown, event: SourceEvent, e
   }
 
   const oldOrder = currentBouts
-    .map((bout) => canonicalFightPair(
-      String(bout.red_fighter_name ?? ""),
-      String(bout.blue_fighter_name ?? ""),
-    ))
+    .map((bout) => boutIdentity(bout))
     .filter((key) => sourceMap.has(key));
   const newOrder = event.bouts
-    .map((bout) => canonicalFightPair(bout.red_fighter_name, bout.blue_fighter_name))
+    .map((bout) => boutIdentity(bout))
     .filter((key) => currentMap.has(key));
   if (oldOrder.length === newOrder.length && oldOrder.some((key, index) => key !== newOrder[index])) {
     const labels = new Map<string, string>();
     currentBouts.forEach((bout) => labels.set(
-      canonicalFightPair(String(bout.red_fighter_name ?? ""), String(bout.blue_fighter_name ?? "")),
+      boutIdentity(bout),
       `${String(bout.red_fighter_name ?? "")} vs. ${String(bout.blue_fighter_name ?? "")}`,
     ));
-    event.bouts.forEach((bout) => labels.set(canonicalFightPair(bout.red_fighter_name, bout.blue_fighter_name), boutLabel(bout)));
+    event.bouts.forEach((bout) => labels.set(boutIdentity(bout), boutLabel(bout)));
     changes.push({
       summary: "Fight order changed.",
       beforeValue: oldOrder.map((key) => labels.get(key) ?? key),

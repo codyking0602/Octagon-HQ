@@ -482,6 +482,111 @@ describe("monitoring card-change approval proposals", () => {
     ]));
   });
 
+  it("marks same-person fighter name corrections without treating them as opponent swaps", () => {
+    const amaya = {
+      ...first,
+      bout_id: "main-melissa-amaya-valesca-machado",
+      red_fighter_slug: "melissa-amaya",
+      red_fighter_name: "Melissa Amaya",
+      blue_fighter_slug: "valesca-machado",
+      blue_fighter_name: "Valesca Machado",
+    };
+    const correctedAmaya = {
+      ...amaya,
+      bout_id: "main-melissa-amaya-tina-black",
+      blue_fighter_slug: "tina-black",
+      blue_fighter_name: "Tina Black",
+    };
+    const osmanli = {
+      ...second,
+      bout_id: "main-mehemmedeli-osmanli-ilimbek-akylbek",
+      red_fighter_slug: "mehemmedeli-osmanli",
+      red_fighter_name: "Mehemmedeli Osmanli",
+      blue_fighter_slug: "ilimbek-akylbek",
+      blue_fighter_name: "Ilimbek Akylbek",
+    };
+    const correctedOsmanli = {
+      ...osmanli,
+      bout_id: "main-mahammadali-osmanli-ilimbek-akylbek",
+      red_fighter_slug: "mahammadali-osmanli",
+      red_fighter_name: "Mahammadali Osmanli",
+    };
+    const current = { ...canonical, bouts: [amaya, osmanli] };
+    const next = { ...source, bouts: [correctedAmaya, correctedOsmanli] };
+
+    const result = findings(next, "current", current);
+    const corrections = result.filter((item) => (
+      (item.source_details?.approval_proposal as { identity_correction?: boolean } | undefined)?.identity_correction
+    ));
+
+    expect(corrections).toHaveLength(2);
+    expect(corrections).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        bout_id: amaya.bout_id,
+        summary: "Correct Valesca Machado identity to Tina Black.",
+        source_details: expect.objectContaining({
+          approval_proposal: expect.objectContaining({
+            action: "replace_fighter",
+            corner: "blue",
+            identity_correction: true,
+            replacement_fighter_slug: "tina-black",
+          }),
+        }),
+      }),
+      expect.objectContaining({
+        bout_id: osmanli.bout_id,
+        summary: "Correct Mehemmedeli Osmanli identity to Mahammadali Osmanli.",
+        source_details: expect.objectContaining({
+          approval_proposal: expect.objectContaining({
+            action: "replace_fighter",
+            corner: "red",
+            identity_correction: true,
+            replacement_fighter_slug: "mahammadali-osmanli",
+          }),
+        }),
+      }),
+    ]));
+  });
+
+  it("treats an unknown future display-name change as an identity correction when UFC keeps the athlete slug", () => {
+    const currentBout = {
+      ...first,
+      bout_id: "main-athlete-profile-beta",
+      red_fighter_slug: "athlete-profile",
+      red_fighter_name: "Original Public Name",
+      blue_fighter_slug: "beta",
+      blue_fighter_name: "Beta",
+    };
+    const sourceBout = {
+      ...currentBout,
+      red_fighter_name: "Completely New Public Name",
+    };
+    const result = findings(
+      { ...source, bouts: [sourceBout, second] },
+      "current",
+      { ...canonical, bouts: [currentBout, second] },
+    );
+
+    expect(result).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        bout_id: currentBout.bout_id,
+        summary: "Correct Original Public Name identity to Completely New Public Name.",
+        source_details: expect.objectContaining({
+          approval_proposal: expect.objectContaining({
+            action: "replace_fighter",
+            corner: "red",
+            identity_correction: true,
+            expected_red_fighter_slug: "athlete-profile",
+            replacement_fighter_slug: "athlete-profile",
+          }),
+        }),
+      }),
+    ]));
+    expect(result.some((item) => (
+      item.summary === "Replace Original Public Name with Completely New Public Name."
+    ))).toBe(false);
+  });
+
   it("reconciles multiple simultaneous UFC card changes instead of dropping to generic review", () => {
     const amayaReplacement = {
       bout_id: "main-melissa-amaya-tina-black",
@@ -531,7 +636,10 @@ describe("monitoring card-change approval proposals", () => {
     expect(actions.filter((action) => action === "add_bout")).toHaveLength(2);
     expect(actions.filter((action) => action === "remove_bout")).toHaveLength(3);
     expect(actions).toContain("reorder_card");
-    expect(result.some((item) => item.summary === "Replace Valesca Machado with Tina Black.")).toBe(true);
+    expect(result.some((item) => item.summary === "Correct Valesca Machado identity to Tina Black.")).toBe(true);
+    expect(result.some((item) => (
+      (item.source_details?.approval_proposal as { identity_correction?: boolean } | undefined)?.identity_correction === true
+    ))).toBe(true);
     expect(result.some((item) => item.summary.startsWith("Added main card:"))).toBe(false);
     expect(result.some((item) => item.summary.startsWith("Removed main card:"))).toBe(false);
   });

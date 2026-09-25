@@ -1,7 +1,7 @@
 import { matchCanonicalEventIdentity } from "../../../supabase/functions/sync-next-ufc-event/eventIdentity.ts";
 import { fighterMatch } from "../../../supabase/functions/sync-next-ufc-event/normalization.ts";
 import { buildCardChangeFindings } from "./cardChangeApproval.ts";
-import { fightOddsMatchupIdentity, fighterOddsIdentity, type NormalizedFightOddsSnapshot, type OddsAdapterResult } from "./oddsModel.ts";
+import { fightOddsMatchupIdentity, fighterOddsIdentity, isValidAmericanOdds, sameOddsFighterIdentity, type NormalizedFightOddsSnapshot, type OddsAdapterResult } from "./oddsModel.ts";
 import { buildMonitoringRunPayload, type MonitoringFindingInput, type MonitoringRunPayload, type MonitoringTriggerKind } from "./monitoringStorageModel.ts";
 
 export type CardScope = "main" | "full";
@@ -14,6 +14,8 @@ export interface MonitoringBout {
   blue_fighter_name: string;
   red_american_odds?: number | null;
   blue_american_odds?: number | null;
+  odds_source?: string | null;
+  odds_updated_at?: string | null;
   included_in_picks?: boolean;
   card_segment?: "prelim" | "main";
   segment_sequence?: number;
@@ -63,13 +65,24 @@ function stableEventMatch(left: MonitoringEvent, right: MonitoringEvent) {
 const matchupIdentity = (bout: MonitoringBout) => fightOddsMatchupIdentity(bout.red_fighter_name, bout.blue_fighter_name);
 const includedBouts = (event: MonitoringEvent) => event.bouts.filter((bout) => bout.included_in_picks !== false);
 
+function oddsFighterMatch(left: string, right: string) {
+  return sameOddsFighterIdentity(left, right)
+    || fighterMatch(left, right)
+    || fighterMatch(right, left);
+}
+
+function oddsFighterMatchesSide(name: string, stableSlug: string, providerName: string) {
+  return oddsFighterMatch(name, providerName)
+    || oddsFighterMatch(stableSlug.replace(/-/g, " "), providerName);
+}
+
 function pairMatchesBout(left: string, right: string, bout: MonitoringBout) {
   return (
-    fighterMatch(bout.red_fighter_name, left)
-    && fighterMatch(bout.blue_fighter_name, right)
+    oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, left)
+    && oddsFighterMatchesSide(bout.blue_fighter_name, bout.blue_fighter_slug, right)
   ) || (
-    fighterMatch(bout.red_fighter_name, right)
-    && fighterMatch(bout.blue_fighter_name, left)
+    oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, right)
+    && oddsFighterMatchesSide(bout.blue_fighter_name, bout.blue_fighter_slug, left)
   );
 }
 
@@ -82,9 +95,10 @@ function canonicalizeSnapshot(snapshot: NormalizedFightOddsSnapshot, event: Moni
   const [first, second] = snapshot.prices;
   const bout = matchingCanonicalBout(first.fighterName, second.fighterName, event);
   if (!bout) return null;
-  const red = fighterMatch(bout.red_fighter_name, first.fighterName) ? first : second;
+  const red = oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, first.fighterName) ? first : second;
   const blue = red === first ? second : first;
-  if (!fighterMatch(bout.red_fighter_name, red.fighterName) || !fighterMatch(bout.blue_fighter_name, blue.fighterName)) return null;
+  if (!oddsFighterMatchesSide(bout.red_fighter_name, bout.red_fighter_slug, red.fighterName)
+    || !oddsFighterMatchesSide(bout.blue_fighter_name, bout.blue_fighter_slug, blue.fighterName)) return null;
   return {
     ...snapshot,
     matchupIdentity: matchupIdentity(bout),
@@ -181,6 +195,18 @@ export function filterOddsToMonitoredEvent(odds: OddsAdapterResult, event: Monit
   };
 }
 
+const RECENT_ODDS_CONTINUITY_MS = 12 * 60 * 60 * 1000;
+
+function hasRecentStoredOdds(bout: MonitoringBout, observedAt: string) {
+  if (!isValidAmericanOdds(bout.red_american_odds) || !isValidAmericanOdds(bout.blue_american_odds)) return false;
+  const updatedAt = Date.parse(bout.odds_updated_at ?? "");
+  const observed = Date.parse(observedAt);
+  return Number.isFinite(updatedAt)
+    && Number.isFinite(observed)
+    && observed >= updatedAt
+    && observed - updatedAt <= RECENT_ODDS_CONTINUITY_MS;
+}
+
 const normalizedValue = (value: unknown): string => Array.isArray(value)
   ? `[${value.map(normalizedValue).join(",")}]`
   : value && typeof value === "object"
@@ -251,12 +277,21 @@ export function buildManualMonitoringPayload(input: {
   const providerBlocked = odds.diagnostics.some((diagnostic) => diagnostic.severity === "error" && !diagnostic.matchupIdentity);
   if (!providerBlocked) {
     for (const [matchup, bout] of canonicalByMatchup) {
-      if (matchedMatchups.has(matchup)) continue;
+      if (matchedMatchups.has(matchup) || hasRecentStoredOdds(bout, completedAt)) continue;
       const findingIdentity = stableKey(resolved.identity, "bout", bout.bout_id, "unmatched_fight");
       findings.push({ finding_key: findingIdentity, finding_type: "unmatched_fight", severity: "warning", summary: "A monitored bout did not confidently match a provider snapshot.", detected_at: completedAt, matchup_identity: matchup, bout_id: bout.bout_id, source_details: { monitored_event_kind: resolved.kind, finding_identity: findingIdentity } });
     }
   }
   odds.diagnostics.forEach((diagnostic) => {
+    const continuityBout = diagnostic.matchupIdentity
+      ? canonicalByMatchup.get(diagnostic.matchupIdentity)
+      : null;
+    if (
+      diagnostic.code === "missing_complete_bookmaker"
+      && continuityBout
+      && hasRecentStoredOdds(continuityBout, completedAt)
+    ) return;
+
     const findingIdentity = stableKey(resolved.identity, "provider_error", diagnostic.code, diagnostic.sourceEventId ?? "event", diagnostic.matchupIdentity ?? "event");
     findings.push({ finding_key: findingIdentity, finding_type: "provider_error", severity: diagnostic.severity, summary: diagnostic.message, detected_at: completedAt, matchup_identity: diagnostic.matchupIdentity, source_details: { code: diagnostic.code, source_event_id: diagnostic.sourceEventId, finding_identity: findingIdentity } });
   });
