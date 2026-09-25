@@ -128,10 +128,10 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).toContain("CHALLENGE LEADERBOARD");
     expect(mlbPlay).toContain("SWIPE FOR CHALLENGE LEADERBOARD");
     expect(mlbPlay).toContain("PLAY STANDINGS");
-    expect(mlbPlay).toContain("Postseason Challenge Race");
+    expect(mlbPlay).toContain("Postseason challenge race");
     expect(mlbPlay).toContain("entry.play_points");
     expect(mlbPlay).toContain("entry.play_rank");
-    expect(mlbPlay).toContain("navigate(challengeRoute)");
+    expect(mlbPlay).toContain("navigate(challenge.route)");
     expect(mlbPlay).not.toContain("SERIES PICKS STANDING");
     expect(mlbPlay).not.toContain("BRACKET");
     expect(mlbPlay).not.toContain("MlbHomeHq");
