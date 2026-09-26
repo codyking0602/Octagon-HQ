@@ -145,6 +145,33 @@ function whoAmIRows(entry: MlbPlayChallengeLeaderboardEntry) {
   });
 }
 
+function blindResumeRows(entry: MlbPlayChallengeLeaderboardEntry) {
+  const rounds = Array.isArray(entry.resultDetail.rounds) ? entry.resultDetail.rounds : [];
+  return rounds.map((value, index) => {
+    const round = value && typeof value === "object" && !Array.isArray(value)
+      ? value as Record<string, unknown>
+      : {};
+    const playerA = round.player_a && typeof round.player_a === "object" && !Array.isArray(round.player_a)
+      ? round.player_a as Record<string, unknown>
+      : {};
+    const playerB = round.player_b && typeof round.player_b === "object" && !Array.isArray(round.player_b)
+      ? round.player_b as Record<string, unknown>
+      : {};
+    const winnerId = String(round.winner_id ?? "");
+    const pickedId = String(round.picked_id ?? "");
+    const winnerName = String((winnerId === playerA.id ? playerA : playerB).name ?? "Winner");
+    const pickedName = String((pickedId === playerA.id ? playerA : playerB).name ?? "Pick");
+    return {
+      round: Number(round.round ?? index + 1),
+      correct: round.correct === true,
+      points: Number(round.points ?? 0),
+      revealedCount: Number(round.revealed_count ?? 0),
+      winnerName,
+      pickedName,
+    };
+  });
+}
+
 function millionaireResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
   const detail = entry.resultDetail;
   const publicResult = entry.publicResult;
@@ -169,9 +196,11 @@ function MlbPlayResultDetail({
   const games = gameRows(entry);
   const wavelengthRounds = wavelengthRows(entry);
   const whoAmIRounds = whoAmIRows(entry);
+  const blindResumeRounds = blindResumeRows(entry);
   const isWavelength = entry.gameType === "wavelength";
   const isMillionaire = entry.gameType === "millionaire";
   const isWhoAmI = entry.gameType === "who_am_i";
+  const isBlindResume = entry.gameType === "blind_resume";
   const millionaire = millionaireResultSummary(entry);
 
   return (
@@ -239,6 +268,17 @@ function MlbPlayResultDetail({
                 </article>
               ))}
             </div>
+          ) : isBlindResume && blindResumeRounds.length ? (
+            <div className="mlb-play-result-card__games">
+              {blindResumeRounds.map((round) => (
+                <article key={round.round}>
+                  <span>ROUND {round.round}</span>
+                  <strong>+{round.points}</strong>
+                  <small>{round.correct ? "CORRECT" : "MISS"} · {round.revealedCount} STATS SHOWN</small>
+                  <small>PICK {round.pickedName.toUpperCase()} · WINNER {round.winnerName.toUpperCase()}</small>
+                </article>
+              ))}
+            </div>
           ) : games.length ? (
             <div className="mlb-play-result-card__games">
               {games.map((game) => (
@@ -262,7 +302,9 @@ function MlbPlayResultDetail({
                 ? "The challenge score is the average of both Wavelength games."
                 : isWhoAmI
                   ? "The challenge score is the average of both Who Am I rounds."
-                  : "The challenge score is the average of both Find the Leader boards."}
+                  : isBlindResume
+                    ? "The challenge score is the total earned across all five Blind Resume rounds."
+                    : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>

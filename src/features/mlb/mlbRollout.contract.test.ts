@@ -13,6 +13,7 @@ const playLeaderboardMigration = readFileSync("supabase/migrations/202612310183_
 const playScheduleMigration = readFileSync("supabase/migrations/202612310184_mlb_play_challenge_schedule.sql", "utf8");
 const millionaireReadyMigration = readFileSync("supabase/migrations/202612310187_mlb_oct3_millionaire_ready.sql", "utf8");
 const whoAmIReadyMigration = readFileSync("supabase/migrations/202612310188_mlb_oct6_who_am_i_ready.sql", "utf8");
+const blindResumeReadyMigration = readFileSync("supabase/migrations/202612310189_mlb_oct9_blind_resume_ready.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -20,6 +21,7 @@ const championshipSummary = readFileSync("src/features/mlb/MlbChampionshipSummar
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
+const mlbChallengePage = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
 const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
 const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
 const mlbOwnerFixture = readFileSync("src/features/mlb/mlbOwnerPreview.ts", "utf8");
@@ -141,8 +143,17 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).not.toContain("BRACKET");
     expect(mlbPlay).not.toContain("MlbHomeHq");
     expect(mlbPlay).not.toMatch(/DEMO|OWNER DESIGN|DISPOSABLE/);
+    expect(mlbPlay).toContain('entry.gameType === "blind_resume"');
+    expect(mlbPlay).toContain("STATS SHOWN");
+    expect(mlbPlay).toContain("WINNER");
     expect(styles).toContain('.today-hub[data-sport="mlb"]');
     expect(styles).toContain(".mlb-play-standings");
+  });
+
+  it("routes the October 9 Blind Resume slot through the production runner", () => {
+    expect(mlbChallengePage).toContain("MlbBlindResumeProductionChallenge");
+    expect(mlbChallengePage).toContain("MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY");
+    expect(mlbChallengePage).toContain('challenge.game_type === "blind_resume"');
   });
 
   it("automatically schedules MLB Play in Central time and protects future results", () => {
@@ -159,6 +170,10 @@ describe("MLB Playoffs rollout gate", () => {
     expect(whoAmIReadyMigration).toContain("scheduled_date = date '2026-10-06'");
     expect(whoAmIReadyMigration).toContain("game_type = 'who_am_i'");
     expect(whoAmIReadyMigration).toContain("content_ready = true");
+    expect(blindResumeReadyMigration).toContain("challenge_key = 'mlb-2026-play-05'");
+    expect(blindResumeReadyMigration).toContain("scheduled_date = date '2026-10-09'");
+    expect(blindResumeReadyMigration).toContain("game_type = 'blind_resume'");
+    expect(blindResumeReadyMigration).toContain("content_ready = true");
     expect(playScheduleMigration).toContain("get_mlb_postseason_active_challenge");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_active");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_ready");

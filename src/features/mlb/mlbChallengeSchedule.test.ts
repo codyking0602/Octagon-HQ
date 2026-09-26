@@ -27,6 +27,7 @@ describe("MLB postseason challenge schedule", () => {
         "mlb-2026-play-02",
         "mlb-2026-play-03",
         "mlb-2026-play-04",
+        "mlb-2026-play-05",
         "mlb-2026-play-10",
       ]);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
@@ -99,4 +100,20 @@ describe("MLB postseason challenge schedule", () => {
       is_live: true,
     });
   });
+
+  it("automatically activates the production Blind Resume challenge on October 9", () => {
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-09T04:59:59Z"))).toMatchObject({
+      id: "mlb-2026-play-04",
+      game_type: "who_am_i",
+      ready: true,
+      is_live: true,
+    });
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-09T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-05",
+      game_type: "blind_resume",
+      ready: true,
+      is_live: true,
+    });
+  });
+
 });
