@@ -45,7 +45,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-03",
     game_type: "millionaire",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-04",
