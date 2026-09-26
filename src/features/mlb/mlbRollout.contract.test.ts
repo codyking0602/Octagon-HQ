@@ -21,6 +21,7 @@ const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", 
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
 const championshipSummary = readFileSync("src/features/mlb/MlbChampionshipSummary.tsx", "utf8");
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
+const tokens = readFileSync("src/styles/tokens.css", "utf8");
 const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
 const mlbChallengePage = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
@@ -234,7 +235,7 @@ describe("MLB Playoffs rollout gate", () => {
   });
 
   it("uses a distinct muted green MLB identity without changing Football geometry", () => {
-    expect(styles).toContain("--mlb-green: #2f855f");
+    expect(tokens).toContain("--mlb-green: #2f855f");
     expect(styles).toContain("--home-sport-accent: var(--mlb-green)");
     expect(styles).toContain("--home-football-blue: var(--mlb-green)");
     expect(styles).toContain('.home-challenge-card[data-sport="mlb"]');
