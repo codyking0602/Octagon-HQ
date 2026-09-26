@@ -189,7 +189,9 @@ export function FootballHitTheNumberPresentation({
                   >
                     <span className="hit-number-role-slot__index">{index + 1}</span>
                     {subject && subjectId ? (
-                      {renderSubjectMark ? renderSubjectMark(subjectId, "hit-number-role-slot__photo") : <FootballHitNumberSubjectMark subjectId={subjectId} className="hit-number-role-slot__photo" />}
+                      renderSubjectMark
+                        ? renderSubjectMark(subjectId, "hit-number-role-slot__photo")
+                        : <FootballHitNumberSubjectMark subjectId={subjectId} className="hit-number-role-slot__photo" />
                     ) : (
                       <span className="hit-number-role-slot__empty">+</span>
                     )}
