@@ -830,7 +830,11 @@ export function OfficialSportsFeudDailyView({
               {busy ? "SAVING…" : "RETRY SAVE"}
             </button>
           ) : null}
-          {onExit ? <button className="feud-primary-button" type="button" onClick={onExit}>CONTINUE</button> : null}
+          {onExit ? (
+            <button className="feud-primary-button" type="button" onClick={onExit} disabled={busy}>
+              {busy ? "SAVING…" : "CONTINUE"}
+            </button>
+          ) : null}
         </section>
       ) : null}
     </main>
