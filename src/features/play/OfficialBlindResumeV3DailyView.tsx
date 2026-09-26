@@ -145,7 +145,7 @@ export function OfficialBlindResumeV3DailyView({
           <div>
             <p className="eyebrow">FIVE-ROUND RESULTS</p>
             <strong>{attempt.normalizedScore}/100</strong>
-            <h1>{correctCount === 5 ? "Perfect card" : "Official card complete"}</h1>
+            <h1>{correctCount === 5 ? (mlb ? "Perfect picks" : "Perfect card") : "Official card complete"}</h1>
           </div>
           <p>{correctCount}-{5 - correctCount} record · {earnedPoints} points earned. {mlb ? "Your challenge score is complete." : "Your official score is saved to Today’s Challenge."}</p>
         </section>
