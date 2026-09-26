@@ -276,7 +276,7 @@ export default function MlbWhoAmIChallenge({
       />
 
       {productionMode && attempt ? (
-        <section className="mlb-who-am-i-save-status" aria-label="MLB Who Am I official result status">
+        <section className="mlb-find-final-score mlb-who-am-i-save-status" aria-label="MLB Who Am I official result status">
           <p>
             {practiceMode
               ? "Replay complete. Your locked official result does not change."
