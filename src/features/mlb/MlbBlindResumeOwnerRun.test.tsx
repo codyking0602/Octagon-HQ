@@ -63,6 +63,8 @@ describe("MLB Blind Resume owner run", () => {
     fireEvent.click(screen.getByRole("button", { name: /see final score/i }));
 
     expect(screen.getByText("94/100")).toBeInTheDocument();
+    expect(screen.getByText("Perfect picks")).toBeInTheDocument();
+    expect(screen.queryByText("Perfect card")).not.toBeInTheDocument();
     expect(screen.getByText(/5-0 record · 94 points earned/)).toBeInTheDocument();
   });
 
@@ -76,5 +78,7 @@ describe("MLB Blind Resume owner run", () => {
     expect(schedule).toMatch(/date: "2026-10-09",[\s\S]*?game_type: "blind_resume",[\s\S]*?ready: false/);
     expect(styles).toContain('.blind-resume-page[data-sport="mlb"]');
     expect(styles).toContain("--mlb-blind-accent: #2f855f");
+    expect(styles).toContain("grid-template-columns: 42px minmax(0, 1fr) auto");
+    expect(styles).toContain("grid-template-columns: minmax(142px, .8fr) minmax(0, 1.2fr)");
   });
 });
