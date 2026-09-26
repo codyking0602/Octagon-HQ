@@ -26,6 +26,7 @@ describe("MLB postseason challenge schedule", () => {
         "mlb-2026-play-01",
         "mlb-2026-play-02",
         "mlb-2026-play-03",
+        "mlb-2026-play-04",
         "mlb-2026-play-10",
       ]);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
@@ -79,6 +80,21 @@ describe("MLB postseason challenge schedule", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-03T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-03",
       game_type: "millionaire",
+      ready: true,
+      is_live: true,
+    });
+  });
+
+  it("automatically activates the production Who Am I challenge on October 6", () => {
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-06T04:59:59Z"))).toMatchObject({
+      id: "mlb-2026-play-03",
+      game_type: "millionaire",
+      ready: true,
+      is_live: true,
+    });
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-06T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-04",
+      game_type: "who_am_i",
       ready: true,
       is_live: true,
     });
