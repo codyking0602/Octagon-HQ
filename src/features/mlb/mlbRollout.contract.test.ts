@@ -14,6 +14,7 @@ const playScheduleMigration = readFileSync("supabase/migrations/202612310184_mlb
 const millionaireReadyMigration = readFileSync("supabase/migrations/202612310187_mlb_oct3_millionaire_ready.sql", "utf8");
 const whoAmIReadyMigration = readFileSync("supabase/migrations/202612310188_mlb_oct6_who_am_i_ready.sql", "utf8");
 const blindResumeReadyMigration = readFileSync("supabase/migrations/202612310189_mlb_oct9_blind_resume_ready.sql", "utf8");
+const backHalfRotationMigration = readFileSync("supabase/migrations/202612310190_mlb_back_half_rotation_and_sports_feud_ready.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -146,6 +147,8 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).toContain('entry.gameType === "blind_resume"');
     expect(mlbPlay).toContain("STATS SHOWN");
     expect(mlbPlay).toContain("WINNER");
+    expect(mlbPlay).toContain('entry.gameType === "sports_feud"');
+    expect(mlbPlay).toContain("FAST MONEY");
     expect(styles).toContain('.today-hub[data-sport="mlb"]');
     expect(styles).toContain(".mlb-play-standings");
   });
@@ -154,6 +157,12 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbChallengePage).toContain("MlbBlindResumeProductionChallenge");
     expect(mlbChallengePage).toContain("MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY");
     expect(mlbChallengePage).toContain('challenge.game_type === "blind_resume"');
+  });
+
+  it("routes the two approved Sports Feud dates through the shared MLB production runner", () => {
+    expect(mlbChallengePage).toContain("MlbSportsFeudChallenge");
+    expect(mlbChallengePage).toContain("mlbSportsFeudProductionConfig");
+    expect(mlbChallengePage).toContain('challenge.game_type === "sports_feud"');
   });
 
   it("automatically schedules MLB Play in Central time and protects future results", () => {
@@ -174,6 +183,15 @@ describe("MLB Playoffs rollout gate", () => {
     expect(blindResumeReadyMigration).toContain("scheduled_date = date '2026-10-09'");
     expect(blindResumeReadyMigration).toContain("game_type = 'blind_resume'");
     expect(blindResumeReadyMigration).toContain("content_ready = true");
+    expect(backHalfRotationMigration).toContain("'mlb-2026-play-06'");
+    expect(backHalfRotationMigration).toContain("date '2026-10-12'");
+    expect(backHalfRotationMigration).toContain("'sports_feud'");
+    expect(backHalfRotationMigration).toContain("'mlb-2026-play-09'");
+    expect(backHalfRotationMigration).toContain("date '2026-10-23'");
+    expect(backHalfRotationMigration).toContain("'wavelength'");
+    expect(backHalfRotationMigration).toContain("'mlb-2026-play-10'");
+    expect(backHalfRotationMigration).toContain("date '2026-10-27'");
+    expect(backHalfRotationMigration).toContain("true)");
     expect(playScheduleMigration).toContain("get_mlb_postseason_active_challenge");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_active");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_ready");
