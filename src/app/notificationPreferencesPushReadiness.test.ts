@@ -68,7 +68,7 @@ describe("notification settings simplification", () => {
   });
 
   it("keeps the notification center focused only on the bell feed", () => {
-    expect(center).toContain("UFC, Football, and account updates in one inbox.");
+    expect(center).toContain("UFC, Football, Baseball, and account updates in one inbox.");
     expect(center).toContain("Mark all as read");
     expect(center).toContain("notification-list");
     expect(center).not.toContain("What should reach you?");
