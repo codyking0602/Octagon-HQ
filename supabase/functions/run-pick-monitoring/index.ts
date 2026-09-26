@@ -121,6 +121,20 @@ Deno.serve(async (request) => {
     }
     notificationDispatch = dispatched.data;
 
+    // MLB reuses this same trusted wake-up. The database owns launch, round,
+    // challenge timing, completion checks, recipients, and idempotency, so no
+    // second scheduler or delivery path is introduced.
+    const mlbDispatched = await admin.rpc("dispatch_due_mlb_notifications", {
+      p_now: new Date().toISOString(),
+    });
+    if (mlbDispatched.error) {
+      return finishScheduledDecision({
+        outcome: "failed",
+        reason: "mlb_notification_dispatch_failed",
+        response: safeError(503, "MLB_NOTIFICATION_DISPATCH_FAILED", "Due MLB notifications could not be dispatched safely."),
+      });
+    }
+
     // Football shares this existing scheduler owner. The football sync owns ESPN
     // final detection and the canonical record_football_pick_final write path.
     const footballSettlementResponse = await fetch(`${url}/functions/v1/sync-next-football-event`, {
