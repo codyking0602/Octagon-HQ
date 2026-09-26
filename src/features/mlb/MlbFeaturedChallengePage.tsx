@@ -21,6 +21,8 @@ import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
 import MlbSportsFeudOwnerRun from "./MlbSportsFeudOwnerRun";
+import MlbSportsFeudChallenge from "./MlbSportsFeudChallenge";
+import { mlbSportsFeudProductionConfig } from "./mlbSportsFeudProduction";
 import MlbBlindResumeProductionChallenge from "./MlbBlindResumeProductionChallenge";
 import {
   MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY,
@@ -357,6 +359,33 @@ export default function MlbFeaturedChallengePage() {
         key={challenge.id}
         season={liveHub?.season ?? 2026}
         challengeKey={challenge.id}
+      />
+    );
+  }
+
+  if (challenge.game_type === "sports_feud") {
+    const sportsFeudConfig = mlbSportsFeudProductionConfig(challenge.id, challenge.date ?? "");
+
+    if (!sportsFeudConfig) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Sports Feud date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <MlbSportsFeudChallenge
+        key={challenge.id}
+        config={sportsFeudConfig}
+        season={liveHub?.season ?? 2026}
       />
     );
   }

@@ -172,6 +172,46 @@ function blindResumeRows(entry: MlbPlayChallengeLeaderboardEntry) {
   });
 }
 
+function sportsFeudSummary(entry: MlbPlayChallengeLeaderboardEntry) {
+  const detail = entry.resultDetail;
+  const mainBoards = Array.isArray(detail.main_boards) ? detail.main_boards : [];
+  const fastMoney = detail.fast_money && typeof detail.fast_money === "object" && !Array.isArray(detail.fast_money)
+    ? detail.fast_money as Record<string, unknown>
+    : {};
+  const boards = mainBoards.map((value, index) => {
+    const board = value && typeof value === "object" && !Array.isArray(value)
+      ? value as Record<string, unknown>
+      : {};
+    const found = Array.isArray(board.found_answers)
+      ? board.found_answers.filter((name): name is string => typeof name === "string")
+      : [];
+    return {
+      round: Number(board.round ?? index + 1),
+      points: Number(board.points ?? 0),
+      strikes: Number(board.strikes ?? 0),
+      found,
+    };
+  });
+  const results = Array.isArray(fastMoney.results)
+    ? fastMoney.results.map((value, index) => {
+        const row = value && typeof value === "object" && !Array.isArray(value)
+          ? value as Record<string, unknown>
+          : {};
+        return {
+          index: index + 1,
+          answer: String(row.submitted_answer ?? "NO ANSWER"),
+          points: Number(row.points ?? 0),
+        };
+      })
+    : [];
+  return {
+    mainPoints: Number(entry.publicResult.main_points ?? boards.reduce((sum, board) => sum + board.points, 0)),
+    fastPoints: Number(entry.publicResult.fast_money_points ?? fastMoney.points ?? 0),
+    boards,
+    results,
+  };
+}
+
 function millionaireResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
   const detail = entry.resultDetail;
   const publicResult = entry.publicResult;
@@ -201,7 +241,9 @@ function MlbPlayResultDetail({
   const isMillionaire = entry.gameType === "millionaire";
   const isWhoAmI = entry.gameType === "who_am_i";
   const isBlindResume = entry.gameType === "blind_resume";
+  const isSportsFeud = entry.gameType === "sports_feud";
   const millionaire = millionaireResultSummary(entry);
+  const sportsFeud = sportsFeudSummary(entry);
 
   return (
     <div
@@ -279,6 +321,26 @@ function MlbPlayResultDetail({
                 </article>
               ))}
             </div>
+          ) : isSportsFeud ? (
+            <div className="mlb-play-result-card__games">
+              <article>
+                <span>MAIN BOARDS</span>
+                <strong>{sportsFeud.mainPoints}<small>/60</small></strong>
+                {sportsFeud.boards.map((board) => (
+                  <small key={board.round}>
+                    ROUND {board.round} · {board.found.length} ANSWERS FOUND · {board.strikes} STRIKES
+                    {board.found.length ? ` · ${board.found.join(" · ").toUpperCase()}` : ""}
+                  </small>
+                ))}
+              </article>
+              <article>
+                <span>FAST MONEY</span>
+                <strong>{sportsFeud.fastPoints}<small>/40</small></strong>
+                {sportsFeud.results.length
+                  ? <small>{sportsFeud.results.map((row) => `${row.answer.toUpperCase()} +${row.points}`).join(" · ")}</small>
+                  : null}
+              </article>
+            </div>
           ) : games.length ? (
             <div className="mlb-play-result-card__games">
               {games.map((game) => (
@@ -304,7 +366,9 @@ function MlbPlayResultDetail({
                   ? "The challenge score is the average of both Who Am I rounds."
                   : isBlindResume
                     ? "The challenge score is the total earned across all five Blind Resume rounds."
-                    : "The challenge score is the average of both Find the Leader boards."}
+                    : isSportsFeud
+                      ? `The challenge score is ${sportsFeud.mainPoints}/60 from the two main boards plus ${sportsFeud.fastPoints}/40 from Fast Money.`
+                      : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>
