@@ -21,6 +21,7 @@ const championshipSummary = readFileSync("src/features/mlb/MlbChampionshipSummar
 const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
 const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
+const mlbChallengePage = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
 const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
 const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
 const mlbOwnerFixture = readFileSync("src/features/mlb/mlbOwnerPreview.ts", "utf8");
@@ -147,6 +148,12 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).toContain("WINNER");
     expect(styles).toContain('.today-hub[data-sport="mlb"]');
     expect(styles).toContain(".mlb-play-standings");
+  });
+
+  it("routes the October 9 Blind Resume slot through the production runner", () => {
+    expect(mlbChallengePage).toContain("MlbBlindResumeProductionChallenge");
+    expect(mlbChallengePage).toContain("MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY");
+    expect(mlbChallengePage).toContain('challenge.game_type === "blind_resume"');
   });
 
   it("automatically schedules MLB Play in Central time and protects future results", () => {
