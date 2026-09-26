@@ -13,6 +13,7 @@ const playLeaderboardMigration = readFileSync("supabase/migrations/202612310183_
 const playScheduleMigration = readFileSync("supabase/migrations/202612310184_mlb_play_challenge_schedule.sql", "utf8");
 const millionaireReadyMigration = readFileSync("supabase/migrations/202612310187_mlb_oct3_millionaire_ready.sql", "utf8");
 const whoAmIReadyMigration = readFileSync("supabase/migrations/202612310188_mlb_oct6_who_am_i_ready.sql", "utf8");
+const blindResumeReadyMigration = readFileSync("supabase/migrations/202612310189_mlb_oct9_blind_resume_ready.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -141,6 +142,9 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).not.toContain("BRACKET");
     expect(mlbPlay).not.toContain("MlbHomeHq");
     expect(mlbPlay).not.toMatch(/DEMO|OWNER DESIGN|DISPOSABLE/);
+    expect(mlbPlay).toContain('entry.gameType === "blind_resume"');
+    expect(mlbPlay).toContain("STATS SHOWN");
+    expect(mlbPlay).toContain("WINNER");
     expect(styles).toContain('.today-hub[data-sport="mlb"]');
     expect(styles).toContain(".mlb-play-standings");
   });
@@ -159,6 +163,10 @@ describe("MLB Playoffs rollout gate", () => {
     expect(whoAmIReadyMigration).toContain("scheduled_date = date '2026-10-06'");
     expect(whoAmIReadyMigration).toContain("game_type = 'who_am_i'");
     expect(whoAmIReadyMigration).toContain("content_ready = true");
+    expect(blindResumeReadyMigration).toContain("challenge_key = 'mlb-2026-play-05'");
+    expect(blindResumeReadyMigration).toContain("scheduled_date = date '2026-10-09'");
+    expect(blindResumeReadyMigration).toContain("game_type = 'blind_resume'");
+    expect(blindResumeReadyMigration).toContain("content_ready = true");
     expect(playScheduleMigration).toContain("get_mlb_postseason_active_challenge");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_active");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_ready");
