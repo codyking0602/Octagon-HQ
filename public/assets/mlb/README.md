@@ -1,7 +1,7 @@
 # MLB launch assets
 
-Drop the approved MLB playoff welcome background at:
+The MLB playoff welcome takeover currently uses:
 
-`public/assets/mlb/playoffs-welcome-bg.webp`
+`public/assets/mlb/69608B72-2CD3-4A50-A271-8CC234EFBD11.png`
 
-The welcome takeover already references that exact public path.
+This is the owner-preview and eventual public-launch background unless it is replaced intentionally.

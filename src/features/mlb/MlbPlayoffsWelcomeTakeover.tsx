@@ -3,8 +3,10 @@ import "../../styles/mlb-playoffs-welcome.css";
 
 const MLB_PLAYOFFS_WELCOME_VERSION = "2026-v1";
 
-function storageKey(profileId: string) {
-  return `octagon-hq:mlb-playoffs-welcome:${MLB_PLAYOFFS_WELCOME_VERSION}:${profileId}`;
+export type MlbPlayoffsWelcomeMode = "preview" | "launch";
+
+function storageKey(profileId: string, mode: MlbPlayoffsWelcomeMode) {
+  return `octagon-hq:mlb-playoffs-welcome:${MLB_PLAYOFFS_WELCOME_VERSION}:${mode}:${profileId}`;
 }
 
 function Icon({ kind }: { kind: "series" | "bracket" | "challenges" | "race" }) {
@@ -41,10 +43,16 @@ function Icon({ kind }: { kind: "series" | "bracket" | "challenges" | "race" }) 
   );
 }
 
-export function MlbPlayoffsWelcomeTakeover({ profileId }: { profileId: string }) {
+export function MlbPlayoffsWelcomeTakeover({
+  profileId,
+  mode = "launch",
+}: {
+  profileId: string;
+  mode?: MlbPlayoffsWelcomeMode;
+}) {
   const [visible, setVisible] = useState(() => {
     try {
-      return window.localStorage.getItem(storageKey(profileId)) !== "dismissed";
+      return window.localStorage.getItem(storageKey(profileId, mode)) !== "dismissed";
     } catch {
       return true;
     }
@@ -64,7 +72,7 @@ export function MlbPlayoffsWelcomeTakeover({ profileId }: { profileId: string })
 
   function dismiss() {
     try {
-      window.localStorage.setItem(storageKey(profileId), "dismissed");
+      window.localStorage.setItem(storageKey(profileId, mode), "dismissed");
     } catch {
       // The acknowledgement still closes for this session if storage is unavailable.
     }

@@ -152,6 +152,8 @@ export function AppShell() {
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const isMlb = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
+  const showMlbWelcome = Boolean(identity.profile && (MLB_PLAYOFFS_PUBLIC_ENABLED || identity.profile.canControlPicks === true));
+  const mlbWelcomeMode = MLB_PLAYOFFS_PUBLIC_ENABLED ? "launch" : "preview";
   const effectiveSelectedSport = selectedSport === "mlb" && !mlbVisible ? "ufc" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
@@ -174,8 +176,8 @@ export function AppShell() {
       className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${isMlb ? " app-shell--mlb-room" : ""}`}
       data-hq-theme={themeScope}
     >
-      {MLB_PLAYOFFS_PUBLIC_ENABLED && identity.profile ? (
-        <MlbPlayoffsWelcomeTakeover profileId={identity.profile.id} />
+      {showMlbWelcome && identity.profile ? (
+        <MlbPlayoffsWelcomeTakeover profileId={identity.profile.id} mode={mlbWelcomeMode} />
       ) : null}
 
       <RouteScrollManager />
