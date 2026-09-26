@@ -123,7 +123,7 @@ export default function NotificationCenterPage() {
         <div>
           <p className="eyebrow">THE HQ</p>
           <h1>Notifications</h1>
-          <p>UFC, Football, and account updates in one inbox.</p>
+          <p>UFC, Football, Baseball, and account updates in one inbox.</p>
         </div>
         {notifications.unreadCount > 0 || hasReadNotifications ? (
           <div className="notification-page__actions">

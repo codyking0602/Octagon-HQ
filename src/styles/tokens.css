@@ -17,6 +17,9 @@
   --football-brand-navy: #1F4E79;
   --football-logo-backplate: #E7E1D7;
   --football-logo-backplate-border: rgba(74, 63, 49, .22);
+  --mlb-green: #2f855f;
+  --mlb-green-strong: #63a884;
+  --mlb-green-rgb: 47, 133, 95;
   --hq-context-accent: var(--hq-neutral-accent);
   --hq-context-accent-strong: var(--hq-neutral-accent-strong);
   --hq-context-accent-rgb: var(--hq-neutral-accent-rgb);
@@ -56,4 +59,13 @@
   --hq-context-accent-contrast: #07111d;
   --hq-context-accent-soft: rgba(var(--football-brand-blue-rgb), .16);
   --hq-context-accent-border: rgba(var(--football-brand-blue-rgb), .48);
+}
+
+[data-hq-theme="mlb"] {
+  --hq-context-accent: var(--mlb-green);
+  --hq-context-accent-strong: var(--mlb-green-strong);
+  --hq-context-accent-rgb: var(--mlb-green-rgb);
+  --hq-context-accent-contrast: #ffffff;
+  --hq-context-accent-soft: rgba(var(--mlb-green-rgb), .13);
+  --hq-context-accent-border: rgba(var(--mlb-green-rgb), .38);
 }

@@ -19,6 +19,19 @@ describe("notificationSport", () => {
     expect(notificationSport({ kind: "picks_card_updated", route: null })).toBe("ufc");
   });
 
+  it("recognizes MLB notifications and routes them through the green baseball identity", () => {
+    expect(notificationKinds).toContain("mlb_launch_available");
+    expect(notificationKinds).toContain("mlb_challenge_available");
+    expect(notificationKinds).toContain("mlb_challenge_four_hours");
+    expect(notificationKinds).toContain("mlb_round_available");
+    expect(notificationKinds).toContain("mlb_round_recap");
+    expect(notificationSport({ kind: "mlb_launch_available", route: "/mlb" })).toBe("mlb");
+    expect(notificationSport({ kind: "mlb_challenge_available", route: "/mlb/challenge" })).toBe("mlb");
+    expect(notificationSport({ kind: "mlb_round_available", route: "/mlb/picks" })).toBe("mlb");
+    expect(notificationSport({ kind: "mlb_round_recap", route: null })).toBe("mlb");
+    expect(notificationSportLabel("mlb")).toBe("MLB");
+  });
+
   it("accepts the canonical Football Picks notification kind and route", () => {
     expect(notificationKinds).toContain("football_picks_open");
     expect(notificationSport({ kind: "football_picks_open", route: "/football/picks" })).toBe("football");

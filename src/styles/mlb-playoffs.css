@@ -1,18 +1,6 @@
 :root {
-  --mlb-green: #2f855f;
-  --mlb-green-strong: #63a884;
-  --mlb-green-rgb: 47, 133, 95;
   --mlb-ink: #09130e;
 }
-
-[data-hq-theme="mlb"] {
-  --hq-context-accent: var(--mlb-green);
-  --hq-context-accent-strong: var(--mlb-green-strong);
-  --hq-context-accent-rgb: var(--mlb-green-rgb);
-  --hq-context-accent-soft: rgba(var(--mlb-green-rgb), .13);
-  --hq-context-accent-border: rgba(var(--mlb-green-rgb), .38);
-}
-
 
 .home-sport-hq--mlb {
   --home-sport-accent: var(--mlb-green);
