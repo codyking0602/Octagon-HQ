@@ -53,7 +53,10 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbWelcome).toContain("How can you not be romantic about baseball?");
     expect(mlbWelcome).toContain("ENTER THE PLAYOFFS");
     expect(mlbWelcome).not.toContain("Track the standings");
-    expect(mlbWelcomeStyles).toContain('/assets/mlb/534DBEC2-190B-483E-9ED2-B07493623124.png');
+    expect(mlbWelcome).toContain('/assets/mlb/69608B72-2CD3-4A50-A271-8CC234EFBD11.png');
+    expect(mlbWelcome).not.toContain('/assets/MLB.webp');
+    expect(mlbWelcomeStyles).toContain('aspect-ratio: 941 / 1672');
+    expect(mlbWelcomeStyles).toContain('background: transparent');
   });
 
   it("does not add a fifth permanent bottom navigation tab", () => {
