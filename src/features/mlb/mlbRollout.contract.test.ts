@@ -27,6 +27,8 @@ const mlbChallengePage = readFileSync("src/features/mlb/MlbFeaturedChallengePage
 const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
 const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
 const mlbOwnerFixture = readFileSync("src/features/mlb/mlbOwnerPreview.ts", "utf8");
+const mlbWelcome = readFileSync("src/features/mlb/MlbPlayoffsWelcomeTakeover.tsx", "utf8");
+const mlbWelcomeStyles = readFileSync("src/styles/mlb-playoffs-welcome.css", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
   it("stays owner-only until the explicit public release", () => {
@@ -41,6 +43,15 @@ describe("MLB Playoffs rollout gate", () => {
     expect(bottomNav).toContain("canViewMlbPlayoffs(identity?.profile)");
     expect(home).toContain("canViewMlbPlayoffs(identity.profile)");
     expect(router.match(/<MlbGate/g) ?? []).toHaveLength(4);
+  });
+
+  it("prepares a mandatory one-time welcome takeover for the public MLB launch", () => {
+    expect(appShell).toContain("MLB_PLAYOFFS_PUBLIC_ENABLED && identity.profile");
+    expect(appShell).toContain("<MlbPlayoffsWelcomeTakeover");
+    expect(mlbWelcome).toContain("How can you not be romantic about baseball?");
+    expect(mlbWelcome).toContain("ENTER THE PLAYOFFS");
+    expect(mlbWelcome).not.toContain("Track the standings");
+    expect(mlbWelcomeStyles).toContain('/assets/mlb/playoffs-welcome-bg.webp');
   });
 
   it("does not add a fifth permanent bottom navigation tab", () => {
