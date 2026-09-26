@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../../styles/mlb-playoffs-welcome.css";
 
 const MLB_PLAYOFFS_LAUNCH_VERSION = "2026-v1";
-const MLB_PLAYOFFS_PREVIEW_VERSION = "2026-v4";
+const MLB_PLAYOFFS_PREVIEW_VERSION = "2026-v5";
 
 export type MlbPlayoffsWelcomeMode = "preview" | "launch";
 
