@@ -38,7 +38,7 @@ describe("MLB Wavelength production bank", () => {
   it("locks two games on each Wavelength date with four distinct opening clues", () => {
     expect(MLB_WAVELENGTH_PRODUCTION_GAMES).toHaveLength(4);
     expect(mlbProductionWavelengthGamesForDate("2026-10-01")).toHaveLength(2);
-    expect(mlbProductionWavelengthGamesForDate("2026-10-27")).toHaveLength(2);
+    expect(mlbProductionWavelengthGamesForDate("2026-10-23")).toHaveLength(2);
 
     const openings = MLB_WAVELENGTH_PRODUCTION_GAMES.map((game) => game.openingClueId);
     expect(new Set(openings).size).toBe(4);
@@ -75,7 +75,7 @@ describe("MLB Wavelength production bank", () => {
   });
 
   it("can run both games on each date without repeating a clue", () => {
-    for (const date of ["2026-10-01", "2026-10-27"] as const) {
+    for (const date of ["2026-10-01", "2026-10-23"] as const) {
       const unavailable: string[] = [];
       for (const game of mlbProductionWavelengthGamesForDate(date)) {
         const round = createMlbProductionWavelengthRound(game);
