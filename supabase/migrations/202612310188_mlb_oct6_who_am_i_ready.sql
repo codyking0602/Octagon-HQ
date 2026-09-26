@@ -7,7 +7,8 @@ declare
   v_updated integer;
 begin
   update public.mlb_postseason_challenges
-  set content_ready = true
+  set content_ready = true,
+      description = 'Two identities. Progressive clues. One averaged final score.'
   where season = 2026
     and slot = 4
     and challenge_key = 'mlb-2026-play-04'
