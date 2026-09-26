@@ -1,7 +1,7 @@
 import { assembleWhoAmIRevealClues } from "./whoAmIRevealPlanner";
 
-export type WhoAmISport = "ufc" | "football";
-export type WhoAmILeague = "UFC" | "NFL" | "CFB";
+export type WhoAmISport = "ufc" | "football" | "mlb";
+export type WhoAmILeague = "UFC" | "NFL" | "CFB" | "MLB";
 export type WhoAmIRevealCoordinate = "school" | "franchise" | "position" | "era";
 export type WhoAmISubjectKind = "fighter" | "player" | "coach";
 export type WhoAmIClueBand = "broad" | "helpful" | "strong" | "giveaway";
