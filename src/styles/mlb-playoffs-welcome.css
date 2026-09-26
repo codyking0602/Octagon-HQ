@@ -1,0 +1,267 @@
+.mlb-welcome-takeover {
+  --mlb-welcome-green: #2f855f;
+  --mlb-welcome-green-strong: #63a884;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #050706;
+  color: #f7f8f7;
+}
+
+.mlb-welcome-takeover__background,
+.mlb-welcome-takeover__scrim {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mlb-welcome-takeover__background {
+  background:
+    center 16% / cover no-repeat
+    url("/assets/mlb/playoffs-welcome-bg.webp");
+  opacity: .46;
+  filter: saturate(.82) brightness(.78) contrast(1.04);
+}
+
+.mlb-welcome-takeover__scrim {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3, 5, 4, .18) 0%,
+      rgba(3, 5, 4, .36) 31%,
+      rgba(3, 5, 4, .72) 70%,
+      rgba(3, 5, 4, .96) 100%
+    );
+}
+
+.mlb-welcome-takeover__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(100%, 520px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(calc(env(safe-area-inset-top) + 34px), 50px)
+    24px
+    max(calc(env(safe-area-inset-bottom) + 22px), 30px);
+  align-content: start;
+}
+
+.mlb-welcome-takeover__quote {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 7px;
+  margin-top: clamp(20px, 7vh, 78px);
+}
+
+.mlb-welcome-takeover__quote > span {
+  color: var(--mlb-welcome-green-strong);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(34px, 8vw, 48px);
+  font-weight: 800;
+  line-height: .8;
+}
+
+.mlb-welcome-takeover__quote > span:last-child {
+  align-self: end;
+  transform: translateY(-2px);
+}
+
+.mlb-welcome-takeover__quote blockquote {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 8.5vw, 44px);
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -.04em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.mlb-welcome-takeover__heading {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  text-align: center;
+}
+
+.mlb-welcome-takeover__heading::before {
+  content: "";
+  width: 34px;
+  height: 3px;
+  margin-bottom: 5px;
+  border-radius: 999px;
+  background: var(--mlb-welcome-green);
+}
+
+.mlb-welcome-takeover__heading img {
+  width: 50px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.mlb-welcome-takeover__heading > div {
+  display: grid;
+  gap: 1px;
+}
+
+.mlb-welcome-takeover__heading small {
+  color: var(--mlb-welcome-green-strong);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .18em;
+}
+
+.mlb-welcome-takeover__heading h1 {
+  margin: 0;
+  font-size: clamp(24px, 7vw, 34px);
+  line-height: .98;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+}
+
+.mlb-welcome-takeover__heading p {
+  margin: 1px 0 0;
+  color: rgba(247, 248, 247, .9);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(16px, 4.8vw, 21px);
+  font-weight: 700;
+}
+
+.mlb-welcome-takeover__features {
+  display: grid;
+  gap: 3px;
+  margin-top: 25px;
+}
+
+.mlb-welcome-takeover__features article {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 13px;
+  min-width: 0;
+  padding: 11px 0;
+}
+
+.mlb-welcome-takeover__features svg {
+  width: 31px;
+  height: 31px;
+  margin: 1px auto 0;
+  fill: none;
+  stroke: var(--mlb-welcome-green-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.mlb-welcome-takeover__features article > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-left: 13px;
+  border-left: 1px solid rgba(255, 255, 255, .22);
+}
+
+.mlb-welcome-takeover__features strong {
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .045em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.mlb-welcome-takeover__features p {
+  margin: 0;
+  color: rgba(247, 248, 247, .78);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.mlb-welcome-takeover__enter {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 58px;
+  margin-top: 26px;
+  padding: 0 19px 0 30px;
+  border: 1px solid var(--mlb-welcome-green-strong);
+  border-radius: 14px;
+  background:
+    linear-gradient(110deg, rgba(99, 168, 132, .25), transparent 52%),
+    var(--mlb-welcome-green);
+  box-shadow:
+    0 0 0 1px rgba(47, 133, 95, .22),
+    0 10px 30px rgba(0, 0, 0, .34);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mlb-welcome-takeover__enter span {
+  justify-self: center;
+  font-size: 13px;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.mlb-welcome-takeover__enter b {
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+@media (max-width: 390px) {
+  .mlb-welcome-takeover__content {
+    padding-inline: 18px;
+  }
+
+  .mlb-welcome-takeover__quote {
+    margin-top: 14px;
+  }
+
+  .mlb-welcome-takeover__features {
+    margin-top: 18px;
+  }
+
+  .mlb-welcome-takeover__features article {
+    padding-block: 8px;
+  }
+
+  .mlb-welcome-takeover__enter {
+    min-height: 54px;
+    margin-top: 18px;
+  }
+}
+
+@media (max-height: 740px) {
+  .mlb-welcome-takeover__content {
+    padding-top: max(calc(env(safe-area-inset-top) + 16px), 24px);
+  }
+
+  .mlb-welcome-takeover__quote {
+    margin-top: 0;
+  }
+
+  .mlb-welcome-takeover__heading {
+    margin-top: 15px;
+  }
+
+  .mlb-welcome-takeover__features {
+    margin-top: 14px;
+  }
+
+  .mlb-welcome-takeover__features article {
+    padding-block: 7px;
+  }
+
+  .mlb-welcome-takeover__enter {
+    margin-top: 14px;
+  }
+}

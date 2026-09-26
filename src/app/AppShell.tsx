@@ -4,7 +4,8 @@ import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
 import { BackRoomLogoLink } from "../features/back-room/BackRoomLogoLink";
 import { useIdentity } from "../features/identity/IdentityProvider";
-import { canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
+import { MlbPlayoffsWelcomeTakeover } from "../features/mlb/MlbPlayoffsWelcomeTakeover";
+import { MLB_PLAYOFFS_PUBLIC_ENABLED, canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
 import { memberProfilePath } from "../features/members/memberProfilesModel";
 import { NotificationHeaderAction } from "../features/notifications/NotificationHeaderAction";
 import { NotificationPushSetting } from "../features/notifications/NotificationPushSetting";
@@ -173,6 +174,10 @@ export function AppShell() {
       className={`app-shell${isGame ? " app-shell--game" : ""}${isBackRoom ? " app-shell--back-room" : ""}${isFootball ? " app-shell--football-room" : ""}${isMlb ? " app-shell--mlb-room" : ""}`}
       data-hq-theme={themeScope}
     >
+      {MLB_PLAYOFFS_PUBLIC_ENABLED && identity.profile ? (
+        <MlbPlayoffsWelcomeTakeover profileId={identity.profile.id} />
+      ) : null}
+
       <RouteScrollManager />
 
       {isMillionaireGame ? null : isMlbSeries ? (
