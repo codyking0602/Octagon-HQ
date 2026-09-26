@@ -1,18 +1,5 @@
-import { useMemo, useState } from "react";
 import type { WhoAmIClue, WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
-import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
-import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
-import {
-  OFFICIAL_DAILY_RUNTIME_VERSION,
-  OFFICIAL_DAILY_SCORING_VERSION,
-  type OfficialDailyRuntimeContext,
-} from "../play/todaysChallengeRuntime";
-import {
-  advanceTwoRoundWhoAmIDailyRuntime,
-  buildTwoRoundWhoAmIDailyPublication,
-} from "../play/whoAmITwoRoundDailyRuntime";
-
-type JsonRecord = Record<string, unknown>;
+import MlbWhoAmIChallenge from "./MlbWhoAmIChallenge";
 
 const subjects: readonly WhoAmISubject[] = [
   { id: "mlb-randy-johnson", name: "Randy Johnson", kind: "player", eraBand: "modern" },
@@ -94,86 +81,15 @@ export const MLB_WHO_AM_I_OWNER_ROUNDS: readonly [WhoAmIRound, WhoAmIRound] = [
 
 const OWNER_DAY = "2026-10-06";
 const OWNER_SCHEDULE_VERSION = "mlb-who-am-i-owner-run-v1";
-
-const publication = buildTwoRoundWhoAmIDailyPublication(
-  [
-    { round: MLB_WHO_AM_I_OWNER_ROUNDS[0], scriptId: "mlb-owner-round-1" },
-    { round: MLB_WHO_AM_I_OWNER_ROUNDS[1], scriptId: "mlb-owner-round-2" },
-  ],
-  OWNER_DAY,
-  OWNER_SCHEDULE_VERSION,
-  OFFICIAL_DAILY_RUNTIME_VERSION,
-  OFFICIAL_DAILY_SCORING_VERSION,
-);
-
-function record(value: unknown): JsonRecord {
-  return value && typeof value === "object" && !Array.isArray(value) ? value as JsonRecord : {};
-}
-
-function initialState() {
-  return record(publication.publicSetup.initial_state);
-}
+const OWNER_SCRIPT_IDS = ["mlb-owner-round-1", "mlb-owner-round-2"] as const;
 
 export default function MlbWhoAmIOwnerRun() {
-  const [publicState, setPublicState] = useState<JsonRecord>(() => initialState());
-  const [submissionState, setSubmissionState] = useState<JsonRecord>({ rounds: [], final_submission: null });
-  const [attempt, setAttempt] = useState<TodayChallengeProjection["officialAttempt"]>(null);
-  const [revision, setRevision] = useState(0);
-
-  const projection = useMemo<TodayChallengeProjection>(() => ({
-    available: true,
-    id: "00000000-0000-4000-8000-000000000406",
-    centralDay: OWNER_DAY,
-    scheduleVersion: OWNER_SCHEDULE_VERSION,
-    gameType: "who_am_i",
-    setupKey: publication.setupKey,
-    contentVersion: publication.contentVersion,
-    scoringVersion: publication.scoringVersion,
-    fallbackReason: null,
-    publicSetup: publication.publicSetup,
-    progressRevision: revision,
-    publicState,
-    revealSetup: attempt ? publication.revealSetup : null,
-    officialAttempt: attempt,
-    deploymentSha: "owner-run",
-  }), [attempt, publicState, revision]);
-
-  function advance(action: JsonRecord) {
-    if (attempt) return;
-    const context: OfficialDailyRuntimeContext = {
-      gameType: "who_am_i",
-      setupKey: publication.setupKey,
-      publicSetup: publication.publicSetup,
-      revealSetup: publication.revealSetup,
-      privateSetupEvidence: publication.privateSetupEvidence,
-      privateGradingEvidence: publication.privateGradingEvidence,
-      submissionState,
-      publicState,
-    };
-    const next = advanceTwoRoundWhoAmIDailyRuntime(context, action);
-    setSubmissionState(next.submissionState);
-    setPublicState(next.publicState);
-    setRevision((value) => value + 1);
-
-    if (next.complete) {
-      const rounds = Array.isArray(next.publicState.completed_rounds)
-        ? next.publicState.completed_rounds.filter((row): row is JsonRecord => Boolean(row) && typeof row === "object" && !Array.isArray(row))
-        : [];
-      const score = Number(next.publicState.score ?? 0);
-      setAttempt({
-        nativeScore: score,
-        normalizedScore: score,
-        completedAt: new Date().toISOString(),
-        publicResult: { rounds },
-      });
-    }
-  }
-
   return (
-    <OfficialWhoAmIDailyView
-      projection={projection}
-      busy={false}
-      onAdvance={advance}
+    <MlbWhoAmIChallenge
+      rounds={MLB_WHO_AM_I_OWNER_ROUNDS}
+      scriptIds={OWNER_SCRIPT_IDS}
+      challengeDate={OWNER_DAY}
+      scheduleVersion={OWNER_SCHEDULE_VERSION}
     />
   );
 }
