@@ -25,6 +25,7 @@ describe("MLB postseason challenge schedule", () => {
       .map((challenge) => challenge.id)).toEqual([
         "mlb-2026-play-01",
         "mlb-2026-play-02",
+        "mlb-2026-play-03",
         "mlb-2026-play-10",
       ]);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
@@ -68,10 +69,17 @@ describe("MLB postseason challenge schedule", () => {
     });
   });
 
-  it("does not expose an unbuilt scheduled challenge as playable", () => {
+  it("automatically activates the production Millionaire challenge on October 3", () => {
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-03T04:59:59Z"))).toMatchObject({
+      id: "mlb-2026-play-02",
+      game_type: "wavelength",
+      ready: true,
+      is_live: true,
+    });
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-03T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-03",
-      ready: false,
+      game_type: "millionaire",
+      ready: true,
       is_live: true,
     });
   });
