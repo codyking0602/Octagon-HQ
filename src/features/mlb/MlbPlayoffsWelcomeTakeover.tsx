@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import "../../styles/mlb-playoffs-welcome.css";
 
-const MLB_PLAYOFFS_WELCOME_VERSION = "2026-v1";
+const MLB_PLAYOFFS_LAUNCH_VERSION = "2026-v1";
+const MLB_PLAYOFFS_PREVIEW_VERSION = "2026-v2";
 
 export type MlbPlayoffsWelcomeMode = "preview" | "launch";
 
 function storageKey(profileId: string, mode: MlbPlayoffsWelcomeMode) {
-  return `octagon-hq:mlb-playoffs-welcome:${MLB_PLAYOFFS_WELCOME_VERSION}:${mode}:${profileId}`;
+  const version = mode === "preview" ? MLB_PLAYOFFS_PREVIEW_VERSION : MLB_PLAYOFFS_LAUNCH_VERSION;
+  return `octagon-hq:mlb-playoffs-welcome:${version}:${mode}:${profileId}`;
 }
 
 function Icon({ kind }: { kind: "series" | "bracket" | "challenges" | "race" }) {
@@ -97,11 +99,16 @@ export function MlbPlayoffsWelcomeTakeover({
         </section>
 
         <section className="mlb-welcome-takeover__heading">
-          <img src="/assets/MLB.webp" alt="" />
-          <div>
-            <small>MLB</small>
-            <h1 id="mlb-welcome-title">Playoff Challenge</h1>
+          <div className="mlb-welcome-takeover__logo-row" aria-hidden="true">
+            <i />
+            <img src="/assets/MLB.webp" alt="" />
+            <i />
           </div>
+          <h1 id="mlb-welcome-title">
+            <small>MLB</small>
+            <strong>PLAYOFF</strong>
+            <span>CHALLENGE</span>
+          </h1>
           <p>Welcome to October at The HQ.</p>
         </section>
 
