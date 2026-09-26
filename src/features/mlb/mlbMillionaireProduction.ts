@@ -3,6 +3,8 @@ import type { MillionaireRun } from "../games/millionaireEngine";
 
 export const MLB_MILLIONAIRE_PRODUCTION_DATE = "2026-10-03" as const;
 export const MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-03" as const;
+export const MLB_MILLIONAIRE_SECOND_PRODUCTION_DATE = "2026-10-18" as const;
+export const MLB_MILLIONAIRE_SECOND_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-08" as const;
 
 type SourceNote = {
   questionId: string;
@@ -172,6 +174,176 @@ export const MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03: MillionaireRun = [
     fiftyFifty: ["A", "D"],
   }),
 ];
+
+/**
+ * Spoiler-protected production run for the second scheduled MLB Millionaire challenge.
+ * This run is distinct from both the October 3 production run and all owner-review prompts.
+ */
+export const MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18: MillionaireRun = [
+  question({
+    id: "mlb-2026-10-18-millionaire-q1",
+    level: "Q1",
+    money: 500,
+    type: "stat-basics",
+    prompt: "A pitcher's ERA is based on earned runs allowed per how many innings?",
+    choices: ["Six", "Nine", "Seven", "Twelve"],
+    correct: "B",
+    explanation: "ERA estimates the number of earned runs a pitcher allows per nine innings.",
+    statSheet: "The ERA formula multiplies earned runs by nine, then divides by innings pitched.",
+    fiftyFifty: ["B", "D"],
+  }),
+  question({
+    id: "mlb-2026-10-18-millionaire-q2",
+    level: "Q2",
+    money: 1_000,
+    type: "ballpark",
+    prompt: "Which MLB team calls Wrigley Field home?",
+    choices: ["Los Angeles Dodgers", "St. Louis Cardinals", "New York Yankees", "Chicago Cubs"],
+    correct: "D",
+    explanation: "Wrigley Field has been the home of the Chicago Cubs since 1916.",
+    statSheet: "The Friendly Confines are on Chicago's North Side.",
+    fiftyFifty: ["A", "D"],
+  }),
+  question({
+    id: "mlb-2026-10-18-millionaire-q3",
+    level: "Q3",
+    money: 5_000,
+    type: "nickname",
+    prompt: "Which Yankees legend was nicknamed 'The Iron Horse'?",
+    choices: ["Lou Gehrig", "Yogi Berra", "Joe DiMaggio", "Mickey Mantle"],
+    correct: "A",
+    explanation: "Lou Gehrig earned the Iron Horse nickname for his extraordinary durability.",
+    statSheet: "His durability produced a 2,130-game consecutive-games streak.",
+    fiftyFifty: ["A", "C"],
+  }),
+  question({
+    id: "mlb-2026-10-18-millionaire-q4",
+    level: "Q4",
+    money: 10_000,
+    type: "world-series-moment",
+    prompt: "Who hit the famous pinch-hit walk-off homer in Game 1 of the 1988 World Series?",
+    choices: ["Reggie Jackson", "Ozzie Smith", "Kirk Gibson", "Joe Carter"],
+    correct: "C",
+    explanation: "Kirk Gibson homered off Dennis Eckersley to win Game 1 for the Dodgers.",
+    statSheet: "The injured Dodgers star was not in the starting lineup and came off the bench in the ninth inning.",
+    fiftyFifty: ["C", "D"],
+  }),
+  question({
+    id: "mlb-2026-10-18-millionaire-q5",
+    level: "Q5",
+    money: 50_000,
+    type: "awards-history",
+    prompt: "Who won the 1998 National League MVP during the McGwire-Sosa home run race?",
+    choices: ["Mark McGwire", "Sammy Sosa", "Barry Bonds", "Ken Griffey Jr."],
+    correct: "B",
+    explanation: "Sammy Sosa won the 1998 NL MVP after hitting 66 home runs and helping the Cubs reach the postseason.",
+    statSheet: "The winner played for the Cubs and led the Majors with 158 RBIs.",
+    fiftyFifty: ["A", "B"],
+  }),
+  question({
+    id: "mlb-2026-10-18-millionaire-q6",
+    level: "Q6",
+    money: 100_000,
+    type: "chronology",
+    prompt: "Which of these stars reached 500 career home runs first?",
+    choices: ["Willie Mays", "Ken Griffey Jr.", "Alex Rodriguez", "Jim Thome"],
+    correct: "A",
+    explanation: "Willie Mays reached 500 home runs in 1965, decades before the other three choices.",
+    statSheet: "The correct answer reached No. 500 during a 52-homer season for the Giants.",
+    fiftyFifty: ["A", "B"],
+  }),
+  question({
+    id: "mlb-2026-10-18-millionaire-q7",
+    level: "Q7",
+    money: 500_000,
+    type: "record-history",
+    prompt: "Who is the only player to hit two grand slams in the same inning?",
+    choices: ["Mark McGwire", "Albert Pujols", "Fernando Tatis Sr.", "Manny Ramirez"],
+    correct: "C",
+    explanation: "Fernando Tatis Sr. hit two grand slams in the same inning for St. Louis in 1999.",
+    statSheet: "Both grand slams came off the same Dodgers pitcher, Chan Ho Park.",
+    fiftyFifty: ["B", "C"],
+  }),
+  question({
+    id: "mlb-2026-10-18-millionaire-q8",
+    level: "Q8",
+    money: 1_000_000,
+    type: "world-series-history",
+    prompt: "Who is the only player to win World Series MVP while playing for the losing team?",
+    choices: ["Mickey Mantle", "Yogi Berra", "Whitey Ford", "Bobby Richardson"],
+    correct: "D",
+    explanation: "Yankees second baseman Bobby Richardson won the 1960 World Series MVP even though Pittsburgh won the Series.",
+    statSheet: null,
+    fiftyFifty: ["A", "D"],
+  }),
+];
+
+export const MLB_MILLIONAIRE_SECOND_PRODUCTION_SOURCE_NOTES: readonly SourceNote[] = [
+  {
+    questionId: "mlb-2026-10-18-millionaire-q1",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/glossary/standard-stats/earned-run-average",
+    verifiedAt: "2026-09-25",
+  },
+  {
+    questionId: "mlb-2026-10-18-millionaire-q2",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/featured/wrigley-field-guide-capacity-seating-chart-parking-and-more",
+    verifiedAt: "2026-09-25",
+  },
+  {
+    questionId: "mlb-2026-10-18-millionaire-q3",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/player/lou-gehrig-114680",
+    verifiedAt: "2026-09-25",
+  },
+  {
+    questionId: "mlb-2026-10-18-millionaire-q4",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/top-legendary-walk-offs-in-baseball-history",
+    verifiedAt: "2026-09-25",
+  },
+  {
+    questionId: "mlb-2026-10-18-millionaire-q5",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/each-mlb-team-s-single-season-home-run-leader",
+    verifiedAt: "2026-09-25",
+  },
+  {
+    questionId: "mlb-2026-10-18-millionaire-q6",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/members-of-the-500-home-run-club/",
+    verifiedAt: "2026-09-25",
+  },
+  {
+    questionId: "mlb-2026-10-18-millionaire-q7",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/fernando-tatis-hit-2-grand-slams-in-1-inning",
+    verifiedAt: "2026-09-25",
+  },
+  {
+    questionId: "mlb-2026-10-18-millionaire-q8",
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/all-time-world-series-mvp-team",
+    verifiedAt: "2026-09-25",
+  },
+];
+
+export function mlbMillionaireProductionRun(challengeKey: string, challengeDate: string) {
+  if (
+    challengeKey === MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY
+    && challengeDate === MLB_MILLIONAIRE_PRODUCTION_DATE
+  ) {
+    return MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03;
+  }
+  if (
+    challengeKey === MLB_MILLIONAIRE_SECOND_PRODUCTION_CHALLENGE_KEY
+    && challengeDate === MLB_MILLIONAIRE_SECOND_PRODUCTION_DATE
+  ) {
+    return MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18;
+  }
+  return null;
+}
 
 export const MLB_MILLIONAIRE_PRODUCTION_SOURCE_NOTES: readonly SourceNote[] = [
   {

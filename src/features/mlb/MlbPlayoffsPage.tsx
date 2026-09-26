@@ -172,6 +172,36 @@ function blindResumeRows(entry: MlbPlayChallengeLeaderboardEntry) {
   });
 }
 
+function hitTheNumberRows(entry: MlbPlayChallengeLeaderboardEntry) {
+  const games = Array.isArray(entry.resultDetail.games) ? entry.resultDetail.games : [];
+  return games.map((value, index) => {
+    const game = value && typeof value === "object" && !Array.isArray(value)
+      ? value as Record<string, unknown>
+      : {};
+    const selections = Array.isArray(game.selections)
+      ? game.selections.map((selection) => (
+          selection && typeof selection === "object" && !Array.isArray(selection)
+            ? selection as Record<string, unknown>
+            : {}
+        ))
+      : [];
+    return {
+      game: Number(game.game ?? index + 1),
+      metricLabel: String(game.metric_label ?? "Home Runs"),
+      configurationLabel: String(game.configuration_label ?? ""),
+      target: Number(game.target ?? 0),
+      total: Number(game.total ?? 0),
+      distance: Number(game.distance ?? 0),
+      status: String(game.status ?? "under"),
+      score: Number(game.score ?? 0),
+      selections: selections.map((selection) => ({
+        name: String(selection.name ?? "Pick"),
+        value: Number(selection.value ?? 0),
+      })),
+    };
+  });
+}
+
 function sportsFeudSummary(entry: MlbPlayChallengeLeaderboardEntry) {
   const detail = entry.resultDetail;
   const mainBoards = Array.isArray(detail.main_boards) ? detail.main_boards : [];
@@ -241,8 +271,10 @@ function MlbPlayResultDetail({
   const isMillionaire = entry.gameType === "millionaire";
   const isWhoAmI = entry.gameType === "who_am_i";
   const isBlindResume = entry.gameType === "blind_resume";
+  const isHitTheNumber = entry.gameType === "hit_the_number";
   const isSportsFeud = entry.gameType === "sports_feud";
   const millionaire = millionaireResultSummary(entry);
+  const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
 
   return (
@@ -321,6 +353,28 @@ function MlbPlayResultDetail({
                 </article>
               ))}
             </div>
+          ) : isHitTheNumber && hitTheNumberGames.length ? (
+            <div className="mlb-play-result-card__games">
+              {hitTheNumberGames.map((game) => (
+                <article key={game.game}>
+                  <span>GAME {game.game} · {game.metricLabel.toUpperCase()}</span>
+                  <strong>{game.score}<small>/100</small></strong>
+                  <small>
+                    {game.status === "perfect"
+                      ? `PERFECT · ${game.total.toLocaleString()} / ${game.target.toLocaleString()}`
+                      : game.status === "bust"
+                        ? `BUST · ${game.total.toLocaleString()} / ${game.target.toLocaleString()}`
+                        : `${game.distance.toLocaleString()} UNDER · ${game.total.toLocaleString()} / ${game.target.toLocaleString()}`}
+                  </small>
+                  {game.configurationLabel ? <small>{game.configurationLabel.toUpperCase()}</small> : null}
+                  {game.selections.length ? (
+                    <small>
+                      {game.selections.map((selection) => `${selection.name.toUpperCase()} ${selection.value.toLocaleString()}`).join(" · ")}
+                    </small>
+                  ) : null}
+                </article>
+              ))}
+            </div>
           ) : isSportsFeud ? (
             <div className="mlb-play-result-card__games">
               <article>
@@ -366,9 +420,11 @@ function MlbPlayResultDetail({
                   ? "The challenge score is the average of both Who Am I rounds."
                   : isBlindResume
                     ? "The challenge score is the total earned across all five Blind Resume rounds."
-                    : isSportsFeud
-                      ? `The challenge score is ${sportsFeud.mainPoints}/60 from the two main boards plus ${sportsFeud.fastPoints}/40 from Fast Money.`
-                      : "The challenge score is the average of both Find the Leader boards."}
+                    : isHitTheNumber
+                      ? "The challenge score is the average of both Hit the Number games."
+                      : isSportsFeud
+                        ? `The challenge score is ${sportsFeud.mainPoints}/60 from the two main boards plus ${sportsFeud.fastPoints}/40 from Fast Money.`
+                        : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>
