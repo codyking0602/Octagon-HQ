@@ -33,13 +33,13 @@ describe("MLB owner preview", () => {
     expect(MLB_OWNER_PREVIEW_HUB.spotlight?.series_id).toBe("al-wc-2");
     expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.teams.every((team) => Boolean(team.logo_url))).toBe(true);
   });
-  it("presents the October 12 Sports Feud card exactly as a live challenge", () => {
+  it("presents the October 15 Hit the Number card exactly as a live challenge", () => {
     expect(MLB_OWNER_PREVIEW_HUB.featuredChallenge).toMatchObject({
-      id: "mlb-2026-play-06",
-      title: "Sports Feud",
-      date: "2026-10-12",
+      id: "mlb-2026-play-07",
+      title: "Hit the Number",
+      date: "2026-10-15",
       route: "/mlb/challenge",
-      game_type: "sports_feud",
+      game_type: "hit_the_number",
       ready: true,
       is_live: true,
     });
