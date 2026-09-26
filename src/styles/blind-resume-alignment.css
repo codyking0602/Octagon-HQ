@@ -460,3 +460,103 @@
     font-size: .53rem;
   }
 }
+
+
+/* MLB reuses the locked UFC Blind Resume geometry with the postseason green identity. */
+.blind-resume-page[data-sport="mlb"] {
+  --mlb-blind-accent: #2f855f;
+  --mlb-blind-accent-strong: #245f47;
+  --mlb-blind-accent-soft: rgba(47, 133, 95, .16);
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-scoreboard {
+  border-color: rgba(47, 133, 95, .42);
+  background:
+    radial-gradient(circle at top left, rgba(47, 133, 95, .24), transparent 48%),
+    linear-gradient(145deg, #111a16, #090d0b 78%);
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-scoreboard .eyebrow,
+.blind-resume-page[data-sport="mlb"] .blind-resume-card > header b,
+.blind-resume-page[data-sport="mlb"] .blind-resume-apex-note {
+  color: #78bd9a;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-card {
+  border-color: rgba(47, 133, 95, .34);
+  background: #101513;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-card > header {
+  background: #0b110e;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-picks button {
+  border-color: rgba(47, 133, 95, .62);
+  background: rgba(47, 133, 95, .09);
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-card > .primary-action,
+.blind-resume-page[data-sport="mlb"] > .primary-action {
+  border-color: rgba(78, 164, 119, .8);
+  background: linear-gradient(135deg, var(--mlb-blind-accent), var(--mlb-blind-accent-strong));
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-reveal-grid article {
+  background: #141a17;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-reveal-grid article.is-winner,
+.blind-resume-page[data-sport="mlb"] .blind-resume-recap section.is-winner {
+  border-color: rgba(71, 170, 117, .7);
+  background: linear-gradient(180deg, rgba(47, 133, 95, .12), #141a17 46%);
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-reveal-grid article > em,
+.blind-resume-page[data-sport="mlb"] .blind-resume-recap em {
+  background: rgba(47, 133, 95, .22);
+  color: #9ed6b8;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-final {
+  border-color: rgba(47, 133, 95, .42);
+  background:
+    radial-gradient(circle at top left, rgba(47, 133, 95, .2), transparent 52%),
+    linear-gradient(145deg, #111a16, #090d0b 80%);
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-final .eyebrow {
+  color: #78bd9a;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-mlb-logo {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .94);
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-reveal-photo.blind-resume-mlb-logo {
+  width: 100%;
+  height: clamp(112px, 31vw, 142px);
+  border-radius: 14px;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-recap__photo.blind-resume-mlb-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-mlb-logo img {
+  display: block;
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-mlb-logo > b {
+  color: #345b49;
+  font-size: .72rem;
+  letter-spacing: .08em;
+}
