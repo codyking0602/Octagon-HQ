@@ -163,6 +163,8 @@ export function OfficialSportsFeudDailyView({
   busy,
   onAdvance,
   onExit,
+  resultStatus,
+  onRetryResult,
 }: {
   projection: TodayChallengeProjection;
   busy: boolean;
@@ -171,6 +173,8 @@ export function OfficialSportsFeudDailyView({
     options?: TodayChallengeAdvanceOptions,
   ) => void;
   onExit?: () => void;
+  resultStatus?: string;
+  onRetryResult?: () => void;
 }) {
   const initial = initialPresentation(projection);
   const [scene, setScene] = useState<Scene>(() => initial.scene);
@@ -820,6 +824,12 @@ export function OfficialSportsFeudDailyView({
             <p><span>MAIN BOARDS</span><strong>{finalMain}/{FAMILY_FEUD_MAIN_RAW_MAX}</strong></p>
             <p><span>FAST MONEY</span><strong>{finalFast}/{FAMILY_FEUD_FAST_MONEY_RAW_MAX}</strong></p>
           </div>
+          {resultStatus ? <p className="feud-result__status">{resultStatus}</p> : null}
+          {onRetryResult ? (
+            <button className="feud-secondary-button" type="button" onClick={onRetryResult} disabled={busy}>
+              {busy ? "SAVING…" : "RETRY SAVE"}
+            </button>
+          ) : null}
           {onExit ? <button className="feud-primary-button" type="button" onClick={onExit}>CONTINUE</button> : null}
         </section>
       ) : null}
