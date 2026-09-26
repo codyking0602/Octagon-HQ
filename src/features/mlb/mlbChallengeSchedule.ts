@@ -52,11 +52,11 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     slot: 4,
     title: "Who Am I",
     kicker: "WHO AM I",
-    description: "Identify the baseball name from a progressive clue ladder.",
+    description: "Two identities. Progressive clues. One averaged final score.",
     route: "/mlb/challenge",
     date: "2026-10-06",
     game_type: "who_am_i",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-05",

@@ -124,6 +124,27 @@ function wavelengthRows(entry: MlbPlayChallengeLeaderboardEntry) {
   });
 }
 
+function whoAmIRows(entry: MlbPlayChallengeLeaderboardEntry) {
+  const rounds = Array.isArray(entry.resultDetail.rounds) ? entry.resultDetail.rounds : [];
+  return rounds.map((value, index) => {
+    const round = value && typeof value === "object" && !Array.isArray(value)
+      ? value as Record<string, unknown>
+      : {};
+    const identity = round.identity && typeof round.identity === "object" && !Array.isArray(round.identity)
+      ? round.identity as Record<string, unknown>
+      : {};
+    return {
+      round: Number(round.round ?? index + 1),
+      score: Number(round.score ?? 0),
+      outcome: String(round.outcome ?? ""),
+      cluesUsed: Number(round.revealed_count ?? 0),
+      wrongGuesses: Number(round.wrong_guesses ?? 0),
+      recoveryMisses: Number(round.recovery_wrong_guesses ?? 0),
+      identityName: String(identity.name ?? "Identity revealed"),
+    };
+  });
+}
+
 function millionaireResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
   const detail = entry.resultDetail;
   const publicResult = entry.publicResult;
@@ -147,8 +168,10 @@ function MlbPlayResultDetail({
 }) {
   const games = gameRows(entry);
   const wavelengthRounds = wavelengthRows(entry);
+  const whoAmIRounds = whoAmIRows(entry);
   const isWavelength = entry.gameType === "wavelength";
   const isMillionaire = entry.gameType === "millionaire";
+  const isWhoAmI = entry.gameType === "who_am_i";
   const millionaire = millionaireResultSummary(entry);
 
   return (
@@ -203,6 +226,19 @@ function MlbPlayResultDetail({
                 </article>
               ))}
             </div>
+          ) : isWhoAmI && whoAmIRounds.length ? (
+            <div className="mlb-play-result-card__games">
+              {whoAmIRounds.map((round) => (
+                <article key={round.round}>
+                  <span>ROUND {round.round}</span>
+                  <strong>{round.score}<small>/100</small></strong>
+                  <small>{round.identityName.toUpperCase()} · {round.cluesUsed} CLUES · {round.outcome.replace("_", " ").toUpperCase()}</small>
+                  {round.wrongGuesses || round.recoveryMisses
+                    ? <small>{round.wrongGuesses} NATURAL MISSES · {round.recoveryMisses} RECOVERY MISSES</small>
+                    : null}
+                </article>
+              ))}
+            </div>
           ) : games.length ? (
             <div className="mlb-play-result-card__games">
               {games.map((game) => (
@@ -224,7 +260,9 @@ function MlbPlayResultDetail({
               ? "Millionaire score follows the eight-question ladder with a 2-point deduction for each lifeline used."
               : isWavelength
                 ? "The challenge score is the average of both Wavelength games."
-                : "The challenge score is the average of both Find the Leader boards."}
+                : isWhoAmI
+                  ? "The challenge score is the average of both Who Am I rounds."
+                  : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>

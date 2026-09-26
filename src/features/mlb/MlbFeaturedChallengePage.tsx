@@ -21,6 +21,11 @@ import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
 import MlbWhoAmIOwnerRun from "./MlbWhoAmIOwnerRun";
+import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
+import {
+  MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY,
+  MLB_WHO_AM_I_PRODUCTION_DATE,
+} from "./mlbWhoAmIProduction";
 import MillionaireCasualPage, { type MillionaireCasualSettledResult } from "../play/MillionaireCasualPage";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
@@ -291,6 +296,34 @@ export default function MlbFeaturedChallengePage() {
         season={liveHub?.season ?? 2026}
         challengeKey={challenge.id}
         challengeDate={challenge.date}
+      />
+    );
+  }
+
+  if (challenge.game_type === "who_am_i") {
+    const isProductionWhoAmI = challenge.id === MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY
+      && challenge.date === MLB_WHO_AM_I_PRODUCTION_DATE;
+
+    if (!isProductionWhoAmI) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Who Am I date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <MlbWhoAmIProductionChallenge
+        key={challenge.id}
+        season={liveHub?.season ?? 2026}
+        challengeKey={challenge.id}
       />
     );
   }
