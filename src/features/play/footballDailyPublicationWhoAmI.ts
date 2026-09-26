@@ -11,7 +11,6 @@ import {
   persistenceSetup,
 } from "./footballDailyPublicationShared";
 
-const FOOTBALL_AUTHORED_WHO_AM_I_SCHEDULE_VERSION = "football-daily-v12-sports-feud";
 const FOOTBALL_AUTHORED_WHO_AM_I_CUTOVER_DAY = "2026-09-23";
 
 export function buildFootballDailyPersistenceSetup(
@@ -22,8 +21,10 @@ export function buildFootballDailyPersistenceSetup(
 ) {
   if (gameType !== "who_am_i") throw new Error("Football Who Am I publication runtime received the wrong game type.");
 
-  const authored = scheduleVersion === FOOTBALL_AUTHORED_WHO_AM_I_SCHEDULE_VERSION
-    && day >= FOOTBALL_AUTHORED_WHO_AM_I_CUTOVER_DAY;
+  // Authored Who Am I is a permanent format cutover, not a property of the
+  // rotation version that happened to introduce it. Future schedule-version
+  // bumps must keep the NFL + CFB two-round Daily.
+  const authored = day >= FOOTBALL_AUTHORED_WHO_AM_I_CUTOVER_DAY;
   const publication = authored
     ? buildTwoRoundWhoAmIDailyPublication(
         createFootballWhoAmIAuthoredDailyRounds(
