@@ -13,11 +13,16 @@ import {
   saveMlbPlayPreviewResult,
   type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
+import {
+  MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY,
+  MLB_MILLIONAIRE_PRODUCTION_DATE,
+  MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03,
+} from "./mlbMillionaireProduction";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
-import MillionaireCasualPage from "../play/MillionaireCasualPage";
+import MillionaireCasualPage, { type MillionaireCasualSettledResult } from "../play/MillionaireCasualPage";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -107,7 +112,7 @@ export default function MlbFeaturedChallengePage() {
       && !previewMode
       && challenge?.ready === true
       && challenge?.is_live === true
-      && challenge?.game_type === "find_leader",
+      && (challenge?.game_type === "find_leader" || challenge?.game_type === "millionaire"),
     season: liveHub?.season ?? 2026,
     challengeKey,
   });
@@ -175,6 +180,39 @@ export default function MlbFeaturedChallengePage() {
       await reloadOverview();
     } catch (nextError) {
       setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Play result could not be recorded.");
+    } finally {
+      setRecording(false);
+    }
+  }
+
+  async function saveOfficialMillionaireResult(result: MillionaireCasualSettledResult) {
+    setRecording(true);
+    setRecordError("");
+    try {
+      await recordMlbPlayChallengeResult({
+        season: liveHub?.season ?? 2026,
+        challengeKey,
+        rawScore: result.score,
+        gameType: "millionaire",
+        publicResult: {
+          outcome: result.outcome,
+          final_money: result.finalMoney,
+          completed_questions: result.completedQuestions,
+          lifelines_used: result.lifelinesUsed,
+          time_remaining_ms: result.timeRemainingMs,
+          score: result.score,
+        },
+        resultDetail: {
+          outcome: result.outcome,
+          final_money: result.finalMoney,
+          completed_questions: result.completedQuestions,
+          lifelines_used: result.lifelinesUsed,
+          time_remaining_ms: result.timeRemainingMs,
+        },
+      });
+      await reloadOverview();
+    } catch (nextError) {
+      setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Millionaire result could not be recorded.");
     } finally {
       setRecording(false);
     }
@@ -279,6 +317,87 @@ export default function MlbFeaturedChallengePage() {
         season={liveHub?.season ?? 2026}
         challengeKey={challenge.id}
         challengeDate={challenge.date}
+      />
+    );
+  }
+
+  if (challenge.game_type === "millionaire") {
+    const isProductionMillionaire = challenge.id === MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY
+      && challenge.date === MLB_MILLIONAIRE_PRODUCTION_DATE;
+
+    if (!isProductionMillionaire) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Millionaire date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    if (overviewLoading && !overview && !practiceMode) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>Loading your challenge…</h1>
+          </section>
+        </div>
+      );
+    }
+
+    if (savedResult && !practiceMode) {
+      const finalMoney = typeof savedResult.publicResult.final_money === "number"
+        ? savedResult.publicResult.final_money
+        : 0;
+      const completedQuestions = typeof savedResult.publicResult.completed_questions === "number"
+        ? savedResult.publicResult.completed_questions
+        : 0;
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">OFFICIAL RESULT</p>
+            <h1>Who Wants to Be a Millionaire?</h1>
+            <strong>{savedResult.rawScore}<small>/100</small></strong>
+            <div className="mlb-find-saved-result__games">
+              <span><small>QUESTIONS</small><b>{completedQuestions}/8</b></span>
+              <span><small>WALKED WITH</small><b>{"$"}{finalMoney.toLocaleString()}</b></span>
+            </div>
+            <p>Your official score is locked. Replays do not change the postseason standings.</p>
+            {recordError ? <p>{recordError}</p> : null}
+            <div className="mlb-find-final-actions">
+              <button
+                className="primary-action"
+                type="button"
+                onClick={() => {
+                  setPracticeMode(true);
+                  setRecordError("");
+                }}
+              >
+                PLAY AGAIN
+              </button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+                MLB PLAY
+              </button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <MillionaireCasualPage
+        scope="mlb"
+        accessMode="production"
+        runOverride={MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03}
+        onSettled={(nextResult) => {
+          if (!practiceMode) void saveOfficialMillionaireResult(nextResult);
+        }}
       />
     );
   }

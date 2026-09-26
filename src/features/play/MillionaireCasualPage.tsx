@@ -9,6 +9,7 @@ import {
   currentMillionaireQuestion,
   millionaireCanWalkAway,
   type MillionaireLifeline,
+  type MillionaireRun,
   type MillionaireState,
   type MillionaireTransitionResult,
 } from "../games/millionaireEngine";
@@ -44,6 +45,8 @@ export type MillionaireCasualSettledResult = {
 type MillionaireCasualPageProps = {
   scope: "ufc" | "football" | "mlb";
   onSettled?: (result: MillionaireCasualSettledResult) => void;
+  runOverride?: MillionaireRun;
+  accessMode?: "owner-review" | "production";
 };
 type PlayPhase = "answering" | "locked" | "revealed" | "settled";
 type RevealState = { result: MillionaireTransitionResult; selectedChoiceId: MillionaireChoiceId | null } | null;
@@ -191,13 +194,15 @@ function MillionaireGame({
   onBack,
   onChangeLeague,
   onSettled,
+  runOverride,
 }: {
   league: MillionaireLeague;
   onBack: () => void;
   onChangeLeague?: () => void;
   onSettled?: (result: MillionaireCasualSettledResult) => void;
+  runOverride?: MillionaireRun;
 }) {
-  const run = useMemo(() => millionaireCasualRun(league), [league]);
+  const run = useMemo(() => runOverride ?? millionaireCasualRun(league), [league, runOverride]);
   const [gameState, setGameState] = useState<MillionaireState>(() => createMillionaireState(run));
   const [timeRemainingMs, setTimeRemainingMs] = useState(MILLIONAIRE_TIME_BANK_MS);
   const [phase, setPhase] = useState<PlayPhase>("answering");
@@ -424,14 +429,22 @@ function MillionaireGame({
   );
 }
 
-export default function MillionaireCasualPage({ scope, onSettled }: MillionaireCasualPageProps) {
+export default function MillionaireCasualPage({
+  scope,
+  onSettled,
+  runOverride,
+  accessMode = "owner-review",
+}: MillionaireCasualPageProps) {
   const identity = useIdentity();
   const navigate = useNavigate();
   const [footballLeague, setFootballLeague] = useState<"nfl" | "cfb" | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const backRoute = scope === "ufc" ? "/play" : scope === "mlb" ? "/mlb" : "/football";
 
-  if (!identity.profile?.canControlPicks) return <Navigate to={backRoute} replace />;
+  const productionAccess = accessMode === "production" && scope === "mlb";
+  if (!identity.profile || (!productionAccess && !identity.profile.canControlPicks)) {
+    return <Navigate to={backRoute} replace />;
+  }
 
   let content;
   if (scope === "football" && footballLeague === null) {
@@ -441,7 +454,14 @@ export default function MillionaireCasualPage({ scope, onSettled }: MillionaireC
     const introBack = scope === "football" ? () => setFootballLeague(null) : () => navigate(backRoute);
     const changeLeague = scope === "football" ? () => { setGameStarted(false); setFootballLeague(null); } : undefined;
     content = gameStarted
-      ? <MillionaireGame key={league} league={league} onBack={() => navigate(backRoute)} onChangeLeague={changeLeague} onSettled={onSettled} />
+      ? <MillionaireGame
+          key={league}
+          league={league}
+          onBack={() => navigate(backRoute)}
+          onChangeLeague={changeLeague}
+          onSettled={onSettled}
+          runOverride={runOverride}
+        />
       : <MillionaireRulesIntro league={league} onStart={() => setGameStarted(true)} onBack={introBack} />;
   }
 
