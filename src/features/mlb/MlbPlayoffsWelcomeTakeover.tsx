@@ -95,20 +95,20 @@ export function MlbPlayoffsWelcomeTakeover({
         <section className="mlb-welcome-takeover__quote">
           <span aria-hidden="true">“</span>
           <blockquote aria-label="How can you not be romantic about baseball?">
-            <span className="mlb-welcome-takeover__quote-line">How can you not be romantic</span>{" "}
-            <span className="mlb-welcome-takeover__quote-line">about baseball?</span>
+            <span className="mlb-welcome-takeover__quote-line">How can you not be</span>{" "}
+            <span className="mlb-welcome-takeover__quote-line">romantic about baseball?</span>
           </blockquote>
           <span aria-hidden="true">”</span>
         </section>
 
         <section className="mlb-welcome-takeover__heading">
-          <div className="mlb-welcome-takeover__logo-row" aria-hidden="true">
+          <img className="mlb-welcome-takeover__logo" src="/assets/MLB.webp" alt="" aria-hidden="true" />
+          <div className="mlb-welcome-takeover__league-row" aria-hidden="true">
             <i />
-            <img src="/assets/MLB.webp" alt="" />
+            <small>MLB</small>
             <i />
           </div>
           <h1 id="mlb-welcome-title">
-            <small>MLB</small>
             <strong>PLAYOFF</strong>
             <span>CHALLENGE</span>
           </h1>
