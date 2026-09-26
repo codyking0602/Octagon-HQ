@@ -11,6 +11,7 @@ interface FighterPresentation {
   gender: string;
   thumbUrl: string;
   profileUrl: string;
+  subtitle: string;
 }
 
 function record(value: unknown): JsonRecord | null {
@@ -38,13 +39,27 @@ function fighter(value: unknown): FighterPresentation | null {
     gender: typeof row.gender === "string" ? row.gender : "",
     thumbUrl: typeof row.thumb_url === "string" ? row.thumb_url : "",
     profileUrl: typeof row.profile_url === "string" ? row.profile_url : "",
+    subtitle: typeof row.subtitle === "string" ? row.subtitle : "",
   };
 }
 
-function rankCopy(row: FighterPresentation) {
+function rankCopy(row: FighterPresentation, mlb: boolean) {
+  if (mlb) return row.subtitle || "MLB career résumé";
   const ranked = getPlayFighter(row.id)?.model;
   if (!ranked) return "UFC career ranking";
   return `${row.gender === "women" ? "Women’s" : "Men’s"} UFC GOAT #${ranked.rank}`;
+}
+
+function SubjectVisual({ row, mlb, compact = false }: { row: FighterPresentation; mlb: boolean; compact?: boolean }) {
+  const src = compact ? row.thumbUrl || row.profileUrl : row.profileUrl || row.thumbUrl;
+  if (mlb) {
+    return (
+      <span className={compact ? "blind-resume-recap__photo blind-resume-mlb-logo" : "blind-resume-reveal-photo blind-resume-mlb-logo"}>
+        {src ? <img alt="" loading="lazy" referrerPolicy="no-referrer" src={src} /> : <b aria-hidden="true">MLB</b>}
+      </span>
+    );
+  }
+  return <FighterPhoto className={compact ? "blind-resume-recap__photo" : "blind-resume-reveal-photo"} name={row.name} src={src} />;
 }
 
 export function OfficialBlindResumeV3DailyView({
@@ -58,6 +73,8 @@ export function OfficialBlindResumeV3DailyView({
   onAdvance: (action: Record<string, unknown>) => void;
   onNavigate: (route: string) => void;
 }) {
+  const mlb = projection.publicSetup.sport === "mlb";
+  const subjectLabel = mlb ? "PLAYER" : "FIGHTER";
   const state = projection.publicState;
   const results = records(state.results);
   const currentRound = record(state.current_round);
@@ -92,25 +109,25 @@ export function OfficialBlindResumeV3DailyView({
         returnLabel: "Back to Blind Resume",
       });
       return (
-        <div className="page blind-resume-page" data-game="blind_resume" data-version="v3">
+        <div className="page blind-resume-page" data-game="blind_resume" data-version="v3" data-sport={mlb ? "mlb" : "ufc"}>
           <section className={`blind-resume-verdict ${correct ? "is-correct" : "is-miss"}`}>
-            <p className="eyebrow">{correct ? "YOU PICKED THE MODEL WINNER" : "THE MODEL DISAGREES"}</p>
+            <p className="eyebrow">{correct ? (mlb ? "YOU PICKED THE BETTER RÉSUMÉ" : "YOU PICKED THE MODEL WINNER") : (mlb ? "THE RANKING DISAGREES" : "THE MODEL DISAGREES")}</p>
             <h1>{winner.name} ranks higher</h1>
-            <p>{rankCopy(winner)}. {loser.name} is {rankCopy(loser).replace(/^(Men’s|Women’s) UFC GOAT /, "")}.</p>
+            <p>{rankCopy(winner, mlb)}. {loser.name} is {rankCopy(loser, mlb).replace(/^(Men’s|Women’s) UFC GOAT /, "")}.</p>
             <strong>+{points} POINTS</strong>
           </section>
           <section className="blind-resume-reveal-grid">
             {[fighterA, fighterB].map((row, index) => (
               <article className={`${row.id === winnerId ? "is-winner" : ""}${row.id === pickedId ? " is-picked" : ""}`} key={row.id}>
-                <FighterPhoto className="blind-resume-reveal-photo" name={row.name} src={row.profileUrl || row.thumbUrl} />
-                <span>FIGHTER {index === 0 ? "A" : "B"}</span>
+                <SubjectVisual row={row} mlb={mlb} />
+                <span>{subjectLabel} {index === 0 ? "A" : "B"}</span>
                 <strong>{row.name}</strong>
-                <small>{rankCopy(row)}</small>
+                <small>{rankCopy(row, mlb)}</small>
                 {row.id === pickedId ? <em>YOUR PICK</em> : null}
               </article>
             ))}
           </section>
-          <button className="blind-resume-intelligence" type="button" onClick={() => onNavigate(`/intelligence?${params.toString()}`)}>TAKE MATCHUP TO INTELLIGENCE</button>
+          {!mlb ? <button className="blind-resume-intelligence" type="button" onClick={() => onNavigate(`/intelligence?${params.toString()}`)}>TAKE MATCHUP TO INTELLIGENCE</button> : null}
           <button className="primary-action" type="button" onClick={() => setPendingReveal(null)}>{finalRound ? "SEE FINAL SCORE" : "NEXT ROUND"}</button>
         </div>
       );
@@ -123,14 +140,14 @@ export function OfficialBlindResumeV3DailyView({
 
   if (attempt) {
     return (
-      <div className="page blind-resume-page blind-resume-page--final" data-game="blind_resume" data-version="v3">
+      <div className="page blind-resume-page blind-resume-page--final" data-game="blind_resume" data-version="v3" data-sport={mlb ? "mlb" : "ufc"}>
         <section className="blind-resume-final">
           <div>
             <p className="eyebrow">FIVE-ROUND RESULTS</p>
             <strong>{attempt.normalizedScore}/100</strong>
             <h1>{correctCount === 5 ? "Perfect card" : "Official card complete"}</h1>
           </div>
-          <p>{correctCount}-{5 - correctCount} record · {earnedPoints} points earned. Your official score is saved to Today’s Challenge.</p>
+          <p>{correctCount}-{5 - correctCount} record · {earnedPoints} points earned. {mlb ? "Your challenge score is complete." : "Your official score is saved to Today’s Challenge."}</p>
         </section>
         <section className="blind-resume-recap" aria-label="Five-round Blind Resume recap">
           {results.map((result, index) => {
@@ -148,8 +165,8 @@ export function OfficialBlindResumeV3DailyView({
                 <div>
                   {[fighterA, fighterB].map((row) => (
                     <section className={row.id === winnerId ? "is-winner" : ""} key={row.id}>
-                      <FighterPhoto className="blind-resume-recap__photo" name={row.name} src={row.thumbUrl} />
-                      <span><strong>{row.name}</strong><small>{rankCopy(row).replace(/^(Men’s|Women’s) UFC /, "")}</small></span>
+                      <SubjectVisual row={row} mlb={mlb} compact />
+                      <span><strong>{row.name}</strong><small>{rankCopy(row, mlb).replace(/^(Men’s|Women’s) UFC /, "")}</small></span>
                       <em>{row.id === winnerId ? "WINNER" : row.id === pickedId ? "PICK" : ""}</em>
                     </section>
                   ))}
@@ -168,14 +185,14 @@ export function OfficialBlindResumeV3DailyView({
   const missPoints = integer(currentRound?.miss_points, 2);
 
   return (
-    <div className="page blind-resume-page" data-game="blind_resume" data-version="v3">
+    <div className="page blind-resume-page" data-game="blind_resume" data-version="v3" data-sport={mlb ? "mlb" : "ufc"}>
       <section className="blind-resume-scoreboard">
-        <div><p className="eyebrow">TODAY’S CHALLENGE</p><h1>Which UFC career ranks higher?</h1></div>
+        <div><p className="eyebrow">{mlb ? "MLB PLAYOFF CHALLENGE" : "TODAY’S CHALLENGE"}</p><h1>{mlb ? "Which MLB career ranks higher?" : "Which UFC career ranks higher?"}</h1></div>
         <aside><span>ROUND {integer(currentRound?.round_number, results.length + 1)} OF 5</span><b>{earnedPoints} PTS · {correctCount}-{results.length - correctCount}</b></aside>
       </section>
       {currentRound ? (
         <section className="blind-resume-card">
-          <header><div><span>FIGHTER A</span><strong>?</strong></div><b>RESUME</b><div><span>FIGHTER B</span><strong>?</strong></div></header>
+          <header><div><span>{subjectLabel} A</span><strong>?</strong></div><b>RESUME</b><div><span>{subjectLabel} B</span><strong>?</strong></div></header>
           <div className="blind-resume-stats">
             {stats.map((stat, index) => {
               const revealed = stat.revealed === true;

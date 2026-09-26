@@ -20,7 +20,7 @@ import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
-import MlbWhoAmIOwnerRun from "./MlbWhoAmIOwnerRun";
+import MlbBlindResumeOwnerRun from "./MlbBlindResumeOwnerRun";
 import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
 import {
   MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY,
@@ -268,7 +268,7 @@ export default function MlbFeaturedChallengePage() {
   const savedResult = overview?.ownResult ?? null;
 
   if (previewMode) {
-    return <MlbWhoAmIOwnerRun />;
+    return <MlbBlindResumeOwnerRun />;
   }
 
   if (!challenge || !challenge.is_live || !challenge.ready) {
