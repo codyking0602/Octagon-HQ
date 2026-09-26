@@ -81,13 +81,13 @@ describe("MLB Hit the Number owner run", () => {
     expect(screen.getByText("GAME 2").parentElement?.textContent).toContain("100");
   });
 
-  it("is owner-only and leaves the real October 15 production slot unready", () => {
+  it("stays owner-only while the real October 15 production slot is active", () => {
     const page = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
     const schedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 
     expect(page).toContain("identity.profile?.canControlPicks === true");
     expect(page).toContain("return <MlbHitTheNumberOwnerRun />");
-    expect(schedule).toMatch(/date: "2026-10-15",[\s\S]*?game_type: "hit_the_number",[\s\S]*?ready: false/);
+    expect(schedule).toMatch(/date: "2026-10-15",[\s\S]*?game_type: "hit_the_number",[\s\S]*?ready: true/);
     expect(schedule).not.toContain("mlb-owner-hit-number-career-steroid-era");
   });
 });
