@@ -28,6 +28,8 @@ describe("MLB postseason challenge schedule", () => {
         "mlb-2026-play-03",
         "mlb-2026-play-04",
         "mlb-2026-play-05",
+        "mlb-2026-play-06",
+        "mlb-2026-play-09",
         "mlb-2026-play-10",
       ]);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
@@ -63,10 +65,40 @@ describe("MLB postseason challenge schedule", () => {
       ready: true,
       is_live: true,
     });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-27T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-10",
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-23T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-09",
       game_type: "wavelength",
       ready: true,
+      is_live: true,
+    });
+  });
+
+  it("activates the two production Sports Feud dates with the approved spacing", () => {
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-12T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-06",
+      game_type: "sports_feud",
+      ready: true,
+      is_live: true,
+    });
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-27T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-10",
+      game_type: "sports_feud",
+      ready: true,
+      is_live: true,
+    });
+  });
+
+  it("moves Hit the Number and Millionaire forward without marking unfinished content ready", () => {
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-15T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-07",
+      game_type: "hit_the_number",
+      ready: false,
+      is_live: true,
+    });
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-18T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-08",
+      game_type: "millionaire",
+      ready: false,
       is_live: true,
     });
   });
