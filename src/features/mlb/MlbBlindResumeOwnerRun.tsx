@@ -59,7 +59,7 @@ export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeOwnerRound[] 
       { label: "MVP AWARDS", valueA: "3", valueB: "2" },
       { label: "WORLD SERIES TITLES", valueA: "2", valueB: "1" },
       { label: "CAREER RBI", valueA: "2,218", valueB: "1,881" },
-      { label: "CAREER WAR", valueA: "101.5", valueB: "67.3" },
+      { label: "CAREER WAR", valueA: "101.2", valueB: "67.2" },
     ],
   },
   {
@@ -74,7 +74,7 @@ export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeOwnerRound[] 
       { label: "CAREER STRIKEOUTS", valueA: "3,093", valueB: "2,560" },
       { label: "CY YOUNG AWARDS", valueA: "1", valueB: "0" },
       { label: "WORLD SERIES TITLES", valueA: "1", valueB: "1" },
-      { label: "200+ INNING SEASONS", valueA: "8", valueB: "8" },
+      { label: "CAREER INNINGS", valueA: "3,577.1", valueB: "2,698.0" },
       { label: "CAREER WAR", valueA: "62.3", valueB: "59.0" },
     ],
   },
@@ -91,7 +91,7 @@ export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeOwnerRound[] 
       { label: "MVP AWARDS", valueA: "1", valueB: "1" },
       { label: "GOLD GLOVES", valueA: "3", valueB: "1" },
       { label: "WORLD SERIES TITLES", valueA: "0", valueB: "3" },
-      { label: "CAREER WAR", valueA: "55.2", valueB: "44.8" },
+      { label: "CAREER WAR", valueA: "55.6", valueB: "45.0" },
     ],
   },
   {
@@ -107,7 +107,7 @@ export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeOwnerRound[] 
       { label: "MVP AWARDS", valueA: "1", valueB: "1" },
       { label: "SILVER SLUGGERS", valueA: "3", valueB: "5" },
       { label: "CAREER RBI", valueA: "701", valueB: "1,154" },
-      { label: "CAREER WAR", valueA: "28.2", valueB: "47.1" },
+      { label: "CAREER WAR", valueA: "28.1", valueB: "47.2" },
     ],
   },
   {
@@ -123,7 +123,7 @@ export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeOwnerRound[] 
       { label: "GOLD GLOVES", valueA: "5", valueB: "8" },
       { label: "CAREER RBI", valueA: "1,707", valueB: "1,287" },
       { label: "SEASONS PLAYED", valueA: "21", valueB: "17" },
-      { label: "CAREER WAR", valueA: "93.5", valueB: "70.1" },
+      { label: "CAREER WAR", valueA: "93.7", valueB: "70.1" },
     ],
   },
 ] as const;
