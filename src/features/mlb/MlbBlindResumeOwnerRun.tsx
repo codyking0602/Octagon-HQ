@@ -1,37 +1,17 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { OfficialBlindResumeV3DailyView } from "../play/OfficialBlindResumeV3DailyView";
-import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
-import { blindResumeV3RoundPoints } from "../play/todaysChallengeRuntime";
-import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
+import MlbBlindResumeChallenge, {
+  type MlbBlindResumeRound,
+  type MlbBlindResumeSubject,
+} from "./MlbBlindResumeChallenge";
 
-type JsonRecord = Record<string, unknown>;
-
-export type MlbBlindResumeOwnerSubject = {
-  id: string;
-  name: string;
-  teamAbbreviation: string;
-  subtitle: string;
-};
-
-export type MlbBlindResumeOwnerRound = {
-  id: string;
-  playerA: MlbBlindResumeOwnerSubject;
-  playerB: MlbBlindResumeOwnerSubject;
-  winnerId: string;
-  stats: readonly {
-    label: string;
-    valueA: string;
-    valueB: string;
-  }[];
-};
+export type MlbBlindResumeOwnerSubject = MlbBlindResumeSubject;
+export type MlbBlindResumeOwnerRound = MlbBlindResumeRound;
 
 const subject = (
   id: string,
   name: string,
   teamAbbreviation: string,
   subtitle: string,
-): MlbBlindResumeOwnerSubject => ({ id, name, teamAbbreviation, subtitle });
+): MlbBlindResumeSubject => ({ id, name, teamAbbreviation, subtitle });
 
 const pujols = subject("mlb-owner-blind-resume-pujols", "Albert Pujols", "STL", "Cardinals · Hall of Fame-caliber slugger");
 const cabrera = subject("mlb-owner-blind-resume-cabrera", "Miguel Cabrera", "DET", "Tigers · Triple Crown winner");
@@ -45,7 +25,7 @@ const beltre = subject("mlb-owner-blind-resume-beltre", "Adrian Beltre", "TEX", 
 const rolen = subject("mlb-owner-blind-resume-rolen", "Scott Rolen", "STL", "Cardinals · Hall of Fame third baseman");
 
 // Burned owner-review matchups. Nothing in this card may be reused for the scheduled Oct. 9 challenge.
-export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeOwnerRound[] = [
+export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeRound[] = [
   {
     id: "mlb-owner-br-01",
     playerA: pujols,
@@ -130,140 +110,13 @@ export const MLB_BLIND_RESUME_OWNER_ROUNDS: readonly MlbBlindResumeOwnerRound[] 
 
 const OWNER_DAY = "2026-10-09";
 const OWNER_SCHEDULE_VERSION = "mlb-blind-resume-owner-run-v1";
-const OWNER_SETUP_KEY = `blind-resume-v3:${OWNER_SCHEDULE_VERSION}:${OWNER_DAY}`;
-
-function presentation(subjectRow: MlbBlindResumeOwnerSubject) {
-  const asset = mlbTeamAssetByAbbreviation(subjectRow.teamAbbreviation);
-  return {
-    id: subjectRow.id,
-    name: subjectRow.name,
-    gender: "",
-    thumb_url: asset?.logoUrl ?? "",
-    profile_url: asset?.logoUrl ?? "",
-    subtitle: subjectRow.subtitle,
-  };
-}
-
-function visibleRound(roundIndex: number, revealedCount: number) {
-  const round = MLB_BLIND_RESUME_OWNER_ROUNDS[roundIndex]!;
-  return {
-    round_index: roundIndex,
-    round_number: roundIndex + 1,
-    player_a_label: "PLAYER A",
-    player_b_label: "PLAYER B",
-    revealed_count: revealedCount,
-    correct_points: blindResumeV3RoundPoints(revealedCount, true),
-    miss_points: blindResumeV3RoundPoints(revealedCount, false),
-    stats: round.stats.map((stat, index) => ({
-      label: stat.label,
-      revealed: index < revealedCount,
-      value_a: index < revealedCount ? stat.valueA : null,
-      value_b: index < revealedCount ? stat.valueB : null,
-    })),
-  };
-}
 
 export default function MlbBlindResumeOwnerRun() {
-  const navigate = useNavigate();
-  const [answers, setAnswers] = useState<JsonRecord[]>([]);
-  const [results, setResults] = useState<JsonRecord[]>([]);
-  const [revealedCount, setRevealedCount] = useState(2);
-  const [attempt, setAttempt] = useState<TodayChallengeProjection["officialAttempt"]>(null);
-
-  const publicState = useMemo<JsonRecord>(() => ({
-    complete: Boolean(attempt),
-    round_index: attempt ? MLB_BLIND_RESUME_OWNER_ROUNDS.length : answers.length,
-    results,
-    current_round: attempt ? null : visibleRound(answers.length, revealedCount),
-  }), [answers.length, attempt, results, revealedCount]);
-
-  const projection = useMemo<TodayChallengeProjection>(() => ({
-    available: true,
-    id: "00000000-0000-4000-8000-000000001009",
-    centralDay: OWNER_DAY,
-    scheduleVersion: OWNER_SCHEDULE_VERSION,
-    gameType: "blind_resume",
-    setupKey: OWNER_SETUP_KEY,
-    contentVersion: "blind-resume-v3",
-    scoringVersion: "play-official-score-v3",
-    fallbackReason: null,
-    publicSetup: {
-      sport: "mlb",
-      round_count: MLB_BLIND_RESUME_OWNER_ROUNDS.length,
-      reveal_counts: [2, 4, 6, 8],
-      correct_points: [20, 19, 18, 17],
-      miss_points: [2, 4, 6, 8],
-    },
-    progressRevision: answers.length + revealedCount,
-    publicState,
-    revealSetup: attempt ? {
-      rounds: MLB_BLIND_RESUME_OWNER_ROUNDS.map((round, roundIndex) => ({
-        round_index: roundIndex,
-        player_a: presentation(round.playerA),
-        player_b: presentation(round.playerB),
-        winner_id: round.winnerId,
-      })),
-    } : null,
-    officialAttempt: attempt,
-    deploymentSha: "owner-run",
-  }), [answers.length, attempt, publicState, revealedCount]);
-
-  function advance(action: JsonRecord) {
-    if (attempt) return;
-    const roundIndex = answers.length;
-    const round = MLB_BLIND_RESUME_OWNER_ROUNDS[roundIndex];
-    if (!round) return;
-
-    if (action.reveal === true) {
-      if (revealedCount < 8) setRevealedCount((value) => Math.min(8, value + 2));
-      return;
-    }
-
-    const side = String(action.choice ?? "").toUpperCase();
-    if (side !== "A" && side !== "B") return;
-    const pickedId = side === "A" ? round.playerA.id : round.playerB.id;
-    const correct = pickedId === round.winnerId;
-    const pointsAwarded = blindResumeV3RoundPoints(revealedCount, correct);
-    const nextAnswers = [...answers, { choice: pickedId, revealed_count: revealedCount }];
-    const nextResults = [...results, {
-      round_index: roundIndex,
-      picked_side: side,
-      picked_id: pickedId,
-      winner_id: round.winnerId,
-      correct,
-      revealed_count: revealedCount,
-      points_awarded: pointsAwarded,
-      fighter_a: presentation(round.playerA),
-      fighter_b: presentation(round.playerB),
-    }];
-
-    setAnswers(nextAnswers);
-    setResults(nextResults);
-    setRevealedCount(2);
-
-    if (nextAnswers.length === MLB_BLIND_RESUME_OWNER_ROUNDS.length) {
-      const normalizedScore = nextResults.reduce((sum, result) => sum + Number(result.points_awarded ?? 0), 0);
-      const correctPicks = nextResults.filter((result) => result.correct === true).length;
-      setAttempt({
-        nativeScore: correctPicks,
-        normalizedScore,
-        completedAt: new Date().toISOString(),
-        publicResult: {
-          answers: nextAnswers,
-          correct_picks: correctPicks,
-          points: normalizedScore,
-          results: nextResults,
-        },
-      });
-    }
-  }
-
   return (
-    <OfficialBlindResumeV3DailyView
-      projection={projection}
-      busy={false}
-      onAdvance={advance}
-      onNavigate={(route) => navigate(route === "/play" ? "/mlb" : route)}
+    <MlbBlindResumeChallenge
+      rounds={MLB_BLIND_RESUME_OWNER_ROUNDS}
+      challengeDate={OWNER_DAY}
+      scheduleVersion={OWNER_SCHEDULE_VERSION}
     />
   );
 }
