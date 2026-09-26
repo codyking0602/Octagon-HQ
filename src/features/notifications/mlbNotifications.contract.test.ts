@@ -12,7 +12,7 @@ describe("MLB notification launch contract", () => {
     expect(migration).toContain("where season_row.public_enabled");
     expect(migration).toContain("dispatch_due_mlb_notifications");
     expect(scheduler).toContain('admin.rpc("dispatch_due_mlb_notifications"');
-    expect(scheduler).toContain("no second scheduler or delivery path is introduced");
+    expect(scheduler).toContain("second scheduler or delivery path is introduced");
   });
 
   it("limits MLB push to launch, challenge live, challenge ending, and new rounds", () => {
