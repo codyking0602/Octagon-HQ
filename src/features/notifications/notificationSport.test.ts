@@ -13,6 +13,12 @@ describe("notificationSport", () => {
     expect(notificationKinds).toContain("fighter_watchlist_added");
   });
 
+  it("accepts the canonical UFC card-update notification kind", () => {
+    expect(notificationKinds).toContain("picks_card_updated");
+    expect(notificationSport({ kind: "picks_card_updated", route: "/picks" })).toBe("ufc");
+    expect(notificationSport({ kind: "picks_card_updated", route: null })).toBe("ufc");
+  });
+
   it("accepts the canonical Football Picks notification kind and route", () => {
     expect(notificationKinds).toContain("football_picks_open");
     expect(notificationSport({ kind: "football_picks_open", route: "/football/picks" })).toBe("football");
