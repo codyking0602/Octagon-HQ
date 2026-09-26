@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../../styles/mlb-playoffs-welcome.css";
 
 const MLB_PLAYOFFS_LAUNCH_VERSION = "2026-v1";
-const MLB_PLAYOFFS_PREVIEW_VERSION = "2026-v3";
+const MLB_PLAYOFFS_PREVIEW_VERSION = "2026-v4";
 
 export type MlbPlayoffsWelcomeMode = "preview" | "launch";
 
@@ -56,7 +56,7 @@ export function MlbPlayoffsWelcomeTakeover({
     >
       <div className="mlb-welcome-takeover__poster">
         <img
-          src="/assets/mlb/69608B72-2CD3-4A50-A271-8CC234EFBD11.png"
+          src="/assets/mlb/F02B626F-635A-4727-AB42-FDEBB911C2BF.png"
           alt="MLB Playoff Challenge. How can you not be romantic about baseball? Welcome to October at The HQ. Series Picks. Bracket. Featured Challenges. Championship Race."
           draggable={false}
         />
