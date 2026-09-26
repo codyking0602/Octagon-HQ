@@ -122,6 +122,15 @@ export default function WhoAmIPresentation({
   onReplay,
 }: WhoAmIPresentationProps) {
   const football = sport === "football";
+  const baseball = sport === "mlb";
+  const sportLabel = football ? "FOOTBALL" : baseball ? "MLB" : "UFC";
+  const gameLabel = football ? "FOOTBALL GAMES" : baseball ? "MLB PLAYOFF CHALLENGE" : "UFC GAMES";
+  const hiddenRole = football ? "player or head coach" : baseball ? "player" : "fighter";
+  const searchPlaceholder = football
+    ? `Search ${league} names…`
+    : baseball
+      ? "Search MLB players…"
+      : "Search UFC fighters…";
   const finalGuessRequired = phase === "playing" && revealedCount >= WHO_AM_I_CLUE_LIMIT;
   const latestPairStart = Math.max(0, revealedCount - WHO_AM_I_CLUES_PER_REVEAL);
   const cluePairs = useMemo(() => (
@@ -160,7 +169,7 @@ export default function WhoAmIPresentation({
       <section className="twenty-questions-shell">
         <header className="twenty-questions-header">
           <div>
-            <p className="eyebrow">{daily ? `TODAY’S CHALLENGE · ${football ? "FOOTBALL" : "UFC"}` : football ? "FOOTBALL GAMES" : "UFC GAMES"}</p>
+            <p className="eyebrow">{daily ? `TODAY’S CHALLENGE · ${sportLabel}` : gameLabel}</p>
             <h1>Who Am I?</h1>
             {dailyContext ? <span className="twenty-questions-daily-context">{dailyContext}</span> : null}
           </div>
@@ -171,7 +180,7 @@ export default function WhoAmIPresentation({
           <section className="twenty-questions-start">
             <div className="twenty-questions-start__mark">?</div>
             <p className="twenty-questions-start__league">{league} ROUND</p>
-            <h2>How early can you recognize the hidden {football ? "player or head coach" : "fighter"}?</h2>
+            <h2>How early can you recognize the hidden {hiddenRole}?</h2>
             <p>
               Two clues at a time. Guess when you know it. Every reveal lowers the score, and a wrong guess costs{" "}
               {WHO_AM_I_WRONG_GUESS_PENALTY} points.
@@ -263,7 +272,7 @@ export default function WhoAmIPresentation({
                   onKeyDown={(event) => {
                     if (event.key === "Enter") event.preventDefault();
                   }}
-                  placeholder={football ? `Search ${league} names…` : "Search UFC fighters…"}
+                  placeholder={searchPlaceholder}
                   aria-label="Search identities"
                   autoComplete="off"
                   enterKeyHint="search"
