@@ -94,7 +94,10 @@ export function MlbPlayoffsWelcomeTakeover({
       <div className="mlb-welcome-takeover__content">
         <section className="mlb-welcome-takeover__quote">
           <span aria-hidden="true">“</span>
-          <blockquote>How can you not be romantic about baseball?</blockquote>
+          <blockquote>
+            <span className="mlb-welcome-takeover__quote-line">How can you not be romantic</span>{" "}
+            <span className="mlb-welcome-takeover__quote-line">about baseball?</span>
+          </blockquote>
           <span aria-hidden="true">”</span>
         </section>
 
