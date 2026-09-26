@@ -53,8 +53,12 @@ export function OfficialWhoAmIDailyView({
   const roundSetups = records(outerSetup.rounds);
   const setup = twoRound ? record(roundSetups[roundIndex]) : outerSetup;
   const state = twoRound ? record(outerState.active_round) : outerState;
-  const sport = outerSetup.sport === "football" || setup.sport === "football" ? "football" : "ufc";
-  const football = sport === "football";
+  const configuredSport = String(outerSetup.sport ?? setup.sport ?? "");
+  const sport = configuredSport === "football"
+    ? "football"
+    : configuredSport === "mlb"
+      ? "mlb"
+      : "ufc";
   const league = String(setup.league ?? state.league ?? (football ? "FOOTBALL" : "UFC"));
   const phase = String(state.phase ?? "playing");
   const revealedCount = Number(state.revealed_count ?? WHO_AM_I_CLUES_PER_REVEAL);
