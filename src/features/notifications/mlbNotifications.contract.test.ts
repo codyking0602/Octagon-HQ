@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const center = readFileSync("src/features/notifications/NotificationCenterPage.tsx", "utf8");
 const model = readFileSync("src/features/notifications/notificationModel.ts", "utf8");
-const styles = readFileSync("src/styles/mlb-playoffs.css", "utf8");
+const tokens = readFileSync("src/styles/tokens.css", "utf8");
 const migration = readFileSync("supabase/migrations/202612310192_mlb_notifications.sql", "utf8");
 const scheduler = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 
@@ -28,8 +28,8 @@ describe("MLB notification launch contract", () => {
   it("renders MLB inbox rows with the established muted Baseball green", () => {
     expect(center).toContain("data-hq-theme={sport ?? undefined}");
     expect(model).toContain('return "mlb"');
-    expect(styles).toContain("--mlb-green: #2f855f");
-    expect(styles).toContain('[data-hq-theme="mlb"]');
-    expect(styles).toContain("--hq-context-accent: var(--mlb-green)");
+    expect(tokens).toContain("--mlb-green: #2f855f");
+    expect(tokens).toContain('[data-hq-theme="mlb"]');
+    expect(tokens).toContain("--hq-context-accent: var(--mlb-green)");
   });
 });
