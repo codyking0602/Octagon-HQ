@@ -59,7 +59,7 @@ describe("MLB Hit the Number owner run", () => {
     fireEvent.click(screen.getByRole("button", { name: /5\/5 SELECTED · LOCK PICKS/i }));
 
     expect(screen.getByText("PERFECT")).toBeInTheDocument();
-    expect(screen.getByText("2,680")).toBeInTheDocument();
+    expect(screen.getAllByText("2,680").length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole("button", { name: /NEXT GAME/i }));
 
     expect(screen.getByText("GAME 2 OF 2")).toBeInTheDocument();
