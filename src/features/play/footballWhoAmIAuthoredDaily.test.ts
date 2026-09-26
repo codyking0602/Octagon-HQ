@@ -57,6 +57,44 @@ describe("Football authored Who Am I Daily", () => {
     expect(publicJson).not.toContain('"identity"');
   });
 
+  it("keeps the two-round authored format across future Football schedule-version changes", () => {
+    for (const scheduleVersion of [
+      "football-daily-v12-sports-feud",
+      "football-daily-v15-weighted-sep24",
+      "football-daily-v16-weighted-sep25",
+      "football-daily-v999-future-rotation",
+    ]) {
+      const setup = buildFootballDailyPersistenceSetup(
+        "2026-09-26",
+        scheduleVersion,
+        "who_am_i",
+        [],
+      );
+
+      expect(setup.contentVersion).toBe("who-am-i-authored-daily-v1");
+      expect(setup.publicSetup.format_version).toBe("who-am-i-two-round-v1");
+      expect(setup.publicSetup.round_count).toBe(2);
+      expect(
+        rows(setup.privateSetupEvidence.rounds)
+          .map((row) => record(row.private_setup_evidence).league)
+          .sort(),
+      ).toEqual(["CFB", "NFL"]);
+    }
+  });
+
+  it("preserves the historical single-round format before the authored cutover", () => {
+    const setup = buildFootballDailyPersistenceSetup(
+      "2026-09-22",
+      "football-daily-v999-future-rotation",
+      "who_am_i",
+      [],
+    );
+
+    expect(setup.contentVersion).toBe("who-am-i-daily-v2");
+    expect(setup.publicSetup.format_version).toBeUndefined();
+    expect(setup.publicSetup.round_count).toBeUndefined();
+  });
+
   it("keeps owner-reviewed identities out of the initial deterministic launch pair without hard-banning them", () => {
     const setup = buildFootballDailyPersistenceSetup(
       "2026-09-27",
