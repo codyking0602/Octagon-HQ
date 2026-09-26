@@ -3,6 +3,7 @@ import {
   SPORTS_FEUD_FAST_MONEY_STAGE_ASSET,
   SPORTS_FEUD_HOSTS,
   SPORTS_FEUD_MAIN_STAGE_ASSET,
+  SPORTS_FEUD_MLB_HOST,
   sportsFeudHostAppearanceIndex,
   sportsFeudHostAsset,
   sportsFeudHostNumber,
@@ -30,6 +31,12 @@ describe("Sports Feud presentation assets", () => {
       "/assets/2cfb.png",
       "/assets/3cfb.png",
     ]);
+  });
+
+  it("uses the uploaded MLB host as the fixed MLB Sports Feud host", () => {
+    expect(SPORTS_FEUD_MLB_HOST).toBe("/assets/MLB.webp");
+    expect(sportsFeudHostNumber("mlb", "2026-10-15")).toBe(1);
+    expect(sportsFeudHostAsset("mlb", "2026-10-15")).toBe("/assets/MLB.webp");
   });
 
   it("locks the September 23 launch hosts to UFC #1 and CFB #3", () => {

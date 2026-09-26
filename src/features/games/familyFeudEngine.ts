@@ -1,4 +1,4 @@
-export type FamilyFeudSport = "ufc" | "football";
+export type FamilyFeudSport = "ufc" | "football" | "mlb";
 export type FamilyFeudEntityKind = "person" | "team" | "school" | "other";
 
 export interface FamilyFeudEntity {

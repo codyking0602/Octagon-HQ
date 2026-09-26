@@ -202,7 +202,8 @@ export function OfficialSportsFeudDailyView({
 
   const setup = projection.publicSetup;
   const domain = String(setup.presentation_domain ?? (projection.sport === "football" ? "nfl" : "ufc")) as SportsFeudHostSport;
-  const hqName = domain === "cfb" ? "CFB HQ" : domain === "nfl" ? "NFL HQ" : "UFC HQ";
+  const hqName = domain === "mlb" ? "MLB HQ" : domain === "cfb" ? "CFB HQ" : domain === "nfl" ? "NFL HQ" : "UFC HQ";
+  const challengeLabel = domain === "mlb" ? "PLAYOFF CHALLENGE" : "DAILY CHALLENGE";
   const hostAsset = useMemo(
     () => sportsFeudHostAsset(domain, projection.centralDay),
     [domain, projection.centralDay],
@@ -558,7 +559,7 @@ export function OfficialSportsFeudDailyView({
         "feud-scene--" + scene,
         keyboardOpen ? "is-keyboard-open" : "",
       ].filter(Boolean).join(" ")}
-      data-scope={projection.sport === "football" ? "football" : "ufc"}
+      data-scope={domain === "mlb" ? "mlb" : projection.sport === "football" ? "football" : "ufc"}
       data-scene={scene}
       data-main-reveal={mainRevealPhase}
       style={{
@@ -573,7 +574,7 @@ export function OfficialSportsFeudDailyView({
 
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="official-feud-intro-title">
-          <div className="feud-intro__eyebrow">{hqName} · DAILY CHALLENGE</div>
+          <div className="feud-intro__eyebrow">{hqName} · {challengeLabel}</div>
           <Brand />
           <h1 id="official-feud-intro-title">Clear the board.</h1>
           <p>Find four good HQ answers before three strikes. Then finish five Fast Money prompts.</p>
