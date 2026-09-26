@@ -57,55 +57,6 @@ body.millionaire-daily-active .bottom-nav {
   user-select: none;
 }
 
-/* MLB's host source is a transparent cutout, not a composed 16:9 stage.
-   Keep only the positioning bay: the transparent host renders directly over the studio. */
-.millionaire-stage-host-slot {
-  z-index: 4;
-  left: 198px;
-  bottom: 247px;
-  width: 509px;
-  height: 554px;
-  overflow: visible;
-  background: transparent;
-  box-shadow: none;
-  pointer-events: none;
-}
-
-.millionaire-stage-host-slot::before,
-.millionaire-stage-host-slot::after {
-  content: none;
-}
-
-.millionaire-stage-host {
-  position: absolute;
-  z-index: 2;
-  left: -7%;
-  right: auto;
-  top: auto;
-  bottom: -1.5%;
-  width: 114%;
-  height: 105%;
-  max-width: none;
-  object-fit: cover;
-  object-position: center 38%;
-  pointer-events: none;
-  user-select: none;
-}
-
-/* MLB uses a portrait transparent cutout. Preserve its intrinsic ratio instead
-   of cropping it into the generic near-square host image box. */
-.millionaire-stage-host-slot--mlb .millionaire-stage-host {
-  left: 54%;
-  right: auto;
-  top: auto;
-  bottom: -2%;
-  width: auto;
-  height: 108%;
-  object-fit: contain;
-  object-position: center bottom;
-  transform: translateX(-50%);
-}
-
 /* Keep the photographic background visible; old synthetic stage layers do not participate. */
 .millionaire-shell--fixed-stage .millionaire-arena,
 .millionaire-shell--fixed-stage .millionaire-crowd,
