@@ -33,13 +33,13 @@ describe("MLB owner preview", () => {
     expect(MLB_OWNER_PREVIEW_HUB.spotlight?.series_id).toBe("al-wc-2");
     expect(MLB_OWNER_PREVIEW_HUB.bracketTemplate.teams.every((team) => Boolean(team.logo_url))).toBe(true);
   });
-  it("presents the October 9 Blind Resume card exactly as a live challenge", () => {
+  it("presents the October 15 Sports Feud card exactly as a live challenge", () => {
     expect(MLB_OWNER_PREVIEW_HUB.featuredChallenge).toMatchObject({
-      id: "mlb-2026-play-05",
-      title: "Blind Resume",
-      date: "2026-10-09",
+      id: "mlb-2026-play-07",
+      title: "Sports Feud",
+      date: "2026-10-15",
       route: "/mlb/challenge",
-      game_type: "blind_resume",
+      game_type: "sports_feud",
       ready: true,
       is_live: true,
     });
