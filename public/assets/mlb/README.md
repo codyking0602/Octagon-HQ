@@ -1,7 +1,7 @@
 # MLB launch assets
 
-The MLB playoff welcome takeover currently uses:
+The MLB playoff welcome takeover uses the approved locked poster:
 
-`public/assets/mlb/534DBEC2-190B-483E-9ED2-B07493623124.png`
+`public/assets/mlb/69608B72-2CD3-4A50-A271-8CC234EFBD11.png`
 
-This is the clean photo-only background used beneath the CSS-rendered quote, title, explainer rows, and acknowledgement button.
+The poster owns the quote, MLB mark, title, explainer rows, background treatment, and blank green CTA artwork. The app overlays only the real clickable ENTER THE PLAYOFFS button text/arrow on the baked CTA area.
