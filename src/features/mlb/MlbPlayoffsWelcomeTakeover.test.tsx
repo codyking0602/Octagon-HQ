@@ -17,7 +17,7 @@ describe("MLB playoffs welcome takeover", () => {
 
     const poster = getByAltText(/MLB Playoff Challenge/i);
     expect(poster.getAttribute("src")).toBe(
-      "/assets/mlb/F02B626F-635A-4727-AB42-FDEBB911C2BF.png",
+      "/assets/mlb/9420D6BC-7C2C-496A-8927-1E04162E5E0A.png",
     );
     expect(poster.getAttribute("alt")).toContain("How can you not be romantic about baseball?");
     expect(poster.getAttribute("alt")).toContain("Series Picks");
@@ -32,7 +32,7 @@ describe("MLB playoffs welcome takeover", () => {
   });
 
   it("stays dismissed for that profile after acknowledgement", () => {
-    const key = "octagon-hq:mlb-playoffs-welcome:2026-v5:preview:profile-a";
+    const key = "octagon-hq:mlb-playoffs-welcome:2026-v6:preview:profile-a";
     const first = render(<MlbPlayoffsWelcomeTakeover profileId="profile-a" mode="preview" />);
 
     fireEvent.click(first.getByRole("button", { name: /enter the playoffs/i }));
@@ -53,7 +53,7 @@ describe("MLB playoffs welcome takeover", () => {
 
   it("keeps owner preview dismissal separate from the real public launch", () => {
     window.localStorage.setItem(
-      "octagon-hq:mlb-playoffs-welcome:2026-v5:preview:profile-a",
+      "octagon-hq:mlb-playoffs-welcome:2026-v6:preview:profile-a",
       "dismissed",
     );
 
