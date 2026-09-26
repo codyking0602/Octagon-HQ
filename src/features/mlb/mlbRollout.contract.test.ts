@@ -15,6 +15,7 @@ const millionaireReadyMigration = readFileSync("supabase/migrations/202612310187
 const whoAmIReadyMigration = readFileSync("supabase/migrations/202612310188_mlb_oct6_who_am_i_ready.sql", "utf8");
 const blindResumeReadyMigration = readFileSync("supabase/migrations/202612310189_mlb_oct9_blind_resume_ready.sql", "utf8");
 const backHalfRotationMigration = readFileSync("supabase/migrations/202612310190_mlb_back_half_rotation_and_sports_feud_ready.sql", "utf8");
+const oct15Oct18ReadyMigration = readFileSync("supabase/migrations/202612310191_mlb_oct15_hit_number_oct18_millionaire_ready.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -149,6 +150,8 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbPlay).toContain("WINNER");
     expect(mlbPlay).toContain('entry.gameType === "sports_feud"');
     expect(mlbPlay).toContain("FAST MONEY");
+    expect(mlbPlay).toContain('entry.gameType === "hit_the_number"');
+    expect(mlbPlay).toContain("average of both Hit the Number games");
     expect(styles).toContain('.today-hub[data-sport="mlb"]');
     expect(styles).toContain(".mlb-play-standings");
   });
@@ -163,6 +166,14 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbChallengePage).toContain("MlbSportsFeudChallenge");
     expect(mlbChallengePage).toContain("mlbSportsFeudProductionConfig");
     expect(mlbChallengePage).toContain('challenge.game_type === "sports_feud"');
+  });
+
+  it("routes the October 15 Hit the Number and both Millionaire dates through production runners", () => {
+    expect(mlbChallengePage).toContain("MlbHitTheNumberChallenge");
+    expect(mlbChallengePage).toContain("MLB_HIT_NUMBER_PRODUCTION_CONFIG");
+    expect(mlbChallengePage).toContain('challenge.game_type === "hit_the_number"');
+    expect(mlbChallengePage).toContain("mlbMillionaireProductionRun");
+    expect(mlbChallengePage).toContain('challenge.game_type === "millionaire"');
   });
 
   it("automatically schedules MLB Play in Central time and protects future results", () => {
@@ -192,6 +203,13 @@ describe("MLB Playoffs rollout gate", () => {
     expect(backHalfRotationMigration).toContain("'mlb-2026-play-10'");
     expect(backHalfRotationMigration).toContain("date '2026-10-27'");
     expect(backHalfRotationMigration).toContain("true)");
+    expect(oct15Oct18ReadyMigration).toContain("challenge_key = 'mlb-2026-play-07'");
+    expect(oct15Oct18ReadyMigration).toContain("scheduled_date = date '2026-10-15'");
+    expect(oct15Oct18ReadyMigration).toContain("game_type = 'hit_the_number'");
+    expect(oct15Oct18ReadyMigration).toContain("challenge_key = 'mlb-2026-play-08'");
+    expect(oct15Oct18ReadyMigration).toContain("scheduled_date = date '2026-10-18'");
+    expect(oct15Oct18ReadyMigration).toContain("game_type = 'millionaire'");
+    expect(oct15Oct18ReadyMigration).toContain("set content_ready = true");
     expect(playScheduleMigration).toContain("get_mlb_postseason_active_challenge");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_active");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_ready");
