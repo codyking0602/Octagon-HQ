@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import MlbWhoAmIOwnerRun, { MLB_WHO_AM_I_OWNER_ROUNDS } from "./MlbWhoAmIOwnerRun";
 
 afterEach(() => cleanup());
@@ -26,7 +27,7 @@ describe("MLB Who Am I owner run", () => {
   });
 
   it("looks like the real MLB challenge and averages the two round scores", () => {
-    render(<MlbWhoAmIOwnerRun />);
+    render(<MemoryRouter><MlbWhoAmIOwnerRun /></MemoryRouter>);
 
     expect(document.body.textContent).toContain("TODAY’S CHALLENGE · MLB");
     expect(document.body.textContent).toContain("ROUND 1 OF 2");
