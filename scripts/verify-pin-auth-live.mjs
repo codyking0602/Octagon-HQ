@@ -330,10 +330,11 @@ try {
 
       const allClear = monitoringRegion.getByLabel("Pending changes all clear");
       const pendingChanges = monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" });
+      const reviewOnlyReceipts = monitoringRegion.getByRole("heading", { name: "Review-only monitoring receipts" });
       const partialCoverage = syncHeadingText === "AUTO-SYNC HAS PARTIAL COVERAGE";
       const waitingForNextCheck = syncHeadingText === "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK";
-      if (!await allClear.count() && !await pendingChanges.count() && !partialCoverage && !waitingForNextCheck) {
-        throw new Error("Monitoring rendered neither its compact all-clear state, pending findings workflow, explicit partial coverage, nor healthy waiting state.");
+      if (!await allClear.count() && !await pendingChanges.count() && !await reviewOnlyReceipts.count() && !partialCoverage && !waitingForNextCheck) {
+        throw new Error("Monitoring rendered neither its compact all-clear state, owner-decision workflow, review-only receipts, explicit partial coverage, nor healthy waiting state.");
       }
 
       await fightRegion.waitFor({ state: "visible", timeout: 15_000 });
