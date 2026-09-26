@@ -364,7 +364,7 @@ export default function MlbFeaturedChallengePage() {
   }
 
   if (challenge.game_type === "sports_feud") {
-    const sportsFeudConfig = mlbSportsFeudProductionConfig(challenge.id, challenge.date);
+    const sportsFeudConfig = mlbSportsFeudProductionConfig(challenge.id, challenge.date ?? "");
 
     if (!sportsFeudConfig) {
       return (
