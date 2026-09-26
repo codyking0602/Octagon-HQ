@@ -99,7 +99,8 @@ export default function MlbFeaturedChallengePage() {
   const navigate = useNavigate();
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const { hub: liveHub } = useMlbPlayoffs(signedIn);
-  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
+  const previewMode = identity.profile?.canControlPicks === true
+    && (!liveHub || !liveHub.fieldReady || liveHub.featuredChallenge?.is_live !== true);
   const challenge = liveHub?.featuredChallenge ?? null;
   const challengeKey = challenge?.id ?? "";
   const {
