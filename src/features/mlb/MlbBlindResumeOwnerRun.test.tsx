@@ -68,14 +68,14 @@ describe("MLB Blind Resume owner run", () => {
     expect(screen.getByText(/5-0 record · 94 points earned/)).toBeInTheDocument();
   });
 
-  it("stays behind the existing owner capability while leaving the Oct. 9 production slot unready", () => {
+  it("stays behind the existing owner capability while the approved Oct. 9 slot is production-ready", () => {
     const page = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
     const schedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
     const styles = readFileSync("src/styles/blind-resume-alignment.css", "utf8");
 
     expect(page).toContain("identity.profile?.canControlPicks === true");
     expect(page).toContain("return <MlbBlindResumeOwnerRun />");
-    expect(schedule).toMatch(/date: "2026-10-09",[\s\S]*?game_type: "blind_resume",[\s\S]*?ready: false/);
+    expect(schedule).toMatch(/date: "2026-10-09",[\s\S]*?game_type: "blind_resume",[\s\S]*?ready: true/);
     expect(styles).toContain('.blind-resume-page[data-sport="mlb"]');
     expect(styles).toContain("--mlb-blind-accent: #2f855f");
     expect(styles).toContain("grid-template-columns: 42px minmax(0, 1fr) auto");
