@@ -29,6 +29,8 @@ describe("MLB postseason challenge schedule", () => {
         "mlb-2026-play-04",
         "mlb-2026-play-05",
         "mlb-2026-play-06",
+        "mlb-2026-play-07",
+        "mlb-2026-play-08",
         "mlb-2026-play-09",
         "mlb-2026-play-10",
       ]);
@@ -88,17 +90,17 @@ describe("MLB postseason challenge schedule", () => {
     });
   });
 
-  it("moves Hit the Number and Millionaire forward without marking unfinished content ready", () => {
+  it("automatically activates the finished Hit the Number and second Millionaire dates", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-15T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-07",
       game_type: "hit_the_number",
-      ready: false,
+      ready: true,
       is_live: true,
     });
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-18T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-08",
       game_type: "millionaire",
-      ready: false,
+      ready: true,
       is_live: true,
     });
   });
