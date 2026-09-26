@@ -21,6 +21,11 @@ import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
 import MlbBlindResumeOwnerRun from "./MlbBlindResumeOwnerRun";
+import MlbBlindResumeProductionChallenge from "./MlbBlindResumeProductionChallenge";
+import {
+  MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY,
+  MLB_BLIND_RESUME_PRODUCTION_DATE,
+} from "./mlbBlindResumeProduction";
 import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
 import {
   MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY,
@@ -321,6 +326,34 @@ export default function MlbFeaturedChallengePage() {
 
     return (
       <MlbWhoAmIProductionChallenge
+        key={challenge.id}
+        season={liveHub?.season ?? 2026}
+        challengeKey={challenge.id}
+      />
+    );
+  }
+
+  if (challenge.game_type === "blind_resume") {
+    const isProductionBlindResume = challenge.id === MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY
+      && challenge.date === MLB_BLIND_RESUME_PRODUCTION_DATE;
+
+    if (!isProductionBlindResume) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Blind Resume date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <MlbBlindResumeProductionChallenge
         key={challenge.id}
         season={liveHub?.season ?? 2026}
         challengeKey={challenge.id}
