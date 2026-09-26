@@ -560,3 +560,46 @@
   font-size: .72rem;
   letter-spacing: .08em;
 }
+
+
+/* MLB result-screen phone polish: keep the score and recap identity columns from colliding. */
+.blind-resume-page[data-sport="mlb"] .blind-resume-final {
+  grid-template-columns: minmax(142px, .8fr) minmax(0, 1.2fr);
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-final > div > strong {
+  font-size: 40px;
+  letter-spacing: -.065em;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-final > p {
+  min-width: 0;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-recap__round section {
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+}
+
+.blind-resume-page[data-sport="mlb"] .blind-resume-recap__photo.blind-resume-mlb-logo {
+  width: 40px;
+  height: 40px;
+}
+
+@media (max-width: 390px) {
+  .blind-resume-page[data-sport="mlb"] .blind-resume-final {
+    grid-template-columns: minmax(132px, .82fr) minmax(0, 1.18fr);
+  }
+
+  .blind-resume-page[data-sport="mlb"] .blind-resume-final > div > strong {
+    font-size: 38px;
+  }
+
+  .blind-resume-page[data-sport="mlb"] .blind-resume-recap__round section {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  .blind-resume-page[data-sport="mlb"] .blind-resume-recap__photo.blind-resume-mlb-logo {
+    width: 36px;
+    height: 36px;
+  }
+}
