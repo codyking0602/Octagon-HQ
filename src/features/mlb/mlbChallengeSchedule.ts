@@ -89,7 +89,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-15",
     game_type: "hit_the_number",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-08",
@@ -100,7 +100,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-18",
     game_type: "millionaire",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-09",
