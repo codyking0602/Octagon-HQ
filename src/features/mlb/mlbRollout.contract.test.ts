@@ -11,6 +11,7 @@ const picksParityMigration = readFileSync("supabase/migrations/202612310181_mlb_
 const championshipMigration = readFileSync("supabase/migrations/202612310182_mlb_postseason_championship.sql", "utf8");
 const playLeaderboardMigration = readFileSync("supabase/migrations/202612310183_mlb_play_challenge_leaderboard.sql", "utf8");
 const playScheduleMigration = readFileSync("supabase/migrations/202612310184_mlb_play_challenge_schedule.sql", "utf8");
+const millionaireReadyMigration = readFileSync("supabase/migrations/202612310187_mlb_oct3_millionaire_ready.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -149,6 +150,10 @@ describe("MLB Playoffs rollout gate", () => {
     expect(playScheduleMigration).toContain("date '2026-10-01'");
     expect(playScheduleMigration).toContain("date '2026-10-27'");
     expect(playScheduleMigration).toContain("content_ready = slot in (1, 2, 10)");
+    expect(millionaireReadyMigration).toContain("challenge_key = 'mlb-2026-play-03'");
+    expect(millionaireReadyMigration).toContain("scheduled_date = date '2026-10-03'");
+    expect(millionaireReadyMigration).toContain("game_type = 'millionaire'");
+    expect(millionaireReadyMigration).toContain("content_ready = true");
     expect(playScheduleMigration).toContain("get_mlb_postseason_active_challenge");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_active");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_ready");
