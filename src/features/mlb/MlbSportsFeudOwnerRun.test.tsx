@@ -56,7 +56,7 @@ describe("MLB Sports Feud owner run", () => {
   it("runs the canonical engine end to end and can produce a 100-point card", () => {
     const publication = buildFamilyFeudDailySetup(
       MLB_SPORTS_FEUD_OWNER_PACK,
-      "2026-10-15",
+      "2026-10-12",
       "mlb-sports-feud-owner-run-v1",
     );
     expect(publication.publicSetup.presentation_domain).toBe("mlb");
@@ -101,13 +101,13 @@ describe("MLB Sports Feud owner run", () => {
     });
   });
 
-  it("is owner-only and does not activate the real October 15 production slot", () => {
+  it("stays owner-only while the approved October 12 production slot is active", () => {
     const page = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
     const schedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 
     expect(page).toContain("identity.profile?.canControlPicks === true");
     expect(page).toContain("return <MlbSportsFeudOwnerRun />");
-    expect(schedule).toMatch(/date: "2026-10-15",[\s\S]*?game_type: "sports_feud",[\s\S]*?ready: false/);
+    expect(schedule).toMatch(/date: "2026-10-12",[\s\S]*?game_type: "sports_feud",[\s\S]*?ready: true/);
     expect(schedule).not.toContain("mlb-sports-feud-owner-run-v1");
   });
 });
