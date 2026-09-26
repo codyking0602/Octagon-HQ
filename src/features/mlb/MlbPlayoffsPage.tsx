@@ -302,7 +302,9 @@ function MlbPlayResultDetail({
                 ? "The challenge score is the average of both Wavelength games."
                 : isWhoAmI
                   ? "The challenge score is the average of both Who Am I rounds."
-                  : "The challenge score is the average of both Find the Leader boards."}
+                  : isBlindResume
+                    ? "The challenge score is the total earned across all five Blind Resume rounds."
+                    : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>
