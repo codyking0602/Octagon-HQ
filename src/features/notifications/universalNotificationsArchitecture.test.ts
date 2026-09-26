@@ -13,7 +13,7 @@ const shell = readFileSync("src/app/AppShell.tsx", "utf8");
 describe("PR 13 universal notification ownership", () => {
   it("frames the existing inbox as The HQ and renders every sport through one list", () => {
     expect(center).toContain('<p className="eyebrow">THE HQ</p>');
-    expect(center).toContain("UFC, Football, and account updates in one inbox.");
+    expect(center).toContain("UFC, Football, Baseball, and account updates in one inbox.");
     expect(center).toContain("notifications.items.map((item) => <NotificationRow");
     expect(center).toContain("data-notification-sport={sport ?? \"universal\"}");
     expect(center).not.toContain("YOUR OCTAGON HQ");
