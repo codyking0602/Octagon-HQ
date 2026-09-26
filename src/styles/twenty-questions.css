@@ -11,6 +11,14 @@
   --twenty-questions-accent: var(--mlb-green, #2f855f);
 }
 
+.who-am-i-page[data-sport="mlb"] .eyebrow {
+  color: var(--twenty-questions-accent);
+}
+
+.official-daily-result-actions.is-mlb button {
+  background: var(--mlb-green, #2f855f);
+}
+
 .twenty-questions-shell {
   display: grid;
   gap: 14px;

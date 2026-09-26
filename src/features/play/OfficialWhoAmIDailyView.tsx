@@ -227,7 +227,7 @@ export function OfficialWhoAmIDailyView({
       />
 
       {twoRound && !attempt && outerState.awaiting_next === true ? (
-        <div className="official-daily-result-actions">
+        <div className={`official-daily-result-actions${sport === "mlb" ? " is-mlb" : ""}`}>
           <button type="button" disabled={busy} onClick={() => onAdvance({ type: "next_round" })}>
             CONTINUE TO ROUND 2
           </button>

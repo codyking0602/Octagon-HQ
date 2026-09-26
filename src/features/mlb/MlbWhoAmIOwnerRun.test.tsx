@@ -36,6 +36,7 @@ describe("MLB Who Am I owner run", () => {
     solveCurrentRound(MLB_WHO_AM_I_OWNER_ROUNDS[0].hiddenSubject.name);
     expect(document.body.textContent).toContain("ROUND SCORE");
     expect(document.body.textContent).toContain("100");
+    expect(document.querySelector(".official-daily-result-actions.is-mlb")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /continue to round 2/i }));
 
     expect(document.body.textContent).toContain("ROUND 2 OF 2");
