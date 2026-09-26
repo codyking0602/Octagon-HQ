@@ -323,14 +323,16 @@ function MlbPlayResultDetail({
             </div>
           ) : isSportsFeud ? (
             <div className="mlb-play-result-card__games">
-              {sportsFeud.boards.map((board) => (
-                <article key={board.round}>
-                  <span>ROUND {board.round}</span>
-                  <strong>{board.points}<small>/30</small></strong>
-                  <small>{board.strikes} STRIKES · {board.found.length} ANSWERS FOUND</small>
-                  {board.found.length ? <small>{board.found.join(" · ").toUpperCase()}</small> : null}
-                </article>
-              ))}
+              <article>
+                <span>MAIN BOARDS</span>
+                <strong>{sportsFeud.mainPoints}<small>/60</small></strong>
+                {sportsFeud.boards.map((board) => (
+                  <small key={board.round}>
+                    ROUND {board.round} · {board.found.length} ANSWERS FOUND · {board.strikes} STRIKES
+                    {board.found.length ? ` · ${board.found.join(" · ").toUpperCase()}` : ""}
+                  </small>
+                ))}
+              </article>
               <article>
                 <span>FAST MONEY</span>
                 <strong>{sportsFeud.fastPoints}<small>/40</small></strong>
