@@ -11,16 +11,18 @@ import {
   recordMlbPlayChallengeResult,
   type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
-import {
-  MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY,
-  MLB_MILLIONAIRE_PRODUCTION_DATE,
-  MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03,
-} from "./mlbMillionaireProduction";
+import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
 import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
 import MlbHitTheNumberOwnerRun from "./MlbHitTheNumberOwnerRun";
+import MlbHitTheNumberChallenge from "./MlbHitTheNumberChallenge";
+import {
+  MLB_HIT_NUMBER_PRODUCTION_CHALLENGE_KEY,
+  MLB_HIT_NUMBER_PRODUCTION_CONFIG,
+  MLB_HIT_NUMBER_PRODUCTION_DATE,
+} from "./mlbHitTheNumberProduction";
 import MlbSportsFeudChallenge from "./MlbSportsFeudChallenge";
 import { mlbSportsFeudProductionConfig } from "./mlbSportsFeudProduction";
 import MlbBlindResumeProductionChallenge from "./MlbBlindResumeProductionChallenge";
@@ -390,11 +392,38 @@ export default function MlbFeaturedChallengePage() {
     );
   }
 
-  if (challenge.game_type === "millionaire") {
-    const isProductionMillionaire = challenge.id === MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY
-      && challenge.date === MLB_MILLIONAIRE_PRODUCTION_DATE;
+  if (challenge.game_type === "hit_the_number") {
+    const isProductionHitTheNumber = challenge.id === MLB_HIT_NUMBER_PRODUCTION_CHALLENGE_KEY
+      && challenge.date === MLB_HIT_NUMBER_PRODUCTION_DATE;
 
-    if (!isProductionMillionaire) {
+    if (!isProductionHitTheNumber) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Hit the Number date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <MlbHitTheNumberChallenge
+        key={challenge.id}
+        config={MLB_HIT_NUMBER_PRODUCTION_CONFIG}
+        season={liveHub?.season ?? 2026}
+      />
+    );
+  }
+
+  if (challenge.game_type === "millionaire") {
+    const productionMillionaireRun = mlbMillionaireProductionRun(challenge.id, challenge.date ?? "");
+
+    if (!productionMillionaireRun) {
       return (
         <div className="page mlb-find-leader-page">
           <section className="mlb-find-saved-result">
@@ -463,7 +492,7 @@ export default function MlbFeaturedChallengePage() {
       <MillionaireCasualPage
         scope="mlb"
         accessMode="production"
-        runOverride={MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03}
+        runOverride={productionMillionaireRun}
         onSettled={(nextResult) => {
           if (!practiceMode) void saveOfficialMillionaireResult(nextResult);
         }}
