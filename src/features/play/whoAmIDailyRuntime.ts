@@ -84,7 +84,7 @@ function roundFromEvidence(context: OfficialDailyRuntimeContext): WhoAmIRound {
   if (!hiddenSubject) throw new Error("Who Am I hidden subject is unavailable.");
   const league = String(evidence.league ?? "");
   const sport = String(evidence.sport ?? "");
-  if (!["UFC", "NFL", "CFB"].includes(league) || !["ufc", "football"].includes(sport)) {
+  if (!["UFC", "NFL", "CFB", "MLB"].includes(league) || !["ufc", "football", "mlb"].includes(sport)) {
     throw new Error("Who Am I round identity is invalid.");
   }
   return {
