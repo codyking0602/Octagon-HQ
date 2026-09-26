@@ -99,6 +99,7 @@ export function FootballHitTheNumberPresentation({
   onRewind,
   onLock,
   resultActions,
+  renderSubjectMark,
   busy = false,
 }: {
   target: number;
@@ -120,6 +121,7 @@ export function FootballHitTheNumberPresentation({
   onRewind?: ((index: number) => void) | null;
   onLock?: (() => void) | null;
   resultActions?: ReactNode;
+  renderSubjectMark?: (subjectId: string, className: string) => ReactNode;
   busy?: boolean;
 }) {
   const candidateById = new Map(candidates.map((candidate) => [candidate.id, candidate]));
@@ -187,7 +189,7 @@ export function FootballHitTheNumberPresentation({
                   >
                     <span className="hit-number-role-slot__index">{index + 1}</span>
                     {subject && subjectId ? (
-                      <FootballHitNumberSubjectMark subjectId={subjectId} className="hit-number-role-slot__photo" />
+                      {renderSubjectMark ? renderSubjectMark(subjectId, "hit-number-role-slot__photo") : <FootballHitNumberSubjectMark subjectId={subjectId} className="hit-number-role-slot__photo" />}
                     ) : (
                       <span className="hit-number-role-slot__empty">+</span>
                     )}
@@ -221,7 +223,7 @@ export function FootballHitTheNumberPresentation({
                     <b>{index + 1}</b>
                     {subject && subjectId ? (
                       <>
-                        <FootballHitNumberSubjectMark subjectId={subjectId} className="hit-number-slot__photo" />
+                        {renderSubjectMark ? renderSubjectMark(subjectId, "hit-number-slot__photo") : <FootballHitNumberSubjectMark subjectId={subjectId} className="hit-number-slot__photo" />}
                         <span>{subject.name}</span>
                         {result && value != null
                           ? <strong className="hit-number-stat-value">{formatValue(value)}</strong>
@@ -290,7 +292,7 @@ export function FootballHitTheNumberPresentation({
                   key={candidate.id}
                   style={isSelected ? selectedFootballCardStyle : undefined}
                 >
-                  <FootballHitNumberSubjectMark subjectId={candidate.id} className="hit-number-fighter-card__photo" />
+                  {renderSubjectMark ? renderSubjectMark(candidate.id, "hit-number-fighter-card__photo") : <FootballHitNumberSubjectMark subjectId={candidate.id} className="hit-number-fighter-card__photo" />}
                   <span>
                     <strong style={{ whiteSpace: "normal", overflow: "visible", textOverflow: "clip", lineHeight: 1.15 }}>{candidate.name}</strong>
                     <small>{candidate.subtitle}</small>
