@@ -8,9 +8,7 @@ import {
   type MlbFindLeaderBoard,
 } from "./mlbFindLeaderProduction";
 import {
-  MLB_PLAY_MILLIONAIRE_REVIEW_CHALLENGE_KEY,
   recordMlbPlayChallengeResult,
-  saveMlbPlayPreviewResult,
   type MlbPlayChallengeResult,
 } from "./mlbPlayChallenge";
 import {
@@ -22,6 +20,7 @@ import { mlbTeamAssetByAbbreviation } from "./mlbTeamAssets";
 import { useMlbPlayChallengeOverview } from "./useMlbPlayChallengeOverview";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import MlbWavelengthChallenge from "./MlbWavelengthChallenge";
+import MlbWhoAmIOwnerRun from "./MlbWhoAmIOwnerRun";
 import MillionaireCasualPage, { type MillionaireCasualSettledResult } from "../play/MillionaireCasualPage";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
@@ -100,7 +99,8 @@ export default function MlbFeaturedChallengePage() {
   const navigate = useNavigate();
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const { hub: liveHub } = useMlbPlayoffs(signedIn);
-  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
+  const previewMode = identity.profile?.canControlPicks === true
+    && (!liveHub || !liveHub.fieldReady || liveHub.featuredChallenge?.is_live !== true);
   const challenge = liveHub?.featuredChallenge ?? null;
   const challengeKey = challenge?.id ?? "";
   const {
@@ -263,33 +263,7 @@ export default function MlbFeaturedChallengePage() {
   const savedResult = overview?.ownResult ?? null;
 
   if (previewMode) {
-    return (
-      <MillionaireCasualPage
-        scope="mlb"
-        onSettled={(result) => {
-          saveMlbPlayPreviewResult(MLB_PLAY_MILLIONAIRE_REVIEW_CHALLENGE_KEY, {
-            rawScore: result.score,
-            gameType: "millionaire",
-            publicResult: {
-              outcome: result.outcome,
-              final_money: result.finalMoney,
-              completed_questions: result.completedQuestions,
-              lifelines_used: result.lifelinesUsed,
-              time_remaining_ms: result.timeRemainingMs,
-              score: result.score,
-            },
-            resultDetail: {
-              outcome: result.outcome,
-              final_money: result.finalMoney,
-              completed_questions: result.completedQuestions,
-              lifelines_used: result.lifelinesUsed,
-              time_remaining_ms: result.timeRemainingMs,
-            },
-            completedAt: new Date().toISOString(),
-          });
-        }}
-      />
-    );
+    return <MlbWhoAmIOwnerRun />;
   }
 
   if (!challenge || !challenge.is_live || !challenge.ready) {
