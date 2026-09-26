@@ -25,8 +25,8 @@ describe("MLB playoffs welcome takeover", () => {
   });
 
   it("stays dismissed for that profile after acknowledgement", () => {
-    const key = "octagon-hq:mlb-playoffs-welcome:2026-v1:profile-a";
-    const first = render(<MlbPlayoffsWelcomeTakeover profileId="profile-a" />);
+    const key = "octagon-hq:mlb-playoffs-welcome:2026-v1:preview:profile-a";
+    const first = render(<MlbPlayoffsWelcomeTakeover profileId="profile-a" mode="preview" />);
 
     fireEvent.click(first.getByRole("button", { name: /enter the playoffs/i }));
 
@@ -35,12 +35,25 @@ describe("MLB playoffs welcome takeover", () => {
 
     first.unmount();
 
-    const second = render(<MlbPlayoffsWelcomeTakeover profileId="profile-a" />);
+    const second = render(<MlbPlayoffsWelcomeTakeover profileId="profile-a" mode="preview" />);
     expect(second.queryByRole("dialog")).toBeNull();
 
     second.unmount();
 
-    const otherProfile = render(<MlbPlayoffsWelcomeTakeover profileId="profile-b" />);
+    const otherProfile = render(<MlbPlayoffsWelcomeTakeover profileId="profile-b" mode="preview" />);
     expect(otherProfile.getByRole("dialog")).toBeTruthy();
+  });
+
+  it("keeps owner preview dismissal separate from the real public launch", () => {
+    window.localStorage.setItem(
+      "octagon-hq:mlb-playoffs-welcome:2026-v1:preview:profile-a",
+      "dismissed",
+    );
+
+    const launch = render(
+      <MlbPlayoffsWelcomeTakeover profileId="profile-a" mode="launch" />,
+    );
+
+    expect(launch.getByRole("dialog")).toBeTruthy();
   });
 });
