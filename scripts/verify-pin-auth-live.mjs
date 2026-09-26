@@ -290,6 +290,16 @@ try {
     (url) => url.pathname === "/picks/control" && url.hash === "#monitoring",
     { timeout: 15_000 },
   );
+
+  // Owner browser proofs use a fresh context, so the intentional owner-only MLB
+  // preview welcome is unacknowledged on every run. Dismiss that product takeover
+  // before exercising Picks controls; otherwise it correctly intercepts page input.
+  const mlbWelcome = page.getByRole("dialog", { name: "Playoff Challenge" });
+  if (await mlbWelcome.isVisible().catch(() => false)) {
+    await mlbWelcome.getByRole("button", { name: "ENTER THE PLAYOFFS" }).click();
+    await mlbWelcome.waitFor({ state: "hidden", timeout: 5_000 });
+  }
+
   const controlStatus = await waitForControlStatus(page);
   let monitoringOutcome;
   const monitoringRegion = page.getByRole("region", {
