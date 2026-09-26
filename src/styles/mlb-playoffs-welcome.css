@@ -31,15 +31,14 @@
 
 .mlb-welcome-takeover__enter {
   position: absolute;
-  left: 10.84%;
-  top: 87.2%;
-  width: 77%;
+  left: 13.5%;
+  top: 89.55%;
+  width: 73%;
   height: 5.65%;
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 4.4% 0 10%;
+  justify-content: center;
+  padding: 0 8%;
   border: 0;
   border-radius: 12px;
   background: transparent;
@@ -50,14 +49,18 @@
 }
 
 .mlb-welcome-takeover__enter span {
-  justify-self: center;
   font-size: clamp(12px, 3.05vw, 16px);
   font-weight: 950;
   letter-spacing: .085em;
   line-height: 1;
+  text-align: center;
 }
 
 .mlb-welcome-takeover__enter b {
+  position: absolute;
+  right: 5.5%;
+  top: 50%;
+  transform: translateY(-54%);
   font-size: clamp(27px, 6.5vw, 35px);
   font-weight: 500;
   line-height: .8;
