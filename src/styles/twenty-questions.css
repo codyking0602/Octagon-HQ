@@ -7,6 +7,10 @@
   --twenty-questions-accent: #1f4e79;
 }
 
+.twenty-questions-page[data-sport="mlb"] {
+  --twenty-questions-accent: var(--mlb-green, #2f855f);
+}
+
 .twenty-questions-shell {
   display: grid;
   gap: 14px;
