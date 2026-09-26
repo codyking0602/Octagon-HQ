@@ -4,14 +4,16 @@ import { MemoryRouter } from "react-router-dom";
 import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
 import { MLB_WHO_AM_I_PRODUCTION_ROUNDS } from "./mlbWhoAmIProduction";
 
-const recordResult = vi.fn(async (input: Record<string, unknown>) => ({
-  rawScore: input.rawScore,
-  gameType: input.gameType,
-  publicResult: input.publicResult,
-  resultDetail: input.resultDetail,
-  completedAt: "2026-10-06T12:00:00-05:00",
+const { recordResult, reloadOverview } = vi.hoisted(() => ({
+  recordResult: vi.fn(async (input: Record<string, unknown>) => ({
+    rawScore: input.rawScore,
+    gameType: input.gameType,
+    publicResult: input.publicResult,
+    resultDetail: input.resultDetail,
+    completedAt: "2026-10-06T12:00:00-05:00",
+  })),
+  reloadOverview: vi.fn(async () => undefined),
 }));
-const reloadOverview = vi.fn(async () => undefined);
 
 vi.mock("./mlbPlayChallenge", async () => {
   const actual = await vi.importActual<typeof import("./mlbPlayChallenge")>("./mlbPlayChallenge");
