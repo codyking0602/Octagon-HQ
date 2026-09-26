@@ -289,7 +289,8 @@ export default function MlbPlayoffsPage() {
   const signedIn = Boolean(identity.profile);
   const { hub: liveHub, loading } = useMlbPlayoffs(signedIn);
   const { championship: liveChampionship } = useMlbChampionship(signedIn);
-  const previewMode = identity.profile?.canControlPicks === true && (!liveHub || !liveHub.fieldReady);
+  const previewMode = identity.profile?.canControlPicks === true
+    && (!liveHub || !liveHub.fieldReady || liveHub.featuredChallenge?.is_live !== true);
   const hub = previewMode ? MLB_OWNER_PREVIEW_HUB : liveHub;
   const championship = previewMode ? MLB_OWNER_PREVIEW_CHAMPIONSHIP : liveChampionship;
   const challenge = hub?.featuredChallenge ?? null;
