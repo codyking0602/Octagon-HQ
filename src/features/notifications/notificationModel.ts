@@ -17,6 +17,11 @@ export const notificationKinds = [
   "picks_card_updated",
   "ufc_event_starting",
   "football_picks_open",
+  "mlb_launch_available",
+  "mlb_challenge_available",
+  "mlb_challenge_four_hours",
+  "mlb_round_available",
+  "mlb_round_recap",
   "daily_challenge_four_hours",
   "daily_streak_at_risk",
   "daily_challenge_available",
@@ -61,7 +66,7 @@ export type NotificationKind = typeof notificationKinds[number];
 export type NotificationCategory = typeof notificationCategories[number];
 export type NotificationPriority = typeof notificationPriorities[number];
 export type NotificationPreferenceKey = typeof notificationPreferenceKeys[number];
-export type NotificationSport = "ufc" | "football";
+export type NotificationSport = "ufc" | "football" | "mlb";
 export type NotificationPermissionState = "unsupported" | "default" | "granted" | "denied";
 export type NotificationDevicePushStatus =
   | "checking"
@@ -165,6 +170,14 @@ const categoryMarks: Record<NotificationCategory, string> = {
   operations: "!",
 };
 
+const mlbOnlyKinds = new Set<NotificationKind>([
+  "mlb_launch_available",
+  "mlb_challenge_available",
+  "mlb_challenge_four_hours",
+  "mlb_round_available",
+  "mlb_round_recap",
+]);
+
 const ufcOnlyKinds = new Set<NotificationKind>([
   "picks_repick_required",
   "picks_fight_cancelled",
@@ -198,18 +211,22 @@ function routeMatches(route: string, root: string) {
 export function notificationSport(item: Pick<NotificationItem, "kind" | "route">): NotificationSport | null {
   const route = item.route ?? "";
   if (routeMatches(route, "/football")) return "football";
+  if (routeMatches(route, "/mlb")) return "mlb";
   if (
     routeMatches(route, "/picks")
     || routeMatches(route, "/play")
     || routeMatches(route, "/rankings")
     || routeMatches(route, "/intelligence")
   ) return "ufc";
+  if (mlbOnlyKinds.has(item.kind)) return "mlb";
   if (ufcOnlyKinds.has(item.kind)) return "ufc";
   return null;
 }
 
 export function notificationSportLabel(sport: NotificationSport) {
-  return sport === "football" ? "Football" : "UFC";
+  if (sport === "football") return "Football";
+  if (sport === "mlb") return "MLB";
+  return "UFC";
 }
 
 export function notificationCategoryLabel(category: NotificationCategory) {
