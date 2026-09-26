@@ -1,19 +1,10 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type {
   FamilyFeudEntity,
   FamilyFeudEntityKind,
   FamilyFeudPack,
   FamilyFeudQuestion,
 } from "../games/familyFeudEngine";
-import OfficialSportsFeudDailyView from "../play/OfficialSportsFeudDailyView";
-import {
-  advanceFamilyFeudDailyRuntime,
-  buildFamilyFeudDailySetup,
-} from "../play/familyFeudDailyRuntime";
-import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
-
-type JsonRecord = Record<string, unknown>;
+import MlbSportsFeudChallenge from "./MlbSportsFeudChallenge";
 
 const MAIN_POINTS = [10, 8, 7, 5, 4, 4, 3, 3, 2, 2, 2, 2] as const;
 const FAST_POINTS = [8, 7, 6, 5, 4, 3, 2, 1, 1, 1] as const;
@@ -183,82 +174,20 @@ export const MLB_SPORTS_FEUD_OWNER_PACK: FamilyFeudPack = {
   ],
 };
 
-const OWNER_DAY = "2026-10-15";
+const OWNER_DAY = "2026-10-12";
 const OWNER_SCHEDULE_VERSION = "mlb-sports-feud-owner-run-v1";
-
-function record(value: unknown): JsonRecord {
-  return value && typeof value === "object" && !Array.isArray(value)
-    ? value as JsonRecord
-    : {};
-}
+const OWNER_CHALLENGE_KEY = "mlb-owner-sports-feud-review";
 
 export default function MlbSportsFeudOwnerRun() {
-  const navigate = useNavigate();
-  const publication = useMemo(
-    () => buildFamilyFeudDailySetup(MLB_SPORTS_FEUD_OWNER_PACK, OWNER_DAY, OWNER_SCHEDULE_VERSION),
-    [],
-  );
-  const [publicState, setPublicState] = useState<JsonRecord>(
-    () => record(publication.publicSetup.initial_state),
-  );
-  const [submissionState, setSubmissionState] = useState<JsonRecord>({});
-  const [attempt, setAttempt] = useState<TodayChallengeProjection["officialAttempt"]>(null);
-  const [revision, setRevision] = useState(0);
-
-  const projection = useMemo<TodayChallengeProjection>(() => ({
-    available: true,
-    id: "00000000-0000-4000-8000-000000001015",
-    centralDay: OWNER_DAY,
-    scheduleVersion: OWNER_SCHEDULE_VERSION,
-    gameType: "sports_feud",
-    setupKey: publication.setupKey,
-    contentVersion: publication.contentVersion,
-    scoringVersion: publication.scoringVersion,
-    fallbackReason: null,
-    publicSetup: publication.publicSetup,
-    progressRevision: revision,
-    publicState,
-    revealSetup: attempt ? publication.revealSetup : null,
-    officialAttempt: attempt,
-    deploymentSha: "mlb-sports-feud-owner-run",
-  }), [attempt, publicState, publication, revision]);
-
-  function advance(action: Record<string, unknown>) {
-    if (attempt) return;
-    const next = advanceFamilyFeudDailyRuntime({
-      setupKey: publication.setupKey,
-      publicSetup: publication.publicSetup,
-      privateSetupEvidence: publication.privateSetupEvidence,
-      submissionState,
-    }, action);
-
-    setSubmissionState(next.submissionState);
-    setPublicState(next.publicState);
-    setRevision((value) => value + 1);
-
-    if (next.complete && next.finalSubmission) {
-      const final = next.finalSubmission;
-      const nativeScore = Number(final.native_score ?? 0);
-      const normalizedScore = Number(final.normalized_score ?? 0);
-      setAttempt({
-        nativeScore,
-        normalizedScore,
-        completedAt: new Date().toISOString(),
-        publicResult: {
-          main_points: Number(final.main_points ?? 0),
-          fast_money_points: Number(final.fast_money_points ?? 0),
-          fast_money_time_remaining_ms: Number(final.fast_money_time_remaining_ms ?? 0),
-        },
-      });
-    }
-  }
-
   return (
-    <OfficialSportsFeudDailyView
-      projection={projection}
-      busy={false}
-      onAdvance={advance}
-      onExit={() => navigate("/mlb")}
+    <MlbSportsFeudChallenge
+      mode="owner_review"
+      config={{
+        pack: MLB_SPORTS_FEUD_OWNER_PACK,
+        challengeDate: OWNER_DAY,
+        scheduleVersion: OWNER_SCHEDULE_VERSION,
+        challengeKey: OWNER_CHALLENGE_KEY,
+      }}
     />
   );
 }
