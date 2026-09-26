@@ -23,8 +23,9 @@ export type MlbHitNumberOwnerGame = {
   candidates: readonly MlbHitNumberOwnerCandidate[];
 };
 
-// Disposable owner-review content. These exact boards, targets, and player-season
-// identities are burned after review and must not be reused for the real Oct. 15 game.
+// Disposable owner-review content. These exact boards, targets, and season-card
+// combinations are burned after review. A small amount of player overlap with the real
+// Oct. 15 game is allowed, but the production pools/targets must be materially different.
 // Career totals and single-season HR values are factual; Baseball-Reference/MLB leader
 // tables were checked when this mock was authored.
 export const MLB_HIT_NUMBER_OWNER_GAMES: readonly [MlbHitNumberOwnerGame, MlbHitNumberOwnerGame] = [
