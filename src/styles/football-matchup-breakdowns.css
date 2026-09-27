@@ -36,11 +36,197 @@
 .football-matchup-breakdown-videos a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid #303436; border-radius: 10px; background: #17191a; color: #f1f1ef; text-decoration: none; }
 .football-matchup-breakdown-videos a span { font-size: .72rem; font-weight: 850; }
 .football-matchup-breakdown-videos a strong { flex: 0 0 auto; color: #e9aa7e; font-size: .54rem; letter-spacing: .08em; }
+
+.football-matchup-breakdown-sheet__header.is-compact {
+  position: relative;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  border-bottom-color: #3b3e40;
+  background:
+    linear-gradient(118deg,
+      rgba(var(--football-matchup-away-rgb), .92) 0%,
+      rgba(var(--football-matchup-away-rgb), .72) 42%,
+      rgba(var(--football-matchup-home-rgb), .72) 58%,
+      rgba(var(--football-matchup-home-rgb), .92) 100%);
+}
+.football-matchup-breakdown-sheet__header.is-compact::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .08), rgba(0, 0, 0, .48));
+}
+.football-matchup-breakdown-sheet__header.is-compact > button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  border-color: rgba(255,255,255,.28);
+  background: rgba(8,10,11,.42);
+  color: #fff;
+}
+.football-matchup-breakdown-feature {
+  position: relative;
+  z-index: 1;
+  padding: 18px 18px 15px;
+}
+.football-matchup-breakdown-feature .eyebrow { margin: 0 44px 5px 0; color: #f6d8c0; }
+.football-matchup-breakdown-feature h2 {
+  margin: 0;
+  max-width: calc(100% - 42px);
+  font-size: clamp(1.05rem, 4.8vw, 1.45rem);
+  line-height: 1.08;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+.football-matchup-breakdown-feature__teams {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+.football-matchup-breakdown-feature-team {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+}
+.football-matchup-breakdown-feature-team.is-home {
+  grid-template-columns: minmax(0, 1fr) 46px;
+  text-align: right;
+}
+.football-matchup-breakdown-feature-team.is-home .football-matchup-breakdown-feature-team__logo { grid-column: 2; grid-row: 1; }
+.football-matchup-breakdown-feature-team.is-home > div { grid-column: 1; grid-row: 1; }
+.football-matchup-breakdown-feature-team__logo {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 50%;
+  background: rgba(245,242,235,.93);
+  box-shadow: 0 5px 14px rgba(0,0,0,.24);
+  overflow: hidden;
+}
+.football-matchup-breakdown-feature-team__logo img { width: 34px; height: 34px; object-fit: contain; }
+.football-matchup-breakdown-feature-team__logo b { color: #151719; font-size: .67rem; letter-spacing: .04em; }
+.football-matchup-breakdown-feature-team a,
+.football-matchup-breakdown-feature-team > div > strong {
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  font-size: clamp(.72rem, 3.25vw, .9rem);
+  font-weight: 950;
+  line-height: 1.05;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+}
+.football-matchup-breakdown-feature-team a:hover,
+.football-matchup-breakdown-feature-team a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.football-matchup-breakdown-feature-team > div > span {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,255,255,.8);
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.football-matchup-breakdown-feature-team > div > span b { color: #fff; }
+.football-matchup-breakdown-feature__at {
+  color: rgba(255,255,255,.68);
+  font-size: .56rem;
+  letter-spacing: .12em;
+}
+.football-matchup-breakdown-feature__meta {
+  margin: 13px 0 0 !important;
+  color: rgba(255,255,255,.72) !important;
+  font-size: .58rem !important;
+  font-weight: 850 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase;
+}
+.football-matchup-breakdown-tabs.is-compact { position: static; top: auto; }
+.football-matchup-breakdown-sheet__body--compact { background: #101213; }
+.football-matchup-breakdown-sheet__body--compact > section { padding: 16px 18px; }
+.football-matchup-breakdown-compact-section h3 { margin-bottom: 8px; }
+.football-matchup-breakdown-sheet__body--compact .football-matchup-breakdown-compact-section > p {
+  margin: 0;
+  color: #c2c5c6;
+  font-size: .78rem;
+  line-height: 1.55;
+}
+.football-matchup-breakdown-compact-things { display: grid; }
+.football-matchup-breakdown-compact-things article {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid #2a2d2f;
+}
+.football-matchup-breakdown-compact-things article:first-child { padding-top: 2px; border-top: 0; }
+.football-matchup-breakdown-compact-things article:last-child { padding-bottom: 0; }
+.football-matchup-breakdown-compact-things article > span {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border: 1px solid #b66c3d;
+  border-radius: 50%;
+  color: #f0b78f;
+  font-size: .58rem;
+  font-weight: 950;
+}
+.football-matchup-breakdown-compact-things h4 {
+  color: #f2f2ef;
+  font-size: .78rem;
+  letter-spacing: .01em;
+}
+.football-matchup-breakdown-compact-things p {
+  margin-top: 5px;
+  color: #b8bcbd;
+  font-size: .75rem;
+  line-height: 1.52;
+}
+.football-matchup-breakdown-compact-things p strong,
+.football-matchup-breakdown-sheet__body--compact p strong { color: #f4f1ec; font-weight: 900; }
+.football-matchup-breakdown-inline-link {
+  color: #f4f1ec;
+  font-weight: 900;
+  text-decoration-color: rgba(233,170,126,.62);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.football-matchup-breakdown-inline-link:hover,
+.football-matchup-breakdown-inline-link:focus-visible { color: #ffd4b7; }
+.football-matchup-breakdown-compact-section.is-bottom-line {
+  border-bottom: 0;
+  background:
+    linear-gradient(90deg,
+      rgba(var(--football-matchup-away-rgb, 158,27,50), .13),
+      rgba(16,18,19,.92) 47%,
+      rgba(var(--football-matchup-home-rgb, 93,23,37), .13));
+  box-shadow: inset 0 2px 0 rgba(216,136,82,.72);
+}
+
 @media (min-width: 700px) {
   .football-matchup-breakdown-backdrop { align-items: center; padding: 24px; }
   .football-matchup-breakdown-sheet { max-height: 90vh; border-bottom: 1px solid #34383b; border-radius: 22px; }
   .football-matchup-breakdown-sheet__header { padding: 21px 22px 16px; }
+  .football-matchup-breakdown-sheet__header.is-compact { padding: 0; }
+  .football-matchup-breakdown-feature { padding: 21px 22px 17px; }
+  .football-matchup-breakdown-feature-team { grid-template-columns: 56px minmax(0, 1fr); gap: 11px; }
+  .football-matchup-breakdown-feature-team.is-home { grid-template-columns: minmax(0, 1fr) 56px; }
+  .football-matchup-breakdown-feature-team__logo { width: 56px; height: 56px; }
+  .football-matchup-breakdown-feature-team__logo img { width: 41px; height: 41px; }
   .football-matchup-breakdown-tabs { top: 95px; padding-inline: 18px; }
   .football-matchup-breakdown-sheet__body > section { padding: 22px; }
+  .football-matchup-breakdown-sheet__body--compact > section { padding: 18px 22px; }
   .football-matchup-breakdown-grid, .football-matchup-breakdown-edges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
