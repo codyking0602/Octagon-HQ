@@ -20,6 +20,25 @@ function dayAt(index: number) {
   return new Date(Date.UTC(2027, 0, index + 1)).toISOString().slice(0, 10);
 }
 
+type DailySetup = ReturnType<typeof buildOfficialDailySetup>;
+
+function hitNumberChildSetups(setup: DailySetup): DailySetup[] {
+  const rounds = setup.privateSetupEvidence.rounds;
+  if (!Array.isArray(rounds)) return [setup];
+  return rounds.map((value) => {
+    const row = value as Record<string, unknown>;
+    return {
+      setupKey: String(row.setup_key ?? ""),
+      contentVersion: String(row.content_version ?? ""),
+      scoringVersion: row.scoring_version as DailySetup["scoringVersion"],
+      publicSetup: row.public_setup as DailySetup["publicSetup"],
+      revealSetup: row.reveal_setup as DailySetup["revealSetup"],
+      privateSetupEvidence: row.private_setup_evidence as DailySetup["privateSetupEvidence"],
+      privateGradingEvidence: row.private_grading_evidence as DailySetup["privateGradingEvidence"],
+    };
+  });
+}
+
 function formatIdFor(setup: ReturnType<typeof buildOfficialDailySetup>) {
   const format = setup.publicSetup.format as Record<string, unknown> | undefined;
   return String(format?.formatId ?? "classic") as HitTheNumberFormatId;
@@ -29,7 +48,9 @@ function setupForFormat(formatId: HitTheNumberFormatId) {
   for (let index = 0; index < 240; index += 1) {
     const day = dayAt(index);
     const setup = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
-    if (formatIdFor(setup) === formatId) return { day, setup };
+    for (const child of hitNumberChildSetups(setup)) {
+      if (formatIdFor(child) === formatId) return { day, setup: child };
+    }
   }
   throw new Error(`No deterministic ${formatId} Daily seed found.`);
 }
@@ -81,34 +102,40 @@ describe("official Hit the Number daily runtime", () => {
       const first = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
       const second = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
       expect(second).toEqual(first);
-      expect(first.contentVersion).toBe(HIT_THE_NUMBER_DAILY_CONTENT_VERSION);
-      expect(first.setupKey.startsWith(`${HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:`)).toBe(true);
-      expect(first.scoringVersion).toBe("play-official-score-v1");
-      expect(first.publicSetup.runtime_version).toBe(OFFICIAL_DAILY_RUNTIME_VERSION);
-      expect(first.publicSetup.version).toBe("hit-the-number-v2");
-      expect(first.publicSetup.target).toEqual(expect.any(Number));
-      expect(first.publicSetup.pickCount).toEqual(expect.any(Number));
-      expect(first.publicSetup.fighterIds).toEqual(expect.any(Array));
-      expect(first.publicSetup.format).toEqual(expect.objectContaining({
-        formatId: expect.any(String),
-        label: expect.any(String),
-        slots: expect.any(Array),
-      }));
-      observedModes.add(String(first.publicSetup.boardType));
-      observedFormats.add(formatIdFor(first));
+      expect(first.scoringVersion).toBe("daily-two-game-average-score-v1");
+      const children = hitNumberChildSetups(first);
+      expect(children).toHaveLength(2);
 
-      const browserJson = JSON.stringify({
-        public_setup: first.publicSetup,
-        public_state: initialOfficialDailyPublicState(first.publicSetup),
-        reveal_setup: first.revealSetup,
-      });
-      expect(browserJson).not.toContain("solutionFighterIds");
-      expect(browserJson).not.toContain("solution_fighter_ids");
-      expect(browserJson).not.toContain('"values"');
-      expect(browserJson).not.toContain("slot_eligible_ids");
-      expect(first.privateGradingEvidence.values).toEqual(expect.any(Object));
-      expect(first.privateGradingEvidence.slot_eligible_ids).toEqual(expect.any(Array));
-      expect(first.revealSetup).toEqual({});
+      for (const child of children) {
+        expect(child.contentVersion).toBe(HIT_THE_NUMBER_DAILY_CONTENT_VERSION);
+        expect(child.setupKey.startsWith(`${HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:`)).toBe(true);
+        expect(child.scoringVersion).toBe("play-official-score-v1");
+        expect(child.publicSetup.runtime_version).toBe(OFFICIAL_DAILY_RUNTIME_VERSION);
+        expect(child.publicSetup.version).toBe("hit-the-number-v2");
+        expect(child.publicSetup.target).toEqual(expect.any(Number));
+        expect(child.publicSetup.pickCount).toEqual(expect.any(Number));
+        expect(child.publicSetup.fighterIds).toEqual(expect.any(Array));
+        expect(child.publicSetup.format).toEqual(expect.objectContaining({
+          formatId: expect.any(String),
+          label: expect.any(String),
+          slots: expect.any(Array),
+        }));
+        observedModes.add(String(child.publicSetup.boardType));
+        observedFormats.add(formatIdFor(child));
+
+        const browserJson = JSON.stringify({
+          public_setup: child.publicSetup,
+          public_state: initialOfficialDailyPublicState(child.publicSetup),
+          reveal_setup: child.revealSetup,
+        });
+        expect(browserJson).not.toContain("solutionFighterIds");
+        expect(browserJson).not.toContain("solution_fighter_ids");
+        expect(browserJson).not.toContain('"values"');
+        expect(browserJson).not.toContain("slot_eligible_ids");
+        expect(child.privateGradingEvidence.values).toEqual(expect.any(Object));
+        expect(child.privateGradingEvidence.slot_eligible_ids).toEqual(expect.any(Array));
+        expect(child.revealSetup).toEqual({});
+      }
     }
 
     expect(observedModes).toEqual(new Set(["open-roster", "random-pool"]));
@@ -125,9 +152,11 @@ describe("official Hit the Number daily runtime", () => {
 
     for (let index = 0; index < 240 && observedSupplementalStats.size < supplementalStatIds.length; index += 1) {
       const setup = buildOfficialDailySetup("hit_the_number", dayAt(index), scheduleVersion);
-      const statId = String(setup.publicSetup.statId ?? "");
-      if (supplementalStatIds.some((candidate) => candidate === statId)) {
-        observedSupplementalStats.add(statId);
+      for (const child of hitNumberChildSetups(setup)) {
+        const statId = String(child.publicSetup.statId ?? "");
+        if (supplementalStatIds.some((candidate) => candidate === statId)) {
+          observedSupplementalStats.add(statId);
+        }
       }
     }
 

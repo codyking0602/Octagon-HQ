@@ -18,10 +18,15 @@ describe("Hit the Number Daily choice invariant", () => {
     for (let index = 0; index < 120; index += 1) {
       const day = new Date(Date.UTC(2027, 0, index + 1)).toISOString().slice(0, 10);
       const setup = buildOfficialDailySetup("hit_the_number", day, "choice-invariant-v1");
-      const fighterIds = setup.publicSetup.fighterIds as string[];
-      const pickCount = Number(setup.publicSetup.pickCount);
+      const rounds = Array.isArray(setup.publicSetup.rounds)
+        ? setup.publicSetup.rounds as Array<Record<string, unknown>>
+        : [setup.publicSetup];
 
-      expect(fighterIds.length, `forced-choice board generated for ${day}`).toBeGreaterThan(pickCount);
+      for (const round of rounds) {
+        const fighterIds = round.fighterIds as string[];
+        const pickCount = Number(round.pickCount);
+        expect(fighterIds.length, `forced-choice board generated for ${day}`).toBeGreaterThan(pickCount);
+      }
     }
   });
 });

@@ -13,12 +13,33 @@ function dayAt(index: number) {
   return new Date(Date.UTC(2027, 4, index + 1)).toISOString().slice(0, 10);
 }
 
+type DailySetup = ReturnType<typeof buildOfficialDailySetup>;
+
+function hitNumberChildSetups(setup: DailySetup): DailySetup[] {
+  const rounds = setup.privateSetupEvidence.rounds;
+  if (!Array.isArray(rounds)) return [setup];
+  return rounds.map((value) => {
+    const row = value as Record<string, unknown>;
+    return {
+      setupKey: String(row.setup_key ?? ""),
+      contentVersion: String(row.content_version ?? ""),
+      scoringVersion: row.scoring_version as DailySetup["scoringVersion"],
+      publicSetup: row.public_setup as DailySetup["publicSetup"],
+      revealSetup: row.reveal_setup as DailySetup["revealSetup"],
+      privateSetupEvidence: row.private_setup_evidence as DailySetup["privateSetupEvidence"],
+      privateGradingEvidence: row.private_grading_evidence as DailySetup["privateGradingEvidence"],
+    };
+  });
+}
+
 function oneFromEachSetup() {
   for (let index = 0; index < 180; index += 1) {
     const day = dayAt(index);
     const setup = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
-    const format = setup.publicSetup.format as Record<string, unknown> | undefined;
-    if (format?.formatId === "one-from-each") return { day, setup };
+    for (const child of hitNumberChildSetups(setup)) {
+      const format = child.publicSetup.format as Record<string, unknown> | undefined;
+      if (format?.formatId === "one-from-each") return { day, setup: child };
+    }
   }
   throw new Error("No deterministic One From Each Daily seed found.");
 }
@@ -27,7 +48,9 @@ function randomPoolSetup() {
   for (let index = 0; index < 180; index += 1) {
     const day = dayAt(index);
     const setup = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
-    if (setup.publicSetup.boardType === "random-pool") return { day, setup };
+    for (const child of hitNumberChildSetups(setup)) {
+      if (child.publicSetup.boardType === "random-pool") return { day, setup: child };
+    }
   }
   throw new Error("No deterministic Random Pool Daily seed found.");
 }
