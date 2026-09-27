@@ -1,10 +1,12 @@
 import type { FactCheckItem } from "../games/factCheckEngine";
+import { FOOTBALL_FACT_CHECK_AUTHORITY_BANK } from "./footballFactCheckAuthorityBank";
+import { FOOTBALL_FACT_CHECK_WEEKLY_BANK } from "./footballFactCheckWeeklyBank";
 
 function fact(item: FactCheckItem): FactCheckItem {
   return item;
 }
 
-export const FOOTBALL_FACT_CHECK_BANK: readonly FactCheckItem[] = [
+export const FOOTBALL_FACT_CHECK_HAND_AUTHORED_BANK: readonly FactCheckItem[] = [
   fact({
     id: "burrow-lsu-nine",
     sport: "football",
@@ -557,4 +559,11 @@ export const FOOTBALL_FACT_CHECK_BANK: readonly FactCheckItem[] = [
     explanation: "False — Rice's regular-season receiving touchdown total was 197.",
     recency: "evergreen",
   }),
+];
+
+
+export const FOOTBALL_FACT_CHECK_BANK: readonly FactCheckItem[] = [
+  ...FOOTBALL_FACT_CHECK_HAND_AUTHORED_BANK,
+  ...FOOTBALL_FACT_CHECK_AUTHORITY_BANK,
+  ...FOOTBALL_FACT_CHECK_WEEKLY_BANK,
 ];
