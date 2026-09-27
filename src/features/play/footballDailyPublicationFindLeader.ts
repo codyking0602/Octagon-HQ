@@ -25,20 +25,27 @@ function buildFindLeaderSetup(day: string, scheduleVersion: string, gameIndex = 
   const desiredLeague = dailyLeague(day, gameIndex).toLowerCase();
   const questions = footballFindLeaderQuestions.filter((question) =>
     footballFindLeaderLeagueForDomain(question.domainId) === desiredLeague);
-  const start = stableLineupHash(`${scheduleVersion}|${day}|football-find-leader|game-${gameIndex + 1}`) % questions.length;
+  const startSeed = gameIndex === 0
+    ? `${scheduleVersion}|${day}|football-find-leader`
+    : `${scheduleVersion}|${day}|football-find-leader|game-2`;
+  const start = stableLineupHash(startSeed) % questions.length;
   let board = null;
   for (let offset = 0; offset < questions.length; offset += 1) {
     const question = questions[(start + offset) % questions.length]!;
     board = buildFootballFindLeaderBoard(
       question,
-      `${FOOTBALL_DAILY_RUNTIME_VERSION}|${scheduleVersion}|${day}|game-${gameIndex + 1}|${offset}`,
+      gameIndex === 0
+        ? `${FOOTBALL_DAILY_RUNTIME_VERSION}|${scheduleVersion}|${day}|${offset}`
+        : `${FOOTBALL_DAILY_RUNTIME_VERSION}|${scheduleVersion}|${day}|game-2|${offset}`,
     );
     if (board) break;
   }
   if (!board) throw new Error("Football Find the Leader could not build the official board.");
   const candidates = board.candidates.map(({ id, name, subtitle }) => ({ id, name, subtitle }));
   return {
-    setupKey: `football-find-leader:${scheduleVersion}:${day}:game-${gameIndex + 1}:${board.definitionId}`,
+    setupKey: gameIndex === 0
+      ? `football-find-leader:${scheduleVersion}:${day}:${board.definitionId}`
+      : `football-find-leader:${scheduleVersion}:${day}:game-2:${board.definitionId}`,
     contentVersion: board.version,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
