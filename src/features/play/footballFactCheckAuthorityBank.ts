@@ -1,0 +1,203 @@
+import {
+  footballCfbChampionSeasonRows,
+  footballQbCareerRows,
+  footballRbCareerRows,
+} from "../back-room/footballFactualStatsCoverage";
+import { footballCanonicalSubjects } from "../back-room/footballFactualStatsCatalog";
+import type { FactCheckDifficulty, FactCheckItem } from "../games/factCheckEngine";
+
+const SOURCE_LEDGER = "hq-football-factual-ledger";
+const SOURCE_CANONICAL = "hq-football-canonical-subject-ledger";
+
+function item(
+  value: Omit<FactCheckItem, "sport" | "recency">,
+): FactCheckItem {
+  return {
+    sport: "football",
+    recency: "evergreen",
+    ...value,
+  };
+}
+
+function compactNumber(value: number) {
+  return value.toLocaleString("en-US");
+}
+
+function midpointThreshold(value: number, step: number) {
+  const base = Math.floor(value / step) * step;
+  const threshold = base + step / 2;
+  return threshold === value ? threshold + step : threshold;
+}
+
+function overUnderAnswer(value: number, threshold: number) {
+  return value > threshold ? "OVER" : "UNDER";
+}
+
+const qbFacts = footballQbCareerRows.flatMap((row, index): FactCheckItem[] => {
+  const yardsThreshold = midpointThreshold(row.passingYards, 10_000);
+  const gamesThreshold = index % 2 === 0 ? 200 : 175;
+  const tdIntAnswer = row.passingTouchdowns >= row.interceptions ? "PASSING TDS" : "INTERCEPTIONS";
+
+  return [
+    item({
+      id: `ledger-qb-yards-${row.id}`,
+      league: "nfl",
+      format: "over_under",
+      difficulty: 3,
+      prompt: `${row.name} finished his NFL career with ___ ${compactNumber(yardsThreshold)} passing yards.`,
+      choices: ["OVER", "UNDER"],
+      answer: overUnderAnswer(row.passingYards, yardsThreshold),
+      explanation: `${row.name} finished with ${compactNumber(row.passingYards)} career passing yards.`,
+      sourceId: SOURCE_LEDGER,
+    }),
+    item({
+      id: `ledger-qb-games-${row.id}`,
+      league: "nfl",
+      format: "true_false",
+      difficulty: 2,
+      prompt: `${row.name} played at least ${gamesThreshold} NFL regular-season games.`,
+      choices: ["TRUE", "FALSE"],
+      answer: row.games >= gamesThreshold ? "TRUE" : "FALSE",
+      explanation: `${row.name} played ${row.games} NFL regular-season games.`,
+      sourceId: SOURCE_LEDGER,
+    }),
+    item({
+      id: `ledger-qb-td-int-${row.id}`,
+      league: "nfl",
+      format: "either_or",
+      difficulty: 2,
+      prompt: `Which career total was higher for ${row.name}?`,
+      choices: ["PASSING TDS", "INTERCEPTIONS"],
+      answer: tdIntAnswer,
+      explanation: `${row.name}: ${row.passingTouchdowns} passing touchdowns and ${row.interceptions} interceptions.`,
+      sourceId: SOURCE_LEDGER,
+    }),
+  ];
+});
+
+const rbFacts = footballRbCareerRows.flatMap((row, index): FactCheckItem[] => {
+  const yardsThreshold = midpointThreshold(row.rushingYards, 2_000);
+  const tdThreshold = index % 2 === 0 ? 100 : 90;
+  const catchesThreshold = index % 3 === 0 ? 400 : 300;
+
+  return [
+    item({
+      id: `ledger-rb-yards-${row.id}`,
+      league: "nfl",
+      format: "over_under",
+      difficulty: 3,
+      prompt: `${row.name} finished his NFL career with ___ ${compactNumber(yardsThreshold)} rushing yards.`,
+      choices: ["OVER", "UNDER"],
+      answer: overUnderAnswer(row.rushingYards, yardsThreshold),
+      explanation: `${row.name} finished with ${compactNumber(row.rushingYards)} career rushing yards.`,
+      sourceId: SOURCE_LEDGER,
+    }),
+    item({
+      id: `ledger-rb-rush-td-${row.id}`,
+      league: "nfl",
+      format: "true_false",
+      difficulty: 2,
+      prompt: `${row.name} scored at least ${tdThreshold} NFL regular-season rushing touchdowns.`,
+      choices: ["TRUE", "FALSE"],
+      answer: row.rushingTouchdowns >= tdThreshold ? "TRUE" : "FALSE",
+      explanation: `${row.name} scored ${row.rushingTouchdowns} career rushing touchdowns.`,
+      sourceId: SOURCE_LEDGER,
+    }),
+    item({
+      id: `ledger-rb-catches-${row.id}`,
+      league: "nfl",
+      format: "over_under",
+      difficulty: 3,
+      prompt: `${row.name} finished with ___ ${catchesThreshold} NFL regular-season receptions.`,
+      choices: ["OVER", "UNDER"],
+      answer: overUnderAnswer(row.receptions, catchesThreshold),
+      explanation: `${row.name} finished with ${row.receptions} career receptions.`,
+      sourceId: SOURCE_LEDGER,
+    }),
+  ];
+});
+
+const championFacts = footballCfbChampionSeasonRows.flatMap((row): FactCheckItem[] => [
+  item({
+    id: `ledger-cfb-points-${row.id}`,
+    league: "cfb",
+    format: "over_under",
+    difficulty: 3,
+    prompt: `${row.name} scored ___ 500 points during its championship season.`,
+    choices: ["OVER", "UNDER"],
+    answer: overUnderAnswer(row.pointsFor, 500),
+    explanation: `${row.name} scored ${row.pointsFor} points that season.`,
+    sourceId: SOURCE_LEDGER,
+  }),
+  item({
+    id: `ledger-cfb-defense-${row.id}`,
+    league: "cfb",
+    format: "true_false",
+    difficulty: 4,
+    prompt: `${row.name} allowed fewer than 15 points per game during its championship season.`,
+    choices: ["TRUE", "FALSE"],
+    answer: row.opponentPointsPerGame < 15 ? "TRUE" : "FALSE",
+    explanation: `${row.name} allowed ${row.opponentPointsPerGame.toFixed(1)} points per game.`,
+    sourceId: SOURCE_LEDGER,
+  }),
+]);
+
+const draftSubjects = footballCanonicalSubjects
+  .filter((subject) => (
+    subject.kind === "player-career"
+    && subject.league === "NFL"
+    && subject.draftYear != null
+    && subject.draftPick != null
+  ))
+  .slice()
+  .sort((a, b) => (a.draftYear! - b.draftYear!) || (a.draftPick! - b.draftPick!));
+
+function draftComesBefore(
+  a: (typeof draftSubjects)[number],
+  b: (typeof draftSubjects)[number],
+) {
+  if (a.draftYear !== b.draftYear) return a.draftYear! < b.draftYear!;
+  return a.draftPick! < b.draftPick!;
+}
+
+const draftChronologyFacts: FactCheckItem[] = Array.from(
+  { length: Math.min(40, Math.max(0, draftSubjects.length - 1)) },
+  (_, index) => {
+    const left = draftSubjects[index]!;
+    const offset = Math.max(7, Math.floor(draftSubjects.length / 3));
+    const right = draftSubjects[(index + offset) % draftSubjects.length]!;
+    const before = draftComesBefore(left, right);
+    const yearGap = Math.abs(left.draftYear! - right.draftYear!);
+    const sameYear = left.draftYear === right.draftYear;
+    const explanation = sameYear
+      ? `${left.name} was pick ${left.draftPick} in ${left.draftYear}; ${right.name} was pick ${right.draftPick}.`
+      : `${left.name} was drafted in ${left.draftYear}; ${right.name} was drafted in ${right.draftYear}.`;
+
+    return item({
+      id: `canonical-draft-order-${index}-${left.id}-${right.id}`,
+      league: "nfl",
+      format: "before_after",
+      difficulty: (yearGap <= 4 ? 3 : 2) as FactCheckDifficulty,
+      prompt: `${left.name} was drafted ___ ${right.name}.`,
+      choices: ["BEFORE", "AFTER"],
+      answer: before ? "BEFORE" : "AFTER",
+      explanation,
+      sourceId: SOURCE_CANONICAL,
+    });
+  },
+);
+
+export const FOOTBALL_FACT_CHECK_AUTHORITY_BANK: readonly FactCheckItem[] = [
+  ...qbFacts,
+  ...rbFacts,
+  ...championFacts,
+  ...draftChronologyFacts,
+];
+
+export const FOOTBALL_FACT_CHECK_AUTHORITY_COUNTS = {
+  qb: qbFacts.length,
+  rb: rbFacts.length,
+  champion: championFacts.length,
+  draftChronology: draftChronologyFacts.length,
+  total: FOOTBALL_FACT_CHECK_AUTHORITY_BANK.length,
+} as const;
