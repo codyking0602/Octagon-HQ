@@ -97,7 +97,7 @@ export default function FootballWeeklySuperteamPreviewPage() {
         <div>
           <p className="eyebrow">OWNER PREVIEW · SEP 29</p>
           <h1>Real CFB Superteam Day 1</h1>
-          <p>These eight candidates are the actual launch board. Grades remain hidden. Preview bids stay local and never enter the live auction.</p>
+          <p>These candidates are the actual launch board. Grades remain hidden. Preview bids stay local and never enter the live auction.</p>
         </div>
         <button type="button" onClick={() => navigate("/football")}>DONE</button>
       </section>
@@ -107,6 +107,7 @@ export default function FootballWeeklySuperteamPreviewPage() {
         busy={false}
         error={null}
         forceBoard
+        tableMode="hidden"
         onSubmit={async (bids) => {
           setState((current) => current ? {
             ...current,

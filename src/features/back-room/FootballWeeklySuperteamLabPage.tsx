@@ -227,6 +227,8 @@ export default function FootballWeeklySuperteamLabPage() {
           forceBoard
           showContinueAction={false}
           submittedNote="Saved for this simulated seat. Switch seats above or edit these bids."
+          tableMode="lab"
+          tableSeatIndex={seatIndex}
           onSubmit={submit}
           onContinue={() => undefined}
         />
