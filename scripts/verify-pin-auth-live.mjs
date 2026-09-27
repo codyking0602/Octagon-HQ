@@ -408,7 +408,6 @@ try {
 
     const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });
     const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });
-    const preparedStageButton = page.getByRole("button", { name: "VERIFY PREP & STAGE" });
 
     if (await updateButton.count()) {
       const previewResponsePromise = page.waitForResponse(
@@ -469,17 +468,12 @@ try {
           `Event Setup returned unexpected HTTP ${previewResponse.status()}: ${safeMessage(previewBody)}.\n${diagnostics.join("\n")}`,
         );
       }
-    } else if (await syncButton.count() || await preparedStageButton.count()) {
-      const noDraftAction = await preparedStageButton.count() ? preparedStageButton : syncButton;
-      const preparedFlow = Boolean(await preparedStageButton.count());
+    } else if (await syncButton.count()) {
       await page.getByText("NO STAGED CARD", { exact: true }).waitFor({ state: "visible", timeout: 15_000 });
-      await page.getByRole("heading", {
-        name: preparedFlow ? "Verify the prepared UFC event." : "Stage the next UFC event.",
-        exact: true,
-      }).waitFor({ state: "visible", timeout: 15_000 });
-      await noDraftAction.waitFor({ state: "visible", timeout: 15_000 });
-      if (await noDraftAction.isDisabled()) {
-        throw new Error("Event Setup disabled the canonical no-draft staging action.");
+      await page.getByRole("heading", { name: "Stage the next UFC event.", exact: true }).waitFor({ state: "visible", timeout: 15_000 });
+      await syncButton.waitFor({ state: "visible", timeout: 15_000 });
+      if (await syncButton.isDisabled()) {
+        throw new Error("Event Setup disabled the canonical no-draft sync action.");
       }
       if (await page.getByText("SOURCE REVIEW · NOT APPLIED").count()) {
         throw new Error("Event Setup opened a source review without a staged draft.");
@@ -491,9 +485,7 @@ try {
       if (syncRequestCount !== syncRequestsBeforeSetup) {
         throw new Error("Event Setup called the sync provider while rendering the no-draft review state.");
       }
-      previewOutcome = preparedFlow
-        ? "confirmed the prepared no-draft setup presents its verify-and-stage action without applying or publishing anything"
-        : "confirmed the no-draft setup presents its canonical sync action without applying or publishing anything";
+      previewOutcome = "confirmed the no-draft setup presents its canonical sync action without applying or publishing anything";
     } else {
       throw new Error("Event Setup rendered neither its staged-card review action nor its no-draft sync action.");
     }
