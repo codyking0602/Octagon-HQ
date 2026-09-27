@@ -538,9 +538,46 @@ begin
             and bid.day_index=board.day_index
             and bid.slot=board.slot
             and bid.amount>0
+            and exists(
+              select 1 from private.football_weekly_auction_participants participant
+              where participant.week_start=bid.week_start
+                and participant.profile_id=bid.profile_id
+            )
+            and (
+              select count(*)
+              from private.football_weekly_auction_awards prior_award
+              where prior_award.week_start=p_week_start
+                and prior_award.day_index=p_day_index
+                and prior_award.profile_id=bid.profile_id
+            ) < 2
+            and private.football_weekly_superteam_assignment_slot(
+              p_week_start,bid.profile_id,board.season_reference
+            ) is not null
+            and bid.amount <= (
+              50
+              - coalesce((
+                select sum(prior_award.winning_bid)
+                from private.football_weekly_auction_awards prior_award
+                where prior_award.week_start=p_week_start
+                  and prior_award.profile_id=bid.profile_id
+              ),0)
+              - greatest(
+                7
+                - (
+                  select count(*)
+                  from private.football_weekly_auction_awards prior_award
+                  where prior_award.week_start=p_week_start
+                    and prior_award.profile_id=bid.profile_id
+                    and prior_award.roster_slot is not null
+                )
+                - 1,
+                0
+              )
+            )
           order by
             bid.amount desc,
             private.football_weekly_superteam_tie_rank(p_week_start,p_day_index,bid.profile_id),
+            preference.claim_rank,
             bid.profile_id
           limit 1
         ),99) as top_claim_rank
