@@ -1,0 +1,352 @@
+.football-fact-check {
+  min-height: 100dvh;
+  padding: 18px 16px calc(32px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(circle at top, rgba(34, 94, 168, 0.2), transparent 34%),
+    linear-gradient(180deg, #081320 0%, #0b1726 52%, #08121d 100%);
+  color: #f8f4e8;
+}
+
+.football-fact-check__back {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: rgba(248, 244, 232, 0.72);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 8px 0;
+}
+
+.football-fact-check__intro,
+.football-fact-check__result {
+  width: min(100%, 520px);
+  margin: 7vh auto 0;
+  text-align: center;
+}
+
+.football-fact-check__eyebrow {
+  margin: 0 0 8px;
+  color: #9db9dd;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.football-fact-check h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 12vw, 4.2rem);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+}
+
+.football-fact-check__lede {
+  margin: 16px auto 0;
+  max-width: 360px;
+  color: rgba(248, 244, 232, 0.72);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.football-fact-check__rules,
+.football-fact-check__result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 24px 0 18px;
+}
+
+.football-fact-check__rules div,
+.football-fact-check__result-grid div {
+  border: 1px solid rgba(157, 185, 221, 0.24);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+  padding: 15px 8px 13px;
+}
+
+.football-fact-check__rules strong,
+.football-fact-check__result-grid strong {
+  display: block;
+  font-size: 1.35rem;
+}
+
+.football-fact-check__rules span,
+.football-fact-check__result-grid span {
+  display: block;
+  margin-top: 4px;
+  color: rgba(248, 244, 232, 0.56);
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.football-fact-check__rule-copy {
+  margin: 0 auto 24px;
+  padding: 15px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+  text-align: left;
+}
+
+.football-fact-check__rule-copy p {
+  margin: 0;
+  color: rgba(248, 244, 232, 0.73);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.football-fact-check__rule-copy p + p {
+  margin-top: 9px;
+}
+
+.football-fact-check__rule-copy b {
+  color: #f8f4e8;
+}
+
+.football-fact-check__primary,
+.football-fact-check__secondary {
+  width: 100%;
+  min-height: 50px;
+  border-radius: 14px;
+  font: inherit;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+}
+
+.football-fact-check__primary {
+  border: 1px solid #d8e5f5;
+  background: #f8f4e8;
+  color: #081320;
+}
+
+.football-fact-check__secondary {
+  margin-top: 10px;
+  border: 1px solid rgba(248, 244, 232, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8f4e8;
+}
+
+.football-fact-check__game {
+  width: min(100%, 560px);
+  margin: 14px auto 0;
+}
+
+.football-fact-check__hud {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 1fr;
+  gap: 8px;
+}
+
+.football-fact-check__hud div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid rgba(157, 185, 221, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 9px 10px;
+}
+
+.football-fact-check__hud span {
+  color: rgba(248, 244, 232, 0.52);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+}
+
+.football-fact-check__hud strong {
+  font-size: 0.9rem;
+}
+
+.football-fact-check__progress {
+  height: 4px;
+  margin: 10px 2px 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.football-fact-check__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #9db9dd;
+  transition: width 180ms ease;
+}
+
+.football-fact-check__card {
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(157, 185, 221, 0.22);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(31, 61, 96, 0.46), rgba(11, 23, 38, 0.86)),
+    #0b1726;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.26);
+  padding: 20px;
+}
+
+.football-fact-check__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #9db9dd;
+  font-size: 0.66rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+}
+
+.football-fact-check__card h2 {
+  margin: 44px 0 32px;
+  font-size: clamp(1.55rem, 7vw, 2.3rem);
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  text-align: center;
+}
+
+.football-fact-check__choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.football-fact-check__choices button {
+  min-height: 74px;
+  border: 1px solid rgba(248, 244, 232, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #f8f4e8;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+}
+
+.football-fact-check__choices button:not(:disabled):active {
+  transform: scale(0.985);
+}
+
+.football-fact-check__choices button.is-correct {
+  border-color: rgba(112, 218, 154, 0.7);
+  background: rgba(58, 161, 99, 0.22);
+}
+
+.football-fact-check__choices button.is-wrong {
+  border-color: rgba(239, 112, 112, 0.7);
+  background: rgba(179, 59, 59, 0.22);
+}
+
+.football-fact-check__lock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  min-height: 50px;
+  border: 1px solid rgba(236, 197, 95, 0.34);
+  border-radius: 14px;
+  background: rgba(236, 197, 95, 0.08);
+  color: #f0cc6c;
+  font: inherit;
+  font-weight: 950;
+  padding: 0 14px;
+}
+
+.football-fact-check__lock small {
+  color: rgba(240, 204, 108, 0.62);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+}
+
+.football-fact-check__lock.is-armed {
+  border-color: #f0cc6c;
+  background: rgba(236, 197, 95, 0.18);
+  box-shadow: 0 0 0 2px rgba(236, 197, 95, 0.08);
+}
+
+.football-fact-check__lock:disabled {
+  opacity: 0.35;
+}
+
+.football-fact-check__reveal {
+  margin-top: auto;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.football-fact-check__reveal.is-correct {
+  background: rgba(58, 161, 99, 0.13);
+}
+
+.football-fact-check__reveal.is-wrong {
+  background: rgba(179, 59, 59, 0.13);
+}
+
+.football-fact-check__verdict {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+}
+
+.football-fact-check__verdict b {
+  font-size: 1rem;
+}
+
+.football-fact-check__reveal > p:not(.football-fact-check__verdict) {
+  margin: 10px 0 14px;
+  color: rgba(248, 244, 232, 0.78);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.football-fact-check__result h1 {
+  font-size: clamp(4.8rem, 24vw, 7.5rem);
+}
+
+.football-fact-check__result-label {
+  margin: 4px 0 0;
+  color: rgba(248, 244, 232, 0.52);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.football-fact-check__result-note {
+  margin: 4px auto 22px;
+  max-width: 390px;
+  color: rgba(248, 244, 232, 0.58);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 390px) {
+  .football-fact-check {
+    padding-inline: 12px;
+  }
+
+  .football-fact-check__card {
+    min-height: 445px;
+    padding: 17px 14px;
+  }
+
+  .football-fact-check__card h2 {
+    margin-top: 34px;
+  }
+
+  .football-fact-check__hud div {
+    display: block;
+  }
+
+  .football-fact-check__hud strong {
+    display: block;
+    margin-top: 2px;
+  }
+}
