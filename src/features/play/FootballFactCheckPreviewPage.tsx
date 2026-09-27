@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  FACT_CHECK_RECENT_MEMORY_SIZE,
   buildFactCheckRun,
   createFactCheckState,
   submitFactCheckAnswer,
@@ -22,8 +23,32 @@ function formatLabel(item: FactCheckItem) {
   }
 }
 
+const RECENT_FACTS_STORAGE_KEY = "octagon:football:fact-check:recent:v1";
+
+function recentFactIds() {
+  if (typeof window === "undefined") return [] as string[];
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(RECENT_FACTS_STORAGE_KEY) ?? "[]");
+    return Array.isArray(parsed) ? parsed.filter((value): value is string => typeof value === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function rememberFactIds(ids: readonly string[]) {
+  if (typeof window === "undefined") return;
+  const next = [...new Set([...ids, ...recentFactIds()])].slice(0, FACT_CHECK_RECENT_MEMORY_SIZE);
+  try {
+    window.localStorage.setItem(RECENT_FACTS_STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    // Owner preview remains playable even when storage is unavailable.
+  }
+}
+
 function newRun() {
-  return buildFactCheckRun(FOOTBALL_FACT_CHECK_BANK);
+  return buildFactCheckRun(FOOTBALL_FACT_CHECK_BANK, {
+    recentItemIds: recentFactIds(),
+  });
 }
 
 export default function FootballFactCheckPreviewPage() {
@@ -41,7 +66,9 @@ export default function FootballFactCheckPreviewPage() {
     : run[state.index];
 
   function start() {
-    setRun(newRun());
+    const nextRun = newRun();
+    rememberFactIds(nextRun.map((item) => item.id));
+    setRun(nextRun);
     setState(createFactCheckState());
     setLastResult(null);
     setLockArmed(false);
@@ -91,7 +118,7 @@ export default function FootballFactCheckPreviewPage() {
           <div className="football-fact-check__rules">
             <div><strong>10</strong><span>QUESTIONS</span></div>
             <div><strong>2</strong><span>LOCK ITS</span></div>
-            <div><strong>1</strong><span>TEST RUN</span></div>
+            <div><strong>{FOOTBALL_FACT_CHECK_BANK.length}</strong><span>FACT BANK</span></div>
           </div>
 
           <div className="football-fact-check__rule-copy">
@@ -130,7 +157,7 @@ export default function FootballFactCheckPreviewPage() {
           <article className={lastResult ? "football-fact-check__card is-reveal" : "football-fact-check__card"}>
             <div className="football-fact-check__meta">
               <span>{formatLabel(question)}</span>
-              <span>{question.league.toUpperCase()}</span>
+              <span>{question.recency === "weekly" ? `THIS WEEK · ${question.league.toUpperCase()}` : question.league.toUpperCase()}</span>
             </div>
             <h2>{question.prompt}</h2>
 
