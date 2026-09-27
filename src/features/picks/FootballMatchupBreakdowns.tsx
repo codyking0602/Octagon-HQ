@@ -28,6 +28,16 @@ function MatchupRichText({ parts }: { parts: FootballMatchupRichTextPart[] }) {
   );
 }
 
+function compactMatchupStyle(breakdown: FootballMatchupBreakdown) {
+  const [away, home] = breakdown.teams.map((team) => footballWeeklySuperteamIdentity(team.name));
+  return {
+    "--football-matchup-away": away.primary,
+    "--football-matchup-away-rgb": away.primaryRgb,
+    "--football-matchup-home": home.primary,
+    "--football-matchup-home-rgb": home.primaryRgb,
+  } as CSSProperties;
+}
+
 function CompactMatchupHeader({
   breakdown,
   onClose,
@@ -39,12 +49,7 @@ function CompactMatchupHeader({
   const awayIdentity = footballWeeklySuperteamIdentity(away.name);
   const homeIdentity = footballWeeklySuperteamIdentity(home.name);
   const rankingSource = breakdown.compact?.rankingSource ?? "AP";
-  const style = {
-    "--football-matchup-away": awayIdentity.primary,
-    "--football-matchup-away-rgb": awayIdentity.primaryRgb,
-    "--football-matchup-home": homeIdentity.primary,
-    "--football-matchup-home-rgb": homeIdentity.primaryRgb,
-  } as CSSProperties;
+  const style = compactMatchupStyle(breakdown);
 
   function Team({
     team,
@@ -77,7 +82,7 @@ function CompactMatchupHeader({
     <header className="football-matchup-breakdown-sheet__header is-compact" style={style}>
       <div className="football-matchup-breakdown-feature">
         <p className="eyebrow">THE HQ · MATCHUP BREAKDOWN</p>
-        <h2 id="football-matchup-breakdown-title">{breakdown.compact ? breakdown.title : breakdown.title}</h2>
+        <h2 id="football-matchup-breakdown-title">{breakdown.title}</h2>
         <div className="football-matchup-breakdown-feature__teams">
           <Team team={away} identity={awayIdentity} side="away" />
           <b className="football-matchup-breakdown-feature__at">AT</b>
@@ -184,7 +189,10 @@ export function FootballMatchupBreakdowns({
         ) : null}
 
         {active.compact ? (
-          <div className="football-matchup-breakdown-sheet__body football-matchup-breakdown-sheet__body--compact">
+          <div
+            className="football-matchup-breakdown-sheet__body football-matchup-breakdown-sheet__body--compact"
+            style={compactMatchupStyle(active)}
+          >
             <section className="football-matchup-breakdown-compact-section is-setup">
               <h3>THE SETUP</h3>
               <p><MatchupRichText parts={active.compact.setup} /></p>
