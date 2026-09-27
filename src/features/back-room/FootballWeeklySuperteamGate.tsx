@@ -28,9 +28,10 @@ function RulesCover({ onStart }: { onStart: () => void }) {
       <strong>7 spots. $50. One college football monster.</strong>
       <div className="football-weekly-superteam__rules">
         <p><b>Roster:</b> QB · RB · WR · Flex · Front Seven · Secondary · Head Coach</p>
-        <p><b>Every day:</b> 8 new candidates. Bid on as many as you want, but you can win at most 2.</p>
-        <p><b>Claim priority matters.</b> Rank your bids 1–8. Higher-priority claims resolve first if your wins start filling slots or using bankroll.</p>
+        <p><b>Every day:</b> 8–12 candidates. The board grows on future days when more players join, and you can win at most 2.</p>
+        <p><b>Claim priority matters.</b> Rank every candidate on today’s board. Higher-priority claims resolve first if your wins start filling slots or using bankroll.</p>
         <p><b>$1 reserve.</b> Your bids always preserve at least $1 for every roster spot you could still need. Losing bids cost nothing.</p>
+        <p><b>Late joins:</b> New players can enter through Day 4 when enough reserve inventory remains. Today’s board never changes after it opens.</p>
         <p><b>Peak college season.</b> Each player is graded on the school + season shown. Grades stay hidden until the week ends.</p>
         <p><b>Final score:</b> the equal-weight average of all 7 roster spots. Empty spots after Day 7 are filled by the worst eligible unclaimed option for $1.</p>
       </div>
@@ -131,7 +132,7 @@ function RosterStrip({ collection }: { collection: FootballWeeklySuperteamState[
 }
 
 function CandidateCard({
-  card, bid, disabled, eligible, onAmount, onPriority,
+  card, bid, disabled, eligible, onAmount, onPriority, priorityCount,
 }: {
   card: FootballWeeklySuperteamCard;
   bid: FootballWeeklySuperteamBid;
@@ -139,6 +140,7 @@ function CandidateCard({
   eligible: boolean;
   onAmount: (amount: number) => void;
   onPriority: (priority: number) => void;
+  priorityCount: number;
 }) {
   const identity = footballWeeklySuperteamIdentity(card.school);
   return (
@@ -163,7 +165,7 @@ function CandidateCard({
             onChange={(event) => onPriority(Number(event.currentTarget.value))}
             aria-label={card.display_name + " claim priority"}
           >
-            {Array.from({ length: 8 }, (_, index) => index + 1).map((priority) => (
+            {Array.from({ length: priorityCount }, (_, index) => index + 1).map((priority) => (
               <option value={priority} key={priority}>P{priority}</option>
             ))}
           </select>
@@ -365,13 +367,13 @@ export function FootballWeeklySuperteamGate({
       <section className="football-weekly-superteam__board surface-card">
         <header>
           <div><p className="eyebrow">CFB SUPERTEAM</p><h1>DAY {state.day_index} OF 7</h1></div>
-          <div><strong>8</strong><span>CANDIDATES</span></div>
+          <div><strong>{state.teams.length}</strong><span>CANDIDATES</span></div>
         </header>
         <div className="football-weekly-superteam__tie-order">
           <small>TODAY’S TIE PRIORITY</small>
           <span>{state.tie_priority.length
             ? state.tie_priority.map((entry) => entry.rank + ". " + entry.display_name).join(" · ")
-            : "Preview — field locks after Day 1"}</span>
+            : "Preview — field can grow through Day 4"}</span>
         </div>
         <div className="football-weekly-superteam__candidate-stack">
           {state.teams.map((card) => (
@@ -383,6 +385,7 @@ export function FootballWeeklySuperteamGate({
               eligible={candidateEligible(card, state.collection)}
               onAmount={(amount) => changeAmount(card.slot, amount)}
               onPriority={(priority) => changePriority(card.slot, priority)}
+              priorityCount={state.teams.length}
             />
           ))}
         </div>

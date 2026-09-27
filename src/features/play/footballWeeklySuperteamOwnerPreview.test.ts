@@ -25,7 +25,8 @@ describe("CFB Superteam owner preview", () => {
   });
 
   it("renders eight candidates with claim priority and no grade surface", () => {
-    expect(gate).toContain("8 new candidates");
+    expect(gate).toContain("8–12 candidates");
+    expect(gate).toContain("<strong>{state.teams.length}</strong><span>CANDIDATES</span>");
     expect(gate).toContain("CLAIM PRIORITY");
     expect(gate).toContain("P1 is your first claim");
     expect(gate).not.toContain("card.grade");

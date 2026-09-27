@@ -8,6 +8,7 @@ declare
   v_week_b date:=date '2026-11-10';
   v_sig_a text;
   v_sig_b text;
+  v_capacity integer;
 begin
   if (select count(*) from private.cfb_superteam_v1_authority where group_key='QB')<>50
     or (select count(*) from private.cfb_superteam_v1_authority where group_key='RB')<>50
@@ -23,10 +24,10 @@ begin
   perform private.materialize_football_weekly_superteam_week(v_week_a);
   perform private.materialize_football_weekly_superteam_week(v_week_b);
 
-  if (select count(*) from private.football_weekly_auction_board where week_start=v_week_a)<>56
-    or (select count(*) from private.football_weekly_auction_board where week_start=v_week_b)<>56
+  if (select count(*) from private.football_weekly_auction_board where week_start=v_week_a)<>84
+    or (select count(*) from private.football_weekly_auction_board where week_start=v_week_b)<>84
   then
-    raise exception 'CFB Superteam reusable generator did not materialize 56-card weeks';
+    raise exception 'CFB Superteam elastic generator did not materialize 84-card reserve weeks';
   end if;
 
   if exists(
@@ -36,15 +37,31 @@ begin
       on authority.item_reference=board.season_reference
     where board.week_start in (v_week_a,v_week_b)
     group by board.week_start,board.day_index
+    having count(*)<>12
+      or count(distinct authority.display_name)<>12
+      or count(distinct authority.school)<>12
+      or max(authority.hidden_grade)-min(authority.hidden_grade)<7
+      or max(authority.hidden_grade)<95
+      or min(authority.hidden_grade)>92
+  ) then
+    raise exception 'CFB Superteam elastic reserve board is unbalanced';
+  end if;
+
+  if exists(
+    select board.day_index
+    from private.football_weekly_auction_board board
+    join private.cfb_superteam_v1_authority authority
+      on authority.item_reference=board.season_reference
+    where board.week_start in (v_week_a,v_week_b)
+      and board.slot<=8
+    group by board.week_start,board.day_index
     having count(*)<>8
-      or count(distinct authority.display_name)<>8
-      or count(distinct authority.school)<>8
       or max(authority.hidden_grade)-min(authority.hidden_grade)<7
       or max(authority.hidden_grade)<95
       or min(authority.hidden_grade)>92
       or count(*) filter(where authority.hidden_grade>=96)>3
   ) then
-    raise exception 'CFB Superteam Standard board shape regressed into a compressed board';
+    raise exception 'CFB Superteam eight-card Standard base regressed';
   end if;
 
   if exists(
@@ -54,16 +71,16 @@ begin
       on authority.item_reference=weekly.item_reference
     where week_start in (v_week_a,v_week_b)
     group by week_start
-    having count(*)<>56
-      or count(*) filter(where authority.group_key='QB')<>8
-      or count(*) filter(where authority.group_key='RB')<>9
-      or count(*) filter(where authority.group_key='WR')<>9
-      or count(*) filter(where authority.group_key='TE')<>4
-      or count(*) filter(where authority.group_key='Front Seven')<>9
-      or count(*) filter(where authority.group_key='Secondary')<>9
-      or count(*) filter(where authority.group_key='Head Coach')<>8
+    having count(*)<>84
+      or count(*) filter(where authority.group_key='QB')<>12
+      or count(*) filter(where authority.group_key='RB')<>13
+      or count(*) filter(where authority.group_key='WR')<>13
+      or count(*) filter(where authority.group_key='TE')<>10
+      or count(*) filter(where authority.group_key='Front Seven')<>12
+      or count(*) filter(where authority.group_key='Secondary')<>12
+      or count(*) filter(where authority.group_key='Head Coach')<>12
   ) then
-    raise exception 'CFB Superteam weekly positional mix drifted';
+    raise exception 'CFB Superteam elastic positional reserve mix drifted';
   end if;
 
   select string_agg(season_reference,'|' order by day_index,slot)
@@ -87,9 +104,30 @@ begin
   ) then
     raise exception 'CFB Superteam introduced a named non-Standard board shape';
   end if;
+
+  if private.football_weekly_superteam_cards_for_field(5)<>8
+    or private.football_weekly_superteam_cards_for_field(6)<>9
+    or private.football_weekly_superteam_cards_for_field(8)<>10
+    or private.football_weekly_superteam_cards_for_field(9)<>11
+    or private.football_weekly_superteam_cards_for_field(10)<>12
+  then
+    raise exception 'CFB Superteam elastic field thresholds drifted';
+  end if;
+
+  if private.football_weekly_auction_cards_for_day(v_week_a,1)<>8 then
+    raise exception 'CFB Superteam Day 1 must expose only eight base cards';
+  end if;
+
+  v_capacity:=private.football_weekly_superteam_join_capacity(
+    v_week_a,
+    ((v_week_a::timestamp+time '12:00') at time zone 'America/Chicago')
+  );
+  if v_capacity<>11 then
+    raise exception 'CFB Superteam Day 1 capacity must safely allow 11 entrants, got %',v_capacity;
+  end if;
 end;
 $superteam_standard_pool$;
 
 rollback;
 
-\echo 'CFB Superteam deep-pool Standard generator proof passed.'
+\echo 'CFB Superteam deep-pool Standard + elastic field proof passed.'
