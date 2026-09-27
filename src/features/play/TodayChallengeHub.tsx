@@ -25,6 +25,18 @@ const FootballTodayChallengeResult = lazy(() =>
   })),
 );
 
+const DailyTwoGameLeaderboardResult = lazy(() =>
+  import("./DailyTwoGameLeaderboardResult").then((module) => ({
+    default: module.DailyTwoGameLeaderboardResult,
+  })),
+);
+
+function record(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+}
+
 function dayLabel(day: string) {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Chicago",
@@ -126,7 +138,17 @@ function DailyAnswerDetail({
         </span>
       </header>
       <div className="today-hub-official-result__body official-daily-page">
-        {entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" ? (
+        {(sport === "ufc" || sport === "football")
+          && (entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number")
+          && record(entry.publicResult.daily_series).format_version === "daily-two-game-average-v1" ? (
+          <Suspense fallback={<p className="today-hub-empty">Loading two-game result…</p>}>
+            <DailyTwoGameLeaderboardResult
+              projection={resultProjection}
+              resultDetail={entry.resultDetail}
+              sport={sport === "football" ? "football" : "ufc"}
+            />
+          </Suspense>
+        ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" ? (
           <DailyLeaderboardGameResult
             projection={resultProjection}
             resultDetail={entry.resultDetail}

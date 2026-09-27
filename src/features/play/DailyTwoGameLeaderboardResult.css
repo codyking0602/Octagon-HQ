@@ -1,0 +1,465 @@
+.daily-two-game-result {
+  --two-game-accent: #b8bec9;
+  display: grid;
+  gap: 14px;
+  padding: 4px 16px 112px;
+}
+
+.daily-two-game-result--ufc {
+  --two-game-accent: #ff3131;
+}
+
+.daily-two-game-result--football {
+  --two-game-accent: #8fc8f2;
+}
+
+.daily-two-game-result__summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "label score"
+    "games games";
+  align-items: end;
+  gap: 6px 14px;
+  border: 1px solid color-mix(in srgb, var(--two-game-accent) 38%, #30343a);
+  border-radius: 24px;
+  background: #121416;
+  padding: 16px 18px 14px;
+}
+
+.daily-two-game-result__summary > span {
+  grid-area: label;
+  align-self: center;
+  color: #a5aab4;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.daily-two-game-result__summary > strong {
+  grid-area: score;
+  color: #fff;
+  font-size: clamp(2.9rem, 12vw, 4.2rem);
+  font-weight: 950;
+  line-height: 0.86;
+  letter-spacing: -0.07em;
+}
+
+.daily-two-game-result__summary > strong small {
+  margin-left: 5px;
+  color: #a5aab4;
+  font-size: 0.34em;
+  letter-spacing: -0.02em;
+}
+
+.daily-two-game-result__summary > div {
+  grid-area: games;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.daily-two-game-result__summary > div span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  border-radius: 12px;
+  background: #1a1d20;
+  padding: 9px 11px;
+  color: #8f95a0;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.daily-two-game-result__summary > div b {
+  color: #fff;
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.daily-two-game-result__games {
+  display: grid;
+  gap: 10px;
+}
+
+.daily-two-game-result__game {
+  overflow: hidden;
+  border: 1px solid #30343a;
+  border-radius: 20px;
+  background: #111315;
+}
+
+.daily-two-game-result__game[open] {
+  border-color: color-mix(in srgb, var(--two-game-accent) 58%, #30343a);
+}
+
+.daily-two-game-result__game > summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 76px;
+  padding: 12px 14px;
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.daily-two-game-result__game > summary::-webkit-details-marker {
+  display: none;
+}
+
+.daily-two-game-result__game-number {
+  color: var(--two-game-accent);
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.15em;
+}
+
+.daily-two-game-result__game-copy {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.daily-two-game-result__game-copy strong {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.daily-two-game-result__game-copy strong small {
+  margin-left: 2px;
+  color: #8f95a0;
+  font-size: 0.38em;
+  letter-spacing: 0;
+}
+
+.daily-two-game-result__game-copy em {
+  min-width: 0;
+  color: #9ba1aa;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-align: right;
+}
+
+.daily-two-game-result__chevron {
+  color: #8f95a0;
+  font-size: 1.35rem;
+  line-height: 1;
+  transition: transform 160ms ease;
+}
+
+.daily-two-game-result__game[open] .daily-two-game-result__chevron {
+  transform: rotate(180deg);
+}
+
+.daily-two-game-result__detail {
+  display: grid;
+  gap: 13px;
+  border-top: 1px solid #292c31;
+  padding: 14px;
+}
+
+.daily-two-game-result__question {
+  display: grid;
+  gap: 5px;
+}
+
+.daily-two-game-result__question small,
+.daily-two-game-result__path span,
+.daily-two-game-result__picks > span,
+.daily-two-game-result__scroll-label {
+  color: #8f95a0;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+.daily-two-game-result__question strong {
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.daily-two-game-result__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  border-radius: 12px;
+  background: #08090a;
+  padding: 4px;
+}
+
+.daily-two-game-result__tabs button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #838892;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.daily-two-game-result__tabs button.is-active {
+  background: #202328;
+  color: var(--two-game-accent);
+}
+
+.daily-two-game-result__scroll-label {
+  margin: 0;
+}
+
+.daily-two-game-result__rail {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  padding: 1px 1px 7px;
+}
+
+.daily-two-game-result__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.daily-two-game-result__tile {
+  position: relative;
+  display: grid;
+  flex: 0 0 148px;
+  min-width: 0;
+  min-height: 166px;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-areas:
+    "position position"
+    "photo name"
+    "photo subtitle"
+    "status status";
+  align-items: center;
+  gap: 3px 9px;
+  border: 1px solid #30343a;
+  border-radius: 16px;
+  background: #0b0d0f;
+  padding: 10px;
+  scroll-snap-align: start;
+}
+
+.daily-two-game-result__tile.is-leader {
+  border-color: color-mix(in srgb, var(--two-game-accent) 70%, #30343a);
+}
+
+.daily-two-game-result__tile.is-fatal {
+  border-color: #ee3636;
+  background: #1d0b0c;
+}
+
+.daily-two-game-result__position {
+  grid-area: position;
+  color: #747a84;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.daily-two-game-result__tile img,
+.daily-two-game-result__initials {
+  grid-area: photo;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: #050607;
+  object-fit: contain;
+}
+
+.daily-two-game-result__initials {
+  display: grid;
+  place-items: center;
+  color: #a8aeb7;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.daily-two-game-result__tile strong {
+  grid-area: name;
+  min-width: 0;
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.daily-two-game-result__tile small {
+  grid-area: subtitle;
+  min-width: 0;
+  color: #777d87;
+  font-size: 0.7rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.daily-two-game-result__tile em {
+  grid-area: status;
+  color: var(--two-game-accent);
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+}
+
+.daily-two-game-result__tile.is-fatal em {
+  color: #ff4d4d;
+}
+
+.daily-two-game-result__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.daily-two-game-result__metrics > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  border-radius: 13px;
+  background: #1b1e21;
+  padding: 10px 11px;
+}
+
+.daily-two-game-result__metrics span {
+  color: #828893;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+}
+
+.daily-two-game-result__metrics strong {
+  color: #fff;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.daily-two-game-result__metrics strong.is-word {
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+
+.daily-two-game-result__path,
+.daily-two-game-result__picks {
+  display: grid;
+  gap: 7px;
+  border-radius: 13px;
+  background: #1b1e21;
+  padding: 11px;
+}
+
+.daily-two-game-result__path strong {
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.daily-two-game-result__picks > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.daily-two-game-result__picks strong {
+  border: 1px solid #33373d;
+  border-radius: 999px;
+  background: #0d0f11;
+  padding: 6px 9px;
+  color: #e7e9ed;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.daily-two-game-result__rail--clues {
+  gap: 8px;
+}
+
+.daily-two-game-result__clue {
+  display: grid;
+  flex: 0 0 200px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "index category rating"
+    "index text rating";
+  gap: 2px 9px;
+  align-items: center;
+  min-height: 76px;
+  border: 1px solid #30343a;
+  border-radius: 14px;
+  background: #0b0d0f;
+  padding: 10px;
+  scroll-snap-align: start;
+}
+
+.daily-two-game-result__clue > span {
+  grid-area: index;
+  color: #727985;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.daily-two-game-result__clue small {
+  grid-area: category;
+  color: #818894;
+  font-size: 0.62rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+}
+
+.daily-two-game-result__clue strong {
+  grid-area: text;
+  color: #fff;
+  font-size: 0.84rem;
+  line-height: 1.15;
+}
+
+.daily-two-game-result__clue em {
+  grid-area: rating;
+  color: var(--two-game-accent);
+  font-size: 1.15rem;
+  font-style: normal;
+  font-weight: 950;
+}
+
+@media (max-width: 390px) {
+  .daily-two-game-result {
+    padding-inline: 12px;
+  }
+
+  .daily-two-game-result__summary {
+    padding-inline: 14px;
+  }
+
+  .daily-two-game-result__game-copy {
+    gap: 7px;
+  }
+
+  .daily-two-game-result__game-copy em {
+    font-size: 0.64rem;
+  }
+
+  .daily-two-game-result__tile {
+    flex-basis: 142px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .daily-two-game-result__chevron {
+    transition: none;
+  }
+}
