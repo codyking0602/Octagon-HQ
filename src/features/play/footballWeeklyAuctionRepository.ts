@@ -149,20 +149,87 @@ const buildQbFinalSchema = z.object({
   my_result: myResultSchema.default({}),
 });
 
-const finalSchema = z.union([cfbFinalSchema, buildQbFinalSchema]);
+const superteamRosterSlotSchema = z.enum(["QB", "RB", "WR", "Flex", "Front Seven", "Secondary", "Head Coach"]);
+const superteamGroupSchema = z.enum(["QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach"]);
+const superteamBidSchema = z.object({
+  amount: z.coerce.number().int().min(0).max(50),
+  priority: z.coerce.number().int().min(1).max(8),
+});
+const superteamCardSchema = z.object({
+  slot: z.coerce.number().int().min(1).max(8),
+  item_reference: z.string(),
+  display_name: z.string(),
+  school: z.string(),
+  season_year: z.coerce.number().int(),
+  group_key: superteamGroupSchema,
+  eligible_slots: z.array(superteamRosterSlotSchema),
+  lock_at: z.string(),
+});
+const superteamPriorResultSchema = z.object({
+  slot: z.coerce.number().int().min(1).max(8),
+  item_reference: z.string(),
+  display_name: z.string(),
+  school: z.string(),
+  season_year: z.coerce.number().int(),
+  group_key: superteamGroupSchema,
+  winning_bid: z.coerce.number().int().min(0),
+  roster_slot: superteamRosterSlotSchema.nullable(),
+  winner_profile_id: z.string().uuid().nullable(),
+  winner_display_name: z.string().nullable(),
+  bids: z.array(bidHistorySchema.extend({
+    priority: z.coerce.number().int().min(1).max(8).nullable(),
+  })).default([]),
+});
+const superteamCollectionSchema = z.object({
+  item_reference: z.string(),
+  display_name: z.string(),
+  school: z.string(),
+  season_year: z.coerce.number().int(),
+  group_key: superteamGroupSchema,
+  roster_slot: superteamRosterSlotSchema,
+  winning_bid: z.coerce.number().int().min(0),
+});
+const superteamFinalCollectionSchema = superteamCollectionSchema.extend({
+  grade: z.coerce.number(),
+  counts: z.boolean(),
+});
+const superteamFinalItemSchema = z.object({
+  day_index: z.coerce.number().int().min(1).max(7),
+  slot: z.coerce.number().int().min(1).max(8),
+  item_reference: z.string(),
+  display_name: z.string(),
+  school: z.string(),
+  season_year: z.coerce.number().int(),
+  group_key: superteamGroupSchema,
+  eligible_slots: z.array(superteamRosterSlotSchema),
+  grade: z.coerce.number(),
+  winning_bid: z.coerce.number().int().min(0),
+  roster_slot: superteamRosterSlotSchema.nullable(),
+  winner_profile_id: z.string().uuid().nullable(),
+  winner_display_name: z.string().nullable(),
+});
+const superteamFinalSchema = z.object({
+  subject_key: z.literal("cfb-superteam"),
+  week_start: z.string(),
+  standings: z.array(finalStandingSchema),
+  collection: z.array(superteamFinalCollectionSchema),
+  all_teams: z.array(superteamFinalItemSchema),
+  my_result: myResultSchema.default({}),
+});
+
+const finalSchema = z.union([cfbFinalSchema, buildQbFinalSchema, superteamFinalSchema]);
 
 const commonActiveFields = {
   available: z.literal(true),
   week_start: z.string(),
   week_end: z.string(),
   day_index: z.coerce.number().int().min(1).max(7),
-  bankroll: z.coerce.number().int().min(0).max(40),
+  bankroll: z.coerce.number().int().min(0).max(50),
   owned_count: z.coerce.number().int().nonnegative(),
-  reserve_floor: z.coerce.number().int().min(0).max(4),
-  max_commit: z.coerce.number().int().min(0).max(40),
+  reserve_floor: z.coerce.number().int().min(0).max(7),
+  max_commit: z.coerce.number().int().min(0).max(50),
   submitted_today: z.boolean(),
   show_intro: z.boolean(),
-  bids: z.record(z.string(), z.coerce.number().int().min(0)).default({}),
   previous_final: finalSchema.nullable().optional(),
 } as const;
 
@@ -173,6 +240,7 @@ const cfbAvailableSchema = z.object({
   teams: z.array(cfbTeamSchema).length(3),
   prior_results: z.array(cfbPriorResultSchema).default([]),
   collection: z.array(cfbCollectionSchema).default([]),
+  bids: z.record(z.string(), z.coerce.number().int().min(0)).default({}),
 });
 
 const buildQbAvailableSchema = z.object({
@@ -182,31 +250,52 @@ const buildQbAvailableSchema = z.object({
   trait_passes: z.record(z.string(), z.boolean()).default({}),
   prior_results: z.array(buildQbPriorResultSchema).default([]),
   collection: z.array(buildQbCollectionSchema).default([]),
+  bids: z.record(z.string(), z.coerce.number().int().min(0)).default({}),
+});
+
+const superteamAvailableSchema = z.object({
+  ...commonActiveFields,
+  subject_key: z.literal("cfb-superteam"),
+  teams: z.array(superteamCardSchema).length(8),
+  prior_results: z.array(superteamPriorResultSchema).default([]),
+  collection: z.array(superteamCollectionSchema).default([]),
+  tie_priority: z.array(z.object({
+    profile_id: z.string().uuid(),
+    display_name: z.string(),
+    rank: z.coerce.number().int().positive(),
+  })).default([]),
+  bids: z.record(z.string(), superteamBidSchema).default({}),
 });
 
 const unavailableSchema = z.object({
   available: z.literal(false),
-  subject_key: z.enum(["cfb-best-teams-since-2000", "nfl-build-qb"]).optional(),
+  subject_key: z.enum(["cfb-best-teams-since-2000", "nfl-build-qb", "cfb-superteam"]).optional(),
   starts_on: z.string().optional(),
   locked_this_week: z.boolean().optional(),
   week_start: z.string().optional(),
   eligible_week_start: z.string().optional(),
 });
 
-const stateSchema = z.union([cfbAvailableSchema, buildQbAvailableSchema, unavailableSchema]);
+const stateSchema = z.union([cfbAvailableSchema, buildQbAvailableSchema, superteamAvailableSchema, unavailableSchema]);
 
 export type FootballWeeklyAuctionState = z.infer<typeof stateSchema>;
 export type FootballWeeklyAuctionCfbState = z.infer<typeof cfbAvailableSchema>;
 export type FootballWeeklyBuildQbState = z.infer<typeof buildQbAvailableSchema>;
-export type FootballWeeklyAuctionActiveState = FootballWeeklyAuctionCfbState | FootballWeeklyBuildQbState;
+export type FootballWeeklySuperteamState = z.infer<typeof superteamAvailableSchema>;
+export type FootballWeeklyAuctionActiveState = FootballWeeklyAuctionCfbState | FootballWeeklyBuildQbState | FootballWeeklySuperteamState;
 export type FootballWeeklyAuctionFinal = z.infer<typeof cfbFinalSchema>;
 export type FootballWeeklyBuildQbFinal = z.infer<typeof buildQbFinalSchema>;
+export type FootballWeeklySuperteamFinal = z.infer<typeof superteamFinalSchema>;
 export type FootballWeeklyFinal = z.infer<typeof finalSchema>;
 export type FootballWeeklyAuctionTeam = z.infer<typeof cfbTeamSchema>;
 export type FootballWeeklyAuctionPriorResult = z.infer<typeof cfbPriorResultSchema>;
 export type FootballWeeklyBuildQbCard = z.infer<typeof buildQbCardSchema>;
 export type FootballWeeklyBuildQbPriorResult = z.infer<typeof buildQbPriorResultSchema>;
 export type FootballWeeklyBuildQbTrait = z.infer<typeof buildQbTraitSchema>;
+export type FootballWeeklySuperteamCard = z.infer<typeof superteamCardSchema>;
+export type FootballWeeklySuperteamRosterSlot = z.infer<typeof superteamRosterSlotSchema>;
+export type FootballWeeklySuperteamBid = z.infer<typeof superteamBidSchema>;
+export type FootballWeeklyAuctionBidInput = number | FootballWeeklySuperteamBid;
 
 type RpcError = { message?: string };
 type Client = {
@@ -237,7 +326,8 @@ export interface FootballWeeklyAuctionRepository {
   load(): Promise<FootballWeeklyAuctionState>;
   loadHistory(): Promise<FootballWeeklyFinal[]>;
   loadBuildQbPreview(): Promise<FootballWeeklyAuctionState>;
-  submit(bids: Record<number, number>): Promise<FootballWeeklyAuctionState>;
+  loadSuperteamPreview(): Promise<FootballWeeklyAuctionState>;
+  submit(bids: Record<number, FootballWeeklyAuctionBidInput>): Promise<FootballWeeklyAuctionState>;
   acknowledgeFinal(weekStart: string): Promise<FootballWeeklyAuctionState>;
 }
 
@@ -259,9 +349,12 @@ export function createFootballWeeklyAuctionRepository(
     async loadBuildQbPreview() {
       return stateSchema.parse(await rpc(client, "get_my_football_weekly_build_qb_preview"));
     },
+    async loadSuperteamPreview() {
+      return stateSchema.parse(await rpc(client, "get_my_football_weekly_superteam_preview"));
+    },
     async submit(bids) {
-      const payload: Record<string, number> = {};
-      for (const [slot, amount] of Object.entries(bids)) payload[slot] = amount;
+      const payload: Record<string, FootballWeeklyAuctionBidInput> = {};
+      for (const [slot, value] of Object.entries(bids)) payload[slot] = value;
       return stateSchema.parse(await rpc(client, "submit_my_football_weekly_auction_bids", {
         p_bids: payload,
       }));
