@@ -1,0 +1,899 @@
+.football-weekly-superteam,
+.football-weekly-superteam__cover,
+.football-weekly-superteam__final {
+  width: min(760px, calc(100% - 24px));
+  margin: 14px auto 100px;
+}
+
+.football-weekly-superteam {
+  display: grid;
+  gap: 10px;
+}
+
+.football-weekly-superteam__cover,
+.football-weekly-superteam__final,
+.football-weekly-superteam__board,
+.football-weekly-superteam__roster,
+.football-weekly-superteam__prior {
+  background: linear-gradient(180deg, rgba(8, 22, 34, .98), rgba(7, 15, 24, .98));
+  border: 1px solid rgba(255,255,255,.09);
+}
+
+.football-weekly-superteam__cover {
+  padding: 20px;
+}
+
+.football-weekly-superteam__cover h1,
+.football-weekly-superteam__board h1,
+.football-weekly-superteam__final h1 {
+  margin: 2px 0 5px;
+  font-size: clamp(1.55rem, 6vw, 2.2rem);
+  letter-spacing: -.035em;
+}
+
+.football-weekly-superteam__cover > strong {
+  color: #d8e6ee;
+  font-size: .92rem;
+}
+
+.football-weekly-superteam__rules {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 13px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  background: rgba(255,255,255,.035);
+}
+
+.football-weekly-superteam__rules p {
+  margin: 0;
+  color: #b9c7d1;
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+.football-weekly-superteam__rules b {
+  color: #fff;
+}
+
+.football-weekly-superteam__primary {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #d7a31a, #f2cd5f);
+  color: #07111a;
+  font: inherit;
+  font-size: .78rem;
+  font-weight: 950;
+  letter-spacing: .055em;
+}
+
+.football-weekly-superteam__primary:disabled {
+  opacity: .45;
+}
+
+.football-weekly-superteam__status {
+  position: sticky;
+  z-index: 16;
+  top: calc(58px + var(--safe-top));
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 14px;
+  background: rgba(7, 18, 29, .96);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.22);
+}
+
+.football-weekly-superteam__status > div {
+  min-width: 0;
+  padding: 9px 8px;
+  text-align: center;
+}
+
+.football-weekly-superteam__status > div + div {
+  border-left: 1px solid rgba(255,255,255,.08);
+}
+
+.football-weekly-superteam__status small,
+.football-weekly-superteam__status span {
+  display: block;
+  color: #7f93a2;
+  font-size: .54rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-weekly-superteam__status strong {
+  display: block;
+  margin: 2px 0 1px;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.football-weekly-superteam__roster {
+  padding: 12px;
+}
+
+.football-weekly-superteam__roster > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.football-weekly-superteam__roster > header p {
+  margin: 0;
+}
+
+.football-weekly-superteam__roster > header > strong {
+  color: #d8b541;
+  font-size: .7rem;
+  letter-spacing: .06em;
+}
+
+.football-weekly-superteam__roster > div {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(88px,1fr));
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.football-weekly-superteam__roster > div::-webkit-scrollbar {
+  display: none;
+}
+
+.football-weekly-superteam__roster article {
+  min-width: 88px;
+  min-height: 64px;
+  padding: 8px;
+  border: 1px dashed rgba(255,255,255,.14);
+  border-radius: 10px;
+  background: rgba(255,255,255,.02);
+}
+
+.football-weekly-superteam__roster article.is-filled {
+  border-style: solid;
+  border-color: rgba(215, 163, 26, .35);
+  background: rgba(215, 163, 26, .08);
+}
+
+.football-weekly-superteam__roster article small,
+.football-weekly-superteam__roster article strong,
+.football-weekly-superteam__roster article span {
+  display: block;
+}
+
+.football-weekly-superteam__roster article small {
+  color: #d8b541;
+  font-size: .52rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.football-weekly-superteam__roster article strong {
+  overflow: hidden;
+  margin-top: 3px;
+  color: #fff;
+  font-size: .68rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-superteam__roster article span {
+  overflow: hidden;
+  margin-top: 2px;
+  color: #7f93a2;
+  font-size: .54rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-superteam__prior {
+  padding: 12px;
+}
+
+.football-weekly-superteam__prior > header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.football-weekly-superteam__prior > header p {
+  margin: 0;
+}
+
+.football-weekly-superteam__prior > article {
+  padding: 9px 0;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.football-weekly-superteam__prior > article > div {
+  display: grid;
+  gap: 2px;
+}
+
+.football-weekly-superteam__prior > article span {
+  color: #c5d0d8;
+  font-size: .7rem;
+}
+
+.football-weekly-superteam__prior > article strong {
+  color: #fff;
+  font-size: .72rem;
+}
+
+.football-weekly-superteam__prior summary {
+  margin-top: 5px;
+  color: #d8b541;
+  cursor: pointer;
+  font-size: .61rem;
+  font-weight: 900;
+}
+
+.football-weekly-superteam__bid-history {
+  display: grid;
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.football-weekly-superteam__bid-history > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 7px;
+  border-radius: 7px;
+  background: rgba(255,255,255,.03);
+}
+
+.football-weekly-superteam__board {
+  padding: 13px;
+}
+
+.football-weekly-superteam__board > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.football-weekly-superteam__board > header p {
+  margin: 0;
+}
+
+.football-weekly-superteam__board > header > div:last-child {
+  min-width: 70px;
+  text-align: right;
+}
+
+.football-weekly-superteam__board > header > div:last-child strong,
+.football-weekly-superteam__board > header > div:last-child span {
+  display: block;
+}
+
+.football-weekly-superteam__board > header > div:last-child strong {
+  color: #f1cd61;
+  font-size: 1.45rem;
+}
+
+.football-weekly-superteam__board > header > div:last-child span {
+  color: #7f93a2;
+  font-size: .52rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-weekly-superteam__tie-order {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 10px;
+  background: rgba(255,255,255,.025);
+}
+
+.football-weekly-superteam__tie-order small {
+  color: #d8b541;
+  font-size: .55rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-weekly-superteam__tie-order span {
+  color: #aebcc6;
+  font-size: .63rem;
+  line-height: 1.4;
+}
+
+.football-weekly-superteam__candidate-stack {
+  display: grid;
+  gap: 7px;
+}
+
+.football-weekly-superteam__candidate {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 8px;
+  align-items: center;
+  overflow: hidden;
+  min-height: 78px;
+  padding: 9px;
+  border: 1px solid rgba(var(--superteam-primary-rgb), .28);
+  border-radius: 12px;
+  background:
+    linear-gradient(100deg, rgba(var(--superteam-primary-rgb), .18), rgba(8,20,31,.9) 48%),
+    #091722;
+}
+
+.football-weekly-superteam__candidate::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--superteam-primary);
+}
+
+.football-weekly-superteam__candidate.is-locked {
+  opacity: .48;
+  filter: saturate(.55);
+}
+
+.football-weekly-superteam__candidate-main {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+}
+
+.football-weekly-superteam__mark {
+  display: grid;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255,255,255,.92);
+}
+
+.football-weekly-superteam__mark img {
+  width: 31px;
+  height: 31px;
+  object-fit: contain;
+}
+
+.football-weekly-superteam__mark b {
+  color: #091722;
+  font-size: .59rem;
+}
+
+.football-weekly-superteam__candidate-main > div {
+  min-width: 0;
+}
+
+.football-weekly-superteam__candidate-main small,
+.football-weekly-superteam__candidate-main strong,
+.football-weekly-superteam__candidate-main span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-superteam__candidate-main small {
+  color: #a8b7c2;
+  font-size: .51rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.football-weekly-superteam__candidate-main strong {
+  margin: 2px 0 1px;
+  color: #fff;
+  font-size: .8rem;
+}
+
+.football-weekly-superteam__candidate-main span {
+  color: #94a5b1;
+  font-size: .64rem;
+}
+
+.football-weekly-superteam__controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.football-weekly-superteam__priority,
+.football-weekly-superteam__bid label {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  overflow: hidden;
+  height: 38px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 9px;
+  background: rgba(0,0,0,.24);
+}
+
+.football-weekly-superteam__priority {
+  grid-template-columns: 1fr;
+  width: 50px;
+  height: 42px;
+  padding: 3px;
+  text-align: center;
+}
+
+.football-weekly-superteam__priority span,
+.football-weekly-superteam__bid label span {
+  color: #778b99;
+  font-size: .45rem;
+  font-weight: 950;
+  letter-spacing: .07em;
+}
+
+.football-weekly-superteam__priority select {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  background: transparent;
+  color: #f1cd61;
+  font: inherit;
+  font-size: .76rem;
+  font-weight: 950;
+  text-align: center;
+}
+
+.football-weekly-superteam__bid {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.football-weekly-superteam__bid > button {
+  width: 27px;
+  height: 38px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 9px;
+  background: rgba(255,255,255,.04);
+  color: #d8e2e8;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.football-weekly-superteam__bid label {
+  position: relative;
+  grid-template-columns: 12px 34px;
+  width: 51px;
+  padding: 0 3px;
+}
+
+.football-weekly-superteam__bid label span {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.football-weekly-superteam__bid label b {
+  padding-top: 8px;
+  color: #708592;
+  font-size: .64rem;
+}
+
+.football-weekly-superteam__bid input {
+  width: 34px;
+  padding-top: 8px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 950;
+  text-align: center;
+}
+
+.football-weekly-superteam__candidate > em {
+  position: absolute;
+  right: 8px;
+  bottom: 2px;
+  color: #667b89;
+  font-size: .43rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.football-weekly-superteam__priority-note {
+  display: grid;
+  gap: 2px;
+  margin: 10px 0;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: rgba(215,163,26,.075);
+}
+
+.football-weekly-superteam__priority-note strong {
+  color: #e1bc4b;
+  font-size: .58rem;
+  letter-spacing: .08em;
+}
+
+.football-weekly-superteam__priority-note span {
+  color: #aab9c4;
+  font-size: .62rem;
+  line-height: 1.4;
+}
+
+.football-weekly-superteam__error {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: rgba(194,58,58,.14);
+  color: #ffb6b6;
+  font-size: .68rem;
+  line-height: 1.4;
+}
+
+.football-weekly-superteam__submitted {
+  display: grid;
+  gap: 8px;
+}
+
+.football-weekly-superteam__submitted > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.football-weekly-superteam__submitted > div strong {
+  color: #8bd09c;
+  font-size: .68rem;
+}
+
+.football-weekly-superteam__submitted > div span {
+  color: #7f93a2;
+  font-size: .62rem;
+}
+
+.football-weekly-superteam__submitted > button:not(.football-weekly-superteam__primary) {
+  min-height: 38px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 10px;
+  background: rgba(255,255,255,.035);
+  color: #dbe5eb;
+  font: inherit;
+  font-size: .66rem;
+  font-weight: 900;
+}
+
+.football-weekly-superteam__final {
+  padding: 15px;
+}
+
+.football-weekly-superteam__final > header {
+  margin-bottom: 12px;
+}
+
+.football-weekly-superteam__final > header p,
+.football-weekly-superteam__final > header h1 {
+  margin-top: 0;
+}
+
+.football-weekly-superteam__final > header span {
+  color: #93a5b1;
+  font-size: .72rem;
+}
+
+.football-weekly-superteam__champion,
+.football-weekly-superteam__finish {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 7px 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid rgba(215,163,26,.24);
+  border-radius: 12px;
+  background: rgba(215,163,26,.07);
+}
+
+.football-weekly-superteam__champion small,
+.football-weekly-superteam__finish small {
+  grid-column: 1 / -1;
+  color: #d8b541;
+  font-size: .55rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.football-weekly-superteam__champion strong,
+.football-weekly-superteam__finish strong {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.football-weekly-superteam__champion b,
+.football-weekly-superteam__finish b {
+  color: #f1cd61;
+  font-size: 1.45rem;
+}
+
+.football-weekly-superteam__champion span,
+.football-weekly-superteam__finish span {
+  grid-column: 1 / -1;
+  color: #8598a5;
+  font-size: .61rem;
+}
+
+.football-weekly-superteam__tabs {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.football-weekly-superteam__tabs button,
+.football-weekly-superteam__player-picker button {
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 9px;
+  background: rgba(255,255,255,.025);
+  color: #94a6b2;
+  font: inherit;
+  font-size: .62rem;
+  font-weight: 900;
+}
+
+.football-weekly-superteam__tabs button {
+  min-height: 36px;
+}
+
+.football-weekly-superteam__tabs button.is-active,
+.football-weekly-superteam__player-picker button.is-active {
+  border-color: rgba(215,163,26,.35);
+  background: rgba(215,163,26,.10);
+  color: #f1cd61;
+}
+
+.football-weekly-superteam__standings {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.football-weekly-superteam__standings > div {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 10px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.03);
+}
+
+.football-weekly-superteam__standings > div.is-current {
+  outline: 1px solid rgba(215,163,26,.28);
+}
+
+.football-weekly-superteam__standings b {
+  color: #d8b541;
+}
+
+.football-weekly-superteam__standings strong {
+  color: #fff;
+  font-size: .73rem;
+}
+
+.football-weekly-superteam__standings span {
+  color: #fff;
+  font-weight: 900;
+}
+
+.football-weekly-superteam__player-picker {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  margin-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.football-weekly-superteam__player-picker button {
+  flex: 0 0 auto;
+  min-width: 84px;
+  padding: 7px 9px;
+}
+
+.football-weekly-superteam__player-picker strong,
+.football-weekly-superteam__player-picker span {
+  display: block;
+}
+
+.football-weekly-superteam__player-picker span {
+  margin-top: 2px;
+  font-size: .57rem;
+}
+
+.football-weekly-superteam__final-roster-list,
+.football-weekly-superteam__grades {
+  display: grid;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.football-weekly-superteam__final-roster-list article {
+  display: grid;
+  grid-template-columns: 74px 1fr auto;
+  gap: 3px 8px;
+  align-items: center;
+  padding: 8px 9px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.03);
+}
+
+.football-weekly-superteam__final-roster-list small {
+  grid-row: 1 / 3;
+  color: #d8b541;
+  font-size: .55rem;
+  font-weight: 950;
+}
+
+.football-weekly-superteam__final-roster-list strong {
+  color: #fff;
+  font-size: .7rem;
+}
+
+.football-weekly-superteam__final-roster-list span {
+  color: #8194a1;
+  font-size: .57rem;
+}
+
+.football-weekly-superteam__final-roster-list b {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  color: #f1cd61;
+}
+
+.football-weekly-superteam__grades article {
+  display: grid;
+  grid-template-columns: 42px 1fr auto 38px;
+  gap: 7px;
+  align-items: center;
+  padding: 7px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.025);
+}
+
+.football-weekly-superteam__grades > article > span,
+.football-weekly-superteam__grades em {
+  color: #7f93a2;
+  font-size: .52rem;
+  font-style: normal;
+}
+
+.football-weekly-superteam__grades strong {
+  color: #fff;
+  font-size: .67rem;
+}
+
+.football-weekly-superteam__grades strong small {
+  display: block;
+  margin-top: 2px;
+  color: #8396a3;
+  font-size: .52rem;
+  font-weight: 600;
+}
+
+.football-weekly-superteam__grades b {
+  color: #f1cd61;
+  text-align: right;
+}
+
+@media (max-width: 560px) {
+  .football-weekly-superteam,
+  .football-weekly-superteam__cover,
+  .football-weekly-superteam__final {
+    width: calc(100% - 14px);
+    margin-top: 7px;
+  }
+
+  .football-weekly-superteam__board,
+  .football-weekly-superteam__roster,
+  .football-weekly-superteam__prior {
+    border-radius: 12px;
+  }
+
+  .football-weekly-superteam__candidate {
+    grid-template-columns: minmax(0,1fr) 118px;
+    min-height: 75px;
+    gap: 5px;
+    padding: 8px 7px;
+  }
+
+  .football-weekly-superteam__mark {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .football-weekly-superteam__mark img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .football-weekly-superteam__controls {
+    gap: 3px;
+  }
+
+  .football-weekly-superteam__priority {
+    width: 43px;
+  }
+
+  .football-weekly-superteam__bid > button {
+    width: 23px;
+  }
+
+  .football-weekly-superteam__bid label {
+    width: 45px;
+    grid-template-columns: 10px 29px;
+  }
+
+  .football-weekly-superteam__bid input {
+    width: 29px;
+  }
+
+  .football-weekly-superteam__candidate-main strong {
+    font-size: .73rem;
+  }
+
+  .football-weekly-superteam__candidate-main small {
+    font-size: .46rem;
+  }
+
+  .football-weekly-superteam__candidate-main span {
+    font-size: .58rem;
+  }
+
+  .football-weekly-superteam__grades article {
+    grid-template-columns: 36px minmax(0,1fr) 34px;
+  }
+
+  .football-weekly-superteam__grades em {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .football-weekly-superteam__candidate {
+    grid-template-columns: minmax(0,1fr) 112px;
+  }
+
+  .football-weekly-superteam__mark {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .football-weekly-superteam__mark img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .football-weekly-superteam__priority {
+    width: 40px;
+  }
+
+  .football-weekly-superteam__bid > button {
+    width: 21px;
+  }
+
+  .football-weekly-superteam__bid label {
+    width: 43px;
+  }
+}

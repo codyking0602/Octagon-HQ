@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import "../../styles/football-weekly-auction.css";
 import type {
   FootballWeeklyAuctionActiveState,
+  FootballWeeklyAuctionBidInput,
   FootballWeeklyAuctionCfbState,
   FootballWeeklyAuctionFinal,
   FootballWeeklyAuctionPriorResult,
@@ -16,6 +17,10 @@ import {
   FootballWeeklyBuildQbFinalResult,
   FootballWeeklyBuildQbGate,
 } from "./FootballWeeklyBuildQbGate";
+import {
+  FootballWeeklySuperteamFinalResult,
+  FootballWeeklySuperteamGate,
+} from "./FootballWeeklySuperteamGate";
 import {
   footballWeeklyAuctionTeamIdentity,
   footballWeeklyAuctionTeamStyle,
@@ -454,11 +459,20 @@ export function FootballWeeklyAuctionGate({
   busy: boolean;
   error: string | null;
   forceBoard?: boolean;
-  onSubmit: (bids: Record<number, number>) => Promise<void>;
+  onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
   onAcknowledgeFinal: (weekStart: string) => Promise<void>;
   onContinue: () => void;
 }) {
   if (state.previous_final) {
+    if (state.previous_final.subject_key === "cfb-superteam") {
+      return (
+        <FootballWeeklySuperteamFinalResult
+          result={state.previous_final}
+          busy={busy}
+          onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
+        />
+      );
+    }
     if (state.previous_final.subject_key === "nfl-build-qb") {
       return (
         <FootballWeeklyBuildQbFinalResult
@@ -473,6 +487,19 @@ export function FootballWeeklyAuctionGate({
         result={state.previous_final}
         busy={busy}
         onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
+      />
+    );
+  }
+
+  if (state.subject_key === "cfb-superteam") {
+    return (
+      <FootballWeeklySuperteamGate
+        state={state}
+        busy={busy}
+        error={error}
+        forceBoard={forceBoard}
+        onSubmit={onSubmit}
+        onContinue={onContinue}
       />
     );
   }
