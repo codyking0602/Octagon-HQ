@@ -803,6 +803,59 @@ async function finalizePending(
   return getContext(admin, String(context.daily_challenge_id), profileId);
 }
 
+async function continueTwoGameWithoutIntermission(
+  admin: SupabaseClient,
+  context: OfficialDailyRuntimeContext & JsonRecord,
+  profileId: string,
+) {
+  if (!isTwoGameDaily(context) || context.publicState.awaiting_next !== true) return context;
+
+  const roundIndex = Number(context.publicState.round_index ?? 0);
+  const completedRounds = Array.isArray(context.publicState.completed_rounds)
+    ? context.publicState.completed_rounds
+    : [];
+  const roundScores = Array.isArray(context.publicState.round_scores)
+    ? context.publicState.round_scores
+    : [];
+  const children = Array.isArray(context.privateSetupEvidence.rounds)
+    ? context.privateSetupEvidence.rounds
+    : [];
+
+  if (roundIndex !== 0 || completedRounds.length < 1 || roundScores.length < 1 || children.length !== 2) {
+    throw new Error("Two-game Daily saved intermission state is invalid.");
+  }
+
+  const secondChild = requiredRecord(children[1], "Two-game Daily second child");
+  const secondPublicSetup = requiredRecord(secondChild.public_setup, "Two-game Daily second public setup");
+  const secondInitial = requiredRecord(secondPublicSetup.initial_state, "Two-game Daily second initial state");
+
+  const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+    p_daily_challenge_id: String(context.daily_challenge_id),
+    p_profile_id: profileId,
+    p_expected_revision: Number(context.progress_revision),
+    p_submission_state: context.submissionState,
+    p_public_state: {
+      ...context.publicState,
+      complete: false,
+      round_index: 1,
+      round_count: 2,
+      awaiting_next: false,
+      active_round: secondInitial,
+      active_reveal: null,
+      score: null,
+    },
+  });
+
+  if (saved.error) {
+    if (saved.error.code === "40001") {
+      return getContext(admin, String(context.daily_challenge_id), profileId);
+    }
+    throw new Error("The two-game Daily could not continue into Game 2.");
+  }
+
+  return getContext(admin, String(context.daily_challenge_id), profileId);
+}
+
 Deno.serve(async (request) => {
   if (request.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (request.method !== "POST") return safeError(405, "METHOD_NOT_ALLOWED", "Method not allowed.");
@@ -878,6 +931,7 @@ Deno.serve(async (request) => {
       const materialized = await materializeFootballToday(admin);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
+      context = await continueTwoGameWithoutIntermission(admin, context, profileId);
 
       const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0
         || Boolean(asRecord(context.official_attempt));
@@ -957,6 +1011,7 @@ Deno.serve(async (request) => {
     const materialized = await materializeToday(admin);
     let context = await getContext(admin, materialized.dailyChallengeId, profileId);
     context = await finalizePending(userClient, admin, context, profileId);
+    context = await continueTwoGameWithoutIntermission(admin, context, profileId);
 
     if (body.mode === "get-today" || body.mode === undefined) {
       return json(publicPayload(context));

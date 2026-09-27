@@ -103,7 +103,7 @@ describe("two-game Daily standard", () => {
     expect(hitRounds.map((round) => round.league).sort()).toEqual(["CFB", "NFL"]);
   });
 
-  it("locks Game 1, advances to Game 2, and averages both normalized scores", () => {
+  it("locks Game 1 and enters Game 2 in the same successful action", () => {
     const setup = buildOfficialDailySetup(
       "find_leader",
       "2026-09-27",
@@ -124,16 +124,9 @@ describe("two-game Daily standard", () => {
     };
 
     expect(first.complete).toBe(false);
-    expect(first.publicState.awaiting_next).toBe(true);
+    expect(first.publicState.awaiting_next).toBe(false);
+    expect(first.publicState.round_index).toBe(1);
     expect(first.publicState.round_scores).toEqual([10]);
-
-    const transitioned = advanceOfficialDailyRuntime(context, { type: "next_game" });
-    context = {
-      ...context,
-      submissionState: transitioned.submissionState,
-      publicState: transitioned.publicState,
-    };
-    expect(context.publicState.round_index).toBe(1);
 
     const secondEvidence = record(privateRounds[1]!.private_setup_evidence);
     const secondLeader = String(secondEvidence.leader_id);
