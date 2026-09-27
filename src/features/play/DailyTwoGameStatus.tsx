@@ -27,9 +27,12 @@ export interface DailyTwoGameSeriesState {
 export function dailyTwoGameSeriesState(
   projection: TodayChallengeProjection,
 ): DailyTwoGameSeriesState | null {
-  const live = record(projection.publicState.daily_series);
+  const live = record(projection.publicState.daily_series)
+    ?? (projection.publicState.format_version === "daily-two-game-average-v1"
+      ? projection.publicState
+      : null);
   const final = record(projection.officialAttempt?.publicResult.daily_series);
-  const source = live ?? final;
+  const source = final ?? live;
   if (!source || source.format_version !== "daily-two-game-average-v1") return null;
 
   const roundScores = numberArray(source.round_scores);
@@ -45,7 +48,7 @@ export function dailyTwoGameSeriesState(
     awaitingNext: source.awaiting_next === true,
     complete: source.complete === true || Boolean(projection.officialAttempt),
     roundScores,
-    averageScore: projection.officialAttempt?.normalizedScore ?? averageScore,
+    averageScore,
   };
 }
 
