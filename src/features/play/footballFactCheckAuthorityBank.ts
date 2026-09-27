@@ -68,23 +68,23 @@ const nflDraftPool = footballCanonicalSubjects
     && subject.draftPick != null
   ));
 
-const nflRoundSubjects = [
-  ...nflDraftPool.filter((subject) => subject.draftRound === 1).slice(0, 20),
-  ...nflDraftPool.filter((subject) => subject.draftRound! > 1).slice(0, 20),
+const nflDraftTierSubjects = [
+  ...nflDraftPool.filter((subject) => subject.draftPick! <= 10).slice(0, 20),
+  ...nflDraftPool.filter((subject) => subject.draftPick! > 10).slice(0, 20),
 ];
 
 const nflDraftSubjects = nflDraftPool
   .slice()
   .sort((a, b) => (a.draftYear! - b.draftYear!) || (a.draftPick! - b.draftPick!));
 
-const nflRoundFacts: FactCheckItem[] = nflRoundSubjects.map((subject) => item({
-  id: `canonical-nfl-round-${subject.id}`,
+const nflDraftTierFacts: FactCheckItem[] = nflDraftTierSubjects.map((subject) => item({
+  id: `canonical-nfl-draft-tier-${subject.id}`,
   league: "nfl",
   format: "either_or",
   difficulty: 1,
   prompt: `${subject.name} entered the NFL as...`,
-  choices: ["ROUND 1 PICK", "LATER ROUND PICK"],
-  answer: subject.draftRound === 1 ? "ROUND 1 PICK" : "LATER ROUND PICK",
+  choices: ["TOP 10 PICK", "PICK 11 OR LATER"],
+  answer: subject.draftPick! <= 10 ? "TOP 10 PICK" : "PICK 11 OR LATER",
   explanation: `${subject.name} was drafted in Round ${subject.draftRound}, pick ${subject.draftPick}, in ${subject.draftYear}.`,
   sourceId: SOURCE_CANONICAL,
 }));
@@ -213,7 +213,7 @@ const draftChronologyFacts: FactCheckItem[] = Array.from(
 
 export const FOOTBALL_FACT_CHECK_AUTHORITY_BANK: readonly FactCheckItem[] = [
   ...cfbAwardFacts,
-  ...nflRoundFacts,
+  ...nflDraftTierFacts,
   ...qbFacts,
   ...rbFacts,
   ...championFacts,
@@ -222,7 +222,7 @@ export const FOOTBALL_FACT_CHECK_AUTHORITY_BANK: readonly FactCheckItem[] = [
 
 export const FOOTBALL_FACT_CHECK_AUTHORITY_COUNTS = {
   cfbAward: cfbAwardFacts.length,
-  nflRound: nflRoundFacts.length,
+  nflDraftTier: nflDraftTierFacts.length,
   qb: qbFacts.length,
   rb: rbFacts.length,
   champion: championFacts.length,
