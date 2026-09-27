@@ -104,9 +104,11 @@ describe("Phase 2B event setup backend", () => {
     expect(productionPreviewVerifier).not.toContain("expectedFights");
     expect(webkitVerifier).toContain('const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });');
     expect(webkitVerifier).toContain('const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });');
+    expect(webkitVerifier).toContain('const preparedStageButton = page.getByRole("button", { name: "VERIFY PREP & STAGE" });');
     expect(webkitVerifier).toContain("if (await updateButton.count())");
     expect(webkitVerifier).toContain("await updateButton.click()");
-    expect(webkitVerifier).toContain("} else if (await syncButton.count())");
+    expect(webkitVerifier).toContain("} else if (await syncButton.count() || await preparedStageButton.count())");
+    expect(webkitVerifier).toContain('preparedFlow ? "Verify the prepared UFC event." : "Stage the next UFC event."');
     expect(webkitVerifier).toContain('page.getByText("NO STAGED CARD", { exact: true })');
     expect(webkitVerifier).toContain("syncRequestCount !== syncRequestsBeforeSetup");
     expect(webkitVerifier).toContain("/^(Main card|Full card) · \\d+ fights$/i");
