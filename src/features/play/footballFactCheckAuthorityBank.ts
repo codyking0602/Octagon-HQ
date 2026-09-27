@@ -33,13 +33,17 @@ function overUnderAnswer(value: number, threshold: number) {
   return value > threshold ? "OVER" : "UNDER";
 }
 
-const cfbAwardSubjects = footballCanonicalSubjects
+const cfbAwardPool = footballCanonicalSubjects
   .filter((subject) => (
     subject.kind === "player-career"
     && subject.league === "CFB"
     && subject.heismanWinner != null
-  ))
-  .slice(0, 40);
+  ));
+
+const cfbAwardSubjects = [
+  ...cfbAwardPool.filter((subject) => subject.heismanWinner === true).slice(0, 20),
+  ...cfbAwardPool.filter((subject) => subject.heismanWinner === false).slice(0, 20),
+];
 
 const cfbAwardFacts: FactCheckItem[] = cfbAwardSubjects.map((subject) => item({
   id: `canonical-cfb-heisman-${subject.id}`,
@@ -66,7 +70,12 @@ const nflDraftSubjects = footballCanonicalSubjects
   .slice()
   .sort((a, b) => (a.draftYear! - b.draftYear!) || (a.draftPick! - b.draftPick!));
 
-const nflRoundFacts: FactCheckItem[] = nflDraftSubjects.slice(0, 40).map((subject) => item({
+const nflRoundSubjects = [
+  ...nflDraftSubjects.filter((subject) => subject.draftRound === 1).slice(0, 20),
+  ...nflDraftSubjects.filter((subject) => subject.draftRound! > 1).slice(0, 20),
+];
+
+const nflRoundFacts: FactCheckItem[] = nflRoundSubjects.map((subject) => item({
   id: `canonical-nfl-round-${subject.id}`,
   league: "nfl",
   format: "either_or",
@@ -174,9 +183,11 @@ function draftComesBefore(
 const draftChronologyFacts: FactCheckItem[] = Array.from(
   { length: Math.min(30, Math.max(0, nflDraftSubjects.length - 1)) },
   (_, index) => {
-    const left = nflDraftSubjects[index]!;
+    const first = nflDraftSubjects[index]!;
     const offset = Math.max(7, Math.floor(nflDraftSubjects.length / 3));
-    const right = nflDraftSubjects[(index + offset) % nflDraftSubjects.length]!;
+    const second = nflDraftSubjects[(index + offset) % nflDraftSubjects.length]!;
+    const left = index % 2 === 0 ? first : second;
+    const right = index % 2 === 0 ? second : first;
     const before = draftComesBefore(left, right);
     const yearGap = Math.abs(left.draftYear! - right.draftYear!);
     const sameYear = left.draftYear === right.draftYear;
