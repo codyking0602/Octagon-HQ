@@ -91,5 +91,6 @@ export const MLB_OWNER_PLAYER_SPOTLIGHT = {
     { label: "OPS", value: ".942" },
   ],
   meta: "2026 REGULAR SEASON · 40/40 CLUB",
-  highlightUrl: "https://www.mlb.com/video/pete-crow-armstrong-s-historic-40-40-season",
+  profileUrl: "https://www.baseball-reference.com/players/c/crowape01.shtml",
+  highlightUrl: "https://youtu.be/08zDHKWWmrk?is=LcAtx-G4XUoBvf4u",
 } as const;
