@@ -11,6 +11,7 @@ export type PlayGameId =
   | "better-than"
   | "auction"
   | "hit-the-number"
+  | "fact-check"
   | "20-questions"
   | "who-am-i"
   | "millionaire"
@@ -50,6 +51,7 @@ export type PlayCompletionState =
   | "identity-guessed-or-clue-limit"
   | "millionaire-settled"
   | "sports-feud-settled"
+  | "fact-check-settled"
   | "draft-room-complete";
 
 export interface PlayGameLineupDefinition {
@@ -525,6 +527,30 @@ export const playGameCatalog = [
       reminderEligible: false,
       historyRecording: "casual-and-challenge",
       difficultyModel: "Verified NFL and CFB factual targets across classic, themed, era, and team-build boards.",
+    },
+  },
+  {
+    sport: "football",
+    id: "fact-check",
+    route: "/football/fact-check",
+    icon: "✓?",
+    title: "Fact Check",
+    description: "Make ten quick football calls across true/false, before/after, over/under, and head-to-head prompts.",
+    availability: "preview",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "fact-check-settled",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "Ten curated binary football calls with a controlled 1–10 difficulty ramp, current-week seasoning, Lock It strategy, and recent-fact repeat protection.",
     },
   },
   {

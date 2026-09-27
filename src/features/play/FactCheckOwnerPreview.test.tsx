@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { PlayLandingGameLibrary } from "./PlayLandingPresentation";
 
-describe("Fact Check owner preview entry", () => {
+describe("Fact Check owner Casual entry", () => {
   it("stays hidden by default and routes the Football owner preview when enabled", () => {
     const onNavigate = vi.fn();
     const { rerender } = render(
@@ -23,7 +23,7 @@ describe("Fact Check owner preview entry", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Fact Check/i }));
     expect(onNavigate).toHaveBeenCalledWith("/football/fact-check");
-    expect(screen.getByRole("button", { name: /Fact Check/i })).toHaveTextContent("OWNER PREVIEW");
+    expect(screen.getByRole("button", { name: /Fact Check/i })).toHaveTextContent("CASUAL · OWNER ONLY");
   });
 
   it("never exposes the Football Fact Check preview in the UFC library", () => {

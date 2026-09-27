@@ -58,6 +58,9 @@ export function PlayLandingGameLibrary({
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
   const familyFeudRoute = sport === "ufc" ? "/play/sports-feud" : "/football/sports-feud";
+  const factCheck = factCheckVisible && sport === "football"
+    ? playGameDefinition("fact-check", "football")
+    : null;
 
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
@@ -71,16 +74,16 @@ export function PlayLandingGameLibrary({
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
-        {factCheckVisible && sport === "football" ? (
+        {factCheck ? (
           <button
-            className="play-landing-game-card is-strategic"
+            className="play-landing-game-card"
             type="button"
-            onClick={() => onNavigate("/football/fact-check")}
+            onClick={() => onNavigate(factCheck.route)}
           >
-            <span className="play-landing-game-card__icon" aria-hidden="true">✓?</span>
-            <span className="play-landing-game-card__status">OWNER PREVIEW</span>
-            <strong>Fact Check</strong>
-            <small>Make ten fast football calls across true/false, before/after, over/under, and head-to-head prompts.</small>
+            <span className="play-landing-game-card__icon" aria-hidden="true">{factCheck.icon}</span>
+            <span className="play-landing-game-card__status">CASUAL · OWNER ONLY</span>
+            <strong>{factCheck.title}</strong>
+            <small>{factCheck.description}</small>
             <em>PLAY →</em>
           </button>
         ) : null}
