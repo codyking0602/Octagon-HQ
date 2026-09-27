@@ -57,6 +57,40 @@
   color: #fff;
 }
 
+.football-weekly-superteam__rules-callout,
+.football-weekly-superteam__rules-example {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.football-weekly-superteam__rules-callout {
+  border: 1px solid rgba(215,163,26,.28);
+  background: rgba(215,163,26,.085);
+}
+
+.football-weekly-superteam__rules-example {
+  background: rgba(255,255,255,.035);
+}
+
+.football-weekly-superteam__rules-callout b,
+.football-weekly-superteam__rules-example b {
+  font-size: .6rem;
+  letter-spacing: .065em;
+}
+
+.football-weekly-superteam__rules-callout b {
+  color: #f1cd61;
+}
+
+.football-weekly-superteam__rules-callout span,
+.football-weekly-superteam__rules-example span {
+  color: #b9c7d1;
+  font-size: .72rem;
+  line-height: 1.4;
+}
+
 .football-weekly-superteam__primary {
   width: 100%;
   min-height: 48px;
@@ -362,9 +396,12 @@
 }
 
 .football-weekly-superteam__mark img {
+  display: block;
   width: 31px;
   height: 31px;
   object-fit: contain;
+  object-position: center;
+  transform: translate(1px, 1px);
 }
 
 .football-weekly-superteam__mark b {
@@ -435,6 +472,7 @@
   font-size: .45rem;
   font-weight: 950;
   letter-spacing: .07em;
+  white-space: nowrap;
 }
 
 .football-weekly-superteam__priority select {
@@ -810,7 +848,7 @@
   }
 
   .football-weekly-superteam__candidate {
-    grid-template-columns: minmax(0,1fr) 118px;
+    grid-template-columns: minmax(0,1fr) auto;
     min-height: 75px;
     gap: 5px;
     padding: 8px 7px;
@@ -832,7 +870,7 @@
   }
 
   .football-weekly-superteam__priority {
-    width: 43px;
+    width: 46px;
   }
 
   .football-weekly-superteam__bid > button {
@@ -871,7 +909,7 @@
 
 @media (max-width: 380px) {
   .football-weekly-superteam__candidate {
-    grid-template-columns: minmax(0,1fr) 112px;
+    grid-template-columns: minmax(0,1fr) auto;
   }
 
   .football-weekly-superteam__mark {
@@ -886,7 +924,7 @@
   }
 
   .football-weekly-superteam__priority {
-    width: 40px;
+    width: 44px;
   }
 
   .football-weekly-superteam__bid > button {
