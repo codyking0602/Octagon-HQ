@@ -542,8 +542,22 @@ begin
     where board.week_start=p_week_start
       and (
         board.day_index>v_day_index
-        or board.slot<=private.football_weekly_auction_cards_for_day(
-          p_week_start,board.day_index
+        or (
+          board.day_index=v_day_index
+          and board.slot<=private.football_weekly_auction_cards_for_day(
+            p_week_start,board.day_index
+          )
+        )
+        or (
+          board.day_index<v_day_index
+          and exists(
+            select 1
+            from private.football_weekly_auction_awards award
+            where award.week_start=board.week_start
+              and award.day_index=board.day_index
+              and award.slot=board.slot
+              and award.profile_id is null
+          )
         )
       )
   )
