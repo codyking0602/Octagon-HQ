@@ -5,6 +5,7 @@ const bidHistorySchema = z.object({
   profile_id: z.string().uuid(),
   display_name: z.string(),
   amount: z.coerce.number().int().min(0),
+  priority: z.coerce.number().int().min(1).max(8).nullable().optional(),
 });
 
 const finalStandingSchema = z.object({
@@ -88,6 +89,74 @@ const cfbFinalSchema = z.object({
   standings: z.array(finalStandingSchema),
   collection: z.array(cfbFinalCollectionSchema),
   all_teams: z.array(cfbFinalTeamSchema),
+  my_result: myResultSchema.default({}),
+});
+
+const superteamGroupSchema = z.enum([
+  "QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach",
+]);
+const superteamRosterSlotSchema = z.enum([
+  "QB", "RB", "WR", "Flex", "Front Seven", "Secondary", "Head Coach",
+]);
+const superteamAwardSourceSchema = z.enum(["auction", "autofill"]);
+
+const superteamCardSchema = z.object({
+  slot: z.coerce.number().int().min(1).max(8),
+  item_reference: z.string(),
+  display_name: z.string(),
+  school: z.string(),
+  peak_season: z.coerce.number().int(),
+  candidate_group: superteamGroupSchema,
+  lock_at: z.string(),
+});
+
+const superteamPriorResultSchema = superteamCardSchema.omit({ lock_at: true }).extend({
+  winning_bid: z.coerce.number().int().min(0),
+  winner_profile_id: z.string().uuid().nullable(),
+  winner_display_name: z.string().nullable(),
+  roster_slot: superteamRosterSlotSchema.nullable(),
+  award_source: superteamAwardSourceSchema,
+  bids: z.array(bidHistorySchema).default([]),
+});
+
+const superteamCollectionSchema = z.object({
+  item_reference: z.string(),
+  display_name: z.string(),
+  school: z.string(),
+  peak_season: z.coerce.number().int(),
+  candidate_group: superteamGroupSchema,
+  roster_slot: superteamRosterSlotSchema,
+  winning_bid: z.coerce.number().int().min(0),
+  award_source: superteamAwardSourceSchema,
+});
+
+const superteamFinalCollectionSchema = superteamCollectionSchema.extend({
+  grade: z.coerce.number(),
+  counts: z.boolean(),
+});
+
+const superteamFinalTeamSchema = z.object({
+  day_index: z.coerce.number().int().min(1).max(7),
+  slot: z.coerce.number().int().min(1).max(8),
+  item_reference: z.string(),
+  display_name: z.string(),
+  school: z.string(),
+  peak_season: z.coerce.number().int(),
+  candidate_group: superteamGroupSchema,
+  grade: z.coerce.number(),
+  winning_bid: z.coerce.number().int().min(0),
+  winner_profile_id: z.string().uuid().nullable(),
+  winner_display_name: z.string().nullable(),
+  roster_slot: superteamRosterSlotSchema.nullable(),
+  award_source: superteamAwardSourceSchema,
+});
+
+const superteamFinalSchema = z.object({
+  subject_key: z.literal("cfb-superteam"),
+  week_start: z.string(),
+  standings: z.array(finalStandingSchema),
+  collection: z.array(superteamFinalCollectionSchema),
+  all_teams: z.array(superteamFinalTeamSchema),
   my_result: myResultSchema.default({}),
 });
 
@@ -267,6 +336,15 @@ const superteamAvailableSchema = z.object({
   bids: z.record(z.string(), superteamBidSchema).default({}),
 });
 
+const superteamAvailableSchema = z.object({
+  ...commonActiveFields,
+  subject_key: z.literal("cfb-superteam"),
+  teams: z.array(superteamCardSchema).length(8),
+  claim_priorities: z.record(z.string(), z.coerce.number().int().min(1).max(8)).default({}),
+  prior_results: z.array(superteamPriorResultSchema).default([]),
+  collection: z.array(superteamCollectionSchema).default([]),
+});
+
 const unavailableSchema = z.object({
   available: z.literal(false),
   subject_key: z.enum(["cfb-best-teams-since-2000", "nfl-build-qb", "cfb-superteam"]).optional(),
@@ -292,6 +370,14 @@ export type FootballWeeklyAuctionPriorResult = z.infer<typeof cfbPriorResultSche
 export type FootballWeeklyBuildQbCard = z.infer<typeof buildQbCardSchema>;
 export type FootballWeeklyBuildQbPriorResult = z.infer<typeof buildQbPriorResultSchema>;
 export type FootballWeeklyBuildQbTrait = z.infer<typeof buildQbTraitSchema>;
+export type FootballWeeklySuperteamCard = z.infer<typeof superteamCardSchema>;
+export type FootballWeeklySuperteamPriorResult = z.infer<typeof superteamPriorResultSchema>;
+export type FootballWeeklySuperteamGroup = z.infer<typeof superteamGroupSchema>;
+export type FootballWeeklySuperteamRosterSlot = z.infer<typeof superteamRosterSlotSchema>;
+
+export type FootballWeeklyAuctionSubmission = Record<number, number> & {
+  _priorities?: Record<string, number>;
+};
 export type FootballWeeklySuperteamCard = z.infer<typeof superteamCardSchema>;
 export type FootballWeeklySuperteamRosterSlot = z.infer<typeof superteamRosterSlotSchema>;
 export type FootballWeeklySuperteamBid = z.infer<typeof superteamBidSchema>;
