@@ -131,7 +131,7 @@ function RosterStrip({ collection }: { collection: FootballWeeklySuperteamState[
 }
 
 function CandidateCard({
-  card, bid, disabled, eligible, onAmount, onPriority,
+  card, bid, disabled, eligible, onAmount, onPriority, priorityCount,
 }: {
   card: FootballWeeklySuperteamCard;
   bid: FootballWeeklySuperteamBid;
@@ -139,6 +139,7 @@ function CandidateCard({
   eligible: boolean;
   onAmount: (amount: number) => void;
   onPriority: (priority: number) => void;
+  priorityCount: number;
 }) {
   const identity = footballWeeklySuperteamIdentity(card.school);
   return (
@@ -383,6 +384,7 @@ export function FootballWeeklySuperteamGate({
               eligible={candidateEligible(card, state.collection)}
               onAmount={(amount) => changeAmount(card.slot, amount)}
               onPriority={(priority) => changePriority(card.slot, priority)}
+              priorityCount={state.teams.length}
             />
           ))}
         </div>
