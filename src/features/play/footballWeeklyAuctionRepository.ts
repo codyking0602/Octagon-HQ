@@ -267,6 +267,28 @@ const superteamAvailableSchema = z.object({
   bids: z.record(z.string(), superteamBidSchema).default({}),
 });
 
+const superteamLabSeatSchema = z.object({
+  seat_index: z.coerce.number().int().min(1).max(6),
+  profile_id: z.string().uuid(),
+  display_name: z.string(),
+  submitted_today: z.boolean(),
+  owned_count: z.coerce.number().int().min(0).max(7),
+  bankroll: z.coerce.number().int().min(0).max(50),
+});
+
+const superteamLabSchema = z.object({
+  available: z.literal(true),
+  run_number: z.coerce.number().int().positive(),
+  lab_week_start: z.string(),
+  day_index: z.coerce.number().int().min(1).max(8),
+  completed: z.boolean(),
+  submitted_count: z.coerce.number().int().min(0).max(6),
+  seat_index: z.coerce.number().int().min(1).max(6),
+  seats: z.array(superteamLabSeatSchema).length(6),
+  state: superteamAvailableSchema.nullable(),
+  final: superteamFinalSchema.nullable(),
+});
+
 const unavailableSchema = z.object({
   available: z.literal(false),
   subject_key: z.enum(["cfb-best-teams-since-2000", "nfl-build-qb", "cfb-superteam"]).optional(),
@@ -295,6 +317,7 @@ export type FootballWeeklyBuildQbTrait = z.infer<typeof buildQbTraitSchema>;
 export type FootballWeeklySuperteamCard = z.infer<typeof superteamCardSchema>;
 export type FootballWeeklySuperteamRosterSlot = z.infer<typeof superteamRosterSlotSchema>;
 export type FootballWeeklySuperteamBid = z.infer<typeof superteamBidSchema>;
+export type FootballWeeklySuperteamLabState = z.infer<typeof superteamLabSchema>;
 export type FootballWeeklyAuctionBidInput = number | FootballWeeklySuperteamBid;
 
 type RpcError = { message?: string };
@@ -327,6 +350,13 @@ export interface FootballWeeklyAuctionRepository {
   loadHistory(): Promise<FootballWeeklyFinal[]>;
   loadBuildQbPreview(): Promise<FootballWeeklyAuctionState>;
   loadSuperteamPreview(): Promise<FootballWeeklyAuctionState>;
+  loadSuperteamLab(seatIndex?: number): Promise<FootballWeeklySuperteamLabState>;
+  resetSuperteamLab(): Promise<FootballWeeklySuperteamLabState>;
+  submitSuperteamLab(
+    seatIndex: number,
+    bids: Record<number, FootballWeeklyAuctionBidInput>,
+  ): Promise<FootballWeeklySuperteamLabState>;
+  advanceSuperteamLab(seatIndex?: number): Promise<FootballWeeklySuperteamLabState>;
   submit(bids: Record<number, FootballWeeklyAuctionBidInput>): Promise<FootballWeeklyAuctionState>;
   acknowledgeFinal(weekStart: string): Promise<FootballWeeklyAuctionState>;
 }
@@ -351,6 +381,27 @@ export function createFootballWeeklyAuctionRepository(
     },
     async loadSuperteamPreview() {
       return stateSchema.parse(await rpc(client, "get_my_football_weekly_superteam_preview"));
+    },
+    async loadSuperteamLab(seatIndex = 1) {
+      return superteamLabSchema.parse(await rpc(client, "get_my_football_weekly_superteam_lab", {
+        p_seat_index: seatIndex,
+      }));
+    },
+    async resetSuperteamLab() {
+      return superteamLabSchema.parse(await rpc(client, "reset_my_football_weekly_superteam_lab"));
+    },
+    async submitSuperteamLab(seatIndex, bids) {
+      const payload: Record<string, FootballWeeklyAuctionBidInput> = {};
+      for (const [slot, value] of Object.entries(bids)) payload[slot] = value;
+      return superteamLabSchema.parse(await rpc(client, "submit_my_football_weekly_superteam_lab_bids", {
+        p_seat_index: seatIndex,
+        p_bids: payload,
+      }));
+    },
+    async advanceSuperteamLab(seatIndex = 1) {
+      return superteamLabSchema.parse(await rpc(client, "advance_my_football_weekly_superteam_lab", {
+        p_seat_index: seatIndex,
+      }));
     },
     async submit(bids) {
       const payload: Record<string, FootballWeeklyAuctionBidInput> = {};

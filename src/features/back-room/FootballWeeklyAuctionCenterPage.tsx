@@ -8,6 +8,8 @@ import {
 import { FootballWeeklyAuctionFinalResult } from "./FootballWeeklyAuctionGate";
 import { FootballWeeklyBuildQbFinalResult } from "./FootballWeeklyBuildQbGate";
 import { FootballWeeklySuperteamFinalResult } from "./FootballWeeklySuperteamGate";
+import { useIdentity } from "../identity/IdentityProvider";
+import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import "../../styles/football-weekly-auction-center.css";
 
 type CenterTab = "week" | "results";
@@ -41,6 +43,8 @@ function archivedScore(result: FootballWeeklyFinal) {
 
 export default function FootballWeeklyAuctionCenterPage() {
   const navigate = useNavigate();
+  const identity = useIdentity();
+  const owner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [tab, setTab] = useState<CenterTab>("week");
   const [state, setState] = useState<FootballWeeklyAuctionState | null>(null);
@@ -125,6 +129,21 @@ export default function FootballWeeklyAuctionCenterPage() {
           RESULTS{history.length ? ` · ${history.length}` : ""}
         </button>
       </nav>
+
+      {owner ? (
+        <button
+          className="football-weekly-auction-center__lab"
+          type="button"
+          onClick={() => navigate("/football/weekly-auction-lab")}
+        >
+          <span>
+            <small>OWNER QA · REAL ENGINE</small>
+            <strong>WEEKLY AUCTION PLAYTHROUGH LAB</strong>
+            <em>Control six seats, resolve seven days, reset to a fresh alternate board.</em>
+          </span>
+          <b>OPEN →</b>
+        </button>
+      ) : null}
 
       {loading ? <section className="football-weekly-auction-center__message surface-card">Loading Weekly Auction…</section> : null}
       {error ? <section className="football-weekly-auction-center__message surface-card is-error">{error}</section> : null}
