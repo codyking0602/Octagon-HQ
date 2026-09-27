@@ -21,6 +21,12 @@ describe("Football Daily leaderboard result renderer", () => {
     expect(hub).toContain("sport={sport}");
   });
 
+  it("keeps the two-game Daily average above the active Football game result", () => {
+    expect(hub).toContain("dailyTwoGameLeaderboardPublicState(entry.publicState, entry.publicResult)");
+    expect(footballDaily).toContain("<DailyTwoGameStatus projection={projection} />");
+    expect(footballDaily).toContain("dailyTwoGameActiveScore(projection) ?? attempt.normalizedScore");
+  });
+
   it("covers every Football Daily game type, including Hit the Number", () => {
     expect(footballDaily).toContain("export function FootballTodayChallengeResult");
     for (const gameType of [
