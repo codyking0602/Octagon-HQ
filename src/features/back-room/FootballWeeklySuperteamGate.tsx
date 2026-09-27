@@ -13,13 +13,14 @@ import {
   footballWeeklySuperteamStyle,
 } from "./footballWeeklySuperteamVisualIdentity";
 import { FootballWeeklySuperteamTableDialog } from "./FootballWeeklySuperteamTableDialog";
+import { footballWeeklySuperteamAuctionScore } from "./footballWeeklySuperteamAuctionScore";
 
 const ROSTER_SLOTS: readonly FootballWeeklySuperteamRosterSlot[] = [
   "QB", "RB", "WR", "Flex", "Front Seven", "Secondary", "Head Coach",
 ];
 
 type SuperteamBidMap = Record<number, FootballWeeklySuperteamBid>;
-type FinalTab = "standings" | "rosters" | "grades";
+type FinalTab = "standings" | "rosters";
 
 export function FootballWeeklySuperteamRulesCover({
   onStart,
@@ -301,20 +302,19 @@ export function FootballWeeklySuperteamFinalResult({
       <div className={me.is_winner ? "football-weekly-superteam__champion" : "football-weekly-superteam__finish"}>
         <small>{me.is_winner ? "WEEKLY CHAMPION" : "YOUR FINISH"}</small>
         <strong>{me.is_winner ? "YOU" : me.final_rank ? "#" + me.final_rank : "—"}</strong>
-        <b>{me.final_score == null ? "—" : Number(me.final_score).toFixed(1)}</b>
-        <span>7-player Superteam average</span>
+        <b>{footballWeeklySuperteamAuctionScore(me.final_score) ?? "—"}</b>
+        <span>AUCTION SCORE</span>
       </div>
       <nav className="football-weekly-superteam__tabs">
         <button className={tab === "standings" ? "is-active" : ""} type="button" onClick={() => setTab("standings")}>Standings</button>
         <button className={tab === "rosters" ? "is-active" : ""} type="button" onClick={() => setTab("rosters")}>Superteams</button>
-        <button className={tab === "grades" ? "is-active" : ""} type="button" onClick={() => setTab("grades")}>All Grades</button>
       </nav>
       {tab === "standings" ? (
         <div className="football-weekly-superteam__standings">
           {result.standings.map((entry) => (
             <div className={entry.is_current_user ? "is-current" : ""} key={entry.profile_id}>
               <b>#{entry.rank ?? "—"}</b><strong>{entry.display_name}</strong>
-              <span>{entry.final_score == null ? "—" : entry.final_score.toFixed(1)}</span>
+              <span>{footballWeeklySuperteamAuctionScore(entry.final_score) ?? "—"}</span>
             </div>
           ))}
         </div>
@@ -330,7 +330,7 @@ export function FootballWeeklySuperteamFinalResult({
                 onClick={() => setSelectedProfileId(entry.profile_id)}
               >
                 <strong>{entry.display_name}</strong>
-                <span>{entry.final_score == null ? "—" : entry.final_score.toFixed(1)}</span>
+                <span>{footballWeeklySuperteamAuctionScore(entry.final_score) ?? "—"}</span>
               </button>
             ))}
           </div>
@@ -341,23 +341,10 @@ export function FootballWeeklySuperteamFinalResult({
                 <article key={slot}>
                   <small>{slot}</small><strong>{item?.display_name ?? "—"}</strong>
                   <span>{item ? item.school + " · " + item.season_year + " · $" + item.winning_bid : "—"}</span>
-                  <b>{item ? item.grade.toFixed(1) : "—"}</b>
                 </article>
               );
             })}
           </div>
-        </div>
-      ) : null}
-      {tab === "grades" ? (
-        <div className="football-weekly-superteam__grades">
-          {result.all_teams.map((entry) => (
-            <article key={entry.item_reference}>
-              <span>DAY {entry.day_index}</span>
-              <strong>{entry.display_name}<small>{entry.school} · {entry.season_year}</small></strong>
-              <em>{entry.winner_display_name ?? "UNCLAIMED"}{entry.roster_slot ? " · " + entry.roster_slot : ""}</em>
-              <b>{entry.grade.toFixed(1)}</b>
-            </article>
-          ))}
         </div>
       ) : null}
       {showNewWeekAction ? (
