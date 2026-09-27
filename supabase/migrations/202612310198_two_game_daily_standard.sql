@@ -223,7 +223,7 @@ declare
   v_round_one_state jsonb;
   v_restored integer := 0;
 begin
-  select daily.*, schedule.sport
+  select daily, schedule.sport
   into v_daily, v_sport
   from private.daily_challenges daily
   join private.daily_challenge_schedule_versions schedule
