@@ -7,6 +7,9 @@ import {
   buildFootballOfficialDailySetup,
 } from "./footballTodayChallengeRuntime";
 import { buildFootballDailyPersistenceSetup as buildFootballWhoAmIPersistenceSetup } from "./footballDailyPublicationWhoAmI";
+import { buildFootballDailyPersistenceSetup as buildFootballWavelengthPersistenceSetup } from "./footballDailyPublicationWavelength";
+import { buildFootballDailyPersistenceSetup as buildFootballFindLeaderPersistenceSetup } from "./footballDailyPublicationFindLeader";
+import { buildFootballDailyPersistenceSetup as buildFootballHitNumberPersistenceSetup } from "./footballDailyPublicationHitNumber";
 import type {
   OfficialDailyGameType,
   OfficialDailyRuntimeContext,
@@ -609,6 +612,19 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
   const scheduleVersion = footballTodayScheduleVersionForDay(day);
   const setupScheduleVersion = footballTodaySetupScheduleVersionForDay(day);
   if (gameType !== "keep_4_cut_4") {
+    const splitBuilder = gameType === "wavelength"
+      ? buildFootballWavelengthPersistenceSetup
+      : gameType === "find_leader"
+        ? buildFootballFindLeaderPersistenceSetup
+        : gameType === "hit_the_number"
+          ? buildFootballHitNumberPersistenceSetup
+          : null;
+    if (splitBuilder) {
+      return {
+        ...splitBuilder(day, setupScheduleVersion, gameType),
+        scheduleVersion,
+      };
+    }
     return {
       gameType,
       scheduleVersion,
