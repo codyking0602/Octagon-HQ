@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { footballCfbTeamMediaId } from "../back-room/footballMediaIdentity";
 import { footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMetadata";
+import { footballTeamAssets } from "../back-room/footballSubjectAssets";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreakdowns";
 import { footballDateTimeLabel } from "../picks/footballTime";
@@ -108,16 +110,20 @@ function normalizeTeamIdentity(value: string) {
 }
 
 function logoForTeam(game: PickBout, team: FootballMatchupBreakdown["teams"][number]) {
-  const canonicalName = footballTeamSchoolMetadataFor(team.name)?.name ?? team.name;
+  const metadata = footballTeamSchoolMetadataFor(team.name);
+  const canonicalName = metadata?.name ?? team.name;
   const logoOverride = FOOTBALL_HQ_LOGO_OVERRIDES[canonicalName];
   if (logoOverride) return logoOverride;
 
+  const canonicalLogo = metadata?.level === "CFB"
+    ? footballTeamAssets[footballCfbTeamMediaId(canonicalName)]?.src ?? null
+    : null;
   const aliases = new Set(team.aliases.map(normalizeTeamIdentity));
   const homeSlug = normalizeTeamIdentity(game.homeTeamSlug ?? game.redFighterSlug);
   const awaySlug = normalizeTeamIdentity(game.awayTeamSlug ?? game.blueFighterSlug);
-  if (aliases.has(homeSlug)) return game.homeTeamLogoUrl ?? null;
-  if (aliases.has(awaySlug)) return game.awayTeamLogoUrl ?? null;
-  return null;
+  if (aliases.has(homeSlug)) return game.homeTeamLogoUrl ?? canonicalLogo;
+  if (aliases.has(awaySlug)) return game.awayTeamLogoUrl ?? canonicalLogo;
+  return canonicalLogo;
 }
 
 function fullTeamNameForGame(game: PickBout, team: FootballMatchupBreakdown["teams"][number]) {
@@ -287,7 +293,7 @@ function FeaturedGameRow({
         </div>
       </div>
       <div className="football-hq-game-row__meta">
-        <strong>{footballDateTimeLabel(game.locksAt ?? event.startsAt)}</strong>
+        <strong>{footballDateTimeLabel(breakdown.kickoffAt ?? game.locksAt ?? event.startsAt)}</strong>
         <b>OPEN BREAKDOWN →</b>
       </div>
     </Link>

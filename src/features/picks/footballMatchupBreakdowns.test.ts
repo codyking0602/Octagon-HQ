@@ -41,14 +41,14 @@ describe("football matchup breakdowns", () => {
     ]);
 
     expect(footballMatchupBreakdownsForEvent(event).map((breakdown) => breakdown.id)).toEqual([
-      "2026-oregon-usc",
+      "2026-alabama-mississippi-state",
       "2026-raiders-saints",
     ]);
   });
 
   it("frames LSU-Ole Miss around Lane Kiffin's return to Oxford", () => {
     const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-lsu-ole-miss");
-    const setup = breakdown?.setup.join(" ") ?? "";
+    const setup = breakdown?.setup?.join(" ") ?? "";
 
     expect(setup).toContain("Lane Kiffin’s return to Oxford is the story before the ball is even kicked");
     expect(setup).toContain("There won’t be much warmth waiting for him");
@@ -60,13 +60,42 @@ describe("football matchup breakdowns", () => {
     expect(footballMatchupBreakdownsForEvent(event)).toEqual([]);
   });
 
-  it("keeps the locked editorial structure, limits The HQ Edge to opposing units, and carries no final read or score", () => {
+  it("also discovers Alabama-Mississippi State from its real upcoming slate matchup", () => {
+    const event = footballEvent([[
+      "mississippi-state-bulldogs",
+      "Mississippi State Bulldogs",
+      "alabama-crimson-tide",
+      "Alabama Crimson Tide",
+    ]]);
+
+    expect(footballMatchupBreakdownsForEvent(event).map((breakdown) => breakdown.id)).toEqual([
+      "2026-alabama-mississippi-state",
+    ]);
+  });
+
+  it("uses the current AP poll and compact editorial structure for Alabama-Mississippi State", () => {
+    const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-alabama-mississippi-state");
+    expect(breakdown?.compact?.rankingSource).toBe("AP");
+    expect(breakdown?.teams.map((team) => team.rank)).toEqual([7, 16]);
+    expect(breakdown?.teams.map((team) => team.record)).toEqual(["4–0", "4–0"]);
+    expect(breakdown?.compact?.things).toHaveLength(3);
+    expect(breakdown?.compact?.setup.map((part) => part.text).join("")).not.toContain("No. 7");
+  });
+
+  it("keeps legacy editorial contracts while allowing the approved compact matchup format", () => {
     for (const breakdown of FOOTBALL_MATCHUP_BREAKDOWNS) {
-      expect(breakdown.keyMatchups).toHaveLength(3);
-      expect(breakdown.pathsToWin).toHaveLength(2);
-      expect(breakdown.playersToWatch).toHaveLength(2);
-      expect(breakdown.unitEdges).toHaveLength(2);
-      expect(breakdown.unitEdges.every((unit) => unit.title.includes("OFFENSE vs."))).toBe(true);
+      if (breakdown.compact) {
+        expect(breakdown.compact.things).toHaveLength(3);
+        expect(breakdown.pathsToWin).toBeUndefined();
+        expect(breakdown.playersToWatch).toBeUndefined();
+        expect(breakdown.unitEdges).toBeUndefined();
+      } else {
+        expect(breakdown.keyMatchups).toHaveLength(3);
+        expect(breakdown.pathsToWin).toHaveLength(2);
+        expect(breakdown.playersToWatch).toHaveLength(2);
+        expect(breakdown.unitEdges).toHaveLength(2);
+        expect(breakdown.unitEdges?.every((unit) => unit.title.includes("OFFENSE vs."))).toBe(true);
+      }
       expect(breakdown).not.toHaveProperty("hqRead");
       expect(breakdown).not.toHaveProperty("prediction");
     }

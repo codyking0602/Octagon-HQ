@@ -3,6 +3,27 @@ import type { PickBout, PickEvent, PickWatchMoment } from "./picksModel";
 export interface FootballMatchupTeam {
   name: string;
   aliases: string[];
+  rank?: number | null;
+  record?: string;
+  sportsReferenceUrl?: string;
+}
+
+export interface FootballMatchupRichTextPart {
+  text: string;
+  href?: string;
+  emphasis?: boolean;
+}
+
+export interface FootballMatchupCompactThing {
+  title: string;
+  body: FootballMatchupRichTextPart[];
+}
+
+export interface FootballMatchupCompactContent {
+  rankingSource: "AP" | "CFP";
+  setup: FootballMatchupRichTextPart[];
+  things: [FootballMatchupCompactThing, FootballMatchupCompactThing, FootballMatchupCompactThing];
+  bottomLine: FootballMatchupRichTextPart[];
 }
 
 export interface FootballMatchupKeyBattle {
@@ -37,12 +58,15 @@ export interface FootballMatchupBreakdown {
   id: string;
   title: string;
   venue: string;
+  kickoffAt?: string;
   teams: [FootballMatchupTeam, FootballMatchupTeam];
-  setup: string[];
-  keyMatchups: FootballMatchupKeyBattle[];
-  pathsToWin: [FootballMatchupPathToWin, FootballMatchupPathToWin];
-  playersToWatch: [FootballMatchupPlayers, FootballMatchupPlayers];
-  unitEdges: [FootballMatchupUnitEdge, FootballMatchupUnitEdge];
+  eventBindings?: Array<[FootballMatchupTeam, FootballMatchupTeam]>;
+  compact?: FootballMatchupCompactContent;
+  setup?: string[];
+  keyMatchups?: FootballMatchupKeyBattle[];
+  pathsToWin?: [FootballMatchupPathToWin, FootballMatchupPathToWin];
+  playersToWatch?: [FootballMatchupPlayers, FootballMatchupPlayers];
+  unitEdges?: [FootballMatchupUnitEdge, FootballMatchupUnitEdge];
   videos?: PickWatchMoment[];
 }
 
@@ -469,74 +493,77 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
     ],
   },
   {
-    id: "2026-oregon-usc",
-    title: "Oregon vs. USC",
-    venue: "L.A. Memorial Coliseum · Los Angeles",
+    id: "2026-alabama-mississippi-state",
+    title: "Alabama at Mississippi State",
+    venue: "Davis Wade Stadium · Starkville",
+    kickoffAt: "2026-10-03T16:00:00Z",
     teams: [
+      {
+        name: "Alabama",
+        aliases: ["alabama", "alabama-crimson-tide", "crimson-tide"],
+        rank: 7,
+        record: "4–0",
+        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/alabama/",
+      },
+      {
+        name: "Mississippi State",
+        aliases: ["mississippi-state", "mississippi-state-bulldogs", "bulldogs"],
+        rank: 16,
+        record: "4–0",
+        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/mississippi-state/",
+      },
+    ],
+    eventBindings: [[
       { name: "Oregon", aliases: ["oregon", "oregon-ducks", "ducks"] },
       { name: "USC", aliases: ["usc", "usc-trojans", "southern-california", "southern-california-trojans", "trojans"] },
-    ],
-    setup: [
-      "No. 20 Oregon heads to Los Angeles for its Big Ten opener against No. 12 USC, which is already 4–0 and 1–0 in conference play. The Ducks are 2–1 after rebounding from a road loss at Oklahoma State with an 84–0 win over Portland State, while USC comes home after surviving Rutgers 42–35. Oregon has won the last four meetings, including 42–27 last season, so this is also USC's chance to flip a series that has leaned green lately.",
-      "The matchup is built around two quarterbacks playing efficient football. Jayden Maiava leads the nation with 1,173 passing yards and 12 touchdowns through four games, while Dante Moore has thrown for 849 yards and nine scores without an interception. USC is averaging 43.0 points per game; Oregon is at 49.7. The deciding question is which defense can create enough negative plays to knock either offense off schedule without giving up explosives behind the pressure.",
-    ],
-    keyMatchups: [
-      {
-        title: "Dante Moore + Oregon's receivers vs. USC's secondary",
-        body: "Moore has completed 68.5% of his passes with nine touchdowns and no interceptions, and Oregon has multiple vertical answers in Evan Stewart and Dakorien Moore. USC created two interceptions at Rutgers, but it also allowed five plays of at least 20 yards. The Trojans need to disguise coverage and make Moore hold the ball without giving Oregon clean one-on-one shots downfield.",
-        edge: "Oregon — slight",
-      },
-      {
-        title: "USC's run game vs. Oregon's front",
-        body: "King Miller has 338 rushing yards and has topped 100 in consecutive games, while USC's backs averaged 6.7 yards per carry at Rutgers without a negative rush. Oregon is allowing only 110.7 rushing yards per game and 3.6 yards per carry. If the Ducks can win early downs with the front, they can take away the balance that keeps Maiava out of obvious passing situations.",
-        edge: "Even",
-      },
-      {
-        title: "Jayden Maiava vs. Oregon's coverage and pressure",
-        body: "Maiava is completing 75.7% of his throws with 12 touchdowns and only one interception, and USC has enough receiving depth to attack every level. Oregon counters with five interceptions through three games and has held opposing quarterbacks to a 53.3% completion rate. The Ducks have only four sacks, so they may need coverage to buy the front enough time to affect Maiava.",
-        edge: "USC — slight",
-      },
-    ],
-    pathsToWin: [
-      {
-        team: "Oregon",
-        body: "Keep Moore clean enough to attack USC's safeties, use Stewart and Dakorien Moore to force the field open and avoid the penalties that have already cost Oregon more than 70 yards per game. Defensively, stop Miller before USC can live in play action and make Maiava drive the field against tighter passing windows.",
-      },
-      {
-        team: "USC",
-        body: "Stay balanced and make Oregon defend every blade of grass. Miller's run game can keep the Ducks from turning the game into a pure pass-rush contest, while Maiava's efficiency gives USC answers when Oregon plays coverage. Defensively, the Trojans need takeaways or early-down disruption so Moore cannot repeatedly operate from clean second-and-manageable situations.",
-      },
-    ],
-    playersToWatch: [
-      {
-        team: "Oregon",
-        players: [
-          { name: "Dante Moore", position: "QB", body: "He enters conference play with 849 passing yards, nine touchdowns and no interceptions. USC's best chance is forcing him to hold the ball and win after the first read is taken away." },
-          { name: "Evan Stewart", position: "WR", body: "Oregon's leading receiver has 15 catches for 222 yards and two touchdowns. His ability to win vertically makes USC pay for leaning extra help toward the box." },
-          { name: "Jett Washington", position: "DB", body: "He leads Oregon with two interceptions and becomes especially important against a USC passing game that has spread production across multiple receivers." },
-        ],
-      },
-      {
-        team: "USC",
-        players: [
-          { name: "Jayden Maiava", position: "QB", body: "Through four games he has 1,173 passing yards, 12 touchdowns and one interception while completing 75.7% of his passes. Oregon has not yet faced a passing game this efficient." },
-          { name: "King Miller", position: "RB", body: "USC's leading rusher has 338 yards and three touchdowns, including back-to-back 100-yard games. His success determines whether Oregon can sell out to pressure Maiava." },
-          { name: "Christian Pierce", position: "S", body: "He had 11 tackles, an interception and two pass breakups at Rutgers. USC needs that same range and tackling against Oregon's deep, spread-out receiving group." },
-        ],
-      },
-    ],
-    unitEdges: [
-      {
-        title: "OREGON OFFENSE vs. USC DEFENSE",
-        edge: "OREGON — SLIGHT",
-        body: "USC has created timely takeaways, but Oregon's combination of Moore's ball security, multiple receiving threats and a functional run game gives the Ducks several ways to punish aggressive coverage.",
-      },
-      {
-        title: "USC OFFENSE vs. OREGON DEFENSE",
-        edge: "USC — SLIGHT",
-        body: "Oregon's coverage numbers are strong, but Maiava's efficiency plus Miller's recent production makes USC difficult to push into one-dimensional football. The Ducks need their four-man rush to affect the pocket more consistently than it has through three games.",
-      },
-    ],
+    ]],
+    compact: {
+      rankingSource: "AP",
+      setup: [
+        { text: "Mississippi State suddenly has a chance to turn a 4–0 start into something much bigger. The Bulldogs welcome unbeaten Alabama to Starkville one week after their first home win over a ranked opponent since 2014." },
+      ],
+      things: [
+        {
+          title: "Alabama can strike fast",
+          body: [
+            { text: "Keelon Russell", href: "https://www.sports-reference.com/cfb/players/keelon-russell-1.html", emphasis: true },
+            { text: " threw for " },
+            { text: "365 yards and four touchdowns", emphasis: true },
+            { text: " against South Carolina, with Alabama averaging " },
+            { text: "8.6 yards per play", emphasis: true },
+            { text: ". Mississippi State has to prevent the Tide from creating separation early." },
+          ],
+        },
+        {
+          title: "State has more than one answer",
+          body: [
+            { text: "Kamario Taylor", href: "https://www.sports-reference.com/cfb/players/kamario-taylor-1.html", emphasis: true },
+            { text: " threw for " },
+            { text: "360 yards", emphasis: true },
+            { text: " against Missouri, but " },
+            { text: "Fluff Bothwell", href: "https://www.sports-reference.com/cfb/players/fluff-bothwell-1.html", emphasis: true },
+            { text: " also ran for " },
+            { text: "122", emphasis: true },
+            { text: " and " },
+            { text: "Anthony Evans III", href: "https://www.sports-reference.com/cfb/players/anthony-evans-iii-1.html", emphasis: true },
+            { text: " topped " },
+            { text: "100 receiving", emphasis: true },
+            { text: ". Alabama can’t make this a one-player offense." },
+          ],
+        },
+        {
+          title: "Who controls the pressure?",
+          body: [
+            { text: "Alabama overwhelmed South Carolina early. Mississippi State trailed Missouri in the second half and answered with " },
+            { text: "two fourth-quarter touchdowns", emphasis: true },
+            { text: ". If this stays close late, State has already shown it can finish." },
+          ],
+        },
+      ],
+      bottomLine: [
+        { text: "Alabama wants to make Mississippi State chase the game. State’s best path is to absorb the early punch, keep its entire offense involved and make Alabama win a four-quarter fight in Starkville." },
+      ],
+    },
   },
   {
     id: "2026-raiders-saints",
@@ -630,7 +657,8 @@ function boutIncludesTeam(bout: PickBout, team: FootballMatchupTeam) {
 export function footballMatchupBreakdownsForEvent(event: PickEvent | null) {
   if (event?.sport !== "football") return [];
 
-  return FOOTBALL_MATCHUP_BREAKDOWNS.filter((breakdown) => event.bouts.some((bout) =>
-    breakdown.teams.every((team) => boutIncludesTeam(bout, team)),
-  ));
+  return FOOTBALL_MATCHUP_BREAKDOWNS.filter((breakdown) => event.bouts.some((bout) => {
+    const teamSets = [breakdown.teams, ...(breakdown.eventBindings ?? [])];
+    return teamSets.some((teams) => teams.every((team) => boutIncludesTeam(bout, team)));
+  }));
 }

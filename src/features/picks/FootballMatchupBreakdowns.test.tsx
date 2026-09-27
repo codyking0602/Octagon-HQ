@@ -48,13 +48,35 @@ describe("FootballMatchupBreakdowns", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("opens Oregon-USC from the exact Home deep link", async () => {
-    window.history.replaceState({}, "", "/football/picks?matchup=2026-oregon-usc");
+  it("opens the compact Alabama-Mississippi State preview with AP ranks and Sports Reference links", async () => {
+    window.history.replaceState({}, "", "/football/picks?matchup=2026-alabama-mississippi-state");
     render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
 
-    expect(await screen.findByRole("dialog")).toHaveTextContent("Oregon vs. USC");
-    expect(screen.getByText("OREGON OFFENSE vs. USC DEFENSE")).toBeInTheDocument();
-    expect(screen.getByText("USC OFFENSE vs. OREGON DEFENSE")).toBeInTheDocument();
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveTextContent("Alabama at Mississippi State");
+    expect(dialog).toHaveTextContent("AP #7");
+    expect(dialog).toHaveTextContent("AP #16");
+    expect(dialog).toHaveTextContent("3 THINGS THAT MATTER");
+    expect(dialog).toHaveTextContent("THE BOTTOM LINE");
+    expect(screen.queryByText("HOW EACH TEAM WINS")).not.toBeInTheDocument();
+    expect(screen.queryByText("PLAYERS TO WATCH")).not.toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: "Alabama" })).toHaveAttribute(
+      "href",
+      "https://www.sports-reference.com/cfb/schools/alabama/",
+    );
+    expect(screen.getByRole("link", { name: "Mississippi State" })).toHaveAttribute(
+      "href",
+      "https://www.sports-reference.com/cfb/schools/mississippi-state/",
+    );
+    expect(screen.getByRole("link", { name: "Keelon Russell" })).toHaveAttribute(
+      "href",
+      "https://www.sports-reference.com/cfb/players/keelon-russell-1.html",
+    );
+    expect(screen.getByRole("link", { name: "Kamario Taylor" })).toHaveAttribute(
+      "href",
+      "https://www.sports-reference.com/cfb/players/kamario-taylor-1.html",
+    );
   });
 
   it("portals the open breakdown above the Picks stacking context and locks background scrolling", () => {
