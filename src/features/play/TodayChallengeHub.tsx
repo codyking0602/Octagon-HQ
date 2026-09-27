@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
 import { DailyLeaderboardGameResult } from "./DailyLeaderboardGameResult";
+import { dailyTwoGameLeaderboardPublicState } from "./DailyTwoGameStatus";
 import {
   dailyRankKeepComboStage,
   isDailyRankKeepCombo,
@@ -97,7 +98,7 @@ function DailyAnswerDetail({
     ...projection,
     gameType: entry.gameType,
     progressRevision: entry.progressRevision,
-    publicState: entry.publicState,
+    publicState: dailyTwoGameLeaderboardPublicState(entry.publicState, entry.publicResult),
     officialAttempt: {
       nativeScore: entry.nativeScore,
       normalizedScore: entry.normalizedScore,
