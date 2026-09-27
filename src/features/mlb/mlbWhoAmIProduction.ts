@@ -1,6 +1,6 @@
 import type { WhoAmIClue, WhoAmIRound, WhoAmISubject } from "../games/whoAmIEngine";
 
-export const MLB_WHO_AM_I_PRODUCTION_DATE = "2026-10-06" as const;
+export const MLB_WHO_AM_I_PRODUCTION_DATE = "2026-10-03" as const;
 export const MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-04" as const;
 export const MLB_WHO_AM_I_PRODUCTION_SCHEDULE_VERSION = "mlb-who-am-i-oct6-v1" as const;
 export const MLB_WHO_AM_I_PRODUCTION_SCRIPT_IDS = [
