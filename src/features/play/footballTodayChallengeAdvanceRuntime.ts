@@ -8,10 +8,6 @@ import {
   nextFootballWavelengthClue,
   type FootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
-import {
-  gradeFootballHitTheNumberSelection,
-  type FootballHitTheNumberPlan,
-} from "../back-room/footballHitTheNumberModel";
 import { wavelengthScore } from "./wavelengthEngine";
 import {
   advanceTwoGameDailyRuntime,
@@ -420,10 +416,30 @@ function scoreTwoGameFootballChild(
   if (context.gameType === "hit_the_number") {
     const finalSubmission = asRecord(advanced.finalSubmission);
     const selectedIds = stringArray(finalSubmission.selected_ids, "Football two-game Hit the Number selections");
-    return gradeFootballHitTheNumberSelection(
-      context.privateSetupEvidence.plan as unknown as FootballHitTheNumberPlan,
-      selectedIds,
-    ).score;
+    const values = asRecord(context.privateGradingEvidence.values);
+    const target = Number(context.privateGradingEvidence.target);
+    const pickCount = Number(context.privateGradingEvidence.pick_count);
+    if (!Number.isInteger(pickCount) || pickCount < 4 || pickCount > 6 || selectedIds.length !== pickCount) {
+      throw new Error("Football two-game Hit the Number selection is invalid.");
+    }
+    if (!Number.isFinite(target) || target <= 0) {
+      throw new Error("Football two-game Hit the Number target is invalid.");
+    }
+    const total = selectedIds.reduce((sum, id) => {
+      const value = Number(values[id]);
+      if (!Number.isFinite(value)) throw new Error("Football two-game Hit the Number value evidence is unavailable.");
+      return sum + value;
+    }, 0);
+    const distance = Math.abs(target - total);
+    if (distance < 1e-9) return 100;
+    const bust = total > target;
+    const raw = bust
+      ? 50 - (50 * distance / target)
+      : 100 - (50 * distance / target);
+    const rounded = Math.round(raw);
+    return bust
+      ? Math.max(0, Math.min(49, rounded))
+      : Math.max(50, Math.min(99, rounded));
   }
   throw new Error(`Unsupported Football two-game Daily score for ${String(context.gameType)}.`);
 }
