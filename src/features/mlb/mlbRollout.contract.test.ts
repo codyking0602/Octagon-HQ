@@ -16,6 +16,7 @@ const whoAmIReadyMigration = readFileSync("supabase/migrations/202612310188_mlb_
 const blindResumeReadyMigration = readFileSync("supabase/migrations/202612310189_mlb_oct9_blind_resume_ready.sql", "utf8");
 const backHalfRotationMigration = readFileSync("supabase/migrations/202612310190_mlb_back_half_rotation_and_sports_feud_ready.sql", "utf8");
 const oct15Oct18ReadyMigration = readFileSync("supabase/migrations/202612310191_mlb_oct15_hit_number_oct18_millionaire_ready.sql", "utf8");
+const pullForwardMigration = readFileSync("supabase/migrations/202612310204_mlb_pull_forward_schedule_and_freeze_wc_odds.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -172,7 +173,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(styles).toContain(".mlb-play-standings");
   });
 
-  it("routes the October 9 Blind Resume slot through the production runner", () => {
+  it("routes the moved Blind Resume slot through the production runner", () => {
     expect(mlbChallengePage).toContain("MlbBlindResumeProductionChallenge");
     expect(mlbChallengePage).toContain("MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY");
     expect(mlbChallengePage).toContain('challenge.game_type === "blind_resume"');
@@ -184,7 +185,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbChallengePage).toContain('challenge.game_type === "sports_feud"');
   });
 
-  it("routes the October 15 Hit the Number and both Millionaire dates through production runners", () => {
+  it("routes the moved Hit the Number and both Millionaire dates through production runners", () => {
     expect(mlbChallengePage).toContain("MlbHitTheNumberChallenge");
     expect(mlbChallengePage).toContain("MLB_HIT_NUMBER_PRODUCTION_CONFIG");
     expect(mlbChallengePage).toContain('challenge.game_type === "hit_the_number"');
@@ -230,9 +231,14 @@ describe("MLB Playoffs rollout gate", () => {
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_active");
     expect(playScheduleMigration).toContain("mlb_play_challenge_not_ready");
     expect(playScheduleMigration).toContain("mlb_play_challenge_game_type_mismatch");
+    expect(pullForwardMigration).toContain("date '2026-09-27'");
+    expect(pullForwardMigration).toContain("date '2026-09-29'");
+    expect(pullForwardMigration).toContain("date '2026-10-23'");
+    expect(pullForwardMigration).toContain("'DraftKings opening · frozen Sep 27'");
+    expect(challengeSchedule).toContain('"2026-09-27"');
     expect(challengeSchedule).toContain('"2026-09-29"');
-    expect(challengeSchedule).toContain('"2026-10-01"');
-    expect(challengeSchedule).toContain('"2026-10-27"');
+    expect(challengeSchedule).toContain('"2026-10-23"');
+    expect(challengeSchedule).not.toContain('"2026-10-27"');
     expect(mlbRepository).toContain('rpc("get_mlb_postseason_active_challenge"');
     expect(mlbRepository).toContain("resolveMlbFeaturedChallenge()");
   });
