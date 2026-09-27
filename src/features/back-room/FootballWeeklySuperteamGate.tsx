@@ -332,7 +332,9 @@ export function FootballWeeklySuperteamGate({
   const submitted = state.submitted_today && !editing;
   const openSlots = Math.max(0, 7 - state.collection.length);
   const exposure = twoWinExposure(bids, openSlots);
-  const legal = exposure <= state.max_commit;
+  const highestBid = Math.max(0, ...Object.values(bids).map((bid) => bid.amount));
+  const singleWinCap = Math.max(0, state.bankroll - Math.max(openSlots - 1, 0));
+  const legal = exposure <= state.max_commit && highestBid <= singleWinCap;
 
   function changeAmount(slot: number, amount: number) {
     setBids((current) => ({ ...current, [slot]: { ...current[slot]!, amount } }));
@@ -390,7 +392,9 @@ export function FootballWeeklySuperteamGate({
         </div>
         {!legal ? (
           <p className="football-weekly-superteam__error">
-            Your two highest possible wins total {"$"}{exposure}. Keep that at or below {"$"}{state.max_commit} so every open roster spot retains its $1 reserve.
+            {highestBid > singleWinCap
+              ? <>Any single win can cost at most {"$"}{singleWinCap} right now so the other open roster spots keep their $1 reserve.</>
+              : <>Your two highest possible wins total {"$"}{exposure}. Keep that at or below {"$"}{state.max_commit} so every open roster spot retains its $1 reserve.</>}
           </p>
         ) : null}
         {error ? <p className="football-weekly-superteam__error">{error}</p> : null}
