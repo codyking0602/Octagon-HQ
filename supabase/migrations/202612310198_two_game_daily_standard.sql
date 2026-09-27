@@ -466,16 +466,29 @@ begin
     return;
   end if;
 
+  if p_game_type = 'keep_4_cut_4'
+    and p_scoring_version = 'play-official-score-v4' then
+    return query
+    select *
+    from private.grade_daily_challenge_pre_two_game(
+      p_game_type,
+      p_scoring_version,
+      p_submission,
+      p_grading_evidence
+    );
+    return;
+  end if;
+
   return query
   select *
-  from private.grade_daily_challenge_pre_two_game(
+  from private.grade_daily_challenge_pre_combo(
     p_game_type,
     p_scoring_version,
     p_submission,
     p_grading_evidence
   );
 end;
-$$;
+$;
 
 revoke all on function private.grade_daily_challenge(text, text, jsonb, jsonb)
   from public, anon, authenticated;
