@@ -18,9 +18,27 @@ function cluePresentation(clue: FootballWavelengthClue) {
   return { id: clue.id, category: clue.category, text: clue.text };
 }
 
+function buildWavelengthRound(day: string, scheduleVersion: string, gameIndex: number) {
+  const gameOneSeed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|wavelength|${scheduleVersion}|${day}`;
+  const gameOne = createFootballWavelengthRound(gameOneSeed);
+  if (gameIndex === 0) return { seed: gameOneSeed, round: gameOne };
+
+  for (let attempt = 0; attempt < 32; attempt += 1) {
+    const seed = `${gameOneSeed}|game-2|${attempt}`;
+    const round = createFootballWavelengthRound(seed);
+    if (
+      round.target !== gameOne.target
+      && round.clues[0]?.id !== gameOne.clues[0]?.id
+      && round.clues[0]?.category !== gameOne.clues[0]?.category
+    ) {
+      return { seed, round };
+    }
+  }
+  throw new Error("Football Wavelength could not build a distinct second Daily game.");
+}
+
 function buildWavelengthSetup(day: string, scheduleVersion: string, gameIndex = 0): OfficialDailySetupPublication {
-  const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|wavelength|${scheduleVersion}|${day}${gameIndex === 0 ? "" : "|game-2"}`;
-  const round = createFootballWavelengthRound(seed);
+  const { seed, round } = buildWavelengthRound(day, scheduleVersion, gameIndex);
   const opening = round.clues[0]!;
   return {
     setupKey: `football-wavelength:${scheduleVersion}:${day}${gameIndex === 0 ? "" : ":game-2"}`,
