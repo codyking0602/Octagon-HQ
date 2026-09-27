@@ -22,6 +22,10 @@ const gate = readFileSync(
   "utf8",
 );
 const router = readFileSync("src/app/router.tsx", "utf8");
+const styles = readFileSync(
+  "src/styles/football-weekly-superteam.css",
+  "utf8",
+);
 
 describe("Weekly Auction owner playthrough lab", () => {
   it("runs live and lab submissions through the same bid legality core", () => {
@@ -66,6 +70,9 @@ describe("Weekly Auction owner playthrough lab", () => {
 
   it("wires a reusable six-seat owner UI onto the normal Superteam board", () => {
     expect(page).toContain("WEEKLY AUCTION PLAYTHROUGH");
+    expect(page).toContain("same six simulated players through all seven days");
+    expect(page).toContain("FootballWeeklySuperteamRulesCover");
+    expect(page).toContain('startLabel="START PLAYTHROUGH"');
     expect(page).toContain("lab.seats.map");
     expect(page).toContain("repository.submitSuperteamLab");
     expect(page).toContain("repository.advanceSuperteamLab");
@@ -74,6 +81,15 @@ describe("Weekly Auction owner playthrough lab", () => {
     expect(page).toContain("<FootballWeeklySuperteamFinalResult");
     expect(page).toContain("showContinueAction={false}");
     expect(gate).toContain("showContinueAction = true");
+  });
+
+  it("explains conditional overbidding and keeps the mobile board readable", () => {
+    expect(gate).toContain("YOU CAN BID MORE THAN YOUR BANKROLL");
+    expect(gate).toContain("MAX SPEND TODAY");
+    expect(gate).toContain("If everything can’t fit, your ranking decides which claims stay alive.");
+    expect(gate).toContain("$20 left · P1 $15 · P2 $12 · P3 $5 = $32 in submitted bids");
+    expect(styles).toContain("transform: translate(1px, 1px)");
+    expect(styles).toContain("grid-template-columns: minmax(0,1fr) auto");
   });
 
   it("adds an owner-only Auction Center entry and dedicated route", () => {
