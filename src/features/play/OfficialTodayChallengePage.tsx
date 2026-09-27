@@ -8,7 +8,11 @@ import {
   OfficialBlindRankScoreSummary,
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
-import { DailyTwoGameStatus, dailyTwoGameSeriesState } from "./DailyTwoGameStatus";
+import {
+  DailyTwoGameStatus,
+  dailyTwoGameActiveScore,
+  dailyTwoGameSeriesState,
+} from "./DailyTwoGameStatus";
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
 import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
@@ -89,12 +93,16 @@ export function OfficialTodayChallengeContent({
   const blindResumeV3 = projection.gameType === "blind_resume"
     && projection.contentVersion === "blind-resume-v3";
   const keepCutComponentScore = dailyRankKeepComboComponentScore(projection, "keep_cut");
-  const presentationProjection = keepCutComponentScore !== null && projection.officialAttempt
+  const twoGameComponentScore = projection.officialAttempt
+    ? dailyTwoGameActiveScore(projection)
+    : null;
+  const componentScore = keepCutComponentScore ?? twoGameComponentScore;
+  const presentationProjection = componentScore !== null && projection.officialAttempt
     ? {
         ...projection,
         officialAttempt: {
           ...projection.officialAttempt,
-          normalizedScore: keepCutComponentScore,
+          normalizedScore: componentScore,
         },
       }
     : projection;
@@ -119,7 +127,7 @@ export function OfficialTodayChallengeContent({
         />
       ) : projection.gameType === "hit_the_number" ? (
         <OfficialHitTheNumberDailyView
-          projection={projection}
+          projection={presentationProjection}
           busy={busy}
           onAdvance={onAdvance}
         />
