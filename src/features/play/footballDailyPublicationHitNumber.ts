@@ -10,6 +10,8 @@ import {
 } from "../back-room/footballHitTheNumberModel";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
+import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
+import { buildTwoGameDailyPublication } from "./dailyTwoGameRuntime";
 import type {
   OfficialDailyGameType,
   OfficialDailySetupPublication,
@@ -20,14 +22,17 @@ import {
   persistenceSetup,
 } from "./footballDailyPublicationShared";
 
-function dailyLeague(day: string) {
-  return stableLineupHash(`${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${day}`) % 2 === 0 ? "NFL" : "CFB";
+function dailyLeague(day: string, gameIndex = 0) {
+  const first = stableLineupHash(`${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${day}`) % 2 === 0 ? "NFL" : "CFB";
+  return gameIndex === 0 ? first : first === "NFL" ? "CFB" : "NFL";
 }
 
-function buildDailyHitTheNumberPlan(day: string, scheduleVersion: string) {
-  const desiredLeague = dailyLeague(day);
+function buildDailyHitTheNumberPlan(day: string, scheduleVersion: string, gameIndex = 0) {
+  const desiredLeague = dailyLeague(day, gameIndex);
   for (let attempt = 0; attempt < 128; attempt += 1) {
-    const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|${attempt}`;
+    const seed = gameIndex === 0
+      ? `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|${attempt}`
+      : `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|game-2|${attempt}`;
     const plan = createFootballHitTheNumberPlan(seed, "random-pool");
     if (plan.league !== desiredLeague) continue;
     if (plan.subjectIds.length !== footballHitTheNumberRandomPoolSize(plan.pickCount)) continue;
@@ -56,8 +61,8 @@ function hitTheNumberPublicState(
   };
 }
 
-function buildHitTheNumberSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
-  const { plan, values } = buildDailyHitTheNumberPlan(day, scheduleVersion);
+function buildHitTheNumberSetup(day: string, scheduleVersion: string, gameIndex = 0): OfficialDailySetupPublication {
+  const { plan, values } = buildDailyHitTheNumberPlan(day, scheduleVersion, gameIndex);
   const candidates = plan.subjectIds.map((id) => {
     const subject = getFootballHitTheNumberSubject(id);
     if (!subject) throw new Error(`Football Hit the Number subject ${id} is unavailable.`);
@@ -65,7 +70,9 @@ function buildHitTheNumberSetup(day: string, scheduleVersion: string): OfficialD
   });
   const valueMap = Object.fromEntries(plan.subjectIds.map((id, index) => [id, values[index]]));
   return {
-    setupKey: `${FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:${plan.metricId}:${plan.pickCount}`,
+    setupKey: gameIndex === 0
+      ? `${FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:${plan.metricId}:${plan.pickCount}`
+      : `${FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:game-2:${plan.metricId}:${plan.pickCount}`,
     contentVersion: FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
@@ -104,5 +111,17 @@ export function buildFootballDailyPersistenceSetup(
   gameType: OfficialDailyGameType,
 ) {
   if (gameType !== "hit_the_number") throw new Error("Football Hit the Number publication runtime received the wrong game type.");
-  return persistenceSetup(gameType, day, scheduleVersion, buildHitTheNumberSetup(day, scheduleVersion));
+  const publication = dailyUsesTwoGameAverage(gameType, day)
+    ? buildTwoGameDailyPublication({
+        sport: "football",
+        gameType,
+        day,
+        scheduleVersion,
+        children: [
+          buildHitTheNumberSetup(day, scheduleVersion, 0),
+          buildHitTheNumberSetup(day, scheduleVersion, 1),
+        ],
+      })
+    : buildHitTheNumberSetup(day, scheduleVersion);
+  return persistenceSetup(gameType, day, scheduleVersion, publication);
 }

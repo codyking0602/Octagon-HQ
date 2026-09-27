@@ -12,7 +12,12 @@ import {
   createBlindRankLineup,
 } from "./blindRankEngine";
 import { createUfcWhoAmIRound } from "../games/ufcWhoAmIAuthority";
-import { dailyFindLeaderBoard } from "./findLeaderEngine";
+import {
+  FIND_LEADER_DAILY_CONTENT_VERSION,
+  buildFindLeaderBoard,
+  dailyFindLeaderBoard,
+  findLeaderQuestions,
+} from "./findLeaderEngine";
 import {
   advanceOfficialHitTheNumberDailyRuntime,
   buildOfficialHitTheNumberDailySetup,
@@ -23,7 +28,7 @@ import {
   keepCutRating,
   keepCutTier,
 } from "./keepCutEngine";
-import { seededLineupRandom } from "./lineupModel";
+import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import { buildWhoAmIDailyPublication } from "./whoAmIDailyRuntime";
 import { createUfcWhoAmIAuthoredDailyRounds } from "./ufcWhoAmIAuthoredDaily";
 import { parseWhoAmIAuthoredPublicationHistory } from "./whoAmIAuthoredDailySelection";
@@ -56,11 +61,22 @@ import {
   createWavelengthRound,
   nextWavelengthClue,
   wavelengthClues,
+  wavelengthScore,
   wavelengthSequenceKey,
   type WavelengthClue,
   type WavelengthRecentHistory,
   type WavelengthRound,
 } from "./wavelengthEngine";
+import { gradeHitTheNumberSelection, type HitTheNumberPublicSetup } from "./hitTheNumberEngine";
+import {
+  DAILY_TWO_GAME_SCORING_VERSION,
+  dailyUsesTwoGameAverage,
+} from "./dailyTwoGameContract";
+import {
+  advanceTwoGameDailyRuntime,
+  buildTwoGameDailyPublication,
+  isTwoGameDailyContext,
+} from "./dailyTwoGameRuntime";
 
 export type OfficialDailyGameType =
   | "find_leader"
@@ -90,7 +106,8 @@ export interface OfficialDailySetupPublication {
     | typeof WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION
     | typeof BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION
     | typeof MILLIONAIRE_DAILY_SCORING_VERSION
-    | typeof FAMILY_FEUD_DAILY_SCORING_VERSION;
+    | typeof FAMILY_FEUD_DAILY_SCORING_VERSION
+    | typeof DAILY_TWO_GAME_SCORING_VERSION;
   publicSetup: Record<string, unknown>;
   revealSetup: Record<string, unknown>;
   privateSetupEvidence: Record<string, unknown>;
@@ -199,6 +216,7 @@ function buildSeededWavelengthDailyRound(
   day: string,
   scheduleVersion: string,
   recent?: WavelengthRecentHistory,
+  gameIndex = 0,
 ) {
   const random = seededLineupRandom(
     OFFICIAL_DAILY_RUNTIME_VERSION,
@@ -206,6 +224,7 @@ function buildSeededWavelengthDailyRound(
     scheduleVersion,
     day,
     "round",
+    ...(gameIndex === 0 ? [] : ["game-2"]),
   );
   return createWavelengthRound({ recent, random });
 }
@@ -248,8 +267,25 @@ function choosePack<T extends { id: string }>(
   return rows[Math.floor(random() * rows.length)] ?? rows[0]!;
 }
 
-function buildFindLeaderSetup(day: string): OfficialDailySetupPublication {
-  const board = dailyFindLeaderBoard(day);
+function secondFindLeaderBoard(day: string) {
+  const first = dailyFindLeaderBoard(day);
+  if (!first) return null;
+  const alternatives = findLeaderQuestions.filter((definition) => definition.id !== first.definitionId);
+  const start = stableLineupHash(`${OFFICIAL_DAILY_RUNTIME_VERSION}|find-leader|${day}|game-2`) % alternatives.length;
+  for (let offset = 0; offset < alternatives.length; offset += 1) {
+    const definition = alternatives[(start + offset) % alternatives.length]!;
+    const board = buildFindLeaderBoard(
+      definition,
+      `${OFFICIAL_DAILY_RUNTIME_VERSION}|find-leader|${day}|game-2|${offset}`,
+      day,
+    );
+    if (board) return { ...board, version: FIND_LEADER_DAILY_CONTENT_VERSION };
+  }
+  return null;
+}
+
+function buildFindLeaderSetup(day: string, gameIndex = 0): OfficialDailySetupPublication {
+  const board = gameIndex === 0 ? dailyFindLeaderBoard(day) : secondFindLeaderBoard(day);
   if (!board) throw new Error(`Find the Leader could not build the official ${day} board.`);
   const candidates = board.candidates.map((candidate) => ({
     id: candidate.id,
@@ -299,14 +335,25 @@ function buildFindLeaderSetup(day: string): OfficialDailySetupPublication {
   };
 }
 
-function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
+function buildWavelengthSetup(day: string, scheduleVersion: string, gameIndex = 0): OfficialDailySetupPublication {
   const recent = buildWavelengthDailyRecentHistory(day, scheduleVersion);
-  const round = buildSeededWavelengthDailyRound(day, scheduleVersion, recent);
+  const firstRound = gameIndex === 0
+    ? null
+    : buildSeededWavelengthDailyRound(day, scheduleVersion, recent, 0);
+  const gameRecent: WavelengthRecentHistory = firstRound
+    ? {
+        targets: [...(recent.targets ?? []), firstRound.target],
+        clueIds: [...(recent.clueIds ?? []), ...firstRound.clues.map((clue) => clue.id)],
+        categories: [...(recent.categories ?? []), ...firstRound.clues.map((clue) => clue.category)],
+        clueSequenceKeys: [...(recent.clueSequenceKeys ?? []), wavelengthSequenceKey(firstRound)],
+      }
+    : recent;
+  const round = buildSeededWavelengthDailyRound(day, scheduleVersion, gameRecent, gameIndex);
   const firstClue = round.clues[0];
   if (!firstClue) throw new Error("Wavelength did not create an opening clue.");
 
   return {
-    setupKey: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${WAVELENGTH_DAILY_HISTORY_VERSION}:${scheduleVersion}:${day}`,
+    setupKey: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${WAVELENGTH_DAILY_HISTORY_VERSION}:${scheduleVersion}:${day}${gameIndex === 0 ? "" : ":game-2"}`,
     contentVersion: `${WAVELENGTH_CONTRACT_VERSIONS.generator}:${WAVELENGTH_DAILY_HISTORY_VERSION}`,
     scoringVersion: WAVELENGTH_OFFICIAL_DAILY_SCORING_VERSION,
     publicSetup: {
@@ -568,6 +615,52 @@ export function buildOfficialDailySetup(
 ): OfficialDailySetupPublication {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error("Official daily day must use YYYY-MM-DD.");
   if (!scheduleVersion.trim()) throw new Error("Official daily schedule version is required.");
+
+  if (dailyUsesTwoGameAverage(gameType, day)) {
+    if (gameType === "find_leader") {
+      return buildTwoGameDailyPublication({
+        sport: "ufc",
+        gameType,
+        day,
+        scheduleVersion,
+        children: [buildFindLeaderSetup(day, 0), buildFindLeaderSetup(day, 1)],
+      });
+    }
+    if (gameType === "wavelength") {
+      return buildTwoGameDailyPublication({
+        sport: "ufc",
+        gameType,
+        day,
+        scheduleVersion,
+        children: [
+          buildWavelengthSetup(day, scheduleVersion, 0),
+          buildWavelengthSetup(day, scheduleVersion, 1),
+        ],
+      });
+    }
+    if (gameType === "hit_the_number") {
+      return buildTwoGameDailyPublication({
+        sport: "ufc",
+        gameType,
+        day,
+        scheduleVersion,
+        children: [
+          buildOfficialHitTheNumberDailySetup(
+            day,
+            scheduleVersion,
+            OFFICIAL_DAILY_RUNTIME_VERSION,
+            OFFICIAL_DAILY_SCORING_VERSION,
+          ) as OfficialDailySetupPublication,
+          buildOfficialHitTheNumberDailySetup(
+            day,
+            `${scheduleVersion}:game-2`,
+            OFFICIAL_DAILY_RUNTIME_VERSION,
+            OFFICIAL_DAILY_SCORING_VERSION,
+          ) as OfficialDailySetupPublication,
+        ],
+      });
+    }
+  }
 
   switch (gameType) {
     case "find_leader": return buildFindLeaderSetup(day);
@@ -911,7 +1004,7 @@ export function initialOfficialDailyPublicState(publicSetup: JsonRecord) {
   return asRecord(publicSetup.initial_state);
 }
 
-export function advanceOfficialDailyRuntime(
+function advanceSingleOfficialDailyRuntime(
   context: OfficialDailyRuntimeContext,
   action: unknown,
 ): OfficialDailyAdvanceResult {
@@ -928,4 +1021,47 @@ export function advanceOfficialDailyRuntime(
     case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsedAction);
     default: throw new Error(`Unsupported official daily game ${String(context.gameType)}.`);
   }
+}
+
+function scoreTwoGameChild(
+  context: OfficialDailyRuntimeContext,
+  advanced: OfficialDailyAdvanceResult,
+) {
+  if (context.gameType === "find_leader") {
+    return Number(advanced.publicState.native_progress ?? 0) * 10;
+  }
+  if (context.gameType === "wavelength") {
+    const guesses = Array.isArray(advanced.submissionState.guesses)
+      ? advanced.submissionState.guesses.map(Number)
+      : [];
+    const finalGuess = guesses.at(-1);
+    const target = Number(context.privateSetupEvidence.target);
+    if (!Number.isFinite(finalGuess) || !Number.isFinite(target)) {
+      throw new Error("Two-game Wavelength score evidence is unavailable.");
+    }
+    return wavelengthScore(Number(finalGuess), target);
+  }
+  if (context.gameType === "hit_the_number") {
+    const finalSubmission = asRecord(advanced.finalSubmission);
+    const selectedIds = stringArray(finalSubmission.selected_ids, "Two-game Hit the Number selections");
+    return gradeHitTheNumberSelection(
+      context.publicSetup as unknown as HitTheNumberPublicSetup,
+      selectedIds,
+    ).score;
+  }
+  throw new Error(`Unsupported two-game Daily score for ${String(context.gameType)}.`);
+}
+
+export function advanceOfficialDailyRuntime(
+  context: OfficialDailyRuntimeContext,
+  action: unknown,
+): OfficialDailyAdvanceResult {
+  return isTwoGameDailyContext(context)
+    ? advanceTwoGameDailyRuntime(
+        context,
+        action,
+        advanceSingleOfficialDailyRuntime,
+        scoreTwoGameChild,
+      )
+    : advanceSingleOfficialDailyRuntime(context, action);
 }

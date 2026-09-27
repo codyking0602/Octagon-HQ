@@ -25,6 +25,7 @@ interface OfficialDailyRuntimeContext {
 
 const DAILY_COMBO_CONTENT_VERSION = "daily-rank-keep-combo-v1";
 const DAILY_COMBO_SCORING_VERSION = "play-official-score-v4";
+const DAILY_TWO_GAME_FORMAT_VERSION = "daily-two-game-average-v1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
@@ -276,6 +277,53 @@ function isDailyCombo(context: OfficialDailyRuntimeContext & JsonRecord) {
     || context.privateSetupEvidence.combo_version === DAILY_COMBO_CONTENT_VERSION;
 }
 
+function isTwoGameDaily(context: OfficialDailyRuntimeContext & JsonRecord) {
+  return context.privateSetupEvidence.format_version === DAILY_TWO_GAME_FORMAT_VERSION
+    || context.publicSetup.format_version === DAILY_TWO_GAME_FORMAT_VERSION;
+}
+
+function twoGameChild(context: OfficialDailyRuntimeContext & JsonRecord, index: number) {
+  const rounds = context.privateSetupEvidence.rounds;
+  if (!Array.isArray(rounds) || rounds.length !== 2 || rounds.some((round) => !asRecord(round))) {
+    throw new Error("Two-game Daily child evidence is invalid.");
+  }
+  return requiredRecord(rounds[index], `Two-game Daily game ${index + 1} evidence`);
+}
+
+function twoGameSeriesState(context: OfficialDailyRuntimeContext & JsonRecord) {
+  const index = Number(context.publicState.round_index ?? 0);
+  if (!Number.isInteger(index) || index < 0 || index > 1) {
+    throw new Error("Two-game Daily active game is invalid.");
+  }
+  const attempt = asRecord(context.official_attempt);
+  const finalSeries = asRecord(asRecord(attempt?.public_result)?.daily_series);
+  const storedScores = Array.isArray(context.publicState.round_scores)
+    ? context.publicState.round_scores.map(Number)
+    : [];
+  const finalScores = Array.isArray(finalSeries?.round_scores)
+    ? finalSeries.round_scores.map(Number)
+    : [];
+  const scores = finalScores.length ? finalScores : storedScores;
+  const finalAverage = Number(finalSeries?.average_score);
+  return {
+    format_version: DAILY_TWO_GAME_FORMAT_VERSION,
+    game_index: index,
+    game_number: index + 1,
+    game_count: 2,
+    awaiting_next: context.publicState.awaiting_next === true,
+    complete: context.publicState.complete === true || Boolean(attempt),
+    round_scores: scores,
+    average_score: Number.isFinite(finalAverage)
+      ? finalAverage
+      : context.publicState.complete === true
+        ? Number(context.publicState.score ?? 0)
+        : null,
+    rounds: Array.isArray(finalSeries?.rounds)
+      ? finalSeries.rounds
+      : context.publicState.completed_rounds ?? [],
+  };
+}
+
 function comboStage(context: OfficialDailyRuntimeContext & JsonRecord): "blind_rank_5" | "keep_4_cut_4" {
   const stage = context.publicState.combo_stage ?? context.submissionState.combo_stage;
   return stage === "keep_4_cut_4" ? "keep_4_cut_4" : "blind_rank_5";
@@ -418,6 +466,11 @@ async function whoAmIPublicationHistory(
 }
 
 async function materializeToday(admin: SupabaseClient) {
+  const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "ufc" });
+  if (prepared.error) {
+    throw new Error("The UFC two-game Daily cutover could not be prepared safely.");
+  }
+
   const relaunchReset = await admin.rpc("reset_sep24_ufc_sports_feud_for_relaunch", {});
   if (relaunchReset.error) {
     throw new Error("The September 24 UFC Sports Feud relaunch reset failed.");
@@ -431,8 +484,13 @@ async function materializeToday(admin: SupabaseClient) {
   const expectedGame = requiredString(request.expected_game, "Expected daily game") as OfficialDailyGameType;
 
   if (request.required !== true) {
+    const dailyChallengeId = requiredString(request.daily_challenge_id, "Daily challenge id");
+    const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+      p_daily_challenge_id: dailyChallengeId,
+    });
+    if (restored.error) throw new Error("The UFC two-game Daily carryover could not be restored.");
     return {
-      dailyChallengeId: requiredString(request.daily_challenge_id, "Daily challenge id"),
+      dailyChallengeId,
       centralDay: day,
       scheduleVersion,
       gameType: requiredString(request.published_game, "Published game"),
@@ -474,9 +532,14 @@ async function materializeToday(admin: SupabaseClient) {
   });
   if (published.error) throw new Error("The official daily setup could not be published safely.");
   const result = requiredRecord(published.data, "Published daily setup");
+  const dailyChallengeId = requiredString(result.id, "Published daily challenge id");
+  const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+    p_daily_challenge_id: dailyChallengeId,
+  });
+  if (restored.error) throw new Error("The UFC two-game Daily carryover could not be restored.");
 
   return {
-    dailyChallengeId: requiredString(result.id, "Published daily challenge id"),
+    dailyChallengeId,
     centralDay: day,
     scheduleVersion,
     gameType,
@@ -486,6 +549,11 @@ async function materializeToday(admin: SupabaseClient) {
 }
 
 async function materializeFootballToday(admin: SupabaseClient) {
+  const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "football" });
+  if (prepared.error) {
+    throw new Error("The Football two-game Daily cutover could not be prepared safely.");
+  }
+
   const requested = await admin.rpc("get_daily_challenge_materialization_request", {
     p_sport: "football",
   });
@@ -496,8 +564,13 @@ async function materializeFootballToday(admin: SupabaseClient) {
   const expectedGame = requiredString(request.expected_game, "Football expected game");
 
   if (request.required !== true) {
+    const dailyChallengeId = requiredString(request.daily_challenge_id, "Football daily challenge id");
+    const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+      p_daily_challenge_id: dailyChallengeId,
+    });
+    if (restored.error) throw new Error("The Football two-game Daily carryover could not be restored.");
     return {
-      dailyChallengeId: requiredString(request.daily_challenge_id, "Football daily challenge id"),
+      dailyChallengeId,
       centralDay: day,
       scheduleVersion,
       gameType: requiredString(request.published_game, "Published Football game"),
@@ -536,8 +609,13 @@ async function materializeFootballToday(admin: SupabaseClient) {
   });
   if (published.error) throw new Error("The official Football daily setup could not be published safely.");
   const result = requiredRecord(published.data, "Published Football daily setup");
+  const dailyChallengeId = requiredString(result.id, "Published Football daily challenge id");
+  const restored = await admin.rpc("restore_daily_two_game_cutover_progress", {
+    p_daily_challenge_id: dailyChallengeId,
+  });
+  if (restored.error) throw new Error("The Football two-game Daily carryover could not be restored.");
   return {
-    dailyChallengeId: requiredString(result.id, "Published Football daily challenge id"),
+    dailyChallengeId,
     centralDay: day,
     scheduleVersion,
     gameType: publicationGame,
@@ -556,6 +634,54 @@ async function getContext(admin: SupabaseClient, dailyChallengeId: string, profi
 
 function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
   const attempt = asRecord(context.official_attempt);
+
+  if (isTwoGameDaily(context)) {
+    const series = twoGameSeriesState(context);
+    const child = twoGameChild(context, series.game_index);
+    const activePublicState = requiredRecord(context.publicState.active_round, "Two-game Daily active public state");
+    const publicState = {
+      ...activePublicState,
+      daily_series: series,
+    };
+    const revealAllowed = Boolean(attempt) || series.awaiting_next || series.complete;
+    return {
+      available: true,
+      id: context.daily_challenge_id,
+      central_day: context.central_day,
+      schedule_version: context.schedule_version,
+      game_type: context.game_type,
+      setup_key: requiredString(child.setup_key, "Two-game Daily child setup key"),
+      content_version: requiredString(child.content_version, "Two-game Daily child content version"),
+      scoring_version: context.scoring_version,
+      fallback_reason: context.fallback_reason ?? null,
+      public_setup: requiredRecord(child.public_setup, "Two-game Daily child public setup"),
+      progress_revision: context.progress_revision,
+      public_state: publicState,
+      reveal_setup: revealAllowed
+        ? requiredRecord(child.reveal_setup, "Two-game Daily child reveal setup")
+        : null,
+      official_attempt: (() => {
+        if (!attempt) return null;
+        const finalSeries = asRecord(asRecord(attempt.public_result)?.daily_series);
+        const rounds = Array.isArray(finalSeries?.rounds)
+          ? finalSeries.rounds.map((row) => asRecord(row))
+          : [];
+        const round = asRecord(rounds[series.game_index]);
+        if (!round) return attempt;
+        return {
+          ...attempt,
+          native_score: Number(round.native_score ?? attempt.native_score ?? 0),
+          normalized_score: Number(round.normalized_score ?? attempt.normalized_score ?? 0),
+          public_result: {
+            ...round,
+            daily_series: series,
+          },
+        };
+      })(),
+      deployment_sha: DEPLOYED_SOURCE_SHA,
+    };
+  }
+
   if (isDailyCombo(context)) {
     const stage = comboStage(context);
     const child = comboChild(context, stage);

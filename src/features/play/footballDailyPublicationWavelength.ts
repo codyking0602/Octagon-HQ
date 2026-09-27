@@ -3,6 +3,8 @@ import {
   type FootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
 import { WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
+import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
+import { buildTwoGameDailyPublication } from "./dailyTwoGameRuntime";
 import type {
   OfficialDailyGameType,
   OfficialDailySetupPublication,
@@ -16,12 +18,30 @@ function cluePresentation(clue: FootballWavelengthClue) {
   return { id: clue.id, category: clue.category, text: clue.text };
 }
 
-function buildWavelengthSetup(day: string, scheduleVersion: string): OfficialDailySetupPublication {
-  const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|wavelength|${scheduleVersion}|${day}`;
-  const round = createFootballWavelengthRound(seed);
+function buildWavelengthRound(day: string, scheduleVersion: string, gameIndex: number) {
+  const gameOneSeed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|wavelength|${scheduleVersion}|${day}`;
+  const gameOne = createFootballWavelengthRound(gameOneSeed);
+  if (gameIndex === 0) return { seed: gameOneSeed, round: gameOne };
+
+  for (let attempt = 0; attempt < 32; attempt += 1) {
+    const seed = `${gameOneSeed}|game-2|${attempt}`;
+    const round = createFootballWavelengthRound(seed);
+    if (
+      round.target !== gameOne.target
+      && round.clues[0]?.id !== gameOne.clues[0]?.id
+      && round.clues[0]?.category !== gameOne.clues[0]?.category
+    ) {
+      return { seed, round };
+    }
+  }
+  throw new Error("Football Wavelength could not build a distinct second Daily game.");
+}
+
+function buildWavelengthSetup(day: string, scheduleVersion: string, gameIndex = 0): OfficialDailySetupPublication {
+  const { seed, round } = buildWavelengthRound(day, scheduleVersion, gameIndex);
   const opening = round.clues[0]!;
   return {
-    setupKey: `football-wavelength:${scheduleVersion}:${day}`,
+    setupKey: `football-wavelength:${scheduleVersion}:${day}${gameIndex === 0 ? "" : ":game-2"}`,
     contentVersion: FOOTBALL_DAILY_RUNTIME_VERSION,
     scoringVersion: WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
@@ -46,5 +66,17 @@ export function buildFootballDailyPersistenceSetup(
   gameType: OfficialDailyGameType,
 ) {
   if (gameType !== "wavelength") throw new Error("Football Wavelength publication runtime received the wrong game type.");
-  return persistenceSetup(gameType, day, scheduleVersion, buildWavelengthSetup(day, scheduleVersion));
+  const publication = dailyUsesTwoGameAverage(gameType, day)
+    ? buildTwoGameDailyPublication({
+        sport: "football",
+        gameType,
+        day,
+        scheduleVersion,
+        children: [
+          buildWavelengthSetup(day, scheduleVersion, 0),
+          buildWavelengthSetup(day, scheduleVersion, 1),
+        ],
+      })
+    : buildWavelengthSetup(day, scheduleVersion);
+  return persistenceSetup(gameType, day, scheduleVersion, publication);
 }

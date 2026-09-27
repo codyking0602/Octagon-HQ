@@ -833,3 +833,82 @@
     padding: var(--space-3);
   }
 }
+
+
+.daily-two-game-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(100%, 720px);
+  margin: 0 auto 10px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface, #fff) 92%, transparent);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.daily-two-game-progress span {
+  opacity: 0.68;
+  font-weight: 700;
+}
+
+.daily-two-game-intermission,
+.daily-two-game-final {
+  width: min(100% - 24px, 520px);
+  margin: 18px auto;
+  padding: 22px 18px;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface, #fff) 94%, transparent);
+  text-align: center;
+  box-shadow: 0 12px 36px rgb(0 0 0 / 8%);
+}
+
+.daily-two-game-intermission strong,
+.daily-two-game-final strong {
+  display: block;
+  margin: 4px 0 8px;
+  font-size: clamp(2.5rem, 12vw, 4rem);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.daily-two-game-intermission strong small,
+.daily-two-game-final strong small {
+  margin-left: 4px;
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  opacity: 0.55;
+}
+
+.daily-two-game-intermission p:not(.eyebrow),
+.daily-two-game-final p {
+  margin: 8px auto 0;
+  max-width: 34ch;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  opacity: 0.72;
+}
+
+.daily-two-game-intermission button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 12px;
+  background: currentColor;
+  color: var(--surface, #fff);
+  font: inherit;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.daily-two-game-final > span {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  opacity: 0.66;
+}
