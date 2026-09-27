@@ -103,6 +103,49 @@ describe("two-game Daily standard", () => {
     expect(hitRounds.map((round) => round.league).sort()).toEqual(["CFB", "NFL"]);
   });
 
+  it("still accepts the legacy intermission action for already-stuck progress", () => {
+    const setup = buildOfficialDailySetup(
+      "find_leader",
+      "2026-09-27",
+      "play-rotation-v16-weighted-sep27",
+    );
+    const privateRounds = rows(setup.privateSetupEvidence.rounds);
+    const context = contextFor("find_leader", setup);
+    const legacyContext: OfficialDailyRuntimeContext = {
+      ...context,
+      submissionState: {
+        rounds: [{
+          eliminated_ids: ["brandon-moreno"],
+          final_submission: { eliminated_ids: ["brandon-moreno"] },
+        }],
+        final_submission: null,
+      },
+      publicState: {
+        complete: false,
+        format_version: DAILY_TWO_GAME_FORMAT_VERSION,
+        round_index: 0,
+        round_count: 2,
+        awaiting_next: true,
+        completed_rounds: [{ game_index: 0, normalized_score: 90 }],
+        round_scores: [90],
+        active_round: { complete: true, eliminated_ids: ["brandon-moreno"], native_progress: 9 },
+        active_reveal: {},
+        score: null,
+      },
+    };
+
+    const transitioned = advanceOfficialDailyRuntime(legacyContext, { type: "next_game" });
+
+    expect(transitioned.complete).toBe(false);
+    expect(transitioned.publicState.round_index).toBe(1);
+    expect(transitioned.publicState.awaiting_next).toBe(false);
+    expect(transitioned.publicState.round_scores).toEqual([90]);
+    expect(transitioned.publicState.active_round).toEqual(
+      record(record(privateRounds[1]!.public_setup).initial_state),
+    );
+    expect(rows(transitioned.submissionState.rounds)).toHaveLength(1);
+  });
+
   it("locks Game 1, advances to Game 2, and averages both normalized scores", () => {
     const setup = buildOfficialDailySetup(
       "find_leader",
@@ -124,16 +167,13 @@ describe("two-game Daily standard", () => {
     };
 
     expect(first.complete).toBe(false);
-    expect(first.publicState.awaiting_next).toBe(true);
+    expect(first.publicState.awaiting_next).toBe(false);
     expect(first.publicState.round_scores).toEqual([10]);
-
-    const transitioned = advanceOfficialDailyRuntime(context, { type: "next_game" });
-    context = {
-      ...context,
-      submissionState: transitioned.submissionState,
-      publicState: transitioned.publicState,
-    };
-    expect(context.publicState.round_index).toBe(1);
+    expect(first.publicState.round_index).toBe(1);
+    expect(first.publicState.active_reveal).toBeNull();
+    expect(first.publicState.active_round).toEqual(
+      record(record(privateRounds[1]!.public_setup).initial_state),
+    );
 
     const secondEvidence = record(privateRounds[1]!.private_setup_evidence);
     const secondLeader = String(secondEvidence.leader_id);
