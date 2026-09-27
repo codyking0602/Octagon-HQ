@@ -389,7 +389,7 @@ returns table(
 language plpgsql
 immutable
 set search_path = ''
-as $$
+as $two_game$
 declare
   v_format constant text := 'daily-two-game-average-v1';
   v_scoring constant text := 'daily-two-game-average-score-v1';
@@ -488,7 +488,7 @@ begin
     p_grading_evidence
   );
 end;
-$;
+$two_game$;
 
 revoke all on function private.grade_daily_challenge(text, text, jsonb, jsonb)
   from public, anon, authenticated;
