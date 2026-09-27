@@ -8,10 +8,10 @@ import type {
 const MAIN_POINTS = [10, 8, 7, 5, 4, 4, 3, 3, 2, 2, 2, 2] as const;
 const FAST_POINTS = [8, 7, 6, 5, 4, 3, 2, 1, 1, 1] as const;
 
-export const MLB_SPORTS_FEUD_OCT12_DATE = "2026-10-12" as const;
+export const MLB_SPORTS_FEUD_OCT12_DATE = "2026-10-09" as const;
 export const MLB_SPORTS_FEUD_OCT12_KEY = "mlb-2026-play-06" as const;
 export const MLB_SPORTS_FEUD_OCT12_VERSION = "mlb-sports-feud-oct12-v1" as const;
-export const MLB_SPORTS_FEUD_OCT27_DATE = "2026-10-27" as const;
+export const MLB_SPORTS_FEUD_OCT27_DATE = "2026-10-23" as const;
 export const MLB_SPORTS_FEUD_OCT27_KEY = "mlb-2026-play-10" as const;
 export const MLB_SPORTS_FEUD_OCT27_VERSION = "mlb-sports-feud-oct27-v1" as const;
 
