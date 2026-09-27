@@ -8,6 +8,7 @@ import {
   OfficialBlindRankScoreSummary,
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
+import { DailyTwoGameStatus, dailyTwoGameSeriesState } from "./DailyTwoGameStatus";
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
 import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
@@ -97,9 +98,15 @@ export function OfficialTodayChallengeContent({
         },
       }
     : projection;
+  const twoGameSeries = dailyTwoGameSeriesState(projection);
+
+  if (twoGameSeries?.awaitingNext) {
+    return <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={onAdvance} />;
+  }
 
   return (
     <>
+      <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={onAdvance} />
       <DailyRankKeepComboStatus projection={projection} />
       <OfficialBlindRankScoreSummary projection={projection} />
       <OfficialBlindRankComboResult projection={projection} />
