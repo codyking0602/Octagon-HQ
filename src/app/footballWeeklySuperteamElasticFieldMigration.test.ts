@@ -35,6 +35,7 @@ describe("CFB Superteam elastic weekly field", () => {
     expect(migration).toContain("private.football_weekly_superteam_join_capacity");
     expect(migration).toContain("board.day_index=case when v_subject='cfb-superteam' then 4 else 1 end");
     expect(migration).toContain("coalesce(v_flex_pool,0)/3");
+    expect(migration).toContain("award.profile_id is null");
     expect(migration).toContain("if v_current>=v_capacity then return false");
   });
 
