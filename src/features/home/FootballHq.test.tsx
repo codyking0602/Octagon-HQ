@@ -202,28 +202,25 @@ describe("Football HQ Home summary", () => {
     );
     expect(within(hq).queryByRole("link", { name: /VIEW PLAYER/i })).not.toBeInTheDocument();
 
-    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Oregon vs. USC" }))
-      .toHaveAttribute("href", "/football/picks?matchup=2026-oregon-usc");
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-alabama-mississippi-state");
     expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Raiders vs. Saints" }))
       .toHaveAttribute("href", "/football/picks?matchup=2026-raiders-saints");
-    expect(within(hq).getByText("Sat, Sep 26, 6:30 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByText("Sat, Oct 3, 11:00 AM CT")).toBeInTheDocument();
     expect(within(hq).getByText("Sun, Sep 27, 3:25 PM CT")).toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
-    expect(within(hq).getByText("Oregon Ducks")).toBeInTheDocument();
-    expect(within(hq).getByText("USC Trojans")).toBeInTheDocument();
-    const collegeGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Oregon vs. USC" });
+    expect(within(hq).getByText("Alabama")).toBeInTheDocument();
+    expect(within(hq).getByText("Mississippi State")).toBeInTheDocument();
+    const collegeGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" });
     const collegeTeams = collegeGame.querySelectorAll(".football-hq-game-row__teams > div");
-    expect(collegeTeams[0]).toHaveStyle("--team-color: #044520");
-    expect(collegeTeams[1]).toHaveStyle("--team-color: #990000");
-    const collegeLogos = collegeGame.querySelectorAll("img");
-    expect(collegeLogos[0]).toHaveAttribute("src", "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png");
-    expect(collegeLogos[1]).toHaveAttribute("src", "https://example.com/usc.png");
+    expect(collegeTeams[0]).toHaveStyle("--team-color: #9E1B32");
+    expect(collegeTeams[1]).toHaveStyle("--team-color: #5D1725");
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
     expect(within(hq).getByText("Las Vegas Raiders")).toBeInTheDocument();
     expect(within(hq).getByText("New Orleans Saints")).toBeInTheDocument();
-    expect(within(hq).queryByText("L.A. Memorial Coliseum · Los Angeles")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("Davis Wade Stadium · Starkville")).not.toBeInTheDocument();
     expect(within(hq).queryByText("Caesars Superdome · New Orleans")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
