@@ -53,7 +53,10 @@ describe("FootballMatchupBreakdowns", () => {
     render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
 
     const dialog = await screen.findByRole("dialog");
-    expect(dialog).toHaveTextContent("Alabama at Mississippi State");
+    expect(dialog).toHaveAccessibleName("Alabama at Mississippi State");
+    expect(dialog).toHaveTextContent("THE HQ’S CFB GAME OF THE WEEK");
+    expect(dialog).not.toHaveTextContent("THE HQ · MATCHUP BREAKDOWN");
+    expect(screen.queryByRole("heading", { name: "Alabama at Mississippi State" })).not.toBeInTheDocument();
     expect(dialog).toHaveTextContent("AP #7");
     expect(dialog).toHaveTextContent("AP #16");
     expect(dialog).toHaveTextContent("3 THINGS THAT MATTER");
