@@ -1,0 +1,1 @@
+-- Two-game Daily standard migration.
