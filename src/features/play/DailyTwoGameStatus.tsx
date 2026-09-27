@@ -14,6 +14,37 @@ function numberArray(value: unknown) {
     : [];
 }
 
+export function dailyTwoGameLeaderboardPublicState(
+  publicState: Record<string, unknown>,
+  publicResult: Record<string, unknown>,
+) {
+  if (publicState.format_version !== "daily-two-game-average-v1") return publicState;
+  const activeRound = record(publicState.active_round);
+  if (!activeRound) return publicState;
+
+  const finalSeries = record(publicResult.daily_series);
+  const roundScores = numberArray(finalSeries?.round_scores ?? publicState.round_scores);
+  const rawIndex = Number(publicState.round_index ?? Math.max(0, roundScores.length - 1));
+  const gameIndex = Number.isInteger(rawIndex) && rawIndex >= 0 && rawIndex <= 1 ? rawIndex : 0;
+  const average = Number(finalSeries?.average_score ?? publicState.score);
+  const series: JsonRecord = {
+    ...(finalSeries ?? {}),
+    format_version: "daily-two-game-average-v1",
+    game_index: gameIndex,
+    game_number: gameIndex + 1,
+    game_count: 2,
+    awaiting_next: false,
+    complete: true,
+    round_scores: roundScores,
+    average_score: Number.isFinite(average) ? average : null,
+  };
+
+  return {
+    ...activeRound,
+    daily_series: series,
+  };
+}
+
 export interface DailyTwoGameSeriesState {
   gameIndex: number;
   gameNumber: number;
