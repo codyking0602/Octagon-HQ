@@ -3883,3 +3883,12 @@
   text-decoration: underline;
   text-underline-offset: .14em;
 }
+
+
+.mlb-bracket-shell__person > div:first-child > small.is-own-summary {
+  grid-column: 1 / -1;
+}
+
+.mlb-bracket__heading > small {
+  white-space: nowrap;
+}
