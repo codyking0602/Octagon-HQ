@@ -48,7 +48,7 @@ describe("football matchup breakdowns", () => {
 
   it("frames LSU-Ole Miss around Lane Kiffin's return to Oxford", () => {
     const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-lsu-ole-miss");
-    const setup = breakdown?.setup.join(" ") ?? "";
+    const setup = breakdown?.setup?.join(" ") ?? "";
 
     expect(setup).toContain("Lane Kiffin’s return to Oxford is the story before the ball is even kicked");
     expect(setup).toContain("There won’t be much warmth waiting for him");
