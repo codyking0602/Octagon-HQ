@@ -9,10 +9,10 @@ import {
   MLB_WHO_AM_I_PRODUCTION_SOURCE_NOTES,
 } from "./mlbWhoAmIProduction";
 
-describe("MLB Who Am I October 6 production content", () => {
+describe("MLB Who Am I October 3 production content", () => {
   it("locks the scheduled identity and two-round format", () => {
     expect(MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY).toBe("mlb-2026-play-04");
-    expect(MLB_WHO_AM_I_PRODUCTION_DATE).toBe("2026-10-06");
+    expect(MLB_WHO_AM_I_PRODUCTION_DATE).toBe("2026-10-03");
     expect(MLB_WHO_AM_I_PRODUCTION_ROUNDS).toHaveLength(2);
     expect(MLB_WHO_AM_I_PRODUCTION_ROUNDS.every((round) => (
       round.sport === "mlb"
