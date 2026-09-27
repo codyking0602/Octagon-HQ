@@ -227,18 +227,22 @@ export function advanceTwoGameDailyRuntime(
   nextCompleted[index] = summary;
 
   if (index === 0) {
+    const secondInitial = record(
+      record(children[1]!.public_setup, "Two-game Daily second setup").initial_state,
+      "Two-game Daily second initial state",
+    );
     return {
       submissionState: { rounds: nextSavedRounds, final_submission: null },
       publicState: {
         complete: false,
         format_version: DAILY_TWO_GAME_FORMAT_VERSION,
-        round_index: 0,
+        round_index: 1,
         round_count: 2,
-        awaiting_next: true,
+        awaiting_next: false,
         completed_rounds: nextCompleted,
         round_scores: nextScores,
-        active_round: advanced.publicState,
-        active_reveal: child.reveal_setup,
+        active_round: secondInitial,
+        active_reveal: null,
         score: null,
       },
       complete: false,
