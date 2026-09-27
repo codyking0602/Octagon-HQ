@@ -31,6 +31,12 @@ const DailyTwoGameLeaderboardResult = lazy(() =>
   })),
 );
 
+function record(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
+}
+
 function dayLabel(day: string) {
   return new Intl.DateTimeFormat("en-US", {
     timeZone: "America/Chicago",
