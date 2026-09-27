@@ -180,7 +180,11 @@ function FindLeader({ projection, advance }: GameProps) {
       candidates={candidates}
       leaderId={attempt ? String(reveal.leader_id ?? "") : null}
       eliminatedIds={eliminatedIds}
-      result={attempt ? { score: attempt.normalizedScore, perfect, fatalId } : null}
+      result={attempt ? {
+        score: dailyTwoGameActiveScore(projection) ?? attempt.normalizedScore,
+        perfect,
+        fatalId,
+      } : null}
       eyebrow="TODAY’S CHALLENGE"
       intro="Eliminate nine decoys until only the leader remains."
       onEliminate={attempt ? null : (id) => advance({ eliminated_id: id })}
@@ -529,27 +533,44 @@ export function FootballTodayChallengeResult({
   onExit?: () => void;
 }) {
   const advance = (_action: JsonRecord) => {};
+  let result: React.ReactNode = null;
 
   switch (projection.gameType) {
     case "find_leader":
-      return <FindLeader projection={projection} advance={advance} />;
+      result = <FindLeader projection={projection} advance={advance} />;
+      break;
     case "blind_resume":
-      return <BlindResume projection={projection} advance={advance} />;
+      result = <BlindResume projection={projection} advance={advance} />;
+      break;
     case "wavelength":
-      return <Wavelength projection={projection} advance={advance} busy={false} />;
+      result = <Wavelength projection={projection} advance={advance} busy={false} />;
+      break;
     case "blind_rank_5":
-      return <BlindRank projection={projection} advance={advance} />;
+      result = <BlindRank projection={projection} advance={advance} />;
+      break;
     case "keep_4_cut_4":
-      return <KeepCut projection={projection} advance={advance} />;
+      result = <KeepCut projection={projection} advance={advance} />;
+      break;
     case "hit_the_number":
-      return <HitTheNumber projection={projection} advance={advance} />;
+      result = <HitTheNumber projection={projection} advance={advance} />;
+      break;
     case "who_am_i":
-      return <OfficialWhoAmIDailyView projection={projection} busy={false} onAdvance={advance} />;
+      result = <OfficialWhoAmIDailyView projection={projection} busy={false} onAdvance={advance} />;
+      break;
     case "millionaire":
-      return <OfficialMillionaireDailyView projection={projection} busy={false} onAdvance={advance} />;
+      result = <OfficialMillionaireDailyView projection={projection} busy={false} onAdvance={advance} />;
+      break;
     case "sports_feud":
-      return <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} onExit={onExit} />;
+      result = <OfficialSportsFeudDailyView projection={projection} busy={false} onAdvance={advance} onExit={onExit} />;
+      break;
   }
+
+  return (
+    <>
+      <DailyTwoGameStatus projection={projection} />
+      {result}
+    </>
+  );
 }
 
 export default function FootballTodayChallengePage() {
