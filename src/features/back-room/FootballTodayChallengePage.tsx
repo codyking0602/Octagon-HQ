@@ -6,6 +6,11 @@ import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyView";
 import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
 import {
+  DailyTwoGameStatus,
+  dailyTwoGameActiveScore,
+  dailyTwoGameSeriesState,
+} from "../play/DailyTwoGameStatus";
+import {
   createTodayChallengeRepository,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
@@ -372,7 +377,7 @@ function Wavelength({ projection, advance, busy }: GameProps & { busy: boolean }
         onLock={() => advance({ guess })}
         busy={busy}
         result={projection.officialAttempt ? {
-          score: projection.officialAttempt.normalizedScore,
+          score: dailyTwoGameActiveScore(projection) ?? projection.officialAttempt.normalizedScore,
           target,
         } : null}
       />
@@ -484,7 +489,7 @@ function HitTheNumber({ projection, advance }: GameProps) {
           target,
           total,
           distance,
-          score: projection.officialAttempt.normalizedScore,
+          score: dailyTwoGameActiveScore(projection) ?? projection.officialAttempt.normalizedScore,
         } : null}
         formatValue={formatValue}
         onToggle={projection.officialAttempt ? null : (id) => {
@@ -707,6 +712,19 @@ export default function FootballTodayChallengePage() {
   ) : null;
 
   const blindResume = projection.gameType === "blind_resume";
+  const twoGameSeries = dailyTwoGameSeriesState(projection);
+
+  if (twoGameSeries?.awaitingNext) {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell">
+          {weeklyEditControl}
+          {error ? <div className="football-today-error">{error}</div> : null}
+          <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
+        </section>
+      </div>
+    );
+  }
 
   if (projection.gameType === "wavelength") {
     const wavelengthClassName = projection.officialAttempt
@@ -717,6 +735,7 @@ export default function FootballTodayChallengePage() {
       <div className={wavelengthClassName}>
         {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
+        <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
         <Wavelength projection={projection} advance={advance} busy={busy} />
         {projection.officialAttempt ? (
           <div className="game-result-actions-wrap">
@@ -808,6 +827,7 @@ export default function FootballTodayChallengePage() {
         )}
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
+        <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={advance} />
         {!blindResume ? <ScoreCard projection={projection} /> : null}
         {projection.officialAttempt ? (
           <div className="football-today-result-actions">
