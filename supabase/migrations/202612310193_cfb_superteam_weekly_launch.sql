@@ -1255,6 +1255,7 @@ declare
   v_item_reference text;
   v_amounts integer[]:=array[]::integer[];
   v_priorities integer[]:=array[]::integer[];
+  v_single_commit integer;
   v_top_commit integer;
   v_reserve_after integer;
 begin
@@ -1334,6 +1335,14 @@ begin
     v_amounts:=array_append(v_amounts,v_bid);
     v_priorities:=array_append(v_priorities,v_priority);
   end loop;
+
+  select coalesce(max(value),0)::integer
+  into v_single_commit
+  from unnest(v_amounts) value;
+
+  if v_single_commit>v_bankroll-greatest(v_open_slots-1,0) then
+    raise exception 'Any single CFB Superteam win must leave $1 for every roster spot still open after it';
+  end if;
 
   select coalesce(sum(value),0)::integer
   into v_top_commit
