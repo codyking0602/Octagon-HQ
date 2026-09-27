@@ -875,29 +875,33 @@ Deno.serve(async (request) => {
       const previewScheduleVersion = requiredString(preview.schedule_version, "Football preview schedule version");
       const previewGame = requiredString(preview.expected_game, "Football preview game");
 
-      const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
-        p_profile_id: profileId,
-      });
-      if (weeklyGate.error) {
-        throw new Error("Football Weekly Auction gate could not be checked.");
-      }
-      const weeklyGateState = requiredRecord(weeklyGate.data, "Football Weekly Auction gate");
-      if (weeklyGateState.required === true) {
-        return safeError(
-          409,
-          "WEEKLY_AUCTION_REQUIRED",
-          "Submit today’s Weekly Auction bids before starting Football Daily.",
-          {
-            central_day: previewDay,
-            schedule_version: previewScheduleVersion,
-            game_type: previewGame,
-          },
-        );
-      }
-
       const materialized = await materializeFootballToday(admin);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
+
+      const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0
+        || Boolean(asRecord(context.official_attempt));
+      if (!continuingFootballDaily) {
+        const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
+          p_profile_id: profileId,
+        });
+        if (weeklyGate.error) {
+          throw new Error("Football Weekly Auction gate could not be checked.");
+        }
+        const weeklyGateState = requiredRecord(weeklyGate.data, "Football Weekly Auction gate");
+        if (weeklyGateState.required === true) {
+          return safeError(
+            409,
+            "WEEKLY_AUCTION_REQUIRED",
+            "Submit today’s Weekly Auction bids before starting Football Daily.",
+            {
+              central_day: previewDay,
+              schedule_version: previewScheduleVersion,
+              game_type: previewGame,
+            },
+          );
+        }
+      }
 
       if (body.mode === "get-today" || body.mode === undefined) {
         return json(footballPublicPayload(context));
