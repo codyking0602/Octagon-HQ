@@ -131,10 +131,14 @@ function ScoreCard({ projection }: { projection: TodayChallengeProjection }) {
   const attempt = projection.officialAttempt;
   if (!attempt) return null;
   const result = attempt.publicResult;
+  const series = dailyTwoGameSeriesState(projection);
+  const displayScore = series?.complete && series.averageScore !== null
+    ? series.averageScore
+    : attempt.normalizedScore;
   return (
     <section className="football-today-score">
       <p className="eyebrow">FINAL SCORE</p>
-      <strong>{attempt.normalizedScore}<small>/100</small></strong>
+      <strong>{displayScore}<small>/100</small></strong>
       {typeof result.blind_rank_score === "number" && typeof result.keep_cut_score === "number" ? (
         <span>BLIND RANK {result.blind_rank_score} · KEEP/CUT {result.keep_cut_score}</span>
       ) : null}
@@ -654,7 +658,11 @@ export default function FootballTodayChallengePage() {
 
   async function shareResult() {
     if (!projection?.officialAttempt) return;
-    const outcome = await shareDailyChallengeResult({ sport: "football", score: projection.officialAttempt.normalizedScore, centralDay: projection.centralDay });
+    const series = dailyTwoGameSeriesState(projection);
+    const score = series?.complete && series.averageScore !== null
+      ? series.averageScore
+      : projection.officialAttempt.normalizedScore;
+    const outcome = await shareDailyChallengeResult({ sport: "football", score, centralDay: projection.centralDay });
     setShareStatus(outcome === "shared" ? "RESULT SHARED" : outcome === "copied" ? "RESULT LINK COPIED" : outcome === "cancelled" ? "" : "SHARE UNAVAILABLE");
   }
 
