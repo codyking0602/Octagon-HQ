@@ -24,6 +24,7 @@ const FootballHitTheNumberPage = lazy(() => import("../features/back-room/Footba
 const FootballFindLeaderPage = lazy(() => import("../features/back-room/FootballFindLeaderPage"));
 const FootballDraftRoomPage = lazy(() => import("../features/back-room/FootballDraftRoomPage"));
 const FootballWeeklyBuildQbPreviewPage = lazy(() => import("../features/back-room/FootballWeeklyBuildQbPreviewPage"));
+const FootballWeeklySuperteamPreviewPage = lazy(() => import("../features/back-room/FootballWeeklySuperteamPreviewPage"));
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
@@ -95,6 +96,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/find-leader", element: <FootballFindLeaderPage /> },
       { path: "football/draft-room", element: <FootballDraftRoomPage /> },
       { path: "football/weekly-build-qb-preview", element: <FootballWeeklyBuildQbPreviewPage /> },
+      { path: "football/weekly-superteam-preview", element: <FootballWeeklySuperteamPreviewPage /> },
       { path: "football/20-questions", element: <Navigate to="/football/who-am-i" replace /> },
       { path: "football/who-am-i", element: <FootballWhoAmIPage /> },
       { path: "football/millionaire", element: <MillionaireCasualPage scope="football" /> },
