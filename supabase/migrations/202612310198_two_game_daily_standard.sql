@@ -223,16 +223,19 @@ declare
   v_round_one_state jsonb;
   v_restored integer := 0;
 begin
-  select daily, schedule.sport
-  into v_daily, v_sport
+  select daily.*
+  into v_daily
   from private.daily_challenges daily
-  join private.daily_challenge_schedule_versions schedule
-    on schedule.version = daily.schedule_version
   where daily.id = p_daily_challenge_id;
 
   if v_daily.id is null then
     raise exception 'two-game Daily restore challenge is unavailable';
   end if;
+
+  select schedule.sport
+  into v_sport
+  from private.daily_challenge_schedule_versions schedule
+  where schedule.version = v_daily.schedule_version;
 
   if v_daily.scoring_version <> v_scoring
     or v_daily.game_type not in ('find_leader', 'wavelength', 'hit_the_number') then
