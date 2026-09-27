@@ -24,11 +24,11 @@ describe("CFB Superteam owner preview", () => {
     expect(router).toContain("<FootballWeeklySuperteamPreviewPage />");
   });
 
-  it("renders eight candidates with claim priority and no grade surface", () => {
-    expect(gate).toContain("8–12 candidates");
+  it("renders the candidate board with clear ranked claims and no grade surface", () => {
+    expect(gate).toContain("YOU CAN BID MORE THAN YOUR BANKROLL");
     expect(gate).toContain("<strong>{state.teams.length}</strong><span>CANDIDATES</span>");
     expect(gate).toContain("CLAIM PRIORITY");
-    expect(gate).toContain("P1 is your first claim");
+    expect(gate).toContain("P1 is your first choice");
     expect(gate).not.toContain("card.grade");
   });
 });
