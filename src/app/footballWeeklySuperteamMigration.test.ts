@@ -32,6 +32,7 @@ describe("CFB Superteam Weekly Auction launch", () => {
     expect(migration).toContain("v_max_wins:=least(2,v_open_slots)");
     expect(migration).toContain("v_reserve_after:=greatest(v_open_slots-v_max_wins,0)");
     expect(migration).toContain("v_top_commit>v_bankroll-v_reserve_after");
+    expect(migration).toContain("v_available>v_direct_needed");
   });
 
   it("finishes incomplete rosters with the worst eligible unclaimed option for one dollar", () => {
@@ -40,6 +41,7 @@ describe("CFB Superteam Weekly Auction launch", () => {
     expect(migration).toContain("order by authority.hidden_grade asc");
     expect(migration).toContain("winning_bid=1");
     expect(migration).toContain("having count(award.roster_slot)<>7");
+    expect(migration).toContain("'QB','RB','WR','Front Seven','Secondary','Head Coach','Flex'");
   });
 
   it("scores the equal-weight seven-player roster and keeps grades private until finals", () => {
