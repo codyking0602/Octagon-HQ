@@ -1,4 +1,5 @@
 name: Verify Supabase Backend
+# Fact Check PR1: exact-head release verification trigger.
 # Release verification: run exact-head backend proof when UI-only go-live PRs touch this workflow.
 
 on:
