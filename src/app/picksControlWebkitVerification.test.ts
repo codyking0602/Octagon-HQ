@@ -65,11 +65,9 @@ describe("production Picks Control Center WebKit verification", () => {
     expect(verifier).toContain('getByRole("heading", { name: "Choose what counts", exact: true })');
     expect(verifier).toContain('const updateButton = page.getByRole("button", { name: "CHECK FOR CARD UPDATES" });');
     expect(verifier).toContain('const syncButton = page.getByRole("button", { name: "SYNC NEXT UFC EVENT" });');
-    expect(verifier).toContain('const preparedStageButton = page.getByRole("button", { name: "VERIFY PREP & STAGE" });');
     expect(verifier).toContain("if (await updateButton.count())");
     expect(verifier).toContain("await updateButton.click()");
-    expect(verifier).toContain("} else if (await syncButton.count() || await preparedStageButton.count())");
-    expect(verifier).toContain('preparedFlow ? "Verify the prepared UFC event." : "Stage the next UFC event."');
+    expect(verifier).toContain("} else if (await syncButton.count())");
     expect(verifier).toContain('getByText("NO STAGED CARD", { exact: true })');
     expect(verifier).toContain("syncRequestCount !== syncRequestsBeforeSetup");
     expect(verifier).toContain("} else if (isActiveEventLifecycle(setupStatus)) {");
