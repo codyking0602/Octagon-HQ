@@ -63,6 +63,16 @@ describe("Football Daily product integration", () => {
     expect(runtime).not.toContain("buildFootballTodayRuntimeSnapshot(materialized.centralDay");
   });
 
+  it("never lets the Weekly Auction gate strand an already-started Football Daily", () => {
+    expect(runtime).toContain("const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0");
+    expect(runtime).toContain("|| Boolean(asRecord(context.official_attempt))");
+    expect(runtime).toContain("if (!continuingFootballDaily) {");
+    expect(runtime.indexOf("let context = await getContext(admin, materialized.dailyChallengeId, profileId)"))
+      .toBeLessThan(runtime.indexOf("const continuingFootballDaily"));
+    expect(runtime.indexOf("const continuingFootballDaily"))
+      .toBeLessThan(runtime.indexOf('football_weekly_auction_daily_gate'));
+  });
+
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {
     expect(hq).toContain('<TodayChallengeHub sport="football" />');
     expect(todayHub).toContain('sport === "football" ? "/football/today"');

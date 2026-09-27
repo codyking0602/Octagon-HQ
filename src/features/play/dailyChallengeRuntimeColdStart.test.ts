@@ -79,9 +79,13 @@ describe("daily challenge runtime cold-start isolation", () => {
     const footballBranch = runtime.indexOf('if (body.sport === "football") {');
     const weeklyGate = runtime.indexOf('football_weekly_auction_daily_gate', footballBranch);
     const footballMaterialization = runtime.indexOf('const materialized = await materializeFootballToday(admin);', footballBranch);
+    const footballContext = runtime.indexOf('let context = await getContext(admin, materialized.dailyChallengeId, profileId);', footballBranch);
+    const continuingDaily = runtime.indexOf('const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0', footballBranch);
     expect(footballBranch).toBeGreaterThan(-1);
-    expect(weeklyGate).toBeGreaterThan(footballBranch);
-    expect(footballMaterialization).toBeGreaterThan(weeklyGate);
+    expect(footballMaterialization).toBeGreaterThan(footballBranch);
+    expect(footballContext).toBeGreaterThan(footballMaterialization);
+    expect(continuingDaily).toBeGreaterThan(footballContext);
+    expect(weeklyGate).toBeGreaterThan(continuingDaily);
     expect(runtime).toContain('if (request.required !== true)');
     expect(runtime).toContain('loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType)');
     expect(runtime).toContain('buildFootballDailyPersistenceSetup(');
