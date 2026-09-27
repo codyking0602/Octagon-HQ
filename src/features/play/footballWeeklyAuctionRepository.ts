@@ -153,10 +153,10 @@ const superteamRosterSlotSchema = z.enum(["QB", "RB", "WR", "Flex", "Front Seven
 const superteamGroupSchema = z.enum(["QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach"]);
 const superteamBidSchema = z.object({
   amount: z.coerce.number().int().min(0).max(50),
-  priority: z.coerce.number().int().min(1).max(8),
+  priority: z.coerce.number().int().min(1).max(12),
 });
 const superteamCardSchema = z.object({
-  slot: z.coerce.number().int().min(1).max(8),
+  slot: z.coerce.number().int().min(1).max(12),
   item_reference: z.string(),
   display_name: z.string(),
   school: z.string(),
@@ -166,7 +166,7 @@ const superteamCardSchema = z.object({
   lock_at: z.string(),
 });
 const superteamPriorResultSchema = z.object({
-  slot: z.coerce.number().int().min(1).max(8),
+  slot: z.coerce.number().int().min(1).max(12),
   item_reference: z.string(),
   display_name: z.string(),
   school: z.string(),
@@ -177,7 +177,7 @@ const superteamPriorResultSchema = z.object({
   winner_profile_id: z.string().uuid().nullable(),
   winner_display_name: z.string().nullable(),
   bids: z.array(bidHistorySchema.extend({
-    priority: z.coerce.number().int().min(1).max(8).nullable(),
+    priority: z.coerce.number().int().min(1).max(12).nullable(),
   })).default([]),
 });
 const superteamCollectionSchema = z.object({
@@ -195,7 +195,7 @@ const superteamFinalCollectionSchema = superteamCollectionSchema.extend({
 });
 const superteamFinalItemSchema = z.object({
   day_index: z.coerce.number().int().min(1).max(7),
-  slot: z.coerce.number().int().min(1).max(8),
+  slot: z.coerce.number().int().min(1).max(12),
   item_reference: z.string(),
   display_name: z.string(),
   school: z.string(),
@@ -256,7 +256,7 @@ const buildQbAvailableSchema = z.object({
 const superteamAvailableSchema = z.object({
   ...commonActiveFields,
   subject_key: z.literal("cfb-superteam"),
-  teams: z.array(superteamCardSchema).length(8),
+  teams: z.array(superteamCardSchema).min(8).max(12),
   prior_results: z.array(superteamPriorResultSchema).default([]),
   collection: z.array(superteamCollectionSchema).default([]),
   tie_priority: z.array(z.object({
