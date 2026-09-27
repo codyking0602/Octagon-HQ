@@ -63,8 +63,7 @@ describe("two-game Daily standard", () => {
     const ufcRounds = rows(ufc.privateSetupEvidence.rounds);
     expect(ufcRounds).toHaveLength(2);
     expect(record(ufcRounds[0]!.private_setup_evidence).leader_id).toBe("amanda-nunes");
-    expect(record(ufcRounds[1]!.private_setup_evidence).leader_id)
-      .not.toBe(record(ufcRounds[0]!.private_setup_evidence).leader_id);
+    expect(ufcRounds[1]!.setup_key).not.toBe(ufcRounds[0]!.setup_key);
 
     const football = buildFootballWavelengthDaily(
       "2026-09-27",
