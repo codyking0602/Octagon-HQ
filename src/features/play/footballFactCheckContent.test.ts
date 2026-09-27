@@ -47,13 +47,13 @@ describe("Football Fact Check content bank", () => {
 
   it("keeps generated answer directions balanced enough to resist pattern guessing", () => {
     const heismanFacts = FOOTBALL_FACT_CHECK_AUTHORITY_BANK.filter((item) => item.id.startsWith("canonical-cfb-heisman-"));
-    const roundFacts = FOOTBALL_FACT_CHECK_AUTHORITY_BANK.filter((item) => item.id.startsWith("canonical-nfl-round-"));
+    const draftTierFacts = FOOTBALL_FACT_CHECK_AUTHORITY_BANK.filter((item) => item.id.startsWith("canonical-nfl-draft-tier-"));
     const chronologyFacts = FOOTBALL_FACT_CHECK_AUTHORITY_BANK.filter((item) => item.id.startsWith("canonical-draft-order-"));
 
     expect(heismanFacts.filter((item) => item.answer === "HEISMAN WINNER").length).toBeGreaterThanOrEqual(15);
     expect(heismanFacts.filter((item) => item.answer === "NOT A WINNER").length).toBeGreaterThanOrEqual(15);
-    expect(roundFacts.filter((item) => item.answer === "ROUND 1 PICK").length).toBeGreaterThanOrEqual(15);
-    expect(roundFacts.filter((item) => item.answer === "LATER ROUND PICK").length).toBeGreaterThanOrEqual(15);
+    expect(draftTierFacts.filter((item) => item.answer === "TOP 10 PICK").length).toBeGreaterThanOrEqual(15);
+    expect(draftTierFacts.filter((item) => item.answer === "PICK 11 OR LATER").length).toBeGreaterThanOrEqual(15);
     expect(chronologyFacts.filter((item) => item.answer === "BEFORE").length).toBeGreaterThanOrEqual(10);
     expect(chronologyFacts.filter((item) => item.answer === "AFTER").length).toBeGreaterThanOrEqual(10);
   });
