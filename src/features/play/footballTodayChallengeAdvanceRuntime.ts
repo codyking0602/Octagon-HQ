@@ -8,6 +8,15 @@ import {
   nextFootballWavelengthClue,
   type FootballWavelengthClue,
 } from "../back-room/footballWavelengthModel";
+import {
+  gradeFootballHitTheNumberSelection,
+  type FootballHitTheNumberPlan,
+} from "../back-room/footballHitTheNumberModel";
+import { wavelengthScore } from "./wavelengthEngine";
+import {
+  advanceTwoGameDailyRuntime,
+  isTwoGameDailyContext,
+} from "./dailyTwoGameRuntime";
 import { advanceCanonicalWhoAmIDailyRuntime } from "./whoAmITwoRoundDailyRuntime";
 import { advanceMillionaireDailyRuntime } from "./millionaireDailyRuntime";
 import { advanceFamilyFeudDailyRuntime } from "./familyFeudDailyRuntime";
@@ -371,7 +380,7 @@ function advanceHitTheNumber(context: OfficialDailyRuntimeContext, action: JsonR
   };
 }
 
-export function advanceFootballOfficialDailyRuntime(
+function advanceSingleFootballOfficialDailyRuntime(
   context: OfficialDailyRuntimeContext,
   action: unknown,
 ): OfficialDailyAdvanceResult {
@@ -388,4 +397,47 @@ export function advanceFootballOfficialDailyRuntime(
     case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsed);
     default: throw new Error(`Unsupported Football official daily game ${String(context.gameType)}.`);
   }
+}
+
+function scoreTwoGameFootballChild(
+  context: OfficialDailyRuntimeContext,
+  advanced: OfficialDailyAdvanceResult,
+) {
+  if (context.gameType === "find_leader") {
+    return Number(advanced.publicState.native_progress ?? 0) * 10;
+  }
+  if (context.gameType === "wavelength") {
+    const guesses = Array.isArray(advanced.submissionState.guesses)
+      ? advanced.submissionState.guesses.map(Number)
+      : [];
+    const finalGuess = guesses.at(-1);
+    const target = Number(context.privateSetupEvidence.target);
+    if (!Number.isFinite(finalGuess) || !Number.isFinite(target)) {
+      throw new Error("Football two-game Wavelength score evidence is unavailable.");
+    }
+    return wavelengthScore(Number(finalGuess), target);
+  }
+  if (context.gameType === "hit_the_number") {
+    const finalSubmission = asRecord(advanced.finalSubmission);
+    const selectedIds = stringArray(finalSubmission.selected_ids, "Football two-game Hit the Number selections");
+    return gradeFootballHitTheNumberSelection(
+      context.privateSetupEvidence.plan as unknown as FootballHitTheNumberPlan,
+      selectedIds,
+    ).score;
+  }
+  throw new Error(`Unsupported Football two-game Daily score for ${String(context.gameType)}.`);
+}
+
+export function advanceFootballOfficialDailyRuntime(
+  context: OfficialDailyRuntimeContext,
+  action: unknown,
+): OfficialDailyAdvanceResult {
+  return isTwoGameDailyContext(context)
+    ? advanceTwoGameDailyRuntime(
+        context,
+        action,
+        advanceSingleFootballOfficialDailyRuntime,
+        scoreTwoGameFootballChild,
+      )
+    : advanceSingleFootballOfficialDailyRuntime(context, action);
 }
