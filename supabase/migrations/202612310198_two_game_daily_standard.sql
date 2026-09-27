@@ -364,3 +364,115 @@ revoke all on function public.restore_daily_two_game_cutover_progress(uuid)
   from public, anon, authenticated;
 grant execute on function public.restore_daily_two_game_cutover_progress(uuid)
   to service_role;
+
+
+-- Preserve the complete pre-release grader under a compatibility name, then
+-- layer the two-game average contract in front of it.
+alter function private.grade_daily_challenge(text, text, jsonb, jsonb)
+  rename to grade_daily_challenge_pre_two_game;
+
+create or replace function private.grade_daily_challenge(
+  p_game_type text,
+  p_scoring_version text,
+  p_submission jsonb,
+  p_grading_evidence jsonb
+)
+returns table(
+  native_score integer,
+  normalized_score integer,
+  public_result jsonb,
+  grading_snapshot jsonb
+)
+language plpgsql
+immutable
+set search_path = ''
+as $$
+declare
+  v_format constant text := 'daily-two-game-average-v1';
+  v_scoring constant text := 'daily-two-game-average-score-v1';
+  v_submissions jsonb;
+  v_rounds jsonb;
+  v_round_one record;
+  v_round_two record;
+  v_average integer;
+begin
+  if p_scoring_version = v_scoring then
+    if p_game_type not in ('find_leader', 'wavelength', 'hit_the_number')
+      or jsonb_typeof(p_submission) <> 'object'
+      or jsonb_typeof(p_grading_evidence) <> 'object'
+      or p_grading_evidence->>'format_version' <> v_format then
+      raise exception 'Two-game Daily grading evidence is invalid';
+    end if;
+
+    v_submissions := p_submission->'rounds';
+    v_rounds := p_grading_evidence->'rounds';
+
+    if jsonb_typeof(v_submissions) <> 'array'
+      or jsonb_array_length(v_submissions) <> 2
+      or jsonb_typeof(v_rounds) <> 'array'
+      or jsonb_array_length(v_rounds) <> 2 then
+      raise exception 'Two-game Daily requires exactly two completed games';
+    end if;
+
+    select *
+    into v_round_one
+    from private.grade_daily_challenge_pre_two_game(
+      p_game_type,
+      nullif(v_rounds->0->>'scoring_version', ''),
+      v_submissions->0,
+      v_rounds->0->'private_grading_evidence'
+    );
+
+    select *
+    into v_round_two
+    from private.grade_daily_challenge_pre_two_game(
+      p_game_type,
+      nullif(v_rounds->1->>'scoring_version', ''),
+      v_submissions->1,
+      v_rounds->1->'private_grading_evidence'
+    );
+
+    v_average := round(
+      (v_round_one.normalized_score + v_round_two.normalized_score) / 2.0
+    )::integer;
+
+    native_score := v_round_two.native_score;
+    normalized_score := v_average;
+    public_result := v_round_two.public_result || jsonb_build_object(
+      'daily_series', jsonb_build_object(
+        'format_version', v_format,
+        'round_scores', jsonb_build_array(
+          v_round_one.normalized_score,
+          v_round_two.normalized_score
+        ),
+        'average_score', v_average,
+        'rounds', jsonb_build_array(
+          v_round_one.public_result || jsonb_build_object(
+            'native_score', v_round_one.native_score,
+            'normalized_score', v_round_one.normalized_score
+          ),
+          v_round_two.public_result || jsonb_build_object(
+            'native_score', v_round_two.native_score,
+            'normalized_score', v_round_two.normalized_score
+          )
+        )
+      )
+    );
+    grading_snapshot := p_grading_evidence;
+    return next;
+    return;
+  end if;
+
+  return query
+  select *
+  from private.grade_daily_challenge_pre_two_game(
+    p_game_type,
+    p_scoring_version,
+    p_submission,
+    p_grading_evidence
+  );
+end;
+$$;
+
+revoke all on function private.grade_daily_challenge(text, text, jsonb, jsonb)
+  from public, anon, authenticated;
