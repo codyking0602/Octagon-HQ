@@ -112,6 +112,55 @@ describe("compact two-game leaderboard result", () => {
     expect(openGame.textContent).toContain("#1");
   });
 
+  it("uses sanitized leaderboard detail when the live projection does not carry Find the Leader reveal rounds", () => {
+    const missingRevealProjection = projection({
+      publicSetup: { format_version: "daily-two-game-average-v1" },
+      revealSetup: null,
+    });
+    const setupRounds = [
+      { question: "Who leads game one?", stat_label: "STAT ONE", candidates: [] },
+      { question: "Who leads game two?", stat_label: "STAT TWO", candidates: [] },
+    ];
+    const revealRounds = [
+      {
+        leader_id: "leader-one",
+        candidates: Array.from({ length: 10 }, (_, index) => ({
+          id: index === 0 ? "leader-one" : `one-${index}`,
+          name: index === 0 ? "Leader One" : `Game One ${index}`,
+          value: 10 - index,
+          division: "TEST",
+        })),
+      },
+      {
+        leader_id: "leader-two",
+        candidates: Array.from({ length: 10 }, (_, index) => ({
+          id: index === 0 ? "leader-two" : `two-${index}`,
+          name: index === 0 ? "Leader Two" : `Game Two ${index}`,
+          value: 20 - index,
+          division: "TEST",
+        })),
+      },
+    ];
+
+    const { container, getAllByText } = render(
+      <DailyTwoGameLeaderboardResult
+        projection={missingRevealProjection}
+        resultDetail={{ setup_rounds: setupRounds, reveal_rounds: revealRounds }}
+        sport="ufc"
+      />,
+    );
+
+    const games = [...container.querySelectorAll<HTMLDetailsElement>(".daily-two-game-result__game")];
+    fireEvent.click(games[1]!.querySelector("summary")!);
+    fireEvent.click(getAllByText("FINAL REVEAL")[1]!);
+
+    const openGame = games[1]!;
+    expect(openGame.querySelectorAll(".daily-two-game-result__tile")).toHaveLength(10);
+    expect(openGame.textContent).toContain("Who leads game two?");
+    expect(openGame.textContent).toContain("Leader Two");
+    expect(openGame.textContent).not.toContain("unavailable");
+  });
+
   it("reconstructs both Wavelength rounds from sanitized leaderboard detail", () => {
     const wavelengthProjection = projection({
       gameType: "wavelength",
