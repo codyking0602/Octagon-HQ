@@ -14,10 +14,10 @@ import {
   mlbMillionaireProductionRun,
 } from "./mlbMillionaireProduction";
 
-describe("MLB Millionaire October 3 production run", () => {
+describe("MLB Millionaire October 1 production run", () => {
   it("locks the scheduled challenge identity and complete eight-question ladder", () => {
     expect(MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY).toBe("mlb-2026-play-03");
-    expect(MLB_MILLIONAIRE_PRODUCTION_DATE).toBe("2026-10-03");
+    expect(MLB_MILLIONAIRE_PRODUCTION_DATE).toBe("2026-10-01");
     expect(() => assertMillionaireRun(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03)).not.toThrow();
     expect(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03).toHaveLength(8);
     expect(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03.map((question) => question.level)).toEqual(MILLIONAIRE_LEVELS);
@@ -73,21 +73,21 @@ describe("MLB Millionaire October 3 production run", () => {
 });
 
 
-describe("MLB Millionaire October 18 production run", () => {
+describe("MLB Millionaire October 15 production run", () => {
   it("locks the second scheduled challenge identity and complete eight-question ladder", () => {
     expect(MLB_MILLIONAIRE_SECOND_PRODUCTION_CHALLENGE_KEY).toBe("mlb-2026-play-08");
-    expect(MLB_MILLIONAIRE_SECOND_PRODUCTION_DATE).toBe("2026-10-18");
+    expect(MLB_MILLIONAIRE_SECOND_PRODUCTION_DATE).toBe("2026-10-15");
     expect(() => assertMillionaireRun(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18)).not.toThrow();
     expect(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18).toHaveLength(8);
     expect(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18.map((question) => question.level)).toEqual(MILLIONAIRE_LEVELS);
     expect(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18.map((question) => question.money)).toEqual(
       MILLIONAIRE_LEVELS.map((level) => MILLIONAIRE_MONEY_BY_LEVEL[level]),
     );
-    expect(mlbMillionaireProductionRun("mlb-2026-play-08", "2026-10-18"))
+    expect(mlbMillionaireProductionRun("mlb-2026-play-08", "2026-10-15"))
       .toBe(MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18);
   });
 
-  it("does not reuse owner-review prompts or the October 3 production questions", () => {
+  it("does not reuse owner-review prompts or the October 1 production questions", () => {
     const blockedPrompts = new Set<string>([
       ...MLB_MILLIONAIRE_OWNER_REVIEW_PROMPTS,
       ...MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03.map((question) => question.prompt),
@@ -125,7 +125,7 @@ describe("MLB Millionaire October 18 production run", () => {
     });
   });
 
-  it("keeps an MLB.com verification source for every October 18 question", () => {
+  it("keeps an MLB.com verification source for every October 15 question", () => {
     const questionIds = MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18.map((question) => question.id);
     expect(MLB_MILLIONAIRE_SECOND_PRODUCTION_SOURCE_NOTES.map((source) => source.questionId)).toEqual(questionIds);
     expect(MLB_MILLIONAIRE_SECOND_PRODUCTION_SOURCE_NOTES.every((source) => (

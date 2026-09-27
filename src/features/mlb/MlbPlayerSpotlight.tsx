@@ -15,7 +15,11 @@ export function MlbPlayerSpotlight() {
       </div>
       <div className="football-player-spotlight__copy">
         <span>PLAYER SPOTLIGHT</span>
-        <h3>{player.name}</h3>
+        <h3>
+          <a href={player.profileUrl} target="_blank" rel="noreferrer">
+            {player.name}
+          </a>
+        </h3>
         <strong>{player.team.toUpperCase()} · {player.position}</strong>
         <div className="football-player-spotlight__stats" aria-label={`${player.name} 2026 season stats`}>
           {player.stats.map((stat) => (

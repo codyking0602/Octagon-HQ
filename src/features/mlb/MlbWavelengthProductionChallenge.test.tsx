@@ -14,7 +14,7 @@ const { recordMock, reloadMock } = vi.hoisted(() => ({
     gameType: input.gameType,
     publicResult: input.publicResult,
     resultDetail: input.resultDetail,
-    completedAt: "2026-10-01T12:00:00-05:00",
+    completedAt: "2026-09-29T12:00:00-05:00",
   })),
   reloadMock: vi.fn(async () => undefined),
 }));
@@ -42,7 +42,7 @@ function renderPage() {
       <MlbWavelengthChallenge
         mode="production"
         challengeKey="mlb-2026-play-02"
-        challengeDate="2026-10-01"
+        challengeDate="2026-09-29"
       />
     </MemoryRouter>,
   );

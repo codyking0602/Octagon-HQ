@@ -30,6 +30,22 @@ function dateTime(value: string | null) {
   }).format(new Date(value));
 }
 
+function bracketLockLabel(value: string | null) {
+  if (!value || !Number.isFinite(Date.parse(value))) return "LOCK TBD";
+  const date = new Date(value);
+  const day = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  }).format(date).toUpperCase();
+  const time = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    hour: "numeric",
+  }).format(date).toUpperCase();
+  return `LOCKS ${day} · ${time} CT`;
+}
+
 function bracketRank(entries: MlbBracketEntry[], profileId: string) {
   const index = entries.findIndex((entry) => entry.profile_id === profileId);
   return index >= 0 ? index + 1 : null;
@@ -419,7 +435,7 @@ export default function MlbPicksPage() {
       <section id="mlb-bracket" className="mlb-bracket mlb-bracket--interactive" aria-labelledby="mlb-bracket-title">
         <header className="mlb-section-heading mlb-bracket__heading">
           <div><p className="eyebrow">2026 MLB PLAYOFFS</p><h2 id="mlb-bracket-title">Playoff bracket</h2></div>
-          <small>{hub.bracketLocked ? "LOCKED" : hub.fieldReady ? `LOCKS ${dateTime(hub.bracketLockAt).toUpperCase()}` : "FIELD PENDING"}</small>
+          <small>{hub.bracketLocked ? "LOCKED" : hub.fieldReady ? bracketLockLabel(hub.bracketLockAt) : "FIELD PENDING"}</small>
         </header>
 
         {!hub.fieldReady ? (
@@ -433,8 +449,8 @@ export default function MlbPicksPage() {
               <div className="mlb-bracket-shell__person">
                 <div>
                   <span>{editingBracket ? "BUILDING YOUR BRACKET" : viewed?.is_current_user ? "YOUR BRACKET" : "BRACKET"}</span>
-                  <strong>{editingBracket ? identity.profile?.displayName : viewed?.display_name ?? identity.profile?.displayName}</strong>
-                  <small>
+                  {!editingBracket && viewed && !viewed.is_current_user ? <strong>{viewed.display_name}</strong> : null}
+                  <small className={editingBracket || viewed?.is_current_user ? "is-own-summary" : undefined}>
                     {editingBracket
                       ? `${Math.max(0, focusedIndex + 1)} OF ${guideNodes.length} · ${roundLabel(focusedNode ?? guideNodes[0]!)}`
                       : viewed?.is_current_user

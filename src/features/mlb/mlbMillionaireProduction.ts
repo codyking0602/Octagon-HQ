@@ -1,9 +1,9 @@
 import type { MillionaireChoiceId, MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
 import type { MillionaireRun } from "../games/millionaireEngine";
 
-export const MLB_MILLIONAIRE_PRODUCTION_DATE = "2026-10-03" as const;
+export const MLB_MILLIONAIRE_PRODUCTION_DATE = "2026-10-01" as const;
 export const MLB_MILLIONAIRE_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-03" as const;
-export const MLB_MILLIONAIRE_SECOND_PRODUCTION_DATE = "2026-10-18" as const;
+export const MLB_MILLIONAIRE_SECOND_PRODUCTION_DATE = "2026-10-15" as const;
 export const MLB_MILLIONAIRE_SECOND_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-08" as const;
 
 type SourceNote = {

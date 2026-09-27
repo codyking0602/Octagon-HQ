@@ -8,10 +8,10 @@ import {
 } from "./mlbBlindResumeProduction";
 import { MLB_WHO_AM_I_PRODUCTION_ROUNDS } from "./mlbWhoAmIProduction";
 
-describe("MLB Blind Resume October 9 production content", () => {
+describe("MLB Blind Resume October 6 production content", () => {
   it("locks the scheduled five-round production card", () => {
     expect(MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY).toBe("mlb-2026-play-05");
-    expect(MLB_BLIND_RESUME_PRODUCTION_DATE).toBe("2026-10-09");
+    expect(MLB_BLIND_RESUME_PRODUCTION_DATE).toBe("2026-10-06");
     expect(MLB_BLIND_RESUME_PRODUCTION_ROUNDS).toHaveLength(5);
     expect(MLB_BLIND_RESUME_PRODUCTION_ROUNDS.every((round) => round.stats.length === 8)).toBe(true);
 
@@ -20,7 +20,7 @@ describe("MLB Blind Resume October 9 production content", () => {
     expect(players.every((player) => player.id.startsWith("mlb-"))).toBe(true);
   });
 
-  it("never reuses burned owner-review players or the October 6 production identities", () => {
+  it("never reuses burned owner-review players or the October 3 production identities", () => {
     const burnedOwnerNames = new Set(
       MLB_BLIND_RESUME_OWNER_ROUNDS.flatMap((round) => [round.playerA.name, round.playerB.name]),
     );

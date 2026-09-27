@@ -17,7 +17,7 @@ function TeamPanel({ name, seed }: { name: string; seed: number | null | undefin
 
   return (
     <div className="mlb-series-breakdown__team" style={{ "--series-team-color": color } as CSSProperties}>
-      <span className="mlb-series-breakdown__team-logo">
+      <span className={`mlb-series-breakdown__team-logo${asset?.abbreviation === "NYY" ? " mlb-yankees-light" : ""}`}>
         {logo ? <img src={logo} alt="" loading="eager" /> : null}
       </span>
       <strong>{name}</strong>
@@ -43,7 +43,7 @@ function PlayerCard({
       style={{ "--series-team-color": color } as CSSProperties}
     >
       <header>
-        <span className="mlb-series-player__logo">
+        <span className={`mlb-series-player__logo${asset?.abbreviation === "NYY" ? " mlb-yankees-light" : ""}`}>
           {logo ? <img src={logo} alt="" loading="lazy" /> : null}
         </span>
         <div>

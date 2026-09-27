@@ -23,6 +23,7 @@ describe("MLB team visual assets", () => {
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Pete Crow-Armstrong");
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("691718");
     expect(MLB_OWNER_PLAYER_SPOTLIGHT.stats).toHaveLength(4);
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toContain("mlb.com/video/");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toContain("baseball-reference.com/players/c/crowape01.shtml");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toContain("youtu.be/08zDHKWWmrk");
   });
 });
