@@ -21,7 +21,7 @@ describe("CFB Superteam Weekly Auction", () => {
     expect(authority).toContain("v_qb<>50 or v_rb<>50 or v_wr<>50 or v_te<>24");
     expect(authority).toContain("v_f7<>60 or v_secondary<>60 or v_coach<>35");
     expect(runtime).toContain("when 'cfb-superteam' then 8");
-    expect(runtime).toContain("return 7-count(*)::integer");
+    expect(runtime).toContain("select 7-count(*)::integer");
     expect(runtime).toContain("select 50-coalesce(sum(roster.price_paid),0)::integer");
     expect(gate).toContain("7 spots. $50. 7 days.");
     expect(gate).toContain("Max 2 wins today");
