@@ -79,17 +79,17 @@ export function mlbTeamColor(
 }
 
 export const MLB_OWNER_PLAYER_SPOTLIGHT = {
-  name: "Aaron Judge",
-  team: "New York Yankees",
-  position: "RF",
-  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/592450/headshot/67/current",
-  teamColor: "#0C2340",
+  name: "Pete Crow-Armstrong",
+  team: "Chicago Cubs",
+  position: "CF",
+  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/691718/headshot/67/current",
+  teamColor: "#0E3386",
   stats: [
-    { label: "AVG", value: ".241" },
-    { label: "HR", value: "18" },
-    { label: "RBI", value: "41" },
-    { label: "OPS", value: ".871" },
+    { label: "HR", value: "45" },
+    { label: "SB", value: "41" },
+    { label: "RBI", value: "107" },
+    { label: "OPS", value: ".942" },
   ],
-  meta: "2026 REGULAR SEASON",
-  highlightUrl: "https://www.mlb.com/video/aaron-judge-homers-7-on-a-fly-ball-to-right-field",
+  meta: "2026 REGULAR SEASON · 40/40 CLUB",
+  highlightUrl: "https://www.mlb.com/video/pete-crow-armstrong-s-historic-40-40-season",
 } as const;

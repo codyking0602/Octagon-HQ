@@ -24,69 +24,65 @@ export type MlbSeriesBreakdownContent = {
 };
 
 /**
- * Owner-only sample copy used to review the locked MLB Series Breakdown shell
- * before the real 2026 postseason field is published.
- *
- * Keep this content out of live-field mode. Once the field is final, real
- * series copy can be authored against the same structure without redesigning
- * the page.
+ * The postseason hub intentionally features one full Series Breakdown at a time.
+ * The 2026 Wild Card feature is Yankees-Red Sox, the rivalry rematch with the
+ * strongest mix of current stakes, recognizable players, and postseason history.
  */
 export const MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS: Readonly<Record<string, MlbSeriesBreakdownContent>> = {
   "al-wc-2": {
-    eyebrow: "DESIGN PREVIEW · SAMPLE ANALYSIS",
+    eyebrow: "AL WILD CARD · RIVALRY REMATCH",
     series:
-      "Boston had New York's number for most of the regular season, but the Yankees closed the gap late. The matchup comes down to a clear contrast: Boston has the best single-game pitching weapon in Garrett Crochet and a more defined late-inning plan, while New York has the more dangerous power lineup and home field. In a three-game series, whichever team gets its preferred script first could control everything.",
+      "New York won the season series 7-6, including a 4-2 mark at Yankee Stadium, and eliminated Boston in last year's Wild Card Series. Both clubs finished among MLB's top five in team ERA, so this best-of-three can turn on one big swing or one bullpen mistake.",
     decisions: [
       {
-        title: "Can New York solve Crochet?",
+        title: "Who lands the first punch?",
         body:
-          "Crochet gives Boston a legitimate chance to seize Game 1. If New York makes him work, creates traffic and forces Boston into the bullpen early, the complexion of the series changes immediately.",
+          "A three-game series makes Game 1 enormous. Both clubs have enough starting pitching to control a night, so early traffic and one crooked inning could decide who gets to dictate the rest of the series.",
       },
       {
-        title: "Who controls the late innings?",
+        title: "Can Boston keep the ball in the park?",
         body:
-          "Boston knows exactly how it wants to finish games, with Aroldis Chapman anchoring the back end. New York has more uncertainty there. If these games reach the sixth or seventh inning tight, bullpen usage could decide the series.",
+          "New York leaned on home-run power in the season series. Boston's cleanest path is limiting free baserunners and making the Yankees create offense one base at a time.",
       },
       {
-        title: "Can Boston keep New York's power quiet?",
+        title: "Who owns the late innings?",
         body:
-          "Aaron Judge headlines a lineup that can flip a game with one mistake. Boston does not have to shut the Yankees down completely; it has to avoid giving the middle of the order chances with runners on base.",
+          "Boston can shorten games with Aroldis Chapman and Garrett Whitlock, while New York has David Bednar at the back end. In a rivalry this tight, the seventh through ninth innings may be the whole series.",
       },
     ],
     players: [
       {
         teamId: "nyy",
-        name: "Aaron Judge",
+        name: "Ben Rice",
         role: "YANKEES",
         body:
-          "He changes the entire shape of New York's offense. If Boston can keep the bases empty in front of him and force other hitters to beat them, it dramatically lowers the danger level.",
+          "With Aaron Judge's health uncertain, Rice is the power bat Boston cannot let beat it. His ability to change a game with one swing gives New York a postseason centerpiece even if the lineup is not at full strength.",
       },
       {
         teamId: "bos",
-        name: "Garrett Crochet",
+        name: "Roman Anthony",
         role: "RED SOX",
         body:
-          "He is Boston's biggest advantage in the series. A dominant Game 1 start could put the Yankees under elimination pressure immediately and let Boston dictate its pitching plan from there.",
+          "Anthony gives Boston an on-base spark at the top of the lineup. If he reaches base consistently, the Red Sox can pressure New York before the Yankees' power has a chance to take over.",
       },
     ],
     winPaths: {
       nyy: [
-        "Make Crochet work and force an early pitching change.",
-        "Create traffic for Judge and the power bats.",
-        "Get enough length from the starters to protect the bullpen.",
+        "Create early traffic and let the power bats do damage.",
+        "Get length from the starters and hand Bednar a lead.",
+        "Make Boston chase runs instead of playing from ahead.",
       ],
       bos: [
-        "Control Game 1 behind Crochet.",
-        "Force New York into its bullpen early.",
-        "Reach Chapman with a late lead.",
+        "Win the on-base battle at the top of the order.",
+        "Keep New York's home-run swings to solo shots.",
+        "Reach Chapman and Whitlock with a late lead.",
       ],
     },
     hqRead:
-      "This feels like a series where Game 1 matters even more than usual. Boston has the pitcher most capable of taking over one game, while New York has the lineup most capable of turning one mistake into three runs. The thing to watch: can the Yankees make Crochet uncomfortable early? If not, Boston may get exactly the kind of short, pitching-driven series it wants.",
+      "New York has home field, the 7-6 season-series edge and last year's Wild Card win. Boston has enough pitching and late-inning strength to make every game uncomfortable. In a best-of-three, the safer expectation is not a runaway — it is three nights where one mistake can swing the rivalry.",
   },
 };
 
-export function resolveMlbSeriesBreakdownContent(seriesId: string, previewMode: boolean) {
-  if (!previewMode) return null;
+export function resolveMlbSeriesBreakdownContent(seriesId: string, _previewMode: boolean) {
   return MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS[seriesId] ?? null;
 }

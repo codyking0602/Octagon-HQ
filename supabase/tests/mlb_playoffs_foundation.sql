@@ -24,10 +24,17 @@ begin
     from public.mlb_playoff_seasons
     where season = 2026
       and public_enabled = false
-      and field_ready = false
-      and bracket_template = '{"teams":[],"nodes":[]}'::jsonb
+      and field_ready = true
+      and current_round = 'wild_card'
+      and bracket_lock_at = timestamptz '2026-09-29 12:00:00-05'
+      and jsonb_array_length(coalesce(bracket_template -> 'teams', '[]'::jsonb)) = 12
+      and jsonb_array_length(coalesce(bracket_template -> 'nodes', '[]'::jsonb)) = 11
   ) then
-    raise exception '2026 MLB rollout must start private and field-pending';
+    raise exception '2026 MLB owner-review field must be ready while remaining private';
+  end if;
+
+  if (select count(*) from public.mlb_playoff_series where season = 2026 and round = 'wild_card') <> 4 then
+    raise exception '2026 MLB owner-review field must contain four Wild Card series';
   end if;
 
   if (select featured_challenge ->> 'route' from public.mlb_playoff_seasons where season = 2026) <> '/mlb/challenge' then
