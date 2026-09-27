@@ -133,11 +133,23 @@ function RosterStrip({ collection }: { collection: FootballWeeklySuperteamState[
       <div>
         {ROSTER_SLOTS.map((slot) => {
           const item = bySlot.get(slot);
+          const identity = item ? footballWeeklySuperteamIdentity(item.school) : null;
           return (
-            <article className={item ? "is-filled" : ""} key={slot}>
-              <small>{slot}</small>
-              <strong>{item?.display_name ?? "OPEN"}</strong>
-              <span>{item ? item.school + " · " + item.season_year : "$1 reserved"}</span>
+            <article
+              className={item ? "is-filled" : ""}
+              key={slot}
+              style={identity ? footballWeeklySuperteamStyle(identity) : undefined}
+            >
+              {item ? (
+                <TeamMark school={item.school} />
+              ) : (
+                <span className="football-weekly-superteam__roster-open-mark" aria-hidden="true">+</span>
+              )}
+              <div>
+                <small>{slot}</small>
+                <strong>{item?.display_name ?? "OPEN"}</strong>
+                <span>{item ? item.school + " · " + item.season_year : "$1 reserved"}</span>
+              </div>
             </article>
           );
         })}
@@ -451,10 +463,10 @@ export function FootballWeeklySuperteamGate({
         {tableMode === "hidden" ? (
           <div><small>ROSTER</small><strong>{state.collection.length}/7</strong></div>
         ) : (
-          <button type="button" onClick={() => setAuctionTableOpen(true)} aria-haspopup="dialog">
+          <button type="button" onClick={() => setAuctionTableOpen(true)} aria-haspopup="dialog" aria-label="Open Auction Table">
             <small>AUCTION TABLE</small>
-            <strong>{state.collection.length}/7</strong>
-            <span>YOUR ROSTER · VIEW ›</span>
+            <strong>VIEW ›</strong>
+            <span>ROSTERS + BANKROLLS</span>
           </button>
         )}
         <div><small>BANKROLL</small><strong>{"$"}{state.bankroll}</strong></div>
