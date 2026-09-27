@@ -92,14 +92,15 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
   const displayedIndex = lastResult ? Math.max(0, state.index - 1) : state.index;
   const question = run[displayedIndex] ?? null;
   const currentRound = barTriviaRoundForQuestion(state.index);
+  const displayedRound = barTriviaRoundForQuestion(displayedIndex);
   const roundName = league ? BAR_TRIVIA_ROUND_NAMES[league][currentRound] : "";
   const currentRoundNumber = barTriviaRoundNumber(currentRound);
-  const roundQuestionNumber = currentRound === "round1"
-    ? state.index + 1
-    : currentRound === "round2"
-      ? state.index - 2
-      : currentRound === "round3"
-        ? state.index - 5
+  const displayedRoundQuestionNumber = displayedRound === "round1"
+    ? displayedIndex + 1
+    : displayedRound === "round2"
+      ? displayedIndex - 2
+      : displayedRound === "round3"
+        ? displayedIndex - 5
         : 1;
   const activeStreak = state.streak;
   const scoreLabel = `${state.score}/100`;
@@ -274,7 +275,7 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
           <header className="bar-trivia__hud">
             <div>
               <span>{question.round === "last-call" ? "LAST CALL" : `ROUND ${barTriviaRoundNumber(question.round)}`}</span>
-              <strong>{question.round === "last-call" ? "FINAL QUESTION" : `QUESTION ${roundQuestionNumber} OF 3`}</strong>
+              <strong>{question.round === "last-call" ? "FINAL QUESTION" : `QUESTION ${displayedRoundQuestionNumber} OF 3`}</strong>
             </div>
             <div>
               <span>SCORE</span>
