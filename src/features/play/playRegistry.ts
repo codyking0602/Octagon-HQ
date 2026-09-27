@@ -11,7 +11,7 @@ export type PlayGameId =
   | "better-than"
   | "auction"
   | "hit-the-number"
-  | "fact-check"
+  | "bar-trivia"
   | "20-questions"
   | "who-am-i"
   | "millionaire"
@@ -51,7 +51,7 @@ export type PlayCompletionState =
   | "identity-guessed-or-clue-limit"
   | "millionaire-settled"
   | "sports-feud-settled"
-  | "fact-check-settled"
+  | "bar-trivia-settled"
   | "draft-room-complete";
 
 export interface PlayGameLineupDefinition {
@@ -530,12 +530,12 @@ export const playGameCatalog = [
     },
   },
   {
-    sport: "football",
-    id: "fact-check",
-    route: "/football/fact-check",
-    icon: "✓?",
-    title: "Fact Check",
-    description: "Make ten quick football calls across true/false, before/after, over/under, and head-to-head prompts.",
+    sport: "ufc",
+    id: "bar-trivia",
+    route: "/play/bar-trivia",
+    icon: "BT",
+    title: "Bar Trivia",
+    description: "Three rounds of UFC knowledge, Deep Cuts, and Championship Rounds before a Last Call wager.",
     availability: "preview",
     lineup: {
       defaultType: "replayable",
@@ -544,13 +544,37 @@ export const playGameCatalog = [
       newLineupControl: "result-replay",
       repetitionPolicy: "recent-items-deprioritized",
       lineupSize: 10,
-      completionState: "fact-check-settled",
+      completionState: "bar-trivia-settled",
       challengeEligible: false,
       dailyEligible: false,
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "casual-only",
-      difficultyModel: "Ten curated binary football calls with a controlled 1–10 difficulty ramp, current-week seasoning, Lock It strategy, and recent-fact repeat protection.",
+      difficultyModel: "Nine four-choice UFC bar-trivia questions across three themed rounds plus one wager-based Last Call question.",
+    },
+  },
+  {
+    sport: "football",
+    id: "bar-trivia",
+    route: "/football/bar-trivia",
+    icon: "BT",
+    title: "Bar Trivia",
+    description: "Pick NFL or college, play three themed trivia rounds, then put points on the line at Last Call.",
+    availability: "preview",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "bar-trivia-settled",
+      challengeEligible: false,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-only",
+      difficultyModel: "Separate NFL and CFB ten-question bar-trivia runs: three themed three-question rounds plus one wager-based Last Call question.",
     },
   },
   {
