@@ -20,23 +20,39 @@ const ROSTER_SLOTS: readonly FootballWeeklySuperteamRosterSlot[] = [
 type SuperteamBidMap = Record<number, FootballWeeklySuperteamBid>;
 type FinalTab = "standings" | "rosters" | "grades";
 
-function RulesCover({ onStart }: { onStart: () => void }) {
+export function FootballWeeklySuperteamRulesCover({
+  onStart,
+  startLabel = "START TODAY’S AUCTION",
+}: {
+  onStart: () => void;
+  startLabel?: string;
+}) {
   return (
     <section className="football-weekly-superteam__cover surface-card">
-      <p className="eyebrow">WEEKLY AUCTION · CFB</p>
-      <h1>BUILD A SUPERTEAM</h1>
-      <strong>7 spots. $50. One college football monster.</strong>
+      <p className="eyebrow">THIS WEEK · CFB SUPERTEAM</p>
+      <h1>BUILD YOUR SUPERTEAM</h1>
+      <strong>7 days · $50 · 7 roster spots</strong>
       <div className="football-weekly-superteam__rules">
-        <p><b>Roster:</b> QB · RB · WR · Flex · Front Seven · Secondary · Head Coach</p>
-        <p><b>Every day:</b> 8–12 candidates. The board grows on future days when more players join, and you can win at most 2.</p>
-        <p><b>Claim priority matters.</b> Rank every candidate on today’s board. Higher-priority claims resolve first if your wins start filling slots or using bankroll.</p>
-        <p><b>$1 reserve.</b> Your bids always preserve at least $1 for every roster spot you could still need. Losing bids cost nothing.</p>
-        <p><b>Late joins:</b> New players can enter through Day 4 when enough reserve inventory remains. Today’s board never changes after it opens.</p>
-        <p><b>Peak college season.</b> Each player is graded on the school + season shown. Grades stay hidden until the week ends.</p>
-        <p><b>Final score:</b> the equal-weight average of all 7 roster spots. Empty spots after Day 7 are filled by the worst eligible unclaimed option for $1.</p>
+        <div className="football-weekly-superteam__rules-callout">
+          <b>YOU CAN BID MORE THAN YOUR BANKROLL</b>
+          <span>
+            Your submitted bids may add up to more than the cash you have left. Rankings make
+            those bids conditional, so you never actually spend more than today’s allowed amount.
+          </span>
+        </div>
+        <p><b>Rank every bid.</b> P1 is your first choice. We work down your list and only award wins that fit your bankroll, roster, and 2-win daily limit.</p>
+        <p><b>Win up to 2 per day.</b> Losing bids cost $0.</p>
+        <p><b>Save $1 per open spot.</b> Today’s max spend protects the money you still need to finish your roster.</p>
+        <p><b>Ties rotate daily.</b> Today’s tie order is shown on the board.</p>
+        <div className="football-weekly-superteam__rules-example">
+          <b>EXAMPLE</b>
+          <span>Max spend today $20 · P1 $11 · P2 $9 · P3 $8 = $28 in submitted bids. That is allowed. Your ranking decides which claims stay alive.</span>
+        </div>
+        <p><b>Finish the week.</b> Boards scale with the field, late players can join through Day 4, and any empty Day 7 spots are autofilled for $1.</p>
+        <p><b>Grades stay hidden.</b> Each candidate is graded on the school + season shown, and all 7 roster spots count equally.</p>
       </div>
       <button className="football-weekly-superteam__primary" type="button" onClick={onStart}>
-        START TODAY’S AUCTION
+        {startLabel}
       </button>
     </section>
   );
@@ -337,7 +353,7 @@ export function FootballWeeklySuperteamGate({
   }, [initialBids, state.submitted_today]);
 
   if (state.show_intro && !introDismissed && !forceBoard) {
-    return <RulesCover onStart={() => setIntroDismissed(true)} />;
+    return <FootballWeeklySuperteamRulesCover onStart={() => setIntroDismissed(true)} />;
   }
 
   const submitted = state.submitted_today && !editing;
@@ -369,7 +385,7 @@ export function FootballWeeklySuperteamGate({
       <div className="football-weekly-superteam__status">
         <div><small>ROSTER</small><strong>{state.collection.length}/7</strong></div>
         <div><small>BANKROLL</small><strong>{"$"}{state.bankroll}</strong></div>
-        <div><small>2-WIN EXPOSURE</small><strong>{"$"}{exposure}</strong><span>MAX {"$"}{state.max_commit}</span></div>
+        <div><small>MAX SPEND TODAY</small><strong>{"$"}{state.max_commit}</strong><span>UP TO 2 WINS</span></div>
       </div>
       <RosterStrip collection={state.collection} />
       <PriorResults results={state.prior_results} />
@@ -400,7 +416,7 @@ export function FootballWeeklySuperteamGate({
         </div>
         <div className="football-weekly-superteam__priority-note">
           <strong>CLAIM PRIORITY</strong>
-          <span>P1 is your first claim. Your ranking only matters when other wins, roster locks, or bankroll make a lower claim conditional.</span>
+          <span>Rank every bid. P1 is your first choice. If everything can’t fit, your ranking decides which claims stay alive.</span>
         </div>
         {!legal ? (
           <p className="football-weekly-superteam__error">
