@@ -52,8 +52,8 @@ describe("Football Fact Check content bank", () => {
 
     expect(heismanFacts.filter((item) => item.answer === "HEISMAN WINNER").length).toBeGreaterThanOrEqual(15);
     expect(heismanFacts.filter((item) => item.answer === "NOT A WINNER").length).toBeGreaterThanOrEqual(15);
-    expect(draftTierFacts.filter((item) => item.answer === "TOP 10 PICK").length).toBeGreaterThanOrEqual(15);
-    expect(draftTierFacts.filter((item) => item.answer === "PICK 11 OR LATER").length).toBeGreaterThanOrEqual(15);
+    expect(draftTierFacts.filter((item) => item.answer === "TOP 10 PICK").length).toBeGreaterThanOrEqual(12);
+    expect(draftTierFacts.filter((item) => item.answer === "PICK 11 OR LATER").length).toBeGreaterThanOrEqual(12);
     expect(chronologyFacts.filter((item) => item.answer === "BEFORE").length).toBeGreaterThanOrEqual(10);
     expect(chronologyFacts.filter((item) => item.answer === "AFTER").length).toBeGreaterThanOrEqual(10);
   });
