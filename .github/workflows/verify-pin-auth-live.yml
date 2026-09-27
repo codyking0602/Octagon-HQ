@@ -1,4 +1,5 @@
 name: Verify Live PIN Authentication
+# Release verification: preserve exact-head live login proof for UI-only go-live PRs.
 
 on:
   pull_request:

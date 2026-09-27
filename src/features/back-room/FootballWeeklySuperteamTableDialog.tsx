@@ -38,7 +38,7 @@ function RosterRow({ item }: { item: FootballWeeklySuperteamTableRosterItem }) {
         <strong>{item.display_name}</strong>
         <span>{item.school} · {item.season_year}</span>
       </div>
-      <b>{"$"}{item.price_paid}</b>
+      <b>WON {"$"}{item.price_paid}</b>
     </article>
   );
 }
@@ -60,7 +60,7 @@ function PlayerRow({
       <button type="button" aria-expanded={expanded} onClick={onToggle}>
         <span>
           <strong>{player.display_name}</strong>
-          {player.is_current_user ? <small>CURRENT</small> : null}
+          {player.is_current_user ? <small>YOU</small> : null}
         </span>
         <span><strong>{"$"}{player.bankroll}</strong><small>LEFT</small></span>
         <span><strong>{player.owned_count}/7</strong><small>FILLED</small></span>
@@ -137,12 +137,19 @@ export function FootballWeeklySuperteamTableDialog({
         onMouseDown={(event) => event.stopPropagation()}
       >
         <header>
+          <button
+            className="football-weekly-superteam-table__back"
+            type="button"
+            onClick={onClose}
+            aria-label="Back to CFB Superteam"
+          >
+            ← BACK
+          </button>
           <div>
-            <p className="eyebrow">CFB SUPERTEAM</p>
+            <p className="eyebrow">WEEKLY AUCTION · CFB SUPERTEAM</p>
             <h2>AUCTION TABLE</h2>
             <span>Resolved rosters + bankrolls. Today’s bids stay sealed.</span>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close Auction Table">×</button>
         </header>
         <div className="football-weekly-superteam-table__body">
           {loading ? <p className="football-weekly-superteam-table__message">Loading table…</p> : null}

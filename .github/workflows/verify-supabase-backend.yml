@@ -1,4 +1,5 @@
 name: Verify Supabase Backend
+# Release verification: preserve exact-head backend proof for UI-only go-live PRs.
 
 on:
   pull_request:
