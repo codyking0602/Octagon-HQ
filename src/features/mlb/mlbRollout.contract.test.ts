@@ -53,7 +53,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbWelcome).toContain("How can you not be romantic about baseball?");
     expect(mlbWelcome).toContain("ENTER THE PLAYOFFS");
     expect(mlbWelcome).not.toContain("Track the standings");
-    expect(mlbWelcome).toContain('/assets/mlb/F02B626F-635A-4727-AB42-FDEBB911C2BF.png');
+    expect(mlbWelcome).toContain('/assets/mlb/9420D6BC-7C2C-496A-8927-1E04162E5E0A.png');
     expect(mlbWelcome).not.toContain('/assets/MLB.webp');
     expect(mlbWelcomeStyles).toContain('aspect-ratio: 941 / 1672');
     expect(mlbWelcomeStyles).toContain('background: transparent');
