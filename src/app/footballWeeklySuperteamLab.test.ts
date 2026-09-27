@@ -9,6 +9,18 @@ const repository = readFileSync(
   "src/features/play/footballWeeklyAuctionRepository.ts",
   "utf8",
 );
+const realismMigration = readFileSync(
+  "supabase/migrations/202612310201_superteam_lab_realism_and_table.sql",
+  "utf8",
+);
+const tableRepository = readFileSync(
+  "src/features/play/footballWeeklySuperteamTableRepository.ts",
+  "utf8",
+);
+const tableDialog = readFileSync(
+  "src/features/back-room/FootballWeeklySuperteamTableDialog.tsx",
+  "utf8",
+);
 const page = readFileSync(
   "src/features/back-room/FootballWeeklySuperteamLabPage.tsx",
   "utf8",
@@ -80,16 +92,46 @@ describe("Weekly Auction owner playthrough lab", () => {
     expect(page).toContain("<FootballWeeklySuperteamGate");
     expect(page).toContain("<FootballWeeklySuperteamFinalResult");
     expect(page).toContain("showContinueAction={false}");
+    expect(page).toContain('tableMode="lab"');
+    expect(page).toContain("tableSeatIndex={seatIndex}");
     expect(gate).toContain("showContinueAction = true");
   });
 
-  it("explains conditional overbidding and keeps the mobile board readable", () => {
+  it("explains conditional overbidding without the two unnecessary closing rules", () => {
     expect(gate).toContain("YOU CAN BID MORE THAN YOUR BANKROLL");
     expect(gate).toContain("MAX SPEND TODAY");
     expect(gate).toContain("If everything can’t fit, your ranking decides which claims stay alive.");
     expect(gate).toContain("Max spend today $20 · P1 $11 · P2 $9 · P3 $8 = $28 in submitted bids");
-    expect(styles).toContain("transform: translate(1px, 1px)");
-    expect(styles).toContain("grid-template-columns: minmax(0,1fr) auto");
+    expect(gate).not.toContain("<b>Finish the week.</b>");
+    expect(gate).not.toContain("<b>Grades stay hidden.</b>");
+  });
+
+  it("supports press-and-drag claim ordering while retaining the priority selector fallback", () => {
+    expect(gate).toContain("data-superteam-slot={card.slot}");
+    expect(gate).toContain("onPointerMove");
+    expect(gate).toContain("Hold + drag a player card to reorder claims.");
+    expect(gate).toContain("<select");
+    expect(gate).toContain("orderedCards.map");
+  });
+
+  it("keeps roster names and years readable instead of a clipped horizontal strip", () => {
+    expect(styles).toContain("grid-template-columns: repeat(4, minmax(0,1fr))");
+    expect(styles).toContain("grid-template-columns: repeat(2, minmax(0,1fr))");
+    expect(styles).toContain("overflow-wrap: anywhere");
+  });
+
+  it("isolates historical lab weeks from normal maintenance and repairs contaminated runs", () => {
+    expect(realismMigration).toContain("not exists(\n      select 1\n      from private.football_weekly_superteam_lab_runs lab");
+    expect(realismMigration).toContain("perform private.reset_football_weekly_superteam_lab(v_lab.owner_profile_id)");
+    expect(realismMigration).toContain("get_my_football_weekly_superteam_lab_table");
+  });
+
+  it("gives live play and the lab the same sealed-bid-safe Superteam Auction Table", () => {
+    expect(tableRepository).toContain('"get_football_weekly_superteam_table"');
+    expect(tableRepository).toContain('"get_my_football_weekly_superteam_lab_table"');
+    expect(tableDialog).toContain("Resolved rosters + bankrolls. Today’s bids stay sealed.");
+    expect(gate).toContain("<FootballWeeklySuperteamTableDialog");
+    expect(realismMigration).not.toContain("'hidden_grade',");
   });
 
   it("adds an owner-only Auction Center entry and dedicated route", () => {
