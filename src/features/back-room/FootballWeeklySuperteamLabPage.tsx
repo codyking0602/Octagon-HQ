@@ -12,6 +12,7 @@ import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuild
 import {
   FootballWeeklySuperteamFinalResult,
   FootballWeeklySuperteamGate,
+  FootballWeeklySuperteamRulesCover,
 } from "./FootballWeeklySuperteamGate";
 
 export default function FootballWeeklySuperteamLabPage() {
@@ -24,6 +25,7 @@ export default function FootballWeeklySuperteamLabPage() {
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rulesDismissed, setRulesDismissed] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -103,6 +105,7 @@ export default function FootballWeeklySuperteamLabPage() {
       const next = await repository.resetSuperteamLab();
       setLab(next);
       setSeatIndex(1);
+      setRulesDismissed(false);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "A fresh playthrough could not be generated.");
     } finally {
@@ -136,6 +139,17 @@ export default function FootballWeeklySuperteamLabPage() {
     );
   }
 
+  if (!rulesDismissed) {
+    return (
+      <div className="page football-weekly-superteam-lab">
+        <FootballWeeklySuperteamRulesCover
+          startLabel="START PLAYTHROUGH"
+          onStart={() => setRulesDismissed(true)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="page football-weekly-superteam-lab">
       <section className="football-weekly-superteam-lab__hero surface-card">
@@ -143,9 +157,9 @@ export default function FootballWeeklySuperteamLabPage() {
           <p className="eyebrow">OWNER QA · REAL AUCTION ENGINE</p>
           <h1>WEEKLY AUCTION PLAYTHROUGH</h1>
           <p>
-            Run all six seats through an isolated alternate board. The Standard generator,
-            bankroll rules, claim priority, ties, assignments, day resolver, autofill, and
-            final grading are the same engine used by the live game.
+            Run the same six simulated players through all seven days on an isolated alternate
+            board. The Standard generator, bankroll rules, claim priority, ties, assignments,
+            day resolver, autofill, and final grading are the same engine used by the live game.
           </p>
         </div>
         <div className="football-weekly-superteam-lab__hero-actions">
