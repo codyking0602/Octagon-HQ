@@ -43,7 +43,7 @@ describe("Football Daily leaderboard result renderer", () => {
       expect(footballDaily).toContain(`case "${gameType}":`);
     }
     expect(footballDaily).toContain(
-      "return <HitTheNumber projection={projection} advance={advance} />",
+      "result = <HitTheNumber projection={projection} advance={advance} />",
     );
   });
 });
