@@ -59,21 +59,23 @@ const cfbAwardFacts: FactCheckItem[] = cfbAwardSubjects.map((subject) => item({
   sourceId: SOURCE_CANONICAL,
 }));
 
-const nflDraftSubjects = footballCanonicalSubjects
+const nflDraftPool = footballCanonicalSubjects
   .filter((subject) => (
     subject.kind === "player-career"
     && subject.league === "NFL"
     && subject.draftYear != null
     && subject.draftRound != null
     && subject.draftPick != null
-  ))
-  .slice()
-  .sort((a, b) => (a.draftYear! - b.draftYear!) || (a.draftPick! - b.draftPick!));
+  ));
 
 const nflRoundSubjects = [
-  ...nflDraftSubjects.filter((subject) => subject.draftRound === 1).slice(0, 20),
-  ...nflDraftSubjects.filter((subject) => subject.draftRound! > 1).slice(0, 20),
+  ...nflDraftPool.filter((subject) => subject.draftRound === 1).slice(0, 20),
+  ...nflDraftPool.filter((subject) => subject.draftRound! > 1).slice(0, 20),
 ];
+
+const nflDraftSubjects = nflDraftPool
+  .slice()
+  .sort((a, b) => (a.draftYear! - b.draftYear!) || (a.draftPick! - b.draftPick!));
 
 const nflRoundFacts: FactCheckItem[] = nflRoundSubjects.map((subject) => item({
   id: `canonical-nfl-round-${subject.id}`,
