@@ -138,7 +138,8 @@ function DailyAnswerDetail({
         </span>
       </header>
       <div className="today-hub-official-result__body official-daily-page">
-        {(entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number")
+        {(sport === "ufc" || sport === "football")
+          && (entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number")
           && record(entry.publicResult.daily_series).format_version === "daily-two-game-average-v1" ? (
           <Suspense fallback={<p className="today-hub-empty">Loading two-game result…</p>}>
             <DailyTwoGameLeaderboardResult
