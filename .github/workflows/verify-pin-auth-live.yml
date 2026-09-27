@@ -1,5 +1,5 @@
 name: Verify Live PIN Authentication
-# Fact Check owner Casual: exact-head release verification trigger.
+# Bar Trivia PR1: exact-head release verification trigger.
 # Release verification: run exact-head live login proof when UI-only go-live PRs touch this workflow.
 
 on:
