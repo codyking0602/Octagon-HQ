@@ -1,0 +1,83 @@
+.football-weekly-superteam{display:grid;gap:12px;max-width:760px;margin:0 auto;padding-bottom:24px}
+.football-weekly-superteam__cover,.football-weekly-superteam__board,.football-weekly-superteam__final{padding:18px;border-radius:20px}
+.football-weekly-superteam__cover h1,.football-weekly-superteam__board h1,.football-weekly-superteam__final h1{margin:2px 0 4px;font-size:clamp(28px,8vw,42px);line-height:.95}
+.football-weekly-superteam__cover>strong{display:block;font-size:18px;margin-bottom:14px}
+.football-weekly-superteam__cover ul{margin:10px 0 16px;padding-left:20px;display:grid;gap:7px}
+.football-weekly-superteam__primary{width:100%;min-height:48px;border:0;border-radius:14px;background:#0d6b4f;color:#fff;font-weight:900;letter-spacing:.03em}
+.football-weekly-superteam__status{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.football-weekly-superteam__status>div{background:rgba(8,31,43,.93);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:10px;text-align:center;color:#fff}
+.football-weekly-superteam__status small{display:block;font-size:9px;letter-spacing:.1em;opacity:.7}
+.football-weekly-superteam__status strong{display:block;font-size:20px;margin-top:2px}
+.football-weekly-superteam__roster{display:grid;grid-template-columns:repeat(7,minmax(88px,1fr));gap:7px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}
+.football-weekly-superteam__roster::-webkit-scrollbar{display:none}
+.football-weekly-superteam__roster article{min-width:92px;padding:9px;border-radius:13px;background:rgba(8,31,43,.86);border:1px dashed rgba(255,255,255,.18);color:#fff}
+.football-weekly-superteam__roster article.is-filled{border-style:solid;border-color:rgba(82,214,160,.45)}
+.football-weekly-superteam__roster small,.football-weekly-superteam__roster span{display:block;font-size:8px;letter-spacing:.06em;opacity:.7}
+.football-weekly-superteam__roster strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:3px 0}
+.football-weekly-superteam__prior{padding:14px}
+.football-weekly-superteam__prior header{display:flex;justify-content:space-between;align-items:end}
+.football-weekly-superteam__prior>div{display:grid;gap:7px;margin-top:8px}
+.football-weekly-superteam__prior article{border-top:1px solid rgba(15,23,42,.1);padding-top:8px}
+.football-weekly-superteam__prior article>span,.football-weekly-superteam__prior article>strong{display:block;font-size:12px}
+.football-weekly-superteam__prior details{margin-top:5px;font-size:11px}
+.football-weekly-superteam__prior details p{display:flex;justify-content:space-between;margin:4px 0}
+.football-weekly-superteam__board>header{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:8px}
+.football-weekly-superteam__board>header>div:last-child{text-align:right}
+.football-weekly-superteam__board>header>div:last-child strong{display:block;font-size:22px}
+.football-weekly-superteam__board>header>div:last-child small{font-size:9px;letter-spacing:.08em}
+.football-weekly-superteam__note{font-size:12px;line-height:1.35;margin:0 0 10px;color:#475569}
+.football-weekly-superteam__cards{display:grid;gap:8px}
+.football-weekly-superteam__candidate{position:relative;overflow:hidden;border:1px solid color-mix(in srgb,var(--superteam-primary) 38%,#d9e1e8);border-radius:15px;background:linear-gradient(100deg,color-mix(in srgb,var(--superteam-primary) 10%,#fff),#fff 58%);padding:10px}
+.football-weekly-superteam__candidate:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--superteam-primary)}
+.football-weekly-superteam__candidate.is-closed{opacity:.55}
+.football-weekly-superteam__candidate-main{display:grid;grid-template-columns:42px minmax(0,1fr) 74px;align-items:center;gap:9px}
+.football-weekly-superteam__mark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid rgba(15,23,42,.1);overflow:hidden}
+.football-weekly-superteam__mark img{max-width:32px;max-height:32px;object-fit:contain}
+.football-weekly-superteam__mark b{font-size:10px}
+.football-weekly-superteam__candidate-main>div:nth-child(2){min-width:0}
+.football-weekly-superteam__candidate-main small,.football-weekly-superteam__candidate-main span{display:block;font-size:9px;letter-spacing:.06em;color:#64748b}
+.football-weekly-superteam__candidate-main strong{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.football-weekly-superteam__priority{display:grid;grid-template-columns:22px 28px 22px;align-items:center;justify-content:end}
+.football-weekly-superteam__priority button{width:22px;height:26px;border:1px solid #d8e0e8;background:#fff;border-radius:7px;padding:0}
+.football-weekly-superteam__priority b{text-align:center;font-size:12px}
+.football-weekly-superteam__controls{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:9px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(15,23,42,.08)}
+.football-weekly-superteam__target span{display:block;font-size:8px;letter-spacing:.08em;color:#64748b}
+.football-weekly-superteam__target strong,.football-weekly-superteam__target select{display:block;width:100%;margin-top:3px;font-size:12px;font-weight:800}
+.football-weekly-superteam__target select{height:32px;border:1px solid #d8e0e8;border-radius:8px;background:#fff;padding:0 7px}
+.football-weekly-superteam__bid{display:grid;grid-template-columns:32px 1fr 32px;gap:5px;align-items:end}
+.football-weekly-superteam__bid>button{height:34px;border:1px solid #d8e0e8;background:#fff;border-radius:8px;font-weight:900}
+.football-weekly-superteam__bid label{display:grid;grid-template-columns:auto 10px 1fr;align-items:end;border:1px solid #d8e0e8;border-radius:8px;padding:4px 6px;background:#fff}
+.football-weekly-superteam__bid label span{grid-column:1/-1;font-size:7px;letter-spacing:.08em;color:#64748b}
+.football-weekly-superteam__bid input{width:100%;min-width:0;border:0;background:transparent;font-weight:900;font-size:15px;outline:none}
+.football-weekly-superteam__closed{margin-top:8px;padding:7px;border-radius:8px;background:#eef2f6;text-align:center;font-size:9px;font-weight:900;letter-spacing:.08em}
+.football-weekly-superteam__reserve{font-size:10px;text-align:center;color:#64748b;margin:9px 0}
+.football-weekly-superteam__error{padding:9px;border-radius:9px;background:#fee2e2;color:#991b1b;font-size:12px}
+.football-weekly-superteam__submitted{display:grid;gap:8px;text-align:center}
+.football-weekly-superteam__submitted span{display:block;font-size:11px;color:#64748b}
+.football-weekly-superteam__submitted>button:not(.football-weekly-superteam__primary){border:0;background:transparent;font-weight:800;text-decoration:underline}
+.football-weekly-superteam__final>header{text-align:center}
+.football-weekly-superteam__final>.is-champion,.football-weekly-superteam__final>.is-finish{text-align:center;margin:12px 0;padding:12px;border-radius:14px;background:#eef6f2}
+.football-weekly-superteam__final>.is-champion strong,.football-weekly-superteam__final>.is-finish strong,.football-weekly-superteam__final>.is-champion b,.football-weekly-superteam__final>.is-finish b{display:block}
+.football-weekly-superteam__final>.is-champion b,.football-weekly-superteam__final>.is-finish b{font-size:28px}
+.football-weekly-superteam__final nav{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.football-weekly-superteam__final nav button,.football-weekly-superteam__player-picker button{border:1px solid #d8e0e8;background:#fff;border-radius:9px;padding:8px;font-weight:800}
+.football-weekly-superteam__final nav button.is-active,.football-weekly-superteam__player-picker button.is-active{background:#123b32;color:#fff;border-color:#123b32}
+.football-weekly-superteam__standings>div{display:grid;grid-template-columns:34px 1fr 60px;gap:8px;padding:9px 4px;border-bottom:1px solid #e5e7eb}
+.football-weekly-superteam__standings>div.is-current{font-weight:900}
+.football-weekly-superteam__standings span{text-align:right}
+.football-weekly-superteam__final-roster{display:grid;gap:7px}
+.football-weekly-superteam__final-roster article{display:grid;grid-template-columns:38px 1fr 46px;align-items:center;gap:8px;border-left:4px solid var(--superteam-primary);border-radius:10px;background:#f8fafc;padding:8px}
+.football-weekly-superteam__final-roster article>div small,.football-weekly-superteam__final-roster article>div span{display:block;font-size:9px;color:#64748b}
+.football-weekly-superteam__final-roster article>div strong{display:block}
+.football-weekly-superteam__final-roster article>b{text-align:right}
+.football-weekly-superteam__player-picker{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
+.football-weekly-superteam__all-rosters>article{display:grid;grid-template-columns:82px 1fr;gap:6px;padding:7px 0;border-bottom:1px solid #e5e7eb}
+.football-weekly-superteam__all-rosters>article small{grid-column:2;font-size:10px;color:#64748b}
+@media(max-width:600px){
+  .football-weekly-superteam{gap:9px}
+  .football-weekly-superteam__cover,.football-weekly-superteam__board,.football-weekly-superteam__final{padding:13px;border-radius:16px}
+  .football-weekly-superteam__roster{grid-template-columns:repeat(7,84px)}
+  .football-weekly-superteam__candidate-main{grid-template-columns:38px minmax(0,1fr) 70px}
+  .football-weekly-superteam__mark{width:38px;height:38px}
+  .football-weekly-superteam__controls{grid-template-columns:minmax(0,1fr) 142px}
+}
