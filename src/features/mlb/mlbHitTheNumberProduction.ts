@@ -1,7 +1,7 @@
 import type { MlbHitNumberChallengeConfig } from "./MlbHitTheNumberChallenge";
 
 export const MLB_HIT_NUMBER_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-07" as const;
-export const MLB_HIT_NUMBER_PRODUCTION_DATE = "2026-10-15" as const;
+export const MLB_HIT_NUMBER_PRODUCTION_DATE = "2026-10-12" as const;
 export const MLB_HIT_NUMBER_PRODUCTION_VERSION = "mlb-hit-number-oct15-v1" as const;
 
 // Spoiler-protected production content for Oct. 15. Keep this separate from the
