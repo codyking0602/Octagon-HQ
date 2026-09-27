@@ -134,7 +134,7 @@ function FindLeaderRoundDetail({
             })}
           </div>
         </>
-      ) : (
+      ) : ranked.length ? (
         <>
           <p className="daily-two-game-result__scroll-label">SCROLL 1–10 →</p>
           <div className="daily-two-game-result__rail" role="list" aria-label="Final stat reveal">
@@ -153,6 +153,8 @@ function FindLeaderRoundDetail({
             ))}
           </div>
         </>
+      ) : (
+        <p className="daily-two-game-result__empty-reveal">Final reveal data is unavailable for this completed game.</p>
       )}
     </div>
   );
@@ -301,8 +303,12 @@ export function DailyTwoGameLeaderboardResult({
 }) {
   const series = record(projection.officialAttempt?.publicResult.daily_series);
   const roundResults = records(series.rounds);
-  const setupRounds = records(projection.publicSetup.rounds);
-  const revealRounds = records(record(projection.revealSetup).rounds);
+  const projectionSetupRounds = records(projection.publicSetup.rounds);
+  const projectionRevealRounds = records(record(projection.revealSetup).rounds);
+  const detailSetupRounds = records(resultDetail.setup_rounds);
+  const detailRevealRounds = records(resultDetail.reveal_rounds);
+  const setupRounds = projectionSetupRounds.length ? projectionSetupRounds : detailSetupRounds;
+  const revealRounds = projectionRevealRounds.length ? projectionRevealRounds : detailRevealRounds;
   const detailRounds = records(resultDetail.rounds);
   const roundScores = numbers(series.round_scores);
   const average = Number(series.average_score ?? projection.officialAttempt?.normalizedScore ?? 0);

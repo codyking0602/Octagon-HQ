@@ -221,6 +221,18 @@
   margin: 0;
 }
 
+.daily-two-game-result__empty-reveal {
+  margin: 0;
+  border: 1px dashed #34383e;
+  border-radius: 14px;
+  padding: 16px;
+  color: #8f95a0;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: center;
+}
+
 .daily-two-game-result__rail {
   display: flex;
   gap: 9px;

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
@@ -119,7 +120,7 @@ function DailyAnswerDetail({
     },
   };
 
-  return (
+  const resultView = (
     <div
       className="today-hub-official-result"
       role="dialog"
@@ -169,6 +170,8 @@ function DailyAnswerDetail({
       </div>
     </div>
   );
+
+  return createPortal(resultView, document.body);
 }
 
 function DailyLeaderboard({
