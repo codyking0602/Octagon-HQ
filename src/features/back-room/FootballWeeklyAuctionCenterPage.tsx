@@ -7,12 +7,15 @@ import {
 } from "../play/footballWeeklyAuctionRepository";
 import { FootballWeeklyAuctionFinalResult } from "./FootballWeeklyAuctionGate";
 import { FootballWeeklyBuildQbFinalResult } from "./FootballWeeklyBuildQbGate";
+import { FootballWeeklySuperteamFinalResult } from "./FootballWeeklySuperteamGate";
 import "../../styles/football-weekly-auction-center.css";
 
 type CenterTab = "week" | "results";
 
 function subjectLabel(subjectKey: FootballWeeklyFinal["subject_key"] | "cfb-best-teams-since-2000") {
-  return subjectKey === "nfl-build-qb" ? "NFL BUILD A QB" : "CFB BEST TEAMS SINCE 2000";
+  if (subjectKey === "nfl-build-qb") return "NFL BUILD A QB";
+  if (subjectKey === "cfb-superteam") return "CFB SUPERTEAM";
+  return "CFB BEST TEAMS SINCE 2000";
 }
 
 function weekLabel(weekStart: string) {
@@ -32,9 +35,9 @@ function weekLabel(weekStart: string) {
 function archivedScore(result: FootballWeeklyFinal) {
   const me = result.my_result;
   if (me.final_score == null) return "NO FINAL SCORE";
-  return result.subject_key === "nfl-build-qb"
-    ? `${me.final_score.toFixed(1)} AVG`
-    : `${me.final_score.toFixed(1)} BEST-3`;
+  return result.subject_key === "cfb-best-teams-since-2000"
+    ? `${me.final_score.toFixed(1)} BEST-3`
+    : `${me.final_score.toFixed(1)} AVG`;
 }
 
 export default function FootballWeeklyAuctionCenterPage() {
@@ -80,6 +83,13 @@ export default function FootballWeeklyAuctionCenterPage() {
         </div>
         {selectedResult.subject_key === "nfl-build-qb" ? (
           <FootballWeeklyBuildQbFinalResult
+            result={selectedResult}
+            busy={false}
+            onAcknowledge={() => undefined}
+            showNewWeekAction={false}
+          />
+        ) : selectedResult.subject_key === "cfb-superteam" ? (
+          <FootballWeeklySuperteamFinalResult
             result={selectedResult}
             busy={false}
             onAcknowledge={() => undefined}
@@ -131,7 +141,7 @@ export default function FootballWeeklyAuctionCenterPage() {
               <span>{activeState.submitted_today ? "BIDS IN" : "TODAY OPEN"}</span>
             </div>
             <div className="football-weekly-auction-center__metrics">
-              <div><small>{activeState.subject_key === "nfl-build-qb" ? "TRAITS" : "TEAMS"}</small><strong>{activeState.owned_count}</strong></div>
+              <div><small>{activeState.subject_key === "nfl-build-qb" ? "TRAITS" : activeState.subject_key === "cfb-superteam" ? "ROSTER" : "TEAMS"}</small><strong>{activeState.owned_count}{activeState.subject_key === "cfb-superteam" ? "/7" : ""}</strong></div>
               <div><small>BANKROLL</small><strong>${activeState.bankroll}</strong></div>
               <div><small>DAY</small><strong>{activeState.day_index}/7</strong></div>
             </div>
