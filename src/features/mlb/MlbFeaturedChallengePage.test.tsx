@@ -36,7 +36,7 @@ vi.mock("./mlbPlayChallenge", () => ({
     gameType: "find_leader",
     publicResult: { game_scores: [10, 10], average_score: 10 },
     resultDetail: {},
-    completedAt: "2026-09-29T12:00:00-05:00",
+    completedAt: "2026-09-27T18:30:00-05:00",
   })),
 }));
 
@@ -51,7 +51,7 @@ vi.mock("./useMlbPlayoffs", () => ({
         kicker: "FIND THE LEADER",
         description: "Two boards.",
         route: "/mlb/challenge",
-        date: "2026-09-29",
+        date: "2026-09-27",
         game_type: "find_leader",
         ready: true,
         is_live: true,
