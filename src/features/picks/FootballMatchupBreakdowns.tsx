@@ -29,7 +29,8 @@ function MatchupRichText({ parts }: { parts: FootballMatchupRichTextPart[] }) {
 }
 
 function compactMatchupStyle(breakdown: FootballMatchupBreakdown) {
-  const [away, home] = breakdown.teams.map((team) => footballWeeklySuperteamIdentity(team.name));
+  const away = footballWeeklySuperteamIdentity(breakdown.teams[0].name);
+  const home = footballWeeklySuperteamIdentity(breakdown.teams[1].name);
   return {
     "--football-matchup-away": away.primary,
     "--football-matchup-away-rgb": away.primaryRgb,
