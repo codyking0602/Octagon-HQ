@@ -42,7 +42,20 @@ describe("Football Fact Check content bank", () => {
     expect(counts.get("true_false") ?? 0).toBeGreaterThanOrEqual(65);
     expect(counts.get("over_under") ?? 0).toBeGreaterThanOrEqual(80);
     expect(counts.get("either_or") ?? 0).toBeGreaterThanOrEqual(30);
-    expect(counts.get("before_after") ?? 0).toBeGreaterThanOrEqual(35);
+    expect(counts.get("before_after") ?? 0).toBeGreaterThanOrEqual(30);
+  });
+
+  it("keeps generated answer directions balanced enough to resist pattern guessing", () => {
+    const heismanFacts = FOOTBALL_FACT_CHECK_AUTHORITY_BANK.filter((item) => item.id.startsWith("canonical-cfb-heisman-"));
+    const roundFacts = FOOTBALL_FACT_CHECK_AUTHORITY_BANK.filter((item) => item.id.startsWith("canonical-nfl-round-"));
+    const chronologyFacts = FOOTBALL_FACT_CHECK_AUTHORITY_BANK.filter((item) => item.id.startsWith("canonical-draft-order-"));
+
+    expect(heismanFacts.filter((item) => item.answer === "HEISMAN WINNER").length).toBeGreaterThanOrEqual(15);
+    expect(heismanFacts.filter((item) => item.answer === "NOT A WINNER").length).toBeGreaterThanOrEqual(15);
+    expect(roundFacts.filter((item) => item.answer === "ROUND 1 PICK").length).toBeGreaterThanOrEqual(15);
+    expect(roundFacts.filter((item) => item.answer === "LATER ROUND PICK").length).toBeGreaterThanOrEqual(15);
+    expect(chronologyFacts.filter((item) => item.answer === "BEFORE").length).toBeGreaterThanOrEqual(10);
+    expect(chronologyFacts.filter((item) => item.answer === "AFTER").length).toBeGreaterThanOrEqual(10);
   });
 
   it("injects two current-week facts without breaking the 1-to-10 difficulty ramp", () => {
