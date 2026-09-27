@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202612310201_auto_continue_two_game_daily.sql",
+  "supabase/migrations/202612310202_auto_continue_two_game_daily.sql",
   "utf8",
 );
 
