@@ -45,6 +45,7 @@ type PlayLandingGameLibraryProps = {
   onNavigate: (route: string) => void;
   footer?: ReactNode;
   familyFeudVisible?: boolean;
+  factCheckVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
@@ -52,6 +53,7 @@ export function PlayLandingGameLibrary({
   onNavigate,
   footer,
   familyFeudVisible = false,
+  factCheckVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
@@ -65,10 +67,24 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length + (familyFeudVisible ? 1 : 0)} LIVE</span>
+        <span>{games.length + (familyFeudVisible ? 1 : 0) + (factCheckVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
+        {factCheckVisible && sport === "football" ? (
+          <button
+            className="play-landing-game-card is-strategic"
+            type="button"
+            onClick={() => onNavigate("/football/fact-check")}
+          >
+            <span className="play-landing-game-card__icon" aria-hidden="true">✓?</span>
+            <span className="play-landing-game-card__status">OWNER PREVIEW</span>
+            <strong>Fact Check</strong>
+            <small>Make ten fast football calls across true/false, before/after, over/under, and head-to-head prompts.</small>
+            <em>PLAY →</em>
+          </button>
+        ) : null}
+
         {familyFeudVisible ? (
           <button
             className="play-landing-game-card is-strategic"
