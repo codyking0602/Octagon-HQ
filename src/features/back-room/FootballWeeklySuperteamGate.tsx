@@ -31,7 +31,8 @@ function RulesCover({ onStart }: { onStart: () => void }) {
         <p><b>Every day:</b> 8–12 candidates. The board grows on future days when more players join, and you can win at most 2.</p>
         <p><b>Claim priority matters.</b> Rank every candidate on today’s board. Higher-priority claims resolve first if your wins start filling slots or using bankroll.</p>
         <p><b>$1 reserve.</b> Your bids always preserve at least $1 for every roster spot you could still need. Losing bids cost nothing.</p>
-        <p><b>Late joins:</b> New players can enter through Day 4 when enough reserve inventory remains. Today’s board never changes after it opens.</p>\n        <p><b>Peak college season.</b> Each player is graded on the school + season shown. Grades stay hidden until the week ends.</p>
+        <p><b>Late joins:</b> New players can enter through Day 4 when enough reserve inventory remains. Today’s board never changes after it opens.</p>
+        <p><b>Peak college season.</b> Each player is graded on the school + season shown. Grades stay hidden until the week ends.</p>
         <p><b>Final score:</b> the equal-weight average of all 7 roster spots. Empty spots after Day 7 are filled by the worst eligible unclaimed option for $1.</p>
       </div>
       <button className="football-weekly-superteam__primary" type="button" onClick={onStart}>
