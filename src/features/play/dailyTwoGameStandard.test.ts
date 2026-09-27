@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import twoGamePublicationMigration from "../../../supabase/migrations/202612310199_two_game_daily_publication.sql?raw";
 import {
   advanceOfficialDailyRuntime,
   buildOfficialDailySetup,
@@ -43,6 +44,13 @@ function contextFor(
 }
 
 describe("two-game Daily standard", () => {
+  it("allows the two-game score contract through the canonical publication guard", () => {
+    expect(twoGamePublicationMigration).toContain("public.publish_daily_challenge_setup");
+    expect(twoGamePublicationMigration).toContain("daily-two-game-average-score-v1");
+    expect(twoGamePublicationMigration).toContain("'wavelength', 'find_leader', 'hit_the_number'");
+    expect(twoGamePublicationMigration).toContain("scoring guard changed before two-game publication cutover");
+  });
+
   it("cuts over only the three approved games beginning September 27", () => {
     for (const game of ["find_leader", "wavelength", "hit_the_number"]) {
       expect(dailyUsesTwoGameAverage(game, "2026-09-26")).toBe(false);
