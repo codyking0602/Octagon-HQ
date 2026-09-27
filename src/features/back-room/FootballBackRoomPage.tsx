@@ -87,7 +87,7 @@ export default function FootballBackRoomPage() {
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/weekly-auction")} />
       <ChallengeCenter sport="football" />
-      <PlayLandingGameLibrary sport="football" onNavigate={navigate} />
+      <PlayLandingGameLibrary sport="football" onNavigate={navigate} factCheckVisible={identity.profile?.canControlPicks === true} />
     </div>
   );
 }
