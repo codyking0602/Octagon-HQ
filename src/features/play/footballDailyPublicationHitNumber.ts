@@ -30,7 +30,9 @@ function dailyLeague(day: string, gameIndex = 0) {
 function buildDailyHitTheNumberPlan(day: string, scheduleVersion: string, gameIndex = 0) {
   const desiredLeague = dailyLeague(day, gameIndex);
   for (let attempt = 0; attempt < 128; attempt += 1) {
-    const seed = `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|game-${gameIndex + 1}|${attempt}`;
+    const seed = gameIndex === 0
+      ? `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|${attempt}`
+      : `${FOOTBALL_DAILY_RUNTIME_VERSION}|hit-the-number|${scheduleVersion}|${day}|game-2|${attempt}`;
     const plan = createFootballHitTheNumberPlan(seed, "random-pool");
     if (plan.league !== desiredLeague) continue;
     if (plan.subjectIds.length !== footballHitTheNumberRandomPoolSize(plan.pickCount)) continue;
@@ -68,7 +70,9 @@ function buildHitTheNumberSetup(day: string, scheduleVersion: string, gameIndex 
   });
   const valueMap = Object.fromEntries(plan.subjectIds.map((id, index) => [id, values[index]]));
   return {
-    setupKey: `${FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:game-${gameIndex + 1}:${plan.metricId}:${plan.pickCount}`,
+    setupKey: gameIndex === 0
+      ? `${FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:${plan.metricId}:${plan.pickCount}`
+      : `${FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION}:${scheduleVersion}:${day}:game-2:${plan.metricId}:${plan.pickCount}`,
     contentVersion: FOOTBALL_HIT_THE_NUMBER_DAILY_CONTENT_VERSION,
     scoringVersion: OFFICIAL_SCORE_CONTRACT_VERSION,
     publicSetup: {
