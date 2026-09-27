@@ -82,8 +82,7 @@ function CompactMatchupHeader({
   return (
     <header className="football-matchup-breakdown-sheet__header is-compact" style={style}>
       <div className="football-matchup-breakdown-feature">
-        <p className="eyebrow">THE HQ · MATCHUP BREAKDOWN</p>
-        <h2 id="football-matchup-breakdown-title">{breakdown.title}</h2>
+        <p className="eyebrow">THE HQ’S CFB GAME OF THE WEEK</p>
         <div className="football-matchup-breakdown-feature__teams">
           <Team team={away} identity={awayIdentity} side="away" />
           <b className="football-matchup-breakdown-feature__at">AT</b>
@@ -158,7 +157,8 @@ export function FootballMatchupBreakdowns({
         className="football-matchup-breakdown-sheet"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="football-matchup-breakdown-title"
+        aria-label={active.compact ? active.title : undefined}
+        aria-labelledby={active.compact ? undefined : "football-matchup-breakdown-title"}
         onMouseDown={(event) => event.stopPropagation()}
       >
         {active.compact ? (
