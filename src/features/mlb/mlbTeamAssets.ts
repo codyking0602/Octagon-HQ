@@ -92,5 +92,5 @@ export const MLB_OWNER_PLAYER_SPOTLIGHT = {
   ],
   meta: "2026 REGULAR SEASON · 40/40 CLUB",
   profileUrl: "https://www.baseball-reference.com/players/c/crowape01.shtml",
-  highlightUrl: "https://youtu.be/08zDHKWWmrk?is=LcAtx-G4XUoBvf4u",
+  highlightUrl: "https://youtu.be/08zDHKWWmrk",
 } as const;
