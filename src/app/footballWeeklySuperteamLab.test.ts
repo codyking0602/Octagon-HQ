@@ -87,7 +87,7 @@ describe("Weekly Auction owner playthrough lab", () => {
     expect(gate).toContain("YOU CAN BID MORE THAN YOUR BANKROLL");
     expect(gate).toContain("MAX SPEND TODAY");
     expect(gate).toContain("If everything can’t fit, your ranking decides which claims stay alive.");
-    expect(gate).toContain("$20 left · P1 $15 · P2 $12 · P3 $5 = $32 in submitted bids");
+    expect(gate).toContain("Max spend today $20 · P1 $11 · P2 $9 · P3 $8 = $28 in submitted bids");
     expect(styles).toContain("transform: translate(1px, 1px)");
     expect(styles).toContain("grid-template-columns: minmax(0,1fr) auto");
   });
