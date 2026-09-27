@@ -45,7 +45,7 @@ type PlayLandingGameLibraryProps = {
   onNavigate: (route: string) => void;
   footer?: ReactNode;
   familyFeudVisible?: boolean;
-  factCheckVisible?: boolean;
+  barTriviaVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
@@ -53,13 +53,13 @@ export function PlayLandingGameLibrary({
   onNavigate,
   footer,
   familyFeudVisible = false,
-  factCheckVisible = false,
+  barTriviaVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
   const familyFeudRoute = sport === "ufc" ? "/play/sports-feud" : "/football/sports-feud";
-  const factCheck = factCheckVisible && sport === "football"
-    ? playGameDefinition("fact-check", "football")
+  const barTrivia = barTriviaVisible
+    ? playGameDefinition("bar-trivia", sport)
     : null;
 
   return (
@@ -70,20 +70,20 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length + (familyFeudVisible ? 1 : 0) + (factCheckVisible ? 1 : 0)} LIVE</span>
+        <span>{games.length + (familyFeudVisible ? 1 : 0) + (barTriviaVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
-        {factCheck ? (
+        {barTrivia ? (
           <button
             className="play-landing-game-card"
             type="button"
-            onClick={() => onNavigate(factCheck.route)}
+            onClick={() => onNavigate(barTrivia.route)}
           >
-            <span className="play-landing-game-card__icon" aria-hidden="true">{factCheck.icon}</span>
+            <span className="play-landing-game-card__icon" aria-hidden="true">{barTrivia.icon}</span>
             <span className="play-landing-game-card__status">CASUAL · OWNER ONLY</span>
-            <strong>{factCheck.title}</strong>
-            <small>{factCheck.description}</small>
+            <strong>{barTrivia.title}</strong>
+            <small>{barTrivia.description}</small>
             <em>PLAY →</em>
           </button>
         ) : null}

@@ -43,7 +43,7 @@ const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
 const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
-const FootballFactCheckPreviewPage = lazy(() => import("../features/play/FootballFactCheckPreviewPage"));
+const BarTriviaCasualPage = lazy(() => import("../features/play/BarTriviaCasualPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -80,6 +80,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/millionaire", element: <TodayChallengeGameRoute gameType="millionaire" casual={<MillionaireCasualPage scope="ufc" />} /> },
       { path: "play/sports-feud/qa-replay", element: <FamilyFeudPrototypePage scope="ufc" qaReplayDay="2026-09-24" /> },
       { path: "play/sports-feud", element: <TodayChallengeGameRoute gameType="sports_feud" casual={<FamilyFeudPrototypePage scope="ufc" />} /> },
+      { path: "play/bar-trivia", element: <OwnerOnlyRoute fallback="/play"><BarTriviaCasualPage scope="ufc" /></OwnerOnlyRoute> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
@@ -105,7 +106,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/who-am-i", element: <FootballWhoAmIPage /> },
       { path: "football/millionaire", element: <MillionaireCasualPage scope="football" /> },
       { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
-      { path: "football/fact-check", element: <OwnerOnlyRoute fallback="/football"><FootballFactCheckPreviewPage /></OwnerOnlyRoute> },
+      { path: "football/bar-trivia", element: <OwnerOnlyRoute fallback="/football"><BarTriviaCasualPage scope="football" /></OwnerOnlyRoute> },
       { path: "picks", element: <PicksPage /> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
