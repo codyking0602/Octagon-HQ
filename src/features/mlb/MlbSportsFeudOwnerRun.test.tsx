@@ -101,10 +101,10 @@ describe("MLB Sports Feud owner run", () => {
     });
   });
 
-  it("keeps the approved October 12 production slot separate from the burned owner pack", () => {
+  it("keeps the pulled-forward October 9 production slot separate from the burned owner pack", () => {
     const schedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 
-    expect(schedule).toMatch(/date: "2026-10-12",[\s\S]*?game_type: "sports_feud",[\s\S]*?ready: true/);
+    expect(schedule).toMatch(/date: "2026-10-09",[\s\S]*?game_type: "sports_feud",[\s\S]*?ready: true/);
     expect(schedule).not.toContain("mlb-sports-feud-owner-run-v1");
   });
 });
