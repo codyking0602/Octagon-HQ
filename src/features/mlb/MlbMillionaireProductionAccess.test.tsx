@@ -18,8 +18,8 @@ afterEach(() => cleanup());
 
 describe("MLB Millionaire production access", () => {
   it.each([
-    ["October 3", MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03],
-    ["October 18", MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18],
+    ["October 1", MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_03],
+    ["October 15", MLB_MILLIONAIRE_PRODUCTION_RUN_2026_10_18],
   ] as const)("lets a signed-in non-owner play the %s production run without opening Casual access", (_label, run) => {
     render(
       <MemoryRouter>
