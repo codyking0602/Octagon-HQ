@@ -131,117 +131,7 @@ begin
                   'target',
                     case
                       when (setup.private_setup_evidence -> 'rounds' -> (ordinality - 1)::integer
-                        -> 'private_setup_evidence' ->> 'target') ~ '^[0-9]+
-            'rounds',
-            coalesce((
-              select jsonb_agg(
-                jsonb_strip_nulls(jsonb_build_object(
-                  'outcome', round_row ->> 'outcome',
-                  'revealed_count', round_row -> 'revealed_count',
-                  'natural_guesses', case
-                    when jsonb_typeof(round_row -> 'natural_guesses') = 'array'
-                      then round_row -> 'natural_guesses'
-                    else '[]'::jsonb
-                  end,
-                  'recovery_choices', case
-                    when jsonb_typeof(round_row -> 'recovery_choices') = 'array'
-                      then round_row -> 'recovery_choices'
-                    else '[]'::jsonb
-                  end,
-                  'recovery_guesses', case
-                    when jsonb_typeof(round_row -> 'recovery_guesses') = 'array'
-                      then round_row -> 'recovery_guesses'
-                    else '[]'::jsonb
-                  end
-                ))
-                order by ordinality
-              )
-              from jsonb_array_elements(
-                case
-                  when jsonb_typeof(progress.submission_state #> '{final_submission,rounds}') = 'array'
-                    then progress.submission_state #> '{final_submission,rounds}'
-                  when jsonb_typeof(progress.submission_state -> 'final_submission') = 'object'
-                    then jsonb_build_array(progress.submission_state -> 'final_submission')
-                  else '[]'::jsonb
-                end
-              ) with ordinality as who_rows(round_row, ordinality)
-            ), '[]'::jsonb)
-          )
-        else '{}'::jsonb
-      end as result_detail,
-      rank() over (
-        order by
-          history.normalized_score desc,
-          case when history.game_type = 'hit_the_number'
-            then private.daily_challenge_hit_number_distance(
-              history.game_type,
-              history.public_result
-            )
-            else null
-          end asc nulls last
-      )::integer as score_rank
-    from private.daily_challenge_history history
-    join private.daily_challenge_schedule_versions schedule
-      on schedule.version = history.schedule_version
-    join private.daily_challenges daily
-      on daily.id = history.daily_challenge_id
-    join private.daily_challenge_setups setup
-      on setup.id = daily.setup_id
-    join public.profiles profile
-      on profile.id = history.profile_id
-    left join public.profile_preferences preference
-      on preference.profile_id = history.profile_id
-    left join private.daily_challenge_progress progress
-      on progress.daily_challenge_id = history.daily_challenge_id
-     and progress.profile_id = history.profile_id
-    where history.central_day = p_day
-      and history.schedule_version = p_schedule_version
-      and schedule.sport = p_sport
-  )
-  select
-    count(*)::integer,
-    coalesce(
-      jsonb_agg(
-        jsonb_build_object(
-          'rank', ranked.score_rank,
-          'profile_id', ranked.profile_id,
-          'display_name', ranked.display_name,
-          'initials', ranked.initials,
-          'avatar_photo_data', ranked.avatar_photo_data,
-          'game_type', ranked.game_type,
-          'native_score', ranked.native_score,
-          'normalized_score', ranked.normalized_score,
-          'completed_at', ranked.completed_at,
-          'public_result', ranked.public_result,
-          'progress_revision', ranked.progress_revision,
-          'public_state', ranked.public_state,
-          'result_detail', ranked.result_detail,
-          'official_score', case
-            when ranked.game_type = 'find_leader' then ranked.native_score
-            else ranked.normalized_score
-          end,
-          'is_current_user', ranked.profile_id = v_profile
-        )
-        order by ranked.score_rank, ranked.display_name
-      ),
-      '[]'::jsonb
-    )
-  into v_count, v_entries
-  from ranked;
-
-  return jsonb_build_object(
-    'unlocked', true,
-    'player_count', coalesce(v_count, 0),
-    'entries', coalesce(v_entries, '[]'::jsonb)
-  );
-end;
-$$;
-
-revoke all on function public.get_daily_challenge_leaderboard(date, text, text)
-  from public, anon;
-grant execute on function public.get_daily_challenge_leaderboard(date, text, text)
-  to authenticated;
-
+                        -> 'private_setup_evidence' ->> 'target') ~ '^[0-9]+$'
                       then (setup.private_setup_evidence -> 'rounds' -> (ordinality - 1)::integer
                         -> 'private_setup_evidence' ->> 'target')::integer
                       else null
@@ -317,6 +207,10 @@ grant execute on function public.get_daily_challenge_leaderboard(date, text, tex
     from private.daily_challenge_history history
     join private.daily_challenge_schedule_versions schedule
       on schedule.version = history.schedule_version
+    join private.daily_challenges daily
+      on daily.id = history.daily_challenge_id
+    join private.daily_challenge_setups setup
+      on setup.id = daily.setup_id
     join public.profiles profile
       on profile.id = history.profile_id
     left join public.profile_preferences preference
