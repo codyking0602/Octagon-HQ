@@ -46,7 +46,7 @@ export function FootballWeeklySuperteamRulesCover({
         <p><b>Ties rotate daily.</b> Today’s tie order is shown on the board.</p>
         <div className="football-weekly-superteam__rules-example">
           <b>EXAMPLE</b>
-          <span>$20 left · P1 $15 · P2 $12 · P3 $5 = $32 in submitted bids. That is allowed. Your ranking decides which wins can actually fit.</span>
+          <span>Max spend today $20 · P1 $11 · P2 $9 · P3 $8 = $28 in submitted bids. That is allowed. Your ranking decides which claims stay alive.</span>
         </div>
         <p><b>Finish the week.</b> Boards scale with the field, late players can join through Day 4, and any empty Day 7 spots are autofilled for $1.</p>
         <p><b>Grades stay hidden.</b> Each candidate is graded on the school + season shown, and all 7 roster spots count equally.</p>
