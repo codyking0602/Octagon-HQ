@@ -404,6 +404,8 @@ declare
   v_wr boolean;
   v_flex boolean;
   v_direct text;
+  v_available integer;
+  v_direct_needed integer;
 begin
   select group_key into v_group
   from private.cfb_superteam_v1_authority
@@ -428,11 +430,61 @@ begin
 
   if v_group='RB' then
     if not v_rb then return 'RB'; end if;
-    if not v_flex then return 'Flex'; end if;
+    if not v_flex then
+      select count(*)::integer into v_available
+      from private.football_weekly_auction_board board
+      join private.cfb_superteam_v1_authority authority
+        on authority.item_reference=board.season_reference
+      left join private.football_weekly_auction_awards award
+        on award.week_start=board.week_start
+       and award.day_index=board.day_index
+       and award.slot=board.slot
+      where board.week_start=p_week_start
+        and authority.group_key='RB'
+        and award.profile_id is null;
+
+      select count(*)::integer into v_direct_needed
+      from private.football_weekly_auction_participants participant
+      where participant.week_start=p_week_start
+        and not exists(
+          select 1
+          from private.football_weekly_auction_awards award
+          where award.week_start=p_week_start
+            and award.profile_id=participant.profile_id
+            and award.roster_slot='RB'
+        );
+
+      if v_available>v_direct_needed then return 'Flex'; end if;
+    end if;
     return null;
   elsif v_group='WR' then
     if not v_wr then return 'WR'; end if;
-    if not v_flex then return 'Flex'; end if;
+    if not v_flex then
+      select count(*)::integer into v_available
+      from private.football_weekly_auction_board board
+      join private.cfb_superteam_v1_authority authority
+        on authority.item_reference=board.season_reference
+      left join private.football_weekly_auction_awards award
+        on award.week_start=board.week_start
+       and award.day_index=board.day_index
+       and award.slot=board.slot
+      where board.week_start=p_week_start
+        and authority.group_key='WR'
+        and award.profile_id is null;
+
+      select count(*)::integer into v_direct_needed
+      from private.football_weekly_auction_participants participant
+      where participant.week_start=p_week_start
+        and not exists(
+          select 1
+          from private.football_weekly_auction_awards award
+          where award.week_start=p_week_start
+            and award.profile_id=participant.profile_id
+            and award.roster_slot='WR'
+        );
+
+      if v_available>v_direct_needed then return 'Flex'; end if;
+    end if;
     return null;
   elsif v_group='TE' then
     if not v_flex then return 'Flex'; end if;
@@ -626,13 +678,19 @@ declare
   v_candidate record;
   v_spent integer;
 begin
-  for v_participant in
-    select participant.profile_id
-    from private.football_weekly_auction_participants participant
-    where participant.week_start=p_week_start
-    order by participant.profile_id
+  -- Fill scarce/direct positions across the whole field before Flex so one
+  -- player's fallback can never consume another player's only completion path.
+  foreach v_roster_slot in array array[
+    'QB','RB','WR','Front Seven','Secondary','Head Coach','Flex'
+  ]::text[]
   loop
-    foreach v_roster_slot in array array['QB','RB','WR','Flex','Front Seven','Secondary','Head Coach']::text[]
+    for v_participant in
+      select participant.profile_id
+      from private.football_weekly_auction_participants participant
+      where participant.week_start=p_week_start
+      order by private.football_weekly_superteam_tie_rank(
+        p_week_start,8,participant.profile_id
+      ),participant.profile_id
     loop
       if exists(
         select 1 from private.football_weekly_auction_awards award
@@ -640,6 +698,8 @@ begin
           and award.profile_id=v_participant.profile_id
           and award.roster_slot=v_roster_slot
       ) then continue; end if;
+
+      v_candidate:=null;
 
       select
         award.day_index,award.slot,authority.item_reference
