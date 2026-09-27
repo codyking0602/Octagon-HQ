@@ -20,6 +20,7 @@ export interface FactCheckItem {
   recency: FactCheckRecency;
   activeFrom?: string;
   expiresAfter?: string;
+  sourceId?: string;
 }
 
 export interface FactCheckAnswerResult {
@@ -47,6 +48,8 @@ export interface FactCheckTransition {
 
 export const FACT_CHECK_RUN_SIZE = 10;
 export const FACT_CHECK_LOCKS_PER_RUN = 2;
+export const FACT_CHECK_WEEKLY_TARGET = 2;
+export const FACT_CHECK_RECENT_MEMORY_SIZE = 40;
 export const FACT_CHECK_DIFFICULTY_PLAN = [
   1, 1, 1, 1,
   2, 2, 2,
@@ -54,10 +57,23 @@ export const FACT_CHECK_DIFFICULTY_PLAN = [
   4,
 ] as const satisfies readonly FactCheckDifficulty[];
 
+const FACT_CHECK_WEEKLY_SLOT_HINTS = new Set([1, 5]);
+
 export function isFactCheckItemActive(item: FactCheckItem, onDate: string) {
   if (item.activeFrom && onDate < item.activeFrom) return false;
   if (item.expiresAfter && onDate > item.expiresAfter) return false;
   return true;
+}
+
+export function factCheckDateKey(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
 function pickCandidate(
@@ -70,15 +86,51 @@ function pickCandidate(
   return leastUsed[Math.floor(random() * leastUsed.length)] ?? leastUsed[0]!;
 }
 
+function candidatesForSlot(
+  active: readonly FactCheckItem[],
+  used: ReadonlySet<string>,
+  recent: ReadonlySet<string>,
+  difficulty: FactCheckDifficulty,
+  preferWeekly: boolean,
+  weeklyTargetMet: boolean,
+) {
+  const unused = active.filter((item) => !used.has(item.id));
+  const exact = unused.filter((item) => item.difficulty === difficulty);
+  const nearest = exact.length
+    ? exact
+    : unused
+        .slice()
+        .sort((a, b) => Math.abs(a.difficulty - difficulty) - Math.abs(b.difficulty - difficulty));
+
+  let scoped = nearest;
+  if (preferWeekly) {
+    const weekly = nearest.filter((item) => item.recency === "weekly");
+    if (weekly.length) scoped = weekly;
+  } else if (weeklyTargetMet) {
+    const evergreen = nearest.filter((item) => item.recency === "evergreen");
+    if (evergreen.length) scoped = evergreen;
+  }
+
+  const fresh = scoped.filter((item) => !recent.has(item.id));
+  return fresh.length ? fresh : scoped;
+}
+
 export function buildFactCheckRun(
   items: readonly FactCheckItem[],
   options: {
     onDate?: string;
     random?: () => number;
+    recentItemIds?: readonly string[];
+    weeklyTarget?: number;
   } = {},
 ) {
-  const onDate = options.onDate ?? new Date().toISOString().slice(0, 10);
+  const onDate = options.onDate ?? factCheckDateKey();
   const random = options.random ?? Math.random;
+  const recent = new Set(options.recentItemIds ?? []);
+  const weeklyTarget = Math.max(0, Math.min(
+    FACT_CHECK_RUN_SIZE,
+    options.weeklyTarget ?? FACT_CHECK_WEEKLY_TARGET,
+  ));
   const active = items.filter((item) => isFactCheckItemActive(item, onDate));
 
   if (active.length < FACT_CHECK_RUN_SIZE) {
@@ -88,19 +140,28 @@ export function buildFactCheckRun(
   const selected: FactCheckItem[] = [];
   const used = new Set<string>();
   const formatCounts = new Map<FactCheckFormat, number>();
+  let weeklySelected = 0;
 
-  FACT_CHECK_DIFFICULTY_PLAN.forEach((difficulty) => {
-    const unused = active.filter((item) => !used.has(item.id));
-    const exact = unused.filter((item) => item.difficulty === difficulty);
-    const candidates = exact.length
-      ? exact
-      : unused
-          .slice()
-          .sort((a, b) => Math.abs(a.difficulty - difficulty) - Math.abs(b.difficulty - difficulty));
+  FACT_CHECK_DIFFICULTY_PLAN.forEach((difficulty, index) => {
+    const weeklyTargetMet = weeklySelected >= weeklyTarget;
+    const preferWeekly = !weeklyTargetMet && FACT_CHECK_WEEKLY_SLOT_HINTS.has(index);
+    const candidates = candidatesForSlot(
+      active,
+      used,
+      recent,
+      difficulty,
+      preferWeekly,
+      weeklyTargetMet,
+    );
+
+    if (!candidates.length) {
+      throw new Error(`Fact Check could not fill question ${index + 1}.`);
+    }
 
     const chosen = pickCandidate(candidates, formatCounts, random);
     selected.push(chosen);
     used.add(chosen.id);
+    if (chosen.recency === "weekly") weeklySelected += 1;
     formatCounts.set(chosen.format, (formatCounts.get(chosen.format) ?? 0) + 1);
   });
 
