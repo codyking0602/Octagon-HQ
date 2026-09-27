@@ -3866,3 +3866,20 @@
     padding: 1.2rem;
   }
 }
+
+
+/* MLB owner-review polish: improve dark-surface Yankees contrast and spotlight profile affordance. */
+.mlb-yankees-light img {
+  filter: brightness(0) invert(1);
+}
+
+.football-player-spotlight__copy h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.football-player-spotlight__copy h3 a:hover,
+.football-player-spotlight__copy h3 a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: .14em;
+}
