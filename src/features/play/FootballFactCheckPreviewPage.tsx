@@ -109,7 +109,7 @@ export default function FootballFactCheckPreviewPage() {
 
       {scene === "intro" ? (
         <section className="football-fact-check__intro">
-          <p className="football-fact-check__eyebrow">OWNER LAB · FOOTBALL</p>
+          <p className="football-fact-check__eyebrow">CASUAL · FOOTBALL</p>
           <h1>FACT CHECK</h1>
           <p className="football-fact-check__lede">
             Ten quick calls. The questions get tougher as you go.
@@ -211,7 +211,7 @@ export default function FootballFactCheckPreviewPage() {
 
       {scene === "result" ? (
         <section className="football-fact-check__result">
-          <p className="football-fact-check__eyebrow">OWNER PLAYTEST COMPLETE</p>
+          <p className="football-fact-check__eyebrow">CASUAL COMPLETE</p>
           <h1>{state.score}</h1>
           <p className="football-fact-check__result-label">TEST SCORE</p>
 
@@ -222,7 +222,7 @@ export default function FootballFactCheckPreviewPage() {
           </div>
 
           <p className="football-fact-check__result-note">
-            This is a local owner preview. It does not write a Daily result or leaderboard score.
+            This Casual game is owner-only for now. It does not write a Daily result, affect a streak, or post to a leaderboard.
           </p>
 
           <button className="football-fact-check__primary" type="button" onClick={start}>
