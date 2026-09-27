@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
@@ -533,7 +533,7 @@ export function FootballTodayChallengeResult({
   onExit?: () => void;
 }) {
   const advance = (_action: JsonRecord) => {};
-  let result: React.ReactNode = null;
+  let result: ReactNode = null;
 
   switch (projection.gameType) {
     case "find_leader":
