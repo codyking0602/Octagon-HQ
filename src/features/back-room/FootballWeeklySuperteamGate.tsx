@@ -308,12 +308,21 @@ export function FootballWeeklySuperteamFinalResult({
 }
 
 export function FootballWeeklySuperteamGate({
-  state, busy, error, forceBoard = false, onSubmit, onContinue,
+  state,
+  busy,
+  error,
+  forceBoard = false,
+  showContinueAction = true,
+  submittedNote = "Edit until midnight CT.",
+  onSubmit,
+  onContinue,
 }: {
   state: FootballWeeklySuperteamState;
   busy: boolean;
   error: string | null;
   forceBoard?: boolean;
+  showContinueAction?: boolean;
+  submittedNote?: string;
   onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
   onContinue: () => void;
 }) {
@@ -403,11 +412,13 @@ export function FootballWeeklySuperteamGate({
         {error ? <p className="football-weekly-superteam__error">{error}</p> : null}
         {submitted ? (
           <div className="football-weekly-superteam__submitted">
-            <div><strong>BIDS SUBMITTED</strong><span>Edit until midnight CT.</span></div>
+            <div><strong>BIDS SUBMITTED</strong><span>{submittedNote}</span></div>
             <button type="button" disabled={busy} onClick={() => setEditing(true)}>EDIT BIDS</button>
-            <button className="football-weekly-superteam__primary" type="button" disabled={busy} onClick={onContinue}>
-              CONTINUE TO DAILY CHALLENGE
-            </button>
+            {showContinueAction ? (
+              <button className="football-weekly-superteam__primary" type="button" disabled={busy} onClick={onContinue}>
+                CONTINUE TO DAILY CHALLENGE
+              </button>
+            ) : null}
           </div>
         ) : (
           <button
