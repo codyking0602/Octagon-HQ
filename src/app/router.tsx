@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, type RouteObject } from "react-router-do
 import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 import { MlbGate } from "../features/mlb/MlbGate";
+import { OwnerOnlyRoute } from "../features/identity/OwnerOnlyRoute";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ShanesWatchlistPage = lazy(() => import("../features/home/ShanesWatchlistPage"));
@@ -42,6 +43,7 @@ const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
 const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
+const FootballFactCheckPreviewPage = lazy(() => import("../features/play/FootballFactCheckPreviewPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -103,6 +105,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/who-am-i", element: <FootballWhoAmIPage /> },
       { path: "football/millionaire", element: <MillionaireCasualPage scope="football" /> },
       { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
+      { path: "football/fact-check", element: <OwnerOnlyRoute fallback="/football"><FootballFactCheckPreviewPage /></OwnerOnlyRoute> },
       { path: "picks", element: <PicksPage /> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
