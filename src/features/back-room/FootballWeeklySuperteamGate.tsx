@@ -12,6 +12,7 @@ import {
   footballWeeklySuperteamIdentity,
   footballWeeklySuperteamStyle,
 } from "./footballWeeklySuperteamVisualIdentity";
+import { FootballWeeklySuperteamTableDialog } from "./FootballWeeklySuperteamTableDialog";
 
 const ROSTER_SLOTS: readonly FootballWeeklySuperteamRosterSlot[] = [
   "QB", "RB", "WR", "Flex", "Front Seven", "Secondary", "Head Coach",
@@ -48,9 +49,7 @@ export function FootballWeeklySuperteamRulesCover({
           <b>EXAMPLE</b>
           <span>Max spend today $20 · P1 $11 · P2 $9 · P3 $8 = $28 in submitted bids. That is allowed. Your ranking decides which claims stay alive.</span>
         </div>
-        <p><b>Finish the week.</b> Boards scale with the field, late players can join through Day 4, and any empty Day 7 spots are autofilled for $1.</p>
-        <p><b>Grades stay hidden.</b> Each candidate is graded on the school + season shown, and all 7 roster spots count equally.</p>
-      </div>
+       </div>
       <button className="football-weekly-superteam__primary" type="button" onClick={onStart}>
         {startLabel}
       </button>
@@ -148,23 +147,58 @@ function RosterStrip({ collection }: { collection: FootballWeeklySuperteamState[
 }
 
 function CandidateCard({
-  card, bid, disabled, eligible, onAmount, onPriority, priorityCount,
+  card,
+  bid,
+  disabled,
+  eligible,
+  dragging,
+  onAmount,
+  onPriority,
+  onDragStart,
+  onDragMove,
+  onDragEnd,
+  priorityCount,
 }: {
   card: FootballWeeklySuperteamCard;
   bid: FootballWeeklySuperteamBid;
   disabled: boolean;
   eligible: boolean;
+  dragging: boolean;
   onAmount: (amount: number) => void;
   onPriority: (priority: number) => void;
+  onDragStart: () => void;
+  onDragMove: (clientY: number) => void;
+  onDragEnd: () => void;
   priorityCount: number;
 }) {
   const identity = footballWeeklySuperteamIdentity(card.school);
   return (
     <article
-      className={"football-weekly-superteam__candidate" + (!eligible ? " is-locked" : "")}
+      className={"football-weekly-superteam__candidate" + (!eligible ? " is-locked" : "") + (dragging ? " is-dragging" : "")}
       style={footballWeeklySuperteamStyle(identity)}
+      data-superteam-slot={card.slot}
     >
-      <div className="football-weekly-superteam__candidate-main">
+      <div
+        className="football-weekly-superteam__candidate-main"
+        onPointerDown={(event) => {
+          if (disabled) return;
+          event.preventDefault();
+          event.currentTarget.setPointerCapture(event.pointerId);
+          onDragStart();
+        }}
+        onPointerMove={(event) => {
+          if (!disabled && event.buttons === 1) onDragMove(event.clientY);
+        }}
+        onPointerUp={(event) => {
+          if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+            event.currentTarget.releasePointerCapture(event.pointerId);
+          }
+          onDragEnd();
+        }}
+        onPointerCancel={onDragEnd}
+        aria-label={"Hold and drag " + card.display_name + " to reorder claim priority"}
+      >
+        <span className="football-weekly-superteam__drag-grip" aria-hidden="true">⋮⋮</span>
         <TeamMark school={card.school} />
         <div>
           <small>{card.group_key.toUpperCase()} · {card.eligible_slots.join(" / ").toUpperCase()}</small>
@@ -330,6 +364,8 @@ export function FootballWeeklySuperteamGate({
   forceBoard = false,
   showContinueAction = true,
   submittedNote = "Edit until midnight CT.",
+  tableMode = "live",
+  tableSeatIndex = 1,
   onSubmit,
   onContinue,
 }: {
@@ -339,6 +375,8 @@ export function FootballWeeklySuperteamGate({
   forceBoard?: boolean;
   showContinueAction?: boolean;
   submittedNote?: string;
+  tableMode?: "live" | "lab" | "hidden";
+  tableSeatIndex?: number;
   onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
   onContinue: () => void;
 }) {
@@ -346,6 +384,8 @@ export function FootballWeeklySuperteamGate({
   const [editing, setEditing] = useState(!state.submitted_today);
   const initialBids = useMemo(() => initialBidMap(state), [state]);
   const [bids, setBids] = useState<SuperteamBidMap>(initialBids);
+  const [auctionTableOpen, setAuctionTableOpen] = useState(false);
+  const [draggingSlot, setDraggingSlot] = useState<number | null>(null);
 
   useEffect(() => {
     setBids(initialBids);
@@ -362,6 +402,9 @@ export function FootballWeeklySuperteamGate({
   const highestBid = Math.max(0, ...Object.values(bids).map((bid) => bid.amount));
   const singleWinCap = Math.max(0, state.bankroll - Math.max(openSlots - 1, 0));
   const legal = exposure <= state.max_commit && highestBid <= singleWinCap;
+  const orderedCards = [...state.teams].sort(
+    (left, right) => (bids[left.slot]?.priority ?? left.slot) - (bids[right.slot]?.priority ?? right.slot),
+  );
 
   function changeAmount(slot: number, amount: number) {
     setBids((current) => ({ ...current, [slot]: { ...current[slot]!, amount } }));
@@ -380,10 +423,40 @@ export function FootballWeeklySuperteamGate({
     });
   }
 
+  function moveDraggedClaim(clientY: number) {
+    if (draggingSlot === null) return;
+    const rows = Array.from(document.querySelectorAll<HTMLElement>("[data-superteam-slot]"));
+    const target = rows
+      .map((row) => ({
+        row,
+        distance: Math.abs((row.getBoundingClientRect().top + row.getBoundingClientRect().bottom) / 2 - clientY),
+      }))
+      .sort((left, right) => left.distance - right.distance)[0]?.row;
+    const targetSlot = Number(target?.dataset.superteamSlot ?? 0);
+    if (!targetSlot || targetSlot === draggingSlot) return;
+    const targetPriority = bids[targetSlot]?.priority;
+    if (targetPriority != null) changePriority(draggingSlot, targetPriority);
+  }
+
   return (
     <div className="football-weekly-superteam">
+      {auctionTableOpen && tableMode !== "hidden" ? (
+        <FootballWeeklySuperteamTableDialog
+          mode={tableMode}
+          seatIndex={tableSeatIndex}
+          onClose={() => setAuctionTableOpen(false)}
+        />
+      ) : null}
       <div className="football-weekly-superteam__status">
-        <div><small>ROSTER</small><strong>{state.collection.length}/7</strong></div>
+        {tableMode === "hidden" ? (
+          <div><small>ROSTER</small><strong>{state.collection.length}/7</strong></div>
+        ) : (
+          <button type="button" onClick={() => setAuctionTableOpen(true)} aria-haspopup="dialog">
+            <small>AUCTION TABLE</small>
+            <strong>{state.collection.length}/7</strong>
+            <span>YOUR ROSTER · VIEW ›</span>
+          </button>
+        )}
         <div><small>BANKROLL</small><strong>{"$"}{state.bankroll}</strong></div>
         <div><small>MAX SPEND TODAY</small><strong>{"$"}{state.max_commit}</strong><span>UP TO 2 WINS</span></div>
       </div>
@@ -401,22 +474,26 @@ export function FootballWeeklySuperteamGate({
             : "Preview — field can grow through Day 4"}</span>
         </div>
         <div className="football-weekly-superteam__candidate-stack">
-          {state.teams.map((card) => (
+          {orderedCards.map((card) => (
             <CandidateCard
               key={card.slot}
               card={card}
               bid={bids[card.slot]!}
               disabled={submitted || busy}
               eligible={candidateEligible(card, state.collection)}
+              dragging={draggingSlot === card.slot}
               onAmount={(amount) => changeAmount(card.slot, amount)}
               onPriority={(priority) => changePriority(card.slot, priority)}
+              onDragStart={() => setDraggingSlot(card.slot)}
+              onDragMove={moveDraggedClaim}
+              onDragEnd={() => setDraggingSlot(null)}
               priorityCount={state.teams.length}
             />
           ))}
         </div>
         <div className="football-weekly-superteam__priority-note">
           <strong>CLAIM PRIORITY</strong>
-          <span>Rank every bid. P1 is your first choice. If everything can’t fit, your ranking decides which claims stay alive.</span>
+          <span>Hold + drag a player card to reorder claims. P1 is your first choice. If everything can’t fit, your ranking decides which claims stay alive.</span>
         </div>
         {!legal ? (
           <p className="football-weekly-superteam__error">
