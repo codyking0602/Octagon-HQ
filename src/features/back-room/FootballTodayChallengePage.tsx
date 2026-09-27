@@ -15,6 +15,7 @@ import {
 } from "../play/useTodayChallengeRuntime";
 import {
   createFootballWeeklyAuctionRepository,
+  type FootballWeeklyAuctionBidPayload,
   type FootballWeeklyAuctionState,
 } from "../play/footballWeeklyAuctionRepository";
 import {
@@ -612,7 +613,7 @@ export default function FootballTodayChallengePage() {
     return () => { active = false; };
   }, [editWeeklyAuction, signedIn, weeklyRepository]);
 
-  async function submitWeeklyBids(bids: Record<number, number>) {
+  async function submitWeeklyBids(bids: FootballWeeklyAuctionBidPayload) {
     if (!weeklyRepository || weeklyBusy) return;
     setWeeklyBusy(true);
     setWeeklyError(null);
