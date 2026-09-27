@@ -13,12 +13,33 @@ function dayAt(index: number) {
   return new Date(Date.UTC(2027, 4, index + 1)).toISOString().slice(0, 10);
 }
 
+function hitNumberChildSetups(setup: ReturnType<typeof buildOfficialDailySetup>) {
+  const publicRounds = Array.isArray(setup.publicSetup.rounds)
+    ? setup.publicSetup.rounds.filter(
+        (row): row is Record<string, unknown> => Boolean(row) && typeof row === "object" && !Array.isArray(row),
+      )
+    : [setup.publicSetup];
+  const revealRounds = Array.isArray(setup.revealSetup.rounds)
+    ? setup.revealSetup.rounds
+    : [setup.revealSetup];
+
+  return publicRounds.map((publicSetup, index) => ({
+    ...setup,
+    publicSetup,
+    revealSetup: revealRounds[index] && typeof revealRounds[index] === "object" && !Array.isArray(revealRounds[index])
+      ? revealRounds[index] as Record<string, unknown>
+      : {},
+  }));
+}
+
 function oneFromEachSetup() {
   for (let index = 0; index < 180; index += 1) {
     const day = dayAt(index);
-    const setup = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
-    const format = setup.publicSetup.format as Record<string, unknown> | undefined;
-    if (format?.formatId === "one-from-each") return { day, setup };
+    const publication = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
+    for (const setup of hitNumberChildSetups(publication)) {
+      const format = setup.publicSetup.format as Record<string, unknown> | undefined;
+      if (format?.formatId === "one-from-each") return { day, setup };
+    }
   }
   throw new Error("No deterministic One From Each Daily seed found.");
 }
@@ -26,8 +47,10 @@ function oneFromEachSetup() {
 function randomPoolSetup() {
   for (let index = 0; index < 180; index += 1) {
     const day = dayAt(index);
-    const setup = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
-    if (setup.publicSetup.boardType === "random-pool") return { day, setup };
+    const publication = buildOfficialDailySetup("hit_the_number", day, scheduleVersion);
+    for (const setup of hitNumberChildSetups(publication)) {
+      if (setup.publicSetup.boardType === "random-pool") return { day, setup };
+    }
   }
   throw new Error("No deterministic Random Pool Daily seed found.");
 }
