@@ -295,20 +295,32 @@ function twoGameSeriesState(context: OfficialDailyRuntimeContext & JsonRecord) {
   if (!Number.isInteger(index) || index < 0 || index > 1) {
     throw new Error("Two-game Daily active game is invalid.");
   }
-  const scores = Array.isArray(context.publicState.round_scores)
+  const attempt = asRecord(context.official_attempt);
+  const finalSeries = asRecord(asRecord(attempt?.public_result)?.daily_series);
+  const storedScores = Array.isArray(context.publicState.round_scores)
     ? context.publicState.round_scores.map(Number)
     : [];
+  const finalScores = Array.isArray(finalSeries?.round_scores)
+    ? finalSeries.round_scores.map(Number)
+    : [];
+  const scores = finalScores.length ? finalScores : storedScores;
+  const finalAverage = Number(finalSeries?.average_score);
   return {
     format_version: DAILY_TWO_GAME_FORMAT_VERSION,
     game_index: index,
     game_number: index + 1,
     game_count: 2,
     awaiting_next: context.publicState.awaiting_next === true,
-    complete: context.publicState.complete === true,
+    complete: context.publicState.complete === true || Boolean(attempt),
     round_scores: scores,
-    average_score: context.publicState.complete === true
-      ? Number(context.publicState.score ?? 0)
-      : null,
+    average_score: Number.isFinite(finalAverage)
+      ? finalAverage
+      : context.publicState.complete === true
+        ? Number(context.publicState.score ?? 0)
+        : null,
+    rounds: Array.isArray(finalSeries?.rounds)
+      ? finalSeries.rounds
+      : context.publicState.completed_rounds ?? [],
   };
 }
 
@@ -648,7 +660,24 @@ function publicPayload(context: OfficialDailyRuntimeContext & JsonRecord) {
       reveal_setup: revealAllowed
         ? requiredRecord(child.reveal_setup, "Two-game Daily child reveal setup")
         : null,
-      official_attempt: attempt,
+      official_attempt: (() => {
+        if (!attempt) return null;
+        const finalSeries = asRecord(asRecord(attempt.public_result)?.daily_series);
+        const rounds = Array.isArray(finalSeries?.rounds)
+          ? finalSeries.rounds.map((row) => asRecord(row))
+          : [];
+        const round = asRecord(rounds[series.game_index]);
+        if (!round) return attempt;
+        return {
+          ...attempt,
+          native_score: Number(round.native_score ?? attempt.native_score ?? 0),
+          normalized_score: Number(round.normalized_score ?? attempt.normalized_score ?? 0),
+          public_result: {
+            ...round,
+            daily_series: series,
+          },
+        };
+      })(),
       deployment_sha: DEPLOYED_SOURCE_SHA,
     };
   }
