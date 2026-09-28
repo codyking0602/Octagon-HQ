@@ -1,17 +1,25 @@
 export type BarTriviaLeague = "nfl" | "cfb" | "ufc";
 export type BarTriviaRound = "round1" | "round2" | "round3" | "last-call";
 export type BarTriviaDoubleRound = Exclude<BarTriviaRound, "last-call">;
+export type BarTriviaDifficulty = "easy" | "medium" | "hard" | "last-call";
+export type BarTriviaContentType = "evergreen" | "current-event";
 
 export interface BarTriviaQuestion {
   id: string;
   league: BarTriviaLeague;
   round: BarTriviaRound;
+  difficulty: BarTriviaDifficulty;
   category: string;
   prompt: string;
   choices: readonly [string, string, string, string];
   answer: string;
   explanation: string;
+  contentType: BarTriviaContentType;
+  activeFrom?: string;
+  expiresAt?: string;
   sourceId?: string;
+  sourceUrl?: string;
+  verifiedAt?: string;
 }
 
 export interface BarTriviaAnswerResult {
@@ -54,7 +62,8 @@ export interface BarTriviaScoreBreakdown {
 export const BAR_TRIVIA_QUESTION_COUNT = 10;
 export const BAR_TRIVIA_MAX_SCORE = 100;
 export const BAR_TRIVIA_MAX_WAGER = 10;
-export const BAR_TRIVIA_RECENT_MEMORY_SIZE = 40;
+export const BAR_TRIVIA_CURRENT_EVENT_TARGET = 2;
+export const BAR_TRIVIA_RECENT_MEMORY_SIZE = 400;
 
 export const BAR_TRIVIA_BASE_POINTS: Record<BarTriviaRound, number> = {
   round1: 10,
@@ -95,34 +104,164 @@ function roundTenth(value: number) {
   return Math.round(value * 10) / 10;
 }
 
+export function barTriviaDifficultyForRound(round: BarTriviaRound): BarTriviaDifficulty {
+  if (round === "round1") return "easy";
+  if (round === "round2") return "medium";
+  if (round === "round3") return "hard";
+  return "last-call";
+}
+
+export type BarTriviaQuestionSeed = Omit<BarTriviaQuestion, "difficulty" | "contentType"> & {
+  difficulty?: BarTriviaDifficulty;
+  contentType?: BarTriviaContentType;
+};
+
+export function barTriviaQuestion(seed: BarTriviaQuestionSeed): BarTriviaQuestion {
+  return {
+    ...seed,
+    difficulty: seed.difficulty ?? barTriviaDifficultyForRound(seed.round),
+    contentType: seed.contentType ?? "evergreen",
+  };
+}
+
+function normalizedNow(value: Date | string | undefined) {
+  const date = value instanceof Date ? value : new Date(value ?? Date.now());
+  return Number.isNaN(date.getTime()) ? new Date() : date;
+}
+
+export function isBarTriviaQuestionActive(question: BarTriviaQuestion, now: Date | string = new Date()) {
+  if (question.contentType !== "current-event") return true;
+  const at = normalizedNow(now).getTime();
+  const starts = question.activeFrom ? new Date(question.activeFrom).getTime() : Number.NEGATIVE_INFINITY;
+  const expires = question.expiresAt ? new Date(question.expiresAt).getTime() : Number.POSITIVE_INFINITY;
+  return at >= starts && at <= expires;
+}
+
+function recentRank(recentQuestionIds: readonly string[]) {
+  return new Map(recentQuestionIds.map((id, index) => [id, index]));
+}
+
 function pickQuestion(
   pool: readonly BarTriviaQuestion[],
   used: ReadonlySet<string>,
-  recent: ReadonlySet<string>,
+  usedCategories: ReadonlySet<string>,
+  recentQuestionIds: readonly string[],
   random: () => number,
 ) {
   const unused = pool.filter((question) => !used.has(question.id));
-  const fresh = unused.filter((question) => !recent.has(question.id));
-  const candidates = fresh.length ? fresh : unused;
-  if (!candidates.length) throw new Error("Bar Trivia does not have enough questions for this round.");
+  if (!unused.length) throw new Error("Bar Trivia does not have enough questions for this round.");
+
+  const ranks = recentRank(recentQuestionIds);
+  const fresh = unused.filter((question) => !ranks.has(question.id));
+  let candidates = fresh.length ? fresh : unused;
+
+  const categoryFresh = candidates.filter((question) => !usedCategories.has(question.category));
+  if (categoryFresh.length) candidates = categoryFresh;
+
+  if (!fresh.length && recentQuestionIds.length) {
+    const ordered = [...candidates].sort((a, b) => (ranks.get(b.id) ?? -1) - (ranks.get(a.id) ?? -1));
+    const oldestBand = ordered.slice(0, Math.max(1, Math.ceil(ordered.length / 4)));
+    candidates = oldestBand;
+  }
+
   return candidates[Math.floor(random() * candidates.length)] ?? candidates[0]!;
+}
+
+function selectCurrentEvents(
+  bank: readonly BarTriviaQuestion[],
+  league: BarTriviaLeague,
+  recentQuestionIds: readonly string[],
+  now: Date,
+  target: number,
+  random: () => number,
+) {
+  const capacity = new Map<BarTriviaRound, number>([
+    ["round1", 3],
+    ["round2", 3],
+    ["round3", 3],
+    ["last-call", 1],
+  ]);
+  const selected: BarTriviaQuestion[] = [];
+  const used = new Set<string>();
+  const usedCategories = new Set<string>();
+  const recent = new Set(recentQuestionIds);
+  const active = bank.filter((question) =>
+    question.league === league &&
+    question.contentType === "current-event" &&
+    isBarTriviaQuestionActive(question, now) &&
+    !recent.has(question.id)
+  );
+
+  while (selected.length < target) {
+    const pool = active.filter((question) =>
+      !used.has(question.id) &&
+      (capacity.get(question.round) ?? 0) > 0
+    );
+    if (!pool.length) break;
+
+    const chosen = pickQuestion(pool, used, usedCategories, recentQuestionIds, random);
+    selected.push(chosen);
+    used.add(chosen.id);
+    usedCategories.add(chosen.category);
+    capacity.set(chosen.round, (capacity.get(chosen.round) ?? 0) - 1);
+  }
+
+  return selected;
 }
 
 export function buildBarTriviaRun(
   bank: readonly BarTriviaQuestion[],
   league: BarTriviaLeague,
-  options: { random?: () => number; recentQuestionIds?: readonly string[] } = {},
+  options: {
+    random?: () => number;
+    recentQuestionIds?: readonly string[];
+    now?: Date | string;
+    currentEventTarget?: number;
+  } = {},
 ) {
   const random = options.random ?? Math.random;
-  const recent = new Set(options.recentQuestionIds ?? []);
+  const recentQuestionIds = options.recentQuestionIds ?? [];
+  const now = normalizedNow(options.now);
+  const currentEventTarget = Math.max(
+    0,
+    Math.min(BAR_TRIVIA_QUESTION_COUNT, options.currentEventTarget ?? BAR_TRIVIA_CURRENT_EVENT_TARGET),
+  );
+  const selectedCurrent = selectCurrentEvents(
+    bank,
+    league,
+    recentQuestionIds,
+    now,
+    currentEventTarget,
+    random,
+  );
+  const currentByRound = new Map<BarTriviaRound, BarTriviaQuestion[]>();
+  for (const question of selectedCurrent) {
+    const queue = currentByRound.get(question.round) ?? [];
+    queue.push(question);
+    currentByRound.set(question.round, queue);
+  }
+
   const used = new Set<string>();
+  const usedCategories = new Set<string>();
   const run: BarTriviaQuestion[] = [];
 
   for (const round of BAR_TRIVIA_ROUND_SLOTS) {
-    const pool = bank.filter((question) => question.league === league && question.round === round);
-    const chosen = pickQuestion(pool, used, recent, random);
+    const currentQueue = currentByRound.get(round);
+    const scheduledCurrent = currentQueue?.shift();
+    const chosen = scheduledCurrent ?? pickQuestion(
+      bank.filter((question) =>
+        question.league === league &&
+        question.round === round &&
+        question.contentType === "evergreen"
+      ),
+      used,
+      usedCategories,
+      recentQuestionIds,
+      random,
+    );
     run.push(chosen);
     used.add(chosen.id);
+    usedCategories.add(chosen.category);
   }
 
   return run;
