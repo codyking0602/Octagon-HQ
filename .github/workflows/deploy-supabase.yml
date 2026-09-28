@@ -424,6 +424,9 @@ jobs:
           if [ -f supabase/migrations/202612310207_bar_trivia_daily_rotation.sql ]; then
             require_remote_migration "202612310207"
           fi
+          if [ -f supabase/migrations/202612310208_mlb_bar_trivia_and_eleven_game_scoring.sql ]; then
+            require_remote_migration "202612310208"
+          fi
           if [ -f supabase/migrations/202612310098_reset_football_weekly_titles.sql ]; then
             require_remote_migration "202612310098"
           fi

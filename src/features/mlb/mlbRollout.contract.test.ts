@@ -18,6 +18,7 @@ const backHalfRotationMigration = readFileSync("supabase/migrations/202612310190
 const oct15Oct18ReadyMigration = readFileSync("supabase/migrations/202612310191_mlb_oct15_hit_number_oct18_millionaire_ready.sql", "utf8");
 const pullForwardMigration = readFileSync("supabase/migrations/202612310204_mlb_pull_forward_schedule_and_freeze_wc_odds.sql", "utf8");
 const publicLaunchMigration = readFileSync("supabase/migrations/202612310205_mlb_public_launch.sql", "utf8");
+const barTriviaMigration = readFileSync("supabase/migrations/202612310208_mlb_bar_trivia_and_eleven_game_scoring.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -27,6 +28,8 @@ const tokens = readFileSync("src/styles/tokens.css", "utf8");
 const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
 const mlbChallengePage = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
+const mlbBarTriviaProduction = readFileSync("src/features/mlb/mlbBarTriviaProduction.ts", "utf8");
+const barTriviaRunner = readFileSync("src/features/play/BarTriviaCasualPage.tsx", "utf8");
 const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
 const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
 const mlbOwnerFixture = readFileSync("src/features/mlb/mlbOwnerPreview.ts", "utf8");
@@ -47,7 +50,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(appShell).toContain("canViewMlbPlayoffs(identity.profile)");
     expect(bottomNav).toContain("canViewMlbPlayoffs(identity?.profile)");
     expect(home).toContain("canViewMlbPlayoffs(identity.profile)");
-    expect(router.match(/<MlbGate/g) ?? []).toHaveLength(5);
+    expect(router.match(/<MlbGate/g) ?? []).toHaveLength(4);
   });
 
   it("prepares a mandatory one-time welcome takeover for the public MLB launch", () => {
@@ -188,6 +191,17 @@ describe("MLB Playoffs rollout gate", () => {
     expect(mlbChallengePage).toContain('challenge.game_type === "sports_feud"');
   });
 
+  it("routes October 21 Bar Trivia through the exact shared Bar Trivia runner", () => {
+    expect(mlbChallengePage).toContain('challenge.game_type === "bar_trivia"');
+    expect(mlbChallengePage).toContain("MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY");
+    expect(mlbChallengePage).toContain("MLB_BAR_TRIVIA_PRODUCTION_RUN");
+    expect(mlbChallengePage).toContain("<BarTriviaCasualPage");
+    expect(mlbChallengePage).toContain("runOverride={MLB_BAR_TRIVIA_PRODUCTION_RUN}");
+    expect(barTriviaRunner).toContain("<BarTriviaGameView");
+    expect(mlbBarTriviaProduction).toContain('"2026-10-21"');
+    expect(mlbBarTriviaProduction).toContain('"mlb-2026-play-11"');
+  });
+
   it("routes the moved Hit the Number and both Millionaire dates through production runners", () => {
     expect(mlbChallengePage).toContain("MlbHitTheNumberChallenge");
     expect(mlbChallengePage).toContain("MLB_HIT_NUMBER_PRODUCTION_CONFIG");
@@ -240,8 +254,12 @@ describe("MLB Playoffs rollout gate", () => {
     expect(pullForwardMigration).toContain("'DraftKings opening · frozen Sep 27'");
     expect(challengeSchedule).toContain('"2026-09-27"');
     expect(challengeSchedule).toContain('"2026-09-29"');
+    expect(challengeSchedule).toContain('"2026-10-21"');
     expect(challengeSchedule).toContain('"2026-10-23"');
     expect(challengeSchedule).not.toContain('"2026-10-27"');
+    expect(barTriviaMigration).toContain("date '2026-10-21'");
+    expect(barTriviaMigration).toContain("'bar_trivia'");
+    expect(barTriviaMigration).toContain("slot between 1 and 11");
     expect(mlbRepository).toContain('rpc("get_mlb_postseason_active_challenge"');
     expect(mlbRepository).toContain("resolveMlbFeaturedChallenge()");
   });
@@ -299,7 +317,9 @@ describe("MLB Playoffs rollout gate", () => {
   it("uses one calibrated 100-point MLB Championship", () => {
     expect(championshipMigration).toContain("43 points from round-by-round series picks");
     expect(championshipMigration).toContain("32 points from the one-time bracket");
-    expect(championshipMigration).toContain("25 points from ten featured Play challenges");
+    expect(barTriviaMigration).toContain("25 championship points total");
+    expect(barTriviaMigration).toContain("when 1 then 25::numeric / 11::numeric");
+    expect(barTriviaMigration).toContain("when 5 then 5::numeric / 11::numeric");
     expect(championshipMigration).toContain("when 'wild_card' then 2");
     expect(championshipMigration).toContain("when 'division_series' then 4");
     expect(championshipMigration).toContain("when 'championship_series' then 5");

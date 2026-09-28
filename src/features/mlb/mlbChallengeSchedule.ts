@@ -114,6 +114,17 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     ready: true,
   },
   {
+    id: "mlb-2026-play-11",
+    slot: 11,
+    title: "Bar Trivia",
+    kicker: "BAR TRIVIA",
+    description: "Three rounds. One Double Round. One Last Call wager.",
+    route: "/mlb/challenge",
+    date: "2026-10-21",
+    game_type: "bar_trivia",
+    ready: true,
+  },
+  {
     id: "mlb-2026-play-10",
     slot: 10,
     title: "Sports Feud",

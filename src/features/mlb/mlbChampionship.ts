@@ -18,7 +18,7 @@ export const MLB_CHAMPIONSHIP_SCORING = {
     championship_series: 5,
     world_series: 10,
   },
-  playPlacement: [2.5, 2, 1.5, 1, 0.5, 0],
+  playPlacement: [25 / 11, 20 / 11, 15 / 11, 10 / 11, 5 / 11, 0],
 } as const;
 
 const championshipEntrySchema = z.object({

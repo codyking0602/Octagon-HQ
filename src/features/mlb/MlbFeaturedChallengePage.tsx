@@ -36,6 +36,13 @@ import {
   MLB_WHO_AM_I_PRODUCTION_DATE,
 } from "./mlbWhoAmIProduction";
 import MillionaireCasualPage, { type MillionaireCasualSettledResult } from "../play/MillionaireCasualPage";
+import BarTriviaCasualPage, { type BarTriviaSettledResult } from "../play/BarTriviaCasualPage";
+import {
+  MLB_BAR_TRIVIA_DOUBLE_ROUND,
+  MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY,
+  MLB_BAR_TRIVIA_PRODUCTION_DATE,
+  MLB_BAR_TRIVIA_PRODUCTION_RUN,
+} from "./mlbBarTriviaProduction";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -126,7 +133,7 @@ export default function MlbFeaturedChallengePage() {
       && !previewMode
       && challenge?.ready === true
       && challenge?.is_live === true
-      && (challenge?.game_type === "find_leader" || challenge?.game_type === "millionaire"),
+      && (challenge?.game_type === "find_leader" || challenge?.game_type === "millionaire" || challenge?.game_type === "bar_trivia"),
     season: liveHub?.season ?? 2026,
     challengeKey,
   });
@@ -227,6 +234,39 @@ export default function MlbFeaturedChallengePage() {
       await reloadOverview();
     } catch (nextError) {
       setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Millionaire result could not be recorded.");
+    } finally {
+      setRecording(false);
+    }
+  }
+
+  async function saveOfficialBarTriviaResult(result: BarTriviaSettledResult) {
+    setRecording(true);
+    setRecordError("");
+    try {
+      await recordMlbPlayChallengeResult({
+        season: liveHub?.season ?? 2026,
+        challengeKey,
+        rawScore: result.score,
+        gameType: "bar_trivia",
+        publicResult: {
+          score: result.score,
+          correct_count: result.correctCount,
+          best_streak: result.bestStreak,
+          double_round: result.doubleRound,
+          wager: result.wager,
+        },
+        resultDetail: {
+          score: result.score,
+          raw_score: result.rawScore,
+          correct_count: result.correctCount,
+          best_streak: result.bestStreak,
+          double_round: result.doubleRound,
+          wager: result.wager,
+        },
+      });
+      await reloadOverview();
+    } catch (nextError) {
+      setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Bar Trivia result could not be recorded.");
     } finally {
       setRecording(false);
     }
@@ -496,6 +536,77 @@ export default function MlbFeaturedChallengePage() {
         onSettled={(nextResult) => {
           if (!practiceMode) void saveOfficialMillionaireResult(nextResult);
         }}
+      />
+    );
+  }
+
+  if (challenge.game_type === "bar_trivia") {
+    const isProductionBarTrivia = challenge.id === MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY
+      && challenge.date === MLB_BAR_TRIVIA_PRODUCTION_DATE;
+
+    if (!isProductionBarTrivia) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Bar Trivia date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    if (overviewLoading && !overview) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>Loading your challenge…</h1>
+          </section>
+        </div>
+      );
+    }
+
+    if (savedResult) {
+      const correctCount = Number(savedResult.publicResult.correct_count ?? 0);
+      const bestStreak = Number(savedResult.publicResult.best_streak ?? 0);
+      const wager = Number(savedResult.publicResult.wager ?? 0);
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">OFFICIAL RESULT</p>
+            <h1>Bar Trivia</h1>
+            <strong>{savedResult.rawScore}<small>/100</small></strong>
+            <div className="mlb-find-saved-result__games">
+              <span><small>CORRECT</small><b>{correctCount}/10</b></span>
+              <span><small>BEST STREAK</small><b>{bestStreak}</b></span>
+              <span><small>LAST CALL</small><b>{wager} PT WAGER</b></span>
+            </div>
+            <p>Your official score is locked. There is no Casual replay for Bar Trivia.</p>
+            {recordError ? <p>{recordError}</p> : null}
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <BarTriviaCasualPage
+        scope="mlb"
+        runOverride={MLB_BAR_TRIVIA_PRODUCTION_RUN}
+        doubleRoundOverride={MLB_BAR_TRIVIA_DOUBLE_ROUND}
+        onSettled={(nextResult) => void saveOfficialBarTriviaResult(nextResult)}
+        resultActions={(
+          <button className="bar-trivia__primary" type="button" onClick={() => navigate("/mlb")} disabled={recording}>
+            {recording ? "SAVING RESULT…" : "BACK TO MLB PLAY"}
+          </button>
+        )}
+        ownerNote={recordError || null}
       />
     );
   }

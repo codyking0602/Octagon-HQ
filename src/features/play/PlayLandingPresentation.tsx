@@ -45,7 +45,6 @@ type PlayLandingGameLibraryProps = {
   onNavigate: (route: string) => void;
   footer?: ReactNode;
   familyFeudVisible?: boolean;
-  barTriviaVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
@@ -53,14 +52,10 @@ export function PlayLandingGameLibrary({
   onNavigate,
   footer,
   familyFeudVisible = false,
-  barTriviaVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
   const familyFeudRoute = sport === "ufc" ? "/play/sports-feud" : "/football/sports-feud";
-  const barTrivia = barTriviaVisible
-    ? playGameDefinition("bar-trivia", sport)
-    : null;
 
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
@@ -70,24 +65,10 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length + (familyFeudVisible ? 1 : 0) + (barTriviaVisible ? 1 : 0)} LIVE</span>
+        <span>{games.length + (familyFeudVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
-        {barTrivia ? (
-          <button
-            className="play-landing-game-card"
-            type="button"
-            onClick={() => onNavigate(barTrivia.route)}
-          >
-            <span className="play-landing-game-card__icon" aria-hidden="true">{barTrivia.icon}</span>
-            <span className="play-landing-game-card__status">CASUAL · OWNER ONLY</span>
-            <strong>{barTrivia.title}</strong>
-            <small>{barTrivia.description}</small>
-            <em>PLAY →</em>
-          </button>
-        ) : null}
-
         {familyFeudVisible ? (
           <button
             className="play-landing-game-card is-strategic"

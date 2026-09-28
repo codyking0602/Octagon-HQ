@@ -43,7 +43,6 @@ const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
 const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
-const BarTriviaCasualPage = lazy(() => import("../features/play/BarTriviaCasualPage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -80,7 +79,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/millionaire", element: <TodayChallengeGameRoute gameType="millionaire" casual={<MillionaireCasualPage scope="ufc" />} /> },
       { path: "play/sports-feud/qa-replay", element: <FamilyFeudPrototypePage scope="ufc" qaReplayDay="2026-09-24" /> },
       { path: "play/sports-feud", element: <TodayChallengeGameRoute gameType="sports_feud" casual={<FamilyFeudPrototypePage scope="ufc" />} /> },
-      { path: "play/bar-trivia", element: <TodayChallengeGameRoute gameType="bar_trivia" casual={<OwnerOnlyRoute fallback="/play"><BarTriviaCasualPage scope="ufc" /></OwnerOnlyRoute>} /> },
+      { path: "play/bar-trivia", element: <TodayChallengeGameRoute gameType="bar_trivia" casual={<Navigate to="/play" replace />} /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
@@ -106,12 +105,12 @@ export const appRoutes: RouteObject[] = [
       { path: "football/who-am-i", element: <FootballWhoAmIPage /> },
       { path: "football/millionaire", element: <MillionaireCasualPage scope="football" /> },
       { path: "football/sports-feud", element: <FamilyFeudPrototypePage scope="football" /> },
-      { path: "football/bar-trivia", element: <OwnerOnlyRoute fallback="/football"><BarTriviaCasualPage scope="football" /></OwnerOnlyRoute> },
+      { path: "football/bar-trivia", element: <Navigate to="/football" replace /> },
       { path: "picks", element: <PicksPage /> },
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
       { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },
-      { path: "mlb/bar-trivia", element: <MlbGate fallback="/"><OwnerOnlyRoute fallback="/mlb"><BarTriviaCasualPage scope="mlb" /></OwnerOnlyRoute></MlbGate> },
+      { path: "mlb/bar-trivia", element: <Navigate to="/mlb" replace /> },
       { path: "mlb/series/:seriesId", element: <MlbGate fallback="/"><MlbSeriesBreakdownPage /></MlbGate> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },

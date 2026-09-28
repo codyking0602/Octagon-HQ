@@ -85,8 +85,20 @@ begin
   if to_regprocedure('public.get_mlb_postseason_championship(integer)') is null then
     raise exception 'MLB Championship projection is missing';
   end if;
-  if (select count(*) from public.mlb_postseason_challenges where season = 2026) <> 10 then
-    raise exception '2026 MLB Championship must have exactly ten Play scoring slots';
+  if (select count(*) from public.mlb_postseason_challenges where season = 2026) <> 11 then
+    raise exception '2026 MLB Championship must have exactly eleven Play scoring slots';
+  end if;
+
+  if not exists (
+    select 1
+    from public.mlb_postseason_challenges
+    where season = 2026
+      and challenge_key = 'mlb-2026-play-11'
+      and scheduled_date = date '2026-10-21'
+      and game_type = 'bar_trivia'
+      and content_ready
+  ) then
+    raise exception '2026 MLB Bar Trivia slot is missing or not production-ready';
   end if;
 end;
 $mlb_playoffs_contract$;
