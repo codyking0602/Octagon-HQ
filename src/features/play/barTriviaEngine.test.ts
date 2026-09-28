@@ -37,7 +37,8 @@ describe("Bar Trivia engine", () => {
         currentEventTarget: 0,
       });
       expect(run.slice(0, 3).every((question) => question.difficulty === "easy")).toBe(true);
-      expect(run.slice(3, 6).every((question) => question.difficulty === "medium")).toBe(true);
+      expect(run[3]!.difficulty).toBe("easy");
+      expect(run.slice(4, 6).every((question) => question.difficulty === "medium")).toBe(true);
     }
   });
 
@@ -56,6 +57,30 @@ describe("Bar Trivia engine", () => {
 
     expect(answerPositions.some((position) => position !== 0)).toBe(true);
     expect(new Set(answerPositions).size).toBeGreaterThan(1);
+  });
+
+  it("calibrates a solid seven-correct game to roughly an 80", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", {
+      random: () => 0,
+      currentEventTarget: 0,
+    });
+    let state = createBarTriviaState("round2");
+
+    for (let index = 0; index < 7; index += 1) {
+      state = submitBarTriviaAnswer(run, state, run[index]!.answer).state;
+    }
+    for (let index = 7; index < 9; index += 1) {
+      const wrong = run[index]!.choices.find((choice) => choice !== run[index]!.answer)!;
+      state = submitBarTriviaAnswer(run, state, wrong).state;
+    }
+
+    state = setBarTriviaWager(state, 0);
+    const wrongFinal = run[9]!.choices.find((choice) => choice !== run[9]!.answer)!;
+    state = submitBarTriviaAnswer(run, state, wrongFinal).state;
+
+    expect(state.correctCount).toBe(7);
+    expect(state.score).toBeGreaterThanOrEqual(76);
+    expect(state.score).toBeLessThanOrEqual(82);
   });
 
   it("locks the calibrated base ladder and streak heat thresholds", () => {
