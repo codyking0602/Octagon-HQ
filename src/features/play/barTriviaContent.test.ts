@@ -6,11 +6,11 @@ describe("Bar Trivia question bank", () => {
     for (const league of ["nfl", "cfb", "ufc"] as const) {
       const questions = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       const evergreen = questions.filter((question) => question.contentType === "evergreen");
-      expect(evergreen.length).toBeGreaterThanOrEqual(58);
-      expect(evergreen.filter((question) => question.round === "round1").length).toBeGreaterThanOrEqual(17);
-      expect(evergreen.filter((question) => question.round === "round2").length).toBeGreaterThanOrEqual(17);
-      expect(evergreen.filter((question) => question.round === "round3").length).toBeGreaterThanOrEqual(17);
-      expect(evergreen.filter((question) => question.round === "last-call").length).toBeGreaterThanOrEqual(7);
+      expect(evergreen.length).toBeGreaterThanOrEqual(100);
+      expect(evergreen.filter((question) => question.round === "round1").length).toBeGreaterThanOrEqual(29);
+      expect(evergreen.filter((question) => question.round === "round2").length).toBeGreaterThanOrEqual(29);
+      expect(evergreen.filter((question) => question.round === "round3").length).toBeGreaterThanOrEqual(29);
+      expect(evergreen.filter((question) => question.round === "last-call").length).toBeGreaterThanOrEqual(11);
     }
   });
 
