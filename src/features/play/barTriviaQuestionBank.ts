@@ -1,7 +1,7 @@
-import type { BarTriviaQuestion } from "../games/barTriviaEngine";
+import { barTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 
-function q(question: BarTriviaQuestion): BarTriviaQuestion {
-  return question;
+function q(question: BarTriviaQuestionSeed) {
+  return barTriviaQuestion(question);
 }
 
 export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
