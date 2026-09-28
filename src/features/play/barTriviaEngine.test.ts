@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
   BAR_TRIVIA_BASE_POINTS,
+  BAR_TRIVIA_CURRENT_EVENT_TARGET,
   BAR_TRIVIA_ROUND_NAMES,
   BAR_TRIVIA_ROUND_SLOTS,
   barTriviaPerfectRawScore,
+  barTriviaQuestion,
   barTriviaScoreBreakdown,
   barTriviaStreakMultiplier,
   buildBarTriviaRun,
   createBarTriviaState,
+  isBarTriviaQuestionActive,
   normalizeBarTriviaScore,
   pickBarTriviaDoubleRound,
   setBarTriviaWager,
@@ -145,6 +148,65 @@ describe("Bar Trivia engine", () => {
     const repeats = second.filter((question) => first.some((prior) => prior.id === question.id));
     expect(repeats.length).toBeLessThanOrEqual(3);
     expect(second.length - repeats.length).toBeGreaterThanOrEqual(7);
+  });
+
+  it("targets two active current-event questions without making them mandatory", () => {
+    const synthetic = [
+      barTriviaQuestion({
+        id: "nfl-current-test-a",
+        league: "nfl",
+        round: "round1",
+        category: "Fresh Story",
+        prompt: "Which test team owns the fresh-story answer for this synthetic current-event question?",
+        choices: ["Alpha", "Bravo", "Charlie", "Delta"],
+        answer: "Alpha",
+        explanation: "Synthetic coverage proves active current-event questions can be scheduled into a normal run.",
+        contentType: "current-event",
+        activeFrom: "2026-09-20T00:00:00Z",
+        expiresAt: "2026-10-05T23:59:59Z",
+        sourceId: "synthetic-a",
+        sourceUrl: "https://example.com/a",
+        verifiedAt: "2026-09-28",
+      }),
+      barTriviaQuestion({
+        id: "nfl-current-test-b",
+        league: "nfl",
+        round: "round3",
+        category: "Fresh Milestone",
+        prompt: "Which test team owns the milestone answer for this second synthetic current-event question?",
+        choices: ["Echo", "Foxtrot", "Golf", "Hotel"],
+        answer: "Echo",
+        explanation: "Synthetic coverage proves the selector can place current events in different difficulty rounds.",
+        contentType: "current-event",
+        activeFrom: "2026-09-20T00:00:00Z",
+        expiresAt: "2026-10-05T23:59:59Z",
+        sourceId: "synthetic-b",
+        sourceUrl: "https://example.com/b",
+        verifiedAt: "2026-09-28",
+      }),
+    ] as const;
+
+    const run = buildBarTriviaRun([...BAR_TRIVIA_QUESTION_BANK, ...synthetic], "nfl", {
+      random: () => 0,
+      now: "2026-09-28T12:00:00Z",
+    });
+
+    expect(BAR_TRIVIA_CURRENT_EVENT_TARGET).toBe(2);
+    expect(run.filter((question) => question.contentType === "current-event")).toHaveLength(2);
+  });
+
+  it("automatically drops expired current events and fills the run with evergreen questions", () => {
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "cfb", {
+      random: () => 0,
+      now: "2030-01-01T12:00:00Z",
+    });
+
+    expect(run).toHaveLength(10);
+    expect(run.every((question) => question.contentType === "evergreen")).toBe(true);
+
+    const current = BAR_TRIVIA_QUESTION_BANK.find((question) => question.contentType === "current-event");
+    expect(current).toBeTruthy();
+    expect(isBarTriviaQuestionActive(current!, "2030-01-01T12:00:00Z")).toBe(false);
   });
 
   it("uses sport-specific round names", () => {
