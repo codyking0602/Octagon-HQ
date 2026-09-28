@@ -283,12 +283,14 @@ describe("MLB Playoffs rollout gate", () => {
     expect(styles).toContain(".mlb-home-championship-summary");
   });
 
-  it("provides a gated full-page series breakdown", () => {
+  it("provides the compact gated full-page series breakdown", () => {
     expect(router).toContain('path: "mlb/series/:seriesId"');
     expect(mlbSeries).toContain("resolveMlbSeriesBreakdownContent");
-    expect(mlbSeries).toContain("3 THINGS THAT DECIDE IT");
-    expect(mlbSeries).toContain("PLAYERS TO WATCH");
+    expect(mlbSeries).toContain("THE HQ'S MLB SPOTLIGHT SERIES");
+    expect(mlbSeries).toContain("THE SERIES");
+    expect(mlbSeries).toContain("3 THINGS THAT MATTER");
     expect(mlbSeries).toContain("THE HQ READ");
+    expect(mlbSeries).not.toContain("PLAYERS TO WATCH");
   });
 
   it("uses one calibrated 100-point MLB Championship", () => {
