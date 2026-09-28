@@ -65,7 +65,7 @@ begin
   );
 
   -- Shipping the infrastructure while MLB is private must be completely dormant.
-  perform public.dispatch_due_mlb_notifications('2026-09-29 13:05:00+00');
+  perform public.dispatch_due_mlb_notifications('2026-09-27 13:05:00+00');
 
   if exists (
     select 1
@@ -81,8 +81,8 @@ begin
       updated_at = now()
   where season = 2026;
 
-  -- 8:05 AM Central on the first challenge date: public launch + challenge live.
-  perform public.dispatch_due_mlb_notifications('2026-09-29 13:05:00+00');
+  -- 8:05 AM Central on launch day: publish the MLB launch only.
+  perform public.dispatch_due_mlb_notifications('2026-09-27 13:05:00+00');
 
   if not exists (
     select 1
@@ -95,16 +95,13 @@ begin
     raise exception 'MLB launch notification was not push eligible';
   end if;
 
-  if not exists (
+  if exists (
     select 1
     from private.notification_groups notification
     where notification.recipient_profile_id = v_incomplete
       and notification.kind = 'mlb_challenge_available'
-      and notification.priority = 'push_candidate'
-      and notification.route = '/mlb/challenge'
-      and notification.title = 'Today''s MLB Challenge is live'
   ) then
-    raise exception 'MLB challenge-live notification was not published correctly';
+    raise exception 'MLB public launch double-pushed the already-live challenge';
   end if;
 
   if exists (
@@ -121,18 +118,18 @@ begin
     completed_at, updated_at
   ) values (
     2026, 'mlb-2026-play-01', v_complete, 88, 'find_leader',
-    '2026-09-29 15:00:00+00', '2026-09-29 15:00:00+00'
+    '2026-09-27 15:00:00+00', '2026-09-27 15:00:00+00'
   );
 
   update public.mlb_playoff_series
   set status = 'complete',
       winner_team_id = 'mlb-notification-a',
       series_score = '2-0',
-      updated_at = '2026-09-30 20:00:00+00'
+      updated_at = '2026-09-28 20:00:00+00'
   where series_id = 'mlb-notification-test-wc';
 
-  -- 8:05 PM Central on Sep 30: slot 1 ends in four hours when slot 2 takes over.
-  perform public.dispatch_due_mlb_notifications('2026-10-01 01:05:00+00');
+  -- 8:05 PM Central on Sep 28: slot 1 ends in four hours when slot 2 takes over.
+  perform public.dispatch_due_mlb_notifications('2026-09-29 01:05:00+00');
 
   if not exists (
     select 1
@@ -179,22 +176,22 @@ begin
     'Notification C',
     'mlb-notification-d',
     'Notification D',
-    '2026-10-02 18:00:00+00',
+    '2026-09-30 18:00:00+00',
     'scheduled',
     null,
     null,
     '[]'::jsonb,
     v_base_position + 1,
-    '2026-10-01 12:30:00+00'
+    '2026-09-29 12:30:00+00'
   );
 
   update public.mlb_playoff_seasons
   set current_round = 'division_series',
-      updated_at = '2026-10-01 12:30:00+00'
+      updated_at = '2026-09-29 12:30:00+00'
   where season = 2026;
 
-  -- 8:05 AM Central on Oct 1: slot 2 live + newly published Division Series slate.
-  perform public.dispatch_due_mlb_notifications('2026-10-01 13:05:00+00');
+  -- 8:05 AM Central on Sep 29: the first post-launch challenge push + new round slate.
+  perform public.dispatch_due_mlb_notifications('2026-09-29 13:05:00+00');
 
   if not exists (
     select 1
@@ -212,12 +209,12 @@ begin
     from private.notification_groups notification
     where notification.recipient_profile_id = v_incomplete
       and notification.kind = 'mlb_challenge_available'
-  ) <> 2 then
-    raise exception 'The two scheduled MLB challenge dates did not each create one challenge-live row';
+  ) <> 1 then
+    raise exception 'Only the first post-launch MLB challenge should create a challenge-live row';
   end if;
 
   -- Replaying the same trusted wake-up must never aggregate duplicate MLB events.
-  perform public.dispatch_due_mlb_notifications('2026-10-01 13:05:00+00');
+  perform public.dispatch_due_mlb_notifications('2026-09-29 13:05:00+00');
 
   if exists (
     select 1

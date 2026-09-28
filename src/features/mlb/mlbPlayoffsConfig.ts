@@ -1,7 +1,7 @@
 import type { IdentityProfile } from "../identity/identityModel";
 
 export const MLB_PLAYOFFS_SEASON = 2026;
-export const MLB_PLAYOFFS_PUBLIC_ENABLED = false;
+export const MLB_PLAYOFFS_PUBLIC_ENABLED = true;
 
 export type MlbPlayoffRound = "wild_card" | "division_series" | "championship_series" | "world_series";
 
