@@ -3,14 +3,21 @@ import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 
 describe("Bar Trivia question bank", () => {
   it("ships a complete seed set for all three sports and every round", () => {
+    const targets = {
+      nfl: { total: 200, round1: 60, round2: 60, round3: 60, lastCall: 20 },
+      cfb: { total: 200, round1: 60, round2: 60, round3: 60, lastCall: 20 },
+      ufc: { total: 320, round1: 90, round2: 90, round3: 90, lastCall: 30 },
+    } as const;
+
     for (const league of ["nfl", "cfb", "ufc"] as const) {
       const questions = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
       const evergreen = questions.filter((question) => question.contentType === "evergreen");
-      expect(evergreen.length).toBeGreaterThanOrEqual(100);
-      expect(evergreen.filter((question) => question.round === "round1").length).toBeGreaterThanOrEqual(29);
-      expect(evergreen.filter((question) => question.round === "round2").length).toBeGreaterThanOrEqual(29);
-      expect(evergreen.filter((question) => question.round === "round3").length).toBeGreaterThanOrEqual(29);
-      expect(evergreen.filter((question) => question.round === "last-call").length).toBeGreaterThanOrEqual(11);
+      const target = targets[league];
+      expect(evergreen.length).toBeGreaterThanOrEqual(target.total);
+      expect(evergreen.filter((question) => question.round === "round1").length).toBeGreaterThanOrEqual(target.round1);
+      expect(evergreen.filter((question) => question.round === "round2").length).toBeGreaterThanOrEqual(target.round2);
+      expect(evergreen.filter((question) => question.round === "round3").length).toBeGreaterThanOrEqual(target.round3);
+      expect(evergreen.filter((question) => question.round === "last-call").length).toBeGreaterThanOrEqual(target.lastCall);
     }
   });
 
