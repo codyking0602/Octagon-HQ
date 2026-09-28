@@ -143,8 +143,11 @@ export default function MlbPicksPage() {
     const initialDraft = hub.ownBracket ?? {};
     setDraft(initialDraft);
     const own = hub.brackets.find((entry) => entry.is_current_user);
-    const preferred = own?.profile_id ?? hub.brackets[0]?.profile_id ?? "";
-    setViewedProfileId((current) => hub.brackets.some((entry) => entry.profile_id === current) ? current : preferred);
+    const visibleEntries = hub.bracketLocked
+      ? hub.brackets
+      : hub.brackets.filter((entry) => entry.is_current_user);
+    const preferred = own?.profile_id ?? (hub.bracketLocked ? hub.brackets[0]?.profile_id ?? "" : "");
+    setViewedProfileId((current) => visibleEntries.some((entry) => entry.profile_id === current) ? current : preferred);
 
     const complete = bracketComplete(hub.bracketTemplate, initialDraft);
     if (hub.fieldReady && !hub.bracketLocked && !complete) {
@@ -181,7 +184,7 @@ export default function MlbPicksPage() {
   const viewed = bracketViewers.find((entry) => entry.profile_id === viewedProfileId) ?? bracketViewers[0] ?? null;
   const viewerIndex = viewed ? bracketViewers.findIndex((entry) => entry.profile_id === viewed.profile_id) : 0;
   const ownEntry = hub?.brackets.find((entry) => entry.is_current_user) ?? null;
-  const ownRank = hub && ownEntry ? bracketRank(hub.brackets, ownEntry.profile_id) : null;
+  const ownRank = hub?.bracketLocked && ownEntry ? bracketRank(hub.brackets, ownEntry.profile_id) : null;
   const roundSeries = hub?.series.filter((series) => series.round === hub.currentRound) ?? [];
   const ownSeriesPicks = new Map(
     previewMode
@@ -212,7 +215,7 @@ export default function MlbPicksPage() {
       const rank = ranks.get(entry.profile_id) ?? 0;
       return { entry, rank, tied: (rankCounts.get(rank) ?? 0) > 1 };
     });
-  }, [hub?.brackets]);
+  }, [hub?.brackets, hub?.bracketLocked]);
 
   const championshipStandings = championship?.standings ?? [];
   const ownChampionship = championship?.own ?? null;
