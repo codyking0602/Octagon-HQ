@@ -3,6 +3,9 @@ import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
 import { BAR_TRIVIA_NFL_EVERGREEN_EXPANSION } from "./barTriviaEvergreenNfl";
 import { BAR_TRIVIA_CFB_EVERGREEN_EXPANSION } from "./barTriviaEvergreenCfb";
 import { BAR_TRIVIA_UFC_EVERGREEN_EXPANSION } from "./barTriviaEvergreenUfc";
+import { BAR_TRIVIA_NFL_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenNflWave2";
+import { BAR_TRIVIA_CFB_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenCfbWave2";
+import { BAR_TRIVIA_UFC_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenUfcWave2";
 
 function q(question: BarTriviaQuestionSeed) {
   return barTriviaQuestion(question);
@@ -89,5 +92,8 @@ export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   ...BAR_TRIVIA_NFL_EVERGREEN_EXPANSION,
   ...BAR_TRIVIA_CFB_EVERGREEN_EXPANSION,
   ...BAR_TRIVIA_UFC_EVERGREEN_EXPANSION,
+  ...BAR_TRIVIA_NFL_EVERGREEN_WAVE_2,
+  ...BAR_TRIVIA_CFB_EVERGREEN_WAVE_2,
+  ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_2,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
 ];
