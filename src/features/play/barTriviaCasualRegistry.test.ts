@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { playGameDefinition, playGamesForSport } from "./playRegistry";
 
-describe("Bar Trivia Daily and owner Casual registry", () => {
-  it("registers separate owner-review Casual routes for Football and UFC", () => {
+describe("Bar Trivia Daily-only registry", () => {
+  it("keeps Football and UFC Bar Trivia registered for Daily without Casual replay", () => {
     const football = playGameDefinition("bar-trivia", "football");
     const ufc = playGameDefinition("bar-trivia", "ufc");
 
@@ -11,9 +11,9 @@ describe("Bar Trivia Daily and owner Casual registry", () => {
 
     for (const game of [football, ufc]) {
       expect(game.availability).toBe("preview");
-      expect(game.lineup.defaultType).toBe("replayable");
-      expect(game.lineup.supportedTypes).toEqual(["daily", "replayable"]);
-      expect(game.lineup.replayBehavior).toBe("new-lineup");
+      expect(game.lineup.defaultType).toBe("daily");
+      expect(game.lineup.supportedTypes).toEqual(["daily"]);
+      expect(game.lineup.replayBehavior).toBe("same-curated-challenge");
       expect(game.lineup.lineupSize).toBe(10);
       expect(game.lineup.completionState).toBe("bar-trivia-settled");
       expect(game.lineup.dailyEligible).toBe(true);
@@ -24,7 +24,7 @@ describe("Bar Trivia Daily and owner Casual registry", () => {
     }
   });
 
-  it("keeps Bar Trivia out of both public game registries while owner-only", () => {
+  it("keeps Bar Trivia out of the public Casual game registries", () => {
     expect(playGamesForSport("football").some((game) => game.id === "bar-trivia")).toBe(false);
     expect(playGamesForSport("ufc").some((game) => game.id === "bar-trivia")).toBe(false);
   });
