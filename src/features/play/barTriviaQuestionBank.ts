@@ -1,5 +1,6 @@
 import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
+import { BAR_TRIVIA_EASY_EXPANSION, BAR_TRIVIA_EASY_QUESTION_IDS } from "./barTriviaEasyCalibration";
 import { BAR_TRIVIA_NFL_EVERGREEN_EXPANSION } from "./barTriviaEvergreenNfl";
 import { BAR_TRIVIA_NFL_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenNflWave2";
 import { BAR_TRIVIA_NFL_EVERGREEN_WAVE_3 } from "./barTriviaEvergreenNflWave3";
@@ -20,7 +21,7 @@ function q(question: BarTriviaQuestionSeed) {
   return barTriviaQuestion(question);
 }
 
-export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
+const RAW_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   // NFL · Round 1 — Around the League
   q({ id:"nfl-r1-ravens-name", league:"nfl", round:"round1", category:"Team Identity", prompt:"The Baltimore Ravens got their name from a work by which writer?", choices:["Edgar Allan Poe","F. Scott Fitzgerald","Mark Twain","Ernest Hemingway"], answer:"Edgar Allan Poe", explanation:"Baltimore chose Ravens as a nod to Edgar Allan Poe's poem “The Raven.”", sourceId:"nfl-history" }),
   q({ id:"nfl-r1-steelers-helmet", league:"nfl", round:"round1", category:"Uniforms", prompt:"Which NFL team famously wears its primary helmet logo on only one side?", choices:["Pittsburgh Steelers","Las Vegas Raiders","Chicago Bears","Green Bay Packers"], answer:"Pittsburgh Steelers", explanation:"The Steelers' Steelmark logo appears only on the right side of the helmet.", sourceId:"nfl-history" }),
@@ -113,5 +114,24 @@ export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_5,
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_6,
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_7,
+  ...BAR_TRIVIA_EASY_EXPANSION,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
 ];
+
+
+function calibrateBarTriviaDifficulty(question: BarTriviaQuestion): BarTriviaQuestion {
+  if (question.contentType !== "evergreen") return question;
+
+  if (BAR_TRIVIA_EASY_QUESTION_IDS.has(question.id)) {
+    return { ...question, round: "round1", difficulty: "easy" };
+  }
+
+  if (question.round === "round1") {
+    return { ...question, round: "round2", difficulty: "medium" };
+  }
+
+  return question;
+}
+
+export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] =
+  RAW_BAR_TRIVIA_QUESTION_BANK.map(calibrateBarTriviaDifficulty);
