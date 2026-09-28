@@ -102,9 +102,10 @@ describe("Sports Feud authored Daily banks", () => {
   it("alternates actual Football Sports Feud appearances between CFB and NFL", () => {
     expect(footballSportsFeudDomainForDay("2026-09-23")).toBe("cfb");
     expect(footballSportsFeudDomainForDay("2026-09-25")).toBe("nfl");
-    expect(footballSportsFeudDomainForDay("2026-09-30")).toBe("cfb");
-    expect(footballSportsFeudDomainForDay("2026-10-06")).toBe("nfl");
-    expect(footballSportsFeudDomainForDay("2026-10-14")).toBe("cfb");
+    expect(footballSportsFeudDomainForDay("2026-10-01")).toBe("cfb");
+    expect(footballSportsFeudDomainForDay("2026-10-07")).toBe("nfl");
+    expect(footballSportsFeudDomainForDay("2026-10-11")).toBe("cfb");
+    expect(footballSportsFeudDomainForDay("2026-10-17")).toBe("nfl");
   });
 
   it("gives Fast Money 50 seconds", () => {

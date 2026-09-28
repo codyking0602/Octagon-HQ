@@ -120,6 +120,18 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Sports Feud score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
+  bar_trivia: {
+    gameType: "bar_trivia",
+    gameId: "bar-trivia",
+    title: "Bar Trivia",
+    dailyRoute: "/play/bar-trivia?mode=daily",
+    casualRoute: "/play/bar-trivia",
+    cta: "Pull up a stool",
+    instructions: "Ten UFC questions across rising rounds, a hidden Double Round, streak heat, and Last Call.",
+    footballInstructions: "Ten NFL or college football questions across rising rounds, a hidden Double Round, streak heat, and Last Call.",
+    nativeResultLabel: "Bar Trivia score",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
+  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",

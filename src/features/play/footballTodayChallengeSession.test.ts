@@ -29,6 +29,7 @@ import {
   FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION,
   FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION,
   FOOTBALL_WEIGHTED_SCHEDULE_VERSION,
+  FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
 
 type JsonRecord = Record<string, unknown>;
@@ -46,6 +47,7 @@ function isoDay(offset: number) {
 }
 
 function setupScheduleVersion(day: string) {
+  if (day >= "2026-09-29") return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= "2026-09-24") return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
   if (day >= "2026-09-23") return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
@@ -80,7 +82,7 @@ function blindResumeActions(day: string, revealStage: 1 | 2 | 3, correct: boolea
 }
 
 describe("Football Today’s Challenge session", () => {
-  it("preserves historical Football days and starts the 26-slot Sports Feud rotation on September 23", () => {
+  it("preserves historical Football days and cuts over to the locked Bar Trivia cycle on September 29", () => {
     expect([
       footballTodayGameForDay("2026-08-22"),
       footballTodayGameForDay("2026-08-23"),
@@ -122,16 +124,22 @@ describe("Football Today’s Challenge session", () => {
     expect(footballTodayGameForDay("2026-09-25")).toBe("sports_feud");
     expect(footballTodayGameForDay("2026-09-26")).toBe("who_am_i");
 
-    const future = Array.from({ length: 26 }, (_unused, offset) => {
-      const day = new Date(Date.UTC(2026, 8, 24 + offset)).toISOString().slice(0, 10);
+    expect(footballTodayScheduleVersionForDay("2026-09-28")).toBe(FOOTBALL_WEIGHTED_SCHEDULE_VERSION);
+    expect(footballTodayScheduleVersionForDay("2026-09-29")).toBe(FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION);
+    expect(FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION).toBe("football-daily-v17-bar-trivia-sep29");
+    expect(footballTodayGameForDay("2026-09-29")).toBe("bar_trivia");
+
+    const future = Array.from({ length: 22 }, (_unused, offset) => {
+      const day = new Date(Date.UTC(2026, 8, 29 + offset)).toISOString().slice(0, 10);
       return footballTodayGameForDay(day);
     });
-    expect(future.filter((game) => game === "find_leader")).toHaveLength(5);
-    expect(future.filter((game) => game === "wavelength")).toHaveLength(5);
-    expect(future.filter((game) => game === "hit_the_number")).toHaveLength(3);
-    expect(future.filter((game) => game === "who_am_i")).toHaveLength(4);
-    expect(future.filter((game) => game === "millionaire")).toHaveLength(5);
     expect(future.filter((game) => game === "sports_feud")).toHaveLength(4);
+    expect(future.filter((game) => game === "millionaire")).toHaveLength(4);
+    expect(future.filter((game) => game === "bar_trivia")).toHaveLength(3);
+    expect(future.filter((game) => game === "wavelength")).toHaveLength(3);
+    expect(future.filter((game) => game === "who_am_i")).toHaveLength(3);
+    expect(future.filter((game) => game === "find_leader")).toHaveLength(3);
+    expect(future.filter((game) => game === "hit_the_number")).toHaveLength(2);
     expect(future).not.toContain("keep_4_cut_4");
     expect(future).not.toContain("blind_resume");
     expect(future).not.toContain("blind_rank_5");

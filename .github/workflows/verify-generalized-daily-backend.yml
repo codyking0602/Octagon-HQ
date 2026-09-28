@@ -55,6 +55,7 @@ on:
       - "supabase/migrations/202612310148_millionaire_daily_launch.sql"
       - "supabase/migrations/202612310160_daily_challenge_weekly_recap.sql"
       - "supabase/migrations/202612310164_sports_feud_daily_launch.sql"
+      - "supabase/migrations/202612310207_bar_trivia_daily_rotation.sql"
       - "supabase/tests/generalized_todays_challenge_backend.sql"
       - "supabase/tests/daily_challenge_runtime_progress.sql"
       - "supabase/tests/daily_challenge_rotation.sql"
@@ -71,6 +72,7 @@ on:
       - "supabase/tests/millionaire_daily_launch.sql"
       - "supabase/tests/daily_challenge_weekly_recap.sql"
       - "supabase/tests/sports_feud_daily_launch.sql"
+      - "supabase/tests/bar_trivia_daily_rotation.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_seed.sql"
       - "supabase/tests/generalized_todays_challenge_legacy_assert.sql"
   workflow_dispatch:
@@ -216,6 +218,10 @@ jobs:
       - name: Execute Sports Feud Daily launch proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/sports_feud_daily_launch.sql
+
+      - name: Execute Bar Trivia Daily rotation proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/bar_trivia_daily_rotation.sql
 
       - name: Execute persisted Football Daily runtime proof
         shell: bash

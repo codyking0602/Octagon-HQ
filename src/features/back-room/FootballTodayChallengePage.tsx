@@ -5,6 +5,7 @@ import { shareDailyChallengeResult } from "../play/dailyChallengeShare";
 import { OfficialWhoAmIDailyView } from "../play/OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyView";
 import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
+import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
 import {
   DailyTwoGameStatus,
   dailyTwoGameActiveScore,
@@ -53,6 +54,7 @@ const GAME_LABELS = {
   who_am_i: "WHO AM I?",
   millionaire: "MILLIONAIRE",
   sports_feud: "SPORTS FEUD",
+  bar_trivia: "BAR TRIVIA",
 } as const;
 
 type JsonRecord = Record<string, unknown>;
@@ -805,6 +807,21 @@ export default function FootballTodayChallengePage() {
         {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         <OfficialSportsFeudDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={advance}
+          onExit={() => navigate("/football")}
+        />
+      </div>
+    );
+  }
+
+  if (projection.gameType === "bar_trivia") {
+    return (
+      <div className="official-daily-page">
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <OfficialBarTriviaDailyView
           projection={projection}
           busy={busy}
           onAdvance={advance}

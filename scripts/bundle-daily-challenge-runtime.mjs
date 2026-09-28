@@ -6,7 +6,7 @@ import { build } from "vite";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = resolve(repoRoot, "supabase/functions/daily-challenge-runtime");
-const footballScheduleVersion = "football-daily-v12-sports-feud";
+const footballScheduleVersion = "football-daily-v17-bar-trivia-sep29";
 const bundles = [
   {
     label: "UFC daily runtime",
@@ -62,6 +62,13 @@ const bundles = [
     fileName: "football-publication-sports-feud.generated.mjs",
     requiredExports: ["buildFootballDailyPersistenceSetup"],
     smoke: { day: "2026-09-23", gameType: "sports_feud" },
+  },
+  {
+    label: "Football Daily Bar Trivia publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationBarTrivia.ts"),
+    fileName: "football-publication-bar-trivia.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-09-29", gameType: "bar_trivia" },
   },
   {
     label: "Football Daily comparison publication runtime",

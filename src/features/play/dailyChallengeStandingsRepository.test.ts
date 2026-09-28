@@ -75,6 +75,7 @@ describe("Daily Challenge Standings repository", () => {
           whoAmI: 81.2,
           millionaire: null,
           sportsFeud: null,
+          barTrivia: null,
         },
         isCurrentUser: true,
         weeklyRank: 1,

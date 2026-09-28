@@ -32,10 +32,16 @@ import type {
 export const SPORTS_FEUD_BANK_VERSION = "sports-feud-bank-v1" as const;
 export const SPORTS_FEUD_HISTORICAL_LAUNCH_DAY = "2026-09-23" as const;
 export const SPORTS_FEUD_WEIGHTED_LAUNCH_DAY = "2026-09-24" as const;
+export const SPORTS_FEUD_BAR_TRIVIA_LAUNCH_DAY = "2026-09-29" as const;
+export const PRE_BAR_TRIVIA_SPORTS_FEUD_APPEARANCES = 2;
 export const UFC_SPORTS_FEUD_CYCLE_LENGTH = 30;
 export const UFC_SPORTS_FEUD_SLOTS = [0, 8, 16, 24] as const;
 export const FOOTBALL_SPORTS_FEUD_CYCLE_LENGTH = 26;
 export const FOOTBALL_SPORTS_FEUD_SLOTS = [1, 6, 12, 20] as const;
+export const UFC_BAR_TRIVIA_SPORTS_FEUD_CYCLE_LENGTH = 24;
+export const UFC_BAR_TRIVIA_SPORTS_FEUD_SLOTS = [1, 7, 13, 19] as const;
+export const FOOTBALL_BAR_TRIVIA_SPORTS_FEUD_CYCLE_LENGTH = 22;
+export const FOOTBALL_BAR_TRIVIA_SPORTS_FEUD_SLOTS = [2, 8, 12, 18] as const;
 
 const MAIN_POINTS = [10, 8, 7, 5, 5, 4, 4, 3] as const;
 const FAST_POINTS = [8, 7, 6, 5, 4, 3, 2, 1] as const;
@@ -264,10 +270,11 @@ function materializeQuestion(
 
 function weightedAppearanceCountThroughDay(
   day: string,
+  anchor: string,
   cycleLength: number,
   slots: readonly number[],
 ) {
-  const offset = dayNumber(day) - dayNumber(SPORTS_FEUD_WEIGHTED_LAUNCH_DAY);
+  const offset = dayNumber(day) - dayNumber(anchor);
   if (offset < 0) return 0;
   const completedCycles = Math.floor(offset / cycleLength);
   const dayInCycle = mod(offset, cycleLength);
@@ -280,13 +287,41 @@ function historicalLaunchAppearanceCount(day: string) {
 }
 
 export function ufcSportsFeudAppearanceCountThroughDay(day: string) {
+  if (day >= SPORTS_FEUD_BAR_TRIVIA_LAUNCH_DAY) {
+    return PRE_BAR_TRIVIA_SPORTS_FEUD_APPEARANCES
+      + weightedAppearanceCountThroughDay(
+        day,
+        SPORTS_FEUD_BAR_TRIVIA_LAUNCH_DAY,
+        UFC_BAR_TRIVIA_SPORTS_FEUD_CYCLE_LENGTH,
+        UFC_BAR_TRIVIA_SPORTS_FEUD_SLOTS,
+      );
+  }
   return historicalLaunchAppearanceCount(day)
-    + weightedAppearanceCountThroughDay(day, UFC_SPORTS_FEUD_CYCLE_LENGTH, UFC_SPORTS_FEUD_SLOTS);
+    + weightedAppearanceCountThroughDay(
+      day,
+      SPORTS_FEUD_WEIGHTED_LAUNCH_DAY,
+      UFC_SPORTS_FEUD_CYCLE_LENGTH,
+      UFC_SPORTS_FEUD_SLOTS,
+    );
 }
 
 export function footballSportsFeudAppearanceCountThroughDay(day: string) {
+  if (day >= SPORTS_FEUD_BAR_TRIVIA_LAUNCH_DAY) {
+    return PRE_BAR_TRIVIA_SPORTS_FEUD_APPEARANCES
+      + weightedAppearanceCountThroughDay(
+        day,
+        SPORTS_FEUD_BAR_TRIVIA_LAUNCH_DAY,
+        FOOTBALL_BAR_TRIVIA_SPORTS_FEUD_CYCLE_LENGTH,
+        FOOTBALL_BAR_TRIVIA_SPORTS_FEUD_SLOTS,
+      );
+  }
   return historicalLaunchAppearanceCount(day)
-    + weightedAppearanceCountThroughDay(day, FOOTBALL_SPORTS_FEUD_CYCLE_LENGTH, FOOTBALL_SPORTS_FEUD_SLOTS);
+    + weightedAppearanceCountThroughDay(
+      day,
+      SPORTS_FEUD_WEIGHTED_LAUNCH_DAY,
+      FOOTBALL_SPORTS_FEUD_CYCLE_LENGTH,
+      FOOTBALL_SPORTS_FEUD_SLOTS,
+    );
 }
 
 export function footballSportsFeudDomainForDay(day: string): "cfb" | "nfl" {
