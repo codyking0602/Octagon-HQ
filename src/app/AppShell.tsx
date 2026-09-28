@@ -152,7 +152,11 @@ export function AppShell() {
   const isFootball = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const isMlb = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
-  const showMlbWelcome = Boolean(identity.profile && (MLB_PLAYOFFS_PUBLIC_ENABLED || identity.profile.canControlPicks === true));
+  const showMlbWelcome = Boolean(
+    identity.profile
+    && (location.pathname === "/" || location.pathname === "/mlb")
+    && (MLB_PLAYOFFS_PUBLIC_ENABLED || identity.profile.canControlPicks === true)
+  );
   const mlbWelcomeMode = MLB_PLAYOFFS_PUBLIC_ENABLED ? "launch" : "preview";
   const effectiveSelectedSport = selectedSport === "mlb" && !mlbVisible ? "ufc" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
