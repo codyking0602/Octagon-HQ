@@ -116,7 +116,7 @@ begin
   select * into strict v_canonical_grade
   from private.grade_daily_challenge(
     'bar_trivia',
-    'bar-trivia-daily-score-v1',
+    'play-official-score-v1',
     jsonb_build_object(
       'proof', 'bar-trivia-proof',
       'native_score', 87,
