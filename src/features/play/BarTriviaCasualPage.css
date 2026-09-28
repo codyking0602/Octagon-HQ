@@ -775,6 +775,12 @@
     url("/images/bar-trivia/cfb-bar-trivia-bg.png");
 }
 
+.bar-trivia__venue[data-league="mlb"] {
+  background-image:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.2), rgba(8, 7, 6, 0.05) 48%, rgba(8, 7, 6, 0.18)),
+    url("/images/bar-trivia/B06D8CE0-B0F4-49DD-9241-0EC98F7509A1.png");
+}
+
 .bar-trivia__venue::after {
   content: "";
   position: absolute;
