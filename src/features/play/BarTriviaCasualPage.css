@@ -640,3 +640,442 @@
     min-height: 54px;
   }
 }
+
+
+/* Bar Trivia v2 — calibrated scoring + immersive venue question stage */
+.bar-trivia__double-banner {
+  width: fit-content;
+  margin: 0 auto 12px;
+  border: 1px solid rgba(238, 186, 98, 0.7);
+  border-radius: 999px;
+  background: rgba(204, 134, 45, 0.15);
+  box-shadow: 0 0 24px rgba(210, 144, 54, 0.14);
+  color: #efc77f;
+  padding: 7px 12px;
+  font-size: 0.66rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+}
+
+.bar-trivia__round-value {
+  display: inline-grid;
+  min-width: 116px;
+  margin: 22px 6px 0;
+  border: 1px solid rgba(215, 170, 103, 0.18);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.035);
+  padding: 9px 12px;
+}
+
+.bar-trivia__round-value span {
+  color: rgba(246, 239, 227, 0.43);
+  font-size: 0.55rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+}
+
+.bar-trivia__round-value strong {
+  margin-top: 2px;
+  font-size: 1.05rem;
+}
+
+.bar-trivia__round-intro .bar-trivia__scoreboard-mini {
+  display: inline-grid;
+  vertical-align: top;
+  width: 116px;
+  margin: 22px 6px 18px;
+}
+
+.bar-trivia__wager-note {
+  margin: -6px 0 18px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.035);
+  color: rgba(246, 239, 227, 0.63);
+  padding: 10px 12px;
+  font-size: 0.73rem;
+  line-height: 1.45;
+}
+
+.bar-trivia__wager-note b {
+  color: #f4d098;
+}
+
+.bar-trivia__game.bar-trivia__venue {
+  position: relative;
+  width: min(100%, 560px);
+  aspect-ratio: 941 / 1672;
+  min-height: 0;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(215, 170, 103, 0.2);
+  border-radius: 18px;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-shadow: 0 18px 56px rgba(0,0,0,0.3);
+}
+
+.bar-trivia__venue[data-league="ufc"] {
+  background-image:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.2), rgba(8, 7, 6, 0.05) 48%, rgba(8, 7, 6, 0.18)),
+    url("/images/bar-trivia/ufc-bar-trivia-bg.png");
+}
+
+.bar-trivia__venue[data-league="nfl"] {
+  background-image:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.2), rgba(8, 7, 6, 0.05) 48%, rgba(8, 7, 6, 0.18)),
+    url("/images/bar-trivia/nfl-bar-trivia-bg.png");
+}
+
+.bar-trivia__venue[data-league="cfb"] {
+  background-image:
+    linear-gradient(180deg, rgba(8, 7, 6, 0.2), rgba(8, 7, 6, 0.05) 48%, rgba(8, 7, 6, 0.18)),
+    url("/images/bar-trivia/cfb-bar-trivia-bg.png");
+}
+
+.bar-trivia__venue::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.28) 0%, transparent 21%, transparent 77%, rgba(0,0,0,0.24) 100%);
+}
+
+.bar-trivia__venue[data-double="true"] {
+  box-shadow:
+    0 0 0 1px rgba(226, 170, 82, 0.28),
+    0 18px 56px rgba(0,0,0,0.34),
+    inset 0 0 42px rgba(213, 142, 48, 0.06);
+}
+
+.bar-trivia__venue .bar-trivia__hud {
+  position: absolute;
+  z-index: 4;
+  top: 2.3%;
+  left: 4%;
+  right: 4%;
+  margin: 0;
+}
+
+.bar-trivia__venue .bar-trivia__hud > div {
+  border-color: rgba(244, 209, 153, 0.24);
+  background: rgba(18, 13, 10, 0.68);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+  backdrop-filter: blur(10px);
+}
+
+.bar-trivia__venue .bar-trivia__hud span {
+  color: rgba(246, 239, 227, 0.58);
+}
+
+.bar-trivia__venue .bar-trivia__streak {
+  position: absolute;
+  z-index: 4;
+  top: 10.2%;
+  left: 4.6%;
+  right: 4.6%;
+  min-height: 28px;
+  margin: 0;
+  border-radius: 999px;
+  background: rgba(12, 9, 7, 0.46);
+  padding: 6px 9px;
+  backdrop-filter: blur(8px);
+}
+
+.bar-trivia__venue .bar-trivia__streak-bulbs {
+  display: flex;
+  gap: 5px;
+}
+
+.bar-trivia__venue .bar-trivia__streak-bulbs span {
+  width: 13px;
+  height: 7px;
+  border: 1px solid rgba(235, 185, 106, 0.18);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+}
+
+.bar-trivia__venue .bar-trivia__streak-bulbs span.is-hot {
+  border-color: rgba(248, 193, 102, 0.7);
+  background: #e0a957;
+  box-shadow: 0 0 9px rgba(234, 169, 75, 0.75);
+}
+
+.bar-trivia__venue .bar-trivia__streak strong {
+  color: rgba(248, 225, 187, 0.78);
+  font-size: 0.56rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.65);
+}
+
+.bar-trivia__venue .bar-trivia__question-card {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.bar-trivia__venue .bar-trivia__question-topline {
+  position: absolute;
+  top: 27.8%;
+  left: 15%;
+  right: 15%;
+  z-index: 2;
+}
+
+.bar-trivia__venue .bar-trivia__question-topline span,
+.bar-trivia__venue .bar-trivia__question-topline b {
+  color: rgba(238, 226, 203, 0.67);
+  font-size: 0.52rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+}
+
+.bar-trivia__score-cues {
+  position: absolute;
+  top: 31.4%;
+  left: 15%;
+  right: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 2;
+}
+
+.bar-trivia__score-cues span,
+.bar-trivia__score-cues b,
+.bar-trivia__score-cues em {
+  border: 1px solid rgba(231, 190, 125, 0.24);
+  border-radius: 999px;
+  background: rgba(16, 18, 17, 0.64);
+  color: rgba(244, 223, 188, 0.76);
+  padding: 4px 7px;
+  font-size: 0.48rem;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.bar-trivia__score-cues b {
+  border-color: rgba(238, 182, 87, 0.5);
+  color: #efbe70;
+}
+
+.bar-trivia__score-cues em {
+  color: #f1d297;
+}
+
+.bar-trivia__venue .bar-trivia__question-card h2 {
+  position: absolute;
+  top: 34.8%;
+  left: 15%;
+  right: 15%;
+  display: grid;
+  place-items: center;
+  min-height: 13.5%;
+  margin: 0;
+  color: #f7f1e5;
+  font-size: clamp(1.05rem, 5.4vw, 1.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.76);
+}
+
+.bar-trivia__venue .bar-trivia__answers {
+  position: absolute;
+  top: 60.6%;
+  left: 6.5%;
+  right: 6.5%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.bar-trivia__venue .bar-trivia__answers button {
+  min-height: clamp(56px, 13.8vw, 76px);
+  border: 1px solid rgba(236, 206, 157, 0.3);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(30, 25, 20, 0.88), rgba(16, 14, 12, 0.9));
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.25),
+    inset 0 1px rgba(255,255,255,0.04);
+  color: #f6ecdc;
+  backdrop-filter: blur(9px);
+}
+
+.bar-trivia__venue .bar-trivia__answers button b {
+  border-color: rgba(225, 170, 83, 0.5);
+  background: rgba(214, 148, 58, 0.08);
+  color: #e9b665;
+}
+
+.bar-trivia__venue .bar-trivia__answers button span {
+  font-size: clamp(0.7rem, 2.7vw, 0.9rem);
+  text-shadow: 0 1px 7px rgba(0,0,0,0.7);
+}
+
+.bar-trivia__venue .bar-trivia__answers button.is-correct {
+  border-color: rgba(97, 211, 136, 0.8);
+  background: linear-gradient(180deg, rgba(43, 103, 62, 0.92), rgba(25, 63, 39, 0.94));
+  box-shadow: 0 0 20px rgba(76, 193, 116, 0.16);
+}
+
+.bar-trivia__venue .bar-trivia__answers button.is-wrong {
+  border-color: rgba(235, 102, 87, 0.82);
+  background: linear-gradient(180deg, rgba(112, 48, 40, 0.92), rgba(73, 31, 27, 0.94));
+}
+
+.bar-trivia__venue .bar-trivia__last-call-chip {
+  position: absolute;
+  z-index: 4;
+  top: 55%;
+  left: 21%;
+  right: 21%;
+  margin: 0;
+  border: 1px solid rgba(226, 172, 86, 0.4);
+  background: rgba(20, 14, 10, 0.76);
+  box-shadow: 0 5px 18px rgba(0,0,0,0.24);
+  color: #efc277;
+  backdrop-filter: blur(8px);
+}
+
+.bar-trivia__venue .bar-trivia__reveal {
+  position: absolute;
+  z-index: 6;
+  left: 5%;
+  right: 5%;
+  bottom: 2.4%;
+  margin: 0;
+  border: 1px solid rgba(240, 217, 180, 0.2);
+  border-radius: 15px;
+  background: rgba(18, 14, 11, 0.92);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.38);
+  padding: 11px 12px;
+  backdrop-filter: blur(14px);
+}
+
+.bar-trivia__venue .bar-trivia__reveal.is-correct {
+  border-color: rgba(95, 192, 128, 0.42);
+  background: rgba(18, 40, 26, 0.94);
+}
+
+.bar-trivia__venue .bar-trivia__reveal.is-wrong {
+  border-color: rgba(212, 95, 83, 0.42);
+  background: rgba(53, 24, 21, 0.94);
+}
+
+.bar-trivia__venue .bar-trivia__reveal-heading span {
+  color: #f7e8ce;
+}
+
+.bar-trivia__venue .bar-trivia__reveal-heading strong {
+  color: #efc278;
+  font-size: 0.85rem;
+}
+
+.bar-trivia__reveal-math {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.bar-trivia__reveal-math span {
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(247, 232, 206, 0.72);
+  padding: 3px 7px;
+  font-size: 0.56rem;
+  font-weight: 850;
+}
+
+.bar-trivia__venue .bar-trivia__reveal p {
+  margin: 7px 0 9px;
+  font-size: 0.69rem;
+  line-height: 1.36;
+}
+
+.bar-trivia__venue .bar-trivia__reveal .bar-trivia__primary {
+  min-height: 39px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+}
+
+.bar-trivia__receipt-summary,
+.bar-trivia__receipt-breakdown {
+  border-top: 1px dashed rgba(33, 27, 21, 0.3);
+  padding-top: 12px;
+}
+
+.bar-trivia__receipt-breakdown {
+  margin-top: 12px;
+}
+
+.bar-trivia__receipt-breakdown > small {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(33, 27, 21, 0.58);
+  font-size: 0.58rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+}
+
+.bar-trivia__receipt-breakdown p {
+  margin: 4px 0;
+}
+
+.bar-trivia__receipt-breakdown .bar-trivia__raw-tab {
+  margin-top: 9px;
+  border-top: 1px solid rgba(33, 27, 21, 0.16);
+  padding-top: 8px;
+}
+
+.bar-trivia__receipt-breakdown em {
+  display: block;
+  margin-top: 6px;
+  color: rgba(33, 27, 21, 0.48);
+  font-size: 0.62rem;
+  font-style: normal;
+  line-height: 1.35;
+}
+
+@media (max-width: 390px) {
+  .bar-trivia__venue .bar-trivia__answers {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .bar-trivia__venue .bar-trivia__answers button {
+    grid-template-columns: 23px 1fr;
+    gap: 5px;
+    min-height: 53px;
+    padding: 7px 8px;
+  }
+
+  .bar-trivia__venue .bar-trivia__answers button b {
+    width: 22px;
+    height: 22px;
+    font-size: 0.62rem;
+  }
+
+  .bar-trivia__venue .bar-trivia__question-card h2 {
+    font-size: 1.03rem;
+  }
+
+  .bar-trivia__score-cues {
+    gap: 3px;
+  }
+
+  .bar-trivia__score-cues span,
+  .bar-trivia__score-cues b,
+  .bar-trivia__score-cues em {
+    padding-inline: 5px;
+    font-size: 0.43rem;
+  }
+}
