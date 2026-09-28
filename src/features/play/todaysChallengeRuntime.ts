@@ -57,6 +57,11 @@ import {
 } from "./familyFeudDailyRuntime";
 import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
 import {
+  advanceBarTriviaDailyRuntime,
+  buildBarTriviaDailySetup,
+  BAR_TRIVIA_DAILY_SCORING_VERSION,
+} from "./barTriviaDailyRuntime";
+import {
   WAVELENGTH_CONTRACT_VERSIONS,
   createWavelengthRound,
   nextWavelengthClue,
@@ -87,7 +92,8 @@ export type OfficialDailyGameType =
   | "hit_the_number"
   | "who_am_i"
   | "millionaire"
-  | "sports_feud";
+  | "sports_feud"
+  | "bar_trivia";
 
 export const OFFICIAL_DAILY_RUNTIME_VERSION = "official-daily-runtime-v1";
 export const OFFICIAL_DAILY_SCORING_VERSION = OFFICIAL_SCORE_CONTRACT_VERSION;
@@ -107,6 +113,7 @@ export interface OfficialDailySetupPublication {
     | typeof BLIND_RESUME_V3_OFFICIAL_DAILY_SCORING_VERSION
     | typeof MILLIONAIRE_DAILY_SCORING_VERSION
     | typeof FAMILY_FEUD_DAILY_SCORING_VERSION
+    | typeof BAR_TRIVIA_DAILY_SCORING_VERSION
     | typeof DAILY_TWO_GAME_SCORING_VERSION;
   publicSetup: Record<string, unknown>;
   revealSetup: Record<string, unknown>;
@@ -680,6 +687,7 @@ export function buildOfficialDailySetup(
       day,
       scheduleVersion,
     );
+    case "bar_trivia": return buildBarTriviaDailySetup("ufc", day, scheduleVersion);
     case "who_am_i": {
       if (day >= UFC_AUTHORED_WHO_AM_I_CUTOVER_DAY) {
         return buildTwoRoundWhoAmIDailyPublication(
@@ -1019,6 +1027,7 @@ function advanceSingleOfficialDailyRuntime(
     case "who_am_i": return advanceCanonicalWhoAmIDailyRuntime(context, parsedAction);
     case "millionaire": return advanceMillionaireDailyRuntime(context, parsedAction);
     case "sports_feud": return advanceFamilyFeudDailyRuntime(context, parsedAction);
+    case "bar_trivia": return advanceBarTriviaDailyRuntime(context, parsedAction);
     default: throw new Error(`Unsupported official daily game ${String(context.gameType)}.`);
   }
 }
