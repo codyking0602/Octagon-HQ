@@ -41,7 +41,10 @@ describe("Bar Trivia question bank", () => {
 
   it("gives every current-event question an explicit eligibility window and verifiable source", () => {
     const currentEvents = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.contentType === "current-event");
-    expect(currentEvents.length).toBeGreaterThanOrEqual(3);
+    expect(currentEvents).toHaveLength(30);
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      expect(currentEvents.filter((question) => question.league === league)).toHaveLength(10);
+    }
 
     for (const question of currentEvents) {
       expect(question.activeFrom).toBeTruthy();
