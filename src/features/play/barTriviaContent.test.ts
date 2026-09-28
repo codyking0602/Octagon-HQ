@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 
-describe("Bar Trivia PR1 question bank", () => {
+describe("Bar Trivia question bank", () => {
   it("ships a complete seed set for all three sports and every round", () => {
     for (const league of ["nfl", "cfb", "ufc"] as const) {
       const questions = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
@@ -24,6 +24,34 @@ describe("Bar Trivia PR1 question bank", () => {
       expect(question.prompt.length).toBeGreaterThan(20);
       expect(question.explanation.length).toBeGreaterThan(20);
       expect(question.sourceId).toBeTruthy();
+      expect(["easy", "medium", "hard", "last-call"]).toContain(question.difficulty);
+      expect(["evergreen", "current-event"]).toContain(question.contentType);
+    }
+  });
+
+  it("gives every current-event question an explicit eligibility window and verifiable source", () => {
+    const currentEvents = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.contentType === "current-event");
+    expect(currentEvents.length).toBeGreaterThanOrEqual(3);
+
+    for (const question of currentEvents) {
+      expect(question.activeFrom).toBeTruthy();
+      expect(question.expiresAt).toBeTruthy();
+      expect(question.sourceUrl).toMatch(/^https:\/\//);
+      expect(question.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(new Date(question.activeFrom!).getTime()).toBeLessThan(new Date(question.expiresAt!).getTime());
+    }
+  });
+
+  it("keeps authored difficulty aligned to the round unless explicitly escalated later", () => {
+    const expected = {
+      round1: "easy",
+      round2: "medium",
+      round3: "hard",
+      "last-call": "last-call",
+    } as const;
+
+    for (const question of BAR_TRIVIA_QUESTION_BANK) {
+      expect(question.difficulty).toBe(expected[question.round]);
     }
   });
 
