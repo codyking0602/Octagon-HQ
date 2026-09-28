@@ -14,6 +14,7 @@ const gameTypeSchema = z.enum([
   "who_am_i",
   "millionaire",
   "sports_feud",
+  "bar_trivia",
 ]);
 const attemptSchema = z.object({
   native_score: z.coerce.number().int(),
@@ -98,6 +99,7 @@ const standingsEntrySchema = z.object({
     who_am_i: z.coerce.number().nullable().optional(),
     millionaire: z.coerce.number().nullable().optional(),
     sports_feud: z.coerce.number().nullable().optional(),
+    bar_trivia: z.coerce.number().nullable().optional(),
   }),
   is_current_user: z.boolean(),
   weekly_rank: z.coerce.number().int().positive(),
@@ -196,6 +198,7 @@ export interface TodayChallengeStandingsEntry {
     whoAmI: number | null;
     millionaire: number | null;
     sportsFeud?: number | null;
+    barTrivia?: number | null;
   };
   isCurrentUser: boolean;
   weeklyRank: number;
@@ -440,6 +443,7 @@ export function createTodayChallengeRepository(
             whoAmI: entry.game_averages.who_am_i ?? null,
             millionaire: entry.game_averages.millionaire ?? null,
             sportsFeud: entry.game_averages.sports_feud ?? null,
+            barTrivia: entry.game_averages.bar_trivia ?? null,
           },
           isCurrentUser: entry.is_current_user,
         })),
