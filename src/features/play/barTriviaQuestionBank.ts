@@ -1,13 +1,14 @@
 import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
 import { BAR_TRIVIA_NFL_EVERGREEN_EXPANSION } from "./barTriviaEvergreenNfl";
-import { BAR_TRIVIA_CFB_EVERGREEN_EXPANSION } from "./barTriviaEvergreenCfb";
-import { BAR_TRIVIA_UFC_EVERGREEN_EXPANSION } from "./barTriviaEvergreenUfc";
 import { BAR_TRIVIA_NFL_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenNflWave2";
 import { BAR_TRIVIA_NFL_EVERGREEN_WAVE_3 } from "./barTriviaEvergreenNflWave3";
+import { BAR_TRIVIA_CFB_EVERGREEN_EXPANSION } from "./barTriviaEvergreenCfb";
 import { BAR_TRIVIA_CFB_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenCfbWave2";
 import { BAR_TRIVIA_CFB_EVERGREEN_WAVE_3 } from "./barTriviaEvergreenCfbWave3";
+import { BAR_TRIVIA_UFC_EVERGREEN_EXPANSION } from "./barTriviaEvergreenUfc";
 import { BAR_TRIVIA_UFC_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenUfcWave2";
+import { BAR_TRIVIA_UFC_EVERGREEN_WAVE_3 } from "./barTriviaEvergreenUfcWave3";
 
 function q(question: BarTriviaQuestionSeed) {
   return barTriviaQuestion(question);
@@ -92,15 +93,13 @@ export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   q({ id:"ufc-final-bmf-ending", league:"ufc", round:"last-call", category:"BMF", prompt:"How did the inaugural Masvidal–Diaz BMF fight officially end?", choices:["Doctor stoppage","Unanimous decision","Corner stoppage","Submission"], answer:"Doctor stoppage", explanation:"The ringside physician stopped UFC 244 after the third round because of cuts around Nate Diaz's eye.", sourceId:"ufc-history" }),
   q({ id:"ufc-final-first-event-year", league:"ufc", round:"last-call", category:"Origins", prompt:"In what year did UFC 1 take place?", choices:["1993","1991","1995","1997"], answer:"1993", explanation:"UFC 1 was held on Nov. 12, 1993, in Denver.", sourceId:"ufc-history" }),
   ...BAR_TRIVIA_NFL_EVERGREEN_EXPANSION,
-  ...BAR_TRIVIA_CFB_EVERGREEN_EXPANSION,
-  ...BAR_TRIVIA_UFC_EVERGREEN_EXPANSION,
   ...BAR_TRIVIA_NFL_EVERGREEN_WAVE_2,
   ...BAR_TRIVIA_NFL_EVERGREEN_WAVE_3,
+  ...BAR_TRIVIA_CFB_EVERGREEN_EXPANSION,
   ...BAR_TRIVIA_CFB_EVERGREEN_WAVE_2,
   ...BAR_TRIVIA_CFB_EVERGREEN_WAVE_3,
+  ...BAR_TRIVIA_UFC_EVERGREEN_EXPANSION,
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_2,
-  ...BAR_TRIVIA_NFL_EVERGREEN_WAVE_3,
-  ...BAR_TRIVIA_CFB_EVERGREEN_WAVE_3,
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_3,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
 ];
