@@ -195,7 +195,7 @@ describe("Bar Trivia engine", () => {
     expect(run.filter((question) => question.contentType === "current-event")).toHaveLength(2);
   });
 
-  it("treats two current events as a target and does not repeat a just-seen current question", () => {
+  it("keeps the two-current-event target while avoiding a just-seen current question", () => {
     const current = BAR_TRIVIA_QUESTION_BANK.find(
       (question) => question.league === "nfl" && question.contentType === "current-event",
     );
@@ -209,7 +209,7 @@ describe("Bar Trivia engine", () => {
 
     expect(run).toHaveLength(10);
     expect(run.some((question) => question.id === current!.id)).toBe(false);
-    expect(run.filter((question) => question.contentType === "current-event").length).toBe(0);
+    expect(run.filter((question) => question.contentType === "current-event")).toHaveLength(2);
   });
 
   it("automatically drops expired current events and fills the run with evergreen questions", () => {
