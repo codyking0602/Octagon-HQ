@@ -66,7 +66,7 @@ For each currently enabled device subscription, the Edge Function:
 
 The payload includes the existing notification title, summary, route, category, kind, aggregate count, and notification ID. No additional member data is sent.
 
-When Octagon HQ is already visible, the service worker tells the existing notification provider to refresh instead of showing a duplicate operating-system alert. When the app is closed or hidden, it displays the device notification. Selecting it focuses or opens Octagon HQ at the canonical notification route.
+When Octagon HQ is already visible, the service worker tells the existing notification provider to refresh the in-app notification state and still displays the device notification. App visibility never suppresses an eligible device push. Selecting the device notification focuses or opens Octagon HQ at the canonical notification route.
 
 ## Preference and read-state behavior
 
