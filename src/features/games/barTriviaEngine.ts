@@ -209,6 +209,17 @@ function selectCurrentEvents(
   return selected;
 }
 
+function shuffleBarTriviaChoices(question: BarTriviaQuestion, random: () => number): BarTriviaQuestion {
+  const choices = [...question.choices] as [string, string, string, string];
+
+  for (let index = choices.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [choices[index], choices[swapIndex]] = [choices[swapIndex]!, choices[index]!];
+  }
+
+  return { ...question, choices };
+}
+
 export function buildBarTriviaRun(
   bank: readonly BarTriviaQuestion[],
   league: BarTriviaLeague,
@@ -264,7 +275,7 @@ export function buildBarTriviaRun(
     usedCategories.add(chosen.category);
   }
 
-  return run;
+  return run.map((question) => shuffleBarTriviaChoices(question, random));
 }
 
 export function pickBarTriviaDoubleRound(random: () => number = Math.random): BarTriviaDoubleRound {

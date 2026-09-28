@@ -4,9 +4,9 @@ import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 describe("Bar Trivia question bank", () => {
   it("ships a complete seed set for all three sports and every round", () => {
     const targets = {
-      nfl: { total: 200, round1: 60, round2: 60, round3: 60, lastCall: 20 },
-      cfb: { total: 200, round1: 60, round2: 60, round3: 60, lastCall: 20 },
-      ufc: { total: 320, round1: 90, round2: 90, round3: 90, lastCall: 30 },
+      nfl: { total: 200, round1: 40, round2: 60, round3: 60, lastCall: 20 },
+      cfb: { total: 200, round1: 40, round2: 60, round3: 60, lastCall: 20 },
+      ufc: { total: 320, round1: 40, round2: 90, round3: 90, lastCall: 30 },
     } as const;
 
     for (const league of ["nfl", "cfb", "ufc"] as const) {
@@ -55,7 +55,7 @@ describe("Bar Trivia question bank", () => {
     }
   });
 
-  it("keeps authored difficulty aligned to the round unless explicitly escalated later", () => {
+  it("keeps the recalibrated difficulty aligned to the playable round", () => {
     const expected = {
       round1: "easy",
       round2: "medium",
@@ -65,6 +65,19 @@ describe("Bar Trivia question bank", () => {
 
     for (const question of BAR_TRIVIA_QUESTION_BANK) {
       expect(question.difficulty).toBe(expected[question.round]);
+    }
+  });
+
+  it("keeps a deep genuinely easy evergreen pool for every sport", () => {
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      const easy = BAR_TRIVIA_QUESTION_BANK.filter(
+        (question) =>
+          question.league === league &&
+          question.contentType === "evergreen" &&
+          question.round === "round1" &&
+          question.difficulty === "easy",
+      );
+      expect(easy.length).toBeGreaterThanOrEqual(40);
     }
   });
 
