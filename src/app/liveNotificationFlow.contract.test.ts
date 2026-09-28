@@ -32,6 +32,8 @@ describe("live notification flow proof", () => {
   });
 
   it("proves persistence eligibility unread retrieval and the exact deep link", () => {
+    expect(proof).toContain('MLB Playoff Challenge welcome');
+    expect(proof).toContain('Enter the playoffs');
     expect(proof).toContain('item?.kind === "game_challenge_received"');
     expect(proof).toContain('item?.title === "You were challenged"');
     expect(proof).toContain("item?.is_read === false");
