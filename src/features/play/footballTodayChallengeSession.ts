@@ -10,6 +10,11 @@ import { buildFootballDailyPersistenceSetup as buildFootballWhoAmIPersistenceSet
 import { buildFootballDailyPersistenceSetup as buildFootballWavelengthPersistenceSetup } from "./footballDailyPublicationWavelength";
 import { buildFootballDailyPersistenceSetup as buildFootballFindLeaderPersistenceSetup } from "./footballDailyPublicationFindLeader";
 import { buildFootballDailyPersistenceSetup as buildFootballHitNumberPersistenceSetup } from "./footballDailyPublicationHitNumber";
+import { buildFootballDailyPersistenceSetup as buildFootballBarTriviaPersistenceSetup } from "./footballDailyPublicationBarTrivia";
+import {
+  DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
+  FOOTBALL_LOCKED_WEIGHTED_CYCLE,
+} from "./dailyChallengeRotation";
 import type {
   OfficialDailyGameType,
   OfficialDailyRuntimeContext,
@@ -25,6 +30,7 @@ export const FOOTBALL_MILLIONAIRE_SCHEDULE_VERSION = "football-daily-v11-million
 export const FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION = "football-daily-v12-sports-feud" as const;
 export const FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION = "football-daily-v15-weighted-sep24" as const;
 export const FOOTBALL_WEIGHTED_SCHEDULE_VERSION = "football-daily-v16-weighted-sep25" as const;
+export const FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION = "football-daily-v17-bar-trivia-sep29" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
 const FOOTBALL_SPORTS_FEUD_CUTOVER_DAY = "2026-09-23";
@@ -224,6 +230,7 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
   if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
@@ -237,6 +244,7 @@ export function footballTodayScheduleVersionForDay(day: string): string {
 
 function footballTodaySetupScheduleVersionForDay(day: string): string {
   dayNumber(day);
+  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
   if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
@@ -249,6 +257,12 @@ function footballTodaySetupScheduleVersionForDay(day: string): string {
 
 export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   const currentDayNumber = dayNumber(day);
+  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) {
+    const offset = currentDayNumber - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
+    const index = ((offset % FOOTBALL_LOCKED_WEIGHTED_CYCLE.length) + FOOTBALL_LOCKED_WEIGHTED_CYCLE.length)
+      % FOOTBALL_LOCKED_WEIGHTED_CYCLE.length;
+    return FOOTBALL_LOCKED_WEIGHTED_CYCLE[index]!;
+  }
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) {
     const offset = currentDayNumber - dayNumber(FOOTBALL_WEIGHTED_CUTOVER_DAY);
     const index = ((offset % FOOTBALL_WEIGHTED_CYCLE.length) + FOOTBALL_WEIGHTED_CYCLE.length) % FOOTBALL_WEIGHTED_CYCLE.length;
@@ -618,7 +632,9 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
         ? buildFootballFindLeaderPersistenceSetup
         : gameType === "hit_the_number"
           ? buildFootballHitNumberPersistenceSetup
-          : null;
+          : gameType === "bar_trivia"
+            ? buildFootballBarTriviaPersistenceSetup
+            : null;
     if (splitBuilder) {
       return {
         ...splitBuilder(day, setupScheduleVersion, gameType),
