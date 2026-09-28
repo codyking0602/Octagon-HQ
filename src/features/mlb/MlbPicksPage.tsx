@@ -158,7 +158,9 @@ export default function MlbPicksPage() {
   const bracketViewers = useMemo(() => {
     if (!hub || !identity.profile) return [];
     const own = hub.brackets.find((entry) => entry.is_current_user);
-    const rest = hub.brackets.filter((entry) => !entry.is_current_user);
+    const rest = hub.bracketLocked
+      ? hub.brackets.filter((entry) => !entry.is_current_user)
+      : [];
     if (own) return [own, ...rest];
 
     const currentUser: MlbBracketEntry = {
