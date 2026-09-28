@@ -1,4 +1,4 @@
-import { barTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
+import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
 
 function q(question: BarTriviaQuestionSeed) {
