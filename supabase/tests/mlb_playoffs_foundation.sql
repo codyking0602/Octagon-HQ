@@ -46,6 +46,11 @@ begin
   if position('not v_season.public_enabled and not v_is_owner' in v_hub_definition) = 0 then
     raise exception 'MLB hub lost owner/private release gate';
   end if;
+  if position('if v_bracket_locked then' in v_hub_definition) = 0
+    or position('if v_bracket_locked or v_is_owner then' in v_hub_definition) > 0
+  then
+    raise exception 'MLB hub must hide every other bracket until the global bracket lock';
+  end if;
 
   select pg_get_functiondef('public.save_mlb_playoff_bracket(integer,jsonb)'::regprocedure::oid)
     into v_save_definition;

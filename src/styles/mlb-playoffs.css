@@ -2707,9 +2707,9 @@
 
 .mlb-bracket-mini-team {
   min-height: 21px;
-  grid-template-columns: 16px 9px minmax(0, 1fr);
-  gap: 2px;
-  padding: 1px 2px;
+  grid-template-columns: 15px 7px minmax(0, 1fr);
+  gap: 1px;
+  padding: 1px;
 }
 
 .mlb-bracket-team-mark.is-compact {
@@ -2795,15 +2795,26 @@
     padding: 4px 2px;
   }
 
+  .mlb-bracket-mini-node {
+    padding: 2px 1px;
+  }
+
   .mlb-bracket-mini-team {
     min-height: 18px;
-    grid-template-columns: 14px 7px minmax(0, 1fr);
+    grid-template-columns: 13px 6px minmax(0, 1fr);
+    gap: 1px;
+    padding: 1px 0;
   }
 
   .mlb-bracket-team-mark.is-compact {
-    width: 14px;
-    height: 14px;
-    min-width: 14px;
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+  }
+
+  .mlb-bracket-mini-team > strong {
+    font-size: clamp(.34rem, 1.28vw, .46rem);
+    letter-spacing: -.02em;
   }
 }
 
