@@ -10,7 +10,8 @@ type OfficialDailyGameType =
   | "hit_the_number"
   | "who_am_i"
   | "millionaire"
-  | "sports_feud";
+  | "sports_feud"
+  | "bar_trivia";
 
 interface OfficialDailyRuntimeContext {
   gameType: OfficialDailyGameType;
@@ -131,6 +132,9 @@ function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
       break;
     case "sports_feud":
       runtime = import("./football-publication-sports-feud.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "bar_trivia":
+      runtime = import("./football-publication-bar-trivia.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
       break;
     case "blind_rank_5":
     case "keep_4_cut_4":
