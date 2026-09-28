@@ -9,12 +9,16 @@ describe("MLB series breakdown content", () => {
     const feature = MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS["al-wc-2"];
 
     expect(feature).toBeTruthy();
-    expect(feature?.eyebrow).toContain("AL WILD CARD");
+    expect(feature?.series).toContain("season series 7-6");
     expect(feature?.decisions).toHaveLength(3);
-    expect(feature?.players).toHaveLength(2);
-    expect(feature?.players.map((player) => player.name)).toEqual(["Ben Rice", "Roman Anthony"]);
-    expect(feature?.winPaths.nyy).toHaveLength(3);
-    expect(feature?.winPaths.bos).toHaveLength(3);
+    expect(feature?.decisions.map((decision) => decision.title)).toEqual([
+      "New York's power",
+      "Boston at the top of the order",
+      "The late innings",
+    ]);
+    expect(feature?.decisions[0].body.some((part) => part.href?.includes("ricebe01.shtml"))).toBe(true);
+    expect(feature?.decisions[1].body.some((part) => part.href?.includes("anthoro01.shtml"))).toBe(true);
+    expect(feature?.hqRead).toContain("high-leverage moments");
   });
 
   it("publishes only the selected featured matchup once the real field is loaded", () => {
