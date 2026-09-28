@@ -58,6 +58,26 @@ describe("provider selection and deterministic evidence", () => {
     expect(filtered.snapshots[0].matchupIdentity).toBe("daniel rodriguez|uros medic");
     expect(filtered.coverage).toEqual({ providerEvents: 1, completeSnapshots: 1, missingSnapshots: 0 });
   });
+  it("keeps staged monitoring safe when the database projection omits fighter slugs", () => {
+    const sluglessBout = { ...event.bouts[0] } as Record<string, unknown>;
+    delete sluglessBout.red_fighter_slug;
+    delete sluglessBout.blue_fighter_slug;
+    const stagedEvent = {
+      ...event,
+      event_id: "draft-id",
+      bouts: [sluglessBout],
+    } as unknown as typeof event;
+
+    const payload = build({
+      resolved: resolveMonitoringEvent(stagedEvent, null),
+      odds: odds([...fixture, unrelatedProviderFight()]),
+    });
+
+    expect(payload.source_event_identity).toBe("ufc:events/ufc-330");
+    expect(payload.odds_snapshots).toHaveLength(1);
+    expect(payload.coverage.provider_events).toBe(1);
+  });
+
   it("records a missing monitored bout instead of an unrelated provider fight", () => {
     const secondBout = { bout_id: "main-2", red_fighter_slug: "missing-one", red_fighter_name: "Missing One", blue_fighter_slug: "missing-two", blue_fighter_name: "Missing Two" };
     const monitored = { ...event, bouts: [...event.bouts, secondBout] };
