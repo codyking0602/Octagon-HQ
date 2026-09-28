@@ -1,4 +1,5 @@
 import { barTriviaQuestion, type BarTriviaQuestion } from "../games/barTriviaEngine";
+import { BAR_TRIVIA_EASY_EXPANSION_2 } from "./barTriviaEasyExpansion2";
 
 function q(question: Parameters<typeof barTriviaQuestion>[0]) {
   return barTriviaQuestion(question);
@@ -150,4 +151,5 @@ const CURATED_EXISTING_EASY_IDS = [
 export const BAR_TRIVIA_EASY_QUESTION_IDS = new Set<string>([
   ...CURATED_EXISTING_EASY_IDS,
   ...BAR_TRIVIA_EASY_EXPANSION.map((question) => question.id),
+  ...BAR_TRIVIA_EASY_EXPANSION_2.map((question) => question.id),
 ]);

@@ -4,9 +4,9 @@ import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
 describe("Bar Trivia question bank", () => {
   it("ships a complete seed set for all three sports and every round", () => {
     const targets = {
-      nfl: { total: 200, round1: 40, round2: 60, round3: 60, lastCall: 20 },
-      cfb: { total: 200, round1: 40, round2: 60, round3: 60, lastCall: 20 },
-      ufc: { total: 320, round1: 40, round2: 90, round3: 90, lastCall: 30 },
+      nfl: { total: 200, round1: 75, round2: 60, round3: 60, lastCall: 20 },
+      cfb: { total: 200, round1: 75, round2: 60, round3: 60, lastCall: 20 },
+      ufc: { total: 320, round1: 75, round2: 90, round3: 90, lastCall: 30 },
     } as const;
 
     for (const league of ["nfl", "cfb", "ufc"] as const) {
@@ -77,7 +77,7 @@ describe("Bar Trivia question bank", () => {
           question.round === "round1" &&
           question.difficulty === "easy",
       );
-      expect(easy.length).toBeGreaterThanOrEqual(40);
+      expect(easy.length).toBeGreaterThanOrEqual(75);
     }
   });
 

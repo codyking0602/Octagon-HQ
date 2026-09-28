@@ -250,8 +250,15 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
 
       {scene === "round-intro" && league ? (
         <section className="bar-trivia__panel bar-trivia__round-intro" aria-labelledby="bar-trivia-round-title">
-          <span className="bar-trivia__round-number">ROUND {currentRoundNumber}</span>
-          {currentRoundIsDouble ? <div className="bar-trivia__double-banner">DOUBLE ROUND · 2× BASE</div> : null}
+          {currentRoundIsDouble ? (
+            <div className="bar-trivia__double-takeover" role="status">
+              <span>ROUND {currentRoundNumber} · THIS IS THE</span>
+              <strong>DOUBLE ROUND</strong>
+              <b>EVERY QUESTION IS WORTH 2× BASE POINTS</b>
+            </div>
+          ) : (
+            <span className="bar-trivia__round-number">ROUND {currentRoundNumber}</span>
+          )}
           <h1 id="bar-trivia-round-title">{roundName}</h1>
           <p>{roundDeckCopy(league, state.index)}</p>
           <div className="bar-trivia__round-value">
@@ -263,7 +270,7 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
             <strong>{scoreLabel}</strong>
           </div>
           <button className="bar-trivia__primary" type="button" onClick={() => setScene("question")}>
-            START ROUND {currentRoundNumber}
+            {currentRoundIsDouble ? "START DOUBLE ROUND · 2×" : `START ROUND ${currentRoundNumber}`}
           </button>
         </section>
       ) : null}
@@ -305,7 +312,13 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
         >
           <header className="bar-trivia__hud">
             <div>
-              <span>{question.round === "last-call" ? "LAST CALL" : `ROUND ${barTriviaRoundNumber(question.round)}`}</span>
+              <span>
+                {displayedRoundIsDouble
+                  ? `2× DOUBLE ROUND · ROUND ${barTriviaRoundNumber(question.round)}`
+                  : question.round === "last-call"
+                    ? "LAST CALL"
+                    : `ROUND ${barTriviaRoundNumber(question.round)}`}
+              </span>
               <strong>{question.round === "last-call" ? "FINAL QUESTION" : `QUESTION ${displayedRoundQuestionNumber} OF 3`}</strong>
             </div>
             <div>

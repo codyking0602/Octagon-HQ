@@ -1,6 +1,7 @@
 import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
 import { BAR_TRIVIA_EASY_EXPANSION, BAR_TRIVIA_EASY_QUESTION_IDS } from "./barTriviaEasyCalibration";
+import { BAR_TRIVIA_EASY_EXPANSION_2 } from "./barTriviaEasyExpansion2";
 import { BAR_TRIVIA_NFL_EVERGREEN_EXPANSION } from "./barTriviaEvergreenNfl";
 import { BAR_TRIVIA_NFL_EVERGREEN_WAVE_2 } from "./barTriviaEvergreenNflWave2";
 import { BAR_TRIVIA_NFL_EVERGREEN_WAVE_3 } from "./barTriviaEvergreenNflWave3";
@@ -115,6 +116,7 @@ const RAW_BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_6,
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_7,
   ...BAR_TRIVIA_EASY_EXPANSION,
+  ...BAR_TRIVIA_EASY_EXPANSION_2,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
 ];
 

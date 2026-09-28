@@ -177,7 +177,7 @@ function selectCurrentEvents(
 ) {
   const capacity = new Map<BarTriviaRound, number>([
     ["round1", 3],
-    ["round2", 3],
+    ["round2", 2],
     ["round3", 3],
     ["last-call", 1],
   ]);
@@ -256,7 +256,27 @@ export function buildBarTriviaRun(
   const usedCategories = new Set<string>();
   const run: BarTriviaQuestion[] = [];
 
-  for (const round of BAR_TRIVIA_ROUND_SLOTS) {
+  for (const [index, round] of BAR_TRIVIA_ROUND_SLOTS.entries()) {
+    if (index === 3) {
+      const accessible = pickQuestion(
+        bank.filter((question) =>
+          question.league === league &&
+          question.round === "round1" &&
+          question.difficulty === "easy" &&
+          question.contentType === "evergreen"
+        ),
+        used,
+        usedCategories,
+        recentQuestionIds,
+        random,
+      );
+      const chosen = { ...accessible, round: "round2" as const };
+      run.push(chosen);
+      used.add(chosen.id);
+      usedCategories.add(chosen.category);
+      continue;
+    }
+
     const currentQueue = currentByRound.get(round);
     const scheduledCurrent = currentQueue?.shift();
     const chosen = scheduledCurrent ?? pickQuestion(
@@ -325,7 +345,8 @@ export function barTriviaPerfectRawScore(doubleRound: BarTriviaDoubleRound) {
 
 export function normalizeBarTriviaScore(rawScore: number, doubleRound: BarTriviaDoubleRound) {
   const maxRaw = barTriviaPerfectRawScore(doubleRound);
-  const normalized = Math.round((Math.max(0, rawScore) / maxRaw) * BAR_TRIVIA_MAX_SCORE);
+  const rawRatio = Math.max(0, rawScore) / maxRaw;
+  const normalized = Math.round(Math.sqrt(rawRatio) * BAR_TRIVIA_MAX_SCORE);
   return Math.max(0, Math.min(BAR_TRIVIA_MAX_SCORE, normalized));
 }
 
