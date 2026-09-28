@@ -16,7 +16,7 @@ export function MlbPlayerSpotlight() {
       <div className="football-player-spotlight__copy">
         <span>PLAYER SPOTLIGHT</span>
         <h3>
-          <a href={player.profileUrl} target="_blank" rel="noreferrer">
+          <a className="mlb-player-spotlight__name-link" href={player.profileUrl} target="_blank" rel="noreferrer">
             {player.name}
           </a>
         </h3>
