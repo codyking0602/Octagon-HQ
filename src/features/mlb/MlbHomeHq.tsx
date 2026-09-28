@@ -27,7 +27,7 @@ function MlbTeamMark({ name }: { name: string }) {
 
   return (
     <span
-      className={`football-hq-team-mark${logo ? "" : " is-empty"}${asset?.abbreviation === "NYY" ? " mlb-yankees-light" : ""}`}
+      className={`football-hq-team-mark${logo ? "" : " is-empty"}${asset?.abbreviation === "NYY" ? " is-white-logo" : ""}`}
       aria-hidden="true"
     >
       {logo ? <img src={logo} alt="" loading="lazy" /> : <b>{name.slice(0, 2).toUpperCase()}</b>}
