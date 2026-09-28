@@ -195,6 +195,23 @@ describe("Bar Trivia engine", () => {
     expect(run.filter((question) => question.contentType === "current-event")).toHaveLength(2);
   });
 
+  it("treats two current events as a target and does not repeat a just-seen current question", () => {
+    const current = BAR_TRIVIA_QUESTION_BANK.find(
+      (question) => question.league === "nfl" && question.contentType === "current-event",
+    );
+    expect(current).toBeTruthy();
+
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", {
+      random: () => 0,
+      now: "2026-09-28T12:00:00Z",
+      recentQuestionIds: [current!.id],
+    });
+
+    expect(run).toHaveLength(10);
+    expect(run.some((question) => question.id === current!.id)).toBe(false);
+    expect(run.filter((question) => question.contentType === "current-event").length).toBe(0);
+  });
+
   it("automatically drops expired current events and fills the run with evergreen questions", () => {
     const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "cfb", {
       random: () => 0,
