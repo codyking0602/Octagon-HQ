@@ -7,7 +7,7 @@ export const BAR_TRIVIA_CURRENT_EVENT_QUESTIONS: readonly BarTriviaQuestion[] = 
     round: "round2",
     difficulty: "medium",
     category: "Wild Wins",
-    prompt: "Which team somehow won in Week 3 despite committing at least five turnovers and at least 10 penalties?",
+    prompt: "Which team pulled off a chaotic Week 3 win over the Chargers despite five turnovers and double-digit penalties?",
     choices: ["Buffalo Bills", "Kansas City Chiefs", "Detroit Lions", "Pittsburgh Steelers"],
     answer: "Buffalo Bills",
     explanation: "Buffalo beat the Chargers 24–16 despite becoming just the 10th Bills team to commit at least five turnovers and 10 penalties in the same game.",
