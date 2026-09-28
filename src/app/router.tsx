@@ -111,6 +111,7 @@ export const appRoutes: RouteObject[] = [
       { path: "mlb", element: <MlbGate fallback="/"><MlbPlayoffsPage /></MlbGate> },
       { path: "mlb/picks", element: <MlbGate fallback="/picks"><MlbPicksPage /></MlbGate> },
       { path: "mlb/challenge", element: <MlbGate fallback="/play"><MlbFeaturedChallengePage /></MlbGate> },
+      { path: "mlb/bar-trivia", element: <MlbGate fallback="/"><OwnerOnlyRoute fallback="/mlb"><BarTriviaCasualPage scope="mlb" /></OwnerOnlyRoute></MlbGate> },
       { path: "mlb/series/:seriesId", element: <MlbGate fallback="/"><MlbSeriesBreakdownPage /></MlbGate> },
       { path: "picks/control", element: <PicksControlCenterPage /> },
       { path: "picks/setup", element: <Navigate to="/picks/control#setup" replace /> },

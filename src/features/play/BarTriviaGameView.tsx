@@ -13,7 +13,7 @@ import {
 } from "../games/barTriviaEngine";
 import "./BarTriviaCasualPage.css";
 
-export type BarTriviaScope = "football" | "ufc";
+export type BarTriviaScope = "football" | "ufc" | "mlb";
 export type BarTriviaScene = "league" | "intro" | "round-intro" | "question" | "wager" | "result";
 export type BarTriviaDisplayQuestion = Omit<BarTriviaQuestion, "answer" | "explanation"> & {
   answer?: string;
@@ -23,19 +23,28 @@ export type BarTriviaDisplayQuestion = Omit<BarTriviaQuestion, "answer" | "expla
 function leagueLabel(league: BarTriviaLeague) {
   if (league === "nfl") return "NFL";
   if (league === "cfb") return "COLLEGE FOOTBALL";
+  if (league === "mlb") return "MLB";
   return "UFC";
 }
 
 function roundDeckCopy(league: BarTriviaLeague, index: number) {
   if (index === 0) {
-    return league === "ufc"
-      ? "Start broad. Fighters, moments, and the stuff every fight fan should know."
-      : "Start broad. Teams, traditions, and the stuff every football fan should know.";
+    if (league === "ufc") {
+      return "Start broad. Fighters, moments, and the stuff every fight fan should know.";
+    }
+    if (league === "mlb") {
+      return "Start very broad. Famous players, nicknames, and baseball facts everyone should have a shot at.";
+    }
+    return "Start broad. Teams, traditions, and the stuff every football fan should know.";
   }
   if (index === 3) {
-    return "The obvious stuff is gone. Time for traditions, oddities, nicknames, and history.";
+    return league === "mlb"
+      ? "Still accessible, but now you need the famous records, numbers, and baseball history."
+      : "The obvious stuff is gone. Time for traditions, oddities, nicknames, and history.";
   }
-  return "Three tougher calls before Last Call.";
+  return league === "mlb"
+    ? "The baseball bar finally gets tougher. Three real calls before Last Call."
+    : "Three tougher calls before Last Call.";
 }
 
 function choiceLetter(index: number) {
@@ -63,7 +72,7 @@ export function BarTriviaGameView({
   question,
   lastResult,
   wagerDraft,
-  availableCounts = { nfl: 0, cfb: 0, ufc: 0 },
+  availableCounts = { nfl: 0, cfb: 0, ufc: 0, mlb: 0 },
   onBack,
   onSelectLeague,
   onStart,
@@ -123,7 +132,7 @@ export function BarTriviaGameView({
     <main className="bar-trivia" data-league={league ?? scope}>
       <div className="bar-trivia__ambient" aria-hidden="true" />
       <button className="bar-trivia__back" type="button" onClick={onBack}>
-        ‹ {scope === "ufc" ? "UFC HQ" : "FOOTBALL HQ"}
+        ‹ {scope === "ufc" ? "UFC HQ" : scope === "mlb" ? "MLB PLAY" : "FOOTBALL HQ"}
       </button>
 
       {scene === "league" ? (

@@ -14,6 +14,7 @@ import {
   type BarTriviaState,
 } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
+import { MLB_BAR_TRIVIA_MOCK_RUN } from "./mlbBarTriviaMockRun";
 import {
   BarTriviaGameView,
   type BarTriviaScene,
@@ -48,6 +49,7 @@ function rememberQuestionIds(league: BarTriviaLeague, ids: readonly string[]) {
 }
 
 function buildRun(league: BarTriviaLeague) {
+  if (league === "mlb") return MLB_BAR_TRIVIA_MOCK_RUN;
   return buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
     recentQuestionIds: recentQuestionIds(league),
   });
@@ -55,15 +57,15 @@ function buildRun(league: BarTriviaLeague) {
 
 export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }) {
   const navigate = useNavigate();
-  const fixedLeague: BarTriviaLeague | null = scope === "ufc" ? "ufc" : null;
+  const fixedLeague: BarTriviaLeague | null = scope === "ufc" ? "ufc" : scope === "mlb" ? "mlb" : null;
   const [league, setLeague] = useState<BarTriviaLeague | null>(fixedLeague);
-  const [scene, setScene] = useState<BarTriviaScene>(scope === "ufc" ? "intro" : "league");
+  const [scene, setScene] = useState<BarTriviaScene>(scope === "football" ? "league" : "intro");
   const [run, setRun] = useState<readonly BarTriviaQuestion[]>([]);
   const [state, setState] = useState<BarTriviaState>(() => createBarTriviaState());
   const [lastResult, setLastResult] = useState<BarTriviaAnswerResult | null>(null);
   const [wagerDraft, setWagerDraft] = useState(BAR_TRIVIA_MAX_WAGER);
 
-  const backRoute = scope === "ufc" ? "/play" : "/football";
+  const backRoute = scope === "ufc" ? "/play" : scope === "mlb" ? "/mlb" : "/football";
   const displayedIndex = lastResult ? Math.max(0, state.index - 1) : state.index;
   const question = run[displayedIndex] ?? null;
 
@@ -71,6 +73,7 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
     nfl: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "nfl").length,
     cfb: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "cfb").length,
     ufc: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "ufc").length,
+    mlb: MLB_BAR_TRIVIA_MOCK_RUN.length,
   }), []);
 
   function selectLeague(nextLeague: BarTriviaLeague) {
@@ -81,7 +84,7 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
   function startGame() {
     if (!league) return;
     const nextRun = buildRun(league);
-    rememberQuestionIds(league, nextRun.map((item) => item.id));
+    if (league !== "mlb") rememberQuestionIds(league, nextRun.map((item) => item.id));
     setRun(nextRun);
     setState(createBarTriviaState(pickBarTriviaDoubleRound()));
     setLastResult(null);
@@ -149,7 +152,9 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
       onLockWager={lockWager}
       onPlayAgain={startGame}
       onChangeLeague={scope === "football" ? changeLeague : undefined}
-      ownerNote="Owner-only Casual preview. No Daily result, streak, or leaderboard write."
+      ownerNote={scope === "mlb"
+        ? "Owner-only MLB calibration run. Mock questions are disposable and do not write a Daily result, streak, or leaderboard score."
+        : "Owner-only Casual preview. No Daily result, streak, or leaderboard write."}
     />
   );
 }
