@@ -184,10 +184,12 @@ function selectCurrentEvents(
   const selected: BarTriviaQuestion[] = [];
   const used = new Set<string>();
   const usedCategories = new Set<string>();
+  const recent = new Set(recentQuestionIds);
   const active = bank.filter((question) =>
     question.league === league &&
     question.contentType === "current-event" &&
-    isBarTriviaQuestionActive(question, now)
+    isBarTriviaQuestionActive(question, now) &&
+    !recent.has(question.id)
   );
 
   while (selected.length < target) {
