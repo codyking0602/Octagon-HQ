@@ -158,7 +158,9 @@ export default function MlbPicksPage() {
   const bracketViewers = useMemo(() => {
     if (!hub || !identity.profile) return [];
     const own = hub.brackets.find((entry) => entry.is_current_user);
-    const rest = hub.brackets.filter((entry) => !entry.is_current_user);
+    const rest = hub.bracketLocked
+      ? hub.brackets.filter((entry) => !entry.is_current_user)
+      : [];
     if (own) return [own, ...rest];
 
     const currentUser: MlbBracketEntry = {
@@ -188,7 +190,10 @@ export default function MlbPicksPage() {
   );
 
   const bracketStandings = useMemo(() => {
-    const entries = (hub?.brackets ?? []).slice().sort((left, right) => (
+    const entries = (hub?.brackets ?? [])
+      .filter((entry) => hub?.bracketLocked || entry.is_current_user)
+      .slice()
+      .sort((left, right) => (
       right.score - left.score
       || left.display_name.localeCompare(right.display_name)
     ));
