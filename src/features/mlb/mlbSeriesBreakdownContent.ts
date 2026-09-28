@@ -1,25 +1,21 @@
-export type MlbSeriesBreakdownDecision = {
-  title: string;
-  body: string;
+export type MlbSeriesBreakdownRichTextPart = {
+  text: string;
+  href?: string;
+  emphasis?: boolean;
 };
 
-export type MlbSeriesBreakdownPlayer = {
-  teamId: string;
-  name: string;
-  role: string;
-  body: string;
+export type MlbSeriesBreakdownDecision = {
+  title: string;
+  body: readonly MlbSeriesBreakdownRichTextPart[];
 };
 
 export type MlbSeriesBreakdownContent = {
-  eyebrow: string;
   series: string;
   decisions: readonly [
     MlbSeriesBreakdownDecision,
     MlbSeriesBreakdownDecision,
     MlbSeriesBreakdownDecision,
   ];
-  players: readonly [MlbSeriesBreakdownPlayer, MlbSeriesBreakdownPlayer];
-  winPaths: Readonly<Record<string, readonly [string, string, string]>>;
   hqRead: string;
 };
 
@@ -30,56 +26,46 @@ export type MlbSeriesBreakdownContent = {
  */
 export const MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS: Readonly<Record<string, MlbSeriesBreakdownContent>> = {
   "al-wc-2": {
-    eyebrow: "AL WILD CARD · RIVALRY REMATCH",
     series:
-      "New York won the season series 7-6, including a 4-2 mark at Yankee Stadium, and eliminated Boston in last year's Wild Card Series. Both clubs finished among MLB's top five in team ERA, so this best-of-three can turn on one big swing or one bullpen mistake.",
+      "New York won the season series 7-6 and eliminated Boston in last year's Wild Card Series. Both clubs finished among MLB's top five in team ERA, so this best-of-three can turn on only a handful of high-leverage at-bats.",
     decisions: [
       {
-        title: "Who lands the first punch?",
-        body:
-          "A three-game series makes Game 1 enormous. Both clubs have enough starting pitching to control a night, so early traffic and one crooked inning could decide who gets to dictate the rest of the series.",
+        title: "New York's power",
+        body: [
+          {
+            text: "Ben Rice",
+            href: "https://www.baseball-reference.com/players/r/ricebe01.shtml",
+            emphasis: true,
+          },
+          {
+            text: " gives the Yankees another bat that can change a game with one swing. Boston needs to keep traffic off the bases and make New York manufacture runs.",
+          },
+        ],
       },
       {
-        title: "Can Boston keep the ball in the park?",
-        body:
-          "New York leaned on home-run power in the season series. Boston's cleanest path is limiting free baserunners and making the Yankees create offense one base at a time.",
+        title: "Boston at the top of the order",
+        body: [
+          {
+            text: "Roman Anthony",
+            href: "https://www.baseball-reference.com/players/a/anthoro01.shtml",
+            emphasis: true,
+          },
+          {
+            text: " getting on base changes the shape of Boston's offense and forces New York to pitch under pressure.",
+          },
+        ],
       },
       {
-        title: "Who owns the late innings?",
-        body:
-          "Boston can shorten games with Aroldis Chapman and Garrett Whitlock, while New York has David Bednar at the back end. In a rivalry this tight, the seventh through ninth innings may be the whole series.",
+        title: "The late innings",
+        body: [
+          {
+            text: "Both teams can shorten games with their bullpens. In a three-game series, one seventh- or eighth-inning mistake can decide the whole thing.",
+          },
+        ],
       },
     ],
-    players: [
-      {
-        teamId: "nyy",
-        name: "Ben Rice",
-        role: "YANKEES",
-        body:
-          "With Aaron Judge's health uncertain, Rice is the power bat Boston cannot let beat it. His ability to change a game with one swing gives New York a postseason centerpiece even if the lineup is not at full strength.",
-      },
-      {
-        teamId: "bos",
-        name: "Roman Anthony",
-        role: "RED SOX",
-        body:
-          "Anthony gives Boston an on-base spark at the top of the lineup. If he reaches base consistently, the Red Sox can pressure New York before the Yankees' power has a chance to take over.",
-      },
-    ],
-    winPaths: {
-      nyy: [
-        "Create early traffic and let the power bats do damage.",
-        "Get length from the starters and hand Bednar a lead.",
-        "Make Boston chase runs instead of playing from ahead.",
-      ],
-      bos: [
-        "Win the on-base battle at the top of the order.",
-        "Keep New York's home-run swings to solo shots.",
-        "Reach Chapman and Whitlock with a late lead.",
-      ],
-    },
     hqRead:
-      "New York has home field, the 7-6 season-series edge and last year's Wild Card win. Boston has enough pitching and late-inning strength to make every game uncomfortable. In a best-of-three, the safer expectation is not a runaway — it is three nights where one mistake can swing the rivalry.",
+      "New York has home field and the recent rivalry edge, but Boston has enough pitching to keep every game tight. This feels much more like a series decided by a handful of high-leverage moments than one team simply overpowering the other.",
   },
 };
 

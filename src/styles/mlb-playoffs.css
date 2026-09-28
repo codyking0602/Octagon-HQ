@@ -3892,3 +3892,187 @@
 .mlb-bracket__heading > small {
   white-space: nowrap;
 }
+
+
+/* MLB Spotlight Series — compact sibling treatment to Football Game of the Week. */
+.mlb-series-breakdown-hero.is-compact {
+  gap: 0;
+  padding: 0;
+  border-color: rgba(var(--mlb-green-rgb), .34);
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--series-away-color) 54%, #101213) 0%,
+      #101213 47%,
+      #101213 53%,
+      color-mix(in srgb, var(--series-home-color) 54%, #101213) 100%
+    );
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown-hero__topline {
+  padding: 13px 15px 8px;
+  background: rgba(5, 7, 8, .26);
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown-hero__topline > span {
+  color: #dff7ea;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown-hero__topline > b {
+  color: rgba(255, 255, 255, .68);
+  text-transform: uppercase;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__matchup {
+  padding: 8px 15px 14px;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  min-height: 0;
+  align-items: center;
+  justify-items: start;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team.is-home {
+  grid-template-columns: minmax(0, 1fr) 44px;
+  justify-items: end;
+  text-align: right;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team.is-home .mlb-series-breakdown__team-logo {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team.is-home .mlb-series-breakdown__team-copy {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team-logo {
+  width: 44px;
+  height: 44px;
+}
+
+.mlb-series-breakdown__team-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team strong {
+  font-size: 11px;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team small {
+  color: rgba(255, 255, 255, .68);
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__matchup > b {
+  color: rgba(255, 255, 255, .48);
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__schedule {
+  padding: 10px 15px 13px;
+  border-top-color: rgba(255, 255, 255, .14);
+  background: rgba(5, 7, 8, .42);
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__schedule > span {
+  color: rgba(255, 255, 255, .74);
+}
+
+.mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__schedule strong {
+  border-color: rgba(255, 255, 255, .14);
+  background: rgba(5, 7, 8, .38);
+  color: rgba(255, 255, 255, .78);
+}
+
+.mlb-series-inline-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color .15s ease, opacity .15s ease;
+}
+
+.mlb-series-inline-link:hover,
+.mlb-series-inline-link:focus-visible {
+  color: var(--mlb-green-strong);
+  outline: none;
+}
+
+.mlb-series-inline-link:active {
+  opacity: .72;
+}
+
+/* The player name is a quiet profile link, not a second CTA. */
+.football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link,
+.football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link:visited {
+  display: inline;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  text-decoration: none;
+}
+
+.football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+.football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid var(--home-football-blue, var(--mlb-green));
+  outline-offset: 3px;
+  text-decoration: none;
+}
+
+@media (max-width: 520px) {
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown-hero__topline {
+    padding: 11px 12px 7px;
+  }
+
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__matchup {
+    padding: 7px 12px 12px;
+  }
+
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team,
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team.is-home {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team.is-home {
+    grid-template-columns: minmax(0, 1fr) 38px;
+  }
+
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team-logo {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__team strong {
+    font-size: 10px;
+  }
+
+  .mlb-series-breakdown-hero.is-compact .mlb-series-breakdown__schedule {
+    padding: 9px 12px 11px;
+  }
+}

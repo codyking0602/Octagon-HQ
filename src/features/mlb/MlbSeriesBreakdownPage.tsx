@@ -4,55 +4,59 @@ import { useIdentity } from "../identity/IdentityProvider";
 import { MLB_OWNER_PREVIEW_HUB } from "./mlbOwnerPreview";
 import {
   resolveMlbSeriesBreakdownContent,
-  type MlbSeriesBreakdownPlayer,
+  type MlbSeriesBreakdownRichTextPart,
 } from "./mlbSeriesBreakdownContent";
 import { mlbTeamAssetByName, mlbTeamColor, mlbTeamLogoUrl } from "./mlbTeamAssets";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import "../../styles/mlb-playoffs.css";
 
-function TeamPanel({ name, seed }: { name: string; seed: number | null | undefined }) {
+function BreakdownRichText({ parts }: { parts: readonly MlbSeriesBreakdownRichTextPart[] }) {
+  return (
+    <>
+      {parts.map((part, index) => {
+        const copy = part.emphasis ? <strong>{part.text}</strong> : part.text;
+        return part.href ? (
+          <a
+            className="mlb-series-inline-link"
+            href={part.href}
+            key={`${part.text}-${index}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {copy}
+          </a>
+        ) : <span key={`${part.text}-${index}`}>{copy}</span>;
+      })}
+    </>
+  );
+}
+
+function TeamPanel({
+  name,
+  seed,
+  side,
+}: {
+  name: string;
+  seed: number | null | undefined;
+  side: "away" | "home";
+}) {
   const asset = mlbTeamAssetByName(name);
   const color = mlbTeamColor(asset?.abbreviation, name);
   const logo = mlbTeamLogoUrl(asset?.abbreviation, name);
 
   return (
-    <div className="mlb-series-breakdown__team" style={{ "--series-team-color": color } as CSSProperties}>
+    <div
+      className={`mlb-series-breakdown__team is-${side}`}
+      style={{ "--series-team-color": color } as CSSProperties}
+    >
       <span className={`mlb-series-breakdown__team-logo${asset?.abbreviation === "NYY" ? " mlb-yankees-light" : ""}`}>
         {logo ? <img src={logo} alt="" loading="eager" /> : null}
       </span>
-      <strong>{name}</strong>
-      <small>{seed ? "NO. " + seed + " SEED · " : ""}{asset?.abbreviation ?? "MLB"}</small>
+      <div className="mlb-series-breakdown__team-copy">
+        <strong>{name}</strong>
+        <small>{seed ? "NO. " + seed + " SEED · " : ""}{asset?.abbreviation ?? "MLB"}</small>
+      </div>
     </div>
-  );
-}
-
-function PlayerCard({
-  player,
-  teamName,
-}: {
-  player: MlbSeriesBreakdownPlayer;
-  teamName: string;
-}) {
-  const asset = mlbTeamAssetByName(teamName);
-  const color = mlbTeamColor(asset?.abbreviation, teamName);
-  const logo = mlbTeamLogoUrl(asset?.abbreviation, teamName);
-
-  return (
-    <article
-      className="mlb-series-player"
-      style={{ "--series-team-color": color } as CSSProperties}
-    >
-      <header>
-        <span className={`mlb-series-player__logo${asset?.abbreviation === "NYY" ? " mlb-yankees-light" : ""}`}>
-          {logo ? <img src={logo} alt="" loading="lazy" /> : null}
-        </span>
-        <div>
-          <small>{player.role}</small>
-          <strong>{player.name}</strong>
-        </div>
-      </header>
-      <p>{player.body}</p>
-    </article>
   );
 }
 
@@ -86,29 +90,27 @@ export default function MlbSeriesBreakdownPage() {
 
   const teamA = hub?.bracketTemplate.teams.find((team) => team.id === series.team_a_id);
   const teamB = hub?.bracketTemplate.teams.find((team) => team.id === series.team_b_id);
-  const playerTeamName = (teamId: string) => (
-    teamId === series.team_a_id ? series.team_a_name : series.team_b_name
-  );
-  const winPathsA = breakdown?.winPaths[series.team_a_id] ?? [];
-  const winPathsB = breakdown?.winPaths[series.team_b_id] ?? [];
+  const teamAColor = mlbTeamColor(teamA?.abbreviation, series.team_a_name);
+  const teamBColor = mlbTeamColor(teamB?.abbreviation, series.team_b_name);
 
   return (
     <div className="page mlb-series-breakdown-page">
-      <section className="surface-card mlb-series-breakdown-hero">
+      <section
+        className="surface-card mlb-series-breakdown-hero is-compact"
+        style={{
+          "--series-away-color": teamAColor,
+          "--series-home-color": teamBColor,
+        } as CSSProperties}
+      >
         <div className="mlb-series-breakdown-hero__topline">
-          <span>MLB PLAYOFFS · SERIES BREAKDOWN</span>
+          <span>THE HQ'S MLB SPOTLIGHT SERIES</span>
           <b>{spotlight?.status ?? series.label}</b>
         </div>
 
-        <div className="mlb-series-breakdown-hero__title">
-          <h1>{spotlight?.title ?? (series.team_a_name + " vs. " + series.team_b_name)}</h1>
-          {breakdown ? <small>{breakdown.eyebrow}</small> : null}
-        </div>
-
         <div className="mlb-series-breakdown__matchup">
-          <TeamPanel name={series.team_a_name} seed={teamA?.seed} />
+          <TeamPanel name={series.team_a_name} seed={teamA?.seed} side="away" />
           <b>VS</b>
-          <TeamPanel name={series.team_b_name} seed={teamB?.seed} />
+          <TeamPanel name={series.team_b_name} seed={teamB?.seed} side="home" />
         </div>
 
         <div className="mlb-series-breakdown__schedule">
@@ -130,7 +132,7 @@ export default function MlbSeriesBreakdownPage() {
 
           <section className="surface-card mlb-series-analysis-card">
             <div className="mlb-series-analysis-card__heading">
-              <span>3 THINGS THAT DECIDE IT</span>
+              <span>3 THINGS THAT MATTER</span>
             </div>
             <div className="mlb-series-decisions">
               {breakdown.decisions.map((decision, index) => (
@@ -138,57 +140,11 @@ export default function MlbSeriesBreakdownPage() {
                   <b>{index + 1}</b>
                   <div>
                     <strong>{decision.title}</strong>
-                    <p>{decision.body}</p>
+                    <p><BreakdownRichText parts={decision.body} /></p>
                   </div>
                 </article>
               ))}
             </div>
-          </section>
-
-          <section className="surface-card mlb-series-analysis-card">
-            <div className="mlb-series-analysis-card__heading">
-              <span>PLAYERS TO WATCH</span>
-              <small>ONE PER TEAM</small>
-            </div>
-            <div className="mlb-series-players">
-              {breakdown.players.map((player) => (
-                <PlayerCard
-                  key={player.teamId}
-                  player={player}
-                  teamName={playerTeamName(player.teamId)}
-                />
-              ))}
-            </div>
-          </section>
-
-          <section className="mlb-series-win-paths">
-            {[
-              {
-                id: series.team_a_id,
-                name: series.team_a_name,
-                items: winPathsA,
-              },
-              {
-                id: series.team_b_id,
-                name: series.team_b_name,
-                items: winPathsB,
-              },
-            ].map((team) => {
-              const asset = mlbTeamAssetByName(team.name);
-              const color = mlbTeamColor(asset?.abbreviation, team.name);
-              return (
-                <article
-                  className="surface-card mlb-series-win-path"
-                  key={team.id}
-                  style={{ "--series-team-color": color } as CSSProperties}
-                >
-                  <span>HOW {asset?.abbreviation ?? team.name.toUpperCase()} WINS</span>
-                  <ul>
-                    {team.items.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                </article>
-              );
-            })}
           </section>
 
           <section className="surface-card mlb-series-hq-read">
