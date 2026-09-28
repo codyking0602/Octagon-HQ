@@ -98,6 +98,7 @@ begin
     or v_correct < 0 or v_correct > 10
     or v_best_streak < 0 or v_best_streak > 10
     or v_wager < 0 or v_wager > 10
+    or v_double_round is null
     or v_double_round not in ('round1', 'round2', 'round3') then
     raise exception 'Bar Trivia terminal score is invalid';
   end if;
