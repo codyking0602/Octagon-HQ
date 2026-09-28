@@ -197,9 +197,9 @@ export default function MlbPicksPage() {
       .filter((entry) => hub?.bracketLocked || entry.is_current_user)
       .slice()
       .sort((left, right) => (
-      right.score - left.score
-      || left.display_name.localeCompare(right.display_name)
-    ));
+        right.score - left.score
+        || left.display_name.localeCompare(right.display_name)
+      ));
     let priorScore: number | null = null;
     let priorRank = 0;
     const ranks = new Map<string, number>();
