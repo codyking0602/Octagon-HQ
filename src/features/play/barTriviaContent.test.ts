@@ -16,7 +16,9 @@ describe("Bar Trivia question bank", () => {
 
   it("keeps every question four-choice, answerable, and reveal-ready", () => {
     const ids = BAR_TRIVIA_QUESTION_BANK.map((question) => question.id);
+    const prompts = BAR_TRIVIA_QUESTION_BANK.map((question) => question.prompt.trim().toLowerCase());
     expect(new Set(ids).size).toBe(ids.length);
+    expect(new Set(prompts).size).toBe(prompts.length);
 
     for (const question of BAR_TRIVIA_QUESTION_BANK) {
       expect(question.choices).toHaveLength(4);
