@@ -5,11 +5,12 @@ describe("Bar Trivia question bank", () => {
   it("ships a complete seed set for all three sports and every round", () => {
     for (const league of ["nfl", "cfb", "ufc"] as const) {
       const questions = BAR_TRIVIA_QUESTION_BANK.filter((question) => question.league === league);
-      expect(questions.length).toBeGreaterThanOrEqual(18);
-      expect(questions.filter((question) => question.round === "round1").length).toBeGreaterThanOrEqual(5);
-      expect(questions.filter((question) => question.round === "round2").length).toBeGreaterThanOrEqual(5);
-      expect(questions.filter((question) => question.round === "round3").length).toBeGreaterThanOrEqual(5);
-      expect(questions.filter((question) => question.round === "last-call").length).toBeGreaterThanOrEqual(3);
+      const evergreen = questions.filter((question) => question.contentType === "evergreen");
+      expect(evergreen.length).toBeGreaterThanOrEqual(58);
+      expect(evergreen.filter((question) => question.round === "round1").length).toBeGreaterThanOrEqual(17);
+      expect(evergreen.filter((question) => question.round === "round2").length).toBeGreaterThanOrEqual(17);
+      expect(evergreen.filter((question) => question.round === "round3").length).toBeGreaterThanOrEqual(17);
+      expect(evergreen.filter((question) => question.round === "last-call").length).toBeGreaterThanOrEqual(7);
     }
   });
 
@@ -52,6 +53,15 @@ describe("Bar Trivia question bank", () => {
 
     for (const question of BAR_TRIVIA_QUESTION_BANK) {
       expect(question.difficulty).toBe(expected[question.round]);
+    }
+  });
+
+  it("keeps each sport broad enough to avoid a one-theme trivia bank", () => {
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      const evergreen = BAR_TRIVIA_QUESTION_BANK.filter(
+        (question) => question.league === league && question.contentType === "evergreen",
+      );
+      expect(new Set(evergreen.map((question) => question.category)).size).toBeGreaterThanOrEqual(10);
     }
   });
 
