@@ -44,6 +44,8 @@ import {
   buildSportsFeudPack,
   footballSportsFeudDomainForDay,
 } from "./sportsFeudDailyBanks";
+import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
+import { footballBarTriviaLeagueForDay } from "./dailyChallengeRotation";
 import {
   OFFICIAL_SCORE_CONTRACT_VERSION,
   WAVELENGTH_OFFICIAL_SCORE_CONTRACT_VERSION,
@@ -344,6 +346,7 @@ export function buildFootballOfficialDailySetup(
       day,
       scheduleVersion,
     );
+    case "bar_trivia": return buildBarTriviaDailySetup(footballBarTriviaLeagueForDay(day), day, scheduleVersion);
     case "who_am_i": return buildWhoAmIDailyPublication(
       createFootballWhoAmIDailyRound(
         seededLineupRandom(FOOTBALL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
