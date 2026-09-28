@@ -96,7 +96,7 @@ describe("Bar Trivia engine", () => {
   it("normalizes every perfect scoring path to exactly 100", () => {
     const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", { random: () => 0 });
 
-    for (const doubleRound of ["round1", "round2", "round3"] as const satisfies readonly BarTriviaDoubleRound[]) {
+    for (const doubleRound of ["round1", "round2", "round3"] as const) {
       let state = createBarTriviaState(doubleRound);
       for (let index = 0; index < 9; index += 1) {
         state = submitBarTriviaAnswer(run, state, run[index]!.answer).state;
