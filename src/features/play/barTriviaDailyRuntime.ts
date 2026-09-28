@@ -19,7 +19,7 @@ import type {
 } from "./todaysChallengeRuntime";
 
 export const BAR_TRIVIA_DAILY_CONTENT_VERSION = "bar-trivia-daily-v1";
-export const BAR_TRIVIA_DAILY_SCORING_VERSION = "bar-trivia-daily-score-v1";
+export const BAR_TRIVIA_DAILY_SCORING_VERSION = "play-official-score-v1";
 
 type JsonRecord = Record<string, unknown>;
 
