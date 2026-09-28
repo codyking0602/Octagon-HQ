@@ -1,5 +1,5 @@
 name: Verify Supabase Backend
-# Bar Trivia scoring/UI v2: exact-head release verification trigger.
+# Bar Trivia presentation polish: exact-head release verification trigger.
 # Release verification: run exact-head backend proof when UI-only go-live PRs touch this workflow.
 
 on:
