@@ -4077,7 +4077,7 @@
   }
 }
 
-/* MLB bracket fairness/mobile hardening — keep pre-lock brackets private and preserve full team abbreviations. */
+/* MLB bracket mobile hardening — preserve full team abbreviations. */
 .mlb-bracket-mini-team {
   grid-template-columns: 15px 7px minmax(20px, 1fr);
   gap: 1px;
