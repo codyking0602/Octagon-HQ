@@ -4076,3 +4076,39 @@
     padding: 9px 12px 11px;
   }
 }
+
+/* MLB bracket fairness/mobile hardening — keep pre-lock brackets private and preserve full team abbreviations. */
+.mlb-bracket-mini-team {
+  grid-template-columns: 15px 7px minmax(20px, 1fr);
+  gap: 1px;
+  padding-inline: 1px;
+}
+
+.mlb-bracket-mini-team > strong {
+  min-width: 20px;
+  letter-spacing: -.02em;
+}
+
+@media (min-width: 700px) {
+  .mlb-bracket-mini-team {
+    grid-template-columns: 19px 10px minmax(20px, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .mlb-bracket-mini-team {
+    grid-template-columns: 13px 6px minmax(20px, 1fr);
+    gap: 1px;
+    padding-inline: 1px;
+  }
+
+  .mlb-bracket-team-mark.is-compact {
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+  }
+
+  .mlb-bracket-mini-team > strong {
+    font-size: .43rem;
+  }
+}
