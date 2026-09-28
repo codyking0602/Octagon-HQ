@@ -254,6 +254,17 @@ function millionaireResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
   };
 }
 
+function barTriviaResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
+  const detail = entry.resultDetail;
+  const publicResult = entry.publicResult;
+  return {
+    correctCount: Number(detail.correct_count ?? publicResult.correct_count ?? 0),
+    bestStreak: Number(detail.best_streak ?? publicResult.best_streak ?? 0),
+    wager: Number(detail.wager ?? publicResult.wager ?? 0),
+    doubleRound: String(detail.double_round ?? publicResult.double_round ?? "round2"),
+  };
+}
+
 function MlbPlayResultDetail({
   entry,
   challengeTitle,
@@ -273,9 +284,11 @@ function MlbPlayResultDetail({
   const isBlindResume = entry.gameType === "blind_resume";
   const isHitTheNumber = entry.gameType === "hit_the_number";
   const isSportsFeud = entry.gameType === "sports_feud";
+  const isBarTrivia = entry.gameType === "bar_trivia";
   const millionaire = millionaireResultSummary(entry);
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
+  const barTrivia = barTriviaResultSummary(entry);
 
   return (
     <div
@@ -395,6 +408,19 @@ function MlbPlayResultDetail({
                   : null}
               </article>
             </div>
+          ) : isBarTrivia ? (
+            <div className="mlb-play-result-card__games">
+              <article>
+                <span>QUESTIONS</span>
+                <strong>{barTrivia.correctCount}<small>/10</small></strong>
+                <small>BEST STREAK · {barTrivia.bestStreak}</small>
+              </article>
+              <article>
+                <span>LAST CALL</span>
+                <strong>{barTrivia.wager}<small> PT WAGER</small></strong>
+                <small>{barTrivia.doubleRound.replace("round", "ROUND ").toUpperCase()} · DOUBLE ROUND</small>
+              </article>
+            </div>
           ) : games.length ? (
             <div className="mlb-play-result-card__games">
               {games.map((game) => (
@@ -478,7 +504,7 @@ function MlbPlayStandings({ championship }: { championship: MlbChampionship | nu
         <p className="today-hub-empty">Play standings will populate when the postseason challenges begin.</p>
       )}
 
-      <footer>10 CHALLENGES · PLACEMENT POINTS FEED THE MLB CHAMPIONSHIP</footer>
+      <footer>11 CHALLENGES · PLACEMENT POINTS FEED THE MLB CHAMPIONSHIP</footer>
     </section>
   );
 }
