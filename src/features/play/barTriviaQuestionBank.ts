@@ -1,5 +1,6 @@
 import { barTriviaQuestion, type BarTriviaQuestion, type BarTriviaQuestionSeed } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "./barTriviaCurrentEvents";
+import { BAR_TRIVIA_NFL_EVERGREEN_EXPANSION } from "./barTriviaEvergreenNfl";
 
 function q(question: BarTriviaQuestionSeed) {
   return barTriviaQuestion(question);
@@ -83,5 +84,6 @@ export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   q({ id:"ufc-final-ufc1-final", league:"ufc", round:"last-call", category:"Origins", prompt:"Royce Gracie defeated whom in the UFC 1 tournament final?", choices:["Gerard Gordeau","Ken Shamrock","Kevin Rosier","Teila Tuli"], answer:"Gerard Gordeau", explanation:"Gracie submitted Gerard Gordeau in the final to win UFC 1.", sourceId:"ufc-history" }),
   q({ id:"ufc-final-bmf-ending", league:"ufc", round:"last-call", category:"BMF", prompt:"How did the inaugural Masvidal–Diaz BMF fight officially end?", choices:["Doctor stoppage","Unanimous decision","Corner stoppage","Submission"], answer:"Doctor stoppage", explanation:"The ringside physician stopped UFC 244 after the third round because of cuts around Nate Diaz's eye.", sourceId:"ufc-history" }),
   q({ id:"ufc-final-first-event-year", league:"ufc", round:"last-call", category:"Origins", prompt:"In what year did UFC 1 take place?", choices:["1993","1991","1995","1997"], answer:"1993", explanation:"UFC 1 was held on Nov. 12, 1993, in Denver.", sourceId:"ufc-history" }),
+  ...BAR_TRIVIA_NFL_EVERGREEN_EXPANSION,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
 ];
