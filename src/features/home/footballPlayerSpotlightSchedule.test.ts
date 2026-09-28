@@ -18,6 +18,10 @@ const completePhotos: FootballSpotlightPhotoSources = {
     cfb: "https://example.com/trinidad.webp",
     nfl: "https://example.com/dak.webp",
   },
+  [FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[2].id]: {
+    cfb: "https://example.com/jeremiah.webp",
+    nfl: "https://example.com/bijan.webp",
+  },
 };
 
 describe("Football Player Spotlight weekly schedule", () => {
@@ -33,6 +37,18 @@ describe("Football Player Spotlight weekly schedule", () => {
     ).id).toBe("2026-09-22-trinidad-dak");
   });
 
+  it("keeps Trinidad/Dak active until the exact Sep. 29 Tuesday midnight CT activation", () => {
+    expect(footballSpotlightPairAt(
+      new Date("2026-09-29T04:59:59.999Z"),
+      completePhotos,
+    ).id).toBe("2026-09-22-trinidad-dak");
+
+    expect(footballSpotlightPairAt(
+      new Date("2026-09-29T05:00:00.000Z"),
+      completePhotos,
+    ).id).toBe("2026-09-29-jeremiah-bijan");
+  });
+
   it("uses the repo-preloaded Trinidad/Dak photos as the scheduled fallback", () => {
     expect(FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-09-22-trinidad-dak"]).toEqual({
       cfb: "/assets/football/player-spotlight/2026-09-22-trinidad-dak/cfb.webp",
@@ -42,6 +58,14 @@ describe("Football Player Spotlight weekly schedule", () => {
       new Date("2026-09-22T05:00:00.000Z"),
       FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
     ).id).toBe("2026-09-22-trinidad-dak");
+    expect(FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-09-29-jeremiah-bijan"]).toEqual({
+      cfb: "/assets/football/player-spotlight/2026-09-29-jeremiah-bijan/cfb.webp",
+      nfl: "/assets/football/player-spotlight/2026-09-29-jeremiah-bijan/nfl.webp",
+    });
+    expect(footballSpotlightPairAt(
+      new Date("2026-09-29T05:00:00.000Z"),
+      FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
+    ).id).toBe("2026-09-29-jeremiah-bijan");
   });
 
   it("does not activate a partially configured future pair", () => {
@@ -61,6 +85,25 @@ describe("Football Player Spotlight weekly schedule", () => {
       new Date("2026-09-22T05:00:00.000Z"),
       incompletePhotos,
     ).id).toBe(FOOTBALL_BASE_SPOTLIGHT_PAIR_ID);
+  });
+
+  it("does not activate the Sep. 29 pair unless both new photos are available", () => {
+    const incompletePhotos: FootballSpotlightPhotoSources = {
+      ...completePhotos,
+      "2026-09-29-jeremiah-bijan": {
+        cfb: "https://example.com/jeremiah.webp",
+        nfl: null,
+      },
+    };
+
+    expect(footballSpotlightPairHasPhotos(
+      FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[2],
+      incompletePhotos,
+    )).toBe(false);
+    expect(footballSpotlightPairAt(
+      new Date("2026-09-29T05:00:00.000Z"),
+      incompletePhotos,
+    ).id).toBe("2026-09-22-trinidad-dak");
   });
 
   it("keeps the Central Time daily CFB/NFL rotation across the new pair", () => {
@@ -103,4 +146,40 @@ describe("Football Player Spotlight weekly schedule", () => {
       ],
     });
   });
+  it("locks the approved Jeremiah and Bijan copy, stats, branding, and highlight URLs", () => {
+    const pair = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[2];
+
+    expect(pair.activatesAt).toBe("2026-09-29T05:00:00.000Z");
+    expect(pair.spotlights.cfb).toMatchObject({
+      name: "Jeremiah Smith",
+      team: "Ohio State",
+      position: "WR",
+      teamColor: "#BB0000",
+      highlightUrl: "https://youtu.be/B26hQ2uCcnM?is=Y9LxDiKnKq3beGYS",
+      result: "VS ILLINOIS · W 42–19",
+      measurements: "6'4\" · 222 LB",
+      stats: [
+        { value: "12", label: "REC" },
+        { value: "217", label: "REC YDS" },
+        { value: "4", label: "REC TD" },
+        { value: "72", label: "LONG" },
+      ],
+    });
+    expect(pair.spotlights.nfl).toMatchObject({
+      name: "Bijan Robinson",
+      team: "Atlanta Falcons",
+      position: "RB",
+      teamColor: "#A71930",
+      highlightUrl: "https://youtu.be/WqGyNkVhg6M?is=5p5DEmsrDRhSbfTR",
+      result: "AT GREEN BAY · W 35–14",
+      measurements: "5'11\" · 215 LB",
+      stats: [
+        { value: "194", label: "RUSH YDS" },
+        { value: "213", label: "SCRIM YDS" },
+        { value: "2", label: "RUSH TD" },
+        { value: "6.7", label: "YPC" },
+      ],
+    });
+  });
+
 });
