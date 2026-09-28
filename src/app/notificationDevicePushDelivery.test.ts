@@ -111,6 +111,7 @@ describe("notification device push delivery", () => {
   });
 
   it("requests permission immediately from the single explicit profile switch", () => {
+    expect(pushConnection).toContain('const workerPath = "/push-readiness-sw.js?v=always-visible-push-1"');
     expect(pushConnection).toContain("export async function requestNotificationDevicePermission");
     expect(pushConnection).toContain("Notification.requestPermission");
     expect(pushConnection).toContain("pushManager.subscribe");
@@ -133,16 +134,18 @@ describe("notification device push delivery", () => {
     expect(provider).not.toContain("localStorage");
   });
 
-  it("shows push only when the app is hidden and routes notification clicks", () => {
+  it("always shows device push while still refreshing a visible in-app client", () => {
     expect(serviceWorker).toContain('addEventListener("push"');
     expect(serviceWorker).toContain('visibilityState === "visible"');
     expect(serviceWorker).toContain("postMessage");
+    expect(serviceWorker).toContain("Device pushes are always user-visible");
     expect(serviceWorker).toContain("showNotification");
+    expect(serviceWorker).not.toContain("postMessage({\n        type: \"octagon-notification-push\",\n        notificationId: payload.notification_id ?? null,\n      });\n      return;");
     expect(serviceWorker).toContain('addEventListener("notificationclick"');
     expect(serviceWorker).toContain("existing.navigate(targetUrl)");
     expect(serviceWorker).toContain("clients.openWindow(targetUrl)");
     expect(provider).toContain("octagon-notification-push");
-    expect(contract).toContain("instead of showing a duplicate operating-system alert");
+    expect(contract).toContain("still displays the device notification");
   });
 
   it("cleans expired endpoints and preserves per-device independence", () => {
