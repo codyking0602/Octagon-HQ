@@ -71,9 +71,9 @@ function oddsFighterMatch(left: string, right: string) {
     || fighterMatch(right, left);
 }
 
-function oddsFighterMatchesSide(name: string, stableSlug: string, providerName: string) {
+function oddsFighterMatchesSide(name: string, stableSlug: string | undefined, providerName: string) {
   return oddsFighterMatch(name, providerName)
-    || oddsFighterMatch(stableSlug.replace(/-/g, " "), providerName);
+    || (stableSlug ? oddsFighterMatch(stableSlug.replace(/-/g, " "), providerName) : false);
 }
 
 function pairMatchesBout(left: string, right: string, bout: MonitoringBout) {
