@@ -307,6 +307,15 @@ try {
   });
   await page.waitForURL((url) => url.pathname === "/notifications", { timeout: 15_000 });
 
+  // A newly launched sport may present a one-time welcome takeover after sign-in.
+  // Dismiss it before proving notification-center navigation so the modal cannot
+  // intercept the notification click.
+  const mlbWelcome = page.getByRole("dialog", { name: "MLB Playoff Challenge welcome" });
+  if (await mlbWelcome.isVisible().catch(() => false)) {
+    await page.getByRole("button", { name: "Enter the playoffs" }).click();
+    await mlbWelcome.waitFor({ state: "hidden", timeout: 5_000 });
+  }
+
   const notification = page.locator("article.notification-item").filter({ hasText: "You were challenged" }).first();
   try {
     await notification.waitFor({ state: "visible", timeout: 15_000 });
