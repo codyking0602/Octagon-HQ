@@ -27,7 +27,7 @@ describe("MLB spotlight series polish", () => {
     expect(breakdown).not.toContain("HOW {");
   });
 
-  it("keeps MLB owner-only during review", () => {
-    expect(config).toContain("MLB_PLAYOFFS_PUBLIC_ENABLED = false");
+  it("preserves the approved spotlight polish after public launch", () => {
+    expect(config).toContain("MLB_PLAYOFFS_PUBLIC_ENABLED = true");
   });
 });
