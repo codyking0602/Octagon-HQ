@@ -8,7 +8,6 @@ import {
   barTriviaRoundForQuestion,
   barTriviaRoundNumber,
   barTriviaScoreBreakdown,
-  barTriviaStreakMultiplier,
   buildBarTriviaRun,
   createBarTriviaState,
   pickBarTriviaDoubleRound,
@@ -123,7 +122,6 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
   const currentRoundIsDouble = currentRound === state.doubleRound;
   const displayedRoundIsDouble = displayedRound === state.doubleRound;
   const currentBase = BAR_TRIVIA_BASE_POINTS[currentRound];
-  const displayedBase = BAR_TRIVIA_BASE_POINTS[displayedRound];
 
   const availableCounts = useMemo(() => ({
     nfl: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "nfl").length,
@@ -234,10 +232,9 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
           </div>
 
           <div className="bar-trivia__rules">
-            <p><b>Round values climb.</b> One of the first three rounds is randomly named the <b>Double Round</b>.</p>
-            <p><b>Streak heat:</b> 3 straight = ×1.10, 5 = ×1.15, 7+ = ×1.25.</p>
-            <p><b>Last Call:</b> the 16-point base stays. Your 0–10 wager sits on top — win it or lose it.</p>
-            <p><b>Final tab:</b> all scoring is normalized back to a clean 100-point scale.</p>
+            <p><b>Round values climb.</b> One of the first three rounds will be the <b>Double Round</b>.</p>
+            <p><b>Streak heat:</b> the longer your streak, the higher your multiplier.</p>
+            <p><b>Last Call:</b> your 0–10 wager sits on top of the final question — win it or lose it.</p>
           </div>
 
           <button className="bar-trivia__primary" type="button" onClick={startGame}>
@@ -327,17 +324,6 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
           </div>
 
           <article className={lastResult ? "bar-trivia__question-card is-reveal" : "bar-trivia__question-card"}>
-            <div className="bar-trivia__question-topline">
-              <span>{BAR_TRIVIA_ROUND_NAMES[league][question.round]}</span>
-              <b>{question.category.toUpperCase()}</b>
-            </div>
-
-            <div className="bar-trivia__score-cues">
-              <span>BASE {displayedBase}</span>
-              {displayedRoundIsDouble ? <b>DOUBLE ROUND · 2×</b> : null}
-              {activeStreak >= 3 ? <em>HEAT ×{barTriviaStreakMultiplier(activeStreak).toFixed(2)}</em> : null}
-            </div>
-
             <h2>{question.prompt}</h2>
 
             <div className="bar-trivia__answers">
@@ -358,10 +344,6 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
                 );
               })}
             </div>
-
-            {question.round === "last-call" && !lastResult ? (
-              <div className="bar-trivia__last-call-chip">LAST CALL · 16 BASE + {state.wager ?? 0} WAGER</div>
-            ) : null}
 
             {lastResult ? (
               <div className={lastResult.correct ? "bar-trivia__reveal is-correct" : "bar-trivia__reveal is-wrong"}>
@@ -405,21 +387,16 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
             <div className="bar-trivia__receipt-summary">
               <p><span>CORRECT</span><b>{state.correctCount}/10</b></p>
               <p><span>BEST STREAK</span><b>{state.bestStreak}</b></p>
-              <p><span>DOUBLE ROUND</span><b>{BAR_TRIVIA_ROUND_NAMES[league][state.doubleRound]}</b></p>
-              <p><span>LAST CALL WAGER</span><b>{state.wager ?? 0}</b></p>
             </div>
 
             <div className="bar-trivia__receipt-breakdown">
-              <small>HOW THE TAB GOT THERE</small>
-              <p><span>QUESTION BASE</span><b>+{formatRaw(scoring.baseEarned)}</b></p>
+              <small>SCORING</small>
               <p><span>DOUBLE ROUND</span><b>+{formatRaw(scoring.doubleRoundBonus)}</b></p>
               <p><span>STREAK HEAT</span><b>+{formatRaw(scoring.streakBonus)}</b></p>
               <p>
-                <span>LAST CALL WAGER</span>
+                <span>LAST CALL</span>
                 <b>{scoring.wagerDelta > 0 ? "+" : ""}{formatRaw(scoring.wagerDelta)}</b>
               </p>
-              <p className="bar-trivia__raw-tab"><span>RAW TAB</span><b>{formatRaw(scoring.rawScore)} / {formatRaw(scoring.perfectRawScore)}</b></p>
-              <em>Normalized to the 100-point HQ scale.</em>
             </div>
           </div>
 
