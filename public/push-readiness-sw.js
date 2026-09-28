@@ -25,9 +25,10 @@ self.addEventListener("push", (event) => {
         type: "octagon-notification-push",
         notificationId: payload.notification_id ?? null,
       });
-      return;
     }
 
+    // Device pushes are always user-visible. An open HQ window may refresh its
+    // in-app bell, but it never suppresses the operating-system notification.
     const title = typeof payload.title === "string" && payload.title.trim()
       ? payload.title.trim()
       : "Octagon HQ";
