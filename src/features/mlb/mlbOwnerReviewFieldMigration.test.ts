@@ -9,10 +9,10 @@ const config = readFileSync("src/features/mlb/mlbPlayoffsConfig.ts", "utf8");
 const spotlight = readFileSync("src/features/mlb/mlbTeamAssets.ts", "utf8");
 
 describe("MLB 2026 owner review field", () => {
-  it("loads the finalized 12-team bracket while keeping public release off", () => {
+  it("loads the finalized 12-team bracket through the private owner-review stage", () => {
     expect(migration).toContain("field_ready = true");
     expect(migration).toContain("public_enabled = false");
-    expect(config).toContain("MLB_PLAYOFFS_PUBLIC_ENABLED = false");
+    expect(config).toContain("MLB_PLAYOFFS_PUBLIC_ENABLED = true");
     expect(migration.match(/\"seed\":/g) ?? []).toHaveLength(12);
     expect(migration.match(/\"id\":\"(?:al|nl)-(?:wc|ds)-[12]\"/g) ?? []).toHaveLength(8);
     expect(migration).toContain("\"id\":\"al-cs\"");
