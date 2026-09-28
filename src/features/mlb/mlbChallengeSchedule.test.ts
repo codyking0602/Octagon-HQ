@@ -6,7 +6,7 @@ import {
 } from "./mlbChallengeSchedule";
 
 describe("MLB postseason challenge schedule", () => {
-  it("locks the pulled-forward ten-challenge cadence in order", () => {
+  it("locks the pulled-forward eleven-challenge cadence in order", () => {
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.date)).toEqual([
       "2026-09-27",
       "2026-09-29",
@@ -17,9 +17,10 @@ describe("MLB postseason challenge schedule", () => {
       "2026-10-12",
       "2026-10-15",
       "2026-10-18",
+      "2026-10-21",
       "2026-10-23",
     ]);
-    expect(new Set(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.id)).size).toBe(10);
+    expect(new Set(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.id)).size).toBe(11);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.ready)).toBe(true);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
   });
@@ -81,6 +82,11 @@ describe("MLB postseason challenge schedule", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-18T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-09",
       game_type: "wavelength",
+      is_live: true,
+    });
+    expect(resolveMlbFeaturedChallenge(new Date("2026-10-21T05:00:00Z"))).toMatchObject({
+      id: "mlb-2026-play-11",
+      game_type: "bar_trivia",
       is_live: true,
     });
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-23T05:00:00Z"))).toMatchObject({
