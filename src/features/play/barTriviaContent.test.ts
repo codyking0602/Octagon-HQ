@@ -90,6 +90,21 @@ describe("Bar Trivia question bank", () => {
     }
   });
 
+  it("never makes an arbitrary UFC event number or Super Bowl number the answer", () => {
+    const allowedUfcMilestones = new Set(["UFC 100", "UFC 200", "UFC 300"]);
+
+    for (const question of BAR_TRIVIA_QUESTION_BANK) {
+      const answer = question.answer.trim();
+      const superBowlNumberAnswer = /^Super Bowl\s+[IVXLCDM\d]+$/i.test(answer);
+      const ufcNumberAnswer = /^UFC(?:\s+on\s+\S+\s+\d+|\s+\d+(?::|$))/i.test(answer);
+
+      expect(superBowlNumberAnswer).toBe(false);
+      if (ufcNumberAnswer) {
+        expect(allowedUfcMilestones.has(answer)).toBe(true);
+      }
+    }
+  });
+
   it("avoids the retired Fact Check stat-threshold format in the seed bank", () => {
     const prompts = BAR_TRIVIA_QUESTION_BANK.map((question) => question.prompt.toLowerCase());
     expect(prompts.some((prompt) => prompt.includes("career passing yards"))).toBe(false);
