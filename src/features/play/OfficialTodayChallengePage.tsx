@@ -16,6 +16,7 @@ import {
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
 import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
+import { OfficialBarTriviaDailyView } from "./OfficialBarTriviaDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -151,6 +152,13 @@ export function OfficialTodayChallengeContent({
             ? () => onNavigate(projection.sport === "football" ? "/football" : "/play")
             : undefined)}
         />
+      ) : projection.gameType === "bar_trivia" ? (
+        <OfficialBarTriviaDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={onAdvance}
+          onExit={() => onNavigate(projection.sport === "football" ? "/football" : "/play")}
+        />
       ) : (
         <OfficialTodayChallengeView
           projection={presentationProjection}
@@ -160,7 +168,10 @@ export function OfficialTodayChallengeContent({
         />
       )}
       <OfficialBlindRankCanonicalOrder projection={projection} />
-      {projection.officialAttempt && adapter && projection.gameType !== "sports_feud" ? (
+      {projection.officialAttempt
+        && adapter
+        && projection.gameType !== "sports_feud"
+        && projection.gameType !== "bar_trivia" ? (
         <OfficialResultActions
           casualRoute={officialDailyGameAllowsCasualReplay(projection.gameType) ? adapter.casualRoute : null}
           onNavigate={onNavigate}
