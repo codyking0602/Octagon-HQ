@@ -5,7 +5,7 @@ export interface NotificationPushSubscriptionInput {
   userAgent: string;
 }
 
-const workerPath = "/push-readiness-sw.js";
+const workerPath = "/push-readiness-sw.js?v=always-visible-push-1";
 const pushIntentStorageKey = "octagon-notification-push-intent";
 
 export type NotificationDevicePushIntent = "enabled" | "disabled" | null;
