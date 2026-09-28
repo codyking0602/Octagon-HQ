@@ -1,13 +1,17 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  BAR_TRIVIA_BASE_POINTS,
   BAR_TRIVIA_MAX_WAGER,
   BAR_TRIVIA_RECENT_MEMORY_SIZE,
   BAR_TRIVIA_ROUND_NAMES,
   barTriviaRoundForQuestion,
   barTriviaRoundNumber,
+  barTriviaScoreBreakdown,
+  barTriviaStreakMultiplier,
   buildBarTriviaRun,
   createBarTriviaState,
+  pickBarTriviaDoubleRound,
   setBarTriviaWager,
   submitBarTriviaAnswer,
   type BarTriviaAnswerResult,
@@ -69,13 +73,24 @@ function roundDeckCopy(league: BarTriviaLeague, index: number) {
   if (index === 3) {
     return "The obvious stuff is gone. Time for traditions, oddities, nicknames, and history.";
   }
-  return league === "ufc"
-    ? "Three tougher calls before Last Call."
-    : "Three tougher calls before Last Call.";
+  return "Three tougher calls before Last Call.";
 }
 
 function choiceLetter(index: number) {
   return ["A", "B", "C", "D"][index] ?? "";
+}
+
+function formatRaw(value: number) {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+function streakCopy(streak: number) {
+  if (streak >= 7) return "ON FIRE · ×1.25";
+  if (streak >= 5) return "HOT STREAK · ×1.15";
+  if (streak >= 3) return "STREAK BOOST · ×1.10";
+  if (streak === 2) return "2 STRAIGHT · BOOST NEXT";
+  if (streak === 1) return "1 IN A ROW";
+  return "BUILD A STREAK";
 }
 
 export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }) {
@@ -104,6 +119,11 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
         : 1;
   const activeStreak = state.streak;
   const scoreLabel = `${state.score}/100`;
+  const scoring = barTriviaScoreBreakdown(state);
+  const currentRoundIsDouble = currentRound === state.doubleRound;
+  const displayedRoundIsDouble = displayedRound === state.doubleRound;
+  const currentBase = BAR_TRIVIA_BASE_POINTS[currentRound];
+  const displayedBase = BAR_TRIVIA_BASE_POINTS[displayedRound];
 
   const availableCounts = useMemo(() => ({
     nfl: BAR_TRIVIA_QUESTION_BANK.filter((item) => item.league === "nfl").length,
@@ -121,7 +141,7 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
     const nextRun = buildRun(league);
     rememberQuestionIds(league, nextRun.map((item) => item.id));
     setRun(nextRun);
-    setState(createBarTriviaState());
+    setState(createBarTriviaState(pickBarTriviaDoubleRound()));
     setLastResult(null);
     setWagerDraft(BAR_TRIVIA_MAX_WAGER);
     setScene("round-intro");
@@ -187,12 +207,12 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
             <button type="button" onClick={() => selectLeague("nfl")}>
               <span>PRO FOOTBALL</span>
               <strong>NFL</strong>
-              <small>{availableCounts.nfl} QUESTIONS IN THE PR1 BANK</small>
+              <small>{availableCounts.nfl} QUESTIONS IN THE BANK</small>
             </button>
             <button type="button" onClick={() => selectLeague("cfb")}>
               <span>SATURDAY FOOTBALL</span>
               <strong>CFB</strong>
-              <small>{availableCounts.cfb} QUESTIONS IN THE PR1 BANK</small>
+              <small>{availableCounts.cfb} QUESTIONS IN THE BANK</small>
             </button>
           </div>
         </section>
@@ -207,16 +227,17 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
           </div>
 
           <div className="bar-trivia__round-list">
-            <div><span>ROUND 1</span><strong>{BAR_TRIVIA_ROUND_NAMES[league].round1}</strong><small>3 QUESTIONS</small></div>
-            <div><span>ROUND 2</span><strong>{BAR_TRIVIA_ROUND_NAMES[league].round2}</strong><small>3 QUESTIONS</small></div>
-            <div><span>ROUND 3</span><strong>{BAR_TRIVIA_ROUND_NAMES[league].round3}</strong><small>3 QUESTIONS</small></div>
-            <div className="is-last-call"><span>FINAL</span><strong>Last Call</strong><small>WAGER 0–10</small></div>
+            <div><span>ROUND 1</span><strong>{BAR_TRIVIA_ROUND_NAMES[league].round1}</strong><small>10 BASE</small></div>
+            <div><span>ROUND 2</span><strong>{BAR_TRIVIA_ROUND_NAMES[league].round2}</strong><small>12 BASE</small></div>
+            <div><span>ROUND 3</span><strong>{BAR_TRIVIA_ROUND_NAMES[league].round3}</strong><small>14 BASE</small></div>
+            <div className="is-last-call"><span>FINAL</span><strong>Last Call</strong><small>16 + WAGER</small></div>
           </div>
 
           <div className="bar-trivia__rules">
-            <p><b>10 questions.</b> Four choices every time.</p>
-            <p><b>10 points</b> for each correct answer through nine questions.</p>
-            <p><b>Last Call:</b> wager 0–10. Get it right and add it. Miss and lose it.</p>
+            <p><b>Round values climb.</b> One of the first three rounds is randomly named the <b>Double Round</b>.</p>
+            <p><b>Streak heat:</b> 3 straight = ×1.10, 5 = ×1.15, 7+ = ×1.25.</p>
+            <p><b>Last Call:</b> the 16-point base stays. Your 0–10 wager sits on top — win it or lose it.</p>
+            <p><b>Final tab:</b> all scoring is normalized back to a clean 100-point scale.</p>
           </div>
 
           <button className="bar-trivia__primary" type="button" onClick={startGame}>
@@ -233,8 +254,13 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
       {scene === "round-intro" && league ? (
         <section className="bar-trivia__panel bar-trivia__round-intro" aria-labelledby="bar-trivia-round-title">
           <span className="bar-trivia__round-number">ROUND {currentRoundNumber}</span>
+          {currentRoundIsDouble ? <div className="bar-trivia__double-banner">DOUBLE ROUND · 2× BASE</div> : null}
           <h1 id="bar-trivia-round-title">{roundName}</h1>
           <p>{roundDeckCopy(league, state.index)}</p>
+          <div className="bar-trivia__round-value">
+            <span>BASE VALUE</span>
+            <strong>{currentBase}{currentRoundIsDouble ? " × 2" : ""}</strong>
+          </div>
           <div className="bar-trivia__scoreboard-mini">
             <span>SCORE</span>
             <strong>{scoreLabel}</strong>
@@ -249,7 +275,7 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
         <section className="bar-trivia__panel bar-trivia__wager" aria-labelledby="bar-trivia-wager-title">
           <p className="bar-trivia__kicker">LAST CALL</p>
           <h1 id="bar-trivia-wager-title">PUT SOMETHING ON IT.</h1>
-          <p>You have <b>{state.score}/90</b> from the first nine. Your final wager can move the score up or down.</p>
+          <p>Your tab is <b>{scoreLabel}</b>. Last Call still carries its <b>16-point base</b>; your wager is extra.</p>
           <div className="bar-trivia__wager-value">
             <strong>{wagerDraft}</strong>
             <span>POINT{wagerDraft === 1 ? "" : "S"}</span>
@@ -263,7 +289,10 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
             value={wagerDraft}
             onChange={(event) => setWagerDraft(Number(event.target.value))}
           />
-          <div className="bar-trivia__wager-scale"><span>0</span><span>PLAY IT SAFE</span><span>10</span></div>
+          <div className="bar-trivia__wager-scale"><span>0</span><span>ON TOP OF THE BASE</span><span>10</span></div>
+          <div className="bar-trivia__wager-note">
+            <b>RIGHT:</b> earn the question + wager. <b>WRONG:</b> lose the wager.
+          </div>
           <button className="bar-trivia__primary" type="button" onClick={lockWager}>
             LOCK WAGER · {wagerDraft}
           </button>
@@ -271,7 +300,12 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
       ) : null}
 
       {scene === "question" && league && question ? (
-        <section className="bar-trivia__game" aria-live="polite">
+        <section
+          className="bar-trivia__game bar-trivia__venue"
+          data-league={league}
+          data-double={displayedRoundIsDouble ? "true" : "false"}
+          aria-live="polite"
+        >
           <header className="bar-trivia__hud">
             <div>
               <span>{question.round === "last-call" ? "LAST CALL" : `ROUND ${barTriviaRoundNumber(question.round)}`}</span>
@@ -284,18 +318,24 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
           </header>
 
           <div className="bar-trivia__streak" data-streak={activeStreak}>
-            <div>
-              {Array.from({ length: 5 }, (_, index) => (
-                <span key={index} className={index < Math.min(activeStreak, 5) ? "is-hot" : ""} />
+            <div className="bar-trivia__streak-bulbs" aria-hidden="true">
+              {Array.from({ length: 7 }, (_, index) => (
+                <span key={index} className={index < Math.min(activeStreak, 7) ? "is-hot" : ""} />
               ))}
             </div>
-            <strong>{activeStreak >= 2 ? `HOT STREAK ×${activeStreak}` : activeStreak === 1 ? "1 IN A ROW" : "BUILD A STREAK"}</strong>
+            <strong>{streakCopy(activeStreak)}</strong>
           </div>
 
           <article className={lastResult ? "bar-trivia__question-card is-reveal" : "bar-trivia__question-card"}>
             <div className="bar-trivia__question-topline">
               <span>{BAR_TRIVIA_ROUND_NAMES[league][question.round]}</span>
               <b>{question.category.toUpperCase()}</b>
+            </div>
+
+            <div className="bar-trivia__score-cues">
+              <span>BASE {displayedBase}</span>
+              {displayedRoundIsDouble ? <b>DOUBLE ROUND · 2×</b> : null}
+              {activeStreak >= 3 ? <em>HEAT ×{barTriviaStreakMultiplier(activeStreak).toFixed(2)}</em> : null}
             </div>
 
             <h2>{question.prompt}</h2>
@@ -320,7 +360,7 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
             </div>
 
             {question.round === "last-call" && !lastResult ? (
-              <div className="bar-trivia__last-call-chip">WAGER · {state.wager ?? 0}</div>
+              <div className="bar-trivia__last-call-chip">LAST CALL · 16 BASE + {state.wager ?? 0} WAGER</div>
             ) : null}
 
             {lastResult ? (
@@ -328,8 +368,22 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
                 <div className="bar-trivia__reveal-heading">
                   <span>{lastResult.correct ? "THAT'S RIGHT" : "NOT TONIGHT"}</span>
                   <strong>
-                    {lastResult.points > 0 ? "+" : ""}{lastResult.points}
+                    {lastResult.points > 0 ? "+" : ""}{lastResult.points} SCORE
                   </strong>
+                </div>
+                <div className="bar-trivia__reveal-math">
+                  {lastResult.correct ? (
+                    <>
+                      <span>{lastResult.basePoints} base</span>
+                      {lastResult.doubleRoundBonus > 0 ? <span>+{formatRaw(lastResult.doubleRoundBonus)} double</span> : null}
+                      {lastResult.streakBonus > 0 ? <span>+{formatRaw(lastResult.streakBonus)} streak</span> : null}
+                      {lastResult.wagerDelta > 0 ? <span>+{formatRaw(lastResult.wagerDelta)} wager</span> : null}
+                    </>
+                  ) : lastResult.wagerDelta < 0 ? (
+                    <span>{formatRaw(lastResult.wagerDelta)} wager</span>
+                  ) : (
+                    <span>0 points</span>
+                  )}
                 </div>
                 <p>{question.explanation}</p>
                 <button className="bar-trivia__primary" type="button" onClick={advance}>
@@ -347,12 +401,28 @@ export default function BarTriviaCasualPage({ scope }: { scope: BarTriviaScope }
           <div className="bar-trivia__receipt">
             <span>FINAL SCORE</span>
             <h1 id="bar-trivia-result-title">{state.score}<small>/100</small></h1>
-            <div>
+
+            <div className="bar-trivia__receipt-summary">
               <p><span>CORRECT</span><b>{state.correctCount}/10</b></p>
               <p><span>BEST STREAK</span><b>{state.bestStreak}</b></p>
-              <p><span>LAST CALL</span><b>{state.wager ?? 0} PT WAGER</b></p>
+              <p><span>DOUBLE ROUND</span><b>{BAR_TRIVIA_ROUND_NAMES[league][state.doubleRound]}</b></p>
+              <p><span>LAST CALL WAGER</span><b>{state.wager ?? 0}</b></p>
+            </div>
+
+            <div className="bar-trivia__receipt-breakdown">
+              <small>HOW THE TAB GOT THERE</small>
+              <p><span>QUESTION BASE</span><b>+{formatRaw(scoring.baseEarned)}</b></p>
+              <p><span>DOUBLE ROUND</span><b>+{formatRaw(scoring.doubleRoundBonus)}</b></p>
+              <p><span>STREAK HEAT</span><b>+{formatRaw(scoring.streakBonus)}</b></p>
+              <p>
+                <span>LAST CALL WAGER</span>
+                <b>{scoring.wagerDelta > 0 ? "+" : ""}{formatRaw(scoring.wagerDelta)}</b>
+              </p>
+              <p className="bar-trivia__raw-tab"><span>RAW TAB</span><b>{formatRaw(scoring.rawScore)} / {formatRaw(scoring.perfectRawScore)}</b></p>
+              <em>Normalized to the 100-point HQ scale.</em>
             </div>
           </div>
+
           <button className="bar-trivia__primary" type="button" onClick={playAgain}>RUN IT BACK</button>
           {scope === "football" ? (
             <button className="bar-trivia__secondary" type="button" onClick={changeLeague}>CHANGE LEAGUE</button>

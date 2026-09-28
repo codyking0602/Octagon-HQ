@@ -550,7 +550,7 @@ export const playGameCatalog = [
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "casual-only",
-      difficultyModel: "Nine four-choice UFC bar-trivia questions across three themed rounds plus one wager-based Last Call question.",
+      difficultyModel: "Nine four-choice UFC bar-trivia questions across three themed rounds with escalating 10/12/14 base values, one random Double Round, streak heat multipliers, and a 16-point Last Call plus 0–10 wager normalized to 100.",
     },
   },
   {
@@ -574,7 +574,7 @@ export const playGameCatalog = [
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "casual-only",
-      difficultyModel: "Separate NFL and CFB ten-question bar-trivia runs: three themed three-question rounds plus one wager-based Last Call question.",
+      difficultyModel: "Separate NFL and CFB ten-question bar-trivia runs with escalating 10/12/14 base values, one random Double Round, streak heat multipliers, and a 16-point Last Call plus 0–10 wager normalized to 100.",
     },
   },
   {
