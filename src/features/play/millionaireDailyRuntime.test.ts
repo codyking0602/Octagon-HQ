@@ -52,21 +52,22 @@ describe("Millionaire official Daily runtime", () => {
     expect(millionaireDailyLeague("football", "2026-09-19")).toBe("cfb");
     expect(millionaireDailyLeague("ufc", "2026-09-19")).toBe("ufc");
     expect(millionaireFootballDailyLeague("2026-09-24")).toBe("nfl");
-    expect(millionaireFootballDailyLeague("2026-09-29")).toBe("cfb");
+    expect(() => millionaireFootballDailyLeague("2026-09-29")).toThrow("not scheduled");
+    expect(millionaireFootballDailyLeague("2026-10-03")).toBe("cfb");
   });
 
   it("rotates ten league-specific runs before repeating and advances hosts 1-2-3 by appearance", () => {
     const ufcDays = [
-      "2026-09-19", "2026-09-26", "2026-10-01", "2026-10-07", "2026-10-14",
-      "2026-10-21", "2026-10-26", "2026-10-31", "2026-11-06", "2026-11-13",
+      "2026-09-19", "2026-09-26", "2026-10-02", "2026-10-10", "2026-10-16",
+      "2026-10-22", "2026-10-26", "2026-11-03", "2026-11-09", "2026-11-15",
     ];
     const cfbDays = [
-      "2026-09-19", "2026-09-29", "2026-10-10", "2026-10-20", "2026-10-31",
-      "2026-11-10", "2026-11-20", "2026-12-01", "2026-12-11", "2026-12-22",
+      "2026-09-19", "2026-10-03", "2026-10-15", "2026-10-25", "2026-11-06",
+      "2026-11-16", "2026-11-28", "2026-12-08", "2026-12-20", "2026-12-30",
     ];
     const nflDays = [
-      "2026-09-24", "2026-10-05", "2026-10-15", "2026-10-25", "2026-11-05",
-      "2026-11-15", "2026-11-26", "2026-12-06", "2026-12-16", "2026-12-27",
+      "2026-09-24", "2026-10-09", "2026-10-19", "2026-10-31", "2026-11-10",
+      "2026-11-22", "2026-12-02", "2026-12-14", "2026-12-24", "2027-01-05",
     ];
 
     expect(ufcDays.map((day) => millionaireDailyRunIndex("ufc", day))).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -85,7 +86,7 @@ describe("Millionaire official Daily runtime", () => {
       .not.toBe((tenth.publicSetup.questions as Record<string, unknown>[])[0]!.id);
   });
 
-  it("accepts the weighted September 24/26 launch slots", () => {
+  it("accepts the historical weighted slots and the new September 29 rotation slots", () => {
     expect(() => buildMillionaireDailySetup(
       "football",
       "2026-09-24",
@@ -95,6 +96,16 @@ describe("Millionaire official Daily runtime", () => {
       "ufc",
       "2026-09-26",
       "play-rotation-v15-weighted-sep25",
+    )).not.toThrow();
+    expect(() => buildMillionaireDailySetup(
+      "football",
+      "2026-10-03",
+      "football-daily-v17-bar-trivia-sep29",
+    )).not.toThrow();
+    expect(() => buildMillionaireDailySetup(
+      "ufc",
+      "2026-10-02",
+      "play-rotation-v17-bar-trivia-sep29",
     )).not.toThrow();
   });
 
