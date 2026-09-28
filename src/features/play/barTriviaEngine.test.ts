@@ -30,6 +30,34 @@ describe("Bar Trivia engine", () => {
     }
   });
 
+  it("keeps Round 1 genuinely easy after the content recalibration", () => {
+    for (const league of ["nfl", "cfb", "ufc"] as const) {
+      const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
+        random: () => 0,
+        currentEventTarget: 0,
+      });
+      expect(run.slice(0, 3).every((question) => question.difficulty === "easy")).toBe(true);
+      expect(run.slice(3, 6).every((question) => question.difficulty === "medium")).toBe(true);
+    }
+  });
+
+  it("randomizes answer positions instead of leaving the correct answer in slot A", () => {
+    let seed = 24681357;
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 0x100000000;
+    };
+
+    const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, "nfl", {
+      random,
+      currentEventTarget: 0,
+    });
+    const answerPositions = run.map((question) => question.choices.indexOf(question.answer));
+
+    expect(answerPositions.some((position) => position !== 0)).toBe(true);
+    expect(new Set(answerPositions).size).toBeGreaterThan(1);
+  });
+
   it("locks the calibrated base ladder and streak heat thresholds", () => {
     expect(BAR_TRIVIA_BASE_POINTS).toEqual({
       round1: 10,
