@@ -17,6 +17,7 @@ const blindResumeReadyMigration = readFileSync("supabase/migrations/202612310189
 const backHalfRotationMigration = readFileSync("supabase/migrations/202612310190_mlb_back_half_rotation_and_sports_feud_ready.sql", "utf8");
 const oct15Oct18ReadyMigration = readFileSync("supabase/migrations/202612310191_mlb_oct15_hit_number_oct18_millionaire_ready.sql", "utf8");
 const pullForwardMigration = readFileSync("supabase/migrations/202612310204_mlb_pull_forward_schedule_and_freeze_wc_odds.sql", "utf8");
+const publicLaunchMigration = readFileSync("supabase/migrations/202612310205_mlb_public_launch.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -33,11 +34,13 @@ const mlbWelcome = readFileSync("src/features/mlb/MlbPlayoffsWelcomeTakeover.tsx
 const mlbWelcomeStyles = readFileSync("src/styles/mlb-playoffs-welcome.css", "utf8");
 
 describe("MLB Playoffs rollout gate", () => {
-  it("stays owner-only until the explicit public release", () => {
-    expect(MLB_PLAYOFFS_PUBLIC_ENABLED).toBe(false);
-    expect(canViewMlbPlayoffs(null)).toBe(false);
-    expect(canViewMlbPlayoffs({ canControlPicks: false })).toBe(false);
+  it("opens MLB publicly after the approved launch", () => {
+    expect(MLB_PLAYOFFS_PUBLIC_ENABLED).toBe(true);
+    expect(canViewMlbPlayoffs(null)).toBe(true);
+    expect(canViewMlbPlayoffs({ canControlPicks: false })).toBe(true);
     expect(canViewMlbPlayoffs({ canControlPicks: true })).toBe(true);
+    expect(publicLaunchMigration).toContain("public_enabled = true");
+    expect(publicLaunchMigration).toContain("field_ready = true");
   });
 
   it("uses the same capability at every visible entry point", () => {
