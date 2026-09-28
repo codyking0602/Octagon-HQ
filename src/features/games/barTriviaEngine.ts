@@ -1,4 +1,4 @@
-export type BarTriviaLeague = "nfl" | "cfb" | "ufc";
+export type BarTriviaLeague = "nfl" | "cfb" | "ufc" | "mlb";
 export type BarTriviaRound = "round1" | "round2" | "round3" | "last-call";
 export type BarTriviaDoubleRound = Exclude<BarTriviaRound, "last-call">;
 export type BarTriviaDifficulty = "easy" | "medium" | "hard" | "last-call";
@@ -96,6 +96,12 @@ export const BAR_TRIVIA_ROUND_NAMES: Record<BarTriviaLeague, Record<BarTriviaRou
     round1: "Around the Octagon",
     round2: "Deep Cuts",
     round3: "Championship Rounds",
+    "last-call": "Last Call",
+  },
+  mlb: {
+    round1: "Around the Diamond",
+    round2: "Deep Cuts",
+    round3: "Late Innings",
     "last-call": "Last Call",
   },
 };
