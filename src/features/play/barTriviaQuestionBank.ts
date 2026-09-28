@@ -14,6 +14,7 @@ import { BAR_TRIVIA_CFB_EVERGREEN_WAVE_4 } from "./barTriviaEvergreenCfbWave4";
 import { BAR_TRIVIA_UFC_EVERGREEN_WAVE_4 } from "./barTriviaEvergreenUfcWave4";
 import { BAR_TRIVIA_UFC_EVERGREEN_WAVE_5 } from "./barTriviaEvergreenUfcWave5";
 import { BAR_TRIVIA_UFC_EVERGREEN_WAVE_6 } from "./barTriviaEvergreenUfcWave6";
+import { BAR_TRIVIA_UFC_EVERGREEN_WAVE_7 } from "./barTriviaEvergreenUfcWave7";
 
 function q(question: BarTriviaQuestionSeed) {
   return barTriviaQuestion(question);
@@ -111,5 +112,6 @@ export const BAR_TRIVIA_QUESTION_BANK: readonly BarTriviaQuestion[] = [
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_4,
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_5,
   ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_6,
+  ...BAR_TRIVIA_UFC_EVERGREEN_WAVE_7,
   ...BAR_TRIVIA_CURRENT_EVENT_QUESTIONS,
 ];
