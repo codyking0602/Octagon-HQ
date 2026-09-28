@@ -63,7 +63,7 @@ export const BAR_TRIVIA_QUESTION_COUNT = 10;
 export const BAR_TRIVIA_MAX_SCORE = 100;
 export const BAR_TRIVIA_MAX_WAGER = 10;
 export const BAR_TRIVIA_CURRENT_EVENT_TARGET = 2;
-export const BAR_TRIVIA_RECENT_MEMORY_SIZE = 320;
+export const BAR_TRIVIA_RECENT_MEMORY_SIZE = 400;
 
 export const BAR_TRIVIA_BASE_POINTS: Record<BarTriviaRound, number> = {
   round1: 10,
