@@ -14,9 +14,15 @@ describe("NFL Build a QB final-results browsing", () => {
     expect(gate).toContain("selectedStanding?.final_score?.toFixed(1)");
   });
 
-  it("keeps the player switcher compact and horizontally scrollable on mobile", () => {
+  it("keeps the player switcher compact, internally scrollable, and unable to widen the page", () => {
+    expect(styles).toContain(".football-weekly-build-qb__final {\n  min-width: 0;");
+    expect(styles).toContain("max-width: 100%;\n  overflow: hidden;");
+    expect(styles).toContain(".football-weekly-build-qb__final > * {\n  min-width: 0;");
+    expect(styles).toContain(".football-weekly-build-qb__builds,\n.football-weekly-build-qb__grade-grid {\n  min-width: 0;");
     expect(styles).toContain(".football-weekly-build-qb__player-picker");
+    expect(styles).toContain("width: 100%;");
     expect(styles).toContain("overflow-x: auto;");
+    expect(styles).toContain("overflow-y: hidden;");
     expect(styles).toContain("flex: 0 0 auto;");
   });
 });
