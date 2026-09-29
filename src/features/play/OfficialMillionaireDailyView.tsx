@@ -77,10 +77,15 @@ function useMillionaireStageScale() {
 
 function officialResult(projection: TodayChallengeProjection) {
   const result = projection.officialAttempt?.publicResult ?? {};
+  const outcome = String(result.outcome ?? "lost");
+  const completedQuestions = Number(result.completed_questions ?? 0);
   return {
-    outcome: String(result.outcome ?? "lost"),
+    outcome,
     finalMoney: Number(result.final_money ?? 0),
-    completedQuestions: Number(result.completed_questions ?? 0),
+    completedQuestions,
+    firstMissQuestion: result.first_miss_question == null
+      ? (outcome === "lost" ? Math.min(8, completedQuestions + 1) : null)
+      : Number(result.first_miss_question),
     lifelinesUsed: Number(result.lifelines_used ?? 0),
     timeRemainingMs: Number(result.time_remaining_ms ?? 0),
     score: projection.officialAttempt?.normalizedScore ?? Number(result.score ?? 0),
@@ -105,6 +110,9 @@ export function OfficialMillionaireDailyView({
   const status = String(state.status ?? "playing");
   const currentIndex = Math.min(7, Math.max(0, Number(state.current_question_index ?? 0)));
   const completedQuestions = Math.min(8, Math.max(0, Number(state.completed_questions ?? 0)));
+  const firstMissQuestionIndex = state.first_miss_question_index == null
+    ? null
+    : Math.min(7, Math.max(0, Number(state.first_miss_question_index)));
   const question = questions[currentIndex] ?? {};
   const choices = records(question.choices);
   const level = MILLIONAIRE_LEVELS[currentIndex]!;
@@ -119,8 +127,9 @@ export function OfficialMillionaireDailyView({
   );
   const [timeRemainingMs, setTimeRemainingMs] = useState(initialTime);
   const [walkPromptOpen, setWalkPromptOpen] = useState(
-    currentIndex === 7 && completedQuestions === 7 && status === "playing",
+    currentIndex === 7 && completedQuestions === 7 && firstMissQuestionIndex === null && status === "playing",
   );
+  const [eliminationPromptOpen, setEliminationPromptOpen] = useState(false);
   const [statSheetOpen, setStatSheetOpen] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(
     projection.progressRevision === 0 && !projection.officialAttempt && status === "playing",
@@ -144,12 +153,12 @@ export function OfficialMillionaireDailyView({
 
   useEffect(() => {
     if (answerFeedback) return;
-    if (currentIndex === 7 && completedQuestions === 7 && status === "playing" && priorIndex.current !== 7) {
+    if (currentIndex === 7 && completedQuestions === 7 && firstMissQuestionIndex === null && status === "playing" && priorIndex.current !== 7) {
       setWalkPromptOpen(true);
     }
     if (currentIndex !== 7) setWalkPromptOpen(false);
     priorIndex.current = currentIndex;
-  }, [answerFeedback, completedQuestions, currentIndex, status]);
+  }, [answerFeedback, completedQuestions, currentIndex, firstMissQuestionIndex, status]);
 
   const lifelineReveal = record(state.last_lifeline_reveal);
   useEffect(() => {
@@ -159,20 +168,20 @@ export function OfficialMillionaireDailyView({
   }, [projection.progressRevision, lifelineReveal.text, lifelineReveal.type]);
 
   useEffect(() => {
-    if (rulesOpen || answerFeedback || projection.officialAttempt || status !== "playing" || busy || walkPromptOpen || timeRemainingMs <= 0) return;
+    if (rulesOpen || answerFeedback || projection.officialAttempt || status !== "playing" || busy || walkPromptOpen || eliminationPromptOpen || timeRemainingMs <= 0) return;
     const started = performance.now();
     const starting = timeRemainingMs;
     const id = window.setInterval(() => {
       setTimeRemainingMs(Math.max(0, starting - (performance.now() - started)));
     }, 100);
     return () => window.clearInterval(id);
-  }, [answerFeedback, busy, currentIndex, projection.officialAttempt, rulesOpen, status, walkPromptOpen]);
+  }, [answerFeedback, busy, currentIndex, eliminationPromptOpen, projection.officialAttempt, rulesOpen, status, walkPromptOpen]);
 
   useEffect(() => {
-    if (rulesOpen || answerFeedback || projection.officialAttempt || status !== "playing" || busy || timeRemainingMs > 0 || timeoutSent.current) return;
+    if (rulesOpen || answerFeedback || projection.officialAttempt || status !== "playing" || busy || eliminationPromptOpen || timeRemainingMs > 0 || timeoutSent.current) return;
     timeoutSent.current = true;
     onAdvance({ type: "timeout", time_remaining_ms: 0 });
-  }, [answerFeedback, busy, onAdvance, projection.officialAttempt, rulesOpen, status, timeRemainingMs]);
+  }, [answerFeedback, busy, eliminationPromptOpen, onAdvance, projection.officialAttempt, rulesOpen, status, timeRemainingMs]);
 
   useEffect(() => {
     if (!answerFeedback || answerFeedback.phase !== "locked") return;
@@ -210,15 +219,24 @@ export function OfficialMillionaireDailyView({
     const hold = answerFeedback.answerOutcome === "double-dip-continue"
       ? MILLIONAIRE_DOUBLE_DIP_MISS_MS
       : MILLIONAIRE_ANSWER_REVEAL_HOLD_MS;
-    const id = window.setTimeout(() => setAnswerFeedback(null), hold);
+    const firstMiss = state.first_miss_question_index == null
+      ? null
+      : Number(state.first_miss_question_index);
+    const firstElimination = answerFeedback.answerOutcome === "wrong"
+      && firstMiss === answerFeedback.currentIndex
+      && answerFeedback.currentIndex < 7
+      && status === "playing";
+    const id = window.setTimeout(() => {
+      setAnswerFeedback(null);
+      if (firstElimination) setEliminationPromptOpen(true);
+    }, hold);
     return () => window.clearTimeout(id);
-  }, [answerFeedback]);
+  }, [answerFeedback, state.first_miss_question_index, status]);
 
   const hostNumber = Math.min(3, Math.max(1, Math.trunc(Number(setup.host_number ?? 1))));
   const stageBackground = MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
   const displayIndex = answerFeedback?.currentIndex ?? currentIndex;
-  const displayCompletedQuestions = answerFeedback?.completedQuestions ?? completedQuestions;
   const displayQuestion = answerFeedback?.question ?? question;
   const displayChoices = answerFeedback?.choices ?? choices;
   const displayLevel = answerFeedback?.level ?? level;
@@ -230,12 +248,12 @@ export function OfficialMillionaireDailyView({
   const visualPhase = answerFeedback?.phase ?? "answering";
 
   const advance = (action: JsonRecord) => {
-    if (busy || projection.officialAttempt) return;
+    if (busy || projection.officialAttempt || eliminationPromptOpen) return;
     onAdvance({ ...action, time_remaining_ms: Math.max(0, Math.floor(timeRemainingMs)) });
   };
 
   const answer = (choiceId: MillionaireChoiceId) => {
-    if (busy || projection.officialAttempt || answerFeedback || walkPromptOpen) return;
+    if (busy || projection.officialAttempt || answerFeedback || walkPromptOpen || eliminationPromptOpen) return;
     setAnswerFeedback({
       phase: "locked",
       selectedChoiceId: choiceId,
@@ -284,8 +302,9 @@ export function OfficialMillionaireDailyView({
               <h2>HOW TO PLAY</h2>
               <div className="millionaire-rules__quick">
                 <p><strong>{millionaireTimeLabel(MILLIONAIRE_TIME_BANK_MS)} TIME BANK</strong><span>Shared across all 8. Time only breaks leaderboard ties.</span></p>
-                <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: leave with $5,000.</span></p>
-                <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: leave with $100,000.</span></p>
+                <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: winnings lock at $5,000.</span></p>
+                <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: winnings lock at $100,000.</span></p>
+                <p><strong>MISS A QUESTION</strong><span>Your Millionaire run ends, but you finish all 8 questions for your score.</span></p>
                 <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
               </div>
               <h3>LIFELINES</h3>
@@ -305,7 +324,7 @@ export function OfficialMillionaireDailyView({
   }
 
   return createPortal(
-    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${displayLevel.toLowerCase()} millionaire-shell--${visualPhase}`}>
+    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${displayLevel.toLowerCase()} millionaire-shell--${visualPhase}${firstMissQuestionIndex !== null ? " millionaire-shell--eliminated" : ""}`}>
       <div className="millionaire-stage-canvas" style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}>
         <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
         <header className="millionaire-title">
@@ -313,7 +332,7 @@ export function OfficialMillionaireDailyView({
         </header>
         <section className="millionaire-stakes" aria-label={`Question ${displayIndex + 1} value`}>
           <strong>{millionaireMoneyLabel(Number(displayQuestion.money ?? MILLIONAIRE_MONEY_BY_LEVEL[displayLevel]))}</strong>
-          <span>{MILLIONAIRE_BASE_PTS[displayLevel]} PTS</span>
+          <span>{firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[displayLevel]} PTS` : "RECOVERY +5"}</span>
         </section>
         <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}>
           <div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div>
@@ -323,19 +342,19 @@ export function OfficialMillionaireDailyView({
           <button
             type="button"
             className={lifelinesUsed.fifty_fifty === true ? "is-spent" : ""}
-            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.fifty_fifty === true || questionState.double_dip_active === true || walkPromptOpen}
+            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.fifty_fifty === true || questionState.double_dip_active === true || walkPromptOpen || eliminationPromptOpen}
             onClick={() => advance({ type: "use_lifeline", lifeline: "fifty-fifty" })}
           ><b>50:50</b><span>50:50</span></button>
           <button
             type="button"
             className={lifelinesUsed.stat_sheet === true ? "is-spent" : ""}
-            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.stat_sheet === true || walkPromptOpen}
+            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.stat_sheet === true || walkPromptOpen || eliminationPromptOpen}
             onClick={() => advance({ type: "use_lifeline", lifeline: "stat-sheet" })}
           ><b>▥</b><span>STAT SHEET</span></button>
           <button
             type="button"
             className={`${lifelinesUsed.double_dip === true ? "is-spent" : ""}${questionState.double_dip_active === true ? " is-active" : ""}`}
-            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.double_dip === true || questionState.fifty_fifty_applied === true || walkPromptOpen}
+            disabled={Boolean(answerFeedback) || busy || q8 || lifelinesUsed.double_dip === true || questionState.fifty_fifty_applied === true || walkPromptOpen || eliminationPromptOpen}
             onClick={() => advance({ type: "use_lifeline", lifeline: "double-dip" })}
           ><b>↝</b><span>{questionState.double_dip_active === true ? "2 PICKS" : "DOUBLE DIP"}</span></button>
         </aside>
@@ -345,7 +364,9 @@ export function OfficialMillionaireDailyView({
             const index = 7 - reverseIndex;
             const checkpoint = ladderLevel === "Q3" || ladderLevel === "Q6";
             const current = !result && index === displayIndex;
-            const complete = index < displayCompletedQuestions;
+            const complete = firstMissQuestionIndex === null
+              ? index < displayIndex
+              : index < firstMissQuestionIndex;
             return (
               <div key={ladderLevel} className={`${current ? "is-current" : ""}${complete ? " is-complete" : ""}${checkpoint ? " is-checkpoint" : ""}`}>
                 <b>{index + 1}</b>
@@ -364,7 +385,20 @@ export function OfficialMillionaireDailyView({
           </section>
         ) : null}
 
-        {walkPromptOpen && !result ? (
+        {eliminationPromptOpen && !result ? (
+          <section className="millionaire-decision millionaire-elimination" aria-label="Millionaire run ended">
+            <span>YOU'LL NEVER BE A MILLIONAIRE.</span>
+            <strong>Your money run is over.</strong>
+            <p>{Number(state.final_money ?? 0) > 0 ? `Winnings locked at ${millionaireMoneyLabel(Number(state.final_money))}. ` : ""}Your Daily score is still alive. Finish all 8 questions.</p>
+            <div>
+              <button type="button" className="is-play" onClick={() => setEliminationPromptOpen(false)}>
+                <small>KEEP PLAYING</small><b>FINISH THE BOARD</b><em>{Number(state.score ?? 0)} PTS SO FAR</em>
+              </button>
+            </div>
+          </section>
+        ) : null}
+
+        {walkPromptOpen && !result && !eliminationPromptOpen ? (
           <section className="millionaire-decision" aria-label="Walk away decision">
             <span>WALK AWAY?</span>
             <strong>You have {millionaireMoneyLabel(currentMoney)} guaranteed.</strong>
@@ -387,6 +421,7 @@ export function OfficialMillionaireDailyView({
             <div className="millionaire-results__score"><b>{result.score}</b><small>PTS</small></div>
             <dl>
               <div><dt>Questions correct</dt><dd>{result.completedQuestions} / 8</dd></div>
+              <div><dt>Millionaire run</dt><dd>{result.firstMissQuestion == null ? (result.outcome === "won" ? "Cleared" : "Walked away") : `Ended Q${result.firstMissQuestion}`}</dd></div>
               <div><dt>Lifelines used</dt><dd>{result.lifelinesUsed}{result.lifelinesUsed ? ` (-${result.lifelinesUsed * 2})` : ""}</dd></div>
               <div><dt>Time remaining</dt><dd>{millionaireTimeLabel(result.timeRemainingMs)}</dd></div>
             </dl>
@@ -418,7 +453,7 @@ export function OfficialMillionaireDailyView({
                     key={id}
                     type="button"
                     className={className}
-                    disabled={Boolean(answerFeedback) || busy || walkPromptOpen || removed || spent}
+                    disabled={Boolean(answerFeedback) || busy || walkPromptOpen || eliminationPromptOpen || removed || spent}
                     onClick={() => answer(id)}
                   >
                     <b>{id}</b><span>{String(choice.text ?? "")}</span>

@@ -135,8 +135,9 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
             <h2>HOW TO PLAY</h2>
             <div className="millionaire-rules__quick">
               <p><strong>{millionaireTimeLabel(MILLIONAIRE_TIME_BANK_MS)} TIME BANK</strong><span>Shared across all 8. Time only breaks leaderboard ties.</span></p>
-              <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: leave with $5,000.</span></p>
-              <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: leave with $100,000.</span></p>
+              <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: winnings lock at $5,000.</span></p>
+              <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: winnings lock at $100,000.</span></p>
+              <p><strong>MISS A QUESTION</strong><span>Your Millionaire run ends, but you finish all 8 questions for your score.</span></p>
               <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
             </div>
             <h3>LIFELINES</h3>
@@ -212,6 +213,7 @@ function MillionaireGame({
   const [statSheetOpen, setStatSheetOpen] = useState(false);
   const [statSheetText, setStatSheetText] = useState("");
   const [walkPromptOpen, setWalkPromptOpen] = useState(false);
+  const [eliminationPromptOpen, setEliminationPromptOpen] = useState(false);
   const timerIds = useRef<number[]>([]);
   const timeoutQueued = useRef(false);
 
@@ -236,14 +238,14 @@ function MillionaireGame({
   useEffect(() => () => { timerIds.current.forEach((id) => window.clearTimeout(id)); }, []);
 
   useEffect(() => {
-    if (phase !== "answering" || gameState.status !== "playing" || timeRemainingMs <= 0) return undefined;
+    if (phase !== "answering" || gameState.status !== "playing" || eliminationPromptOpen || timeRemainingMs <= 0) return undefined;
     const startedAt = performance.now();
     const startingMs = timeRemainingMs;
     const interval = window.setInterval(() => {
       setTimeRemainingMs(Math.max(0, startingMs - (performance.now() - startedAt)));
     }, 100);
     return () => window.clearInterval(interval);
-  }, [phase, gameState.status, gameState.currentQuestionIndex]);
+  }, [phase, gameState.status, gameState.currentQuestionIndex, eliminationPromptOpen]);
 
   function emitSettled(nextState: MillionaireState) {
     if (nextState.status === "playing") return;
@@ -265,14 +267,19 @@ function MillionaireGame({
     setStatSheetOpen(false);
     setStatSheetText("");
     timeoutQueued.current = false;
+    const firstElimination = result.answerOutcome === "wrong"
+      && result.state.status === "playing"
+      && result.state.firstMissQuestionIndex === gameState.currentQuestionIndex;
     if (result.state.status !== "playing") {
       setWalkPromptOpen(false);
+      setEliminationPromptOpen(false);
       setPhase("settled");
       emitSettled(result.state);
       return;
     }
     setPhase("answering");
-    setWalkPromptOpen(millionaireCanWalkAway(result.state));
+    setEliminationPromptOpen(firstElimination);
+    setWalkPromptOpen(!firstElimination && millionaireCanWalkAway(result.state));
   }
 
   function queueReveal(result: MillionaireTransitionResult, choiceId: MillionaireChoiceId | null, delay = MILLIONAIRE_REVEAL_DELAY_MS[level]) {
@@ -292,7 +299,7 @@ function MillionaireGame({
   }, [timeRemainingMs, phase, gameState, run]);
 
   function answer(choiceId: MillionaireChoiceId) {
-    if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || !currentQuestion) return;
+    if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || eliminationPromptOpen || !currentQuestion) return;
     if (gameState.questionState.removedChoiceIds.includes(choiceId) || gameState.questionState.doubleDipWrongChoiceIds.includes(choiceId)) return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "answer", choiceId });
     if (result.answerOutcome === "double-dip-continue") {
@@ -305,7 +312,7 @@ function MillionaireGame({
   }
 
   function useLifeline(lifeline: MillionaireLifeline) {
-    if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || q8) return;
+    if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || eliminationPromptOpen || q8) return;
     if (lifeline === "stat-sheet" && gameState.questionState.statSheetRevealed) return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "use_lifeline", lifeline });
     setGameState(result.state);
@@ -337,6 +344,7 @@ function MillionaireGame({
     setStatSheetOpen(false);
     setStatSheetText("");
     setWalkPromptOpen(false);
+    setEliminationPromptOpen(false);
   }
 
   const correctChoiceId = reveal?.result.questionReveal?.correctChoiceId ?? null;
@@ -345,7 +353,7 @@ function MillionaireGame({
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
 
   return (
-    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}`}>
+    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${level.toLowerCase()} millionaire-shell--${phase}${gameState.firstMissQuestionIndex !== null ? " millionaire-shell--eliminated" : ""}`}>
       <div
         className="millionaire-stage-canvas"
         style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
@@ -353,7 +361,7 @@ function MillionaireGame({
       <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
-      <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
+      <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
       <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}><div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div></div>
 
       <aside className="millionaire-lifelines" aria-label="Lifelines">
@@ -362,7 +370,7 @@ function MillionaireGame({
           const used = gameState.lifelinesUsed[usageKey];
           const incompatible = (lifeline.id === "fifty-fifty" && gameState.questionState.doubleDipActive) || (lifeline.id === "double-dip" && gameState.questionState.fiftyFiftyApplied);
           const activeDoubleDip = lifeline.id === "double-dip" && gameState.questionState.doubleDipActive;
-          const disabled = q8 || used || incompatible || phase !== "answering" || walkPromptOpen;
+          const disabled = q8 || used || incompatible || phase !== "answering" || walkPromptOpen || eliminationPromptOpen;
           return (
             <button key={lifeline.id} type="button" className={`${used ? "is-spent" : ""}${activeDoubleDip ? " is-active" : ""}`} disabled={disabled} onClick={() => useLifeline(lifeline.id)} aria-label={lifeline.label}>
               <b>{lifeline.icon}</b><span>{activeDoubleDip ? "2 PICKS" : lifeline.label}</span>
@@ -374,7 +382,9 @@ function MillionaireGame({
       <aside className="millionaire-ladder" aria-label="Money ladder">
         {MILLIONAIRE_LEVELS.slice().reverse().map((ladderLevel, reverseIndex) => {
           const index = 7 - reverseIndex;
-          const completed = index < gameState.completedQuestions;
+          const completed = gameState.firstMissQuestionIndex === null
+            ? index < gameState.currentQuestionIndex
+            : index < gameState.firstMissQuestionIndex;
           const current = index === gameState.currentQuestionIndex && gameState.status === "playing";
           const checkpoint = ladderLevel === "Q3" || ladderLevel === "Q6";
           return (
@@ -391,7 +401,20 @@ function MillionaireGame({
         </section>
       ) : null}
 
-      {walkPromptOpen && currentQuestion ? (
+      {eliminationPromptOpen ? (
+        <section className="millionaire-decision millionaire-elimination" aria-label="Millionaire run ended">
+          <span>YOU'LL NEVER BE A MILLIONAIRE.</span>
+          <strong>Your money run is over.</strong>
+          <p>{gameState.finalMoney ? `Winnings locked at ${millionaireMoneyLabel(gameState.finalMoney)}. ` : ""}Your score is still alive. Finish all 8 questions.</p>
+          <div>
+            <button type="button" className="is-play" onClick={() => setEliminationPromptOpen(false)}>
+              <small>KEEP PLAYING</small><b>FINISH THE BOARD</b><em>{gameState.score} PTS SO FAR</em>
+            </button>
+          </div>
+        </section>
+      ) : null}
+
+      {walkPromptOpen && currentQuestion && !eliminationPromptOpen ? (
         <section className="millionaire-decision" aria-label="Walk away decision">
           <span>WALK AWAY?</span><strong>You have {millionaireMoneyLabel(gameState.currentMoney)} guaranteed.</strong><p>Play for {millionaireMoneyLabel(currentQuestion.money)} or walk away now.</p>
           <div>
@@ -405,7 +428,7 @@ function MillionaireGame({
         <section className="millionaire-results" aria-live="polite">
           <span>{gameState.status === "won" ? "MILLIONAIRE" : "YOU LEAVE WITH"}</span><strong>{millionaireMoneyLabel(gameState.finalMoney ?? 0)}</strong>
           <div className="millionaire-results__score"><b>{gameState.score}</b><small>PTS</small></div>
-          <dl><div><dt>Questions correct</dt><dd>{gameState.completedQuestions} / 8</dd></div><div><dt>Lifelines used</dt><dd>{usedLifelines}{usedLifelines ? ` (-${usedLifelines * 2})` : ""}</dd></div><div><dt>Time remaining</dt><dd>{millionaireTimeLabel(timeRemainingMs)}</dd></div></dl>
+          <dl><div><dt>Questions correct</dt><dd>{gameState.completedQuestions} / 8</dd></div><div><dt>Millionaire run</dt><dd>{gameState.firstMissQuestionIndex === null ? (gameState.status === "won" ? "Cleared" : "Walked away") : `Ended Q${gameState.firstMissQuestionIndex + 1}`}</dd></div><div><dt>Lifelines used</dt><dd>{usedLifelines}{usedLifelines ? ` (-${usedLifelines * 2})` : ""}</dd></div><div><dt>Time remaining</dt><dd>{millionaireTimeLabel(timeRemainingMs)}</dd></div></dl>
           <div className="millionaire-results__actions"><button type="button" className="is-primary" onClick={restart}>PLAY AGAIN</button>{onChangeLeague ? <button type="button" onClick={onChangeLeague}>CHANGE LEAGUE</button> : null}<button type="button" onClick={onBack}>BACK TO GAMES</button></div>
         </section>
       ) : (
@@ -419,7 +442,7 @@ function MillionaireGame({
               const correct = phase === "revealed" && choice.id === correctChoiceId;
               const wrong = (phase === "revealed" && selected && answerOutcome === "wrong" && choice.id !== correctChoiceId) || doubleDipFlashChoiceId === choice.id;
               const className = [removed ? "is-removed" : "", doubleDipSpent ? "is-double-dip-spent" : "", selected && phase === "locked" ? "is-selected" : "", correct ? "is-correct" : "", wrong ? "is-wrong" : ""].filter(Boolean).join(" ");
-              return <button key={choice.id} type="button" className={className} disabled={phase !== "answering" || removed || doubleDipSpent || walkPromptOpen} onClick={() => answer(choice.id)}><b>{choice.id}</b><span>{choice.text}</span></button>;
+              return <button key={choice.id} type="button" className={className} disabled={phase !== "answering" || removed || doubleDipSpent || walkPromptOpen || eliminationPromptOpen} onClick={() => answer(choice.id)}><b>{choice.id}</b><span>{choice.text}</span></button>;
             })}
           </div>
         </>

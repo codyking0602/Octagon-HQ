@@ -9,11 +9,11 @@ import {
 } from "./millionaireAuthority";
 
 export const MILLIONAIRE_OCTAGON_SCORE_BY_LEVEL = {
-  Q1: 25,
-  Q2: 35,
-  Q3: 45,
-  Q4: 55,
-  Q5: 68,
+  Q1: 30,
+  Q2: 40,
+  Q3: 50,
+  Q4: 60,
+  Q5: 70,
   Q6: 80,
   Q7: 90,
   Q8: 100,
@@ -55,6 +55,7 @@ export interface MillionaireState {
   status: MillionaireStatus;
   currentQuestionIndex: number;
   completedQuestions: number;
+  firstMissQuestionIndex: number | null;
   currentMoney: number;
   finalMoney: number | null;
   baseScore: number;
@@ -113,6 +114,15 @@ export function millionaireScoreAfterLifelines(baseScore: number, usage: Million
   return Math.max(0, Math.min(100, baseScore - usedLifelineCount(usage) * MILLIONAIRE_LIFELINE_PENALTY));
 }
 
+export function millionaireBaseScore(correctAnswers: number, firstMissQuestionIndex: number | null) {
+  const safeCorrectAnswers = Math.max(0, Math.min(8, Math.trunc(correctAnswers)));
+  if (safeCorrectAnswers === 0 && firstMissQuestionIndex === null) return 0;
+  const survivalCorrect = firstMissQuestionIndex === null
+    ? safeCorrectAnswers
+    : Math.max(0, Math.min(7, Math.trunc(firstMissQuestionIndex)));
+  return Math.min(100, 20 + safeCorrectAnswers * 5 + survivalCorrect * 5);
+}
+
 export function millionaireCheckpointMoney(completedQuestions: number) {
   if (completedQuestions >= 6) return MILLIONAIRE_MONEY_BY_LEVEL.Q6;
   if (completedQuestions >= 3) return MILLIONAIRE_MONEY_BY_LEVEL.Q3;
@@ -144,6 +154,7 @@ export function createMillionaireState(run: readonly MillionaireRuntimeQuestion[
     status: "playing",
     currentQuestionIndex: 0,
     completedQuestions: 0,
+    firstMissQuestionIndex: null,
     currentMoney: 0,
     finalMoney: null,
     baseScore: 0,
@@ -167,7 +178,7 @@ export function currentMillionairePublicQuestion(run: MillionaireRun, state: Mil
 }
 
 export function millionaireCanWalkAway(state: MillionaireState) {
-  if (state.status !== "playing" || state.questionState.doubleDipActive) return false;
+  if (state.status !== "playing" || state.firstMissQuestionIndex !== null || state.questionState.doubleDipActive) return false;
   const questionLevel = state.currentQuestionIndex + 1;
   return MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS.includes(questionLevel as 8);
 }
@@ -180,8 +191,12 @@ function revealFor(question: MillionaireRuntimeQuestion): MillionaireQuestionRev
   };
 }
 
-function scoringState(completedQuestions: number, lifelinesUsed: MillionaireLifelineUsage) {
-  const baseScore = millionaireScoreForCompletedQuestions(completedQuestions);
+function scoringState(
+  correctAnswers: number,
+  firstMissQuestionIndex: number | null,
+  lifelinesUsed: MillionaireLifelineUsage,
+) {
+  const baseScore = millionaireBaseScore(correctAnswers, firstMissQuestionIndex);
   return {
     baseScore,
     score: millionaireScoreAfterLifelines(baseScore, lifelinesUsed),
@@ -288,20 +303,22 @@ function answer(run: MillionaireRun, state: MillionaireState, choiceId: Milliona
   if (state.questionState.doubleDipWrongChoiceIds.includes(choiceId)) throw new Error("A failed Double Dip choice cannot be submitted twice.");
 
   if (choiceId === question.correctChoiceId) {
-    const completedQuestions = state.currentQuestionIndex + 1;
-    const currentMoney = question.money;
-    const scoring = scoringState(completedQuestions, state.lifelinesUsed);
-    const won = completedQuestions === 8;
+    const completedQuestions = state.completedQuestions + 1;
+    const reachedEnd = state.currentQuestionIndex === 7;
+    const stillAlive = state.firstMissQuestionIndex === null;
+    const scoring = scoringState(completedQuestions, state.firstMissQuestionIndex, state.lifelinesUsed);
     return {
       state: {
         ...state,
-        status: won ? "won" : "playing",
-        currentQuestionIndex: won ? state.currentQuestionIndex : state.currentQuestionIndex + 1,
+        status: reachedEnd ? (stillAlive ? "won" : "lost") : "playing",
+        currentQuestionIndex: reachedEnd ? state.currentQuestionIndex : state.currentQuestionIndex + 1,
         completedQuestions,
-        currentMoney,
-        finalMoney: won ? currentMoney : null,
+        currentMoney: stillAlive ? question.money : state.currentMoney,
+        finalMoney: reachedEnd
+          ? (stillAlive ? question.money : (state.finalMoney ?? 0))
+          : state.finalMoney,
         ...scoring,
-        questionState: won ? state.questionState : freshQuestionState(),
+        questionState: reachedEnd ? state.questionState : freshQuestionState(),
       },
       questionReveal: revealFor(question),
       lifelineReveal: null,
@@ -324,15 +341,19 @@ function answer(run: MillionaireRun, state: MillionaireState, choiceId: Milliona
     };
   }
 
-  const finalMoney = millionaireCheckpointMoney(state.completedQuestions);
-  const settledCompletedQuestions = millionaireLevelNumber(question.level) === 8 ? 6 : state.completedQuestions;
-  const scoring = scoringState(settledCompletedQuestions, state.lifelinesUsed);
+  const firstMissQuestionIndex = state.firstMissQuestionIndex ?? state.currentQuestionIndex;
+  const finalMoney = state.finalMoney ?? millionaireCheckpointMoney(state.currentQuestionIndex);
+  const reachedEnd = state.currentQuestionIndex === 7;
+  const scoring = scoringState(state.completedQuestions, firstMissQuestionIndex, state.lifelinesUsed);
   return {
     state: {
       ...state,
-      status: "lost",
+      status: reachedEnd ? "lost" : "playing",
+      currentQuestionIndex: reachedEnd ? state.currentQuestionIndex : state.currentQuestionIndex + 1,
+      firstMissQuestionIndex,
       finalMoney,
       ...scoring,
+      questionState: reachedEnd ? state.questionState : freshQuestionState(),
     },
     questionReveal: revealFor(question),
     lifelineReveal: null,
@@ -343,7 +364,7 @@ function answer(run: MillionaireRun, state: MillionaireState, choiceId: Milliona
 function walkAway(state: MillionaireState): MillionaireTransitionResult {
   assertPlayable(state);
   if (!millionaireCanWalkAway(state)) throw new Error("Walk away is only available before Q8 and not during Double Dip.");
-  const scoring = scoringState(state.completedQuestions, state.lifelinesUsed);
+  const scoring = scoringState(state.completedQuestions, state.firstMissQuestionIndex, state.lifelinesUsed);
   return {
     state: {
       ...state,

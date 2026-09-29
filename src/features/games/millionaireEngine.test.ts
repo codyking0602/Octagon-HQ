@@ -71,7 +71,7 @@ describe("Millionaire locked ladder and score contract", () => {
     expect(MILLIONAIRE_LEVELS.map((level) => MILLIONAIRE_MONEY_BY_LEVEL[level]))
       .toEqual([500, 1_000, 5_000, 10_000, 50_000, 100_000, 500_000, 1_000_000]);
     expect(MILLIONAIRE_LEVELS.map((level) => MILLIONAIRE_OCTAGON_SCORE_BY_LEVEL[level]))
-      .toEqual([25, 35, 45, 55, 68, 80, 90, 100]);
+      .toEqual([30, 40, 50, 60, 70, 80, 90, 100]);
   });
 
   it("returns the most recent checkpoint after a wrong answer", () => {
@@ -113,6 +113,7 @@ describe("Millionaire run contract", () => {
       status: "playing",
       currentQuestionIndex: 0,
       completedQuestions: 0,
+      firstMissQuestionIndex: null,
       currentMoney: 0,
       finalMoney: null,
       baseScore: 0,
@@ -140,25 +141,96 @@ describe("Millionaire progression and settlement", () => {
     });
   });
 
-  it("settles wrong answers to checkpoints and makes Q8 a real 90-to-80 risk", () => {
+  it("ends only the money run on the first miss and keeps scoring through Q8", () => {
     const run = fixtureRun();
 
-    const q1Loss = advanceMillionaireRuntime(run, createMillionaireState(run), { type: "answer", choiceId: "B" });
-    expect(q1Loss.state).toMatchObject({ status: "lost", finalMoney: 0, score: 0 });
-    expect(q1Loss.answerOutcome).toBe("wrong");
-    expect(q1Loss.questionReveal?.correctChoiceId).toBe("A");
+    let q1Miss = advanceMillionaireRuntime(run, createMillionaireState(run), { type: "answer", choiceId: "B" });
+    expect(q1Miss.state).toMatchObject({
+      status: "playing",
+      currentQuestionIndex: 1,
+      completedQuestions: 0,
+      firstMissQuestionIndex: 0,
+      finalMoney: 0,
+      baseScore: 20,
+      score: 20,
+    });
+    expect(q1Miss.answerOutcome).toBe("wrong");
+    expect(q1Miss.questionReveal?.correctChoiceId).toBe("A");
+
+    let recovered = q1Miss.state;
+    for (let index = 1; index < 8; index += 1) {
+      recovered = advanceMillionaireRuntime(run, recovered, { type: "answer", choiceId: "A" }).state;
+    }
+    expect(recovered).toMatchObject({
+      status: "lost",
+      completedQuestions: 7,
+      firstMissQuestionIndex: 0,
+      finalMoney: 0,
+      baseScore: 55,
+      score: 55,
+    });
 
     const afterQ3 = answerCorrect(run, createMillionaireState(run), 3);
-    const q4Loss = advanceMillionaireRuntime(run, afterQ3, { type: "answer", choiceId: "B" });
-    expect(q4Loss.state).toMatchObject({ status: "lost", finalMoney: 5_000, baseScore: 45, score: 45 });
+    const q4Miss = advanceMillionaireRuntime(run, afterQ3, { type: "answer", choiceId: "B" });
+    expect(q4Miss.state).toMatchObject({
+      status: "playing",
+      currentQuestionIndex: 4,
+      completedQuestions: 3,
+      firstMissQuestionIndex: 3,
+      finalMoney: 5_000,
+      baseScore: 50,
+      score: 50,
+    });
 
     const afterQ6 = answerCorrect(run, createMillionaireState(run), 6);
-    const q7Loss = advanceMillionaireRuntime(run, afterQ6, { type: "answer", choiceId: "B" });
-    expect(q7Loss.state).toMatchObject({ status: "lost", finalMoney: 100_000, baseScore: 80, score: 80 });
+    const q7Miss = advanceMillionaireRuntime(run, afterQ6, { type: "answer", choiceId: "B" });
+    expect(q7Miss.state).toMatchObject({
+      status: "playing",
+      firstMissQuestionIndex: 6,
+      finalMoney: 100_000,
+      baseScore: 80,
+      score: 80,
+    });
 
     const afterQ7 = answerCorrect(run, createMillionaireState(run), 7);
-    const q8Loss = advanceMillionaireRuntime(run, afterQ7, { type: "answer", choiceId: "B" });
-    expect(q8Loss.state).toMatchObject({ status: "lost", finalMoney: 100_000, baseScore: 80, score: 80 });
+    const q8Miss = advanceMillionaireRuntime(run, afterQ7, { type: "answer", choiceId: "B" });
+    expect(q8Miss.state).toMatchObject({
+      status: "lost",
+      completedQuestions: 7,
+      firstMissQuestionIndex: 7,
+      finalMoney: 100_000,
+      baseScore: 90,
+      score: 90,
+    });
+  });
+
+  it("keeps unused lifelines available after elimination and still charges two points", () => {
+    const run = fixtureRun();
+    const eliminated = advanceMillionaireRuntime(run, createMillionaireState(run), {
+      type: "answer",
+      choiceId: "B",
+    }).state;
+
+    const lifeline = advanceMillionaireRuntime(run, eliminated, {
+      type: "use_lifeline",
+      lifeline: "stat-sheet",
+    });
+    expect(lifeline.state).toMatchObject({
+      status: "playing",
+      firstMissQuestionIndex: 0,
+      baseScore: 20,
+      score: 18,
+    });
+    expect(lifeline.lifelineReveal).toEqual({ type: "stat-sheet", text: "Fixture Stat Sheet Q2" });
+
+    const correct = advanceMillionaireRuntime(run, lifeline.state, { type: "answer", choiceId: "A" });
+    expect(correct.state).toMatchObject({
+      completedQuestions: 1,
+      firstMissQuestionIndex: 0,
+      baseScore: 25,
+      score: 23,
+      finalMoney: 0,
+    });
   });
 
   it("offers the walk-away decision only before Q8 and preserves the earned 90-point result", () => {
@@ -200,7 +272,7 @@ describe("Millionaire lifeline invariants", () => {
 
     expect(result.lifelineReveal).toEqual({ type: "fifty-fifty", removedChoiceIds: ["C", "D"] });
     expect(result.state.questionState.removedChoiceIds).toEqual(["C", "D"]);
-    expect(result.state.score).toBe(43);
+    expect(result.state.score).toBe(48);
     expect(() => advanceMillionaireRuntime(run, result.state, { type: "answer", choiceId: "C" })).toThrow("removed 50/50 choice");
     expect(() => advanceMillionaireRuntime(run, result.state, { type: "use_lifeline", lifeline: "fifty-fifty" })).toThrow("already been used");
   });
@@ -244,7 +316,14 @@ describe("Millionaire lifeline invariants", () => {
     const secondMiss = advanceMillionaireRuntime(run, firstMiss.state, { type: "answer", choiceId: "C" });
     expect(secondMiss.answerOutcome).toBe("wrong");
     expect(secondMiss.questionReveal?.correctChoiceId).toBe("A");
-    expect(secondMiss.state).toMatchObject({ status: "lost", finalMoney: 5_000, score: 43 });
+    expect(secondMiss.state).toMatchObject({
+      status: "playing",
+      currentQuestionIndex: 4,
+      firstMissQuestionIndex: 3,
+      finalMoney: 5_000,
+      baseScore: 50,
+      score: 48,
+    });
   });
 
   it("lets the second Double Dip attempt succeed and then clears per-question Double Dip state", () => {
@@ -260,8 +339,8 @@ describe("Millionaire lifeline invariants", () => {
       completedQuestions: 3,
       currentQuestionIndex: 3,
       currentMoney: 5_000,
-      baseScore: 45,
-      score: 43,
+      baseScore: 50,
+      score: 48,
     });
     expect(recovered.state.questionState.doubleDipActive).toBe(false);
     expect(recovered.state.questionState.doubleDipWrongChoiceIds).toEqual([]);

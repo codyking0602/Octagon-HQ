@@ -162,7 +162,7 @@ describe("Millionaire official Daily runtime", () => {
     expect(publication.privateGradingEvidence.proof).toBe(publication.privateSetupEvidence.proof);
   });
 
-  it("banks 90 before Q8 and drops a Q8 miss back to the 80-point checkpoint", () => {
+  it("banks 90 before Q8 and keeps a Q8 miss at 90 while locking checkpoint money", () => {
     let walkContext = contextFor("football");
     for (let index = 0; index < 7; index += 1) {
       const question = privateRun(walkContext)[index]!;
@@ -178,6 +178,7 @@ describe("Millionaire official Daily runtime", () => {
     expect(walked.finalSubmission).toMatchObject({
       outcome: "walked-away",
       completed_questions: 7,
+      first_miss_question: null,
       final_money: 500_000,
       base_score: 90,
     });
@@ -197,9 +198,54 @@ describe("Millionaire official Daily runtime", () => {
     expect(lost.finalSubmission).toMatchObject({
       outcome: "lost",
       completed_questions: 7,
+      first_miss_question: 8,
       final_money: 100_000,
-      base_score: 80,
+      base_score: 90,
     });
+  });
+
+  it("keeps an early bust playable, preserves lifelines, and scores the full board", () => {
+    let context = contextFor("ufc");
+    const q1 = privateRun(context)[0]!;
+    const q1Miss = q1.choices.find((choice) => choice.id !== q1.correctChoiceId)!;
+    const busted = advance(context, { type: "answer", choice_id: q1Miss.id });
+    expect(busted.result.complete).toBe(false);
+    expect(busted.result.publicState).toMatchObject({
+      status: "playing",
+      current_question_index: 1,
+      completed_questions: 0,
+      first_miss_question_index: 0,
+      final_money: 0,
+      base_score: 20,
+      score: 20,
+    });
+    context = busted.context;
+
+    const lifeline = advance(context, { type: "use_lifeline", lifeline: "stat-sheet" });
+    expect(lifeline.result.complete).toBe(false);
+    expect(lifeline.result.publicState.score).toBe(18);
+    context = lifeline.context;
+
+    for (let index = 1; index < 8; index += 1) {
+      const question = privateRun(context)[index]!;
+      const next = advance(context, {
+        type: "answer",
+        choice_id: question.correctChoiceId,
+      });
+      context = next.context;
+      if (index < 7) expect(next.result.complete).toBe(false);
+      else {
+        expect(next.result.complete).toBe(true);
+        expect(next.result.finalSubmission).toMatchObject({
+          outcome: "lost",
+          completed_questions: 7,
+          first_miss_question: 1,
+          final_money: 0,
+          base_score: 55,
+          lifelines_used: 1,
+        });
+      }
+    }
   });
 
   it("keeps Stat Sheet private until the lifeline is used", () => {

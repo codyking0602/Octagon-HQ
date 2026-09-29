@@ -136,7 +136,7 @@ describe("Millionaire private casual runtime", () => {
     const firstCheckpoint = answerCorrectly("cfb", 3);
     const q4Timeout = millionaireTimeoutTransition(firstCheckpoint.run, firstCheckpoint.state).state;
     expect(q4Timeout.finalMoney).toBe(5_000);
-    expect(q4Timeout.score).toBe(45);
+    expect(q4Timeout.score).toBe(50);
 
     const secondCheckpoint = answerCorrectly("cfb", 6);
     const q7Timeout = millionaireTimeoutTransition(secondCheckpoint.run, secondCheckpoint.state).state;
@@ -146,8 +146,8 @@ describe("Millionaire private casual runtime", () => {
     const beforeQ8 = answerCorrectly("cfb", 7);
     const q8Timeout = millionaireTimeoutTransition(beforeQ8.run, beforeQ8.state).state;
     expect(q8Timeout.finalMoney).toBe(100_000);
-    expect(q8Timeout.baseScore).toBe(80);
-    expect(q8Timeout.score).toBe(80);
+    expect(q8Timeout.baseScore).toBe(90);
+    expect(q8Timeout.score).toBe(90);
   });
 
   it("keeps lifeline deductions when the time bank expires", () => {
@@ -160,7 +160,7 @@ describe("Millionaire private casual runtime", () => {
     }
     const timedOut = millionaireTimeoutTransition(run, state).state;
     expect(timedOut.finalMoney).toBe(5_000);
-    expect(timedOut.baseScore).toBe(45);
-    expect(timedOut.score).toBe(43);
+    expect(timedOut.baseScore).toBe(50);
+    expect(timedOut.score).toBe(48);
   });
 });
