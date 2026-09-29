@@ -1482,14 +1482,15 @@ function balancedTake(
 ) {
   const isNflOrdinary = /^nfl grade [1-5] evergreen$/.test(label);
   const isNflUpperGrade = /^nfl grade [45] evergreen$/.test(label);
+  const isUfcUpperGrade = /^ufc grade [45] evergreen$/.test(label) || label === "ufc Finals";
   const latestPromptYear = (question: AverageFanQuestion) => {
     const years = [...question.prompt.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0]));
     return years.length ? Math.max(...years) : null;
   };
-  const nflEraRank = (question: AverageFanQuestion) => {
+  const eraRank = (question: AverageFanQuestion, modernThreshold: number) => {
     const year = latestPromptYear(question);
     if (year == null) return 1;
-    return year >= 2000 ? 0 : 2;
+    return year >= modernThreshold ? 0 : 2;
   };
   const candidateOrder = (left: AverageFanQuestion, right: AverageFanQuestion) => {
     if (isNflOrdinary) {
@@ -1497,9 +1498,13 @@ function balancedTake(
       const formatCompare = formatRank(left) - formatRank(right);
       if (formatCompare) return formatCompare;
       if (isNflUpperGrade) {
-        const eraCompare = nflEraRank(left) - nflEraRank(right);
+        const eraCompare = eraRank(left, 2000) - eraRank(right, 2000);
         if (eraCompare) return eraCompare;
       }
+    }
+    if (isUfcUpperGrade) {
+      const eraCompare = eraRank(left, 2010) - eraRank(right, 2010);
+      if (eraCompare) return eraCompare;
     }
     return left.id.localeCompare(right.id);
   };
