@@ -133,10 +133,10 @@ describe("Who Am I PR10 UFC person identity knowledge", () => {
       expect(universeIds).toContain(subjectId);
     }
     expect(ledgerIds.filter((subjectId) => !originalIds.has(subjectId))).toHaveLength(33);
-    expect(ufcFactualLedgerSubjects.filter((subject) => subject.scope === "ranked-core")).toHaveLength(81);
+    expect(ufcFactualLedgerSubjects.filter((subject) => subject.scope === "ranked-core")).toHaveLength(82);
 
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
-    expect(expansion).toHaveLength(52);
+    expect(expansion).toHaveLength(51);
     expect(expansion.every((subject) => subject.recognizabilityTier === "A")).toBe(true);
   });
 
