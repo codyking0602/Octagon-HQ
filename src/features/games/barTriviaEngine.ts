@@ -1,8 +1,13 @@
+import {
+  isTriviaContentActive,
+  type TriviaContentType,
+} from "./triviaContentExpiry";
+
 export type BarTriviaLeague = "nfl" | "cfb" | "ufc" | "mlb";
 export type BarTriviaRound = "round1" | "round2" | "round3" | "last-call";
 export type BarTriviaDoubleRound = Exclude<BarTriviaRound, "last-call">;
 export type BarTriviaDifficulty = "easy" | "medium" | "hard" | "last-call";
-export type BarTriviaContentType = "evergreen" | "current-event";
+export type BarTriviaContentType = TriviaContentType;
 
 export interface BarTriviaQuestion {
   id: string;
@@ -136,11 +141,7 @@ function normalizedNow(value: Date | string | undefined) {
 }
 
 export function isBarTriviaQuestionActive(question: BarTriviaQuestion, now: Date | string = new Date()) {
-  if (question.contentType !== "current-event") return true;
-  const at = normalizedNow(now).getTime();
-  const starts = question.activeFrom ? new Date(question.activeFrom).getTime() : Number.NEGATIVE_INFINITY;
-  const expires = question.expiresAt ? new Date(question.expiresAt).getTime() : Number.POSITIVE_INFINITY;
-  return at >= starts && at <= expires;
+  return isTriviaContentActive(question, now);
 }
 
 function recentRank(recentQuestionIds: readonly string[]) {

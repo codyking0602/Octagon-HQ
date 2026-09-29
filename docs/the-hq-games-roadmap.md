@@ -2,7 +2,7 @@
 
 **Status:** Sole canonical product and implementation roadmap for UFC + Football Games  
 **Created:** September 3, 2026  
-**Updated:** September 14, 2026  
+**Updated:** September 29, 2026  
 **Scope:** Play landing pages, shared game presentation, UFC games, Football games, Today's Challenge, 20 Questions, Who Am I, Auction, Draft Room, game-source ownership, and Games release readiness.
 
 > **Cross-chat rule:** Read this document before changing UFC Play, Football Play, any shared game mechanic, Today's Challenge, Auction, Draft Room, Blind Rank 5, Keep 4 / Cut 4, 20 Questions, Who Am I, or the data/ranking sources consumed by Games.
@@ -528,3 +528,35 @@ The roadmap is complete only when production has:
 - exact production deployment SHA verified.
 
 The Games launch roadmap is complete when the Stage 15 exact production deployment SHA is verified. Front Seven, Secondary, and any additional Draft Room subjects are post-launch product work and require an explicit future decision rather than being inferred as unfinished launch scope.
+
+---
+
+## 11. Approved post-launch expansion — Are You Smarter Than an Average Fan?
+
+**Status:** Locked September 29, 2026. Implementation begins after the completed original 15-PR Games roadmap.
+
+Canonical detailed spec:
+- `docs/average-fan-game-spec.md`
+
+Product contract:
+- NFL, CFB, and UFC.
+- Football alternates NFL / CFB between official appearances.
+- Target cadence is approximately five appearances per month per sport context.
+- 10-question open grade/subject board plus one protected $1,000,000 Final.
+- Mixed question formats: ~60% short answer, ~25% three-choice, ~15% true/false.
+- One selected Average Fan for the entire run: Cody, Shane, Troy, Tyler, or Lib.
+- Peek / Copy / Save are each available once; no helps on the Final.
+- Wrong answers do not eliminate the HQ run.
+- Board score calibrates around 90 for perfect and 80 for a late first miss; Final is bank / +10 / -10.
+- Durable bank targets: NFL 220, CFB 220, UFC 440.
+- ~10% current-event content reuses Bar Trivia's canonical expiration metadata/behavior.
+- Official Daily persistence, scheduling, grading, history, standings, leaderboard, and result-detail must reuse the existing Daily Challenge platform.
+
+Implementation sequence:
+1. PR1 — formal spec + engine/schema + deterministic fan model/tests.
+2. PR2 — playable owner/Casual preview UI.
+3. PR3 — content banks + current-event expiry integration.
+4. PR4 — official Daily integration + Football NFL/CFB alternation + result detail.
+5. PR5 only if needed — QA/polish.
+
+Do not compress this game into Millionaire. The open board, mixed answer formats, classmate/fan strategy, report-card strengths, and Peek/Copy/Save are the product differentiation.
