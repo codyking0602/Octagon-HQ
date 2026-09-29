@@ -714,6 +714,25 @@
   box-shadow: 0 0 20px rgba(246, 183, 43, 0.4);
 }
 
+.millionaire-elimination > div {
+  max-width: 420px;
+  grid-template-columns: 1fr;
+}
+
+.millionaire-elimination > span {
+  font-size: clamp(0.72rem, 1.45vw, 1.25rem);
+}
+
+.millionaire-shell--eliminated .millionaire-stakes > strong {
+  opacity: 0.58;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}
+
+.millionaire-shell--eliminated .millionaire-stakes > span {
+  color: #f4c34a;
+}
+
 .millionaire-decision button small {
   font-size: clamp(0.45rem, 0.75vw, 0.66rem);
   font-weight: 900;
