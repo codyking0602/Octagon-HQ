@@ -329,6 +329,8 @@ const NFL_PLAYER_FACTS: readonly KnowledgeFact[] = [
   { id: "dickerson-2105", grade: 3, prompt: "Who rushed for 2,105 yards in the 1984 season?", answer: "Eric Dickerson", wrong: ["Adrian Peterson", "Barry Sanders"], explanation: "Eric Dickerson rushed for 2,105 yards in 1984." },
   { id: "josh-allen-2024-mvp", grade: 3, prompt: "Which Bills quarterback won the AP NFL MVP award for the 2024 season?", answer: "Josh Allen", wrong: ["Lamar Jackson", "Joe Burrow"], explanation: "Josh Allen was named AP NFL MVP for the 2024 season." },
 
+  { id: "aaron-donald-2020-dpoy", grade: 4, prompt: "Which Rams defensive tackle won his third AP Defensive Player of the Year award for the 2020 season?", answer: "Aaron Donald", wrong: ["Chris Jones", "Fletcher Cox"], explanation: "Aaron Donald won AP Defensive Player of the Year for the third time for the 2020 season." },
+  { id: "puka-2023-rookie", grade: 4, prompt: "Which Rams receiver set the NFL rookie receiving-yards record with 1,486 yards in the 2023 season?", answer: "Puka Nacua", wrong: ["Ja'Marr Chase", "Justin Jefferson"], explanation: "Puka Nacua set the NFL rookie receiving-yards record with 1,486 yards in 2023." },
   { id: "oj-2000", grade: 4, prompt: "Who became the NFL's first 2,000-yard rusher in 1973?", answer: "O. J. Simpson", wrong: ["Eric Dickerson", "Jim Brown"], explanation: "O. J. Simpson rushed for 2,003 yards in 1973." },
   { id: "van-brocklin-554", grade: 4, prompt: "Who threw for 554 yards in a 1951 game, setting the NFL single-game passing record?", answer: "Norm Van Brocklin", wrong: ["Y. A. Tittle", "Otto Graham"], explanation: "Norm Van Brocklin threw for 554 yards in 1951." },
   { id: "rice-sb23", grade: 4, prompt: "Who had 215 receiving yards and won MVP in Super Bowl XXIII?", answer: "Jerry Rice", wrong: ["John Taylor", "Cris Collinsworth"], explanation: "Jerry Rice caught 11 passes for 215 yards and won Super Bowl XXIII MVP." },
@@ -336,6 +338,8 @@ const NFL_PLAYER_FACTS: readonly KnowledgeFact[] = [
   { id: "peyton-55", grade: 4, prompt: "Which quarterback threw 55 touchdown passes in the 2013 season?", answer: "Peyton Manning", wrong: ["Tom Brady", "Drew Brees"], explanation: "Peyton Manning threw 55 touchdown passes for Denver in 2013." },
   { id: "marino-5000", grade: 4, prompt: "Which quarterback became the first NFL player to pass for 5,000 yards in a season?", answer: "Dan Marino", wrong: ["Dan Fouts", "Warren Moon"], explanation: "Dan Marino passed for 5,084 yards in 1984." },
 
+  { id: "cooper-kupp-2021-opoy", grade: 5, prompt: "Which Rams receiver won AP Offensive Player of the Year for the 2021 season and Super Bowl LVI MVP?", answer: "Cooper Kupp", wrong: ["Odell Beckham Jr.", "Davante Adams"], explanation: "Cooper Kupp won 2021 AP Offensive Player of the Year and was named Super Bowl LVI MVP." },
+  { id: "joe-burrow-2024-comeback", grade: 5, prompt: "Which quarterback won AP Comeback Player of the Year for the 2024 season?", answer: "Joe Burrow", wrong: ["Sam Darnold", "Kirk Cousins"], explanation: "Joe Burrow won the AP Comeback Player of the Year award for the 2024 season." },
   { id: "warner-414", grade: 5, prompt: "Which quarterback threw for 414 yards in Super Bowl XXXIV?", answer: "Kurt Warner", wrong: ["Steve McNair", "Brett Favre"], explanation: "Kurt Warner threw for 414 yards in the Rams' Super Bowl XXXIV victory." },
   { id: "emmitt-double-mvp", grade: 5, prompt: "Who won both NFL MVP and Super Bowl XXVIII MVP for the 1993 season?", answer: "Emmitt Smith", wrong: ["Troy Aikman", "Steve Young"], explanation: "Emmitt Smith won the 1993 NFL MVP award and Super Bowl XXVIII MVP." },
   { id: "rice-22-td", grade: 5, prompt: "Which receiver caught 22 touchdown passes during the strike-shortened 1987 season?", answer: "Jerry Rice", wrong: ["Sterling Sharpe", "Mark Clayton"], explanation: "Jerry Rice caught 22 touchdown passes in 1987." },
@@ -854,6 +858,7 @@ const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
   ["00-smith-heisman-receiver", 4, "Players", "DeVonta Smith was the first wide receiver to win the Heisman Trophy since Desmond Howard.", true, "Smith won the 2020 Heisman; the previous wide receiver winner was Desmond Howard in 1991."],
   ["00-fsu-last-bcs-champ", 4, "Programs", "Florida State won the final BCS National Championship Game before the College Football Playoff era.", true, "Florida State beat Auburn for the 2013 national title in the final BCS championship game."],
   ["00-lsu-two-loss-champ", 4, "CFB History", "LSU won the 2007 BCS national championship after entering the title game with two losses.", true, "LSU finished 12–2 and beat Ohio State for the 2007 season's BCS national championship."],
+  ["00-lamar-2016:heisman", 3, "CFB History", "Lamar Jackson won the Heisman Trophy for the 2016 season.", true, "Lamar Jackson won the 2016 Heisman Trophy at Louisville."],
   ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
   ["01-cfp-first-number-one", 4, "CFB History", "Mississippi State was the first team ranked No. 1 by the College Football Playoff selection committee.", true, "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
   ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
@@ -939,7 +944,7 @@ function authoredCfbQuestions() {
           })
     )),
     ...BAR_TRIVIA_QUESTION_BANK
-      .filter((question) => question.league === "cfb")
+      .filter((question) => question.league === "cfb" && question.contentType !== "current-event")
       .map(authoredCfbQuestion),
   ];
 }
@@ -1208,7 +1213,7 @@ function footballCandidates(league: "NFL" | "CFB") {
     questions.push(...nflKnowledgeQuestions("X’s & O’s", "average-fan:nfl:00-xo", NFL_XO_FACTS));
     questions.push(...nflKnowledgeQuestions("NFL History", "average-fan:nfl:00-history", NFL_HISTORY_FACTS));
     questions.push(...NFL_TRUE_FALSE_FACTS.map((fact) => trueFalseQuestion({
-      id: `average-fan:nfl:00-tf:${fact.id}`,
+      id: `average-fan:nfl:00-0tf:${fact.id}`,
       sport: "nfl",
       grade: fact.grade,
       subject: fact.subject,
@@ -1349,7 +1354,7 @@ function ufcCandidates() {
         subject: "Fighters",
         prompt: `Which UFC fighter owns wins over ${anchors[0].opponent}, ${anchors[1].opponent}, and ${anchors[2].opponent}?`,
         answer: fighter.name,
-        explanation: `${fighter.name}'s UFC ledger includes wins over all three opponents.`,
+        explanation: `${fighter.name} has UFC wins over all three opponents.`,
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
@@ -1408,7 +1413,7 @@ function ufcCandidates() {
         subject: "Fights",
         prompt: `Which UFC fighter faced ${anchorA.opponent}, ${anchorB.opponent}, and ${anchorC.opponent}?`,
         answer: fighter.name,
-        explanation: `${fighter.name}'s UFC ledger includes bouts against all three opponents.`,
+        explanation: `${fighter.name} faced all three opponents in the UFC.`,
         fanMisses: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
