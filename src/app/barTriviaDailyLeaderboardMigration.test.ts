@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202612310209_bar_trivia_leaderboard_details.sql",
+  "supabase/migrations/202612310211_bar_trivia_leaderboard_details.sql",
   "utf8",
 );
 const sqlProof = readFileSync(
