@@ -77,6 +77,19 @@ function aliasesForNumber(value: number) {
   return [String(value), `No. ${value}`, `#${value}`];
 }
 
+function numericMisses(value: number, candidates: readonly number[]) {
+  const answer = String(value);
+  const misses = unique(candidates.map((candidate) => String(candidate)))
+    .filter((candidate) => candidate !== answer);
+  if (misses.length < 2) {
+    for (let delta = 1; misses.length < 2; delta += 1) {
+      const candidate = String(value + delta);
+      if (candidate !== answer && !misses.includes(candidate)) misses.push(candidate);
+    }
+  }
+  return misses.slice(0, 2);
+}
+
 function shortQuestion(seed: {
   id: string;
   sport: AverageFanSport;
@@ -394,7 +407,7 @@ function footballCandidates(league: "NFL" | "CFB") {
 
       if (player.draftYear != null && player.draftPick != null) {
         const pick = player.draftPick;
-        const misses = unique([Math.max(1, pick - 1), pick + 1, pick + 5].map(String)).slice(0, 2);
+        const misses = numericMisses(pick, [Math.max(1, pick - 1), pick + 1, pick + 5]);
         questions.push(shortQuestion({
           id: `average-fan:nfl:g4:${player.id}:draft-pick`,
           sport: "nfl",
