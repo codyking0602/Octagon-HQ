@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 from PIL import Image, ImageFilter
-from rembg import remove
+from rembg import new_session, remove
 
 ALLOWED_HOSTS = {
     "a.espncdn.com",
@@ -94,7 +94,15 @@ def main():
 
     if im.getchannel("A").getextrema() == (255, 255):
         try:
-            im = remove(im).convert("RGBA")
+            session = new_session("u2net_human_seg")
+            im = remove(
+                im,
+                session=session,
+                alpha_matting=True,
+                alpha_matting_foreground_threshold=240,
+                alpha_matting_background_threshold=10,
+                alpha_matting_erode_size=10,
+            ).convert("RGBA")
         except Exception as exc:
             fail(f"background removal failed: {exc}")
 
