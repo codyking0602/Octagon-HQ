@@ -3,6 +3,7 @@ import { ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
 import { stableLineupHash } from "../play/lineupModel";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import type { BarTriviaQuestion } from "./barTriviaEngine";
+import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
 import {
   AVERAGE_FAN_SUBJECTS,
   assertAverageFanQuestion,
@@ -204,6 +205,15 @@ type KnowledgeFact = {
   explanation: string;
 };
 
+type NflTrueFalseFact = {
+  id: string;
+  grade: AverageFanGrade;
+  subject: "Players" | "Teams" | "NFL History" | "X’s & O’s";
+  prompt: string;
+  answer: boolean;
+  explanation: string;
+};
+
 const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "center-snap", grade: 1, prompt: "Which position normally snaps the ball to begin an offensive play?", answer: "Center", wrong: ["Guard", "Tight end"], explanation: "The center snaps the football to the quarterback or another back to start the play." },
   { id: "nickel", grade: 1, prompt: "What nickname is used for a defense with five defensive backs?", answer: "Nickel", wrong: ["Dime", "Goal line"], explanation: "Nickel personnel uses five defensive backs." },
@@ -231,6 +241,174 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "mesh", grade: 5, prompt: "Which passing concept is built around shallow crossing routes that pass close to one another?", answer: "Mesh", wrong: ["Four verts", "Smash"], explanation: "Mesh uses intersecting shallow crossers to stress man and zone coverage." },
   { id: "flood", grade: 5, prompt: "Which passing concept commonly stretches one side of a zone defense at multiple depths?", answer: "Flood", wrong: ["Dagger", "Wham"], explanation: "Flood places receivers at different levels on the same side to high-low zone defenders." },
   { id: "zone-blitz", grade: 5, prompt: "What pressure concept can send a linebacker or defensive back while dropping a defensive lineman into coverage?", answer: "Zone blitz", wrong: ["Prevent defense", "Cover zero"], explanation: "A zone blitz exchanges rush and coverage responsibilities while keeping zone structure behind the pressure." },
+  { id: "touchdown-points", grade: 1, prompt: "How many points is a touchdown worth before the try?", answer: "6", wrong: ["3", "7"], explanation: "A touchdown is worth six points before the extra-point or two-point try." },
+  { id: "field-goal-points", grade: 1, prompt: "How many points is a successful field goal worth?", answer: "3", wrong: ["2", "6"], explanation: "A successful field goal scores three points." },
+  { id: "kneel", grade: 1, prompt: "What play is commonly used by an offense to safely run out the clock at the end of a game?", answer: "Quarterback kneel", wrong: ["Hail Mary", "Onside kick"], explanation: "A quarterback kneel is commonly used to drain the remaining clock safely." },
+  { id: "spike", grade: 1, prompt: "What does a quarterback commonly do immediately after the snap to stop the clock?", answer: "Spike the ball", wrong: ["Take a knee", "Throw a screen"], explanation: "An immediate spike is a legal incomplete forward pass used to stop the clock." },
+
+  { id: "audible", grade: 2, prompt: "What is an audible?", answer: "A play change at the line of scrimmage", wrong: ["A defensive substitution", "A replay challenge"], explanation: "An audible changes the called play or assignment before the snap." },
+  { id: "hard-count", grade: 2, prompt: "What is a hard count designed to make the defense do?", answer: "Jump early", wrong: ["Call timeout", "Drop into zone"], explanation: "A hard count varies the quarterback's cadence to try to draw defenders offside." },
+  { id: "motion", grade: 2, prompt: "What is pre-snap motion?", answer: "An eligible player moving before the snap", wrong: ["The quarterback scrambling", "A lineman pulling after the snap"], explanation: "Pre-snap motion sends an eligible player across or around the formation before the ball is snapped." },
+  { id: "checkdown", grade: 2, prompt: "What is a checkdown in the passing game?", answer: "A short outlet option", wrong: ["A deep post route", "A quarterback sneak"], explanation: "A checkdown is a shorter outlet target used when deeper reads are unavailable." },
+
+  { id: "bootleg", grade: 3, prompt: "What quarterback action usually defines a bootleg?", answer: "Rolling away from the run fake", wrong: ["Taking a straight drop", "Pitching an option immediately"], explanation: "A bootleg moves the quarterback outside after selling action in another direction." },
+  { id: "jet-sweep", grade: 3, prompt: "Which run concept gives or pitches the ball to a receiver already moving across the formation at the snap?", answer: "Jet sweep", wrong: ["Quarterback sneak", "Power dive"], explanation: "A jet sweep uses fast horizontal motion to get the ball carrier to the edge." },
+  { id: "bunch", grade: 3, prompt: "What formation term describes three receivers aligned close together?", answer: "Bunch", wrong: ["Empty", "Wishbone"], explanation: "A bunch set clusters multiple receivers tightly to create traffic and leverage." },
+  { id: "press", grade: 3, prompt: "What coverage technique places a defensive back tight to a receiver at the line of scrimmage?", answer: "Press coverage", wrong: ["Off coverage", "Prevent coverage"], explanation: "Press coverage challenges a receiver at or near the line of scrimmage." },
+
+  { id: "bracket", grade: 4, prompt: "What does bracket coverage usually mean?", answer: "Two defenders combining on one receiver", wrong: ["A seven-man blitz", "A four-deep zone"], explanation: "Bracket coverage uses two defenders to constrain one receiving threat." },
+  { id: "robber", grade: 4, prompt: "What does a 'robber' defender typically do in coverage?", answer: "Drops into an intermediate zone to jump routes", wrong: ["Rushes off the edge every snap", "Plays a deep outside quarter"], explanation: "A robber defender reads the quarterback and looks to cut off intermediate throws." },
+  { id: "stunt", grade: 4, prompt: "What is a defensive-line stunt or twist?", answer: "Rushers exchanging paths after the snap", wrong: ["Safeties swapping deep halves", "Receivers switching sides before the snap"], explanation: "A stunt has pass rushers cross or exchange gaps to stress protection rules." },
+  { id: "contain", grade: 4, prompt: "What is the main goal of edge contain?", answer: "Keep the ball carrier or quarterback from escaping outside", wrong: ["Force every play up the middle before the snap", "Double-team the slot receiver"], explanation: "Contain protects the outside edge and turns the play back toward pursuit." },
+  { id: "inside-zone", grade: 4, prompt: "What run concept asks blockers to work zone combinations while the back reads interior gaps?", answer: "Inside zone", wrong: ["Jet sweep", "Quarterback draw"], explanation: "Inside zone uses zone blocking with the runner reading the interior flow." },
+  { id: "outside-zone", grade: 4, prompt: "What run concept stretches the defense laterally while the back reads for a cut?", answer: "Outside zone", wrong: ["Power", "Trap"], explanation: "Outside zone creates horizontal stretch before the runner chooses a crease." },
+  { id: "hot-route", grade: 4, prompt: "What is a hot route?", answer: "A quick answer built into a pass play against pressure", wrong: ["A deep route run only from the slot", "A route used only in the red zone"], explanation: "A hot route gives the quarterback and receiver a fast response to an unblocked or extra rusher." },
+  { id: "leverage", grade: 4, prompt: "In coverage, what does inside or outside leverage describe?", answer: "A defender's alignment relative to the receiver", wrong: ["The offensive line's snap count", "The punt returner's depth"], explanation: "Leverage describes where a defender positions himself relative to a receiver and the space he wants to deny." },
+
+  { id: "wham", grade: 5, prompt: "What blocking concept uses a tight end or back to trap an interior defensive lineman from the side?", answer: "Wham", wrong: ["Outside zone", "Reach block"], explanation: "A wham block lets an interior defender penetrate before a tight end or back blocks him from an unexpected angle." },
+  { id: "scrape-exchange", grade: 5, prompt: "What option-defense exchange has an edge defender crash inside while a linebacker replaces him outside?", answer: "Scrape exchange", wrong: ["Zone blitz", "Bracket coverage"], explanation: "A scrape exchange changes the usual option responsibilities by having the linebacker replace the crashing edge defender." },
+  { id: "smash", grade: 5, prompt: "Which passing concept commonly pairs a short hitch with a corner route on the same side?", answer: "Smash", wrong: ["Mesh", "Four verts"], explanation: "Smash stresses a cornerback with a short route underneath and a corner route over the top." },
+  { id: "dagger", grade: 5, prompt: "Which passing concept commonly pairs a vertical clear-out with a deep in-breaking route behind it?", answer: "Dagger", wrong: ["Flood", "Wham"], explanation: "Dagger uses a vertical route to clear space for a deep dig or in-breaker." },
+  { id: "power", grade: 5, prompt: "Which classic run scheme usually features a pulling backside guard leading through the point of attack?", answer: "Power", wrong: ["Outside zone", "Draw"], explanation: "Power football traditionally uses down blocks plus a pulling guard through the designed gap." },
+];
+
+const NFL_TRUE_FALSE_FACTS: readonly NflTrueFalseFact[] = [
+  { id: "four-downs", grade: 1, subject: "X’s & O’s", prompt: "An NFL offense normally gets four downs to gain 10 yards for a new first down.", answer: true, explanation: "The offense normally has four downs to gain the 10 yards needed for a new series." },
+  { id: "deion-two-champs", grade: 2, subject: "Players", prompt: "Deion Sanders won Super Bowls with both the 49ers and Cowboys.", answer: true, explanation: "Deion Sanders won Super Bowl XXIX with San Francisco and Super Bowl XXX with Dallas." },
+  { id: "peyton-two-teams", grade: 3, subject: "Players", prompt: "Peyton Manning won Super Bowls as the starting quarterback for two different franchises.", answer: true, explanation: "Manning won Super Bowl XLI with Indianapolis and Super Bowl 50 with Denver." },
+  { id: "two-forward-passes", grade: 4, subject: "X’s & O’s", prompt: "An offense can throw two forward passes on the same play as long as both are released behind the line of scrimmage.", answer: false, explanation: "An NFL play can include only one forward pass." },
+  { id: "fourth-down-fumble", grade: 5, subject: "X’s & O’s", prompt: "On fourth down, an offensive teammate may recover a fumble but cannot advance it beyond the spot of the fumble.", answer: true, explanation: "On fourth down, only the player who fumbled may recover and advance his own fumble; a teammate's recovery returns the ball to the fumble spot." },
+];
+
+const NFL_PLAYER_FACTS: readonly KnowledgeFact[] = [
+  { id: "beast-mode", grade: 1, prompt: "Which running back is famously nicknamed 'Beast Mode'?", answer: "Marshawn Lynch", wrong: ["Adrian Peterson", "LeSean McCoy"], explanation: "Marshawn Lynch became famous under the Beast Mode nickname." },
+  { id: "megatron", grade: 1, prompt: "Which Lions wide receiver is famously nicknamed 'Megatron'?", answer: "Calvin Johnson", wrong: ["Julio Jones", "Larry Fitzgerald"], explanation: "Calvin Johnson became one of Detroit's defining stars under the Megatron nickname." },
+  { id: "gronk", grade: 1, prompt: "Which dominant tight end became universally known as 'Gronk'?", answer: "Rob Gronkowski", wrong: ["Travis Kelce", "Tony Gonzalez"], explanation: "Rob Gronkowski became one of the NFL's most recognizable tight ends under the Gronk nickname." },
+  { id: "sweetness", grade: 1, prompt: "Which Hall of Fame running back was nicknamed 'Sweetness'?", answer: "Walter Payton", wrong: ["Barry Sanders", "Emmitt Smith"], explanation: "Chicago Bears legend Walter Payton was famously nicknamed Sweetness." },
+  { id: "prime-time", grade: 1, prompt: "Which Hall of Fame defensive back was nicknamed 'Prime Time'?", answer: "Deion Sanders", wrong: ["Darrell Green", "Rod Woodson"], explanation: "Deion Sanders built his football persona around the Prime Time nickname." },
+  { id: "sheriff", grade: 1, prompt: "Which quarterback was widely nicknamed 'The Sheriff'?", answer: "Peyton Manning", wrong: ["Brett Favre", "Drew Brees"], explanation: "Peyton Manning was widely known as The Sheriff." },
+
+  { id: "lamar-mvp", grade: 2, prompt: "Which Ravens quarterback won the 2019 NFL MVP award?", answer: "Lamar Jackson", wrong: ["Patrick Mahomes", "Josh Allen"], explanation: "Lamar Jackson won the 2019 NFL MVP award in his second season." },
+  { id: "mahomes-mvp", grade: 2, prompt: "Which Chiefs quarterback won NFL MVP in the 2018 season?", answer: "Patrick Mahomes", wrong: ["Tom Brady", "Drew Brees"], explanation: "Patrick Mahomes won the 2018 NFL MVP award after his first season as Kansas City's full-time starter." },
+  { id: "henry-2020", grade: 2, prompt: "Which running back rushed for more than 2,000 yards in the 2020 season?", answer: "Derrick Henry", wrong: ["Dalvin Cook", "Nick Chubb"], explanation: "Derrick Henry rushed for 2,027 yards in 2020." },
+  { id: "moss-23", grade: 2, prompt: "Which receiver caught 23 touchdown passes in the 2007 season?", answer: "Randy Moss", wrong: ["Terrell Owens", "Marvin Harrison"], explanation: "Randy Moss caught 23 touchdown passes for New England in 2007." },
+  { id: "brady-50", grade: 2, prompt: "Which quarterback became the first to throw 50 touchdown passes in one NFL season?", answer: "Tom Brady", wrong: ["Peyton Manning", "Dan Marino"], explanation: "Tom Brady threw 50 touchdown passes in 2007." },
+  { id: "revis-island", grade: 2, prompt: "Which shutdown cornerback became synonymous with the nickname 'Revis Island'?", answer: "Darrelle Revis", wrong: ["Champ Bailey", "Richard Sherman"], explanation: "Darrelle Revis' man-coverage reputation inspired the Revis Island nickname." },
+
+  { id: "brady-199", grade: 3, prompt: "Which quarterback was selected 199th overall in the 2000 NFL Draft?", answer: "Tom Brady", wrong: ["Drew Brees", "Kurt Warner"], explanation: "New England selected Tom Brady with pick No. 199 in the 2000 NFL Draft." },
+  { id: "rodgers-24", grade: 3, prompt: "Which future Packers MVP slid to No. 24 overall in the 2005 NFL Draft?", answer: "Aaron Rodgers", wrong: ["Alex Smith", "Jason Campbell"], explanation: "Green Bay selected Aaron Rodgers 24th overall in 2005." },
+  { id: "emmitt-record", grade: 3, prompt: "Who finished his career with an NFL-record 18,355 rushing yards?", answer: "Emmitt Smith", wrong: ["Walter Payton", "Barry Sanders"], explanation: "Emmitt Smith finished his career with 18,355 rushing yards." },
+  { id: "rice-record", grade: 3, prompt: "Who finished his career with an NFL-record 22,895 receiving yards?", answer: "Jerry Rice", wrong: ["Larry Fitzgerald", "Terrell Owens"], explanation: "Jerry Rice finished his career with 22,895 receiving yards." },
+  { id: "dickerson-2105", grade: 3, prompt: "Who rushed for 2,105 yards in the 1984 season?", answer: "Eric Dickerson", wrong: ["Adrian Peterson", "Barry Sanders"], explanation: "Eric Dickerson rushed for 2,105 yards in 1984." },
+  { id: "josh-allen-2024-mvp", grade: 3, prompt: "Which Bills quarterback won the AP NFL MVP award for the 2024 season?", answer: "Josh Allen", wrong: ["Lamar Jackson", "Joe Burrow"], explanation: "Josh Allen was named AP NFL MVP for the 2024 season." },
+
+  { id: "oj-2000", grade: 4, prompt: "Who became the NFL's first 2,000-yard rusher in 1973?", answer: "O. J. Simpson", wrong: ["Eric Dickerson", "Jim Brown"], explanation: "O. J. Simpson rushed for 2,003 yards in 1973." },
+  { id: "van-brocklin-554", grade: 4, prompt: "Who threw for 554 yards in a 1951 game, setting the NFL single-game passing record?", answer: "Norm Van Brocklin", wrong: ["Y. A. Tittle", "Otto Graham"], explanation: "Norm Van Brocklin threw for 554 yards in 1951." },
+  { id: "rice-sb23", grade: 4, prompt: "Who had 215 receiving yards and won MVP in Super Bowl XXIII?", answer: "Jerry Rice", wrong: ["John Taylor", "Cris Collinsworth"], explanation: "Jerry Rice caught 11 passes for 215 yards and won Super Bowl XXIII MVP." },
+  { id: "saquon-2005", grade: 4, prompt: "Which running back rushed for 2,005 yards in the 2024 regular season?", answer: "Saquon Barkley", wrong: ["Derrick Henry", "Jahmyr Gibbs"], explanation: "Saquon Barkley rushed for 2,005 yards for Philadelphia in the 2024 regular season." },
+  { id: "peyton-55", grade: 4, prompt: "Which quarterback threw 55 touchdown passes in the 2013 season?", answer: "Peyton Manning", wrong: ["Tom Brady", "Drew Brees"], explanation: "Peyton Manning threw 55 touchdown passes for Denver in 2013." },
+  { id: "marino-5000", grade: 4, prompt: "Which quarterback became the first NFL player to pass for 5,000 yards in a season?", answer: "Dan Marino", wrong: ["Dan Fouts", "Warren Moon"], explanation: "Dan Marino passed for 5,084 yards in 1984." },
+
+  { id: "warner-414", grade: 5, prompt: "Which quarterback threw for 414 yards in Super Bowl XXXIV?", answer: "Kurt Warner", wrong: ["Steve McNair", "Brett Favre"], explanation: "Kurt Warner threw for 414 yards in the Rams' Super Bowl XXXIV victory." },
+  { id: "emmitt-double-mvp", grade: 5, prompt: "Who won both NFL MVP and Super Bowl XXVIII MVP for the 1993 season?", answer: "Emmitt Smith", wrong: ["Troy Aikman", "Steve Young"], explanation: "Emmitt Smith won the 1993 NFL MVP award and Super Bowl XXVIII MVP." },
+  { id: "rice-22-td", grade: 5, prompt: "Which receiver caught 22 touchdown passes during the strike-shortened 1987 season?", answer: "Jerry Rice", wrong: ["Sterling Sharpe", "Mark Clayton"], explanation: "Jerry Rice caught 22 touchdown passes in 1987." },
+  { id: "tomlinson-31", grade: 5, prompt: "Which running back scored 31 rushing-and-receiving touchdowns in the 2006 season?", answer: "LaDainian Tomlinson", wrong: ["Shaun Alexander", "Priest Holmes"], explanation: "LaDainian Tomlinson scored 28 rushing and three receiving touchdowns in 2006." },
+  { id: "hurts-sb59", grade: 5, prompt: "Which quarterback won Super Bowl LIX MVP after rushing for 72 yards against Kansas City?", answer: "Jalen Hurts", wrong: ["Patrick Mahomes", "Saquon Barkley"], explanation: "Jalen Hurts won Super Bowl LIX MVP and rushed for 72 yards in Philadelphia's win." },
+  { id: "dickerson-rookie", grade: 5, prompt: "Which running back rushed for 1,808 yards as a rookie in 1983?", answer: "Eric Dickerson", wrong: ["Earl Campbell", "Barry Sanders"], explanation: "Eric Dickerson rushed for 1,808 yards in his 1983 rookie season." },
+];
+
+const NFL_TEAM_FACTS: readonly KnowledgeFact[] = [
+  { id: "lambeau", grade: 1, prompt: "Which NFL team plays its home games at Lambeau Field?", answer: "Green Bay Packers", wrong: ["Chicago Bears", "Minnesota Vikings"], explanation: "Lambeau Field is the longtime home of the Green Bay Packers." },
+  { id: "arrowhead", grade: 1, prompt: "Which NFL team plays at Arrowhead Stadium?", answer: "Kansas City Chiefs", wrong: ["Denver Broncos", "Las Vegas Raiders"], explanation: "Arrowhead Stadium is the home of the Kansas City Chiefs." },
+  { id: "terrible-towel", grade: 1, prompt: "Which NFL team is famous for the Terrible Towel?", answer: "Pittsburgh Steelers", wrong: ["Cleveland Browns", "Baltimore Ravens"], explanation: "The Terrible Towel is one of the Pittsburgh Steelers' signature traditions." },
+  { id: "who-dat", grade: 1, prompt: "Which NFL team is associated with the 'Who Dat?' chant?", answer: "New Orleans Saints", wrong: ["Atlanta Falcons", "Carolina Panthers"], explanation: "Who Dat is a signature New Orleans Saints chant." },
+  { id: "dawg-pound", grade: 1, prompt: "Which fan base is associated with the 'Dawg Pound'?", answer: "Cleveland Browns", wrong: ["Cincinnati Bengals", "Detroit Lions"], explanation: "The Dawg Pound is a famous Cleveland Browns fan identity." },
+
+  { id: "steel-curtain", grade: 2, prompt: "The 'Steel Curtain' defense is associated with which franchise?", answer: "Pittsburgh Steelers", wrong: ["Dallas Cowboys", "Miami Dolphins"], explanation: "The Steel Curtain was the nickname of Pittsburgh's dominant 1970s defense." },
+  { id: "legion-boom", grade: 2, prompt: "The 'Legion of Boom' secondary belonged to which team?", answer: "Seattle Seahawks", wrong: ["San Francisco 49ers", "Denver Broncos"], explanation: "Seattle's championship-era secondary was nicknamed the Legion of Boom." },
+  { id: "purple-people-eaters", grade: 2, prompt: "The 'Purple People Eaters' defensive line belonged to which franchise?", answer: "Minnesota Vikings", wrong: ["Detroit Lions", "Baltimore Colts"], explanation: "Minnesota's feared defensive front was known as the Purple People Eaters." },
+  { id: "greatest-show", grade: 2, prompt: "The 'Greatest Show on Turf' nickname belongs to which team era?", answer: "St. Louis Rams", wrong: ["Indianapolis Colts", "Minnesota Vikings"], explanation: "The high-powered St. Louis Rams offense became known as the Greatest Show on Turf." },
+  { id: "monsters-midway", grade: 2, prompt: "Which franchise is historically known as the 'Monsters of the Midway'?", answer: "Chicago Bears", wrong: ["Green Bay Packers", "New York Giants"], explanation: "The Monsters of the Midway nickname is historically tied to the Chicago Bears." },
+
+  { id: "orange-crush", grade: 3, prompt: "The 'Orange Crush' defense is associated with which franchise?", answer: "Denver Broncos", wrong: ["Cleveland Browns", "Cincinnati Bengals"], explanation: "Denver's celebrated late-1970s defense was known as the Orange Crush." },
+  { id: "hogs", grade: 3, prompt: "The offensive line nicknamed 'The Hogs' is associated with which franchise?", answer: "Washington", wrong: ["Dallas Cowboys", "New York Giants"], explanation: "Washington's dominant offensive line of the 1980s and early 1990s was known as The Hogs." },
+  { id: "doomsday", grade: 3, prompt: "The 'Doomsday Defense' nickname is most associated with which franchise?", answer: "Dallas Cowboys", wrong: ["Miami Dolphins", "Pittsburgh Steelers"], explanation: "Doomsday Defense became a defining nickname for Dallas' championship-era defenses." },
+  { id: "sacksonville", grade: 3, prompt: "Which team had a 2017 defense nicknamed 'Sacksonville'?", answer: "Jacksonville Jaguars", wrong: ["Tennessee Titans", "Carolina Panthers"], explanation: "Jacksonville's 2017 defense became known as Sacksonville." },
+  { id: "no-fly-zone", grade: 3, prompt: "The 'No Fly Zone' secondary was a signature of which mid-2010s team?", answer: "Denver Broncos", wrong: ["Seattle Seahawks", "Baltimore Ravens"], explanation: "Denver's championship-era secondary in the mid-2010s was nicknamed the No Fly Zone." },
+
+  { id: "broncos-back-to-back", grade: 4, prompt: "Which franchise won back-to-back Super Bowls XXXII and XXXIII?", answer: "Denver Broncos", wrong: ["Green Bay Packers", "Dallas Cowboys"], explanation: "Denver won consecutive championships after the 1997 and 1998 seasons." },
+  { id: "cowboys-three-four", grade: 4, prompt: "Which team won three Super Bowls in four seasons during the 1990s?", answer: "Dallas Cowboys", wrong: ["San Francisco 49ers", "Buffalo Bills"], explanation: "Dallas won Super Bowls XXVII, XXVIII, and XXX." },
+  { id: "ravens-2000", grade: 4, prompt: "Which franchise won Super Bowl XXXV behind its famous 2000 defense?", answer: "Baltimore Ravens", wrong: ["Tennessee Titans", "New York Giants"], explanation: "Baltimore's dominant 2000 defense helped carry the Ravens to the Super Bowl XXXV title." },
+  { id: "bears-only-loss", grade: 4, prompt: "Which team handed the 1985 Bears their only regular-season loss?", answer: "Miami Dolphins", wrong: ["Green Bay Packers", "New York Giants"], explanation: "Miami defeated Chicago on Monday Night Football for the Bears' only regular-season loss in 1985." },
+  { id: "eagles-lix", grade: 4, prompt: "Which franchise stopped Kansas City from winning a third straight championship by winning Super Bowl LIX?", answer: "Philadelphia Eagles", wrong: ["Buffalo Bills", "San Francisco 49ers"], explanation: "Philadelphia beat Kansas City 40-22 in Super Bowl LIX." },
+
+  { id: "bills-four-straight", grade: 5, prompt: "Which franchise reached four consecutive Super Bowls from the 1990 through 1993 seasons?", answer: "Buffalo Bills", wrong: ["Denver Broncos", "Minnesota Vikings"], explanation: "Buffalo became the first and only franchise to appear in four straight Super Bowls." },
+  { id: "vikings-four-losses", grade: 5, prompt: "Which franchise reached four Super Bowls in the 1970s but lost all four?", answer: "Minnesota Vikings", wrong: ["Miami Dolphins", "Oakland Raiders"], explanation: "Minnesota reached Super Bowls IV, VIII, IX, and XI and lost each one." },
+  { id: "broncos-three-losses", grade: 5, prompt: "Which franchise lost Super Bowls XXI, XXII, and XXIV before later winning back-to-back titles?", answer: "Denver Broncos", wrong: ["Buffalo Bills", "Minnesota Vikings"], explanation: "Denver lost three Super Bowls in four seasons before winning consecutive titles in the late 1990s." },
+  { id: "chiefs-title-gap", grade: 5, prompt: "Which franchise ended a 50-season championship drought by winning Super Bowl LIV?", answer: "Kansas City Chiefs", wrong: ["San Francisco 49ers", "Philadelphia Eagles"], explanation: "Kansas City won Super Bowl LIV, its first Super Bowl championship since Super Bowl IV." },
+  { id: "niners-five-zero", grade: 5, prompt: "Which franchise won each of its first five Super Bowl appearances?", answer: "San Francisco 49ers", wrong: ["Dallas Cowboys", "Pittsburgh Steelers"], explanation: "San Francisco started 5-0 in Super Bowls." },
+];
+
+const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
+  { id: "sb1", grade: 1, prompt: "Which team won the first Super Bowl?", answer: "Green Bay Packers", wrong: ["Kansas City Chiefs", "Dallas Cowboys"], explanation: "Green Bay beat Kansas City 35-10 in the first Super Bowl." },
+  { id: "perfect", grade: 1, prompt: "Which franchise completed the famous perfect 1972 season?", answer: "Miami Dolphins", wrong: ["Pittsburgh Steelers", "Dallas Cowboys"], explanation: "Miami finished the 1972 season undefeated and won Super Bowl VII." },
+  { id: "lombardi", grade: 1, prompt: "The Super Bowl trophy is named for which legendary coach?", answer: "Vince Lombardi", wrong: ["Don Shula", "Tom Landry"], explanation: "The NFL championship trophy was named the Vince Lombardi Trophy in 1970." },
+  { id: "helmet", grade: 1, prompt: "Who made the famous Helmet Catch for the Giants in Super Bowl XLII?", answer: "David Tyree", wrong: ["Plaxico Burress", "Victor Cruz"], explanation: "David Tyree pinned Eli Manning's pass against his helmet on the Giants' winning drive." },
+  { id: "immaculate", grade: 1, prompt: "Which Steelers player made the Immaculate Reception?", answer: "Franco Harris", wrong: ["Lynn Swann", "John Stallworth"], explanation: "Franco Harris scored on the Immaculate Reception in the 1972 AFC Divisional Playoff." },
+  { id: "brady-comeback", grade: 1, prompt: "Which quarterback led New England's comeback from 28-3 down in Super Bowl LI?", answer: "Tom Brady", wrong: ["Matt Ryan", "Jimmy Garoppolo"], explanation: "Tom Brady led New England past Atlanta 34-28 in the first overtime Super Bowl." },
+
+  { id: "the-catch", grade: 2, prompt: "Joe Montana's touchdown pass to Dwight Clark in the 1981 NFC Championship became known by what nickname?", answer: "The Catch", wrong: ["The Drive", "The Miracle"], explanation: "Montana-to-Clark against Dallas became one of the NFL's defining playoff plays: The Catch." },
+  { id: "beast-quake", grade: 2, prompt: "Which running back's playoff touchdown run became known as Beast Quake?", answer: "Marshawn Lynch", wrong: ["Shaun Alexander", "Adrian Peterson"], explanation: "Marshawn Lynch's tackle-breaking touchdown against New Orleans became Beast Quake." },
+  { id: "philly-special", grade: 2, prompt: "Which Eagles quarterback caught a touchdown on the Philly Special in Super Bowl LII?", answer: "Nick Foles", wrong: ["Carson Wentz", "Donovan McNabb"], explanation: "Nick Foles caught Trey Burton's touchdown pass on the Philly Special." },
+  { id: "butler", grade: 2, prompt: "Who intercepted Russell Wilson at the goal line to seal Super Bowl XLIX?", answer: "Malcolm Butler", wrong: ["Darrelle Revis", "Devin McCourty"], explanation: "Malcolm Butler intercepted Wilson in the final minute to preserve New England's win." },
+  { id: "namath", grade: 2, prompt: "Which quarterback famously guaranteed the Jets would win Super Bowl III?", answer: "Joe Namath", wrong: ["Johnny Unitas", "Len Dawson"], explanation: "Joe Namath guaranteed a Jets victory before their upset of Baltimore." },
+  { id: "triplets", grade: 2, prompt: "Which running back joined Troy Aikman and Michael Irvin as the Cowboys' 1990s 'Triplets'?", answer: "Emmitt Smith", wrong: ["Tony Dorsett", "Herschel Walker"], explanation: "Aikman, Smith and Irvin powered Dallas' 1990s championship teams." },
+
+  { id: "wide-right", grade: 3, prompt: "Which Bills kicker's miss created the 'Wide Right' ending to Super Bowl XXV?", answer: "Scott Norwood", wrong: ["Steve Christie", "Gary Anderson"], explanation: "Scott Norwood's 47-yard attempt went wide right as Buffalo lost 20-19." },
+  { id: "the-drive", grade: 3, prompt: "Which quarterback led the 98-yard march remembered as 'The Drive' in the 1986 AFC Championship?", answer: "John Elway", wrong: ["Bernie Kosar", "Dan Marino"], explanation: "John Elway led Denver 98 yards to tie Cleveland late in regulation." },
+  { id: "minneapolis", grade: 3, prompt: "Who caught the pass and scored on the Minneapolis Miracle?", answer: "Stefon Diggs", wrong: ["Adam Thielen", "Kyle Rudolph"], explanation: "Stefon Diggs turned the final pass into the game-winning Minneapolis Miracle touchdown." },
+  { id: "music-city", grade: 3, prompt: "Who scored the touchdown on the Music City Miracle?", answer: "Kevin Dyson", wrong: ["Frank Wycheck", "Eddie George"], explanation: "Kevin Dyson took the lateral down the sideline for the Music City Miracle touchdown." },
+  { id: "first-ot", grade: 3, prompt: "Which Super Bowl was the first to go to overtime?", answer: "Super Bowl LI", wrong: ["Super Bowl XLIX", "Super Bowl LII"], explanation: "New England's comeback against Atlanta in Super Bowl LI produced the first overtime in Super Bowl history." },
+  { id: "first-wild-card", grade: 3, prompt: "Which franchise became the first wild-card team to win a Super Bowl?", answer: "Oakland Raiders", wrong: ["Dallas Cowboys", "Pittsburgh Steelers"], explanation: "Oakland won Super Bowl XV after entering the playoffs as a wild card." },
+
+  { id: "randle-el", grade: 4, prompt: "Which Steelers receiver threw a touchdown pass to Hines Ward in Super Bowl XL?", answer: "Antwaan Randle El", wrong: ["Santonio Holmes", "Cedrick Wilson"], explanation: "Antwaan Randle El hit Hines Ward for a 43-yard touchdown." },
+  { id: "hester", grade: 4, prompt: "Who returned the opening kickoff of Super Bowl XLI for a touchdown?", answer: "Devin Hester", wrong: ["Dante Hall", "Desmond Howard"], explanation: "Devin Hester opened Super Bowl XLI with a 92-yard kickoff-return touchdown." },
+  { id: "holmes", grade: 4, prompt: "Which Steelers receiver made the toe-tap game-winning touchdown catch in Super Bowl XLIII?", answer: "Santonio Holmes", wrong: ["Hines Ward", "Nate Washington"], explanation: "Santonio Holmes caught Ben Roethlisberger's late touchdown in the corner of the end zone." },
+  { id: "porter", grade: 4, prompt: "Who intercepted Peyton Manning and returned it for a touchdown late in Super Bowl XLIV?", answer: "Tracy Porter", wrong: ["Darren Sharper", "Jabari Greer"], explanation: "Tracy Porter's pick-six helped seal New Orleans' Super Bowl XLIV victory." },
+  { id: "marcus-allen", grade: 4, prompt: "Which Raiders running back scored on a famous 74-yard run in Super Bowl XVIII?", answer: "Marcus Allen", wrong: ["Bo Jackson", "Roger Craig"], explanation: "Marcus Allen reversed field and broke a 74-yard touchdown run in Super Bowl XVIII." },
+  { id: "hardman-lviii", grade: 4, prompt: "Who caught the game-winning touchdown in overtime of Super Bowl LVIII?", answer: "Mecole Hardman", wrong: ["Travis Kelce", "Rashee Rice"], explanation: "Mecole Hardman caught Patrick Mahomes' game-winning 3-yard touchdown pass in overtime." },
+
+  { id: "first-sb-touchdown", grade: 5, prompt: "Who caught the first touchdown pass in Super Bowl history?", answer: "Max McGee", wrong: ["Boyd Dowler", "Jim Taylor"], explanation: "Max McGee caught Bart Starr's 37-yard touchdown pass for the first touchdown in Super Bowl history." },
+  { id: "dungy", grade: 5, prompt: "Who became the first Black head coach to win a Super Bowl?", answer: "Tony Dungy", wrong: ["Lovie Smith", "Mike Tomlin"], explanation: "Tony Dungy coached Indianapolis to victory in Super Bowl XLI." },
+  { id: "first-mnf", grade: 5, prompt: "Which two teams played in the first Monday Night Football game in 1970?", answer: "Cleveland Browns and New York Jets", wrong: ["Dallas Cowboys and Washington", "Green Bay Packers and Chicago Bears"], explanation: "Cleveland hosted the New York Jets in the first Monday Night Football game." },
+  { id: "sb-name", grade: 5, prompt: "Which championship game was the first for which the 'Super Bowl' name was officially recognized?", answer: "Super Bowl III", wrong: ["Super Bowl I", "Super Bowl V"], explanation: "The Super Bowl title was officially recognized for the game played in January 1969." },
+  { id: "butler-target", grade: 5, prompt: "Which Seahawks receiver was the intended target on Malcolm Butler's goal-line interception in Super Bowl XLIX?", answer: "Ricardo Lockette", wrong: ["Doug Baldwin", "Jermaine Kearse"], explanation: "Russell Wilson's pass was intended for Ricardo Lockette when Malcolm Butler jumped the route." },
+  { id: "music-city-lateral", grade: 5, prompt: "Which Titans tight end threw the lateral across the field on the Music City Miracle?", answer: "Frank Wycheck", wrong: ["Kevin Dyson", "Lorenzo Neal"], explanation: "Frank Wycheck took the handoff and threw the lateral to Kevin Dyson on the Music City Miracle." },
+];
+
+type NflFinalFact = KnowledgeFact & {
+  subject: "Players" | "Teams" | "NFL History" | "X’s & O’s";
+};
+
+const NFL_FINAL_FACTS: readonly NflFinalFact[] = [
+  { id: "howley", grade: 5, subject: "Players", prompt: "Name the only player to win Super Bowl MVP while playing for the losing team.", answer: "Chuck Howley", wrong: ["Bob Lilly", "Randy White"], explanation: "Dallas linebacker Chuck Howley won Super Bowl V MVP even though the Cowboys lost to Baltimore." },
+  { id: "doug-williams", grade: 5, subject: "Players", prompt: "Which quarterback became the first Black starting quarterback to win a Super Bowl and was named Super Bowl XXII MVP?", answer: "Doug Williams", wrong: ["Warren Moon", "Steve McNair"], explanation: "Doug Williams led Washington to the Super Bowl XXII title and won game MVP." },
+  { id: "steve-young-six", grade: 5, subject: "Players", prompt: "Which quarterback threw six touchdown passes in Super Bowl XXIX?", answer: "Steve Young", wrong: ["Joe Montana", "Troy Aikman"], explanation: "Steve Young threw six touchdown passes in San Francisco's Super Bowl XXIX victory." },
+  { id: "terrell-davis-three", grade: 5, subject: "Players", prompt: "Which running back scored three rushing touchdowns and won MVP in Super Bowl XXXII?", answer: "Terrell Davis", wrong: ["John Elway", "Dorsey Levens"], explanation: "Terrell Davis scored three rushing touchdowns and earned Super Bowl XXXII MVP." },
+
+  { id: "bucs-home", grade: 5, subject: "Teams", prompt: "Which franchise became the first to play in and win a Super Bowl in its home stadium?", answer: "Tampa Bay Buccaneers", wrong: ["Los Angeles Rams", "Miami Dolphins"], explanation: "Tampa Bay won Super Bowl LV at Raymond James Stadium." },
+  { id: "bears-46", grade: 5, subject: "Teams", prompt: "Which franchise rode the famous '46 defense' to a Super Bowl XX championship?", answer: "Chicago Bears", wrong: ["New York Giants", "Pittsburgh Steelers"], explanation: "The 1985 Chicago Bears used Buddy Ryan's 46 defense on the way to winning Super Bowl XX." },
+  { id: "raiders-three-cities", grade: 5, subject: "Teams", prompt: "Which franchise reached the Super Bowl while based in Oakland, then Los Angeles, then Oakland again?", answer: "Raiders", wrong: ["Rams", "Chargers"], explanation: "The Raiders reached Super Bowls from Oakland, then Los Angeles, and later Oakland again." },
+  { id: "ravens-two-qbs", grade: 5, subject: "Teams", prompt: "Which franchise won its first two Super Bowls with Trent Dilfer and Joe Flacco as its starting quarterbacks?", answer: "Baltimore Ravens", wrong: ["Tampa Bay Buccaneers", "New York Giants"], explanation: "Baltimore won Super Bowl XXXV with Trent Dilfer and Super Bowl XLVII with Joe Flacco." },
+
+  { id: "mike-jones", grade: 5, subject: "NFL History", prompt: "Who made the tackle at the one-yard line on the final play of Super Bowl XXXIV?", answer: "Mike Jones", wrong: ["Aeneas Williams", "London Fletcher"], explanation: "Rams linebacker Mike Jones tackled Kevin Dyson just short of the goal line to end Super Bowl XXXIV." },
+  { id: "jacoby-jones", grade: 5, subject: "NFL History", prompt: "Who opened the second half of Super Bowl XLVII with a 108-yard kickoff-return touchdown?", answer: "Jacoby Jones", wrong: ["Devin Hester", "Ted Ginn Jr."], explanation: "Jacoby Jones returned the second-half kickoff 108 yards for Baltimore." },
+  { id: "stallworth-73", grade: 5, subject: "NFL History", prompt: "Which Steelers receiver caught a 73-yard touchdown from Terry Bradshaw in Super Bowl XIV?", answer: "John Stallworth", wrong: ["Lynn Swann", "Franco Harris"], explanation: "John Stallworth's 73-yard touchdown catch was a defining play in Pittsburgh's Super Bowl XIV win." },
+  { id: "harrison-100", grade: 5, subject: "NFL History", prompt: "Who returned an interception 100 yards for a touchdown in Super Bowl XLIII?", answer: "James Harrison", wrong: ["Troy Polamalu", "Ike Taylor"], explanation: "James Harrison's 100-yard interception return closed the first half of Super Bowl XLIII." },
+
+  { id: "mills", grade: 5, subject: "X’s & O’s", prompt: "Which passing concept commonly pairs a post route with a deep dig underneath it?", answer: "Mills", wrong: ["Mesh", "Smash"], explanation: "The Mills concept combines a post route with a deep in-breaking dig to stress a safety." },
+  { id: "cover-zero", grade: 5, subject: "X’s & O’s", prompt: "What coverage family typically has no deep safety help and uses man coverage across the board?", answer: "Cover 0", wrong: ["Cover 2", "Cover 4"], explanation: "Cover 0 is a man-coverage pressure structure with no dedicated deep safety." },
+  { id: "tampa-two", grade: 5, subject: "X’s & O’s", prompt: "In a classic Tampa 2, which defender is asked to carry the deep middle between the two safeties?", answer: "Middle linebacker", wrong: ["Nickel corner", "Defensive end"], explanation: "The middle linebacker drops deeper than in a standard Cover 2 to help close the middle of the field." },
 ];
 
 const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
@@ -305,6 +483,54 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "pummeling", grade: 5, prompt: "What clinch drill or exchange involves fighting for inside arm position and underhooks?", answer: "Pummeling", wrong: ["Shrimping", "Posting"], explanation: "Pummeling is the hand-and-arm battle for inside position and underhooks in the clinch." },
   { id: "cage-cutting", grade: 5, prompt: "What striking-footwork concept limits an opponent\'s escape routes instead of simply following them around the cage?", answer: "Cage cutting", wrong: ["Level changing", "Wall walking"], explanation: "Cage cutting uses angles and positioning to reduce an opponent\'s available space and exits." },
 ];
+
+const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
+  { id: "ufc1-winner", grade: 1, prompt: "Who won the UFC 1 tournament?", answer: "Royce Gracie", wrong: ["Ken Shamrock", "Gerard Gordeau"], explanation: "Royce Gracie won the inaugural UFC tournament in 1993." },
+  { id: "ufc1-one-glove", grade: 2, prompt: "Which UFC 1 fighter famously entered the Octagon wearing one boxing glove?", answer: "Art Jimmerson", wrong: ["Kevin Rosier", "Gerard Gordeau"], explanation: "Art Jimmerson wore one red boxing glove against Royce Gracie at UFC 1." },
+  { id: "ufc1-headkick", grade: 3, prompt: "Who scored the first head-kick knockout in UFC history?", answer: "Gerard Gordeau", wrong: ["Vitor Belfort", "Marco Ruas"], explanation: "Gerard Gordeau stopped Teila Tuli with the UFC's first head-kick knockout." },
+  { id: "ufc3-winner", grade: 4, prompt: "Which alternate won the unusual UFC 3 tournament after fighting only once?", answer: "Steve Jennum", wrong: ["Kimo Leopoldo", "Ken Shamrock"], explanation: "Steve Jennum entered late as an alternate and won UFC 3 after one fight." },
+  { id: "ufc4-final", grade: 3, prompt: "Royce Gracie submitted which wrestler to win the UFC 4 tournament?", answer: "Dan Severn", wrong: ["Ken Shamrock", "Oleg Taktarov"], explanation: "Gracie submitted Dan Severn in the UFC 4 tournament final." },
+  { id: "ufc5-winner", grade: 4, prompt: "Who won the UFC 5 tournament?", answer: "Dan Severn", wrong: ["Oleg Taktarov", "Ken Shamrock"], explanation: "Dan Severn submitted Dave Beneteau to win UFC 5." },
+  { id: "ufc6-winner", grade: 4, prompt: "Who won the UFC 6 tournament by submitting Tank Abbott in the final?", answer: "Oleg Taktarov", wrong: ["Dan Severn", "Ken Shamrock"], explanation: "Oleg Taktarov submitted Tank Abbott to win UFC 6." },
+  { id: "first-wheel-kick", grade: 2, prompt: "Who scored the UFC's first spinning wheel-kick knockout?", answer: "Edson Barboza", wrong: ["Stephen Thompson", "Yair Rodriguez"], explanation: "Edson Barboza knocked out Terry Etim with a spinning wheel kick at UFC 142." },
+  { id: "gonzaga-crocop", grade: 2, prompt: "Who knocked out Mirko Cro Cop with a head kick at UFC 70?", answer: "Gabriel Gonzaga", wrong: ["Fabricio Werdum", "Junior dos Santos"], explanation: "Gabriel Gonzaga shocked Cro Cop with a first-round head-kick knockout." },
+  { id: "fox-first", grade: 2, prompt: "Who knocked out Cain Velasquez in the UFC's first fight broadcast live on FOX?", answer: "Junior dos Santos", wrong: ["Brock Lesnar", "Alistair Overeem"], explanation: "Junior dos Santos stopped Velasquez to win the heavyweight title in 2011." },
+  { id: "sterling-dq-title", grade: 2, prompt: "Who won the UFC bantamweight title by disqualification after Petr Yan landed an illegal knee at UFC 259?", answer: "Aljamain Sterling", wrong: ["Cory Sandhagen", "Henry Cejudo"], explanation: "Petr Yan was disqualified for an illegal knee to Aljamain Sterling at UFC 259." },
+  { id: "jones-hamill", grade: 3, prompt: "Jon Jones' lone official UFC loss came by disqualification against whom?", answer: "Matt Hamill", wrong: ["Alexander Gustafsson", "Daniel Cormier"], explanation: "Jones was disqualified against Matt Hamill in 2009." },
+  { id: "mcgregor-alvarez", grade: 2, prompt: "Whom did Conor McGregor defeat to become the UFC's first simultaneous two-division champion?", answer: "Eddie Alvarez", wrong: ["Jose Aldo", "Nate Diaz"], explanation: "McGregor stopped Eddie Alvarez at UFC 205 to hold featherweight and lightweight gold simultaneously." },
+  { id: "aldo-13", grade: 3, prompt: "How many seconds did Conor McGregor need to knock out Jose Aldo at UFC 194?", answer: "13", wrong: ["7", "21"], explanation: "McGregor stopped Aldo 13 seconds into their featherweight title fight." },
+  { id: "edwards-usman-round", grade: 3, prompt: "Leon Edwards' famous head-kick knockout of Kamaru Usman at UFC 278 came in which round?", answer: "Round 5", wrong: ["Round 3", "Round 4"], explanation: "Edwards knocked out Usman late in Round 5 to win the welterweight title." },
+  { id: "holloway-gaethje-time", grade: 4, prompt: "Max Holloway knocked out Justin Gaethje at UFC 300 with how much time left in Round 5?", answer: "1 second", wrong: ["5 seconds", "10 seconds"], explanation: "Holloway's knockout came at 4:59 of Round 5." },
+  { id: "lewis-volkov", grade: 3, prompt: "Derrick Lewis delivered his famous 'my balls was hot' interview after knocking out whom at UFC 229?", answer: "Alexander Volkov", wrong: ["Curtis Blaydes", "Travis Browne"], explanation: "Lewis stopped Alexander Volkov with 11 seconds left before the memorable interview." },
+  { id: "barboza-etim", grade: 4, prompt: "Edson Barboza's spinning wheel-kick knockout at UFC 142 came against whom?", answer: "Terry Etim", wrong: ["Ross Pearson", "Anthony Njokuani"], explanation: "Barboza knocked out Terry Etim with the UFC's first spinning wheel-kick finish." },
+  { id: "belfort-19", grade: 5, prompt: "How old was Vitor Belfort when he won the UFC 12 heavyweight tournament?", answer: "19", wrong: ["21", "23"], explanation: "Vitor Belfort was 19 when he won the UFC 12 heavyweight tournament." },
+  { id: "daley-koscheck", grade: 5, prompt: "Which UFC 113 fighter was released after punching Josh Koscheck after the final bell?", answer: "Paul Daley", wrong: ["Thiago Alves", "Dan Hardy"], explanation: "Paul Daley struck Josh Koscheck after the horn and was released from the UFC." },
+  { id: "taktarov-nine", grade: 5, prompt: "Oleg Taktarov's nine-second submission at UFC 6 came against whom?", answer: "Anthony Macias", wrong: ["Paul Varelans", "Dave Beneteau"], explanation: "Taktarov submitted Anthony Macias in nine seconds at UFC 6." },
+  { id: "first-170", grade: 5, prompt: "Laverne Clark faced whom in the UFC's first 170-pound bout at UFC 16?", answer: "Josh Stewart", wrong: ["Pat Miletich", "Mikey Burnett"], explanation: "UFC's official anniversary history identifies Clark vs. Josh Stewart at UFC 16 as its first 170-pound bout." },
+  { id: "first-155", grade: 5, prompt: "Jens Pulver faced whom in the UFC's first 155-pound bout at UFC 26?", answer: "Joao Roque", wrong: ["Caol Uno", "John Lewis"], explanation: "UFC's official anniversary history identifies Pulver vs. Joao Roque at UFC 26 as its first 155-pound bout." },
+  { id: "first-125", grade: 4, prompt: "Demetrious Johnson faced whom in one of the two bouts that launched the UFC flyweight division at UFC on FX 2?", answer: "Ian McCall", wrong: ["Joseph Benavidez", "John Dodson"], explanation: "Johnson faced Ian McCall as the UFC introduced flyweight with a four-man tournament at UFC on FX 2." },
+  { id: "first-fox-time", grade: 5, prompt: "How long did Junior dos Santos need to stop Cain Velasquez in the UFC's FOX debut?", answer: "64 seconds", wrong: ["48 seconds", "94 seconds"], explanation: "Dos Santos stopped Velasquez 64 seconds into the first round." },
+  { id: "silva-weidman", grade: 3, prompt: "Who ended Anderson Silva's 16-fight UFC winning streak at UFC 162?", answer: "Chris Weidman", wrong: ["Chael Sonnen", "Vitor Belfort"], explanation: "Chris Weidman knocked out Silva at UFC 162 after Silva had won 16 straight UFC fights." },
+  { id: "serra-gsp", grade: 3, prompt: "Who upset Georges St-Pierre at UFC 69 to win the welterweight title?", answer: "Matt Serra", wrong: ["Matt Hughes", "Josh Koscheck"], explanation: "Matt Serra stopped St-Pierre in the first round at UFC 69 to win the welterweight championship." },
+  { id: "holm-rousey", grade: 2, prompt: "Who knocked out Ronda Rousey with a head kick at UFC 193?", answer: "Holly Holm", wrong: ["Amanda Nunes", "Miesha Tate"], explanation: "Holly Holm stopped Rousey in Round 2 at UFC 193 to win the women's bantamweight title." },
+  { id: "diaz-mcgregor", grade: 2, prompt: "Who handed Conor McGregor his first UFC loss by submission at UFC 196?", answer: "Nate Diaz", wrong: ["Dustin Poirier", "Chad Mendes"], explanation: "Nate Diaz submitted McGregor with a rear-naked choke in Round 2 at UFC 196." },
+  { id: "rousey-carmouche", grade: 3, prompt: "Who did Ronda Rousey submit in the UFC's first women's bout?", answer: "Liz Carmouche", wrong: ["Miesha Tate", "Sara McMann"], explanation: "Rousey submitted Liz Carmouche at UFC 157 in the promotion's first women's bout." },
+  { id: "usman-masvidal", grade: 4, prompt: "Kamaru Usman's knockout at UFC 261 came against which challenger?", answer: "Jorge Masvidal", wrong: ["Colby Covington", "Gilbert Burns"], explanation: "Usman knocked out Jorge Masvidal in their welterweight title rematch at UFC 261." },
+];
+
+const UFC_FINAL_FACTS: readonly KnowledgeFact[] = [
+  { id: "final-muscle-shark", grade: 5, prompt: "Which former UFC lightweight champion was known as 'The Muscle Shark'?", answer: "Sean Sherk", wrong: ["Jens Pulver", "Kenny Florian"], explanation: "Former lightweight champion Sean Sherk fought under the nickname The Muscle Shark." },
+  { id: "final-maine-iac", grade: 5, prompt: "Which former two-time UFC heavyweight champion was nicknamed 'The Maine-iac'?", answer: "Tim Sylvia", wrong: ["Andrei Arlovski", "Josh Barnett"], explanation: "Two-time heavyweight champion Tim Sylvia was known as The Maine-iac." },
+  { id: "final-dean-mean", grade: 5, prompt: "Which UFC light heavyweight was known as 'The Dean of Mean'?", answer: "Keith Jardine", wrong: ["Forrest Griffin", "Stephan Bonnar"], explanation: "Keith Jardine fought under the nickname The Dean of Mean." },
+  { id: "final-mighty-mouse-defenses", grade: 5, prompt: "How many consecutive UFC title defenses did Demetrious Johnson record during his flyweight reign?", answer: "11", wrong: ["9", "10"], explanation: "Johnson successfully defended the UFC flyweight title 11 consecutive times." },
+  { id: "final-silva-reign", grade: 5, prompt: "How many days did Anderson Silva's record UFC middleweight title reign last?", answer: "2,457 days", wrong: ["2,142 days", "2,237 days"], explanation: "Silva's middleweight title reign lasted a UFC-record 2,457 days." },
+  { id: "final-masvidal-five", grade: 5, prompt: "Whom did Jorge Masvidal knock out in five seconds for the fastest knockout in UFC history?", answer: "Ben Askren", wrong: ["Darren Till", "Nate Diaz"], explanation: "Masvidal knocked out Ben Askren with a flying knee five seconds into their UFC 239 fight." },
+  { id: "final-tuf1", grade: 5, prompt: "Who defeated Stephan Bonnar by unanimous decision in the light heavyweight final of The Ultimate Fighter 1?", answer: "Forrest Griffin", wrong: ["Diego Sanchez", "Rashad Evans"], explanation: "Forrest Griffin defeated Stephan Bonnar in the historic TUF 1 light heavyweight final." },
+  { id: "final-ufc217-rose", grade: 5, prompt: "Who stopped Joanna Jedrzejczyk at UFC 217 to win the strawweight title?", answer: "Rose Namajunas", wrong: ["Jessica Andrade", "Claudia Gadelha"], explanation: "Rose Namajunas stopped Joanna Jedrzejczyk in the first round at UFC 217." },
+  { id: "final-ufc217-gsp", grade: 5, prompt: "Whom did Georges St-Pierre submit at UFC 217 to become middleweight champion?", answer: "Michael Bisping", wrong: ["Robert Whittaker", "Luke Rockhold"], explanation: "St-Pierre submitted Michael Bisping in Round 3 at UFC 217." },
+  { id: "final-ufc217-tj", grade: 5, prompt: "Whom did TJ Dillashaw stop at UFC 217 to regain the bantamweight title?", answer: "Cody Garbrandt", wrong: ["Dominick Cruz", "Renan Barao"], explanation: "Dillashaw stopped Cody Garbrandt in Round 2 at UFC 217." },
+];
+
 
 function knowledgeQuestions(
   sport: AverageFanSport,
@@ -399,6 +625,216 @@ function currentEventCandidates(sport: AverageFanSport) {
     });
 }
 
+function nflKnowledgeQuestions(
+  subject: AverageFanSubject,
+  prefix: string,
+  facts: readonly KnowledgeFact[],
+) {
+  return facts.map((fact, index) => (
+    index % 3 === 0
+      ? choiceQuestion({
+          id: `${prefix}:${fact.id}:choice`,
+          sport: "nfl",
+          grade: fact.grade,
+          subject,
+          prompt: fact.prompt,
+          answer: fact.answer,
+          wrongChoices: fact.wrong,
+          explanation: fact.explanation,
+          difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+        })
+      : shortQuestion({
+          id: `${prefix}:${fact.id}:short`,
+          sport: "nfl",
+          grade: fact.grade,
+          subject,
+          prompt: fact.prompt,
+          answer: fact.answer,
+          explanation: fact.explanation,
+          fanMisses: fact.wrong,
+          difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+        })
+  ));
+}
+
+const CFB_TRADITION_CATEGORY_HINTS = [
+  "tradition", "rivalr", "troph", "mascot", "stadium", "fan culture", "cheer",
+  "entrance", "band", "fight song", "tailgating", "gameday",
+] as const;
+
+const CFB_PLAYER_CATEGORY_HINTS = [
+  "heisman", "player", "quarterback", "running back", "receiver", "championship star",
+  "two-sport", "award",
+] as const;
+
+const CFB_PROGRAM_CATEGORY_HINTS = [
+  "team identity", "program", "national championship", "championship history",
+  "conference", "bowl game", "coaches", "coaching",
+] as const;
+
+function cfbAuthoredSubject(question: BarTriviaQuestion): AverageFanSubject {
+  const category = question.category.toLocaleLowerCase();
+  if (CFB_TRADITION_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Traditions";
+  if (CFB_PLAYER_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Players";
+  if (CFB_PROGRAM_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Programs";
+  return "CFB History";
+}
+
+function cfbAuthoredGrade(question: BarTriviaQuestion): AverageFanGrade {
+  if (question.round === "last-call") return 5;
+  const bucket = stableOffset(question.id, 4);
+  if (question.difficulty === "easy") return bucket === 0 ? 2 : 1;
+  if (question.difficulty === "medium") return bucket < 2 ? 2 : 3;
+  if (question.difficulty === "hard") return bucket < 2 ? 4 : 5;
+  if (question.round === "round1") return bucket === 0 ? 2 : 1;
+  if (question.round === "round2") return bucket < 2 ? 2 : 3;
+  return bucket < 2 ? 4 : 5;
+}
+
+function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
+  const grade = cfbAuthoredGrade(question);
+  const subject = cfbAuthoredSubject(question);
+  const protectedFinal = question.round === "last-call";
+  const wrongChoices = question.choices.filter((choice) => choice !== question.answer).slice(0, 2);
+  const formatRoll = stableOffset(question.id + ":average-fan-format", 10);
+  const common = {
+    id: `average-fan:cfb:authored:${question.id}`,
+    sport: "cfb" as const,
+    grade,
+    subject,
+    answer: question.answer,
+    aliases: [] as string[],
+    explanation: question.explanation,
+    contentType: question.contentType,
+    activeFrom: question.activeFrom,
+    expiresAt: question.expiresAt,
+    difficultyNudge: grade >= 4 ? 1 : grade === 1 ? -1 : 0,
+    protectedFinal,
+    sourceId: question.sourceId,
+    sourceUrl: question.sourceUrl,
+    verifiedAt: question.verifiedAt,
+  };
+
+  if (formatRoll <= 3 || protectedFinal) {
+    return assertAverageFanQuestion({
+      ...common,
+      format: "three-choice",
+      prompt: question.prompt,
+      choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!] as [string, string, string],
+    });
+  }
+  return assertAverageFanQuestion({
+    ...common,
+    format: "short-answer",
+    prompt: question.prompt,
+    fanMisses: wrongChoices,
+  });
+}
+
+
+
+
+const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
+  ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
+  ["01-cfp-first-number-one", 4, "CFB History", "Mississippi State was the first team ranked No. 1 by the College Football Playoff selection committee.", true, "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
+  ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
+  ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
+].map(([id, grade, subject, prompt, answer, explanation]) => assertAverageFanQuestion({
+  id: `average-fan:cfb:authored:cfb-tf-${id}`,
+  sport: "cfb",
+  grade: grade as AverageFanGrade,
+  subject: subject as AverageFanSubject,
+  format: "true-false",
+  prompt: prompt as string,
+  answer: answer ? "True" : "False",
+  aliases: [],
+  explanation: explanation as string,
+  contentType: "evergreen",
+  difficultyNudge: 0,
+  protectedFinal: false,
+}));
+
+const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
+  ["00-player-mendoza", "Players", "Before his Heisman-winning championship season at Indiana, Fernando Mendoza played for which school?", "California", ["Stanford", "UCLA"], "Fernando Mendoza transferred from California to Indiana before his 2025 Heisman and national-title season."],
+  ["01-player-woodson", "Players", "Which Tennessee quarterback finished behind Charles Woodson in the famous 1997 Heisman race?", "Peyton Manning", ["Tee Martin", "Danny Wuerffel"], "Peyton Manning finished second to Michigan's Charles Woodson in the 1997 Heisman voting."],
+  ["02-player-newton", "Players", "Cam Newton completed Auburn's 2010 national-title season by beating which team in the BCS Championship Game?", "Oregon", ["TCU", "Stanford"], "Auburn beat Oregon 22–19 to finish Cam Newton's Heisman-winning season 14–0."],
+  ["03-player-griffin", "Players", "Archie Griffin won his back-to-back Heisman Trophies in which two seasons?", "1974 and 1975", ["1973 and 1974", "1975 and 1976"], "Ohio State running back Archie Griffin won the Heisman in 1974 and 1975."],
+
+  ["00-program-indiana", "Programs", "Which program completed a 16–0 season by beating Miami for the 2025 national championship?", "Indiana", ["Oregon", "Ohio State"], "Indiana finished 16–0 and beat Miami 27–21 for the 2025 national championship."],
+  ["01-program-texas-rose", "Programs", "Which program ended USC's 34-game winning streak in the 2006 Rose Bowl to win the national title?", "Texas", ["Oklahoma", "Ohio State"], "Texas beat USC 41–38 in the Rose Bowl to win the 2005 national championship."],
+  ["02-program-boise-fiesta", "Programs", "Which program used the hook-and-lateral and Statue of Liberty in its famous 2007 Fiesta Bowl upset of Oklahoma?", "Boise State", ["TCU", "Utah"], "Boise State beat Oklahoma 43–42 in overtime in the 2007 Fiesta Bowl."],
+  ["03-program-app-state", "Programs", "Which FCS program stunned No. 5 Michigan at the Big House in 2007?", "Appalachian State", ["James Madison", "North Dakota State"], "Appalachian State beat Michigan 34–32 in one of college football's signature upsets."],
+
+  ["00-tradition-kick-six", "Traditions", "The 2013 'Kick Six' decided which rivalry game?", "Iron Bowl", ["Egg Bowl", "Red River Rivalry"], "Auburn's Kick Six beat Alabama in the 2013 Iron Bowl."],
+  ["01-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Tre Mason"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
+  ["02-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Josh Reed"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
+  ["03-tradition-miracle-michigan", "Traditions", "Which Colorado quarterback threw the Hail Mary that became known as the Miracle at Michigan in 1994?", "Kordell Stewart", ["Rashaan Salaam", "Eric Bieniemy"], "Kordell Stewart's final-play Hail Mary to Michael Westbrook beat Michigan in 1994."],
+
+  ["00-history-2022-fiesta", "CFB History", "Which team beat Michigan 51–45 in the 2022 season's CFP semifinal at the Fiesta Bowl?", "TCU", ["Georgia", "Ohio State"], "TCU beat Michigan 51–45 in the Fiesta Bowl to reach the national championship game."],
+  ["01-history-2017-rose", "CFB History", "Which team beat Oklahoma 54–48 in double overtime in the Rose Bowl CFP semifinal after the 2017 season?", "Georgia", ["Alabama", "Clemson"], "Georgia beat Oklahoma 54–48 in double overtime in the Rose Bowl semifinal."],
+  ["02-history-2018-tua", "CFB History", "Which freshman quarterback came off the bench and threw the overtime title-winning touchdown for Alabama against Georgia after the 2017 season?", "Tua Tagovailoa", ["Jalen Hurts", "Mac Jones"], "Tua Tagovailoa replaced Jalen Hurts and threw the overtime winner to DeVonta Smith."],
+  ["03-history-2005-rose", "CFB History", "Which Texas quarterback scored the late fourth-down touchdown that beat USC in the 2006 Rose Bowl?", "Vince Young", ["Colt McCoy", "Matt Leinart"], "Vince Young's fourth-down touchdown gave Texas the 41–38 national-title win over USC."],
+].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
+  id: `average-fan:cfb:authored:cfb-final-${id}`,
+  sport: "cfb",
+  grade: 5,
+  subject: subject as AverageFanSubject,
+  format: "three-choice",
+  prompt: prompt as string,
+  answer: answer as string,
+  aliases: [],
+  choices: [answer as string, ...(wrong as string[])] as [string, string, string],
+  explanation: explanation as string,
+  contentType: "evergreen",
+  difficultyNudge: 2,
+  protectedFinal: true,
+}));
+
+const CFB_CURRENT_EVENT_EXPANSION: readonly AverageFanQuestion[] = [
+  ["texas-tennessee", 1, "Programs", "Which No. 1 team survived Tennessee 20–17 in Knoxville in Week 4?", "Texas", ["Georgia", "Alabama"], "Texas held off Tennessee 20–17 in Knoxville."],
+  ["florida-ole-miss", 1, "Programs", "Which team beat No. 9 Ole Miss 52–28 in Week 4?", "Florida", ["LSU", "Auburn"], "Florida beat Ole Miss 52–28 at The Swamp."],
+  ["georgia-oklahoma", 1, "Programs", "Which team beat Oklahoma 41–13 in Week 4?", "Georgia", ["Alabama", "Tennessee"], "Georgia defeated Oklahoma 41–13."],
+  ["lsu-texas-am", 1, "Programs", "Which team beat Texas A&M 35–6 in Week 4?", "LSU", ["Ole Miss", "Florida"], "LSU defeated Texas A&M 35–6 in Baton Rouge."],
+  ["oregon-usc", 1, "Programs", "Which Big Ten team won 41–27 at USC in Week 4?", "Oregon", ["Washington", "UCLA"], "Oregon beat USC 41–27 in Los Angeles."],
+  ["alabama-south-carolina", 1, "Programs", "Which team beat South Carolina 49–18 in Week 4?", "Alabama", ["Georgia", "LSU"], "Alabama defeated South Carolina 49–18."],
+  ["mississippi-state-missouri", 2, "Programs", "Which team handed No. 25 Missouri a 31–24 Week 4 loss?", "Mississippi State", ["Ole Miss", "Arkansas"], "Mississippi State beat Missouri 31–24."],
+  ["ucla-maryland", 2, "Programs", "Which ranked Big Ten team routed Maryland 54–3 in Week 4?", "UCLA", ["USC", "Iowa"], "UCLA defeated Maryland 54–3."],
+  ["indiana-northwestern", 2, "Programs", "Which top-10 Big Ten team beat Northwestern 29–23 in Week 4?", "Indiana", ["Ohio State", "Michigan"], "Indiana beat Northwestern 29–23."],
+  ["boise-western-michigan", 2, "Programs", "Which ranked team beat Western Michigan 32–7 in Week 4?", "Boise State", ["Utah", "BYU"], "Boise State defeated Western Michigan 32–7."],
+  ["texas-tech-sam-houston", 2, "Programs", "Which ranked Big 12 team beat Sam Houston 49–14 in Week 4?", "Texas Tech", ["TCU", "Houston"], "Texas Tech defeated Sam Houston 49–14."],
+  ["houston-georgia-southern", 2, "Programs", "Which ranked Big 12 team won 42–28 at Georgia Southern in Week 4?", "Houston", ["Texas Tech", "UCF"], "Houston beat Georgia Southern 42–28."],
+].map(([id, grade, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
+  id: `average-fan:cfb:authored:cfb-current-2026-w4-${id}`,
+  sport: "cfb",
+  grade: grade as AverageFanGrade,
+  subject: subject as AverageFanSubject,
+  format: "three-choice",
+  prompt: prompt as string,
+  answer: answer as string,
+  aliases: [],
+  choices: [answer as string, ...(wrong as string[])] as [string, string, string],
+  explanation: explanation as string,
+  contentType: "current-event",
+  activeFrom: "2026-09-26T00:00:00-05:00",
+  expiresAt: "2026-10-17T23:59:59-05:00",
+  difficultyNudge: grade === 1 ? -1 : 0,
+  protectedFinal: false,
+  sourceId: "ncaa-2026-week4-recap",
+  sourceUrl: "https://www.ncaa.com/live-updates/football/fbs/college-football-week-4-recaps-highlights-rankings-and-scores",
+  verifiedAt: "2026-09-29",
+}));
+
+function authoredCfbQuestions() {
+  return [
+    ...CFB_CURATED_TRUE_FALSE,
+    ...CFB_CURATED_FINALS,
+    ...CFB_CURRENT_EVENT_EXPANSION,
+    ...BAR_TRIVIA_QUESTION_BANK
+      .filter((question) => question.league === "cfb")
+      .map(authoredCfbQuestion),
+  ];
+}
+
 function footballPlayers(league: "NFL" | "CFB") {
   return queryFootballSubjects({ league, kind: "player-career" })
     .filter((subject) => subject.name && subject.position)
@@ -411,7 +847,7 @@ function displayNflTeam(code: string) {
 
 function footballCandidates(league: "NFL" | "CFB") {
   const sport: AverageFanSport = league === "NFL" ? "nfl" : "cfb";
-  const players = footballPlayers(league);
+  const players = footballPlayers(league).filter((player) => league !== "NFL" || player.casualEligible);
   const playerNames = players.map((player) => player.name);
   const schools = unique(players.map((player) => player.school ?? ""));
   const nflTeams = unique(players.flatMap((player) => (player.franchises ?? []).map(displayNflTeam)));
@@ -606,20 +1042,6 @@ function footballCandidates(league: "NFL" | "CFB") {
           difficultyNudge: 3,
           protectedFinal: true,
         }));
-      } else if (player.school && (player.heismanWinner || player.nationalChampion)) {
-        const wrongNames = peerValues(playerNames, player.name, `${player.id}:cfb-final`);
-        questions.push(shortQuestion({
-          id: `average-fan:cfb:final:${player.id}:resume`,
-          sport: "cfb",
-          grade: 5,
-          subject: "CFB History",
-          prompt: `Which ${position} from ${player.school} matches this résumé: ${player.heismanWinner ? "Heisman Trophy winner" : "national champion"}?`,
-          answer: player.name,
-          explanation: `${player.name} matches that ${player.school} ${position} résumé.`,
-          fanMisses: wrongNames,
-          difficultyNudge: 3,
-          protectedFinal: true,
-        }));
       }
     }
   }
@@ -672,13 +1094,40 @@ function footballCandidates(league: "NFL" | "CFB") {
   }
 
   if (league === "NFL") {
-    questions.push(...knowledgeQuestions("nfl", "X’s & O’s", "average-fan:nfl:xo", NFL_XO_FACTS));
+    questions.push(...nflKnowledgeQuestions("Players", "average-fan:nfl:00-player", NFL_PLAYER_FACTS));
+    questions.push(...nflKnowledgeQuestions("Teams", "average-fan:nfl:00-team", NFL_TEAM_FACTS));
+    questions.push(...nflKnowledgeQuestions("X’s & O’s", "average-fan:nfl:00-xo", NFL_XO_FACTS));
+    questions.push(...nflKnowledgeQuestions("NFL History", "average-fan:nfl:00-history", NFL_HISTORY_FACTS));
+    questions.push(...NFL_TRUE_FALSE_FACTS.map((fact) => trueFalseQuestion({
+      id: `average-fan:nfl:00-tf:${fact.id}`,
+      sport: "nfl",
+      grade: fact.grade,
+      subject: fact.subject,
+      prompt: fact.prompt,
+      answer: fact.answer,
+      explanation: fact.explanation,
+      difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+    })));
+    questions.push(...NFL_FINAL_FACTS.map((fact) => shortQuestion({
+      id: `average-fan:nfl:final-authored:${fact.id}`,
+      sport: "nfl",
+      grade: 5,
+      subject: fact.subject,
+      prompt: fact.prompt,
+      answer: fact.answer,
+      explanation: fact.explanation,
+      fanMisses: fact.wrong,
+      difficultyNudge: 3,
+      protectedFinal: true,
+    })));
   } else {
     questions.push(...knowledgeQuestions("cfb", "Traditions", "average-fan:cfb:tradition", CFB_TRADITION_FACTS));
   }
 
   questions.push(...currentEventCandidates(sport));
-  return questions;
+  return league === "CFB"
+    ? [...authoredCfbQuestions(), ...questions]
+    : questions;
 }
 
 function formatDivision(value: string) {
@@ -770,17 +1219,26 @@ function ufcCandidates() {
       }));
     }
 
-    const debutYear = Number(fighter.activeFrom.slice(0, 4));
-    if (Number.isFinite(debutYear)) {
+    const uniqueWins = wins.filter(
+      (fight, fightIndex) => wins.findIndex((candidate) => candidate.opponent === fight.opponent) === fightIndex,
+    );
+    if (uniqueWins.length >= 3) {
+      const firstIndex = stableOffset(`${fighter.id}:g5-anchor-a`, uniqueWins.length);
+      const anchors = [
+        uniqueWins[firstIndex]!,
+        uniqueWins[(firstIndex + 1) % uniqueWins.length]!,
+        uniqueWins[(firstIndex + 2) % uniqueWins.length]!,
+      ];
+      const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
       questions.push(shortQuestion({
-        id: `average-fan:ufc:g5:${fighter.id}:debut-year`,
+        id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
         sport: "ufc",
         grade: 5,
         subject: "Fighters",
-        prompt: `In what year did ${fighter.name}'s UFC career begin?`,
-        answer: String(debutYear),
-        explanation: `${fighter.name}'s UFC career began in ${debutYear}.`,
-        fanMisses: [String(debutYear - 1), String(debutYear + 1)],
+        prompt: `Which UFC fighter owns wins over ${anchors[0].opponent}, ${anchors[1].opponent}, and ${anchors[2].opponent}?`,
+        answer: fighter.name,
+        explanation: `${fighter.name}'s UFC ledger includes wins over all three opponents.`,
+        fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
     }
@@ -788,17 +1246,19 @@ function ufcCandidates() {
     const titleFights = fighter.fights.filter((fight) => fight.titleFight);
     if (titleFights.length) {
       const titleFight = titleFights[titleFights.length - 1]!;
-      const titleYear = Number(titleFight.date.slice(0, 4));
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:title-identity`);
+      const titleOpponents = unique(titleFights.map((fight) => fight.opponent));
+      const wrongTitleOpponents = peerValues(fighterNames, titleOpponents, `${fighter.id}:title-opponent`);
       questions.push(shortQuestion({
-        id: `average-fan:ufc:g4:${fighter.id}:title-count`,
+        id: `average-fan:ufc:g4:${fighter.id}:title-opponent`,
         sport: "ufc",
         grade: 4,
         subject: "Championships",
-        prompt: `How many UFC title fights did ${fighter.name} have?`,
-        answer: String(titleFights.length),
-        explanation: `${fighter.name} had ${titleFights.length} UFC title fights.`,
-        fanMisses: unique([Math.max(0, titleFights.length - 1), titleFights.length + 1].map(String)),
+        prompt: `Name one fighter ${fighter.name} faced in a UFC title fight.`,
+        answer: titleOpponents[0]!,
+        aliases: titleOpponents.slice(1),
+        explanation: `${fighter.name}'s UFC title-fight opponents include ${titleOpponents.join(", ")}.`,
+        fanMisses: wrongTitleOpponents,
         difficultyNudge: 1,
       }));
       questions.push(shortQuestion({
@@ -806,7 +1266,7 @@ function ufcCandidates() {
         sport: "ufc",
         grade: 5,
         subject: "Championships",
-        prompt: `Which fighter had a UFC title fight against ${titleFight.opponent} in ${titleYear} and recorded a ${titleFight.result}?`,
+        prompt: `Which fighter recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight on ${titleFight.date}?`,
         answer: fighter.name,
         explanation: `${fighter.name} had that UFC title-fight result against ${titleFight.opponent} in ${titleYear}.`,
         fanMisses: wrongNames,
@@ -817,7 +1277,7 @@ function ufcCandidates() {
         sport: "ufc",
         grade: 5,
         subject: "Championships",
-        prompt: `Name the fighter who recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight in ${titleYear}.`,
+        prompt: `Name the fighter who recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight on ${titleFight.date}.`,
         answer: fighter.name,
         explanation: `${fighter.name} matches that opponent, title-fight context, year, and result.`,
         fanMisses: wrongNames,
@@ -825,17 +1285,18 @@ function ufcCandidates() {
         protectedFinal: true,
       }));
     } else if (fighter.fights.length >= 5) {
-      const fight = fighter.fights[fighter.fights.length - 1]!;
-      const year = Number(fight.date.slice(0, 4));
+      const anchorA = fighter.fights[fighter.fights.length - 1]!;
+      const anchorB = fighter.fights[Math.max(0, fighter.fights.length - 3)]!;
+      const anchorC = fighter.fights[Math.max(0, fighter.fights.length - 5)]!;
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:final-fight`);
       questions.push(shortQuestion({
         id: `average-fan:ufc:final:${fighter.id}:fight`,
         sport: "ufc",
         grade: 5,
         subject: "Fights",
-        prompt: `Which fighter recorded a ${fight.result} against ${fight.opponent} in a UFC bout in ${year}?`,
+        prompt: `Which UFC fighter faced ${anchorA.opponent}, ${anchorB.opponent}, and ${anchorC.opponent}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} recorded that ${fight.result} against ${fight.opponent} in ${year}.`,
+        explanation: `${fighter.name}'s UFC ledger includes bouts against all three opponents.`,
         fanMisses: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
@@ -845,6 +1306,29 @@ function ufcCandidates() {
 
   questions.push(...knowledgeQuestions("ufc", "Octagon IQ", "average-fan:ufc:iq", UFC_IQ_FACTS));
   questions.push(...currentEventCandidates("ufc"));
+  const authoredHistory = knowledgeQuestions("ufc", "Fights", "average-fan:ufc:authored-history", UFC_HISTORY_FACTS);
+  const authoredChampionshipIds = new Set([
+    "mcgregor-alvarez", "sterling-dq-title", "edwards-usman-round",
+    "silva-weidman", "serra-gsp", "holm-rousey", "rousey-carmouche", "usman-masvidal",
+  ]);
+  questions.push(...authoredHistory.map((question) => {
+    const factId = question.id.split(":").at(-2) ?? "";
+    return authoredChampionshipIds.has(factId)
+      ? assertAverageFanQuestion({ ...question, subject: "Championships" })
+      : question;
+  }));
+  questions.push(...UFC_FINAL_FACTS.map((fact) => shortQuestion({
+    id: `average-fan:ufc:final:authored:${fact.id}`,
+    sport: "ufc",
+    grade: 5,
+    subject: "Fights",
+    prompt: fact.prompt,
+    answer: fact.answer,
+    explanation: fact.explanation,
+    fanMisses: fact.wrong,
+    difficultyNudge: 3,
+    protectedFinal: true,
+  })));
   return questions;
 }
 
