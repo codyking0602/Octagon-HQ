@@ -16,6 +16,14 @@ Real fighter photography only. Do not generate UFC fighter images.
 
 Canonical fighter thumbnails may come **only from UFC or ESPN imagery**. If neither UFC nor ESPN has an acceptable thumbnail yet, do not create or substitute a thumb asset; let the existing missing-thumbnail presentation render instead. Never derive a thumbnail from a Spotlight image, third-party photo, random cutout, poster, social image, Getty-style image, or generated/recreated fighter art. A blank/missing thumb is preferable to questionable provenance.
 
+Every prep/refresh run must resolve thumb readiness in this order:
+
+1. Check production `main` first for `public/assets/fighters/<fighter-slug>-thumb.webp` for every selected fighter.
+2. Mechanically and visually validate any existing canonical thumb. A valid existing canonical thumb is reused and marked `thumb_ready`; do not reset it to pending merely because the prep package lacks provenance metadata.
+3. Only when no valid canonical repo thumb exists, actively search UFC and ESPN official imagery.
+4. If an official UFC/ESPN source image is found, process it through the hard gate instead of leaving it pending solely because it was not already in the repo.
+5. Only fighters that still lack an acceptable source after those checks remain `thumb_pending`, and they are rechecked on every unstaged-package refresh.
+
 When an acceptable UFC/ESPN thumbnail is available:
 
 - `public/assets/fighters/<fighter-slug>-thumb.webp`
@@ -41,7 +49,7 @@ The stored Spotlight `source` remains `UFCStats` because UFCStats is the canonic
 
 ## Prep package storage
 
-The Monday task upserts one row into `public.ufc_pick_prep_packages`, keyed by `source_event_key`.
+While the event remains unstaged, the recurring prep task keeps one living row current in `public.ufc_pick_prep_packages`, keyed by `source_event_key`.
 
 The JSON payload must contain:
 
