@@ -1327,7 +1327,7 @@ function ufcCandidates() {
         subject: "Championships",
         prompt: `Which fighter recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight on ${titleFight.date}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} had that UFC title-fight result against ${titleFight.opponent} in ${titleYear}.`,
+        explanation: `${fighter.name} had that UFC title-fight result against ${titleFight.opponent} on ${titleFight.date}.`,
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
