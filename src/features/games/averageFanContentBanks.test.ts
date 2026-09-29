@@ -5,6 +5,8 @@ import {
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
 } from "./averageFanContentBanks";
+import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
+import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { validateAverageFanQuestion, type AverageFanSport } from "./averageFanEngine";
 
 const sports: readonly AverageFanSport[] = ["nfl", "cfb", "ufc"];
@@ -64,6 +66,48 @@ describe("Average Fan durable content banks", () => {
       expect(shortShare).toBeLessThanOrEqual(0.75);
       expect(choiceShare).toBeGreaterThanOrEqual(0.12);
       expect(trueFalseShare).toBeGreaterThanOrEqual(0.05);
+    }
+  });
+
+
+  it("does not repeat the same prompt inside a sport bank", () => {
+    for (const sport of sports) {
+      const seen = new Set<string>();
+      for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
+        const prompt = question.prompt.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+        expect(seen.has(prompt), question.id).toBe(false);
+        seen.add(prompt);
+      }
+    }
+  });
+
+  it("keeps CFB conference choices to exactly one program from the requested conference", () => {
+    const programs = queryFootballSubjects({ league: "CFB", kind: "program" });
+    const conferenceByName = new Map(programs.map((program) => [program.name, program.conference]));
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.cfb) {
+      if (!question.id.endsWith(":conference-program") || !question.choices) continue;
+      const answerConference = conferenceByName.get(question.answer);
+      expect(answerConference, question.id).toBeTruthy();
+      const matchingChoices = question.choices.filter(
+        (choice) => conferenceByName.get(choice) === answerConference,
+      );
+      expect(matchingChoices, question.id).toEqual([question.answer]);
+    }
+  });
+
+  it("never uses another valid UFC opponent as a wrong opponent choice", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      const match = /^average-fan:ufc:g3:(.+):opponent$/.exec(question.id);
+      if (!match || !question.choices) continue;
+      const fighter = getUfcFactualSubject(match[1]!);
+      expect(fighter, question.id).toBeTruthy();
+      if (!fighter) continue;
+      const wins = fighter.fights.filter((fight) => fight.result === "win");
+      const validOpponents = new Set(
+        (wins.length ? wins : fighter.fights).map((fight) => fight.opponent),
+      );
+      const validChoices = question.choices.filter((choice) => validOpponents.has(choice));
+      expect(validChoices, question.id).toEqual([question.answer]);
     }
   });
 
