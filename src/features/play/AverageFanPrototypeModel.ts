@@ -1,5 +1,8 @@
 import {
   assertAverageFanQuestion,
+  averageFanAnswersMatch,
+  averageFanFanAnswer,
+  type AverageFanFan,
   type AverageFanQuestion,
 } from "../games/averageFanEngine";
 
@@ -195,4 +198,29 @@ export function averageFanMoneyLabel(value: number) {
 export function averageFanGradeLabel(grade: number) {
   const suffix = grade === 1 ? "st" : grade === 2 ? "nd" : grade === 3 ? "rd" : "th";
   return grade + suffix + " Grade";
+}
+
+
+export function resolveAverageFanPreviewAnswer({
+  question,
+  fan,
+  playerAnswer,
+  saveAvailable,
+}: {
+  question: AverageFanQuestion;
+  fan: AverageFanFan;
+  playerAnswer: string;
+  saveAvailable: boolean;
+}) {
+  const fanAnswer = averageFanFanAnswer(question, fan);
+  const correct = averageFanAnswersMatch(question, playerAnswer);
+  const saveConsumed = !correct && saveAvailable;
+  const saved = saveConsumed && fanAnswer.correct;
+
+  return {
+    correct,
+    fanAnswer,
+    saveConsumed,
+    saved,
+  };
 }
