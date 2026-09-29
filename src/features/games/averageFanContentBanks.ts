@@ -1360,12 +1360,16 @@ function ufcCandidates() {
         uniqueWins[(firstIndex + 2) % uniqueWins.length]!,
       ];
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
+      const modernAnchor = anchors.find((fight) => Number(fight.date.slice(0, 4)) >= 2010);
+      const modernAnchorHint = modernAnchor
+        ? `, including the win over ${modernAnchor.opponent} in ${modernAnchor.date.slice(0, 4)}`
+        : "";
       questions.push(shortQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
         sport: "ufc",
         grade: 5,
         subject: "Fighters",
-        prompt: `Which UFC fighter owns wins over ${anchors[0].opponent}, ${anchors[1].opponent}, and ${anchors[2].opponent}?`,
+        prompt: `Which UFC fighter owns wins over ${anchors[0].opponent}, ${anchors[1].opponent}, and ${anchors[2].opponent}${modernAnchorHint}?`,
         answer: fighter.name,
         explanation: `${fighter.name} has UFC wins over all three opponents.`,
         fanMisses: wrongNames,
