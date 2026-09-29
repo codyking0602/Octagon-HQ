@@ -14,6 +14,7 @@ const refreshedRankingData = new Set([
   "Mackenzie Dern",
   "Conor McGregor",
   "Islam Makhachev",
+  "Alexandre Pantoja",
   "Aljamain Sterling",
   "B.J. Penn",
   "Tito Ortiz",
@@ -31,7 +32,7 @@ describe("V2 ranking roster overlay", () => {
         historicalRankingMigrationInputs.fighters.map(({ fighter }) => fighter),
       ),
     );
-    expect(v2RankingRoster.additions).toHaveLength(1);
+    expect(v2RankingRoster.additions).toHaveLength(2);
     expect(canonicalRankingInputs.counts.fighters).toBe(
       canonicalRankingInputs.fighters.length,
     );
@@ -89,15 +90,18 @@ describe("V2 ranking roster overlay", () => {
     );
   });
 
-  it("retains the current source versions and Rafael dos Anjos addition", () => {
+  it("retains the current source versions and V2 additions", () => {
     expect(v2RankingRoster).toMatchObject({
-      modelAsOfDate: "2026-08-16",
-      factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260816",
+      modelAsOfDate: "2026-09-19",
+      factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260919",
+      judgmentVersion: "octagon-hq-v2-rankings-refresh-judgments-20260919",
     });
-    expect(
-      canonicalRankingInputs.fighters.some(
-        ({ fighter }) => fighter === "Rafael dos Anjos",
-      ),
-    ).toBe(true);
+    for (const fighter of ["Rafael dos Anjos", "Joshua Van"]) {
+      expect(
+        canonicalRankingInputs.fighters.some(
+          (candidate) => candidate.fighter === fighter,
+        ),
+      ).toBe(true);
+    }
   });
 });
