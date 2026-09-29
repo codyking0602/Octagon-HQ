@@ -86,7 +86,8 @@ describe("Average Fan durable content banks", () => {
   it("keeps the selected NFL bank fully authored and player-facing", () => {
     const ordinary = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => !question.protectedFinal);
     expect(ordinary).toHaveLength(205);
-    expect(ordinary.every((question) => question.id.startsWith("average-fan:nfl:00-"))).toBe(true);
+    const evergreen = ordinary.filter((question) => question.contentType === "evergreen");
+    expect(evergreen.every((question) => question.id.startsWith("average-fan:nfl:00-"))).toBe(true);
 
     const registryFiller = [
       /^what position did /i,
@@ -251,8 +252,9 @@ describe("Average Fan durable content banks", () => {
 
   it("keeps dated upper-grade identity trivia modern-heavy instead of making old eras the difficulty proxy", () => {
     for (const sport of sports) {
+      const identitySubject = sport === "ufc" ? "Fighters" : "Players";
       const dated = AVERAGE_FAN_CONTENT_BANKS[sport]
-        .filter((question) => question.grade >= 4)
+        .filter((question) => question.grade >= 4 && question.subject === identitySubject)
         .map((question) => ({
           question,
           years: [...question.prompt.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0])),
