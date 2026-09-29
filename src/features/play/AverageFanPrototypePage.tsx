@@ -46,33 +46,6 @@ const FAN_LABELS: Record<AverageFanFan, string> = {
   troy: "TROY",
 };
 
-function AverageFanLogo() {
-  return (
-    <div className="average-fan-logo" aria-label="Are You Smarter Than an Average Fan?">
-      <span className="average-fan-logo__top">ARE YOU</span>
-      <strong className="average-fan-logo__hero">SMARTER</strong>
-      <span className="average-fan-logo__mid">THAN AN</span>
-      <strong className="average-fan-logo__bottom">AVERAGE FAN?</strong>
-    </div>
-  );
-}
-
-function ChalkDoodles() {
-  return (
-    <div className="average-fan-chalk" aria-hidden="true">
-      <span className="average-fan-chalk__football">Football</span>
-      <span className="average-fan-chalk__ufc">UFC</span>
-      <span className="average-fan-chalk__college">College<br />Sports</span>
-      <i className="average-fan-chalk__ball" />
-      <i className="average-fan-chalk__goalpost" />
-      <i className="average-fan-chalk__glove">✦</i>
-      <i className="average-fan-chalk__route route-a">↗</i>
-      <i className="average-fan-chalk__route route-b">↙</i>
-      <i className="average-fan-chalk__route route-c">↘</i>
-    </div>
-  );
-}
-
 function HostArt({ compact = false }: { compact?: boolean }) {
   return (
     <div className={`average-fan-host${compact ? " average-fan-host--compact" : ""}`} aria-label="Pat McAfee host">
@@ -768,7 +741,38 @@ export default function AverageFanPrototypePage() {
   }
 
   return (
-    <div className="average-fan-intro">
+    <div className="average-fan-intro average-fan-intro--plate">
+      <section
+        className="average-fan-intro-stage"
+        aria-label="Are You Smarter Than an Average Fan? opening screen"
+      >
+        <img
+          className="average-fan-intro-stage__plate"
+          src="/assets/average-fan/average-fan-opening-stage.png"
+          alt=""
+          aria-hidden="true"
+        />
+
+        <div className="average-fan-intro-stage__actions">
+          <button
+            className="average-fan-intro-stage__button average-fan-intro-stage__button--start"
+            type="button"
+            onClick={() => setScene("fan-select")}
+          >
+            <span aria-hidden="true">▶</span>
+            <strong>START</strong>
+          </button>
+          <button
+            className="average-fan-intro-stage__button average-fan-intro-stage__button--rules"
+            type="button"
+            onClick={() => setRulesOpen(true)}
+          >
+            <span aria-hidden="true">▤</span>
+            <strong>HOW TO PLAY</strong>
+          </button>
+        </div>
+      </section>
+
       <button
         className="average-fan-exit"
         type="button"
@@ -777,36 +781,6 @@ export default function AverageFanPrototypePage() {
       >
         ‹ HQ
       </button>
-
-      <StudioBackdrop />
-
-      <section className="average-fan-board" aria-label="Average Fan opening screen">
-        <ChalkDoodles />
-        <AverageFanLogo />
-        <p className="average-fan-tagline">Pick your fan. Work the board. Go for $1,000,000.</p>
-      </section>
-
-      <HostArt />
-      <StudioProps />
-
-      <div className="average-fan-intro-actions">
-        <button
-          className="average-fan-intro-button average-fan-intro-button--start"
-          type="button"
-          onClick={() => setScene("fan-select")}
-        >
-          <span aria-hidden="true">▶</span>
-          START
-        </button>
-        <button
-          className="average-fan-intro-button average-fan-intro-button--rules"
-          type="button"
-          onClick={() => setRulesOpen(true)}
-        >
-          <span aria-hidden="true">▤</span>
-          HOW TO PLAY
-        </button>
-      </div>
 
       {rulesOpen ? <RulesModal onClose={() => setRulesOpen(false)} /> : null}
     </div>

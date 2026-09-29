@@ -2714,3 +2714,131 @@ button.average-fan-help-button {
     width: 100%;
   }
 }
+
+
+/* Average Fan locked opening plate.
+   The approved image owns the studio, host, chalkboard, title and button shells.
+   CSS owns only the two live button labels/icons and hit targets. */
+.average-fan-intro--plate {
+  background: #02060f;
+  isolation: isolate;
+}
+
+.average-fan-intro--plate::before {
+  content: "";
+  position: absolute;
+  inset: -5%;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(0, 5, 15, 0.56), rgba(0, 5, 15, 0.72)),
+    url("/assets/average-fan/average-fan-opening-stage.png") center / cover no-repeat;
+  filter: blur(18px) saturate(0.78);
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+.average-fan-intro--plate .average-fan-intro-stage {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: min(100vw, calc(100dvh * 1672 / 941));
+  aspect-ratio: 1672 / 941;
+  max-height: 100dvh;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  isolation: isolate;
+}
+
+.average-fan-intro-stage__plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.average-fan-intro-stage__actions {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.average-fan-intro-stage__button {
+  position: absolute;
+  top: 67.1%;
+  width: 22.55%;
+  height: 12.75%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  padding: 0;
+  border: 0;
+  border-radius: 14%;
+  outline: 0;
+  color: #fff;
+  background: transparent;
+  font: inherit;
+  font-size: clamp(16px, min(2.38vw, 4.23vh), 42px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, 0.72);
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.average-fan-intro-stage__button--start {
+  left: 26.1%;
+}
+
+.average-fan-intro-stage__button--rules {
+  left: 49.55%;
+  font-size: clamp(14px, min(2.12vw, 3.72vh), 37px);
+}
+
+.average-fan-intro-stage__button > span {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  font-size: 0.83em;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.42));
+}
+
+.average-fan-intro-stage__button > strong {
+  font-weight: 1000;
+  white-space: nowrap;
+}
+
+.average-fan-intro-stage__button:active {
+  transform: scale(0.985);
+}
+
+.average-fan-intro-stage__button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.94);
+  outline-offset: -4px;
+}
+
+.average-fan-intro--plate .average-fan-exit {
+  z-index: 30;
+}
+
+@media (max-width: 700px) {
+  .average-fan-intro-stage__button {
+    gap: 0.25em;
+    font-size: clamp(14px, 3.75vw, 21px);
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.78);
+  }
+
+  .average-fan-intro-stage__button--rules {
+    font-size: clamp(11px, 3vw, 17px);
+  }
+
+  .average-fan-intro-stage__button > span {
+    font-size: 0.72em;
+  }
+}
