@@ -5,9 +5,9 @@ import {
   type MillionaireRuntimeQuestion,
 } from "../games/millionaireAuthority";
 import {
+  millionaireBaseScore,
   millionaireCheckpointMoney,
   millionaireScoreAfterLifelines,
-  millionaireScoreForCompletedQuestions,
   currentMillionaireQuestion,
   type MillionaireRun,
   type MillionaireState,
@@ -33,11 +33,11 @@ export const MILLIONAIRE_ANSWER_REVEAL_HOLD_MS = 900;
 export const MILLIONAIRE_DOUBLE_DIP_MISS_MS = 450;
 
 export const MILLIONAIRE_BASE_PTS = {
-  Q1: 25,
-  Q2: 35,
-  Q3: 45,
-  Q4: 55,
-  Q5: 68,
+  Q1: 30,
+  Q2: 40,
+  Q3: 50,
+  Q4: 60,
+  Q5: 70,
   Q6: 80,
   Q7: 90,
   Q8: 100,
@@ -335,11 +335,18 @@ export function millionaireTimeoutTransition(run: MillionaireRun, state: Million
   if (state.status !== "playing") throw new Error("Millionaire run is already settled.");
   const current = currentMillionaireQuestion(run, state);
   if (!current) throw new Error("Millionaire current question is unavailable.");
-  const settledCompletedQuestions = current.level === "Q8" ? 6 : state.completedQuestions;
-  const baseScore = millionaireScoreForCompletedQuestions(settledCompletedQuestions);
+  const firstMissQuestionIndex = state.firstMissQuestionIndex ?? state.currentQuestionIndex;
+  const baseScore = millionaireBaseScore(state.completedQuestions, firstMissQuestionIndex);
   const score = millionaireScoreAfterLifelines(baseScore, state.lifelinesUsed);
   return {
-    state: { ...state, status: "lost", finalMoney: millionaireCheckpointMoney(state.completedQuestions), baseScore, score },
+    state: {
+      ...state,
+      status: "lost",
+      firstMissQuestionIndex,
+      finalMoney: state.finalMoney ?? millionaireCheckpointMoney(state.currentQuestionIndex),
+      baseScore,
+      score,
+    },
     questionReveal: { questionId: current.id, correctChoiceId: current.correctChoiceId, explanation: current.explanation },
     lifelineReveal: null,
     answerOutcome: "wrong",
