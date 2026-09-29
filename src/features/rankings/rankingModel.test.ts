@@ -13,6 +13,7 @@ const parityByFighter = new Map(
 );
 const refreshedFighters = new Set([
   "Aljamain Sterling",
+  "Alexandre Pantoja",
   "B.J. Penn",
   "Conor McGregor",
   "Dricus du Plessis",
