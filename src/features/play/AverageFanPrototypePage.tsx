@@ -17,6 +17,7 @@ import {
   AVERAGE_FAN_UFC_PREVIEW_FINAL,
   averageFanGradeLabel,
   averageFanMoneyLabel,
+  resolveAverageFanPreviewAnswer,
 } from "./AverageFanPrototypeModel";
 import "./AverageFanPrototypePage.css";
 
@@ -502,10 +503,6 @@ function AverageFanGame({
     () => current ? averageFanFanAnswer(current, fan) : null,
     [current, fan],
   );
-  const finalFanAnswer = useMemo(
-    () => averageFanFanAnswer(AVERAGE_FAN_UFC_PREVIEW_FINAL, fan),
-    [fan],
-  );
   const unsavedMisses = resolved.filter((item) => !item.correct && !item.saved).map((item) => item.order);
   const boardScore = scoreAverageFanBoard(unsavedMisses);
   const completed = resolved.length;
@@ -523,25 +520,23 @@ function AverageFanGame({
 
   function resolveAnswer(playerAnswer: string, copied = false) {
     if (!current || phase !== "question" || !fanAnswer) return;
-    const correct = averageFanAnswersMatch(current, playerAnswer);
-    let saveConsumed = false;
-    let saved = false;
-
-    if (!correct && !saveUsed) {
-      saveConsumed = true;
-      setSaveUsed(true);
-      saved = fanAnswer.correct;
-    }
+    const resolution = resolveAverageFanPreviewAnswer({
+      question: current,
+      fan,
+      playerAnswer,
+      saveAvailable: !saveUsed,
+    });
+    if (resolution.saveConsumed) setSaveUsed(true);
 
     const item: ResolvedQuestion = {
       question: current,
       playerAnswer,
-      fanAnswer: fanAnswer.answer,
-      correct,
+      fanAnswer: resolution.fanAnswer.answer,
+      correct: resolution.correct,
       peekUsed: peekActive,
       copied,
-      saveConsumed,
-      saved,
+      saveConsumed: resolution.saveConsumed,
+      saved: resolution.saved,
       order: resolved.length + 1,
     };
     setResolved((items) => [...items, item]);
@@ -692,10 +687,6 @@ function AverageFanGame({
                   <strong>{finalOutcome === "correct" ? "YOU'RE A MILLIONAIRE!" : "FINAL MISS"}</strong>
                   <p><b>Answer:</b> {AVERAGE_FAN_UFC_PREVIEW_FINAL.answer}</p>
                   <p>{AVERAGE_FAN_UFC_PREVIEW_FINAL.explanation}</p>
-                  <div className="average-fan-reveal__fan">
-                    <FanAvatar fan={fan} />
-                    <span><b>{FAN_LABELS[fan]} had:</b> {finalFanAnswer.answer}</span>
-                  </div>
                   <button type="button" onClick={() => setPhase("result")}>SEE RESULTS</button>
                 </div>
               )}
