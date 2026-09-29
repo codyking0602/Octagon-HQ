@@ -108,6 +108,12 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageCss).toMatch(/\.average-fan-game-stage__plate \{[\s\S]*?width: 1536px;[\s\S]*?height: 864px;[\s\S]*?object-fit: contain;/);
   });
 
+  it("keeps the fixed gameplay canvas centered after clearing old inset rules", () => {
+    expect(pageCss).toMatch(
+      /\/\* Average Fan gameplay stage plate[\s\S]*?\.average-fan-game-stage \{[\s\S]*?inset: auto;[\s\S]*?left: 50%;[\s\S]*?top: 50%;[\s\S]*?width: 1536px;[\s\S]*?height: 864px;[\s\S]*?padding: 0;/,
+    );
+  });
+
   it("keeps live gameplay over the baked stage instead of rebuilding the host or desk", () => {
     const gameplayStart = pageSource.indexOf("function AverageFanGame");
     const gameplayEnd = pageSource.indexOf("export default function AverageFanPrototypePage", gameplayStart);
