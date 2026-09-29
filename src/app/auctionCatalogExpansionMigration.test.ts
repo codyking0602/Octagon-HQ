@@ -262,6 +262,15 @@ describe("Auction catalog expansion migration", () => {
         Power: 83,
         Heart: 60,
       },
+      // Moreno's released card predates the September 12 Morales result.
+      "Brandon Moreno": {
+        overall: 88,
+        Striking: 83,
+        Grappling: 81,
+        Frame: 68,
+        Power: 80,
+        Heart: 72,
+      },
       "Alexa Grasso": {
         overall: 86,
         Striking: 82,
@@ -296,6 +305,7 @@ describe("Auction catalog expansion migration", () => {
       "Rafael dos Anjos",
       "Mackenzie Dern",
       "Sean O'Malley",
+      "Brandon Moreno",
       "Alexa Grasso",
     ]);
   });
