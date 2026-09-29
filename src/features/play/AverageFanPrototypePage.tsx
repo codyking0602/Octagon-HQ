@@ -182,13 +182,28 @@ function FanCard({
     <button
       type="button"
       className={`average-fan-card average-fan-card--${fan}${selected ? " is-selected" : ""}`}
+      aria-label={`Select ${FAN_LABELS[fan]}`}
       aria-pressed={selected}
       onClick={onSelect}
-    >
-      <FanAvatar fan={fan} />
-      <strong>{FAN_LABELS[fan]}</strong>
-    </button>
+    />
   );
+}
+
+function averageFanSubjectIcon(subject: string) {
+  const icons: Record<string, string> = {
+    Players: "●",
+    Teams: "◆",
+    "NFL History": "⌛",
+    "X’s & O’s": "↗",
+    Programs: "◆",
+    Traditions: "★",
+    "CFB History": "⌛",
+    Fighters: "✦",
+    Fights: "⚔",
+    Championships: "★",
+    "Octagon IQ": "⬡",
+  };
+  return icons[subject] ?? "•";
 }
 
 function FanSelector({
@@ -199,6 +214,7 @@ function FanSelector({
   onConfirm: (fan: AverageFanFan) => void;
 }) {
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
+  const stageScale = useAverageFanOpeningStageScale();
   const sport = "ufc" as const;
 
   const rows = useMemo(() => {
@@ -208,12 +224,18 @@ function FanSelector({
   }, [selectedFan]);
 
   return (
-    <div className="average-fan-selector">
-      <StudioBackdrop />
-      <button className="average-fan-exit" type="button" onClick={onBack} aria-label="Back to opening screen">‹ BACK</button>
-
-      <section className="average-fan-selector-board" aria-labelledby="average-fan-selector-title">
-        <div className="average-fan-selector-title" id="average-fan-selector-title">Select Your Fan</div>
+    <div className="average-fan-selector average-fan-selector--plate">
+      <section
+        className="average-fan-selector-stage"
+        aria-label="Select your fan"
+        style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
+      >
+        <img
+          className="average-fan-selector-stage__plate"
+          src="/assets/average-fan/average-fan-selector-stage.png"
+          alt=""
+          aria-hidden="true"
+        />
 
         <div className="average-fan-card-grid" aria-label="Fans">
           {FAN_ORDER.map((fan) => (
@@ -232,6 +254,7 @@ function FanSelector({
           <div className="average-fan-report__rows">
             {rows.map(({ subject, grade }) => (
               <div className="average-fan-report__row" key={subject}>
+                <i aria-hidden="true">{averageFanSubjectIcon(subject)}</i>
                 <span>{subject}</span>
                 <strong data-grade={grade}>{grade}</strong>
               </div>
@@ -239,23 +262,17 @@ function FanSelector({
           </div>
         </section>
 
-        <div className="average-fan-selector-hero">
-          <span className="average-fan-selector-crown" aria-hidden="true">♛</span>
-          <FanAvatar fan={selectedFan} large />
-          <span className="average-fan-selector-pedestal" aria-hidden="true" />
-        </div>
-
         <button
           className="average-fan-select-button"
           type="button"
           onClick={() => onConfirm(selectedFan)}
         >
           <span aria-hidden="true">▶</span>
-          SELECT FAN
+          <strong>SELECT FAN</strong>
         </button>
       </section>
 
-      <StudioProps />
+      <button className="average-fan-exit" type="button" onClick={onBack} aria-label="Back to opening screen">‹ BACK</button>
     </div>
   );
 }

@@ -941,692 +941,340 @@
 }
 
 
-/* Fan selector — approved game-show/classroom composition */
+/* Fan selector — locked photographic plate with live selection/report overlays.
+   The uploaded 1672x941 image owns the studio, chalkboard, props, header,
+   five portrait cards and blank SELECT FAN shell. */
 .average-fan-selector {
   position: fixed;
   inset: 0;
   z-index: 80;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
   overflow: hidden;
   color: #fff;
-  background:
-    radial-gradient(circle at 15% 0%, rgba(25, 119, 255, 0.38), transparent 26%),
-    radial-gradient(circle at 86% 8%, rgba(20, 84, 235, 0.35), transparent 25%),
-    linear-gradient(180deg, #07122f 0%, #07172e 45%, #071a31 100%);
+  background: #000;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  isolation: isolate;
 }
 
-.average-fan-selector-board {
+.average-fan-selector,
+.average-fan-selector *,
+.average-fan-selector *::before,
+.average-fan-selector *::after {
+  box-sizing: border-box;
+}
+
+.average-fan-selector-stage {
   position: absolute;
-  z-index: 8;
-  inset: 4.5vh 6.8vw 7.5vh;
-  border: clamp(10px, 1vw, 16px) solid #75411f;
-  border-radius: 8px;
-  background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px),
-    radial-gradient(circle at 68% 22%, rgba(35, 120, 88, .22), transparent 30%),
-    linear-gradient(135deg, #0a5a46 0%, #084936 55%, #06392f 100%);
-  box-shadow:
-    0 0 0 4px #2b180d,
-    0 30px 70px rgba(0,0,0,.42),
-    inset 0 0 70px rgba(0,0,0,.2);
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: 1672px;
+  height: 941px;
+  overflow: hidden;
+  transform-origin: center center;
+  background: #02060f;
+  isolation: isolate;
 }
 
-.average-fan-selector-title {
+.average-fan-selector-stage__plate {
   position: absolute;
-  top: -2.8%;
-  left: 2.5%;
-  z-index: 9;
-  min-width: 38%;
-  padding: .45em 1em .5em;
-  border: 5px solid #ffc53d;
-  border-radius: 18px;
-  color: #fff;
-  background: linear-gradient(180deg, #1244a6, #0b2f79);
-  box-shadow:
-    inset 0 0 0 3px rgba(255,255,255,.25),
-    0 5px 0 #5b3517,
-    0 10px 22px rgba(0,0,0,.32);
-  font-size: clamp(28px, 4.5vw, 70px);
-  font-weight: 1000;
-  letter-spacing: -.04em;
-  line-height: .95;
-  text-shadow: 0 3px 0 rgba(0,0,0,.28);
+  inset: 0;
+  z-index: 0;
+  width: 1672px;
+  height: 941px;
+  object-fit: contain;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
 }
 
+.average-fan-selector .average-fan-exit {
+  z-index: 40;
+}
+
+/* The portraits and labels are baked into the plate. These are only live hit targets. */
 .average-fan-card-grid {
   position: absolute;
-  top: 17%;
-  left: 4.2%;
-  width: 32%;
-  height: 70%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: clamp(10px, 1.2vw, 18px);
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
 }
 
 .average-fan-card {
-  --fan-card: #1e71d8;
-  position: relative;
-  min-width: 0;
-  overflow: hidden;
-  padding: 0 0 2.35em;
-  border: 3px solid rgba(255,255,255,.64);
-  border-radius: 17px;
-  color: #fff;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,.18), transparent 26%),
-    linear-gradient(150deg, color-mix(in srgb, var(--fan-card) 88%, white), var(--fan-card));
-  box-shadow: inset 0 0 0 2px rgba(0,0,0,.12), 0 8px 14px rgba(0,0,0,.22);
-  font: inherit;
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 5px solid transparent;
+  border-radius: 23px;
+  outline: 0;
+  color: transparent;
+  background: transparent;
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 110ms ease, box-shadow 110ms ease, filter 110ms ease, transform 90ms ease;
 }
 
-.average-fan-card--shane { --fan-card: #f2a611; }
-.average-fan-card--cody { --fan-card: #1673da; }
-.average-fan-card--lib { --fan-card: #c62435; }
-.average-fan-card--tyler { --fan-card: #169658; }
-.average-fan-card--troy { --fan-card: #5637c7; }
+.average-fan-card--shane {
+  left: 204px;
+  top: 190px;
+  width: 241px;
+  height: 217px;
+}
 
-.average-fan-card:nth-child(5) {
-  grid-column: 1;
+.average-fan-card--cody {
+  left: 458px;
+  top: 194px;
+  width: 235px;
+  height: 212px;
+}
+
+.average-fan-card--lib {
+  left: 204px;
+  top: 414px;
+  width: 239px;
+  height: 207px;
+}
+
+.average-fan-card--tyler {
+  left: 458px;
+  top: 414px;
+  width: 235px;
+  height: 207px;
+}
+
+.average-fan-card--troy {
+  left: 201px;
+  top: 628px;
+  width: 241px;
+  height: 199px;
 }
 
 .average-fan-card:hover,
 .average-fan-card:focus-visible {
-  transform: translateY(-2px);
-  filter: brightness(1.06);
+  filter: brightness(1.05);
+}
+
+.average-fan-card:active {
+  transform: scale(0.988);
 }
 
 .average-fan-card.is-selected {
-  border-color: #fff8d5;
+  border-color: #ffd54b;
   box-shadow:
-    0 0 0 4px #ffbd21,
-    0 0 23px 7px rgba(255, 194, 41, .7),
-    inset 0 0 0 2px rgba(0,0,0,.12);
+    0 0 0 3px rgba(255, 248, 213, 0.96),
+    0 0 24px 8px rgba(255, 191, 30, 0.86),
+    inset 0 0 18px rgba(255, 213, 75, 0.18);
 }
 
-.average-fan-card.is-selected::before {
-  content: "▶";
-  position: absolute;
-  z-index: 6;
-  left: -27px;
-  top: 42%;
-  color: #fff;
-  font-size: clamp(22px, 2.4vw, 38px);
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,.55));
-}
-
-.average-fan-card > strong {
-  position: absolute;
-  inset: auto 0 0;
-  z-index: 4;
-  min-height: 2.2em;
-  display: grid;
-  place-items: center;
-  border-top: 2px solid rgba(255,255,255,.65);
-  background: linear-gradient(180deg, #143d88, #09265f);
-  font-size: clamp(13px, 1.55vw, 24px);
-  font-weight: 1000;
-  letter-spacing: .025em;
-  text-shadow: 0 2px rgba(0,0,0,.4);
-}
-
-.average-fan-avatar {
-  --skin: #a96f50;
-  --hair: #1c1815;
-  --shirt: #28519b;
-  position: absolute;
-  inset: 6% 6% 17%;
-  display: block;
-}
-
-.average-fan-avatar--cody { --skin: #bf8568; --hair: #171413; --shirt: #5d43ae; }
-.average-fan-avatar--lib { --skin: #e0a07e; --hair: #111; --shirt: #eee6dc; }
-.average-fan-avatar--tyler { --skin: #df9d75; --hair: #271914; --shirt: #222831; }
-.average-fan-avatar--troy { --skin: #bd8b6f; --hair: #191615; --shirt: #1b1c20; }
-
-.average-fan-avatar--shane .average-fan-avatar__head {
-  width: 36%;
-  left: 32%;
-  border-radius: 44% 44% 48% 48%;
-}
-
-.average-fan-avatar--cody .average-fan-avatar__head {
-  width: 39%;
-  left: 30.5%;
-  border-radius: 46% 46% 49% 49%;
-}
-
-.average-fan-avatar--lib .average-fan-avatar__head {
-  width: 36%;
-  left: 32%;
-  border-radius: 46% 46% 50% 50%;
-}
-
-.average-fan-avatar--tyler .average-fan-avatar__head {
-  width: 37%;
-  left: 31.5%;
-  border-radius: 45% 45% 48% 48%;
-}
-
-.average-fan-avatar--troy .average-fan-avatar__head {
-  width: 42%;
-  left: 29%;
-  border-radius: 47% 47% 50% 50%;
-}
-
-.average-fan-avatar__body {
-  position: absolute;
-  left: 17%;
-  right: 17%;
-  bottom: -1%;
-  height: 43%;
-  border-radius: 48% 48% 14% 14%;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--shirt) 78%, white), var(--shirt));
-  box-shadow: inset -8px -8px 16px rgba(0,0,0,.12);
-}
-
-.average-fan-avatar__head {
-  position: absolute;
-  z-index: 3;
-  top: 16%;
-  left: 31%;
-  width: 38%;
-  aspect-ratio: .88 / 1;
-  border-radius: 45% 45% 48% 48%;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--skin) 84%, white), var(--skin));
-  box-shadow: inset -5px -6px 10px rgba(85,40,20,.12);
-}
-
-.average-fan-avatar__hair {
-  position: absolute;
-  z-index: 4;
-  top: 8%;
-  left: 29%;
-  width: 42%;
-  height: 23%;
-  border-radius: 70% 60% 25% 25%;
-  background:
-    repeating-radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--hair) 82%, white) 0 2px, var(--hair) 3px 5px);
-}
-
-.average-fan-avatar--shane .average-fan-avatar__hair {
-  top: 8%;
-  left: 31%;
-  width: 38%;
-  height: 18%;
-  border-radius: 70% 70% 34% 34%;
-  background: #171413;
-}
-
-.average-fan-avatar--cody .average-fan-avatar__hair {
-  top: 4%;
-  left: 27%;
-  width: 46%;
-  height: 28%;
-  border-radius: 62% 62% 35% 35%;
-  background:
-    radial-gradient(circle at 22% 28%, #24201e 0 6%, transparent 7%),
-    radial-gradient(circle at 42% 17%, #24201e 0 7%, transparent 8%),
-    radial-gradient(circle at 61% 19%, #24201e 0 7%, transparent 8%),
-    radial-gradient(circle at 79% 31%, #24201e 0 6%, transparent 7%),
-    repeating-radial-gradient(circle at 50% 0%, #292522 0 3px, #151311 4px 7px);
-}
-
-.average-fan-avatar--lib .average-fan-avatar__hair {
-  top: 4%;
-  left: 17%;
-  width: 66%;
-  height: 58%;
-  border-radius: 54% 54% 42% 42%;
-  background: linear-gradient(90deg, #101010 0 46%, #171717 47% 100%);
-}
-.average-fan-avatar--lib .average-fan-avatar__hair::after {
-  content: "";
-  position: absolute;
-  left: 48%;
-  top: 0;
-  width: 3px;
-  height: 58%;
-  background: rgba(255,255,255,.12);
-  transform: rotate(7deg);
-}
-
-.average-fan-avatar--tyler .average-fan-avatar__hair {
-  top: 5%;
-  left: 29%;
-  width: 45%;
-  height: 22%;
-  border-radius: 70% 55% 25% 30%;
-  background: linear-gradient(150deg, #3a281f 0 42%, #211712 43% 100%);
-  transform: skewX(-8deg);
-}
-
-.average-fan-avatar--troy .average-fan-avatar__hair {
-  top: 8%;
-  left: 28%;
-  width: 44%;
-  height: 19%;
-  border-radius: 60% 60% 25% 25%;
-  background: #171412;
-}
-
-.average-fan-avatar__eye {
-  position: absolute;
-  top: 43%;
-  width: 8%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #171717;
-}
-.average-fan-avatar__eye::after {
-  content: "";
-  position: absolute;
-  inset: 26%;
-  border-radius: 50%;
-  background: #f8f8f8;
-}
-.average-fan-avatar__eye.eye-a { left: 27%; }
-.average-fan-avatar__eye.eye-b { right: 27%; }
-
-.average-fan-avatar__smile {
-  position: absolute;
-  left: 28%;
-  right: 25%;
-  bottom: 19%;
-  height: 12%;
-  border-bottom: 3px solid #6c322c;
-  border-radius: 0 0 50% 50%;
-}
-
-.average-fan-avatar--troy .average-fan-avatar__smile {
-  left: 24%;
-  right: 21%;
-  bottom: 17%;
-  border-bottom-width: 4px;
-}
-
-.average-fan-avatar__mustache {
-  position: absolute;
-  z-index: 5;
-  left: 31%;
-  right: 29%;
-  bottom: 27%;
-  height: 8%;
-  border-radius: 50% 50% 65% 65%;
-  background: #5a3829;
-  transform: rotate(-2deg);
-}
-.average-fan-avatar__mustache::before,
-.average-fan-avatar__mustache::after {
-  content: "";
-  position: absolute;
-  top: 1px;
-  width: 56%;
-  height: 100%;
-  border-radius: 60%;
-  background: #5a3829;
-}
-.average-fan-avatar__mustache::before { left: -17%; transform: rotate(9deg); }
-.average-fan-avatar__mustache::after { right: -17%; transform: rotate(-9deg); }
-
-.average-fan-avatar__glasses {
-  position: absolute;
-  left: 17%;
-  right: 17%;
-  top: 36%;
-  height: 23%;
-  border-top: 3px solid #111;
-}
-
-.average-fan-avatar--shane .average-fan-avatar__glasses {
-  left: 14%;
-  right: 14%;
-  top: 35%;
-}
-
-.average-fan-avatar--cody .average-fan-avatar__glasses {
-  left: 14%;
-  right: 14%;
-  top: 34%;
-}
-.average-fan-avatar__glasses::before,
-.average-fan-avatar__glasses::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  width: 35%;
-  height: 100%;
-  border: 3px solid #111;
-  border-radius: 42% 42% 46% 46%;
-}
-.average-fan-avatar__glasses::before { left: 0; }
-.average-fan-avatar__glasses::after { right: 0; }
-
+/* Report card owns the newly opened board space. */
 .average-fan-report {
   position: absolute;
-  top: 18%;
-  left: 39%;
-  width: 32%;
-  min-height: 55%;
+  z-index: 10;
+  left: 738px;
+  top: 153px;
+  width: 698px;
+  height: 565px;
+  color: #fff;
 }
 
 .average-fan-report h2 {
-  margin: 0 0 .05em;
+  margin: 0;
+  min-height: 104px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #fff8e9;
-  font-size: clamp(38px, 5.6vw, 92px);
+  font-size: 82px;
   font-weight: 1000;
-  line-height: .95;
-  letter-spacing: -.04em;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
   text-align: center;
+  text-transform: uppercase;
   text-shadow:
     -2px -2px 0 #4d2f17,
     2px -2px 0 #4d2f17,
     -2px 2px 0 #4d2f17,
     2px 2px 0 #4d2f17,
-    0 6px 0 rgba(0,0,0,.24);
+    0 6px 0 rgba(0, 0, 0, 0.26);
 }
 
 .average-fan-report__underline {
   display: block;
-  width: 84%;
+  width: 520px;
   height: 8px;
-  margin: 10px auto 16px;
+  margin: 0 auto 18px;
   border-radius: 999px;
-  background: #e5bd37;
-  rotate: -1deg;
+  background: linear-gradient(90deg, transparent 0, #e2b632 12%, #ffe682 50%, #e2b632 88%, transparent 100%);
+  box-shadow: 0 0 12px rgba(246, 194, 61, 0.24);
+  transform: rotate(-0.7deg);
 }
 
 .average-fan-report__rows {
   display: grid;
-  gap: clamp(8px, 1.2vh, 13px);
+  gap: 14px;
 }
 
 .average-fan-report__row {
-  min-height: clamp(46px, 6.7vh, 66px);
+  height: 84px;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 58px minmax(0, 1fr) 104px;
   align-items: center;
-  gap: 12px;
-  padding: 6px 10px 6px 22px;
-  border: 2px solid rgba(255,255,255,.18);
-  border-radius: 14px;
-  background: linear-gradient(90deg, rgba(3,33,27,.68), rgba(5,49,39,.5));
-  box-shadow: inset 0 1px rgba(255,255,255,.05);
+  gap: 18px;
+  padding: 8px 14px 8px 18px;
+  border: 2px solid rgba(210, 250, 235, 0.2);
+  border-radius: 15px;
+  color: #fff;
+  background:
+    linear-gradient(90deg, rgba(2, 36, 29, 0.84), rgba(5, 61, 48, 0.66)),
+    rgba(1, 22, 18, 0.54);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.05),
+    0 5px 12px rgba(0, 0, 0, 0.14);
+}
+
+.average-fan-report__row > i {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(230, 248, 241, 0.82);
+  border-radius: 13px;
+  color: #f6faf7;
+  background: rgba(3, 45, 36, 0.7);
+  font-size: 29px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
 }
 
 .average-fan-report__row > span {
-  font-size: clamp(15px, 1.75vw, 27px);
+  min-width: 0;
+  overflow: hidden;
+  color: #f8fbf9;
+  font-size: 31px;
   font-weight: 850;
+  line-height: 1;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.38);
 }
 
 .average-fan-report__row > strong {
-  min-width: 72px;
-  padding: 5px 13px;
-  border: 3px solid #10e84d;
-  border-radius: 12px;
+  min-width: 94px;
+  padding: 9px 12px 8px;
+  border: 3px solid #15e850;
+  border-radius: 13px;
   color: #fff;
-  background: rgba(8,95,44,.55);
-  box-shadow: 0 0 9px rgba(29,255,92,.28);
-  font-size: clamp(22px, 2.5vw, 40px);
+  background: rgba(7, 99, 46, 0.62);
+  box-shadow:
+    0 0 12px rgba(29, 255, 92, 0.3),
+    inset 0 0 12px rgba(35, 255, 106, 0.08);
+  font-size: 38px;
   line-height: 1;
   text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.42);
 }
 
 .average-fan-report__row > strong[data-grade^="B"],
 .average-fan-report__row > strong[data-grade^="C"] {
-  border-color: #18bfff;
-  background: rgba(6,76,112,.55);
-  box-shadow: 0 0 9px rgba(24,191,255,.24);
+  border-color: #20c7ff;
+  background: rgba(5, 82, 125, 0.64);
+  box-shadow:
+    0 0 12px rgba(32, 199, 255, 0.28),
+    inset 0 0 12px rgba(32, 199, 255, 0.07);
 }
 
-.average-fan-selector-hero {
-  position: absolute;
-  right: 1.5%;
-  top: 5.5%;
-  bottom: 4%;
-  width: 27%;
-  display: grid;
-  place-items: end center;
-}
-
-.average-fan-selector-hero .average-fan-avatar.is-large {
-  position: absolute;
-  inset: 7% 4% 12%;
-  transform: scale(1.48);
-  transform-origin: 50% 100%;
-  filter: drop-shadow(0 13px 14px rgba(0,0,0,.28));
-}
-
-.average-fan-selector-hero .average-fan-avatar.is-large .average-fan-avatar__body {
-  left: 15%;
-  right: 15%;
-  height: 58%;
-  border-radius: 44% 44% 18% 18%;
-}
-.average-fan-selector-hero .average-fan-avatar.is-large .average-fan-avatar__head {
-  top: 5%;
-  left: 30%;
-  width: 40%;
-}
-.average-fan-selector-hero .average-fan-avatar.is-large .average-fan-avatar__hair {
-  top: 0;
-}
-.average-fan-selector-hero .average-fan-avatar.is-large .average-fan-avatar__body::before,
-.average-fan-selector-hero .average-fan-avatar.is-large .average-fan-avatar__body::after {
-  content: "";
-  position: absolute;
-  bottom: -34%;
-  width: 24%;
-  height: 54%;
-  border-radius: 999px;
-  background: #c3a374;
-  border: 3px solid rgba(0,0,0,.09);
-}
-.average-fan-selector-hero .average-fan-avatar.is-large .average-fan-avatar__body::before { left: 21%; }
-.average-fan-selector-hero .average-fan-avatar.is-large .average-fan-avatar__body::after { right: 21%; }
-
-.average-fan-selector-crown {
-  position: absolute;
-  z-index: 5;
-  top: 2%;
-  left: 12%;
-  color: #f3ca43;
-  font-size: clamp(28px, 3.6vw, 56px);
-  rotate: -12deg;
-  text-shadow: 0 3px rgba(0,0,0,.28);
-}
-
-.average-fan-selector-pedestal {
-  position: absolute;
-  left: 2%;
-  right: 2%;
-  bottom: 0;
-  height: 11%;
-  border: 4px solid #101829;
-  border-radius: 50%;
-  background:
-    linear-gradient(180deg, rgba(45,207,255,.72), rgba(0,79,205,.8) 35%, #14161b 36% 100%);
-  box-shadow: 0 0 18px rgba(34,158,255,.7), inset 0 4px rgba(255,255,255,.22);
-}
-
+/* The green shell is baked; CSS owns only its live text/icon and hit target. */
 .average-fan-select-button {
   position: absolute;
   z-index: 12;
-  left: 39%;
-  bottom: 2.2%;
-  width: 30%;
-  min-height: clamp(60px, 8.2vh, 84px);
+  left: 575px;
+  top: 759px;
+  width: 514px;
+  height: 111px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
-  border: 4px solid rgba(255,255,255,.9);
-  border-radius: 18px;
+  gap: 17px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 28px;
+  outline: 0;
   color: #fff;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.14), transparent 30%),
-    linear-gradient(180deg, #19ca51, #087d32);
-  box-shadow:
-    inset 0 0 0 3px rgba(0,70,30,.45),
-    0 0 20px rgba(37,255,112,.58),
-    0 9px 18px rgba(0,0,0,.28);
+  background: transparent;
   font: inherit;
-  font-size: clamp(20px, 2.7vw, 43px);
+  font-size: 43px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-shadow: 0 3px 4px rgba(0, 0, 0, 0.68);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.average-fan-select-button > span {
+  flex: 0 0 auto;
+  font-size: 0.82em;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4));
+}
+
+.average-fan-select-button > strong {
   font-weight: 1000;
-  letter-spacing: -.03em;
-  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.average-fan-select-button.is-confirmed {
-  filter: brightness(.88);
+.average-fan-select-button:active {
+  transform: scale(0.988);
 }
 
-@media (max-width: 820px) {
-  .average-fan-selector-board {
-    inset: 3svh 3vw 7svh;
-  }
-
-  .average-fan-selector-title {
-    top: -1.5%;
-    left: 3%;
-    min-width: 62%;
-    padding: .45em .7em;
-    font-size: clamp(26px, 7.8vw, 50px);
-  }
-
-  .average-fan-card-grid {
-    top: 15%;
-    left: 4%;
-    width: 40%;
-    height: 67%;
-    gap: 8px;
-  }
-
-  .average-fan-card {
-    border-radius: 12px;
-    padding-bottom: 1.8em;
-  }
-
-  .average-fan-card > strong {
-    font-size: clamp(11px, 3vw, 18px);
-  }
-
-  .average-fan-report {
-    top: 17%;
-    left: 47%;
-    width: 48%;
-    min-height: 48%;
-  }
-
-  .average-fan-report h2 {
-    font-size: clamp(35px, 10vw, 65px);
-    text-align: left;
-  }
-
-  .average-fan-report__underline {
-    width: 74%;
-    margin-left: 0;
-  }
-
-  .average-fan-report__row {
-    min-height: 44px;
-    padding: 5px 7px 5px 11px;
-    border-radius: 10px;
-  }
-
-  .average-fan-report__row > span {
-    font-size: clamp(12px, 3.2vw, 18px);
-  }
-
-  .average-fan-report__row > strong {
-    min-width: 52px;
-    padding: 4px 7px;
-    font-size: clamp(18px, 5vw, 30px);
-  }
-
-  .average-fan-selector-hero {
-    display: none;
-  }
-
-  .average-fan-select-button {
-    left: 47%;
-    bottom: 6%;
-    width: 47%;
-    min-height: 58px;
-    border-radius: 14px;
-    font-size: clamp(18px, 5vw, 30px);
-  }
-
-  .average-fan-selector .average-fan-props {
-    opacity: .62;
-  }
+.average-fan-select-button:focus-visible {
+  outline: 4px solid rgba(255, 255, 255, 0.96);
+  outline-offset: -7px;
 }
 
-@media (max-width: 520px) {
-  .average-fan-selector-board {
-    inset: 2svh 2.5vw 5.5svh;
+@media (orientation: portrait) {
+  .average-fan-selector {
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden !important;
   }
 
-  .average-fan-selector-title {
-    top: 1%;
-    left: 4%;
-    right: 4%;
-    min-width: 0;
+  .average-fan-selector > * {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .average-fan-selector::before {
+    content: "↻\A ROTATE TO PLAY\A Average Fan is landscape only.";
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-content: center;
+    padding: 2rem;
+    visibility: visible;
+    color: #f7fbff;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(22, 88, 194, 0.3), transparent 36%),
+      linear-gradient(180deg, #020a1a, #04183a 55%, #010711);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.65;
+    letter-spacing: 0.05em;
     text-align: center;
-  }
-
-  .average-fan-card-grid {
-    top: 14%;
-    left: 4%;
-    width: 42%;
-    height: 67%;
-    gap: 7px;
-  }
-
-  .average-fan-report {
-    top: 15%;
-    left: 49%;
-    width: 47%;
-  }
-
-  .average-fan-report h2 {
-    font-size: clamp(28px, 9vw, 46px);
-  }
-
-  .average-fan-report__row {
-    grid-template-columns: minmax(0, 1fr) 44px;
-    gap: 5px;
-    padding-left: 8px;
-  }
-
-  .average-fan-report__row > span {
-    font-size: 10.5px;
-    line-height: 1.05;
-    white-space: normal;
-  }
-
-  .average-fan-report__row > strong {
-    min-width: 42px;
-    padding: 3px;
-    font-size: 18px;
-  }
-
-  .average-fan-select-button {
-    left: 49%;
-    width: 47%;
-    bottom: 4.5%;
-    min-height: 52px;
-    font-size: 16px;
-    gap: 8px;
+    white-space: pre-line;
+    text-shadow: 0 2px 10px #000;
+    pointer-events: none;
   }
 }
 
-
-/* PR2 gameplay — show-style board + modern readable question surface */
 .average-fan-game {
   position: fixed;
   inset: 0;
