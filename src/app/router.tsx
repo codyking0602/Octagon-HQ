@@ -42,7 +42,7 @@ const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"))
 const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
-const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
+const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));\nconst AverageFanPrototypePage = lazy(() => import("../features/play/AverageFanPrototypePage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -79,7 +79,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/millionaire", element: <TodayChallengeGameRoute gameType="millionaire" casual={<MillionaireCasualPage scope="ufc" />} /> },
       { path: "play/sports-feud/qa-replay", element: <FamilyFeudPrototypePage scope="ufc" qaReplayDay="2026-09-24" /> },
       { path: "play/sports-feud", element: <TodayChallengeGameRoute gameType="sports_feud" casual={<FamilyFeudPrototypePage scope="ufc" />} /> },
-      { path: "play/bar-trivia", element: <TodayChallengeGameRoute gameType="bar_trivia" casual={<Navigate to="/play" replace />} /> },
+      { path: "play/bar-trivia", element: <TodayChallengeGameRoute gameType="bar_trivia" casual={<Navigate to="/play" replace />} /> },\n      { path: "play/average-fan-preview", element: <OwnerOnlyRoute fallback="/play"><AverageFanPrototypePage /></OwnerOnlyRoute> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
