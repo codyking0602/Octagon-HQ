@@ -7,6 +7,7 @@ import { createServer } from "vite";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputPath = path.join(root, "src/features/rankings/data/generated/ufcstats-supplemental-facts-v1.json");
 
+// Pin the first UFCStats refresh after UFC 331 so the ranking clock is fully sourced.
 const CORE = {
   repository: "Greco1899/scrape_ufc_stats",
   commit: "a3c5452eee2f5bb4f5eae4ce958f0f23dd8863d8",
