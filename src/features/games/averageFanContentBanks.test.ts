@@ -81,7 +81,7 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-  it("keeps CFB conference choices to exactly one program from the requested conference", () => {
+  it("keeps the selected NFL bank authored-first and player-facing", () => {\n    const ordinary = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => !question.protectedFinal);\n    const authored = ordinary.filter((question) => question.id.startsWith("average-fan:nfl:00-"));\n    expect(authored.length).toBeGreaterThanOrEqual(130);\n\n    for (const question of AVERAGE_FAN_CONTENT_BANKS.nfl) {\n      const playerFacingCopy = (question.prompt + " " + question.explanation).toLocaleLowerCase();\n      expect(playerFacingCopy, question.id).not.toMatch(/\b(?:canonical|registry|ledger|internal id|hq factual)\b/);\n    }\n  });\n\n  it("uses a distinct authored NFL Final set across football subjects", () => {\n    const finals = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => question.protectedFinal);\n    expect(finals.every((question) => question.id.startsWith("average-fan:nfl:final-authored:"))).toBe(true);\n    expect(\n      finals.reduce<Record<string, number>>((counts, question) => {\n        counts[question.subject] = (counts[question.subject] ?? 0) + 1;\n        return counts;\n      }, {}),\n    ).toEqual({\n      Players: 4,\n      Teams: 4,\n      "NFL History": 4,\n      "X’s & O’s": 3,\n    });\n  });\n  it("keeps CFB conference choices to exactly one program from the requested conference", () => {
     const programs = queryFootballSubjects({ league: "CFB", kind: "program" });
     const conferenceByName = new Map(programs.map((program) => [program.name, program.conference]));
     for (const question of AVERAGE_FAN_CONTENT_BANKS.cfb) {
