@@ -62,7 +62,7 @@ begin
 
   select * into v_grade
   from private.grade_millionaire_daily(
-    '{"proof":"proof","outcome":"won","completed_questions":8,"final_money":1000000,"base_score":100,"lifelines_used":2,"time_remaining_ms":42000}'::jsonb,
+    '{"proof":"proof","outcome":"won","completed_questions":8,"first_miss_question":null,"final_money":1000000,"base_score":100,"lifelines_used":2,"time_remaining_ms":42000}'::jsonb,
     '{"proof":"proof"}'::jsonb
   );
   if v_grade.normalized_score <> 96
@@ -72,22 +72,34 @@ begin
 
   select * into v_grade
   from private.grade_millionaire_daily(
-    '{"proof":"proof","outcome":"lost","completed_questions":7,"final_money":100000,"base_score":80,"lifelines_used":0,"time_remaining_ms":31000}'::jsonb,
+    '{"proof":"proof","outcome":"lost","completed_questions":7,"first_miss_question":8,"final_money":100000,"base_score":90,"lifelines_used":0,"time_remaining_ms":31000}'::jsonb,
     '{"proof":"proof"}'::jsonb
   );
-  if v_grade.normalized_score <> 80
+  if v_grade.normalized_score <> 90
+    or v_grade.public_result->>'first_miss_question' <> '8'
     or v_grade.public_result->>'final_money' <> '100000' then
     raise exception 'Millionaire Q8-risk grading is invalid: %', row_to_json(v_grade);
   end if;
 
   select * into v_grade
   from private.grade_millionaire_daily(
-    '{"proof":"proof","outcome":"walked-away","completed_questions":7,"final_money":500000,"base_score":90,"lifelines_used":1,"time_remaining_ms":51000}'::jsonb,
+    '{"proof":"proof","outcome":"walked-away","completed_questions":7,"first_miss_question":null,"final_money":500000,"base_score":90,"lifelines_used":1,"time_remaining_ms":51000}'::jsonb,
     '{"proof":"proof"}'::jsonb
   );
   if v_grade.normalized_score <> 88
     or v_grade.public_result->>'final_money' <> '500000' then
     raise exception 'Millionaire walk-away grading is invalid: %', row_to_json(v_grade);
+  end if;
+
+  select * into v_grade
+  from private.grade_millionaire_daily(
+    '{"proof":"proof","outcome":"lost","completed_questions":7,"first_miss_question":1,"final_money":0,"base_score":55,"lifelines_used":1,"time_remaining_ms":24000}'::jsonb,
+    '{"proof":"proof"}'::jsonb
+  );
+  if v_grade.normalized_score <> 53
+    or v_grade.public_result->>'first_miss_question' <> '1'
+    or v_grade.public_result->>'final_money' <> '0' then
+    raise exception 'Millionaire early-bust recovery grading is invalid: %', row_to_json(v_grade);
   end if;
 end
 $$;
