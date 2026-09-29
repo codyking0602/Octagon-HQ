@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 const pageSource = readFileSync("src/features/play/AverageFanPrototypePage.tsx", "utf8");
 const pageCss = readFileSync("src/features/play/AverageFanPrototypePage.css", "utf8");
+const routerSource = readFileSync("src/app/router.tsx", "utf8");
+const appShellSource = readFileSync("src/app/AppShell.tsx", "utf8");
 
 const portraitPaths = [
   "public/assets/average-fan/average-fan-shane.png",
@@ -138,13 +140,27 @@ describe("Average Fan locked gameplay stage", () => {
     }
   });
 
-  it("keeps answer presentation format-aware and exposes a real owner review entry point", () => {
+  it("keeps all answer formats below the chalkboard and keyboard-safe", () => {
+    expect(pageSource).toContain('className="average-fan-answer-stage"');
     expect(pageSource).toContain('data-choice-count={question.choices!.length}');
     expect(pageSource).toContain('average-fan-choice-grid--tf');
     expect(pageSource).toContain('className="average-fan-short-answer"');
+    expect(pageSource).toContain('inputMode="text"');
+    expect(pageSource).not.toContain("autoFocus");
+    expect(pageSource).toContain("keyboardOcclusion");
+    expect(pageSource).toContain('top: `calc(50% - ${keyboardShift}px)`');
+    expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?top: 584px;[\s\S]*?width: 846px;[\s\S]*?height: 198px;/);
+    expect(pageCss).toMatch(/\.average-fan-game-fan__portrait \{[\s\S]*?left: 42%;[\s\S]*?width: 238px;[\s\S]*?height: 360px;/);
+    expect(pageSource).not.toContain("Q{displayedQuestionNumber}");
+  });
+
+  it("keeps the owner review shortcut but also exposes Average Fan through the real app route", () => {
     expect(pageSource).toContain('searchParams.get("screen") === "gameplay"');
     expect(pageSource).toContain('searchParams.get("fan")');
     expect(pageSource).toContain('AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION');
+    expect(routerSource).toContain('path: "play/average-fan"');
+    expect(routerSource).toContain('<AverageFanPrototypePage />');
+    expect(appShellSource).toContain('location.pathname === "/play/average-fan"');
   });
 
   it("keeps the gameplay screen landscape-only and chalk-first", () => {
