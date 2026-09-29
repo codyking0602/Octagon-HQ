@@ -111,6 +111,32 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("keeps the UFC bank on canonical UFC subjects and authored landmark coverage in rotation", () => {
+    const bank = AVERAGE_FAN_CONTENT_BANKS.ufc;
+    const validSubjects = new Set(["Fighters", "Fights", "Championships", "Octagon IQ"]);
+    for (const question of bank) {
+      expect(validSubjects.has(question.subject), question.id).toBe(true);
+    }
+
+    const authored = bank.filter((question) => question.id.includes(":authored-history:"));
+    expect(authored.length).toBeGreaterThanOrEqual(20);
+    expect(authored.some((question) => question.subject === "Championships")).toBe(true);
+    expect(authored.some((question) => question.subject === "Fights")).toBe(true);
+  });
+
+  it("keeps UFC hard identity prompts specific enough to avoid two-opponent ambiguity", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      if (question.id.includes(":three-win-identity")) {
+        expect((question.prompt.match(/,/g) ?? []).length, question.id).toBeGreaterThanOrEqual(1);
+        expect(question.prompt.includes(" and "), question.id).toBe(true);
+      }
+      if (question.protectedFinal && question.id.endsWith(":fight")) {
+        expect((question.prompt.match(/,/g) ?? []).length, question.id).toBeGreaterThanOrEqual(1);
+        expect(question.prompt.includes(" and "), question.id).toBe(true);
+      }
+    }
+  });
+
   it("never ships an expiring current-event record without an expiry date", () => {
     for (const sport of sports) {
       for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
