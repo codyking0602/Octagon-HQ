@@ -162,10 +162,10 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     );
 
     expect(screen.getByText("FIGHT SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
 
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #2")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #4")).toHaveLength(2);
     expect(screen.getAllByText(/45-second Contender Series contract win/)).toHaveLength(2);
     expect(screen.getByText("7 KO/TKO wins in 9 fights")).toBeInTheDocument();
     expect(screen.getByText(bilal!.whyOnBoard)).toBeInTheDocument();
@@ -209,9 +209,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #4")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #2")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #4")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #2")).toHaveLength(2);
     expect(screen.getByText(rosas!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
       "href",
