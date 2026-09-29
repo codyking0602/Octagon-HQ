@@ -83,15 +83,36 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-  it("keeps the selected NFL bank authored-first and player-facing", () => {
+  it("keeps the selected NFL bank fully authored and player-facing", () => {
     const ordinary = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => !question.protectedFinal);
-    const authored = ordinary.filter((question) => question.id.startsWith("average-fan:nfl:00-"));
-    expect(authored.length).toBeGreaterThanOrEqual(130);
+    expect(ordinary).toHaveLength(205);
+    expect(ordinary.every((question) => question.id.startsWith("average-fan:nfl:00-"))).toBe(true);
 
+    const registryFiller = [
+      /^what position did /i,
+      /^which college did .* enter the nfl from/i,
+      /^name one nfl team .* played for/i,
+      /^what overall pick was .* nfl draft/i,
+      /^which player from .* was selected no\./i,
+    ];
     for (const question of AVERAGE_FAN_CONTENT_BANKS.nfl) {
       const playerFacingCopy = (question.prompt + " " + question.explanation).toLocaleLowerCase();
       expect(playerFacingCopy, question.id).not.toMatch(/\b(?:canonical|registry|ledger|internal id|hq factual)\b/);
+      for (const pattern of registryFiller) {
+        expect(pattern.test(question.prompt), question.id).toBe(false);
+      }
     }
+  });
+
+  it("keeps meaningful NFL format variety", () => {
+    const ordinary = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => !question.protectedFinal);
+    const counts = ordinary.reduce<Record<string, number>>((acc, question) => {
+      acc[question.format] = (acc[question.format] ?? 0) + 1;
+      return acc;
+    }, {});
+    expect(counts["short-answer"]).toBeGreaterThan(80);
+    expect(counts["three-choice"]).toBeGreaterThan(35);
+    expect(counts["true-false"]).toBeGreaterThanOrEqual(20);
   });
 
   it("uses a distinct authored NFL Final set across football subjects", () => {
