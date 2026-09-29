@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
 from PIL import Image, ImageFilter
-from rembg import remove
+from rembg import new_session, remove
 
 ALLOWED_HOSTS = {
     "a.espncdn.com",
@@ -92,14 +92,16 @@ def main():
     except Exception as exc:
         fail(f"cannot decode source image: {exc}")
 
-    if im.getchannel("A").getextrema() == (255, 255):
-        try:
-            im = remove(im).convert("RGBA")
-        except Exception as exc:
-            fail(f"background removal failed: {exc}")
+    try:
+        session = new_session(
+            "birefnet-portrait" if kind == "thumb" else "birefnet-general-lite"
+        )
+        im = remove(im, session=session).convert("RGBA")
+    except Exception as exc:
+        fail(f"background removal failed: {exc}")
 
-        if im.getchannel("A").getextrema() == (255, 255):
-            fail("background removal produced no visible transparency")
+    if im.getchannel("A").getextrema() == (255, 255):
+        fail("background removal produced no visible transparency")
 
     box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
@@ -114,6 +116,11 @@ def main():
         new_height = round(im.width / target_ratio)
         top = (im.height - new_height) // 2
         im = im.crop((0, top, im.width, top + new_height))
+
+    try:
+        im = remove(im, session=session).convert("RGBA")
+    except Exception as exc:
+        fail(f"post-crop background cleanup failed: {exc}")
 
     im = im.resize(size, Image.Resampling.LANCZOS)
     im = im.filter(
