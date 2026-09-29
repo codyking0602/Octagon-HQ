@@ -714,20 +714,22 @@ function AverageFanGame({
         </div>
 
         <MoneyRail completed={railCompleted} />
-        <HelpRail
-          fan={fan}
-          peekUsed={peekUsed}
-          copyUsed={copyUsed}
-          saveUsed={saveUsed}
-          canUse={phase === "question"}
-          peekActive={peekActive}
-          onPeek={() => {
-            if (phase !== "question" || peekUsed) return;
-            setPeekUsed(true);
-            setPeekActive(true);
-          }}
-          onCopy={copyFan}
-        />
+        {phase === "board" || phase === "question" || phase === "reveal" ? (
+          <HelpRail
+            fan={fan}
+            peekUsed={peekUsed}
+            copyUsed={copyUsed}
+            saveUsed={saveUsed}
+            canUse={phase === "question"}
+            peekActive={peekActive}
+            onPeek={() => {
+              if (phase !== "question" || peekUsed) return;
+              setPeekUsed(true);
+              setPeekActive(true);
+            }}
+            onCopy={copyFan}
+          />
+        ) : null}
 
         <div className="average-fan-game-scorebar">
           <span><small>YOUR FAN</small><strong>{FAN_LABELS[fan]}</strong></span>
