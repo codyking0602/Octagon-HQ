@@ -476,7 +476,15 @@
 }
 
 .football-weekly-build-qb__final {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
   padding: 18px;
+}
+
+.football-weekly-build-qb__final > * {
+  min-width: 0;
 }
 
 .football-weekly-build-qb__final > header span {
@@ -536,10 +544,26 @@
   background: rgba(255,255,255,.11);
 }
 
+.football-weekly-build-qb__builds,
+.football-weekly-build-qb__grade-grid {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.football-weekly-build-qb__builds {
+  overflow: hidden;
+}
+
 .football-weekly-build-qb__player-picker {
   display: flex;
   gap: 5px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
   margin-bottom: 8px;
   scrollbar-width: none;
 }
