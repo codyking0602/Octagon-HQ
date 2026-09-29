@@ -94,7 +94,7 @@ describe("September 19, 2026 canonical ranking refresh", () => {
     });
     expect(input("Alexandre Pantoja").era.window.end).toBe("2026-09-19");
     expect(getFighter("alex-pantoja")?.visibleStats).toMatchObject({
-      ufcRecord: "13-6",
+      ufcRecord: "14-5",
       titleFightWins: 5,
     });
   });
