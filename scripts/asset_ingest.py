@@ -92,15 +92,16 @@ def main():
     except Exception as exc:
         fail(f"cannot decode source image: {exc}")
 
-    if im.getchannel("A").getextrema() == (255, 255):
-        try:
-            session = new_session("birefnet-portrait" if kind == "thumb" else "birefnet-general-lite")
-            im = remove(im, session=session).convert("RGBA")
-        except Exception as exc:
-            fail(f"background removal failed: {exc}")
+    try:
+        session = new_session(
+            "birefnet-portrait" if kind == "thumb" else "birefnet-general-lite"
+        )
+        im = remove(im, session=session).convert("RGBA")
+    except Exception as exc:
+        fail(f"background removal failed: {exc}")
 
-        if im.getchannel("A").getextrema() == (255, 255):
-            fail("background removal produced no visible transparency")
+    if im.getchannel("A").getextrema() == (255, 255):
+        fail("background removal produced no visible transparency")
 
     box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
