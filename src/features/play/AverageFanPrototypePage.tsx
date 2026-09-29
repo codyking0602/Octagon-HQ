@@ -286,10 +286,7 @@ function FanSelector({
       <section
         className="average-fan-selector-stage"
         aria-label="Select your fan"
-        style={{
-          top: `calc(50% - ${keyboardShift}px)`,
-          transform: `translate(-50%, -50%) scale(${stageScale})`,
-        }}
+        style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
       >
         <img
           className="average-fan-selector-stage__plate"
@@ -605,7 +602,6 @@ function AverageFanGame({
   const unsavedMisses = resolved.filter((item) => !item.correct && !item.saved).map((item) => item.order);
   const boardScore = scoreAverageFanBoard(unsavedMisses);
   const completed = resolved.length;
-  const currentMoney = completed ? AVERAGE_FAN_MONEY_LADDER[Math.min(completed, 10) - 1]! : 0;
   const finalScore = finalOutcome ? scoreAverageFanFinal(boardScore, finalOutcome) : boardScore;
   const finalMoney = finalOutcome === "correct" ? 1_000_000 : finalOutcome === "wrong" ? 25_000 : 500_000;
 
@@ -690,7 +686,10 @@ function AverageFanGame({
       <section
         className="average-fan-game-stage"
         aria-label="Are You Smarter Than an Average Fan? gameplay"
-        style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
+        style={{
+          top: `calc(50% - ${keyboardShift}px)`,
+          transform: `translate(-50%, -50%) scale(${stageScale})`,
+        }}
       >
         <img
           className="average-fan-game-stage__plate"
