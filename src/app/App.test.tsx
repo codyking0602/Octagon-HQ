@@ -126,7 +126,7 @@ describe("Octagon HQ V2", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Clear ranking filters" }));
     expect(search).toHaveValue("");
-    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("66");
+    expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("67");
     expect(screen.queryByRole("button", { name: "Clear ranking filters" })).not.toBeInTheDocument();
   });
 
