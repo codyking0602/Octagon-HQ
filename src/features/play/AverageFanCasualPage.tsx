@@ -107,9 +107,11 @@ function MemberPortrait({
   members: readonly MemberCardSummary[];
 }) {
   const name = FAN_NAMES[fan];
-  const member = members.find((candidate) =>
-    normalizeName(candidate.displayName) === normalizeName(name)
-  );
+  const member = members.find((candidate) => {
+    const candidateName = normalizeName(candidate.displayName);
+    const fanName = normalizeName(name);
+    return candidateName === fanName || candidateName.split(" ")[0] === fanName;
+  });
   if (member?.avatarPhotoData) {
     return <img src={member.avatarPhotoData} alt="" aria-hidden="true" />;
   }
@@ -422,7 +424,6 @@ function QuestionScene({
   result,
   onDraft,
   onPeek,
-  onCopy,
   onAnswer,
   onContinue,
   onBack,
@@ -438,7 +439,6 @@ function QuestionScene({
   result: AverageFanBoardResult | null;
   onDraft: (value: string) => void;
   onPeek: () => void;
-  onCopy: () => void;
   onAnswer: (value: string, help?: AnswerHelp) => void;
   onContinue: () => void;
   onBack: () => void;
@@ -885,7 +885,6 @@ export default function AverageFanCasualPage({ scope }: { scope: Scope }) {
           result={lastResult}
           onDraft={setAnswerDraft}
           onPeek={peek}
-          onCopy={() => {}}
           onAnswer={answerBoard}
           onContinue={continueFromQuestion}
           onBack={() => { setActiveQuestion(null); setAnswerDraft(""); setPeeked(false); }}
