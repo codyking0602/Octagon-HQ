@@ -823,12 +823,12 @@ function ufcCandidates() {
   }
 
   questions.push(...knowledgeQuestions("ufc", "Octagon IQ", "average-fan:ufc:iq", UFC_IQ_FACTS));
-  questions.push(...knowledgeQuestions("ufc", "UFC History", "average-fan:ufc:history", UFC_HISTORY_FACTS));
+  questions.push(...knowledgeQuestions("ufc", "Fights", "average-fan:ufc:history", UFC_HISTORY_FACTS));
   questions.push(...UFC_FINAL_FACTS.map((fact) => shortQuestion({
     id: `average-fan:ufc:final:authored:${fact.id}`,
     sport: "ufc",
     grade: 5,
-    subject: "UFC History",
+    subject: "Fights",
     prompt: fact.prompt,
     answer: fact.answer,
     explanation: fact.explanation,
