@@ -541,6 +541,10 @@ type CfbCuratedGradeFiveFact = KnowledgeFact & {
 };
 
 const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
+  { id: "burrow-2019-sixty-td", grade: 5, subject: "Players", prompt: "Which LSU quarterback threw 60 touchdown passes during the 2019 national-championship season?", answer: "Joe Burrow", wrong: ["Tua Tagovailoa", "Trevor Lawrence"], explanation: "Joe Burrow threw 60 touchdown passes during LSU's 15-0 championship season in 2019." },
+  { id: "elliott-2014-title-rushing", grade: 5, subject: "Players", prompt: "Which Ohio State running back rushed for 246 yards against Oregon in the national championship game after the 2014 season?", answer: "Ezekiel Elliott", wrong: ["Carlos Hyde", "J. K. Dobbins"], explanation: "Ezekiel Elliott rushed for 246 yards and four touchdowns in Ohio State's championship win over Oregon." },
+  { id: "watson-2016-title-420", grade: 5, subject: "Players", prompt: "Which Clemson quarterback threw for 420 yards in the national championship win over Alabama after the 2016 season?", answer: "Deshaun Watson", wrong: ["Tajh Boyd", "Kelly Bryant"], explanation: "Deshaun Watson threw for 420 yards and three touchdowns as Clemson beat Alabama for the title." },
+  { id: "daniels-2023-heisman", grade: 5, subject: "Players", prompt: "Which LSU quarterback won the 2023 Heisman Trophy after accounting for 50 touchdowns that season?", answer: "Jayden Daniels", wrong: ["Bo Nix", "Michael Penix Jr."], explanation: "Jayden Daniels won the 2023 Heisman after throwing 40 touchdown passes and rushing for 10 scores." },
   { id: "hunter-biletnikoff-bednarik", grade: 5, subject: "Players", prompt: "Which Colorado star won both the Biletnikoff Award and the Bednarik Award in 2024?", answer: "Travis Hunter", wrong: ["Tetairoa McMillan", "Will Johnson"], explanation: "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player." },
   { id: "bennett-double-cfp-mvp", grade: 5, subject: "Players", prompt: "Which Georgia quarterback was the offensive MVP of both the Orange Bowl semifinal and the national championship game during the 2021 title run?", answer: "Stetson Bennett", wrong: ["JT Daniels", "Jake Fromm"], explanation: "Stetson Bennett earned offensive MVP honors in Georgia's CFP semifinal win over Michigan and its championship win over Alabama." },
   { id: "renfrow-title-catch", grade: 5, subject: "Players", prompt: "Who caught Clemson's game-winning touchdown with one second left against Alabama in the 2016 season's CFP title game?", answer: "Hunter Renfrow", wrong: ["Mike Williams", "Artavis Scott"], explanation: "Hunter Renfrow caught Deshaun Watson's two-yard touchdown with one second left to give Clemson the national title." },
@@ -868,7 +872,7 @@ const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
   ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
   ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
 ].map(([id, grade, subject, prompt, answer, explanation]) => assertAverageFanQuestion({
-  id: `average-fan:cfb:authored:cfb-tf-${id}`,
+  id: `average-fan:cfb:authored:00-tf-${id}`,
   sport: "cfb",
   grade: grade as AverageFanGrade,
   subject: subject as AverageFanSubject,
@@ -925,7 +929,7 @@ function authoredCfbQuestions() {
     ...CFB_CURATED_GRADE_FIVE_FACTS.map((fact, index) => (
       index % 3 === 0
         ? choiceQuestion({
-            id: `average-fan:cfb:authored:cfb-g5:${fact.id}:choice`,
+            id: `average-fan:cfb:authored:00-g5:${fact.id}:choice`,
             sport: "cfb",
             grade: 5,
             subject: fact.subject,
@@ -936,7 +940,7 @@ function authoredCfbQuestions() {
             difficultyNudge: 2,
           })
         : shortQuestion({
-            id: `average-fan:cfb:authored:cfb-g5:${fact.id}:short`,
+            id: `average-fan:cfb:authored:00-g5:${fact.id}:short`,
             sport: "cfb",
             grade: 5,
             subject: fact.subject,
@@ -1165,6 +1169,7 @@ function footballCandidates(league: "NFL" | "CFB") {
   }
 
   if (league === "CFB") {
+    const seenConferenceProgramQuestions = new Set<string>();
     for (const [index, program] of programs.entries()) {
       if (!program.conference) continue;
       const conferenceSeason = program.conferenceSeason ?? 2025;
@@ -1191,23 +1196,27 @@ function footballCandidates(league: "NFL" | "CFB") {
         answer: tfTrue,
         explanation: `${program.name} is listed in the ${program.conference}.`,
       }));
-      const wrongPrograms = peerValues(
-        programs
-          .filter((candidate) => candidate.conference && candidate.conference !== program.conference)
-          .map((candidate) => candidate.name),
-        program.name,
-        `${program.id}:program-choice`,
-      );
-      questions.push(choiceQuestion({
-        id: `average-fan:cfb:g3:${program.id}:conference-program`,
-        sport: "cfb",
-        grade: 3,
-        subject: "Programs",
-        prompt: `Which of these programs was in the ${program.conference} for the ${conferenceSeason} season?`,
-        answer: program.name,
-        wrongChoices: wrongPrograms,
-        explanation: `${program.name} is listed in the ${program.conference}.`,
-      }));
+      const conferenceProgramKey = `${program.conference}:${conferenceSeason}`;
+      if (!seenConferenceProgramQuestions.has(conferenceProgramKey)) {
+        seenConferenceProgramQuestions.add(conferenceProgramKey);
+        const wrongPrograms = peerValues(
+          programs
+            .filter((candidate) => candidate.conference && candidate.conference !== program.conference)
+            .map((candidate) => candidate.name),
+          program.name,
+          `${program.id}:program-choice`,
+        );
+        questions.push(choiceQuestion({
+          id: `average-fan:cfb:g3:${program.id}:conference-program`,
+          sport: "cfb",
+          grade: 3,
+          subject: "Programs",
+          prompt: `Which of these programs was in the ${program.conference} for the ${conferenceSeason} season?`,
+          answer: program.name,
+          wrongChoices: wrongPrograms,
+          explanation: `${program.name} was in the ${program.conference} for the ${conferenceSeason} season.`,
+        }));
+      }
     }
   }
 
@@ -1393,14 +1402,22 @@ function ufcCandidates() {
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
+      const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
+        .filter((opponent) => opponent !== titleFight.opponent)
+        .slice(0, 2);
+      const finalOpponentPhrase = finalOtherOpponents.length === 2
+        ? ` and also fought ${finalOtherOpponents[0]} and ${finalOtherOpponents[1]}`
+        : finalOtherOpponents.length === 1
+          ? ` and also fought ${finalOtherOpponents[0]}`
+          : "";
       questions.push(shortQuestion({
         id: `average-fan:ufc:final:${fighter.id}:title`,
         sport: "ufc",
         grade: 5,
         subject: "Championships",
-        prompt: `Name the fighter who recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight on ${titleFight.date}.`,
+        prompt: `Which UFC fighter faced ${titleFight.opponent} in a title fight${finalOpponentPhrase}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} matches that opponent, title-fight context, year, and result.`,
+        explanation: `${fighter.name} faced ${titleFight.opponent} in a UFC title fight${finalOpponentPhrase}.`,
         fanMisses: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
