@@ -84,6 +84,14 @@ describe("September 12, 2026 Noche ranking repair", () => {
     expect(grasso.judgments.apex.components.twoPerformanceStrength).toBe(1.9);
   });
 
+  it("keeps Grasso's profile copy synchronized with the Fiorot refresh", () => {
+    const grasso = input("Alexa Grasso");
+    expect(grasso.presentation.oneLiner).toContain("Manon Fiorot");
+    expect(grasso.presentation.whyRankedHere).toContain("No. 2 contender Manon Fiorot");
+    expect(grasso.presentation.whyNotHigher).toContain("2026 rebound");
+    expect(grasso.presentation.finalTakeaway).toContain("No. 2 Manon Fiorot");
+  });
+
   it("keeps the model cutoff at September 19 while advancing repair versions", () => {
     expect(canonicalRankingInputs.source).toMatchObject({
       modelAsOfDate: "2026-09-19",
