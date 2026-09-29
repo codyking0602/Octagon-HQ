@@ -654,7 +654,7 @@ function footballCandidates(league: "NFL" | "CFB") {
 
   if (league === "NFL") {
     questions.push(...knowledgeQuestions("nfl", "X’s & O’s", "average-fan:nfl:xo", NFL_XO_FACTS));
-    questions.push(...knowledgeQuestions("nfl", "NFL History", "average-fan:nfl:history", NFL_HISTORY_FACTS));
+    questions.push(...knowledgeQuestions("nfl", "NFL History", "average-fan:nfl:00-history", NFL_HISTORY_FACTS));
     questions.push(...NFL_FINAL_FACTS.map((fact) => shortQuestion({
       id: `average-fan:nfl:final-authored:${fact.id}`,
       sport: "nfl",
