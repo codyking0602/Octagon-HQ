@@ -1,6 +1,23 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  AVERAGE_FAN_REPORT_CARDS,
+  AVERAGE_FAN_SUBJECTS,
+  type AverageFanFan,
+  type AverageFanReportGrade,
+} from "../games/averageFanEngine";
 import "./AverageFanPrototypePage.css";
+
+type PrototypeScene = "intro" | "fan-select";
+
+const FAN_ORDER: readonly AverageFanFan[] = ["shane", "cody", "lib", "tyler", "troy"];
+const FAN_LABELS: Record<AverageFanFan, string> = {
+  shane: "SHANE",
+  cody: "CODY",
+  lib: "LIB",
+  tyler: "TYLER",
+  troy: "TROY",
+};
 
 function AverageFanLogo() {
   return (
@@ -52,6 +69,18 @@ function HostArt() {
   );
 }
 
+function StudioBackdrop() {
+  return (
+    <div className="average-fan-studio" aria-hidden="true">
+      <i className="average-fan-light light-one" />
+      <i className="average-fan-light light-two" />
+      <i className="average-fan-light light-three" />
+      <i className="average-fan-light light-four" />
+      <div className="average-fan-stands" />
+    </div>
+  );
+}
+
 function StudioProps() {
   return (
     <div className="average-fan-props" aria-hidden="true">
@@ -92,9 +121,124 @@ function RulesModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+function FanAvatar({ fan, large = false }: { fan: AverageFanFan; large?: boolean }) {
+  const hasGlasses = fan === "shane" || fan === "cody";
+  return (
+    <span
+      className={`average-fan-avatar average-fan-avatar--${fan}${large ? " is-large" : ""}`}
+      aria-hidden="true"
+    >
+      <i className="average-fan-avatar__hair" />
+      <i className="average-fan-avatar__head">
+        <b className="average-fan-avatar__eye eye-a" />
+        <b className="average-fan-avatar__eye eye-b" />
+        {hasGlasses ? <b className="average-fan-avatar__glasses" /> : null}
+        <b className="average-fan-avatar__smile" />
+      </i>
+      <i className="average-fan-avatar__body" />
+    </span>
+  );
+}
+
+function FanCard({
+  fan,
+  selected,
+  onSelect,
+}: {
+  fan: AverageFanFan;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className={`average-fan-card average-fan-card--${fan}${selected ? " is-selected" : ""}`}
+      aria-pressed={selected}
+      onClick={onSelect}
+    >
+      <FanAvatar fan={fan} />
+      <strong>{FAN_LABELS[fan]}</strong>
+    </button>
+  );
+}
+
+function FanSelector({ onBack }: { onBack: () => void }) {
+  const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
+  const [confirmed, setConfirmed] = useState(false);
+  const sport = "ufc" as const;
+
+  const rows = useMemo(() => {
+    const subjects = AVERAGE_FAN_SUBJECTS[sport];
+    const report = AVERAGE_FAN_REPORT_CARDS[sport][selectedFan] as Record<string, AverageFanReportGrade>;
+    return subjects.map((subject) => ({ subject, grade: report[subject] }));
+  }, [selectedFan]);
+
+  function chooseFan(fan: AverageFanFan) {
+    setSelectedFan(fan);
+    setConfirmed(false);
+  }
+
+  return (
+    <div className="average-fan-selector">
+      <StudioBackdrop />
+      <button className="average-fan-exit" type="button" onClick={onBack} aria-label="Back to opening screen">‹ BACK</button>
+
+      <section className="average-fan-selector-board" aria-labelledby="average-fan-selector-title">
+        <div className="average-fan-selector-title" id="average-fan-selector-title">Select Your Fan</div>
+
+        <div className="average-fan-card-grid" aria-label="Fans">
+          {FAN_ORDER.map((fan) => (
+            <FanCard
+              key={fan}
+              fan={fan}
+              selected={fan === selectedFan}
+              onSelect={() => chooseFan(fan)}
+            />
+          ))}
+        </div>
+
+        <section className="average-fan-report" aria-label={`${FAN_LABELS[selectedFan]} UFC report card`}>
+          <h2>{FAN_LABELS[selectedFan]}</h2>
+          <span className="average-fan-report__underline" aria-hidden="true" />
+          <div className="average-fan-report__rows">
+            {rows.map(({ subject, grade }) => (
+              <div className="average-fan-report__row" key={subject}>
+                <span>{subject}</span>
+                <strong data-grade={grade}>{grade}</strong>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <div className="average-fan-selector-hero">
+          <span className="average-fan-selector-crown" aria-hidden="true">♛</span>
+          <FanAvatar fan={selectedFan} large />
+          <span className="average-fan-selector-pedestal" aria-hidden="true" />
+        </div>
+
+        <button
+          className={`average-fan-select-button${confirmed ? " is-confirmed" : ""}`}
+          type="button"
+          onClick={() => setConfirmed(true)}
+        >
+          <span aria-hidden="true">{confirmed ? "✓" : "▶"}</span>
+          {confirmed ? "FAN SELECTED" : "SELECT FAN"}
+        </button>
+      </section>
+
+      <StudioProps />
+    </div>
+  );
+}
+
 export default function AverageFanPrototypePage() {
   const navigate = useNavigate();
+  const [scene, setScene] = useState<PrototypeScene>("intro");
   const [rulesOpen, setRulesOpen] = useState(false);
+
+  if (scene === "fan-select") {
+    return <FanSelector onBack={() => setScene("intro")} />;
+  }
 
   return (
     <div className="average-fan-intro">
@@ -107,13 +251,7 @@ export default function AverageFanPrototypePage() {
         ‹ HQ
       </button>
 
-      <div className="average-fan-studio" aria-hidden="true">
-        <i className="average-fan-light light-one" />
-        <i className="average-fan-light light-two" />
-        <i className="average-fan-light light-three" />
-        <i className="average-fan-light light-four" />
-        <div className="average-fan-stands" />
-      </div>
+      <StudioBackdrop />
 
       <section className="average-fan-board" aria-label="Average Fan opening screen">
         <ChalkDoodles />
@@ -125,7 +263,11 @@ export default function AverageFanPrototypePage() {
       <StudioProps />
 
       <div className="average-fan-intro-actions">
-        <button className="average-fan-intro-button average-fan-intro-button--start" type="button">
+        <button
+          className="average-fan-intro-button average-fan-intro-button--start"
+          type="button"
+          onClick={() => setScene("fan-select")}
+        >
           <span aria-hidden="true">▶</span>
           START
         </button>
