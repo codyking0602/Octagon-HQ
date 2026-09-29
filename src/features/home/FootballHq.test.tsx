@@ -141,9 +141,12 @@ describe("Football HQ team logo presentation", () => {
     expect(footballHqTeamPresentationFor("Ole Miss")).toEqual({ color: "#14213D", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Buffalo Bills")).toEqual({ color: "#C60C30", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Detroit Lions")).toEqual({ color: "#0076B6", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Alabama")).toEqual({ color: "#9E1B32", logoTreatment: "white" });
+    expect(footballHqTeamPresentationFor("Mississippi State")).toEqual({ color: "#5D1725", logoTreatment: "white" });
     expect(footballHqTeamPresentationFor("Texas")).toEqual({ color: "#BF5700", logoTreatment: "white" });
     expect(footballHqTeamPresentationFor("Oregon")).toEqual({ color: "#044520", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("USC")).toEqual({ color: "#990000", logoTreatment: "full-color" });
+    expect(footballHqTeamPresentationFor("Kansas City Chiefs")).toEqual({ color: "#E31837", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("Las Vegas Raiders")).toEqual({ color: "#000000", logoTreatment: "full-color" });
     expect(footballHqTeamPresentationFor("New Orleans Saints")).toEqual({ color: "#D3BC8D", logoTreatment: "full-color" });
   });
@@ -204,10 +207,10 @@ describe("Football HQ Home summary", () => {
 
     expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Alabama at Mississippi State" }))
       .toHaveAttribute("href", "/football/picks?matchup=2026-alabama-mississippi-state");
-    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Raiders vs. Saints" }))
-      .toHaveAttribute("href", "/football/picks?matchup=2026-raiders-saints");
+    expect(within(hq).getByRole("link", { name: "Open matchup breakdown for Chiefs at Raiders" }))
+      .toHaveAttribute("href", "/football/picks?matchup=2026-chiefs-raiders");
     expect(within(hq).getByText("Sat, Oct 3, 11:00 AM CT")).toBeInTheDocument();
-    expect(within(hq).getByText("Sun, Sep 27, 3:25 PM CT")).toBeInTheDocument();
+    expect(within(hq).getByText("Sun, Oct 4, 3:25 PM CT")).toBeInTheDocument();
     expect(within(hq).queryByText(/Miami Hurricanes/)).not.toBeInTheDocument();
     expect(within(hq).queryByText(/Stanford Cardinal/)).not.toBeInTheDocument();
     expect(within(hq).getByText("COLLEGE GAME OF THE WEEK")).toBeInTheDocument();
@@ -217,11 +220,20 @@ describe("Football HQ Home summary", () => {
     const collegeTeams = collegeGame.querySelectorAll(".football-hq-game-row__teams > div");
     expect(collegeTeams[0]).toHaveStyle("--team-color: #9E1B32");
     expect(collegeTeams[1]).toHaveStyle("--team-color: #5D1725");
+    const collegeMarks = collegeGame.querySelectorAll(".football-hq-team-mark");
+    expect(collegeMarks[0]).toHaveClass("is-white-logo");
+    expect(collegeMarks[1]).toHaveClass("is-white-logo");
     expect(within(hq).getByText("NFL GAME OF THE WEEK")).toBeInTheDocument();
+    expect(within(hq).getByText("Kansas City Chiefs")).toBeInTheDocument();
     expect(within(hq).getByText("Las Vegas Raiders")).toBeInTheDocument();
-    expect(within(hq).getByText("New Orleans Saints")).toBeInTheDocument();
+    const nflGame = within(hq).getByRole("link", { name: "Open matchup breakdown for Chiefs at Raiders" });
+    const nflTeams = nflGame.querySelectorAll(".football-hq-game-row__teams > div");
+    expect(nflTeams[0]).toHaveStyle("--team-color: #E31837");
+    expect(nflTeams[1]).toHaveStyle("--team-color: #000000");
+    expect(nflGame.querySelector('img[src="https://a.espncdn.com/i/teamlogos/nfl/500/kc.png"]')).toBeInTheDocument();
+    expect(nflGame.querySelector('img[src="https://a.espncdn.com/i/teamlogos/nfl/500/lv.png"]')).toBeInTheDocument();
     expect(within(hq).queryByText("Davis Wade Stadium · Starkville")).not.toBeInTheDocument();
-    expect(within(hq).queryByText("Caesars Superdome · New Orleans")).not.toBeInTheDocument();
+    expect(within(hq).queryByText("Allegiant Stadium · Las Vegas")).not.toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "OPEN PICKS →" })).toHaveAttribute("href", "/football/picks");
     expect(within(hq).getByRole("link", { name: "VIEW FULL SCHEDULE →" })).toHaveAttribute("href", "/football/picks");
   });

@@ -37,13 +37,25 @@ describe("FootballMatchupBreakdowns", () => {
     expect(screen.queryByText("Ole Miss 31, Louisville 24")).not.toBeInTheDocument();
   });
 
-  it("opens the exact authored breakdown requested by this week's canonical Football Picks URL", async () => {
-    window.history.replaceState({}, "", "/football/picks?matchup=2026-raiders-saints");
+  it("opens the exact compact Chiefs-Raiders breakdown requested by this week's canonical Football Picks URL", async () => {
+    window.history.replaceState({}, "", "/football/picks?matchup=2026-chiefs-raiders");
     render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
 
-    expect(await screen.findByRole("dialog")).toHaveTextContent("Raiders vs. Saints");
-    expect(screen.getByText("RAIDERS OFFENSE vs. SAINTS DEFENSE")).toBeInTheDocument();
-    expect(screen.getByText("SAINTS OFFENSE vs. RAIDERS DEFENSE")).toBeInTheDocument();
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveAccessibleName("Chiefs at Raiders");
+    expect(dialog).toHaveTextContent("THE HQ’S NFL GAME OF THE WEEK");
+    expect(dialog).toHaveTextContent("3 THINGS THAT MATTER");
+    expect(dialog).not.toHaveTextContent("AP NR");
+    expect(screen.getByRole("link", { name: "Kansas City Chiefs" })).toHaveAttribute(
+      "href",
+      "https://www.pro-football-reference.com/teams/kan/2026.htm",
+    );
+    expect(screen.getByRole("link", { name: "Las Vegas Raiders" })).toHaveAttribute(
+      "href",
+      "https://www.pro-football-reference.com/teams/rai/2026.htm",
+    );
+    expect(screen.getByRole("link", { name: "Patrick Mahomes" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Brock Bowers" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Close matchup breakdown" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
@@ -66,11 +78,11 @@ describe("FootballMatchupBreakdowns", () => {
 
     expect(screen.getByRole("link", { name: "Alabama" })).toHaveAttribute(
       "href",
-      "https://www.sports-reference.com/cfb/schools/alabama/",
+      "https://www.sports-reference.com/cfb/schools/alabama/2026.html",
     );
     expect(screen.getByRole("link", { name: "Mississippi State" })).toHaveAttribute(
       "href",
-      "https://www.sports-reference.com/cfb/schools/mississippi-state/",
+      "https://www.sports-reference.com/cfb/schools/mississippi-state/2026.html",
     );
     expect(screen.getByRole("link", { name: "Keelon Russell" })).toHaveAttribute(
       "href",

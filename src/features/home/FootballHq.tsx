@@ -59,6 +59,7 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
   "Buffalo Bills:red": "#C60C30",
   "Detroit Lions:blue": "#0076B6",
   "LSU:gold": "#FDD023",
+  "Kansas City Chiefs:gold": "#E31837",
   "Las Vegas Raiders:black": "#000000",
   "New Orleans Saints:gold": "#D3BC8D",
   "Ole Miss:navy": "#14213D",
@@ -68,7 +69,7 @@ const TEAM_COLOR_OVERRIDES: Readonly<Record<string, string>> = {
 };
 
 const HOME_LOGO_NEUTRALS = new Set(["white", "cream", "gray", "silver"]);
-const HOME_WHITE_LOGO_TEAMS = new Set(["Texas"]);
+const HOME_WHITE_LOGO_TEAMS = new Set(["Alabama", "Mississippi State", "Texas"]);
 const FOOTBALL_HQ_LOGO_OVERRIDES: Readonly<Record<string, string>> = {
   Oregon: "https://a.espncdn.com/i/teamlogos/ncaa/500-dark/2483.png",
 };
@@ -114,6 +115,7 @@ function logoForTeam(game: PickBout, team: FootballMatchupBreakdown["teams"][num
   const canonicalName = metadata?.name ?? team.name;
   const logoOverride = FOOTBALL_HQ_LOGO_OVERRIDES[canonicalName];
   if (logoOverride) return logoOverride;
+  if (team.logoUrl) return team.logoUrl;
 
   const canonicalLogo = metadata?.level === "CFB"
     ? footballTeamAssets[footballCfbTeamMediaId(canonicalName)]?.src ?? null
