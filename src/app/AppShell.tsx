@@ -144,7 +144,8 @@ export function AppShell() {
   const footballGameTitle = FOOTBALL_GAME_TITLES[location.pathname];
   const isPlayGame = Boolean(gameTitle);
   const isFootballGame = Boolean(footballGameTitle);
-  const isMillionaireGame = location.pathname === "/play/millionaire" || location.pathname === "/football/millionaire";\n  const isAverageFanPreview = location.pathname === "/play/average-fan-preview";
+  const isMillionaireGame = location.pathname === "/play/millionaire" || location.pathname === "/football/millionaire";
+  const isAverageFanPreview = location.pathname === "/play/average-fan-preview";
   const isMlbGame = location.pathname === "/mlb/challenge";
   const isMlbSeries = location.pathname.startsWith("/mlb/series/");
   const isGame = isPlayGame || isFootballGame || isMillionaireGame || isAverageFanPreview || isMlbGame || isMlbSeries;
