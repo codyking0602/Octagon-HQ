@@ -331,22 +331,29 @@ const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "music-city-lateral", grade: 5, prompt: "Which Titans tight end threw the lateral across the field on the Music City Miracle?", answer: "Frank Wycheck", wrong: ["Kevin Dyson", "Lorenzo Neal"], explanation: "Frank Wycheck took the handoff and threw the lateral to Kevin Dyson on the Music City Miracle." },
 ];
 
-const NFL_FINAL_FACTS: readonly KnowledgeFact[] = [
-  { id: "immaculate", grade: 5, prompt: "Final: Pittsburgh trailed Oakland on fourth down with seconds left in the 1972 playoffs. Who caught the deflection and scored on the Immaculate Reception?", answer: "Franco Harris", wrong: ["John Fuqua", "Lynn Swann"], explanation: "Franco Harris caught the deflection and scored the iconic playoff touchdown." },
-  { id: "helmet", grade: 5, prompt: "Final: Which Giants receiver made the helmet-pinning catch that kept the winning drive alive against the unbeaten Patriots in Super Bowl XLII?", answer: "David Tyree", wrong: ["Plaxico Burress", "Amani Toomer"], explanation: "David Tyree's Helmet Catch set up the Giants' winning touchdown." },
-  { id: "randle-el", grade: 5, prompt: "Final: In Super Bowl XL, which former college quarterback became the first wide receiver to throw a touchdown pass in a Super Bowl?", answer: "Antwaan Randle El", wrong: ["Hines Ward", "Santonio Holmes"], explanation: "Antwaan Randle El threw a 43-yard touchdown to Hines Ward." },
-  { id: "vinatieri", grade: 5, prompt: "Final: Who kicked the 48-yard field goal on the final play of Super Bowl XXXVI to give New England its first championship?", answer: "Adam Vinatieri", wrong: ["Stephen Gostkowski", "Mike Vanderjagt"], explanation: "Adam Vinatieri's kick beat the Rams 20-17." },
-  { id: "dungy", grade: 5, prompt: "Final: Which Colts coach became the first Black head coach to win a Super Bowl when Indianapolis won Super Bowl XLI?", answer: "Tony Dungy", wrong: ["Lovie Smith", "Jim Caldwell"], explanation: "Tony Dungy made history with Indianapolis' Super Bowl XLI victory." },
-  { id: "wide-right", grade: 5, prompt: "Final: Buffalo's first Super Bowl ended 20-19 after which kicker's 47-yard attempt sailed wide right?", answer: "Scott Norwood", wrong: ["Steve Christie", "Matt Bahr"], explanation: "Scott Norwood's late attempt missed wide right in Super Bowl XXV." },
-  { id: "butler", grade: 5, prompt: "Final: With Seattle one yard from a likely go-ahead touchdown in Super Bowl XLIX, which rookie cornerback intercepted Russell Wilson?", answer: "Malcolm Butler", wrong: ["Logan Ryan", "Darrelle Revis"], explanation: "Malcolm Butler jumped the route at the goal line to seal New England's win." },
-  { id: "holmes", grade: 5, prompt: "Final: Which receiver got both feet down in the back corner of the end zone for Pittsburgh's winning touchdown in Super Bowl XLIII?", answer: "Santonio Holmes", wrong: ["Hines Ward", "Nate Washington"], explanation: "Santonio Holmes' late touchdown catch beat Arizona." },
-  { id: "elway", grade: 5, prompt: "Final: Which quarterback led the 98-yard fourth-quarter march known as 'The Drive' in the 1986 AFC Championship?", answer: "John Elway", wrong: ["Bernie Kosar", "Dan Marino"], explanation: "John Elway led Denver 98 yards to tie Cleveland before the Broncos won in overtime." },
-  { id: "beast-quake", grade: 5, prompt: "Final: Which running back's 67-yard playoff touchdown against New Orleans became known as Beast Quake?", answer: "Marshawn Lynch", wrong: ["Shaun Alexander", "Thomas Rawls"], explanation: "Marshawn Lynch broke tackle after tackle on the run remembered as Beast Quake." },
-  { id: "philly-special", grade: 5, prompt: "Final: Who threw the touchdown pass to Nick Foles on the Philly Special in Super Bowl LII?", answer: "Trey Burton", wrong: ["Corey Clement", "Nelson Agholor"], explanation: "Trey Burton took the pitch and threw to Foles." },
-  { id: "first-wild-card", grade: 5, prompt: "Final: Which franchise became the first wild-card team to win the Super Bowl, beating Philadelphia in Super Bowl XV?", answer: "Oakland Raiders", wrong: ["Dallas Cowboys", "Los Angeles Rams"], explanation: "Oakland became the first wild-card Super Bowl champion." },
-  { id: "white", grade: 5, prompt: "Final: Which Patriots running back caught a Super Bowl-record 14 passes and scored 20 points in the 28-3 comeback?", answer: "James White", wrong: ["Dion Lewis", "Danny Woodhead"], explanation: "James White produced 14 catches and 20 points in Super Bowl LI." },
-  { id: "first-mnf", grade: 5, prompt: "Final: Joe Namath's Jets visited which team in the first Monday Night Football game in 1970?", answer: "Cleveland Browns", wrong: ["Baltimore Colts", "Kansas City Chiefs"], explanation: "The Cleveland Browns hosted the New York Jets in the first Monday Night Football game." },
-  { id: "first-four", grade: 5, prompt: "Final: Which franchise became the first in NFL history to win four Super Bowls when it beat the Rams in Super Bowl XIV?", answer: "Pittsburgh Steelers", wrong: ["Dallas Cowboys", "San Francisco 49ers"], explanation: "Pittsburgh's Super Bowl XIV victory gave the franchise its fourth title." },
+type NflFinalFact = KnowledgeFact & {
+  subject: "Players" | "Teams" | "NFL History" | "X’s & O’s";
+};
+
+const NFL_FINAL_FACTS: readonly NflFinalFact[] = [
+  { id: "howley", grade: 5, subject: "Players", prompt: "Name the only player to win Super Bowl MVP while playing for the losing team.", answer: "Chuck Howley", wrong: ["Bob Lilly", "Randy White"], explanation: "Dallas linebacker Chuck Howley won Super Bowl V MVP even though the Cowboys lost to Baltimore." },
+  { id: "doug-williams", grade: 5, subject: "Players", prompt: "Which quarterback became the first Black starting quarterback to win a Super Bowl and was named Super Bowl XXII MVP?", answer: "Doug Williams", wrong: ["Warren Moon", "Steve McNair"], explanation: "Doug Williams led Washington to the Super Bowl XXII title and won game MVP." },
+  { id: "steve-young-six", grade: 5, subject: "Players", prompt: "Which quarterback threw six touchdown passes in Super Bowl XXIX?", answer: "Steve Young", wrong: ["Joe Montana", "Troy Aikman"], explanation: "Steve Young threw six touchdown passes in San Francisco's Super Bowl XXIX victory." },
+  { id: "terrell-davis-three", grade: 5, subject: "Players", prompt: "Which running back scored three rushing touchdowns and won MVP in Super Bowl XXXII?", answer: "Terrell Davis", wrong: ["John Elway", "Dorsey Levens"], explanation: "Terrell Davis scored three rushing touchdowns and earned Super Bowl XXXII MVP." },
+
+  { id: "bucs-home", grade: 5, subject: "Teams", prompt: "Which franchise became the first to play in and win a Super Bowl in its home stadium?", answer: "Tampa Bay Buccaneers", wrong: ["Los Angeles Rams", "Miami Dolphins"], explanation: "Tampa Bay won Super Bowl LV at Raymond James Stadium." },
+  { id: "bears-46", grade: 5, subject: "Teams", prompt: "Which franchise rode the famous '46 defense' to a Super Bowl XX championship?", answer: "Chicago Bears", wrong: ["New York Giants", "Pittsburgh Steelers"], explanation: "The 1985 Chicago Bears used Buddy Ryan's 46 defense on the way to winning Super Bowl XX." },
+  { id: "raiders-three-cities", grade: 5, subject: "Teams", prompt: "Which franchise reached the Super Bowl while based in Oakland, then Los Angeles, then Oakland again?", answer: "Raiders", wrong: ["Rams", "Chargers"], explanation: "The Raiders reached Super Bowls from Oakland, then Los Angeles, and later Oakland again." },
+  { id: "ravens-two-qbs", grade: 5, subject: "Teams", prompt: "Which franchise won its first two Super Bowls with Trent Dilfer and Joe Flacco as its starting quarterbacks?", answer: "Baltimore Ravens", wrong: ["Tampa Bay Buccaneers", "New York Giants"], explanation: "Baltimore won Super Bowl XXXV with Trent Dilfer and Super Bowl XLVII with Joe Flacco." },
+
+  { id: "mike-jones", grade: 5, subject: "NFL History", prompt: "Who made the tackle at the one-yard line on the final play of Super Bowl XXXIV?", answer: "Mike Jones", wrong: ["Aeneas Williams", "London Fletcher"], explanation: "Rams linebacker Mike Jones tackled Kevin Dyson just short of the goal line to end Super Bowl XXXIV." },
+  { id: "jacoby-jones", grade: 5, subject: "NFL History", prompt: "Who opened the second half of Super Bowl XLVII with a 108-yard kickoff-return touchdown?", answer: "Jacoby Jones", wrong: ["Devin Hester", "Ted Ginn Jr."], explanation: "Jacoby Jones returned the second-half kickoff 108 yards for Baltimore." },
+  { id: "stallworth-73", grade: 5, subject: "NFL History", prompt: "Which Steelers receiver caught a 73-yard touchdown from Terry Bradshaw in Super Bowl XIV?", answer: "John Stallworth", wrong: ["Lynn Swann", "Franco Harris"], explanation: "John Stallworth's 73-yard touchdown catch was a defining play in Pittsburgh's Super Bowl XIV win." },
+  { id: "harrison-100", grade: 5, subject: "NFL History", prompt: "Who returned an interception 100 yards for a touchdown in Super Bowl XLIII?", answer: "James Harrison", wrong: ["Troy Polamalu", "Ike Taylor"], explanation: "James Harrison's 100-yard interception return closed the first half of Super Bowl XLIII." },
+
+  { id: "13-personnel", grade: 5, subject: "X’s & O’s", prompt: "In offensive personnel terminology, what grouping uses one running back and three tight ends?", answer: "13 personnel", wrong: ["12 personnel", "21 personnel"], explanation: "The first digit counts running backs and the second counts tight ends, so 13 personnel means one back and three tight ends." },
+  { id: "cover-zero", grade: 5, subject: "X’s & O’s", prompt: "What coverage family typically has no deep safety help and uses man coverage across the board?", answer: "Cover 0", wrong: ["Cover 2", "Cover 4"], explanation: "Cover 0 is a man-coverage pressure structure with no dedicated deep safety." },
+  { id: "tampa-two", grade: 5, subject: "X’s & O’s", prompt: "In a classic Tampa 2, which defender is asked to carry the deep middle between the two safeties?", answer: "Middle linebacker", wrong: ["Nickel corner", "Defensive end"], explanation: "The middle linebacker drops deeper than in a standard Cover 2 to help close the middle of the field." },
 ];
 
 const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
@@ -734,7 +741,7 @@ function footballCandidates(league: "NFL" | "CFB") {
       id: `average-fan:nfl:final-authored:${fact.id}`,
       sport: "nfl",
       grade: 5,
-      subject: "NFL History",
+      subject: fact.subject,
       prompt: fact.prompt,
       answer: fact.answer,
       explanation: fact.explanation,
