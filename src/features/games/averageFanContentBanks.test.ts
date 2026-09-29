@@ -223,7 +223,7 @@ describe("Average Fan durable content banks", () => {
     for (const sport of sports) {
       for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
         expect(question.prompt, question.id).not.toMatch(/\b(?:HQ|canonical|ledger|registry)\b/i);
-        expect(question.explanation, question.id).not.toMatch(/\b(?:HQ|canonical|ledger|registry)\b/i);
+        expect(question.explanation, question.id).not.toMatch(/\b(?:HQ|canonical|ledger|registry|internal id|sourceId|verifiedAt|difficultyNudge|protectedFinal|fanMisses)\b/i);
       }
     }
   });
@@ -266,4 +266,55 @@ describe("Average Fan durable content banks", () => {
       );
     }
   });
+  it("keeps accepted answers and aliases out of distractors and malformed choice sets", () => {
+    const normalize = (value: string) => value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+    for (const sport of sports) {
+      for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
+        const accepted = new Set([question.answer, ...question.aliases].map(normalize));
+        if (question.format === "three-choice") {
+          expect(question.choices, question.id).toHaveLength(3);
+          const acceptedChoices = question.choices!.filter((choice) => accepted.has(normalize(choice)));
+          expect(acceptedChoices, question.id).toHaveLength(1);
+          expect(normalize(acceptedChoices[0]!), question.id).toBe(normalize(question.answer));
+        } else {
+          expect(question.choices, question.id).toBeUndefined();
+        }
+        for (const miss of question.fanMisses ?? []) {
+          expect(accepted.has(normalize(miss)), question.id).toBe(false);
+        }
+      }
+    }
+  });
+
+  it("rejects mechanically detectable near-duplicate facts with the same answer", () => {
+    const stop = new Set(["the", "a", "an", "of", "to", "in", "on", "for", "and", "or", "was", "is", "did", "which", "who", "what", "name"]);
+    const tokens = (prompt: string) => new Set(
+      prompt.toLocaleLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim()
+        .split(/\s+/)
+        .filter((token) => token.length > 2 && !stop.has(token)),
+    );
+    const answerKey = (value: string) => value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+
+    for (const sport of sports) {
+      const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
+      for (let i = 0; i < bank.length; i += 1) {
+        for (let j = i + 1; j < bank.length; j += 1) {
+          const left = bank[i]!;
+          const right = bank[j]!;
+          if (answerKey(left.answer) !== answerKey(right.answer)) continue;
+          const leftTokens = tokens(left.prompt);
+          const rightTokens = tokens(right.prompt);
+          const union = new Set([...leftTokens, ...rightTokens]);
+          if (union.size < 4) continue;
+          const intersection = [...leftTokens].filter((token) => rightTokens.has(token)).length;
+          const similarity = intersection / union.size;
+          expect(similarity, `${left.id} <> ${right.id}`).toBeLessThan(0.9);
+        }
+      }
+    }
+  });
+
+
 });
