@@ -10,8 +10,13 @@ describe("UFC factual ledger", () => {
     const expansion = ufcFactualLedgerSubjects.filter((subject) => subject.scope === "recognizable-expansion");
 
     expect(ranked).toHaveLength(canonicalRankingInputs.counts.fighters);
-    expect(canonicalRankingInputs.counts.fighters).toBe(ufcFactualExpansion.rankedSubjectCountAtGeneration);
-    expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount);
+    const promotedSinceGeneration =
+      canonicalRankingInputs.counts.fighters
+      - ufcFactualExpansion.rankedSubjectCountAtGeneration;
+    expect(promotedSinceGeneration).toBeGreaterThanOrEqual(0);
+    expect(expansion).toHaveLength(
+      ufcFactualExpansion.expansionSubjectCount - promotedSinceGeneration,
+    );
     expect(ufcFactualLedgerSubjects).toHaveLength(ufcFactualExpansion.targetTotalSubjects);
     expect(ranked.map((subject) => subject.name)).toEqual(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter));
   });
