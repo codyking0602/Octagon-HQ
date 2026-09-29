@@ -6,6 +6,19 @@ const EXPECTED_UNRECONCILED = [
   "Royce Gracie|1993-11-12-art-jimmerson",
   "Royce Gracie|1993-11-12-gerard-gordeau",
   "Royce Gracie|1993-11-12-ken-shamrock",
+  "Alexandre Pantoja|2026-09-19-joshua-van",
+  "Joshua Van|2023-06-24-zhalgas-zhumagulov",
+  "Joshua Van|2023-11-11-kevin-borjas",
+  "Joshua Van|2024-01-13-felipe-bunes",
+  "Joshua Van|2024-07-13-charles-johnson",
+  "Joshua Van|2024-09-14-edgar-chairez",
+  "Joshua Van|2024-12-07-cody-durden",
+  "Joshua Van|2025-03-08-rei-tsuruya",
+  "Joshua Van|2025-06-07-bruno-silva",
+  "Joshua Van|2025-06-28-brandon-royval",
+  "Joshua Van|2025-12-06-alexandre-pantoja",
+  "Joshua Van|2026-05-09-tatsuro-taira",
+  "Joshua Van|2026-09-19-alexandre-pantoja",
 ].sort();
 
 describe("canonical UFCStats supplemental fight snapshot", () => {
@@ -59,11 +72,14 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
 
         if ("reconciliation" in snapshotRow) {
           observedUnreconciled.push(`${fighter.fighter}|${fight.id}`);
-          expect(snapshotRow).toEqual({
+          expect(snapshotRow).toMatchObject({
             reconciliation: "unavailable",
-            source: { provider: "ufcstats", checkedAt: "2026-08-18" },
+            source: { provider: "ufcstats" },
             reason: "no-unique-source-match",
           });
+          expect(snapshotRow.source.checkedAt).toBe(
+            fighter.fighter === "Royce Gracie" ? "2026-08-18" : "2026-09-29",
+          );
           expect(fight.supplementalFacts).toBeUndefined();
           continue;
         }

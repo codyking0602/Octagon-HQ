@@ -49,4 +49,19 @@ describe("Rafael dos Anjos factual reconciliation", () => {
     expect(heavyweight?.stats.ufcRecord).toBe("14-5");
     expect(divisionRankingReport.passed).toBe(true);
   });
+
+  it("uses the reviewed public YouTube media without changing ranking inputs", () => {
+    const input = canonicalRankingInputs.fighters.find(
+      (fighter) => fighter.fighter === "Rafael dos Anjos",
+    );
+    const fighter = getFighter("rafael-dos-anjos");
+
+    expect(input?.presentation.watchUrl).toBe(
+      "https://youtube.com/shorts/L7CYUtF5RQM?is=TomljbeaWRIB7BRV",
+    );
+    expect(input?.presentation.signatureFightUrl).toBe(
+      "https://youtu.be/PQhcgZ4uulQ?is=ih4Qv5lsthLNKgkS",
+    );
+    expect(fighter).toMatchObject({ rank: 29, rawScore: 48.89 });
+  });
 });

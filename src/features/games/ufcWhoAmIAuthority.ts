@@ -133,12 +133,15 @@ const canonicalUfcUniverse: WhoAmIUniverse = {
 };
 
 // The authored cutover expanded the canonical universe from 100 to 133. Keep
-// the legacy generated selector pinned to the original first 100 subjects so
-// pre-cutover Daily materializations and legacy Casual boards do not drift.
+// the legacy generated selector pinned to the original curated identities, not
+// array positions. Ranking promotions can change ranked-core ordering without
+// changing pre-cutover Daily materializations or legacy Casual boards.
 const legacyUfcUniverse: WhoAmIUniverse = {
   sport: "ufc",
   league: "UFC",
-  candidates: ufcFactualLedgerSubjects.slice(0, 100).map(ufcCandidate),
+  candidates: ufcFactualLedgerSubjects
+    .filter((subject) => isUfcWhoAmICalibrationSubject(subject.id))
+    .map(ufcCandidate),
 };
 
 export function getUfcWhoAmIUniverse() {

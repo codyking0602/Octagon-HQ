@@ -22,6 +22,7 @@ const refreshedFighters = new Set([
   "Mackenzie Dern",
   "Robbie Lawler",
   "Tito Ortiz",
+  "Alexandre Pantoja",
 ]);
 
 function calculatedRow(fighter: string) {

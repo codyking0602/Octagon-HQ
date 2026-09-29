@@ -19,6 +19,7 @@ const refreshedRankingData = new Set([
   "Tito Ortiz",
   "Robbie Lawler",
   "Lyoto Machida",
+  "Alexandre Pantoja",
 ]);
 
 describe("V2 ranking roster overlay", () => {
@@ -31,7 +32,7 @@ describe("V2 ranking roster overlay", () => {
         historicalRankingMigrationInputs.fighters.map(({ fighter }) => fighter),
       ),
     );
-    expect(v2RankingRoster.additions).toHaveLength(1);
+    expect(v2RankingRoster.additions).toHaveLength(2);
     expect(canonicalRankingInputs.counts.fighters).toBe(
       canonicalRankingInputs.fighters.length,
     );
@@ -89,15 +90,23 @@ describe("V2 ranking roster overlay", () => {
     );
   });
 
-  it("retains the current source versions and Rafael dos Anjos addition", () => {
+  it("advances source versions and owns both V2 additions", () => {
     expect(v2RankingRoster).toMatchObject({
-      modelAsOfDate: "2026-08-16",
-      factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260816",
+      modelAsOfDate: "2026-09-19",
+      factsVersion: "octagon-hq-v2-van-pantoja-refresh-facts-20260919",
+      judgmentVersion: "octagon-hq-v2-van-pantoja-refresh-judgments-20260919",
+      eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
+      eraDepthResolutionVersion: "octagon-hq-v2-van-era-depth-20260919",
     });
     expect(
       canonicalRankingInputs.fighters.some(
         ({ fighter }) => fighter === "Rafael dos Anjos",
       ),
     ).toBe(true);
+    expect(
+      canonicalRankingInputs.fighters.filter(
+        ({ fighter }) => fighter === "Joshua Van",
+      ),
+    ).toHaveLength(1);
   });
 });
