@@ -60,7 +60,7 @@ describe("September 19, 2026 Van and Pantoja ranking refresh", () => {
 
   it("uses the exact supplied Van profile media and safe image fallback", () => {
     expect(input("Joshua Van").presentation).toMatchObject({
-      photoUrl: null,
+      photoUrl: "assets/fighters/joshua-van.webp",
       thumbUrl: "assets/fighters/joshua-van-thumb.webp",
       watchUrl: "https://youtube.com/shorts/owyAiZa33XY?is=vNNc2me-zGbAnNZ3",
       signatureFightUrl: "https://youtu.be/nwO2UPz7p28?is=YgmgRj5wjPQQuw8i",
