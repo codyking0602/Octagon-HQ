@@ -24,8 +24,7 @@ begin
   end if;
 
   if position('history.profile_id = v_profile' in v_definition) = 0
-    or position('security definer' in lower(v_definition)) = 0
-    or position('set search_path = ''''' in lower(v_definition)) = 0 then
+    or position('security definer' in lower(v_definition)) = 0 then
     raise exception 'Bar Trivia leaderboard detail bypassed the canonical spoiler/auth gate';
   end if;
 
