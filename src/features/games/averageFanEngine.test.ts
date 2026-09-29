@@ -6,6 +6,7 @@ import {
   averageFanCenteredSubjectModifier,
   averageFanFanAccuracy,
   averageFanFanAnswer,
+  averageFanPublicQuestion,
   averageFanQuestionEligibleForBoard,
   averageFanQuestionEligibleForFinal,
   scoreAverageFanBoard,
@@ -98,6 +99,28 @@ describe("Average Fan canonical question contract", () => {
       activeFrom: "2026-09-01T00:00:00Z",
       expiresAt: "2026-10-01T00:00:00Z",
     }))).toEqual([]);
+  });
+
+  it("keeps answer authority and fan-miss evidence out of the public question", () => {
+    const authored = fixture({
+      sourceId: "fixture-source",
+      sourceUrl: "https://example.com/source",
+      verifiedAt: "2026-09-29",
+    });
+    const publicQuestion = averageFanPublicQuestion(authored);
+    expect(publicQuestion).toEqual({
+      id: authored.id,
+      sport: authored.sport,
+      grade: authored.grade,
+      subject: authored.subject,
+      format: authored.format,
+      prompt: authored.prompt,
+    });
+    expect("answer" in publicQuestion).toBe(false);
+    expect("aliases" in publicQuestion).toBe(false);
+    expect("explanation" in publicQuestion).toBe(false);
+    expect("fanMisses" in publicQuestion).toBe(false);
+    expect("sourceId" in publicQuestion).toBe(false);
   });
 });
 
