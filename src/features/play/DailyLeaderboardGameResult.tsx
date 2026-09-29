@@ -43,6 +43,27 @@ export type WhoAmILeaderboardRound = {
   clues: Array<{ id: string; text: string; seen: boolean }>;
 };
 
+export type BarTriviaLeaderboardQuestion = {
+  index: number;
+  id: string;
+  round: string;
+  category: string;
+  prompt: string;
+  choices: string[];
+  pickedChoice: string;
+  correctChoice: string;
+  correct: boolean;
+  points: number;
+  rawPoints: number;
+  basePoints: number;
+  doubleRoundBonus: number;
+  streakBonus: number;
+  wagerDelta: number;
+  roundMultiplier: number;
+  streakMultiplier: number;
+  explanation: string;
+};
+
 function record(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value as JsonRecord
@@ -332,6 +353,170 @@ export function buildSportsFeudFastMoneyRows(
       points: Number(row.points ?? 0),
     };
   });
+}
+
+function barTriviaRoundLabel(round: string) {
+  if (round === "round1") return "ROUND 1";
+  if (round === "round2") return "ROUND 2";
+  if (round === "round3") return "ROUND 3";
+  if (round === "last-call") return "LAST CALL";
+  return round.replace(/[-_]/g, " ").toUpperCase();
+}
+
+function signedPoints(value: number) {
+  return value > 0 ? `+${value}` : String(value);
+}
+
+export function buildBarTriviaLeaderboardQuestions(
+  projection: TodayChallengeProjection,
+  resultDetail: JsonRecord,
+): BarTriviaLeaderboardQuestion[] {
+  const revealedQuestions = records(projection.revealSetup?.questions);
+  const detailAnswers = records(resultDetail.answers);
+  const answerRows = detailAnswers.length ? detailAnswers : records(projection.publicState.answers);
+  const answersByQuestion = new Map(
+    answerRows.map((answer) => [
+      String(answer.question_id ?? answer.questionId ?? ""),
+      answer,
+    ]),
+  );
+
+  return revealedQuestions.map((question, index) => {
+    const id = String(question.id ?? "");
+    const answer = answersByQuestion.get(id) ?? {};
+    const pickedChoice = String(answer.choice ?? "");
+    const correctChoice = String(question.answer ?? "");
+    const recordedCorrect = answer.correct;
+
+    return {
+      index,
+      id,
+      round: String(question.round ?? ""),
+      category: String(question.category ?? ""),
+      prompt: String(question.prompt ?? ""),
+      choices: strings(question.choices),
+      pickedChoice,
+      correctChoice,
+      correct: typeof recordedCorrect === "boolean"
+        ? recordedCorrect
+        : Boolean(pickedChoice && correctChoice && pickedChoice === correctChoice),
+      points: Number(answer.points ?? 0),
+      rawPoints: Number(answer.raw_points ?? answer.rawPoints ?? 0),
+      basePoints: Number(answer.base_points ?? answer.basePoints ?? 0),
+      doubleRoundBonus: Number(answer.double_round_bonus ?? answer.doubleRoundBonus ?? 0),
+      streakBonus: Number(answer.streak_bonus ?? answer.streakBonus ?? 0),
+      wagerDelta: Number(answer.wager_delta ?? answer.wagerDelta ?? 0),
+      roundMultiplier: Number(answer.round_multiplier ?? answer.roundMultiplier ?? 1),
+      streakMultiplier: Number(answer.streak_multiplier ?? answer.streakMultiplier ?? 1),
+      explanation: String(question.explanation ?? ""),
+    };
+  });
+}
+
+function BarTriviaLeaderboardResult({
+  projection,
+  resultDetail,
+}: {
+  projection: TodayChallengeProjection;
+  resultDetail: JsonRecord;
+}) {
+  const state = record(projection.publicState);
+  const result = projection.officialAttempt?.publicResult ?? {};
+  const rows = buildBarTriviaLeaderboardQuestions(projection, resultDetail);
+  const score = projection.officialAttempt?.normalizedScore ?? Number(result.score ?? state.score ?? 0);
+  const correctCount = Number(result.correct_count ?? state.correct_count ?? rows.filter((row) => row.correct).length);
+  const bestStreak = Number(result.best_streak ?? state.best_streak ?? 0);
+  const doubleRound = String(result.double_round ?? resultDetail.double_round ?? state.double_round ?? "");
+  const wager = Number(result.wager ?? resultDetail.wager ?? state.wager ?? 0);
+  const lastCall = rows.find((row) => row.round === "last-call") ?? null;
+  const roundOrder = ["round1", "round2", "round3", "last-call"];
+
+  return (
+    <div className="leaderboard-game-result leaderboard-game-result--bar-trivia">
+      <section className="leaderboard-game-result__hero">
+        <div>
+          <span>BAR TRIVIA</span>
+          <strong>{score}</strong>
+          <small>HQ SCORE</small>
+        </div>
+        <dl>
+          <div><dt>Correct</dt><dd>{correctCount} / 10</dd></div>
+          <div><dt>Best streak</dt><dd>{bestStreak}</dd></div>
+          <div><dt>Double Round</dt><dd>{barTriviaRoundLabel(doubleRound)}</dd></div>
+          <div><dt>Last Call</dt><dd>{lastCall ? signedPoints(lastCall.wagerDelta) : signedPoints(wager)}</dd></div>
+        </dl>
+      </section>
+
+      <div className="leaderboard-bar-trivia-rounds">
+        {roundOrder.map((round) => {
+          const questions = rows.filter((row) => row.round === round);
+          if (!questions.length) return null;
+          return (
+            <section className="leaderboard-bar-trivia-round" key={round}>
+              <header>
+                <div>
+                  <span>{barTriviaRoundLabel(round)}</span>
+                  <h3>{round === "last-call" ? "Final wager" : `${questions.length} questions`}</h3>
+                </div>
+                {round === doubleRound ? <b>2× DOUBLE ROUND</b> : null}
+              </header>
+
+              <div className="leaderboard-bar-trivia-questions">
+                {questions.map((row) => (
+                  <details
+                    className={row.correct ? "is-correct" : "is-wrong"}
+                    key={row.id || row.index}
+                    open={!row.correct}
+                  >
+                    <summary>
+                      <b>Q{row.index + 1}</b>
+                      <span>
+                        <small>{row.category || barTriviaRoundLabel(row.round)}</small>
+                        <strong>{row.prompt}</strong>
+                      </span>
+                      <em>{row.correct ? "CORRECT" : "MISS"} · {signedPoints(row.points)} PTS</em>
+                    </summary>
+
+                    <div className="leaderboard-bar-trivia-question__detail">
+                      <div className="leaderboard-bar-trivia-choices">
+                        {row.choices.map((choice, choiceIndex) => {
+                          const selected = choice === row.pickedChoice;
+                          const correct = choice === row.correctChoice;
+                          return (
+                            <div
+                              className={[
+                                selected ? "is-selected" : "",
+                                correct ? "is-correct" : "",
+                                selected && !correct ? "is-wrong" : "",
+                              ].filter(Boolean).join(" ")}
+                              key={choice}
+                            >
+                              <b>{["A", "B", "C", "D"][choiceIndex] ?? "•"}</b>
+                              <span>{choice}</span>
+                              <em>{correct ? "CORRECT" : selected ? "PICKED" : ""}</em>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="leaderboard-bar-trivia-scoring">
+                        <span>BASE {row.correct ? row.basePoints : 0}</span>
+                        {row.doubleRoundBonus ? <span>DOUBLE +{row.doubleRoundBonus}</span> : null}
+                        {row.streakBonus ? <span>STREAK +{row.streakBonus}</span> : null}
+                        {row.wagerDelta ? <span>WAGER {signedPoints(row.wagerDelta)}</span> : null}
+                      </div>
+
+                      {row.explanation ? <p>{row.explanation}</p> : null}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function SportsFeudLeaderboardResult({
@@ -687,6 +872,9 @@ export function DailyLeaderboardGameResult({
   }
   if (projection.gameType === "who_am_i") {
     return <WhoAmILeaderboardResult projection={projection} resultDetail={resultDetail} />;
+  }
+  if (projection.gameType === "bar_trivia") {
+    return <BarTriviaLeaderboardResult projection={projection} resultDetail={resultDetail} />;
   }
   return null;
 }
