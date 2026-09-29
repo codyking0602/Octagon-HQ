@@ -669,21 +669,6 @@ function footballCandidates(league: "NFL" | "CFB") {
           difficultyNudge: 3,
           protectedFinal: true,
         }));
-      } else if (player.school && (player.heismanWinner || player.nationalChampion)) {
-        const wrongNames = peerValues(playerNames, player.name, `${player.id}:cfb-final`);
-        questions.push(shortQuestion({
-          id: `average-fan:cfb:final:${player.id}:resume`,
-          sport: "cfb",
-          grade: 5,
-          subject: "CFB History",
-          prompt: `Which ${position} from ${player.school} matches this résumé: ${player.heismanWinner ? "Heisman Trophy winner" : "national champion"}?`,
-          answer: player.name,
-          explanation: `${player.name} is the matching ${player.school} ${position} in HQ's canonical registry.`,
-          fanMisses: wrongNames,
-          difficultyNudge: 3,
-          protectedFinal: true,
-        }));
-      }
     }
   }
 
