@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
@@ -48,6 +48,20 @@ const FAN_LABELS: Record<AverageFanFan, string> = {
 
 const AVERAGE_FAN_OPENING_STAGE_WIDTH = 1672;
 const AVERAGE_FAN_OPENING_STAGE_HEIGHT = 941;
+const AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH = 1536;
+const AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT = 864;
+const AVERAGE_FAN_GAMEPLAY_STAGE_SRC = "/assets/average-fan/average-fan-gameplay-stage.png";
+const AVERAGE_FAN_PORTRAITS: Record<AverageFanFan, string> = {
+  shane: "/assets/average-fan/average-fan-shane.png",
+  cody: "/assets/average-fan/average-fan-cody.png",
+  lib: "/assets/average-fan/average-fan-lib.png",
+  tyler: "/assets/average-fan/average-fan-tyler.png",
+  troy: "/assets/average-fan/average-fan-troy.png",
+};
+const AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION =
+  AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "three-choice" && question.grade === 3)
+  ?? AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "three-choice")
+  ?? AVERAGE_FAN_UFC_PREVIEW_BOARD[0]!;
 
 function useAverageFanOpeningStageScale() {
   const [scale, setScale] = useState(1);
@@ -59,6 +73,31 @@ function useAverageFanOpeningStageScale() {
       setScale(Math.min(
         viewportWidth / AVERAGE_FAN_OPENING_STAGE_WIDTH,
         viewportHeight / AVERAGE_FAN_OPENING_STAGE_HEIGHT,
+      ));
+    };
+
+    syncScale();
+    window.addEventListener("resize", syncScale);
+    window.visualViewport?.addEventListener("resize", syncScale);
+    return () => {
+      window.removeEventListener("resize", syncScale);
+      window.visualViewport?.removeEventListener("resize", syncScale);
+    };
+  }, []);
+
+  return scale;
+}
+
+function useAverageFanGameplayStageScale() {
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const syncScale = () => {
+      const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      setScale(Math.min(
+        viewportWidth / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH,
+        viewportHeight / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT,
       ));
     };
 
@@ -277,12 +316,30 @@ function FanSelector({
   );
 }
 
-function MoneyRail({ completed }: { completed: number }) {
+function GameplayFanDesk({ fan }: { fan: AverageFanFan }) {
+  return (
+    <aside className="average-fan-game-fan" aria-label={`${FAN_LABELS[fan]} at the fan desk`}>
+      <img
+        className="average-fan-game-fan__portrait"
+        src={AVERAGE_FAN_PORTRAITS[fan]}
+        alt=""
+        aria-hidden="true"
+      />
+      <div className="average-fan-game-fan__desk-mask" aria-hidden="true" />
+      <strong className="average-fan-game-fan__name">{FAN_LABELS[fan]}</strong>
+    </aside>
+  );
+}
+
+function MoneyRail({ completed, finalActive }: { completed: number; finalActive: boolean }) {
   return (
     <aside className="average-fan-money-rail" aria-label="Money ladder">
+      <div className={`average-fan-money-row average-fan-money-row--final${finalActive ? " is-current" : ""}`}>
+        <strong>$1,000,000</strong>
+      </div>
       {AVERAGE_FAN_MONEY_LADDER.slice().reverse().map((money, reverseIndex) => {
         const questionNumber = AVERAGE_FAN_MONEY_LADDER.length - reverseIndex;
-        const current = completed < 10 && questionNumber === completed + 1;
+        const current = !finalActive && completed < 10 && questionNumber === completed + 1;
         const cleared = questionNumber <= completed;
         return (
           <div
@@ -299,7 +356,6 @@ function MoneyRail({ completed }: { completed: number }) {
 }
 
 function HelpRail({
-  fan,
   peekUsed,
   copyUsed,
   saveUsed,
@@ -308,7 +364,6 @@ function HelpRail({
   onPeek,
   onCopy,
 }: {
-  fan: AverageFanFan;
   peekUsed: boolean;
   copyUsed: boolean;
   saveUsed: boolean;
@@ -319,31 +374,29 @@ function HelpRail({
 }) {
   return (
     <aside className="average-fan-help-rail" aria-label="Fan help">
-      <div className="average-fan-help-fan">
-        <FanAvatar fan={fan} />
-        <strong>{FAN_LABELS[fan]}</strong>
-      </div>
       <button
         type="button"
-        className={`average-fan-help-button${peekActive ? " is-active" : ""}`}
+        className={`average-fan-help-button average-fan-help-button--peek${peekActive ? " is-active" : ""}${peekUsed ? " is-used" : ""}`}
         disabled={!canUse || peekUsed}
         onClick={onPeek}
+        aria-label={peekUsed ? "Peek used" : "Peek at the fan's answer"}
       >
-        <strong>PEEK</strong>
-        <span>{peekUsed ? "USED" : "See the fan's answer"}</span>
+        <span className="average-fan-sr-only">{peekUsed ? "Peek used" : "Peek"}</span>
       </button>
       <button
         type="button"
-        className="average-fan-help-button"
+        className={`average-fan-help-button average-fan-help-button--copy${copyUsed ? " is-used" : ""}`}
         disabled={!canUse || copyUsed}
         onClick={onCopy}
+        aria-label={copyUsed ? "Copy used" : "Copy the fan's answer"}
       >
-        <strong>COPY</strong>
-        <span>{copyUsed ? "USED" : "Lock the fan's answer"}</span>
+        <span className="average-fan-sr-only">{copyUsed ? "Copy used" : "Copy"}</span>
       </button>
-      <div className={`average-fan-help-button average-fan-help-button--save${saveUsed ? " is-used" : ""}`}>
-        <strong>SAVE</strong>
-        <span>{saveUsed ? "USED" : "Auto-rescues one miss"}</span>
+      <div
+        className={`average-fan-help-button average-fan-help-button--save${saveUsed ? " is-used" : ""}`}
+        aria-label={saveUsed ? "Automatic save used" : "Automatic save available"}
+      >
+        <span className="average-fan-sr-only">{saveUsed ? "Save used" : "Automatic save available"}</span>
       </div>
     </aside>
   );
@@ -407,7 +460,7 @@ function QuestionAnswerControl({
 }) {
   if (question.format === "three-choice") {
     return (
-      <div className="average-fan-choice-grid">
+      <div className="average-fan-choice-grid" data-choice-count={question.choices!.length}>
         {question.choices!.map((choice) => (
           <button
             key={choice}
@@ -428,7 +481,7 @@ function QuestionAnswerControl({
 
   if (question.format === "true-false") {
     return (
-      <div className="average-fan-choice-grid average-fan-choice-grid--tf">
+      <div className="average-fan-choice-grid average-fan-choice-grid--tf" data-choice-count="2">
         {["True", "False"].map((choice) => (
           <button
             key={choice}
@@ -500,13 +553,16 @@ function AverageFanGame({
   fan,
   onExit,
   onRestart,
+  initialQuestion = null,
 }: {
   fan: AverageFanFan;
   onExit: () => void;
   onRestart: () => void;
+  initialQuestion?: AverageFanQuestion | null;
 }) {
-  const [phase, setPhase] = useState<GamePhase>("board");
-  const [current, setCurrent] = useState<AverageFanQuestion | null>(null);
+  const stageScale = useAverageFanGameplayStageScale();
+  const [phase, setPhase] = useState<GamePhase>(initialQuestion ? "question" : "board");
+  const [current, setCurrent] = useState<AverageFanQuestion | null>(initialQuestion);
   const [answer, setAnswer] = useState("");
   const [resolved, setResolved] = useState<ResolvedQuestion[]>([]);
   const [peekUsed, setPeekUsed] = useState(false);
@@ -608,11 +664,20 @@ function AverageFanGame({
 
   return (
     <div className="average-fan-game">
-      <StudioBackdrop />
       <button className="average-fan-exit" type="button" onClick={onExit} aria-label="Exit Average Fan preview">‹ HQ</button>
 
-      <div className="average-fan-game-stage">
-        <HostArt compact />
+      <section
+        className="average-fan-game-stage"
+        aria-label="Are You Smarter Than an Average Fan? gameplay"
+        style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
+      >
+        <img
+          className="average-fan-game-stage__plate"
+          src={AVERAGE_FAN_GAMEPLAY_STAGE_SRC}
+          alt=""
+          aria-hidden="true"
+        />
+
         <div className="average-fan-game-chalkboard">
           {phase === "board" ? (
             <TileBoard resolved={resolved} onSelect={chooseQuestion} />
@@ -629,7 +694,6 @@ function AverageFanGame({
                 <>
                   {peekActive && fanAnswer ? (
                     <div className="average-fan-peek-banner">
-                      <FanAvatar fan={fan} />
                       <span><b>{FAN_LABELS[fan]} says:</b> {fanAnswer.answer}</span>
                     </div>
                   ) : null}
@@ -653,7 +717,6 @@ function AverageFanGame({
                   <p><b>Answer:</b> {current.answer}</p>
                   <p>{current.explanation}</p>
                   <div className="average-fan-reveal__fan">
-                    <FanAvatar fan={fan} />
                     <span><b>{FAN_LABELS[fan]} answered:</b> {lastResolution.fanAnswer}</span>
                   </div>
                   {lastResolution.saveConsumed ? (
@@ -722,10 +785,12 @@ function AverageFanGame({
           ) : null}
         </div>
 
-        <MoneyRail completed={railCompleted} />
+        <MoneyRail
+          completed={railCompleted}
+          finalActive={phase === "final-decision" || phase === "final-question" || phase === "final-reveal" || phase === "result"}
+        />
         {phase === "board" || phase === "question" || phase === "reveal" ? (
           <HelpRail
-            fan={fan}
             peekUsed={peekUsed}
             copyUsed={copyUsed}
             saveUsed={saveUsed}
@@ -740,22 +805,21 @@ function AverageFanGame({
           />
         ) : null}
 
-        <div className="average-fan-game-scorebar">
-          <span><small>YOUR FAN</small><strong>{FAN_LABELS[fan]}</strong></span>
-          <span><small>BOARD</small><strong>{completed}/10</strong></span>
-          <span><small>MONEY</small><strong>{completed ? averageFanMoneyLabel(currentMoney) : "$0"}</strong></span>
-          <span><small>HQ SCORE</small><strong>{completed < 10 ? "—" : boardScore}</strong></span>
-        </div>
-      </div>
+        <GameplayFanDesk fan={fan} />
+      </section>
     </div>
-  );
-}
+  );}
 
 export default function AverageFanPrototypePage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const openingStageScale = useAverageFanOpeningStageScale();
-  const [scene, setScene] = useState<PrototypeScene>("intro");
-  const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
+  const reviewGameplay = searchParams.get("screen") === "gameplay";
+  const requestedFan = searchParams.get("fan") as AverageFanFan | null;
+  const reviewFan = requestedFan && FAN_ORDER.includes(requestedFan) ? requestedFan : "cody";
+  const [scene, setScene] = useState<PrototypeScene>(() => reviewGameplay ? "game" : "intro");
+  const [selectedFan, setSelectedFan] = useState<AverageFanFan>(() => reviewGameplay ? reviewFan : "shane");
+  const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
   const [rulesOpen, setRulesOpen] = useState(false);
 
@@ -765,6 +829,7 @@ export default function AverageFanPrototypePage() {
         onBack={() => setScene("intro")}
         onConfirm={(fan) => {
           setSelectedFan(fan);
+          setReviewQuestionEnabled(false);
           setGameKey((value) => value + 1);
           setScene("game");
         }}
@@ -777,8 +842,10 @@ export default function AverageFanPrototypePage() {
       <AverageFanGame
         key={gameKey}
         fan={selectedFan}
+        initialQuestion={reviewQuestionEnabled ? AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION : null}
         onExit={() => navigate("/play")}
         onRestart={() => {
+          setReviewQuestionEnabled(false);
           setGameKey((value) => value + 1);
           setScene("fan-select");
         }}
