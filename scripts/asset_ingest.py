@@ -44,6 +44,55 @@ def download(url):
     return data
 
 
+def clear_corner_background(im, tolerance=48):
+    """Remove flat residual background regions connected to image corners."""
+    rgba = im.convert("RGBA")
+    pixels = rgba.load()
+    width, height = rgba.size
+    seen = set()
+    seeds = [(0, 0), (width - 1, 0), (0, height - 1), (width - 1, height - 1)]
+    limit = tolerance * tolerance
+
+    for seed in seeds:
+        if seed in seen:
+            continue
+        sx, sy = seed
+        sr, sg, sb, sa = pixels[sx, sy]
+        if sa == 0:
+            seen.add(seed)
+            continue
+
+        stack = [seed]
+        component = []
+        while stack:
+            x, y = stack.pop()
+            if (x, y) in seen:
+                continue
+            seen.add((x, y))
+            r, g, b, a = pixels[x, y]
+            if a == 0:
+                continue
+            distance = (r - sr) ** 2 + (g - sg) ** 2 + (b - sb) ** 2
+            if distance > limit:
+                continue
+
+            component.append((x, y))
+            if x > 0:
+                stack.append((x - 1, y))
+            if x + 1 < width:
+                stack.append((x + 1, y))
+            if y > 0:
+                stack.append((x, y - 1))
+            if y + 1 < height:
+                stack.append((x, y + 1))
+
+        for x, y in component:
+            r, g, b, _ = pixels[x, y]
+            pixels[x, y] = (r, g, b, 0)
+
+    return rgba
+
+
 def crop_box(im, crop):
     if not crop:
         return (0, 0, im.width, im.height)
@@ -109,7 +158,7 @@ def main():
         if im.getchannel("A").getextrema() == (255, 255):
             fail("background removal produced no visible transparency")
 
-    box = crop_box(im, spec.get("crop"))
+    im = clear_corner_background(im)\n\n    box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
 
     target_ratio = size[0] / size[1]
