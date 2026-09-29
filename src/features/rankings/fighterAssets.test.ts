@@ -83,7 +83,7 @@ describe("local V2 fighter assets", () => {
       fs.readdirSync(fighterDirectory).filter((name) => name.endsWith(".webp")),
     );
     expectedFiles.forEach((name) => expect(actualFiles.has(name), name).toBe(true));
-    expect(expectedFiles.size).toBe(canonicalRankingInputs.counts.fighters * 2 - 1);
+    expect(expectedFiles.size).toBe(canonicalRankingInputs.counts.fighters * 2);
     expect(actualFiles.size).toBeGreaterThanOrEqual(expectedFiles.size);
   });
 });

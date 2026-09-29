@@ -1386,6 +1386,85 @@ const alexandrePantojaSeptemberRefresh = rankingDataRefresh(pantojaBaseline, {
   },
 });
 
+
+const morenoBaseline = baselineFighter("Brandon Moreno");
+const morenoMoralesFight = reviewedFight({
+  id: "2026-09-12-joseph-morales",
+  date: "2026-09-12",
+  opponent: "Joseph Morales",
+  division: "Flyweight",
+  result: "win",
+  qualityTier: "solid",
+  rounds: [3, 0],
+});
+const brandonMorenoSeptemberRefresh = rankingDataRefresh(morenoBaseline, {
+  facts: {
+    ...morenoBaseline.facts,
+    // The Noche rebound is post-prime evidence. The sealed prime still ends
+    // with the Tatsuro Taira loss and is not reopened by a later contender win.
+    fights: [...morenoBaseline.facts.fights, morenoMoralesFight],
+  },
+});
+
+const grassoBaseline = baselineFighter("Alexa Grasso");
+const grassoFiorotFight = reviewedFight({
+  id: "2026-09-12-manon-fiorot",
+  date: "2026-09-12",
+  opponent: "Manon Fiorot",
+  division: "Flyweight",
+  result: "win",
+  qualityTier: "top-five",
+  rounds: [2, 1],
+});
+const alexaGrassoSeptemberRefresh = rankingDataRefresh(grassoBaseline, {
+  facts: {
+    ...grassoBaseline.facts,
+    fights: [...grassoBaseline.facts.fights, grassoFiorotFight],
+  },
+  judgments: {
+    ...grassoBaseline.judgments,
+    opponentQuality: {
+      ...grassoBaseline.judgments.opponentQuality,
+      inputs: [
+        ...grassoBaseline.judgments.opponentQuality.inputs,
+        {
+          fighter: "Alexa Grasso",
+          fightId: grassoFiorotFight.id,
+          opponent: "Manon Fiorot",
+          date: grassoFiorotFight.date,
+          division: "Flyweight",
+          finalCredit: 1,
+          reviewStatus: "locked",
+          judgmentSource: "octagon-hq-2026-09-29-noche-repair",
+          judgmentStatus: "audited",
+          provenance: "official Noche UFC result + UFC pre-fight ranking position",
+          note: "Number-two flyweight contender defeated by unanimous decision.",
+        },
+      ],
+    },
+    apex: {
+      ...grassoBaseline.judgments.apex,
+      performances: [
+        grassoBaseline.judgments.apex.performances.find(
+          (performance) => performance.opponent === "Valentina Shevchenko",
+        ) ?? grassoBaseline.judgments.apex.performances[1],
+        {
+          fightId: grassoFiorotFight.id,
+          opponent: "Manon Fiorot",
+          date: grassoFiorotFight.date,
+          rating: 9.2,
+        },
+      ],
+      components: {
+        ...grassoBaseline.judgments.apex.components,
+        twoPerformanceStrength: 1.9,
+      },
+      notes:
+        "The title-winning Shevchenko submission and unanimous win over number-two contender Manon Fiorot are Grasso's two strongest UFC performances.",
+    },
+  },
+});
+
 const joshuaVanFight = ({
   date,
   opponent,
@@ -1559,7 +1638,7 @@ const joshuaVan = {
       "The first Pantoja win receives reduced championship and opponent credit because it ended by injury after 26 seconds.",
       "Only UFC fights are included in the canonical ledger.",
     ],
-    photoUrl: null,
+    photoUrl: "assets/fighters/joshua-van.webp",
     thumbUrl: "assets/fighters/joshua-van-thumb.webp",
     watchUrl: "https://youtube.com/shorts/owyAiZa33XY?is=vNNc2me-zGbAnNZ3",
     watchLabel: "Watch: Brandon Royval moment",
@@ -2113,7 +2192,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Brandon Moreno": intentionalEditorialReview(
-      baselineFighter("Brandon Moreno"),
+      brandonMorenoSeptemberRefresh,
       {
         oneLiner:
           "Moreno's career is defined by resilience: cut once from the UFC, he returned to become a two-time flyweight champion through sharp boxing, scrambles, submissions, and a willingness to keep rebuilding after setbacks.",
@@ -2421,7 +2500,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Alexa Grasso": intentionalEditorialReview(
-      baselineFighter("Alexa Grasso"),
+      alexaGrassoSeptemberRefresh,
       {
         oneLiner:
           "Grasso's clean boxing, movement, and opportunistic grappling peaked at exactly the right moment, turning a steady flyweight climb into the submission that finally broke Valentina Shevchenko's long championship reign in stunning fashion.",
@@ -2487,8 +2566,8 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
     },
   },
   modelAsOfDate: "2026-09-19",
-  factsVersion: "octagon-hq-v2-van-pantoja-refresh-facts-20260919",
-  judgmentVersion: "octagon-hq-v2-van-pantoja-refresh-judgments-20260919",
+  factsVersion: "octagon-hq-v2-noche-repair-facts-20260929",
+  judgmentVersion: "octagon-hq-v2-noche-repair-judgments-20260929",
   eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
   eraDepthResolutionVersion: "octagon-hq-v2-van-era-depth-20260919",
 };

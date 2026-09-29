@@ -1194,6 +1194,14 @@
           "for": 1,
           "against": 0
         }
+      },
+      "2026-09-12-manon-fiorot": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-09-29"
+        },
+        "reason": "no-unique-source-match"
       }
     },
     "alexander-volkanovski": {
@@ -5364,6 +5372,14 @@
           "for": 0,
           "against": 0
         }
+      },
+      "2026-09-12-joseph-morales": {
+        "reconciliation": "unavailable",
+        "source": {
+          "provider": "ufcstats",
+          "checkedAt": "2026-09-29"
+        },
+        "reason": "no-unique-source-match"
       }
     },
     "brock-lesnar": {

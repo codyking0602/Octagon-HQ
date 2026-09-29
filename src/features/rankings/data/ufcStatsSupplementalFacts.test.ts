@@ -7,6 +7,8 @@ const EXPECTED_UNRECONCILED = [
   "Royce Gracie|1993-11-12-gerard-gordeau",
   "Royce Gracie|1993-11-12-ken-shamrock",
   "Alexandre Pantoja|2026-09-19-joshua-van",
+  "Alexa Grasso|2026-09-12-manon-fiorot",
+  "Brandon Moreno|2026-09-12-joseph-morales",
   "Joshua Van|2023-06-24-zhalgas-zhumagulov",
   "Joshua Van|2023-11-11-kevin-borjas",
   "Joshua Van|2024-01-13-felipe-bunes",

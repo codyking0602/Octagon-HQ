@@ -20,6 +20,8 @@ const refreshedRankingData = new Set([
   "Robbie Lawler",
   "Lyoto Machida",
   "Alexandre Pantoja",
+  "Brandon Moreno",
+  "Alexa Grasso",
 ]);
 
 describe("V2 ranking roster overlay", () => {
@@ -93,8 +95,8 @@ describe("V2 ranking roster overlay", () => {
   it("advances source versions and owns both V2 additions", () => {
     expect(v2RankingRoster).toMatchObject({
       modelAsOfDate: "2026-09-19",
-      factsVersion: "octagon-hq-v2-van-pantoja-refresh-facts-20260919",
-      judgmentVersion: "octagon-hq-v2-van-pantoja-refresh-judgments-20260919",
+      factsVersion: "octagon-hq-v2-noche-repair-facts-20260929",
+      judgmentVersion: "octagon-hq-v2-noche-repair-judgments-20260929",
       eraDepthVersion: "octagon-hq-v2-van-era-depth-20260919",
       eraDepthResolutionVersion: "octagon-hq-v2-van-era-depth-20260919",
     });
