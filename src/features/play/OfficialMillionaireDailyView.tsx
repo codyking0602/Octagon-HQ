@@ -233,7 +233,6 @@ export function OfficialMillionaireDailyView({
   const stageBackground = MILLIONAIRE_HOSTS[league][hostNumber - 1] ?? MILLIONAIRE_HOSTS[league][0];
   const timerUrgency = timeRemainingMs <= 15_000 ? " is-critical" : timeRemainingMs <= 35_000 ? " is-low" : "";
   const displayIndex = answerFeedback?.currentIndex ?? currentIndex;
-  const displayCompletedQuestions = answerFeedback?.completedQuestions ?? completedQuestions;
   const displayQuestion = answerFeedback?.question ?? question;
   const displayChoices = answerFeedback?.choices ?? choices;
   const displayLevel = answerFeedback?.level ?? level;
@@ -329,7 +328,7 @@ export function OfficialMillionaireDailyView({
         </header>
         <section className="millionaire-stakes" aria-label={`Question ${displayIndex + 1} value`}>
           <strong>{millionaireMoneyLabel(Number(displayQuestion.money ?? MILLIONAIRE_MONEY_BY_LEVEL[displayLevel]))}</strong>
-          <span>{MILLIONAIRE_BASE_PTS[displayLevel]} PTS</span>
+          <span>{firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[displayLevel]} PTS` : "RECOVERY +5"}</span>
         </section>
         <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}>
           <div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div>
