@@ -110,7 +110,7 @@ jobs:
 
           gh run watch "$run_id" --repo "$GITHUB_REPOSITORY" --exit-status
 
-          current_sha=$(gh api             --repo "$GITHUB_REPOSITORY"             "repos/$GITHUB_REPOSITORY/branches/$GITHUB_REF_NAME"             --jq '.commit.sha')
+          current_sha=$(gh api             "repos/$GITHUB_REPOSITORY/branches/$GITHUB_REF_NAME"             --jq '.commit.sha')
           if [ "$current_sha" != "$EXPECTED_SHA" ]; then
             echo "::error title=Asset head moved::Expected $EXPECTED_SHA but branch is now $current_sha."
             exit 1
