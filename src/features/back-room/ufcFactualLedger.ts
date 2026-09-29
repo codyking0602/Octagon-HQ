@@ -126,7 +126,17 @@ function normalizeIdentity(value: string) {
 }
 
 function buildLedger() {
-  const subjects = [...rankedSubjects(), ...expansionSubjects()];
+  const ranked = rankedSubjects();
+  const rankedIds = new Set(ranked.map((subject) => subject.id));
+  const rankedSlugs = new Set(ranked.map((subject) => subject.slug));
+  const rankedIdentities = new Set(ranked.map((subject) => normalizeIdentity(subject.name)));
+  const expansion = expansionSubjects().filter(
+    (subject) =>
+      !rankedIds.has(subject.id)
+      && !rankedSlugs.has(subject.slug)
+      && !rankedIdentities.has(normalizeIdentity(subject.name)),
+  );
+  const subjects = [...ranked, ...expansion];
   const ids = new Set<string>();
   const slugs = new Set<string>();
   const identities = new Set<string>();
