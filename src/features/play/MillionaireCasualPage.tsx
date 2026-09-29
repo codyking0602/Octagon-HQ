@@ -361,7 +361,7 @@ function MillionaireGame({
       <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
       <HQMark onClick={onBack} />
       <header className="millionaire-title"><span>{league === "mlb" ? "MLB PLAYOFF CHALLENGE" : <>{millionaireLeagueLabel(league)} DAILY</>}</span><strong>MILLIONAIRE</strong></header>
-      <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{MILLIONAIRE_BASE_PTS[level]} PTS</span></section>
+      <section className="millionaire-stakes" aria-label={`Question ${levelNumber} value`}><strong>{millionaireMoneyLabel(currentQuestion?.money ?? gameState.currentMoney)}</strong><span>{gameState.firstMissQuestionIndex === null ? `${MILLIONAIRE_BASE_PTS[level]} PTS` : "RECOVERY +5"}</span></section>
       <div className={`millionaire-clock${timerUrgency}`} aria-label={`${millionaireTimeLabel(timeRemainingMs)} remaining`}><div><strong>{millionaireTimeLabel(timeRemainingMs)}</strong><span>TIME BANK</span></div></div>
 
       <aside className="millionaire-lifelines" aria-label="Lifelines">
@@ -370,7 +370,7 @@ function MillionaireGame({
           const used = gameState.lifelinesUsed[usageKey];
           const incompatible = (lifeline.id === "fifty-fifty" && gameState.questionState.doubleDipActive) || (lifeline.id === "double-dip" && gameState.questionState.fiftyFiftyApplied);
           const activeDoubleDip = lifeline.id === "double-dip" && gameState.questionState.doubleDipActive;
-          const disabled = q8 || used || incompatible || phase !== "answering" || walkPromptOpen;
+          const disabled = q8 || used || incompatible || phase !== "answering" || walkPromptOpen || eliminationPromptOpen;
           return (
             <button key={lifeline.id} type="button" className={`${used ? "is-spent" : ""}${activeDoubleDip ? " is-active" : ""}`} disabled={disabled} onClick={() => useLifeline(lifeline.id)} aria-label={lifeline.label}>
               <b>{lifeline.icon}</b><span>{activeDoubleDip ? "2 PICKS" : lifeline.label}</span>
