@@ -83,6 +83,32 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("keeps the selected NFL bank authored-first and player-facing", () => {
+    const ordinary = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => !question.protectedFinal);
+    const authored = ordinary.filter((question) => question.id.startsWith("average-fan:nfl:00-"));
+    expect(authored.length).toBeGreaterThanOrEqual(130);
+
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.nfl) {
+      const playerFacingCopy = (question.prompt + " " + question.explanation).toLocaleLowerCase();
+      expect(playerFacingCopy, question.id).not.toMatch(/\b(?:canonical|registry|ledger|internal id|hq factual)\b/);
+    }
+  });
+
+  it("uses a distinct authored NFL Final set across football subjects", () => {
+    const finals = AVERAGE_FAN_CONTENT_BANKS.nfl.filter((question) => question.protectedFinal);
+    expect(finals.every((question) => question.id.startsWith("average-fan:nfl:final-authored:"))).toBe(true);
+    expect(
+      finals.reduce<Record<string, number>>((counts, question) => {
+        counts[question.subject] = (counts[question.subject] ?? 0) + 1;
+        return counts;
+      }, {}),
+    ).toEqual({
+      Players: 4,
+      Teams: 4,
+      "NFL History": 4,
+      "X’s & O’s": 3,
+    });
+  });
   it("keeps CFB conference choices to exactly one program from the requested conference", () => {
     const programs = queryFootballSubjects({ league: "CFB", kind: "program" });
     const conferenceByName = new Map(programs.map((program) => [program.name, program.conference]));
@@ -120,6 +146,32 @@ describe("Average Fan durable content banks", () => {
       );
       const validChoices = question.choices.filter((choice) => validOpponents.has(choice));
       expect(validChoices, question.id).toEqual([question.answer]);
+    }
+  });
+
+  it("keeps the UFC bank on canonical UFC subjects and authored landmark coverage in rotation", () => {
+    const bank = AVERAGE_FAN_CONTENT_BANKS.ufc;
+    const validSubjects = new Set(["Fighters", "Fights", "Championships", "Octagon IQ"]);
+    for (const question of bank) {
+      expect(validSubjects.has(question.subject), question.id).toBe(true);
+    }
+
+    const authored = bank.filter((question) => question.id.includes(":authored-history:"));
+    expect(authored.length).toBeGreaterThanOrEqual(20);
+    expect(authored.some((question) => question.subject === "Championships")).toBe(true);
+    expect(authored.some((question) => question.subject === "Fights")).toBe(true);
+  });
+
+  it("keeps UFC hard identity prompts specific enough to avoid two-opponent ambiguity", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      if (question.id.includes(":three-win-identity")) {
+        expect((question.prompt.match(/,/g) ?? []).length, question.id).toBeGreaterThanOrEqual(1);
+        expect(question.prompt.includes(" and "), question.id).toBe(true);
+      }
+      if (question.protectedFinal && question.id.endsWith(":fight")) {
+        expect((question.prompt.match(/,/g) ?? []).length, question.id).toBeGreaterThanOrEqual(1);
+        expect(question.prompt.includes(" and "), question.id).toBe(true);
+      }
     }
   });
 
