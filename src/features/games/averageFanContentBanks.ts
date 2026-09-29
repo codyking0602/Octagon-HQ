@@ -412,9 +412,9 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
 
 
 const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
-  ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as a four-team playoff for the 2014 season.", true, "The CFP used a four-team field from the 2014 season through the 2023 season."],
+  ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
   ["01-cfp-first-number-one", 4, "CFB History", "Mississippi State was the first team ranked No. 1 by the College Football Playoff selection committee.", true, "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
-  ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati made the four-team College Football Playoff after the 2021 season.", true, "Cincinnati earned the No. 4 seed in the 2021 season's CFP."],
+  ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
   ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
 ].map(([id, grade, subject, prompt, answer, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:cfb-tf-${id}`,
@@ -510,47 +510,6 @@ function authoredCfbQuestions() {
       .filter((question) => question.league === "cfb")
       .map(authoredCfbQuestion),
   ];
-}
-
-function interleaveCfbCandidates(
-  authored: readonly AverageFanQuestion[],
-  canonical: readonly AverageFanQuestion[],
-) {
-  const result: AverageFanQuestion[] = [];
-  const authoredByKey = new Map<string, AverageFanQuestion[]>();
-  const canonicalByKey = new Map<string, AverageFanQuestion[]>();
-  const keyFor = (question: AverageFanQuestion) =>
-    `${question.protectedFinal ? "final" : question.grade}:${question.subject}`;
-
-  for (const question of authored) {
-    const key = keyFor(question);
-    const rows = authoredByKey.get(key) ?? [];
-    rows.push(question);
-    authoredByKey.set(key, rows);
-  }
-  for (const question of canonical) {
-    const key = keyFor(question);
-    const rows = canonicalByKey.get(key) ?? [];
-    rows.push(question);
-    canonicalByKey.set(key, rows);
-  }
-
-  const keys = unique([...authoredByKey.keys(), ...canonicalByKey.keys()]).sort();
-  for (const key of keys) {
-    const a = authoredByKey.get(key) ?? [];
-    const c = canonicalByKey.get(key) ?? [];
-    let ai = 0;
-    let ci = 0;
-    while (ai < a.length || ci < c.length) {
-      for (let step = 0; step < 3 && ai < a.length; step += 1) result.push(a[ai++]!);
-      if (ci < c.length) result.push(c[ci++]!);
-      if (ai >= a.length && ci < c.length) {
-        result.push(...c.slice(ci));
-        ci = c.length;
-      }
-    }
-  }
-  return result;
 }
 
 function footballPlayers(league: "NFL" | "CFB") {
@@ -815,7 +774,12 @@ function footballCandidates(league: "NFL" | "CFB") {
     questions.push(...knowledgeQuestions("cfb", "Traditions", "average-fan:cfb:tradition", CFB_TRADITION_FACTS));
   }
 
-  return league === "CFB"\n    ? interleaveCfbCandidates(authoredCfbQuestions(), questions)\n    : questions;\n}\n\nfunction formatDivision(value: string) {
+  return league === "CFB"
+    ? [...authoredCfbQuestions(), ...questions]
+    : questions;
+}
+
+function formatDivision(value: string) {
   return value
     .replace(/^women-s-/, "Women's ")
     .replace(/^womens-/, "Women's ")
