@@ -28,8 +28,8 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v4-two-minute-bank" as const;
-export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
+export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
+export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v2-millionaire-recovery" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
 const MILLIONAIRE_LEGACY_TIME_BANK_MS = 150_000;
@@ -221,6 +221,7 @@ function publicState(state: MillionaireState, timeRemainingMs: number, transitio
     status: state.status,
     current_question_index: state.currentQuestionIndex,
     completed_questions: state.completedQuestions,
+    first_miss_question_index: state.firstMissQuestionIndex,
     current_money: state.currentMoney,
     final_money: state.finalMoney,
     base_score: state.baseScore,
@@ -262,6 +263,9 @@ function stateFromPublic(value: unknown): MillionaireState {
     status: status as MillionaireState["status"],
     currentQuestionIndex: integer(row.current_question_index, "Millionaire question index", 0, 7),
     completedQuestions: integer(row.completed_questions, "Millionaire completed questions", 0, 8),
+    firstMissQuestionIndex: row.first_miss_question_index == null
+      ? null
+      : integer(row.first_miss_question_index, "Millionaire first miss question index", 0, 7),
     currentMoney: integer(row.current_money, "Millionaire current money", 0, 1_000_000),
     finalMoney: row.final_money == null ? null : integer(row.final_money, "Millionaire final money", 0, 1_000_000),
     baseScore: integer(row.base_score, "Millionaire base score", 0, 100),
@@ -303,6 +307,7 @@ function finalSubmission(
     proof: String(context.privateSetupEvidence.proof ?? ""),
     outcome: state.status,
     completed_questions: state.completedQuestions,
+    first_miss_question: state.firstMissQuestionIndex == null ? null : state.firstMissQuestionIndex + 1,
     final_money: state.finalMoney ?? 0,
     base_score: state.baseScore,
     lifelines_used: lifelineCount(state),
