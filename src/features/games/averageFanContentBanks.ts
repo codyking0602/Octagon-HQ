@@ -196,6 +196,15 @@ type KnowledgeFact = {
   explanation: string;
 };
 
+type NflTrueFalseFact = {
+  id: string;
+  grade: AverageFanGrade;
+  subject: "Players" | "Teams" | "NFL History" | "X’s & O’s";
+  prompt: string;
+  answer: boolean;
+  explanation: string;
+};
+
 const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "center-snap", grade: 1, prompt: "Which position normally snaps the ball to begin an offensive play?", answer: "Center", wrong: ["Guard", "Tight end"], explanation: "The center snaps the football to the quarterback or another back to start the play." },
   { id: "nickel", grade: 1, prompt: "What nickname is used for a defense with five defensive backs?", answer: "Nickel", wrong: ["Dime", "Goal line"], explanation: "Nickel personnel uses five defensive backs." },
@@ -252,6 +261,14 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "smash", grade: 5, prompt: "Which passing concept commonly pairs a short hitch with a corner route on the same side?", answer: "Smash", wrong: ["Mesh", "Four verts"], explanation: "Smash stresses a cornerback with a short route underneath and a corner route over the top." },
   { id: "dagger", grade: 5, prompt: "Which passing concept commonly pairs a vertical clear-out with a deep in-breaking route behind it?", answer: "Dagger", wrong: ["Flood", "Wham"], explanation: "Dagger uses a vertical route to clear space for a deep dig or in-breaker." },
   { id: "power", grade: 5, prompt: "Which classic run scheme usually features a pulling backside guard leading through the point of attack?", answer: "Power", wrong: ["Outside zone", "Draw"], explanation: "Power football traditionally uses down blocks plus a pulling guard through the designed gap." },
+];
+
+const NFL_TRUE_FALSE_FACTS: readonly NflTrueFalseFact[] = [
+  { id: "four-downs", grade: 1, subject: "X’s & O’s", prompt: "An NFL offense normally gets four downs to gain 10 yards for a new first down.", answer: true, explanation: "The offense normally has four downs to gain the 10 yards needed for a new series." },
+  { id: "deion-two-champs", grade: 2, subject: "Players", prompt: "Deion Sanders won Super Bowls with both the 49ers and Cowboys.", answer: true, explanation: "Deion Sanders won Super Bowl XXIX with San Francisco and Super Bowl XXX with Dallas." },
+  { id: "peyton-two-teams", grade: 3, subject: "Players", prompt: "Peyton Manning won Super Bowls as the starting quarterback for two different franchises.", answer: true, explanation: "Manning won Super Bowl XLI with Indianapolis and Super Bowl 50 with Denver." },
+  { id: "two-forward-passes", grade: 4, subject: "X’s & O’s", prompt: "An offense can throw two forward passes on the same play as long as both are released behind the line of scrimmage.", answer: false, explanation: "An NFL play can include only one forward pass." },
+  { id: "fourth-down-fumble", grade: 5, subject: "X’s & O’s", prompt: "On fourth down, an offensive teammate may recover a fumble but cannot advance it beyond the spot of the fumble.", answer: true, explanation: "On fourth down, only the player who fumbled may recover and advance his own fumble; a teammate's recovery returns the ball to the fumble spot." },
 ];
 
 const NFL_PLAYER_FACTS: readonly KnowledgeFact[] = [
