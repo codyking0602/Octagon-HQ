@@ -532,6 +532,29 @@ const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
   { id: "golden-boot", grade: 5, prompt: "LSU and Arkansas play for which trophy?", answer: "Golden Boot", wrong: ["Magnolia Bowl Trophy", "Tiger Rag"], explanation: "LSU and Arkansas compete for the Golden Boot." },
 ];
 
+type CfbCuratedGradeFiveFact = KnowledgeFact & {
+  subject: "Players" | "Programs" | "Traditions" | "CFB History";
+};
+
+const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
+  { id: "hunter-biletnikoff-bednarik", grade: 5, subject: "Players", prompt: "Which Colorado star won both the Biletnikoff Award and the Bednarik Award in 2024?", answer: "Travis Hunter", wrong: ["Tetairoa McMillan", "Will Johnson"], explanation: "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player." },
+  { id: "bennett-double-cfp-mvp", grade: 5, subject: "Players", prompt: "Which Georgia quarterback was the offensive MVP of both the Orange Bowl semifinal and the national championship game during the 2021 title run?", answer: "Stetson Bennett", wrong: ["JT Daniels", "Jake Fromm"], explanation: "Stetson Bennett earned offensive MVP honors in Georgia's CFP semifinal win over Michigan and its championship win over Alabama." },
+  { id: "renfrow-title-catch", grade: 5, subject: "Players", prompt: "Who caught Clemson's game-winning touchdown with one second left against Alabama in the 2016 season's CFP title game?", answer: "Hunter Renfrow", wrong: ["Mike Williams", "Artavis Scott"], explanation: "Hunter Renfrow caught Deshaun Watson's two-yard touchdown with one second left to give Clemson the national title." },
+  { id: "wuerffel-heisman-title", grade: 5, subject: "Players", prompt: "Which Florida quarterback won the 1996 Heisman Trophy and then led the Gators to the national championship?", answer: "Danny Wuerffel", wrong: ["Rex Grossman", "Jesse Palmer"], explanation: "Danny Wuerffel won the 1996 Heisman Trophy and quarterbacked Florida to its first national championship." },
+
+  { id: "ohio-state-four-seed", grade: 5, subject: "Programs", prompt: "Which program became the first No. 4 seed to win the College Football Playoff, beating Alabama and Oregon after the 2014 season?", answer: "Ohio State", wrong: ["TCU", "Florida State"], explanation: "Ohio State entered the inaugural CFP as the No. 4 seed, beat Alabama in the semifinal, and defeated Oregon for the title." },
+  { id: "tennessee-first-bcs", grade: 5, subject: "Programs", prompt: "Which program won the first BCS National Championship Game after the 1998 season?", answer: "Tennessee", wrong: ["Florida State", "Nebraska"], explanation: "Tennessee beat Florida State in the Fiesta Bowl to win the first BCS national championship." },
+  { id: "utah-sugar-alabama", grade: 5, subject: "Programs", prompt: "Which program completed a 13-0 season by beating Alabama in the Sugar Bowl after the 2008 season?", answer: "Utah", wrong: ["Boise State", "TCU"], explanation: "Utah finished 13-0 after defeating Alabama 31-17 in the Sugar Bowl." },
+
+  { id: "little-brown-jug", grade: 5, subject: "Traditions", prompt: "Michigan and Minnesota play for which rivalry trophy?", answer: "Little Brown Jug", wrong: ["Paul Bunyan Trophy", "Heartland Trophy"], explanation: "Michigan and Minnesota compete for the Little Brown Jug." },
+  { id: "old-brass-spittoon", grade: 5, subject: "Traditions", prompt: "Indiana and Michigan State play for which rivalry trophy?", answer: "Old Brass Spittoon", wrong: ["Old Oaken Bucket", "Land Grant Trophy"], explanation: "Indiana and Michigan State compete for the Old Brass Spittoon." },
+  { id: "illibuck", grade: 5, subject: "Traditions", prompt: "Illinois and Ohio State play for which rivalry trophy?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
+
+  { id: "stanford-usc-2007", grade: 5, subject: "CFB History", prompt: "Which powerhouse did Stanford upset 24-23 in 2007 during Jim Harbaugh's first season as head coach?", answer: "USC", wrong: ["Oregon", "UCLA"], explanation: "Stanford stunned USC 24-23 at the Los Angeles Memorial Coliseum in 2007." },
+  { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", answer: "Jalen Watts-Jackson", wrong: ["LJ Scott", "Aaron Burbridge"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
+  { id: "kick-six-chris-davis", grade: 5, subject: "CFB History", prompt: "Who returned Alabama's missed field goal for Auburn's Kick Six touchdown in 2013?", answer: "Chris Davis", wrong: ["Tre Mason", "Ricardo Louis"], explanation: "Chris Davis returned the missed field goal for the walk-off touchdown that gave Auburn the 2013 Iron Bowl." },
+];
+
 const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "title-rounds", grade: 1, prompt: "How many rounds is a standard UFC championship bout scheduled for?", answer: "5", wrong: ["3", "7"], explanation: "UFC championship bouts are scheduled for five rounds." },
   { id: "standard-rounds", grade: 1, prompt: "How many rounds is a standard non-title UFC bout usually scheduled for?", answer: "3", wrong: ["2", "5"], explanation: "Most non-title UFC bouts are scheduled for three rounds." },
@@ -890,6 +913,31 @@ function authoredCfbQuestions() {
   return [
     ...CFB_CURATED_TRUE_FALSE,
     ...CFB_CURATED_FINALS,
+    ...CFB_CURATED_GRADE_FIVE_FACTS.map((fact, index) => (
+      index % 3 === 0
+        ? choiceQuestion({
+            id: `average-fan:cfb:authored:cfb-g5:${fact.id}:choice`,
+            sport: "cfb",
+            grade: 5,
+            subject: fact.subject,
+            prompt: fact.prompt,
+            answer: fact.answer,
+            wrongChoices: fact.wrong,
+            explanation: fact.explanation,
+            difficultyNudge: 2,
+          })
+        : shortQuestion({
+            id: `average-fan:cfb:authored:cfb-g5:${fact.id}:short`,
+            sport: "cfb",
+            grade: 5,
+            subject: fact.subject,
+            prompt: fact.prompt,
+            answer: fact.answer,
+            explanation: fact.explanation,
+            fanMisses: fact.wrong,
+            difficultyNudge: 2,
+          })
+    )),
     ...BAR_TRIVIA_QUESTION_BANK
       .filter((question) => question.league === "cfb")
       .map(authoredCfbQuestion),
