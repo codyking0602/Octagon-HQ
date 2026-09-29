@@ -82,6 +82,7 @@ V1 repository access: blocked by `CONNECT tunnel failed, response 403`, so displ
 | kayla-harrison | Kayla Harrison | No verified nickname; canonical V2 name used |
 | mackenzie-dern | Mackenzie Dern | No verified nickname; canonical V2 name used |
 | julianna-pena | Julianna “The Venezuelan Vixen” Peña | Established common/UFC nickname override |
+| joshua-van | Joshua “The Fearless” Van | Established common/UFC nickname override |
 | miesha-tate | Miesha “Cupcake” Tate | Established common/UFC nickname override |
 | holly-holm | Holly “The Preacher’s Daughter” Holm | Established common/UFC nickname override |
 | rafael-dos-anjos | Rafael dos Anjos | No verified nickname; canonical V2 name used |
