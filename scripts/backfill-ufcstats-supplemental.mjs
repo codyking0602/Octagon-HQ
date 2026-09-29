@@ -9,8 +9,8 @@ const outputPath = path.join(root, "src/features/rankings/data/generated/ufcstat
 
 const CORE = {
   repository: "Greco1899/scrape_ufc_stats",
-  commit: "8e40eb945e1127bf0ef172ab211a34787948f312",
-  refreshedAt: "2026-08-18",
+  commit: "a3c5452eee2f5bb4f5eae4ce958f0f23dd8863d8",
+  refreshedAt: "2026-09-20",
   files: ["ufc_event_details.csv", "ufc_fight_details.csv", "ufc_fight_results.csv", "ufc_fight_stats.csv"],
 };
 const BONUSES = {
