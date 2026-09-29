@@ -324,6 +324,13 @@ const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "first-155", grade: 5, prompt: "Jens Pulver faced whom in the UFC's first 155-pound bout at UFC 26?", answer: "Joao Roque", wrong: ["Caol Uno", "John Lewis"], explanation: "UFC's official anniversary history identifies Pulver vs. Joao Roque at UFC 26 as its first 155-pound bout." },
   { id: "first-125", grade: 4, prompt: "Demetrious Johnson faced whom in one of the two bouts that launched the UFC flyweight division at UFC on FX 2?", answer: "Ian McCall", wrong: ["Joseph Benavidez", "John Dodson"], explanation: "Johnson faced Ian McCall as the UFC introduced flyweight with a four-man tournament at UFC on FX 2." },
   { id: "first-fox-time", grade: 5, prompt: "How long did Junior dos Santos need to stop Cain Velasquez in the UFC's FOX debut?", answer: "64 seconds", wrong: ["48 seconds", "94 seconds"], explanation: "Dos Santos stopped Velasquez 64 seconds into the first round." },
+  { id: "silva-weidman", grade: 3, prompt: "Who ended Anderson Silva's 16-fight UFC winning streak at UFC 162?", answer: "Chris Weidman", wrong: ["Chael Sonnen", "Vitor Belfort"], explanation: "Chris Weidman knocked out Silva at UFC 162 after Silva had won 16 straight UFC fights." },
+  { id: "serra-gsp", grade: 3, prompt: "Who upset Georges St-Pierre at UFC 69 to win the welterweight title?", answer: "Matt Serra", wrong: ["Matt Hughes", "Josh Koscheck"], explanation: "Matt Serra stopped St-Pierre in the first round at UFC 69 to win the welterweight championship." },
+  { id: "holm-rousey", grade: 2, prompt: "Who knocked out Ronda Rousey with a head kick at UFC 193?", answer: "Holly Holm", wrong: ["Amanda Nunes", "Miesha Tate"], explanation: "Holly Holm stopped Rousey in Round 2 at UFC 193 to win the women's bantamweight title." },
+  { id: "diaz-mcgregor", grade: 2, prompt: "Who handed Conor McGregor his first UFC loss by submission at UFC 196?", answer: "Nate Diaz", wrong: ["Dustin Poirier", "Chad Mendes"], explanation: "Nate Diaz submitted McGregor with a rear-naked choke in Round 2 at UFC 196." },
+  { id: "rousey-carmouche", grade: 3, prompt: "Who did Ronda Rousey submit in the UFC's first women's bout?", answer: "Liz Carmouche", wrong: ["Miesha Tate", "Sara McMann"], explanation: "Rousey submitted Liz Carmouche at UFC 157 in the promotion's first women's bout." },
+  { id: "usman-masvidal", grade: 4, prompt: "Kamaru Usman's knockout at UFC 261 came against which challenger?", answer: "Jorge Masvidal", wrong: ["Colby Covington", "Gilbert Burns"], explanation: "Usman knocked out Jorge Masvidal in their welterweight title rematch at UFC 261." },
+
 ];
 
 const UFC_FINAL_FACTS: readonly KnowledgeFact[] = [
