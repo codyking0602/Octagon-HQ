@@ -545,15 +545,17 @@ function footballCandidates(league: "NFL" | "CFB") {
         }));
       }
 
-      if (player.heismanWinner) {
+      if (player.heismanWinner != null) {
         questions.push(trueFalseQuestion({
           id: `average-fan:cfb:g3:${player.id}:heisman`,
           sport: "cfb",
           grade: 3,
           subject: "CFB History",
           prompt: `${player.name} won the Heisman Trophy.`,
-          answer: true,
-          explanation: `${player.name} won the Heisman Trophy.`,
+          answer: player.heismanWinner,
+          explanation: player.heismanWinner
+            ? `${player.name} won the Heisman Trophy.`
+            : `${player.name} did not win the Heisman Trophy.`,
         }));
       }
 
