@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";\nimport { validateAverageFanQuestion } from "../games/averageFanEngine";
+import { describe, expect, it } from "vitest";
+import { validateAverageFanQuestion } from "../games/averageFanEngine";
 import {
   AVERAGE_FAN_MONEY_LADDER,
   AVERAGE_FAN_UFC_PREVIEW_BOARD,
