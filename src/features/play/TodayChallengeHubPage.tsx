@@ -17,7 +17,10 @@ export default function TodayChallengeHubPage() {
       <TodayChallengeHub />
       <ChallengeCenter />
 
-      <PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />
+      <PlayLandingGameLibrary sport="ufc"
+        onNavigate={navigate}
+        averageFanVisible={identity.profile?.canControlPicks === true}
+      />
     </div>
   );
 }

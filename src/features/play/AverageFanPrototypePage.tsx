@@ -88,29 +88,48 @@ function useAverageFanOpeningStageScale() {
   return scale;
 }
 
-function useAverageFanGameplayStageScale() {
-  const [scale, setScale] = useState(1);
+function useAverageFanGameplayStageLayout() {
+  const [layout, setLayout] = useState({ scale: 1, keyboardShift: 0 });
 
   useEffect(() => {
-    const syncScale = () => {
-      const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
-      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-      setScale(Math.min(
+    const syncLayout = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const scale = Math.min(
         viewportWidth / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH,
         viewportHeight / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT,
-      ));
+      );
+
+      const visualViewport = window.visualViewport;
+      const activeElement = document.activeElement;
+      const shortAnswerFocused = activeElement instanceof HTMLInputElement
+        && activeElement.closest(".average-fan-short-answer") !== null;
+      const keyboardOcclusion = shortAnswerFocused && visualViewport
+        ? Math.max(0, viewportHeight - visualViewport.height - visualViewport.offsetTop)
+        : 0;
+
+      setLayout({
+        scale,
+        keyboardShift: keyboardOcclusion > 80 ? Math.round(keyboardOcclusion / 2) : 0,
+      });
     };
 
-    syncScale();
-    window.addEventListener("resize", syncScale);
-    window.visualViewport?.addEventListener("resize", syncScale);
+    syncLayout();
+    window.addEventListener("resize", syncLayout);
+    window.visualViewport?.addEventListener("resize", syncLayout);
+    window.visualViewport?.addEventListener("scroll", syncLayout);
+    document.addEventListener("focusin", syncLayout);
+    document.addEventListener("focusout", syncLayout);
     return () => {
-      window.removeEventListener("resize", syncScale);
-      window.visualViewport?.removeEventListener("resize", syncScale);
+      window.removeEventListener("resize", syncLayout);
+      window.visualViewport?.removeEventListener("resize", syncLayout);
+      window.visualViewport?.removeEventListener("scroll", syncLayout);
+      document.removeEventListener("focusin", syncLayout);
+      document.removeEventListener("focusout", syncLayout);
     };
   }, []);
 
-  return scale;
+  return layout;
 }
 
 function HostArt({ compact = false }: { compact?: boolean }) {
@@ -461,7 +480,7 @@ function QuestionAnswerControl({
   if (question.format === "three-choice") {
     return (
       <div className="average-fan-choice-grid" data-choice-count={question.choices!.length}>
-        {question.choices!.map((choice) => (
+        {question.choices!.map((choice, index) => (
           <button
             key={choice}
             type="button"
@@ -472,7 +491,8 @@ function QuestionAnswerControl({
               onSubmit(choice);
             }}
           >
-            {choice}
+            <b aria-hidden="true">{String.fromCharCode(65 + index)}</b>
+            <span>{choice}</span>
           </button>
         ))}
       </div>
@@ -493,7 +513,7 @@ function QuestionAnswerControl({
               onSubmit(choice);
             }}
           >
-            {choice}
+            <span>{choice}</span>
           </button>
         ))}
       </div>
@@ -509,8 +529,10 @@ function QuestionAnswerControl({
       }}
     >
       <input
-        autoFocus
         value={value}
+        inputMode="text"
+        enterKeyHint="done"
+        autoCapitalize="words"
         disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
         placeholder="Type your answer"
@@ -560,7 +582,7 @@ function AverageFanGame({
   onRestart: () => void;
   initialQuestion?: AverageFanQuestion | null;
 }) {
-  const stageScale = useAverageFanGameplayStageScale();
+  const { scale: stageScale, keyboardShift } = useAverageFanGameplayStageLayout();
   const [phase, setPhase] = useState<GamePhase>(initialQuestion ? "question" : "board");
   const [current, setCurrent] = useState<AverageFanQuestion | null>(initialQuestion);
   const [answer, setAnswer] = useState("");
@@ -580,7 +602,6 @@ function AverageFanGame({
   const unsavedMisses = resolved.filter((item) => !item.correct && !item.saved).map((item) => item.order);
   const boardScore = scoreAverageFanBoard(unsavedMisses);
   const completed = resolved.length;
-  const currentMoney = completed ? AVERAGE_FAN_MONEY_LADDER[Math.min(completed, 10) - 1]! : 0;
   const finalScore = finalOutcome ? scoreAverageFanFinal(boardScore, finalOutcome) : boardScore;
   const finalMoney = finalOutcome === "correct" ? 1_000_000 : finalOutcome === "wrong" ? 25_000 : 500_000;
 
@@ -656,10 +677,6 @@ function AverageFanGame({
   }
 
   const questionVisible = current && (phase === "question" || phase === "reveal");
-  const displayedQuestionNumber = phase === "reveal" && lastResolution
-    ? lastResolution.order
-    : Math.min(resolved.length + 1, 10);
-  const displayedQuestionMoney = AVERAGE_FAN_MONEY_LADDER[displayedQuestionNumber - 1]!;
   const railCompleted = phase === "reveal" ? Math.max(0, completed - 1) : completed;
 
   return (
@@ -669,7 +686,10 @@ function AverageFanGame({
       <section
         className="average-fan-game-stage"
         aria-label="Are You Smarter Than an Average Fan? gameplay"
-        style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
+        style={{
+          top: `calc(50% - ${keyboardShift}px)`,
+          transform: `translate(-50%, -50%) scale(${stageScale})`,
+        }}
       >
         <img
           className="average-fan-game-stage__plate"
@@ -686,47 +706,8 @@ function AverageFanGame({
               <header>
                 <b>{averageFanGradeLabel(current.grade)}</b>
                 <span>{current.subject}</span>
-                <small>Q{displayedQuestionNumber} · {averageFanMoneyLabel(displayedQuestionMoney)}</small>
               </header>
               <h2>{current.prompt}</h2>
-
-              {phase === "question" ? (
-                <>
-                  {peekActive && fanAnswer ? (
-                    <div className="average-fan-peek-banner">
-                      <span><b>{FAN_LABELS[fan]} says:</b> {fanAnswer.answer}</span>
-                    </div>
-                  ) : null}
-                  <QuestionAnswerControl
-                    question={current}
-                    value={answer}
-                    disabled={false}
-                    onChange={setAnswer}
-                    onSubmit={submitCurrent}
-                  />
-                </>
-              ) : lastResolution ? (
-                <div className={`average-fan-reveal${lastResolution.correct || lastResolution.saved ? " is-correct" : " is-wrong"}`}>
-                  <strong>
-                    {lastResolution.correct
-                      ? "CORRECT"
-                      : lastResolution.saved
-                        ? "SAVED!"
-                        : "NOT QUITE"}
-                  </strong>
-                  <p><b>Answer:</b> {current.answer}</p>
-                  <p>{current.explanation}</p>
-                  <div className="average-fan-reveal__fan">
-                    <span><b>{FAN_LABELS[fan]} answered:</b> {lastResolution.fanAnswer}</span>
-                  </div>
-                  {lastResolution.saveConsumed ? (
-                    <small>{lastResolution.saved ? "Your fan got it right — Save keeps the clean run alive." : "Save was used, but your fan missed too."}</small>
-                  ) : null}
-                  <button type="button" onClick={continueAfterReveal}>
-                    {resolved.length >= 10 ? "SEE FINAL SUBJECT" : "BACK TO BOARD"}
-                  </button>
-                </div>
-              ) : null}
             </section>
           ) : phase === "final-decision" ? (
             <FinalDecision
@@ -743,25 +724,8 @@ function AverageFanGame({
               <header>
                 <b>FINAL</b>
                 <span>{AVERAGE_FAN_UFC_PREVIEW_FINAL.subject}</span>
-                <small>$1,000,000</small>
               </header>
               <h2>{AVERAGE_FAN_UFC_PREVIEW_FINAL.prompt}</h2>
-              {phase === "final-question" ? (
-                <QuestionAnswerControl
-                  question={AVERAGE_FAN_UFC_PREVIEW_FINAL}
-                  value={finalAnswer}
-                  disabled={false}
-                  onChange={setFinalAnswer}
-                  onSubmit={submitFinal}
-                />
-              ) : (
-                <div className={`average-fan-reveal${finalOutcome === "correct" ? " is-correct" : " is-wrong"}`}>
-                  <strong>{finalOutcome === "correct" ? "YOU'RE A MILLIONAIRE!" : "FINAL MISS"}</strong>
-                  <p><b>Answer:</b> {AVERAGE_FAN_UFC_PREVIEW_FINAL.answer}</p>
-                  <p>{AVERAGE_FAN_UFC_PREVIEW_FINAL.explanation}</p>
-                  <button type="button" onClick={() => setPhase("result")}>SEE RESULTS</button>
-                </div>
-              )}
             </section>
           ) : phase === "result" && finalOutcome ? (
             <section className="average-fan-result">
@@ -784,6 +748,67 @@ function AverageFanGame({
             </section>
           ) : null}
         </div>
+
+        {questionVisible ? (
+          <div className="average-fan-answer-stage" data-format={current.format}>
+            {phase === "question" ? (
+              <>
+                {peekActive && fanAnswer ? (
+                  <div className="average-fan-peek-banner">
+                    <span><b>{FAN_LABELS[fan]} says:</b> {fanAnswer.answer}</span>
+                  </div>
+                ) : null}
+                <QuestionAnswerControl
+                  question={current}
+                  value={answer}
+                  disabled={false}
+                  onChange={setAnswer}
+                  onSubmit={submitCurrent}
+                />
+              </>
+            ) : lastResolution ? (
+              <div className={`average-fan-reveal${lastResolution.correct || lastResolution.saved ? " is-correct" : " is-wrong"}`}>
+                <strong>
+                  {lastResolution.correct
+                    ? "CORRECT"
+                    : lastResolution.saved
+                      ? "SAVED!"
+                      : "NOT QUITE"}
+                </strong>
+                <p><b>Answer:</b> {current.answer}</p>
+                <p>{current.explanation}</p>
+                <div className="average-fan-reveal__fan">
+                  <span><b>{FAN_LABELS[fan]} answered:</b> {lastResolution.fanAnswer}</span>
+                </div>
+                {lastResolution.saveConsumed ? (
+                  <small>{lastResolution.saved ? "Your fan got it right — Save keeps the clean run alive." : "Save was used, but your fan missed too."}</small>
+                ) : null}
+                <button type="button" onClick={continueAfterReveal}>
+                  {resolved.length >= 10 ? "SEE FINAL SUBJECT" : "BACK TO BOARD"}
+                </button>
+              </div>
+            ) : null}
+          </div>
+        ) : phase === "final-question" || phase === "final-reveal" ? (
+          <div className="average-fan-answer-stage average-fan-answer-stage--final" data-format={AVERAGE_FAN_UFC_PREVIEW_FINAL.format}>
+            {phase === "final-question" ? (
+              <QuestionAnswerControl
+                question={AVERAGE_FAN_UFC_PREVIEW_FINAL}
+                value={finalAnswer}
+                disabled={false}
+                onChange={setFinalAnswer}
+                onSubmit={submitFinal}
+              />
+            ) : (
+              <div className={`average-fan-reveal${finalOutcome === "correct" ? " is-correct" : " is-wrong"}`}>
+                <strong>{finalOutcome === "correct" ? "YOU'RE A MILLIONAIRE!" : "FINAL MISS"}</strong>
+                <p><b>Answer:</b> {AVERAGE_FAN_UFC_PREVIEW_FINAL.answer}</p>
+                <p>{AVERAGE_FAN_UFC_PREVIEW_FINAL.explanation}</p>
+                <button type="button" onClick={() => setPhase("result")}>SEE RESULTS</button>
+              </div>
+            )}
+          </div>
+        ) : null}
 
         <MoneyRail
           completed={railCompleted}

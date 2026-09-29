@@ -1529,6 +1529,25 @@
   text-shadow: 0 3px rgba(0,0,0,.25);
 }
 
+
+.average-fan-answer-stage {
+  position: absolute;
+  z-index: 7;
+  left: 386px;
+  top: 584px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 846px;
+  height: 198px;
+  padding: 0;
+  pointer-events: auto;
+}
+
+.average-fan-answer-stage--final {
+  top: 592px;
+}
+
 .average-fan-choice-grid {
   width: min(760px, 92%);
   margin: auto auto clamp(8px, 1vh, 14px);
@@ -2599,7 +2618,7 @@ button.average-fan-help-button {
   width: 100%;
   height: 100%;
   min-height: 0;
-  padding: 98px 44px 22px;
+  padding: 92px 42px 28px;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -2619,15 +2638,15 @@ button.average-fan-help-button {
 .average-fan-question-card header b,
 .average-fan-question-card header span {
   position: absolute;
-  top: 12px;
+  top: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 63px;
-  padding: 0 18px;
+  height: 57px;
+  padding: 0 14px;
   overflow: hidden;
   color: #fff7d2;
-  font-size: 27px;
+  font-size: 25px;
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0.01em;
@@ -2637,43 +2656,30 @@ button.average-fan-help-button {
 }
 
 .average-fan-question-card header b {
-  left: 18px;
-  width: 252px;
+  left: 26px;
+  width: 218px;
   color: #fff5bf;
 }
 
 .average-fan-question-card header span {
-  right: 18px;
-  width: 310px;
+  right: 26px;
+  width: 276px;
   color: #ecf7ff;
-}
-
-.average-fan-question-card header small {
-  position: absolute;
-  right: 28px;
-  top: 54px;
-  width: 290px;
-  color: rgba(224, 242, 254, 0.78);
-  font-family: "Chalkboard SE", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-align: center;
-  text-transform: uppercase;
 }
 
 .average-fan-question-card h2 {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  width: min(780px, 100%);
-  min-height: 118px;
-  margin: 0 auto 20px;
+  width: min(790px, 100%);
+  min-height: 0;
+  margin: 0 auto;
   color: #fbf8e8;
   font-family: "Chalkboard SE", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  font-size: clamp(32px, 2.35vw, 42px);
+  font-size: clamp(36px, 2.65vw, 46px);
   font-weight: 700;
-  line-height: 1.17;
+  line-height: 1.16;
   letter-spacing: 0.005em;
   text-wrap: balance;
   text-shadow: 1px 1px 0 rgba(255,255,255,.12), -1px 0 rgba(255,255,255,.08), 0 0 6px rgba(255,255,255,.12);
@@ -2682,9 +2688,9 @@ button.average-fan-help-button {
 .average-fan-choice-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px 16px;
-  width: min(790px, 100%);
-  margin: auto auto 0;
+  gap: 12px 16px;
+  width: 100%;
+  margin: 0;
 }
 
 .average-fan-choice-grid[data-choice-count="3"] > button:last-child {
@@ -2695,59 +2701,113 @@ button.average-fan-help-button {
 
 .average-fan-choice-grid--tf {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  width: min(650px, 100%);
+  width: min(690px, 100%);
+  margin-inline: auto;
 }
 
 .average-fan-choice-grid button {
-  min-height: 64px;
-  padding: 10px 16px;
-  border: 2px solid rgba(249, 246, 222, 0.78);
-  border-radius: 9px;
-  background: rgba(1, 37, 29, 0.44);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 1px 8px rgba(0,0,0,.15);
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px 8px 12px;
+  border: 3px solid rgba(74, 196, 255, 0.94);
+  border-radius: 13px;
+  background: linear-gradient(180deg, rgba(9, 39, 89, .98), rgba(4, 22, 57, .99));
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.07),
+    0 0 11px rgba(44, 173, 255, .46),
+    0 6px 14px rgba(0,0,0,.34);
   color: #fffbe9;
   font-family: "Chalkboard SE", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  font-size: 25px;
+  font-size: 24px;
   font-weight: 700;
   line-height: 1.08;
+  text-align: left;
   text-shadow: 0 0 3px rgba(255,255,255,.18);
   transition: transform 110ms ease, border-color 110ms ease, background 110ms ease;
+}
+
+.average-fan-choice-grid button > b {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: #d72834;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 27px;
+  font-weight: 950;
+  line-height: 1;
+  text-shadow: 0 2px 3px rgba(0,0,0,.35);
+}
+
+.average-fan-choice-grid button:nth-child(2) > b {
+  background: #187ce8;
+}
+
+.average-fan-choice-grid button:nth-child(3) > b {
+  background: #18a363;
+}
+
+.average-fan-choice-grid button:nth-child(4) > b {
+  background: #eaa817;
+}
+
+.average-fan-choice-grid button > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.average-fan-choice-grid--tf button {
+  grid-template-columns: 1fr;
+  min-height: 82px;
+  padding: 10px 22px;
+  text-align: center;
+}
+
+.average-fan-choice-grid--tf button > span {
+  font-size: 31px;
+  font-weight: 800;
 }
 
 .average-fan-choice-grid button:hover:not(:disabled),
 .average-fan-choice-grid button:focus-visible {
   transform: translateY(-1px);
-  border-color: #fff9c7;
-  background: rgba(18, 74, 55, 0.58);
+  border-color: #d5f4ff;
+  background: linear-gradient(180deg, rgba(14, 57, 122, .99), rgba(6, 31, 74, .99));
 }
 
 .average-fan-choice-grid button.is-selected {
   border-color: #ffd857;
-  background: rgba(116, 86, 7, 0.5);
-  box-shadow: 0 0 0 2px rgba(255, 216, 87, 0.16), 0 0 16px rgba(255, 216, 87, 0.18);
+  background: linear-gradient(180deg, rgba(107, 77, 8, .98), rgba(67, 45, 3, .99));
+  box-shadow: 0 0 0 2px rgba(255, 216, 87, 0.16), 0 0 18px rgba(255, 216, 87, 0.26);
   color: #fffbd8;
 }
 
 .average-fan-short-answer {
   display: flex;
   gap: 14px;
-  width: min(760px, 100%);
-  margin: auto auto 10px;
+  width: 100%;
+  margin: 0;
 }
 
 .average-fan-short-answer input {
   flex: 1;
   min-width: 0;
-  height: 64px;
-  padding: 0 20px;
-  border: 2px solid rgba(249,246,222,.82);
-  border-radius: 8px;
+  height: 74px;
+  padding: 0 22px;
+  border: 3px solid rgba(74, 196, 255, 0.94);
+  border-radius: 13px;
   outline: none;
-  background: rgba(1, 36, 28, .55);
+  background: linear-gradient(180deg, rgba(9, 39, 89, .98), rgba(4, 22, 57, .99));
   color: #fffbe9;
   font-family: "Chalkboard SE", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
   font-size: 25px;
-  box-shadow: none;
+  box-shadow: 0 0 11px rgba(44, 173, 255, .42), 0 6px 14px rgba(0,0,0,.34);
 }
 
 .average-fan-short-answer input::placeholder {
@@ -2756,7 +2816,7 @@ button.average-fan-help-button {
 
 .average-fan-short-answer input:focus {
   border-color: #fff3a3;
-  box-shadow: 0 0 0 2px rgba(255, 243, 163, .12);
+  box-shadow: 0 0 0 2px rgba(255, 243, 163, .12), 0 0 18px rgba(44, 173, 255, .45);
 }
 
 .average-fan-short-answer button,
@@ -2773,37 +2833,40 @@ button.average-fan-help-button {
 }
 
 .average-fan-short-answer button {
-  min-width: 170px;
+  min-width: 184px;
   padding: 0 18px;
-  font-size: 17px;
+  border-color: rgba(74, 196, 255, 0.94);
+  background: linear-gradient(180deg, rgba(11, 75, 148, .98), rgba(5, 42, 96, .99));
+  box-shadow: 0 0 11px rgba(44, 173, 255, .38);
+  font-size: 18px;
 }
 
 .average-fan-peek-banner {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(700px, 100%);
-  min-height: 42px;
-  margin: -8px auto 14px;
-  padding: 7px 16px;
-  border: 1.5px dashed rgba(255, 246, 193, .78);
-  border-radius: 6px;
-  background: rgba(74, 58, 7, .38);
+  width: min(720px, 100%);
+  min-height: 36px;
+  margin: 0 auto 9px;
+  padding: 5px 14px;
+  border: 1.5px dashed rgba(255, 232, 122, .84);
+  border-radius: 8px;
+  background: rgba(61, 44, 4, .84);
   color: #fff6c7;
-  font-size: 18px;
-  line-height: 1.15;
+  font-size: 17px;
+  line-height: 1.12;
 }
 
 .average-fan-reveal {
-  width: min(760px, 100%);
-  margin: -8px auto 0;
-  padding: 10px 24px 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  width: 100%;
+  margin: 0;
+  padding: 14px 24px;
+  border: 3px solid rgba(74, 196, 255, .82);
+  border-radius: 13px;
+  background: linear-gradient(180deg, rgba(7, 35, 79, .96), rgba(3, 20, 50, .98));
   color: #f9f6e8;
   text-align: center;
-  box-shadow: none;
+  box-shadow: 0 0 12px rgba(44, 173, 255, .32), 0 6px 14px rgba(0,0,0,.3);
 }
 
 .average-fan-reveal > strong {
@@ -3094,10 +3157,10 @@ button.average-fan-help-button {
 .average-fan-game-fan__portrait {
   position: absolute;
   z-index: 1;
-  left: 50%;
-  bottom: 92px;
-  width: 272px;
-  height: 408px;
+  left: 42%;
+  bottom: 94px;
+  width: 238px;
+  height: 360px;
   max-width: none;
   object-fit: contain;
   object-position: center bottom;
