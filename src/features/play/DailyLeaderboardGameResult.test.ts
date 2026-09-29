@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import {
+  buildBarTriviaLeaderboardQuestions,
   buildMillionaireLeaderboardQuestions,
   buildSportsFeudFastMoneyRows,
   buildWhoAmILeaderboardRounds,
@@ -278,6 +279,92 @@ describe("Daily leaderboard game result reconstruction", () => {
         guessOrder: null,
       },
     ]);
+  });
+
+  it("reconstructs all ten Bar Trivia answers with the canonical reveal and scoring evidence", () => {
+    const questions = Array.from({ length: 10 }, (_, index) => {
+      const round = index < 3 ? "round1" : index < 6 ? "round2" : index < 9 ? "round3" : "last-call";
+      return {
+        id: `bar-q${index + 1}`,
+        league: "nfl",
+        round,
+        difficulty: round === "round1" ? "easy" : round === "round2" ? "medium" : round === "round3" ? "hard" : "last-call",
+        category: index % 2 ? "History" : "Teams",
+        prompt: `Bar question ${index + 1}`,
+        choices: ["Alpha", "Bravo", "Charlie", "Delta"],
+        answer: index === 9 ? "Delta" : "Bravo",
+        explanation: `Explanation ${index + 1}`,
+        contentType: "evergreen",
+      };
+    });
+    const projection = baseProjection({
+      gameType: "bar_trivia",
+      publicSetup: { league: "nfl", question_count: 10 },
+      publicState: {
+        complete: true,
+        score: 84,
+        correct_count: 8,
+        best_streak: 4,
+        double_round: "round2",
+        wager: 7,
+        answers: [],
+      },
+      revealSetup: { league: "nfl", questions },
+      officialAttempt: {
+        nativeScore: 84,
+        normalizedScore: 84,
+        completedAt: "2026-09-29T12:00:00Z",
+        publicResult: {
+          score: 84,
+          correct_count: 8,
+          best_streak: 4,
+          double_round: "round2",
+          wager: 7,
+        },
+      },
+    });
+
+    const rows = buildBarTriviaLeaderboardQuestions(projection, {
+      answers: questions.map((question, index) => ({
+        question_id: question.id,
+        choice: index === 2 ? "Alpha" : question.answer,
+        correct: index !== 2,
+        points: index === 2 ? 0 : index === 9 ? 8 : 9,
+        raw_points: index === 2 ? 0 : index === 9 ? 23 : 12,
+        base_points: index === 9 ? 16 : 12,
+        double_round_bonus: index >= 3 && index < 6 ? 12 : 0,
+        streak_bonus: index === 4 ? 2.4 : 0,
+        wager_delta: index === 9 ? 7 : 0,
+        round_multiplier: index >= 3 && index < 6 ? 2 : 1,
+        streak_multiplier: index === 4 ? 1.1 : 1,
+      })),
+      double_round: "round2",
+      wager: 7,
+    });
+
+    expect(rows).toHaveLength(10);
+    expect(rows[2]).toMatchObject({
+      id: "bar-q3",
+      pickedChoice: "Alpha",
+      correctChoice: "Bravo",
+      correct: false,
+      points: 0,
+      explanation: "Explanation 3",
+    });
+    expect(rows[4]).toMatchObject({
+      round: "round2",
+      correct: true,
+      doubleRoundBonus: 12,
+      streakBonus: 2.4,
+      roundMultiplier: 2,
+    });
+    expect(rows[9]).toMatchObject({
+      round: "last-call",
+      pickedChoice: "Delta",
+      correct: true,
+      wagerDelta: 7,
+      points: 8,
+    });
   });
 
   it("keeps the player's raw Fast Money text while showing the canonical match", () => {
