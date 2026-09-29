@@ -223,6 +223,35 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "mesh", grade: 5, prompt: "Which passing concept is built around shallow crossing routes that pass close to one another?", answer: "Mesh", wrong: ["Four verts", "Smash"], explanation: "Mesh uses intersecting shallow crossers to stress man and zone coverage." },
   { id: "flood", grade: 5, prompt: "Which passing concept commonly stretches one side of a zone defense at multiple depths?", answer: "Flood", wrong: ["Dagger", "Wham"], explanation: "Flood places receivers at different levels on the same side to high-low zone defenders." },
   { id: "zone-blitz", grade: 5, prompt: "What pressure concept can send a linebacker or defensive back while dropping a defensive lineman into coverage?", answer: "Zone blitz", wrong: ["Prevent defense", "Cover zero"], explanation: "A zone blitz exchanges rush and coverage responsibilities while keeping zone structure behind the pressure." },
+  { id: "touchdown-points", grade: 1, prompt: "How many points is a touchdown worth before the try?", answer: "6", wrong: ["3", "7"], explanation: "A touchdown is worth six points before the extra-point or two-point try." },
+  { id: "field-goal-points", grade: 1, prompt: "How many points is a successful field goal worth?", answer: "3", wrong: ["2", "6"], explanation: "A successful field goal scores three points." },
+  { id: "kneel", grade: 1, prompt: "What play is commonly used by an offense to safely run out the clock at the end of a game?", answer: "Quarterback kneel", wrong: ["Hail Mary", "Onside kick"], explanation: "A quarterback kneel is commonly used to drain the remaining clock safely." },
+  { id: "spike", grade: 1, prompt: "What does a quarterback commonly do immediately after the snap to stop the clock?", answer: "Spike the ball", wrong: ["Take a knee", "Throw a screen"], explanation: "An immediate spike is a legal incomplete forward pass used to stop the clock." },
+
+  { id: "audible", grade: 2, prompt: "What is an audible?", answer: "A play change at the line of scrimmage", wrong: ["A defensive substitution", "A replay challenge"], explanation: "An audible changes the called play or assignment before the snap." },
+  { id: "hard-count", grade: 2, prompt: "What is a hard count designed to make the defense do?", answer: "Jump early", wrong: ["Call timeout", "Drop into zone"], explanation: "A hard count varies the quarterback's cadence to try to draw defenders offside." },
+  { id: "motion", grade: 2, prompt: "What is pre-snap motion?", answer: "An eligible player moving before the snap", wrong: ["The quarterback scrambling", "A lineman pulling after the snap"], explanation: "Pre-snap motion sends an eligible player across or around the formation before the ball is snapped." },
+  { id: "checkdown", grade: 2, prompt: "What is a checkdown in the passing game?", answer: "A short outlet option", wrong: ["A deep post route", "A quarterback sneak"], explanation: "A checkdown is a shorter outlet target used when deeper reads are unavailable." },
+
+  { id: "bootleg", grade: 3, prompt: "What quarterback action usually defines a bootleg?", answer: "Rolling away from the run fake", wrong: ["Taking a straight drop", "Pitching an option immediately"], explanation: "A bootleg moves the quarterback outside after selling action in another direction." },
+  { id: "jet-sweep", grade: 3, prompt: "Which run concept gives or pitches the ball to a receiver already moving across the formation at the snap?", answer: "Jet sweep", wrong: ["Quarterback sneak", "Power dive"], explanation: "A jet sweep uses fast horizontal motion to get the ball carrier to the edge." },
+  { id: "bunch", grade: 3, prompt: "What formation term describes three receivers aligned close together?", answer: "Bunch", wrong: ["Empty", "Wishbone"], explanation: "A bunch set clusters multiple receivers tightly to create traffic and leverage." },
+  { id: "press", grade: 3, prompt: "What coverage technique places a defensive back tight to a receiver at the line of scrimmage?", answer: "Press coverage", wrong: ["Off coverage", "Prevent coverage"], explanation: "Press coverage challenges a receiver at or near the line of scrimmage." },
+
+  { id: "bracket", grade: 4, prompt: "What does bracket coverage usually mean?", answer: "Two defenders combining on one receiver", wrong: ["A seven-man blitz", "A four-deep zone"], explanation: "Bracket coverage uses two defenders to constrain one receiving threat." },
+  { id: "robber", grade: 4, prompt: "What does a 'robber' defender typically do in coverage?", answer: "Drops into an intermediate zone to jump routes", wrong: ["Rushes off the edge every snap", "Plays a deep outside quarter"], explanation: "A robber defender reads the quarterback and looks to cut off intermediate throws." },
+  { id: "stunt", grade: 4, prompt: "What is a defensive-line stunt or twist?", answer: "Rushers exchanging paths after the snap", wrong: ["Safeties swapping deep halves", "Receivers switching sides before the snap"], explanation: "A stunt has pass rushers cross or exchange gaps to stress protection rules." },
+  { id: "contain", grade: 4, prompt: "What is the main goal of edge contain?", answer: "Keep the ball carrier or quarterback from escaping outside", wrong: ["Force every play up the middle before the snap", "Double-team the slot receiver"], explanation: "Contain protects the outside edge and turns the play back toward pursuit." },
+  { id: "inside-zone", grade: 4, prompt: "What run concept asks blockers to work zone combinations while the back reads interior gaps?", answer: "Inside zone", wrong: ["Jet sweep", "Quarterback draw"], explanation: "Inside zone uses zone blocking with the runner reading the interior flow." },
+  { id: "outside-zone", grade: 4, prompt: "What run concept stretches the defense laterally while the back reads for a cut?", answer: "Outside zone", wrong: ["Power", "Trap"], explanation: "Outside zone creates horizontal stretch before the runner chooses a crease." },
+  { id: "hot-route", grade: 4, prompt: "What is a hot route?", answer: "A quick answer built into a pass play against pressure", wrong: ["A deep route run only from the slot", "A route used only in the red zone"], explanation: "A hot route gives the quarterback and receiver a fast response to an unblocked or extra rusher." },
+  { id: "leverage", grade: 4, prompt: "In coverage, what does inside or outside leverage describe?", answer: "A defender's alignment relative to the receiver", wrong: ["The offensive line's snap count", "The punt returner's depth"], explanation: "Leverage describes where a defender positions himself relative to a receiver and the space he wants to deny." },
+
+  { id: "21-personnel", grade: 5, prompt: "What personnel grouping uses two running backs and one tight end?", answer: "21 personnel", wrong: ["12 personnel", "22 personnel"], explanation: "21 personnel uses two backs and one tight end." },
+  { id: "22-personnel", grade: 5, prompt: "What personnel grouping uses two running backs and two tight ends?", answer: "22 personnel", wrong: ["11 personnel", "21 personnel"], explanation: "22 personnel uses two backs and two tight ends." },
+  { id: "smash", grade: 5, prompt: "Which passing concept commonly pairs a short hitch with a corner route on the same side?", answer: "Smash", wrong: ["Mesh", "Four verts"], explanation: "Smash stresses a cornerback with a short route underneath and a corner route over the top." },
+  { id: "dagger", grade: 5, prompt: "Which passing concept commonly pairs a vertical clear-out with a deep in-breaking route behind it?", answer: "Dagger", wrong: ["Flood", "Wham"], explanation: "Dagger uses a vertical route to clear space for a deep dig or in-breaker." },
+  { id: "power", grade: 5, prompt: "Which classic run scheme usually features a pulling backside guard leading through the point of attack?", answer: "Power", wrong: ["Outside zone", "Draw"], explanation: "Power football traditionally uses down blocks plus a pulling guard through the designed gap." },
 ];
 
 const NFL_PLAYER_FACTS: readonly KnowledgeFact[] = [
@@ -474,7 +503,7 @@ function displayNflTeam(code: string) {
 
 function footballCandidates(league: "NFL" | "CFB") {
   const sport: AverageFanSport = league === "NFL" ? "nfl" : "cfb";
-  const players = footballPlayers(league);
+  const players = footballPlayers(league).filter((player) => league !== "NFL" || player.casualEligible);
   const playerNames = players.map((player) => player.name);
   const schools = unique(players.map((player) => player.school ?? ""));
   const nflTeams = unique(players.flatMap((player) => (player.franchises ?? []).map(displayNflTeam)));
@@ -543,7 +572,7 @@ function footballCandidates(league: "NFL" | "CFB") {
             : `Name one NFL team ${player.name} played for.`,
           answer,
           aliases: teams.slice(1),
-          explanation: `${player.name}'s canonical NFL career includes ${teams.join(", ")}.`,
+          explanation: `${player.name}'s NFL career included ${teams.join(", ")}.`,
           fanMisses: wrongTeams,
         }));
       }
