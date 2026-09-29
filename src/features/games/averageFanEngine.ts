@@ -146,7 +146,7 @@ export function averageFanCenteredSubjectModifier(
   }
   const row = reportRow(sport, fan);
   const raw = subjects.map((name) => AVERAGE_FAN_REPORT_GRADE_MODIFIER[row[name]!]);
-  const mean = raw.reduce((sum, value) => sum + value, 0) / raw.length;
+  const mean = raw.reduce<number>((sum, value) => sum + value, 0) / raw.length;
   return AVERAGE_FAN_REPORT_GRADE_MODIFIER[row[subject]!] - mean;
 }
 
