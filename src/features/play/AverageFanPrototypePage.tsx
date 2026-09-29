@@ -603,7 +603,7 @@ function AverageFanGame({
               <header>
                 <b>{averageFanGradeLabel(current.grade)}</b>
                 <span>{current.subject}</span>
-                <small>Q{resolved.length + (phase === "reveal" ? 0 : 1)} · {averageFanMoneyLabel(AVERAGE_FAN_MONEY_LADDER[Math.min(phase === "reveal" ? Math.max(0, resolved.length - 1) : resolved.length, 9)]!)}</small>
+                <small>Q{displayedQuestionNumber} · {averageFanMoneyLabel(displayedQuestionMoney)}</small>
               </header>
               <h2>{current.prompt}</h2>
 
@@ -671,16 +671,7 @@ function AverageFanGame({
                   value={finalAnswer}
                   disabled={false}
                   onChange={setFinalAnswer}
-                  onSubmit={(value) => {
-                    if (value) {
-                      const correct = averageFanAnswersMatch(AVERAGE_FAN_UFC_PREVIEW_FINAL, value);
-                      setFinalAnswer(value);
-                      setFinalOutcome(correct ? "correct" : "wrong");
-                      setPhase("final-reveal");
-                      return;
-                    }
-                    submitFinal();
-                  }}
+                  onSubmit={submitFinal}
                 />
               ) : (
                 <div className={`average-fan-reveal${finalOutcome === "correct" ? " is-correct" : " is-wrong"}`}>
