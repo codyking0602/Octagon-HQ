@@ -766,15 +766,18 @@ function ufcCandidates() {
       const titleFight = titleFights[titleFights.length - 1]!;
       const titleYear = Number(titleFight.date.slice(0, 4));
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:title-identity`);
+      const titleOpponents = unique(titleFights.map((fight) => fight.opponent));
+      const wrongTitleOpponents = peerValues(fighterNames, titleOpponents, `${fighter.id}:title-opponent`);
       questions.push(shortQuestion({
-        id: `average-fan:ufc:g4:${fighter.id}:title-count`,
+        id: `average-fan:ufc:g4:${fighter.id}:title-opponent`,
         sport: "ufc",
         grade: 4,
         subject: "Championships",
-        prompt: `How many UFC title fights did ${fighter.name} have?`,
-        answer: String(titleFights.length),
-        explanation: `${fighter.name} had ${titleFights.length} UFC title fights.`,
-        fanMisses: unique([Math.max(0, titleFights.length - 1), titleFights.length + 1].map(String)),
+        prompt: `Name one fighter ${fighter.name} faced in a UFC title fight.`,
+        answer: titleOpponents[0]!,
+        aliases: titleOpponents.slice(1),
+        explanation: `${fighter.name}'s UFC title-fight opponents include ${titleOpponents.join(", ")}.`,
+        fanMisses: wrongTitleOpponents,
         difficultyNudge: 1,
       }));
       questions.push(shortQuestion({
