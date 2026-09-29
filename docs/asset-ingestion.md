@@ -23,6 +23,6 @@ Manifest:
 
 `crop` is optional and uses normalized `[x,y,width,height]` coordinates.
 
-Allowed source hosts are ESPN/ESPN CDN and UFC. Destinations are restricted to `public/assets/fighters/` and must end in `-thumb.webp` or `-spotlight.webp`. Thumbs are exactly 320×320; Spotlights are exactly 626×800. Approved ESPN/UFC source imagery may be opaque. When needed, the ingest processor removes the source background and must still produce real visible transparency in the finished WebP. If background removal cannot produce valid transparency, the job fails closed rather than inventing or substituting imagery.
+Allowed source hosts are ESPN/ESPN CDN and UFC. Destinations are restricted to `public/assets/fighters/` and must end in `-thumb.webp` or `-spotlight.webp`. Thumbs are exactly 320×320; Spotlights are exactly 626×800. Approved ESPN/UFC source imagery may be opaque or partially transparent. Source alpha is not treated as proof that the source background is already clean: every newly ingested fighter source is passed through the canonical background-cleanup model, including a post-crop cleanup pass, and the finished WebP must still contain real visible transparency. If cleanup cannot produce a valid cutout, the job fails closed rather than inventing or substituting imagery.
 
 This is a transport/processing primitive, not a provenance bypass. Sport-specific source rules still apply.
