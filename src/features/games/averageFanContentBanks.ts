@@ -298,6 +298,48 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "cage-cutting", grade: 5, prompt: "What striking-footwork concept limits an opponent\'s escape routes instead of simply following them around the cage?", answer: "Cage cutting", wrong: ["Level changing", "Wall walking"], explanation: "Cage cutting uses angles and positioning to reduce an opponent\'s available space and exits." },
 ];
 
+const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
+  { id: "ufc1-winner", grade: 1, prompt: "Who won the UFC 1 tournament?", answer: "Royce Gracie", wrong: ["Ken Shamrock", "Gerard Gordeau"], explanation: "Royce Gracie won the inaugural UFC tournament in 1993." },
+  { id: "ufc1-one-glove", grade: 2, prompt: "Which UFC 1 fighter famously entered the Octagon wearing one boxing glove?", answer: "Art Jimmerson", wrong: ["Kevin Rosier", "Gerard Gordeau"], explanation: "Art Jimmerson wore one red boxing glove against Royce Gracie at UFC 1." },
+  { id: "ufc1-headkick", grade: 3, prompt: "Who scored the first head-kick knockout in UFC history?", answer: "Gerard Gordeau", wrong: ["Vitor Belfort", "Marco Ruas"], explanation: "Gerard Gordeau stopped Teila Tuli with the UFC's first head-kick knockout." },
+  { id: "ufc3-winner", grade: 4, prompt: "Which alternate won the unusual UFC 3 tournament after fighting only once?", answer: "Steve Jennum", wrong: ["Kimo Leopoldo", "Ken Shamrock"], explanation: "Steve Jennum entered late as an alternate and won UFC 3 after one fight." },
+  { id: "ufc4-final", grade: 3, prompt: "Royce Gracie submitted which wrestler to win the UFC 4 tournament?", answer: "Dan Severn", wrong: ["Ken Shamrock", "Oleg Taktarov"], explanation: "Gracie submitted Dan Severn in the UFC 4 tournament final." },
+  { id: "ufc5-winner", grade: 4, prompt: "Who won the UFC 5 tournament?", answer: "Dan Severn", wrong: ["Oleg Taktarov", "Ken Shamrock"], explanation: "Dan Severn submitted Dave Beneteau to win UFC 5." },
+  { id: "ufc6-winner", grade: 4, prompt: "Who won the UFC 6 tournament by submitting Tank Abbott in the final?", answer: "Oleg Taktarov", wrong: ["Dan Severn", "Ken Shamrock"], explanation: "Oleg Taktarov submitted Tank Abbott to win UFC 6." },
+  { id: "first-wheel-kick", grade: 2, prompt: "Who scored the UFC's first spinning wheel-kick knockout?", answer: "Edson Barboza", wrong: ["Stephen Thompson", "Yair Rodriguez"], explanation: "Edson Barboza knocked out Terry Etim with a spinning wheel kick at UFC 142." },
+  { id: "gonzaga-crocop", grade: 2, prompt: "Who knocked out Mirko Cro Cop with a head kick at UFC 70?", answer: "Gabriel Gonzaga", wrong: ["Fabricio Werdum", "Junior dos Santos"], explanation: "Gabriel Gonzaga shocked Cro Cop with a first-round head-kick knockout." },
+  { id: "fox-first", grade: 2, prompt: "Who knocked out Cain Velasquez in the UFC's first fight broadcast live on FOX?", answer: "Junior dos Santos", wrong: ["Brock Lesnar", "Alistair Overeem"], explanation: "Junior dos Santos stopped Velasquez to win the heavyweight title in 2011." },
+  { id: "sterling-dq-title", grade: 2, prompt: "Who won the UFC bantamweight title by disqualification after Petr Yan landed an illegal knee at UFC 259?", answer: "Aljamain Sterling", wrong: ["Cory Sandhagen", "Henry Cejudo"], explanation: "Petr Yan was disqualified for an illegal knee to Aljamain Sterling at UFC 259." },
+  { id: "jones-hamill", grade: 3, prompt: "Jon Jones' lone official UFC loss came by disqualification against whom?", answer: "Matt Hamill", wrong: ["Alexander Gustafsson", "Daniel Cormier"], explanation: "Jones was disqualified against Matt Hamill in 2009." },
+  { id: "mcgregor-alvarez", grade: 2, prompt: "Whom did Conor McGregor defeat to become the UFC's first simultaneous two-division champion?", answer: "Eddie Alvarez", wrong: ["Jose Aldo", "Nate Diaz"], explanation: "McGregor stopped Eddie Alvarez at UFC 205 to hold featherweight and lightweight gold simultaneously." },
+  { id: "aldo-13", grade: 3, prompt: "How many seconds did Conor McGregor need to knock out Jose Aldo at UFC 194?", answer: "13", wrong: ["7", "21"], explanation: "McGregor stopped Aldo 13 seconds into their featherweight title fight." },
+  { id: "edwards-usman-round", grade: 3, prompt: "Leon Edwards' famous head-kick knockout of Kamaru Usman at UFC 278 came in which round?", answer: "Round 5", wrong: ["Round 3", "Round 4"], explanation: "Edwards knocked out Usman late in Round 5 to win the welterweight title." },
+  { id: "holloway-gaethje-time", grade: 4, prompt: "Max Holloway knocked out Justin Gaethje at UFC 300 with how much time left in Round 5?", answer: "1 second", wrong: ["5 seconds", "10 seconds"], explanation: "Holloway's knockout came at 4:59 of Round 5." },
+  { id: "lewis-volkov", grade: 3, prompt: "Derrick Lewis delivered his famous 'my balls was hot' interview after knocking out whom at UFC 229?", answer: "Alexander Volkov", wrong: ["Curtis Blaydes", "Travis Browne"], explanation: "Lewis stopped Alexander Volkov with 11 seconds left before the memorable interview." },
+  { id: "barboza-etim", grade: 4, prompt: "Edson Barboza's spinning wheel-kick knockout at UFC 142 came against whom?", answer: "Terry Etim", wrong: ["Ross Pearson", "Anthony Njokuani"], explanation: "Barboza knocked out Terry Etim with the UFC's first spinning wheel-kick finish." },
+  { id: "belfort-19", grade: 5, prompt: "How old was Vitor Belfort when he won the UFC 12 heavyweight tournament?", answer: "19", wrong: ["21", "23"], explanation: "Vitor Belfort was 19 when he won the UFC 12 heavyweight tournament." },
+  { id: "daley-koscheck", grade: 5, prompt: "Which UFC 113 fighter was released after punching Josh Koscheck after the final bell?", answer: "Paul Daley", wrong: ["Thiago Alves", "Dan Hardy"], explanation: "Paul Daley struck Josh Koscheck after the horn and was released from the UFC." },
+  { id: "taktarov-nine", grade: 5, prompt: "Oleg Taktarov's nine-second submission at UFC 6 came against whom?", answer: "Anthony Macias", wrong: ["Paul Varelans", "Dave Beneteau"], explanation: "Taktarov submitted Anthony Macias in nine seconds at UFC 6." },
+  { id: "first-170", grade: 5, prompt: "The UFC's first 170-pound bout featured Laverne Clark against whom?", answer: "Josh Stewart", wrong: ["Pat Miletich", "Mikey Burnett"], explanation: "Laverne Clark faced Josh Stewart at UFC 16 in the promotion's first 170-pound bout." },
+  { id: "first-155", grade: 5, prompt: "Jens Pulver fought whom in the UFC's first 155-pound bout?", answer: "Joao Roque", wrong: ["Caol Uno", "John Lewis"], explanation: "Pulver faced Joao Roque at UFC 26 in the promotion's first 155-pound bout." },
+  { id: "first-125", grade: 4, prompt: "Demetrious Johnson faced whom in the UFC's first flyweight bout?", answer: "Ian McCall", wrong: ["Joseph Benavidez", "John Dodson"], explanation: "Johnson and Ian McCall met in the UFC's first flyweight bout in 2012." },
+  { id: "first-fox-time", grade: 5, prompt: "How long did Junior dos Santos need to stop Cain Velasquez in the UFC's FOX debut?", answer: "64 seconds", wrong: ["48 seconds", "94 seconds"], explanation: "Dos Santos stopped Velasquez 64 seconds into the first round." },
+];
+
+const UFC_FINAL_FACTS: readonly KnowledgeFact[] = [
+  { id: "final-aldo-13", grade: 5, prompt: "What was the official time of Conor McGregor's title-winning knockout of Jose Aldo?", answer: "0:13", wrong: ["0:07", "0:21"], explanation: "McGregor stopped Aldo 13 seconds into UFC 194." },
+  { id: "final-holloway-459", grade: 5, prompt: "At what official time did Max Holloway knock out Justin Gaethje at UFC 300?", answer: "4:59 of Round 5", wrong: ["4:49 of Round 5", "4:59 of Round 4"], explanation: "Holloway landed the knockout at 4:59 of the fifth round." },
+  { id: "final-jones-hamill", grade: 5, prompt: "Which fighter handed Jon Jones his lone official UFC loss by disqualification?", answer: "Matt Hamill", wrong: ["Chael Sonnen", "Alexander Gustafsson"], explanation: "Jones' official loss came by disqualification against Matt Hamill." },
+  { id: "final-muscle-shark", grade: 5, prompt: "Which former UFC lightweight champion was known as 'The Muscle Shark'?", answer: "Sean Sherk", wrong: ["Jens Pulver", "Kenny Florian"], explanation: "Former lightweight champion Sean Sherk fought under the nickname The Muscle Shark." },
+  { id: "final-maine-iac", grade: 5, prompt: "Which former two-time UFC heavyweight champion was nicknamed 'The Maine-iac'?", answer: "Tim Sylvia", wrong: ["Andrei Arlovski", "Josh Barnett"], explanation: "Two-time heavyweight champion Tim Sylvia was known as The Maine-iac." },
+  { id: "final-dean-mean", grade: 5, prompt: "Which UFC light heavyweight was known as 'The Dean of Mean'?", answer: "Keith Jardine", wrong: ["Forrest Griffin", "Stephan Bonnar"], explanation: "Keith Jardine fought under the nickname The Dean of Mean." },
+  { id: "final-daley", grade: 5, prompt: "Who was released after throwing a punch at Josh Koscheck after their UFC 113 fight?", answer: "Paul Daley", wrong: ["Dan Hardy", "Thiago Alves"], explanation: "Paul Daley struck Koscheck after the final bell and was released." },
+  { id: "final-belfort-age", grade: 5, prompt: "How old was Vitor Belfort when he won the UFC 12 heavyweight tournament?", answer: "19", wrong: ["20", "21"], explanation: "Belfort was 19 years old when he won the UFC 12 tournament." },
+  { id: "final-barboza", grade: 5, prompt: "Edson Barboza's first-in-UFC spinning wheel-kick knockout came against which opponent?", answer: "Terry Etim", wrong: ["Paul Felder", "Ross Pearson"], explanation: "Barboza knocked out Terry Etim with the historic kick at UFC 142." },
+  { id: "final-taktarov", grade: 5, prompt: "Oleg Taktarov's nine-second UFC 6 submission came against whom?", answer: "Anthony Macias", wrong: ["Tank Abbott", "Paul Varelans"], explanation: "Taktarov submitted Anthony Macias in nine seconds." },
+];
+
+
 function knowledgeQuestions(
   sport: AverageFanSport,
   subject: AverageFanSubject,
@@ -773,6 +815,19 @@ function ufcCandidates() {
   }
 
   questions.push(...knowledgeQuestions("ufc", "Octagon IQ", "average-fan:ufc:iq", UFC_IQ_FACTS));
+  questions.push(...knowledgeQuestions("ufc", "UFC History", "average-fan:ufc:history", UFC_HISTORY_FACTS));
+  questions.push(...UFC_FINAL_FACTS.map((fact) => shortQuestion({
+    id: `average-fan:ufc:final:authored:${fact.id}`,
+    sport: "ufc",
+    grade: 5,
+    subject: "UFC History",
+    prompt: fact.prompt,
+    answer: fact.answer,
+    explanation: fact.explanation,
+    fanMisses: fact.wrong,
+    difficultyNudge: 3,
+    protectedFinal: true,
+  })));
   return questions;
 }
 
