@@ -92,6 +92,10 @@ function gameProgress(projection: TodayChallengeProjection) {
       }
       return `ROUND ${Number(state.main_board_index ?? 0) + 1} OF 2`;
     }
+    case "bar_trivia":
+      return state.complete === true
+        ? "BAR TRIVIA COMPLETE"
+        : `Q${Math.min(10, Number(state.index ?? 0) + 1)} OF 10`;
   }
 }
 
@@ -149,7 +153,7 @@ function DailyAnswerDetail({
               sport={sport === "football" ? "football" : "ufc"}
             />
           </Suspense>
-        ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" ? (
+        ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia" ? (
           <DailyLeaderboardGameResult
             projection={resultProjection}
             resultDetail={entry.resultDetail}
