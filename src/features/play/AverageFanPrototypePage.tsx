@@ -1,14 +1,40 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
+  averageFanAnswersMatch,
+  averageFanFanAnswer,
+  scoreAverageFanBoard,
+  scoreAverageFanFinal,
   type AverageFanFan,
+  type AverageFanQuestion,
   type AverageFanReportGrade,
 } from "../games/averageFanEngine";
+import {
+  AVERAGE_FAN_MONEY_LADDER,
+  AVERAGE_FAN_UFC_PREVIEW_BOARD,
+  AVERAGE_FAN_UFC_PREVIEW_FINAL,
+  averageFanGradeLabel,
+  averageFanMoneyLabel,
+} from "./AverageFanPrototypeModel";
 import "./AverageFanPrototypePage.css";
 
-type PrototypeScene = "intro" | "fan-select";
+type PrototypeScene = "intro" | "fan-select" | "game";
+type GamePhase = "board" | "question" | "reveal" | "final-decision" | "final-question" | "final-reveal" | "result";
+type FinalOutcome = "walk-away" | "correct" | "wrong";
+
+type ResolvedQuestion = {
+  question: AverageFanQuestion;
+  playerAnswer: string;
+  fanAnswer: string;
+  correct: boolean;
+  peekUsed: boolean;
+  copied: boolean;
+  saveConsumed: boolean;
+  saved: boolean;
+  order: number;
+};
 
 const FAN_ORDER: readonly AverageFanFan[] = ["shane", "cody", "lib", "tyler", "troy"];
 const FAN_LABELS: Record<AverageFanFan, string> = {
@@ -46,9 +72,9 @@ function ChalkDoodles() {
   );
 }
 
-function HostArt() {
+function HostArt({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="average-fan-host" aria-label="Pat McAfee host">
+    <div className={`average-fan-host${compact ? " average-fan-host--compact" : ""}`} aria-label="Pat McAfee host">
       <div className="average-fan-host__hair" />
       <div className="average-fan-host__head">
         <i className="average-fan-host__eye eye-left" />
@@ -133,6 +159,7 @@ function FanAvatar({ fan, large = false }: { fan: AverageFanFan; large?: boolean
         <b className="average-fan-avatar__eye eye-a" />
         <b className="average-fan-avatar__eye eye-b" />
         {hasGlasses ? <b className="average-fan-avatar__glasses" /> : null}
+        {fan === "tyler" ? <b className="average-fan-avatar__mustache" /> : null}
         <b className="average-fan-avatar__smile" />
       </i>
       <i className="average-fan-avatar__body" />
@@ -162,9 +189,14 @@ function FanCard({
   );
 }
 
-function FanSelector({ onBack }: { onBack: () => void }) {
+function FanSelector({
+  onBack,
+  onConfirm,
+}: {
+  onBack: () => void;
+  onConfirm: (fan: AverageFanFan) => void;
+}) {
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
-  const [confirmed, setConfirmed] = useState(false);
   const sport = "ufc" as const;
 
   const rows = useMemo(() => {
@@ -172,11 +204,6 @@ function FanSelector({ onBack }: { onBack: () => void }) {
     const report = AVERAGE_FAN_REPORT_CARDS[sport][selectedFan] as Record<string, AverageFanReportGrade>;
     return subjects.map((subject) => ({ subject, grade: report[subject] }));
   }, [selectedFan]);
-
-  function chooseFan(fan: AverageFanFan) {
-    setSelectedFan(fan);
-    setConfirmed(false);
-  }
 
   return (
     <div className="average-fan-selector">
@@ -192,7 +219,7 @@ function FanSelector({ onBack }: { onBack: () => void }) {
               key={fan}
               fan={fan}
               selected={fan === selectedFan}
-              onSelect={() => chooseFan(fan)}
+              onSelect={() => setSelectedFan(fan)}
             />
           ))}
         </div>
@@ -217,12 +244,12 @@ function FanSelector({ onBack }: { onBack: () => void }) {
         </div>
 
         <button
-          className={`average-fan-select-button${confirmed ? " is-confirmed" : ""}`}
+          className="average-fan-select-button"
           type="button"
-          onClick={() => setConfirmed(true)}
+          onClick={() => onConfirm(selectedFan)}
         >
-          <span aria-hidden="true">{confirmed ? "✓" : "▶"}</span>
-          {confirmed ? "FAN SELECTED" : "SELECT FAN"}
+          <span aria-hidden="true">▶</span>
+          SELECT FAN
         </button>
       </section>
 
@@ -231,13 +258,511 @@ function FanSelector({ onBack }: { onBack: () => void }) {
   );
 }
 
+function MoneyRail({ completed }: { completed: number }) {
+  return (
+    <aside className="average-fan-money-rail" aria-label="Money ladder">
+      {AVERAGE_FAN_MONEY_LADDER.slice().reverse().map((money, reverseIndex) => {
+        const questionNumber = AVERAGE_FAN_MONEY_LADDER.length - reverseIndex;
+        const current = questionNumber === Math.min(completed + 1, 10);
+        const cleared = questionNumber <= completed;
+        return (
+          <div
+            className={`average-fan-money-row${current ? " is-current" : ""}${cleared ? " is-cleared" : ""}`}
+            key={money}
+          >
+            <small>{questionNumber}</small>
+            <strong>{averageFanMoneyLabel(money)}</strong>
+          </div>
+        );
+      })}
+    </aside>
+  );
+}
+
+function HelpRail({
+  fan,
+  peekUsed,
+  copyUsed,
+  saveUsed,
+  canUse,
+  peekActive,
+  onPeek,
+  onCopy,
+}: {
+  fan: AverageFanFan;
+  peekUsed: boolean;
+  copyUsed: boolean;
+  saveUsed: boolean;
+  canUse: boolean;
+  peekActive: boolean;
+  onPeek: () => void;
+  onCopy: () => void;
+}) {
+  return (
+    <aside className="average-fan-help-rail" aria-label="Fan help">
+      <div className="average-fan-help-fan">
+        <FanAvatar fan={fan} />
+        <strong>{FAN_LABELS[fan]}</strong>
+      </div>
+      <button
+        type="button"
+        className={`average-fan-help-button${peekActive ? " is-active" : ""}`}
+        disabled={!canUse || peekUsed}
+        onClick={onPeek}
+      >
+        <strong>PEEK</strong>
+        <span>{peekUsed ? "USED" : "See the fan's answer"}</span>
+      </button>
+      <button
+        type="button"
+        className="average-fan-help-button"
+        disabled={!canUse || copyUsed}
+        onClick={onCopy}
+      >
+        <strong>COPY</strong>
+        <span>{copyUsed ? "USED" : "Lock the fan's answer"}</span>
+      </button>
+      <div className={`average-fan-help-button average-fan-help-button--save${saveUsed ? " is-used" : ""}`}>
+        <strong>SAVE</strong>
+        <span>{saveUsed ? "USED" : "Auto-rescues one miss"}</span>
+      </div>
+    </aside>
+  );
+}
+
+function TileBoard({
+  resolved,
+  onSelect,
+}: {
+  resolved: readonly ResolvedQuestion[];
+  onSelect: (question: AverageFanQuestion) => void;
+}) {
+  const resolvedIds = new Set(resolved.map((item) => item.question.id));
+  return (
+    <section className="average-fan-tile-board" aria-label="Question board">
+      <header>
+        <span>CHOOSE A SUBJECT</span>
+        <strong>WORK THE BOARD</strong>
+      </header>
+      <div className="average-fan-grade-board">
+        {[1, 2, 3, 4, 5].map((grade) => {
+          const questions = AVERAGE_FAN_UFC_PREVIEW_BOARD.filter((question) => question.grade === grade);
+          return (
+            <div className="average-fan-grade-row" key={grade}>
+              <b>{averageFanGradeLabel(grade).replace(" Grade", "")}</b>
+              {questions.map((question) => {
+                const done = resolvedIds.has(question.id);
+                return (
+                  <button
+                    key={question.id}
+                    type="button"
+                    className={done ? "is-done" : ""}
+                    disabled={done}
+                    onClick={() => onSelect(question)}
+                  >
+                    <span>{question.subject}</span>
+                    <small>{done ? "✓ ANSWERED" : averageFanGradeLabel(grade)}</small>
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function QuestionAnswerControl({
+  question,
+  value,
+  disabled,
+  onChange,
+  onSubmit,
+}: {
+  question: AverageFanQuestion;
+  value: string;
+  disabled: boolean;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+}) {
+  if (question.format === "three-choice") {
+    return (
+      <div className="average-fan-choice-grid">
+        {question.choices!.map((choice) => (
+          <button
+            key={choice}
+            type="button"
+            disabled={disabled}
+            className={value === choice ? "is-selected" : ""}
+            onClick={() => {
+              onChange(choice);
+              window.setTimeout(onSubmit, 0);
+            }}
+          >
+            {choice}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  if (question.format === "true-false") {
+    return (
+      <div className="average-fan-choice-grid average-fan-choice-grid--tf">
+        {["True", "False"].map((choice) => (
+          <button
+            key={choice}
+            type="button"
+            disabled={disabled}
+            className={value === choice ? "is-selected" : ""}
+            onClick={() => {
+              onChange(choice);
+              window.setTimeout(onSubmit, 0);
+            }}
+          >
+            {choice}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <form
+      className="average-fan-short-answer"
+      onSubmit={(event: FormEvent) => {
+        event.preventDefault();
+        onSubmit();
+      }}
+    >
+      <input
+        autoFocus
+        value={value}
+        disabled={disabled}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="Type your answer"
+        autoComplete="off"
+      />
+      <button type="submit" disabled={disabled || !value.trim()}>LOCK IT IN</button>
+    </form>
+  );
+}
+
+function FinalDecision({
+  boardScore,
+  subject,
+  onWalk,
+  onGo,
+}: {
+  boardScore: number;
+  subject: string;
+  onWalk: () => void;
+  onGo: () => void;
+}) {
+  return (
+    <section className="average-fan-final-card">
+      <p>FINAL QUESTION</p>
+      <h2>{subject}</h2>
+      <span>You've cleared the board with <strong>{boardScore} HQ PTS</strong>.</span>
+      <div className="average-fan-final-stakes">
+        <div><small>WALK AWAY</small><strong>$500,000</strong></div>
+        <div><small>GO FOR IT</small><strong>$1,000,000</strong></div>
+      </div>
+      <div className="average-fan-final-actions">
+        <button type="button" onClick={onWalk}>WALK AWAY</button>
+        <button type="button" className="is-go" onClick={onGo}>GO FOR $1M</button>
+      </div>
+    </section>
+  );
+}
+
+function AverageFanGame({
+  fan,
+  onExit,
+  onRestart,
+}: {
+  fan: AverageFanFan;
+  onExit: () => void;
+  onRestart: () => void;
+}) {
+  const [phase, setPhase] = useState<GamePhase>("board");
+  const [current, setCurrent] = useState<AverageFanQuestion | null>(null);
+  const [answer, setAnswer] = useState("");
+  const [resolved, setResolved] = useState<ResolvedQuestion[]>([]);
+  const [peekUsed, setPeekUsed] = useState(false);
+  const [copyUsed, setCopyUsed] = useState(false);
+  const [saveUsed, setSaveUsed] = useState(false);
+  const [peekActive, setPeekActive] = useState(false);
+  const [lastResolution, setLastResolution] = useState<ResolvedQuestion | null>(null);
+  const [finalAnswer, setFinalAnswer] = useState("");
+  const [finalOutcome, setFinalOutcome] = useState<FinalOutcome | null>(null);
+
+  const fanAnswer = useMemo(
+    () => current ? averageFanFanAnswer(current, fan) : null,
+    [current, fan],
+  );
+  const finalFanAnswer = useMemo(
+    () => averageFanFanAnswer(AVERAGE_FAN_UFC_PREVIEW_FINAL, fan),
+    [fan],
+  );
+  const unsavedMisses = resolved.filter((item) => !item.correct && !item.saved).map((item) => item.order);
+  const boardScore = scoreAverageFanBoard(unsavedMisses);
+  const completed = resolved.length;
+  const currentMoney = completed ? AVERAGE_FAN_MONEY_LADDER[Math.min(completed, 10) - 1]! : 0;
+  const finalScore = finalOutcome ? scoreAverageFanFinal(boardScore, finalOutcome) : boardScore;
+  const finalMoney = finalOutcome === "correct" ? 1_000_000 : finalOutcome === "wrong" ? 25_000 : 500_000;
+
+  function chooseQuestion(question: AverageFanQuestion) {
+    setCurrent(question);
+    setAnswer("");
+    setPeekActive(false);
+    setLastResolution(null);
+    setPhase("question");
+  }
+
+  function resolveAnswer(playerAnswer: string, copied = false) {
+    if (!current || phase !== "question" || !fanAnswer) return;
+    const correct = averageFanAnswersMatch(current, playerAnswer);
+    let saveConsumed = false;
+    let saved = false;
+
+    if (!correct && !saveUsed) {
+      saveConsumed = true;
+      setSaveUsed(true);
+      saved = fanAnswer.correct;
+    }
+
+    const item: ResolvedQuestion = {
+      question: current,
+      playerAnswer,
+      fanAnswer: fanAnswer.answer,
+      correct,
+      peekUsed: peekActive,
+      copied,
+      saveConsumed,
+      saved,
+      order: resolved.length + 1,
+    };
+    setResolved((items) => [...items, item]);
+    setLastResolution(item);
+    setPhase("reveal");
+  }
+
+  function submitCurrent() {
+    if (!answer.trim()) return;
+    resolveAnswer(answer.trim());
+  }
+
+  function copyFan() {
+    if (!current || !fanAnswer || copyUsed || phase !== "question") return;
+    setCopyUsed(true);
+    setAnswer(fanAnswer.answer);
+    resolveAnswer(fanAnswer.answer, true);
+  }
+
+  function continueAfterReveal() {
+    setCurrent(null);
+    setAnswer("");
+    setPeekActive(false);
+    setLastResolution(null);
+    if (resolved.length >= 10) setPhase("final-decision");
+    else setPhase("board");
+  }
+
+  function walkAway() {
+    setFinalOutcome("walk-away");
+    setPhase("result");
+  }
+
+  function submitFinal() {
+    if (!finalAnswer.trim() || phase !== "final-question") return;
+    const correct = averageFanAnswersMatch(AVERAGE_FAN_UFC_PREVIEW_FINAL, finalAnswer.trim());
+    setFinalOutcome(correct ? "correct" : "wrong");
+    setPhase("final-reveal");
+  }
+
+  const questionVisible = current && (phase === "question" || phase === "reveal");
+
+  return (
+    <div className="average-fan-game">
+      <StudioBackdrop />
+      <button className="average-fan-exit" type="button" onClick={onExit} aria-label="Exit Average Fan preview">‹ HQ</button>
+
+      <div className="average-fan-game-stage">
+        <HostArt compact />
+        <div className="average-fan-game-chalkboard">
+          {phase === "board" ? (
+            <TileBoard resolved={resolved} onSelect={chooseQuestion} />
+          ) : questionVisible ? (
+            <section className="average-fan-question-card">
+              <header>
+                <b>{averageFanGradeLabel(current.grade)}</b>
+                <span>{current.subject}</span>
+                <small>Q{resolved.length + (phase === "reveal" ? 0 : 1)} · {averageFanMoneyLabel(AVERAGE_FAN_MONEY_LADDER[Math.min(resolved.length, 9)]!)}</small>
+              </header>
+              <h2>{current.prompt}</h2>
+
+              {phase === "question" ? (
+                <>
+                  {peekActive && fanAnswer ? (
+                    <div className="average-fan-peek-banner">
+                      <FanAvatar fan={fan} />
+                      <span><b>{FAN_LABELS[fan]} says:</b> {fanAnswer.answer}</span>
+                    </div>
+                  ) : null}
+                  <QuestionAnswerControl
+                    question={current}
+                    value={answer}
+                    disabled={false}
+                    onChange={setAnswer}
+                    onSubmit={submitCurrent}
+                  />
+                </>
+              ) : lastResolution ? (
+                <div className={`average-fan-reveal${lastResolution.correct || lastResolution.saved ? " is-correct" : " is-wrong"}`}>
+                  <strong>
+                    {lastResolution.correct
+                      ? "CORRECT"
+                      : lastResolution.saved
+                        ? "SAVED!"
+                        : "NOT QUITE"}
+                  </strong>
+                  <p><b>Answer:</b> {current.answer}</p>
+                  <p>{current.explanation}</p>
+                  <div className="average-fan-reveal__fan">
+                    <FanAvatar fan={fan} />
+                    <span><b>{FAN_LABELS[fan]} answered:</b> {lastResolution.fanAnswer}</span>
+                  </div>
+                  {lastResolution.saveConsumed ? (
+                    <small>{lastResolution.saved ? "Your fan got it right — Save keeps the clean run alive." : "Save was used, but your fan missed too."}</small>
+                  ) : null}
+                  <button type="button" onClick={continueAfterReveal}>
+                    {resolved.length >= 10 ? "SEE FINAL SUBJECT" : "BACK TO BOARD"}
+                  </button>
+                </div>
+              ) : null}
+            </section>
+          ) : phase === "final-decision" ? (
+            <FinalDecision
+              boardScore={boardScore}
+              subject={AVERAGE_FAN_UFC_PREVIEW_FINAL.subject}
+              onWalk={walkAway}
+              onGo={() => {
+                setFinalAnswer("");
+                setPhase("final-question");
+              }}
+            />
+          ) : phase === "final-question" || phase === "final-reveal" ? (
+            <section className="average-fan-question-card average-fan-question-card--final">
+              <header>
+                <b>FINAL</b>
+                <span>{AVERAGE_FAN_UFC_PREVIEW_FINAL.subject}</span>
+                <small>$1,000,000</small>
+              </header>
+              <h2>{AVERAGE_FAN_UFC_PREVIEW_FINAL.prompt}</h2>
+              {phase === "final-question" ? (
+                <QuestionAnswerControl
+                  question={AVERAGE_FAN_UFC_PREVIEW_FINAL}
+                  value={finalAnswer}
+                  disabled={false}
+                  onChange={setFinalAnswer}
+                  onSubmit={submitFinal}
+                />
+              ) : (
+                <div className={`average-fan-reveal${finalOutcome === "correct" ? " is-correct" : " is-wrong"}`}>
+                  <strong>{finalOutcome === "correct" ? "YOU'RE A MILLIONAIRE!" : "FINAL MISS"}</strong>
+                  <p><b>Answer:</b> {AVERAGE_FAN_UFC_PREVIEW_FINAL.answer}</p>
+                  <p>{AVERAGE_FAN_UFC_PREVIEW_FINAL.explanation}</p>
+                  <div className="average-fan-reveal__fan">
+                    <FanAvatar fan={fan} />
+                    <span><b>{FAN_LABELS[fan]} had:</b> {finalFanAnswer.answer}</span>
+                  </div>
+                  <button type="button" onClick={() => setPhase("result")}>SEE RESULTS</button>
+                </div>
+              )}
+            </section>
+          ) : phase === "result" && finalOutcome ? (
+            <section className="average-fan-result">
+              <p>FINAL REPORT</p>
+              <h2>{finalOutcome === "correct" ? "$1,000,000" : finalOutcome === "walk-away" ? "$500,000" : "$25,000"}</h2>
+              <span>{finalOutcome === "correct" ? "SMARTER THAN AN AVERAGE FAN" : finalOutcome === "walk-away" ? "MONEY BANKED" : "SO CLOSE"}</span>
+              <div className="average-fan-result-score">
+                <strong>{finalScore}</strong>
+                <small>HQ PTS</small>
+              </div>
+              <div className="average-fan-result-stats">
+                <div><b>{resolved.filter((item) => item.correct || item.saved).length}/10</b><span>Board clears</span></div>
+                <div><b>{resolved.filter((item) => item.saved).length}</b><span>Saves</span></div>
+                <div><b>{averageFanMoneyLabel(finalMoney)}</b><span>Final money</span></div>
+              </div>
+              <div className="average-fan-result-actions">
+                <button type="button" onClick={onRestart}>PLAY AGAIN</button>
+                <button type="button" onClick={onExit}>BACK TO HQ</button>
+              </div>
+            </section>
+          ) : null}
+        </div>
+
+        <MoneyRail completed={completed} />
+        <HelpRail
+          fan={fan}
+          peekUsed={peekUsed}
+          copyUsed={copyUsed}
+          saveUsed={saveUsed}
+          canUse={phase === "question"}
+          peekActive={peekActive}
+          onPeek={() => {
+            if (phase !== "question" || peekUsed) return;
+            setPeekUsed(true);
+            setPeekActive(true);
+          }}
+          onCopy={copyFan}
+        />
+
+        <div className="average-fan-game-scorebar">
+          <span><small>YOUR FAN</small><strong>{FAN_LABELS[fan]}</strong></span>
+          <span><small>BOARD</small><strong>{completed}/10</strong></span>
+          <span><small>MONEY</small><strong>{completed ? averageFanMoneyLabel(currentMoney) : "$0"}</strong></span>
+          <span><small>HQ SCORE</small><strong>{boardScore}</strong></span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AverageFanPrototypePage() {
   const navigate = useNavigate();
   const [scene, setScene] = useState<PrototypeScene>("intro");
+  const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
+  const [gameKey, setGameKey] = useState(0);
   const [rulesOpen, setRulesOpen] = useState(false);
 
   if (scene === "fan-select") {
-    return <FanSelector onBack={() => setScene("intro")} />;
+    return (
+      <FanSelector
+        onBack={() => setScene("intro")}
+        onConfirm={(fan) => {
+          setSelectedFan(fan);
+          setGameKey((value) => value + 1);
+          setScene("game");
+        }}
+      />
+    );
+  }
+
+  if (scene === "game") {
+    return (
+      <AverageFanGame
+        key={gameKey}
+        fan={selectedFan}
+        onExit={() => navigate("/play")}
+        onRestart={() => {
+          setGameKey((value) => value + 1);
+          setScene("fan-select");
+        }}
+      />
+    );
   }
 
   return (
