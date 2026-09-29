@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BAR_TRIVIA_MAX_WAGER,
   createBarTriviaState,
@@ -90,6 +90,8 @@ export function OfficialBarTriviaDailyView({
   const [scene, setScene] = useState<BarTriviaScene>(() => initialScene(projection));
   const [wagerDraft, setWagerDraft] = useState(BAR_TRIVIA_MAX_WAGER);
   const [dismissedRevealRevision, setDismissedRevealRevision] = useState<number | null>(null);
+  const [pendingChoice, setPendingChoice] = useState<string | null>(null);
+  const pendingSawBusyRef = useRef(false);
   const state = useMemo(() => stateFromProjection(projection), [projection]);
   const gameLeague = league(projection.publicSetup.league);
   const serverLastResult = answerResult(projection.publicState.last_result);
@@ -111,6 +113,29 @@ export function OfficialBarTriviaDailyView({
       setScene("question");
     }
   }, [scene, state.index, state.wager]);
+
+  useEffect(() => {
+    if (serverLastResult) {
+      setPendingChoice(null);
+      pendingSawBusyRef.current = false;
+      return;
+    }
+    if (busy && pendingChoice) {
+      pendingSawBusyRef.current = true;
+      return;
+    }
+    if (!busy && pendingChoice && pendingSawBusyRef.current) {
+      setPendingChoice(null);
+      pendingSawBusyRef.current = false;
+    }
+  }, [busy, pendingChoice, serverLastResult]);
+
+  function answer(choice: string) {
+    if (pendingChoice || lastResult || busy) return;
+    pendingSawBusyRef.current = false;
+    setPendingChoice(choice);
+    onAdvance({ choice });
+  }
 
   function advanceReveal() {
     if (!lastResult) return;
@@ -134,15 +159,16 @@ export function OfficialBarTriviaDailyView({
       state={state}
       question={question}
       lastResult={lastResult}
+      selectedChoice={pendingChoice}
       wagerDraft={wagerDraft}
       onBack={onExit}
       onStart={() => setScene("round-intro")}
       onShowQuestions={() => setScene("question")}
-      onAnswer={(choice) => onAdvance({ choice })}
+      onAnswer={answer}
       onAdvance={advanceReveal}
       onWagerChange={setWagerDraft}
       onLockWager={() => onAdvance({ wager: wagerDraft })}
-      busy={busy}
+      busy={busy || pendingChoice !== null}
       resultActions={(
         <button className="bar-trivia__primary" type="button" onClick={onExit}>
           BACK TO GAMES
