@@ -1604,10 +1604,9 @@
   }
 
   .average-fan-report__row > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 11px;
-    white-space: nowrap;
+    font-size: 10.5px;
+    line-height: 1.05;
+    white-space: normal;
   }
 
   .average-fan-report__row > strong {
