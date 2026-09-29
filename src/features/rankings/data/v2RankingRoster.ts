@@ -1379,8 +1379,16 @@ const alexandrePantojaSeptemberRefresh = rankingDataRefresh(pantojaBaseline, {
   facts: {
     ...pantojaBaseline.facts,
     // The rematch is post-prime evidence. The first Van loss remains the
-    // defensible, sealed end of Pantoja's championship prime.
-    fights: [...pantojaBaseline.facts.fights, pantojaVanRematch],
+    // defensible, sealed end of Pantoja's championship prime. Reconcile the
+    // official UFC 323 result as a TKO (injury), not an uncategorized finish.
+    fights: [
+      ...pantojaBaseline.facts.fights.map((fight) =>
+        fight.id === "2025-12-06-joshua-van"
+          ? { ...fight, methodCategory: "ko-tko" }
+          : fight,
+      ),
+      pantojaVanRematch,
+    ],
   },
 });
 
@@ -1464,7 +1472,7 @@ const joshuaVanFights = [
   joshuaVanFight({
     date: "2025-12-06",
     opponent: "Alexandre Pantoja",
-    method: "other",
+    method: "ko-tko",
     qualityTier: "champion-level",
     championshipType: "normal",
     championshipManualCredit: 0.65,
