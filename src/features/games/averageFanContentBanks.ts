@@ -1173,7 +1173,17 @@ function ufcCandidates() {
   }
 
   questions.push(...knowledgeQuestions("ufc", "Octagon IQ", "average-fan:ufc:iq", UFC_IQ_FACTS));
-  questions.push(...knowledgeQuestions("ufc", "Fights", "average-fan:ufc:authored-history", UFC_HISTORY_FACTS));
+  const authoredHistory = knowledgeQuestions("ufc", "Fights", "average-fan:ufc:authored-history", UFC_HISTORY_FACTS);
+  const authoredChampionshipIds = new Set([
+    "mcgregor-alvarez", "sterling-dq-title", "edwards-usman-round",
+    "silva-weidman", "serra-gsp", "holm-rousey", "rousey-carmouche", "usman-masvidal",
+  ]);
+  questions.push(...authoredHistory.map((question) => {
+    const factId = question.id.split(":").at(-2) ?? "";
+    return authoredChampionshipIds.has(factId)
+      ? assertAverageFanQuestion({ ...question, subject: "Championships" })
+      : question;
+  }));
   questions.push(...UFC_FINAL_FACTS.map((fact) => shortQuestion({
     id: `average-fan:ufc:final:authored:${fact.id}`,
     sport: "ufc",
