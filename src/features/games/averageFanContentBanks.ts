@@ -1310,9 +1310,11 @@ function ufcCandidates() {
     const methodWins = wins.filter((fight) => fight.methodCategory !== "other");
     const methodFight = methodWins[stableOffset(`${fighter.id}:method`, Math.max(1, methodWins.length))];
     if (methodFight) {
-      const sameMethodOpponents = wins
-        .filter((fight) => fight.methodCategory === methodFight.methodCategory)
-        .map((fight) => fight.opponent);
+      const sameMethodOpponents = unique(
+        wins
+          .filter((fight) => fight.methodCategory === methodFight.methodCategory)
+          .map((fight) => fight.opponent),
+      );
       const answer = sameMethodOpponents[0]!;
       const wrongOpponents = peerValues(fighterNames, sameMethodOpponents, `${fighter.id}:method-opponent`);
       questions.push(shortQuestion({
