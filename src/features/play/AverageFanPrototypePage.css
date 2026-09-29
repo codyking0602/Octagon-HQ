@@ -1082,10 +1082,40 @@
   display: block;
 }
 
-.average-fan-avatar--cody { --skin: #c18361; --hair: #171413; --shirt: #653bb4; }
-.average-fan-avatar--lib { --skin: #e0a07e; --hair: #111; --shirt: #efe8de; }
-.average-fan-avatar--tyler { --skin: #df9d75; --hair: #281a15; --shirt: #222831; }
-.average-fan-avatar--troy { --skin: #b98567; --hair: #191615; --shirt: #1b1c20; }
+.average-fan-avatar--cody { --skin: #bf8568; --hair: #171413; --shirt: #5d43ae; }
+.average-fan-avatar--lib { --skin: #e0a07e; --hair: #111; --shirt: #eee6dc; }
+.average-fan-avatar--tyler { --skin: #df9d75; --hair: #271914; --shirt: #222831; }
+.average-fan-avatar--troy { --skin: #bd8b6f; --hair: #191615; --shirt: #1b1c20; }
+
+.average-fan-avatar--shane .average-fan-avatar__head {
+  width: 36%;
+  left: 32%;
+  border-radius: 44% 44% 48% 48%;
+}
+
+.average-fan-avatar--cody .average-fan-avatar__head {
+  width: 39%;
+  left: 30.5%;
+  border-radius: 46% 46% 49% 49%;
+}
+
+.average-fan-avatar--lib .average-fan-avatar__head {
+  width: 36%;
+  left: 32%;
+  border-radius: 46% 46% 50% 50%;
+}
+
+.average-fan-avatar--tyler .average-fan-avatar__head {
+  width: 37%;
+  left: 31.5%;
+  border-radius: 45% 45% 48% 48%;
+}
+
+.average-fan-avatar--troy .average-fan-avatar__head {
+  width: 42%;
+  left: 29%;
+  border-radius: 47% 47% 50% 50%;
+}
 
 .average-fan-avatar__body {
   position: absolute;
@@ -1122,11 +1152,65 @@
     repeating-radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--hair) 82%, white) 0 2px, var(--hair) 3px 5px);
 }
 
+.average-fan-avatar--shane .average-fan-avatar__hair {
+  top: 8%;
+  left: 31%;
+  width: 38%;
+  height: 18%;
+  border-radius: 70% 70% 34% 34%;
+  background: #171413;
+}
+
+.average-fan-avatar--cody .average-fan-avatar__hair {
+  top: 4%;
+  left: 27%;
+  width: 46%;
+  height: 28%;
+  border-radius: 62% 62% 35% 35%;
+  background:
+    radial-gradient(circle at 22% 28%, #24201e 0 6%, transparent 7%),
+    radial-gradient(circle at 42% 17%, #24201e 0 7%, transparent 8%),
+    radial-gradient(circle at 61% 19%, #24201e 0 7%, transparent 8%),
+    radial-gradient(circle at 79% 31%, #24201e 0 6%, transparent 7%),
+    repeating-radial-gradient(circle at 50% 0%, #292522 0 3px, #151311 4px 7px);
+}
+
 .average-fan-avatar--lib .average-fan-avatar__hair {
-  left: 21%;
-  width: 58%;
-  height: 50%;
-  border-radius: 55% 55% 40% 40%;
+  top: 4%;
+  left: 17%;
+  width: 66%;
+  height: 58%;
+  border-radius: 54% 54% 42% 42%;
+  background: linear-gradient(90deg, #101010 0 46%, #171717 47% 100%);
+}
+.average-fan-avatar--lib .average-fan-avatar__hair::after {
+  content: "";
+  position: absolute;
+  left: 48%;
+  top: 0;
+  width: 3px;
+  height: 58%;
+  background: rgba(255,255,255,.12);
+  transform: rotate(7deg);
+}
+
+.average-fan-avatar--tyler .average-fan-avatar__hair {
+  top: 5%;
+  left: 29%;
+  width: 45%;
+  height: 22%;
+  border-radius: 70% 55% 25% 30%;
+  background: linear-gradient(150deg, #3a281f 0 42%, #211712 43% 100%);
+  transform: skewX(-8deg);
+}
+
+.average-fan-avatar--troy .average-fan-avatar__hair {
+  top: 8%;
+  left: 28%;
+  width: 44%;
+  height: 19%;
+  border-radius: 60% 60% 25% 25%;
+  background: #171412;
 }
 
 .average-fan-avatar__eye {
@@ -1157,6 +1241,37 @@
   border-radius: 0 0 50% 50%;
 }
 
+.average-fan-avatar--troy .average-fan-avatar__smile {
+  left: 24%;
+  right: 21%;
+  bottom: 17%;
+  border-bottom-width: 4px;
+}
+
+.average-fan-avatar__mustache {
+  position: absolute;
+  z-index: 5;
+  left: 31%;
+  right: 29%;
+  bottom: 27%;
+  height: 8%;
+  border-radius: 50% 50% 65% 65%;
+  background: #5a3829;
+  transform: rotate(-2deg);
+}
+.average-fan-avatar__mustache::before,
+.average-fan-avatar__mustache::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  width: 56%;
+  height: 100%;
+  border-radius: 60%;
+  background: #5a3829;
+}
+.average-fan-avatar__mustache::before { left: -17%; transform: rotate(9deg); }
+.average-fan-avatar__mustache::after { right: -17%; transform: rotate(-9deg); }
+
 .average-fan-avatar__glasses {
   position: absolute;
   left: 17%;
@@ -1164,6 +1279,18 @@
   top: 36%;
   height: 23%;
   border-top: 3px solid #111;
+}
+
+.average-fan-avatar--shane .average-fan-avatar__glasses {
+  left: 14%;
+  right: 14%;
+  top: 35%;
+}
+
+.average-fan-avatar--cody .average-fan-avatar__glasses {
+  left: 14%;
+  right: 14%;
+  top: 34%;
 }
 .average-fan-avatar__glasses::before,
 .average-fan-avatar__glasses::after {
