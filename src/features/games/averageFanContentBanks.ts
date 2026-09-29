@@ -265,10 +265,24 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
 
 const NFL_TRUE_FALSE_FACTS: readonly NflTrueFalseFact[] = [
   { id: "four-downs", grade: 1, subject: "X’s & O’s", prompt: "An NFL offense normally gets four downs to gain 10 yards for a new first down.", answer: true, explanation: "The offense normally has four downs to gain the 10 yards needed for a new series." },
+  { id: "brady-two-teams", grade: 1, subject: "Players", prompt: "Tom Brady played NFL games for both the Patriots and Buccaneers.", answer: true, explanation: "Brady spent his NFL career with New England and Tampa Bay." },
+  { id: "pick-six", grade: 1, subject: "X’s & O’s", prompt: "A pick-six is an interception returned for a touchdown.", answer: true, explanation: "Pick-six is the common nickname for an interception returned for six points." },
+
   { id: "deion-two-champs", grade: 2, subject: "Players", prompt: "Deion Sanders won Super Bowls with both the 49ers and Cowboys.", answer: true, explanation: "Deion Sanders won Super Bowl XXIX with San Francisco and Super Bowl XXX with Dallas." },
+  { id: "rice-only-niners", grade: 2, subject: "Players", prompt: "Jerry Rice played his entire NFL career for the 49ers.", answer: false, explanation: "Rice starred for San Francisco but also played for the Raiders and Seahawks." },
+  { id: "merger-1970", grade: 2, subject: "NFL History", prompt: "The AFL-NFL merger took full effect for the 1970 season.", answer: true, explanation: "The merged league's conference structure began with the 1970 season." },
+
   { id: "peyton-two-teams", grade: 3, subject: "Players", prompt: "Peyton Manning won Super Bowls as the starting quarterback for two different franchises.", answer: true, explanation: "Manning won Super Bowl XLI with Indianapolis and Super Bowl 50 with Denver." },
+  { id: "warner-drafted", grade: 3, subject: "Players", prompt: "Kurt Warner entered the NFL as a drafted player.", answer: false, explanation: "Kurt Warner went undrafted before becoming an NFL and Super Bowl MVP." },
+  { id: "romo-drafted", grade: 3, subject: "Players", prompt: "Tony Romo was selected in the NFL Draft.", answer: false, explanation: "Tony Romo entered the NFL as an undrafted free agent." },
+
   { id: "two-forward-passes", grade: 4, subject: "X’s & O’s", prompt: "An offense can throw two forward passes on the same play as long as both are released behind the line of scrimmage.", answer: false, explanation: "An NFL play can include only one forward pass." },
+  { id: "terrell-davis-first-round", grade: 4, subject: "Players", prompt: "Terrell Davis was a first-round NFL Draft pick.", answer: false, explanation: "Denver selected Terrell Davis in the sixth round of the 1995 NFL Draft." },
+  { id: "gates-college-football", grade: 4, subject: "Players", prompt: "Antonio Gates played college football before becoming an NFL tight end.", answer: false, explanation: "Antonio Gates played college basketball at Kent State and did not play college football." },
+
   { id: "fourth-down-fumble", grade: 5, subject: "X’s & O’s", prompt: "On fourth down, an offensive teammate may recover a fumble but cannot advance it beyond the spot of the fumble.", answer: true, explanation: "On fourth down, only the player who fumbled may recover and advance his own fumble; a teammate's recovery returns the ball to the fumble spot." },
+  { id: "moon-cfl", grade: 5, subject: "Players", prompt: "Warren Moon began his professional football career in the CFL before starring in the NFL.", answer: true, explanation: "Moon starred for Edmonton in the CFL before beginning his NFL career with Houston." },
+  { id: "elway-colts", grade: 5, subject: "NFL History", prompt: "John Elway was drafted by the Baltimore Colts before his rights were traded to Denver.", answer: true, explanation: "Baltimore selected Elway first overall in 1983 and later traded his rights to the Broncos." },
 ];
 
 const NFL_PLAYER_FACTS: readonly KnowledgeFact[] = [
