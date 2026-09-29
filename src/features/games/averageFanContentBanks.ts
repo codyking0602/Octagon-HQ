@@ -225,6 +225,57 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "zone-blitz", grade: 5, prompt: "What pressure concept can send a linebacker or defensive back while dropping a defensive lineman into coverage?", answer: "Zone blitz", wrong: ["Prevent defense", "Cover zero"], explanation: "A zone blitz exchanges rush and coverage responsibilities while keeping zone structure behind the pressure." },
 ];
 
+const NFL_HISTORY_FACTS: readonly KnowledgeFact[] = [
+  { id: "sb1", grade: 1, prompt: "Which team won the first Super Bowl?", answer: "Green Bay Packers", wrong: ["Kansas City Chiefs", "Dallas Cowboys"], explanation: "Green Bay beat Kansas City 35-10 in the first Super Bowl." },
+  { id: "perfect", grade: 1, prompt: "Which franchise completed the famous perfect 1972 season?", answer: "Miami Dolphins", wrong: ["Pittsburgh Steelers", "Dallas Cowboys"], explanation: "Miami finished the 1972 season undefeated and won Super Bowl VII." },
+  { id: "lombardi", grade: 1, prompt: "The Super Bowl trophy is named for which legendary coach?", answer: "Vince Lombardi", wrong: ["Don Shula", "Tom Landry"], explanation: "The NFL championship trophy was named the Vince Lombardi Trophy in 1970." },
+  { id: "helmet", grade: 1, prompt: "Who made the famous Helmet Catch for the Giants in Super Bowl XLII?", answer: "David Tyree", wrong: ["Plaxico Burress", "Victor Cruz"], explanation: "David Tyree pinned Eli Manning's pass against his helmet on the Giants' winning drive." },
+  { id: "immaculate", grade: 1, prompt: "Which Steelers player made the Immaculate Reception?", answer: "Franco Harris", wrong: ["Lynn Swann", "John Stallworth"], explanation: "Franco Harris scored on the Immaculate Reception in the 1972 AFC Divisional Playoff." },
+  { id: "brady-comeback", grade: 1, prompt: "Which quarterback led New England's comeback from 28-3 down in Super Bowl LI?", answer: "Tom Brady", wrong: ["Matt Ryan", "Jimmy Garoppolo"], explanation: "Tom Brady led New England past Atlanta 34-28 in the first overtime Super Bowl." },
+  { id: "the-catch", grade: 2, prompt: "Joe Montana's touchdown pass to Dwight Clark in the 1981 NFC Championship became known by what nickname?", answer: "The Catch", wrong: ["The Drive", "The Miracle"], explanation: "Montana-to-Clark against Dallas became one of the NFL's defining playoff plays: The Catch." },
+  { id: "beast-quake", grade: 2, prompt: "Which running back's playoff touchdown run became known as Beast Quake?", answer: "Marshawn Lynch", wrong: ["Shaun Alexander", "Adrian Peterson"], explanation: "Marshawn Lynch's tackle-breaking touchdown against New Orleans became Beast Quake." },
+  { id: "philly-special", grade: 2, prompt: "Which Eagles quarterback caught a touchdown on the Philly Special in Super Bowl LII?", answer: "Nick Foles", wrong: ["Carson Wentz", "Donovan McNabb"], explanation: "Nick Foles caught Trey Burton's touchdown pass on the Philly Special." },
+  { id: "butler", grade: 2, prompt: "Who intercepted Russell Wilson at the goal line to seal Super Bowl XLIX?", answer: "Malcolm Butler", wrong: ["Darrelle Revis", "Devin McCourty"], explanation: "Malcolm Butler intercepted Wilson in the final minute to preserve New England's win." },
+  { id: "namath", grade: 2, prompt: "Which quarterback famously guaranteed the Jets would win Super Bowl III?", answer: "Joe Namath", wrong: ["Johnny Unitas", "Len Dawson"], explanation: "Joe Namath guaranteed a Jets victory before their upset of Baltimore." },
+  { id: "triplets", grade: 2, prompt: "Which running back joined Troy Aikman and Michael Irvin as the Cowboys' 1990s 'Triplets'?", answer: "Emmitt Smith", wrong: ["Tony Dorsett", "Herschel Walker"], explanation: "Aikman, Smith and Irvin powered Dallas' 1990s championship teams." },
+  { id: "wide-right", grade: 3, prompt: "Which Bills kicker's miss created the 'Wide Right' ending to Super Bowl XXV?", answer: "Scott Norwood", wrong: ["Steve Christie", "Gary Anderson"], explanation: "Scott Norwood's 47-yard attempt went wide right as Buffalo lost 20-19." },
+  { id: "the-drive", grade: 3, prompt: "Which quarterback led the 98-yard march remembered as 'The Drive' in the 1986 AFC Championship?", answer: "John Elway", wrong: ["Bernie Kosar", "Dan Marino"], explanation: "John Elway led Denver 98 yards to tie Cleveland late in regulation." },
+  { id: "revis-island", grade: 3, prompt: "Which shutdown cornerback became synonymous with the nickname 'Revis Island'?", answer: "Darrelle Revis", wrong: ["Champ Bailey", "Richard Sherman"], explanation: "Darrelle Revis' man-coverage reputation inspired the 'Revis Island' nickname." },
+  { id: "megatron", grade: 3, prompt: "Which Lions receiver was nicknamed 'Megatron'?", answer: "Calvin Johnson", wrong: ["Herman Moore", "Golden Tate"], explanation: "Calvin Johnson's size and athleticism helped make Megatron one of the NFL's best-known nicknames." },
+  { id: "greatest-show", grade: 3, prompt: "Which quarterback was the centerpiece of the Rams offense nicknamed 'The Greatest Show on Turf'?", answer: "Kurt Warner", wrong: ["Marc Bulger", "Trent Green"], explanation: "Kurt Warner led the explosive Rams offense that won Super Bowl XXXIV." },
+  { id: "peyton-denver", grade: 3, prompt: "Peyton Manning won Super Bowls as the starting quarterback for Indianapolis and which other team?", answer: "Denver Broncos", wrong: ["Tennessee Titans", "New York Giants"], explanation: "Manning won Super Bowl XLI with Indianapolis and Super Bowl 50 with Denver." },
+  { id: "randle-el", grade: 4, prompt: "Which Steelers receiver threw a touchdown pass to Hines Ward in Super Bowl XL?", answer: "Antwaan Randle El", wrong: ["Santonio Holmes", "Cedrick Wilson"], explanation: "Antwaan Randle El hit Hines Ward for a 43-yard touchdown." },
+  { id: "hester", grade: 4, prompt: "Who returned the opening kickoff of Super Bowl XLI for a touchdown?", answer: "Devin Hester", wrong: ["Dante Hall", "Desmond Howard"], explanation: "Devin Hester opened Super Bowl XLI with a 92-yard kickoff-return touchdown." },
+  { id: "holmes", grade: 4, prompt: "Which Steelers receiver made the toe-tap game-winning touchdown catch in Super Bowl XLIII?", answer: "Santonio Holmes", wrong: ["Hines Ward", "Nate Washington"], explanation: "Santonio Holmes caught Ben Roethlisberger's late touchdown in the corner of the end zone." },
+  { id: "first-wild-card", grade: 4, prompt: "Which franchise became the first wild-card team to win a Super Bowl?", answer: "Oakland Raiders", wrong: ["Dallas Cowboys", "Pittsburgh Steelers"], explanation: "Oakland won Super Bowl XV after entering the playoffs as a wild card." },
+  { id: "first-ot", grade: 4, prompt: "Which Super Bowl was the first to go to overtime?", answer: "Super Bowl LI", wrong: ["Super Bowl XLIX", "Super Bowl LII"], explanation: "New England's comeback against Atlanta in Super Bowl LI produced the first overtime in Super Bowl history." },
+  { id: "first-four", grade: 4, prompt: "Which franchise became the first to win four Super Bowls?", answer: "Pittsburgh Steelers", wrong: ["Dallas Cowboys", "San Francisco 49ers"], explanation: "Pittsburgh's Super Bowl XIV win made the Steelers the first franchise with four Super Bowl victories." },
+  { id: "white-14", grade: 5, prompt: "Which Patriots running back set a Super Bowl record with 14 receptions in Super Bowl LI?", answer: "James White", wrong: ["Dion Lewis", "Kevin Faulk"], explanation: "James White caught 14 passes in New England's comeback win over Atlanta." },
+  { id: "vinatieri", grade: 5, prompt: "Which kicker won Super Bowl XXXVI on a 48-yard field goal as time expired?", answer: "Adam Vinatieri", wrong: ["Mike Vanderjagt", "Stephen Gostkowski"], explanation: "Adam Vinatieri's 48-yarder gave New England a 20-17 win on the final play." },
+  { id: "parker-75", grade: 5, prompt: "Which Steelers running back scored on a 75-yard run in Super Bowl XL?", answer: "Willie Parker", wrong: ["Jerome Bettis", "Franco Harris"], explanation: "Willie Parker broke a 75-yard touchdown run on the second play of the second half." },
+  { id: "dungy", grade: 5, prompt: "Who became the first Black head coach to win a Super Bowl?", answer: "Tony Dungy", wrong: ["Lovie Smith", "Mike Tomlin"], explanation: "Tony Dungy coached Indianapolis to victory in Super Bowl XLI." },
+  { id: "first-mnf", grade: 5, prompt: "Which two teams played in the first Monday Night Football game in 1970?", answer: "Cleveland Browns and New York Jets", wrong: ["Dallas Cowboys and Washington", "Green Bay Packers and Chicago Bears"], explanation: "Cleveland hosted the New York Jets in the first Monday Night Football game." },
+  { id: "sb-name", grade: 5, prompt: "Which championship game was the first for which the 'Super Bowl' name was officially recognized?", answer: "Super Bowl III", wrong: ["Super Bowl I", "Super Bowl V"], explanation: "The Super Bowl title was officially recognized for the game played in January 1969." },
+];
+
+const NFL_FINAL_FACTS: readonly KnowledgeFact[] = [
+  { id: "immaculate", grade: 5, prompt: "Final: Pittsburgh trailed Oakland on fourth down with seconds left in the 1972 playoffs. Who caught the deflection and scored on the Immaculate Reception?", answer: "Franco Harris", wrong: ["John Fuqua", "Lynn Swann"], explanation: "Franco Harris caught the deflection and scored the iconic playoff touchdown." },
+  { id: "helmet", grade: 5, prompt: "Final: Which Giants receiver made the helmet-pinning catch that kept the winning drive alive against the unbeaten Patriots in Super Bowl XLII?", answer: "David Tyree", wrong: ["Plaxico Burress", "Amani Toomer"], explanation: "David Tyree's Helmet Catch set up the Giants' winning touchdown." },
+  { id: "randle-el", grade: 5, prompt: "Final: In Super Bowl XL, which former college quarterback became the first wide receiver to throw a touchdown pass in a Super Bowl?", answer: "Antwaan Randle El", wrong: ["Hines Ward", "Santonio Holmes"], explanation: "Antwaan Randle El threw a 43-yard touchdown to Hines Ward." },
+  { id: "vinatieri", grade: 5, prompt: "Final: Who kicked the 48-yard field goal on the final play of Super Bowl XXXVI to give New England its first championship?", answer: "Adam Vinatieri", wrong: ["Stephen Gostkowski", "Mike Vanderjagt"], explanation: "Adam Vinatieri's kick beat the Rams 20-17." },
+  { id: "dungy", grade: 5, prompt: "Final: Which Colts coach became the first Black head coach to win a Super Bowl when Indianapolis won Super Bowl XLI?", answer: "Tony Dungy", wrong: ["Lovie Smith", "Jim Caldwell"], explanation: "Tony Dungy made history with Indianapolis' Super Bowl XLI victory." },
+  { id: "wide-right", grade: 5, prompt: "Final: Buffalo's first Super Bowl ended 20-19 after which kicker's 47-yard attempt sailed wide right?", answer: "Scott Norwood", wrong: ["Steve Christie", "Matt Bahr"], explanation: "Scott Norwood's late attempt missed wide right in Super Bowl XXV." },
+  { id: "butler", grade: 5, prompt: "Final: With Seattle one yard from a likely go-ahead touchdown in Super Bowl XLIX, which rookie cornerback intercepted Russell Wilson?", answer: "Malcolm Butler", wrong: ["Logan Ryan", "Darrelle Revis"], explanation: "Malcolm Butler jumped the route at the goal line to seal New England's win." },
+  { id: "holmes", grade: 5, prompt: "Final: Which receiver got both feet down in the back corner of the end zone for Pittsburgh's winning touchdown in Super Bowl XLIII?", answer: "Santonio Holmes", wrong: ["Hines Ward", "Nate Washington"], explanation: "Santonio Holmes' late touchdown catch beat Arizona." },
+  { id: "elway", grade: 5, prompt: "Final: Which quarterback led the 98-yard fourth-quarter march known as 'The Drive' in the 1986 AFC Championship?", answer: "John Elway", wrong: ["Bernie Kosar", "Dan Marino"], explanation: "John Elway led Denver 98 yards to tie Cleveland before the Broncos won in overtime." },
+  { id: "beast-quake", grade: 5, prompt: "Final: Which running back's 67-yard playoff touchdown against New Orleans became known as Beast Quake?", answer: "Marshawn Lynch", wrong: ["Shaun Alexander", "Thomas Rawls"], explanation: "Marshawn Lynch broke tackle after tackle on the run remembered as Beast Quake." },
+  { id: "philly-special", grade: 5, prompt: "Final: Who threw the touchdown pass to Nick Foles on the Philly Special in Super Bowl LII?", answer: "Trey Burton", wrong: ["Corey Clement", "Nelson Agholor"], explanation: "Trey Burton took the pitch and threw to Foles." },
+  { id: "first-wild-card", grade: 5, prompt: "Final: Which franchise became the first wild-card team to win the Super Bowl, beating Philadelphia in Super Bowl XV?", answer: "Oakland Raiders", wrong: ["Dallas Cowboys", "Los Angeles Rams"], explanation: "Oakland became the first wild-card Super Bowl champion." },
+  { id: "white", grade: 5, prompt: "Final: Which Patriots running back caught a Super Bowl-record 14 passes and scored 20 points in the 28-3 comeback?", answer: "James White", wrong: ["Dion Lewis", "Danny Woodhead"], explanation: "James White produced 14 catches and 20 points in Super Bowl LI." },
+  { id: "first-mnf", grade: 5, prompt: "Final: Joe Namath's Jets visited which team in the first Monday Night Football game in 1970?", answer: "Cleveland Browns", wrong: ["Baltimore Colts", "Kansas City Chiefs"], explanation: "The Cleveland Browns hosted the New York Jets in the first Monday Night Football game." },
+  { id: "first-four", grade: 5, prompt: "Final: Which franchise became the first in NFL history to win four Super Bowls when it beat the Rams in Super Bowl XIV?", answer: "Pittsburgh Steelers", wrong: ["Dallas Cowboys", "San Francisco 49ers"], explanation: "Pittsburgh's Super Bowl XIV victory gave the franchise its fourth title." },
+];
+
 const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
   { id: "the-game", grade: 1, prompt: "Which two programs play the rivalry commonly called “The Game”?", answer: "Michigan and Ohio State", wrong: ["Alabama and Auburn", "Texas and Oklahoma"], explanation: "Michigan and Ohio State meet in the rivalry known as The Game." },
   { id: "iron-bowl", grade: 1, prompt: "Which two programs play the Iron Bowl?", answer: "Alabama and Auburn", wrong: ["Georgia and Florida", "Ole Miss and Mississippi State"], explanation: "The Iron Bowl is Alabama versus Auburn." },
@@ -603,6 +654,19 @@ function footballCandidates(league: "NFL" | "CFB") {
 
   if (league === "NFL") {
     questions.push(...knowledgeQuestions("nfl", "X’s & O’s", "average-fan:nfl:xo", NFL_XO_FACTS));
+    questions.push(...knowledgeQuestions("nfl", "NFL History", "average-fan:nfl:history", NFL_HISTORY_FACTS));
+    questions.push(...NFL_FINAL_FACTS.map((fact) => shortQuestion({
+      id: `average-fan:nfl:final-authored:${fact.id}`,
+      sport: "nfl",
+      grade: 5,
+      subject: "NFL History",
+      prompt: fact.prompt,
+      answer: fact.answer,
+      explanation: fact.explanation,
+      fanMisses: fact.wrong,
+      difficultyNudge: 3,
+      protectedFinal: true,
+    })));
   } else {
     questions.push(...knowledgeQuestions("cfb", "Traditions", "average-fan:cfb:tradition", CFB_TRADITION_FACTS));
   }
