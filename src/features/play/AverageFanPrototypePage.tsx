@@ -620,7 +620,7 @@ function AverageFanGame({
                     value={answer}
                     disabled={false}
                     onChange={setAnswer}
-                    onSubmit={(value) => value ? resolveAnswer(value) : submitCurrent()}
+                    onSubmit={submitCurrent}
                   />
                 </>
               ) : lastResolution ? (
@@ -726,7 +726,7 @@ function AverageFanGame({
           <span><small>YOUR FAN</small><strong>{FAN_LABELS[fan]}</strong></span>
           <span><small>BOARD</small><strong>{completed}/10</strong></span>
           <span><small>MONEY</small><strong>{completed ? averageFanMoneyLabel(currentMoney) : "$0"}</strong></span>
-          <span><small>HQ SCORE</small><strong>{boardScore}</strong></span>
+          <span><small>HQ SCORE</small><strong>{completed < 10 ? "—" : boardScore}</strong></span>
         </div>
       </div>
     </div>
