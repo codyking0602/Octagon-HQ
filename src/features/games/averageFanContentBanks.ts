@@ -741,24 +741,24 @@ function ufcCandidates() {
       }));
     }
 
-    if (wins.length >= 2) {
+    if (wins.length >= 3) {
       const firstAnchor = wins[stableOffset(`${fighter.id}:g5-anchor-a`, wins.length)]!;
       const secondPool = wins.filter((fight) => fight.opponent !== firstAnchor.opponent);
-      const secondAnchor = secondPool[stableOffset(`${fighter.id}:g5-anchor-b`, Math.max(1, secondPool.length))];
-      if (secondAnchor) {
-        const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:two-win-identity`);
-        questions.push(shortQuestion({
-          id: `average-fan:ufc:g5:${fighter.id}:two-win-identity`,
-          sport: "ufc",
-          grade: 5,
-          subject: "Fighters",
-          prompt: `Which UFC fighter owns wins over both ${firstAnchor.opponent} and ${secondAnchor.opponent}?`,
-          answer: fighter.name,
-          explanation: `${fighter.name}'s UFC ledger includes wins over both ${firstAnchor.opponent} and ${secondAnchor.opponent}.`,
-          fanMisses: wrongNames,
-          difficultyNudge: 2,
-        }));
-      }
+      const secondAnchor = secondPool[stableOffset(`${fighter.id}:g5-anchor-b`, secondPool.length)]!;
+      const thirdPool = secondPool.filter((fight) => fight.opponent !== secondAnchor.opponent);
+      const thirdAnchor = thirdPool[stableOffset(`${fighter.id}:g5-anchor-c`, thirdPool.length)]!;
+      const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
+      questions.push(shortQuestion({
+        id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
+        sport: "ufc",
+        grade: 5,
+        subject: "Fighters",
+        prompt: `Which UFC fighter owns wins over ${firstAnchor.opponent}, ${secondAnchor.opponent}, and ${thirdAnchor.opponent}?`,
+        answer: fighter.name,
+        explanation: `${fighter.name}'s UFC ledger includes wins over all three opponents.`,
+        fanMisses: wrongNames,
+        difficultyNudge: 2,
+      }));
     }
 
     const titleFights = fighter.fights.filter((fight) => fight.titleFight);
@@ -806,15 +806,16 @@ function ufcCandidates() {
     } else if (fighter.fights.length >= 5) {
       const anchorA = fighter.fights[fighter.fights.length - 1]!;
       const anchorB = fighter.fights[Math.max(0, fighter.fights.length - 3)]!;
+      const anchorC = fighter.fights[Math.max(0, fighter.fights.length - 5)]!;
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:final-fight`);
       questions.push(shortQuestion({
         id: `average-fan:ufc:final:${fighter.id}:fight`,
         sport: "ufc",
         grade: 5,
         subject: "Fights",
-        prompt: `Which UFC fighter faced both ${anchorA.opponent} and ${anchorB.opponent}?`,
+        prompt: `Which UFC fighter faced ${anchorA.opponent}, ${anchorB.opponent}, and ${anchorC.opponent}?`,
         answer: fighter.name,
-        explanation: `${fighter.name}'s UFC ledger includes bouts against both ${anchorA.opponent} and ${anchorB.opponent}.`,
+        explanation: `${fighter.name}'s UFC ledger includes bouts against all three opponents.`,
         fanMisses: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
