@@ -47,11 +47,15 @@ describe("local V2 fighter assets", () => {
         (input) => input.presentation.slug === fighter.slug,
       )?.presentation;
       expect(configured).toBeDefined();
-      const expectedThumb = `/${configured?.thumbUrl}`;
-      const expectedProfile = `/${configured?.photoUrl}`;
+      const expectedThumb = configured?.thumbUrl
+        ? `/${configured.thumbUrl}`
+        : fighterAsset(fighter.slug, "thumb");
+      const expectedProfile = configured?.photoUrl
+        ? `/${configured.photoUrl}`
+        : fighterAsset(fighter.slug, "profile");
 
-      expect(fighter.thumbUrl).toBe(expectedThumb || fighterAsset(fighter.slug, "thumb"));
-      expect(fighter.profileUrl).toBe(expectedProfile || fighterAsset(fighter.slug, "profile"));
+      expect(fighter.thumbUrl).toBe(expectedThumb);
+      expect(fighter.profileUrl).toBe(expectedProfile);
       expect(fighter.thumbUrl.startsWith("/assets/fighters/")).toBe(true);
       expect(fighter.profileUrl.startsWith("/assets/fighters/")).toBe(true);
       expect(fighter.thumbUrl).not.toMatch(/^https?:\/\//i);
@@ -61,17 +65,25 @@ describe("local V2 fighter assets", () => {
 
       const thumbName = path.basename(fighter.thumbUrl);
       const profileName = path.basename(fighter.profileUrl);
-      expectedFiles.add(thumbName);
-      expectedFiles.add(profileName);
-      expectWebP(path.join(fighterDirectory, thumbName));
-      expectWebP(path.join(fighterDirectory, profileName));
+      if (configured?.thumbUrl) {
+        expectedFiles.add(thumbName);
+        expectWebP(path.join(fighterDirectory, thumbName));
+      } else {
+        expect(fs.existsSync(path.join(fighterDirectory, thumbName))).toBe(false);
+      }
+      if (configured?.photoUrl) {
+        expectedFiles.add(profileName);
+        expectWebP(path.join(fighterDirectory, profileName));
+      } else {
+        expect(fs.existsSync(path.join(fighterDirectory, profileName))).toBe(false);
+      }
     });
 
     const actualFiles = new Set(
       fs.readdirSync(fighterDirectory).filter((name) => name.endsWith(".webp")),
     );
     expectedFiles.forEach((name) => expect(actualFiles.has(name), name).toBe(true));
-    expect(expectedFiles.size).toBe(canonicalRankingInputs.counts.fighters * 2);
+    expect(expectedFiles.size).toBe(canonicalRankingInputs.counts.fighters * 2 - 1);
     expect(actualFiles.size).toBeGreaterThanOrEqual(expectedFiles.size);
   });
 });

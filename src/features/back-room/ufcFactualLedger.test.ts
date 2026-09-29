@@ -14,6 +14,10 @@ describe("UFC factual ledger", () => {
     expect(expansion).toHaveLength(ufcFactualExpansion.expansionSubjectCount);
     expect(ufcFactualLedgerSubjects).toHaveLength(ufcFactualExpansion.targetTotalSubjects);
     expect(ranked.map((subject) => subject.name)).toEqual(canonicalRankingInputs.fighters.map((fighter) => fighter.fighter));
+    expect(ufcFactualExpansion.subjects.some((subject) => subject.slug === "joshua-van")).toBe(false);
+    expect(ufcFactualLedgerSubjects.filter((subject) => subject.slug === "joshua-van")).toEqual([
+      expect.objectContaining({ name: "Joshua Van", scope: "ranked-core" }),
+    ]);
   });
 
   it("keeps the recognizable expansion A-tier, modern-leaning, source-backed, and identity-unique", () => {

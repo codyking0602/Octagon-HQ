@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "targetTotalSubjects": 133,
-  "rankedSubjectCountAtGeneration": 81,
-  "expansionSubjectCount": 52,
+  "rankedSubjectCountAtGeneration": 82,
+  "expansionSubjectCount": 51,
   "recognizabilityTier": "A",
   "policy": {
     "recognizabilityTier": "A",
@@ -7575,129 +7575,6 @@
           "result": "loss",
           "methodCategory": "ko-tko",
           "titleFight": false,
-          "interimTitleFight": false
-        }
-      ]
-    },
-    {
-      "id": "ufc:joshua-van",
-      "name": "Joshua Van",
-      "slug": "joshua-van",
-      "recognizabilityTier": "A",
-      "legacyA": false,
-      "primaryDivision": "Flyweight",
-      "secondaryDivisions": [],
-      "activeFrom": "2023-06-24",
-      "activeTo": "2026-05-09",
-      "fights": [
-        {
-          "id": "c2cdeb207cce5ceb",
-          "date": "2023-06-24",
-          "opponent": "Zhalgas Zhumagulov",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "decision",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "8a0fc4624578a7e4",
-          "date": "2023-11-11",
-          "opponent": "Kevin Borjas",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "decision",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "fd29123ff92789e4",
-          "date": "2024-01-13",
-          "opponent": "Felipe Bunes",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "ko-tko",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "80108a70c4afa6c2",
-          "date": "2024-07-13",
-          "opponent": "Charles Johnson",
-          "division": "Flyweight",
-          "result": "loss",
-          "methodCategory": "ko-tko",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "dae8ad2e03aa4a9a",
-          "date": "2024-09-14",
-          "opponent": "Edgar Chairez",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "decision",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "d38029cf47e54cf7",
-          "date": "2024-12-07",
-          "opponent": "Cody Durden",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "decision",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "af3e43049bc86fe9",
-          "date": "2025-03-08",
-          "opponent": "Rei Tsuruya",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "decision",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "b6a87389bdc36a00",
-          "date": "2025-06-07",
-          "opponent": "Bruno Silva",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "ko-tko",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "f722b96ae6862843",
-          "date": "2025-06-28",
-          "opponent": "Brandon Royval",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "decision",
-          "titleFight": false,
-          "interimTitleFight": false
-        },
-        {
-          "id": "dfa692db6d39330c",
-          "date": "2025-12-06",
-          "opponent": "Alexandre Pantoja",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "ko-tko",
-          "titleFight": true,
-          "interimTitleFight": false
-        },
-        {
-          "id": "c85b530861145935",
-          "date": "2026-05-09",
-          "opponent": "Tatsuro Taira",
-          "division": "Flyweight",
-          "result": "win",
-          "methodCategory": "ko-tko",
-          "titleFight": true,
           "interimTitleFight": false
         }
       ]

@@ -253,6 +253,23 @@ describe("Auction catalog expansion migration", () => {
         Power: 78,
         Heart: 70,
       },
+      // Van's insertion moved O'Malley on the live board; the released card is immutable.
+      "Sean O'Malley": {
+        overall: 87,
+        Striking: 91,
+        Grappling: 37,
+        Frame: 72,
+        Power: 83,
+        Heart: 60,
+      },
+      "Alexa Grasso": {
+        overall: 86,
+        Striking: 82,
+        Grappling: 72,
+        Frame: 68,
+        Power: 74,
+        Heart: 65,
+      },
     };
     const additions = [...catalogSql.matchAll(/'ultimate-fighter-(\d+)','((?:[^']|'')*)'.*?jsonb_build_object\(([^)]*)\)/g)]
       .filter((match) => Number(match[1]) >= 31);
@@ -275,7 +292,12 @@ describe("Auction catalog expansion migration", () => {
       };
       expect(inputs, name).toEqual(immutableRankingSnapshots[name] ?? currentRankingInputs);
     }
-    expect(Object.keys(immutableRankingSnapshots)).toEqual(["Rafael dos Anjos", "Mackenzie Dern"]);
+    expect(Object.keys(immutableRankingSnapshots)).toEqual([
+      "Rafael dos Anjos",
+      "Mackenzie Dern",
+      "Sean O'Malley",
+      "Alexa Grasso",
+    ]);
   });
 
   it("contains current career identities and mode-specific category membership", () => {

@@ -46,6 +46,7 @@ export const fighterNamePresentationBySlug: Readonly<Record<string, FighterNameP
   "ilia-topuria": { nickname: "El Matador", position: "middle" },
   "jessica-andrade": { nickname: "Bate Estaca", position: "middle", baseName: "Jéssica Andrade" },
   "julianna-pena": { nickname: "The Venezuelan Vixen", position: "middle", baseName: "Julianna Peña" },
+  "joshua-van": { nickname: "The Fearless", position: "middle" },
   "junior-dos-santos": { nickname: "Cigano", position: "middle" },
   "justin-gaethje": { nickname: "The Highlight", position: "middle" },
   "kamaru-usman": { nickname: "The Nigerian Nightmare", position: "middle" },

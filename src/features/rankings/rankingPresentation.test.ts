@@ -12,17 +12,34 @@ describe("ranking profile watch actions", () => {
     action: resolveProfileWatchAction(fighter.slug),
   }));
 
-  it("restores the V1 signature fights and uses RDA's canonical watch moment", () => {
-    expect(Object.keys(profileSignatureFightUrls)).toHaveLength(allTime.length - 1);
-    expect(actions.filter(({ action }) => action?.source === "signature")).toHaveLength(allTime.length - 1);
-    expect(actions.filter(({ action }) => action?.source === "watch-moment")).toHaveLength(1);
+  it("provides a direct public signature fight for every ranked profile", () => {
+    expect(Object.keys(profileSignatureFightUrls)).toHaveLength(allTime.length);
+    expect(actions.filter(({ action }) => action?.source === "signature")).toHaveLength(allTime.length);
+    expect(actions.filter(({ action }) => action?.source === "watch-moment")).toHaveLength(0);
     expect(actions.filter(({ action }) => action === null)).toHaveLength(0);
+  });
+
+  it("uses the reviewed RDA and Joshua Van media destinations", () => {
+    expect(resolveProfileWatchAction("rafael-dos-anjos")).toMatchObject({
+      source: "signature",
+      url: "https://youtu.be/PQhcgZ4uulQ?is=ih4Qv5lsthLNKgkS",
+    });
+    expect(resolveWatchMomentAction("rafael-dos-anjos")?.url).toBe(
+      "https://youtube.com/shorts/L7CYUtF5RQM?is=TomljbeaWRIB7BRV",
+    );
+    expect(resolveProfileWatchAction("joshua-van")).toMatchObject({
+      source: "signature",
+      url: "https://youtu.be/nwO2UPz7p28?is=YgmgRj5wjPQQuw8i",
+    });
+    expect(resolveWatchMomentAction("joshua-van")?.url).toBe(
+      "https://youtube.com/shorts/owyAiZa33XY?is=vNNc2me-zGbAnNZ3",
+    );
   });
 
   it("never routes a signature-fight action to UFC Fight Pass search", () => {
     actions.forEach(({ action }) => {
       expect(action?.url).not.toContain("ufcfightpass.com");
-      expect(action?.url).toMatch(/^https:\/\/(youtu\.be|www\.youtube\.com|www\.ufc\.com)\//);
+      expect(action?.url).toMatch(/^https:\/\/(youtu\.be|(www\.)?youtube\.com|www\.ufc\.com)\//);
     });
   });
 
