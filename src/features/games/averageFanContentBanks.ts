@@ -741,19 +741,23 @@ function ufcCandidates() {
       }));
     }
 
-    if (wins.length >= 3) {
-      const firstAnchor = wins[stableOffset(`${fighter.id}:g5-anchor-a`, wins.length)]!;
-      const secondPool = wins.filter((fight) => fight.opponent !== firstAnchor.opponent);
-      const secondAnchor = secondPool[stableOffset(`${fighter.id}:g5-anchor-b`, secondPool.length)]!;
-      const thirdPool = secondPool.filter((fight) => fight.opponent !== secondAnchor.opponent);
-      const thirdAnchor = thirdPool[stableOffset(`${fighter.id}:g5-anchor-c`, thirdPool.length)]!;
+    const uniqueWins = wins.filter(
+      (fight, fightIndex) => wins.findIndex((candidate) => candidate.opponent === fight.opponent) === fightIndex,
+    );
+    if (uniqueWins.length >= 3) {
+      const firstIndex = stableOffset(`${fighter.id}:g5-anchor-a`, uniqueWins.length);
+      const anchors = [
+        uniqueWins[firstIndex]!,
+        uniqueWins[(firstIndex + 1) % uniqueWins.length]!,
+        uniqueWins[(firstIndex + 2) % uniqueWins.length]!,
+      ];
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
       questions.push(shortQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
         sport: "ufc",
         grade: 5,
         subject: "Fighters",
-        prompt: `Which UFC fighter owns wins over ${firstAnchor.opponent}, ${secondAnchor.opponent}, and ${thirdAnchor.opponent}?`,
+        prompt: `Which UFC fighter owns wins over ${anchors[0].opponent}, ${anchors[1].opponent}, and ${anchors[2].opponent}?`,
         answer: fighter.name,
         explanation: `${fighter.name}'s UFC ledger includes wins over all three opponents.`,
         fanMisses: wrongNames,
