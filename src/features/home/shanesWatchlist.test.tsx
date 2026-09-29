@@ -182,7 +182,7 @@ describe("Shane's ranked watchlist", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Bilal Hasan" }));
 
     const dialog = screen.getByRole("dialog", { name: "Bilal Hasan" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #2")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #4")).toBeInTheDocument();
     expect(within(dialog).getByText("“The IndoNinja”")).toBeInTheDocument();
     expect(within(dialog).getByText(/ended the fight with a clean right hand at 2:28 of Round 2/i)).toBeInTheDocument();
     expect(within(dialog).getByText("1–0")).toBeInTheDocument();
@@ -228,7 +228,7 @@ describe("Shane's ranked watchlist", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Raul Rosas Jr." }));
 
     const dialog = screen.getByRole("dialog", { name: "Raul Rosas Jr." });
-    expect(within(dialog).getByText("SHANE’S RANKING · #4")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #2")).toBeInTheDocument();
     expect(within(dialog).getByText("“El Nino Problema”")).toBeInTheDocument();
     expect(within(dialog).getByText("6–1")).toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
