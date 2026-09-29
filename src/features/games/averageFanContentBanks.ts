@@ -828,6 +828,9 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
 
 
 const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
+  ["00-mariota-first-heisman", 2, "Players", "Marcus Mariota was Oregon's first Heisman Trophy winner.", true, "Mariota became Oregon's first Heisman winner in 2014."],
+  ["00-boise-blue-field", 2, "Traditions", "Boise State plays its home games on a blue field.", true, "Boise State's Albertsons Stadium is famous for its blue playing surface."],
+  ["00-bcs-no-playoff", 2, "CFB History", "The BCS used a four-team playoff bracket to decide its national champion.", false, "The BCS matched its top two teams in a national championship game rather than using a four-team playoff."],
   ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
   ["01-cfp-first-number-one", 4, "CFB History", "Mississippi State was the first team ranked No. 1 by the College Football Playoff selection committee.", true, "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
   ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
