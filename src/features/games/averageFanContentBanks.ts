@@ -189,6 +189,12 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "turnover-on-downs", grade: 1, prompt: "What happens when an offense fails to convert on fourth down and the play does not otherwise change possession?", answer: "Turnover on downs", wrong: ["Automatic punt", "Replay fourth down"], explanation: "The opponent takes possession at the dead-ball spot after a failed fourth-down attempt." },
   { id: "false-start", grade: 2, prompt: "How many yards is the standard penalty for a false start?", answer: "5", wrong: ["10", "15"], explanation: "A false start is a five-yard penalty." },
   { id: "offensive-holding", grade: 3, prompt: "How many yards is the standard NFL penalty for offensive holding?", answer: "10", wrong: ["5", "15"], explanation: "Offensive holding normally carries a 10-yard penalty in the NFL." },
+  { id: "11-personnel", grade: 5, prompt: "What personnel grouping uses one running back and one tight end?", answer: "11 personnel", wrong: ["12 personnel", "21 personnel"], explanation: "The first digit counts running backs and the second counts tight ends: 11 personnel uses one of each." },
+  { id: "12-personnel", grade: 5, prompt: "What personnel grouping uses one running back and two tight ends?", answer: "12 personnel", wrong: ["11 personnel", "22 personnel"], explanation: "12 personnel uses one running back and two tight ends." },
+  { id: "trips", grade: 5, prompt: "What formation term describes three eligible receivers aligned to the same side?", answer: "Trips", wrong: ["Twins", "Empty"], explanation: "Trips commonly describes a three-receiver surface to one side." },
+  { id: "mesh", grade: 5, prompt: "Which passing concept is built around shallow crossing routes that pass close to one another?", answer: "Mesh", wrong: ["Four verts", "Smash"], explanation: "Mesh uses intersecting shallow crossers to stress man and zone coverage." },
+  { id: "flood", grade: 5, prompt: "Which passing concept commonly stretches one side of a zone defense at multiple depths?", answer: "Flood", wrong: ["Dagger", "Wham"], explanation: "Flood places receivers at different levels on the same side to high-low zone defenders." },
+  { id: "zone-blitz", grade: 5, prompt: "What pressure concept can send a linebacker or defensive back while dropping a defensive lineman into coverage?", answer: "Zone blitz", wrong: ["Prevent defense", "Cover zero"], explanation: "A zone blitz exchanges rush and coverage responsibilities while keeping zone structure behind the pressure." },
 ];
 
 const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
@@ -212,6 +218,11 @@ const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
   { id: "renegade", grade: 3, prompt: "Chief Osceola and Renegade are associated with which program?", answer: "Florida State", wrong: ["Florida", "Miami"], explanation: "Florida State's pregame tradition features Chief Osceola and Renegade." },
   { id: "sailgating", grade: 4, prompt: "Which program is famous for “sailgating” to games on the Tennessee River?", answer: "Tennessee", wrong: ["Kentucky", "Arkansas"], explanation: "Fans can arrive by boat near Tennessee's Neyland Stadium, a tradition known as sailgating." },
   { id: "victory-bell", grade: 3, prompt: "USC and UCLA compete for which rivalry trophy?", answer: "Victory Bell", wrong: ["Jeweled Shillelagh", "Stanford Axe"], explanation: "USC and UCLA play for the Victory Bell." },
+  { id: "floyd-rosedale", grade: 5, prompt: "Iowa and Minnesota play for which trophy?", answer: "Floyd of Rosedale", wrong: ["Heartland Trophy", "Little Brown Jug"], explanation: "Iowa and Minnesota compete for Floyd of Rosedale." },
+  { id: "old-oaken-bucket", grade: 5, prompt: "Indiana and Purdue play for which trophy?", answer: "Old Oaken Bucket", wrong: ["Old Brass Spittoon", "Illibuck"], explanation: "Indiana and Purdue compete for the Old Oaken Bucket." },
+  { id: "jeweled-shillelagh", grade: 5, prompt: "Notre Dame and USC play for which trophy?", answer: "Jeweled Shillelagh", wrong: ["Victory Bell", "Legends Trophy"], explanation: "Notre Dame and USC compete for the Jeweled Shillelagh." },
+  { id: "stanford-axe", grade: 5, prompt: "Stanford and California play for which trophy?", answer: "Stanford Axe", wrong: ["Territorial Cup", "Victory Bell"], explanation: "Stanford and Cal compete for the Stanford Axe." },
+  { id: "golden-boot", grade: 5, prompt: "LSU and Arkansas play for which trophy?", answer: "Golden Boot", wrong: ["Magnolia Bowl Trophy", "Tiger Rag"], explanation: "LSU and Arkansas compete for the Golden Boot." },
 ];
 
 const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
@@ -241,6 +252,11 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "underhook", grade: 4, prompt: "What clinch control is created by placing an arm underneath an opponent's arm?", answer: "Underhook", wrong: ["Overhand", "Whizzer kick"], explanation: "An underhook places the arm underneath the opponent's arm to gain upper-body control." },
   { id: "jab", grade: 1, prompt: "Which straight punch is normally thrown with the lead hand?", answer: "Jab", wrong: ["Cross", "Uppercut"], explanation: "The jab is the standard lead-hand straight punch." },
   { id: "cross", grade: 2, prompt: "Which straight punch is normally thrown with the rear hand?", answer: "Cross", wrong: ["Jab", "Lead hook"], explanation: "The cross is the standard rear-hand straight punch." },
+  { id: "whizzer", grade: 5, prompt: "In wrestling-heavy MMA terminology, what is another common name for an overhook used to counter grappling?", answer: "Whizzer", wrong: ["Underhook", "Body lock"], explanation: "A whizzer is an overhook commonly used to counter takedown and clinch control." },
+  { id: "half-guard", grade: 5, prompt: "What guard position has the bottom fighter trapping one of the top fighter's legs?", answer: "Half guard", wrong: ["Full mount", "Side control"], explanation: "In half guard, the bottom fighter controls one of the top fighter's legs." },
+  { id: "body-triangle", grade: 5, prompt: "What back-control configuration locks the legs around an opponent's torso in a figure-four shape?", answer: "Body triangle", wrong: ["Closed guard", "Seatbelt grip"], explanation: "A body triangle uses a figure-four leg lock around the torso during back control." },
+  { id: "feint", grade: 5, prompt: "What striking term describes a fake attack used to draw a defensive reaction?", answer: "Feint", wrong: ["Frame", "Scramble"], explanation: "A feint is a false attack or movement used to provoke a reaction." },
+  { id: "switch-stance", grade: 5, prompt: "What does a fighter do when switching stance?", answer: "Changes which side is forward", wrong: ["Changes weight class", "Moves from standing to guard"], explanation: "Switching stance changes the lead side, such as moving between orthodox and southpaw." },
 ];
 
 function knowledgeQuestions(
