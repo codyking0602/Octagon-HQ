@@ -1,6 +1,8 @@
 import { queryFootballSubjects, type FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import { ufcFactualLedgerSubjects, type UfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { stableLineupHash } from "../play/lineupModel";
+import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
+import type { BarTriviaQuestion } from "./barTriviaEngine";
 import {
   AVERAGE_FAN_SUBJECTS,
   assertAverageFanQuestion,
@@ -331,6 +333,140 @@ function knowledgeQuestions(
   ));
 }
 
+
+const CFB_TRADITION_CATEGORY_HINTS = [
+  "tradition", "rivalr", "troph", "mascot", "stadium", "fan culture", "cheer",
+  "entrance", "band", "fight song", "tailgating", "gameday",
+] as const;
+
+const CFB_PLAYER_CATEGORY_HINTS = [
+  "heisman", "player", "quarterback", "running back", "receiver", "championship star",
+  "two-sport", "award",
+] as const;
+
+const CFB_PROGRAM_CATEGORY_HINTS = [
+  "team identity", "program", "national championship", "championship history",
+  "conference", "bowl game", "coaches", "coaching",
+] as const;
+
+function cfbAuthoredSubject(question: BarTriviaQuestion): AverageFanSubject {
+  const category = question.category.toLocaleLowerCase();
+  if (CFB_TRADITION_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Traditions";
+  if (CFB_PLAYER_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Players";
+  if (CFB_PROGRAM_CATEGORY_HINTS.some((hint) => category.includes(hint))) return "Programs";
+  return "CFB History";
+}
+
+function cfbAuthoredGrade(question: BarTriviaQuestion): AverageFanGrade {
+  if (question.round === "last-call") return 5;
+  const bucket = stableOffset(question.id, 4);
+  if (question.difficulty === "easy") return bucket === 0 ? 2 : 1;
+  if (question.difficulty === "medium") return bucket < 2 ? 2 : 3;
+  if (question.difficulty === "hard") return bucket < 2 ? 4 : 5;
+  if (question.round === "round1") return bucket === 0 ? 2 : 1;
+  if (question.round === "round2") return bucket < 2 ? 2 : 3;
+  return bucket < 2 ? 4 : 5;
+}
+
+function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
+  const grade = cfbAuthoredGrade(question);
+  const subject = cfbAuthoredSubject(question);
+  const protectedFinal = question.round === "last-call";
+  const wrongChoices = question.choices.filter((choice) => choice !== question.answer).slice(0, 2);
+  const formatRoll = stableOffset(question.id + ":average-fan-format", 10);
+  const common = {
+    id: `average-fan:cfb:authored:${question.id}`,
+    sport: "cfb" as const,
+    grade,
+    subject,
+    answer: question.answer,
+    aliases: [] as string[],
+    explanation: question.explanation,
+    contentType: question.contentType,
+    activeFrom: question.activeFrom,
+    expiresAt: question.expiresAt,
+    difficultyNudge: grade >= 4 ? 1 : grade === 1 ? -1 : 0,
+    protectedFinal,
+    sourceId: question.sourceId,
+    sourceUrl: question.sourceUrl,
+    verifiedAt: question.verifiedAt,
+  };
+
+  if (formatRoll === 0 && !protectedFinal) {
+    return assertAverageFanQuestion({
+      ...common,
+      format: "true-false",
+      prompt: `True or false: ${question.explanation}`,
+      answer: "True",
+      aliases: ["T"],
+      choices: ["True", "False"],
+      fanMisses: ["False"],
+    });
+  }
+  if (formatRoll <= 3 || protectedFinal) {
+    return assertAverageFanQuestion({
+      ...common,
+      format: "three-choice",
+      prompt: question.prompt,
+      choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!] as [string, string, string],
+      fanMisses: wrongChoices,
+    });
+  }
+  return assertAverageFanQuestion({
+    ...common,
+    format: "short-answer",
+    prompt: question.prompt,
+    fanMisses: wrongChoices,
+  });
+}
+
+function authoredCfbQuestions() {
+  return BAR_TRIVIA_QUESTION_BANK
+    .filter((question) => question.league === "cfb")
+    .map(authoredCfbQuestion);
+}
+
+function interleaveCfbCandidates(
+  authored: readonly AverageFanQuestion[],
+  canonical: readonly AverageFanQuestion[],
+) {
+  const result: AverageFanQuestion[] = [];
+  const authoredByKey = new Map<string, AverageFanQuestion[]>();
+  const canonicalByKey = new Map<string, AverageFanQuestion[]>();
+  const keyFor = (question: AverageFanQuestion) =>
+    `${question.protectedFinal ? "final" : question.grade}:${question.subject}`;
+
+  for (const question of authored) {
+    const key = keyFor(question);
+    const rows = authoredByKey.get(key) ?? [];
+    rows.push(question);
+    authoredByKey.set(key, rows);
+  }
+  for (const question of canonical) {
+    const key = keyFor(question);
+    const rows = canonicalByKey.get(key) ?? [];
+    rows.push(question);
+    canonicalByKey.set(key, rows);
+  }
+
+  const keys = unique([...authoredByKey.keys(), ...canonicalByKey.keys()]).sort();
+  for (const key of keys) {
+    const a = authoredByKey.get(key) ?? [];
+    const c = canonicalByKey.get(key) ?? [];
+    let ai = 0;
+    let ci = 0;
+    while (ai < a.length || ci < c.length) {
+      for (let step = 0; step < 3 && ai < a.length; step += 1) result.push(a[ai++]!);
+      if (ci < c.length) result.push(c[ci++]!);
+      if (ai >= a.length && ci < c.length) {
+        result.push(...c.slice(ci));
+        ci = c.length;
+      }
+    }
+  }
+  return result;
+}
+
 function footballPlayers(league: "NFL" | "CFB") {
   return queryFootballSubjects({ league, kind: "player-career" })
     .filter((subject) => subject.name && subject.position)
@@ -607,10 +743,7 @@ function footballCandidates(league: "NFL" | "CFB") {
     questions.push(...knowledgeQuestions("cfb", "Traditions", "average-fan:cfb:tradition", CFB_TRADITION_FACTS));
   }
 
-  return questions;
-}
-
-function formatDivision(value: string) {
+  return league === "CFB"\n    ? interleaveCfbCandidates(authoredCfbQuestions(), questions)\n    : questions;\n}\n\nfunction formatDivision(value: string) {
   return value
     .replace(/^women-s-/, "Women's ")
     .replace(/^womens-/, "Women's ")
