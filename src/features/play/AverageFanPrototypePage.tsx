@@ -263,7 +263,7 @@ function MoneyRail({ completed }: { completed: number }) {
     <aside className="average-fan-money-rail" aria-label="Money ladder">
       {AVERAGE_FAN_MONEY_LADDER.slice().reverse().map((money, reverseIndex) => {
         const questionNumber = AVERAGE_FAN_MONEY_LADDER.length - reverseIndex;
-        const current = questionNumber === Math.min(completed + 1, 10);
+        const current = completed < 10 && questionNumber === completed + 1;
         const cleared = questionNumber <= completed;
         return (
           <div
@@ -549,9 +549,11 @@ function AverageFanGame({
     setPhase("reveal");
   }
 
-  function submitCurrent() {
-    if (!answer.trim()) return;
-    resolveAnswer(answer.trim());
+  function submitCurrent(valueOverride?: string) {
+    const candidate = (valueOverride ?? answer).trim();
+    if (!candidate) return;
+    if (valueOverride !== undefined) setAnswer(candidate);
+    resolveAnswer(candidate);
   }
 
   function copyFan() {
@@ -575,14 +577,21 @@ function AverageFanGame({
     setPhase("result");
   }
 
-  function submitFinal() {
-    if (!finalAnswer.trim() || phase !== "final-question") return;
-    const correct = averageFanAnswersMatch(AVERAGE_FAN_UFC_PREVIEW_FINAL, finalAnswer.trim());
+  function submitFinal(valueOverride?: string) {
+    const candidate = (valueOverride ?? finalAnswer).trim();
+    if (!candidate || phase !== "final-question") return;
+    if (valueOverride !== undefined) setFinalAnswer(candidate);
+    const correct = averageFanAnswersMatch(AVERAGE_FAN_UFC_PREVIEW_FINAL, candidate);
     setFinalOutcome(correct ? "correct" : "wrong");
     setPhase("final-reveal");
   }
 
   const questionVisible = current && (phase === "question" || phase === "reveal");
+  const displayedQuestionNumber = phase === "reveal" && lastResolution
+    ? lastResolution.order
+    : Math.min(resolved.length + 1, 10);
+  const displayedQuestionMoney = AVERAGE_FAN_MONEY_LADDER[displayedQuestionNumber - 1]!;
+  const railCompleted = phase === "reveal" ? Math.max(0, completed - 1) : completed;
 
   return (
     <div className="average-fan-game">
@@ -713,7 +722,7 @@ function AverageFanGame({
           ) : null}
         </div>
 
-        <MoneyRail completed={completed} />
+        <MoneyRail completed={railCompleted} />
         <HelpRail
           fan={fan}
           peekUsed={peekUsed}
