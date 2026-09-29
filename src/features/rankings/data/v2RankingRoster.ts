@@ -1638,7 +1638,7 @@ const joshuaVan = {
       "The first Pantoja win receives reduced championship and opponent credit because it ended by injury after 26 seconds.",
       "Only UFC fights are included in the canonical ledger.",
     ],
-    photoUrl: null,
+    photoUrl: "assets/fighters/joshua-van.webp",
     thumbUrl: "assets/fighters/joshua-van-thumb.webp",
     watchUrl: "https://youtube.com/shorts/owyAiZa33XY?is=vNNc2me-zGbAnNZ3",
     watchLabel: "Watch: Brandon Royval moment",
