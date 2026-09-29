@@ -6,6 +6,8 @@ export interface FootballMatchupTeam {
   rank?: number | null;
   record?: string;
   sportsReferenceUrl?: string;
+  logoUrl?: string;
+  themeColor?: string;
 }
 
 export interface FootballMatchupRichTextPart {
@@ -20,7 +22,8 @@ export interface FootballMatchupCompactThing {
 }
 
 export interface FootballMatchupCompactContent {
-  rankingSource: "AP" | "CFP";
+  leagueLabel?: "CFB" | "NFL";
+  rankingSource?: "AP" | "CFP";
   setup: FootballMatchupRichTextPart[];
   things: [FootballMatchupCompactThing, FootballMatchupCompactThing, FootballMatchupCompactThing];
   bottomLine: FootballMatchupRichTextPart[];
@@ -503,14 +506,14 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
         aliases: ["alabama", "alabama-crimson-tide", "crimson-tide"],
         rank: 7,
         record: "4–0",
-        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/alabama/",
+        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/alabama/2026.html",
       },
       {
         name: "Mississippi State",
         aliases: ["mississippi-state", "mississippi-state-bulldogs", "bulldogs"],
         rank: 16,
         record: "4–0",
-        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/mississippi-state/",
+        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/mississippi-state/2026.html",
       },
     ],
     eventBindings: [[
@@ -566,76 +569,75 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
     },
   },
   {
-    id: "2026-raiders-saints",
-    title: "Raiders vs. Saints",
-    venue: "Caesars Superdome · New Orleans",
+    id: "2026-chiefs-raiders",
+    title: "Chiefs at Raiders",
+    venue: "Allegiant Stadium · Las Vegas",
+    kickoffAt: "2026-10-04T20:25:00Z",
     teams: [
+      {
+        name: "Kansas City Chiefs",
+        aliases: ["kansas-city-chiefs", "kansas-city", "chiefs", "kc-chiefs", "kc"],
+        record: "3–0",
+        sportsReferenceUrl: "https://www.pro-football-reference.com/teams/kan/2026.htm",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png",
+        themeColor: "#E31837",
+      },
+      {
+        name: "Las Vegas Raiders",
+        aliases: ["las-vegas-raiders", "las-vegas", "raiders", "lv-raiders", "lv"],
+        record: "3–0",
+        sportsReferenceUrl: "https://www.pro-football-reference.com/teams/rai/2026.htm",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/lv.png",
+        themeColor: "#000000",
+      },
+    ],
+    eventBindings: [[
       { name: "Las Vegas Raiders", aliases: ["las-vegas-raiders", "las-vegas", "raiders", "lv-raiders", "lv"] },
       { name: "New Orleans Saints", aliases: ["new-orleans-saints", "new-orleans", "saints", "no-saints", "no"] },
-    ],
-    setup: [
-      "Las Vegas brings a 2–0 record into New Orleans for the Saints' home opener, while New Orleans is 1–1 after rallying from a 14–3 deficit to beat Baltimore 24–17. There is also a coaching connection: Raiders head coach Klint Kubiak returns to the Superdome after serving as the Saints' offensive coordinator in 2024, the same season Las Vegas came to New Orleans and won 25–10.",
-      "The early-season identities are already clear. Kirk Cousins has thrown six touchdown passes in two games and the Raiders are getting explosive production from Tre Tucker, while Tyler Shough has thrown for 662 yards through two games and just led a fourth-quarter comeback in Baltimore. Las Vegas wants the game controlled by its efficient passing attack and defense; New Orleans wants Shough, Chris Olave and Juwan Johnson creating enough chain-moving plays to keep the Raiders from dictating tempo.",
-    ],
-    keyMatchups: [
-      {
-        title: "Kirk Cousins + Tre Tucker vs. the Saints' secondary",
-        body: "Cousins corrected the biggest Week 1 concern by attacking deeper against the Chargers, going 8-of-12 for 181 yards and three touchdowns on throws of 10-plus air yards. Tucker was the main beneficiary with five catches for 119 yards. New Orleans has to limit those explosives without giving Cousins easy underneath answers when it backs the safeties off.",
-        edge: "Raiders — slight",
-      },
-      {
-        title: "Ashton Jeanty vs. the Saints' front seven",
-        body: "Jeanty has 150 rushing yards through two games but was held to 48 yards on 21 carries by the Chargers. New Orleans just tightened up against Baltimore and allowed only 40 rushing yards in the second half, with Pete Werner and the front playing faster as the game went on. The Saints can make Las Vegas much easier to defend if they keep the Raiders behind schedule on the ground.",
-        edge: "Saints — slight",
-      },
-      {
-        title: "Tyler Shough + Chris Olave vs. Las Vegas' pass defense",
-        body: "Shough completed 27-of-34 for 252 yards and a touchdown in Baltimore, with Olave catching eight passes for 86 yards and the game-tying score. Las Vegas has opened 2–0 with a defense that is already producing top-10 results in multiple categories. New Orleans needs protection to hold up long enough for Olave and Juwan Johnson to work beyond the first window.",
-        edge: "Even",
-      },
-    ],
-    pathsToWin: [
-      {
-        team: "Las Vegas Raiders",
-        body: "Let Cousins keep playing on time, use Tucker's speed to stretch the Saints vertically and make New Orleans defend the full route tree before leaning harder on Jeanty. Defensively, pressure Shough without opening easy scramble lanes and force the Saints to prove they can finish long drives rather than living on fourth-quarter explosives.",
-      },
-      {
-        team: "New Orleans Saints",
-        body: "Win early downs on defense so Cousins cannot live in favorable play-action situations, then make Las Vegas earn every explosive through tighter coverage. Offensively, keep Shough in rhythm with Olave and Johnson, use the backs as outlets against pressure and avoid falling into another early two-score hole.",
-      },
-    ],
-    playersToWatch: [
-      {
-        team: "Las Vegas Raiders",
-        players: [
-          { name: "Kirk Cousins", position: "QB", body: "He has 413 passing yards and six touchdowns through two games, including three scores in each win. New Orleans has to disrupt his timing before the route concepts fully develop." },
-          { name: "Tre Tucker", position: "WR", body: "Seven catches for 146 yards through two games, including 119 yards against the Chargers. His speed is the Raiders' cleanest way to punish a Saints defense that gets too aggressive underneath." },
-          { name: "Maxx Crosby", position: "DE", body: "The centerpiece of the Raiders' front remains the player New Orleans must account for on every passing down. His ability to create pressure without extra rushers lets Las Vegas keep more bodies in coverage." },
-        ],
-      },
-      {
-        team: "New Orleans Saints",
-        players: [
-          { name: "Tyler Shough", position: "QB", body: "He has 662 passing yards through two games and completed 79.4% of his throws in the comeback win over Baltimore. This matchup tests whether that production can hold up against a defense playing with an early-season edge." },
-          { name: "Chris Olave", position: "WR", body: "Eight catches for 86 yards and a touchdown in Week 2 showed how central he is to the Saints' passing game. New Orleans needs him creating separation before the Raiders' rush can arrive." },
-          { name: "Pete Werner", position: "LB", body: "He led New Orleans with 11 tackles and a sack in Baltimore. His range is critical against Jeanty underneath and against the play-action concepts Kubiak uses to stress linebackers." },
-        ],
-      },
-    ],
-    unitEdges: [
-      {
-        title: "RAIDERS OFFENSE vs. SAINTS DEFENSE",
-        edge: "RAIDERS — SLIGHT",
-        body: "New Orleans showed it can tighten up after halftime, but Cousins' efficiency and Tucker's explosive start give Las Vegas a passing-game answer even when Jeanty is not controlling the ground game.",
-      },
-      {
-        title: "SAINTS OFFENSE vs. RAIDERS DEFENSE",
-        edge: "EVEN",
-        body: "Shough and Olave have already shown enough production to move the ball against quality competition, but Las Vegas' defensive start makes this a much tougher protection and decision-making test than the raw passing totals suggest.",
-      },
-    ],
-  }
-];
+    ]],
+    compact: {
+      leagueLabel: "NFL",
+      setup: [
+        { text: "Kansas City and Las Vegas are both 3–0, making Sunday’s meeting at Allegiant Stadium an early AFC West showdown. The Chiefs arrive off a 24–10 win in Miami; the Raiders just erased an 11-point deficit in New Orleans to win 35–27." },
+      ],
+      things: [
+        {
+          title: "Mahomes is back in rhythm",
+          body: [
+            { text: "Patrick Mahomes", href: "https://www.pro-football-reference.com/players/M/MahoPa00.htm", emphasis: true },
+            { text: " has " },
+            { text: "812 passing yards and seven touchdowns", emphasis: true },
+            { text: " through three games. Las Vegas has to keep Kansas City from living in the efficient, on-schedule offense that carried the Chiefs to 3–0." },
+          ],
+        },
+        {
+          title: "Bowers changes the Raiders’ ceiling",
+          body: [
+            { text: "Brock Bowers", href: "https://www.pro-football-reference.com/players/B/BoweBr01.htm", emphasis: true },
+            { text: " returned in New Orleans with " },
+            { text: "10 catches for 116 yards and a touchdown", emphasis: true },
+            { text: ", while " },
+            { text: "Kirk Cousins", href: "https://www.pro-football-reference.com/players/C/CousKi00.htm", emphasis: true },
+            { text: " threw three touchdown passes for the third straight game. Kansas City now has to account for the Raiders’ best mismatch weapon." },
+          ],
+        },
+        {
+          title: "Walker can keep Kansas City balanced",
+          body: [
+            { text: "Kenneth Walker III", href: "https://www.pro-football-reference.com/players/W/WalkKe00.htm", emphasis: true },
+            { text: " already has " },
+            { text: "360 rushing yards", emphasis: true },
+            { text: " at " },
+            { text: "5.5 yards per carry", emphasis: true },
+            { text: " through three games. If Las Vegas has to honor the run, Mahomes gets a much cleaner menu on early downs." },
+          ],
+        },
+      ],
+      bottomLine: [
+        { text: "Kansas City wants Mahomes and Walker to keep the game on schedule. Las Vegas needs Cousins and Bowers to keep matching scores, then create the kind of extra possessions that fueled its fourth-quarter comeback in New Orleans." },
+      ],
+    },
+  }];
 
 function normalizeTeamToken(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
