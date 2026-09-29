@@ -431,6 +431,12 @@
   line-height: 1.18;
 }
 
+.bar-trivia__answers button.is-selected {
+  border-color: rgba(226, 177, 96, 0.78);
+  background: rgba(184, 124, 48, 0.22);
+  box-shadow: 0 0 0 2px rgba(226, 177, 96, 0.08);
+}
+
 .bar-trivia__answers button.is-correct {
   border-color: rgba(99, 196, 132, 0.68);
   background: rgba(62, 134, 86, 0.24);
@@ -933,6 +939,15 @@
 .bar-trivia__venue .bar-trivia__answers button span {
   font-size: clamp(0.7rem, 2.7vw, 0.9rem);
   text-shadow: 0 1px 7px rgba(0,0,0,0.7);
+}
+
+.bar-trivia__venue .bar-trivia__answers button.is-selected {
+  border-color: rgba(241, 190, 103, 0.92);
+  background: linear-gradient(180deg, rgba(101, 69, 30, 0.94), rgba(62, 42, 22, 0.95));
+  box-shadow:
+    0 0 0 2px rgba(241, 190, 103, 0.10),
+    0 0 22px rgba(226, 158, 69, 0.18);
+  transform: translateY(-1px);
 }
 
 .bar-trivia__venue .bar-trivia__answers button.is-correct {

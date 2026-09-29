@@ -272,6 +272,12 @@ function PlayerCard({
   );
 }
 
+function buildForProfile(result: FootballWeeklyBuildQbFinal, profileId: string) {
+  return result.all_teams
+    .filter((entry) => entry.winner_profile_id === profileId)
+    .sort((left, right) => TRAITS.indexOf(left.trait) - TRAITS.indexOf(right.trait));
+}
+
 export function FootballWeeklyBuildQbFinalResult({
   result,
   busy,
@@ -285,6 +291,14 @@ export function FootballWeeklyBuildQbFinalResult({
 }) {
   const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
+  const currentStanding = result.standings.find((entry) => entry.is_current_user) ?? result.standings[0] ?? null;
+  const [selectedProfileId, setSelectedProfileId] = useState(currentStanding?.profile_id ?? "");
+  const selectedStanding = result.standings.find((entry) => entry.profile_id === selectedProfileId) ?? currentStanding;
+  const selectedBuild = selectedStanding ? buildForProfile(result, selectedStanding.profile_id) : [];
+
+  useEffect(() => {
+    setSelectedProfileId(currentStanding?.profile_id ?? "");
+  }, [currentStanding?.profile_id, result.week_start]);
 
   return (
     <section className="football-weekly-build-qb__final surface-card">
@@ -303,7 +317,7 @@ export function FootballWeeklyBuildQbFinalResult({
 
       <nav className="football-weekly-build-qb__tabs" aria-label="Build a QB final views">
         <button className={tab === "standings" ? "is-active" : ""} type="button" onClick={() => setTab("standings")}>Standings</button>
-        <button className={tab === "build" ? "is-active" : ""} type="button" onClick={() => setTab("build")}>Your QB</button>
+        <button className={tab === "build" ? "is-active" : ""} type="button" onClick={() => setTab("build")}>QBs</button>
         <button className={tab === "grades" ? "is-active" : ""} type="button" onClick={() => setTab("grades")}>All Grades</button>
       </nav>
 
@@ -320,20 +334,38 @@ export function FootballWeeklyBuildQbFinalResult({
       ) : null}
 
       {tab === "build" ? (
-        <div className="football-weekly-build-qb__grade-grid">
-          {TRAITS.map((trait) => {
-            const entry = result.collection.find((item) => item.trait === trait);
-            return entry ? (
-              <article key={trait}>
-                <TeamMark teamCode={entry.team_code} />
-                <div><small>{trait}</small><strong>{entry.display_name}</strong><span>Paid ${entry.winning_bid}</span></div>
-                <b>{entry.grade.toFixed(1)}</b>
-              </article>
-            ) : (
-              <article key={trait}><div><small>{trait}</small><strong>EMPTY</strong></div><b>—</b></article>
-            );
-          })}
-          <footer><span>FOUR-TRAIT AVERAGE</span><strong>{me.final_score?.toFixed(1) ?? "—"}</strong></footer>
+        <div className="football-weekly-build-qb__builds">
+          <div className="football-weekly-build-qb__player-picker" aria-label="Select player QB">
+            {result.standings.map((entry) => (
+              <button
+                className={selectedStanding?.profile_id === entry.profile_id ? "is-active" : ""}
+                type="button"
+                key={entry.profile_id}
+                onClick={() => setSelectedProfileId(entry.profile_id)}
+              >
+                <strong>{entry.display_name}</strong>
+                <span>{entry.final_score == null ? "—" : entry.final_score.toFixed(1)}</span>
+              </button>
+            ))}
+          </div>
+          <div className="football-weekly-build-qb__grade-grid">
+            {TRAITS.map((trait) => {
+              const entry = selectedBuild.find((item) => item.trait === trait);
+              return entry ? (
+                <article key={trait}>
+                  <TeamMark teamCode={entry.team_code} />
+                  <div><small>{trait}</small><strong>{entry.display_name}</strong><span>Paid ${entry.winning_bid}</span></div>
+                  <b>{entry.grade.toFixed(1)}</b>
+                </article>
+              ) : (
+                <article key={trait}><div><small>{trait}</small><strong>EMPTY</strong></div><b>—</b></article>
+              );
+            })}
+            <footer>
+              <span>{selectedStanding?.display_name ?? "QB"} · FOUR-TRAIT AVERAGE</span>
+              <strong>{selectedStanding?.final_score?.toFixed(1) ?? "—"}</strong>
+            </footer>
+          </div>
         </div>
       ) : null}
 

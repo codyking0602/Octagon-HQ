@@ -71,6 +71,7 @@ export function BarTriviaGameView({
   state,
   question,
   lastResult,
+  selectedChoice = null,
   wagerDraft,
   availableCounts = { nfl: 0, cfb: 0, ufc: 0, mlb: 0 },
   onBack,
@@ -93,6 +94,7 @@ export function BarTriviaGameView({
   state: BarTriviaState;
   question: BarTriviaDisplayQuestion | null;
   lastResult: BarTriviaAnswerResult | null;
+  selectedChoice?: string | null;
   wagerDraft: number;
   availableCounts?: Record<BarTriviaLeague, number>;
   onBack: () => void;
@@ -281,14 +283,20 @@ export function BarTriviaGameView({
 
             <div className="bar-trivia__answers">
               {question.choices.map((choice, index) => {
+                const selected = Boolean(!lastResult && selectedChoice === choice);
                 const correct = Boolean(lastResult && question.answer && choice === question.answer);
                 const wrong = Boolean(lastResult && choice === lastResult.choice && !lastResult.correct);
                 return (
                   <button
                     key={choice}
                     type="button"
-                    disabled={Boolean(lastResult) || busy}
-                    className={[correct ? "is-correct" : "", wrong ? "is-wrong" : ""].filter(Boolean).join(" ")}
+                    disabled={Boolean(lastResult) || busy || Boolean(selectedChoice)}
+                    aria-pressed={selected}
+                    className={[
+                      selected ? "is-selected" : "",
+                      correct ? "is-correct" : "",
+                      wrong ? "is-wrong" : "",
+                    ].filter(Boolean).join(" ")}
                     onClick={() => onAnswer(choice)}
                   >
                     <b>{choiceLetter(index)}</b>

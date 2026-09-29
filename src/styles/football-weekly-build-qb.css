@@ -536,6 +536,50 @@
   background: rgba(255,255,255,.11);
 }
 
+.football-weekly-build-qb__player-picker {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  margin-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.football-weekly-build-qb__player-picker::-webkit-scrollbar {
+  display: none;
+}
+
+.football-weekly-build-qb__player-picker button {
+  flex: 0 0 auto;
+  min-width: 86px;
+  padding: 7px 9px;
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 9px;
+  background: rgba(255,255,255,.025);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.football-weekly-build-qb__player-picker strong,
+.football-weekly-build-qb__player-picker span {
+  display: block;
+}
+
+.football-weekly-build-qb__player-picker strong {
+  font-size: .68rem;
+}
+
+.football-weekly-build-qb__player-picker span {
+  margin-top: 2px;
+  font-size: .58rem;
+  opacity: .68;
+}
+
+.football-weekly-build-qb__player-picker button.is-active {
+  border-color: rgba(255,255,255,.28);
+  background: rgba(255,255,255,.11);
+}
+
 .football-weekly-build-qb__rows {
   display: grid;
   gap: 5px;

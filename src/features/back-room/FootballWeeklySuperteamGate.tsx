@@ -467,10 +467,24 @@ export function FootballWeeklySuperteamGate({
           <div><strong>{state.teams.length}</strong><span>CANDIDATES</span></div>
         </header>
         <div className="football-weekly-superteam__tie-order">
-          <small>TODAY’S TIE PRIORITY</small>
-          <span>{state.tie_priority.length
-            ? state.tie_priority.map((entry) => entry.rank + ". " + entry.display_name).join(" · ")
-            : "Preview — field can grow through Day 4"}</span>
+          <div className="football-weekly-superteam__tie-heading">
+            <small>TODAY’S TIE PRIORITY</small>
+            <em>{state.day_index === 1 ? "LIVE · LOCKS MIDNIGHT CT" : "LOCKED FIELD · ROTATES DAILY"}</em>
+          </div>
+          {state.tie_priority.length ? (
+            <div className="football-weekly-superteam__tie-list" aria-label="Today’s tie priority order">
+              {state.tie_priority.map((entry) => (
+                <span className="football-weekly-superteam__tie-entry" key={entry.profile_id}>
+                  {entry.rank}. {entry.display_name}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span className="football-weekly-superteam__tie-empty">Preview — field not locked yet</span>
+          )}
+          {state.day_index === 1 ? (
+            <p>New Day 1 entrants can change this order until the field locks.</p>
+          ) : null}
         </div>
         <div className="football-weekly-superteam__candidate-stack">
           {orderedCards.map((card) => (
