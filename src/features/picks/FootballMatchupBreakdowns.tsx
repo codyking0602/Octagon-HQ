@@ -28,14 +28,22 @@ function MatchupRichText({ parts }: { parts: FootballMatchupRichTextPart[] }) {
   );
 }
 
+function rgbChannels(hex: string) {
+  const value = hex.replace("#", "");
+  const number = Number.parseInt(value, 16);
+  return `${(number >> 16) & 255}, ${(number >> 8) & 255}, ${number & 255}`;
+}
+
 function compactMatchupStyle(breakdown: FootballMatchupBreakdown) {
   const away = footballWeeklySuperteamIdentity(breakdown.teams[0].name);
   const home = footballWeeklySuperteamIdentity(breakdown.teams[1].name);
+  const awayPrimary = breakdown.teams[0].themeColor ?? away.primary;
+  const homePrimary = breakdown.teams[1].themeColor ?? home.primary;
   return {
-    "--football-matchup-away": away.primary,
-    "--football-matchup-away-rgb": away.primaryRgb,
-    "--football-matchup-home": home.primary,
-    "--football-matchup-home-rgb": home.primaryRgb,
+    "--football-matchup-away": awayPrimary,
+    "--football-matchup-away-rgb": rgbChannels(awayPrimary),
+    "--football-matchup-home": homePrimary,
+    "--football-matchup-home-rgb": rgbChannels(homePrimary),
   } as CSSProperties;
 }
 
@@ -49,7 +57,8 @@ function CompactMatchupHeader({
   const [away, home] = breakdown.teams;
   const awayIdentity = footballWeeklySuperteamIdentity(away.name);
   const homeIdentity = footballWeeklySuperteamIdentity(home.name);
-  const rankingSource = breakdown.compact?.rankingSource ?? "AP";
+  const leagueLabel = breakdown.compact?.leagueLabel ?? "CFB";
+  const rankingSource = breakdown.compact?.rankingSource;
   const style = compactMatchupStyle(breakdown);
 
   function Team({
@@ -61,19 +70,25 @@ function CompactMatchupHeader({
     identity: ReturnType<typeof footballWeeklySuperteamIdentity>;
     side: "away" | "home";
   }) {
+    const logoSrc = team.logoUrl ?? identity.logoSrc;
+    const rankLabel = rankingSource && team.rank != null ? `${rankingSource} #${team.rank}` : null;
+
     return (
       <div className={`football-matchup-breakdown-feature-team is-${side}`}>
         <span className="football-matchup-breakdown-feature-team__logo" aria-hidden="true">
-          {identity.logoSrc ? <img src={identity.logoSrc} alt="" /> : <b>{identity.code}</b>}
+          {logoSrc ? <img src={logoSrc} alt="" /> : <b>{identity.code}</b>}
         </span>
         <div>
           {team.sportsReferenceUrl ? (
             <a href={team.sportsReferenceUrl} target="_blank" rel="noreferrer">{team.name}</a>
           ) : <strong>{team.name}</strong>}
-          <span>
-            {team.rank ? <b>{rankingSource} #{team.rank}</b> : <b>{rankingSource} NR</b>}
-            {team.record ? <> · {team.record}</> : null}
-          </span>
+          {rankLabel || team.record ? (
+            <span>
+              {rankLabel ? <b>{rankLabel}</b> : null}
+              {rankLabel && team.record ? " · " : null}
+              {team.record}
+            </span>
+          ) : null}
         </div>
       </div>
     );
@@ -82,7 +97,7 @@ function CompactMatchupHeader({
   return (
     <header className="football-matchup-breakdown-sheet__header is-compact" style={style}>
       <div className="football-matchup-breakdown-feature">
-        <p className="eyebrow">THE HQ’S CFB GAME OF THE WEEK</p>
+        <p className="eyebrow">THE HQ’S {leagueLabel} GAME OF THE WEEK</p>
         <div className="football-matchup-breakdown-feature__teams">
           <Team team={away} identity={awayIdentity} side="away" />
           <b className="football-matchup-breakdown-feature__at">AT</b>
