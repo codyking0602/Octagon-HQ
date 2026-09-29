@@ -330,7 +330,6 @@ const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "diaz-mcgregor", grade: 2, prompt: "Who handed Conor McGregor his first UFC loss by submission at UFC 196?", answer: "Nate Diaz", wrong: ["Dustin Poirier", "Chad Mendes"], explanation: "Nate Diaz submitted McGregor with a rear-naked choke in Round 2 at UFC 196." },
   { id: "rousey-carmouche", grade: 3, prompt: "Who did Ronda Rousey submit in the UFC's first women's bout?", answer: "Liz Carmouche", wrong: ["Miesha Tate", "Sara McMann"], explanation: "Rousey submitted Liz Carmouche at UFC 157 in the promotion's first women's bout." },
   { id: "usman-masvidal", grade: 4, prompt: "Kamaru Usman's knockout at UFC 261 came against which challenger?", answer: "Jorge Masvidal", wrong: ["Colby Covington", "Gilbert Burns"], explanation: "Usman knocked out Jorge Masvidal in their welterweight title rematch at UFC 261." },
-
 ];
 
 const UFC_FINAL_FACTS: readonly KnowledgeFact[] = [
