@@ -77,11 +77,15 @@ function useMillionaireStageScale() {
 
 function officialResult(projection: TodayChallengeProjection) {
   const result = projection.officialAttempt?.publicResult ?? {};
+  const outcome = String(result.outcome ?? "lost");
+  const completedQuestions = Number(result.completed_questions ?? 0);
   return {
-    outcome: String(result.outcome ?? "lost"),
+    outcome,
     finalMoney: Number(result.final_money ?? 0),
-    completedQuestions: Number(result.completed_questions ?? 0),
-    firstMissQuestion: result.first_miss_question == null ? null : Number(result.first_miss_question),
+    completedQuestions,
+    firstMissQuestion: result.first_miss_question == null
+      ? (outcome === "lost" ? Math.min(8, completedQuestions + 1) : null)
+      : Number(result.first_miss_question),
     lifelinesUsed: Number(result.lifelines_used ?? 0),
     timeRemainingMs: Number(result.time_remaining_ms ?? 0),
     score: projection.officialAttempt?.normalizedScore ?? Number(result.score ?? 0),
