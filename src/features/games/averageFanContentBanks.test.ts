@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_BANK_TARGETS,
   AVERAGE_FAN_CONTENT_BANKS,
+  AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS,
   AVERAGE_FAN_FINAL_TARGETS,
   averageFanBankSummary,
 } from "./averageFanContentBanks";
@@ -123,9 +124,15 @@ describe("Average Fan durable content banks", () => {
   });
 
 
-  it("reuses every verified Bar Trivia current-event row for the supported sports", () => {
+  it("reuses the newest verified Bar Trivia current-event pool without letting stale rows grow the bank", () => {
     for (const sport of sports) {
-      const source = BAR_TRIVIA_CURRENT_EVENT_QUESTIONS.filter((question) => question.league === sport);
+      const source = BAR_TRIVIA_CURRENT_EVENT_QUESTIONS
+        .filter((question) => question.league === sport)
+        .sort((a, b) => {
+          const activeCompare = (b.activeFrom ?? "").localeCompare(a.activeFrom ?? "");
+          return activeCompare || b.id.localeCompare(a.id);
+        })
+        .slice(0, AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS[sport]);
       const bankCurrent = AVERAGE_FAN_CONTENT_BANKS[sport].filter(
         (question) => question.contentType === "current-event",
       );
@@ -134,8 +141,13 @@ describe("Average Fan durable content banks", () => {
 
       const bankBySourceId = new Map(bankCurrent.map((question) => [question.sourceId, question]));
       for (const sourceQuestion of source) {
+        expect(sourceQuestion.sourceId, sourceQuestion.id).toBeTruthy();
+        expect(sourceQuestion.sourceUrl, sourceQuestion.id).toBeTruthy();
+        expect(sourceQuestion.verifiedAt, sourceQuestion.id).toBeTruthy();
+
         const adapted = bankBySourceId.get(sourceQuestion.sourceId);
         expect(adapted, sourceQuestion.id).toBeTruthy();
+        expect(adapted?.activeFrom, sourceQuestion.id).toBe(sourceQuestion.activeFrom);
         expect(adapted?.expiresAt, sourceQuestion.id).toBe(sourceQuestion.expiresAt);
         expect(adapted?.verifiedAt, sourceQuestion.id).toBe(sourceQuestion.verifiedAt);
         expect(adapted?.sourceUrl, sourceQuestion.id).toBe(sourceQuestion.sourceUrl);
