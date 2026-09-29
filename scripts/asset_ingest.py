@@ -117,6 +117,11 @@ def main():
         top = (im.height - new_height) // 2
         im = im.crop((0, top, im.width, top + new_height))
 
+    try:
+        im = remove(im, session=session).convert("RGBA")
+    except Exception as exc:
+        fail(f"post-crop background cleanup failed: {exc}")
+
     im = im.resize(size, Image.Resampling.LANCZOS)
     im = im.filter(
         ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)
