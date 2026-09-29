@@ -158,7 +158,9 @@ def main():
         if im.getchannel("A").getextrema() == (255, 255):
             fail("background removal produced no visible transparency")
 
-    im = clear_corner_background(im)\n\n    box = crop_box(im, spec.get("crop"))
+    im = clear_corner_background(im)
+
+    box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
 
     target_ratio = size[0] / size[1]
