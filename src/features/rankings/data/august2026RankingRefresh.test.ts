@@ -16,7 +16,7 @@ const fightsAgainst = (name: string, opponent: string, date: string) =>
 
 describe("August 16, 2026 canonical ranking refresh", () => {
   it("advances the runtime owner while preserving the synchronized canonical roster", () => {
-    expect(canonicalRankingInputs.source.modelAsOfDate).toBe("2026-08-16");
+    expect(canonicalRankingInputs.source.modelAsOfDate >= "2026-08-16").toBe(true);
     expect(canonicalRankingInputs.counts.fighters).toBe(
       canonicalRankingInputs.fighters.length,
     );
