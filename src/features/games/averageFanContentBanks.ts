@@ -669,6 +669,7 @@ function footballCandidates(league: "NFL" | "CFB") {
           difficultyNudge: 3,
           protectedFinal: true,
         }));
+      }
     }
   }
 
