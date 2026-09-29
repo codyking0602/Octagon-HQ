@@ -1362,7 +1362,6 @@ const conorMcGregor = rankingDataRefresh(conorBaseline, {
   },
 });
 
-
 const pantojaBaseline = baselineFighter("Alexandre Pantoja");
 const pantojaVanRematchFight = reviewedFight({
   id: "2026-09-19-joshua-van",
