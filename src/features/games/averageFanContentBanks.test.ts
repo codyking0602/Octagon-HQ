@@ -7,6 +7,7 @@ import {
 } from "./averageFanContentBanks";
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
+import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import { validateAverageFanQuestion, type AverageFanSport } from "./averageFanEngine";
 
 const sports: readonly AverageFanSport[] = ["nfl", "cfb", "ufc"];
@@ -108,6 +109,38 @@ describe("Average Fan durable content banks", () => {
       );
       const validChoices = question.choices.filter((choice) => validOpponents.has(choice));
       expect(validChoices, question.id).toEqual([question.answer]);
+    }
+  });
+
+
+  it("reuses every verified Bar Trivia current-event row for the supported sports", () => {
+    for (const sport of sports) {
+      const source = BAR_TRIVIA_CURRENT_EVENT_QUESTIONS.filter((question) => question.league === sport);
+      const bankCurrent = AVERAGE_FAN_CONTENT_BANKS[sport].filter(
+        (question) => question.contentType === "current-event",
+      );
+      expect(bankCurrent).toHaveLength(source.length);
+      expect(source.length).toBeGreaterThan(0);
+
+      const bankBySourceId = new Map(bankCurrent.map((question) => [question.sourceId, question]));
+      for (const sourceQuestion of source) {
+        const adapted = bankBySourceId.get(sourceQuestion.sourceId);
+        expect(adapted, sourceQuestion.id).toBeTruthy();
+        expect(adapted?.expiresAt, sourceQuestion.id).toBe(sourceQuestion.expiresAt);
+        expect(adapted?.verifiedAt, sourceQuestion.id).toBe(sourceQuestion.verifiedAt);
+        expect(adapted?.sourceUrl, sourceQuestion.id).toBe(sourceQuestion.sourceUrl);
+        expect(adapted?.protectedFinal, sourceQuestion.id).toBe(false);
+      }
+    }
+  });
+
+  it("keeps current events inside the locked grade totals rather than inflating the bank", () => {
+    for (const sport of sports) {
+      const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
+      expect(bank).toHaveLength(AVERAGE_FAN_BANK_TARGETS[sport]);
+      for (const question of bank.filter((row) => row.contentType === "current-event")) {
+        expect(question.protectedFinal, question.id).toBe(false);
+      }
     }
   });
 
