@@ -2535,12 +2535,13 @@ button.average-fan-help-button {
 
 .average-fan-game-stage {
   position: absolute;
+  inset: auto;
   left: 50%;
   top: 50%;
   width: 1536px;
   height: 864px;
   min-height: 0;
-  inset: auto;
+  padding: 0;
   overflow: hidden;
   transform-origin: center center;
   border: 0;
