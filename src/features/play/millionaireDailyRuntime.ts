@@ -29,7 +29,7 @@ import type {
 } from "./todaysChallengeRuntime";
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
-export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v2-millionaire-recovery" as const;
+export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
 export const MILLIONAIRE_DAILY_ANCHOR = "2026-09-19" as const;
 export const FOOTBALL_MILLIONAIRE_DAILY_ANCHOR = MILLIONAIRE_DAILY_ANCHOR;
 const MILLIONAIRE_LEGACY_TIME_BANK_MS = 150_000;
