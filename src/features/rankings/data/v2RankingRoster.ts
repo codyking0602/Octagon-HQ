@@ -531,11 +531,10 @@ const rafaelDosAnjos = {
     ],
     photoUrl: "assets/fighters/rafael-dos-anjos-profile.webp",
     thumbUrl: "assets/fighters/rafael-dos-anjos-thumb.webp",
-    watchUrl: "https://www.ufc.com/video/47604",
+    watchUrl: "https://www.youtube.com/watch?v=2IEKGzUERI8",
     watchLabel: "Watch: RDA dominates Nate Diaz",
-    signatureFightUrl:
-      "https://ufcfightpass.com/search?query=Rafael%20dos%20Anjos%20vs%20Anthony%20Pettis%20UFC%20185",
-    signatureFightLabel: "Signature Fight: Anthony Pettis",
+    signatureFightUrl: "https://www.youtube.com/watch?v=2IEKGzUERI8",
+    signatureFightLabel: "Signature Fight: Nate Diaz",
   },
 };
 
@@ -1363,6 +1362,322 @@ const conorMcGregor = rankingDataRefresh(conorBaseline, {
   },
 });
 
+
+const pantojaBaseline = baselineFighter("Alexandre Pantoja");
+const pantojaVanRematchFight = reviewedFight({
+  id: "2026-09-19-joshua-van",
+  date: "2026-09-19",
+  opponent: "Joshua Van",
+  division: "Flyweight",
+  result: "loss",
+  method: "decision",
+  qualityTier: "champion-level",
+  championshipType: "normal",
+  championshipManualCredit: 0,
+  rounds: [2, 3],
+});
+const alexandrePantojaSeptemberRefresh = rankingDataRefresh(pantojaBaseline, {
+  facts: {
+    ...pantojaBaseline.facts,
+    primeWindow: {
+      ...pantojaBaseline.facts.primeWindow,
+      endFightId: pantojaVanRematchFight.id,
+      open: false,
+    },
+    fights: [...pantojaBaseline.facts.fights, pantojaVanRematchFight],
+  },
+  era: {
+    ...pantojaBaseline.era,
+    window: {
+      ...pantojaBaseline.era.window,
+      end: pantojaVanRematchFight.date,
+    },
+  },
+});
+
+interface VanFightSeed {
+  date: string;
+  opponent: string;
+  result: "win" | "loss";
+  method: string;
+  tier: string;
+  rounds?: readonly [won: number, lost: number, drawn?: number];
+  championshipType?: string;
+  championshipManualCredit?: number | null;
+}
+
+function vanFight(seed: VanFightSeed) {
+  return {
+    id: rdaFightId(seed.date, seed.opponent),
+    date: seed.date,
+    opponent: seed.opponent,
+    division: "Flyweight",
+    officialResult: seed.result,
+    scoringDisposition: seed.result === "win" ? "count-win" : "count-loss",
+    methodCategory: seed.method,
+    qualityTier: seed.tier,
+    championshipType: seed.championshipType ?? "none",
+    championshipEligible: true,
+    championshipOpponentStrength: null,
+    championshipManualCredit: seed.championshipManualCredit ?? null,
+    rounds: seed.rounds
+      ? {
+          status: "audited",
+          won: seed.rounds[0],
+          lost: seed.rounds[1],
+          drawn: seed.rounds[2] ?? 0,
+        }
+      : { status: "unavailable", won: 0, lost: 0, drawn: 0 },
+    lossClassification: {
+      competitive: true,
+      divisionContext: "home",
+      overrideRule: null,
+    },
+  };
+}
+
+const vanFightSeeds: readonly VanFightSeed[] = [
+  {
+    date: "2023-06-24",
+    opponent: "Zhalgas Zhumagulov",
+    result: "win",
+    method: "decision",
+    tier: "solid",
+  },
+  {
+    date: "2023-11-11",
+    opponent: "Kevin Borjas",
+    result: "win",
+    method: "decision",
+    tier: "solid",
+  },
+  {
+    date: "2024-01-13",
+    opponent: "Felipe Bunes",
+    result: "win",
+    method: "ko-tko",
+    tier: "solid",
+  },
+  {
+    date: "2024-07-13",
+    opponent: "Charles Johnson",
+    result: "loss",
+    method: "ko-tko",
+    tier: "ranked",
+  },
+  {
+    date: "2024-09-14",
+    opponent: "Edgar Chairez",
+    result: "win",
+    method: "decision",
+    tier: "solid",
+  },
+  {
+    date: "2024-12-07",
+    opponent: "Cody Durden",
+    result: "win",
+    method: "decision",
+    tier: "ranked",
+  },
+  {
+    date: "2025-03-08",
+    opponent: "Rei Tsuruya",
+    result: "win",
+    method: "decision",
+    tier: "solid",
+  },
+  {
+    date: "2025-06-07",
+    opponent: "Bruno Silva",
+    result: "win",
+    method: "ko-tko",
+    tier: "top-ten",
+  },
+  {
+    date: "2025-06-28",
+    opponent: "Brandon Royval",
+    result: "win",
+    method: "decision",
+    tier: "top-five",
+    rounds: [2, 1],
+  },
+  {
+    date: "2025-12-06",
+    opponent: "Alexandre Pantoja",
+    result: "win",
+    method: "other",
+    tier: "champion-level",
+    rounds: [1, 0],
+    championshipType: "normal",
+    championshipManualCredit: 0.5,
+  },
+  {
+    date: "2026-05-09",
+    opponent: "Tatsuro Taira",
+    result: "win",
+    method: "ko-tko",
+    tier: "top-five",
+    championshipType: "normal",
+    championshipManualCredit: 0.9,
+  },
+  {
+    date: "2026-09-19",
+    opponent: "Alexandre Pantoja",
+    result: "win",
+    method: "decision",
+    tier: "champion-level",
+    rounds: [3, 2],
+    championshipType: "normal",
+    championshipManualCredit: 1,
+  },
+];
+
+function vanQualityWin(date: string, opponent: string, finalCredit: number) {
+  return {
+    fightId: rdaFightId(date, opponent),
+    opponent,
+    date,
+    finalCredit,
+    reviewStatus: "locked",
+    judgmentSource: "octagon-hq-2026-09-19-refresh",
+    judgmentStatus: "reviewed",
+    provenance: "canonical UFC fight fact + September 19 ranking refresh",
+  };
+}
+
+const joshuaVan = {
+  fighter: "Joshua Van",
+  board: "men",
+  facts: {
+    identity: {
+      primaryDivision: "Flyweight",
+      secondaryDivisions: [],
+    },
+    primeWindow: {
+      startFightId: rdaFightId("2025-06-28", "Brandon Royval"),
+      endFightId: null,
+      open: true,
+    },
+    gapCapMonths: 18,
+    fights: vanFightSeeds.map(vanFight),
+  },
+  era: {
+    window: {
+      start: "2025-06-28",
+      end: null,
+    },
+    statusMultiplier: 1.08,
+    divisionMultiplier: 0.95,
+  },
+  judgments: {
+    championship: {
+      fighter: "Joshua Van",
+      benchmarkCredit: 14.54,
+      inputs: [
+        {
+          fightId: rdaFightId("2025-12-06", "Alexandre Pantoja"),
+          opponent: "Alexandre Pantoja",
+          date: "2025-12-06",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 0.5,
+          notes:
+            "Won the flyweight title when Pantoja suffered an early arm injury; official title value is retained but materially discounted for the unusual ending.",
+        },
+        {
+          fightId: rdaFightId("2026-05-09", "Tatsuro Taira"),
+          opponent: "Tatsuro Taira",
+          date: "2026-05-09",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 0.9,
+          notes: "Successfully defended the flyweight title with a fifth-round finish.",
+        },
+        {
+          fightId: rdaFightId("2026-09-19", "Alexandre Pantoja"),
+          opponent: "Alexandre Pantoja",
+          date: "2026-09-19",
+          titleType: "normal",
+          officialTitleFight: true,
+          finalAdjustedCredit: 1,
+          notes:
+            "Successfully defended the flyweight title over five rounds in the Pantoja rematch.",
+        },
+      ],
+    },
+    opponentQuality: {
+      fighter: "Joshua Van",
+      benchmarkCredit: 14.1,
+      fighterAdjustment: 0,
+      inputs: [
+        vanQualityWin("2026-09-19", "Alexandre Pantoja", 1.25),
+        vanQualityWin("2025-06-28", "Brandon Royval", 1),
+        vanQualityWin("2026-05-09", "Tatsuro Taira", 1),
+        vanQualityWin("2025-12-06", "Alexandre Pantoja", 0.65),
+        vanQualityWin("2025-06-07", "Bruno Silva", 0.65),
+        vanQualityWin("2024-12-07", "Cody Durden", 0.45),
+      ],
+    },
+    apex: {
+      fighter: "Joshua Van",
+      performances: [
+        {
+          fightId: rdaFightId("2026-09-19", "Alexandre Pantoja"),
+          opponent: "Alexandre Pantoja",
+          date: "2026-09-19",
+          rating: 9.6,
+        },
+        {
+          fightId: rdaFightId("2026-05-09", "Tatsuro Taira"),
+          opponent: "Tatsuro Taira",
+          date: "2026-05-09",
+          rating: 9.3,
+        },
+      ],
+      components: {
+        twoPerformanceStrength: 1.89,
+        proof: 1.3,
+        bestFighterClaim: 0.85,
+        aura: 0.7,
+      },
+      notes:
+        "The Taira finish and decisive five-round Pantoja rematch provide the strongest proof of Van's championship-level peak.",
+    },
+  },
+  eraDepth: {
+    fighter: "Joshua Van",
+    depthIndex: null,
+    approvedAdjustment: -0.75,
+  },
+  presentation: {
+    slug: "joshua-van",
+    primaryDivision: "Flyweight",
+    secondaryDivision: null,
+    divisionLabel: "FLW",
+    resumeTag: "Young flyweight champion with two defenses",
+    oneLiner:
+      "Van surged from prospect to flyweight champion at remarkable speed, combining fast boxing, pressure, durability, and late-fight offense with two successful defenses in a stunningly short UFC rise.",
+    whyRankedHere:
+      "Van broke through by beating Brandon Royval, then captured the flyweight title from Alexandre Pantoja. He defended against Tatsuro Taira with a finish and later beat Pantoja over five rounds, giving his championship run three title-fight wins over elite opposition.",
+    whyNotHigher:
+      "His case is still young. The first Pantoja title win ended on an early injury, most of his UFC career came before championship contention, and one loss to Charles Johnson remains on the record. Longer-reigning champions have more elite volume.",
+    finalTakeaway:
+      "Van already owns a real championship run and two elite defenses, but his all-time ceiling will depend on how much longer he can sustain it.",
+    keyJudgmentCalls: [
+      "The first Pantoja title win receives reduced championship and opponent-quality credit because the fight ended on an early injury.",
+      "The Taira defense and five-round Pantoja rematch carry the strongest championship proof.",
+      "Prime begins with the Brandon Royval breakthrough and remains open.",
+      "Only UFC accomplishments are scored.",
+    ],
+    photoUrl: "assets/fighters/joshua-van-profile.webp",
+    thumbUrl: "assets/fighters/joshua-van-thumb.webp",
+    watchUrl: "https://www.youtube.com/watch?v=R2i-Jkmp110",
+    watchLabel: "Watch: Van finishes Tatsuro Taira",
+    signatureFightUrl: "https://www.youtube.com/watch?v=R2i-Jkmp110",
+    signatureFightLabel: "Signature Fight: Tatsuro Taira",
+  },
+};
+
 /** Applies the one-time, intentional 2026 profile-copy review without touching ranking data. */
 const intentionalEditorialReview = <
   T extends { presentation: Record<string, unknown> },
@@ -1387,6 +1702,7 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
           "The lightweight reign ended after one defense when Eddie Alvarez stopped him, and Tony Ferguson beat him next. His welterweight run produced strong contender wins but no second championship, while later losses accumulated as the career aged. The longevity is outstanding; the sustained championship peak was brief.",
       },
     ),
+    joshuaVan,
   ],
   replacements: {
     "Jon Jones": intentionalEditorialReview(
@@ -1731,14 +2047,14 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       },
     ),
     "Alexandre Pantoja": intentionalEditorialReview(
-      baselineFighter("Alexandre Pantoja"),
+      alexandrePantojaSeptemberRefresh,
       {
         oneLiner:
-          "Pantoja treats every scramble like an invitation. Relentless grappling, back takes, submission threats, durable exchanges, and a refusal to slow down made him the modern flyweight champion nobody could comfortably separate from.",
+          "Pantoja built the strongest UFC flyweight title run outside Demetrious Johnson, pairing relentless grappling with four defenses before Joshua Van ended the reign and won their rematch.",
         whyRankedHere:
-          "Pantoja beat Brandon Moreno for the flyweight title and built four successful defenses, including wins over Brandon Royval, Kai Asakura, and Kai Kara-France. His repeated success against the division's best gives him the strongest UFC flyweight championship resume outside Demetrious Johnson.",
+          "Pantoja beat Brandon Moreno for the title and defended it four times, including wins over Brandon Royval, Kai Asakura, and Kai Kara-France. That championship volume, plus earlier wins over Moreno, Royval, Alex Perez, and Manel Kape, gives him flyweight depth.",
         whyNotHigher:
-          "Demetrious Johnson's reign remains far longer, while Pantoja's rise included losses to Dustin Ortiz, Deiveson Figueiredo, Askar Askarov, and Joshua Van. Several challengers also entered title fights without deep elite resumes. The championship run is excellent, but it has less longevity than the historical benchmark.",
+          "Joshua Van ended Pantoja's reign by injury in 2025, then beat him clearly over five rounds in the 2026 rematch. Earlier losses to Dustin Ortiz, Deiveson Figueiredo, and Askar Askarov add more blemishes, while Demetrious Johnson's reign remains much longer.",
       },
     ),
     "Leon Edwards": intentionalEditorialReview(
@@ -2275,10 +2591,14 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       primary: "golden-age",
       secondary: "superstar",
     },
+    "Joshua Van": {
+      primary: "new-blood",
+      secondary: null,
+    },
   },
-  modelAsOfDate: "2026-08-16",
-  factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260816",
-  judgmentVersion: "octagon-hq-v2-glover-teixeira-profile-20260817",
+  modelAsOfDate: "2026-09-19",
+  factsVersion: "octagon-hq-v2-rankings-refresh-facts-20260919",
+  judgmentVersion: "octagon-hq-v2-rankings-refresh-judgments-20260919",
   eraDepthVersion: "octagon-hq-v2-rda-20260730",
   eraDepthResolutionVersion: "octagon-hq-v2-rda-20260730",
 };
