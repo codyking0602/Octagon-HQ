@@ -723,7 +723,9 @@ function currentEventCandidates(sport: AverageFanSport) {
         throw new Error(`Average Fan current-event source ${question.id} does not have two distractors.`);
       }
       return assertAverageFanQuestion({
-        id: `average-fan:${sport}:current:${question.id}`,
+        id: sport === "nfl"
+          ? `average-fan:nfl:00-current:${question.id}`
+          : `average-fan:${sport}:current:${question.id}`,
         sport,
         grade: currentEventGrade(question),
         subject: currentEventSubject(question),
@@ -860,6 +862,8 @@ const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
   ["00-lsu-two-loss-champ", 4, "CFB History", "LSU won the 2007 BCS national championship after entering the title game with two losses.", true, "LSU finished 12–2 and beat Ohio State for the 2007 season's BCS national championship."],
   ["00-lamar-2016:heisman", 3, "CFB History", "Lamar Jackson won the Heisman Trophy for the 2016 season.", true, "Lamar Jackson won the 2016 Heisman Trophy at Louisville."],
   ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as an eight-team playoff for the 2014 season.", false, "The CFP began with a four-team field for the 2014 season."],
+  ["00a-smith-2020:heisman", 3, "CFB History", "DeVonta Smith won the 2020 Heisman Trophy.", true, "DeVonta Smith won the 2020 Heisman Trophy after his record-setting season at Alabama."],
+  ["00b-mccaffrey-2015:heisman", 3, "CFB History", "Christian McCaffrey won the 2015 Heisman Trophy.", false, "Derrick Henry won the 2015 Heisman Trophy; Christian McCaffrey finished second."],
   ["01-cfp-first-number-one", 4, "CFB History", "Mississippi State was the first team ranked No. 1 by the College Football Playoff selection committee.", true, "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
   ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati was the No. 1 seed in the four-team College Football Playoff after the 2021 season.", false, "Cincinnati made the field as the No. 4 seed; Alabama was No. 1."],
   ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
@@ -1455,9 +1459,32 @@ function balancedTake(
   subjects: readonly AverageFanSubject[],
   label: string,
 ) {
+  const isNflOrdinary = /^nfl grade [1-5] evergreen$/.test(label);
+  const isNflUpperGrade = /^nfl grade [45] evergreen$/.test(label);
+  const latestPromptYear = (question: AverageFanQuestion) => {
+    const years = [...question.prompt.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0]));
+    return years.length ? Math.max(...years) : null;
+  };
+  const nflEraRank = (question: AverageFanQuestion) => {
+    const year = latestPromptYear(question);
+    if (year == null) return 1;
+    return year >= 2000 ? 0 : 2;
+  };
+  const candidateOrder = (left: AverageFanQuestion, right: AverageFanQuestion) => {
+    if (isNflOrdinary) {
+      const formatRank = (question: AverageFanQuestion) => question.format === "true-false" ? 0 : 1;
+      const formatCompare = formatRank(left) - formatRank(right);
+      if (formatCompare) return formatCompare;
+      if (isNflUpperGrade) {
+        const eraCompare = nflEraRank(left) - nflEraRank(right);
+        if (eraCompare) return eraCompare;
+      }
+    }
+    return left.id.localeCompare(right.id);
+  };
   const bySubject = new Map(subjects.map((subject) => [
     subject,
-    candidates.filter((question) => question.subject === subject).sort((a, b) => a.id.localeCompare(b.id)),
+    candidates.filter((question) => question.subject === subject).sort(candidateOrder),
   ] as const));
   const offsets = new Map(subjects.map((subject) => [subject, 0]));
   const selected: AverageFanQuestion[] = [];
