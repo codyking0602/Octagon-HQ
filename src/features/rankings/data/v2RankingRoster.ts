@@ -1652,7 +1652,12 @@ const intentionalEditorialReview = <
   T extends { presentation: Record<string, unknown> },
 >(
   fighter: T,
-  copy: { oneLiner: string; whyRankedHere: string; whyNotHigher: string },
+  copy: {
+    oneLiner: string;
+    whyRankedHere: string;
+    whyNotHigher: string;
+    finalTakeaway?: string;
+  },
 ) => ({
   ...fighter,
   presentation: { ...fighter.presentation, ...copy },
@@ -2503,11 +2508,13 @@ export const v2RankingRoster: V2RankingRosterOverlay = {
       alexaGrassoSeptemberRefresh,
       {
         oneLiner:
-          "Grasso's clean boxing, movement, and opportunistic grappling peaked at exactly the right moment, turning a steady flyweight climb into the submission that finally broke Valentina Shevchenko's long championship reign in stunning fashion.",
+          "Grasso paired clean boxing, movement, and opportunistic grappling with the submission that broke Valentina Shevchenko's long reign, then rebuilt after losing the belt with major 2026 wins over Maycee Barber and Manon Fiorot.",
         whyRankedHere:
-          "Grasso submitted Valentina Shevchenko to win the flyweight title and retained the belt through a draw in their rematch, adding championship value to earlier wins over Maycee Barber, Viviane Araujo, and Joanne Wood. Beating such a dominant champion gives her peak unusual historical weight in the division.",
+          "Grasso submitted Valentina Shevchenko to win the flyweight title and retained the belt through a draw in their rematch. After the title loss and a setback against Natalia Silva, she rebuilt in 2026 by beating Top-5 Maycee Barber and No. 2 contender Manon Fiorot, giving the championship peak substantially stronger surrounding depth.",
         whyNotHigher:
-          "The reign was short and never included a clean successful-defense victory. Shevchenko eventually reclaimed the title, while other losses kept Grasso from building the long elite run of the champions above. The defining win is enormous, but the surrounding championship volume remains limited.",
+          "The reign was short and never included a clean successful-defense victory, and Shevchenko reclaimed the title before Natalia Silva added another prime loss. The 2026 rebound materially strengthens Grasso's case, but one title-fight win and no successful defense still leave less championship volume than the women above her.",
+        finalTakeaway:
+          "Grasso now has more than one defining championship moment: the Shevchenko title win is backed by a real 2026 resurgence over Maycee Barber and No. 2 Manon Fiorot, though the short reign still caps the all-time case.",
       },
     ),
     "Kayla Harrison": intentionalEditorialReview(
