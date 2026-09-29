@@ -96,6 +96,16 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+
+  it("does not make every CFB Heisman true-false statement automatically true", () => {
+    const heismanQuestions = AVERAGE_FAN_CONTENT_BANKS.cfb.filter(
+      (question) => question.id.endsWith(":heisman"),
+    );
+    const answers = new Set(heismanQuestions.map((question) => question.answer));
+    expect(answers.has("True")).toBe(true);
+    expect(answers.has("False")).toBe(true);
+  });
+
   it("never uses another valid UFC opponent as a wrong opponent choice", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
       const match = /^average-fan:ufc:g3:(.+):opponent$/.exec(question.id);
