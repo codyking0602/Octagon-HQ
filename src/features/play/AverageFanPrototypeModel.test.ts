@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";\nimport { validateAverageFanQuestion } from "../games/averageFanEngine";
 import {
   AVERAGE_FAN_MONEY_LADDER,
   AVERAGE_FAN_UFC_PREVIEW_BOARD,
@@ -21,11 +21,18 @@ describe("Average Fan owner preview pack", () => {
       .toEqual(new Set(["short-answer", "three-choice", "true-false"]));
   });
 
-  it("keeps the Final isolated and protected", () => {
+  it("keeps the Final isolated, protected, and schema-valid", () => {
     expect(AVERAGE_FAN_UFC_PREVIEW_FINAL.protectedFinal).toBe(true);
     expect(AVERAGE_FAN_UFC_PREVIEW_FINAL.grade).toBe(5);
+    expect(validateAverageFanQuestion(AVERAGE_FAN_UFC_PREVIEW_FINAL)).toEqual([]);
     expect(AVERAGE_FAN_UFC_PREVIEW_BOARD.some((question) => question.id === AVERAGE_FAN_UFC_PREVIEW_FINAL.id))
       .toBe(false);
+  });
+
+  it("keeps every preview board question inside the canonical PR1 schema", () => {
+    for (const question of AVERAGE_FAN_UFC_PREVIEW_BOARD) {
+      expect(validateAverageFanQuestion(question)).toEqual([]);
+    }
   });
 
   it("uses the locked money ladder and display helpers", () => {
