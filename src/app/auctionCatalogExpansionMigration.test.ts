@@ -260,7 +260,7 @@ describe("Auction catalog expansion migration", () => {
         Grappling: 94,
         Frame: 68,
         Power: 83,
-        Heart: 78,
+        Heart: 79,
       },
     };
     const additions = [...catalogSql.matchAll(/'ultimate-fighter-(\d+)','((?:[^']|'')*)'.*?jsonb_build_object\(([^)]*)\)/g)]
