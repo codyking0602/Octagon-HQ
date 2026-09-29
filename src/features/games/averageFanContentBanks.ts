@@ -409,6 +409,43 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
 }
 
 
+
+const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
+  ["00-player-mendoza", "Players", "Which quarterback won the 2025 Heisman Trophy and then led Indiana to the national championship?", "Fernando Mendoza", ["Dante Moore", "Julian Sayin"], "Fernando Mendoza won the 2025 Heisman and led Indiana to a 16–0 national-title season."],
+  ["01-player-woodson", "Players", "Which Michigan star won the 1997 Heisman while starring on defense, offense and special teams?", "Charles Woodson", ["Desmond Howard", "Champ Bailey"], "Charles Woodson won the 1997 Heisman as Michigan's three-way star."],
+  ["02-player-newton", "Players", "Which quarterback won the 2010 Heisman and led Auburn to the national championship in his only season there?", "Cam Newton", ["Tim Tebow", "Vince Young"], "Cam Newton won the 2010 Heisman and national championship at Auburn."],
+  ["03-player-griffin", "Players", "Who is the only player to win the Heisman Trophy twice?", "Archie Griffin", ["Tim Tebow", "Matt Leinart"], "Ohio State running back Archie Griffin won the Heisman in 1974 and 1975."],
+
+  ["00-program-indiana", "Programs", "Which program completed a 16–0 season by beating Miami for the 2025 national championship?", "Indiana", ["Oregon", "Ohio State"], "Indiana finished 16–0 and beat Miami 27–21 for the 2025 national championship."],
+  ["01-program-texas-rose", "Programs", "Which program ended USC's 34-game winning streak in the 2006 Rose Bowl to win the national title?", "Texas", ["Oklahoma", "Ohio State"], "Texas beat USC 41–38 in the Rose Bowl to win the 2005 national championship."],
+  ["02-program-boise-fiesta", "Programs", "Which program used the hook-and-lateral and Statue of Liberty in its famous 2007 Fiesta Bowl upset of Oklahoma?", "Boise State", ["TCU", "Utah"], "Boise State beat Oklahoma 43–42 in overtime in the 2007 Fiesta Bowl."],
+  ["03-program-app-state", "Programs", "Which FCS program stunned No. 5 Michigan at the Big House in 2007?", "Appalachian State", ["James Madison", "North Dakota State"], "Appalachian State beat Michigan 34–32 in one of college football's signature upsets."],
+
+  ["00-tradition-kick-six", "Traditions", "The 2013 'Kick Six' decided which rivalry game?", "Iron Bowl", ["Egg Bowl", "Red River Rivalry"], "Auburn's Kick Six beat Alabama in the 2013 Iron Bowl."],
+  ["01-tradition-red-river", "Traditions", "Which major rivalry is traditionally played at the Cotton Bowl during the State Fair of Texas?", "Red River Rivalry", ["Iron Bowl", "World's Largest Outdoor Cocktail Party"], "Texas and Oklahoma traditionally meet at the Cotton Bowl for the Red River Rivalry."],
+  ["02-tradition-white-out", "Traditions", "Which program is famous for the White Out at Beaver Stadium?", "Penn State", ["Michigan", "Tennessee"], "Penn State's White Out is one of college football's signature stadium traditions."],
+  ["03-tradition-sandman", "Traditions", "Which program's home entrance is famously set to Metallica's 'Enter Sandman'?", "Virginia Tech", ["South Carolina", "Wisconsin"], "Virginia Tech enters Lane Stadium to 'Enter Sandman.'"],
+
+  ["00-history-first-cfp", "CFB History", "Which program won the first College Football Playoff national championship after the 2014 season?", "Ohio State", ["Oregon", "Alabama"], "Ohio State beat Oregon 42–20 to win the first CFP national championship."],
+  ["01-history-2019-lsu", "CFB History", "Which team did LSU beat 42–25 to complete its undefeated 2019 national-title season?", "Clemson", ["Ohio State", "Oklahoma"], "LSU beat Clemson 42–25 for the 2019 national championship."],
+  ["02-history-2021-georgia", "CFB History", "Georgia ended a 41-year national-title drought by beating which team in the championship game after the 2021 season?", "Alabama", ["Clemson", "Michigan"], "Georgia beat Alabama 33–18 to win its first national title since 1980."],
+  ["03-history-2005-rose", "CFB History", "Which Texas quarterback scored the late fourth-down touchdown that beat USC in the 2006 Rose Bowl?", "Vince Young", ["Colt McCoy", "Matt Leinart"], "Vince Young's fourth-down touchdown gave Texas the 41–38 national-title win over USC."],
+].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
+  id: `average-fan:cfb:authored:cfb-final-${id}`,
+  sport: "cfb",
+  grade: 5,
+  subject: subject as AverageFanSubject,
+  format: "three-choice",
+  prompt: prompt as string,
+  answer: answer as string,
+  aliases: [],
+  choices: [answer as string, ...(wrong as string[])] as [string, string, string],
+  explanation: explanation as string,
+  contentType: "evergreen",
+  difficultyNudge: 2,
+  protectedFinal: true,
+}));
+
 const CFB_CURRENT_EVENT_EXPANSION: readonly AverageFanQuestion[] = [
   ["texas-tennessee", 1, "Programs", "Which No. 1 team survived Tennessee 20–17 in Knoxville in Week 4?", "Texas", ["Georgia", "Alabama"], "Texas held off Tennessee 20–17 in Knoxville."],
   ["florida-ole-miss", 1, "Programs", "Which team beat No. 9 Ole Miss 52–28 in Week 4?", "Florida", ["LSU", "Auburn"], "Florida beat Ole Miss 52–28 at The Swamp."],
@@ -445,6 +482,7 @@ const CFB_CURRENT_EVENT_EXPANSION: readonly AverageFanQuestion[] = [
 
 function authoredCfbQuestions() {
   return [
+    ...CFB_CURATED_FINALS,
     ...CFB_CURRENT_EVENT_EXPANSION,
     ...BAR_TRIVIA_QUESTION_BANK
       .filter((question) => question.league === "cfb")
