@@ -13,9 +13,9 @@ describe("Shane's ranked watchlist", () => {
     expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     expect(shanesWatchlist.fighters.map((fighter) => fighter.id)).toEqual([
       "quillan-salkilld",
+      "raul-rosas-jr",
       "abdul-rakhman-yakhyaev",
       "bilal-hasan",
-      "raul-rosas-jr",
       "fatima-kline",
       "daniil-donchenko",
       "ty-miller",
@@ -26,37 +26,20 @@ describe("Shane's ranked watchlist", () => {
     expect(salkilld).toMatchObject({
       id: "quillan-salkilld",
       rank: 1,
-      previousRank: 2,
+      previousRank: 1,
       ufcRecord: "6–0",
       ufcWinStreak: "6",
       ufcFinishes: "5",
       photoUrl: "/assets/fighters/quillan-salkilld-thumb.webp",
       videoUrl: "https://youtube.com/shorts/ivb3NbPsnYg?is=y2ti4vYuCvUdFroV",
     });
-    expect(watchMovement(salkilld)).toEqual({ label: "↑1", direction: "up" });
+    expect(watchMovement(salkilld)).toEqual({ label: "—", direction: "same" });
 
-    const yakhyaev = shanesWatchlist.fighters[1];
-    expect(yakhyaev).toMatchObject({
-      id: "abdul-rakhman-yakhyaev",
-      rank: 2,
-      previousRank: 3,
-    });
-    expect(watchMovement(yakhyaev)).toEqual({ label: "↑1", direction: "up" });
-
-    const bilal = shanesWatchlist.fighters[2];
-    expect(bilal).toMatchObject({
-      id: "bilal-hasan",
-      rank: 3,
-      previousRank: 4,
-      ufcRecord: "1–0",
-    });
-    expect(watchMovement(bilal)).toEqual({ label: "↑1", direction: "up" });
-
-    const rosas = shanesWatchlist.fighters[3];
+    const rosas = shanesWatchlist.fighters[1];
     expect(rosas).toMatchObject({
       id: "raul-rosas-jr",
-      rank: 4,
-      previousRank: null,
+      rank: 2,
+      previousRank: 4,
       nickname: "El Nino Problema",
       division: "Bantamweight",
       age: 21,
@@ -67,7 +50,24 @@ describe("Shane's ranked watchlist", () => {
       videoUrl: "https://youtu.be/Nf6Kb6c3uq8?si=fN5vhUPEhtkHbBto",
     });
     expect(existsSync("public/assets/fighters/raul-rosas-jr-thumb.webp")).toBe(true);
-    expect(watchMovement(rosas)).toEqual({ label: "NEW", direction: "new" });
+    expect(watchMovement(rosas)).toEqual({ label: "↑2", direction: "up" });
+
+    const yakhyaev = shanesWatchlist.fighters[2];
+    expect(yakhyaev).toMatchObject({
+      id: "abdul-rakhman-yakhyaev",
+      rank: 3,
+      previousRank: 2,
+    });
+    expect(watchMovement(yakhyaev)).toEqual({ label: "↓1", direction: "down" });
+
+    const bilal = shanesWatchlist.fighters[3];
+    expect(bilal).toMatchObject({
+      id: "bilal-hasan",
+      rank: 4,
+      previousRank: 3,
+      ufcRecord: "1–0",
+    });
+    expect(watchMovement(bilal)).toEqual({ label: "↓1", direction: "down" });
 
     const fatima = shanesWatchlist.fighters[4];
     expect(fatima).toMatchObject({ id: "fatima-kline", rank: 5, previousRank: 5 });
@@ -85,7 +85,7 @@ describe("Shane's ranked watchlist", () => {
     expect(gable).toMatchObject({
       id: "gable-steveson",
       rank: 8,
-      previousRank: 1,
+      previousRank: 8,
       status: "Concern",
       ufcRecord: "1–1",
       ufcWinStreak: "0",
@@ -93,7 +93,7 @@ describe("Shane's ranked watchlist", () => {
       photoUrl: "/assets/fighters/gable-steveson-thumb.webp",
     });
     expect(existsSync("public/assets/fighters/gable-steveson-thumb.webp")).toBe(true);
-    expect(watchMovement(gable)).toEqual({ label: "↓7", direction: "down" });
+    expect(watchMovement(gable)).toEqual({ label: "—", direction: "same" });
   });
 
   it("keeps the Home preview to a compact top-three board", () => {
@@ -102,9 +102,9 @@ describe("Shane's ranked watchlist", () => {
     expect(screen.getByText("SHANE KING’S CONTENDER SERIES")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Fighters to Watch" })).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
+    expect(screen.getByText("Raul Rosas Jr.")).toBeInTheDocument();
     expect(screen.getByText("Abdul Rakhman Yakhyaev")).toBeInTheDocument();
-    expect(screen.getByText("Bilal Hasan")).toBeInTheDocument();
-    expect(screen.queryByText("Raul Rosas Jr.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Bilal Hasan")).not.toBeInTheDocument();
     expect(screen.queryByText("Fatima Kline")).not.toBeInTheDocument();
 
     expect(screen.getByRole("link", { name: /Quillan Salkilld/i })).toHaveAttribute("href", "/fighters-to-watch#quillan-salkilld");
@@ -132,9 +132,9 @@ describe("Shane's ranked watchlist", () => {
     expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
     expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
     expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("1")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("4")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("0")).toBeInTheDocument();
     expect(within(movementSummary).getByText("3")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("5")).toBeInTheDocument();
   });
 
   it("opens the real scouting snapshot as three readable beats with UFC-only numbers", () => {
@@ -175,14 +175,14 @@ describe("Shane's ranked watchlist", () => {
     expect(window.location.hash).toBe("");
   });
 
-  it("keeps Bilal Hasan at #3 after adding Rosas", () => {
+  it("moves Bilal Hasan back to #4 after Rosas rises", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Bilal Hasan" }));
 
     const dialog = screen.getByRole("dialog", { name: "Bilal Hasan" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #3")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #2")).toBeInTheDocument();
     expect(within(dialog).getByText("“The IndoNinja”")).toBeInTheDocument();
     expect(within(dialog).getByText(/ended the fight with a clean right hand at 2:28 of Round 2/i)).toBeInTheDocument();
     expect(within(dialog).getByText("1–0")).toBeInTheDocument();
@@ -221,7 +221,7 @@ describe("Shane's ranked watchlist", () => {
     );
   });
 
-  it("adds Raul Rosas Jr. at #4 with Shane’s selected Contender Series highlight", () => {
+  it("moves Raul Rosas Jr. to #2 after the Font win", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
