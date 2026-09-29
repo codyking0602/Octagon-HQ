@@ -768,7 +768,6 @@ function ufcCandidates() {
     const titleFights = fighter.fights.filter((fight) => fight.titleFight);
     if (titleFights.length) {
       const titleFight = titleFights[titleFights.length - 1]!;
-      const titleYear = Number(titleFight.date.slice(0, 4));
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:title-identity`);
       const titleOpponents = unique(titleFights.map((fight) => fight.opponent));
       const wrongTitleOpponents = peerValues(fighterNames, titleOpponents, `${fighter.id}:title-opponent`);
