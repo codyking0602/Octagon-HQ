@@ -41,7 +41,7 @@ describe("Octagon HQ V2", () => {
     expect(screen.queryByText(/UFC-only/i)).not.toBeInTheDocument();
 
     const summary = screen.getByLabelText("P4P ranking summary");
-    expect(summary).toHaveTextContent("66");
+    expect(summary).toHaveTextContent("67");
 
     const jonProfile = screen.getByRole("link", { name: "View Jon Jones profile" });
     expect(jonProfile).toHaveAttribute("href", "/fighters/jon-jones");
@@ -119,7 +119,7 @@ describe("Octagon HQ V2", () => {
     renderRoute("/rankings");
     await screen.findByRole("heading", { name: "UFC All-Time P4P" });
 
-    const search = screen.getByPlaceholderText("Search 66 fighters");
+    const search = screen.getByPlaceholderText("Search 67 fighters");
     fireEvent.change(search, { target: { value: "Matt Hughes" } });
     expect(screen.getByLabelText("P4P ranking summary")).toHaveTextContent("1");
     expect(screen.getByRole("link", { name: "View Matt Hughes profile" })).toBeInTheDocument();
@@ -478,8 +478,8 @@ describe("final profile correctness pass", () => {
 
   it("resolves honest watch destinations for every fighter", () => {
     const actions = allTime.map((fighter) => resolveProfileWatchAction(fighter.slug));
-    expect(actions.filter((action) => action?.source === "signature")).toHaveLength(allTime.length - 1);
-    expect(actions.filter((action) => action?.source === "watch-moment")).toHaveLength(1);
+    expect(actions.filter((action) => action?.source === "signature")).toHaveLength(allTime.length);
+    expect(actions.filter((action) => action?.source === "watch-moment")).toHaveLength(0);
     expect(actions.filter((action) => action === null)).toHaveLength(0);
   });
 });
