@@ -262,7 +262,7 @@ export function AppShell() {
         </main>
       </BrandedPullToRefresh>
 
-      {isBackRoom || isMillionaireGame || isAverageFanPreview ? null : <BottomNavigation themeScope={themeScope} />}
+      {isBackRoom || isMillionaireGame || isAverageFanGame ? null : <BottomNavigation themeScope={themeScope} />}
     </div>
   );
 }
