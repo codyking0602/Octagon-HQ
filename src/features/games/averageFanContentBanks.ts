@@ -624,35 +624,35 @@ const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
   { id: "mcgregor-alvarez", grade: 2, prompt: "Whom did Conor McGregor defeat to become the UFC's first simultaneous two-division champion?", answer: "Eddie Alvarez", wrong: ["Jose Aldo", "Nate Diaz"], explanation: "McGregor stopped Eddie Alvarez at UFC 205 to hold featherweight and lightweight gold simultaneously." },
   { id: "aldo-13", grade: 3, prompt: "How many seconds did Conor McGregor need to knock out Jose Aldo at UFC 194?", answer: "13", wrong: ["7", "21"], explanation: "McGregor stopped Aldo 13 seconds into their featherweight title fight." },
   { id: "edwards-usman-round", grade: 3, prompt: "Leon Edwards' famous head-kick knockout of Kamaru Usman at UFC 278 came in which round?", answer: "Round 5", wrong: ["Round 3", "Round 4"], explanation: "Edwards knocked out Usman late in Round 5 to win the welterweight title." },
-  { id: "holloway-gaethje-time", grade: 4, prompt: "Max Holloway knocked out Justin Gaethje at UFC 300 with how much time left in Round 5?", answer: "1 second", wrong: ["5 seconds", "10 seconds"], explanation: "Holloway's knockout came at 4:59 of Round 5." },
+  { id: "holloway-gaethje-time", grade: 4, prompt: "Max Holloway knocked out Justin Gaethje at UFC 300 in 2024 with how much time left in Round 5?", answer: "1 second", wrong: ["5 seconds", "10 seconds"], explanation: "Holloway's knockout came at 4:59 of Round 5." },
   { id: "lewis-volkov", grade: 3, prompt: "Derrick Lewis delivered his famous 'my balls was hot' interview after knocking out whom at UFC 229?", answer: "Alexander Volkov", wrong: ["Curtis Blaydes", "Travis Browne"], explanation: "Lewis stopped Alexander Volkov with 11 seconds left before the memorable interview." },
-  { id: "barboza-etim", grade: 4, prompt: "Edson Barboza's spinning wheel-kick knockout at UFC 142 came against whom?", answer: "Terry Etim", wrong: ["Ross Pearson", "Anthony Njokuani"], explanation: "Barboza knocked out Terry Etim with the UFC's first spinning wheel-kick finish." },
+  { id: "barboza-etim", grade: 4, prompt: "Edson Barboza's spinning wheel-kick knockout at UFC 142 in 2012 came against whom?", answer: "Terry Etim", wrong: ["Ross Pearson", "Anthony Njokuani"], explanation: "Barboza knocked out Terry Etim with the UFC's first spinning wheel-kick finish." },
   { id: "belfort-19", grade: 5, prompt: "How old was Vitor Belfort when he won the UFC 12 heavyweight tournament?", answer: "19", wrong: ["21", "23"], explanation: "Vitor Belfort was 19 when he won the UFC 12 heavyweight tournament." },
-  { id: "daley-koscheck", grade: 5, prompt: "Which UFC 113 fighter was released after punching Josh Koscheck after the final bell?", answer: "Paul Daley", wrong: ["Thiago Alves", "Dan Hardy"], explanation: "Paul Daley struck Josh Koscheck after the horn and was released from the UFC." },
+  { id: "daley-koscheck", grade: 5, prompt: "Which UFC 113 fighter was released in 2010 after punching Josh Koscheck after the final bell?", answer: "Paul Daley", wrong: ["Thiago Alves", "Dan Hardy"], explanation: "Paul Daley struck Josh Koscheck after the horn and was released from the UFC." },
   { id: "taktarov-nine", grade: 5, prompt: "Oleg Taktarov's nine-second submission at UFC 6 came against whom?", answer: "Anthony Macias", wrong: ["Paul Varelans", "Dave Beneteau"], explanation: "Taktarov submitted Anthony Macias in nine seconds at UFC 6." },
   { id: "first-170", grade: 5, prompt: "Laverne Clark faced whom in the UFC's first 170-pound bout at UFC 16?", answer: "Josh Stewart", wrong: ["Pat Miletich", "Mikey Burnett"], explanation: "UFC's official anniversary history identifies Clark vs. Josh Stewart at UFC 16 as its first 170-pound bout." },
   { id: "first-155", grade: 5, prompt: "Jens Pulver faced whom in the UFC's first 155-pound bout at UFC 26?", answer: "Joao Roque", wrong: ["Caol Uno", "John Lewis"], explanation: "UFC's official anniversary history identifies Pulver vs. Joao Roque at UFC 26 as its first 155-pound bout." },
-  { id: "first-125", grade: 4, prompt: "Demetrious Johnson faced whom in one of the two bouts that launched the UFC flyweight division at UFC on FX 2?", answer: "Ian McCall", wrong: ["Joseph Benavidez", "John Dodson"], explanation: "Johnson faced Ian McCall as the UFC introduced flyweight with a four-man tournament at UFC on FX 2." },
-  { id: "first-fox-time", grade: 5, prompt: "How long did Junior dos Santos need to stop Cain Velasquez in the UFC's FOX debut?", answer: "64 seconds", wrong: ["48 seconds", "94 seconds"], explanation: "Dos Santos stopped Velasquez 64 seconds into the first round." },
+  { id: "first-125", grade: 4, prompt: "Demetrious Johnson faced whom in one of the two bouts that launched the UFC flyweight division in 2012 at UFC on FX 2?", answer: "Ian McCall", wrong: ["Joseph Benavidez", "John Dodson"], explanation: "Johnson faced Ian McCall as the UFC introduced flyweight with a four-man tournament at UFC on FX 2." },
+  { id: "first-fox-time", grade: 5, prompt: "How long did Junior dos Santos need to stop Cain Velasquez in the UFC's 2011 FOX debut?", answer: "64 seconds", wrong: ["48 seconds", "94 seconds"], explanation: "Dos Santos stopped Velasquez 64 seconds into the first round." },
   { id: "silva-weidman", grade: 3, prompt: "Who ended Anderson Silva's 16-fight UFC winning streak at UFC 162?", answer: "Chris Weidman", wrong: ["Chael Sonnen", "Vitor Belfort"], explanation: "Chris Weidman knocked out Silva at UFC 162 after Silva had won 16 straight UFC fights." },
   { id: "serra-gsp", grade: 3, prompt: "Who upset Georges St-Pierre at UFC 69 to win the welterweight title?", answer: "Matt Serra", wrong: ["Matt Hughes", "Josh Koscheck"], explanation: "Matt Serra stopped St-Pierre in the first round at UFC 69 to win the welterweight championship." },
   { id: "holm-rousey", grade: 2, prompt: "Who knocked out Ronda Rousey with a head kick at UFC 193?", answer: "Holly Holm", wrong: ["Amanda Nunes", "Miesha Tate"], explanation: "Holly Holm stopped Rousey in Round 2 at UFC 193 to win the women's bantamweight title." },
   { id: "diaz-mcgregor", grade: 2, prompt: "Who handed Conor McGregor his first UFC loss by submission at UFC 196?", answer: "Nate Diaz", wrong: ["Dustin Poirier", "Chad Mendes"], explanation: "Nate Diaz submitted McGregor with a rear-naked choke in Round 2 at UFC 196." },
   { id: "rousey-carmouche", grade: 3, prompt: "Who did Ronda Rousey submit in the UFC's first women's bout?", answer: "Liz Carmouche", wrong: ["Miesha Tate", "Sara McMann"], explanation: "Rousey submitted Liz Carmouche at UFC 157 in the promotion's first women's bout." },
-  { id: "usman-masvidal", grade: 4, prompt: "Kamaru Usman's knockout at UFC 261 came against which challenger?", answer: "Jorge Masvidal", wrong: ["Colby Covington", "Gilbert Burns"], explanation: "Usman knocked out Jorge Masvidal in their welterweight title rematch at UFC 261." },
+  { id: "usman-masvidal", grade: 4, prompt: "Kamaru Usman's knockout at UFC 261 in 2021 came against which challenger?", answer: "Jorge Masvidal", wrong: ["Colby Covington", "Gilbert Burns"], explanation: "Usman knocked out Jorge Masvidal in their welterweight title rematch at UFC 261." },
 ];
 
 const UFC_FINAL_FACTS: readonly KnowledgeFact[] = [
   { id: "final-muscle-shark", grade: 5, prompt: "Which former UFC lightweight champion was known as 'The Muscle Shark'?", answer: "Sean Sherk", wrong: ["Jens Pulver", "Kenny Florian"], explanation: "Former lightweight champion Sean Sherk fought under the nickname The Muscle Shark." },
   { id: "final-maine-iac", grade: 5, prompt: "Which former two-time UFC heavyweight champion was nicknamed 'The Maine-iac'?", answer: "Tim Sylvia", wrong: ["Andrei Arlovski", "Josh Barnett"], explanation: "Two-time heavyweight champion Tim Sylvia was known as The Maine-iac." },
   { id: "final-dean-mean", grade: 5, prompt: "Which UFC light heavyweight was known as 'The Dean of Mean'?", answer: "Keith Jardine", wrong: ["Forrest Griffin", "Stephan Bonnar"], explanation: "Keith Jardine fought under the nickname The Dean of Mean." },
-  { id: "final-mighty-mouse-defenses", grade: 5, prompt: "How many consecutive UFC title defenses did Demetrious Johnson record during his flyweight reign?", answer: "11", wrong: ["9", "10"], explanation: "Johnson successfully defended the UFC flyweight title 11 consecutive times." },
-  { id: "final-silva-reign", grade: 5, prompt: "How many days did Anderson Silva's record UFC middleweight title reign last?", answer: "2,457 days", wrong: ["2,142 days", "2,237 days"], explanation: "Silva's middleweight title reign lasted a UFC-record 2,457 days." },
-  { id: "final-masvidal-five", grade: 5, prompt: "Whom did Jorge Masvidal knock out in five seconds for the fastest knockout in UFC history?", answer: "Ben Askren", wrong: ["Darren Till", "Nate Diaz"], explanation: "Masvidal knocked out Ben Askren with a flying knee five seconds into their UFC 239 fight." },
+  { id: "final-mighty-mouse-defenses", grade: 5, prompt: "How many consecutive UFC title defenses did Demetrious Johnson record during his 2012–2018 flyweight reign?", answer: "11", wrong: ["9", "10"], explanation: "Johnson successfully defended the UFC flyweight title 11 consecutive times." },
+  { id: "final-silva-reign", grade: 5, prompt: "How many days did Anderson Silva's UFC middleweight title reign from 2006 to 2013 last?", answer: "2,457 days", wrong: ["2,142 days", "2,237 days"], explanation: "Silva's middleweight title reign lasted a UFC-record 2,457 days." },
+  { id: "final-masvidal-five", grade: 5, prompt: "Whom did Jorge Masvidal knock out in five seconds in 2019 for the fastest knockout in UFC history?", answer: "Ben Askren", wrong: ["Darren Till", "Nate Diaz"], explanation: "Masvidal knocked out Ben Askren with a flying knee five seconds into their UFC 239 fight." },
   { id: "final-tuf1", grade: 5, prompt: "Who defeated Stephan Bonnar by unanimous decision in the light heavyweight final of The Ultimate Fighter 1?", answer: "Forrest Griffin", wrong: ["Diego Sanchez", "Rashad Evans"], explanation: "Forrest Griffin defeated Stephan Bonnar in the historic TUF 1 light heavyweight final." },
-  { id: "final-ufc217-rose", grade: 5, prompt: "Who stopped Joanna Jedrzejczyk at UFC 217 to win the strawweight title?", answer: "Rose Namajunas", wrong: ["Jessica Andrade", "Claudia Gadelha"], explanation: "Rose Namajunas stopped Joanna Jedrzejczyk in the first round at UFC 217." },
-  { id: "final-ufc217-gsp", grade: 5, prompt: "Whom did Georges St-Pierre submit at UFC 217 to become middleweight champion?", answer: "Michael Bisping", wrong: ["Robert Whittaker", "Luke Rockhold"], explanation: "St-Pierre submitted Michael Bisping in Round 3 at UFC 217." },
-  { id: "final-ufc217-tj", grade: 5, prompt: "Whom did TJ Dillashaw stop at UFC 217 to regain the bantamweight title?", answer: "Cody Garbrandt", wrong: ["Dominick Cruz", "Renan Barao"], explanation: "Dillashaw stopped Cody Garbrandt in Round 2 at UFC 217." },
+  { id: "final-ufc217-rose", grade: 5, prompt: "Who stopped Joanna Jedrzejczyk at UFC 217 in 2017 to win the strawweight title?", answer: "Rose Namajunas", wrong: ["Jessica Andrade", "Claudia Gadelha"], explanation: "Rose Namajunas stopped Joanna Jedrzejczyk in the first round at UFC 217." },
+  { id: "final-ufc217-gsp", grade: 5, prompt: "Whom did Georges St-Pierre submit at UFC 217 in 2017 to become middleweight champion?", answer: "Michael Bisping", wrong: ["Robert Whittaker", "Luke Rockhold"], explanation: "St-Pierre submitted Michael Bisping in Round 3 at UFC 217." },
+  { id: "final-ufc217-tj", grade: 5, prompt: "Whom did TJ Dillashaw stop at UFC 217 in 2017 to regain the bantamweight title?", answer: "Cody Garbrandt", wrong: ["Dominick Cruz", "Renan Barao"], explanation: "Dillashaw stopped Cody Garbrandt in Round 2 at UFC 217." },
 ];
 
 
@@ -1568,9 +1568,15 @@ function buildBank(
   return bank;
 }
 
+const averageFanNflCandidates = footballCandidates("NFL").filter((question) => (
+  question.contentType === "current-event"
+  || question.id.startsWith("average-fan:nfl:00-")
+  || question.id.startsWith("average-fan:nfl:final-authored:")
+));
+
 export const averageFanNflQuestionBank = buildBank(
   "nfl",
-  footballCandidates("NFL"),
+  averageFanNflCandidates,
   FOOTBALL_GRADE_TARGETS,
   AVERAGE_FAN_FINAL_TARGETS.nfl,
 );
