@@ -399,8 +399,6 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
       prompt: `True or false: ${question.explanation}`,
       answer: "True",
       aliases: ["T"],
-      choices: ["True", "False"],
-      fanMisses: ["False"],
     });
   }
   if (formatRoll <= 3 || protectedFinal) {
@@ -409,7 +407,6 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
       format: "three-choice",
       prompt: question.prompt,
       choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!] as [string, string, string],
-      fanMisses: wrongChoices,
     });
   }
   return assertAverageFanQuestion({
