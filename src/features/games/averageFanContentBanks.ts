@@ -1401,6 +1401,7 @@ function balancedTake(
   candidates: readonly AverageFanQuestion[],
   target: number,
   subjects: readonly AverageFanSubject[],
+  label: string,
 ) {
   const bySubject = new Map(subjects.map((subject) => [
     subject,
@@ -1422,7 +1423,7 @@ function balancedTake(
       progressed = true;
     }
     if (!progressed) {
-      throw new Error(`Average Fan content bank has only ${selected.length} eligible questions for a target of ${target}.`);
+      throw new Error(`Average Fan ${label} has only ${selected.length} eligible questions for a target of ${target}.`);
     }
   }
   return selected;
@@ -1455,6 +1456,7 @@ function buildBank(
       )),
       evergreenTarget,
       subjects,
+      `${sport} grade ${grade} evergreen`,
     );
     return [...current, ...evergreen];
   });
@@ -1462,6 +1464,7 @@ function buildBank(
     candidates.filter((question) => question.protectedFinal),
     finalTarget,
     subjects,
+    `${sport} Finals`,
   );
   const bank = [...ordinary, ...finals];
   const ids = new Set(bank.map((question) => question.id));
