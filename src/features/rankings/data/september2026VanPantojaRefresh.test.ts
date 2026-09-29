@@ -34,7 +34,11 @@ describe("September 19, 2026 Van and Pantoja ranking refresh", () => {
 
   it("represents all three Van title results and the latest rematch once", () => {
     expect(fight("Joshua Van", "Alexandre Pantoja", "2025-12-06")).toEqual([
-      expect.objectContaining({ officialResult: "win", championshipType: "normal" }),
+      expect.objectContaining({
+        officialResult: "win",
+        methodCategory: "ko-tko",
+        championshipType: "normal",
+      }),
     ]);
     expect(fight("Joshua Van", "Tatsuro Taira", "2026-05-09")).toEqual([
       expect.objectContaining({
@@ -57,7 +61,7 @@ describe("September 19, 2026 Van and Pantoja ranking refresh", () => {
   it("uses the exact supplied Van profile media and safe image fallback", () => {
     expect(input("Joshua Van").presentation).toMatchObject({
       photoUrl: null,
-      thumbUrl: null,
+      thumbUrl: "assets/fighters/joshua-van-thumb.webp",
       watchUrl: "https://youtube.com/shorts/owyAiZa33XY?is=vNNc2me-zGbAnNZ3",
       signatureFightUrl: "https://youtu.be/nwO2UPz7p28?is=YgmgRj5wjPQQuw8i",
     });
@@ -70,6 +74,13 @@ describe("September 19, 2026 Van and Pantoja ranking refresh", () => {
         methodCategory: "decision",
         championshipType: "normal",
         rounds: { status: "audited", won: 1, lost: 4, drawn: 0 },
+      }),
+    ]);
+    expect(fight("Alexandre Pantoja", "Joshua Van", "2025-12-06")).toEqual([
+      expect.objectContaining({
+        officialResult: "loss",
+        methodCategory: "ko-tko",
+        championshipType: "normal",
       }),
     ]);
     expect(input("Alexandre Pantoja").facts.primeWindow).toEqual({
