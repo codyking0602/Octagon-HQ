@@ -60,7 +60,7 @@ function stableOffset(key: string, length: number) {
 }
 
 function normalizeAcceptedValue(value: string) {
-  return value.trim().toLocaleLowerCase().replace(/\\s+/g, " ");
+  return value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
 }
 
 function peerValues(
@@ -285,6 +285,17 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "body-triangle", grade: 5, prompt: "What back-control configuration locks the legs around an opponent's torso in a figure-four shape?", answer: "Body triangle", wrong: ["Closed guard", "Seatbelt grip"], explanation: "A body triangle uses a figure-four leg lock around the torso during back control." },
   { id: "feint", grade: 5, prompt: "What striking term describes a fake attack used to draw a defensive reaction?", answer: "Feint", wrong: ["Frame", "Scramble"], explanation: "A feint is a false attack or movement used to provoke a reaction." },
   { id: "switch-stance", grade: 5, prompt: "What does a fighter do when switching stance?", answer: "Changes which side is forward", wrong: ["Changes weight class", "Moves from standing to guard"], explanation: "Switching stance changes the lead side, such as moving between orthodox and southpaw." },
+  { id: "single-leg", grade: 3, prompt: "What wrestling takedown attacks one of an opponent\'s legs?", answer: "Single-leg takedown", wrong: ["Double-leg takedown", "Hip toss"], explanation: "A single-leg takedown attacks one leg and works to finish from that control." },
+  { id: "side-control", grade: 3, prompt: "What top grappling position places a fighter across the opponent\'s torso after passing the legs?", answer: "Side control", wrong: ["Closed guard", "Back control"], explanation: "Side control is a dominant top position across the opponent\'s torso after the legs have been passed." },
+  { id: "teep", grade: 3, prompt: "What striking term is commonly used for a push kick that helps manage distance?", answer: "Teep", wrong: ["Spinning backfist", "Overhand"], explanation: "A teep is a push kick commonly used to control range and disrupt forward movement." },
+  { id: "level-change", grade: 4, prompt: "What wrestling movement lowers a fighter\'s level to threaten or enter a takedown?", answer: "Level change", wrong: ["Switch step", "Hip escape"], explanation: "A level change lowers the hips and body position to set up a wrestling entry." },
+  { id: "back-hooks", grade: 4, prompt: "In back control, what are the legs called when they are inserted inside an opponent\'s thighs?", answer: "Hooks", wrong: ["Frames", "Posts"], explanation: "Hooks use the feet and legs inside the opponent\'s thighs to help secure back control." },
+  { id: "rear-body-lock", grade: 4, prompt: "What clinch control wraps the arms around an opponent\'s waist or hips from behind?", answer: "Rear body lock", wrong: ["Front headlock", "Double collar tie"], explanation: "A rear body lock controls the opponent from behind with the arms locked around the waist or hips." },
+  { id: "calf-kick", grade: 4, prompt: "A calf kick is aimed primarily at which area?", answer: "Lower leg", wrong: ["Ribs", "Forearm"], explanation: "A calf kick targets the lower leg around the calf rather than the thigh or upper body." },
+  { id: "hip-escape", grade: 5, prompt: "What grappling movement is also commonly called a shrimp?", answer: "Hip escape", wrong: ["Granby roll", "Technical stand-up"], explanation: "The hip escape, often called a shrimp, creates space by moving the hips away from pressure." },
+  { id: "frame", grade: 5, prompt: "What grappling term describes using the forearm or other skeletal structure to create and maintain space?", answer: "Frame", wrong: ["Hook", "Whizzer"], explanation: "A frame uses skeletal structure, often the forearm, to manage distance and resist pressure." },
+  { id: "pummeling", grade: 5, prompt: "What clinch drill or exchange involves fighting for inside arm position and underhooks?", answer: "Pummeling", wrong: ["Shrimping", "Posting"], explanation: "Pummeling is the hand-and-arm battle for inside position and underhooks in the clinch." },
+  { id: "cage-cutting", grade: 5, prompt: "What striking-footwork concept limits an opponent\'s escape routes instead of simply following them around the cage?", answer: "Cage cutting", wrong: ["Level changing", "Wall walking"], explanation: "Cage cutting uses angles and positioning to reduce an opponent\'s available space and exits." },
 ];
 
 function knowledgeQuestions(
@@ -293,30 +304,31 @@ function knowledgeQuestions(
   prefix: string,
   facts: readonly KnowledgeFact[],
 ) {
-  return facts.flatMap((fact) => [
-    shortQuestion({
-      id: `${prefix}:${fact.id}:short`,
-      sport,
-      grade: fact.grade,
-      subject,
-      prompt: fact.prompt,
-      answer: fact.answer,
-      explanation: fact.explanation,
-      fanMisses: fact.wrong,
-      difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
-    }),
-    choiceQuestion({
-      id: `${prefix}:${fact.id}:choice`,
-      sport,
-      grade: fact.grade,
-      subject,
-      prompt: fact.prompt,
-      answer: fact.answer,
-      wrongChoices: fact.wrong,
-      explanation: fact.explanation,
-      difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
-    }),
-  ]);
+  return facts.map((fact, index) => (
+    index % 4 === 0
+      ? choiceQuestion({
+          id: `${prefix}:${fact.id}:choice`,
+          sport,
+          grade: fact.grade,
+          subject,
+          prompt: fact.prompt,
+          answer: fact.answer,
+          wrongChoices: fact.wrong,
+          explanation: fact.explanation,
+          difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+        })
+      : shortQuestion({
+          id: `${prefix}:${fact.id}:short`,
+          sport,
+          grade: fact.grade,
+          subject,
+          prompt: fact.prompt,
+          answer: fact.answer,
+          explanation: fact.explanation,
+          fanMisses: fact.wrong,
+          difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+        })
+  ));
 }
 
 function footballPlayers(league: "NFL" | "CFB") {
@@ -338,7 +350,6 @@ function footballCandidates(league: "NFL" | "CFB") {
   const programs = league === "CFB"
     ? queryFootballSubjects({ league: "CFB", kind: "program" }).sort((a, b) => a.id.localeCompare(b.id))
     : [];
-  const programNames = programs.map((program) => program.name);
   const conferences = unique(programs.map((program) => program.conference ?? ""));
   const questions: AverageFanQuestion[] = [];
 
@@ -354,7 +365,7 @@ function footballCandidates(league: "NFL" | "CFB") {
       subject: playerSubject,
       prompt: `What position did ${player.name} play?`,
       answer: position,
-      explanation: `${player.name} is listed in HQ's canonical ${league} registry as a ${position}.`,
+      explanation: `${player.name} played ${position}.`,
       fanMisses: wrongPositions,
       difficultyNudge: -1,
     }));
@@ -372,17 +383,17 @@ function footballCandidates(league: "NFL" | "CFB") {
       difficultyNudge: 0,
     }));
 
-    if (player.school) {
+    if (league === "NFL" && player.school) {
       const wrongSchools = peerValues(schools, player.school, `${player.id}:school`);
       questions.push(choiceQuestion({
-        id: `average-fan:${sport}:g2:${player.id}:school`,
-        sport,
+        id: `average-fan:nfl:g2:${player.id}:school`,
+        sport: "nfl",
         grade: 2,
         subject: playerSubject,
-        prompt: `Which school is associated with ${player.name}'s college career?`,
+        prompt: `Which college did ${player.name} enter the NFL from?`,
         answer: player.school,
         wrongChoices: wrongSchools,
-        explanation: `${player.name}'s canonical football profile lists ${player.school}.`,
+        explanation: `${player.name} entered the NFL from ${player.school}.`,
       }));
     }
 
@@ -465,16 +476,15 @@ function footballCandidates(league: "NFL" | "CFB") {
       }
     } else {
       if (player.school) {
-        const wrongNames = peerValues(playerNames, player.name, `${player.id}:cfb-identity`);
-        questions.push(shortQuestion({
+        questions.push(choiceQuestion({
           id: `average-fan:cfb:g3:${player.id}:school-position`,
           sport: "cfb",
           grade: 3,
           subject: "Players",
-          prompt: `Which ${position} is associated with ${player.school} in HQ's canonical college player registry?`,
-          answer: player.name,
-          explanation: `${player.name} is registered as a ${position} for ${player.school}.`,
-          fanMisses: wrongNames,
+          prompt: `What position did ${player.name} play at ${player.school}?`,
+          answer: position,
+          wrongChoices: wrongPositions,
+          explanation: `${player.name} played ${position} at ${player.school}.`,
         }));
       }
 
@@ -486,7 +496,7 @@ function footballCandidates(league: "NFL" | "CFB") {
           subject: "CFB History",
           prompt: `${player.name} won the Heisman Trophy.`,
           answer: true,
-          explanation: `${player.name} is marked as a Heisman Trophy winner in HQ's canonical football registry.`,
+          explanation: `${player.name} won the Heisman Trophy.`,
         }));
       }
 
@@ -547,15 +557,16 @@ function footballCandidates(league: "NFL" | "CFB") {
   if (league === "CFB") {
     for (const [index, program] of programs.entries()) {
       if (!program.conference) continue;
+      const conferenceSeason = program.conferenceSeason ?? 2025;
       const wrongConferences = peerValues(conferences, program.conference, `${program.id}:conference`);
       questions.push(shortQuestion({
         id: `average-fan:cfb:g1:${program.id}:conference`,
         sport: "cfb",
         grade: 1,
         subject: "Programs",
-        prompt: `Which conference is ${program.name} listed in on HQ's canonical program profile?`,
+        prompt: `For the ${conferenceSeason} season, which conference was ${program.name} in?`,
         answer: program.conference,
-        explanation: `${program.name} is listed in the ${program.conference}.`,
+        explanation: `${program.name} was in the ${program.conference} for the ${conferenceSeason} season.`,
         fanMisses: wrongConferences,
         difficultyNudge: -1,
       }));
@@ -566,17 +577,23 @@ function footballCandidates(league: "NFL" | "CFB") {
         sport: "cfb",
         grade: 2,
         subject: "Programs",
-        prompt: `${program.name} is listed in the ${shownConference}.`,
+        prompt: `${program.name} was in the ${shownConference} for the ${conferenceSeason} season.`,
         answer: tfTrue,
         explanation: `${program.name} is listed in the ${program.conference}.`,
       }));
-      const wrongPrograms = peerValues(programNames, program.name, `${program.id}:program-choice`);
+      const wrongPrograms = peerValues(
+        programs
+          .filter((candidate) => candidate.conference && candidate.conference !== program.conference)
+          .map((candidate) => candidate.name),
+        program.name,
+        `${program.id}:program-choice`,
+      );
       questions.push(choiceQuestion({
         id: `average-fan:cfb:g3:${program.id}:conference-program`,
         sport: "cfb",
         grade: 3,
         subject: "Programs",
-        prompt: `Which of these programs is listed in the ${program.conference}?`,
+        prompt: `Which of these programs was in the ${program.conference} for the ${conferenceSeason} season?`,
         answer: program.name,
         wrongChoices: wrongPrograms,
         explanation: `${program.name} is listed in the ${program.conference}.`,
@@ -622,7 +639,7 @@ function ufcCandidates() {
       sport: "ufc",
       grade: 1,
       subject: "Fighters",
-      prompt: `What is ${fighter.name}'s primary UFC division in HQ's factual ledger?`,
+      prompt: `Which UFC division is ${fighter.name} primarily associated with?`,
       answer: primaryDivision,
       explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
       fanMisses: wrongDivisions,
@@ -636,7 +653,7 @@ function ufcCandidates() {
       sport: "ufc",
       grade: 2,
       subject: "Fighters",
-      prompt: `${fighter.name}'s primary UFC division is ${shownDivision}.`,
+      prompt: `${fighter.name} is primarily associated with the UFC ${shownDivision} division.`,
       answer: tfTrue,
       explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
     }));
@@ -644,7 +661,8 @@ function ufcCandidates() {
     const wins = fighter.fights.filter((fight) => fight.result === "win");
     const recognizableFight = wins[stableOffset(`${fighter.id}:win`, Math.max(1, wins.length))] ?? fighter.fights[0];
     if (recognizableFight) {
-      const wrongOpponents = peerValues(fighterNames, recognizableFight.opponent, `${fighter.id}:opponent`);
+      const acceptedOpponents = (wins.length ? wins : fighter.fights).map((fight) => fight.opponent);
+      const wrongOpponents = peerValues(fighterNames, acceptedOpponents, `${fighter.id}:opponent`);
       questions.push(choiceQuestion({
         id: `average-fan:ufc:g3:${fighter.id}:opponent`,
         sport: "ufc",
@@ -690,7 +708,7 @@ function ufcCandidates() {
         subject: "Fighters",
         prompt: `In what year did ${fighter.name}'s UFC career begin?`,
         answer: String(debutYear),
-        explanation: `${fighter.name}'s UFC ledger begins in ${debutYear}.`,
+        explanation: `${fighter.name}'s UFC career began in ${debutYear}.`,
         fanMisses: [String(debutYear - 1), String(debutYear + 1)],
         difficultyNudge: 2,
       }));
@@ -706,9 +724,9 @@ function ufcCandidates() {
         sport: "ufc",
         grade: 4,
         subject: "Championships",
-        prompt: `How many UFC title fights appear in ${fighter.name}'s HQ factual ledger?`,
+        prompt: `How many UFC title fights did ${fighter.name} have?`,
         answer: String(titleFights.length),
-        explanation: `${fighter.name}'s UFC factual ledger contains ${titleFights.length} title fights.`,
+        explanation: `${fighter.name} had ${titleFights.length} UFC title fights.`,
         fanMisses: unique([Math.max(0, titleFights.length - 1), titleFights.length + 1].map(String)),
         difficultyNudge: 1,
       }));
