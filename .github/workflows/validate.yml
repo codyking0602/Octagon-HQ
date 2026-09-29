@@ -29,7 +29,7 @@ defaults:
 jobs:
   core:
     name: typecheck + production build
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -110,7 +110,7 @@ jobs:
 
   tests:
     name: test shard ${{ matrix.shard }}/8
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     strategy:
@@ -171,7 +171,7 @@ jobs:
 
   football-provider:
     name: Football ESPN schedule provider
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
@@ -201,7 +201,7 @@ jobs:
 
   phone-layouts:
     name: Today's Challenge phone layouts
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.draft == false }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -262,7 +262,7 @@ jobs:
 
   validate:
     name: validate
-    if: ${{ always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false) }}
+    if: ${{ always() && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.draft == false) }}
     needs:
       - core
       - tests
