@@ -1,6 +1,8 @@
 import { queryFootballSubjects, type FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
 import { ufcFactualLedgerSubjects, type UfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { stableLineupHash } from "../play/lineupModel";
+import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
+import type { BarTriviaQuestion } from "./barTriviaEngine";
 import {
   AVERAGE_FAN_SUBJECTS,
   assertAverageFanQuestion,
@@ -331,6 +333,61 @@ function knowledgeQuestions(
   ));
 }
 
+
+function currentEventGrade(question: BarTriviaQuestion): AverageFanGrade {
+  if (question.round === "round1") return 1;
+  if (question.round === "round2") return 3;
+  if (question.round === "round3") return 4;
+  return 5;
+}
+
+function currentEventSubject(question: BarTriviaQuestion): AverageFanSubject {
+  if (question.league === "nfl") {
+    return ["Clutch Moments", "Milestones", "Coaching Debuts", "Comebacks"].includes(question.category)
+      ? "Players"
+      : "Teams";
+  }
+  if (question.league === "cfb") {
+    return ["Milestones", "Weird Moments", "Defensive Takeovers", "Breakout Games"].includes(question.category)
+      ? "Players"
+      : "Programs";
+  }
+  if (question.category === "Title Fights") return "Championships";
+  if (question.category === "TUF History") return "Fighters";
+  return "Fights";
+}
+
+function currentEventCandidates(sport: AverageFanSport) {
+  return BAR_TRIVIA_CURRENT_EVENT_QUESTIONS
+    .filter((question) => question.league === sport)
+    .map((question) => {
+      const wrongChoices = question.choices.filter((choice) => choice !== question.answer);
+      if (wrongChoices.length < 2) {
+        throw new Error(`Average Fan current-event source ${question.id} does not have two distractors.`);
+      }
+      return assertAverageFanQuestion({
+        id: `average-fan:${sport}:current:${question.id}`,
+        sport,
+        grade: currentEventGrade(question),
+        subject: currentEventSubject(question),
+        format: "three-choice",
+        prompt: question.prompt,
+        answer: question.answer,
+        aliases: [],
+        choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!] as [string, string, string],
+        explanation: question.explanation,
+        contentType: "current-event",
+        activeFrom: question.activeFrom,
+        expiresAt: question.expiresAt,
+        difficultyNudge: question.round === "round1" ? -1 : question.round === "round2" ? 0 : 1,
+        protectedFinal: false,
+        sourceId: question.sourceId,
+        sourceUrl: question.sourceUrl,
+        verifiedAt: question.verifiedAt,
+      });
+    });
+}
+
 function footballPlayers(league: "NFL" | "CFB") {
   return queryFootballSubjects({ league, kind: "player-career" })
     .filter((subject) => subject.name && subject.position)
@@ -607,6 +664,7 @@ function footballCandidates(league: "NFL" | "CFB") {
     questions.push(...knowledgeQuestions("cfb", "Traditions", "average-fan:cfb:tradition", CFB_TRADITION_FACTS));
   }
 
+  questions.push(...currentEventCandidates(sport));
   return questions;
 }
 
@@ -773,6 +831,7 @@ function ufcCandidates() {
   }
 
   questions.push(...knowledgeQuestions("ufc", "Octagon IQ", "average-fan:ufc:iq", UFC_IQ_FACTS));
+  questions.push(...currentEventCandidates("ufc"));
   return questions;
 }
 
@@ -814,11 +873,29 @@ function buildBank(
   finalTarget: number,
 ) {
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
-  const ordinary = ([1, 2, 3, 4, 5] as const).flatMap((grade) => balancedTake(
-    candidates.filter((question) => !question.protectedFinal && question.grade === grade),
-    gradeTargets[grade],
-    subjects,
-  ));
+  const ordinary = ([1, 2, 3, 4, 5] as const).flatMap((grade) => {
+    const current = candidates
+      .filter((question) => (
+        !question.protectedFinal
+        && question.grade === grade
+        && question.contentType === "current-event"
+      ))
+      .sort((a, b) => a.id.localeCompare(b.id));
+    if (current.length > gradeTargets[grade]) {
+      throw new Error(`Average Fan ${sport} grade ${grade} has too many current-event questions.`);
+    }
+    const evergreenTarget = gradeTargets[grade] - current.length;
+    const evergreen = balancedTake(
+      candidates.filter((question) => (
+        !question.protectedFinal
+        && question.grade === grade
+        && question.contentType === "evergreen"
+      )),
+      evergreenTarget,
+      subjects,
+    );
+    return [...current, ...evergreen];
+  });
   const finals = balancedTake(
     candidates.filter((question) => question.protectedFinal),
     finalTarget,
