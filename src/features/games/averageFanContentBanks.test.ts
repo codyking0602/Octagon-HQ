@@ -144,6 +144,33 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+
+  it("keeps internal data-owner language out of player-facing copy", () => {
+    for (const sport of sports) {
+      for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
+        expect(question.prompt, question.id).not.toMatch(/\b(?:HQ|canonical|ledger|registry)\b/i);
+        expect(question.explanation, question.id).not.toMatch(/\b(?:HQ|canonical|ledger|registry)\b/i);
+      }
+    }
+  });
+
+  it("keeps dated upper-grade identity trivia modern-heavy instead of making old eras the difficulty proxy", () => {
+    for (const sport of sports) {
+      const dated = AVERAGE_FAN_CONTENT_BANKS[sport]
+        .filter((question) => question.grade >= 4)
+        .map((question) => ({
+          question,
+          years: [...question.prompt.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0])),
+        }))
+        .filter((row) => row.years.length > 0);
+
+      expect(dated.length, sport).toBeGreaterThan(0);
+      const modernThreshold = sport === "ufc" ? 2010 : 2000;
+      const modern = dated.filter((row) => Math.max(...row.years) >= modernThreshold).length;
+      expect(modern / dated.length, sport).toBeGreaterThanOrEqual(0.65);
+    }
+  });
+
   it("never ships an expiring current-event record without an expiry date", () => {
     for (const sport of sports) {
       for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
