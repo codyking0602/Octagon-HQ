@@ -3,7 +3,7 @@ import argparse, json, os, sys
 from io import BytesIO
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter\nfrom rembg import remove
 
 ALLOWED_HOSTS = {"a.espncdn.com","espncdn.com","www.espn.com","espn.com","ufc.com","www.ufc.com"}
 PREFIX = "public/assets/fighters/"
