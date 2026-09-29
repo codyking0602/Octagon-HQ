@@ -384,7 +384,7 @@ function QuestionAnswerControl({
   value: string;
   disabled: boolean;
   onChange: (value: string) => void;
-  onSubmit: () => void;
+  onSubmit: (value?: string) => void;
 }) {
   if (question.format === "three-choice") {
     return (
@@ -397,7 +397,7 @@ function QuestionAnswerControl({
             className={value === choice ? "is-selected" : ""}
             onClick={() => {
               onChange(choice);
-              window.setTimeout(onSubmit, 0);
+              onSubmit(choice);
             }}
           >
             {choice}
@@ -418,7 +418,7 @@ function QuestionAnswerControl({
             className={value === choice ? "is-selected" : ""}
             onClick={() => {
               onChange(choice);
-              window.setTimeout(onSubmit, 0);
+              onSubmit(choice);
             }}
           >
             {choice}
@@ -433,7 +433,7 @@ function QuestionAnswerControl({
       className="average-fan-short-answer"
       onSubmit={(event: FormEvent) => {
         event.preventDefault();
-        onSubmit();
+        onSubmit(value);
       }}
     >
       <input
@@ -667,7 +667,16 @@ function AverageFanGame({
                   value={finalAnswer}
                   disabled={false}
                   onChange={setFinalAnswer}
-                  onSubmit={(value) => {\n                    if (value) {\n                      const correct = averageFanAnswersMatch(AVERAGE_FAN_UFC_PREVIEW_FINAL, value);\n                      setFinalAnswer(value);\n                      setFinalOutcome(correct ? "correct" : "wrong");\n                      setPhase("final-reveal");\n                      return;\n                    }\n                    submitFinal();\n                  }}
+                  onSubmit={(value) => {
+                    if (value) {
+                      const correct = averageFanAnswersMatch(AVERAGE_FAN_UFC_PREVIEW_FINAL, value);
+                      setFinalAnswer(value);
+                      setFinalOutcome(correct ? "correct" : "wrong");
+                      setPhase("final-reveal");
+                      return;
+                    }
+                    submitFinal();
+                  }}
                 />
               ) : (
                 <div className={`average-fan-reveal${finalOutcome === "correct" ? " is-correct" : " is-wrong"}`}>
