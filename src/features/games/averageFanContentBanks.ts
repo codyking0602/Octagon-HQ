@@ -508,6 +508,37 @@ function knowledgeQuestions(
   ));
 }
 
+function nflKnowledgeQuestions(
+  subject: AverageFanSubject,
+  prefix: string,
+  facts: readonly KnowledgeFact[],
+) {
+  return facts.map((fact, index) => (
+    index % 3 === 0
+      ? choiceQuestion({
+          id: `${prefix}:${fact.id}:choice`,
+          sport: "nfl",
+          grade: fact.grade,
+          subject,
+          prompt: fact.prompt,
+          answer: fact.answer,
+          wrongChoices: fact.wrong,
+          explanation: fact.explanation,
+          difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+        })
+      : shortQuestion({
+          id: `${prefix}:${fact.id}:short`,
+          sport: "nfl",
+          grade: fact.grade,
+          subject,
+          prompt: fact.prompt,
+          answer: fact.answer,
+          explanation: fact.explanation,
+          fanMisses: fact.wrong,
+          difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+        })
+  ));
+}
 function footballPlayers(league: "NFL" | "CFB") {
   return queryFootballSubjects({ league, kind: "player-career" })
     .filter((subject) => subject.name && subject.position)
@@ -779,10 +810,20 @@ function footballCandidates(league: "NFL" | "CFB") {
   }
 
   if (league === "NFL") {
-    questions.push(...knowledgeQuestions("nfl", "Players", "average-fan:nfl:00-player", NFL_PLAYER_FACTS));
-    questions.push(...knowledgeQuestions("nfl", "Teams", "average-fan:nfl:00-team", NFL_TEAM_FACTS));
-    questions.push(...knowledgeQuestions("nfl", "X’s & O’s", "average-fan:nfl:00-xo", NFL_XO_FACTS));
-    questions.push(...knowledgeQuestions("nfl", "NFL History", "average-fan:nfl:00-history", NFL_HISTORY_FACTS));
+    questions.push(...nflKnowledgeQuestions("Players", "average-fan:nfl:00-player", NFL_PLAYER_FACTS));
+    questions.push(...nflKnowledgeQuestions("Teams", "average-fan:nfl:00-team", NFL_TEAM_FACTS));
+    questions.push(...nflKnowledgeQuestions("X’s & O’s", "average-fan:nfl:00-xo", NFL_XO_FACTS));
+    questions.push(...nflKnowledgeQuestions("NFL History", "average-fan:nfl:00-history", NFL_HISTORY_FACTS));
+    questions.push(...NFL_TRUE_FALSE_FACTS.map((fact) => trueFalseQuestion({
+      id: `average-fan:nfl:00-tf:${fact.id}`,
+      sport: "nfl",
+      grade: fact.grade,
+      subject: fact.subject,
+      prompt: fact.prompt,
+      answer: fact.answer,
+      explanation: fact.explanation,
+      difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
+    })));
     questions.push(...NFL_FINAL_FACTS.map((fact) => shortQuestion({
       id: `average-fan:nfl:final-authored:${fact.id}`,
       sport: "nfl",
