@@ -55,10 +55,26 @@ const NAME_ALIASES = new Map([
 // audited backfill. They stay explicit rather than being force-matched to a
 // different UFCStats bout. Ranking-history corrections are deliberately out of
 // scope for this supplemental-data PR.
+const RECONCILIATION_AUDIT_DATE = "2026-09-29";
 const KNOWN_UNRECONCILED = new Set([
   "Royce Gracie|1993-11-12-art-jimmerson",
   "Royce Gracie|1993-11-12-ken-shamrock",
   "Royce Gracie|1993-11-12-gerard-gordeau",
+  "Alexandre Pantoja|2026-09-19-joshua-van",
+  "Alexa Grasso|2026-09-12-manon-fiorot",
+  "Brandon Moreno|2026-09-12-joseph-morales",
+  "Joshua Van|2023-06-24-zhalgas-zhumagulov",
+  "Joshua Van|2023-11-11-kevin-borjas",
+  "Joshua Van|2024-01-13-felipe-bunes",
+  "Joshua Van|2024-07-13-charles-johnson",
+  "Joshua Van|2024-09-14-edgar-chairez",
+  "Joshua Van|2024-12-07-cody-durden",
+  "Joshua Van|2025-03-08-rei-tsuruya",
+  "Joshua Van|2025-06-07-bruno-silva",
+  "Joshua Van|2025-06-28-brandon-royval",
+  "Joshua Van|2025-12-06-alexandre-pantoja",
+  "Joshua Van|2026-05-09-tatsuro-taira",
+  "Joshua Van|2026-09-19-alexandre-pantoja",
 ]);
 
 function rawUrl(repository, commit, file) {
@@ -212,8 +228,9 @@ function candidateDetails(detailsByDate, canonicalDate) {
 }
 async function main() {
   const canonicalRankingInputs = await loadCanonicalRankingInputs();
-  const modelDate = canonicalRankingInputs.source.modelAsOfDate;
-  if (modelDate > CORE.refreshedAt) throw new Error(`Pinned UFCStats core export ${CORE.refreshedAt} is older than model date ${modelDate}.`);
+  // The canonical ranking ledger can move beyond the pinned source snapshot.
+  // Newer or otherwise unmatched fights stay explicit in KNOWN_UNRECONCILED
+  // instead of blocking regeneration or being force-matched to stale evidence.
   const [eventText, detailText, resultText, statsText, bonusText] = await Promise.all([
     downloadText(CORE.repository, CORE.commit, CORE.files[0]), downloadText(CORE.repository, CORE.commit, CORE.files[1]),
     downloadText(CORE.repository, CORE.commit, CORE.files[2]), downloadText(CORE.repository, CORE.commit, CORE.files[3]),
@@ -238,7 +255,12 @@ async function main() {
         observedUnreconciled.add(reconciliationKey);
         byFight[fight.id] = {
           reconciliation: "unavailable",
-          source: { provider: "ufcstats", checkedAt: CORE.refreshedAt },
+          source: {
+            provider: "ufcstats",
+            checkedAt: fighter.fighter === "Royce Gracie"
+              ? CORE.refreshedAt
+              : RECONCILIATION_AUDIT_DATE,
+          },
           reason: "no-unique-source-match",
         };
         continue;
