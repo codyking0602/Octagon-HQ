@@ -28,6 +28,8 @@ When an acceptable UFC/ESPN thumbnail is available:
 
 - `public/assets/fighters/<fighter-slug>-thumb.webp`
 
+The official source image itself does **not** need transparency. Approved opaque ESPN/UFC photography may go through the canonical asset-ingest background-removal step; the finished checked-in thumb must still pass the exact 320×320 real-alpha transparency gate.
+
 For every fighter on the main card:
 
 - `public/assets/fighters/<fighter-slug>-spotlight.webp`
