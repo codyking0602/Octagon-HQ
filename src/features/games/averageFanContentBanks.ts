@@ -392,15 +392,6 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
     verifiedAt: question.verifiedAt,
   };
 
-  if (formatRoll === 0 && !protectedFinal) {
-    return assertAverageFanQuestion({
-      ...common,
-      format: "true-false",
-      prompt: `True or false: ${question.explanation}`,
-      answer: "True",
-      aliases: ["T"],
-    });
-  }
   if (formatRoll <= 3 || protectedFinal) {
     return assertAverageFanQuestion({
       ...common,
@@ -417,14 +408,48 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
   });
 }
 
+
+const CFB_CURRENT_EVENT_EXPANSION: readonly AverageFanQuestion[] = [
+  ["texas-tennessee", 1, "Programs", "Which No. 1 team survived Tennessee 20–17 in Knoxville in Week 4?", "Texas", ["Georgia", "Alabama"], "Texas held off Tennessee 20–17 in Knoxville."],
+  ["florida-ole-miss", 1, "Programs", "Which team beat No. 9 Ole Miss 52–28 in Week 4?", "Florida", ["LSU", "Auburn"], "Florida beat Ole Miss 52–28 at The Swamp."],
+  ["georgia-oklahoma", 1, "Programs", "Which team beat Oklahoma 41–13 in Week 4?", "Georgia", ["Alabama", "Tennessee"], "Georgia defeated Oklahoma 41–13."],
+  ["lsu-texas-am", 1, "Programs", "Which team beat Texas A&M 35–6 in Week 4?", "LSU", ["Ole Miss", "Florida"], "LSU defeated Texas A&M 35–6 in Baton Rouge."],
+  ["oregon-usc", 1, "Programs", "Which Big Ten team won 41–27 at USC in Week 4?", "Oregon", ["Washington", "UCLA"], "Oregon beat USC 41–27 in Los Angeles."],
+  ["alabama-south-carolina", 1, "Programs", "Which team beat South Carolina 49–18 in Week 4?", "Alabama", ["Georgia", "LSU"], "Alabama defeated South Carolina 49–18."],
+  ["mississippi-state-missouri", 2, "Programs", "Which team handed No. 25 Missouri a 31–24 Week 4 loss?", "Mississippi State", ["Ole Miss", "Arkansas"], "Mississippi State beat Missouri 31–24."],
+  ["ucla-maryland", 2, "Programs", "Which ranked Big Ten team routed Maryland 54–3 in Week 4?", "UCLA", ["USC", "Iowa"], "UCLA defeated Maryland 54–3."],
+  ["indiana-northwestern", 2, "Programs", "Which top-10 Big Ten team beat Northwestern 29–23 in Week 4?", "Indiana", ["Ohio State", "Michigan"], "Indiana beat Northwestern 29–23."],
+  ["boise-western-michigan", 2, "Programs", "Which ranked team beat Western Michigan 32–7 in Week 4?", "Boise State", ["Utah", "BYU"], "Boise State defeated Western Michigan 32–7."],
+  ["texas-tech-sam-houston", 2, "Programs", "Which ranked Big 12 team beat Sam Houston 49–14 in Week 4?", "Texas Tech", ["TCU", "Houston"], "Texas Tech defeated Sam Houston 49–14."],
+  ["houston-georgia-southern", 2, "Programs", "Which ranked Big 12 team won 42–28 at Georgia Southern in Week 4?", "Houston", ["Texas Tech", "UCF"], "Houston beat Georgia Southern 42–28."],
+].map(([id, grade, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
+  id: `average-fan:cfb:authored:cfb-current-2026-w4-${id}`,
+  sport: "cfb",
+  grade: grade as AverageFanGrade,
+  subject: subject as AverageFanSubject,
+  format: "three-choice",
+  prompt: prompt as string,
+  answer: answer as string,
+  aliases: [],
+  choices: [answer as string, ...(wrong as string[])] as [string, string, string],
+  explanation: explanation as string,
+  contentType: "current-event",
+  activeFrom: "2026-09-26T00:00:00-05:00",
+  expiresAt: "2026-10-17T23:59:59-05:00",
+  difficultyNudge: grade === 1 ? -1 : 0,
+  protectedFinal: false,
+  sourceId: "ncaa-2026-week4-recap",
+  sourceUrl: "https://www.ncaa.com/live-updates/football/fbs/college-football-week-4-recaps-highlights-rankings-and-scores",
+  verifiedAt: "2026-09-29",
+}));
+
 function authoredCfbQuestions() {
-  return BAR_TRIVIA_QUESTION_BANK
-    .filter((question) => question.league === "cfb")
-    .sort((a, b) => {
-      const currentEventOrder = Number(b.contentType === "current-event") - Number(a.contentType === "current-event");
-      return currentEventOrder || a.id.localeCompare(b.id);
-    })
-    .map(authoredCfbQuestion);
+  return [
+    ...CFB_CURRENT_EVENT_EXPANSION,
+    ...BAR_TRIVIA_QUESTION_BANK
+      .filter((question) => question.league === "cfb")
+      .map(authoredCfbQuestion),
+  ];
 }
 
 function interleaveCfbCandidates(
