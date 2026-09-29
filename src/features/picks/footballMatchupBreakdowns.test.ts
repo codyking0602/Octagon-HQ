@@ -42,7 +42,7 @@ describe("football matchup breakdowns", () => {
 
     expect(footballMatchupBreakdownsForEvent(event).map((breakdown) => breakdown.id)).toEqual([
       "2026-alabama-mississippi-state",
-      "2026-raiders-saints",
+      "2026-chiefs-raiders",
     ]);
   });
 
@@ -80,6 +80,24 @@ describe("football matchup breakdowns", () => {
     expect(breakdown?.teams.map((team) => team.record)).toEqual(["4–0", "4–0"]);
     expect(breakdown?.compact?.things).toHaveLength(3);
     expect(breakdown?.compact?.setup.map((part) => part.text).join("")).not.toContain("No. 7");
+    expect(breakdown?.teams.map((team) => team.sportsReferenceUrl)).toEqual([
+      "https://www.sports-reference.com/cfb/schools/alabama/2026.html",
+      "https://www.sports-reference.com/cfb/schools/mississippi-state/2026.html",
+    ]);
+  });
+
+  it("uses the compact NFL treatment for Chiefs-Raiders with 2026 team links", () => {
+    const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-chiefs-raiders");
+    expect(breakdown?.title).toBe("Chiefs at Raiders");
+    expect(breakdown?.kickoffAt).toBe("2026-10-04T20:25:00Z");
+    expect(breakdown?.compact?.leagueLabel).toBe("NFL");
+    expect(breakdown?.compact?.rankingSource).toBeUndefined();
+    expect(breakdown?.teams.map((team) => team.record)).toEqual(["3–0", "3–0"]);
+    expect(breakdown?.teams.map((team) => team.sportsReferenceUrl)).toEqual([
+      "https://www.pro-football-reference.com/teams/kan/2026.htm",
+      "https://www.pro-football-reference.com/teams/rai/2026.htm",
+    ]);
+    expect(breakdown?.compact?.things).toHaveLength(3);
   });
 
   it("keeps legacy editorial contracts while allowing the approved compact matchup format", () => {
