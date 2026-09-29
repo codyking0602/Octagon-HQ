@@ -253,6 +253,15 @@ describe("Auction catalog expansion migration", () => {
         Power: 78,
         Heart: 70,
       },
+      // Pantoja's released card predates the September 2026 Joshua Van rematch.
+      "Alexandre Pantoja": {
+        overall: 89,
+        Striking: 78,
+        Grappling: 94,
+        Frame: 68,
+        Power: 83,
+        Heart: 78,
+      },
     };
     const additions = [...catalogSql.matchAll(/'ultimate-fighter-(\d+)','((?:[^']|'')*)'.*?jsonb_build_object\(([^)]*)\)/g)]
       .filter((match) => Number(match[1]) >= 31);
@@ -275,7 +284,7 @@ describe("Auction catalog expansion migration", () => {
       };
       expect(inputs, name).toEqual(immutableRankingSnapshots[name] ?? currentRankingInputs);
     }
-    expect(Object.keys(immutableRankingSnapshots)).toEqual(["Rafael dos Anjos", "Mackenzie Dern"]);
+    expect(Object.keys(immutableRankingSnapshots)).toEqual(["Rafael dos Anjos", "Mackenzie Dern", "Alexandre Pantoja"]);
   });
 
   it("contains current career identities and mode-specific category membership", () => {
