@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AVERAGE_FAN_REPORT_CARDS,
@@ -45,6 +45,34 @@ const FAN_LABELS: Record<AverageFanFan, string> = {
   tyler: "TYLER",
   troy: "TROY",
 };
+
+const AVERAGE_FAN_OPENING_STAGE_WIDTH = 1672;
+const AVERAGE_FAN_OPENING_STAGE_HEIGHT = 941;
+
+function useAverageFanOpeningStageScale() {
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const syncScale = () => {
+      const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      setScale(Math.min(
+        viewportWidth / AVERAGE_FAN_OPENING_STAGE_WIDTH,
+        viewportHeight / AVERAGE_FAN_OPENING_STAGE_HEIGHT,
+      ));
+    };
+
+    syncScale();
+    window.addEventListener("resize", syncScale);
+    window.visualViewport?.addEventListener("resize", syncScale);
+    return () => {
+      window.removeEventListener("resize", syncScale);
+      window.visualViewport?.removeEventListener("resize", syncScale);
+    };
+  }, []);
+
+  return scale;
+}
 
 function HostArt({ compact = false }: { compact?: boolean }) {
   return (
@@ -708,6 +736,7 @@ function AverageFanGame({
 
 export default function AverageFanPrototypePage() {
   const navigate = useNavigate();
+  const openingStageScale = useAverageFanOpeningStageScale();
   const [scene, setScene] = useState<PrototypeScene>("intro");
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
   const [gameKey, setGameKey] = useState(0);
@@ -745,6 +774,7 @@ export default function AverageFanPrototypePage() {
       <section
         className="average-fan-intro-stage"
         aria-label="Are You Smarter Than an Average Fan? opening screen"
+        style={{ transform: `translate(-50%, -50%) scale(${openingStageScale})` }}
       >
         <img
           className="average-fan-intro-stage__plate"
