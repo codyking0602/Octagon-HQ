@@ -6,6 +6,7 @@ import {
   AVERAGE_FAN_UFC_PREVIEW_FINAL,
   averageFanGradeLabel,
   averageFanMoneyLabel,
+  resolveAverageFanPreviewAnswer,
 } from "./AverageFanPrototypeModel";
 
 describe("Average Fan owner preview pack", () => {
@@ -34,6 +35,39 @@ describe("Average Fan owner preview pack", () => {
     for (const question of AVERAGE_FAN_UFC_PREVIEW_BOARD) {
       expect(validateAverageFanQuestion(question)).toEqual([]);
     }
+  });
+
+  it("consumes Save only on a wrong player answer and mirrors the deterministic fan outcome", () => {
+    const question = AVERAGE_FAN_UFC_PREVIEW_BOARD[0]!;
+    const correct = resolveAverageFanPreviewAnswer({
+      question,
+      fan: "shane",
+      playerAnswer: question.answer,
+      saveAvailable: true,
+    });
+    expect(correct.correct).toBe(true);
+    expect(correct.saveConsumed).toBe(false);
+    expect(correct.saved).toBe(false);
+
+    const wrongWithoutSave = resolveAverageFanPreviewAnswer({
+      question,
+      fan: "shane",
+      playerAnswer: "__definitely wrong__",
+      saveAvailable: false,
+    });
+    expect(wrongWithoutSave.correct).toBe(false);
+    expect(wrongWithoutSave.saveConsumed).toBe(false);
+    expect(wrongWithoutSave.saved).toBe(false);
+
+    const wrongWithSave = resolveAverageFanPreviewAnswer({
+      question,
+      fan: "shane",
+      playerAnswer: "__definitely wrong__",
+      saveAvailable: true,
+    });
+    expect(wrongWithSave.correct).toBe(false);
+    expect(wrongWithSave.saveConsumed).toBe(true);
+    expect(wrongWithSave.saved).toBe(wrongWithSave.fanAnswer.correct);
   });
 
   it("uses the locked money ladder and display helpers", () => {
