@@ -420,6 +420,10 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
 function authoredCfbQuestions() {
   return BAR_TRIVIA_QUESTION_BANK
     .filter((question) => question.league === "cfb")
+    .sort((a, b) => {
+      const currentEventOrder = Number(b.contentType === "current-event") - Number(a.contentType === "current-event");
+      return currentEventOrder || a.id.localeCompare(b.id);
+    })
     .map(authoredCfbQuestion);
 }
 
