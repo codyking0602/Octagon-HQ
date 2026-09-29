@@ -410,6 +410,27 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
 
 
 
+
+const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
+  ["00-cfp-four-team", 3, "CFB History", "The College Football Playoff began as a four-team playoff for the 2014 season.", true, "The CFP used a four-team field from the 2014 season through the 2023 season."],
+  ["01-cfp-first-number-one", 4, "CFB History", "Mississippi State was the first team ranked No. 1 by the College Football Playoff selection committee.", true, "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
+  ["02-cfp-2021-cincinnati", 4, "Programs", "Cincinnati made the four-team College Football Playoff after the 2021 season.", true, "Cincinnati earned the No. 4 seed in the 2021 season's CFP."],
+  ["03-champ-2003-split", 4, "CFB History", "The 2003 season ended with LSU and USC recognized by major selectors as national champions.", true, "LSU won the BCS title while USC finished No. 1 in the AP poll, producing a split championship."],
+].map(([id, grade, subject, prompt, answer, explanation]) => assertAverageFanQuestion({
+  id: `average-fan:cfb:authored:cfb-tf-${id}`,
+  sport: "cfb",
+  grade: grade as AverageFanGrade,
+  subject: subject as AverageFanSubject,
+  format: "true-false",
+  prompt: prompt as string,
+  answer: answer ? "True" : "False",
+  aliases: [],
+  explanation: explanation as string,
+  contentType: "evergreen",
+  difficultyNudge: 0,
+  protectedFinal: false,
+}));
+
 const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   ["00-player-mendoza", "Players", "Before his Heisman-winning championship season at Indiana, Fernando Mendoza played for which school?", "California", ["Stanford", "UCLA"], "Fernando Mendoza transferred from California to Indiana before his 2025 Heisman and national-title season."],
   ["01-player-woodson", "Players", "Which Tennessee quarterback finished behind Charles Woodson in the famous 1997 Heisman race?", "Peyton Manning", ["Tee Martin", "Danny Wuerffel"], "Peyton Manning finished second to Michigan's Charles Woodson in the 1997 Heisman voting."],
@@ -482,6 +503,7 @@ const CFB_CURRENT_EVENT_EXPANSION: readonly AverageFanQuestion[] = [
 
 function authoredCfbQuestions() {
   return [
+    ...CFB_CURATED_TRUE_FALSE,
     ...CFB_CURATED_FINALS,
     ...CFB_CURRENT_EVENT_EXPANSION,
     ...BAR_TRIVIA_QUESTION_BANK
