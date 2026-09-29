@@ -1,5 +1,5 @@
-import { queryFootballSubjects, type FootballSubjectProfile } from "../back-room/footballSubjectRegistry";
-import { ufcFactualLedgerSubjects, type UfcFactualSubject } from "../back-room/ufcFactualLedger";
+import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
+import { ufcFactualLedgerSubjects } from "../back-room/ufcFactualLedger";
 import { stableLineupHash } from "../play/lineupModel";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import type { BarTriviaQuestion } from "./barTriviaEngine";
@@ -22,6 +22,12 @@ export const AVERAGE_FAN_FINAL_TARGETS = {
   nfl: 15,
   cfb: 15,
   ufc: 30,
+} as const;
+
+export const AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS = {
+  nfl: 10,
+  cfb: 10,
+  ufc: 10,
 } as const;
 
 const FOOTBALL_GRADE_TARGETS: Record<AverageFanGrade, number> = {
@@ -360,6 +366,11 @@ function currentEventSubject(question: BarTriviaQuestion): AverageFanSubject {
 function currentEventCandidates(sport: AverageFanSport) {
   return BAR_TRIVIA_CURRENT_EVENT_QUESTIONS
     .filter((question) => question.league === sport)
+    .sort((a, b) => {
+      const activeCompare = (b.activeFrom ?? "").localeCompare(a.activeFrom ?? "");
+      return activeCompare || b.id.localeCompare(a.id);
+    })
+    .slice(0, AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS[sport])
     .map((question) => {
       const wrongChoices = question.choices.filter((choice) => choice !== question.answer);
       if (wrongChoices.length < 2) {
