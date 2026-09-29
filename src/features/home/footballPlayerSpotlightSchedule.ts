@@ -94,6 +94,42 @@ export const FOOTBALL_PLAYER_SPOTLIGHT_PAIRS: readonly FootballPlayerSpotlightPa
       },
     },
   },
+  {
+    id: "2026-09-29-jeremiah-bijan",
+    activatesAt: "2026-09-29T05:00:00.000Z",
+    spotlights: {
+      cfb: {
+        name: "Jeremiah Smith",
+        team: "Ohio State",
+        position: "WR",
+        stats: [
+          { value: "12", label: "REC" },
+          { value: "217", label: "REC YDS" },
+          { value: "4", label: "REC TD" },
+          { value: "72", label: "LONG" },
+        ],
+        result: "VS ILLINOIS · W 42–19",
+        measurements: "6'4\" · 222 LB",
+        teamColor: "#BB0000",
+        highlightUrl: "https://youtu.be/B26hQ2uCcnM?is=Y9LxDiKnKq3beGYS",
+      },
+      nfl: {
+        name: "Bijan Robinson",
+        team: "Atlanta Falcons",
+        position: "RB",
+        stats: [
+          { value: "194", label: "RUSH YDS" },
+          { value: "213", label: "SCRIM YDS" },
+          { value: "2", label: "RUSH TD" },
+          { value: "6.7", label: "YPC" },
+        ],
+        result: "AT GREEN BAY · W 35–14",
+        measurements: "5'11\" · 215 LB",
+        teamColor: "#A71930",
+        highlightUrl: "https://youtu.be/WqGyNkVhg6M?is=5p5DEmsrDRhSbfTR",
+      },
+    },
+  },
 ] as const;
 
 export const FOOTBALL_BASE_SPOTLIGHT_PAIR_ID = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[0].id;
@@ -103,6 +139,10 @@ export const FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES: FootballSpotlightPhotoSou
   "2026-09-22-trinidad-dak": {
     cfb: "/assets/football/player-spotlight/2026-09-22-trinidad-dak/cfb.webp",
     nfl: "/assets/football/player-spotlight/2026-09-22-trinidad-dak/nfl.webp",
+  },
+  "2026-09-29-jeremiah-bijan": {
+    cfb: "/assets/football/player-spotlight/2026-09-29-jeremiah-bijan/cfb.webp",
+    nfl: "/assets/football/player-spotlight/2026-09-29-jeremiah-bijan/nfl.webp",
   },
 };
 
