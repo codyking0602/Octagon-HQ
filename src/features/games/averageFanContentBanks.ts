@@ -741,19 +741,24 @@ function ufcCandidates() {
       }));
     }
 
-    const debutYear = Number(fighter.activeFrom.slice(0, 4));
-    if (Number.isFinite(debutYear)) {
-      questions.push(shortQuestion({
-        id: `average-fan:ufc:g5:${fighter.id}:debut-year`,
-        sport: "ufc",
-        grade: 5,
-        subject: "Fighters",
-        prompt: `In what year did ${fighter.name}'s UFC career begin?`,
-        answer: String(debutYear),
-        explanation: `${fighter.name}'s UFC career began in ${debutYear}.`,
-        fanMisses: [String(debutYear - 1), String(debutYear + 1)],
-        difficultyNudge: 2,
-      }));
+    if (wins.length >= 2) {
+      const firstAnchor = wins[stableOffset(`${fighter.id}:g5-anchor-a`, wins.length)]!;
+      const secondPool = wins.filter((fight) => fight.opponent !== firstAnchor.opponent);
+      const secondAnchor = secondPool[stableOffset(`${fighter.id}:g5-anchor-b`, Math.max(1, secondPool.length))];
+      if (secondAnchor) {
+        const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:two-win-identity`);
+        questions.push(shortQuestion({
+          id: `average-fan:ufc:g5:${fighter.id}:two-win-identity`,
+          sport: "ufc",
+          grade: 5,
+          subject: "Fighters",
+          prompt: `Which UFC fighter owns wins over both ${firstAnchor.opponent} and ${secondAnchor.opponent}?`,
+          answer: fighter.name,
+          explanation: `${fighter.name}'s UFC ledger includes wins over both ${firstAnchor.opponent} and ${secondAnchor.opponent}.`,
+          fanMisses: wrongNames,
+          difficultyNudge: 2,
+        }));
+      }
     }
 
     const titleFights = fighter.fights.filter((fight) => fight.titleFight);
@@ -796,17 +801,17 @@ function ufcCandidates() {
         protectedFinal: true,
       }));
     } else if (fighter.fights.length >= 5) {
-      const fight = fighter.fights[fighter.fights.length - 1]!;
-      const year = Number(fight.date.slice(0, 4));
+      const anchorA = fighter.fights[fighter.fights.length - 1]!;
+      const anchorB = fighter.fights[Math.max(0, fighter.fights.length - 3)]!;
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:final-fight`);
       questions.push(shortQuestion({
         id: `average-fan:ufc:final:${fighter.id}:fight`,
         sport: "ufc",
         grade: 5,
         subject: "Fights",
-        prompt: `Which fighter recorded a ${fight.result} against ${fight.opponent} in a UFC bout in ${year}?`,
+        prompt: `Which UFC fighter faced both ${anchorA.opponent} and ${anchorB.opponent}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} matches that opponent, year, and result in HQ's UFC factual ledger.`,
+        explanation: `${fighter.name}'s UFC ledger includes bouts against both ${anchorA.opponent} and ${anchorB.opponent}.`,
         fanMisses: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
