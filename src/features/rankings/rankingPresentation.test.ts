@@ -12,10 +12,10 @@ describe("ranking profile watch actions", () => {
     action: resolveProfileWatchAction(fighter.slug),
   }));
 
-  it("restores the V1 signature fights and uses RDA's canonical watch moment", () => {
-    expect(Object.keys(profileSignatureFightUrls)).toHaveLength(allTime.length - 1);
-    expect(actions.filter(({ action }) => action?.source === "signature")).toHaveLength(allTime.length - 1);
-    expect(actions.filter(({ action }) => action?.source === "watch-moment")).toHaveLength(1);
+  it("uses direct signature fights for the complete ranking roster", () => {
+    expect(Object.keys(profileSignatureFightUrls)).toHaveLength(allTime.length);
+    expect(actions.filter(({ action }) => action?.source === "signature")).toHaveLength(allTime.length);
+    expect(actions.filter(({ action }) => action?.source === "watch-moment")).toHaveLength(0);
     expect(actions.filter(({ action }) => action === null)).toHaveLength(0);
   });
 
@@ -33,6 +33,19 @@ describe("ranking profile watch actions", () => {
     });
     const duplicates = [...ownersByUrl.entries()].filter(([, slugs]) => slugs.length > 1);
     expect(duplicates).toEqual([]);
+  });
+
+  it("locks direct RDA and Joshua Van signature fights", () => {
+    expect(resolveProfileWatchAction("rafael-dos-anjos")).toMatchObject({
+      label: "Watch Signature Fight",
+      source: "signature",
+      url: "https://www.youtube.com/watch?v=2IEKGzUERI8",
+    });
+    expect(resolveProfileWatchAction("joshua-van")).toMatchObject({
+      label: "Watch Signature Fight",
+      source: "signature",
+      url: "https://www.youtube.com/watch?v=R2i-Jkmp110",
+    });
   });
 
   it("locks Max Holloway's full-fight destination", () => {
