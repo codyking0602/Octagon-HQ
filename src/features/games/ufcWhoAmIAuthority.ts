@@ -4,7 +4,12 @@ import {
 } from "../back-room/ufcFactualLedger";
 import { getUfcPersonIdentityKnowledge } from "../back-room/ufcPersonIdentityKnowledge";
 import { whoAmIClueSelectionClass, whoAmIIdentityKnowledgeClue } from "./whoAmIClueAssembler";
-import { isUfcWhoAmICalibrationSubject, shouldUseUfcWhoAmIIdentityConcept, ufcWhoAmIIdentityFacetOverride } from "./ufcWhoAmICuration";
+import {
+  UFC_WHO_AM_I_CALIBRATION_SUBJECT_IDS,
+  isUfcWhoAmICalibrationSubject,
+  shouldUseUfcWhoAmIIdentityConcept,
+  ufcWhoAmIIdentityFacetOverride,
+} from "./ufcWhoAmICuration";
 import {
   createWhoAmIRound,
   type WhoAmICandidate,
@@ -133,12 +138,21 @@ const canonicalUfcUniverse: WhoAmIUniverse = {
 };
 
 // The authored cutover expanded the canonical universe from 100 to 133. Keep
-// the legacy generated selector pinned to the original first 100 subjects so
-// pre-cutover Daily materializations and legacy Casual boards do not drift.
+// the legacy generated selector pinned by the reviewed 100 subject identities,
+// not by ledger position, so ranking promotions cannot drift the legacy pool.
+const factualSubjectById = new Map(
+  ufcFactualLedgerSubjects.map((subject) => [subject.id, subject]),
+);
 const legacyUfcUniverse: WhoAmIUniverse = {
   sport: "ufc",
   league: "UFC",
-  candidates: ufcFactualLedgerSubjects.slice(0, 100).map(ufcCandidate),
+  candidates: UFC_WHO_AM_I_CALIBRATION_SUBJECT_IDS.map((subjectId) => {
+    const subject = factualSubjectById.get(subjectId);
+    if (!subject) {
+      throw new Error(`Missing legacy UFC Who Am I subject ${subjectId}.`);
+    }
+    return ufcCandidate(subject);
+  }),
 };
 
 export function getUfcWhoAmIUniverse() {
