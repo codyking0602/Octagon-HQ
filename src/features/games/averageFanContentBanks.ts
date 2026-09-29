@@ -469,7 +469,7 @@ function footballCandidates(league: "NFL" | "CFB") {
             : `Name one NFL team ${player.name} played for.`,
           answer,
           aliases: teams.slice(1),
-          explanation: `${player.name}'s canonical NFL career includes ${teams.join(", ")}.`,
+          explanation: `${player.name}'s NFL career included ${teams.join(", ")}.`,
           fanMisses: wrongTeams,
         }));
       }
@@ -602,7 +602,7 @@ function footballCandidates(league: "NFL" | "CFB") {
           subject: "CFB History",
           prompt: `Which ${position} from ${player.school} matches this résumé: ${player.heismanWinner ? "Heisman Trophy winner" : "national champion"}?`,
           answer: player.name,
-          explanation: `${player.name} is the matching ${player.school} ${position} in HQ's canonical registry.`,
+          explanation: `${player.name} matches that ${player.school} ${position} résumé.`,
           fanMisses: wrongNames,
           difficultyNudge: 3,
           protectedFinal: true,
@@ -751,7 +751,7 @@ function ufcCandidates() {
         prompt: `Name one opponent ${fighter.name} beat by ${methodLabel(methodFight.methodCategory)} in the UFC.`,
         answer,
         aliases: sameMethodOpponents.slice(1),
-        explanation: `${fighter.name}'s UFC ledger includes a ${methodLabel(methodFight.methodCategory)} win over ${answer}.`,
+        explanation: `${fighter.name} beat ${answer} by ${methodLabel(methodFight.methodCategory)} in the UFC.`,
         fanMisses: wrongOpponents,
         difficultyNudge: 1,
       }));
@@ -822,7 +822,7 @@ function ufcCandidates() {
         subject: "Fights",
         prompt: `Which fighter recorded a ${fight.result} against ${fight.opponent} in a UFC bout in ${year}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} matches that opponent, year, and result in HQ's UFC factual ledger.`,
+        explanation: `${fighter.name} recorded that ${fight.result} against ${fight.opponent} in ${year}.`,
         fanMisses: wrongNames,
         difficultyNudge: 3,
         protectedFinal: true,
