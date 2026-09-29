@@ -59,8 +59,23 @@ function stableOffset(key: string, length: number) {
   return length ? stableLineupHash(key) % length : 0;
 }
 
-function peerValues(values: readonly string[], answer: string, key: string, count = 2) {
-  const pool = unique(values).filter((value) => value !== answer).sort();
+function normalizeAcceptedValue(value: string) {
+  return value.trim().toLocaleLowerCase().replace(/\\s+/g, " ");
+}
+
+function peerValues(
+  values: readonly string[],
+  acceptedAnswers: string | readonly string[],
+  key: string,
+  count = 2,
+) {
+  const accepted = new Set(
+    (typeof acceptedAnswers === "string" ? [acceptedAnswers] : acceptedAnswers)
+      .map(normalizeAcceptedValue),
+  );
+  const pool = unique(values)
+    .filter((value) => !accepted.has(normalizeAcceptedValue(value)))
+    .sort();
   if (pool.length < count) {
     throw new Error(`Average Fan content bank does not have enough peers for ${key}.`);
   }
@@ -375,7 +390,7 @@ function footballCandidates(league: "NFL" | "CFB") {
       const teams = unique((player.franchises ?? []).map(displayNflTeam));
       if (teams.length) {
         const answer = teams[0]!;
-        const wrongTeams = peerValues(nflTeams, answer, `${player.id}:team`);
+        const wrongTeams = peerValues(nflTeams, teams, `${player.id}:team`);
         questions.push(shortQuestion({
           id: `average-fan:nfl:g3:${player.id}:team`,
           sport: "nfl",
@@ -651,7 +666,7 @@ function ufcCandidates() {
         .filter((fight) => fight.methodCategory === methodFight.methodCategory)
         .map((fight) => fight.opponent);
       const answer = sameMethodOpponents[0]!;
-      const wrongOpponents = peerValues(fighterNames, answer, `${fighter.id}:method-opponent`);
+      const wrongOpponents = peerValues(fighterNames, sameMethodOpponents, `${fighter.id}:method-opponent`);
       questions.push(shortQuestion({
         id: `average-fan:ufc:g4:${fighter.id}:method-win`,
         sport: "ufc",
