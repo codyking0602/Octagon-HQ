@@ -12,8 +12,8 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
   it("pins the raw UFCStats export provenance used to build the checked-in snapshot", () => {
     expect(ufcStatsSupplementalFactsSnapshot.provenance.core).toEqual({
       repository: "Greco1899/scrape_ufc_stats",
-      commit: "8e40eb945e1127bf0ef172ab211a34787948f312",
-      refreshedAt: "2026-08-18",
+      commit: "a3c5452eee2f5bb4f5eae4ce958f0f23dd8863d8",
+      refreshedAt: "2026-09-20",
       files: [
         "ufc_event_details.csv",
         "ufc_fight_details.csv",
@@ -61,7 +61,7 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
           observedUnreconciled.push(`${fighter.fighter}|${fight.id}`);
           expect(snapshotRow).toEqual({
             reconciliation: "unavailable",
-            source: { provider: "ufcstats", checkedAt: "2026-08-18" },
+            source: { provider: "ufcstats", checkedAt: "2026-09-20" },
             reason: "no-unique-source-match",
           });
           expect(fight.supplementalFacts).toBeUndefined();
@@ -75,7 +75,7 @@ describe("canonical UFCStats supplemental fight snapshot", () => {
         expect(supplemental?.source.provider).toBe("ufcstats");
         expect(supplemental?.source.eventId).toMatch(/^[a-z0-9]+$/i);
         expect(supplemental?.source.fightId).toMatch(/^[a-z0-9]+$/i);
-        expect(supplemental?.source.checkedAt).toBe("2026-08-18");
+        expect(supplemental?.source.checkedAt).toBe("2026-09-20");
         expect(supplemental?.mainEvent.status).toBe("verified");
 
         if (supplemental?.bonuses.status === "verified") verifiedBonusRows += 1;
