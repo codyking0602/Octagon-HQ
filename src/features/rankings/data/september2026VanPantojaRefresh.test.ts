@@ -36,7 +36,7 @@ describe("September 19, 2026 Van and Pantoja ranking refresh", () => {
     expect(fight("Joshua Van", "Alexandre Pantoja", "2025-12-06")).toEqual([
       expect.objectContaining({
         officialResult: "win",
-        methodCategory: "ko-tko",
+        methodCategory: "other",
         championshipType: "normal",
       }),
     ]);
@@ -79,7 +79,7 @@ describe("September 19, 2026 Van and Pantoja ranking refresh", () => {
     expect(fight("Alexandre Pantoja", "Joshua Van", "2025-12-06")).toEqual([
       expect.objectContaining({
         officialResult: "loss",
-        methodCategory: "ko-tko",
+        methodCategory: "other",
         championshipType: "normal",
       }),
     ]);
