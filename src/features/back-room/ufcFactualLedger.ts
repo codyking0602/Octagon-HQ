@@ -115,10 +115,15 @@ function rankedSubjects(): UfcFactualSubject[] {
 }
 
 function expansionSubjects(): UfcFactualSubject[] {
-  return ufcFactualExpansion.subjects.map((subject) => ({
-    ...subject,
-    scope: "recognizable-expansion",
-  }));
+  const rankedSlugs = new Set(
+    canonicalRankingInputs.fighters.map((fighter) => fighter.presentation.slug),
+  );
+  return ufcFactualExpansion.subjects
+    .filter((subject) => !rankedSlugs.has(subject.slug))
+    .map((subject) => ({
+      ...subject,
+      scope: "recognizable-expansion",
+    }));
 }
 
 function normalizeIdentity(value: string) {
