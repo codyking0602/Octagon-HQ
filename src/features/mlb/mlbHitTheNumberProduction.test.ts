@@ -11,7 +11,7 @@ import {
 describe("MLB Hit the Number October 12 production", () => {
   it("locks the approved challenge identity and two five-of-fourteen HR boards", () => {
     expect(MLB_HIT_NUMBER_PRODUCTION_CHALLENGE_KEY).toBe("mlb-2026-play-07");
-    expect(MLB_HIT_NUMBER_PRODUCTION_DATE).toBe("2026-10-12");
+    expect(MLB_HIT_NUMBER_PRODUCTION_DATE).toBe("2026-10-17");
     expect(MLB_HIT_NUMBER_PRODUCTION_CONFIG.games).toHaveLength(2);
 
     MLB_HIT_NUMBER_PRODUCTION_CONFIG.games.forEach((game) => {

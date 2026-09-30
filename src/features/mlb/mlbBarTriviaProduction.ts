@@ -1,7 +1,7 @@
 import { barTriviaQuestion, type BarTriviaDoubleRound, type BarTriviaQuestion } from "../games/barTriviaEngine";
 
 export const MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-11";
-export const MLB_BAR_TRIVIA_PRODUCTION_DATE = "2026-10-21";
+export const MLB_BAR_TRIVIA_PRODUCTION_DATE = "2026-10-11";
 export const MLB_BAR_TRIVIA_DOUBLE_ROUND: BarTriviaDoubleRound = "round2";
 
 export const MLB_BAR_TRIVIA_PRODUCTION_RUN = [
