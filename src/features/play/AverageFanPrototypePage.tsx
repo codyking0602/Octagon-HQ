@@ -88,7 +88,7 @@ function measureAverageFanLargeViewport() {
   };
 }
 
-function useAverageFanOpeningStageScale() {
+export function useAverageFanOpeningStageScale() {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
