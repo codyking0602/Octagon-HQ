@@ -15,6 +15,7 @@ const gameTypeSchema = z.enum([
   "millionaire",
   "sports_feud",
   "bar_trivia",
+  "average_fan",
 ]);
 const attemptSchema = z.object({
   native_score: z.coerce.number().int(),
@@ -100,6 +101,7 @@ const standingsEntrySchema = z.object({
     millionaire: z.coerce.number().nullable().optional(),
     sports_feud: z.coerce.number().nullable().optional(),
     bar_trivia: z.coerce.number().nullable().optional(),
+    average_fan: z.coerce.number().nullable().optional(),
   }),
   is_current_user: z.boolean(),
   weekly_rank: z.coerce.number().int().positive(),
