@@ -154,7 +154,12 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-hit-the-number.generated.mjs');
     expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-comparison.generated.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs');
-    expect(backendWorkflow).toContain('supabase functions deploy daily-challenge-runtime');
-    expect(backendWorkflow).toContain('--use-api');
+    expect(backendWorkflow).toContain(
+      'supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-docker',
+    );
+    expect(backendWorkflow).toContain('SUPABASE_INTERNAL_IMAGE_REGISTRY: ghcr.io');
+    expect(backendWorkflow).toContain(
+      'supabase functions deploy deliver-notification-push --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api',
+    );
   });
 });
