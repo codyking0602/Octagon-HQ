@@ -186,7 +186,7 @@ describe("branded pull-to-refresh", () => {
     expect(region!.style.getPropertyValue("--pull-refresh-distance")).toBe("0px");
   });
 
-  it("never captures interactive controls inside the page-content region", () => {
+  it("keeps the START GAME 2 control tappable inside the page-content region", () => {
     const startGameTwo = vi.fn();
     const { container } = render(
       <MemoryRouter initialEntries={["/football"]}>
