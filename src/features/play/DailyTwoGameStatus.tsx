@@ -95,6 +95,35 @@ export interface DailyTwoGamePresentationIntermissionState {
   firstScore: number;
 }
 
+const DAILY_TWO_GAME_HANDOFF_STORAGE_PREFIX = "octagon-hq:daily-two-game-handoff:";
+
+function handoffStorage(storage?: Storage) {
+  if (storage) return storage;
+  return typeof window !== "undefined" ? window.sessionStorage : null;
+}
+
+export function dailyTwoGamePresentationHandoffWasDismissed(
+  key: string,
+  storage?: Storage,
+) {
+  try {
+    return handoffStorage(storage)?.getItem(`${DAILY_TWO_GAME_HANDOFF_STORAGE_PREFIX}${key}`) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function rememberDailyTwoGamePresentationHandoff(
+  key: string,
+  storage?: Storage,
+) {
+  try {
+    handoffStorage(storage)?.setItem(`${DAILY_TWO_GAME_HANDOFF_STORAGE_PREFIX}${key}`, "1");
+  } catch {
+    // Presentation persistence must never block gameplay.
+  }
+}
+
 export function dailyTwoGamePresentationIntermissionState(
   projection: TodayChallengeProjection,
 ): DailyTwoGamePresentationIntermissionState | null {
