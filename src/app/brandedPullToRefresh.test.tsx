@@ -111,6 +111,10 @@ describe("branded pull-to-refresh", () => {
     expect(styles).toContain("pull-refresh-logo-flash");
   });
 
+  it("keeps Average Fan outside the pull-to-refresh clipping and transform shell", () => {
+    expect(appShell).toMatch(/\{isAverageFanGame \? \(\s*<main[\s\S]*?<Outlet \/>[\s\S]*?\) : \(\s*<BrandedPullToRefresh>/);
+  });
+
   it("moves the page content with the finger and refreshes through the existing owners", async () => {
     let finishNotification!: (value: boolean) => void;
     refreshMocks.notifications.mockImplementationOnce(() => new Promise<boolean>((resolve) => {

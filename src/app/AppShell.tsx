@@ -253,14 +253,23 @@ export function AppShell() {
         </header>
       )}
 
-      <BrandedPullToRefresh>
+      {isAverageFanGame ? (
         <main className={`app-content${isGame ? " app-content--game" : ""}`}>
           <Suspense fallback={<RouteLoading />}>
             <Outlet />
           </Suspense>
           <ProfilePushSettingRoute />
         </main>
-      </BrandedPullToRefresh>
+      ) : (
+        <BrandedPullToRefresh>
+          <main className={`app-content${isGame ? " app-content--game" : ""}`}>
+            <Suspense fallback={<RouteLoading />}>
+              <Outlet />
+            </Suspense>
+            <ProfilePushSettingRoute />
+          </main>
+        </BrandedPullToRefresh>
+      )}
 
       {isBackRoom || isMillionaireGame || isAverageFanGame ? null : <BottomNavigation themeScope={themeScope} />}
     </div>

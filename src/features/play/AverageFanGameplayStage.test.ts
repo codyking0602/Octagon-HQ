@@ -173,7 +173,7 @@ describe("Average Fan locked gameplay stage", () => {
   });
 
   it("fills the baked yellow grade frame with the live blue grade pill", () => {
-    expect(pageCss).toMatch(/\/\* Average Fan gameplay stage plate[\s\S]*?\.average-fan-question-card header b \{[\s\S]*?left: 14px;[\s\S]*?top: 9px;[\s\S]*?width: 242px;[\s\S]*?height: 66px;[\s\S]*?font-size: 22px;/);
+    expect(pageCss).toMatch(/\/\* Average Fan gameplay stage plate[\s\S]*?\.average-fan-question-card header b \{[\s\S]*?left: 14px;[\s\S]*?top: 9px;[\s\S]*?width: 254px;[\s\S]*?height: 76px;[\s\S]*?font-size: 22px;/);
   });
 
   it("keeps all answer formats below the chalkboard and keyboard-safe", () => {
@@ -204,6 +204,7 @@ describe("Average Fan locked gameplay stage", () => {
     expect(routerSource).toContain('path: "play/average-fan"');
     expect(routerSource).toContain('<AverageFanPrototypePage />');
     expect(appShellSource).toContain('location.pathname === "/play/average-fan"');
+    expect(appShellSource).toMatch(/\{isAverageFanGame \? \(\s*<main[\s\S]*?<Outlet \/>[\s\S]*?\) : \(\s*<BrandedPullToRefresh>/);
   });
 
   it("keeps the gameplay screen landscape-only and chalk-first", () => {
