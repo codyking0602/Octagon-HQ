@@ -24,11 +24,12 @@ export const AVERAGE_FAN_DAILY_CONTENT_VERSION = "average-fan-daily-v1" as const
 export const AVERAGE_FAN_DAILY_SCORING_VERSION = "average-fan-score-v1" as const;
 
 type AverageFanDailyScope = "ufc" | "football";
+type AverageFanDailySport = Exclude<AverageFanSport, "mlb">;
 type JsonRecord = Record<string, unknown>;
 
 interface AverageFanPublicationHistoryRow {
   day: string;
-  sport: AverageFanSport;
+  sport: AverageFanDailySport;
   questionIds: string[];
   finalQuestionId: string | null;
 }
@@ -81,7 +82,7 @@ function recentHistory(history: readonly AverageFanPublicationHistoryRow[], day:
   });
 }
 
-function dailySport(scope: AverageFanDailyScope, history: readonly AverageFanPublicationHistoryRow[]): AverageFanSport {
+function dailySport(scope: AverageFanDailyScope, history: readonly AverageFanPublicationHistoryRow[]): AverageFanDailySport {
   if (scope === "ufc") return "ufc";
   const footballAppearances = history.filter((row) => row.sport === "nfl" || row.sport === "cfb").length;
   return footballAppearances % 2 === 0 ? "cfb" : "nfl";
@@ -96,7 +97,7 @@ function deterministicOrder<T extends { id: string }>(rows: readonly T[], seed: 
 }
 
 function boardFor(
-  sport: AverageFanSport,
+  sport: AverageFanDailySport,
   day: string,
   scheduleVersion: string,
   history: readonly AverageFanPublicationHistoryRow[],
@@ -163,7 +164,7 @@ function boardFor(
 }
 
 function finalFor(
-  sport: AverageFanSport,
+  sport: AverageFanDailySport,
   day: string,
   scheduleVersion: string,
   history: readonly AverageFanPublicationHistoryRow[],
