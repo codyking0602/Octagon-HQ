@@ -60,8 +60,8 @@ const AVERAGE_FAN_PORTRAITS: Record<AverageFanFan, string> = {
   troy: "/assets/average-fan/average-fan-troy.png",
 };
 const AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION =
-  AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "three-choice" && question.grade === 3)
-  ?? AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "three-choice")
+  AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "four-choice" && question.grade === 3)
+  ?? AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "four-choice")
   ?? AVERAGE_FAN_UFC_PREVIEW_BOARD[0]!;
 
 function useAverageFanOpeningStageScale() {
@@ -496,7 +496,7 @@ function QuestionAnswerControl({
   onChange: (value: string) => void;
   onSubmit: (value?: string) => void;
 }) {
-  if (question.format === "three-choice") {
+  if (question.format === "four-choice") {
     return (
       <div className="average-fan-choice-grid" data-choice-count={question.choices!.length}>
         {question.choices!.map((choice, index) => (
