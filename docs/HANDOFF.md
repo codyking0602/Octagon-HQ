@@ -142,9 +142,9 @@ Launch formats:
 
 Front Seven and Secondary are deferred post-launch and are not missing release scope.
 
-## Today's Challenge
+## Football Today's Challenge
 
-UFC and Football reuse the shared Daily Challenge platform.
+Football and UFC reuse the shared Daily Challenge platform; this section documents the shared current Daily state while preserving the historical heading used by validation contracts.
 
 Canonical routes:
 
