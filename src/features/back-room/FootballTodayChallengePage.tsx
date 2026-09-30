@@ -7,8 +7,10 @@ import { OfficialMillionaireDailyView } from "../play/OfficialMillionaireDailyVi
 import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView";
 import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
 import {
+  DailyTwoGamePresentationIntermission,
   DailyTwoGameStatus,
   dailyTwoGameActiveScore,
+  dailyTwoGamePresentationIntermissionState,
   dailyTwoGameSeriesState,
 } from "../play/DailyTwoGameStatus";
 import {
@@ -365,6 +367,8 @@ function BlindResume({ projection, advance }: GameProps) {
 
 function Wavelength({ projection, advance, busy }: GameProps & { busy: boolean }) {
   const [guess, setGuess] = useState(50);
+  const series = dailyTwoGameSeriesState(projection);
+  useEffect(() => setGuess(50), [series?.gameIndex]);
   const state = projection.publicState;
   const guesses = Array.isArray(state.guesses) ? state.guesses.map(Number) : [];
   const reveal = record(state.reveal);
@@ -588,6 +592,7 @@ export default function FootballTodayChallengePage() {
   const [weeklyBusy, setWeeklyBusy] = useState(false);
   const [weeklyError, setWeeklyError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
+  const [dismissedTwoGameHandoff, setDismissedTwoGameHandoff] = useState<string | null>(null);
   const weeklyGateActive = Boolean(
     weeklyState?.available
     && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
@@ -744,6 +749,26 @@ export default function FootballTodayChallengePage() {
 
   const blindResume = projection.gameType === "blind_resume";
   const twoGameSeries = dailyTwoGameSeriesState(projection);
+  const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
+
+  if (
+    presentationHandoff
+    && dismissedTwoGameHandoff !== presentationHandoff.key
+  ) {
+    return (
+      <div className="page football-debate-page football-wavelength-page wavelength-page--football">
+        {weeklyEditControl}
+        {error ? <div className="football-today-error">{error}</div> : null}
+        <DailyTwoGamePresentationIntermission
+          projection={projection}
+          onContinue={() => {
+            setDismissedTwoGameHandoff(presentationHandoff.key);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+      </div>
+    );
+  }
 
   if (twoGameSeries?.awaitingNext) {
     return (
