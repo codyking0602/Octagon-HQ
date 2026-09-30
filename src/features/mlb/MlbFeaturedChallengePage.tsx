@@ -5,6 +5,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import {
   MLB_FIND_LEADER_PRODUCTION_BOARDS,
   formatMlbFindLeaderValue,
+  mlbFindLeaderProductionBoards,
   type MlbFindLeaderBoard,
 } from "./mlbFindLeaderProduction";
 import {
@@ -31,18 +32,10 @@ import {
   MLB_BLIND_RESUME_PRODUCTION_DATE,
 } from "./mlbBlindResumeProduction";
 import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
-import {
-  MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY,
-  MLB_WHO_AM_I_PRODUCTION_DATE,
-} from "./mlbWhoAmIProduction";
+import { mlbWhoAmIProductionConfig } from "./mlbWhoAmIProduction";
 import MillionaireCasualPage, { type MillionaireCasualSettledResult } from "../play/MillionaireCasualPage";
 import BarTriviaCasualPage, { type BarTriviaSettledResult } from "../play/BarTriviaCasualPage";
-import {
-  MLB_BAR_TRIVIA_DOUBLE_ROUND,
-  MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY,
-  MLB_BAR_TRIVIA_PRODUCTION_DATE,
-  MLB_BAR_TRIVIA_PRODUCTION_RUN,
-} from "./mlbBarTriviaProduction";
+import { mlbBarTriviaProductionConfig } from "./mlbBarTriviaProduction";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -145,10 +138,13 @@ export default function MlbFeaturedChallengePage() {
   const [completedGames, setCompletedGames] = useState<CompletedGame[]>([]);
   const [recording, setRecording] = useState(false);
   const [recordError, setRecordError] = useState("");
-  const board = MLB_FIND_LEADER_PRODUCTION_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PRODUCTION_BOARDS[0]!;
+  const findLeaderBoards = challenge?.game_type === "find_leader"
+    ? mlbFindLeaderProductionBoards(challenge.id, challenge.date ?? "") ?? MLB_FIND_LEADER_PRODUCTION_BOARDS
+    : MLB_FIND_LEADER_PRODUCTION_BOARDS;
+  const board = findLeaderBoards[boardIndex] ?? findLeaderBoards[0]!;
   const leader = boardLeader(board);
   const eliminatedSet = useMemo(() => new Set(eliminated), [eliminated]);
-  const finalScore = completedScores.length === MLB_FIND_LEADER_PRODUCTION_BOARDS.length
+  const finalScore = completedScores.length === findLeaderBoards.length
     ? Math.round(completedScores.reduce((sum, score) => sum + score, 0) / completedScores.length)
     : null;
 
@@ -290,7 +286,7 @@ export default function MlbFeaturedChallengePage() {
     setCompletedScores(nextScores);
     setCompletedGames(nextGames);
 
-    const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
+    const isLastBoard = boardIndex === findLeaderBoards.length - 1;
     if (isLastBoard && !practiceMode) {
       const score = Math.round(nextScores.reduce((sum, value) => sum + value, 0) / nextScores.length);
       void saveOfficialResult(score, nextGames);
@@ -313,7 +309,7 @@ export default function MlbFeaturedChallengePage() {
     }
   }
 
-  const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
+  const isLastBoard = boardIndex === findLeaderBoards.length - 1;
   const savedResult = overview?.ownResult ?? null;
 
   if (previewMode) {
@@ -350,10 +346,9 @@ export default function MlbFeaturedChallengePage() {
   }
 
   if (challenge.game_type === "who_am_i") {
-    const isProductionWhoAmI = challenge.id === MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY
-      && challenge.date === MLB_WHO_AM_I_PRODUCTION_DATE;
+    const whoAmIConfig = mlbWhoAmIProductionConfig(challenge.id, challenge.date ?? "");
 
-    if (!isProductionWhoAmI) {
+    if (!whoAmIConfig) {
       return (
         <div className="page mlb-find-leader-page">
           <section className="mlb-find-saved-result">
@@ -372,7 +367,7 @@ export default function MlbFeaturedChallengePage() {
       <MlbWhoAmIProductionChallenge
         key={challenge.id}
         season={liveHub?.season ?? 2026}
-        challengeKey={challenge.id}
+        config={whoAmIConfig}
       />
     );
   }
@@ -541,10 +536,9 @@ export default function MlbFeaturedChallengePage() {
   }
 
   if (challenge.game_type === "bar_trivia") {
-    const isProductionBarTrivia = challenge.id === MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY
-      && challenge.date === MLB_BAR_TRIVIA_PRODUCTION_DATE;
+    const barTriviaConfig = mlbBarTriviaProductionConfig(challenge.id, challenge.date ?? "");
 
-    if (!isProductionBarTrivia) {
+    if (!barTriviaConfig) {
       return (
         <div className="page mlb-find-leader-page">
           <section className="mlb-find-saved-result">
@@ -598,8 +592,8 @@ export default function MlbFeaturedChallengePage() {
     return (
       <BarTriviaCasualPage
         scope="mlb"
-        runOverride={MLB_BAR_TRIVIA_PRODUCTION_RUN}
-        doubleRoundOverride={MLB_BAR_TRIVIA_DOUBLE_ROUND}
+        runOverride={barTriviaConfig.run}
+        doubleRoundOverride={barTriviaConfig.doubleRound}
         onSettled={(nextResult) => void saveOfficialBarTriviaResult(nextResult)}
         resultActions={(
           <button className="bar-trivia__primary" type="button" onClick={() => navigate("/mlb")} disabled={recording}>
@@ -678,9 +672,9 @@ export default function MlbFeaturedChallengePage() {
 
   return (
     <div className="page football-find-leader-page mlb-find-leader-page">
-      <div className="mlb-find-series-progress" aria-label={`Game ${boardIndex + 1} of ${MLB_FIND_LEADER_PRODUCTION_BOARDS.length}`}>
+      <div className="mlb-find-series-progress" aria-label={`Game ${boardIndex + 1} of ${findLeaderBoards.length}`}>
         <span>FIND THE LEADER</span>
-        <strong>GAME {boardIndex + 1} OF {MLB_FIND_LEADER_PRODUCTION_BOARDS.length}</strong>
+        <strong>GAME {boardIndex + 1} OF {findLeaderBoards.length}</strong>
       </div>
 
       <FootballFindLeaderPresentation
