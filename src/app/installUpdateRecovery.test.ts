@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   forceRefreshLatestBuild,
   installUpdateRecovery,
+  recoverRuntimeDeploymentMismatch,
   isRecoverableRouteLoadError,
   recoverRouteLoadError,
 } from "./installUpdateRecovery";
@@ -36,6 +37,41 @@ describe("deployment update recovery", () => {
 
     expect(reload).toHaveBeenCalledTimes(1);
     remove();
+  });
+
+  it("reloads a stale Daily bundle only when the runtime SHA matches the live frontend", async () => {
+    const navigate = vi.fn();
+    const recovered = await recoverRuntimeDeploymentMismatch({
+      runtimeSha: NEXT_SHA,
+      runningSha: RUNNING_SHA,
+      fetchDeploymentSha: vi.fn().mockResolvedValue(NEXT_SHA),
+      href: "https://the.hq-app.workers.dev/football/today",
+      storage: window.sessionStorage,
+      navigate,
+      now: () => 19_000,
+      productionOrigin: PRODUCTION_ORIGIN,
+    });
+
+    expect(recovered).toBe(true);
+    expect(navigate).toHaveBeenCalledWith(
+      `https://the.hq-app.workers.dev/football/today?hq-update=${NEXT_SHA}`,
+    );
+  });
+
+  it("does not reload when the runtime and live frontend are temporarily on different SHAs", async () => {
+    const navigate = vi.fn();
+    const recovered = await recoverRuntimeDeploymentMismatch({
+      runtimeSha: NEXT_SHA,
+      runningSha: RUNNING_SHA,
+      fetchDeploymentSha: vi.fn().mockResolvedValue(RUNNING_SHA),
+      href: "https://the.hq-app.workers.dev/football/today",
+      storage: window.sessionStorage,
+      navigate,
+      productionOrigin: PRODUCTION_ORIGIN,
+    });
+
+    expect(recovered).toBe(false);
+    expect(navigate).not.toHaveBeenCalled();
   });
 
   it("reloads when the live deployment is newer than the running bundle", async () => {
