@@ -32,6 +32,9 @@ import {
   MLB_BLIND_RESUME_PRODUCTION_DATE,
 } from "./mlbBlindResumeProduction";
 import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
+import MlbAverageFanChallenge from "./MlbAverageFanChallenge";
+import { mlbAverageFanProductionConfig } from "./mlbAverageFanProduction";
+import type { AverageFanSettledResult } from "../play/AverageFanPrototypePage";
 import { mlbWhoAmIProductionConfig } from "./mlbWhoAmIProduction";
 import MillionaireCasualPage, { type MillionaireCasualSettledResult } from "../play/MillionaireCasualPage";
 import BarTriviaCasualPage, { type BarTriviaSettledResult } from "../play/BarTriviaCasualPage";
@@ -126,7 +129,12 @@ export default function MlbFeaturedChallengePage() {
       && !previewMode
       && challenge?.ready === true
       && challenge?.is_live === true
-      && (challenge?.game_type === "find_leader" || challenge?.game_type === "millionaire" || challenge?.game_type === "bar_trivia"),
+      && (
+        challenge?.game_type === "find_leader"
+        || challenge?.game_type === "millionaire"
+        || challenge?.game_type === "bar_trivia"
+        || challenge?.game_type === "average_fan"
+      ),
     season: liveHub?.season ?? 2026,
     challengeKey,
   });
@@ -268,6 +276,42 @@ export default function MlbFeaturedChallengePage() {
     }
   }
 
+  async function saveOfficialAverageFanResult(result: AverageFanSettledResult) {
+    setRecording(true);
+    setRecordError("");
+    try {
+      await recordMlbPlayChallengeResult({
+        season: liveHub?.season ?? 2026,
+        challengeKey,
+        rawScore: result.score,
+        gameType: "average_fan",
+        publicResult: {
+          score: result.score,
+          board_score: result.boardScore,
+          board_clears: result.boardClears,
+          saves: result.saves,
+          final_outcome: result.finalOutcome,
+          final_money: result.finalMoney,
+          fan: result.fan,
+        },
+        resultDetail: {
+          score: result.score,
+          board_score: result.boardScore,
+          board_clears: result.boardClears,
+          saves: result.saves,
+          final_outcome: result.finalOutcome,
+          final_money: result.finalMoney,
+          fan: result.fan,
+        },
+      });
+      await reloadOverview();
+    } catch (nextError) {
+      setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Average Fan result could not be recorded.");
+    } finally {
+      setRecording(false);
+    }
+  }
+
   function finishBoard(nextResult: ResultState, eliminatedIds: string[]) {
     const fatal = nextResult.fatalId
       ? board.candidates.find((candidate) => candidate.id === nextResult.fatalId) ?? null
@@ -368,6 +412,84 @@ export default function MlbFeaturedChallengePage() {
         key={challenge.id}
         season={liveHub?.season ?? 2026}
         config={whoAmIConfig}
+      />
+    );
+  }
+
+  if (challenge.game_type === "average_fan") {
+    const averageFanConfig = mlbAverageFanProductionConfig(challenge.id, challenge.date ?? "");
+
+    if (!averageFanConfig) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Average Fan date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    if (overviewLoading && !overview && !practiceMode) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>Loading your challenge…</h1>
+          </section>
+        </div>
+      );
+    }
+
+    if (savedResult && !practiceMode) {
+      const clears = Number(savedResult.publicResult.board_clears ?? 0);
+      const saves = Number(savedResult.publicResult.saves ?? 0);
+      const finalOutcome = String(savedResult.publicResult.final_outcome ?? "");
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">OFFICIAL RESULT</p>
+            <h1>Are You Smarter Than an Average Fan?</h1>
+            <strong>{savedResult.rawScore}<small>/100</small></strong>
+            <div className="mlb-find-saved-result__games">
+              <span><small>BOARD CLEARS</small><b>{clears}/10</b></span>
+              <span><small>SAVES</small><b>{saves}</b></span>
+              <span><small>FINAL</small><b>{finalOutcome.replace("-", " ").toUpperCase() || "—"}</b></span>
+            </div>
+            <p>Your official score is locked. Replays do not change the postseason standings.</p>
+            {recordError ? <p>{recordError}</p> : null}
+            <div className="mlb-find-final-actions">
+              <button
+                className="primary-action"
+                type="button"
+                onClick={() => {
+                  setPracticeMode(true);
+                  setRecordError("");
+                }}
+              >
+                PLAY AGAIN
+              </button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+                MLB PLAY
+              </button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <MlbAverageFanChallenge
+        key={challenge.id}
+        config={averageFanConfig}
+        onExit={() => navigate("/mlb")}
+        onSettled={(nextResult) => {
+          if (!practiceMode) void saveOfficialAverageFanResult(nextResult);
+        }}
       />
     );
   }
