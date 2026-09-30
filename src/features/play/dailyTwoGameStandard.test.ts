@@ -13,6 +13,7 @@ import {
 import { buildFootballDailyPersistenceSetup as buildFootballWavelengthDaily } from "./footballDailyPublicationWavelength";
 import { buildFootballDailyPersistenceSetup as buildFootballFindLeaderDaily } from "./footballDailyPublicationFindLeader";
 import { buildFootballDailyPersistenceSetup as buildFootballHitNumberDaily } from "./footballDailyPublicationHitNumber";
+import { advanceFootballOfficialDailyRuntime } from "./footballTodayChallengeAdvanceRuntime";
 
 function record(value: unknown) {
   return value as Record<string, unknown>;
@@ -81,6 +82,47 @@ describe("two-game Daily standard", () => {
       .not.toBe(record(footballRounds[0]!.private_setup_evidence).target);
     expect(record(footballRounds[1]!.private_setup_evidence).opening_clue_id)
       .not.toBe(record(footballRounds[0]!.private_setup_evidence).opening_clue_id);
+  });
+
+
+  it("keeps Wavelength Game 2 preloaded behind a durable server handoff", () => {
+    const setup = buildFootballWavelengthDaily(
+      "2026-09-30",
+      "football-daily-v16-weighted-sep25",
+      "wavelength",
+    );
+    let context: OfficialDailyRuntimeContext = {
+      gameType: "wavelength",
+      setupKey: setup.setupKey,
+      publicSetup: setup.publicSetup,
+      revealSetup: setup.revealSetup,
+      privateSetupEvidence: setup.privateSetupEvidence,
+      privateGradingEvidence: setup.privateGradingEvidence,
+      submissionState: {},
+      publicState: initialOfficialDailyPublicState(setup.publicSetup),
+    };
+
+    for (const guess of [70, 79, 90, 96]) {
+      const next = advanceFootballOfficialDailyRuntime(context, { guess });
+      context = {
+        ...context,
+        submissionState: next.submissionState,
+        publicState: next.publicState,
+      };
+    }
+
+    expect(context.publicState.round_index).toBe(1);
+    expect(context.publicState.awaiting_next).toBe(false);
+    expect(context.publicState.handoff_pending).toBe(true);
+    expect(context.publicState.round_scores).toHaveLength(1);
+    expect(record(context.publicState.active_round).guesses).toEqual([]);
+
+    const acknowledged = advanceFootballOfficialDailyRuntime(context, { type: "next_game" });
+    expect(acknowledged.complete).toBe(false);
+    expect(acknowledged.publicState.round_index).toBe(1);
+    expect(acknowledged.publicState.handoff_pending).toBe(false);
+    expect(record(acknowledged.publicState.active_round).guesses).toEqual([]);
+    expect(acknowledged.publicState.round_scores).toEqual(context.publicState.round_scores);
   });
 
   it("balances Football Find the Leader and Hit the Number across NFL and CFB", () => {

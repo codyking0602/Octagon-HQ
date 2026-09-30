@@ -558,7 +558,10 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         "name": "McGregor-Diaz",
         "aliases": [
           "McGregor vs Diaz",
-          "Conor vs Nate"
+          "Conor vs Nate",
+          "Conor Nate Diaz",
+          "Conor McGregor Nate Diaz",
+          "McGregor Nate Diaz"
         ]
       },
       {

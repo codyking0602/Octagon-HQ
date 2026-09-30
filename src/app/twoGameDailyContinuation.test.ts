@@ -16,14 +16,16 @@ describe("permanent two-game Daily handoff", () => {
     );
     expect(firstGameCompletion).toContain("round_index: 1");
     expect(firstGameCompletion).toContain("awaiting_next: false");
+    expect(firstGameCompletion).toContain('handoff_pending: context.gameType === "wavelength"');
     expect(firstGameCompletion).toContain("active_round: secondInitial");
     expect(firstGameCompletion).not.toContain("awaiting_next: true");
   });
 
-  it("self-heals any persisted intermission for both Football and UFC", () => {
+  it("self-heals legacy persisted intermissions while preserving the Wavelength handoff", () => {
     expect(edgeRuntime).toContain("async function continueTwoGameWithoutIntermission");
     expect(edgeRuntime).toContain("context.publicState.awaiting_next !== true");
     expect(edgeRuntime).toContain("active_round: secondInitial");
+    expect(edgeRuntime).toContain('handoff_pending: context.gameType === "wavelength"');
     expect(edgeRuntime).toContain("context = await continueTwoGameWithoutIntermission(admin, context, profileId)");
     expect(
       edgeRuntime.match(/context = await continueTwoGameWithoutIntermission\(admin, context, profileId\)/g),

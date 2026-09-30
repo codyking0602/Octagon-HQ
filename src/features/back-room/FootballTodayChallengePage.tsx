@@ -597,7 +597,6 @@ export default function FootballTodayChallengePage() {
   const [weeklyBusy, setWeeklyBusy] = useState(false);
   const [weeklyError, setWeeklyError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
-  const [dismissedTwoGameHandoff, setDismissedTwoGameHandoff] = useState<string | null>(null);
   const weeklyGateActive = Boolean(
     weeklyState?.available
     && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
@@ -756,18 +755,19 @@ export default function FootballTodayChallengePage() {
   const twoGameSeries = dailyTwoGameSeriesState(projection);
   const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
 
-  if (
-    presentationHandoff
-    && dismissedTwoGameHandoff !== presentationHandoff.key
-  ) {
+  if (presentationHandoff) {
     return (
       <div className="page football-debate-page football-wavelength-page wavelength-page--football">
         {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         <DailyTwoGamePresentationIntermission
           projection={projection}
+          busy={busy}
           onContinue={() => {
-            setDismissedTwoGameHandoff(presentationHandoff.key);
+            advance(
+              { type: "next_game" },
+              { dedupeKey: `football-wavelength-handoff:${projection.id}` },
+            );
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         />

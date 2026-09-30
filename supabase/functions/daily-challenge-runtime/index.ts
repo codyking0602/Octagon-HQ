@@ -319,6 +319,7 @@ function twoGameSeriesState(context: OfficialDailyRuntimeContext & JsonRecord) {
     game_number: index + 1,
     game_count: 2,
     awaiting_next: context.publicState.awaiting_next === true,
+    handoff_pending: context.publicState.handoff_pending === true,
     complete: context.publicState.complete === true || Boolean(attempt),
     round_scores: scores,
     average_score: Number.isFinite(finalAverage)
@@ -867,6 +868,7 @@ async function continueTwoGameWithoutIntermission(
       round_index: 1,
       round_count: 2,
       awaiting_next: false,
+      handoff_pending: context.gameType === "wavelength",
       active_round: secondInitial,
       active_reveal: null,
       score: null,
