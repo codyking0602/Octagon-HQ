@@ -107,3 +107,58 @@
   .wavelength-result-hero { min-height: 166px; }
   .wavelength-result-hero strong { font-size: 64px; }
 }
+
+
+.daily-two-game-intermission {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  gap: 12px;
+  width: min(620px, calc(100% - 24px));
+  margin: 28px auto;
+  padding: 24px;
+  border: 1px solid rgba(var(--wavelength-accent-rgb), .42);
+  border-radius: 20px;
+  background: linear-gradient(155deg, rgba(var(--wavelength-accent-rgb), .16), transparent 54%), var(--surface);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.daily-two-game-intermission > strong {
+  font-size: clamp(4rem, 18vw, 7rem);
+  line-height: .86;
+  letter-spacing: -.07em;
+}
+
+.daily-two-game-intermission > strong small {
+  margin-left: 4px;
+  color: var(--text-muted);
+  font-size: .22em;
+  letter-spacing: 0;
+}
+
+.daily-two-game-intermission > p:not(.eyebrow) {
+  margin: 0 auto;
+  max-width: 30rem;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.daily-two-game-intermission > button {
+  position: relative;
+  z-index: 6;
+  min-height: 52px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--wavelength-accent);
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
