@@ -33,9 +33,9 @@ describe("Average Fan opening stage presentation contract", () => {
   it("puts the sport choice in the app before fan selection", () => {
     expect(pageSource).toContain('type PrototypeScene = "intro" | "sport-select" | "fan-select" | "game";');
     expect(pageSource).toContain("export function SportSelector");
-    expect(pageSource).toContain("<strong>UFC</strong>");
-    expect(pageSource).toContain("<strong>NFL</strong>");
-    expect(pageSource).toContain("<strong>COLLEGE FOOTBALL</strong>");
+    expect(pageSource).toContain('label: "UFC"');
+    expect(pageSource).toContain('label: "NFL"');
+    expect(pageSource).toContain('label: "COLLEGE FOOTBALL"');
     expect(pageSource).toContain('setScene("fan-select")');
     expect(pageSource).toContain('onBack={() => setScene("sport-select")}');
     expect(pageCss).toContain(".average-fan-sport-panel");
