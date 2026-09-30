@@ -312,7 +312,7 @@ describe("Sports Feud authored Daily banks", () => {
     }
   });
 
-  it("replaces the September 30 UFC MMA-team board without changing the rest of the slate", () => {
+  it("reranks the September 30 UFC board and tightens the punch prompt", () => {
     const removedPrompt = "Name an MMA team associated with multiple notable UFC fighters.";
     expect(UFC_SPORTS_FEUD_MAIN.some((question) => question.prompt === removedPrompt)).toBe(false);
 
