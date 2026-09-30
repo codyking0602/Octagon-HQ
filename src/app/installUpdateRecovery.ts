@@ -31,6 +31,12 @@ interface RecoverRouteLoadErrorOptions extends ForceRefreshLatestBuildOptions {
   error: unknown;
 }
 
+interface RuntimeDeploymentRecoveryOptions extends ForceRefreshLatestBuildOptions {
+  runtimeSha: string;
+  runningSha?: string;
+  fetchDeploymentSha?: () => Promise<string | null>;
+}
+
 function normalizedSha(value: unknown) {
   const sha = typeof value === "string" ? value.trim().toLowerCase() : "";
   return SHA_PATTERN.test(sha) ? sha : "";
@@ -104,6 +110,61 @@ export function forceRefreshLatestBuild({
   storage.removeItem(UPDATE_RELOAD_KEY);
   storage.removeItem(UPDATE_TARGET_SHA_KEY);
   navigate(latestBuildUrl(href, String(now()), productionOrigin));
+}
+
+export async function recoverRuntimeDeploymentMismatch({
+  runtimeSha,
+  href = window.location.href,
+  storage = window.sessionStorage,
+  navigate = (url) => window.location.replace(url),
+  now = () => Date.now(),
+  productionOrigin = runtimeProductionOrigin(),
+  runningSha = typeof __OCTAGON_DEPLOYMENT_SHA__ === "string" ? __OCTAGON_DEPLOYMENT_SHA__ : "",
+  fetchDeploymentSha,
+}: RuntimeDeploymentRecoveryOptions) {
+  const activeSha = normalizedSha(runningSha);
+  const targetSha = normalizedSha(runtimeSha);
+  if (!activeSha || !targetSha || activeSha === targetSha) return false;
+
+  let liveSha = "";
+  try {
+    if (fetchDeploymentSha) {
+      liveSha = normalizedSha(await fetchDeploymentSha());
+    } else {
+      const canonicalOrigin = normalizedProductionOrigin(productionOrigin);
+      const markerUrl = new URL("/deployment.json", canonicalOrigin || window.location.origin);
+      markerUrl.searchParams.set("running", activeSha);
+      markerUrl.searchParams.set("runtime", targetSha);
+      markerUrl.searchParams.set("check", String(now()));
+      const response = await window.fetch(markerUrl, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache, no-store, max-age=0",
+          Pragma: "no-cache",
+        },
+      });
+      if (response.ok) {
+        const marker = await response.json() as { sha?: unknown };
+        liveSha = normalizedSha(marker.sha);
+      }
+    }
+  } catch {
+    return false;
+  }
+
+  if (liveSha !== targetSha) return false;
+
+  const current = now();
+  const previous = Number(storage.getItem(UPDATE_RELOAD_KEY) ?? "0");
+  const previousTarget = storage.getItem(UPDATE_TARGET_SHA_KEY) ?? "";
+  if (previousTarget === targetSha && previous > 0 && current - previous < UPDATE_RELOAD_COOLDOWN_MS) {
+    return false;
+  }
+
+  storage.setItem(UPDATE_RELOAD_KEY, String(current));
+  storage.setItem(UPDATE_TARGET_SHA_KEY, targetSha);
+  navigate(latestBuildUrl(href, targetSha, productionOrigin));
+  return true;
 }
 
 export function installUpdateRecovery({
