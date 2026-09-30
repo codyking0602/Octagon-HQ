@@ -368,7 +368,7 @@ export function FanSelector({
           ))}
         </div>
 
-        <section className="average-fan-report" aria-label={`${FAN_LABELS[selectedFan]} UFC report card`}>
+        <section className="average-fan-report" aria-label={`${FAN_LABELS[selectedFan]} ${sport.toUpperCase()} report card`}>
           <h2>{FAN_LABELS[selectedFan]}</h2>
           <span className="average-fan-report__underline" aria-hidden="true" />
           <div className="average-fan-report__rows">
