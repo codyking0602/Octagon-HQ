@@ -46,6 +46,7 @@ import {
 } from "./sportsFeudDailyBanks";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
 import { buildAverageFanDailySetup } from "./averageFanDailyRuntime";
+import { buildAverageFanDailySetup } from "./averageFanDailyRuntime";
 import { footballBarTriviaLeagueForDay } from "./dailyChallengeRotation";
 import {
   OFFICIAL_SCORE_CONTRACT_VERSION,
