@@ -10,8 +10,10 @@ import {
   DailyTwoGamePresentationIntermission,
   DailyTwoGameStatus,
   dailyTwoGameActiveScore,
+  dailyTwoGamePresentationHandoffWasDismissed,
   dailyTwoGamePresentationIntermissionState,
   dailyTwoGameSeriesState,
+  rememberDailyTwoGamePresentationHandoff,
 } from "../play/DailyTwoGameStatus";
 import {
   createTodayChallengeRepository,
@@ -751,9 +753,14 @@ export default function FootballTodayChallengePage() {
   const twoGameSeries = dailyTwoGameSeriesState(projection);
   const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
 
+  const presentationHandoffDismissed = presentationHandoff
+    ? dismissedTwoGameHandoff === presentationHandoff.key
+      || dailyTwoGamePresentationHandoffWasDismissed(presentationHandoff.key)
+    : false;
+
   if (
     presentationHandoff
-    && dismissedTwoGameHandoff !== presentationHandoff.key
+    && !presentationHandoffDismissed
   ) {
     return (
       <div className="page football-debate-page football-wavelength-page wavelength-page--football">
@@ -762,6 +769,7 @@ export default function FootballTodayChallengePage() {
         <DailyTwoGamePresentationIntermission
           projection={projection}
           onContinue={() => {
+            rememberDailyTwoGamePresentationHandoff(presentationHandoff.key);
             setDismissedTwoGameHandoff(presentationHandoff.key);
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
