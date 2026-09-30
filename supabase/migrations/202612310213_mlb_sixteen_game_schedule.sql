@@ -41,14 +41,14 @@ begin
     (2026, 12, 'mlb-2026-play-12', date '2026-10-07', 'average_fan',   'Are You Smarter Than an Average Fan?',    'AVERAGE FAN',     'Five grades. Ten questions. One baseball classroom.', false),
     (2026, 5,  'mlb-2026-play-05', date '2026-10-09', 'blind_resume',  'Blind Resume',                            'BLIND RESUME',    'Five head-to-head careers. Reveal only what you need.', true),
     (2026, 11, 'mlb-2026-play-11', date '2026-10-11', 'bar_trivia',    'Bar Trivia',                              'BAR TRIVIA',      'Three rounds. One Double Round. One Last Call wager.', true),
-    (2026, 13, 'mlb-2026-play-13', date '2026-10-13', 'find_leader',   'Find the Leader',                         'FIND THE LEADER', 'Two boards. Eliminate decoys and leave the stat leader standing.', true),
+    (2026, 13, 'mlb-2026-play-13', date '2026-10-13', 'find_leader',   'Find the Leader',                         'FIND THE LEADER', 'Two boards. Eliminate decoys and leave the stat leader standing.', false),
     (2026, 8,  'mlb-2026-play-08', date '2026-10-15', 'millionaire',   'Who Wants to Be a Millionaire?',          'MILLIONAIRE',     'Eight questions. Three lifelines. One postseason run.', true),
     (2026, 7,  'mlb-2026-play-07', date '2026-10-17', 'hit_the_number','Hit the Number',                          'HIT THE NUMBER',  'Build a total without going over the target.', true),
-    (2026, 14, 'mlb-2026-play-14', date '2026-10-19', 'who_am_i',      'Who Am I',                                'WHO AM I',        'Two identities. Progressive clues. One averaged final score.', true),
+    (2026, 14, 'mlb-2026-play-14', date '2026-10-19', 'who_am_i',      'Who Am I',                                'WHO AM I',        'Two identities. Progressive clues. One averaged final score.', false),
     (2026, 9,  'mlb-2026-play-09', date '2026-10-21', 'wavelength',    'Wavelength',                              'WAVELENGTH',      'Two games. Four adaptive clues each.', true),
     (2026, 15, 'mlb-2026-play-15', date '2026-10-23', 'average_fan',   'Are You Smarter Than an Average Fan?',    'AVERAGE FAN',     'Five grades. Ten questions. One baseball classroom.', false),
     (2026, 10, 'mlb-2026-play-10', date '2026-10-25', 'sports_feud',   'Sports Feud',                             'SPORTS FEUD',     'Clear two baseball boards, then finish with Fast Money.', true),
-    (2026, 16, 'mlb-2026-play-16', date '2026-10-27', 'bar_trivia',    'Bar Trivia',                              'BAR TRIVIA',      'Three rounds. One Double Round. One Last Call wager.', true)
+    (2026, 16, 'mlb-2026-play-16', date '2026-10-27', 'bar_trivia',    'Bar Trivia',                              'BAR TRIVIA',      'Three rounds. One Double Round. One Last Call wager.', false)
   on conflict (season, slot) do update
   set challenge_key = excluded.challenge_key,
       scheduled_date = excluded.scheduled_date,
@@ -74,10 +74,13 @@ begin
       and content_ready = false
       and challenge_key in (
         'mlb-2026-play-12',
-        'mlb-2026-play-15'
+        'mlb-2026-play-13',
+        'mlb-2026-play-14',
+        'mlb-2026-play-15',
+        'mlb-2026-play-16'
       )
-  ) <> 2 then
-    raise exception 'the two MLB Average Fan slots must remain not-ready until content is wired';
+  ) <> 5 then
+    raise exception 'the five new MLB Play slots must remain not-ready until content is wired';
   end if;
 end;
 $$;
