@@ -35,10 +35,7 @@ describe("MLB postseason challenge schedule", () => {
       .map((challenge) => challenge.id);
     expect(notReady).toEqual([
       "mlb-2026-play-12",
-      "mlb-2026-play-13",
-      "mlb-2026-play-14",
       "mlb-2026-play-15",
-      "mlb-2026-play-16",
     ]);
   });
 
@@ -93,7 +90,7 @@ describe("MLB postseason challenge schedule", () => {
     });
   });
 
-  it("reserves the five new dates without falsely marking their content ready", () => {
+  it("keeps only the two Average Fan dates reserved while the three authored additions are ready", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-07T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-12",
       game_type: "average_fan",
@@ -102,12 +99,12 @@ describe("MLB postseason challenge schedule", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-13T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-13",
       game_type: "find_leader",
-      ready: false,
+      ready: true,
     });
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-19T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-14",
       game_type: "who_am_i",
-      ready: false,
+      ready: true,
     });
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-23T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-15",
@@ -117,7 +114,7 @@ describe("MLB postseason challenge schedule", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-27T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-16",
       game_type: "bar_trivia",
-      ready: false,
+      ready: true,
       is_live: true,
     });
   });
