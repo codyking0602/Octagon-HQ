@@ -204,6 +204,7 @@ export function advanceTwoGameDailyRuntime(
         round_index: 1,
         round_count: 2,
         awaiting_next: false,
+        handoff_pending: context.gameType === "wavelength",
         completed_rounds: completed,
         round_scores: scores,
         active_round: secondInitial,
