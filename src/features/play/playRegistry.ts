@@ -96,6 +96,7 @@ export const playGameCatalog = [
     icon: "AF",
     title: "Are You Smarter Than an Average Fan?",
     description: "Choose a fan, work a 10-question UFC grade board in any order, then make the Final call.",
+    availability: "preview",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["daily", "replayable"],
@@ -375,6 +376,7 @@ export const playGameCatalog = [
     icon: "AF",
     title: "Are You Smarter Than an Average Fan?",
     description: "Choose a fan, work a 10-question NFL or CFB grade board in any order, then make the Final call.",
+    availability: "preview",
     lineup: {
       defaultType: "replayable",
       supportedTypes: ["daily", "replayable"],
