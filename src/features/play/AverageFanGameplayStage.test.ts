@@ -200,8 +200,11 @@ describe("Average Fan locked gameplay stage", () => {
   it("keeps the owner review shortcut but also exposes Average Fan through the real app route", () => {
     expect(pageSource).toContain('searchParams.get("screen") === "gameplay"');
     expect(pageSource).toContain('searchParams.get("fan")');
-    expect(pageSource).toContain('AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION');
+    expect(pageSource).toContain('const reviewQuestion = previewQuestions.find');
+    expect(pageSource).toContain('buildAverageFanDailySetup(');
     expect(routerSource).toContain('path: "play/average-fan"');
+    expect(routerSource).toContain('<TodayChallengeGameRoute gameType="average_fan"');
+    expect(routerSource).toContain('path: "play/average-fan-preview"');
     expect(routerSource).toContain('<AverageFanPrototypePage />');
     expect(appShellSource).toContain('location.pathname === "/play/average-fan"');
     expect(appShellSource).toMatch(/\{isAverageFanGame \? \(\s*<main[\s\S]*?<Outlet \/>[\s\S]*?\) : \(\s*<BrandedPullToRefresh>/);
