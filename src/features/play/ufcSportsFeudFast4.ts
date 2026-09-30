@@ -423,28 +423,19 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
     "collisionGroup": "strikes",
     "prompts": [
       {
-        "prompt": "Name a strike you can use in MMA.",
+        "prompt": "Name a punch or fist strike commonly used in MMA.",
         "answers": [
           "Jab",
           "Cross",
           "Hook",
           "Uppercut",
-          "Elbow",
-          "Knee",
-          "Body kick",
-          "Head kick"
-        ],
-        "alsoAcceptedAnswers": [
           "Overhand",
-          "Low kick",
-          "Front kick",
-          "Spinning backfist",
-          "Hammerfist",
-          "Spinning elbow",
           "Superman punch",
-          "Spinning kick"
-        ]
-      },
+          "Hammerfist",
+          "Spinning backfist"
+        ],
+        "alsoAcceptedAnswers": []
+      }
       {
         "prompt": "Name a striking technique you might see in the UFC.",
         "answers": [
