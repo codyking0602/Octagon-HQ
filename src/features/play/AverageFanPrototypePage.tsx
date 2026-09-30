@@ -64,16 +64,38 @@ const AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION =
   ?? AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "four-choice")
   ?? AVERAGE_FAN_UFC_PREVIEW_BOARD[0]!;
 
+function measureAverageFanLargeViewport() {
+  const fallbackWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+  const fallbackHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+  const probe = document.createElement("div");
+  probe.setAttribute("aria-hidden", "true");
+  Object.assign(probe.style, {
+    position: "fixed",
+    left: "0",
+    top: "0",
+    width: "100lvw",
+    height: "100lvh",
+    visibility: "hidden",
+    pointerEvents: "none",
+  });
+  document.body.appendChild(probe);
+  const rect = probe.getBoundingClientRect();
+  probe.remove();
+  return {
+    width: rect.width > 0 ? rect.width : fallbackWidth,
+    height: rect.height > 0 ? rect.height : fallbackHeight,
+  };
+}
+
 function useAverageFanOpeningStageScale() {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const syncScale = () => {
-      const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
-      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const viewport = measureAverageFanLargeViewport();
       setScale(Math.min(
-        viewportWidth / AVERAGE_FAN_OPENING_STAGE_WIDTH,
-        viewportHeight / AVERAGE_FAN_OPENING_STAGE_HEIGHT,
+        viewport.width / AVERAGE_FAN_OPENING_STAGE_WIDTH,
+        viewport.height / AVERAGE_FAN_OPENING_STAGE_HEIGHT,
       ));
     };
 
@@ -102,13 +124,10 @@ function useAverageFanGameplayStageLayout() {
         ? Math.max(0, window.innerHeight - visualViewport.height - visualViewport.offsetTop)
         : 0;
       const keyboardOpen = keyboardOcclusion > 80;
-      const viewportWidth = visualViewport?.width ?? window.innerWidth;
-      const viewportHeight = keyboardOpen
-        ? window.innerHeight
-        : visualViewport?.height ?? window.innerHeight;
+      const viewport = measureAverageFanLargeViewport();
       const scale = Math.min(
-        viewportWidth / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH,
-        viewportHeight / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT,
+        viewport.width / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH,
+        viewport.height / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT,
       );
 
       setLayout({
@@ -135,6 +154,31 @@ function useAverageFanGameplayStageLayout() {
   }, []);
 
   return layout;
+}
+
+function useAverageFanScreenLock() {
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+    const previous = {
+      rootOverflow: root.style.overflow,
+      rootOverscroll: root.style.overscrollBehavior,
+      bodyOverflow: body.style.overflow,
+      bodyOverscroll: body.style.overscrollBehavior,
+    };
+
+    root.style.overflow = "hidden";
+    root.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "none";
+
+    return () => {
+      root.style.overflow = previous.rootOverflow;
+      root.style.overscrollBehavior = previous.rootOverscroll;
+      body.style.overflow = previous.bodyOverflow;
+      body.style.overscrollBehavior = previous.bodyOverscroll;
+    };
+  }, []);
 }
 
 function HostArt({ compact = false }: { compact?: boolean }) {
@@ -606,29 +650,6 @@ function AverageFanGame({
   initialQuestion?: AverageFanQuestion | null;
 }) {
   const { scale: stageScale, answerShift } = useAverageFanGameplayStageLayout();
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const body = document.body;
-    const previous = {
-      rootOverflow: root.style.overflow,
-      rootOverscroll: root.style.overscrollBehavior,
-      bodyOverflow: body.style.overflow,
-      bodyOverscroll: body.style.overscrollBehavior,
-    };
-
-    root.style.overflow = "hidden";
-    root.style.overscrollBehavior = "none";
-    body.style.overflow = "hidden";
-    body.style.overscrollBehavior = "none";
-
-    return () => {
-      root.style.overflow = previous.rootOverflow;
-      root.style.overscrollBehavior = previous.rootOverscroll;
-      body.style.overflow = previous.bodyOverflow;
-      body.style.overscrollBehavior = previous.bodyOverscroll;
-    };
-  }, []);
   const [phase, setPhase] = useState<GamePhase>(initialQuestion ? "question" : "board");
   const [current, setCurrent] = useState<AverageFanQuestion | null>(initialQuestion);
   const [answer, setAnswer] = useState("");
@@ -889,6 +910,7 @@ function AverageFanGame({
   );}
 
 export default function AverageFanPrototypePage() {
+  useAverageFanScreenLock();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const openingStageScale = useAverageFanOpeningStageScale();
