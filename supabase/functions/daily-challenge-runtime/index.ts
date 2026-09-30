@@ -11,7 +11,8 @@ type OfficialDailyGameType =
   | "who_am_i"
   | "millionaire"
   | "sports_feud"
-  | "bar_trivia";
+  | "bar_trivia"
+  | "average_fan";
 
 interface OfficialDailyRuntimeContext {
   gameType: OfficialDailyGameType;
@@ -135,6 +136,9 @@ function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
       break;
     case "bar_trivia":
       runtime = import("./football-publication-bar-trivia.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
+      break;
+    case "average_fan":
+      runtime = import("./football-publication-average-fan.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
       break;
     case "blind_rank_5":
     case "keep_4_cut_4":
@@ -469,6 +473,21 @@ async function whoAmIPublicationHistory(
   return response.data;
 }
 
+async function averageFanPublicationHistory(
+  admin: SupabaseClient,
+  sport: "ufc" | "football",
+  day: string,
+) {
+  const response = await admin.rpc("get_average_fan_publication_history", {
+    p_sport: sport,
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Average Fan publication history is unavailable.");
+  }
+  return response.data;
+}
+
 async function materializeToday(admin: SupabaseClient) {
   const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "ufc" });
   if (prepared.error) {
@@ -510,7 +529,9 @@ async function materializeToday(admin: SupabaseClient) {
   try {
     const publicationHistory = gameType === "who_am_i"
       ? await whoAmIPublicationHistory(admin, "ufc", day)
-      : undefined;
+      : gameType === "average_fan"
+        ? await averageFanPublicationHistory(admin, "ufc", day)
+        : undefined;
     publication = gameType === "keep_4_cut_4"
       ? buildDailyComboSetup(day, scheduleVersion, ufcRuntime)
       : ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion, publicationHistory);
@@ -585,7 +606,9 @@ async function materializeFootballToday(admin: SupabaseClient) {
   const footballRuntime = await loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType);
   const publicationHistory = expectedGame === "who_am_i"
     ? await whoAmIPublicationHistory(admin, "football", day)
-    : undefined;
+    : expectedGame === "average_fan"
+      ? await averageFanPublicationHistory(admin, "football", day)
+      : undefined;
   const publication = footballRuntime.buildFootballDailyPersistenceSetup(
     day,
     scheduleVersion,
