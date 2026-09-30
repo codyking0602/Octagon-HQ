@@ -144,18 +144,6 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Average Fan score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
-  average_fan: {
-    gameType: "average_fan",
-    gameId: "average-fan",
-    title: "Are You Smarter Than an Average Fan?",
-    dailyRoute: "/play/average-fan?mode=daily",
-    casualRoute: "/play/average-fan-preview",
-    cta: "Pick your fan",
-    instructions: "Choose a fan, work all 10 grade-and-subject tiles, then decide whether to walk or go for $1,000,000.",
-    footballInstructions: "Choose a fan, work all 10 NFL or CFB grade-and-subject tiles, then decide whether to walk or go for $1,000,000.",
-    nativeResultLabel: "Average Fan score",
-    nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
-  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",
