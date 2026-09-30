@@ -97,14 +97,57 @@ function peerValues(
   return picked;
 }
 
+function knowledgeChoiceKind(fact: KnowledgeFact) {
+  const prompt = fact.prompt.toLocaleLowerCase();
+  if (/^(who|whom)\b/.test(prompt) || /nickname|nicknamed/.test(prompt)) return "person";
+  if (/which (?:nfl |ufc |college )?(?:team|franchise|program|school)\b/.test(prompt)) return "team";
+  if (/position\b/.test(prompt)) return "position";
+  if (/trophy|rivalry|bowl\b/.test(prompt)) return "tradition";
+  if (/how many|how long/.test(prompt)) return "numeric";
+  return prompt.split(/\s+/).slice(0, 2).join(" ");
+}
+
+function numericKnowledgeDistractor(fact: KnowledgeFact) {
+  const values = [fact.answer, ...fact.wrong];
+  const parsed = values.map((value) => {
+    const match = /^([\d,]+)(.*)$/.exec(value.trim());
+    if (!match) return null;
+    return {
+      number: Number(match[1]!.replaceAll(",", "")),
+      suffix: match[2]!.trim(),
+    };
+  });
+  if (parsed.some((value) => !value || !Number.isFinite(value.number))) return null;
+  const rows = parsed as { number: number; suffix: string }[];
+  if (new Set(rows.map((row) => row.suffix)).size !== 1) return null;
+  const numbers = rows.map((row) => row.number).sort((a, b) => a - b);
+  const step = Math.max(1, numbers[numbers.length - 1]! - numbers[numbers.length - 2]!);
+  let candidate = numbers[numbers.length - 1]! + step;
+  while (numbers.includes(candidate)) candidate += step;
+  const suffix = rows[0]!.suffix;
+  return candidate.toLocaleString("en-US") + (suffix ? ` ${suffix}` : "");
+}
+
 function knowledgeChoiceWrongChoices(
   facts: readonly KnowledgeFact[],
   fact: KnowledgeFact,
   key: string,
 ) {
   const authored = unique(fact.wrong).filter((choice) => choice !== fact.answer);
+  const numeric = numericKnowledgeDistractor(fact);
+  if (numeric && !authored.includes(numeric) && numeric !== fact.answer) {
+    return [...authored, numeric];
+  }
+
+  const kind = knowledgeChoiceKind(fact);
+  const semanticPool = facts
+    .filter((candidate) => candidate.id !== fact.id && knowledgeChoiceKind(candidate) === kind)
+    .flatMap((candidate) => [candidate.answer, ...candidate.wrong]);
+  const fallbackPool = semanticPool.length
+    ? semanticPool
+    : facts.filter((candidate) => candidate.id !== fact.id).flatMap((candidate) => [candidate.answer, ...candidate.wrong]);
   const peer = peerValues(
-    facts.map((candidate) => candidate.answer),
+    fallbackPool,
     [fact.answer, ...authored],
     key,
     1,
