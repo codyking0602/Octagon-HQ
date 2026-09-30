@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { OfficialBlindResumeV3DailyView } from "./OfficialBlindResumeV3DailyView";
@@ -9,8 +9,10 @@ import {
 } from "./OfficialBlindRankResult";
 import { OfficialHitTheNumberDailyView } from "./OfficialHitTheNumberDailyView";
 import {
+  DailyTwoGamePresentationIntermission,
   DailyTwoGameStatus,
   dailyTwoGameActiveScore,
+  dailyTwoGamePresentationIntermissionState,
   dailyTwoGameSeriesState,
 } from "./DailyTwoGameStatus";
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
@@ -90,6 +92,7 @@ export function OfficialTodayChallengeContent({
   showMillionaireExit?: boolean;
   onSportsFeudExit?: () => void;
 }) {
+  const [dismissedTwoGameHandoff, setDismissedTwoGameHandoff] = useState<string | null>(null);
   const adapter = todayChallengeAdapter(projection.gameType);
   const blindResumeV3 = projection.gameType === "blind_resume"
     && projection.contentVersion === "blind-resume-v3";
@@ -108,6 +111,19 @@ export function OfficialTodayChallengeContent({
       }
     : projection;
   const twoGameSeries = dailyTwoGameSeriesState(projection);
+  const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
+
+  if (
+    presentationHandoff
+    && dismissedTwoGameHandoff !== presentationHandoff.key
+  ) {
+    return (
+      <DailyTwoGamePresentationIntermission
+        projection={projection}
+        onContinue={() => setDismissedTwoGameHandoff(presentationHandoff.key)}
+      />
+    );
+  }
 
   if (twoGameSeries?.awaitingNext) {
     return <DailyTwoGameStatus projection={projection} busy={busy} onAdvance={onAdvance} />;
