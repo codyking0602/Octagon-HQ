@@ -741,7 +741,7 @@ Do **not** re-debate:
 - `NotificationHeaderAction` continues to read `notifications.unreadCount` from the existing provider. `NotificationPushSetting` remains mounted in the existing AppShell profile menu and consumes the same provider/device registration path.
 - Supabase notification tables/RPCs and the canonical `deliver-notification-push` Edge Function are unchanged. No second notification provider, repository, snapshot query, unread query, push path, route owner, realtime channel, or initialization is introduced.
 - Visible notification/push framing is updated from Octagon HQ to The HQ where the surface is universal.
-- The locked onboarding cleanup requirement is preserved but explicitly deferred; PR #823 does not implement it. Per Cody's direct scope, **PR 14 is next**.
+- The locked onboarding cleanup requirement was preserved but explicitly deferred at that time; PR #823 did not implement it. PR #14 was later completed in #826.
 
 ### PR 12 Universal Profile
 
