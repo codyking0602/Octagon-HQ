@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import argparse
+import ipaddress
 import json
 import os
 import sys
+from html.parser import HTMLParser
 from io import BytesIO
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
 from PIL import Image, ImageFilter
@@ -18,8 +20,16 @@ ALLOWED_HOSTS = {
     "ufc.com",
     "www.ufc.com",
 }
+UFC_PROFILE_HOSTS = {
+    "ufc.com",
+    "www.ufc.com",
+    "ufc.com.br",
+    "www.ufc.com.br",
+    "jp.ufc.com",
+}
 PREFIX = "public/assets/fighters/"
 MAX_BYTES = 20 * 1024 * 1024
+MAX_PAGE_BYTES = 5 * 1024 * 1024
 
 
 def fail(msg):
@@ -27,21 +37,115 @@ def fail(msg):
     raise SystemExit(1)
 
 
-def download(url):
-    host = (urlparse(url).hostname or "").lower()
-    if host not in ALLOWED_HOSTS:
-        fail(f"source host not allowed: {host}")
-
+def request_bytes(url, max_bytes):
     req = Request(
         url,
         headers={"User-Agent": "Mozilla/5.0 OctagonHQAssetIngest/1.0"},
     )
     with urlopen(req, timeout=30) as response:
-        data = response.read(MAX_BYTES + 1)
+        data = response.read(max_bytes + 1)
 
-    if len(data) > MAX_BYTES:
-        fail("source exceeds 20 MB")
+    if len(data) > max_bytes:
+        fail(f"source exceeds {max_bytes // (1024 * 1024)} MB")
     return data
+
+
+def download(url):
+    host = (urlparse(url).hostname or "").lower()
+    if host not in ALLOWED_HOSTS:
+        fail(f"source host not allowed: {host}")
+    return request_bytes(url, MAX_BYTES)
+
+
+def is_public_https(url):
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or not parsed.hostname:
+        return False
+    host = parsed.hostname.lower()
+    if host in {"localhost", "localhost.localdomain"} or host.endswith(".local"):
+        return False
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return True
+    return not (
+        ip.is_private
+        or ip.is_loopback
+        or ip.is_link_local
+        or ip.is_multicast
+        or ip.is_reserved
+    )
+
+
+class UfcProfileImageParser(HTMLParser):
+    def __init__(self, fighter_name):
+        super().__init__()
+        self.fighter_name = " ".join(fighter_name.lower().split())
+        self.candidates = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() != "img":
+            return
+
+        values = {key.lower(): value for key, value in attrs if key and value}
+        alt = " ".join(values.get("alt", "").lower().split())
+        if not alt or self.fighter_name not in alt:
+            return
+
+        for key in ("src", "data-src", "data-original"):
+            value = values.get(key)
+            if value:
+                self.candidates.append(value)
+                return
+
+        for key in ("srcset", "data-srcset"):
+            value = values.get(key)
+            if not value:
+                continue
+            first = value.split(",", 1)[0].strip().split(" ", 1)[0]
+            if first:
+                self.candidates.append(first)
+                return
+
+
+def resolve_ufc_profile_source(page_url, fighter_name):
+    host = (urlparse(page_url).hostname or "").lower()
+    if host not in UFC_PROFILE_HOSTS:
+        fail(f"UFC profile host not allowed: {host}")
+
+    page = request_bytes(page_url, MAX_PAGE_BYTES)
+    html = page.decode("utf-8", errors="replace")
+
+    parser = UfcProfileImageParser(fighter_name)
+    parser.feed(html)
+    if not parser.candidates:
+        fail(f"official UFC profile has no fighter image matching {fighter_name}")
+
+    for candidate in parser.candidates:
+        image_url = urljoin(page_url, candidate)
+        if not is_public_https(image_url):
+            continue
+        return image_url
+
+    fail("official UFC profile image URL is not a safe public HTTPS URL")
+
+
+def resolve_source(spec):
+    source_url = spec.get("source_url")
+    source_page_url = spec.get("source_page_url")
+
+    if bool(source_url) == bool(source_page_url):
+        fail("manifest must provide exactly one of source_url or source_page_url")
+
+    if source_url:
+        return source_url, download(source_url)
+
+    fighter_name = str(spec.get("fighter_name") or "").strip()
+    if not fighter_name:
+        fail("fighter_name is required with source_page_url")
+
+    image_url = resolve_ufc_profile_source(source_page_url, fighter_name)
+    return image_url, request_bytes(image_url, MAX_BYTES)
 
 
 def crop_box(im, crop):
@@ -85,7 +189,7 @@ def main():
         fail("destination is outside approved fighter asset path")
 
     size = (320, 320) if kind == "thumb" else (626, 800)
-    data = download(spec["source_url"])
+    source_url, data = resolve_source(spec)
 
     try:
         im = Image.open(BytesIO(data)).convert("RGBA")
@@ -136,7 +240,7 @@ def main():
                 "destination": dest,
                 "size": list(check.size),
                 "alpha_extrema": list(check.getchannel("A").getextrema()),
-                "source_host": urlparse(spec["source_url"]).hostname,
+                "source_host": urlparse(source_url).hostname,
             }
         )
     )
