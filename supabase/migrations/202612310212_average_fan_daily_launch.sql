@@ -43,9 +43,8 @@ security definer
 set search_path = ''
 as $$
 begin
-  if auth.role() is distinct from 'service_role' then
-    raise exception 'service role required to read Average Fan publication history';
-  end if;
+  -- EXECUTE is revoked from PUBLIC/anon/authenticated below and granted only
+  -- to service_role; avoid deprecated JWT-role checks inside SECURITY DEFINER.
   if p_sport is null or p_sport not in ('ufc', 'football') or p_before_day is null then
     raise exception 'valid Average Fan publication-history scope is required';
   end if;
