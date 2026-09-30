@@ -64,6 +64,23 @@ export type BarTriviaLeaderboardQuestion = {
   explanation: string;
 };
 
+export type AverageFanLeaderboardQuestion = {
+  index: number;
+  id: string;
+  grade: number;
+  subject: string;
+  prompt: string;
+  playerAnswer: string;
+  fanAnswer: string;
+  correctAnswer: string;
+  explanation: string;
+  correct: boolean;
+  copied: boolean;
+  peekUsed: boolean;
+  saveConsumed: boolean;
+  saved: boolean;
+};
+
 function record(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value)
     ? value as JsonRecord
@@ -519,6 +536,139 @@ function BarTriviaLeaderboardResult({
   );
 }
 
+export function buildAverageFanLeaderboardQuestions(
+  projection: TodayChallengeProjection,
+  resultDetail: JsonRecord,
+): AverageFanLeaderboardQuestion[] {
+  const revealQuestions = new Map(
+    records(projection.revealSetup?.questions).map((row) => [String(row.id ?? ""), row]),
+  );
+  const detailResolved = records(resultDetail.resolved);
+  const resolved = detailResolved.length ? detailResolved : records(projection.publicState.resolved);
+
+  return resolved.map((row, index) => {
+    const publicQuestion = record(row.question);
+    const id = String(publicQuestion.id ?? "");
+    const reveal = revealQuestions.get(id) ?? {};
+    return {
+      index,
+      id,
+      grade: Number(publicQuestion.grade ?? reveal.grade ?? 0),
+      subject: String(publicQuestion.subject ?? reveal.subject ?? ""),
+      prompt: String(publicQuestion.prompt ?? reveal.prompt ?? ""),
+      playerAnswer: String(row.player_answer ?? ""),
+      fanAnswer: String(row.fan_answer ?? ""),
+      correctAnswer: String(row.correct_answer ?? reveal.answer ?? ""),
+      explanation: String(row.explanation ?? reveal.explanation ?? ""),
+      correct: row.correct === true,
+      copied: row.copied === true,
+      peekUsed: row.peek_used === true,
+      saveConsumed: row.save_consumed === true,
+      saved: row.saved === true,
+    };
+  });
+}
+
+function AverageFanLeaderboardResult({
+  projection,
+  resultDetail,
+}: {
+  projection: TodayChallengeProjection;
+  resultDetail: JsonRecord;
+}) {
+  const result = projection.officialAttempt?.publicResult ?? {};
+  const rows = buildAverageFanLeaderboardQuestions(projection, resultDetail);
+  const score = projection.officialAttempt?.normalizedScore ?? Number(result.score ?? resultDetail.final_score ?? 0);
+  const boardScore = Number(result.board_score ?? resultDetail.board_score ?? 0);
+  const fan = String(result.fan ?? resultDetail.fan ?? "").toUpperCase();
+  const sport = String(result.sport ?? projection.publicSetup.sport ?? "").toUpperCase();
+  const finalOutcome = String(result.final_outcome ?? resultDetail.final_outcome ?? "");
+  const finalQuestion = record(resultDetail.final_question);
+  const finalPrompt = String(finalQuestion.prompt ?? "");
+  const finalSubject = String(resultDetail.final_subject ?? finalQuestion.subject ?? "");
+  const finalPlayerAnswer = String(resultDetail.final_player_answer ?? "");
+  const finalCorrectAnswer = String(resultDetail.final_correct_answer ?? "");
+  const finalExplanation = String(resultDetail.final_explanation ?? "");
+  const savedCount = rows.filter((row) => row.saved).length;
+  const unsavedMisses = rows.filter((row) => !row.correct && !row.saved).length;
+
+  return (
+    <div className="leaderboard-game-result leaderboard-game-result--average-fan">
+      <section className="leaderboard-game-result__hero">
+        <div>
+          <span>AVERAGE FAN</span>
+          <strong>{score}</strong>
+          <small>HQ SCORE</small>
+        </div>
+        <dl>
+          <div><dt>Board</dt><dd>{boardScore} / 90</dd></div>
+          <div><dt>Fan</dt><dd>{fan || "—"}</dd></div>
+          <div><dt>Board misses</dt><dd>{unsavedMisses}</dd></div>
+          <div><dt>Final</dt><dd>{finalOutcome ? finalOutcome.replace(/-/g, " ").toUpperCase() : "—"}</dd></div>
+        </dl>
+      </section>
+
+      <section className="leaderboard-average-fan-board">
+        <header>
+          <div>
+            <span>{sport || "SPORT"} · 10-QUESTION BOARD</span>
+            <h3>How the board unfolded</h3>
+          </div>
+          <b>{savedCount ? `${savedCount} SAVE` : "NO SAVE USED"}</b>
+        </header>
+        <div className="leaderboard-average-fan-questions">
+          {rows.map((row) => {
+            const cleared = row.correct || row.saved;
+            return (
+              <details className={cleared ? "is-correct" : "is-wrong"} key={row.id || row.index} open={!cleared}>
+                <summary>
+                  <b>Q{row.index + 1}</b>
+                  <span>
+                    <small>{row.grade ? `GRADE ${row.grade}` : "BOARD"} · {row.subject}</small>
+                    <strong>{row.prompt}</strong>
+                  </span>
+                  <em>{row.correct ? "CORRECT" : row.saved ? "SAVED" : "MISS"}</em>
+                </summary>
+                <div className="leaderboard-average-fan-question__detail">
+                  <dl>
+                    <div><dt>Player</dt><dd>{row.playerAnswer || "—"}</dd></div>
+                    <div><dt>Fan</dt><dd>{row.fanAnswer || "—"}</dd></div>
+                    <div><dt>Answer</dt><dd>{row.correctAnswer || "—"}</dd></div>
+                  </dl>
+                  <div className="leaderboard-average-fan-tags">
+                    {row.peekUsed ? <span>PEEK</span> : null}
+                    {row.copied ? <span>COPY</span> : null}
+                    {row.saveConsumed ? <span>{row.saved ? "SAVE WORKED" : "SAVE USED"}</span> : null}
+                  </div>
+                  {row.explanation ? <p>{row.explanation}</p> : null}
+                </div>
+              </details>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="leaderboard-average-fan-final">
+        <header>
+          <span>FINAL · {finalSubject || "SUBJECT"}</span>
+          <h3>{finalOutcome === "walk-away" ? "Walked away" : finalPrompt || "Final question"}</h3>
+        </header>
+        {finalOutcome === "walk-away" ? (
+          <p>The run ended with the board score intact.</p>
+        ) : (
+          <>
+            <dl>
+              <div><dt>Player</dt><dd>{finalPlayerAnswer || "—"}</dd></div>
+              <div><dt>Correct</dt><dd>{finalCorrectAnswer || "—"}</dd></div>
+            </dl>
+            {finalExplanation ? <p>{finalExplanation}</p> : null}
+          </>
+        )}
+      </section>
+    </div>
+  );
+}
+
 function SportsFeudLeaderboardResult({
   projection,
   resultDetail,
@@ -875,6 +1025,9 @@ export function DailyLeaderboardGameResult({
   }
   if (projection.gameType === "bar_trivia") {
     return <BarTriviaLeaderboardResult projection={projection} resultDetail={resultDetail} />;
+  }
+  if (projection.gameType === "average_fan") {
+    return <AverageFanLeaderboardResult projection={projection} resultDetail={resultDetail} />;
   }
   return null;
 }
