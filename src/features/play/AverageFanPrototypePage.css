@@ -1237,6 +1237,151 @@
   outline-offset: -7px;
 }
 
+
+/* Average Fan subject-board polish */
+.average-fan-game-chalkboard.is-board {
+  overflow: hidden;
+}
+
+.average-fan-game-chalkboard.is-board::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 4px 6px 8px;
+  display: block;
+  border-radius: 3px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.035), transparent 26%),
+    radial-gradient(circle at 74% 62%, rgba(255,255,255,.025), transparent 32%),
+    linear-gradient(180deg, rgba(3, 78, 56, .99), rgba(3, 66, 49, .995));
+  box-shadow: inset 0 0 32px rgba(0,0,0,.2);
+  pointer-events: none;
+}
+
+.average-fan-game-chalkboard.is-board > * {
+  position: relative;
+  z-index: 2;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-tile-board {
+  padding: 20px 20px 16px;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-tile-board header {
+  height: 42px;
+  gap: 12px;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-tile-board header span {
+  color: rgba(255, 248, 216, .72);
+  font-size: 12px;
+  letter-spacing: .13em;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-tile-board header strong {
+  color: #fff7d0;
+  font-size: 25px;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-board {
+  gap: 8px;
+  width: 100%;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row {
+  grid-template-columns: 118px repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row > b {
+  min-height: 66px;
+  padding: 0 8px;
+  border: 2px solid rgba(255, 224, 104, .78);
+  border-radius: 9px;
+  background: linear-gradient(180deg, rgba(32, 95, 168, .96), rgba(15, 61, 125, .98));
+  color: #fff4bd;
+  font-size: 17px;
+  font-weight: 900;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.07);
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-height: 66px;
+  padding: 8px 14px;
+  border: 2px solid rgba(255,255,255,.6);
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 4px 8px rgba(0,0,0,.14);
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button[data-subject-tone="red"] {
+  background: linear-gradient(180deg, rgba(184, 48, 58, .97), rgba(112, 24, 34, .98));
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button[data-subject-tone="blue"] {
+  background: linear-gradient(180deg, rgba(30, 118, 194, .97), rgba(12, 69, 132, .98));
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button[data-subject-tone="gold"] {
+  background: linear-gradient(180deg, rgba(191, 137, 31, .97), rgba(120, 77, 10, .98));
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button[data-subject-tone="purple"] {
+  background: linear-gradient(180deg, rgba(122, 71, 169, .97), rgba(75, 37, 119, .98));
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button span {
+  font-size: 18px;
+  line-height: 1.08;
+  text-shadow: 0 2px 3px rgba(0,0,0,.32);
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button small {
+  position: absolute;
+  right: 8px;
+  bottom: 5px;
+  margin: 0;
+  color: rgba(255,255,255,.78);
+  font-size: 9px;
+}
+
+.average-fan-game-chalkboard.is-board .average-fan-grade-row button.is-done {
+  opacity: .46;
+  background: rgba(25, 46, 42, .9);
+}
+
+.average-fan-question-card header b {
+  left: 24px;
+  width: 224px;
+  font-size: 23px;
+}
+
+.average-fan-question-card header span {
+  right: 24px;
+  width: 286px;
+  font-size: 23px;
+}
+
+.average-fan-answer-stage {
+  z-index: 10;
+}
+
+.average-fan-game-fan {
+  z-index: 9;
+}
+
+.average-fan-game-fan__portrait {
+  left: 34%;
+  bottom: 96px;
+  width: 224px;
+  height: 342px;
+}
+
 @media (orientation: portrait) {
   .average-fan-selector {
     inset: 0;
