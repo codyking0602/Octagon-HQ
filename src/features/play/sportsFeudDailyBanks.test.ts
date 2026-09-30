@@ -351,6 +351,24 @@ describe("Sports Feud authored Daily banks", () => {
         .toBe(4);
     }
 
+    const baddy = matchFamilyFeudAnswer(pack, nicknameBoard, "Baddy");
+    expect(baddy.status).toBe("matched");
+    if (baddy.status === "matched") {
+      expect(pack.entities.find((entity) => entity.id === baddy.entityId)?.displayName)
+        .toBe("The Baddy");
+      expect(nicknameBoard.alsoAcceptedEntityIds).toContain(baddy.entityId);
+    }
+
+    const rivalry = pack.fastMoney[1]!;
+    const mcGregorDiaz = matchFamilyFeudAnswer(pack, rivalry, "Conor Nate Diaz");
+    expect(mcGregorDiaz.status).toBe("matched");
+    if (mcGregorDiaz.status === "matched") {
+      expect(pack.entities.find((entity) => entity.id === mcGregorDiaz.entityId)?.displayName)
+        .toBe("McGregor-Diaz");
+      expect(rivalry.answers.find((answer) => answer.entityId === mcGregorDiaz.entityId)?.points)
+        .toBe(6);
+    }
+
     const punch = pack.fastMoney[2]!;
     const hook = matchFamilyFeudAnswer(pack, punch, "Hook");
     expect(hook.status).toBe("matched");
