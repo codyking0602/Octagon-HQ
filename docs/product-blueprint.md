@@ -1,4 +1,4 @@
-# Octagon HQ V2 Product Blueprint
+# The HQ Product Blueprint
 
 ## Product promise
 The HQ is a multi-sport games, picks, rankings/content, and community product centered on UFC and Football, with temporary event-specific experiences such as the 2026 MLB postseason.
@@ -68,9 +68,13 @@ Group picks are social only after the result is known. Locking an event never re
 - Member-facing reveal fields are limited to display name, selected fighter, and current-viewer highlighting. Profile UUIDs, emails, timestamps, PIN data, and administrative fields are excluded.
 - Completed-event recaps retain the resolved fight-by-fight group breakdown permanently.
 
-# PICKS ROADMAP — LOCKED PRODUCT DIRECTION
+# PICKS ROADMAP — HISTORICAL LOCKED DIRECTION
 
-The following phases must remain separate, narrow implementations and must preserve the current Picks owners and scoring rules.
+This section preserves the design constraints that produced the current Picks architecture. It is **not** a live implementation checklist. Current `main` already contains Fight Night results control, Event Setup/card review, automatic odds/monitoring, and approved pre-lock card-change handling including cancellation, fighter replacement, reorder, and removal/exclusion. Published Fight Spotlight/media support is also established.
+
+Do not recreate those systems from these historical phase descriptions. Check `docs/HANDOFF.md` and current `main` first. The remaining genuinely future work includes audited post-completion result corrections and any explicitly approved later expansion.
+
+The following phase descriptions remain useful ownership/safety contracts and must preserve the current Picks owners and scoring rules.
 
 ## PHASE 2A — FIGHT NIGHT RESULTS CONTROL
 
