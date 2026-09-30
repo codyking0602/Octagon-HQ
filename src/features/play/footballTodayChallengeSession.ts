@@ -399,23 +399,6 @@ function grade(
     };
   }
 
-  if (gameType === "average_fan") {
-    const persisted = buildFootballAverageFanPersistenceSetup(
-      day,
-      scheduleVersion,
-      gameType,
-      footballAverageFanLocalHistory(day),
-    );
-    return {
-      setupKey: persisted.setupKey,
-      contentVersion: persisted.contentVersion,
-      scoringVersion: persisted.scoringVersion as OfficialDailySetupPublication["scoringVersion"],
-      publicSetup: persisted.publicSetup,
-      revealSetup: persisted.revealSetup,
-      privateSetupEvidence: persisted.privateSetupEvidence,
-      privateGradingEvidence: persisted.privateGradingEvidence,
-    };
-  }
   if (gameType === "who_am_i") {
     const score = Number(context.publicState.score ?? 0);
     if (!Number.isInteger(score) || score < 0 || score > 100) throw new Error("Football Who Am I score is invalid.");
@@ -561,6 +544,23 @@ function buildSessionPublication(
   day: string,
   scheduleVersion: string,
 ): OfficialDailySetupPublication {
+  if (gameType === "average_fan") {
+    const persisted = buildFootballAverageFanPersistenceSetup(
+      day,
+      scheduleVersion,
+      gameType,
+      footballAverageFanLocalHistory(day),
+    );
+    return {
+      setupKey: persisted.setupKey,
+      contentVersion: persisted.contentVersion,
+      scoringVersion: persisted.scoringVersion as OfficialDailySetupPublication["scoringVersion"],
+      publicSetup: persisted.publicSetup,
+      revealSetup: persisted.revealSetup,
+      privateSetupEvidence: persisted.privateSetupEvidence,
+      privateGradingEvidence: persisted.privateGradingEvidence,
+    };
+  }
   if (gameType === "who_am_i") {
     const persisted = buildFootballWhoAmIPersistenceSetup(day, scheduleVersion, gameType);
     return {
