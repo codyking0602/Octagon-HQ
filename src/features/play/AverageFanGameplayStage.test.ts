@@ -209,6 +209,20 @@ describe("Average Fan locked gameplay stage", () => {
     expect(appShellSource).toMatch(/\{isAverageFanGame \? \(\s*<main[\s\S]*?<Outlet \/>[\s\S]*?\) : \(\s*<BrandedPullToRefresh>/);
   });
 
+  it("stops the money story on the first unsaved miss while keeping HQ play alive", () => {
+    expect(pageSource).toContain('type GamePhase = "board" | "question" | "reveal" | "verdict"');
+    expect(pageSource).toContain("YOU ARE NOT SMARTER THAN AN AVERAGE FAN");
+    expect(pageSource).toContain("YOUR HQ SCORE IS STILL ALIVE");
+    expect(pageSource).toContain(">KEEP PLAYING</button>");
+    expect(pageSource).toContain("const firstUnsavedMiss = unsavedMisses[0] ?? null;");
+    expect(pageSource).toContain("moneyAlive={moneyAlive}");
+    expect(pageSource).toContain("lostAt={firstUnsavedMiss}");
+    expect(pageSource).toContain('moneyAlive ? "GO FOR $1M" : "PLAY FINAL"');
+    expect(pageCss).toContain(".average-fan-money-rail.is-frozen");
+    expect(pageCss).toContain(".average-fan-money-row.is-lost");
+    expect(pageCss).toContain(".average-fan-verdict");
+  });
+
   it("keeps the gameplay screen landscape-only and chalk-first", () => {
     expect(pageCss).toContain("@media (orientation: portrait)");
     expect(pageCss).toContain('content: "↻\\A ROTATE TO PLAY\\A Average Fan is landscape only.";');

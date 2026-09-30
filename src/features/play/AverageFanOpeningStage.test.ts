@@ -23,10 +23,22 @@ describe("Average Fan opening stage presentation contract", () => {
     expect(pageSource).toContain('className="average-fan-intro-stage__button average-fan-intro-stage__button--rules"');
     expect(pageSource).toContain("<strong>START</strong>");
     expect(pageSource).toContain("<strong>HOW TO PLAY</strong>");
-    expect(pageSource).toContain('onClick={() => setScene("fan-select")}');
+    expect(pageSource).toContain('onClick={() => setScene("sport-select")}');
     expect(pageSource).toContain("onClick={() => setRulesOpen(true)}");
     expect(pageCss).not.toContain("object-fit: fill");
     expect(pageCss).toMatch(/\.average-fan-intro--plate \{[\s\S]*?height: 100lvh;[\s\S]*?min-height: 100lvh;/);
+  });
+
+
+  it("puts the sport choice in the app before fan selection", () => {
+    expect(pageSource).toContain('type PrototypeScene = "intro" | "sport-select" | "fan-select" | "game";');
+    expect(pageSource).toContain("export function SportSelector");
+    expect(pageSource).toContain('label: "UFC"');
+    expect(pageSource).toContain('label: "NFL"');
+    expect(pageSource).toContain('label: "COLLEGE FOOTBALL"');
+    expect(pageSource).toContain('setScene("fan-select")');
+    expect(pageSource).toContain('onBack={() => setScene("sport-select")}');
+    expect(pageCss).toContain(".average-fan-sport-panel");
   });
 
   it("keeps How to Play comfortably inside its blue shell", () => {

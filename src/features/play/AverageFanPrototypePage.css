@@ -3513,3 +3513,149 @@ button.average-fan-help-button {
     white-space: pre-line;
   }
 }
+
+
+/* Average Fan Casual sport choice — preserve the approved opening plate and add only the selection layer. */
+.average-fan-sport-panel {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  top: 53%;
+  width: 780px;
+  padding: 30px 34px 34px;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(246, 198, 59, .82);
+  border-radius: 24px;
+  background: rgba(3, 15, 37, .92);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .48);
+  text-align: center;
+}
+
+.average-fan-sport-panel > p {
+  margin: 0 0 6px;
+  color: #f6c63b;
+  font-size: 18px;
+  font-weight: 1000;
+  letter-spacing: .16em;
+}
+
+.average-fan-sport-panel > h2 {
+  margin: 0 0 22px;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 44px;
+  line-height: 1;
+}
+
+.average-fan-sport-options {
+  display: grid;
+  gap: 12px;
+}
+
+.average-fan-sport-options button {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 22px;
+  border: 2px solid rgba(255, 255, 255, .26);
+  border-radius: 16px;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(24, 90, 183, .96), rgba(9, 45, 105, .96));
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.average-fan-sport-options button:active {
+  transform: scale(.99);
+}
+
+.average-fan-sport-options button:focus-visible {
+  outline: 3px solid #f6c63b;
+  outline-offset: 2px;
+}
+
+.average-fan-sport-options strong {
+  font-size: 26px;
+  font-weight: 1000;
+}
+
+.average-fan-sport-options span {
+  color: rgba(255, 255, 255, .78);
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+/* Once the money run is lost, freeze the rail where it ended instead of implying continued advancement. */
+.average-fan-money-rail.is-frozen .average-fan-money-row:not(.is-cleared):not(.is-lost) {
+  opacity: .28;
+  filter: grayscale(.6);
+}
+
+.average-fan-money-row.is-lost {
+  opacity: 1;
+  border-color: rgba(239, 84, 84, .92);
+  color: #fff;
+  background: linear-gradient(90deg, rgba(143, 29, 43, .94), rgba(83, 20, 31, .94));
+  box-shadow: 0 0 12px rgba(239, 84, 84, .22);
+}
+
+/* First unsaved miss verdict. The player loses the money/title run, not the HQ scoring run. */
+.average-fan-verdict {
+  position: relative;
+  z-index: 4;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 42px 64px;
+  text-align: center;
+}
+
+.average-fan-verdict > p {
+  margin: 0 0 10px;
+  color: #f3cf53;
+  font-size: 15px;
+  font-weight: 1000;
+  letter-spacing: .18em;
+}
+
+.average-fan-verdict > h2 {
+  max-width: 900px;
+  margin: 0;
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 64px;
+  line-height: .96;
+  text-transform: uppercase;
+  text-shadow: 0 5px rgba(0, 0, 0, .3);
+}
+
+.average-fan-verdict > strong {
+  margin-top: 22px;
+  color: #71e78e;
+  font-size: 23px;
+  letter-spacing: .05em;
+}
+
+.average-fan-verdict > span {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, .78);
+  font-size: 18px;
+}
+
+.average-fan-verdict > button {
+  min-width: 280px;
+  min-height: 66px;
+  margin-top: 28px;
+  border: 3px solid rgba(255, 255, 255, .76);
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(180deg, #1abd50, #087c31);
+  font: inherit;
+  font-size: 20px;
+  font-weight: 1000;
+  cursor: pointer;
+}
