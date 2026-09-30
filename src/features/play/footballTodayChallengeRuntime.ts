@@ -45,6 +45,7 @@ import {
   footballSportsFeudDomainForDay,
 } from "./sportsFeudDailyBanks";
 import { buildBarTriviaDailySetup } from "./barTriviaDailyRuntime";
+import { buildAverageFanDailySetup } from "./averageFanDailyRuntime";
 import { footballBarTriviaLeagueForDay } from "./dailyChallengeRotation";
 import {
   OFFICIAL_SCORE_CONTRACT_VERSION,
@@ -331,6 +332,7 @@ export function buildFootballOfficialDailySetup(
   gameType: OfficialDailyGameType,
   day: string,
   scheduleVersion: string,
+  publicationHistory?: unknown,
 ): OfficialDailySetupPublication {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error("Football official daily day must use YYYY-MM-DD.");
   switch (gameType) {
@@ -347,6 +349,7 @@ export function buildFootballOfficialDailySetup(
       scheduleVersion,
     );
     case "bar_trivia": return buildBarTriviaDailySetup(footballBarTriviaLeagueForDay(day), day, scheduleVersion);
+    case "average_fan": return buildAverageFanDailySetup("football", day, scheduleVersion, publicationHistory);
     case "who_am_i": return buildWhoAmIDailyPublication(
       createFootballWhoAmIDailyRound(
         seededLineupRandom(FOOTBALL_DAILY_RUNTIME_VERSION, "who-am-i", scheduleVersion, day, "round"),
