@@ -435,7 +435,7 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Spinning backfist"
         ],
         "alsoAcceptedAnswers": []
-      }
+      },
       {
         "prompt": "Name a striking technique you might see in the UFC.",
         "answers": [
