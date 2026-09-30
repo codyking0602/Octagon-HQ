@@ -94,7 +94,7 @@ type FootballAdvanceRuntimeModule = {
 };
 
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
-const footballPublicationRuntimePromises = new Map<string, Promise<FootballPublicationRuntimeModule>>();
+let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
 
 function loadUfcRuntime() {
@@ -104,52 +104,11 @@ function loadUfcRuntime() {
   return ufcRuntimePromise;
 }
 
-function loadFootballPublicationRuntime(gameType: OfficialDailyGameType) {
-  const bundleKey = gameType === "blind_rank_5" || gameType === "keep_4_cut_4"
-    ? "comparison"
-    : gameType;
-  const existing = footballPublicationRuntimePromises.get(bundleKey);
-  if (existing) return existing;
-
-  let runtime: Promise<FootballPublicationRuntimeModule>;
-  switch (gameType) {
-    case "who_am_i":
-      runtime = import("./football-publication-who-am-i.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "wavelength":
-      runtime = import("./football-publication-wavelength.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "find_leader":
-      runtime = import("./football-publication-find-leader.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "blind_resume":
-      runtime = import("./football-publication-blind-resume.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "hit_the_number":
-      runtime = import("./football-publication-hit-the-number.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "millionaire":
-      runtime = import("./football-publication-millionaire.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "sports_feud":
-      runtime = import("./football-publication-sports-feud.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "bar_trivia":
-      runtime = import("./football-publication-bar-trivia.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "average_fan":
-      runtime = import("./football-publication-average-fan.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    case "blind_rank_5":
-    case "keep_4_cut_4":
-      runtime = import("./football-publication-comparison.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
-      break;
-    default:
-      throw new Error(`Unsupported Football Daily publication game ${String(gameType)}.`);
+function loadFootballPublicationRuntime(_gameType: OfficialDailyGameType) {
+  if (!footballPublicationRuntimePromise) {
+    footballPublicationRuntimePromise = import("./football-publication.generated.mjs") as Promise<FootballPublicationRuntimeModule>;
   }
-
-  footballPublicationRuntimePromises.set(bundleKey, runtime);
-  return runtime;
+  return footballPublicationRuntimePromise;
 }
 
 function loadFootballAdvanceRuntime() {

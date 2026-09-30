@@ -65,17 +65,17 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(bundler).toContain("./generate-football-who-am-i-daily-universes.mjs");
   });
 
-  it("serves published Football Daily reads before loading only the active game publication runtime", () => {
-    expect(runtime).toContain('function loadFootballPublicationRuntime(gameType: OfficialDailyGameType)');
+  it("serves published Football Daily reads before loading the shared publication runtime", () => {
+    expect(runtime).toContain('function loadFootballPublicationRuntime(_gameType: OfficialDailyGameType)');
     expect(runtime).toContain('function loadFootballAdvanceRuntime()');
-    expect(runtime).toContain('import("./football-publication-who-am-i.generated.mjs")');
-    expect(runtime).toContain('import("./football-publication-wavelength.generated.mjs")');
-    expect(runtime).toContain('import("./football-publication-find-leader.generated.mjs")');
-    expect(runtime).toContain('import("./football-publication-blind-resume.generated.mjs")');
-    expect(runtime).toContain('import("./football-publication-hit-the-number.generated.mjs")');
-    expect(runtime).toContain('import("./football-publication-comparison.generated.mjs")');
+    expect(runtime).toContain('import("./football-publication.generated.mjs")');
     expect(runtime).toContain('import("./football-advance.generated.mjs")');
-    expect(runtime).not.toContain('import("./football-publication.generated.mjs")');
+    expect(runtime).not.toContain('import("./football-publication-who-am-i.generated.mjs")');
+    expect(runtime).not.toContain('import("./football-publication-wavelength.generated.mjs")');
+    expect(runtime).not.toContain('import("./football-publication-find-leader.generated.mjs")');
+    expect(runtime).not.toContain('import("./football-publication-blind-resume.generated.mjs")');
+    expect(runtime).not.toContain('import("./football-publication-hit-the-number.generated.mjs")');
+    expect(runtime).not.toContain('import("./football-publication-comparison.generated.mjs")');
     const footballBranch = runtime.indexOf('if (body.sport === "football") {');
     const weeklyGate = runtime.indexOf('football_weekly_auction_daily_gate', footballBranch);
     const footballMaterialization = runtime.indexOf('const materialized = await materializeFootballToday(admin);', footballBranch);
@@ -115,21 +115,30 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(footballAdvanceRuntime).not.toContain('from "./footballTodayChallengeRuntime"');
   });
 
-  it("builds one Football publication artifact per active game family", () => {
+  it("builds one shared Football publication artifact with smoke coverage for every active game family", () => {
     expect(bundler).toContain('src/features/play/todaysChallengeRuntime.ts');
-    expect(bundler).toContain('src/features/play/footballDailyPublicationWhoAmI.ts');
-    expect(bundler).toContain('src/features/play/footballDailyPublicationWavelength.ts');
-    expect(bundler).toContain('src/features/play/footballDailyPublicationFindLeader.ts');
-    expect(bundler).toContain('src/features/play/footballDailyPublicationBlindResume.ts');
-    expect(bundler).toContain('src/features/play/footballDailyPublicationHitNumber.ts');
-    expect(bundler).toContain('src/features/play/footballDailyPublicationComparison.ts');
+    expect(bundler).toContain('src/features/play/footballDailyPublicationAll.ts');
     expect(bundler).toContain('src/features/play/footballTodayChallengeAdvanceRuntime.ts');
     expect(bundler).toContain('fileName: "runtime.generated.mjs"');
-    expect(bundler).toContain('fileName: "football-publication-who-am-i.generated.mjs"');
-    expect(bundler).toContain('fileName: "football-publication-hit-the-number.generated.mjs"');
-    expect(bundler).toContain('fileName: "football-publication-comparison.generated.mjs"');
-    expect(bundler).not.toContain('fileName: "football-publication.generated.mjs"');
+    expect(bundler).toContain('fileName: "football-publication.generated.mjs"');
     expect(bundler).toContain('fileName: "football-advance.generated.mjs"');
+    expect(bundler).not.toContain('fileName: "football-publication-who-am-i.generated.mjs"');
+    expect(bundler).not.toContain('fileName: "football-publication-hit-the-number.generated.mjs"');
+    expect(bundler).not.toContain('fileName: "football-publication-comparison.generated.mjs"');
+    for (const gameType of [
+      "who_am_i",
+      "wavelength",
+      "find_leader",
+      "blind_resume",
+      "hit_the_number",
+      "millionaire",
+      "sports_feud",
+      "bar_trivia",
+      "average_fan",
+      "keep_4_cut_4",
+    ]) {
+      expect(bundler).toContain(`gameType: "${gameType}"`);
+    }
     expect(bundler).not.toContain('fileName: "football-runtime.generated.mjs"');
     expect(bundler).not.toContain('src/features/play/dailyRuntimeBundle.ts');
     expect(bundler).toContain('inlineDynamicImports: true');
@@ -137,14 +146,15 @@ describe("daily challenge runtime cold-start isolation", () => {
 
   it("keeps GitHub Actions as the single deployment owner", () => {
     expect(backendWorkflow).toContain('node scripts/bundle-daily-challenge-runtime.mjs');
-    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-who-am-i.generated.mjs');
-    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-wavelength.generated.mjs');
-    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-find-leader.generated.mjs');
-    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-blind-resume.generated.mjs');
-    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-hit-the-number.generated.mjs');
-    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-comparison.generated.mjs');
-    expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs');
+    expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-publication.generated.mjs');
+    expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-who-am-i.generated.mjs');
+    expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-wavelength.generated.mjs');
+    expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-find-leader.generated.mjs');
+    expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-blind-resume.generated.mjs');
+    expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-hit-the-number.generated.mjs');
+    expect(backendWorkflow).not.toContain('test -f supabase/functions/daily-challenge-runtime/football-publication-comparison.generated.mjs');
     expect(backendWorkflow).toContain('test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs');
     expect(backendWorkflow).toContain('supabase functions deploy daily-challenge-runtime');
+    expect(backendWorkflow).toContain('--use-api');
   });
 });
