@@ -8,8 +8,9 @@ describe("Average Fan opening stage presentation contract", () => {
   it("scales the approved 1672x941 opening plate as one fixed landscape stage", () => {
     expect(pageSource).toContain("const AVERAGE_FAN_OPENING_STAGE_WIDTH = 1672;");
     expect(pageSource).toContain("const AVERAGE_FAN_OPENING_STAGE_HEIGHT = 941;");
-    expect(pageSource).toContain("viewportWidth / AVERAGE_FAN_OPENING_STAGE_WIDTH");
-    expect(pageSource).toContain("viewportHeight / AVERAGE_FAN_OPENING_STAGE_HEIGHT");
+    expect(pageSource).toContain("viewport.width / AVERAGE_FAN_OPENING_STAGE_WIDTH");
+    expect(pageSource).toContain("viewport.height / AVERAGE_FAN_OPENING_STAGE_HEIGHT");
+    expect(pageSource).toContain("measureAverageFanLargeViewport()");
     expect(pageSource).toContain("Math.min(");
     expect(pageSource).toContain('translate(-50%, -50%) scale(${openingStageScale})');
     expect(pageCss).toMatch(/\.average-fan-intro--plate \.average-fan-intro-stage \{[\s\S]*?width: 1672px;[\s\S]*?height: 941px;/);
@@ -25,6 +26,7 @@ describe("Average Fan opening stage presentation contract", () => {
     expect(pageSource).toContain('onClick={() => setScene("fan-select")}');
     expect(pageSource).toContain("onClick={() => setRulesOpen(true)}");
     expect(pageCss).not.toContain("object-fit: fill");
+    expect(pageCss).toMatch(/\.average-fan-intro--plate \{[\s\S]*?height: 100lvh;[\s\S]*?min-height: 100lvh;/);
   });
 
   it("keeps How to Play comfortably inside its blue shell", () => {
