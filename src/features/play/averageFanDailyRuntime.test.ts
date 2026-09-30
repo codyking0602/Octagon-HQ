@@ -51,13 +51,13 @@ describe("Average Fan canonical Daily runtime", () => {
     const third = buildAverageFanDailySetup("football", "2026-10-15", "football-v1", [
       {
         day: "2026-10-01",
-        sport: "nfl",
+        sport: "cfb",
         question_ids: first.privateSetupEvidence.question_ids,
         final_question_id: first.privateSetupEvidence.final_question_id,
       },
       {
         day: "2026-10-08",
-        sport: "cfb",
+        sport: "nfl",
         question_ids: second.privateSetupEvidence.question_ids,
         final_question_id: second.privateSetupEvidence.final_question_id,
       },
@@ -96,7 +96,6 @@ describe("Average Fan Daily Casual parity", () => {
     let result = advanceAverageFanDailyRuntime(contextFrom(publication), { fan: "shane" });
     let missQuestion: AverageFanQuestion | null = null;
     for (const candidate of questions) {
-      const fanAnswer = candidate.answer === "__never__" ? "" : candidate.answer;
       result = advanceAverageFanDailyRuntime(contextFrom(publication, result), { question_id: candidate.id });
       const wrong = candidate.format === "true-false"
         ? (candidate.answer.toLowerCase() === "true" ? "False" : "True")
