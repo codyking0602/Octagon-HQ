@@ -132,6 +132,18 @@ export const TODAY_CHALLENGE_ADAPTERS = {
     nativeResultLabel: "Bar Trivia score",
     nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
   },
+  average_fan: {
+    gameType: "average_fan",
+    gameId: "average-fan",
+    title: "Are You Smarter Than an Average Fan?",
+    dailyRoute: "/play/average-fan?mode=daily",
+    casualRoute: "/play/average-fan?mode=casual",
+    cta: "Pick your fan",
+    instructions: "Choose a fan, work all 10 UFC grade-and-subject tiles, then decide whether to bank your HQ score or play the Final.",
+    footballInstructions: "Choose a fan, work all 10 football grade-and-subject tiles, then decide whether to bank your HQ score or play the Final.",
+    nativeResultLabel: "Average Fan score",
+    nativeDisplay: (attempt) => `${attempt.nativeScore}/100`,
+  },
   who_am_i: {
     gameType: "who_am_i",
     gameId: "who-am-i",
