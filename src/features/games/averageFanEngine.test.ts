@@ -174,6 +174,8 @@ describe("Average Fan report-card intelligence", () => {
           .reduce((sum, value) => sum + value, 0);
       });
       expect(new Set(totals)).toEqual(new Set([11]));
+      const profiles = AVERAGE_FAN_FANS.map((fan) => JSON.stringify(AVERAGE_FAN_REPORT_CARDS[sport][fan]));
+      expect(new Set(profiles).size).toBe(AVERAGE_FAN_FANS.length);
 
       for (const fan of AVERAGE_FAN_FANS) {
         const modifiers = AVERAGE_FAN_SUBJECTS[sport].map((subject) =>
