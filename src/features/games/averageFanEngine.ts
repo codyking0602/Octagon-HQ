@@ -5,7 +5,7 @@ import {
 } from "./triviaContentExpiry";
 
 export const AVERAGE_FAN_GAME_ID = "average-fan" as const;
-export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v1" as const;
+export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v2" as const;
 export const AVERAGE_FAN_FANS = ["cody", "shane", "troy", "tyler", "lib"] as const;
 export const AVERAGE_FAN_GRADES = [1, 2, 3, 4, 5] as const;
 export const AVERAGE_FAN_FORMATS = ["short-answer", "four-choice", "true-false"] as const;
