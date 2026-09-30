@@ -89,12 +89,15 @@ begin
     raise exception '2026 MLB Championship must have exactly sixteen Play scoring slots';
   end if;
 
-  if (select count(*) from public.mlb_postseason_challenges where season = 2026 and content_ready) <> 14 then
-    raise exception '2026 MLB Championship must have fourteen production-ready Play challenges after authored additions';
+  if (select count(*) from public.mlb_postseason_challenges where season = 2026 and content_ready) <> 16 then
+    raise exception '2026 MLB Championship must have all sixteen Play challenges production-ready';
   end if;
 
-  if (select count(*) from public.mlb_postseason_challenges where season = 2026 and not content_ready) <> 2 then
-    raise exception '2026 MLB Championship must reserve exactly two not-ready Average Fan challenges';
+  if exists (
+    select 1 from public.mlb_postseason_challenges
+    where season = 2026 and not content_ready
+  ) then
+    raise exception '2026 MLB Championship cannot retain a not-ready Play challenge';
   end if;
 
   if not exists (
