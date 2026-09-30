@@ -90,6 +90,58 @@ export function dailyTwoGameActiveScore(projection: TodayChallengeProjection) {
   return Number.isFinite(score) ? score : projection.officialAttempt?.normalizedScore ?? null;
 }
 
+export interface DailyTwoGamePresentationIntermissionState {
+  key: string;
+  firstScore: number;
+}
+
+export function dailyTwoGamePresentationIntermissionState(
+  projection: TodayChallengeProjection,
+): DailyTwoGamePresentationIntermissionState | null {
+  const series = dailyTwoGameSeriesState(projection);
+  if (
+    projection.gameType !== "wavelength"
+    || projection.officialAttempt
+    || !series
+    || series.complete
+    || series.awaitingNext
+    || series.gameIndex !== 1
+    || series.roundScores.length !== 1
+  ) {
+    return null;
+  }
+
+  const guesses = numberArray(projection.publicState.guesses);
+  if (guesses.length !== 0) return null;
+  const firstScore = series.roundScores[0];
+  if (!Number.isFinite(firstScore)) return null;
+
+  return {
+    key: `${projection.id}:${Math.round(firstScore)}`,
+    firstScore: Math.round(firstScore),
+  };
+}
+
+export function DailyTwoGamePresentationIntermission({
+  projection,
+  onContinue,
+}: {
+  projection: TodayChallengeProjection;
+  onContinue: () => void;
+}) {
+  const intermission = dailyTwoGamePresentationIntermissionState(projection);
+  if (!intermission) return null;
+
+  return (
+    <section className="daily-two-game-intermission" aria-live="polite">
+      <p className="eyebrow">GAME 1 OF 2 COMPLETE</p>
+      <strong>{intermission.firstScore}<small>/100</small></strong>
+      <p>Your first score is locked. Game 2 starts fresh at 50, and the two scores will be averaged.</p>
+      <button type="button" onClick={onContinue}>START GAME 2</button>
+    </section>
+  );
+}
+
 export function DailyTwoGameStatus({
   projection,
   busy = false,
@@ -111,7 +163,7 @@ export function DailyTwoGameStatus({
         <p>Your first score is locked. Game 2 decides the Daily average.</p>
         {onAdvance ? (
           <button type="button" disabled={busy} onClick={() => onAdvance({ type: "next_game" })}>
-            {busy ? "LOADING…" : "PLAY GAME 2"}
+            {busy ? "LOADING…" : "START GAME 2"}
           </button>
         ) : null}
       </section>
