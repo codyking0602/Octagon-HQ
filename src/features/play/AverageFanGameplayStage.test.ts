@@ -172,6 +172,10 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?z-index: 10;/);
   });
 
+  it("fills the baked yellow grade frame with the live blue grade pill", () => {
+    expect(pageCss).toMatch(/\/\* Average Fan gameplay stage plate[\s\S]*?\.average-fan-question-card header b \{[\s\S]*?left: 14px;[\s\S]*?top: 9px;[\s\S]*?width: 242px;[\s\S]*?height: 66px;[\s\S]*?font-size: 22px;/);
+  });
+
   it("keeps all answer formats below the chalkboard and keyboard-safe", () => {
     expect(pageSource).toContain('className="average-fan-answer-stage"');
     expect(pageSource).toContain('question.format === "four-choice"');
