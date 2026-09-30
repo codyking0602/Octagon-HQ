@@ -12,8 +12,10 @@ import {
   DailyTwoGamePresentationIntermission,
   DailyTwoGameStatus,
   dailyTwoGameActiveScore,
+  dailyTwoGamePresentationHandoffWasDismissed,
   dailyTwoGamePresentationIntermissionState,
   dailyTwoGameSeriesState,
+  rememberDailyTwoGamePresentationHandoff,
 } from "./DailyTwoGameStatus";
 import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
@@ -113,14 +115,22 @@ export function OfficialTodayChallengeContent({
   const twoGameSeries = dailyTwoGameSeriesState(projection);
   const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
 
+  const presentationHandoffDismissed = presentationHandoff
+    ? dismissedTwoGameHandoff === presentationHandoff.key
+      || dailyTwoGamePresentationHandoffWasDismissed(presentationHandoff.key)
+    : false;
+
   if (
     presentationHandoff
-    && dismissedTwoGameHandoff !== presentationHandoff.key
+    && !presentationHandoffDismissed
   ) {
     return (
       <DailyTwoGamePresentationIntermission
         projection={projection}
-        onContinue={() => setDismissedTwoGameHandoff(presentationHandoff.key)}
+        onContinue={() => {
+          rememberDailyTwoGamePresentationHandoff(presentationHandoff.key);
+          setDismissedTwoGameHandoff(presentationHandoff.key);
+        }}
       />
     );
   }
