@@ -117,7 +117,10 @@ export function OfficialTodayChallengeContent({
       <DailyTwoGamePresentationIntermission
         projection={projection}
         busy={busy}
-        onContinue={() => onAdvance({ type: "next_game" })}
+        onContinue={() => onAdvance(
+          { type: "next_game" },
+          { dedupeKey: `wavelength-handoff:${projection.id}` },
+        )}
       />
     );
   }
