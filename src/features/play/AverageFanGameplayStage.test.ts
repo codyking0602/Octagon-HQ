@@ -168,7 +168,7 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageSource).not.toContain("autoFocus");
     expect(pageSource).toContain("keyboardOcclusion");
     expect(pageSource).toContain('top: `calc(50% - ${keyboardShift}px)`');
-    expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?top: 584px;[\s\S]*?width: 846px;[\s\S]*?height: 198px;/);
+    expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?top: 566px;[\s\S]*?width: 846px;[\s\S]*?height: 164px;/);
     expect(pageCss).toMatch(/\.average-fan-game-fan__portrait \{[\s\S]*?left: 34%;[\s\S]*?width: 224px;[\s\S]*?height: 342px;/);
     expect(pageSource).not.toContain("Q{displayedQuestionNumber}");
   });
