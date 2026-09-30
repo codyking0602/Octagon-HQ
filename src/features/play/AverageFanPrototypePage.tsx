@@ -13,19 +13,18 @@ import {
 } from "../games/averageFanEngine";
 import {
   AVERAGE_FAN_MONEY_LADDER,
-  AVERAGE_FAN_UFC_PREVIEW_BOARD,
-  AVERAGE_FAN_UFC_PREVIEW_FINAL,
   averageFanGradeLabel,
   averageFanMoneyLabel,
   resolveAverageFanPreviewAnswer,
 } from "./AverageFanPrototypeModel";
+import { buildAverageFanCasualBoard } from "./averageFanCasualBoard";
 import "./AverageFanPrototypePage.css";
 
 type PrototypeScene = "intro" | "fan-select" | "game";
 type GamePhase = "board" | "question" | "reveal" | "final-decision" | "final-question" | "final-reveal" | "result";
 type FinalOutcome = "walk-away" | "correct" | "wrong";
 
-type ResolvedQuestion = {
+export type ResolvedQuestion = {
   question: AverageFanQuestion;
   playerAnswer: string;
   fanAnswer: string;
@@ -37,8 +36,8 @@ type ResolvedQuestion = {
   order: number;
 };
 
-const FAN_ORDER: readonly AverageFanFan[] = ["shane", "cody", "lib", "tyler", "troy"];
-const FAN_LABELS: Record<AverageFanFan, string> = {
+export const FAN_ORDER: readonly AverageFanFan[] = ["shane", "cody", "lib", "tyler", "troy"];
+export const FAN_LABELS: Record<AverageFanFan, string> = {
   shane: "SHANE",
   cody: "CODY",
   lib: "LIB",
@@ -50,7 +49,7 @@ const AVERAGE_FAN_OPENING_STAGE_WIDTH = 1672;
 const AVERAGE_FAN_OPENING_STAGE_HEIGHT = 941;
 const AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH = 1536;
 const AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT = 864;
-const AVERAGE_FAN_GAMEPLAY_STAGE_SRC = "/assets/average-fan/average-fan-gameplay-stage.png";
+export const AVERAGE_FAN_GAMEPLAY_STAGE_SRC = "/assets/average-fan/average-fan-gameplay-stage.png";
 const AVERAGE_FAN_PORTRAITS: Record<AverageFanFan, string> = {
   shane: "/assets/average-fan/average-fan-shane.png",
   cody: "/assets/average-fan/average-fan-cody.png",
@@ -59,10 +58,6 @@ const AVERAGE_FAN_PORTRAITS: Record<AverageFanFan, string> = {
   tyler: "/assets/average-fan/average-fan-lib.png",
   troy: "/assets/average-fan/average-fan-troy.png",
 };
-const AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION =
-  AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "four-choice" && question.grade === 3)
-  ?? AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "four-choice")
-  ?? AVERAGE_FAN_UFC_PREVIEW_BOARD[0]!;
 
 // iOS landscape can report a smaller dynamic viewport than the usable stage; size the fixed scene against lvh.
 function measureAverageFanLargeViewport() {
@@ -88,7 +83,7 @@ function measureAverageFanLargeViewport() {
   };
 }
 
-function useAverageFanOpeningStageScale() {
+export function useAverageFanOpeningStageScale() {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -112,7 +107,7 @@ function useAverageFanOpeningStageScale() {
   return scale;
 }
 
-function useAverageFanGameplayStageLayout() {
+export function useAverageFanGameplayStageLayout() {
   const [layout, setLayout] = useState({ scale: 1, answerShift: 0 });
 
   useEffect(() => {
@@ -157,7 +152,7 @@ function useAverageFanGameplayStageLayout() {
   return layout;
 }
 
-function useAverageFanScreenLock() {
+export function useAverageFanScreenLock() {
   useEffect(() => {
     const root = document.documentElement;
     const body = document.body;
@@ -233,7 +228,7 @@ function StudioProps() {
   );
 }
 
-function RulesModal({ onClose }: { onClose: () => void }) {
+export function RulesModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="average-fan-rules-backdrop" role="presentation" onMouseDown={onClose}>
       <section
@@ -331,22 +326,22 @@ function averageFanSubjectTone(subject: string) {
   return tones[subject] ?? "blue";
 }
 
-function FanSelector({
+export function FanSelector({
   onBack,
   onConfirm,
+  sport = "ufc",
 }: {
   onBack: () => void;
   onConfirm: (fan: AverageFanFan) => void;
+  sport?: "nfl" | "cfb" | "ufc";
 }) {
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
   const stageScale = useAverageFanOpeningStageScale();
-  const sport = "ufc" as const;
-
   const rows = useMemo(() => {
     const subjects = AVERAGE_FAN_SUBJECTS[sport];
     const report = AVERAGE_FAN_REPORT_CARDS[sport][selectedFan] as Record<string, AverageFanReportGrade>;
     return subjects.map((subject) => ({ subject, grade: report[subject] }));
-  }, [selectedFan]);
+  }, [selectedFan, sport]);
 
   return (
     <div className="average-fan-selector average-fan-selector--plate">
@@ -373,7 +368,7 @@ function FanSelector({
           ))}
         </div>
 
-        <section className="average-fan-report" aria-label={`${FAN_LABELS[selectedFan]} UFC report card`}>
+        <section className="average-fan-report" aria-label={`${FAN_LABELS[selectedFan]} ${sport.toUpperCase()} report card`}>
           <h2>{FAN_LABELS[selectedFan]}</h2>
           <span className="average-fan-report__underline" aria-hidden="true" />
           <div className="average-fan-report__rows">
@@ -402,7 +397,7 @@ function FanSelector({
   );
 }
 
-function GameplayFanDesk({ fan }: { fan: AverageFanFan }) {
+export function GameplayFanDesk({ fan }: { fan: AverageFanFan }) {
   return (
     <aside className="average-fan-game-fan" aria-label={`${FAN_LABELS[fan]} at the fan desk`}>
       <img
@@ -417,7 +412,7 @@ function GameplayFanDesk({ fan }: { fan: AverageFanFan }) {
   );
 }
 
-function MoneyRail({ completed, finalActive }: { completed: number; finalActive: boolean }) {
+export function MoneyRail({ completed, finalActive }: { completed: number; finalActive: boolean }) {
   return (
     <aside className="average-fan-money-rail" aria-label="Money ladder">
       <div className={`average-fan-money-row average-fan-money-row--final${finalActive ? " is-current" : ""}`}>
@@ -441,7 +436,7 @@ function MoneyRail({ completed, finalActive }: { completed: number; finalActive:
   );
 }
 
-function HelpRail({
+export function HelpRail({
   peekUsed,
   copyUsed,
   saveUsed,
@@ -488,12 +483,14 @@ function HelpRail({
   );
 }
 
-function TileBoard({
+export function TileBoard({
   resolved,
   onSelect,
+  questions,
 }: {
   resolved: readonly ResolvedQuestion[];
   onSelect: (question: AverageFanQuestion) => void;
+  questions: readonly AverageFanQuestion[];
 }) {
   const resolvedIds = new Set(resolved.map((item) => item.question.id));
   return (
@@ -504,11 +501,11 @@ function TileBoard({
       </header>
       <div className="average-fan-grade-board">
         {[1, 2, 3, 4, 5].map((grade) => {
-          const questions = AVERAGE_FAN_UFC_PREVIEW_BOARD.filter((question) => question.grade === grade);
+          const gradeQuestions = questions.filter((question) => question.grade === grade);
           return (
             <div className="average-fan-grade-row" key={grade}>
               <b>{averageFanGradeLabel(grade)}</b>
-              {questions.map((question) => {
+              {gradeQuestions.map((question) => {
                 const done = resolvedIds.has(question.id);
                 return (
                   <button
@@ -532,7 +529,7 @@ function TileBoard({
   );
 }
 
-function QuestionAnswerControl({
+export function QuestionAnswerControl({
   question,
   value,
   disabled,
@@ -611,7 +608,7 @@ function QuestionAnswerControl({
   );
 }
 
-function FinalDecision({
+export function FinalDecision({
   boardScore,
   subject,
   onWalk,
@@ -641,11 +638,15 @@ function FinalDecision({
 
 function AverageFanGame({
   fan,
+  questions,
+  finalQuestion,
   onExit,
   onRestart,
   initialQuestion = null,
 }: {
   fan: AverageFanFan;
+  questions: readonly AverageFanQuestion[];
+  finalQuestion: AverageFanQuestion;
   onExit: () => void;
   onRestart: () => void;
   initialQuestion?: AverageFanQuestion | null;
@@ -739,7 +740,7 @@ function AverageFanGame({
     const candidate = (valueOverride ?? finalAnswer).trim();
     if (!candidate || phase !== "final-question") return;
     if (valueOverride !== undefined) setFinalAnswer(candidate);
-    const correct = averageFanAnswersMatch(AVERAGE_FAN_UFC_PREVIEW_FINAL, candidate);
+    const correct = averageFanAnswersMatch(finalQuestion, candidate);
     setFinalOutcome(correct ? "correct" : "wrong");
     setPhase("final-reveal");
   }
@@ -767,7 +768,7 @@ function AverageFanGame({
 
         <div className={`average-fan-game-chalkboard${phase === "board" ? " is-board" : ""}`}>
           {phase === "board" ? (
-            <TileBoard resolved={resolved} onSelect={chooseQuestion} />
+            <TileBoard questions={questions} resolved={resolved} onSelect={chooseQuestion} />
           ) : questionVisible ? (
             <section className="average-fan-question-card">
               <header>
@@ -779,7 +780,7 @@ function AverageFanGame({
           ) : phase === "final-decision" ? (
             <FinalDecision
               boardScore={boardScore}
-              subject={AVERAGE_FAN_UFC_PREVIEW_FINAL.subject}
+              subject={finalQuestion.subject}
               onWalk={walkAway}
               onGo={() => {
                 setFinalAnswer("");
@@ -790,9 +791,9 @@ function AverageFanGame({
             <section className="average-fan-question-card average-fan-question-card--final">
               <header>
                 <b>FINAL</b>
-                <span>{AVERAGE_FAN_UFC_PREVIEW_FINAL.subject}</span>
+                <span>{finalQuestion.subject}</span>
               </header>
-              <h2>{AVERAGE_FAN_UFC_PREVIEW_FINAL.prompt}</h2>
+              <h2>{finalQuestion.prompt}</h2>
             </section>
           ) : phase === "result" && finalOutcome ? (
             <section className="average-fan-result">
@@ -863,12 +864,12 @@ function AverageFanGame({
         ) : phase === "final-question" || phase === "final-reveal" ? (
           <div
             className="average-fan-answer-stage average-fan-answer-stage--final"
-            data-format={AVERAGE_FAN_UFC_PREVIEW_FINAL.format}
+            data-format={finalQuestion.format}
             style={answerShift ? { transform: `translateY(-${answerShift}px)` } : undefined}
           >
             {phase === "final-question" ? (
               <QuestionAnswerControl
-                question={AVERAGE_FAN_UFC_PREVIEW_FINAL}
+                question={finalQuestion}
                 value={finalAnswer}
                 disabled={false}
                 onChange={setFinalAnswer}
@@ -877,8 +878,8 @@ function AverageFanGame({
             ) : (
               <div className={`average-fan-reveal${finalOutcome === "correct" ? " is-correct" : " is-wrong"}`}>
                 <strong>{finalOutcome === "correct" ? "YOU'RE A MILLIONAIRE!" : "FINAL MISS"}</strong>
-                <p><b>Answer:</b> {AVERAGE_FAN_UFC_PREVIEW_FINAL.answer}</p>
-                <p>{AVERAGE_FAN_UFC_PREVIEW_FINAL.explanation}</p>
+                <p><b>Answer:</b> {finalQuestion.answer}</p>
+                <p>{finalQuestion.explanation}</p>
                 <button type="button" onClick={() => setPhase("result")}>SEE RESULTS</button>
               </div>
             )}
@@ -915,6 +916,10 @@ export default function AverageFanPrototypePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const openingStageScale = useAverageFanOpeningStageScale();
+  const requestedSport = searchParams.get("sport");
+  const casualSport = requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"
+    ? requestedSport
+    : "ufc";
   const reviewGameplay = searchParams.get("screen") === "gameplay";
   const requestedFan = searchParams.get("fan") as AverageFanFan | null;
   const reviewFan = requestedFan && FAN_ORDER.includes(requestedFan) ? requestedFan : "cody";
@@ -923,15 +928,25 @@ export default function AverageFanPrototypePage() {
   const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
   const [rulesOpen, setRulesOpen] = useState(false);
+  const casualBoard = useMemo(
+    () => buildAverageFanCasualBoard(casualSport, `${casualSport}-owner-casual-${gameKey}`),
+    [casualSport, gameKey],
+  );
+  const casualQuestions = casualBoard.questions;
+  const casualFinal = casualBoard.finalQuestion;
+  const reviewQuestion = casualQuestions.find((question) => question.format === "four-choice" && question.grade === 3)
+    ?? casualQuestions.find((question) => question.format === "four-choice")
+    ?? casualQuestions[0]!;
+  const exitRoute = casualSport === "ufc" ? "/play" : "/football";
 
   if (scene === "fan-select") {
     return (
       <FanSelector
+        sport={casualSport}
         onBack={() => setScene("intro")}
         onConfirm={(fan) => {
           setSelectedFan(fan);
           setReviewQuestionEnabled(false);
-          setGameKey((value) => value + 1);
           setScene("game");
         }}
       />
@@ -943,8 +958,10 @@ export default function AverageFanPrototypePage() {
       <AverageFanGame
         key={gameKey}
         fan={selectedFan}
-        initialQuestion={reviewQuestionEnabled ? AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION : null}
-        onExit={() => navigate("/play")}
+        questions={casualQuestions}
+        finalQuestion={casualFinal}
+        initialQuestion={reviewQuestionEnabled ? reviewQuestion : null}
+        onExit={() => navigate(exitRoute)}
         onRestart={() => {
           setReviewQuestionEnabled(false);
           setGameKey((value) => value + 1);
@@ -991,8 +1008,8 @@ export default function AverageFanPrototypePage() {
       <button
         className="average-fan-exit"
         type="button"
-        onClick={() => navigate("/play")}
-        aria-label="Exit Average Fan preview"
+        onClick={() => navigate(exitRoute)}
+        aria-label="Exit Average Fan Casual"
       >
         ‹ HQ
       </button>

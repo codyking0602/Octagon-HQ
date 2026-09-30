@@ -42,7 +42,8 @@ describe("Average Fan opening stage presentation contract", () => {
 
   it("preserves the existing HQ exit behavior", () => {
     expect(pageSource).toContain('className="average-fan-exit"');
-    expect(pageSource).toContain('onClick={() => navigate("/play")}');
+    expect(pageSource).toContain('const exitRoute = casualSport === "ufc" ? "/play" : "/football";');
+    expect(pageSource).toContain("onClick={() => navigate(exitRoute)}");
     expect(pageSource).toContain("‹ HQ");
   });
 });
