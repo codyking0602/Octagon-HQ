@@ -8,9 +8,9 @@ const footballDaily = readFileSync(
 );
 
 describe("Football Daily leaderboard result renderer", () => {
-  it("routes Millionaire, Sports Feud, Who Am I, and Bar Trivia through the read-only leaderboard viewer", () => {
+  it("routes Daily-only rich results, including Average Fan, through the read-only leaderboard viewer", () => {
     expect(hub).toContain("DailyLeaderboardGameResult");
-    expect(hub).toContain('entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia"');
+    expect(hub).toContain('entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia" || entry.gameType === "average_fan"');
     expect(hub).toContain("resultDetail={entry.resultDetail}");
   });
 
@@ -39,6 +39,7 @@ describe("Football Daily leaderboard result renderer", () => {
       "who_am_i",
       "millionaire",
       "sports_feud",
+      "average_fan",
     ]) {
       expect(footballDaily).toContain(`case "${gameType}":`);
     }
