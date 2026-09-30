@@ -67,6 +67,11 @@ import {
   AVERAGE_FAN_DAILY_SCORING_VERSION,
 } from "./averageFanDailyRuntime";
 import {
+  advanceAverageFanDailyRuntime,
+  buildAverageFanDailySetup,
+  AVERAGE_FAN_DAILY_SCORING_VERSION,
+} from "./averageFanDailyRuntime";
+import {
   WAVELENGTH_CONTRACT_VERSIONS,
   createWavelengthRound,
   nextWavelengthClue,
