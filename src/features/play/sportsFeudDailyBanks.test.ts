@@ -312,7 +312,7 @@ describe("Sports Feud authored Daily banks", () => {
     }
   });
 
-  it("replaces the September 30 UFC MMA-team board without changing the rest of the slate", () => {
+  it("reranks the September 30 UFC board and tightens the punch prompt", () => {
     const removedPrompt = "Name an MMA team associated with multiple notable UFC fighters.";
     expect(UFC_SPORTS_FEUD_MAIN.some((question) => question.prompt === removedPrompt)).toBe(false);
 
@@ -324,7 +324,7 @@ describe("Sports Feud authored Daily banks", () => {
     expect(pack.fastMoney.map((question) => question.prompt)).toEqual([
       "Name another fighter on the undisputed UFC middleweight champions list.",
       "Name a rivalry that produced major UFC promotion and drama.",
-      "Name a strike you can use in MMA.",
+      "Name a punch or fist strike commonly used in MMA.",
       "Name a UFC athlete opponents cannot afford to get hit clean by.",
       "Name a division a UFC fighter can compete in.",
     ]);
@@ -335,6 +335,28 @@ describe("Sports Feud authored Daily banks", () => {
     if (bones.status === "matched") {
       expect(pack.entities.find((entity) => entity.id === bones.entityId)?.displayName)
         .toBe("Bones");
+    }
+
+    const rampage = matchFamilyFeudAnswer(pack, nicknameBoard, "Rampage Jackson");
+    expect(rampage.status).toBe("matched");
+    if (rampage.status === "matched") {
+      expect(nicknameBoard.answers.find((answer) => answer.entityId === rampage.entityId)?.points)
+        .toBe(5);
+    }
+
+    const diamond = matchFamilyFeudAnswer(pack, nicknameBoard, "The Diamond");
+    expect(diamond.status).toBe("matched");
+    if (diamond.status === "matched") {
+      expect(nicknameBoard.answers.find((answer) => answer.entityId === diamond.entityId)?.points)
+        .toBe(4);
+    }
+
+    const punch = pack.fastMoney[2]!;
+    const hook = matchFamilyFeudAnswer(pack, punch, "Hook");
+    expect(hook.status).toBe("matched");
+    if (hook.status === "matched") {
+      expect(punch.answers.find((answer) => answer.entityId === hook.entityId)?.points)
+        .toBe(6);
     }
   });
 

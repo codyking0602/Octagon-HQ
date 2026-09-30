@@ -2277,102 +2277,65 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
         "answers": [
           {
             "name": "The Notorious",
-            "aliases": [
-              "Conor McGregor",
-              "Conor",
-              "Notorious"
-            ]
+            "aliases": ["Conor McGregor", "Conor", "Notorious"]
           },
           {
             "name": "Bones",
-            "aliases": [
-              "Jon Jones",
-              "Jon"
-            ]
+            "aliases": ["Jon Jones", "Jon"]
           },
           {
             "name": "The Spider",
-            "aliases": [
-              "Anderson Silva",
-              "Anderson",
-              "Spider"
-            ]
-          },
-          {
-            "name": "Mighty Mouse",
-            "aliases": [
-              "Demetrious Johnson",
-              "DJ"
-            ]
+            "aliases": ["Anderson Silva", "Anderson", "Spider"]
           },
           {
             "name": "The Iceman",
-            "aliases": [
-              "Chuck Liddell",
-              "Chuck",
-              "Iceman"
-            ]
+            "aliases": ["Chuck Liddell", "Chuck", "Iceman"]
+          },
+          {
+            "name": "Rampage",
+            "aliases": ["Quinton Jackson", "Rampage Jackson", "Quinton"]
+          },
+          {
+            "name": "Mighty Mouse",
+            "aliases": ["Demetrious Johnson", "DJ"]
+          },
+          {
+            "name": "The Diamond",
+            "aliases": ["Dustin Poirier", "Poirier", "Diamond"]
           },
           {
             "name": "Stylebender",
-            "aliases": [
-              "Israel Adesanya",
-              "Izzy",
-              "The Last Stylebender"
-            ]
-          },
-          {
-            "name": "Poatan",
-            "aliases": [
-              "Alex Pereira",
-              "Pereira"
-            ]
-          },
-          {
-            "name": "Do Bronx",
-            "aliases": [
-              "Charles Oliveira",
-              "Oliveira"
-            ]
+            "aliases": ["Israel Adesanya", "Izzy", "The Last Stylebender"]
           }
         ],
         "alsoAcceptedAnswers": [
           {
             "name": "Wonderboy",
-            "aliases": [
-              "Stephen Thompson",
-              "Thompson"
-            ]
+            "aliases": ["Stephen Thompson", "Thompson"]
           },
           {
             "name": "The Highlight",
-            "aliases": [
-              "Justin Gaethje",
-              "Gaethje",
-              "Highlight"
-            ]
+            "aliases": ["Justin Gaethje", "Gaethje", "Highlight"]
           },
           {
             "name": "The Lioness",
-            "aliases": [
-              "Amanda Nunes",
-              "Nunes",
-              "Lioness"
-            ]
+            "aliases": ["Amanda Nunes", "Nunes", "Lioness"]
           },
           {
             "name": "Rowdy",
-            "aliases": [
-              "Ronda Rousey",
-              "Rousey"
-            ]
+            "aliases": ["Ronda Rousey", "Rousey"]
           },
           {
             "name": "Blessed",
-            "aliases": [
-              "Max Holloway",
-              "Holloway"
-            ]
+            "aliases": ["Max Holloway", "Holloway"]
+          },
+          {
+            "name": "Poatan",
+            "aliases": ["Alex Pereira", "Pereira"]
+          },
+          {
+            "name": "Do Bronx",
+            "aliases": ["Charles Oliveira", "Oliveira"]
           }
         ]
       }

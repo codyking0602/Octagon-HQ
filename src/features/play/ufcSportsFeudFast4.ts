@@ -423,26 +423,26 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
     "collisionGroup": "strikes",
     "prompts": [
       {
-        "prompt": "Name a strike you can use in MMA.",
+        "prompt": "Name a punch or fist strike commonly used in MMA.",
         "answers": [
           "Jab",
           "Cross",
           "Hook",
           "Uppercut",
-          "Elbow",
-          "Knee",
-          "Body kick",
-          "Head kick"
+          "Overhand",
+          "Superman punch",
+          "Hammerfist",
+          "Spinning backfist"
         ],
         "alsoAcceptedAnswers": [
-          "Overhand",
-          "Low kick",
-          "Front kick",
-          "Spinning backfist",
-          "Hammerfist",
-          "Spinning elbow",
-          "Superman punch",
-          "Spinning kick"
+          {
+            "name": "Body shot",
+            "aliases": ["Body punch"]
+          },
+          {
+            "name": "Liver shot",
+            "aliases": ["Liver punch"]
+          }
         ]
       },
       {
