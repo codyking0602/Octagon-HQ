@@ -11,6 +11,7 @@ import { buildFootballDailyPersistenceSetup as buildWavelength } from "./footbal
 import { buildFootballDailyPersistenceSetup as buildWhoAmI } from "./footballDailyPublicationWhoAmI";
 import {
   buildFootballTodayPersistenceSetup,
+  footballAverageFanLocalHistory,
   footballTodayGameForDay,
   footballTodayScheduleVersionForDay,
 } from "./footballTodayChallengeSession";
@@ -47,7 +48,14 @@ describe("split Football Daily publication runtimes", () => {
       const gameType = footballTodayGameForDay(day);
       const scheduleVersion = footballTodayScheduleVersionForDay(day);
       const expected = buildFootballTodayPersistenceSetup(day);
-      const actual = builderFor(gameType)(day, scheduleVersion, gameType);
+      const builder = builderFor(gameType);
+      expect(builder).toBeTypeOf("function");
+      const actual = builder!(
+        day,
+        scheduleVersion,
+        gameType,
+        gameType === "average_fan" ? footballAverageFanLocalHistory(day) : undefined,
+      );
       expect(actual).toEqual(expected);
     }
   }, 60_000);
@@ -62,7 +70,9 @@ describe("split Football Daily publication runtimes", () => {
         scheduleVersion,
         ...buildFootballOfficialDailySetup(gameType, day, scheduleVersion),
       };
-      expect(builderFor(gameType)(day, scheduleVersion, gameType)).toEqual(expected);
+      const builder = builderFor(gameType);
+      expect(builder).toBeTypeOf("function");
+      expect(builder!(day, scheduleVersion, gameType)).toEqual(expected);
     }
   });
 });
