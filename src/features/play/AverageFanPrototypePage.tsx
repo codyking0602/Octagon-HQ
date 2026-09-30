@@ -54,8 +54,9 @@ const AVERAGE_FAN_GAMEPLAY_STAGE_SRC = "/assets/average-fan/average-fan-gameplay
 const AVERAGE_FAN_PORTRAITS: Record<AverageFanFan, string> = {
   shane: "/assets/average-fan/average-fan-shane.png",
   cody: "/assets/average-fan/average-fan-cody.png",
-  lib: "/assets/average-fan/average-fan-lib.png",
-  tyler: "/assets/average-fan/average-fan-tyler.png",
+  // The two source files were named opposite their pictured identities.
+  lib: "/assets/average-fan/average-fan-tyler.png",
+  tyler: "/assets/average-fan/average-fan-lib.png",
   troy: "/assets/average-fan/average-fan-troy.png",
 };
 const AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION =
@@ -264,6 +265,23 @@ function averageFanSubjectIcon(subject: string) {
   return icons[subject] ?? "•";
 }
 
+function averageFanSubjectTone(subject: string) {
+  const tones: Record<string, "red" | "blue" | "gold" | "purple"> = {
+    Players: "red",
+    Teams: "blue",
+    "NFL History": "gold",
+    "X’s & O’s": "purple",
+    Programs: "blue",
+    Traditions: "gold",
+    "CFB History": "purple",
+    Fighters: "red",
+    Fights: "blue",
+    Championships: "gold",
+    "Octagon IQ": "purple",
+  };
+  return tones[subject] ?? "blue";
+}
+
 function FanSelector({
   onBack,
   onConfirm,
@@ -440,7 +458,7 @@ function TileBoard({
           const questions = AVERAGE_FAN_UFC_PREVIEW_BOARD.filter((question) => question.grade === grade);
           return (
             <div className="average-fan-grade-row" key={grade}>
-              <b>{averageFanGradeLabel(grade).replace(" Grade", "")}</b>
+              <b>{averageFanGradeLabel(grade)}</b>
               {questions.map((question) => {
                 const done = resolvedIds.has(question.id);
                 return (
@@ -448,11 +466,12 @@ function TileBoard({
                     key={question.id}
                     type="button"
                     className={done ? "is-done" : ""}
+                    data-subject-tone={averageFanSubjectTone(question.subject)}
                     disabled={done}
                     onClick={() => onSelect(question)}
                   >
                     <span>{question.subject}</span>
-                    <small>{done ? "✓ ANSWERED" : averageFanGradeLabel(grade)}</small>
+                    {done ? <small>✓ ANSWERED</small> : null}
                   </button>
                 );
               })}
@@ -698,7 +717,7 @@ function AverageFanGame({
           aria-hidden="true"
         />
 
-        <div className="average-fan-game-chalkboard">
+        <div className={`average-fan-game-chalkboard${phase === "board" ? " is-board" : ""}`}>
           {phase === "board" ? (
             <TileBoard resolved={resolved} onSelect={chooseQuestion} />
           ) : questionVisible ? (
