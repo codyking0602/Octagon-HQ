@@ -20,8 +20,8 @@ import {
 import { buildAverageFanCasualBoard } from "./averageFanCasualBoard";
 import "./AverageFanPrototypePage.css";
 
-type PrototypeScene = "intro" | "fan-select" | "game";
-type GamePhase = "board" | "question" | "reveal" | "final-decision" | "final-question" | "final-reveal" | "result";
+type PrototypeScene = "intro" | "sport-select" | "fan-select" | "game";
+type GamePhase = "board" | "question" | "reveal" | "verdict" | "final-decision" | "final-question" | "final-reveal" | "result";
 type FinalOutcome = "walk-away" | "correct" | "wrong";
 
 export type ResolvedQuestion = {
@@ -242,10 +242,10 @@ export function RulesModal({ onClose }: { onClose: () => void }) {
         <p>HOW TO PLAY</p>
         <h2 id="average-fan-rules-title">ARE YOU SMARTER THAN AN AVERAGE FAN?</h2>
         <div className="average-fan-rules__grid">
-          <article><b>1</b><span><strong>Pick your fan.</strong> Your fan is locked for the whole run.</span></article>
+          <article><b>1</b><span><strong>Pick your sport and fan.</strong> Your fan is locked for the whole run.</span></article>
           <article><b>2</b><span><strong>Work the board.</strong> Choose any of the 10 grade-and-subject tiles.</span></article>
           <article><b>3</b><span><strong>Use your help.</strong> Peek, Copy and Save are each available once.</span></article>
-          <article><b>4</b><span><strong>Make the final call.</strong> After 10 questions, see the Final subject and choose whether to walk or go for $1,000,000.</span></article>
+          <article><b>4</b><span><strong>Finish strong.</strong> An unsaved miss ends the money run, but you keep playing for HQ points and the Final.</span></article>
         </div>
       </section>
     </div>
@@ -324,6 +324,51 @@ function averageFanSubjectTone(subject: string) {
     "Octagon IQ": "purple",
   };
   return tones[subject] ?? "blue";
+}
+
+export function SportSelector({
+  onBack,
+  onSelect,
+}: {
+  onBack: () => void;
+  onSelect: (sport: "nfl" | "cfb" | "ufc") => void;
+}) {
+  const stageScale = useAverageFanOpeningStageScale();
+  const sports = [
+    { id: "ufc" as const, label: "UFC", detail: "Fighters • Fights • Championships • Octagon IQ" },
+    { id: "nfl" as const, label: "NFL", detail: "Players • Teams • NFL History • X’s & O’s" },
+    { id: "cfb" as const, label: "COLLEGE FOOTBALL", detail: "Players • Programs • Traditions • CFB History" },
+  ];
+
+  return (
+    <div className="average-fan-sport-select average-fan-intro--plate">
+      <section
+        className="average-fan-intro-stage"
+        aria-label="Choose Average Fan sport"
+        style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}
+      >
+        <img
+          className="average-fan-intro-stage__plate"
+          src="/assets/average-fan/average-fan-opening-stage.png"
+          alt=""
+          aria-hidden="true"
+        />
+        <section className="average-fan-sport-panel">
+          <p>CHOOSE YOUR SPORT</p>
+          <h2>WHO ARE YOU SMARTER THAN?</h2>
+          <div className="average-fan-sport-options">
+            {sports.map((sport) => (
+              <button key={sport.id} type="button" onClick={() => onSelect(sport.id)}>
+                <strong>{sport.label}</strong>
+                <span>{sport.detail}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+      </section>
+      <button className="average-fan-exit" type="button" onClick={onBack} aria-label="Back to opening screen">‹ BACK</button>
+    </div>
+  );
 }
 
 export function FanSelector({
@@ -412,19 +457,32 @@ export function GameplayFanDesk({ fan }: { fan: AverageFanFan }) {
   );
 }
 
-export function MoneyRail({ completed, finalActive }: { completed: number; finalActive: boolean }) {
+export function MoneyRail({
+  completed,
+  finalActive,
+  lostAt,
+}: {
+  completed: number;
+  finalActive: boolean;
+  lostAt: number | null;
+}) {
+  const displayCompleted = lostAt ? Math.max(0, lostAt - 1) : completed;
   return (
-    <aside className="average-fan-money-rail" aria-label="Money ladder">
-      <div className={`average-fan-money-row average-fan-money-row--final${finalActive ? " is-current" : ""}`}>
+    <aside
+      className={`average-fan-money-rail${lostAt ? " is-frozen" : ""}`}
+      aria-label={lostAt ? `Money ladder — run ended at question ${lostAt}` : "Money ladder"}
+    >
+      <div className={`average-fan-money-row average-fan-money-row--final${finalActive && !lostAt ? " is-current" : ""}`}>
         <strong>$1,000,000</strong>
       </div>
       {AVERAGE_FAN_MONEY_LADDER.slice().reverse().map((money, reverseIndex) => {
         const questionNumber = AVERAGE_FAN_MONEY_LADDER.length - reverseIndex;
-        const current = !finalActive && completed < 10 && questionNumber === completed + 1;
-        const cleared = questionNumber <= completed;
+        const current = !lostAt && !finalActive && completed < 10 && questionNumber === completed + 1;
+        const cleared = questionNumber <= displayCompleted;
+        const lost = lostAt === questionNumber;
         return (
           <div
-            className={`average-fan-money-row${current ? " is-current" : ""}${cleared ? " is-cleared" : ""}`}
+            className={`average-fan-money-row${current ? " is-current" : ""}${cleared ? " is-cleared" : ""}${lost ? " is-lost" : ""}`}
             key={money}
           >
             <small>{questionNumber}</small>
@@ -611,11 +669,13 @@ export function QuestionAnswerControl({
 export function FinalDecision({
   boardScore,
   subject,
+  moneyAlive,
   onWalk,
   onGo,
 }: {
   boardScore: number;
   subject: string;
+  moneyAlive: boolean;
   onWalk: () => void;
   onGo: () => void;
 }) {
@@ -623,14 +683,27 @@ export function FinalDecision({
     <section className="average-fan-final-card">
       <p>FINAL QUESTION</p>
       <h2>{subject}</h2>
-      <span>You've cleared the board with <strong>{boardScore} HQ PTS</strong>.</span>
+      <span>
+        {moneyAlive
+          ? <>You've cleared the board with <strong>{boardScore} HQ PTS</strong>.</>
+          : <>The money run is over. You have <strong>{boardScore} HQ PTS</strong> — the Final is worth ±10.</>}
+      </span>
       <div className="average-fan-final-stakes">
-        <div><small>WALK AWAY</small><strong>$500,000</strong></div>
-        <div><small>GO FOR IT</small><strong>$1,000,000</strong></div>
+        {moneyAlive ? (
+          <>
+            <div><small>WALK AWAY</small><strong>$500,000</strong></div>
+            <div><small>GO FOR IT</small><strong>$1,000,000</strong></div>
+          </>
+        ) : (
+          <>
+            <div><small>BANK SCORE</small><strong>{boardScore} PTS</strong></div>
+            <div><small>PLAY FINAL</small><strong>±10 PTS</strong></div>
+          </>
+        )}
       </div>
       <div className="average-fan-final-actions">
-        <button type="button" onClick={onWalk}>WALK AWAY</button>
-        <button type="button" className="is-go" onClick={onGo}>GO FOR $1M</button>
+        <button type="button" onClick={onWalk}>{moneyAlive ? "WALK AWAY" : "BANK HQ SCORE"}</button>
+        <button type="button" className="is-go" onClick={onGo}>{moneyAlive ? "GO FOR $1M" : "PLAY FINAL"}</button>
       </div>
     </section>
   );
@@ -661,6 +734,7 @@ function AverageFanGame({
   const [saveUsed, setSaveUsed] = useState(false);
   const [peekActive, setPeekActive] = useState(false);
   const [lastResolution, setLastResolution] = useState<ResolvedQuestion | null>(null);
+  const [verdictShown, setVerdictShown] = useState(false);
   const [finalAnswer, setFinalAnswer] = useState("");
   const [finalOutcome, setFinalOutcome] = useState<FinalOutcome | null>(null);
 
@@ -671,8 +745,12 @@ function AverageFanGame({
   const unsavedMisses = resolved.filter((item) => !item.correct && !item.saved).map((item) => item.order);
   const boardScore = scoreAverageFanBoard(unsavedMisses);
   const completed = resolved.length;
+  const firstUnsavedMiss = unsavedMisses[0] ?? null;
+  const moneyAlive = firstUnsavedMiss === null;
   const finalScore = finalOutcome ? scoreAverageFanFinal(boardScore, finalOutcome) : boardScore;
-  const finalMoney = finalOutcome === "correct" ? 1_000_000 : finalOutcome === "wrong" ? 25_000 : 500_000;
+  const finalMoney = moneyAlive
+    ? (finalOutcome === "correct" ? 1_000_000 : finalOutcome === "wrong" ? 25_000 : 500_000)
+    : null;
 
   function chooseQuestion(question: AverageFanQuestion) {
     setCurrent(question);
@@ -723,10 +801,27 @@ function AverageFanGame({
   }
 
   function continueAfterReveal() {
+    const firstUnsurvivedMiss = Boolean(
+      lastResolution
+      && !lastResolution.correct
+      && !lastResolution.saved
+      && unsavedMisses.length === 1
+      && !verdictShown
+    );
     setCurrent(null);
     setAnswer("");
     setPeekActive(false);
     setLastResolution(null);
+    if (firstUnsurvivedMiss) {
+      setVerdictShown(true);
+      setPhase("verdict");
+      return;
+    }
+    if (resolved.length >= 10) setPhase("final-decision");
+    else setPhase("board");
+  }
+
+  function continueAfterVerdict() {
     if (resolved.length >= 10) setPhase("final-decision");
     else setPhase("board");
   }
@@ -777,10 +872,19 @@ function AverageFanGame({
               </header>
               <h2>{current.prompt}</h2>
             </section>
+          ) : phase === "verdict" ? (
+            <section className="average-fan-verdict" role="status" aria-live="polite">
+              <p>THE VERDICT</p>
+              <h2>YOU ARE NOT SMARTER THAN AN AVERAGE FAN</h2>
+              <strong>YOUR HQ SCORE IS STILL ALIVE</strong>
+              <span>Finish the board and see how high you can score.</span>
+              <button type="button" onClick={continueAfterVerdict}>KEEP PLAYING</button>
+            </section>
           ) : phase === "final-decision" ? (
             <FinalDecision
               boardScore={boardScore}
               subject={finalQuestion.subject}
+              moneyAlive={moneyAlive}
               onWalk={walkAway}
               onGo={() => {
                 setFinalAnswer("");
@@ -798,8 +902,16 @@ function AverageFanGame({
           ) : phase === "result" && finalOutcome ? (
             <section className="average-fan-result">
               <p>FINAL REPORT</p>
-              <h2>{finalOutcome === "correct" ? "$1,000,000" : finalOutcome === "walk-away" ? "$500,000" : "$25,000"}</h2>
-              <span>{finalOutcome === "correct" ? "SMARTER THAN AN AVERAGE FAN" : finalOutcome === "walk-away" ? "MONEY BANKED" : "SO CLOSE"}</span>
+              <h2>
+                {moneyAlive
+                  ? (finalOutcome === "correct" ? "$1,000,000" : finalOutcome === "walk-away" ? "$500,000" : "$25,000")
+                  : `${finalScore} HQ PTS`}
+              </h2>
+              <span>
+                {moneyAlive
+                  ? (finalOutcome === "correct" ? "YOU ARE SMARTER THAN AN AVERAGE FAN" : finalOutcome === "walk-away" ? "MONEY BANKED" : "YOU ARE NOT SMARTER THAN AN AVERAGE FAN")
+                  : "HQ RUN COMPLETE"}
+              </span>
               <div className="average-fan-result-score">
                 <strong>{finalScore}</strong>
                 <small>HQ PTS</small>
@@ -807,7 +919,7 @@ function AverageFanGame({
               <div className="average-fan-result-stats">
                 <div><b>{resolved.filter((item) => item.correct || item.saved).length}/10</b><span>Board clears</span></div>
                 <div><b>{resolved.filter((item) => item.saved).length}</b><span>Saves</span></div>
-                <div><b>{averageFanMoneyLabel(finalMoney)}</b><span>Final money</span></div>
+                <div><b>{finalMoney ? averageFanMoneyLabel(finalMoney) : "ENDED"}</b><span>Money run</span></div>
               </div>
               <div className="average-fan-result-actions">
                 <button type="button" onClick={onRestart}>PLAY AGAIN</button>
@@ -877,7 +989,11 @@ function AverageFanGame({
               />
             ) : (
               <div className={`average-fan-reveal${finalOutcome === "correct" ? " is-correct" : " is-wrong"}`}>
-                <strong>{finalOutcome === "correct" ? "YOU'RE A MILLIONAIRE!" : "FINAL MISS"}</strong>
+                <strong>
+                  {finalOutcome === "correct"
+                    ? (moneyAlive ? "YOU'RE A MILLIONAIRE!" : "FINAL CORRECT +10")
+                    : "FINAL MISS -10"}
+                </strong>
                 <p><b>Answer:</b> {finalQuestion.answer}</p>
                 <p>{finalQuestion.explanation}</p>
                 <button type="button" onClick={() => setPhase("result")}>SEE RESULTS</button>
@@ -889,6 +1005,7 @@ function AverageFanGame({
         <MoneyRail
           completed={railCompleted}
           finalActive={phase === "final-decision" || phase === "final-question" || phase === "final-reveal" || phase === "result"}
+          lostAt={firstUnsavedMiss}
         />
         {phase === "board" || phase === "question" || phase === "reveal" ? (
           <HelpRail
@@ -917,13 +1034,14 @@ export default function AverageFanPrototypePage() {
   const [searchParams] = useSearchParams();
   const openingStageScale = useAverageFanOpeningStageScale();
   const requestedSport = searchParams.get("sport");
-  const casualSport = requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"
+  const initialSport = requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"
     ? requestedSport
     : "ufc";
   const reviewGameplay = searchParams.get("screen") === "gameplay";
   const requestedFan = searchParams.get("fan") as AverageFanFan | null;
   const reviewFan = requestedFan && FAN_ORDER.includes(requestedFan) ? requestedFan : "cody";
   const [scene, setScene] = useState<PrototypeScene>(() => reviewGameplay ? "game" : "intro");
+  const [casualSport, setCasualSport] = useState<"nfl" | "cfb" | "ufc">(initialSport);
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>(() => reviewGameplay ? reviewFan : "shane");
   const [reviewQuestionEnabled, setReviewQuestionEnabled] = useState(reviewGameplay);
   const [gameKey, setGameKey] = useState(0);
@@ -939,11 +1057,24 @@ export default function AverageFanPrototypePage() {
     ?? casualQuestions[0]!;
   const exitRoute = casualSport === "ufc" ? "/play" : "/football";
 
+  if (scene === "sport-select") {
+    return (
+      <SportSelector
+        onBack={() => setScene("intro")}
+        onSelect={(sport) => {
+          setCasualSport(sport);
+          setReviewQuestionEnabled(false);
+          setScene("fan-select");
+        }}
+      />
+    );
+  }
+
   if (scene === "fan-select") {
     return (
       <FanSelector
         sport={casualSport}
-        onBack={() => setScene("intro")}
+        onBack={() => setScene("sport-select")}
         onConfirm={(fan) => {
           setSelectedFan(fan);
           setReviewQuestionEnabled(false);
@@ -989,7 +1120,7 @@ export default function AverageFanPrototypePage() {
           <button
             className="average-fan-intro-stage__button average-fan-intro-stage__button--start"
             type="button"
-            onClick={() => setScene("fan-select")}
+            onClick={() => setScene("sport-select")}
           >
             <span aria-hidden="true">▶</span>
             <strong>START</strong>
