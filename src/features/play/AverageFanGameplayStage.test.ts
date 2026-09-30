@@ -140,6 +140,25 @@ describe("Average Fan locked gameplay stage", () => {
     }
   });
 
+  it("keeps the corrected Tyler and Lib pictured identities in gameplay", () => {
+    expect(pageSource).toContain('lib: "/assets/average-fan/average-fan-tyler.png"');
+    expect(pageSource).toContain('tyler: "/assets/average-fan/average-fan-lib.png"');
+  });
+
+  it("lets the live subject board cover the baked question template cleanly", () => {
+    expect(pageSource).toContain('phase === "board" ? " is-board" : ""');
+    expect(pageSource).toContain("<b>{averageFanGradeLabel(grade)}</b>");
+    expect(pageSource).not.toContain('.replace(" Grade", "")');
+    expect(pageSource).toContain("data-subject-tone={averageFanSubjectTone(question.subject)}");
+    expect(pageCss).toMatch(/\.average-fan-game-chalkboard\.is-board::before \{[\s\S]*?background:/);
+    expect(pageCss).toContain('button[data-subject-tone="red"]');
+    expect(pageCss).toContain('button[data-subject-tone="blue"]');
+    expect(pageCss).toContain('button[data-subject-tone="gold"]');
+    expect(pageCss).toContain('button[data-subject-tone="purple"]');
+    expect(pageCss).toMatch(/\.average-fan-game-fan \{[\s\S]*?z-index: 9;/);
+    expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?z-index: 10;/);
+  });
+
   it("keeps all answer formats below the chalkboard and keyboard-safe", () => {
     expect(pageSource).toContain('className="average-fan-answer-stage"');
     expect(pageSource).toContain('data-choice-count={question.choices!.length}');
@@ -150,7 +169,7 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageSource).toContain("keyboardOcclusion");
     expect(pageSource).toContain('top: `calc(50% - ${keyboardShift}px)`');
     expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?top: 584px;[\s\S]*?width: 846px;[\s\S]*?height: 198px;/);
-    expect(pageCss).toMatch(/\.average-fan-game-fan__portrait \{[\s\S]*?left: 42%;[\s\S]*?width: 238px;[\s\S]*?height: 360px;/);
+    expect(pageCss).toMatch(/\.average-fan-game-fan__portrait \{[\s\S]*?left: 34%;[\s\S]*?width: 224px;[\s\S]*?height: 342px;/);
     expect(pageSource).not.toContain("Q{displayedQuestionNumber}");
   });
 
