@@ -47,8 +47,8 @@ function findWrongQuestion(
       grade: 5,
       difficultyNudge: 3,
       format,
-      ...(format === "three-choice"
-        ? { answer: "Alpha", aliases: [], choices: ["Alpha", "Beta", "Gamma"] as const, fanMisses: undefined }
+      ...(format === "four-choice"
+        ? { answer: "Alpha", aliases: [], choices: ["Alpha", "Beta", "Gamma", "Delta"] as const, fanMisses: undefined }
         : format === "true-false"
           ? { answer: "True", aliases: [], fanMisses: undefined }
           : {}),
@@ -63,10 +63,10 @@ describe("Average Fan canonical question contract", () => {
   it("accepts the three locked formats and enforces authored short-answer fan misses", () => {
     expect(validateAverageFanQuestion(fixture())).toEqual([]);
     expect(validateAverageFanQuestion(fixture({
-      format: "three-choice",
+      format: "four-choice",
       answer: "Alpha",
       aliases: [],
-      choices: ["Alpha", "Beta", "Gamma"],
+      choices: ["Alpha", "Beta", "Gamma", "Delta"],
       fanMisses: undefined,
     }))).toEqual([]);
     expect(validateAverageFanQuestion(fixture({
@@ -184,7 +184,7 @@ describe("Average Fan report-card intelligence", () => {
     const short = findWrongQuestion("short-answer", "shane");
     expect(short.question.fanMisses).toContain(short.answer.answer);
 
-    const choice = findWrongQuestion("three-choice", "shane");
+    const choice = findWrongQuestion("four-choice", "shane");
     expect(choice.question.choices).toContain(choice.answer.answer);
     expect(choice.answer.answer).not.toBe(choice.question.answer);
 
