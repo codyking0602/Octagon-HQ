@@ -759,7 +759,10 @@ export default function FootballTodayChallengePage() {
           projection={projection}
           busy={busy}
           onContinue={() => {
-            advance({ type: "next_game" });
+            advance(
+              { type: "next_game" },
+              { dedupeKey: `football-wavelength-handoff:${projection.id}` },
+            );
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         />
