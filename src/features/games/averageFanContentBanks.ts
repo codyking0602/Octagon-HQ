@@ -902,35 +902,35 @@ const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
 }));
 
 const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
-  ["00-player-mendoza", "Players", "Before his Heisman-winning championship season at Indiana, Fernando Mendoza played for which school?", "California", ["Stanford", "UCLA"], "Fernando Mendoza transferred from California to Indiana before his 2025 Heisman and national-title season."],
-  ["01-player-woodson", "Players", "Which Tennessee quarterback finished behind Charles Woodson in the famous 1997 Heisman race?", "Peyton Manning", ["Tee Martin", "Danny Wuerffel"], "Peyton Manning finished second to Michigan's Charles Woodson in the 1997 Heisman voting."],
-  ["02-player-newton", "Players", "Cam Newton completed Auburn's 2010 national-title season by beating which team in the BCS Championship Game?", "Oregon", ["TCU", "Stanford"], "Auburn beat Oregon 22–19 to finish Cam Newton's Heisman-winning season 14–0."],
-  ["03-player-griffin", "Players", "Archie Griffin won his back-to-back Heisman Trophies in which two seasons?", "1974 and 1975", ["1973 and 1974", "1975 and 1976"], "Ohio State running back Archie Griffin won the Heisman in 1974 and 1975."],
+  ["00-player-mendoza", "Players", "Before his Heisman-winning championship season at Indiana, Fernando Mendoza played for which school?", "California", ["Stanford", "UCLA", "Arizona State"], "Fernando Mendoza transferred from California to Indiana before his 2025 Heisman and national-title season."],
+  ["01-player-woodson", "Players", "Which Tennessee quarterback finished behind Charles Woodson in the famous 1997 Heisman race?", "Peyton Manning", ["Tee Martin", "Danny Wuerffel", "Tim Couch"], "Peyton Manning finished second to Michigan's Charles Woodson in the 1997 Heisman voting."],
+  ["02-player-newton", "Players", "Cam Newton completed Auburn's 2010 national-title season by beating which team in the BCS Championship Game?", "Oregon", ["TCU", "Stanford", "Alabama"], "Auburn beat Oregon 22–19 to finish Cam Newton's Heisman-winning season 14–0."],
+  ["03-player-griffin", "Players", "Archie Griffin won his back-to-back Heisman Trophies in which two seasons?", "1974 and 1975", ["1973 and 1974", "1975 and 1976", "1972 and 1973"], "Ohio State running back Archie Griffin won the Heisman in 1974 and 1975."],
 
-  ["00-program-indiana", "Programs", "Which program completed a 16–0 season by beating Miami for the 2025 national championship?", "Indiana", ["Oregon", "Ohio State"], "Indiana finished 16–0 and beat Miami 27–21 for the 2025 national championship."],
-  ["01-program-texas-rose", "Programs", "Which program ended USC's 34-game winning streak in the 2006 Rose Bowl to win the national title?", "Texas", ["Oklahoma", "Ohio State"], "Texas beat USC 41–38 in the Rose Bowl to win the 2005 national championship."],
-  ["02-program-boise-fiesta", "Programs", "Which program used the hook-and-lateral and Statue of Liberty in its famous 2007 Fiesta Bowl upset of Oklahoma?", "Boise State", ["TCU", "Utah"], "Boise State beat Oklahoma 43–42 in overtime in the 2007 Fiesta Bowl."],
-  ["03-program-app-state", "Programs", "Which FCS program stunned No. 5 Michigan at the Big House in 2007?", "Appalachian State", ["James Madison", "North Dakota State"], "Appalachian State beat Michigan 34–32 in one of college football's signature upsets."],
+  ["00-program-indiana", "Programs", "Which program completed a 16–0 season by beating Miami for the 2025 national championship?", "Indiana", ["Oregon", "Ohio State", "Notre Dame"], "Indiana finished 16–0 and beat Miami 27–21 for the 2025 national championship."],
+  ["01-program-texas-rose", "Programs", "Which program ended USC's 34-game winning streak in the 2006 Rose Bowl to win the national title?", "Texas", ["Oklahoma", "Ohio State", "Florida"], "Texas beat USC 41–38 in the Rose Bowl to win the 2005 national championship."],
+  ["02-program-boise-fiesta", "Programs", "Which program used the hook-and-lateral and Statue of Liberty in its famous 2007 Fiesta Bowl upset of Oklahoma?", "Boise State", ["TCU", "Utah", "UCF"], "Boise State beat Oklahoma 43–42 in overtime in the 2007 Fiesta Bowl."],
+  ["03-program-app-state", "Programs", "Which FCS program stunned No. 5 Michigan at the Big House in 2007?", "Appalachian State", ["James Madison", "North Dakota State", "Georgia Southern"], "Appalachian State beat Michigan 34–32 in one of college football's signature upsets."],
 
-  ["00-tradition-kick-six", "Traditions", "The 2013 'Kick Six' decided which rivalry game?", "Iron Bowl", ["Egg Bowl", "Red River Rivalry"], "Auburn's Kick Six beat Alabama in the 2013 Iron Bowl."],
-  ["01-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Tre Mason"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
-  ["02-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Josh Reed"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
-  ["03-tradition-miracle-michigan", "Traditions", "Which Colorado quarterback threw the Hail Mary that became known as the Miracle at Michigan in 1994?", "Kordell Stewart", ["Rashaan Salaam", "Eric Bieniemy"], "Kordell Stewart's final-play Hail Mary to Michael Westbrook beat Michigan in 1994."],
+  ["00-tradition-kick-six", "Traditions", "The 2013 'Kick Six' decided which rivalry game?", "Iron Bowl", ["Egg Bowl", "Red River Rivalry", "Bedlam"], "Auburn's Kick Six beat Alabama in the 2013 Iron Bowl."],
+  ["01-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Tre Mason", "Nick Marshall"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
+  ["02-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Josh Reed", "Skyler Green"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
+  ["03-tradition-miracle-michigan", "Traditions", "Which Colorado quarterback threw the Hail Mary that became known as the Miracle at Michigan in 1994?", "Kordell Stewart", ["Rashaan Salaam", "Eric Bieniemy", "Darian Hagan"], "Kordell Stewart's final-play Hail Mary to Michael Westbrook beat Michigan in 1994."],
 
-  ["00-history-2022-fiesta", "CFB History", "Which team beat Michigan 51–45 in the 2022 season's CFP semifinal at the Fiesta Bowl?", "TCU", ["Georgia", "Ohio State"], "TCU beat Michigan 51–45 in the Fiesta Bowl to reach the national championship game."],
-  ["01-history-2017-rose", "CFB History", "Which team beat Oklahoma 54–48 in double overtime in the Rose Bowl CFP semifinal after the 2017 season?", "Georgia", ["Alabama", "Clemson"], "Georgia beat Oklahoma 54–48 in double overtime in the Rose Bowl semifinal."],
-  ["02-history-2018-tua", "CFB History", "Which freshman quarterback came off the bench and threw the overtime title-winning touchdown for Alabama against Georgia after the 2017 season?", "Tua Tagovailoa", ["Jalen Hurts", "Mac Jones"], "Tua Tagovailoa replaced Jalen Hurts and threw the overtime winner to DeVonta Smith."],
-  ["03-history-2005-rose", "CFB History", "Which Texas quarterback scored the late fourth-down touchdown that beat USC in the 2006 Rose Bowl?", "Vince Young", ["Colt McCoy", "Matt Leinart"], "Vince Young's fourth-down touchdown gave Texas the 41–38 national-title win over USC."],
+  ["00-history-2022-fiesta", "CFB History", "Which team beat Michigan 51–45 in the 2022 season's CFP semifinal at the Fiesta Bowl?", "TCU", ["Georgia", "Ohio State", "Alabama"], "TCU beat Michigan 51–45 in the Fiesta Bowl to reach the national championship game."],
+  ["01-history-2017-rose", "CFB History", "Which team beat Oklahoma 54–48 in double overtime in the Rose Bowl CFP semifinal after the 2017 season?", "Georgia", ["Alabama", "Clemson", "Ohio State"], "Georgia beat Oklahoma 54–48 in double overtime in the Rose Bowl semifinal."],
+  ["02-history-2018-tua", "CFB History", "Which freshman quarterback came off the bench and threw the overtime title-winning touchdown for Alabama against Georgia after the 2017 season?", "Tua Tagovailoa", ["Jalen Hurts", "Mac Jones", "Bryce Young"], "Tua Tagovailoa replaced Jalen Hurts and threw the overtime winner to DeVonta Smith."],
+  ["03-history-2005-rose", "CFB History", "Which Texas quarterback scored the late fourth-down touchdown that beat USC in the 2006 Rose Bowl?", "Vince Young", ["Colt McCoy", "Matt Leinart", "Chris Simms"], "Vince Young's fourth-down touchdown gave Texas the 41–38 national-title win over USC."],
 ].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:cfb-final-${id}`,
   sport: "cfb",
   grade: 5,
   subject: subject as AverageFanSubject,
-  format: "three-choice",
+  format: "four-choice",
   prompt: prompt as string,
   answer: answer as string,
   aliases: [],
-  choices: [answer as string, ...(wrong as string[])] as [string, string, string],
+  choices: [answer as string, ...(wrong as string[])] as [string, string, string, string],
   explanation: explanation as string,
   contentType: "evergreen",
   difficultyNudge: 2,
@@ -1635,7 +1635,7 @@ export function averageFanBankSummary(sport: AverageFanSport) {
     total: bank.length,
     finals: bank.filter((question) => question.protectedFinal).length,
     formats: Object.fromEntries(
-      ["short-answer", "three-choice", "true-false"].map((format) => [
+      ["short-answer", "four-choice", "true-false"].map((format) => [
         format,
         bank.filter((question) => question.format === format).length,
       ]),
