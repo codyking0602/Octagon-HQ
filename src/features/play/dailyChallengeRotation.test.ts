@@ -20,11 +20,12 @@ function addDays(day: string, offset: number) {
 }
 
 describe("locked Daily Challenge rotation", () => {
-  it("uses the approved Football and UFC weights exactly", () => {
-    expect(FOOTBALL_LOCKED_WEIGHTED_CYCLE).toHaveLength(22);
+  it("adds Average Fan without reducing the locked game weights", () => {
+    expect(FOOTBALL_LOCKED_WEIGHTED_CYCLE).toHaveLength(26);
     expect(counts(FOOTBALL_LOCKED_WEIGHTED_CYCLE)).toEqual({
       sports_feud: 4,
       millionaire: 4,
+      average_fan: 4,
       bar_trivia: 3,
       wavelength: 3,
       who_am_i: 3,
@@ -33,8 +34,9 @@ describe("locked Daily Challenge rotation", () => {
     });
     expect(FOOTBALL_LOCKED_WEIGHTED_CYCLE).not.toContain("blind_resume");
 
-    expect(UFC_LOCKED_WEIGHTED_CYCLE).toHaveLength(24);
+    expect(UFC_LOCKED_WEIGHTED_CYCLE).toHaveLength(29);
     expect(counts(UFC_LOCKED_WEIGHTED_CYCLE)).toEqual({
+      average_fan: 5,
       sports_feud: 4,
       millionaire: 4,
       bar_trivia: 3,
@@ -46,56 +48,45 @@ describe("locked Daily Challenge rotation", () => {
     });
   });
 
-  it("forces the September 29 Bar Trivia debut for both sports", () => {
-    expect(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY).toBe("2026-09-29");
+  it("preserves September 29 and cuts the new immutable rotation on September 30", () => {
+    expect(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY).toBe("2026-09-30");
     expect(lockedWeightedGameForDay("football", "2026-09-29")).toBe("bar_trivia");
     expect(lockedWeightedGameForDay("ufc", "2026-09-29")).toBe("bar_trivia");
+    expect(lockedWeightedGameForDay("football", "2026-09-30")).toBe("wavelength");
+    expect(lockedWeightedGameForDay("ufc", "2026-09-30")).toBe("sports_feud");
+    expect(lockedWeightedGameForDay("football", "2026-10-01")).toBe("average_fan");
+    expect(lockedWeightedGameForDay("ufc", "2026-10-02")).toBe("average_fan");
   });
 
-  it("starts Football Bar Trivia with NFL and alternates NFL and CFB by appearance", () => {
-    const appearances: Array<{ day: string; league: string }> = [];
-    for (let offset = 0; appearances.length < 10; offset += 1) {
+  it("continues Football Bar Trivia NFL/CFB alternation across the schedule cutover", () => {
+    const appearances = ["2026-09-29"];
+    for (let offset = 0; appearances.length < 6; offset += 1) {
       const day = addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset);
-      if (lockedWeightedGameForDay("football", day) === "bar_trivia") {
-        appearances.push({ day, league: footballBarTriviaLeagueForDay(day) });
-      }
+      if (lockedWeightedGameForDay("football", day) === "bar_trivia") appearances.push(day);
     }
-
-    expect(appearances.slice(0, 6)).toEqual([
-      { day: "2026-09-29", league: "nfl" },
-      { day: "2026-10-05", league: "cfb" },
-      { day: "2026-10-13", league: "nfl" },
-      { day: "2026-10-21", league: "cfb" },
-      { day: "2026-10-27", league: "nfl" },
-      { day: "2026-11-04", league: "cfb" },
+    expect(appearances).toEqual([
+      "2026-09-29",
+      "2026-10-06",
+      "2026-10-16",
+      "2026-10-25",
+      "2026-11-01",
+      "2026-11-11",
     ]);
-    expect(appearances.map((appearance) => appearance.league)).toEqual(
-      appearances.map((_appearance, index) => index % 2 === 0 ? "nfl" : "cfb"),
-    );
+    expect(appearances.map(footballBarTriviaLeagueForDay)).toEqual([
+      "nfl", "cfb", "nfl", "cfb", "nfl", "cfb",
+    ]);
   });
 
-  it("is deterministic and minimizes cross-sport same-game dates without changing weights", () => {
-    for (let offset = 0; offset < 264; offset += 1) {
-      const day = addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset);
-      expect(lockedWeightedGameForDay("football", day)).toBe(
-        lockedWeightedGameForDay("football", day),
-      );
-      expect(lockedWeightedGameForDay("ufc", day)).toBe(
-        lockedWeightedGameForDay("ufc", day),
-      );
-    }
+  it("keeps Average Fan staggered between sports in the opening window", () => {
+    const football = Array.from({ length: 30 }, (_, offset) => offset)
+      .filter((offset) => lockedWeightedGameForDay("football", addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset)) === "average_fan")
+      .map((offset) => addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset));
+    const ufc = Array.from({ length: 30 }, (_, offset) => offset)
+      .filter((offset) => lockedWeightedGameForDay("ufc", addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset)) === "average_fan")
+      .map((offset) => addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset));
 
-    const collisions = Array.from({ length: 264 }, (_, offset) => offset)
-      .filter((offset) => {
-        const day = addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset);
-        return lockedWeightedGameForDay("football", day) === lockedWeightedGameForDay("ufc", day);
-      });
-
-    expect(collisions).toEqual([0, 72, 168]);
-    expect(collisions.map((offset) => lockedWeightedGameForDay(
-      "football",
-      addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset),
-    ))).toEqual(["bar_trivia", "bar_trivia", "bar_trivia"]);
-    expect(collisions.filter((offset) => offset < 60)).toEqual([0]);
+    expect(football.slice(0, 4)).toEqual(["2026-10-01", "2026-10-07", "2026-10-13", "2026-10-19"]);
+    expect(ufc.slice(0, 5)).toEqual(["2026-10-02", "2026-10-08", "2026-10-14", "2026-10-20", "2026-10-26"]);
+    expect(football.filter((day) => ufc.includes(day))).toEqual([]);
   });
 });
