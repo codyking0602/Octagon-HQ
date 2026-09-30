@@ -1630,7 +1630,7 @@ export const AVERAGE_FAN_CONTENT_BANKS = {
   ufc: averageFanUfcQuestionBank,
 } as const;
 
-export function averageFanBankSummary(sport: AverageFanSport) {
+export function averageFanBankSummary(sport: Exclude<AverageFanSport, "mlb">) {
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
   return {
     total: bank.length,
