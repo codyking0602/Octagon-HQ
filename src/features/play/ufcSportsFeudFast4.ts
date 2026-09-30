@@ -434,7 +434,16 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Hammerfist",
           "Spinning backfist"
         ],
-        "alsoAcceptedAnswers": []
+        "alsoAcceptedAnswers": [
+          {
+            "name": "Body shot",
+            "aliases": ["Body punch"]
+          },
+          {
+            "name": "Liver shot",
+            "aliases": ["Liver punch"]
+          }
+        ]
       },
       {
         "prompt": "Name a striking technique you might see in the UFC.",
