@@ -178,7 +178,7 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: supabase functions deploy pin-auth --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+        run: supabase functions deploy pin-auth --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
 
       - name: Deploy UFC event sync function when present
         env:
@@ -189,7 +189,7 @@ jobs:
           if [ -f supabase/functions/sync-next-ufc-event/index.ts ]; then
             printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
               > supabase/functions/sync-next-ufc-event/deployment.ts
-            supabase functions deploy sync-next-ufc-event --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+            supabase functions deploy sync-next-ufc-event --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
           else
             echo "sync-next-ufc-event is not present in this exact deployment source; skipping."
           fi
@@ -203,7 +203,7 @@ jobs:
           if [ -f supabase/functions/sync-next-football-event/index.ts ]; then
             secret_names=$(supabase secrets list --project-ref "$SUPABASE_PROJECT_ID" --output json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).map(x=>x.name).join("\n")))')
             printf '%s\n' "$secret_names" | grep -Fxq THE_ODDS_API_KEY || { echo "::error title=Missing football provider secret::THE_ODDS_API_KEY is not configured."; exit 1; }
-            supabase functions deploy sync-next-football-event --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+            supabase functions deploy sync-next-football-event --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
           fi
 
       - name: Deploy Picks Spotlight builder when present
@@ -215,7 +215,7 @@ jobs:
           if [ -f supabase/functions/build-pick-spotlight/index.ts ]; then
             printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
               > supabase/functions/build-pick-spotlight/deployment.ts
-            supabase functions deploy build-pick-spotlight --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+            supabase functions deploy build-pick-spotlight --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
           else
             echo "build-pick-spotlight is not present in this exact deployment source; skipping."
           fi
@@ -235,7 +235,7 @@ jobs:
             fi
             printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
               > supabase/functions/run-pick-monitoring/deployment.ts
-            supabase functions deploy run-pick-monitoring --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+            supabase functions deploy run-pick-monitoring --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
           else
             echo "run-pick-monitoring is not present in this exact deployment source; skipping."
           fi
@@ -258,9 +258,10 @@ jobs:
             test -f supabase/functions/daily-challenge-runtime/football-publication-blind-resume.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication-hit-the-number.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication-millionaire.generated.mjs
+            test -f supabase/functions/daily-challenge-runtime/football-publication-average-fan.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-publication-comparison.generated.mjs
             test -f supabase/functions/daily-challenge-runtime/football-advance.generated.mjs
-            supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+            supabase functions deploy daily-challenge-runtime --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
           else
             echo "daily-challenge-runtime is not present in this exact deployment source; skipping."
           fi
@@ -274,7 +275,7 @@ jobs:
           if [ -f supabase/functions/deliver-notification-push/index.ts ]; then
             printf '// Generated only in the deployment workspace.\nexport const DEPLOYED_SOURCE_SHA = "%s";\n' "$SOURCE_SHA" \
               > supabase/functions/deliver-notification-push/deployment.ts
-            supabase functions deploy deliver-notification-push --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt
+            supabase functions deploy deliver-notification-push --project-ref "$SUPABASE_PROJECT_ID" --no-verify-jwt --use-api
           else
             echo "deliver-notification-push is not present in this exact deployment source; skipping."
           fi
