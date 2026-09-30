@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_FANS,
+  AVERAGE_FAN_FORMATS,
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
   averageFanCenteredSubjectModifier,
@@ -78,6 +79,34 @@ describe("Average Fan canonical question contract", () => {
 
     expect(validateAverageFanQuestion(fixture({ fanMisses: [] })))
       .toContain("short-answer questions must author 1-3 plausible fan misses");
+  });
+
+  it("locks multiple choice to four authored answers and rejects the legacy three-choice contract", () => {
+    expect(AVERAGE_FAN_FORMATS).toEqual(["short-answer", "four-choice", "true-false"]);
+
+    expect(validateAverageFanQuestion(fixture({
+      format: "four-choice",
+      answer: "Alpha",
+      aliases: [],
+      choices: ["Alpha", "Beta", "Gamma"] as unknown as [string, string, string, string],
+      fanMisses: undefined,
+    }))).toContain("four-choice questions must define exactly four choices");
+
+    expect(validateAverageFanQuestion(fixture({
+      format: "four-choice",
+      answer: "Alpha",
+      aliases: [],
+      choices: ["Alpha", "Beta", "Gamma", "Gamma"],
+      fanMisses: undefined,
+    }))).toContain("four-choice choices must be unique");
+
+    expect(validateAverageFanQuestion(fixture({
+      format: "three-choice" as AverageFanQuestion["format"],
+      answer: "Alpha",
+      aliases: [],
+      choices: undefined,
+      fanMisses: undefined,
+    }))).toContain("format is unsupported");
   });
 
   it("protects dedicated finals from ordinary board eligibility", () => {
