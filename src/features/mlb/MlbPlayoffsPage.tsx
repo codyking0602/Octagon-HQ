@@ -504,7 +504,7 @@ function MlbPlayStandings({ championship }: { championship: MlbChampionship | nu
         <p className="today-hub-empty">Play standings will populate when the postseason challenges begin.</p>
       )}
 
-      <footer>11 CHALLENGES · PLACEMENT POINTS FEED THE MLB CHAMPIONSHIP</footer>
+      <footer>16 CHALLENGES · PLACEMENT POINTS FEED THE MLB CHAMPIONSHIP</footer>
     </section>
   );
 }
