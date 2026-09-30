@@ -16,6 +16,7 @@ export type PlayGameId =
   | "who-am-i"
   | "millionaire"
   | "sports-feud"
+  | "average-fan"
   | "draft-room";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
@@ -52,6 +53,7 @@ export type PlayCompletionState =
   | "millionaire-settled"
   | "sports-feud-settled"
   | "bar-trivia-settled"
+  | "average-fan-settled"
   | "draft-room-complete";
 
 export interface PlayGameLineupDefinition {
@@ -87,6 +89,29 @@ export interface PlayGameDefinition {
 }
 
 export const playGameCatalog = [
+  {
+    sport: "ufc",
+    id: "average-fan",
+    route: "/play/average-fan",
+    icon: "AF",
+    title: "Average Fan",
+    description: "Choose a fan, work a 10-question grade board in any order, then decide whether to risk the Final.",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Two questions per grade across Grades 1–5, three authored formats, one automatic Save, Peek, Copy, and a protected Final.",
+    },
+  },
   {
     sport: "ufc",
     id: "millionaire",
@@ -341,6 +366,29 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "A cutoff-centered eight-fighter board revealed one fighter at a time with every Keep/Cut decision locked.",
+    },
+  },
+  {
+    sport: "football",
+    id: "average-fan",
+    route: "/play/average-fan",
+    icon: "AF",
+    title: "Average Fan",
+    description: "Choose a fan, work a 10-question grade board in any order, then decide whether to risk the Final.",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Two questions per grade across Grades 1–5, three authored formats, one automatic Save, Peek, Copy, and a protected Final.",
     },
   },
   {
