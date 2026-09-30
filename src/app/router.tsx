@@ -3,7 +3,6 @@ import { createBrowserRouter, Navigate, type RouteObject } from "react-router-do
 import AppRouteError from "./AppRouteError";
 import { AppShell } from "./AppShell";
 import { MlbGate } from "../features/mlb/MlbGate";
-import { OwnerOnlyRoute } from "../features/identity/OwnerOnlyRoute";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
 const ShanesWatchlistPage = lazy(() => import("../features/home/ShanesWatchlistPage"));
@@ -43,7 +42,6 @@ const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
 const MillionaireCasualPage = lazy(() => import("../features/play/MillionaireCasualPage"));
 const FamilyFeudPrototypePage = lazy(() => import("../features/play/FamilyFeudPrototypePage"));
-const AverageFanPrototypePage = lazy(() => import("../features/play/AverageFanPrototypePage"));
 const PicksPage = lazy(() => import("../features/picks/PicksPage"));
 const FootballPicksRoute = lazy(() => import("../features/picks/FootballPicksRoute"));
 const PicksControlCenterPage = lazy(() => import("../features/picks-control/PicksControlCenterPage"));
@@ -81,8 +79,8 @@ export const appRoutes: RouteObject[] = [
       { path: "play/sports-feud/qa-replay", element: <FamilyFeudPrototypePage scope="ufc" qaReplayDay="2026-09-24" /> },
       { path: "play/sports-feud", element: <TodayChallengeGameRoute gameType="sports_feud" casual={<FamilyFeudPrototypePage scope="ufc" />} /> },
       { path: "play/bar-trivia", element: <TodayChallengeGameRoute gameType="bar_trivia" casual={<Navigate to="/play" replace />} /> },
-      { path: "play/average-fan", element: <TodayChallengeGameRoute gameType="average_fan" casual={<OwnerOnlyRoute fallback="/play"><AverageFanPrototypePage /></OwnerOnlyRoute>} /> },
-      { path: "play/average-fan-preview", element: <Navigate to="/play/average-fan?mode=casual" replace /> },
+      { path: "play/average-fan", element: <TodayChallengeGameRoute gameType="average_fan" casual={<Navigate to="/play" replace />} /> },
+      { path: "play/average-fan-preview", element: <Navigate to="/play" replace /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
