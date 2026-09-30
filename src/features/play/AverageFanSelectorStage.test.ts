@@ -32,6 +32,14 @@ describe("Average Fan selector stage presentation contract", () => {
     expect(pageCss).toMatch(/\.average-fan-select-button \{[\s\S]*?left: 575px;[\s\S]*?top: 759px;[\s\S]*?background: transparent;/);
   });
 
+  it("fills the iPhone large viewport and locks selector rubber-banding", () => {
+    expect(pageCss).toMatch(/\.average-fan-selector \{[\s\S]*?width: 100vw;[\s\S]*?height: 100lvh;[\s\S]*?min-height: 100lvh;/);
+    expect(pageSource).toContain('useAverageFanScreenLock();');
+    expect(pageSource).toContain('width: "100lvw"');
+    expect(pageSource).toContain('height: "100lvh"');
+    expect(pageSource).toContain("measureAverageFanLargeViewport()");
+  });
+
   it("removes the full-body selected fan treatment and stays landscape-only", () => {
     const selectorStart = pageSource.indexOf("function FanSelector");
     const selectorEnd = pageSource.indexOf("function MoneyRail", selectorStart);
