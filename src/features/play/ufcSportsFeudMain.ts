@@ -3821,7 +3821,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Ronda Rousey",
           "Tai Tuivasa",
           "Mike Perry",
-          "Diego Sanchez"
+          "Diego Sanchez",
+          "Nate Diaz"
         ]
       },
       {

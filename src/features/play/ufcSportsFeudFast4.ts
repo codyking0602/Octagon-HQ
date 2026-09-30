@@ -556,7 +556,9 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
       {
         "name": "Hook",
         "aliases": [
-          "Hook punch"
+          "Hook punch",
+          "Right hook",
+          "Left hook"
         ]
       },
       {

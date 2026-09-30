@@ -369,12 +369,31 @@ describe("Sports Feud authored Daily banks", () => {
         .toBe(6);
     }
 
+    const rivalryRouseyTate = matchFamilyFeudAnswer(pack, rivalry, "Roussey And Misha Tate");
+    expect(rivalryRouseyTate.status).toBe("matched");
+    if (rivalryRouseyTate.status === "matched") {
+      expect(pack.entities.find((entity) => entity.id === rivalryRouseyTate.entityId)?.displayName)
+        .toBe("Rousey-Tate");
+      expect(rivalry.alsoAcceptedEntityIds).toContain(rivalryRouseyTate.entityId);
+    }
+
     const punch = pack.fastMoney[2]!;
-    const hook = matchFamilyFeudAnswer(pack, punch, "Hook");
+    const hook = matchFamilyFeudAnswer(pack, punch, "Right Hook");
     expect(hook.status).toBe("matched");
     if (hook.status === "matched") {
+      expect(pack.entities.find((entity) => entity.id === hook.entityId)?.displayName)
+        .toBe("Hook");
       expect(punch.answers.find((answer) => answer.entityId === hook.entityId)?.points)
         .toBe(6);
+    }
+
+    const walkout = pack.mainBoards[1]!;
+    const nateDiaz = matchFamilyFeudAnswer(pack, walkout, "Nate Diaz");
+    expect(nateDiaz.status).toBe("matched");
+    if (nateDiaz.status === "matched") {
+      expect(pack.entities.find((entity) => entity.id === nateDiaz.entityId)?.displayName)
+        .toBe("Nate Diaz");
+      expect(walkout.alsoAcceptedEntityIds).toContain(nateDiaz.entityId);
     }
   });
 
