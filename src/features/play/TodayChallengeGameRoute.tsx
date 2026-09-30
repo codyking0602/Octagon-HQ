@@ -98,6 +98,7 @@ export function hasDailyOnlyCompatibilityIntent(search: string) {
 export function isOfficialDailyRoute(gameType: DailyGameType, search: string) {
   const params = new URLSearchParams(search);
   if (params.get("mode") === "daily") return true;
+  if (gameType === "average_fan") return true;
   if (gameType === "blind_rank_5" || gameType === "keep_4_cut_4") {
     return !hasDailyOnlyCompatibilityIntent(search);
   }
