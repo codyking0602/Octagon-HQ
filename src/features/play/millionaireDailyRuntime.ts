@@ -27,6 +27,11 @@ import type {
   OfficialDailyRuntimeContext,
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
+import {
+  DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
+  FOOTBALL_LOCKED_WEIGHTED_CYCLE,
+  UFC_LOCKED_WEIGHTED_CYCLE,
+} from "./dailyChallengeRotation";
 
 export const MILLIONAIRE_DAILY_CONTENT_VERSION = "millionaire-daily-v5-finish-board" as const;
 export const MILLIONAIRE_DAILY_SCORING_VERSION = "play-official-score-v1" as const;
@@ -67,6 +72,7 @@ const WEIGHTED_DAILY_CUTOVER = "2026-09-24";
 const BAR_TRIVIA_WEIGHTED_CUTOVER = "2026-09-29";
 const PRE_WEIGHTED_MILLIONAIRE_APPEARANCES = 1;
 const PRE_BAR_TRIVIA_WEIGHTED_MILLIONAIRE_APPEARANCES = 2;
+const PRE_AVERAGE_FAN_WEIGHTED_MILLIONAIRE_APPEARANCES = 2;
 
 const FOOTBALL_MILLIONAIRE_LEGACY_CYCLE_LENGTH = 22;
 const FOOTBALL_MILLIONAIRE_LEGACY_SLOTS = [0, 7, 13, 19] as const;
@@ -81,6 +87,13 @@ const UFC_MILLIONAIRE_CYCLE_LENGTH = 30;
 const UFC_MILLIONAIRE_SLOTS = [2, 7, 13, 20, 27] as const;
 const UFC_BAR_TRIVIA_CYCLE_LENGTH = 24;
 const UFC_BAR_TRIVIA_MILLIONAIRE_SLOTS = [3, 11, 17, 23] as const;
+
+const FOOTBALL_AVERAGE_FAN_MILLIONAIRE_SLOTS = FOOTBALL_LOCKED_WEIGHTED_CYCLE
+  .map((game, index) => game === "millionaire" ? index : -1)
+  .filter((index) => index >= 0);
+const UFC_AVERAGE_FAN_MILLIONAIRE_SLOTS = UFC_LOCKED_WEIGHTED_CYCLE
+  .map((game, index) => game === "millionaire" ? index : -1)
+  .filter((index) => index >= 0);
 
 type JsonRecord = Record<string, unknown>;
 
@@ -140,11 +153,20 @@ export function millionaireFootballDailyAppearance(day: string) {
       "Football",
     );
   }
-  return PRE_BAR_TRIVIA_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
+  if (day < DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) {
+    return PRE_BAR_TRIVIA_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
+      day,
+      BAR_TRIVIA_WEIGHTED_CUTOVER,
+      FOOTBALL_BAR_TRIVIA_CYCLE_LENGTH,
+      FOOTBALL_BAR_TRIVIA_MILLIONAIRE_SLOTS,
+      "Football",
+    );
+  }
+  return PRE_AVERAGE_FAN_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
     day,
-    BAR_TRIVIA_WEIGHTED_CUTOVER,
-    FOOTBALL_BAR_TRIVIA_CYCLE_LENGTH,
-    FOOTBALL_BAR_TRIVIA_MILLIONAIRE_SLOTS,
+    DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
+    FOOTBALL_LOCKED_WEIGHTED_CYCLE.length,
+    FOOTBALL_AVERAGE_FAN_MILLIONAIRE_SLOTS,
     "Football",
   );
 }
@@ -168,11 +190,20 @@ export function millionaireUfcDailyAppearance(day: string) {
       "UFC",
     );
   }
-  return PRE_BAR_TRIVIA_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
+  if (day < DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) {
+    return PRE_BAR_TRIVIA_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
+      day,
+      BAR_TRIVIA_WEIGHTED_CUTOVER,
+      UFC_BAR_TRIVIA_CYCLE_LENGTH,
+      UFC_BAR_TRIVIA_MILLIONAIRE_SLOTS,
+      "UFC",
+    );
+  }
+  return PRE_AVERAGE_FAN_WEIGHTED_MILLIONAIRE_APPEARANCES + appearanceIndex(
     day,
-    BAR_TRIVIA_WEIGHTED_CUTOVER,
-    UFC_BAR_TRIVIA_CYCLE_LENGTH,
-    UFC_BAR_TRIVIA_MILLIONAIRE_SLOTS,
+    DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
+    UFC_LOCKED_WEIGHTED_CYCLE.length,
+    UFC_AVERAGE_FAN_MILLIONAIRE_SLOTS,
     "UFC",
   );
 }
