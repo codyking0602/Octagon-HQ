@@ -54,6 +54,6 @@ describe("daily challenge runtime bundle prerequisites", () => {
     ]) {
       expect(bundlerSource).toContain(`gameType: "${gameType}"`);
     }
-    expect(bundlerSource).toContain("failed its deterministic smoke proof.");
+    expect(bundlerSource).toContain("failed its deterministic smoke proof for ${smoke.gameType}.");
   });
 });
