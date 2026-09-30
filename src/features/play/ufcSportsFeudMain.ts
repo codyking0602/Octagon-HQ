@@ -2336,6 +2336,10 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           {
             "name": "Do Bronx",
             "aliases": ["Charles Oliveira", "Oliveira"]
+          },
+          {
+            "name": "The Baddy",
+            "aliases": ["Baddy", "Paddy Pimblett", "Paddy"]
           }
         ]
       }
