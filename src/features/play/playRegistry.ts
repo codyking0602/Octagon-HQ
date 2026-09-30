@@ -12,6 +12,7 @@ export type PlayGameId =
   | "auction"
   | "hit-the-number"
   | "bar-trivia"
+  | "average-fan"
   | "20-questions"
   | "who-am-i"
   | "millionaire"
@@ -52,6 +53,7 @@ export type PlayCompletionState =
   | "millionaire-settled"
   | "sports-feud-settled"
   | "bar-trivia-settled"
+  | "average-fan-settled"
   | "draft-room-complete";
 
 export interface PlayGameLineupDefinition {
@@ -87,6 +89,30 @@ export interface PlayGameDefinition {
 }
 
 export const playGameCatalog = [
+  {
+    sport: "ufc",
+    id: "average-fan",
+    route: "/play/average-fan?mode=casual&sport=ufc",
+    icon: "AF",
+    title: "Are You Smarter Than an Average Fan?",
+    description: "Choose a fan, work a 10-question UFC grade board in any order, then finish with the Final.",
+    availability: "preview",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "Two questions per grade across Grades 1–5, three authored formats, Peek, Copy, one automatic Save, the approved loss verdict, and a protected Final.",
+    },
+  },
   {
     sport: "ufc",
     id: "millionaire",
@@ -341,6 +367,30 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "A cutoff-centered eight-fighter board revealed one fighter at a time with every Keep/Cut decision locked.",
+    },
+  },
+  {
+    sport: "football",
+    id: "average-fan",
+    route: "/play/average-fan?mode=casual&sport=cfb",
+    icon: "AF",
+    title: "Are You Smarter Than an Average Fan?",
+    description: "Choose a fan, work a 10-question NFL or CFB grade board in any order, then finish with the Final.",
+    availability: "preview",
+    lineup: {
+      defaultType: "replayable",
+      supportedTypes: ["daily", "replayable"],
+      replayBehavior: "new-lineup",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: true,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily-and-casual",
+      difficultyModel: "Two questions per grade across Grades 1–5, three authored formats, Peek, Copy, one automatic Save, the approved loss verdict, and a protected Final.",
     },
   },
   {
