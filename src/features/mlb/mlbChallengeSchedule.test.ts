@@ -6,22 +6,34 @@ import {
 } from "./mlbChallengeSchedule";
 
 describe("MLB postseason challenge schedule", () => {
-  it("locks the pulled-forward eleven-challenge cadence in order", () => {
+  it("locks the sixteen-game every-other-day cadence through October 27", () => {
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.date)).toEqual([
       "2026-09-27",
       "2026-09-29",
       "2026-10-01",
       "2026-10-03",
-      "2026-10-06",
+      "2026-10-05",
+      "2026-10-07",
       "2026-10-09",
-      "2026-10-12",
+      "2026-10-11",
+      "2026-10-13",
       "2026-10-15",
-      "2026-10-18",
+      "2026-10-17",
+      "2026-10-19",
       "2026-10-21",
       "2026-10-23",
+      "2026-10-25",
+      "2026-10-27",
     ]);
-    expect(new Set(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.id)).size).toBe(11);
-    expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.ready)).toBe(true);
+    expect(new Set(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.id)).size).toBe(16);
+    expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.filter((challenge) => challenge.ready)).toHaveLength(11);
+    expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.filter((challenge) => !challenge.ready).map((challenge) => challenge.id)).toEqual([
+      "mlb-2026-play-12",
+      "mlb-2026-play-13",
+      "mlb-2026-play-14",
+      "mlb-2026-play-15",
+      "mlb-2026-play-16",
+    ]);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
   });
 
@@ -30,7 +42,7 @@ describe("MLB postseason challenge schedule", () => {
     expect(mlbCentralDateKey(new Date("2026-09-27T05:00:00Z"))).toBe("2026-09-27");
   });
 
-  it("starts Find the Leader on September 27 and advances to Wavelength on September 29", () => {
+  it("preserves the two already-played challenge identities", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-09-27T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-01",
       game_type: "find_leader",
@@ -45,55 +57,30 @@ describe("MLB postseason challenge schedule", () => {
     });
   });
 
-  it("advances the middle postseason run without manual flips", () => {
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-01T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-03",
-      game_type: "millionaire",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-03T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-04",
-      game_type: "who_am_i",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-06T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-05",
-      game_type: "blind_resume",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-09T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-06",
-      game_type: "sports_feud",
-      is_live: true,
-    });
-  });
+  it("uses the balanced approved rotation after September 29", () => {
+    const expected = [
+      ["2026-10-01", "mlb-2026-play-03", "millionaire"],
+      ["2026-10-03", "mlb-2026-play-04", "who_am_i"],
+      ["2026-10-05", "mlb-2026-play-06", "sports_feud"],
+      ["2026-10-07", "mlb-2026-play-12", "average_fan"],
+      ["2026-10-09", "mlb-2026-play-05", "blind_resume"],
+      ["2026-10-11", "mlb-2026-play-11", "bar_trivia"],
+      ["2026-10-13", "mlb-2026-play-13", "find_leader"],
+      ["2026-10-15", "mlb-2026-play-08", "millionaire"],
+      ["2026-10-17", "mlb-2026-play-07", "hit_the_number"],
+      ["2026-10-19", "mlb-2026-play-14", "who_am_i"],
+      ["2026-10-21", "mlb-2026-play-09", "wavelength"],
+      ["2026-10-23", "mlb-2026-play-15", "average_fan"],
+      ["2026-10-25", "mlb-2026-play-10", "sports_feud"],
+      ["2026-10-27", "mlb-2026-play-16", "bar_trivia"],
+    ] as const;
 
-  it("keeps the pulled-forward back half and leaves October 27 open for a future game", () => {
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-12T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-07",
-      game_type: "hit_the_number",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-15T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-08",
-      game_type: "millionaire",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-18T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-09",
-      game_type: "wavelength",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-21T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-11",
-      game_type: "bar_trivia",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-23T05:00:00Z"))).toMatchObject({
-      id: "mlb-2026-play-10",
-      game_type: "sports_feud",
-      is_live: true,
-    });
-    expect(resolveMlbFeaturedChallenge(new Date("2026-10-27T12:00:00Z"))?.id).toBe("mlb-2026-play-10");
+    for (const [date, id, gameType] of expected) {
+      expect(resolveMlbFeaturedChallenge(new Date(`${date}T12:00:00Z`))).toMatchObject({
+        id,
+        game_type: gameType,
+        is_live: true,
+      });
+    }
   });
 });
