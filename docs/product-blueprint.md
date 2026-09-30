@@ -1,15 +1,15 @@
 # Octagon HQ V2 Product Blueprint
 
 ## Product promise
-Octagon HQ is a UFC-only rankings, games, picks, and community product built for debate and the group chat.
+The HQ is a multi-sport games, picks, rankings/content, and community product centered on UFC and Football, with temporary event-specific experiences such as the 2026 MLB postseason.
 
 ## Locked experience
 - A branded black startup screen prevents unfinished UI and theme flicker.
 - Fresh launches always open Home.
 - Routes load independently so one feature cannot delay the entire app.
 - War Room is absent from navigation, Home, routes, onboarding, and notifications unless the user has access.
-- Public language uses Octagon HQ. Internal labels such as “UFC App” and “GOAT26” are never shown.
-- Home includes Your HQ: Daily streak, Current Picks record, Favorite fighter, and Open challenges.
+- Universal public framing uses The HQ. Octagon HQ may remain where it is intentionally UFC-specific; internal labels such as “UFC App” and “GOAT26” are never shown.
+- Home keeps Your HQ compact: Daily streak plus useful UFC/Football Picks stats without unnecessary CTA clutter. What's New is not a major Home feature; meaningful changes generally flow through notifications.
 - Sharing is minimal, native, consistent, and uses clean links.
 
 ## Architecture owners
