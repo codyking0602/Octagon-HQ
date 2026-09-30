@@ -10,6 +10,7 @@ import {
   type AverageFanFan,
   type AverageFanQuestion,
   type AverageFanReportGrade,
+  type AverageFanSport,
 } from "../games/averageFanEngine";
 import {
   AVERAGE_FAN_MONEY_LADDER,
@@ -378,7 +379,7 @@ export function FanSelector({
 }: {
   onBack: () => void;
   onConfirm: (fan: AverageFanFan) => void;
-  sport?: "nfl" | "cfb" | "ufc";
+  sport?: AverageFanSport;
 }) {
   const [selectedFan, setSelectedFan] = useState<AverageFanFan>("shane");
   const stageScale = useAverageFanOpeningStageScale();
@@ -709,12 +710,23 @@ export function FinalDecision({
   );
 }
 
-function AverageFanGame({
+export type AverageFanSettledResult = {
+  score: number;
+  boardScore: number;
+  boardClears: number;
+  saves: number;
+  finalOutcome: FinalOutcome;
+  finalMoney: number | null;
+  fan: AverageFanFan;
+};
+
+export function AverageFanGame({
   fan,
   questions,
   finalQuestion,
   onExit,
   onRestart,
+  onSettled,
   initialQuestion = null,
 }: {
   fan: AverageFanFan;
@@ -722,6 +734,7 @@ function AverageFanGame({
   finalQuestion: AverageFanQuestion;
   onExit: () => void;
   onRestart: () => void;
+  onSettled?: (result: AverageFanSettledResult) => void;
   initialQuestion?: AverageFanQuestion | null;
 }) {
   const { scale: stageScale, answerShift } = useAverageFanGameplayStageLayout();
@@ -826,8 +839,25 @@ function AverageFanGame({
     else setPhase("board");
   }
 
+  function emitSettled(outcome: FinalOutcome) {
+    const score = scoreAverageFanFinal(boardScore, outcome);
+    const money = moneyAlive
+      ? (outcome === "correct" ? 1_000_000 : outcome === "wrong" ? 25_000 : 500_000)
+      : null;
+    onSettled?.({
+      score,
+      boardScore,
+      boardClears: resolved.filter((item) => item.correct || item.saved).length,
+      saves: resolved.filter((item) => item.saved).length,
+      finalOutcome: outcome,
+      finalMoney: money,
+      fan,
+    });
+  }
+
   function walkAway() {
     setFinalOutcome("walk-away");
+    emitSettled("walk-away");
     setPhase("result");
   }
 
@@ -835,8 +865,9 @@ function AverageFanGame({
     const candidate = (valueOverride ?? finalAnswer).trim();
     if (!candidate || phase !== "final-question") return;
     if (valueOverride !== undefined) setFinalAnswer(candidate);
-    const correct = averageFanAnswersMatch(finalQuestion, candidate);
-    setFinalOutcome(correct ? "correct" : "wrong");
+    const outcome: FinalOutcome = averageFanAnswersMatch(finalQuestion, candidate) ? "correct" : "wrong";
+    setFinalOutcome(outcome);
+    emitSettled(outcome);
     setPhase("final-reveal");
   }
 
