@@ -15,74 +15,22 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"],
   },
   {
-    label: "Football Daily Who Am I publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWhoAmI.ts"),
-    fileName: "football-publication-who-am-i.generated.mjs",
+    label: "Football Daily publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAll.ts"),
+    fileName: "football-publication.generated.mjs",
     requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-27", gameType: "who_am_i" },
-  },
-  {
-    label: "Football Daily Wavelength publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationWavelength.ts"),
-    fileName: "football-publication-wavelength.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-16", gameType: "wavelength" },
-  },
-  {
-    label: "Football Daily Find the Leader publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationFindLeader.ts"),
-    fileName: "football-publication-find-leader.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-15", gameType: "find_leader" },
-  },
-  {
-    label: "Football Daily Blind Resume publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationBlindResume.ts"),
-    fileName: "football-publication-blind-resume.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-21", gameType: "blind_resume" },
-  },
-  {
-    label: "Football Daily Hit the Number publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationHitNumber.ts"),
-    fileName: "football-publication-hit-the-number.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-18", gameType: "hit_the_number" },
-  },
-  {
-    label: "Football Daily Millionaire publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationMillionaire.ts"),
-    fileName: "football-publication-millionaire.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-24", gameType: "millionaire" },
-  },
-  {
-    label: "Football Daily Sports Feud publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationSportsFeud.ts"),
-    fileName: "football-publication-sports-feud.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-23", gameType: "sports_feud" },
-  },
-  {
-    label: "Football Daily Bar Trivia publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationBarTrivia.ts"),
-    fileName: "football-publication-bar-trivia.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-29", gameType: "bar_trivia" },
-  },
-  {
-    label: "Football Daily Average Fan publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAverageFan.ts"),
-    fileName: "football-publication-average-fan.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-10-01", gameType: "average_fan" },
-  },
-  {
-    label: "Football Daily comparison publication runtime",
-    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationComparison.ts"),
-    fileName: "football-publication-comparison.generated.mjs",
-    requiredExports: ["buildFootballDailyPersistenceSetup"],
-    smoke: { day: "2026-09-17", gameType: "keep_4_cut_4" },
+    smokes: [
+      { day: "2026-09-27", gameType: "who_am_i" },
+      { day: "2026-09-16", gameType: "wavelength" },
+      { day: "2026-09-15", gameType: "find_leader" },
+      { day: "2026-09-21", gameType: "blind_resume" },
+      { day: "2026-09-18", gameType: "hit_the_number" },
+      { day: "2026-09-24", gameType: "millionaire" },
+      { day: "2026-09-23", gameType: "sports_feud" },
+      { day: "2026-09-29", gameType: "bar_trivia" },
+      { day: "2026-10-01", gameType: "average_fan" },
+      { day: "2026-09-17", gameType: "keep_4_cut_4" },
+    ],
   },
   {
     label: "Football daily advance runtime",
@@ -152,28 +100,31 @@ for (const bundle of bundles) {
 
   const digest = createHash("sha256").update(bundled).digest("hex");
 
-  if (bundle.smoke) {
+  const smokes = bundle.smokes ?? (bundle.smoke ? [bundle.smoke] : []);
+  if (smokes.length) {
     const generatedRuntime = await import(`${pathToFileURL(output).href}?sha256=${digest}`);
-    const publication = generatedRuntime.buildFootballDailyPersistenceSetup(
-      bundle.smoke.day,
-      footballScheduleVersion,
-      bundle.smoke.gameType,
-    );
-    if (
-      !publication
-      || typeof publication !== "object"
-      || typeof publication.setupKey !== "string"
-      || !publication.setupKey
-      || typeof publication.scheduleVersion !== "string"
-      || !publication.scheduleVersion
-      || typeof publication.gameType !== "string"
-      || !publication.gameType
-      || !publication.publicSetup
-      || typeof publication.publicSetup !== "object"
-      || !publication.privateSetupEvidence
-      || typeof publication.privateSetupEvidence !== "object"
-    ) {
-      throw new Error(`${bundle.label} failed its deterministic smoke proof.`);
+    for (const smoke of smokes) {
+      const publication = generatedRuntime.buildFootballDailyPersistenceSetup(
+        smoke.day,
+        footballScheduleVersion,
+        smoke.gameType,
+      );
+      if (
+        !publication
+        || typeof publication !== "object"
+        || typeof publication.setupKey !== "string"
+        || !publication.setupKey
+        || typeof publication.scheduleVersion !== "string"
+        || !publication.scheduleVersion
+        || typeof publication.gameType !== "string"
+        || !publication.gameType
+        || !publication.publicSetup
+        || typeof publication.publicSetup !== "object"
+        || !publication.privateSetupEvidence
+        || typeof publication.privateSetupEvidence !== "object"
+      ) {
+        throw new Error(`${bundle.label} failed its deterministic smoke proof for ${smoke.gameType}.`);
+      }
     }
   }
 
