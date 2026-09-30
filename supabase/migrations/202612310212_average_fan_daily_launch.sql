@@ -275,6 +275,7 @@ $old$;
             'final_outcome', progress.public_state ->> 'final_outcome',
             'final_score', progress.public_state -> 'final_score',
             'final_question', progress.public_state -> 'final_question',
+            'final_player_answer', progress.public_state ->> 'final_player_answer',
             'final_correct_answer', progress.public_state ->> 'final_correct_answer',
             'final_explanation', progress.public_state ->> 'final_explanation'
           )
