@@ -2721,8 +2721,14 @@ button.average-fan-help-button {
 /* Average Fan gameplay stage plate — locked 1536×864 composition */
 .average-fan-game {
   position: fixed;
-  inset: 0;
+  inset: auto;
+  left: 0;
+  top: 0;
+  width: 100dvw;
+  height: 100dvh;
+  min-height: 100dvh;
   overflow: hidden;
+  overscroll-behavior: none;
   background: #030712;
   color: #f8fafc;
 }
@@ -2838,6 +2844,7 @@ button.average-fan-help-button {
   left: 26px;
   width: 218px;
   color: #fff5bf;
+  font-size: 21px;
 }
 
 .average-fan-question-card header span {
@@ -3095,9 +3102,9 @@ button.average-fan-help-button {
 
 .average-fan-tile-board header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 14px;
   height: 46px;
   color: #fff7cd;
   font-family: "Chalkboard SE", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
@@ -3318,7 +3325,7 @@ button.average-fan-help-button {
 
 .average-fan-game-fan {
   position: absolute;
-  z-index: 3;
+  z-index: 12;
   left: 1174px;
   top: 438px;
   width: 326px;
@@ -3358,7 +3365,7 @@ button.average-fan-help-button {
   position: absolute;
   z-index: 6;
   left: 62px;
-  top: 326px;
+  top: 316px;
   display: flex;
   align-items: center;
   justify-content: center;
