@@ -2188,7 +2188,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
     ]
   },
   {
-    "category": "gyms",
+    "category": "ufc-identity",
     "entityKind": "other",
     "collisionGroup": "gyms",
     "prompts": [
@@ -2273,23 +2273,107 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
         ]
       },
       {
-        "prompt": "Name an MMA team associated with multiple notable UFC fighters.",
+        "prompt": "Name a famous UFC fighter nickname.",
         "answers": [
-          "American Top Team",
-          "AKA",
-          "Jackson Wink",
-          "City Kickboxing",
-          "Xtreme Couture",
-          "Team Alpha Male",
-          "Nova Uniao",
-          "Tristar Gym"
+          {
+            "name": "The Notorious",
+            "aliases": [
+              "Conor McGregor",
+              "Conor",
+              "Notorious"
+            ]
+          },
+          {
+            "name": "Bones",
+            "aliases": [
+              "Jon Jones",
+              "Jon"
+            ]
+          },
+          {
+            "name": "The Spider",
+            "aliases": [
+              "Anderson Silva",
+              "Anderson",
+              "Spider"
+            ]
+          },
+          {
+            "name": "Mighty Mouse",
+            "aliases": [
+              "Demetrious Johnson",
+              "DJ"
+            ]
+          },
+          {
+            "name": "The Iceman",
+            "aliases": [
+              "Chuck Liddell",
+              "Chuck",
+              "Iceman"
+            ]
+          },
+          {
+            "name": "Stylebender",
+            "aliases": [
+              "Israel Adesanya",
+              "Izzy",
+              "The Last Stylebender"
+            ]
+          },
+          {
+            "name": "Poatan",
+            "aliases": [
+              "Alex Pereira",
+              "Pereira"
+            ]
+          },
+          {
+            "name": "Do Bronx",
+            "aliases": [
+              "Charles Oliveira",
+              "Oliveira"
+            ]
+          }
         ],
         "alsoAcceptedAnswers": [
-          "Roufusport",
-          "Kings MMA",
-          "Serra-Longo",
-          "MMA Lab",
-          "Kill Cliff FC"
+          {
+            "name": "Wonderboy",
+            "aliases": [
+              "Stephen Thompson",
+              "Thompson"
+            ]
+          },
+          {
+            "name": "The Highlight",
+            "aliases": [
+              "Justin Gaethje",
+              "Gaethje",
+              "Highlight"
+            ]
+          },
+          {
+            "name": "The Lioness",
+            "aliases": [
+              "Amanda Nunes",
+              "Nunes",
+              "Lioness"
+            ]
+          },
+          {
+            "name": "Rowdy",
+            "aliases": [
+              "Ronda Rousey",
+              "Rousey"
+            ]
+          },
+          {
+            "name": "Blessed",
+            "aliases": [
+              "Max Holloway",
+              "Holloway"
+            ]
+          }
         ]
       }
     ],
