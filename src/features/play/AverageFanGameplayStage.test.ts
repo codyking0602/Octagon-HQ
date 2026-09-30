@@ -161,7 +161,9 @@ describe("Average Fan locked gameplay stage", () => {
 
   it("keeps all answer formats below the chalkboard and keyboard-safe", () => {
     expect(pageSource).toContain('className="average-fan-answer-stage"');
+    expect(pageSource).toContain('question.format === "four-choice"');
     expect(pageSource).toContain('data-choice-count={question.choices!.length}');
+    expect(pageCss).not.toContain('data-choice-count="3"');
     expect(pageSource).toContain('average-fan-choice-grid--tf');
     expect(pageSource).toContain('className="average-fan-short-answer"');
     expect(pageSource).toContain('inputMode="text"');
