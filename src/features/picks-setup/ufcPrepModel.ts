@@ -84,8 +84,8 @@ const prepAssetSchema = z.object({
   fighter_name: z.string().min(1),
   thumb_ready: z.boolean(),
   spotlight_ready: z.boolean(),
-  thumb_path: z.string().default(""),
-  spotlight_path: z.string().default(""),
+  thumb_path: z.string().nullish().transform((value) => value ?? ""),
+  spotlight_path: z.string().nullish().transform((value) => value ?? ""),
 });
 
 const prepSchema = z.object({
