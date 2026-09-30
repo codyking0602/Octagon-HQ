@@ -55,26 +55,28 @@ type ReportCards = {
 };
 
 export const AVERAGE_FAN_REPORT_CARDS = {
+  // Every fan totals the same raw report-card strength (11 modifier points)
+  // inside each sport. The shape changes by subject; the overall quality does not.
   nfl: {
     cody: { Players: "A", Teams: "B+", "NFL History": "A-", "X’s & O’s": "B-" },
-    shane: { Players: "A+", Teams: "B", "NFL History": "B+", "X’s & O’s": "C+" },
-    troy: { Players: "B+", Teams: "A-", "NFL History": "B", "X’s & O’s": "A" },
-    tyler: { Players: "B", Teams: "B+", "NFL History": "A", "X’s & O’s": "A-" },
-    lib: { Players: "A-", Teams: "A", "NFL History": "C+", "X’s & O’s": "B" },
+    shane: { Players: "A+", Teams: "B+", "NFL History": "A-", "X’s & O’s": "C+" },
+    troy: { Players: "B+", Teams: "A-", "NFL History": "B-", "X’s & O’s": "A" },
+    tyler: { Players: "B", Teams: "B", "NFL History": "A", "X’s & O’s": "A-" },
+    lib: { Players: "A-", Teams: "A", "NFL History": "B-", "X’s & O’s": "B+" },
   },
   cfb: {
-    cody: { Players: "A", Programs: "A-", Traditions: "B+", "CFB History": "B" },
-    shane: { Players: "A+", Programs: "B+", Traditions: "B", "CFB History": "C+" },
-    troy: { Players: "B+", Programs: "A", Traditions: "A-", "CFB History": "B" },
-    tyler: { Players: "B", Programs: "A-", Traditions: "A+", "CFB History": "B+" },
-    lib: { Players: "A-", Programs: "A", Traditions: "B+", "CFB History": "C+" },
+    cody: { Players: "A", Programs: "A-", Traditions: "B+", "CFB History": "B-" },
+    shane: { Players: "A+", Programs: "B+", Traditions: "A-", "CFB History": "C+" },
+    troy: { Players: "B+", Programs: "A", Traditions: "A-", "CFB History": "B-" },
+    tyler: { Players: "B+", Programs: "A-", Traditions: "A+", "CFB History": "C+" },
+    lib: { Players: "A-", Programs: "A", Traditions: "B+", "CFB History": "B-" },
   },
   ufc: {
-    cody: { Fighters: "A", Fights: "A-", Championships: "A", "Octagon IQ": "B" },
-    shane: { Fighters: "A+", Fights: "A", Championships: "A-", "Octagon IQ": "C+" },
-    troy: { Fighters: "B+", Fights: "A", Championships: "B+", "Octagon IQ": "A-" },
-    tyler: { Fighters: "A-", Fights: "B+", Championships: "A", "Octagon IQ": "B" },
-    lib: { Fighters: "A", Fights: "B+", Championships: "B", "Octagon IQ": "C+" },
+    cody: { Fighters: "A", Fights: "B+", Championships: "A-", "Octagon IQ": "B-" },
+    shane: { Fighters: "A+", Fights: "B+", Championships: "A-", "Octagon IQ": "C+" },
+    troy: { Fighters: "B+", Fights: "A", Championships: "B-", "Octagon IQ": "A-" },
+    tyler: { Fighters: "A-", Fights: "B+", Championships: "A", "Octagon IQ": "B-" },
+    lib: { Fighters: "A", Fights: "B+", Championships: "A-", "Octagon IQ": "B-" },
   },
 } as const satisfies ReportCards;
 
