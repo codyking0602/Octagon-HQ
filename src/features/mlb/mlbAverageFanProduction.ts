@@ -120,7 +120,7 @@ const FIRST_BOARD = [
     format: "short-answer",
     prompt: "Whose 56-game hitting streak in 1941 remains the Major League record?",
     answer: "Joe DiMaggio",
-    aliases: ["DiMaggio", "Joe Dimaggio"],
+    aliases: ["DiMaggio"],
     fanMisses: ["Pete Rose", "Ted Williams", "Stan Musial"],
     explanation: "Joe DiMaggio hit safely in 56 consecutive games in 1941.",
     difficultyNudge: 1,
