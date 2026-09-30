@@ -34,6 +34,10 @@ const IGNORED_PULL_TARGETS = [
   "input",
   "textarea",
   "select",
+  "button",
+  "a",
+  "label",
+  "[role='button']",
   "[contenteditable='true']",
   "[data-pull-refresh-ignore]",
 ].join(",");
