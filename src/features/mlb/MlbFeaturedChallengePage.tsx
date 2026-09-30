@@ -304,7 +304,6 @@ export default function MlbFeaturedChallengePage() {
           fan: result.fan,
         },
       });
-      await reloadOverview();
     } catch (nextError) {
       setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Average Fan result could not be recorded.");
     } finally {
