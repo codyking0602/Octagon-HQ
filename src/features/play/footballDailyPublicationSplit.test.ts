@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { buildFootballDailyPersistenceSetup as buildAverageFan } from "./footballDailyPublicationAverageFan";
 import { buildFootballDailyPersistenceSetup as buildBarTrivia } from "./footballDailyPublicationBarTrivia";
 import { buildFootballDailyPersistenceSetup as buildBlindResume } from "./footballDailyPublicationBlindResume";
 import { buildFootballDailyPersistenceSetup as buildComparison } from "./footballDailyPublicationComparison";
@@ -26,6 +27,7 @@ const builderFor = (gameType: OfficialDailyGameType) => {
     case "millionaire": return buildMillionaire;
     case "sports_feud": return buildSportsFeud;
     case "bar_trivia": return buildBarTrivia;
+    case "average_fan": return buildAverageFan;
     case "blind_rank_5":
     case "keep_4_cut_4":
       return buildComparison;
@@ -38,6 +40,28 @@ function addDays(day: string, offset: number) {
   return date.toISOString().slice(0, 10);
 }
 
+function averageFanHistoryBefore(day: string) {
+  const rows: Array<Record<string, unknown>> = [];
+  for (let offset = 0; addDays("2026-10-01", offset) < day; offset += 1) {
+    const priorDay = addDays("2026-10-01", offset);
+    if (footballTodayGameForDay(priorDay) !== "average_fan") continue;
+    rows.push({
+      day: priorDay,
+      sport: rows.length % 2 === 0 ? "cfb" : "nfl",
+      question_ids: [],
+      final_question_id: null,
+    });
+  }
+  return rows;
+}
+
+function buildSplitPublication(gameType: OfficialDailyGameType, day: string, scheduleVersion: string) {
+  if (gameType === "average_fan") {
+    return buildAverageFan(day, scheduleVersion, gameType, averageFanHistoryBefore(day));
+  }
+  return builderFor(gameType)(day, scheduleVersion, gameType);
+}
+
 describe("split Football Daily publication runtimes", () => {
   it("matches the canonical persisted setup across the live future rotation", () => {
     for (let offset = 0; offset < 40; offset += 1) {
@@ -45,7 +69,7 @@ describe("split Football Daily publication runtimes", () => {
       const gameType = footballTodayGameForDay(day);
       const scheduleVersion = footballTodayScheduleVersionForDay(day);
       const expected = buildFootballTodayPersistenceSetup(day);
-      const actual = builderFor(gameType)(day, scheduleVersion, gameType);
+      const actual = buildSplitPublication(gameType, day, scheduleVersion);
       expect(actual).toEqual(expected);
     }
   }, 60_000);
