@@ -180,6 +180,8 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageSource).not.toContain("autoFocus");
     expect(pageSource).toContain("keyboardOcclusion");
     expect(pageSource).toContain("visualViewport?.width ?? window.innerWidth");
+    expect(pageSource).toContain("const keyboardOpen = keyboardOcclusion > 80");
+    expect(pageSource).toContain("keyboardOpen");
     expect(pageSource).toContain("visualViewport?.height ?? window.innerHeight");
     expect(pageSource).not.toContain('top: `calc(50% - ${keyboardShift}px)`');
     expect(pageSource).toContain('transform: `translateY(-${answerShift}px)`');
