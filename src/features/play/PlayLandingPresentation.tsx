@@ -45,7 +45,6 @@ type PlayLandingGameLibraryProps = {
   onNavigate: (route: string) => void;
   footer?: ReactNode;
   familyFeudVisible?: boolean;
-  averageFanVisible?: boolean;
 };
 
 export function PlayLandingGameLibrary({
@@ -53,12 +52,10 @@ export function PlayLandingGameLibrary({
   onNavigate,
   footer,
   familyFeudVisible = false,
-  averageFanVisible = false,
 }: PlayLandingGameLibraryProps) {
   const games = playLandingGameIds(sport)
     .map((gameId) => playGameDefinition(gameId, sport));
   const familyFeudRoute = sport === "ufc" ? "/play/sports-feud" : "/football/sports-feud";
-  const averageFanRoute = "/play/average-fan";
 
   return (
     <section className="play-landing-library" data-sport={sport} aria-labelledby={`${sport}-all-games-title`}>
@@ -68,24 +65,10 @@ export function PlayLandingGameLibrary({
           <h2 id={`${sport}-all-games-title`}>Pick a game</h2>
           <p>Quick games and blind tests, ready whenever the debate starts.</p>
         </div>
-        <span>{games.length + (familyFeudVisible ? 1 : 0) + (averageFanVisible && sport === "ufc" ? 1 : 0)} LIVE</span>
+        <span>{games.length + (familyFeudVisible ? 1 : 0)} LIVE</span>
       </header>
 
       <div className="play-landing-library__grid" aria-label={`${sport === "ufc" ? "UFC" : "Football"} games`}>
-        {averageFanVisible && sport === "ufc" ? (
-          <button
-            className="play-landing-game-card is-strategic"
-            type="button"
-            onClick={() => onNavigate(averageFanRoute)}
-          >
-            <span className="play-landing-game-card__icon" aria-hidden="true">AF</span>
-            <span className="play-landing-game-card__status">OWNER PREVIEW</span>
-            <strong>Average Fan</strong>
-            <small>Pick a fan, work the grade board, use Peek / Copy / Save, then decide whether to go for $1,000,000.</small>
-            <em>PLAY →</em>
-          </button>
-        ) : null}
-
         {familyFeudVisible ? (
           <button
             className="play-landing-game-card is-strategic"
