@@ -50,6 +50,7 @@ export interface DailyTwoGameSeriesState {
   gameNumber: number;
   gameCount: number;
   awaitingNext: boolean;
+  handoffPending: boolean;
   complete: boolean;
   roundScores: number[];
   averageScore: number | null;
@@ -77,6 +78,7 @@ export function dailyTwoGameSeriesState(
     gameNumber: Number(source.game_number ?? gameIndex + 1),
     gameCount: Number(source.game_count ?? 2),
     awaitingNext: source.awaiting_next === true,
+    handoffPending: source.handoff_pending === true,
     complete: source.complete === true || Boolean(projection.officialAttempt),
     roundScores,
     averageScore,
@@ -105,14 +107,13 @@ export function dailyTwoGamePresentationIntermissionState(
     || !series
     || series.complete
     || series.awaitingNext
+    || !series.handoffPending
     || series.gameIndex !== 1
     || series.roundScores.length !== 1
   ) {
     return null;
   }
 
-  const guesses = numberArray(projection.publicState.guesses);
-  if (guesses.length !== 0) return null;
   const firstScore = series.roundScores[0];
   if (!Number.isFinite(firstScore)) return null;
 
@@ -125,9 +126,11 @@ export function dailyTwoGamePresentationIntermissionState(
 export function DailyTwoGamePresentationIntermission({
   projection,
   onContinue,
+  busy = false,
 }: {
   projection: TodayChallengeProjection;
   onContinue: () => void;
+  busy?: boolean;
 }) {
   const intermission = dailyTwoGamePresentationIntermissionState(projection);
   if (!intermission) return null;
@@ -137,7 +140,9 @@ export function DailyTwoGamePresentationIntermission({
       <p className="eyebrow">GAME 1 OF 2 COMPLETE</p>
       <strong>{intermission.firstScore}<small>/100</small></strong>
       <p>Your first score is locked. Game 2 starts fresh at 50, and the two scores will be averaged.</p>
-      <button type="button" onClick={onContinue}>START GAME 2</button>
+      <button type="button" disabled={busy} onClick={onContinue}>
+        {busy ? "LOADING…" : "START GAME 2"}
+      </button>
     </section>
   );
 }
@@ -154,7 +159,7 @@ export function DailyTwoGameStatus({
   const series = dailyTwoGameSeriesState(projection);
   if (!series) return null;
 
-  if (series.awaitingNext) {
+  if (series.handoffPending || series.awaitingNext) {
     const first = series.roundScores[0];
     return (
       <section className="daily-two-game-intermission" aria-live="polite">
