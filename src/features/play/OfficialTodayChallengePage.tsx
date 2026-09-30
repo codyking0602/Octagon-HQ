@@ -17,6 +17,7 @@ import { OfficialWhoAmIDailyView } from "./OfficialWhoAmIDailyView";
 import { OfficialMillionaireDailyView } from "./OfficialMillionaireDailyView";
 import { OfficialSportsFeudDailyView } from "./OfficialSportsFeudDailyView";
 import { OfficialBarTriviaDailyView } from "./OfficialBarTriviaDailyView";
+import { OfficialAverageFanDailyView } from "./OfficialAverageFanDailyView";
 import {
   DailyRankKeepComboStatus,
   dailyRankKeepComboComponentScore,
@@ -54,7 +55,7 @@ function RuntimeStatus({ error, onRefresh }: { error: unknown; onRefresh?: () =>
 }
 
 export function officialDailyGameAllowsCasualReplay(gameType: DailyGameType) {
-  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4" && gameType !== "millionaire" && gameType !== "sports_feud";
+  return gameType !== "blind_rank_5" && gameType !== "keep_4_cut_4" && gameType !== "millionaire" && gameType !== "sports_feud" && gameType !== "average_fan";
 }
 
 function OfficialResultActions({
@@ -152,6 +153,13 @@ export function OfficialTodayChallengeContent({
             ? () => onNavigate(projection.sport === "football" ? "/football" : "/play")
             : undefined)}
         />
+      ) : projection.gameType === "average_fan" ? (
+        <OfficialAverageFanDailyView
+          projection={projection}
+          busy={busy}
+          onAdvance={onAdvance}
+          onExit={() => onNavigate(projection.sport === "football" ? "/football" : "/play")}
+        />
       ) : projection.gameType === "bar_trivia" ? (
         <OfficialBarTriviaDailyView
           projection={projection}
@@ -171,7 +179,8 @@ export function OfficialTodayChallengeContent({
       {projection.officialAttempt
         && adapter
         && projection.gameType !== "sports_feud"
-        && projection.gameType !== "bar_trivia" ? (
+        && projection.gameType !== "bar_trivia"
+        && projection.gameType !== "average_fan" ? (
         <OfficialResultActions
           casualRoute={officialDailyGameAllowsCasualReplay(projection.gameType) ? adapter.casualRoute : null}
           onNavigate={onNavigate}
