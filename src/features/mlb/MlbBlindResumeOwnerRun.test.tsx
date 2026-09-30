@@ -74,7 +74,7 @@ describe("MLB Blind Resume owner run", () => {
     const styles = readFileSync("src/styles/blind-resume-alignment.css", "utf8");
 
     expect(page).toContain("identity.profile?.canControlPicks === true");
-    expect(schedule).toMatch(/date: "2026-10-06",[\s\S]*?game_type: "blind_resume",[\s\S]*?ready: true/);
+    expect(schedule).toMatch(/date: "2026-10-09",[\s\S]*?game_type: "blind_resume",[\s\S]*?ready: true/);
     expect(styles).toContain('.blind-resume-page[data-sport="mlb"]');
     expect(styles).toContain("--mlb-blind-accent: #2f855f");
     expect(styles).toContain("grid-template-columns: 42px minmax(0, 1fr) auto");
