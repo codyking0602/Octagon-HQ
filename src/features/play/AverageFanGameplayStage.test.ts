@@ -116,6 +116,16 @@ describe("Average Fan locked gameplay stage", () => {
     );
   });
 
+  it("pins the game to the dynamic iPhone viewport without moving the whole stage for keyboard occlusion", () => {
+    expect(pageCss).toMatch(/\/\* Average Fan gameplay stage plate[\s\S]*?\.average-fan-game \{[\s\S]*?width: 100dvw;[\s\S]*?height: 100dvh;[\s\S]*?overscroll-behavior: none;/);
+    expect(pageSource).toContain('root.style.overflow = "hidden"');
+    expect(pageSource).toContain('body.style.overflow = "hidden"');
+    expect(pageSource).toContain('root.style.overscrollBehavior = "none"');
+    expect(pageSource).toContain('body.style.overscrollBehavior = "none"');
+    expect(pageSource).toContain("answerShift");
+    expect(pageSource).not.toContain("keyboardShift");
+  });
+
   it("keeps live gameplay over the baked stage instead of rebuilding the host or desk", () => {
     const gameplayStart = pageSource.indexOf("function AverageFanGame");
     const gameplayEnd = pageSource.indexOf("export default function AverageFanPrototypePage", gameplayStart);
@@ -155,7 +165,7 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageCss).toContain('button[data-subject-tone="blue"]');
     expect(pageCss).toContain('button[data-subject-tone="gold"]');
     expect(pageCss).toContain('button[data-subject-tone="purple"]');
-    expect(pageCss).toMatch(/\.average-fan-game-fan \{[\s\S]*?z-index: 9;/);
+    expect(pageCss).toMatch(/\/\* Average Fan gameplay stage plate[\s\S]*?\.average-fan-game-fan \{[\s\S]*?z-index: 12;/);
     expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?z-index: 10;/);
   });
 
@@ -169,7 +179,12 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageSource).toContain('inputMode="text"');
     expect(pageSource).not.toContain("autoFocus");
     expect(pageSource).toContain("keyboardOcclusion");
-    expect(pageSource).toContain('top: `calc(50% - ${keyboardShift}px)`');
+    expect(pageSource).toContain("visualViewport?.width ?? window.innerWidth");
+    expect(pageSource).toContain("const keyboardOpen = keyboardOcclusion > 80");
+    expect(pageSource).toContain("keyboardOpen");
+    expect(pageSource).toContain("visualViewport?.height ?? window.innerHeight");
+    expect(pageSource).not.toContain('top: `calc(50% - ${keyboardShift}px)`');
+    expect(pageSource).toContain('transform: `translateY(-${answerShift}px)`');
     expect(pageCss).toMatch(/\.average-fan-answer-stage \{[\s\S]*?top: 566px;[\s\S]*?width: 846px;[\s\S]*?height: 164px;/);
     expect(pageCss).toMatch(/\.average-fan-game-fan__portrait \{[\s\S]*?left: 34%;[\s\S]*?width: 224px;[\s\S]*?height: 342px;/);
     expect(pageSource).not.toContain("Q{displayedQuestionNumber}");
