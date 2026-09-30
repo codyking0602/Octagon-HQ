@@ -185,4 +185,33 @@ describe("branded pull-to-refresh", () => {
     expect(refreshMocks.notifications).not.toHaveBeenCalled();
     expect(region!.style.getPropertyValue("--pull-refresh-distance")).toBe("0px");
   });
+
+  it("keeps the START GAME 2 control tappable inside the page-content region", () => {
+    const startGameTwo = vi.fn();
+    const { container } = render(
+      <MemoryRouter initialEntries={["/football"]}>
+        <BrandedPullToRefresh>
+          <main>
+            <button type="button" onClick={startGameTwo}>START GAME 2</button>
+          </main>
+        </BrandedPullToRefresh>
+      </MemoryRouter>,
+    );
+    const button = screen.getByRole("button", { name: "START GAME 2" });
+    const region = container.querySelector<HTMLElement>(".pull-refresh-region");
+
+    fireEvent.touchStart(button, {
+      touches: [{ clientX: 24, clientY: 24 }],
+    });
+    fireEvent.touchMove(button, {
+      touches: [{ clientX: 25, clientY: 60 }],
+    });
+    fireEvent.touchEnd(button);
+    fireEvent.click(button);
+
+    expect(startGameTwo).toHaveBeenCalledTimes(1);
+    expect(refreshMocks.notifications).not.toHaveBeenCalled();
+    expect(region!.style.getPropertyValue("--pull-refresh-distance")).toBe("0px");
+    expect(region!.classList.contains("pull-refresh-region--idle")).toBe(true);
+  });
 });
