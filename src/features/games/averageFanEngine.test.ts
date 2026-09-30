@@ -3,6 +3,7 @@ import {
   AVERAGE_FAN_FANS,
   AVERAGE_FAN_FORMATS,
   AVERAGE_FAN_REPORT_CARDS,
+  AVERAGE_FAN_REPORT_GRADE_MODIFIER,
   AVERAGE_FAN_SUBJECTS,
   averageFanCenteredSubjectModifier,
   averageFanFanAccuracy,
@@ -158,14 +159,22 @@ describe("Average Fan report-card intelligence", () => {
     expect(AVERAGE_FAN_FANS).toEqual(["cody", "shane", "troy", "tyler", "lib"]);
     expect(AVERAGE_FAN_REPORT_CARDS.ufc.shane).toEqual({
       Fighters: "A+",
-      Fights: "A",
+      Fights: "B+",
       Championships: "A-",
       "Octagon IQ": "C+",
     });
   });
 
-  it("centers every fan within each sport so subject strengths do not create a best overall fan", () => {
+  it("keeps every displayed fan equally strong overall while preserving subject differences", () => {
     for (const sport of Object.keys(AVERAGE_FAN_SUBJECTS) as AverageFanSport[]) {
+      const totals = AVERAGE_FAN_FANS.map((fan) => {
+        const row = AVERAGE_FAN_REPORT_CARDS[sport][fan] as Record<string, keyof typeof AVERAGE_FAN_REPORT_GRADE_MODIFIER>;
+        return AVERAGE_FAN_SUBJECTS[sport]
+          .map((subject) => AVERAGE_FAN_REPORT_GRADE_MODIFIER[row[subject]!])
+          .reduce((sum, value) => sum + value, 0);
+      });
+      expect(new Set(totals)).toEqual(new Set([11]));
+
       for (const fan of AVERAGE_FAN_FANS) {
         const modifiers = AVERAGE_FAN_SUBJECTS[sport].map((subject) =>
           averageFanCenteredSubjectModifier(sport, fan, subject)
@@ -177,7 +186,7 @@ describe("Average Fan report-card intelligence", () => {
 
     expect(AVERAGE_FAN_SUBJECTS.ufc.map((subject) =>
       averageFanCenteredSubjectModifier("ufc", "shane", subject)
-    )).toEqual([6, 3, 0, -9]);
+    )).toEqual([7.25, -0.75, 1.25, -7.75]);
   });
 
   it("applies grade base, centered subject strength, difficulty nudge, and clamp", () => {
@@ -186,14 +195,14 @@ describe("Average Fan report-card intelligence", () => {
       grade: 4,
       subject: "Fighters",
       difficultyNudge: 0,
-    }), "shane")).toBe(82);
+    }), "shane")).toBe(83.25);
 
     expect(averageFanFanAccuracy(fixture({
       sport: "ufc",
       grade: 4,
       subject: "Octagon IQ",
       difficultyNudge: 0,
-    }), "shane")).toBe(67);
+    }), "shane")).toBe(68.25);
 
     expect(averageFanFanAccuracy(fixture({
       sport: "ufc",
