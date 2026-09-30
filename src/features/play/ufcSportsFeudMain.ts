@@ -2188,7 +2188,7 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
     ]
   },
   {
-    "category": "gyms",
+    "category": "ufc-identity",
     "entityKind": "other",
     "collisionGroup": "gyms",
     "prompts": [
@@ -2273,115 +2273,105 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
         ]
       },
       {
-        "prompt": "Name a UFC fighter with an iconic nickname.",
-        "category": "fighter-nicknames",
-        "entityKind": "person",
-        "collisionGroup": "gyms",
+        "prompt": "Name a famous UFC fighter nickname.",
         "answers": [
           {
-            "name": "Conor McGregor",
+            "name": "The Notorious",
             "aliases": [
-              "The Notorious",
+              "Conor McGregor",
+              "Conor",
               "Notorious"
             ]
           },
           {
-            "name": "Jon Jones",
+            "name": "Bones",
             "aliases": [
-              "Bones"
+              "Jon Jones",
+              "Jon"
             ]
           },
           {
-            "name": "Anderson Silva",
+            "name": "The Spider",
             "aliases": [
-              "The Spider",
+              "Anderson Silva",
+              "Anderson",
               "Spider"
             ]
           },
           {
-            "name": "Demetrious Johnson",
+            "name": "Mighty Mouse",
             "aliases": [
-              "Mighty Mouse"
+              "Demetrious Johnson",
+              "DJ"
             ]
           },
           {
-            "name": "Chuck Liddell",
+            "name": "The Iceman",
             "aliases": [
-              "The Iceman",
+              "Chuck Liddell",
+              "Chuck",
               "Iceman"
             ]
           },
           {
-            "name": "Israel Adesanya",
+            "name": "Stylebender",
             "aliases": [
-              "The Last Stylebender",
-              "Stylebender"
+              "Israel Adesanya",
+              "Izzy",
+              "The Last Stylebender"
             ]
           },
           {
-            "name": "Alex Pereira",
+            "name": "Poatan",
             "aliases": [
-              "Poatan"
+              "Alex Pereira",
+              "Pereira"
             ]
           },
           {
-            "name": "Charles Oliveira",
+            "name": "Do Bronx",
             "aliases": [
-              "Do Bronx"
+              "Charles Oliveira",
+              "Oliveira"
             ]
           }
         ],
         "alsoAcceptedAnswers": [
           {
-            "name": "Stephen Thompson",
+            "name": "Wonderboy",
             "aliases": [
-              "Wonderboy"
+              "Stephen Thompson",
+              "Thompson"
             ]
           },
           {
-            "name": "Tony Ferguson",
+            "name": "The Highlight",
             "aliases": [
-              "El Cucuy"
-            ]
-          },
-          {
-            "name": "Justin Gaethje",
-            "aliases": [
-              "The Highlight",
+              "Justin Gaethje",
+              "Gaethje",
               "Highlight"
             ]
           },
           {
-            "name": "Chan Sung Jung",
+            "name": "The Lioness",
             "aliases": [
-              "The Korean Zombie",
-              "Korean Zombie"
-            ]
-          },
-          {
-            "name": "Amanda Nunes",
-            "aliases": [
-              "The Lioness",
+              "Amanda Nunes",
+              "Nunes",
               "Lioness"
             ]
           },
           {
-            "name": "Ronda Rousey",
+            "name": "Rowdy",
             "aliases": [
-              "Rowdy"
+              "Ronda Rousey",
+              "Rousey"
             ]
           },
           {
-            "name": "Max Holloway",
+            "name": "Blessed",
             "aliases": [
-              "Blessed"
-            ]
-          },
-          {
-            "name": "Randy Couture",
-            "aliases": [
-              "The Natural",
-              "Natural"
+              "Max Holloway",
+              "Holloway"
             ]
           }
         ]
