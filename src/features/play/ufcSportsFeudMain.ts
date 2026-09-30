@@ -2273,23 +2273,117 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
         ]
       },
       {
-        "prompt": "Name an MMA team associated with multiple notable UFC fighters.",
+        "prompt": "Name a UFC fighter with an iconic nickname.",
+        "category": "fighter-nicknames",
+        "entityKind": "person",
+        "collisionGroup": "gyms",
         "answers": [
-          "American Top Team",
-          "AKA",
-          "Jackson Wink",
-          "City Kickboxing",
-          "Xtreme Couture",
-          "Team Alpha Male",
-          "Nova Uniao",
-          "Tristar Gym"
+          {
+            "name": "Conor McGregor",
+            "aliases": [
+              "The Notorious",
+              "Notorious"
+            ]
+          },
+          {
+            "name": "Jon Jones",
+            "aliases": [
+              "Bones"
+            ]
+          },
+          {
+            "name": "Anderson Silva",
+            "aliases": [
+              "The Spider",
+              "Spider"
+            ]
+          },
+          {
+            "name": "Demetrious Johnson",
+            "aliases": [
+              "Mighty Mouse"
+            ]
+          },
+          {
+            "name": "Chuck Liddell",
+            "aliases": [
+              "The Iceman",
+              "Iceman"
+            ]
+          },
+          {
+            "name": "Israel Adesanya",
+            "aliases": [
+              "The Last Stylebender",
+              "Stylebender"
+            ]
+          },
+          {
+            "name": "Alex Pereira",
+            "aliases": [
+              "Poatan"
+            ]
+          },
+          {
+            "name": "Charles Oliveira",
+            "aliases": [
+              "Do Bronx"
+            ]
+          }
         ],
         "alsoAcceptedAnswers": [
-          "Roufusport",
-          "Kings MMA",
-          "Serra-Longo",
-          "MMA Lab",
-          "Kill Cliff FC"
+          {
+            "name": "Stephen Thompson",
+            "aliases": [
+              "Wonderboy"
+            ]
+          },
+          {
+            "name": "Tony Ferguson",
+            "aliases": [
+              "El Cucuy"
+            ]
+          },
+          {
+            "name": "Justin Gaethje",
+            "aliases": [
+              "The Highlight",
+              "Highlight"
+            ]
+          },
+          {
+            "name": "Chan Sung Jung",
+            "aliases": [
+              "The Korean Zombie",
+              "Korean Zombie"
+            ]
+          },
+          {
+            "name": "Amanda Nunes",
+            "aliases": [
+              "The Lioness",
+              "Lioness"
+            ]
+          },
+          {
+            "name": "Ronda Rousey",
+            "aliases": [
+              "Rowdy"
+            ]
+          },
+          {
+            "name": "Max Holloway",
+            "aliases": [
+              "Blessed"
+            ]
+          },
+          {
+            "name": "Randy Couture",
+            "aliases": [
+              "The Natural",
+              "Natural"
+            ]
+          }
         ]
       }
     ],
