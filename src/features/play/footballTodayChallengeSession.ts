@@ -11,6 +11,7 @@ import { buildFootballDailyPersistenceSetup as buildFootballWavelengthPersistenc
 import { buildFootballDailyPersistenceSetup as buildFootballFindLeaderPersistenceSetup } from "./footballDailyPublicationFindLeader";
 import { buildFootballDailyPersistenceSetup as buildFootballHitNumberPersistenceSetup } from "./footballDailyPublicationHitNumber";
 import { buildFootballDailyPersistenceSetup as buildFootballBarTriviaPersistenceSetup } from "./footballDailyPublicationBarTrivia";
+import { buildFootballDailyPersistenceSetup as buildFootballAverageFanPersistenceSetup } from "./footballDailyPublicationAverageFan";
 import {
   DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
   FOOTBALL_LOCKED_WEIGHTED_CYCLE,
@@ -31,6 +32,7 @@ export const FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION = "football-daily-v12-sports-
 export const FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION = "football-daily-v15-weighted-sep24" as const;
 export const FOOTBALL_WEIGHTED_SCHEDULE_VERSION = "football-daily-v16-weighted-sep25" as const;
 export const FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION = "football-daily-v17-bar-trivia-sep29" as const;
+export const FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION = "football-daily-v18-average-fan-oct1" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
 const FOOTBALL_SPORTS_FEUD_CUTOVER_DAY = "2026-09-23";
@@ -230,7 +232,8 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
-  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
+  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION;
+  if (day >= "2026-09-29") return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
   if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
@@ -244,7 +247,8 @@ export function footballTodayScheduleVersionForDay(day: string): string {
 
 function footballTodaySetupScheduleVersionForDay(day: string): string {
   dayNumber(day);
-  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
+  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION;
+  if (day >= "2026-09-29") return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
   if (day >= FOOTBALL_SPORTS_FEUD_CUTOVER_DAY) return FOOTBALL_SPORTS_FEUD_SCHEDULE_VERSION;
@@ -263,6 +267,8 @@ export function footballTodayGameForDay(day: string): OfficialDailyGameType {
       % FOOTBALL_LOCKED_WEIGHTED_CYCLE.length;
     return FOOTBALL_LOCKED_WEIGHTED_CYCLE[index]!;
   }
+  if (day === "2026-09-29") return "bar_trivia";
+  if (day === "2026-09-30") return "wavelength";
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) {
     const offset = currentDayNumber - dayNumber(FOOTBALL_WEIGHTED_CUTOVER_DAY);
     const index = ((offset % FOOTBALL_WEIGHTED_CYCLE.length) + FOOTBALL_WEIGHTED_CYCLE.length) % FOOTBALL_WEIGHTED_CYCLE.length;
@@ -288,6 +294,23 @@ export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   const offset = currentDayNumber - dayNumber(FOOTBALL_HISTORICAL_ANCHOR_DAY);
   const index = ((offset % FOOTBALL_HISTORICAL_CYCLE.length) + FOOTBALL_HISTORICAL_CYCLE.length) % FOOTBALL_HISTORICAL_CYCLE.length;
   return FOOTBALL_HISTORICAL_CYCLE[index]!;
+}
+
+function footballAverageFanLocalHistory(day: string) {
+  const offset = dayNumber(day) - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
+  if (offset <= 0) return [] as Array<Record<string, unknown>>;
+  const rows: Array<Record<string, unknown>> = [];
+  for (let index = 0; index < offset; index += 1) {
+    if (FOOTBALL_LOCKED_WEIGHTED_CYCLE[index % FOOTBALL_LOCKED_WEIGHTED_CYCLE.length] !== "average_fan") continue;
+    const appearance = rows.length;
+    rows.push({
+      day: new Date((dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) + index) * 86_400_000).toISOString().slice(0, 10),
+      sport: appearance % 2 === 0 ? "cfb" : "nfl",
+      question_ids: [],
+      final_question_id: null,
+    });
+  }
+  return rows;
 }
 
 function contextFor(gameType: OfficialDailyGameType, publication: OfficialDailySetupPublication): OfficialDailyRuntimeContext {
@@ -454,6 +477,29 @@ function grade(
     };
   }
 
+  if (gameType === "average_fan") {
+    const score = Number(finalSubmission.normalized_score ?? -1);
+    const boardScore = Number(finalSubmission.board_score ?? -1);
+    const outcome = String(finalSubmission.final_outcome ?? "");
+    if (!Number.isInteger(score) || score < 0 || score > 100
+      || !Number.isInteger(boardScore) || boardScore < 0 || boardScore > 90
+      || !["walk-away", "correct", "wrong"].includes(outcome)) {
+      throw new Error("Football Average Fan score is invalid.");
+    }
+    return {
+      native: score,
+      normalized: score,
+      result: {
+        score,
+        board_score: boardScore,
+        final_outcome: outcome,
+        fan: finalSubmission.fan,
+        sport: finalSubmission.sport,
+        saves: finalSubmission.saves,
+      },
+    };
+  }
+
   if (gameType === "keep_4_cut_4") {
     const kept = stringArray(finalSubmission.kept_ids, "Football Keep Cut kept ids");
     const board = stringArray(context.privateGradingEvidence.fighter_ids, "Football Keep Cut board ids");
@@ -499,6 +545,23 @@ function buildSessionPublication(
   day: string,
   scheduleVersion: string,
 ): OfficialDailySetupPublication {
+  if (gameType === "average_fan") {
+    const persisted = buildFootballAverageFanPersistenceSetup(
+      day,
+      scheduleVersion,
+      gameType,
+      footballAverageFanLocalHistory(day),
+    );
+    return {
+      setupKey: persisted.setupKey,
+      contentVersion: persisted.contentVersion,
+      scoringVersion: persisted.scoringVersion as OfficialDailySetupPublication["scoringVersion"],
+      publicSetup: persisted.publicSetup,
+      revealSetup: persisted.revealSetup,
+      privateSetupEvidence: persisted.privateSetupEvidence,
+      privateGradingEvidence: persisted.privateGradingEvidence,
+    };
+  }
   if (gameType === "who_am_i") {
     const persisted = buildFootballWhoAmIPersistenceSetup(day, scheduleVersion, gameType);
     return {
@@ -626,6 +689,17 @@ export function buildFootballTodayPersistenceSetup(day: string): FootballTodayPe
   const scheduleVersion = footballTodayScheduleVersionForDay(day);
   const setupScheduleVersion = footballTodaySetupScheduleVersionForDay(day);
   if (gameType !== "keep_4_cut_4") {
+    if (gameType === "average_fan") {
+      return {
+        ...buildFootballAverageFanPersistenceSetup(
+          day,
+          setupScheduleVersion,
+          gameType,
+          footballAverageFanLocalHistory(day),
+        ),
+        scheduleVersion,
+      };
+    }
     const splitBuilder = gameType === "wavelength"
       ? buildFootballWavelengthPersistenceSetup
       : gameType === "find_leader"
