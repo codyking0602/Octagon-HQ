@@ -71,6 +71,13 @@ const bundles = [
     smoke: { day: "2026-09-29", gameType: "bar_trivia" },
   },
   {
+    label: "Football Daily Average Fan publication runtime",
+    entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAverageFan.ts"),
+    fileName: "football-publication-average-fan.generated.mjs",
+    requiredExports: ["buildFootballDailyPersistenceSetup"],
+    smoke: { day: "2026-10-01", gameType: "average_fan" },
+  },
+  {
     label: "Football Daily comparison publication runtime",
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationComparison.ts"),
     fileName: "football-publication-comparison.generated.mjs",
