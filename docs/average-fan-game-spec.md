@@ -1,6 +1,6 @@
 # Are You Smarter Than an Average Fan? — Canonical Game + Content Spec
 
-**Status:** Locked product design; PR1 implementation contract  
+**Status:** LIVE — canonical Daily game; launched October 1, 2026  
 **Date:** September 29, 2026  
 **Repository:** `codyking0602/Octagon-HQ`
 
@@ -15,11 +15,11 @@ Sports:
 - CFB
 - UFC
 
-Football appearances alternate NFL / CFB. The alternation is continuous across official appearances and does not reset just because a calendar month changes. V1 begins with NFL when the first official Football slot is materialized, then CFB, then NFL, and so on.
+Football appearances alternate CFB / NFL across official appearances using publication history. The October 1, 2026 launch uses CFB; the next Football Average Fan appearance uses NFL, then CFB, and so on. The alternation does not reset with the calendar month.
 
 Target cadence is approximately five official Daily appearances per month in Football and five in UFC. Scheduling must use the existing immutable Daily schedule/version system. Never rewrite already-materialized days.
 
-This is a Daily-first game. PR2 may expose an owner/Casual preview for QA, but official competition, persistence, history, streaks, standings, leaderboards, and reminders belong to the existing Daily Challenge platform.
+This is a Daily-only production game. The owner/Casual preview used during development was intentionally closed after approval. Official competition, persistence, history, streaks, standings, leaderboards, and reminders belong to the existing Daily Challenge platform.
 
 ## 2. Existing owners to reuse
 
@@ -391,50 +391,14 @@ Do not expose hidden future questions, answers, fan outcomes, or Final prompt be
 
 Use the existing `result_detail` path already returned by Daily leaderboard rows.
 
-## 17. Implementation sequence
+## 17. Implementation history — COMPLETE
 
-### PR1 — spec + engine/schema + deterministic fan model/tests
-- this document
-- roadmap pointer
-- shared trivia expiration helper reused by Bar Trivia
-- canonical Average Fan types/schema/validation
-- centered fan report-card model
-- deterministic fan answers
-- board/final scoring
-- focused tests
+The staged implementation is complete:
 
-No route or official schedule changes.
+- engine/schema and deterministic fan model
+- approved playable preview
+- NFL / CFB / UFC content banks and current-event expiry integration
+- official Daily integration, Football CFB/NFL alternation, persistence, grading, standings, leaderboard detail, and result reconstruction
+- final QA/polish and closure of Casual/preview discovery
 
-### PR2 — owner/Casual preview UI
-- report-card fan selection
-- 10-tile board
-- short answer / 4-choice / T/F interaction
-- Peek / Copy / Save
-- money ladder
-- Final subject -> Walk Away / Go for $1M
-- result presentation
-
-### PR3 — content banks
-- NFL 220
-- CFB 220
-- UFC 440
-- protected Final pools
-- expiry metadata on current-event records
-- deterministic quality/balance tests
-
-### PR4 — official Daily integration
-- add canonical game type/registry mapping
-- server Daily publication + grading
-- immutable schedule integration
-- Football NFL/CFB alternation
-- history/streak/standings
-- leaderboard result-detail click-through
-
-### PR5 — QA/polish only if needed
-- mobile fit
-- accessibility
-- animation/pacing
-- exact result reconstruction
-- final content balance audit
-
-Every PR follows the repository release standard: exact head typecheck, full tests, production build, relevant backend verification, then merge only when green.
+Do not reopen the old PR1–PR5 sequence. Future work should be narrow content calibration, factual corrections, or presentation polish against the canonical Daily implementation on current `main`.

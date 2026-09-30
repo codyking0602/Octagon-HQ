@@ -1,7 +1,7 @@
 # The HQ Universal App Roadmap
 
-**Status:** Product architecture locked; Phase 0 audit complete; rollout PRs 2–13 complete through PR #823; PR 14 follows.  
-**Last updated:** September 1, 2026  
+**Status:** Original universal rollout complete through PR #14 / #826; later product changes are tracked against current `main`.  
+**Last updated:** September 30, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
 > **Cross-chat rule:** Read this document before making changes related to the universal app shell, Home, sport switching, branding, navigation, profile, notifications, onboarding, or sport theming. Treat sections marked **LOCKED** as authoritative unless Cody explicitly reopens a decision.
@@ -204,20 +204,20 @@ Existing favorite data may remain in storage if removing it would create unneces
 
 # 7. Universal Home Architecture — LOCKED
 
-Home becomes the command center for **The HQ** across sports.
+Home is the command center for **The HQ** across sports.
 
-The card/section order is:
+Current section order:
 
 1. **Up Next**
 2. **Today's Challenges**
-3. **What's New**
-4. **Your HQ**
-5. **UFC HQ**
-6. **Football HQ**
+3. **Your HQ**
+4. **UFC HQ**
+5. **Football HQ**
+
+**What's New is no longer a major Home section.** Meaningful product/content changes should generally surface through the existing notification system and relevant destination instead of consuming permanent Home space.
 
 Do not add a separate standalone Leaderboards section. Relevant standing / rank information belongs inside the card or feature it relates to.
 
----
 
 ## 7.1 Up Next — LOCKED
 
@@ -267,25 +267,12 @@ A daily challenge may also become the Up Next hero when it is the most important
 
 ---
 
-## 7.3 What's New — LOCKED
+## 7.3 What's New — RETIRED FROM MAJOR HOME
 
-What's New belongs on universal Home as its own content section.
+The old dedicated Home What's New section is no longer part of the current Home hierarchy.
 
-### Purpose
+Use notifications for meaningful changes, launches, recaps, and content updates. Preserve historical/deep-link compatibility where needed, but do not restore What's New as a large permanent Home card unless Cody explicitly changes this direction.
 
-Surface meaningful new product/content changes across The HQ, such as:
-
-- New ranking update
-- New Fight Spotlight
-- New Shane's Contender Series fighter/content
-- New weekly Football slate
-- New game mode or feature
-
-### Rule
-
-What's New answers **“What changed?”** It should not become a duplicate activity feed or another version of Up Next.
-
----
 
 ## 7.4 Your HQ — LOCKED
 
@@ -300,7 +287,7 @@ For the current product, show exactly these three core stats:
 ### Explicitly excluded for now
 
 - Open Challenges — too repetitive next to Today's Challenges / challenge surfaces
-- Championships — no championship system exists yet
+- Championships — keep weekly championship presentation in its existing Play/standings flow rather than forcing it into Your HQ
 - A forced fourth stat just to fill space
 
 Three clean stats is preferred over inventing another metric.
@@ -325,7 +312,7 @@ Preserve the existing daily Ranking Spotlight as a standing UFC Home feature.
 
 Preserve Shane's Contender Series as a standing UFC feature with its own branded treatment when active.
 
-This is not merely What's New. What's New may announce new Contender Series content, but the persistent access point remains inside the UFC HQ block.
+The persistent access point remains inside the UFC HQ block; meaningful new Contender Series content may also surface through notifications.
 
 ### Standings
 
@@ -475,9 +462,9 @@ Use the following routing so the rollout does not get trapped between the limite
 | **11** | Football HQ Home block + What's New integration | **COMPLETE — #820; base `9afbfdfe11bddd20051ea6eaef5b996c30d310a4`; explicit ChatGPT execution exception** | **HIGH — preserve weekly picks + both Game of the Week owners** |
 | **12** | Universal Profile | **COMPLETE — #821; base `d4b13a3144220229ac17c1c5ad971a14bbb718c1`; explicit ChatGPT execution exception** | Normal; do not reintroduce unused favorites |
 | **13** | Universal Notifications | **COMPLETE — #823; base `0bb7b27bd472b803c04314416364eab3c2ece851`; explicit ChatGPT execution exception** | **HIGH — deep links, unread ownership, delivery ownership** |
-| **14** | Brand migration + War Room / legacy cleanup | **CODEX REQUIRED — NEXT** | **HIGH — deletion / regression risk; inventory first** |
+| **14** | Brand migration + War Room / legacy cleanup | **COMPLETE — #826** | **HIGH — deletion / regression risk; inventory first** |
 
-On September 1, Cody explicitly narrowed PR 13 to **Universal Notifications only** and prohibited unrelated onboarding work. The locked onboarding cleanup requirement remains preserved below but was not implemented by PR #823. Per that direct scope, **PR 14 is the next named rollout step**; onboarding cleanup may only be revisited separately if Cody explicitly requests it.
+On September 1, Cody explicitly narrowed PR 13 to **Universal Notifications only**. PR 14 was subsequently completed in #826. The older onboarding-cleanup note remains historical context only and must not be treated as the next automatic roadmap item.
 
 ---
 
@@ -631,7 +618,7 @@ PR #823 keeps the existing `NotificationProvider`, `notificationRepository`, `/n
 
 ## Phase 5 — Onboarding Cleanup
 
-**Status: DEFERRED by Cody's explicit PR 13 scope; not implemented by PR #823. PR 14 is next.**
+**Status: DEFERRED as a standalone roadmap item. Do not infer it as next work from this historical rollout.**
 
 Goal: remove obsolete favorite-fighter gating without disturbing existing accounts.
 
@@ -648,7 +635,9 @@ Audit clarification: the current profile-creation flow does not require a favori
 
 ## Phase 6 — Brand Migration + Legacy Cleanup
 
-This phase requires an explicit inventory before edits.
+**Status: COMPLETE — PR #826.**
+
+This phase required an explicit inventory before edits.
 
 ### Universal surfaces
 
@@ -691,7 +680,7 @@ Do not claim a merged change is live until the live deployment SHA is verified.
 
 # 13. Current Resume Point
 
-**Phase 0 is complete. PR 2 through PR 13 are complete through PR #823. PR 14 — Brand migration + War Room / legacy cleanup is the next named rollout item.**
+**The original universal rollout is complete through PR #14 / #826. Current product direction comes from current `main`, this roadmap's locked sections, and explicit later decisions.**
 
 Current verified roadmap baseline:
 
@@ -715,7 +704,7 @@ Current verified roadmap baseline:
 
 PR 4 remains the one canonical shared selected-sport owner and persistence path. PR 5 consumes that state in the existing AppShell and BottomNavigation owners. PR 6 consumes those existing owners for contextual accent scoping while preserving the single `main.tsx` style initialization path and removing favorite-team app-wide shell theming rather than introducing another theme owner. PR #813 only corrects Football's existing contextual token to the locked navy. PR #814 keeps `src/features/home/HomePage.tsx` as the single Home composition owner and adds only the six locked section boundaries plus neutral universal Home presentation; it adds no provider, repository, alternate query path, route owner, or theme initialization. PR #815 keeps that same Home owner, adds a pure Up Next priority model, reuses the existing providers/runtime state, and adds no second query/provider/repository/theme/route owner. PR #818 keeps the same Home owner, adds the two independent daily challenge summaries, and extends the single app-level Picks owner to expose the existing Football summary through its canonical repository path. PR #819 keeps the same Home owner, consumes the existing UFC event/Picks history and calculated ranking/Shane owners, and adds only UFC-local presentation plus focused tests. PR #820 keeps the same Home owner and the same app-level Picks/repository owner, extending only its existing optional Football Home read model so the completed Football HQ block consumes canonical current-slate, pick, summary, history, standing, and published event-art assets without a second provider/query owner. The canonical What's New surface remains unchanged. PR #821 keeps the existing profile route/surface, identity, preferences, Picks, daily-streak, and challenge owners; it composes the signed-in Universal Profile from those owners and removes the redundant signed-in self query rather than introducing any second profile/provider/repository/query path. PR #822 is only the narrow post-merge live-verifier copy repair required by the PR 12 The HQ sign-in label. PR #823 keeps the single notification provider/repository/inbox/unread/deep-link/settings/push owners and adds only sport-aware presentation using existing route/kind metadata and canonical theme tokens.
 
-The next named rollout item is **PR 14 — Brand migration + War Room / legacy cleanup**. Resolve fresh `main` before starting it. Do not begin PR 14 from the PR 13 branch or fold PR 14 cleanup into PR 13.
+PR 14 is complete. Do not revive its stale branches or duplicate rollout PRs. Resolve fresh `main` before any new product work.
 
 Do **not** restart card-by-card Home brainstorming unless Cody explicitly reopens it.
 
@@ -752,7 +741,7 @@ Do **not** re-debate:
 - `NotificationHeaderAction` continues to read `notifications.unreadCount` from the existing provider. `NotificationPushSetting` remains mounted in the existing AppShell profile menu and consumes the same provider/device registration path.
 - Supabase notification tables/RPCs and the canonical `deliver-notification-push` Edge Function are unchanged. No second notification provider, repository, snapshot query, unread query, push path, route owner, realtime channel, or initialization is introduced.
 - Visible notification/push framing is updated from Octagon HQ to The HQ where the surface is universal.
-- The locked onboarding cleanup requirement is preserved but explicitly deferred; PR #823 does not implement it. Per Cody's direct scope, **PR 14 is next**.
+- The locked onboarding cleanup requirement was preserved but explicitly deferred at that time; PR #823 did not implement it. PR #14 was later completed in #826.
 
 ### PR 12 Universal Profile
 
