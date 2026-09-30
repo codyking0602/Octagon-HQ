@@ -1,7 +1,7 @@
 # The HQ Universal App Roadmap
 
 **Status:** Original universal rollout complete through PR #14 / #826; later product changes are tracked against current `main`.  
-**Last updated:** September 1, 2026  
+**Last updated:** September 30, 2026  
 **Canonical purpose:** Preserve the agreed multi-sport architecture for The HQ so implementation can continue across multiple chats without re-deciding settled product choices.
 
 > **Cross-chat rule:** Read this document before making changes related to the universal app shell, Home, sport switching, branding, navigation, profile, notifications, onboarding, or sport theming. Treat sections marked **LOCKED** as authoritative unless Cody explicitly reopens a decision.
@@ -287,7 +287,7 @@ For the current product, show exactly these three core stats:
 ### Explicitly excluded for now
 
 - Open Challenges — too repetitive next to Today's Challenges / challenge surfaces
-- Championships — no championship system exists yet
+- Championships — keep weekly championship presentation in its existing Play/standings flow rather than forcing it into Your HQ
 - A forced fourth stat just to fill space
 
 Three clean stats is preferred over inventing another metric.
@@ -312,7 +312,7 @@ Preserve the existing daily Ranking Spotlight as a standing UFC Home feature.
 
 Preserve Shane's Contender Series as a standing UFC feature with its own branded treatment when active.
 
-This is not merely What's New. What's New may announce new Contender Series content, but the persistent access point remains inside the UFC HQ block.
+The persistent access point remains inside the UFC HQ block; meaningful new Contender Series content may also surface through notifications.
 
 ### Standings
 
