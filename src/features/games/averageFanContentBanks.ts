@@ -97,63 +97,14 @@ function peerValues(
   return picked;
 }
 
-function knowledgeChoiceKind(fact: KnowledgeFact) {
-  const prompt = fact.prompt.toLocaleLowerCase();
-  if (/^(who|whom)\b/.test(prompt) || /nickname|nicknamed/.test(prompt)) return "person";
-  if (/which (?:nfl |ufc |college )?(?:team|franchise|program|school)\b/.test(prompt)) return "team";
-  if (/position\b/.test(prompt)) return "position";
-  if (/trophy|rivalry|bowl\b/.test(prompt)) return "tradition";
-  if (/how many|how long/.test(prompt)) return "numeric";
-  return prompt.split(/\s+/).slice(0, 2).join(" ");
-}
-
-function numericKnowledgeDistractor(fact: KnowledgeFact) {
-  const values = [fact.answer, ...fact.wrong];
-  const parsed = values.map((value) => {
-    const match = /^([\d,]+)(.*)$/.exec(value.trim());
-    if (!match) return null;
-    return {
-      number: Number(match[1]!.replaceAll(",", "")),
-      suffix: match[2]!.trim(),
-    };
-  });
-  if (parsed.some((value) => !value || !Number.isFinite(value.number))) return null;
-  const rows = parsed as { number: number; suffix: string }[];
-  if (new Set(rows.map((row) => row.suffix)).size !== 1) return null;
-  const numbers = rows.map((row) => row.number).sort((a, b) => a - b);
-  const step = Math.max(1, numbers[numbers.length - 1]! - numbers[numbers.length - 2]!);
-  let candidate = numbers[numbers.length - 1]! + step;
-  while (numbers.includes(candidate)) candidate += step;
-  const suffix = rows[0]!.suffix;
-  return candidate.toLocaleString("en-US") + (suffix ? ` ${suffix}` : "");
-}
-
-function knowledgeChoiceWrongChoices(
-  facts: readonly KnowledgeFact[],
-  fact: KnowledgeFact,
-  key: string,
-) {
-  const authored = unique(fact.wrong).filter((choice) => choice !== fact.answer);
-  if (authored.length >= 3) return authored.slice(0, 3);
-  const numeric = numericKnowledgeDistractor(fact);
-  if (numeric && !authored.includes(numeric) && numeric !== fact.answer) {
-    return [...authored, numeric];
+function knowledgeChoiceWrongChoices(fact: KnowledgeFact) {
+  const authored = unique(fact.wrong)
+    .filter((choice) => normalizeAcceptedValue(choice) !== normalizeAcceptedValue(fact.answer));
+  const normalized = new Set(authored.map(normalizeAcceptedValue));
+  if (authored.length !== 3 || normalized.size !== 3) {
+    throw new Error(`Average Fan four-choice fact ${fact.id} must author exactly three unique distractors.`);
   }
-
-  const kind = knowledgeChoiceKind(fact);
-  const semanticPool = facts
-    .filter((candidate) => candidate.id !== fact.id && knowledgeChoiceKind(candidate) === kind)
-    .flatMap((candidate) => [candidate.answer, ...candidate.wrong]);
-  const fallbackPool = semanticPool.length
-    ? semanticPool
-    : facts.filter((candidate) => candidate.id !== fact.id).flatMap((candidate) => [candidate.answer, ...candidate.wrong]);
-  const peer = peerValues(
-    fallbackPool,
-    [fact.answer, ...authored],
-    key,
-    1,
-  );
-  return [...authored, ...peer];
+  return authored;
 }
 
 function aliasesForNumber(value: number) {
@@ -308,7 +259,7 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "12-personnel", grade: 5, prompt: "What personnel grouping uses one running back and two tight ends?", answer: "12 personnel", wrong: ["11 personnel", "22 personnel", "21 personnel"], explanation: "12 personnel uses one running back and two tight ends." },
   { id: "trips", grade: 5, prompt: "What formation term describes three eligible receivers aligned to the same side?", answer: "Trips", wrong: ["Twins", "Empty"], explanation: "Trips commonly describes a three-receiver surface to one side." },
   { id: "mesh", grade: 5, prompt: "Which passing concept is built around shallow crossing routes that pass close to one another?", answer: "Mesh", wrong: ["Four verts", "Smash"], explanation: "Mesh uses intersecting shallow crossers to stress man and zone coverage." },
-  { id: "flood", grade: 5, prompt: "Which passing concept commonly stretches one side of a zone defense at multiple depths?", answer: "Flood", wrong: ["Dagger", "Wham", "Mesh"], explanation: "Flood places receivers at different levels on the same side to high-low zone defenders." },
+  { id: "flood", grade: 5, prompt: "Which passing concept commonly stretches one side of a zone defense at multiple depths?", answer: "Flood", wrong: ["Dagger", "Smash", "Mesh"], explanation: "Flood places receivers at different levels on the same side to high-low zone defenders." },
   { id: "zone-blitz", grade: 5, prompt: "What pressure concept can send a linebacker or defensive back while dropping a defensive lineman into coverage?", answer: "Zone blitz", wrong: ["Prevent defense", "Cover zero"], explanation: "A zone blitz exchanges rush and coverage responsibilities while keeping zone structure behind the pressure." },
   { id: "touchdown-points", grade: 1, prompt: "How many points is a touchdown worth before the try?", answer: "6", wrong: ["3", "7"], explanation: "A touchdown is worth six points before the extra-point or two-point try." },
   { id: "field-goal-points", grade: 1, prompt: "How many points is a successful field goal worth?", answer: "3", wrong: ["2", "6", "1"], explanation: "A successful field goal scores three points." },
@@ -322,7 +273,7 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
 
   { id: "bootleg", grade: 3, prompt: "What quarterback action usually defines a bootleg?", answer: "Rolling away from the run fake", wrong: ["Taking a straight drop", "Pitching an option immediately"], explanation: "A bootleg moves the quarterback outside after selling action in another direction." },
   { id: "jet-sweep", grade: 3, prompt: "Which run concept gives or pitches the ball to a receiver already moving across the formation at the snap?", answer: "Jet sweep", wrong: ["Quarterback sneak", "Power dive"], explanation: "A jet sweep uses fast horizontal motion to get the ball carrier to the edge." },
-  { id: "bunch", grade: 3, prompt: "What formation term describes three receivers aligned close together?", answer: "Bunch", wrong: ["Empty", "Wishbone", "Trips"], explanation: "A bunch set clusters multiple receivers tightly to create traffic and leverage." },
+  { id: "bunch", grade: 3, prompt: "What formation term describes three receivers aligned close together?", answer: "Bunch", wrong: ["Empty", "Wishbone", "Pistol"], explanation: "A bunch set clusters multiple receivers tightly to create traffic and leverage." },
   { id: "press", grade: 3, prompt: "What coverage technique places a defensive back tight to a receiver at the line of scrimmage?", answer: "Press coverage", wrong: ["Off coverage", "Prevent coverage"], explanation: "Press coverage challenges a receiver at or near the line of scrimmage." },
 
   { id: "bracket", grade: 4, prompt: "What does bracket coverage usually mean?", answer: "Two defenders combining on one receiver", wrong: ["A seven-man blitz", "A four-deep zone"], explanation: "Bracket coverage uses two defenders to constrain one receiving threat." },
@@ -740,7 +691,7 @@ function knowledgeQuestions(
           subject,
           prompt: fact.prompt,
           answer: fact.answer,
-          wrongChoices: knowledgeChoiceWrongChoices(facts, fact, `${prefix}:${fact.id}:fourth`),
+          wrongChoices: knowledgeChoiceWrongChoices(fact),
           explanation: fact.explanation,
           difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
         })
@@ -834,7 +785,7 @@ function nflKnowledgeQuestions(
           subject,
           prompt: fact.prompt,
           answer: fact.answer,
-          wrongChoices: knowledgeChoiceWrongChoices(facts, fact, `${prefix}:${fact.id}:fourth`),
+          wrongChoices: knowledgeChoiceWrongChoices(fact),
           explanation: fact.explanation,
           difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
         })
@@ -1004,11 +955,7 @@ function authoredCfbQuestions() {
             subject: fact.subject,
             prompt: fact.prompt,
             answer: fact.answer,
-            wrongChoices: knowledgeChoiceWrongChoices(
-              CFB_CURATED_GRADE_FIVE_FACTS.filter((candidate) => candidate.subject === fact.subject),
-              fact,
-              `cfb-g5:${fact.id}:fourth`,
-            ),
+            wrongChoices: knowledgeChoiceWrongChoices(fact),
             explanation: fact.explanation,
             difficultyNudge: 2,
           })
