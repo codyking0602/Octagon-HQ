@@ -309,6 +309,17 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("spreads four-choice correct answers across all four card positions", () => {
+    for (const sport of sports) {
+      const positions = new Set(
+        AVERAGE_FAN_CONTENT_BANKS[sport]
+          .filter((question) => question.format === "four-choice")
+          .map((question) => question.choices!.indexOf(question.answer)),
+      );
+      expect([...positions].sort((a, b) => a - b), sport).toEqual([0, 1, 2, 3]);
+    }
+  });
+
   it("rejects mechanically detectable near-duplicate facts with the same answer", () => {
     const stop = new Set(["the", "a", "an", "of", "to", "in", "on", "for", "and", "or", "was", "is", "did", "which", "who", "what", "name"]);
     const tokens = (prompt: string) => new Set(
