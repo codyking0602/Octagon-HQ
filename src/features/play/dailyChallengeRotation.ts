@@ -82,6 +82,7 @@ export function lockedWeightedGameForDay(
 }
 
 export function footballBarTriviaAppearanceIndex(day: string) {
+  if (day === "2026-09-29") return 0;
   const offset = dayNumber(day) - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
   if (offset < 0 || lockedWeightedGameForDay("football", day) !== "bar_trivia") {
     throw new Error("Football Bar Trivia league is only defined for Bar Trivia Daily dates.");
@@ -91,7 +92,10 @@ export function footballBarTriviaAppearanceIndex(day: string) {
   const beforeInCycle = FOOTBALL_LOCKED_WEIGHTED_CYCLE
     .slice(0, slot)
     .filter((game) => game === "bar_trivia").length;
-  return fullCycles * FOOTBALL_LOCKED_WEIGHTED_CYCLE.filter((game) => game === "bar_trivia").length
+  // September 29 was the first immutable Bar Trivia appearance. Continue that
+  // NFL/CFB alternation across the September 30 Average Fan schedule cutover.
+  return 1
+    + fullCycles * FOOTBALL_LOCKED_WEIGHTED_CYCLE.filter((game) => game === "bar_trivia").length
     + beforeInCycle;
 }
 
