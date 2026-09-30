@@ -123,15 +123,21 @@ function boardFor(
   );
   const current = currentCandidates[0] ?? null;
   const selected: AverageFanQuestion[] = [];
+  const subjectCounts = new Map<string, number>();
 
   for (const grade of [1, 2, 3, 4, 5] as const) {
     const gradeSelected: AverageFanQuestion[] = [];
-    if (current?.grade === grade) gradeSelected.push(current);
+    if (current?.grade === grade) {
+      gradeSelected.push(current);
+      subjectCounts.set(current.subject, (subjectCounts.get(current.subject) ?? 0) + 1);
+    }
 
     const ordered = deterministicOrder(
       poolForGrade(grade).filter((question) => question.id !== current?.id),
       `${seed}|grade|${grade}`,
     ).sort((left, right) => {
+      const subjectDelta = (subjectCounts.get(left.subject) ?? 0) - (subjectCounts.get(right.subject) ?? 0);
+      if (subjectDelta !== 0) return subjectDelta;
       const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
       const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
       if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
@@ -144,6 +150,7 @@ function boardFor(
       const next = ordered.find((question) => !gradeSelected.some((picked) => picked.id === question.id));
       if (!next) throw new Error(`Average Fan ${sport} grade ${grade} cannot build two Daily questions.`);
       gradeSelected.push(next);
+      subjectCounts.set(next.subject, (subjectCounts.get(next.subject) ?? 0) + 1);
       ordered.splice(ordered.indexOf(next), 1);
     }
     selected.push(...gradeSelected);
