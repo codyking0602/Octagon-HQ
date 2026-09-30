@@ -76,7 +76,7 @@ function peerValues(
   values: readonly string[],
   acceptedAnswers: string | readonly string[],
   key: string,
-  count = 2,
+  count = 3,
 ) {
   const accepted = new Set(
     (typeof acceptedAnswers === "string" ? [acceptedAnswers] : acceptedAnswers)
@@ -95,6 +95,21 @@ function peerValues(
     if (!picked.includes(value)) picked.push(value);
   }
   return picked;
+}
+
+function knowledgeChoiceWrongChoices(
+  facts: readonly KnowledgeFact[],
+  fact: KnowledgeFact,
+  key: string,
+) {
+  const authored = unique(fact.wrong).filter((choice) => choice !== fact.answer);
+  const peer = peerValues(
+    facts.map((candidate) => candidate.answer),
+    [fact.answer, ...authored],
+    key,
+    1,
+  );
+  return [...authored, ...peer];
 }
 
 function aliasesForNumber(value: number) {
@@ -151,18 +166,18 @@ function choiceQuestion(seed: {
   difficultyNudge?: number;
   protectedFinal?: boolean;
 }) {
-  const wrong = unique(seed.wrongChoices).filter((choice) => choice !== seed.answer).slice(0, 2);
-  if (wrong.length !== 2) throw new Error(`Average Fan choice question ${seed.id} needs two wrong choices.`);
+  const wrong = unique(seed.wrongChoices).filter((choice) => choice !== seed.answer).slice(0, 3);
+  if (wrong.length !== 3) throw new Error(`Average Fan choice question ${seed.id} needs three wrong choices.`);
   return assertAverageFanQuestion({
     id: seed.id,
     sport: seed.sport,
     grade: seed.grade,
     subject: seed.subject,
-    format: "three-choice",
+    format: "four-choice",
     prompt: seed.prompt,
     answer: seed.answer,
     aliases: seed.aliases ?? [],
-    choices: [seed.answer, wrong[0]!, wrong[1]!] as [string, string, string],
+    choices: [seed.answer, wrong[0]!, wrong[1]!, wrong[2]!] as [string, string, string, string],
     explanation: seed.explanation,
     contentType: "evergreen",
     difficultyNudge: seed.difficultyNudge ?? 0,
@@ -671,7 +686,7 @@ function knowledgeQuestions(
           subject,
           prompt: fact.prompt,
           answer: fact.answer,
-          wrongChoices: fact.wrong,
+          wrongChoices: knowledgeChoiceWrongChoices(facts, fact, `${prefix}:${fact.id}:fourth`),
           explanation: fact.explanation,
           difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,
         })
@@ -723,8 +738,8 @@ function currentEventCandidates(sport: AverageFanSport) {
     .slice(0, AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS[sport])
     .map((question) => {
       const wrongChoices = question.choices.filter((choice) => choice !== question.answer);
-      if (wrongChoices.length < 2) {
-        throw new Error(`Average Fan current-event source ${question.id} does not have two distractors.`);
+      if (wrongChoices.length < 3) {
+        throw new Error(`Average Fan current-event source ${question.id} does not have three distractors.`);
       }
       return assertAverageFanQuestion({
         id: sport === "nfl"
@@ -733,11 +748,11 @@ function currentEventCandidates(sport: AverageFanSport) {
         sport,
         grade: currentEventGrade(question),
         subject: currentEventSubject(question),
-        format: "three-choice",
+        format: "four-choice",
         prompt: question.prompt,
         answer: question.answer,
         aliases: [],
-        choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!] as [string, string, string],
+        choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!, wrongChoices[2]!] as [string, string, string, string],
         explanation: question.explanation,
         contentType: "current-event",
         activeFrom: question.activeFrom,
@@ -821,7 +836,7 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
   const grade = cfbAuthoredGrade(question);
   const subject = cfbAuthoredSubject(question);
   const protectedFinal = question.round === "last-call";
-  const wrongChoices = question.choices.filter((choice) => choice !== question.answer).slice(0, 2);
+  const wrongChoices = question.choices.filter((choice) => choice !== question.answer).slice(0, 3);
   const formatRoll = stableOffset(question.id + ":average-fan-format", 10);
   const common = {
     id: `average-fan:cfb:authored:${question.id}`,
@@ -844,9 +859,9 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
   if (formatRoll <= 3 || protectedFinal) {
     return assertAverageFanQuestion({
       ...common,
-      format: "three-choice",
+      format: "four-choice",
       prompt: question.prompt,
-      choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!] as [string, string, string],
+      choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!, wrongChoices[2]!] as [string, string, string, string],
     });
   }
   return assertAverageFanQuestion({
@@ -935,7 +950,11 @@ function authoredCfbQuestions() {
             subject: fact.subject,
             prompt: fact.prompt,
             answer: fact.answer,
-            wrongChoices: fact.wrong,
+            wrongChoices: knowledgeChoiceWrongChoices(
+              CFB_CURATED_GRADE_FIVE_FACTS.filter((candidate) => candidate.subject === fact.subject),
+              fact,
+              `cfb-g5:${fact.id}:fourth`,
+            ),
             explanation: fact.explanation,
             difficultyNudge: 2,
           })
