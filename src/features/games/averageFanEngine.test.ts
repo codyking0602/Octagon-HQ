@@ -171,7 +171,7 @@ describe("Average Fan report-card intelligence", () => {
         const row = AVERAGE_FAN_REPORT_CARDS[sport][fan] as Record<string, keyof typeof AVERAGE_FAN_REPORT_GRADE_MODIFIER>;
         return AVERAGE_FAN_SUBJECTS[sport]
           .map((subject) => AVERAGE_FAN_REPORT_GRADE_MODIFIER[row[subject]!])
-          .reduce((sum, value) => sum + value, 0);
+          .reduce<number>((sum, value) => sum + value, 0);
       });
       expect(new Set(totals)).toEqual(new Set([11]));
       const profiles = AVERAGE_FAN_FANS.map((fan) => JSON.stringify(AVERAGE_FAN_REPORT_CARDS[sport][fan]));
