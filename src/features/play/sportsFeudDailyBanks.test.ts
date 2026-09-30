@@ -318,7 +318,7 @@ describe("Sports Feud authored Daily banks", () => {
 
     const pack = buildSportsFeudPack("ufc", "2026-09-30");
     expect(pack.mainBoards.map((question) => question.prompt)).toEqual([
-      "Name a UFC fighter with an iconic nickname.",
+      "Name a famous UFC fighter nickname.",
       "Name a fighter whose walk to the cage feels like part of the show.",
     ]);
     expect(pack.fastMoney.map((question) => question.prompt)).toEqual([
@@ -330,11 +330,11 @@ describe("Sports Feud authored Daily banks", () => {
     ]);
 
     const nicknameBoard = pack.mainBoards[0]!;
-    const bones = matchFamilyFeudAnswer(pack, nicknameBoard, "Bones");
+    const bones = matchFamilyFeudAnswer(pack, nicknameBoard, "Jon Jones");
     expect(bones.status).toBe("matched");
     if (bones.status === "matched") {
       expect(pack.entities.find((entity) => entity.id === bones.entityId)?.displayName)
-        .toBe("Jon Jones");
+        .toBe("Bones");
     }
   });
 
