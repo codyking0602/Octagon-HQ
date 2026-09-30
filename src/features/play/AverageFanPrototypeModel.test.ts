@@ -20,7 +20,7 @@ describe("Average Fan owner preview pack", () => {
 
   it("exercises all three canonical answer formats", () => {
     expect(new Set(AVERAGE_FAN_UFC_PREVIEW_BOARD.map((question) => question.format)))
-      .toEqual(new Set(["short-answer", "three-choice", "true-false"]));
+      .toEqual(new Set(["short-answer", "four-choice", "true-false"]));
   });
 
   it("keeps the Final isolated, protected, and schema-valid", () => {
