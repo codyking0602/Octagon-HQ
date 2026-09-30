@@ -529,7 +529,17 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "Hughes-St-Pierre",
           "Couture-Liddell",
           "McGregor-Aldo",
-          "Nunes-Shevchenko"
+          "Nunes-Shevchenko",
+          {
+            "name": "Rousey-Tate",
+            "aliases": [
+              "Rousey vs Tate",
+              "Ronda vs Miesha",
+              "Rousey Miesha Tate",
+              "Rousey and Miesha Tate",
+              "Ronda Rousey Miesha Tate"
+            ]
+          }
         ]
       },
       {
