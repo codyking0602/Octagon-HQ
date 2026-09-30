@@ -78,6 +78,7 @@ export function buildTwoGameDailyPublication({
         round_index: 0,
         round_count: 2,
         awaiting_next: false,
+        handoff_pending: false,
         completed_rounds: [],
         round_scores: [],
         active_round: firstInitial,
@@ -166,6 +167,27 @@ export function advanceTwoGameDailyRuntime(
     ? context.publicState.round_scores.map(Number)
     : [];
 
+  if (context.publicState.handoff_pending === true) {
+    if (
+      parsedAction.type !== "next_game"
+      || context.gameType !== "wavelength"
+      || index !== 1
+      || completed.length !== 1
+      || scores.length !== 1
+    ) {
+      throw new Error("Finish the Wavelength Game 1 handoff before continuing.");
+    }
+    return {
+      submissionState: { rounds: savedRounds, final_submission: null },
+      publicState: {
+        ...context.publicState,
+        handoff_pending: false,
+      },
+      complete: false,
+      finalSubmission: null,
+    };
+  }
+
   if (context.publicState.awaiting_next === true) {
     if (parsedAction.type !== "next_game" || index !== 0 || completed.length !== 1) {
       throw new Error("Finish the two-game Daily transition before continuing.");
@@ -239,6 +261,7 @@ export function advanceTwoGameDailyRuntime(
         round_index: 1,
         round_count: 2,
         awaiting_next: false,
+        handoff_pending: context.gameType === "wavelength",
         completed_rounds: nextCompleted,
         round_scores: nextScores,
         active_round: secondInitial,
@@ -268,6 +291,7 @@ export function advanceTwoGameDailyRuntime(
       round_index: 1,
       round_count: 2,
       awaiting_next: false,
+      handoff_pending: false,
       completed_rounds: nextCompleted,
       round_scores: nextScores,
       active_round: advanced.publicState,
