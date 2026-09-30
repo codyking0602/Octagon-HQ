@@ -305,27 +305,27 @@ declare
     'sports_feud',
     'who_am_i',
     'millionaire',
-    'find_leader',
     'average_fan',
-    'bar_trivia',
-    'hit_the_number',
-    'sports_feud',
-    'wavelength',
-    'millionaire',
-    'who_am_i',
-    'average_fan',
-    'sports_feud',
     'find_leader',
     'bar_trivia',
     'hit_the_number',
-    'millionaire',
+    'sports_feud',
     'average_fan',
     'wavelength',
+    'millionaire',
+    'who_am_i',
+    'sports_feud',
+    'average_fan',
+    'find_leader',
+    'bar_trivia',
+    'hit_the_number',
+    'millionaire',
+    'wavelength',
+    'average_fan',
     'sports_feud',
     'who_am_i',
     'millionaire',
-    'find_leader',
-    'average_fan'
+    'find_leader'
   ]::text[];
   v_ufc_cycle constant text[] := array[
     'bar_trivia',
@@ -335,16 +335,17 @@ declare
     'millionaire',
     'who_am_i',
     'blind_resume',
+    'average_fan',
     'find_leader',
     'sports_feud',
-    'average_fan',
     'hit_the_number',
     'bar_trivia',
+    'average_fan',
     'wavelength',
     'millionaire',
     'who_am_i',
-    'average_fan',
     'sports_feud',
+    'average_fan',
     'find_leader',
     'blind_resume',
     'hit_the_number',
@@ -355,8 +356,7 @@ declare
     'who_am_i',
     'bar_trivia',
     'find_leader',
-    'millionaire',
-    'average_fan'
+    'millionaire'
   ]::text[];
 begin
   if private.daily_challenge_schedule_for_day(v_cutover - 1, 'ufc')
@@ -382,6 +382,13 @@ begin
     or coalesce(array_length(v_ufc_cycle, 1), 0) <> 29
     or (select count(*) from unnest(v_ufc_cycle) game where game = 'average_fan') <> 5 then
     raise exception 'Average Fan Daily appearance cadence is invalid';
+  end if;
+
+  if v_football_cycle[1] is distinct from 'average_fan'
+    or v_ufc_cycle[2] is distinct from 'average_fan'
+    or v_football_cycle[27] = 'average_fan'
+    or v_ufc_cycle[29] = 'average_fan' then
+    raise exception 'Average Fan Daily staggering or cycle boundary is invalid';
   end if;
 
   insert into private.daily_challenge_schedule_versions (
