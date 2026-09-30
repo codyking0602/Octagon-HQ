@@ -23,6 +23,12 @@ describe("Today’s Challenge route ownership", () => {
     }
   });
 
+  it("routes Average Fan to official Daily by default while preserving explicit Casual review", () => {
+    expect(isOfficialDailyRoute("average_fan", "")).toBe(true);
+    expect(isOfficialDailyRoute("average_fan", "?mode=daily")).toBe(true);
+    expect(isOfficialDailyRoute("average_fan", "?mode=casual")).toBe(false);
+  });
+
   it("routes Daily-only Blind Rank and Keep/Cut through the official runtime while preserving challenge links", () => {
     for (const gameType of ["blind_rank_5", "keep_4_cut_4"] as const) {
       expect(isOfficialDailyRoute(gameType, "")).toBe(true);
