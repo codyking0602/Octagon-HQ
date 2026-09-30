@@ -39,12 +39,21 @@ describe("daily challenge runtime bundle prerequisites", () => {
   it("executes every generated Football publication artifact before deployment can accept it", () => {
     expect(bundlerSource).toContain("pathToFileURL(output).href");
     expect(bundlerSource).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
-    expect(bundlerSource).toContain('fileName: "football-publication-who-am-i.generated.mjs"');
-    expect(bundlerSource).toContain('fileName: "football-publication-wavelength.generated.mjs"');
-    expect(bundlerSource).toContain('fileName: "football-publication-find-leader.generated.mjs"');
-    expect(bundlerSource).toContain('fileName: "football-publication-blind-resume.generated.mjs"');
-    expect(bundlerSource).toContain('fileName: "football-publication-hit-the-number.generated.mjs"');
-    expect(bundlerSource).toContain('fileName: "football-publication-comparison.generated.mjs"');
+    expect(bundlerSource).toContain('fileName: "football-publication.generated.mjs"');
+    for (const gameType of [
+      "who_am_i",
+      "wavelength",
+      "find_leader",
+      "blind_resume",
+      "hit_the_number",
+      "millionaire",
+      "sports_feud",
+      "bar_trivia",
+      "average_fan",
+      "keep_4_cut_4",
+    ]) {
+      expect(bundlerSource).toContain(`gameType: "${gameType}"`);
+    }
     expect(bundlerSource).toContain("failed its deterministic smoke proof.");
   });
 });
