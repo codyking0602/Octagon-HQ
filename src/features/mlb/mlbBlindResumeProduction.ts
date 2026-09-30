@@ -3,7 +3,7 @@ import type {
   MlbBlindResumeSubject,
 } from "./MlbBlindResumeChallenge";
 
-export const MLB_BLIND_RESUME_PRODUCTION_DATE = "2026-10-06" as const;
+export const MLB_BLIND_RESUME_PRODUCTION_DATE = "2026-10-09" as const;
 export const MLB_BLIND_RESUME_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-05" as const;
 export const MLB_BLIND_RESUME_PRODUCTION_SCHEDULE_VERSION = "mlb-blind-resume-oct9-v1" as const;
 
