@@ -30,13 +30,7 @@ describe("MLB postseason challenge schedule", () => {
     expect(new Set(MLB_POSTSEASON_CHALLENGE_SCHEDULE.map((challenge) => challenge.slot)).size).toBe(16);
     expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.route === "/mlb/challenge")).toBe(true);
 
-    const notReady = MLB_POSTSEASON_CHALLENGE_SCHEDULE
-      .filter((challenge) => !challenge.ready)
-      .map((challenge) => challenge.id);
-    expect(notReady).toEqual([
-      "mlb-2026-play-12",
-      "mlb-2026-play-15",
-    ]);
+    expect(MLB_POSTSEASON_CHALLENGE_SCHEDULE.every((challenge) => challenge.ready)).toBe(true);
   });
 
   it("keeps the approved final game-type mix balanced", () => {
@@ -90,11 +84,11 @@ describe("MLB postseason challenge schedule", () => {
     });
   });
 
-  it("keeps only the two Average Fan dates reserved while the three authored additions are ready", () => {
+  it("activates all five added challenge dates after their content is wired", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-07T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-12",
       game_type: "average_fan",
-      ready: false,
+      ready: true,
     });
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-13T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-13",
@@ -109,7 +103,7 @@ describe("MLB postseason challenge schedule", () => {
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-23T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-15",
       game_type: "average_fan",
-      ready: false,
+      ready: true,
     });
     expect(resolveMlbFeaturedChallenge(new Date("2026-10-27T05:00:00Z"))).toMatchObject({
       id: "mlb-2026-play-16",
