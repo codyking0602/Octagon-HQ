@@ -289,6 +289,19 @@ describe("Average Fan durable content banks", () => {
       );
     }
   });
+  it("keeps the Super Bowl XL receiver distractors position-plausible", () => {
+    const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:00-history:randle-el:choice",
+    );
+    expect(question?.format).toBe("four-choice");
+    expect(new Set(question?.choices)).toEqual(new Set([
+      "Antwaan Randle El",
+      "Santonio Holmes",
+      "Cedrick Wilson",
+      "Nate Washington",
+    ]));
+  });
+
   it("keeps accepted answers and aliases out of distractors and malformed choice sets", () => {
     const normalize = (value: string) => value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
     for (const sport of sports) {
