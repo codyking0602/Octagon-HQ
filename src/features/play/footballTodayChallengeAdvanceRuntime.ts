@@ -18,6 +18,7 @@ import { advanceMillionaireDailyRuntime } from "./millionaireDailyRuntime";
 import { advanceAverageFanDailyRuntime } from "./averageFanDailyRuntime";
 import { advanceFamilyFeudDailyRuntime } from "./familyFeudDailyRuntime";
 import { advanceBarTriviaDailyRuntime } from "./barTriviaDailyRuntime";
+import { advanceAverageFanDailyRuntime } from "./averageFanDailyRuntime";
 import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
