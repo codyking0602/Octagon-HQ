@@ -20,6 +20,7 @@ const pullForwardMigration = readFileSync("supabase/migrations/202612310204_mlb_
 const publicLaunchMigration = readFileSync("supabase/migrations/202612310205_mlb_public_launch.sql", "utf8");
 const barTriviaMigration = readFileSync("supabase/migrations/202612310208_mlb_bar_trivia_and_eleven_game_scoring.sql", "utf8");
 const sixteenGameScheduleMigration = readFileSync("supabase/migrations/202612310213_mlb_sixteen_game_schedule.sql", "utf8");
+const authoredAdditionsMigration = readFileSync("supabase/migrations/202612310214_mlb_added_authored_challenges_ready.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -194,13 +195,14 @@ describe("MLB Playoffs rollout gate", () => {
 
   it("routes the moved October 11 Bar Trivia through the exact shared Bar Trivia runner", () => {
     expect(mlbChallengePage).toContain('challenge.game_type === "bar_trivia"');
-    expect(mlbChallengePage).toContain("MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY");
-    expect(mlbChallengePage).toContain("MLB_BAR_TRIVIA_PRODUCTION_RUN");
+    expect(mlbChallengePage).toContain("mlbBarTriviaProductionConfig");
     expect(mlbChallengePage).toContain("<BarTriviaCasualPage");
-    expect(mlbChallengePage).toContain("runOverride={MLB_BAR_TRIVIA_PRODUCTION_RUN}");
+    expect(mlbChallengePage).toContain("runOverride={barTriviaConfig.run}");
     expect(barTriviaRunner).toContain("<BarTriviaGameView");
     expect(mlbBarTriviaProduction).toContain('"2026-10-11"');
     expect(mlbBarTriviaProduction).toContain('"mlb-2026-play-11"');
+    expect(mlbBarTriviaProduction).toContain('"2026-10-27"');
+    expect(mlbBarTriviaProduction).toContain('"mlb-2026-play-16"');
   });
 
   it("routes the moved Hit the Number and both Millionaire dates through production runners", () => {
@@ -264,6 +266,11 @@ describe("MLB Playoffs rollout gate", () => {
     expect(sixteenGameScheduleMigration).toContain("'mlb-2026-play-16'");
     expect(sixteenGameScheduleMigration).toContain("slot between 1 and 16");
     expect(sixteenGameScheduleMigration).toContain("content_ready = excluded.content_ready");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-13'");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-14'");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-16'");
+    expect(authoredAdditionsMigration).toContain("content_ready = true");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-12', 'mlb-2026-play-15'");
     expect(mlbRepository).toContain('rpc("get_mlb_postseason_active_challenge"');
     expect(mlbRepository).toContain("resolveMlbFeaturedChallenge()");
   });
