@@ -96,6 +96,10 @@ function gameProgress(projection: TodayChallengeProjection) {
       return state.complete === true
         ? "BAR TRIVIA COMPLETE"
         : `Q${Math.min(10, Number(state.index ?? 0) + 1)} OF 10`;
+    case "average_fan":
+      return state.complete === true
+        ? "AVERAGE FAN COMPLETE"
+        : `${Array.isArray(state.resolved) ? state.resolved.length : 0}/10 CLEARED`;
   }
 }
 
@@ -153,7 +157,7 @@ function DailyAnswerDetail({
               sport={sport === "football" ? "football" : "ufc"}
             />
           </Suspense>
-        ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia" ? (
+        ) : entry.gameType === "millionaire" || entry.gameType === "sports_feud" || entry.gameType === "who_am_i" || entry.gameType === "bar_trivia" || entry.gameType === "average_fan" ? (
           <DailyLeaderboardGameResult
             projection={resultProjection}
             resultDetail={entry.resultDetail}
