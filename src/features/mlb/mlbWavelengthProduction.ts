@@ -21,7 +21,7 @@ export type MlbProductionWavelengthClue = {
 
 export type MlbProductionWavelengthGameDefinition = {
   id: string;
-  challengeDate: "2026-09-29" | "2026-10-18";
+  challengeDate: "2026-09-29" | "2026-10-21";
   target: number;
   openingClueId: string;
 };
@@ -171,13 +171,13 @@ export const MLB_WAVELENGTH_PRODUCTION_GAMES: readonly MlbProductionWavelengthGa
   },
   {
     id: "mlb-2026-10-23-wavelength-1",
-    challengeDate: "2026-10-18",
+    challengeDate: "2026-10-21",
     target: 81,
     openingClueId: "clutch-paul-konerko",
   },
   {
     id: "mlb-2026-10-23-wavelength-2",
-    challengeDate: "2026-10-18",
+    challengeDate: "2026-10-21",
     target: 56,
     openingClueId: "park-kauffman",
   },
