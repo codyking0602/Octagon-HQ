@@ -1,6 +1,6 @@
 # The HQ — Current Handoff
 
-_Last updated: 2026-09-14_
+_Last updated: 2026-09-30_
 
 This is the cold-start operational handoff for `codyking0602/Octagon-HQ`. Current `main` is always the live source of truth; resolve it from GitHub before every branch rather than trusting a copied SHA in this file.
 
@@ -102,7 +102,7 @@ Consumers use canonical providers/repositories instead of independently resolvin
 
 ## Current Games product
 
-The active product is The HQ with UFC and Football sport contexts.
+The active product is The HQ with UFC and Football sport contexts, plus the temporary 2026 MLB postseason experience.
 
 ### UFC normal Play library
 
@@ -121,7 +121,7 @@ The active product is The HQ with UFC and Football sport contexts.
 - Who Am I
 - Draft Room
 
-20 Questions is retired. Blind Rank 5 + Keep 4 / Cut 4 remain Daily Double mechanics rather than normal library games. Football Blind Resume remains historical/Daily-only and is not part of the current future Football rotation.
+20 Questions is retired. Historical Daily Double, Football Blind Resume, and other retired/older Daily content remain valid for history/deep-link compatibility but are not part of the current future weighted Daily cycles. Average Fan, Millionaire, Sports Feud, and Bar Trivia are Daily families and are not part of the normal All Games libraries.
 
 ### Football Draft Room
 
@@ -142,25 +142,31 @@ Launch formats:
 
 Front Seven and Secondary are deferred post-launch and are not missing release scope.
 
-## Football Today's Challenge
+## Today's Challenge
 
-Football Today's Challenge reuses the shared Daily Challenge platform.
+UFC and Football reuse the shared Daily Challenge platform.
 
-Canonical route:
+Canonical routes:
 
-- `/football/today`
+- UFC: `/play/today`
+- Football: `/football/today`
 
-The shared `daily-challenge-runtime` owns private setup/actions/grading, persistence, history, streaks, standings, leaderboards, competition, and reminders. Do not create Football-specific duplicate stacks.
+The shared `daily-challenge-runtime` owns private setup/actions/grading, persistence, history, streaks, standings, leaderboards, competition, and reminders. Do not create sport-specific duplicate stacks.
 
-Current future Football rotation is `football-daily-v4`: Find the Leader ×5, Wavelength ×5, Hit the Number ×4, Who Am I ×4, Daily Double ×2. Football Blind Resume remains valid historical Daily content but is not in the future v4 rotation.
+Current weighted cycles begin **October 1, 2026** and are immutable once materialized:
+
+- Football, 27 slots: Average Fan ×5, Millionaire ×4, Sports Feud ×4, Bar Trivia ×3, Find the Leader ×3, Wavelength ×3, Who Am I ×3, Hit the Number ×2.
+- UFC, 29 slots: Average Fan ×5, Millionaire ×4, Sports Feud ×4, Bar Trivia ×3, Find the Leader ×3, Wavelength ×3, Who Am I ×3, Blind Resume ×2, Hit the Number ×2.
+
+October 1 intentionally launches Average Fan in both sports. Football's first official Average Fan appearance is CFB; later Football Average Fan appearances alternate CFB/NFL from publication history.
 
 ## Games roadmap status
 
 `docs/the-hq-games-roadmap.md` is the sole active Games roadmap.
 
-Completed launch work includes source/eligibility ownership, Play presentation parity, mature Find the Leader/Wavelength/Blind Resume/Hit the Number, Daily-only comparison cleanup, retirement of 20 Questions, the completed public Who Am I rebuild, Today's Challenge vNext, and the complete Draft Room launch slate.
+The original 15-stage Games launch is complete. Post-launch work that is also complete includes Sports Feud, Millionaire, Bar Trivia, the CFB Superteam Weekly Auction, two-game Daily standardization, and the canonical Average Fan Daily launch for October 1, 2026.
 
-The September 14 Stage 15 release opens Draft Room by removing the frontend owner-only gate and flipping the existing backend public-release switch. Exact-head typecheck, full tests, build, backend verification, merge, and exact production SHA verification remain the release standard.
+Average Fan Casual/owner preview routes were intentionally closed after approval; the production game is Daily-only. Front Seven and Secondary remain optional post-launch Draft Room additions, not unfinished launch scope.
 
 ## Football canonical data ownership
 
@@ -224,12 +230,12 @@ Fighter-count validation must remain synchronized with the canonical ranking dat
 
 Before broad unrelated expansion:
 
-1. Remove any remaining V1 runtime URL/dependency.
+1. Finish the remaining UFC fighter asset-ingest background-cleanup hardening; PR #1533 is the one current open implementation item that is not stale/superseded.
 2. Keep duplicate Cloudflare native Git deployment disabled.
 3. Keep required backend verification genuinely green; repair failures at their canonical root.
-4. Confirm production `main` and the live deployment SHA match.
-5. Keep this handoff and the two canonical roadmaps current.
-6. Prove exact-head frontend/backend release paths whenever changed scope requires them.
+4. Confirm production `main` and the live deployment SHA match for runtime changes.
+5. Keep this handoff and the canonical roadmaps synchronized with current `main`.
+6. Treat old open PRs/issues as cleanup debt; close them when their work is already merged or superseded rather than reviving stale branches.
 
 ## Validation standard
 
@@ -243,6 +249,8 @@ Relevant Supabase SQL tests, migration-order checks, backend verification, phone
 
 ## Next safe action
 
-For Games work, the launch roadmap is complete after the Stage 15 exact production SHA is verified. Treat Front Seven, Secondary, and any new Draft Room formats as explicit post-launch additions, not unfinished release scope.
+For Games, work from the current weighted Daily cycles and current Play/Draft Room owners rather than older v4/v7 rotation notes. Treat Front Seven, Secondary, and additional Draft Room subjects as explicit future product decisions.
 
-For other product areas, read the canonical owner for that scope first and preserve the same one-owner release standard.
+For UFC Picks operations, preserve the current Event Setup / monitoring / Fight Night ownership. Fighter replacement and live fight removal are already implemented on `main`; do not recreate those systems from old issues. The remaining known repo-level implementation cleanup is fighter asset-ingest hardening.
+
+For Home/editorial operations, weekly Football Player Spotlight and CFB/NFL Game of the Week content still require normal weekly curation.
