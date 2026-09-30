@@ -103,8 +103,8 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageSource).toContain("const AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT = 864;");
     expect(pageSource).toContain('src={AVERAGE_FAN_GAMEPLAY_STAGE_SRC}');
     expect(pageSource).toContain('"/assets/average-fan/average-fan-gameplay-stage.png"');
-    expect(pageSource).toContain("viewportWidth / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH");
-    expect(pageSource).toContain("viewportHeight / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT");
+    expect(pageSource).toContain("viewport.width / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH");
+    expect(pageSource).toContain("viewport.height / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT");
     expect(pageSource).toContain('translate(-50%, -50%) scale(${stageScale})');
     expect(pageCss).toMatch(/\.average-fan-game-stage \{[\s\S]*?width: 1536px;[\s\S]*?height: 864px;/);
     expect(pageCss).toMatch(/\.average-fan-game-stage__plate \{[\s\S]*?width: 1536px;[\s\S]*?height: 864px;[\s\S]*?object-fit: contain;/);
@@ -116,7 +116,7 @@ describe("Average Fan locked gameplay stage", () => {
     );
   });
 
-  it("pins the game to the dynamic iPhone viewport without moving the whole stage for keyboard occlusion", () => {
+  it("pins the game to the large iPhone viewport without moving the whole stage for keyboard occlusion", () => {
     expect(pageCss).toMatch(/\/\* Average Fan gameplay stage plate[\s\S]*?\.average-fan-game \{[\s\S]*?width: 100lvw;[\s\S]*?height: 100lvh;[\s\S]*?overscroll-behavior: none;/);
     expect(pageSource).toContain('useAverageFanScreenLock();');
     expect(pageSource).toContain('root.style.overflow = "hidden"');
