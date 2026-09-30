@@ -76,7 +76,7 @@ export const AVERAGE_FAN_REPORT_CARDS = {
     shane: { Fighters: "A+", Fights: "B+", Championships: "A-", "Octagon IQ": "C+" },
     troy: { Fighters: "B+", Fights: "A", Championships: "B-", "Octagon IQ": "A-" },
     tyler: { Fighters: "A-", Fights: "B+", Championships: "A", "Octagon IQ": "B-" },
-    lib: { Fighters: "A", Fights: "B+", Championships: "A-", "Octagon IQ": "B-" },
+    lib: { Fighters: "A-", Fights: "A", Championships: "B+", "Octagon IQ": "B-" },
   },
 } as const satisfies ReportCards;
 
