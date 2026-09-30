@@ -341,7 +341,7 @@ export function FanSelector({
     const subjects = AVERAGE_FAN_SUBJECTS[sport];
     const report = AVERAGE_FAN_REPORT_CARDS[sport][selectedFan] as Record<string, AverageFanReportGrade>;
     return subjects.map((subject) => ({ subject, grade: report[subject] }));
-  }, [selectedFan]);
+  }, [selectedFan, sport]);
 
   return (
     <div className="average-fan-selector average-fan-selector--plate">
@@ -486,11 +486,11 @@ export function HelpRail({
 export function TileBoard({
   resolved,
   onSelect,
-  questions = AVERAGE_FAN_UFC_PREVIEW_BOARD,
+  questions,
 }: {
   resolved: readonly ResolvedQuestion[];
   onSelect: (question: AverageFanQuestion) => void;
-  questions?: readonly AverageFanQuestion[];
+  questions: readonly AverageFanQuestion[];
 }) {
   const resolvedIds = new Set(resolved.map((item) => item.question.id));
   return (
