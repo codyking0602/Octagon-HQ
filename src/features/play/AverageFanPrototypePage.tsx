@@ -95,23 +95,25 @@ function useAverageFanGameplayStageLayout() {
   useEffect(() => {
     const syncLayout = () => {
       const visualViewport = window.visualViewport;
-      const viewportWidth = visualViewport?.width ?? window.innerWidth;
-      const viewportHeight = visualViewport?.height ?? window.innerHeight;
-      const scale = Math.min(
-        viewportWidth / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH,
-        viewportHeight / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT,
-      );
-
       const activeElement = document.activeElement;
       const shortAnswerFocused = activeElement instanceof HTMLInputElement
         && activeElement.closest(".average-fan-short-answer") !== null;
       const keyboardOcclusion = shortAnswerFocused && visualViewport
         ? Math.max(0, window.innerHeight - visualViewport.height - visualViewport.offsetTop)
         : 0;
+      const keyboardOpen = keyboardOcclusion > 80;
+      const viewportWidth = visualViewport?.width ?? window.innerWidth;
+      const viewportHeight = keyboardOpen
+        ? window.innerHeight
+        : visualViewport?.height ?? window.innerHeight;
+      const scale = Math.min(
+        viewportWidth / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH,
+        viewportHeight / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT,
+      );
 
       setLayout({
         scale,
-        answerShift: keyboardOcclusion > 80
+        answerShift: keyboardOpen
           ? Math.min(190, Math.round(keyboardOcclusion / Math.max(scale * 2, 0.01)))
           : 0,
       });
