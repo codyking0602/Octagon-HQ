@@ -2,7 +2,7 @@
 
 **Status:** Sole canonical product and implementation roadmap for UFC + Football Games  
 **Created:** September 3, 2026  
-**Updated:** September 29, 2026  
+**Updated:** September 30, 2026  
 **Scope:** Play landing pages, shared game presentation, UFC games, Football games, Today's Challenge, 20 Questions, Who Am I, Auction, Draft Room, game-source ownership, and Games release readiness.
 
 > **Cross-chat rule:** Read this document before changing UFC Play, Football Play, any shared game mechanic, Today's Challenge, Auction, Draft Room, Blind Rank 5, Keep 4 / Cut 4, 20 Questions, Who Am I, or the data/ranking sources consumed by Games.
@@ -15,30 +15,22 @@
 
 ## 1. Current roadmap position
 
-PRs 1 through 14 are complete. **Stage 15 — full Games maturity audit + production release is the release step.**
+The original 15-stage Games launch is complete and public.
 
-Cody approved Football Draft Room for public release on **September 14, 2026** after the launch slate was completed, calibrated, simulated, and visually polished. The release uses the existing shared sealed-bid/Auction architecture; it does not create a second backend or challenge lifecycle.
+Completed post-launch additions now include:
 
-The public Draft Room launch slate is:
+- Sports Feud for UFC and Football Daily.
+- Millionaire for UFC and Football Daily.
+- Bar Trivia for UFC and Football Daily.
+- CFB Superteam Weekly Auction.
+- two-game Daily standardization where applicable.
+- Are You Smarter Than an Average Fan? as an official Daily family beginning October 1, 2026.
 
-- NFL Build a QB
-- CFB Build a QB
-- NFL QB / RB / WR Trio
-- CFB QB / RB / WR Trio
-- Cowboys Since 2007
-- Longhorns Since 2003
-- Cowboys Teams Since 2007
-- Longhorns Teams Since 2003
-- Best CFB Teams
-- NFL Divisions
+Average Fan's approved Casual/owner preview was intentionally closed after sign-off. Production Average Fan is Daily-only and reuses the canonical Daily persistence/grading/history/leaderboard stack.
 
-Front Seven and Secondary are **deferred post-launch additions**, not release blockers. The earlier standalone College Football National Champions concept is superseded for launch by the broader Best CFB Teams conference/split-conference product.
+The public Draft Room launch slate remains complete. Front Seven and Secondary are deferred optional additions, not missing launch scope. 20 Questions remains retired.
 
-Stage 11 — Today’s Challenge vNext remains complete. Who Am I is public and part of the official UFC/Football Daily rotations. 20 Questions remains retired. Auction and Draft Room remain outside Today’s Challenge.
-
-Stage 12 established the shared Draft Room foundation and Build a QB. Later Draft Room stages expanded that same lifecycle with Trio, team/player history rooms, Best CFB Teams, and NFL Divisions. The Stage 15 release removes the owner-only discovery/route gate and flips the existing backend public-release switch only after the exact release head is green.
-
-Do not reopen completed Draft Room grading, board construction, or game mechanics merely because the older roadmap named additional builders.
+Do not reopen completed mechanics or older rollout stages merely because historical PRs/roadmap text still exists elsewhere.
 
 ---
 
@@ -80,14 +72,11 @@ Never create a second factual owner, comparison owner, route owner, challenge ow
 
 The lists above remain the intended mature product. Stage 11 Slice 2 releases Who Am I as a normal public replayable game in both Play libraries. 20 Questions is retired and is not part of either mature Play library.
 
-### Daily-only mechanics
+### Daily / historical mechanics
 
-- Football Blind Resume
-- Blind Rank 5 + Keep 4 / Cut 4 as Daily Double mechanics
+The current future weighted Daily cycles no longer use Daily Double. Blind Rank 5, Keep 4 / Cut 4, Football Blind Resume, and prior schedule families remain valid only where current main still exposes them for normal play, history, challenge compatibility, or deep links.
 
-Blind Rank 5 and Keep 4 / Cut 4 are not deleted. Their engines, graders, historical results, hydration, and compatible deep links remain valid where required.
-
-Football Blind Resume is also not deleted. Its three-round Daily implementation and historical results remain valid, but Stage 11 removes it from the future Football rotation beginning September 12, 2026.
+Average Fan, Millionaire, Sports Feud, and Bar Trivia are current Daily families but are not core All Games library entries.
 
 ### Better Than
 
@@ -101,25 +90,34 @@ Today's Challenge is the competitive daily layer, not a duplicate of All Games.
 
 The canonical Daily platform owns sport-scoped deterministic setup, private evidence, grading, persistence, immutable first completed attempts, cross-device progress, history, streaks, standings, leaderboards, reminders, and schedule resolution. Do not create a second Daily scheduler, schedule engine, repository, grader, leaderboard provider, or persistence path.
 
-Official future Daily families after Stage 11 are:
-- Find the Leader
-- Wavelength
-- UFC Blind Resume
-- Hit the Number
-- Who Am I
-- Daily Double: Blind Rank 5 + Keep 4 / Cut 4
+The current immutable weighted cycles cut over on **October 1, 2026**.
 
-Football Blind Resume remains valid historical Daily content but is not part of `football-daily-v4`.
+### Football — 27-slot cycle
 
-Who Am I uses the same canonical casual populations, clue authority, score ladder, and Recovery Board rules. Daily setup is deterministic, ignores casual recent-subject localStorage exclusions, restores progress cross-device, reveals the correct identity after completion, and is graded by the existing server-owned Daily grader chain.
+- Average Fan ×5
+- Millionaire ×4
+- Sports Feud ×4
+- Bar Trivia ×3
+- Find the Leader ×3
+- Wavelength ×3
+- Who Am I ×3
+- Hit the Number ×2
 
-Current future schedule identities begin September 12, 2026 Central:
-- UFC `play-rotation-v7`: Find 5 / Wavelength 5 / Blind Resume 4 / Hit 4 / Who Am I 4 / Daily Double 2.
-- Football `football-daily-v4`: Find 5 / Wavelength 5 / Hit 4 / Who Am I 4 / Daily Double 2.
+### UFC — 29-slot cycle
 
-Schedule versions are immutable. Never rewrite an already-materialized Daily day to force a new rotation.
+- Average Fan ×5
+- Millionaire ×4
+- Sports Feud ×4
+- Bar Trivia ×3
+- Find the Leader ×3
+- Wavelength ×3
+- Who Am I ×3
+- Blind Resume ×2
+- Hit the Number ×2
 
-Auction, Draft Room, and Better Than do not enter Today's Challenge.
+October 1 intentionally uses Average Fan for both UFC and Football. Football uses CFB on the October 1 launch and then alternates CFB/NFL across official Average Fan appearances using publication history.
+
+Historical Daily schedules and completed results remain immutable. Never rewrite an already-materialized Daily day merely to match the newest cycle.
 
 ---
 
@@ -531,32 +529,25 @@ The Games launch roadmap is complete when the Stage 15 exact production deployme
 
 ---
 
-## 11. Approved post-launch expansion — Are You Smarter Than an Average Fan?
+## 11. Are You Smarter Than an Average Fan? — LIVE
 
-**Status:** Locked September 29, 2026. Implementation begins after the completed original 15-PR Games roadmap.
+**Status:** Approved, built, and launched as an official Daily family for UFC and Football on October 1, 2026.
 
 Canonical detailed spec:
 - `docs/average-fan-game-spec.md`
 
-Product contract:
-- NFL, CFB, and UFC.
-- Football alternates NFL / CFB between official appearances.
-- Target cadence is approximately five appearances per month per sport context.
+Locked production contract:
+
+- NFL, CFB, and UFC content banks.
+- Football launch on October 1 uses CFB; later appearances alternate CFB/NFL.
+- approximately five appearances per weighted cycle for each sport context.
 - 10-question open grade/subject board plus one protected $1,000,000 Final.
-- Mixed question formats: ~60% short answer, ~25% three-choice, ~15% true/false.
-- One selected Average Fan for the entire run: Cody, Shane, Troy, Tyler, or Lib.
-- Peek / Copy / Save are each available once; no helps on the Final.
-- Wrong answers do not eliminate the HQ run.
-- Board score calibrates around 90 for perfect and 80 for a late first miss; Final is bank / +10 / -10.
-- Durable bank targets: NFL 220, CFB 220, UFC 440.
-- ~10% current-event content reuses Bar Trivia's canonical expiration metadata/behavior.
-- Official Daily persistence, scheduling, grading, history, standings, leaderboard, and result-detail must reuse the existing Daily Challenge platform.
+- mixed question formats with short answer dominant.
+- one selected Average Fan for the full run: Cody, Shane, Troy, Tyler, or Lib.
+- Peek / Copy / Save once each; no helps on the Final.
+- wrong answers do not end the run.
+- the first unsaved miss triggers the approved "YOU ARE NOT SMARTER THAN AN AVERAGE FAN" verdict while play continues.
+- official Daily persistence, scheduling, grading, history, standings, leaderboard, and result-detail reuse the existing Daily platform.
+- the approved Casual/owner preview is closed; production discovery is Daily-only.
 
-Implementation sequence:
-1. PR1 — formal spec + engine/schema + deterministic fan model/tests.
-2. PR2 — playable owner/Casual preview UI.
-3. PR3 — content banks + current-event expiry integration.
-4. PR4 — official Daily integration + Football NFL/CFB alternation + result detail.
-5. PR5 only if needed — QA/polish.
-
-Do not compress this game into Millionaire. The open board, mixed answer formats, classmate/fan strategy, report-card strengths, and Peek/Copy/Save are the product differentiation.
+Any future Average Fan work is content calibration, QA, or narrow polish—not a rebuild or second runtime.
