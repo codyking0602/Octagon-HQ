@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { buildFootballDailyPersistenceSetup as buildAverageFan } from "./footballDailyPublicationAverageFan";
 import { buildFootballDailyPersistenceSetup as buildBarTrivia } from "./footballDailyPublicationBarTrivia";
 import { buildFootballDailyPersistenceSetup as buildBlindResume } from "./footballDailyPublicationBlindResume";
 import { buildFootballDailyPersistenceSetup as buildComparison } from "./footballDailyPublicationComparison";
@@ -26,6 +27,7 @@ const builderFor = (gameType: OfficialDailyGameType) => {
     case "millionaire": return buildMillionaire;
     case "sports_feud": return buildSportsFeud;
     case "bar_trivia": return buildBarTrivia;
+    case "average_fan": return buildAverageFan;
     case "blind_rank_5":
     case "keep_4_cut_4":
       return buildComparison;
