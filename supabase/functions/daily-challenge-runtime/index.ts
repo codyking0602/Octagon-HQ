@@ -488,6 +488,21 @@ async function averageFanPublicationHistory(
   return response.data;
 }
 
+async function averageFanPublicationHistory(
+  admin: SupabaseClient,
+  sport: "ufc" | "football",
+  day: string,
+) {
+  const response = await admin.rpc("get_average_fan_publication_history", {
+    p_sport: sport,
+    p_before_day: day,
+  });
+  if (response.error || !Array.isArray(response.data)) {
+    throw new Error("Average Fan publication history is unavailable.");
+  }
+  return response.data;
+}
+
 async function materializeToday(admin: SupabaseClient) {
   const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "ufc" });
   if (prepared.error) {
