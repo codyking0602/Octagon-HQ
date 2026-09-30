@@ -341,7 +341,7 @@ export function SportSelector({
   ];
 
   return (
-    <div className="average-fan-sport-select average-fan-intro--plate">
+    <div className="average-fan-intro average-fan-sport-select average-fan-intro--plate">
       <section
         className="average-fan-intro-stage"
         aria-label="Choose Average Fan sport"
