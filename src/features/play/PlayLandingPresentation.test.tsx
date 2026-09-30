@@ -53,24 +53,11 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/who-am-i");
   });
 
-  it("shows Average Fan as an owner-only UFC app entry when explicitly enabled", () => {
-    const navigate = vi.fn();
-    const { rerender } = render(
-      <PlayLandingGameLibrary sport="ufc" onNavigate={navigate} averageFanVisible={false} />,
-    );
+  it("keeps Average Fan out of Casual Play libraries now that it is Daily-only", () => {
+    const { rerender } = render(<PlayLandingGameLibrary sport="ufc" onNavigate={vi.fn()} />);
     expect(screen.queryByRole("button", { name: /average fan/i })).not.toBeInTheDocument();
 
-    rerender(
-      <PlayLandingGameLibrary sport="ufc" onNavigate={navigate} averageFanVisible />,
-    );
-    const averageFan = screen.getByRole("button", { name: /average fan/i });
-    expect(within(averageFan).getByText("OWNER PREVIEW")).toBeInTheDocument();
-    fireEvent.click(averageFan);
-    expect(navigate).toHaveBeenCalledWith("/play/average-fan");
-
-    rerender(
-      <PlayLandingGameLibrary sport="football" onNavigate={navigate} averageFanVisible />,
-    );
+    rerender(<PlayLandingGameLibrary sport="football" onNavigate={vi.fn()} />);
     expect(screen.queryByRole("button", { name: /average fan/i })).not.toBeInTheDocument();
   });
 
