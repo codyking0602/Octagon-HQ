@@ -3,7 +3,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 import {
   DailyTwoGamePresentationIntermission,
+  dailyTwoGamePresentationHandoffWasDismissed,
   dailyTwoGamePresentationIntermissionState,
+  rememberDailyTwoGamePresentationHandoff,
 } from "./DailyTwoGameStatus";
 
 function wavelengthProjection(overrides: Partial<TodayChallengeProjection> = {}): TodayChallengeProjection {
@@ -60,6 +62,13 @@ describe("Wavelength two-game presentation handoff", () => {
     expect(screen.getByText("90")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "START GAME 2" }));
     expect(onContinue).toHaveBeenCalledTimes(1);
+  });
+
+  it("persists the presentation handoff dismissal across a page remount", () => {
+    const key = "challenge-1:90";
+    expect(dailyTwoGamePresentationHandoffWasDismissed(key, window.sessionStorage)).toBe(false);
+    rememberDailyTwoGamePresentationHandoff(key, window.sessionStorage);
+    expect(dailyTwoGamePresentationHandoffWasDismissed(key, window.sessionStorage)).toBe(true);
   });
 
   it("does not interrupt Game 2 once the player has made a new guess", () => {
