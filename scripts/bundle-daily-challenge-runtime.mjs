@@ -121,7 +121,7 @@ for (const bundle of bundles) {
       // Keep deployment artifacts below the Supabase Edge Function request-size ceiling.
       // These generated bundles are runtime-only build outputs, so minification does not
       // change authored content or scoring behavior.
-      minify: "esbuild",
+      minify: "oxc",
       sourcemap: false,
       emptyOutDir: false,
       copyPublicDir: false,
