@@ -10,10 +10,6 @@
 alter table public.mlb_postseason_challenges
   drop constraint if exists mlb_postseason_challenges_slot_check;
 
-alter table public.mlb_postseason_challenges
-  add constraint mlb_postseason_challenges_slot_check
-  check (slot between 1 and 16);
-
 do $schedule$
 declare
   v_existing integer;
@@ -103,6 +99,10 @@ begin
   end if;
 end
 $schedule$;
+
+alter table public.mlb_postseason_challenges
+  add constraint mlb_postseason_challenges_slot_check
+  check (slot between 1 and 16);
 
 create or replace function public.score_mlb_postseason_play(
   p_season integer,
