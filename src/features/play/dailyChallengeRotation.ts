@@ -1,57 +1,67 @@
 import type { OfficialDailyGameType } from "./todaysChallengeRuntime";
 
-export const DAILY_WEIGHTED_ROTATION_CUTOVER_DAY = "2026-09-29";
+export const DAILY_WEIGHTED_ROTATION_CUTOVER_DAY = "2026-10-01";
 
 export const FOOTBALL_LOCKED_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
-  "bar_trivia",
-  "wavelength",
+  "average_fan",
   "sports_feud",
-  "who_am_i",
-  "millionaire",
-  "find_leader",
-  "bar_trivia",
   "hit_the_number",
   "sports_feud",
-  "wavelength",
-  "millionaire",
-  "who_am_i",
-  "sports_feud",
-  "find_leader",
   "bar_trivia",
-  "hit_the_number",
-  "millionaire",
   "wavelength",
+  "millionaire",
+  "average_fan",
+  "millionaire",
+  "hit_the_number",
+  "bar_trivia",
+  "wavelength",
+  "find_leader",
+  "average_fan",
+  "find_leader",
+  "who_am_i",
+  "find_leader",
+  "wavelength",
+  "millionaire",
+  "average_fan",
   "sports_feud",
   "who_am_i",
   "millionaire",
-  "find_leader",
+  "average_fan",
+  "bar_trivia",
+  "who_am_i",
+  "sports_feud",
 ];
 
 export const UFC_LOCKED_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
-  "bar_trivia",
-  "sports_feud",
-  "wavelength",
-  "millionaire",
-  "who_am_i",
-  "blind_resume",
+  "average_fan",
   "find_leader",
-  "sports_feud",
+  "wavelength",
+  "bar_trivia",
+  "average_fan",
+  "bar_trivia",
   "hit_the_number",
-  "bar_trivia",
-  "wavelength",
-  "millionaire",
-  "who_am_i",
   "sports_feud",
-  "find_leader",
+  "average_fan",
+  "millionaire",
   "blind_resume",
-  "hit_the_number",
   "millionaire",
   "wavelength",
+  "hit_the_number",
+  "average_fan",
+  "millionaire",
+  "wavelength",
+  "blind_resume",
+  "who_am_i",
   "sports_feud",
+  "find_leader",
+  "sports_feud",
+  "average_fan",
+  "find_leader",
+  "who_am_i",
+  "sports_feud",
+  "millionaire",
   "who_am_i",
   "bar_trivia",
-  "find_leader",
-  "millionaire",
 ];
 
 function dayNumber(day: string) {
@@ -73,6 +83,7 @@ export function lockedWeightedGameForDay(
 }
 
 export function footballBarTriviaAppearanceIndex(day: string) {
+  if (day === "2026-09-29") return 0;
   const offset = dayNumber(day) - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
   if (offset < 0 || lockedWeightedGameForDay("football", day) !== "bar_trivia") {
     throw new Error("Football Bar Trivia league is only defined for Bar Trivia Daily dates.");
@@ -82,7 +93,8 @@ export function footballBarTriviaAppearanceIndex(day: string) {
   const beforeInCycle = FOOTBALL_LOCKED_WEIGHTED_CYCLE
     .slice(0, slot)
     .filter((game) => game === "bar_trivia").length;
-  return fullCycles * FOOTBALL_LOCKED_WEIGHTED_CYCLE.filter((game) => game === "bar_trivia").length
+  return 1
+    + fullCycles * FOOTBALL_LOCKED_WEIGHTED_CYCLE.filter((game) => game === "bar_trivia").length
     + beforeInCycle;
 }
 
