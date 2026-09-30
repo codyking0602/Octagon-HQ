@@ -78,7 +78,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-07",
     game_type: "average_fan",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-05",
@@ -166,7 +166,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-23",
     game_type: "average_fan",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-10",
