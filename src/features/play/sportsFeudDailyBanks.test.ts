@@ -312,6 +312,32 @@ describe("Sports Feud authored Daily banks", () => {
     }
   });
 
+  it("replaces the September 30 UFC MMA-team board without changing the rest of the slate", () => {
+    const removedPrompt = "Name an MMA team associated with multiple notable UFC fighters.";
+    expect(UFC_SPORTS_FEUD_MAIN.some((question) => question.prompt === removedPrompt)).toBe(false);
+
+    const pack = buildSportsFeudPack("ufc", "2026-09-30");
+    expect(pack.mainBoards.map((question) => question.prompt)).toEqual([
+      "Name a UFC fighter with an iconic nickname.",
+      "Name a fighter whose walk to the cage feels like part of the show.",
+    ]);
+    expect(pack.fastMoney.map((question) => question.prompt)).toEqual([
+      "Name another fighter on the undisputed UFC middleweight champions list.",
+      "Name a rivalry that produced major UFC promotion and drama.",
+      "Name a strike you can use in MMA.",
+      "Name a UFC athlete opponents cannot afford to get hit clean by.",
+      "Name a division a UFC fighter can compete in.",
+    ]);
+
+    const nicknameBoard = pack.mainBoards[0]!;
+    const bones = matchFamilyFeudAnswer(pack, nicknameBoard, "Bones");
+    expect(bones.status).toBe("matched");
+    if (bones.status === "matched") {
+      expect(pack.entities.find((entity) => entity.id === bones.entityId)?.displayName)
+        .toBe("Jon Jones");
+    }
+  });
+
   it("never mixes question identities across the three source banks", () => {
     const cfb = new Set([...CFB_SPORTS_FEUD_MAIN, ...CFB_FAST].map((question) => question.id));
     const nfl = new Set([...NFL_SPORTS_FEUD_MAIN, ...NFL_FAST].map((question) => question.id));
