@@ -134,6 +134,7 @@ function knowledgeChoiceWrongChoices(
   key: string,
 ) {
   const authored = unique(fact.wrong).filter((choice) => choice !== fact.answer);
+  if (authored.length >= 3) return authored.slice(0, 3);
   const numeric = numericKnowledgeDistractor(fact);
   if (numeric && !authored.includes(numeric) && numeric !== fact.answer) {
     return [...authored, numeric];
@@ -196,6 +197,18 @@ function shortQuestion(seed: {
   });
 }
 
+function fourChoiceOrder(
+  questionId: string,
+  answer: string,
+  wrongChoices: readonly string[],
+): [string, string, string, string] {
+  const wrong = unique(wrongChoices).filter((choice) => choice !== answer).slice(0, 3);
+  if (wrong.length !== 3) throw new Error(`Average Fan choice question ${questionId} needs three wrong choices.`);
+  const choices = [answer, wrong[0]!, wrong[1]!, wrong[2]!] as [string, string, string, string];
+  const offset = stableOffset(`${questionId}:choice-order`, choices.length);
+  return choices.map((_, index) => choices[(index + offset) % choices.length]!) as [string, string, string, string];
+}
+
 function choiceQuestion(seed: {
   id: string;
   sport: AverageFanSport;
@@ -209,8 +222,6 @@ function choiceQuestion(seed: {
   difficultyNudge?: number;
   protectedFinal?: boolean;
 }) {
-  const wrong = unique(seed.wrongChoices).filter((choice) => choice !== seed.answer).slice(0, 3);
-  if (wrong.length !== 3) throw new Error(`Average Fan choice question ${seed.id} needs three wrong choices.`);
   return assertAverageFanQuestion({
     id: seed.id,
     sport: seed.sport,
@@ -220,7 +231,7 @@ function choiceQuestion(seed: {
     prompt: seed.prompt,
     answer: seed.answer,
     aliases: seed.aliases ?? [],
-    choices: [seed.answer, wrong[0]!, wrong[1]!, wrong[2]!] as [string, string, string, string],
+    choices: fourChoiceOrder(seed.id, seed.answer, seed.wrongChoices),
     explanation: seed.explanation,
     contentType: "evergreen",
     difficultyNudge: seed.difficultyNudge ?? 0,
@@ -259,7 +270,7 @@ type KnowledgeFact = {
   grade: AverageFanGrade;
   prompt: string;
   answer: string;
-  wrong: readonly [string, string];
+  wrong: readonly [string, string] | readonly [string, string, string];
   explanation: string;
 };
 
@@ -795,7 +806,7 @@ function currentEventCandidates(sport: AverageFanSport) {
         prompt: question.prompt,
         answer: question.answer,
         aliases: [],
-        choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!, wrongChoices[2]!] as [string, string, string, string],
+        choices: fourChoiceOrder(`average-fan:${sport}:current:${question.id}`, question.answer, wrongChoices),
         explanation: question.explanation,
         contentType: "current-event",
         activeFrom: question.activeFrom,
@@ -904,7 +915,7 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
       ...common,
       format: "four-choice",
       prompt: question.prompt,
-      choices: [question.answer, wrongChoices[0]!, wrongChoices[1]!, wrongChoices[2]!] as [string, string, string, string],
+      choices: fourChoiceOrder(`average-fan:cfb:authored:${question.id}`, question.answer, wrongChoices),
     });
   }
   return assertAverageFanQuestion({
@@ -973,7 +984,7 @@ const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   prompt: prompt as string,
   answer: answer as string,
   aliases: [],
-  choices: [answer as string, ...(wrong as string[])] as [string, string, string, string],
+  choices: fourChoiceOrder(`average-fan:cfb:authored:cfb-final-${id}`, answer as string, wrong as string[]),
   explanation: explanation as string,
   contentType: "evergreen",
   difficultyNudge: 2,
