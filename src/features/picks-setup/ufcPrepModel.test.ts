@@ -72,6 +72,22 @@ describe("UFC Picks prep", () => {
     });
   });
 
+
+  it("accepts null asset paths for legitimately missing prep assets", () => {
+    const value = {
+      ...prepPayload,
+      assets: prepPayload.assets.map((asset, index) => (
+        index === 2
+          ? { ...asset, thumb_path: null, spotlight_path: null }
+          : asset
+      )),
+    };
+
+    const prep = mapUfcPickPrep(value)!;
+    expect(prep.assets[2].thumbPath).toBe("");
+    expect(prep.assets[2].spotlightPath).toBe("");
+  });
+
   it("finds the prepared main-event spotlight only for the matching staged bout", () => {
     const prep = mapUfcPickPrep(prepPayload)!;
     const spotlight = preparedMainEventSpotlight(prep, [{
