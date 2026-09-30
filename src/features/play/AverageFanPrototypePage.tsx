@@ -90,28 +90,30 @@ function useAverageFanOpeningStageScale() {
 }
 
 function useAverageFanGameplayStageLayout() {
-  const [layout, setLayout] = useState({ scale: 1, keyboardShift: 0 });
+  const [layout, setLayout] = useState({ scale: 1, answerShift: 0 });
 
   useEffect(() => {
     const syncLayout = () => {
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
+      const visualViewport = window.visualViewport;
+      const viewportWidth = visualViewport?.width ?? window.innerWidth;
+      const viewportHeight = visualViewport?.height ?? window.innerHeight;
       const scale = Math.min(
         viewportWidth / AVERAGE_FAN_GAMEPLAY_STAGE_WIDTH,
         viewportHeight / AVERAGE_FAN_GAMEPLAY_STAGE_HEIGHT,
       );
 
-      const visualViewport = window.visualViewport;
       const activeElement = document.activeElement;
       const shortAnswerFocused = activeElement instanceof HTMLInputElement
         && activeElement.closest(".average-fan-short-answer") !== null;
       const keyboardOcclusion = shortAnswerFocused && visualViewport
-        ? Math.max(0, viewportHeight - visualViewport.height - visualViewport.offsetTop)
+        ? Math.max(0, window.innerHeight - visualViewport.height - visualViewport.offsetTop)
         : 0;
 
       setLayout({
         scale,
-        keyboardShift: keyboardOcclusion > 80 ? Math.round(keyboardOcclusion / 2) : 0,
+        answerShift: keyboardOcclusion > 80
+          ? Math.min(190, Math.round(keyboardOcclusion / Math.max(scale * 2, 0.01)))
+          : 0,
       });
     };
 
@@ -601,7 +603,30 @@ function AverageFanGame({
   onRestart: () => void;
   initialQuestion?: AverageFanQuestion | null;
 }) {
-  const { scale: stageScale, keyboardShift } = useAverageFanGameplayStageLayout();
+  const { scale: stageScale, answerShift } = useAverageFanGameplayStageLayout();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+    const previous = {
+      rootOverflow: root.style.overflow,
+      rootOverscroll: root.style.overscrollBehavior,
+      bodyOverflow: body.style.overflow,
+      bodyOverscroll: body.style.overscrollBehavior,
+    };
+
+    root.style.overflow = "hidden";
+    root.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "none";
+
+    return () => {
+      root.style.overflow = previous.rootOverflow;
+      root.style.overscrollBehavior = previous.rootOverscroll;
+      body.style.overflow = previous.bodyOverflow;
+      body.style.overscrollBehavior = previous.bodyOverscroll;
+    };
+  }, []);
   const [phase, setPhase] = useState<GamePhase>(initialQuestion ? "question" : "board");
   const [current, setCurrent] = useState<AverageFanQuestion | null>(initialQuestion);
   const [answer, setAnswer] = useState("");
@@ -706,7 +731,6 @@ function AverageFanGame({
         className="average-fan-game-stage"
         aria-label="Are You Smarter Than an Average Fan? gameplay"
         style={{
-          top: `calc(50% - ${keyboardShift}px)`,
           transform: `translate(-50%, -50%) scale(${stageScale})`,
         }}
       >
@@ -769,7 +793,11 @@ function AverageFanGame({
         </div>
 
         {questionVisible ? (
-          <div className="average-fan-answer-stage" data-format={current.format}>
+          <div
+            className="average-fan-answer-stage"
+            data-format={current.format}
+            style={answerShift ? { transform: `translateY(-${answerShift}px)` } : undefined}
+          >
             {phase === "question" ? (
               <>
                 {peekActive && fanAnswer ? (
@@ -809,7 +837,11 @@ function AverageFanGame({
             ) : null}
           </div>
         ) : phase === "final-question" || phase === "final-reveal" ? (
-          <div className="average-fan-answer-stage average-fan-answer-stage--final" data-format={AVERAGE_FAN_UFC_PREVIEW_FINAL.format}>
+          <div
+            className="average-fan-answer-stage average-fan-answer-stage--final"
+            data-format={AVERAGE_FAN_UFC_PREVIEW_FINAL.format}
+            style={answerShift ? { transform: `translateY(-${answerShift}px)` } : undefined}
+          >
             {phase === "final-question" ? (
               <QuestionAnswerControl
                 question={AVERAGE_FAN_UFC_PREVIEW_FINAL}
