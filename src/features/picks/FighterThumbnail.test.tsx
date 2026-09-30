@@ -33,6 +33,11 @@ describe("fighterThumbnailPath", () => {
       .toBe("/assets/fighters/jan-blachowicz-thumb.webp");
   });
 
+  it("keeps King Green's published Bobby Green slug bound to the canonical King Green asset", () => {
+    expect(fighterThumbnailPath("bobby-green"))
+      .toBe("/assets/fighters/king-green-thumb.webp");
+  });
+
   it("resolves every UFC 330 card thumbnail that ships with this asset update", () => {
     const slugs = [
       "ian-machado-garry",
