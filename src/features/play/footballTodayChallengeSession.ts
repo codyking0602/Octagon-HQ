@@ -296,7 +296,7 @@ export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   return FOOTBALL_HISTORICAL_CYCLE[index]!;
 }
 
-function footballAverageFanLocalHistory(day: string) {
+export function footballAverageFanLocalHistory(day: string) {
   const offset = dayNumber(day) - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
   if (offset <= 0) return [] as Array<Record<string, unknown>>;
   const rows: Array<Record<string, unknown>> = [];
