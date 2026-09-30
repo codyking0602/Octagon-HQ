@@ -5,10 +5,10 @@ import {
 } from "./triviaContentExpiry";
 
 export const AVERAGE_FAN_GAME_ID = "average-fan" as const;
-export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v1" as const;
+export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v2" as const;
 export const AVERAGE_FAN_FANS = ["cody", "shane", "troy", "tyler", "lib"] as const;
 export const AVERAGE_FAN_GRADES = [1, 2, 3, 4, 5] as const;
-export const AVERAGE_FAN_FORMATS = ["short-answer", "three-choice", "true-false"] as const;
+export const AVERAGE_FAN_FORMATS = ["short-answer", "four-choice", "true-false"] as const;
 
 export type AverageFanFan = (typeof AVERAGE_FAN_FANS)[number];
 export type AverageFanGrade = (typeof AVERAGE_FAN_GRADES)[number];
@@ -87,7 +87,7 @@ export interface AverageFanQuestion {
   prompt: string;
   answer: string;
   aliases: readonly string[];
-  choices?: readonly [string, string, string];
+  choices?: readonly [string, string, string, string];
   explanation: string;
   contentType: TriviaContentType;
   activeFrom?: string;
@@ -107,7 +107,7 @@ export interface AverageFanPublicQuestion {
   subject: AverageFanSubject;
   format: AverageFanQuestionFormat;
   prompt: string;
-  choices?: readonly [string, string, string];
+  choices?: readonly [string, string, string, string];
 }
 
 export interface AverageFanFanAnswer {
@@ -228,17 +228,17 @@ export function validateAverageFanQuestion(question: AverageFanQuestion): string
     }
   }
 
-  if (question.format === "three-choice") {
-    if (!question.choices || question.choices.length !== 3) {
-      errors.push("three-choice questions must define exactly three choices");
+  if (question.format === "four-choice") {
+    if (!question.choices || question.choices.length !== 4) {
+      errors.push("four-choice questions must define exactly four choices");
     } else {
       const choices = question.choices.map(normalizeAnswer);
-      if (new Set(choices).size !== 3) errors.push("three-choice choices must be unique");
+      if (new Set(choices).size !== 4) errors.push("four-choice choices must be unique");
       if (!choices.includes(normalizedAnswer)) {
-        errors.push("three-choice choices must include the canonical answer");
+        errors.push("four-choice choices must include the canonical answer");
       }
     }
-    if (question.fanMisses?.length) errors.push("three-choice questions use authored choices instead of fanMisses");
+    if (question.fanMisses?.length) errors.push("four-choice questions use authored choices instead of fanMisses");
   }
 
   if (question.format === "true-false") {
@@ -303,7 +303,7 @@ function deterministicWrongAnswer(question: AverageFanQuestion, fan: AverageFanF
     return normalizeAnswer(question.answer) === "true" ? "False" : "True";
   }
 
-  const misses = question.format === "three-choice"
+  const misses = question.format === "four-choice"
     ? question.choices!.filter((choice) => !averageFanAnswersMatch(question, choice))
     : question.fanMisses!;
 

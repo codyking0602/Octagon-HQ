@@ -99,17 +99,17 @@ NFL History includes broad league culture/history, stadiums, rivalries, iconic m
 
 Target bank mix:
 - ~60% short answer
-- ~25% three-choice multiple choice
+- ~25% four-choice multiple choice
 - ~15% true/false
 
 Short answer must remain dominant so the game does not collapse into Millionaire.
 
 Canonical format IDs:
 - `short-answer`
-- `three-choice`
+- `four-choice`
 - `true-false`
 
-Three-choice questions author exactly three visible choices. True/false questions do not need an authored choices array; the runtime supplies True / False.
+Four-choice questions author exactly four visible choices. True/false questions do not need an authored choices array; the runtime supplies True / False.
 
 ## 6. Grade difficulty
 
@@ -142,7 +142,7 @@ Each record includes:
 - `prompt`
 - `answer`
 - `aliases`
-- `choices` when format is three-choice
+- `choices` when format is four-choice
 - `explanation`
 - `contentType`: `evergreen | current-event`
 - `activeFrom` optional
@@ -154,7 +154,7 @@ Each record includes:
 
 Rules:
 - short-answer questions must author 1–3 plausible fan-miss answers
-- three-choice wrong fan answers come only from authored wrong choices
+- four-choice wrong fan answers come only from authored wrong choices
 - true/false wrong fan answer is the opposite truth value
 - protected Final questions must be grade 5
 - protected Final questions are excluded from ordinary board selection
@@ -294,7 +294,7 @@ Therefore every HQ player sees the same Cody/Shane/etc. answer on the same quest
 Correct/wrong decision uses a stable hash roll against the computed fan accuracy.
 
 Wrong answer source:
-- three-choice: deterministic authored wrong option
+- four-choice: deterministic authored wrong option
 - true/false: opposite truth value
 - short-answer: deterministic selection from the question's 1–3 authored `fanMisses`
 
@@ -360,7 +360,7 @@ Millionaire:
 Average Fan:
 - open 10-tile subject board
 - player chooses order
-- mixed short answer / three-choice / true-false
+- mixed short answer / four-choice / true-false
 - one selected fan for the whole run
 - report-card strengths/weaknesses
 - Peek / Copy / Save
@@ -408,7 +408,7 @@ No route or official schedule changes.
 ### PR2 — owner/Casual preview UI
 - report-card fan selection
 - 10-tile board
-- short answer / 3-choice / T/F interaction
+- short answer / 4-choice / T/F interaction
 - Peek / Copy / Save
 - money ladder
 - Final subject -> Walk Away / Go for $1M

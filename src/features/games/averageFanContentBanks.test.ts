@@ -61,7 +61,7 @@ describe("Average Fan durable content banks", () => {
     for (const sport of sports) {
       const summary = averageFanBankSummary(sport);
       const shortShare = Number(summary.formats["short-answer"]) / summary.total;
-      const choiceShare = Number(summary.formats["three-choice"]) / summary.total;
+      const choiceShare = Number(summary.formats["four-choice"]) / summary.total;
       const trueFalseShare = Number(summary.formats["true-false"]) / summary.total;
 
       expect(shortShare).toBeGreaterThanOrEqual(0.5);
@@ -112,7 +112,7 @@ describe("Average Fan durable content banks", () => {
       return acc;
     }, {});
     expect(counts["short-answer"]).toBeGreaterThan(80);
-    expect(counts["three-choice"]).toBeGreaterThan(35);
+    expect(counts["four-choice"]).toBeGreaterThan(35);
     expect(counts["true-false"]).toBeGreaterThanOrEqual(20);
   });
 
@@ -294,8 +294,8 @@ describe("Average Fan durable content banks", () => {
     for (const sport of sports) {
       for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
         const accepted = new Set([question.answer, ...question.aliases].map(normalize));
-        if (question.format === "three-choice") {
-          expect(question.choices, question.id).toHaveLength(3);
+        if (question.format === "four-choice") {
+          expect(question.choices, question.id).toHaveLength(4);
           const acceptedChoices = question.choices!.filter((choice) => accepted.has(normalize(choice)));
           expect(acceptedChoices, question.id).toHaveLength(1);
           expect(normalize(acceptedChoices[0]!), question.id).toBe(normalize(question.answer));
@@ -306,6 +306,17 @@ describe("Average Fan durable content banks", () => {
           expect(accepted.has(normalize(miss)), question.id).toBe(false);
         }
       }
+    }
+  });
+
+  it("spreads four-choice correct answers across all four card positions", () => {
+    for (const sport of sports) {
+      const positions = new Set(
+        AVERAGE_FAN_CONTENT_BANKS[sport]
+          .filter((question) => question.format === "four-choice")
+          .map((question) => question.choices!.indexOf(question.answer)),
+      );
+      expect([...positions].sort((a, b) => a - b), sport).toEqual([0, 1, 2, 3]);
     }
   });
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_FANS,
+  AVERAGE_FAN_FORMATS,
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
   averageFanCenteredSubjectModifier,
@@ -47,8 +48,8 @@ function findWrongQuestion(
       grade: 5,
       difficultyNudge: 3,
       format,
-      ...(format === "three-choice"
-        ? { answer: "Alpha", aliases: [], choices: ["Alpha", "Beta", "Gamma"] as const, fanMisses: undefined }
+      ...(format === "four-choice"
+        ? { answer: "Alpha", aliases: [], choices: ["Alpha", "Beta", "Gamma", "Delta"] as const, fanMisses: undefined }
         : format === "true-false"
           ? { answer: "True", aliases: [], fanMisses: undefined }
           : {}),
@@ -63,10 +64,10 @@ describe("Average Fan canonical question contract", () => {
   it("accepts the three locked formats and enforces authored short-answer fan misses", () => {
     expect(validateAverageFanQuestion(fixture())).toEqual([]);
     expect(validateAverageFanQuestion(fixture({
-      format: "three-choice",
+      format: "four-choice",
       answer: "Alpha",
       aliases: [],
-      choices: ["Alpha", "Beta", "Gamma"],
+      choices: ["Alpha", "Beta", "Gamma", "Delta"],
       fanMisses: undefined,
     }))).toEqual([]);
     expect(validateAverageFanQuestion(fixture({
@@ -78,6 +79,34 @@ describe("Average Fan canonical question contract", () => {
 
     expect(validateAverageFanQuestion(fixture({ fanMisses: [] })))
       .toContain("short-answer questions must author 1-3 plausible fan misses");
+  });
+
+  it("locks multiple choice to four authored answers and rejects the legacy three-choice contract", () => {
+    expect(AVERAGE_FAN_FORMATS).toEqual(["short-answer", "four-choice", "true-false"]);
+
+    expect(validateAverageFanQuestion(fixture({
+      format: "four-choice",
+      answer: "Alpha",
+      aliases: [],
+      choices: ["Alpha", "Beta", "Gamma"] as unknown as [string, string, string, string],
+      fanMisses: undefined,
+    }))).toContain("four-choice questions must define exactly four choices");
+
+    expect(validateAverageFanQuestion(fixture({
+      format: "four-choice",
+      answer: "Alpha",
+      aliases: [],
+      choices: ["Alpha", "Beta", "Gamma", "Gamma"],
+      fanMisses: undefined,
+    }))).toContain("four-choice choices must be unique");
+
+    expect(validateAverageFanQuestion(fixture({
+      format: "three-choice" as AverageFanQuestion["format"],
+      answer: "Alpha",
+      aliases: [],
+      choices: undefined,
+      fanMisses: undefined,
+    }))).toContain("format is unsupported");
   });
 
   it("protects dedicated finals from ordinary board eligibility", () => {
@@ -184,7 +213,7 @@ describe("Average Fan report-card intelligence", () => {
     const short = findWrongQuestion("short-answer", "shane");
     expect(short.question.fanMisses).toContain(short.answer.answer);
 
-    const choice = findWrongQuestion("three-choice", "shane");
+    const choice = findWrongQuestion("four-choice", "shane");
     expect(choice.question.choices).toContain(choice.answer.answer);
     expect(choice.answer.answer).not.toBe(choice.question.answer);
 

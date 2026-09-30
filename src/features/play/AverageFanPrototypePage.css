@@ -2872,12 +2872,6 @@ button.average-fan-help-button {
   margin: 0;
 }
 
-.average-fan-choice-grid[data-choice-count="3"] > button:last-child {
-  grid-column: 1 / -1;
-  width: calc(50% - 8px);
-  justify-self: center;
-}
-
 .average-fan-choice-grid--tf {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: min(690px, 100%);
