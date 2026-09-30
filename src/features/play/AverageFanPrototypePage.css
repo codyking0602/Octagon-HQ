@@ -1384,15 +1384,6 @@
 
 
 /* Keep lower gameplay controls above iPhone landscape browser occlusion. */
-.average-fan-answer-stage {
-  top: 566px;
-  height: 164px;
-}
-
-.average-fan-answer-stage--final {
-  top: 566px;
-}
-
 .average-fan-reveal {
   padding: 8px 20px;
 }
@@ -1722,18 +1713,18 @@
   position: absolute;
   z-index: 7;
   left: 386px;
-  top: 584px;
+  top: 566px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 846px;
-  height: 198px;
+  height: 164px;
   padding: 0;
   pointer-events: auto;
 }
 
 .average-fan-answer-stage--final {
-  top: 592px;
+  top: 566px;
 }
 
 .average-fan-choice-grid {
