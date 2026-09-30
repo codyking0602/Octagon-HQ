@@ -118,7 +118,10 @@ for (const bundle of bundles) {
     logLevel: "warn",
     build: {
       target: "es2022",
-      minify: false,
+      // Keep deployment artifacts below the Supabase Edge Function request-size ceiling.
+      // These generated bundles are runtime-only build outputs, so minification does not
+      // change authored content or scoring behavior.
+      minify: "esbuild",
       sourcemap: false,
       emptyOutDir: false,
       copyPublicDir: false,
