@@ -64,6 +64,7 @@ const AVERAGE_FAN_GAMEPLAY_REVIEW_QUESTION =
   ?? AVERAGE_FAN_UFC_PREVIEW_BOARD.find((question) => question.format === "four-choice")
   ?? AVERAGE_FAN_UFC_PREVIEW_BOARD[0]!;
 
+// iOS landscape can report a smaller dynamic viewport than the usable stage; size the fixed scene against lvh.
 function measureAverageFanLargeViewport() {
   const fallbackWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
   const fallbackHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
