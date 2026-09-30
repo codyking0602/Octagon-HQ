@@ -19,6 +19,7 @@ const thumbnailSlugAliases = new Map([
   ["jan-b-achowicz", "jan-blachowicz"],
   ["jan-błachowicz", "jan-blachowicz"],
   ["alexandre-pantoja", "alex-pantoja"],
+  ["bobby-green", "king-green"],
 ]);
 
 const remotePhotoBySlug = new Map([
