@@ -28,6 +28,7 @@ function wavelengthProjection(overrides: Partial<TodayChallengeProjection> = {})
         game_number: 2,
         game_count: 2,
         awaiting_next: false,
+        handoff_pending: true,
         complete: false,
         round_scores: [90],
         average_score: null,
@@ -62,7 +63,7 @@ describe("Wavelength two-game presentation handoff", () => {
     expect(onContinue).toHaveBeenCalledTimes(1);
   });
 
-  it("does not interrupt Game 2 once the player has made a new guess", () => {
+  it("stops showing the intermission only after the server acknowledges Game 2", () => {
     const projection = wavelengthProjection({
       publicState: {
         guesses: [50],
@@ -72,6 +73,7 @@ describe("Wavelength two-game presentation handoff", () => {
           game_number: 2,
           game_count: 2,
           awaiting_next: false,
+          handoff_pending: false,
           complete: false,
           round_scores: [90],
           average_score: null,
@@ -80,6 +82,11 @@ describe("Wavelength two-game presentation handoff", () => {
     });
 
     expect(dailyTwoGamePresentationIntermissionState(projection)).toBeNull();
+  });
+
+  it("persists the intermission even if Game 2 still has no guesses after a reload", () => {
+    const projection = wavelengthProjection();
+    expect(dailyTwoGamePresentationIntermissionState(projection)?.firstScore).toBe(90);
   });
 
   it("does not change the handoff behavior for other two-game Daily formats", () => {

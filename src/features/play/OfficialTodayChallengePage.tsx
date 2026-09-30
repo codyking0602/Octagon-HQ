@@ -92,7 +92,6 @@ export function OfficialTodayChallengeContent({
   showMillionaireExit?: boolean;
   onSportsFeudExit?: () => void;
 }) {
-  const [dismissedTwoGameHandoff, setDismissedTwoGameHandoff] = useState<string | null>(null);
   const adapter = todayChallengeAdapter(projection.gameType);
   const blindResumeV3 = projection.gameType === "blind_resume"
     && projection.contentVersion === "blind-resume-v3";
@@ -113,14 +112,15 @@ export function OfficialTodayChallengeContent({
   const twoGameSeries = dailyTwoGameSeriesState(projection);
   const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
 
-  if (
-    presentationHandoff
-    && dismissedTwoGameHandoff !== presentationHandoff.key
-  ) {
+  if (presentationHandoff) {
     return (
       <DailyTwoGamePresentationIntermission
         projection={projection}
-        onContinue={() => setDismissedTwoGameHandoff(presentationHandoff.key)}
+        busy={busy}
+        onContinue={() => onAdvance(
+          { type: "next_game" },
+          { dedupeKey: `wavelength-handoff:${projection.id}` },
+        )}
       />
     );
   }
