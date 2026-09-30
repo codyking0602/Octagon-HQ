@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { recoverRuntimeDeploymentMismatch } from "../../app/installUpdateRecovery";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createTodayChallengeRepository,
@@ -138,6 +139,11 @@ export function useTodayChallengeRuntime({
   useEffect(() => {
     if (query.data) authoritativeRef.current = query.data;
   }, [query.data]);
+
+  useEffect(() => {
+    if (!query.data?.deploymentSha) return;
+    void recoverRuntimeDeploymentMismatch({ runtimeSha: query.data.deploymentSha });
+  }, [query.data?.deploymentSha]);
 
   const publishOfficialProjection = useCallback((projection: TodayChallengeProjection) => {
     authoritativeRef.current = projection;
