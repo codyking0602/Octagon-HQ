@@ -6,7 +6,7 @@ import {
 } from "./todaysChallengeAdapters";
 
 describe("Today’s Challenge adapters", () => {
-  it("maps the ten canonical backend game identities to existing Play games", () => {
+  it("maps the eleven canonical backend game identities to existing Play games", () => {
     expect(Object.keys(TODAY_CHALLENGE_ADAPTERS)).toEqual([
       "find_leader",
       "blind_resume",
@@ -17,6 +17,7 @@ describe("Today’s Challenge adapters", () => {
       "millionaire",
       "sports_feud",
       "bar_trivia",
+      "average_fan",
       "who_am_i",
     ]);
 
@@ -45,6 +46,8 @@ describe("Today’s Challenge adapters", () => {
     expect(TODAY_CHALLENGE_ADAPTERS.sports_feud.casualRoute).toBe("/play/sports-feud");
     expect(TODAY_CHALLENGE_ADAPTERS.bar_trivia.dailyRoute).toBe("/play/bar-trivia?mode=daily");
     expect(TODAY_CHALLENGE_ADAPTERS.bar_trivia.casualRoute).toBe("/play/bar-trivia");
+    expect(TODAY_CHALLENGE_ADAPTERS.average_fan.dailyRoute).toBe("/play/average-fan?mode=daily");
+    expect(TODAY_CHALLENGE_ADAPTERS.average_fan.casualRoute).toBe("/play/average-fan?mode=casual");
   });
 
   it("requires Football-safe instructions for every official Daily game", () => {
