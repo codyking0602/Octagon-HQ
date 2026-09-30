@@ -12,6 +12,7 @@ export type PlayGameId =
   | "auction"
   | "hit-the-number"
   | "bar-trivia"
+  | "average-fan"
   | "20-questions"
   | "who-am-i"
   | "millionaire"
@@ -623,6 +624,54 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily",
       difficultyModel: "Separate NFL and CFB ten-question bar-trivia runs with escalating 10/12/14 base values, one random Double Round, streak heat multipliers, and a 16-point Last Call plus 0–10 wager normalized to 100.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "average-fan",
+    route: "/play/average-fan",
+    icon: "AF",
+    title: "Are You Smarter Than an Average Fan?",
+    description: "Choose a fan, work ten mixed-format UFC questions, then decide whether to risk the Final.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Ten authored grade-banded UFC questions with deterministic fan help, one automatic Save, and a protected Final.",
+    },
+  },
+  {
+    sport: "football",
+    id: "average-fan",
+    route: "/football/today",
+    icon: "AF",
+    title: "Are You Smarter Than an Average Fan?",
+    description: "Choose a fan, work ten NFL or CFB questions, then decide whether to risk the Final.",
+    availability: "preview",
+    lineup: {
+      defaultType: "daily",
+      supportedTypes: ["daily"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-daily",
+      lineupSize: 10,
+      completionState: "average-fan-settled",
+      challengeEligible: false,
+      dailyEligible: true,
+      streakEligible: true,
+      reminderEligible: true,
+      historyRecording: "official-daily",
+      difficultyModel: "Ten authored grade-banded NFL or CFB questions with deterministic fan help, continuous NFL/CFB alternation, and a protected Final.",
     },
   },
   {
