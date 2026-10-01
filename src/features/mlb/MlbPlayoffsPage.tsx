@@ -16,6 +16,8 @@ import {
   type MlbPlayChallengeLeaderboardEntry,
   type MlbPlayChallengeOverview,
 } from "./mlbPlayChallenge";
+import { buildMlbMillionaireQuestionDetails } from "./mlbMillionaireLeaderboard";
+import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
 import { useMlbChampionship } from "./useMlbChampionship";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import { millionaireMoneyLabel, millionaireTimeLabel } from "../play/MillionaireCasualModel";
@@ -267,10 +269,14 @@ function barTriviaResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
 
 function MlbPlayResultDetail({
   entry,
+  challengeKey,
+  challengeDate,
   challengeTitle,
   onClose,
 }: {
   entry: MlbPlayChallengeLeaderboardEntry;
+  challengeKey: string;
+  challengeDate: string | null | undefined;
   challengeTitle: string;
   onClose: () => void;
 }) {
@@ -286,6 +292,12 @@ function MlbPlayResultDetail({
   const isSportsFeud = entry.gameType === "sports_feud";
   const isBarTrivia = entry.gameType === "bar_trivia";
   const millionaire = millionaireResultSummary(entry);
+  const millionaireRun = isMillionaire
+    ? mlbMillionaireProductionRun(challengeKey, challengeDate ?? "")
+    : null;
+  const millionaireQuestions = millionaireRun
+    ? buildMlbMillionaireQuestionDetails(millionaireRun, entry.resultDetail, entry.publicResult)
+    : [];
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
   const barTrivia = barTriviaResultSummary(entry);
@@ -319,18 +331,80 @@ function MlbPlayResultDetail({
           </div>
 
           {isMillionaire ? (
-            <div className="mlb-play-result-card__games">
-              <article>
-                <span>FINAL MONEY</span>
-                <strong>{millionaireMoneyLabel(millionaire.finalMoney)}</strong>
-                <small>{millionaire.completedQuestions} / 8 QUESTIONS CORRECT</small>
-              </article>
-              <article>
-                <span>RUN DETAILS</span>
-                <strong>{millionaire.lifelinesUsed}<small> LIFELINES</small></strong>
-                <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
-              </article>
-            </div>
+            <>
+              <div className="mlb-play-result-card__games">
+                <article>
+                  <span>FINAL MONEY</span>
+                  <strong>{millionaireMoneyLabel(millionaire.finalMoney)}</strong>
+                  <small>{millionaire.completedQuestions} / 8 QUESTIONS CORRECT</small>
+                </article>
+                <article>
+                  <span>RUN DETAILS</span>
+                  <strong>{millionaire.lifelinesUsed}<small> LIFELINES</small></strong>
+                  <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
+                </article>
+              </div>
+
+              {millionaireQuestions.length ? (
+                <section className="mlb-millionaire-result-path">
+                  <header>
+                    <span>QUESTION-BY-QUESTION</span>
+                    <strong>HOW THE RUN UNFOLDED</strong>
+                  </header>
+                  {millionaireQuestions.map((row) => {
+                    const statusLabel = row.status === "walked-away"
+                      ? "WALKED AWAY"
+                      : row.status === "detail-not-recorded"
+                        ? "DETAIL NOT RECORDED"
+                        : row.status.toUpperCase();
+                    return (
+                      <article
+                        className={`is-${row.status}`}
+                        key={row.questionNumber}
+                      >
+                        <div className="mlb-millionaire-result-path__question">
+                          <b>Q{row.questionNumber}</b>
+                          <span>
+                            <small>{statusLabel}</small>
+                            <strong>{row.prompt}</strong>
+                          </span>
+                        </div>
+                        <div className="mlb-millionaire-result-path__choices">
+                          {row.choices.map((choice) => {
+                            const selected = row.selectedChoiceIds.includes(choice.id);
+                            const correct = choice.id === row.correctChoiceId;
+                            return (
+                              <span
+                                className={[
+                                  selected ? "is-selected" : "",
+                                  correct ? "is-correct" : "",
+                                  selected && !correct ? "is-wrong" : "",
+                                ].filter(Boolean).join(" ")}
+                                key={choice.id}
+                              >
+                                <b>{choice.id}</b>
+                                <em>{choice.text}</em>
+                                <small>{correct ? "CORRECT" : selected ? "PICKED" : ""}</small>
+                              </span>
+                            );
+                          })}
+                        </div>
+                        {row.lifelines.length ? (
+                          <small className="mlb-millionaire-result-path__lifelines">
+                            LIFELINES · {row.lifelines.map((value) => value.replace(/[-_]/g, " ").toUpperCase()).join(" · ")}
+                          </small>
+                        ) : null}
+                        {!row.detailRecorded && row.status !== "detail-not-recorded" ? (
+                          <small className="mlb-millionaire-result-path__legacy">
+                            Exact pick and lifeline timing were not recorded for this completed run.
+                          </small>
+                        ) : null}
+                      </article>
+                    );
+                  })}
+                </section>
+              ) : null}
+            </>
           ) : isWavelength && wavelengthRounds.length ? (
             <div className="mlb-play-result-card__games">
               {wavelengthRounds.map((round) => (
@@ -439,7 +513,7 @@ function MlbPlayResultDetail({
 
           <p>
             {isMillionaire
-              ? "Millionaire score follows the eight-question ladder with a 2-point deduction for each lifeline used."
+              ? "Millionaire score follows the eight-question ladder with a 2-point deduction per lifeline. At Q8, walking banks the Q7 score; a miss costs 5 points and a correct answer adds 10."
               : isWavelength
                 ? "The challenge score is the average of both Wavelength games."
                 : isWhoAmI
@@ -582,6 +656,8 @@ export default function MlbPlayoffsPage() {
     return (
       <MlbPlayResultDetail
         entry={selectedEntry}
+        challengeKey={challenge.id}
+        challengeDate={challenge.date}
         challengeTitle={challenge.title}
         onClose={() => setSelectedProfileId(null)}
       />
