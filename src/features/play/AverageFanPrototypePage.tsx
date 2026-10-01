@@ -797,6 +797,7 @@ export function AverageFanGame({
       saved: resolution.saved,
       order: resolved.length + 1,
     };
+    // Paint the reveal before iOS starts settling the landscape keyboard/viewport.
     flushSync(() => {
       if (resolution.saveConsumed) setSaveUsed(true);
       setResolved((items) => [...items, item]);
