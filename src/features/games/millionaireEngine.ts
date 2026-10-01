@@ -117,6 +117,11 @@ export function millionaireScoreAfterLifelines(baseScore: number, usage: Million
 export function millionaireBaseScore(correctAnswers: number, firstMissQuestionIndex: number | null) {
   const safeCorrectAnswers = Math.max(0, Math.min(8, Math.trunc(correctAnswers)));
   if (safeCorrectAnswers === 0 && firstMissQuestionIndex === null) return 0;
+
+  // Reaching Q8 clean earns the 90-point walk-away. Choosing to play it puts
+  // five points at risk for the ten-point upside: miss = 85, hit = 100.
+  if (safeCorrectAnswers === 7 && firstMissQuestionIndex === 7) return 85;
+
   const survivalCorrect = firstMissQuestionIndex === null
     ? safeCorrectAnswers
     : Math.max(0, Math.min(7, Math.trunc(firstMissQuestionIndex)));
