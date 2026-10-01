@@ -181,6 +181,7 @@ with legacy as (
   where game_type = 'millionaire'
     and challenge_key = 'mlb-2026-play-03'
     and not (coalesce(result_detail, '{}'::jsonb) ? 'action_history')
+    and not (coalesce(result_detail, '{}'::jsonb) ? 'first_miss_question')
 ),
 valid as (
   select *
