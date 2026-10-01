@@ -6,6 +6,10 @@ import {
   type MillionaireChoiceId,
 } from "../games/millionaireAuthority";
 import {
+  MILLIONAIRE_LIFELINE_PENALTY,
+  MILLIONAIRE_Q8_MISS_BASE_SCORE,
+} from "../games/millionaireEngine";
+import {
   MILLIONAIRE_ANSWER_REVEAL_HOLD_MS,
   MILLIONAIRE_BASE_PTS,
   MILLIONAIRE_DOUBLE_DIP_MISS_MS,
@@ -118,6 +122,12 @@ export function OfficialMillionaireDailyView({
   const level = MILLIONAIRE_LEVELS[currentIndex]!;
   const questionState = record(state.question_state);
   const lifelinesUsed = record(state.lifelines_used);
+  const usedLifelineCount = Number(lifelinesUsed.fifty_fifty === true)
+    + Number(lifelinesUsed.stat_sheet === true)
+    + Number(lifelinesUsed.double_dip === true);
+  const q8WalkScore = Math.max(0, MILLIONAIRE_BASE_PTS.Q7 - (usedLifelineCount * MILLIONAIRE_LIFELINE_PENALTY));
+  const q8MissScore = Math.max(0, MILLIONAIRE_Q8_MISS_BASE_SCORE - (usedLifelineCount * MILLIONAIRE_LIFELINE_PENALTY));
+  const q8WinScore = Math.max(0, MILLIONAIRE_BASE_PTS.Q8 - (usedLifelineCount * MILLIONAIRE_LIFELINE_PENALTY));
   const removedChoices = strings(questionState.removed_choice_ids);
   const doubleDipMisses = strings(questionState.double_dip_wrong_choice_ids);
   const stageScale = useMillionaireStageScale();
@@ -305,7 +315,7 @@ export function OfficialMillionaireDailyView({
                 <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: winnings lock at $5,000.</span></p>
                 <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: winnings lock at $100,000.</span></p>
                 <p><strong>MISS A QUESTION</strong><span>Your Millionaire run ends, but you finish all 8 questions for your score.</span></p>
-                <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
+                <p><strong>WALK AWAY</strong><span>Before Q8, bank 90 base PTS, or play for 100. A Q8 miss falls to 85 base PTS.</span></p>
               </div>
               <h3>LIFELINES</h3>
               <div className="millionaire-rules__lifelines">
@@ -401,14 +411,14 @@ export function OfficialMillionaireDailyView({
         {walkPromptOpen && !result && !eliminationPromptOpen ? (
           <section className="millionaire-decision" aria-label="Walk away decision">
             <span>WALK AWAY?</span>
-            <strong>You have {millionaireMoneyLabel(currentMoney)} guaranteed.</strong>
-            <p>Play for $1,000,000 and 100 PTS, or bank your Q7 result.</p>
+            <strong>You have {millionaireMoneyLabel(currentMoney)} and {q8WalkScore} PTS guaranteed.</strong>
+            <p>Play Q8: get it right for {q8WinScore} PTS. Miss it and finish with {q8MissScore} PTS.</p>
             <div>
               <button type="button" className="is-play" onClick={() => setWalkPromptOpen(false)}>
-                <small>PLAY FOR</small><b>$1,000,000</b><em>100 PTS</em>
+                <small>PLAY FOR</small><b>$1,000,000</b><em>HIT {q8WinScore} · MISS {q8MissScore}</em>
               </button>
               <button type="button" onClick={() => advance({ type: "walk_away" })}>
-                <small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(currentMoney)}</b><em>90 PTS</em>
+                <small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(currentMoney)}</b><em>{q8WalkScore} PTS</em>
               </button>
             </div>
           </section>
