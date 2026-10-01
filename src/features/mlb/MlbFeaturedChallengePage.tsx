@@ -222,17 +222,23 @@ export default function MlbFeaturedChallengePage() {
         publicResult: {
           outcome: result.outcome,
           final_money: result.finalMoney,
+          base_score: result.baseScore,
+          score: result.score,
           completed_questions: result.completedQuestions,
+          first_miss_question: result.firstMissQuestion,
           lifelines_used: result.lifelinesUsed,
           time_remaining_ms: result.timeRemainingMs,
-          score: result.score,
         },
         resultDetail: {
           outcome: result.outcome,
           final_money: result.finalMoney,
+          base_score: result.baseScore,
+          score: result.score,
           completed_questions: result.completedQuestions,
+          first_miss_question: result.firstMissQuestion,
           lifelines_used: result.lifelinesUsed,
           time_remaining_ms: result.timeRemainingMs,
+          action_history: result.actionHistory,
         },
       });
       await reloadOverview();

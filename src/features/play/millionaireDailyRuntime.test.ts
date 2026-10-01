@@ -162,7 +162,7 @@ describe("Millionaire official Daily runtime", () => {
     expect(publication.privateGradingEvidence.proof).toBe(publication.privateSetupEvidence.proof);
   });
 
-  it("banks 90 before Q8 and keeps a Q8 miss at 90 while locking checkpoint money", () => {
+  it("banks 90 before Q8 and drops a Q8 miss to 85 while locking checkpoint money", () => {
     let walkContext = contextFor("football");
     for (let index = 0; index < 7; index += 1) {
       const question = privateRun(walkContext)[index]!;
@@ -200,7 +200,7 @@ describe("Millionaire official Daily runtime", () => {
       completed_questions: 7,
       first_miss_question: 8,
       final_money: 100_000,
-      base_score: 90,
+      base_score: 85,
     });
   });
 

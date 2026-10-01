@@ -3722,6 +3722,138 @@
   line-height: 1.45;
 }
 
+.mlb-millionaire-result-path {
+  display: grid;
+  gap: 8px;
+}
+
+.mlb-millionaire-result-path > header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 1px;
+}
+
+.mlb-millionaire-result-path > header span,
+.mlb-millionaire-result-path > header strong {
+  font-size: .55rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.mlb-millionaire-result-path > header span {
+  color: var(--mlb-green-strong);
+}
+
+.mlb-millionaire-result-path > article {
+  display: grid;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, .018);
+}
+
+.mlb-millionaire-result-path > article.is-wrong,
+.mlb-millionaire-result-path > article.is-timeout {
+  border-color: rgba(239, 95, 95, .34);
+}
+
+.mlb-millionaire-result-path__question {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.mlb-millionaire-result-path__question > b {
+  flex: 0 0 auto;
+  color: var(--mlb-green-strong);
+  font-size: .72rem;
+}
+
+.mlb-millionaire-result-path__question > span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mlb-millionaire-result-path__question small,
+.mlb-millionaire-result-path__lifelines,
+.mlb-millionaire-result-path__legacy {
+  color: var(--text-muted);
+  font-size: .48rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+
+.mlb-millionaire-result-path__legacy {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.mlb-millionaire-result-path__question strong {
+  font-size: .75rem;
+  line-height: 1.25;
+}
+
+.mlb-millionaire-result-path__choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.mlb-millionaire-result-path__choices > span {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.mlb-millionaire-result-path__choices > span.is-correct {
+  border-color: rgba(var(--mlb-green-rgb), .42);
+}
+
+.mlb-millionaire-result-path__choices > span.is-selected.is-wrong {
+  border-color: rgba(239, 95, 95, .42);
+}
+
+.mlb-millionaire-result-path__choices b,
+.mlb-millionaire-result-path__choices small {
+  font-size: .48rem;
+  font-weight: 950;
+}
+
+.mlb-millionaire-result-path__choices em {
+  min-width: 0;
+  overflow: hidden;
+  font-size: .62rem;
+  font-style: normal;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mlb-millionaire-result-path__choices small {
+  color: var(--text-muted);
+}
+
+@media (max-width: 520px) {
+  .mlb-millionaire-result-path__choices {
+    grid-template-columns: 1fr;
+  }
+
+  .mlb-millionaire-result-path > header {
+    align-items: start;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
 .mlb-find-saved-result {
   display: grid;
   gap: 13px;
