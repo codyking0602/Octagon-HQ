@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
+  AVERAGE_FAN_PLAYABLE_GRADES,
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_SUBJECTS,
   averageFanAnswersMatch,
@@ -245,7 +246,7 @@ export function RulesModal({ onClose }: { onClose: () => void }) {
         <h2 id="average-fan-rules-title">ARE YOU SMARTER THAN AN AVERAGE FAN?</h2>
         <div className="average-fan-rules__grid">
           <article><b>1</b><span><strong>Pick your sport and fan.</strong> Your fan is locked for the whole run.</span></article>
-          <article><b>2</b><span><strong>Work the board.</strong> Choose any of the 10 grade-and-subject tiles.</span></article>
+          <article><b>2</b><span><strong>Work the board.</strong> Choose any of the 8 subject tiles from 2nd through 5th Grade.</span></article>
           <article><b>3</b><span><strong>Use your help.</strong> Peek, Copy and Save are each available once.</span></article>
           <article><b>4</b><span><strong>Finish strong.</strong> An unsaved miss ends the money run, but you keep playing for HQ points and the Final.</span></article>
         </div>
@@ -483,7 +484,7 @@ export function MoneyRail({
       </div>
       {AVERAGE_FAN_MONEY_LADDER.slice().reverse().map((money, reverseIndex) => {
         const questionNumber = AVERAGE_FAN_MONEY_LADDER.length - reverseIndex;
-        const current = !lostAt && !finalActive && completed < 10 && questionNumber === completed + 1;
+        const current = !lostAt && !finalActive && completed < AVERAGE_FAN_MONEY_LADDER.length && questionNumber === completed + 1;
         const cleared = questionNumber <= displayCompleted;
         const lost = lostAt === questionNumber;
         return (
@@ -564,7 +565,7 @@ export function TileBoard({
         <strong>WORK THE BOARD</strong>
       </header>
       <div className="average-fan-grade-board">
-        {[1, 2, 3, 4, 5].map((grade) => {
+        {AVERAGE_FAN_PLAYABLE_GRADES.map((grade) => {
           const gradeQuestions = questions.filter((question) => question.grade === grade);
           return (
             <div className="average-fan-grade-row" key={grade}>
@@ -837,12 +838,12 @@ export function AverageFanGame({
       setPhase("verdict");
       return;
     }
-    if (resolved.length >= 10) setPhase("final-decision");
+    if (resolved.length >= questions.length) setPhase("final-decision");
     else setPhase("board");
   }
 
   function continueAfterVerdict() {
-    if (resolved.length >= 10) setPhase("final-decision");
+    if (resolved.length >= questions.length) setPhase("final-decision");
     else setPhase("board");
   }
 
@@ -959,7 +960,7 @@ export function AverageFanGame({
                 <small>HQ PTS</small>
               </div>
               <div className="average-fan-result-stats">
-                <div><b>{resolved.filter((item) => item.correct || item.saved).length}/10</b><span>Board clears</span></div>
+                <div><b>{resolved.filter((item) => item.correct || item.saved).length}/{questions.length}</b><span>Board clears</span></div>
                 <div><b>{resolved.filter((item) => item.saved).length}</b><span>Saves</span></div>
                 <div><b>{finalMoney ? averageFanMoneyLabel(finalMoney) : "ENDED"}</b><span>Money run</span></div>
               </div>
@@ -1010,7 +1011,7 @@ export function AverageFanGame({
                   <small>{lastResolution.saved ? "Your fan got it right — Save keeps the clean run alive." : "Save was used, but your fan missed too."}</small>
                 ) : null}
                 <button type="button" onClick={continueAfterReveal}>
-                  {resolved.length >= 10 ? "SEE FINAL SUBJECT" : "BACK TO BOARD"}
+                  {resolved.length >= questions.length ? "SEE FINAL SUBJECT" : "BACK TO BOARD"}
                 </button>
               </div>
             ) : null}

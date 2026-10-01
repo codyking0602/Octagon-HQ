@@ -1284,8 +1284,9 @@
 }
 
 .average-fan-game-chalkboard.is-board .average-fan-grade-board {
-  gap: 8px;
+  gap: 10px;
   width: 100%;
+  align-content: center;
 }
 
 .average-fan-game-chalkboard.is-board .average-fan-grade-row {
@@ -1294,7 +1295,7 @@
 }
 
 .average-fan-game-chalkboard.is-board .average-fan-grade-row > b {
-  min-height: 66px;
+  min-height: 78px;
   padding: 0 8px;
   border: 2px solid rgba(255, 224, 104, .78);
   border-radius: 9px;
@@ -1310,7 +1311,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  min-height: 66px;
+  min-height: 78px;
   padding: 8px 14px;
   border: 2px solid rgba(255,255,255,.6);
   border-radius: 10px;
@@ -1919,7 +1920,7 @@
 .average-fan-money-rail {
   position: absolute;
   z-index: 14;
-  top: 7%;
+  top: 11%;
   right: .3%;
   width: 14%;
   display: grid;

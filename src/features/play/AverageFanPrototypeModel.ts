@@ -14,8 +14,6 @@ export const AVERAGE_FAN_MONEY_LADDER = [
   25_000,
   50_000,
   100_000,
-  175_000,
-  300_000,
   500_000,
 ] as const;
 
@@ -27,7 +25,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g1-fighters",
     sport: "ufc",
-    grade: 1,
+    grade: 2,
     subject: "Fighters",
     format: "short-answer",
     prompt: "Which UFC star is nicknamed “The Notorious”?",
@@ -42,7 +40,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g1-octagon-iq",
     sport: "ufc",
-    grade: 1,
+    grade: 2,
     subject: "Octagon IQ",
     format: "true-false",
     prompt: "UFC fights are scored using the 10-point must system.",
@@ -56,7 +54,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g2-championships",
     sport: "ufc",
-    grade: 2,
+    grade: 3,
     subject: "Championships",
     format: "four-choice",
     prompt: "A standard UFC championship fight is scheduled for how many rounds?",
@@ -71,7 +69,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g2-fighters",
     sport: "ufc",
-    grade: 2,
+    grade: 3,
     subject: "Fighters",
     format: "short-answer",
     prompt: "Which former UFC heavyweight champion is nicknamed “The Predator”?",
@@ -86,7 +84,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g3-fights",
     sport: "ufc",
-    grade: 3,
+    grade: 4,
     subject: "Fights",
     format: "four-choice",
     prompt: "Who did Leon Edwards knock out with a head kick at UFC 278?",
@@ -101,7 +99,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g3-championships",
     sport: "ufc",
-    grade: 3,
+    grade: 4,
     subject: "Championships",
     format: "short-answer",
     prompt: "Who became the UFC's first simultaneous two-division champion?",
@@ -116,7 +114,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g4-octagon-iq",
     sport: "ufc",
-    grade: 4,
+    grade: 5,
     subject: "Octagon IQ",
     format: "short-answer",
     prompt: "In a southpaw stance, which side is forward?",
@@ -131,7 +129,7 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
   q({
     id: "average-fan-preview-ufc-g4-fights",
     sport: "ufc",
-    grade: 4,
+    grade: 5,
     subject: "Fights",
     format: "four-choice",
     prompt: "Who did Alex Pereira defeat to win the UFC light heavyweight title at UFC 295?",
@@ -141,36 +139,6 @@ export const AVERAGE_FAN_UFC_PREVIEW_BOARD = [
     explanation: "Pereira stopped Jiří Procházka at UFC 295 to win the light heavyweight championship.",
     contentType: "evergreen",
     difficultyNudge: 1,
-    protectedFinal: false,
-  }),
-  q({
-    id: "average-fan-preview-ufc-g5-fighters",
-    sport: "ufc",
-    grade: 5,
-    subject: "Fighters",
-    format: "short-answer",
-    prompt: "Who handed Israel Adesanya his first UFC loss?",
-    answer: "Jan Blachowicz",
-    aliases: ["Blachowicz", "Jan", "Jan Błachowicz"],
-    explanation: "Jan Blachowicz defeated Adesanya by decision at UFC 259.",
-    contentType: "evergreen",
-    difficultyNudge: 2,
-    fanMisses: ["Alex Pereira", "Robert Whittaker", "Yoel Romero"],
-    protectedFinal: false,
-  }),
-  q({
-    id: "average-fan-preview-ufc-g5-championships",
-    sport: "ufc",
-    grade: 5,
-    subject: "Championships",
-    format: "short-answer",
-    prompt: "Who was the first fighter to hold UFC flyweight and bantamweight titles at the same time?",
-    answer: "Henry Cejudo",
-    aliases: ["Cejudo", "Henry"],
-    explanation: "Henry Cejudo added the bantamweight title while already holding the flyweight championship.",
-    contentType: "evergreen",
-    difficultyNudge: 2,
-    fanMisses: ["Demetrious Johnson", "Brandon Moreno", "T.J. Dillashaw"],
     protectedFinal: false,
   }),
 ] as const satisfies readonly AverageFanQuestion[];
