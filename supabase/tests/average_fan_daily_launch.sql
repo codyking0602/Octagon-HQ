@@ -226,6 +226,21 @@ begin
       end if;
   end;
 
+  if position(
+    'used_current_event_source_ids'
+    in pg_get_functiondef(
+      'public.get_average_fan_publication_history(text,date)'::regprocedure::oid
+    )
+  ) = 0
+    or position(
+      'jsonb_path_query'
+      in pg_get_functiondef(
+        'public.get_average_fan_publication_history(text,date)'::regprocedure::oid
+      )
+    ) = 0 then
+    raise exception 'Average Fan cross-game current-event source gate is missing';
+  end if;
+
   select pg_get_functiondef(
     'private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)'::regprocedure::oid
   ) into v_grader_definition;

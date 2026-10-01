@@ -566,7 +566,7 @@ const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
   { id: "elliott-2014-title-rushing", grade: 5, subject: "Players", prompt: "Which Ohio State running back rushed for 246 yards against Oregon in the national championship game after the 2014 season?", answer: "Ezekiel Elliott", wrong: ["Carlos Hyde", "J. K. Dobbins"], explanation: "Ezekiel Elliott rushed for 246 yards and four touchdowns in Ohio State's championship win over Oregon." },
   { id: "watson-2016-title-420", grade: 5, subject: "Players", prompt: "Which Clemson quarterback threw for 420 yards in the national championship win over Alabama after the 2016 season?", answer: "Deshaun Watson", wrong: ["Tajh Boyd", "Kelly Bryant"], explanation: "Deshaun Watson threw for 420 yards and three touchdowns as Clemson beat Alabama for the title." },
   { id: "daniels-2023-heisman", grade: 5, subject: "Players", prompt: "Which LSU quarterback won the 2023 Heisman Trophy after accounting for 50 touchdowns that season?", answer: "Jayden Daniels", wrong: ["Bo Nix", "Michael Penix Jr.", "Caleb Williams"], explanation: "Jayden Daniels won the 2023 Heisman after throwing 40 touchdown passes and rushing for 10 scores." },
-  { id: "hunter-biletnikoff-bednarik", grade: 5, subject: "Players", prompt: "Which Colorado star won both the Biletnikoff Award and the Bednarik Award in 2024?", answer: "Travis Hunter", wrong: ["Tetairoa McMillan", "Will Johnson"], explanation: "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player." },
+  { id: "hunter-biletnikoff-bednarik", grade: 5, subject: "Players", prompt: "Who pulled off the rare 2024 sweep of the Biletnikoff and Bednarik awards?", answer: "Travis Hunter", wrong: ["Tetairoa McMillan", "Will Johnson"], explanation: "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player." },
   { id: "bennett-double-cfp-mvp", grade: 5, subject: "Players", prompt: "Which Georgia quarterback was the offensive MVP of both the Orange Bowl semifinal and the national championship game during the 2021 title run?", answer: "Stetson Bennett", wrong: ["JT Daniels", "Jake Fromm"], explanation: "Stetson Bennett earned offensive MVP honors in Georgia's CFP semifinal win over Michigan and its championship win over Alabama." },
   { id: "renfrow-title-catch", grade: 5, subject: "Players", prompt: "Who caught Clemson's game-winning touchdown with one second left against Alabama in the 2016 season's CFP title game?", answer: "Hunter Renfrow", wrong: ["Mike Williams", "Artavis Scott", "Jordan Leggett"], explanation: "Hunter Renfrow caught Deshaun Watson's two-yard touchdown with one second left to give Clemson the national title." },
   { id: "wuerffel-heisman-title", grade: 5, subject: "Players", prompt: "Which Florida quarterback won the 1996 Heisman Trophy and then led the Gators to the national championship?", answer: "Danny Wuerffel", wrong: ["Rex Grossman", "Jesse Palmer"], explanation: "Danny Wuerffel won the 1996 Heisman Trophy and quarterbacked Florida to its first national championship." },
@@ -576,11 +576,11 @@ const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
   { id: "utah-sugar-alabama", grade: 5, subject: "Programs", prompt: "Which program completed a 13-0 season by beating Alabama in the Sugar Bowl after the 2008 season?", answer: "Utah", wrong: ["Boise State", "TCU"], explanation: "Utah finished 13-0 after defeating Alabama 31-17 in the Sugar Bowl." },
 
   { id: "little-brown-jug", grade: 5, subject: "Traditions", prompt: "Michigan and Minnesota play for which rivalry trophy?", answer: "Little Brown Jug", wrong: ["Paul Bunyan Trophy", "Heartland Trophy", "Old Oaken Bucket"], explanation: "Michigan and Minnesota compete for the Little Brown Jug." },
-  { id: "old-brass-spittoon", grade: 5, subject: "Traditions", prompt: "Indiana and Michigan State play for which rivalry trophy?", answer: "Old Brass Spittoon", wrong: ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], explanation: "Indiana and Michigan State compete for the Old Brass Spittoon." },
-  { id: "illibuck", grade: 5, subject: "Traditions", prompt: "Illinois and Ohio State play for which rivalry trophy?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
+  { id: "old-brass-spittoon", grade: 5, subject: "Traditions", prompt: "What trophy is at stake when Indiana meets Michigan State?", answer: "Old Brass Spittoon", wrong: ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], explanation: "Indiana and Michigan State compete for the Old Brass Spittoon." },
+  { id: "illibuck", grade: 5, subject: "Traditions", prompt: "What wooden-turtle trophy goes to the winner of Illinois–Ohio State?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
 
   { id: "stanford-usc-2007", grade: 5, subject: "CFB History", prompt: "Which powerhouse did Stanford upset 24-23 in 2007 during Jim Harbaugh's first season as head coach?", answer: "USC", wrong: ["Oregon", "UCLA"], explanation: "Stanford stunned USC 24-23 at the Los Angeles Memorial Coliseum in 2007." },
-  { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", answer: "Jalen Watts-Jackson", wrong: ["LJ Scott", "Aaron Burbridge", "Connor Cook"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
+  { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Name the Michigan State player who took Michigan's mishandled final punt to the end zone in 2015.", answer: "Jalen Watts-Jackson", wrong: ["LJ Scott", "Aaron Burbridge", "Connor Cook"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
   { id: "kick-six-chris-davis", grade: 5, subject: "CFB History", prompt: "Who returned Alabama's missed field goal for Auburn's Kick Six touchdown in 2013?", answer: "Chris Davis", wrong: ["Tre Mason", "Ricardo Louis"], explanation: "Chris Davis returned the missed field goal for the walk-off touchdown that gave Auburn the 2013 Iron Bowl." },
 ];
 
@@ -616,7 +616,7 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "body-triangle", grade: 5, prompt: "What back-control configuration locks the legs around an opponent's torso in a figure-four shape?", answer: "Body triangle", wrong: ["Closed guard", "Seatbelt grip", "Hooks"], explanation: "A body triangle uses a figure-four leg lock around the torso during back control." },
   { id: "feint", grade: 5, prompt: "What striking term describes a fake attack used to draw a defensive reaction?", answer: "Feint", wrong: ["Frame", "Scramble"], explanation: "A feint is a false attack or movement used to provoke a reaction." },
   { id: "switch-stance", grade: 5, prompt: "What does a fighter do when switching stance?", answer: "Changes which side is forward", wrong: ["Changes weight class", "Moves from standing to guard"], explanation: "Switching stance changes the lead side, such as moving between orthodox and southpaw." },
-  { id: "single-leg", grade: 3, prompt: "What wrestling takedown attacks one of an opponent\'s legs?", answer: "Single-leg takedown", wrong: ["Double-leg takedown", "Hip toss"], explanation: "A single-leg takedown attacks one leg and works to finish from that control." },
+  { id: "single-leg", grade: 2, prompt: "What wrestling takedown attacks one of an opponent\'s legs?", answer: "Single-leg takedown", wrong: ["Double-leg takedown", "Hip toss"], explanation: "A single-leg takedown attacks one leg and works to finish from that control." },
   { id: "side-control", grade: 3, prompt: "What top grappling position places a fighter across the opponent\'s torso after passing the legs?", answer: "Side control", wrong: ["Closed guard", "Back control", "Half guard"], explanation: "Side control is a dominant top position across the opponent\'s torso after the legs have been passed." },
   { id: "teep", grade: 3, prompt: "What striking term is commonly used for a push kick that helps manage distance?", answer: "Teep", wrong: ["Spinning backfist", "Overhand"], explanation: "A teep is a push kick commonly used to control range and disrupt forward movement." },
   { id: "level-change", grade: 4, prompt: "What wrestling movement lowers a fighter\'s level to threaten or enter a takedown?", answer: "Level change", wrong: ["Switch step", "Hip escape"], explanation: "A level change lowers the hips and body position to set up a wrestling entry." },
@@ -915,24 +915,24 @@ const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
 
 const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   ["00-player-mendoza", "Players", "Before his Heisman-winning championship season at Indiana, Fernando Mendoza played for which school?", "California", ["Stanford", "UCLA", "Arizona State"], "Fernando Mendoza transferred from California to Indiana before his 2025 Heisman and national-title season."],
-  ["01-player-woodson", "Players", "Which Tennessee quarterback finished behind Charles Woodson in the famous 1997 Heisman race?", "Peyton Manning", ["Tee Martin", "Danny Wuerffel", "Tim Couch"], "Peyton Manning finished second to Michigan's Charles Woodson in the 1997 Heisman voting."],
-  ["02-player-newton", "Players", "Cam Newton completed Auburn's 2010 national-title season by beating which team in the BCS Championship Game?", "Oregon", ["TCU", "Stanford", "Alabama"], "Auburn beat Oregon 22–19 to finish Cam Newton's Heisman-winning season 14–0."],
+  ["01-player-bennett-mvps", "Players", "During Georgia's 2021 championship run, who was named offensive MVP in both College Football Playoff games?", "Stetson Bennett", ["JT Daniels", "Jake Fromm", "Bryce Young"], "Stetson Bennett earned offensive MVP honors in Georgia's semifinal win over Michigan and championship win over Alabama."],
+  ["02-player-hunter-awards", "Players", "Which Colorado star won both the Biletnikoff Award and the Bednarik Award in 2024?", "Travis Hunter", ["Tetairoa McMillan", "Will Johnson", "Ashton Jeanty"], "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player."],
   ["03-player-griffin", "Players", "Archie Griffin won his back-to-back Heisman Trophies in which two seasons?", "1974 and 1975", ["1973 and 1974", "1975 and 1976", "1972 and 1973"], "Ohio State running back Archie Griffin won the Heisman in 1974 and 1975."],
 
-  ["00-program-indiana", "Programs", "Which program completed a 16–0 season by beating Miami for the 2025 national championship?", "Indiana", ["Oregon", "Ohio State", "Notre Dame"], "Indiana finished 16–0 and beat Miami 27–21 for the 2025 national championship."],
-  ["01-program-texas-rose", "Programs", "Which program ended USC's 34-game winning streak in the 2006 Rose Bowl to win the national title?", "Texas", ["Oklahoma", "Ohio State", "Florida"], "Texas beat USC 41–38 in the Rose Bowl to win the 2005 national championship."],
-  ["02-program-boise-fiesta", "Programs", "Which program used the hook-and-lateral and Statue of Liberty in its famous 2007 Fiesta Bowl upset of Oklahoma?", "Boise State", ["TCU", "Utah", "UCF"], "Boise State beat Oklahoma 43–42 in overtime in the 2007 Fiesta Bowl."],
-  ["03-program-app-state", "Programs", "Which FCS program stunned No. 5 Michigan at the Big House in 2007?", "Appalachian State", ["James Madison", "North Dakota State", "Georgia Southern"], "Appalachian State beat Michigan 34–32 in one of college football's signature upsets."],
+  ["00-program-tennessee-bcs", "Programs", "The first BCS champion came out of the 1998 season. Which program was it?", "Tennessee", ["Florida State", "Nebraska", "Ohio State"], "Tennessee beat Florida State in the Fiesta Bowl to win the first BCS national championship."],
+  ["01-program-utah-sugar", "Programs", "Which unbeaten team capped the 2008 season by beating Alabama 31–17 in the Sugar Bowl?", "Utah", ["Boise State", "TCU", "BYU"], "Utah finished 13–0 after defeating Alabama 31–17 in the Sugar Bowl."],
+  ["02-program-four-seed", "Programs", "Who won the inaugural four-team College Football Playoff from the No. 4 seed?", "Ohio State", ["TCU", "Florida State", "Oregon"], "Ohio State entered the inaugural CFP as the No. 4 seed, beat Alabama, then defeated Oregon for the title."],
+  ["03-program-first-cfp-one", "Programs", "Which program was the first team ever ranked No. 1 by the College Football Playoff selection committee?", "Mississippi State", ["Alabama", "Florida State", "Oregon"], "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
 
-  ["00-tradition-kick-six", "Traditions", "The 2013 'Kick Six' decided which rivalry game?", "Iron Bowl", ["Egg Bowl", "Red River Rivalry", "Bedlam"], "Auburn's Kick Six beat Alabama in the 2013 Iron Bowl."],
-  ["01-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Tre Mason", "Nick Marshall"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
-  ["02-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Josh Reed", "Skyler Green"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
-  ["03-tradition-miracle-michigan", "Traditions", "Which Colorado quarterback threw the Hail Mary that became known as the Miracle at Michigan in 1994?", "Kordell Stewart", ["Rashaan Salaam", "Eric Bieniemy", "Darian Hagan"], "Kordell Stewart's final-play Hail Mary to Michael Westbrook beat Michigan in 1994."],
+  ["00-tradition-spittoon", "Traditions", "Indiana and Michigan State play for which rivalry trophy?", "Old Brass Spittoon", ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], "Indiana and Michigan State compete for the Old Brass Spittoon."],
+  ["01-tradition-illibuck", "Traditions", "Illinois and Ohio State play for which rivalry trophy?", "Illibuck", ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], "Illinois and Ohio State compete for the Illibuck trophy."],
+  ["02-tradition-prayer", "Traditions", "Which Auburn receiver caught the deflected touchdown known as the Prayer at Jordan-Hare in 2013?", "Ricardo Louis", ["Sammie Coates", "Tre Mason", "Nick Marshall"], "Ricardo Louis caught the deflected fourth-down pass that beat Georgia in the 2013 Prayer at Jordan-Hare."],
+  ["03-tradition-bluegrass", "Traditions", "Which LSU receiver caught the tipped final-play touchdown known as the Bluegrass Miracle in 2002?", "Devery Henderson", ["Michael Clayton", "Josh Reed", "Skyler Green"], "Devery Henderson caught the tipped 75-yard touchdown that gave LSU the Bluegrass Miracle win over Kentucky."],
 
-  ["00-history-2022-fiesta", "CFB History", "Which team beat Michigan 51–45 in the 2022 season's CFP semifinal at the Fiesta Bowl?", "TCU", ["Georgia", "Ohio State", "Alabama"], "TCU beat Michigan 51–45 in the Fiesta Bowl to reach the national championship game."],
-  ["01-history-2017-rose", "CFB History", "Which team beat Oklahoma 54–48 in double overtime in the Rose Bowl CFP semifinal after the 2017 season?", "Georgia", ["Alabama", "Clemson", "Ohio State"], "Georgia beat Oklahoma 54–48 in double overtime in the Rose Bowl semifinal."],
-  ["02-history-2018-tua", "CFB History", "Which freshman quarterback came off the bench and threw the overtime title-winning touchdown for Alabama against Georgia after the 2017 season?", "Tua Tagovailoa", ["Jalen Hurts", "Mac Jones", "Bryce Young"], "Tua Tagovailoa replaced Jalen Hurts and threw the overtime winner to DeVonta Smith."],
-  ["03-history-2005-rose", "CFB History", "Which Texas quarterback scored the late fourth-down touchdown that beat USC in the 2006 Rose Bowl?", "Vince Young", ["Colt McCoy", "Matt Leinart", "Chris Simms"], "Vince Young's fourth-down touchdown gave Texas the 41–38 national-title win over USC."],
+  ["00-history-first-ap", "CFB History", "Which school finished No. 1 in the first final Associated Press college football poll in 1936?", "Minnesota", ["Notre Dame", "Alabama", "Pittsburgh"], "Minnesota finished atop the first final AP poll in 1936."],
+  ["01-history-first-rose", "CFB History", "Michigan beat which school 49–0 in the first Rose Bowl game in 1902?", "Stanford", ["California", "USC", "Washington"], "Michigan defeated Stanford 49–0 in the inaugural Tournament East-West football game, now known as the Rose Bowl."],
+  ["02-history-watts-jackson", "CFB History", "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", "Jalen Watts-Jackson", ["LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired."],
+  ["03-history-first-heisman", "CFB History", "The inaugural Downtown Athletic Club Trophy, later renamed the Heisman, went to which Chicago halfback?", "Jay Berwanger", ["Davey O'Brien", "Doc Blanchard", "Tom Harmon"], "University of Chicago halfback Jay Berwanger won the inaugural Downtown Athletic Club Trophy, later renamed the Heisman."],
 ].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:cfb-final-${id}`,
   sport: "cfb",
@@ -945,7 +945,7 @@ const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   choices: fourChoiceOrder(`average-fan:cfb:authored:cfb-final-${id}`, answer as string, wrong as string[]),
   explanation: explanation as string,
   contentType: "evergreen",
-  difficultyNudge: 2,
+  difficultyNudge: 3,
   protectedFinal: true,
 }));
 
@@ -1285,12 +1285,54 @@ function footballCandidates(league: "NFL" | "CFB") {
     : questions;
 }
 
+const UFC_MENS_STANDARD_DIVISIONS = [
+  "Flyweight",
+  "Bantamweight",
+  "Featherweight",
+  "Lightweight",
+  "Welterweight",
+  "Middleweight",
+  "Light Heavyweight",
+  "Heavyweight",
+] as const;
+
+const UFC_WOMENS_STANDARD_DIVISIONS = [
+  "Women's Strawweight",
+  "Women's Flyweight",
+  "Women's Bantamweight",
+  "Women's Featherweight",
+] as const;
+
+const UFC_STANDARD_DIVISIONS = [
+  ...UFC_MENS_STANDARD_DIVISIONS,
+  ...UFC_WOMENS_STANDARD_DIVISIONS,
+] as const;
+
 function formatDivision(value: string) {
-  return value
-    .replace(/^women-s-/, "Women's ")
-    .replace(/^womens-/, "Women's ")
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  const key = value
+    .normalize("NFKD")
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  const canonical = new Map<string, string>([
+    ["flyweight", "Flyweight"],
+    ["bantamweight", "Bantamweight"],
+    ["featherweight", "Featherweight"],
+    ["lightweight", "Lightweight"],
+    ["welterweight", "Welterweight"],
+    ["middleweight", "Middleweight"],
+    ["light-heavyweight", "Light Heavyweight"],
+    ["heavyweight", "Heavyweight"],
+    ["women-s-strawweight", "Women's Strawweight"],
+    ["womens-strawweight", "Women's Strawweight"],
+    ["women-s-flyweight", "Women's Flyweight"],
+    ["womens-flyweight", "Women's Flyweight"],
+    ["women-s-bantamweight", "Women's Bantamweight"],
+    ["womens-bantamweight", "Women's Bantamweight"],
+    ["women-s-featherweight", "Women's Featherweight"],
+    ["womens-featherweight", "Women's Featherweight"],
+  ]);
+  return canonical.get(key) ?? value.replace(/-/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function methodLabel(method: string) {
@@ -1300,38 +1342,53 @@ function methodLabel(method: string) {
   return "other";
 }
 
+const UFC_MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+] as const;
+
+function naturalFightDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day || month < 1 || month > 12) return value;
+  return `${UFC_MONTH_NAMES[month - 1]} ${day}, ${year}`;
+}
+
 function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
   const fighterNames = fighters.map((fighter) => fighter.name);
-  const divisions = unique(fighters.map((fighter) => formatDivision(fighter.primaryDivision)));
   const questions: AverageFanQuestion[] = [];
 
   for (const [index, fighter] of fighters.entries()) {
     const primaryDivision = formatDivision(fighter.primaryDivision);
-    const wrongDivisions = peerValues(divisions, primaryDivision, `${fighter.id}:division`);
-    questions.push(choiceQuestion({
-      id: `average-fan:ufc:g1:${fighter.id}:division`,
-      sport: "ufc",
-      grade: 1,
-      subject: "Fighters",
-      prompt: `Which UFC division is ${fighter.name} primarily associated with?`,
-      answer: primaryDivision,
-      wrongChoices: wrongDivisions,
-      explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
-      difficultyNudge: fighter.scope === "recognizable-expansion" ? -2 : -1,
-    }));
+    if ((UFC_STANDARD_DIVISIONS as readonly string[]).includes(primaryDivision)) {
+      const divisionPool = primaryDivision.startsWith("Women's ")
+        ? UFC_WOMENS_STANDARD_DIVISIONS
+        : UFC_MENS_STANDARD_DIVISIONS;
+      const wrongDivisions = peerValues(divisionPool, primaryDivision, `${fighter.id}:division`);
+      questions.push(choiceQuestion({
+        id: `average-fan:ufc:g1:${fighter.id}:division`,
+        sport: "ufc",
+        grade: 1,
+        subject: "Fighters",
+        prompt: `Which UFC division is ${fighter.name} primarily associated with?`,
+        answer: primaryDivision,
+        wrongChoices: wrongDivisions,
+        explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
+        difficultyNudge: fighter.scope === "recognizable-expansion" ? -2 : -1,
+      }));
 
-    const tfTrue = index % 2 === 0;
-    const shownDivision = tfTrue ? primaryDivision : wrongDivisions[0]!;
-    questions.push(trueFalseQuestion({
-      id: `average-fan:ufc:g2:${fighter.id}:division-tf`,
-      sport: "ufc",
-      grade: 2,
-      subject: "Fighters",
-      prompt: `${fighter.name} is primarily associated with the UFC ${shownDivision} division.`,
-      answer: tfTrue,
-      explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
-    }));
+      const tfTrue = index % 2 === 0;
+      const shownDivision = tfTrue ? primaryDivision : wrongDivisions[0]!;
+      questions.push(trueFalseQuestion({
+        id: `average-fan:ufc:g2:${fighter.id}:division-tf`,
+        sport: "ufc",
+        grade: 2,
+        subject: "Fighters",
+        prompt: `${fighter.name} is primarily associated with the UFC ${shownDivision} division.`,
+        answer: tfTrue,
+        explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
+      }));
+    }
 
     const wins = fighter.fights.filter((fight) => fight.result === "win");
     const recognizableFight = wins[stableOffset(`${fighter.id}:win`, Math.max(1, wins.length))] ?? fighter.fights[0];
@@ -1376,29 +1433,20 @@ function ufcCandidates() {
       }));
     }
 
-    const uniqueWins = wins.filter(
-      (fight, fightIndex) => wins.findIndex((candidate) => candidate.opponent === fight.opponent) === fightIndex,
-    );
+    const uniqueWins = wins
+      .filter((fight, fightIndex) => wins.findIndex((candidate) => candidate.opponent === fight.opponent) === fightIndex)
+      .sort((left, right) => right.date.localeCompare(left.date));
     if (uniqueWins.length >= 3) {
-      const firstIndex = stableOffset(`${fighter.id}:g5-anchor-a`, uniqueWins.length);
-      const anchors = [
-        uniqueWins[firstIndex]!,
-        uniqueWins[(firstIndex + 1) % uniqueWins.length]!,
-        uniqueWins[(firstIndex + 2) % uniqueWins.length]!,
-      ];
+      const anchors = uniqueWins.slice(0, 3);
       const wrongNames = peerValues(fighterNames, fighter.name, `${fighter.id}:three-win-identity`);
-      const modernAnchor = anchors.find((fight) => Number(fight.date.slice(0, 4)) >= 2010);
-      const modernAnchorHint = modernAnchor
-        ? `, including the win over ${modernAnchor.opponent} in ${modernAnchor.date.slice(0, 4)}`
-        : "";
       questions.push(shortQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:three-win-identity`,
         sport: "ufc",
         grade: 5,
         subject: "Fighters",
-        prompt: `Which UFC fighter owns wins over ${anchors[0].opponent}, ${anchors[1].opponent}, and ${anchors[2].opponent}${modernAnchorHint}?`,
+        prompt: `Which UFC fighter owns wins over ${anchors[0]!.opponent}, ${anchors[1]!.opponent}, and ${anchors[2]!.opponent}, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} has UFC wins over all three opponents.`,
+        explanation: `${fighter.name} has UFC wins over all three opponents, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}.`,
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
@@ -1422,20 +1470,23 @@ function ufcCandidates() {
         fanMisses: wrongTitleOpponents,
         difficultyNudge: 1,
       }));
+      const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
+        .filter((opponent) => opponent !== titleFight.opponent)
+        .slice(0, 2);
+      const titleIdentityExtra = finalOtherOpponents[0]
+        ? ` and also fought ${finalOtherOpponents[0]}`
+        : "";
       questions.push(shortQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:title-identity`,
         sport: "ufc",
         grade: 5,
         subject: "Championships",
-        prompt: `Which fighter recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight on ${titleFight.date}?`,
+        prompt: `Which fighter recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight on ${naturalFightDate(titleFight.date)}${titleIdentityExtra}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} had that UFC title-fight result against ${titleFight.opponent} on ${titleFight.date}.`,
+        explanation: `${fighter.name} had that UFC title-fight result against ${titleFight.opponent} on ${naturalFightDate(titleFight.date)}${titleIdentityExtra}.`,
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
-      const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
-        .filter((opponent) => opponent !== titleFight.opponent)
-        .slice(0, 2);
       const finalOpponentPhrase = finalOtherOpponents.length === 2
         ? ` and also fought ${finalOtherOpponents[0]} and ${finalOtherOpponents[1]}`
         : finalOtherOpponents.length === 1
@@ -1707,9 +1758,18 @@ export const averageFanNflQuestionBank = buildBank(
   AVERAGE_FAN_FINAL_TARGETS.nfl,
 );
 
+const CFB_REVIEWED_FINAL_ALTERNATE_IDS = new Set([
+  "average-fan:cfb:authored:cfb-final-first-ap-champ",
+  "average-fan:cfb:authored:cfb-final-1902-rose",
+]);
+
+const averageFanCfbCandidates = footballCandidates("CFB").filter(
+  (question) => !CFB_REVIEWED_FINAL_ALTERNATE_IDS.has(question.id),
+);
+
 export const averageFanCfbQuestionBank = buildBank(
   "cfb",
-  footballCandidates("CFB"),
+  averageFanCfbCandidates,
   FOOTBALL_GRADE_TARGETS,
   AVERAGE_FAN_FINAL_TARGETS.cfb,
 );

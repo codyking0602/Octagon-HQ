@@ -28,6 +28,7 @@ on:
       - "supabase/migrations/202612310216_average_fan_daily_scoring_publication.sql"
       - "supabase/migrations/202612310218_average_fan_daily_completion_scoring.sql"
       - "supabase/migrations/202612310220_average_fan_four_grade_calibration.sql"
+      - "supabase/migrations/202612310221_average_fan_review_cleanup.sql"
       - "supabase/tests/average_fan_daily_launch.sql"
       - "src/features/play/*SportsFeud*"
       - "src/features/games/familyFeudEngine.ts"
@@ -448,6 +449,7 @@ jobs:
           require_remote_migration "202612310160"
           require_remote_migration "202612310164"
           require_remote_migration "202612310220"
+          require_remote_migration "202612310221"
           supabase db push --linked --dry-run
 
       - name: Record exact deployed backend proof
@@ -459,5 +461,6 @@ jobs:
             echo "- Exact deployed source SHA: \`$SOURCE_SHA\`"
             echo "- Remote migrations: \`202609050001\`, \`202609050002\`, \`202609060001\`, \`202609080001\`, \`202609090001\`, \`202609140003\`, \`202612310025\`, \`202612310026\`, \`202612310027\`, \`202612310028\`, \`202612310052\`, \`202612310069\`, \`202612310092\`, \`202612310093\`, \`202612310094\`, \`202612310095\`, \`202612310098\`, \`202612310099\` all present"
             echo "- Average Fan four-grade calibration migration: `202612310220` present"
+            echo "- Average Fan review cleanup migration: `202612310221` present"
             echo "- Pending linked migrations: none"
           } >> "$GITHUB_STEP_SUMMARY"
