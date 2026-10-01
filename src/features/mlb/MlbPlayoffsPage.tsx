@@ -282,7 +282,7 @@ function millionaireQuestionRows(
     correctChoiceId: question.correctChoiceId,
     explanation: question.explanation,
     lifelines: [] as string[],
-    status: "unreached" as "correct" | "wrong" | "walked-away" | "timeout" | "unreached",
+    status: "unreached" as "correct" | "wrong" | "walked-away" | "timeout" | "unreached" | "detail-unavailable",
   }));
 
   const actions = Array.isArray(entry.resultDetail.action_history)
@@ -365,6 +365,7 @@ function millionaireQuestionRows(
   if (firstMiss) {
     rows.slice(0, firstMiss - 1).forEach((row) => { row.status = "correct"; });
     rows[firstMiss - 1]!.status = "wrong";
+    rows.slice(firstMiss).forEach((row) => { row.status = "detail-unavailable"; });
   }
   return rows;
 }
@@ -430,6 +431,9 @@ function MlbPlayResultDetail({
   const isAverageFan = entry.gameType === "average_fan";
   const millionaire = millionaireResultSummary(entry);
   const millionaireQuestions = millionaireQuestionRows(entry, challengeKey, challengeDate);
+  const millionaireLegacyDetailLimited = isMillionaire
+    && !Array.isArray(entry.resultDetail.action_history)
+    && millionaire.outcome === "lost";
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
   const barTrivia = barTriviaResultSummary(entry);
@@ -477,6 +481,9 @@ function MlbPlayResultDetail({
                   <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
                 </article>
               </div>
+              {millionaireLegacyDetailLimited ? (
+                <p>Question-by-question recovery detail was not stored for this earlier completed run. The clean opening and first miss are shown; later recovery answers are marked DETAIL UNAVAILABLE.</p>
+              ) : null}
               {millionaireQuestions.length ? (
                 <div className="mlb-play-result-card__games">
                   {millionaireQuestions.map((row) => {
@@ -486,11 +493,11 @@ function MlbPlayResultDetail({
                     const correct = row.choices.find((choice) => choice.id === row.correctChoiceId)?.text ?? row.correctChoiceId;
                     return (
                       <article key={row.index}>
-                        <span>Q{row.index + 1} · {row.status.replace("-", " ").toUpperCase()}</span>
+                        <span>Q{row.index + 1} · {row.status.replace(/-/g, " ").toUpperCase()}</span>
                         <strong>{row.status === "correct" ? "✓" : row.status === "wrong" ? "✕" : row.status === "walked-away" ? "WALK" : "—"}</strong>
                         <small>{row.prompt}</small>
                         {selected ? <small>PICKED · {selected}</small> : null}
-                        {row.status !== "unreached" ? <small>ANSWER · {correct}</small> : null}
+                        {row.status !== "unreached" && row.status !== "detail-unavailable" ? <small>ANSWER · {correct}</small> : null}
                         {row.lifelines.length ? <small>{row.lifelines.map((value) => value.replace(/[-_]/g, " ").toUpperCase()).join(" · ")}</small> : null}
                       </article>
                     );
