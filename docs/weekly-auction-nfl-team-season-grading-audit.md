@@ -2,33 +2,47 @@
 
 ## Scope
 
-This locks the **population and hidden grading ladder only** for the proposed NFL Weekly Auction subject: **Best NFL Team-Seasons Since 2000**.
+This locks the **auction-eligible population and existing hidden grading ladder** for the proposed NFL Weekly Auction subject: **Best NFL Team-Seasons Since 2000**.
 
 It does **not** change the live Weekly Auction runtime, board size, bankroll, scoring-team count, bidding rules, or current CFB Superteam.
 
-## Population
+## Population cut
 
-Locked population: **293 team-seasons**, 2000–2025.
+The initial grading pass covered **293 seasons**. That was intentionally broad for grading, but too broad for the actual auction authority.
 
-| Era | Team-seasons |
+The locked auction pool is now **200 team-seasons**.
+
+| Era | Auction-eligible team-seasons |
 | --- | ---: |
-| 2000–2004 | 34 |
-| 2005–2009 | 47 |
-| 2010–2014 | 65 |
-| 2015–2019 | 61 |
-| 2020–2025 | 86 |
+| 2000–2004 | 30 |
+| 2005–2009 | 35 |
+| 2010–2014 | 40 |
+| 2015–2019 | 40 |
+| 2020–2025 | 55 |
 
-The population follows the project-wide Weekly Auction rule that **membership and grading are separate decisions**.
+Yearly caps:
 
-### Older-era membership
+- 2000–2004: **6 per year**
+- 2005–2009: **7 per year**
+- 2010–2019: **8 per year**
+- 2020–2024: **9 per year**
+- 2025: **10**
 
-The pre-2010 bar is intentionally higher.
+This keeps older history selective while allowing the engine a broader recent inventory.
 
-- 2000–2004: Super Bowl or conference-title participants, 13+ win teams, 12+ win teams with strong scoring dominance, plus a very small set of explicit identity hooks.
-- 2005–2009: the above bar broadens to include 12+ win teams, 11+ win playoff teams, and 10+ win teams with a playoff victory.
-- Recognition hooks are documented, not inferred from franchise prestige.
+## Selection rules
 
-Explicit identity-hook additions:
+The pool cut does **not** re-grade anything.
+
+Within each season:
+
+1. protect every conference championship participant;
+2. protect explicitly documented identity-hook seasons;
+3. fill the remaining yearly slots by the already-locked hidden grade.
+
+Recognition can therefore affect **membership**, but it still cannot raise a grade.
+
+Explicit value / identity protections:
 
 - 2000 LAR — Defending-champion Greatest Show on Turf follow-up; one of the era's defining offenses.
 - 2001 LV — Tuck Rule postseason team; a highly recognizable Raiders season.
@@ -36,70 +50,37 @@ Explicit identity-hook additions:
 - 2002 SF — Jeff Garcia/Terrell Owens team with the 24-point playoff comeback against the Giants.
 - 2003 GB — Favre-era playoff team strongly associated with the 4th-and-26 divisional loss.
 - 2008 NE — 11-5 Matt Cassel season after Tom Brady's injury; a historically notable non-playoff team.
+- 2010 SEA — 7-9 division winner with the Beast Quake playoff upset; an iconic lower-grade season.
+- 2011 DEN — Tebow-era 8-8 team with the overtime playoff win over Pittsburgh; an iconic value/trap season.
+- 2012 WAS — RGIII rookie-season division champion; one of the most recognizable teams of the early 2010s.
+- 2020 CLE — Cleveland's first playoff win in more than two decades makes this 11-5 season historically recognizable.
+- 2023 GB — Jordan Love's first playoff team and road upset of Dallas make this 9-8 season a useful modern identity/value candidate.
 
-### Modern membership
+Examples of why this matters:
 
-From 2010 onward, the field is intentionally much broader:
+- **2010 Seattle** stays in the pool at **74.0** because Beast Quake makes the season historically useful, not because recognition inflated the grade.
+- **2011 Denver** stays at **74.0** for the Tebow playoff identity.
+- **2008 New England** stays at **85.0** for the Cassel/11-5 identity.
+- **2023 Green Bay** stays at **79.0** as a modern recognizable value candidate.
 
-- every playoff team;
-- every 10+ win non-playoff team.
+## Grading
 
-That creates enough Core / Lower / Wildcard inventory for auction strategy without turning modern NFL history into an arbitrary recognition test.
+The existing **74–100, 0.5-point** ladder remains unchanged for every retained team.
 
-## Grading philosophy
+The grading philosophy remains:
 
-The hidden scale is **74–100 in 0.5-point increments**.
+- grade the actual team-season, not the franchise brand;
+- regular-season quality and scoring dominance are the foundation;
+- postseason performance matters but is not an automatic trump card;
+- dominant non-champions may grade above weaker champions;
+- recognition is membership-only;
+- curated neighbor overrides are allowed when the baseline formula materially misstates the season.
 
-Grade the **actual team-season**, not the franchise brand.
-
-Evidence priority:
-
-1. Regular-season win rate.
-2. Era-neutral scoring dominance (point differential per game).
-3. Postseason depth and championship result.
-4. Full-season consistency and neighbor placement.
-5. Curated context for historically exceptional profiles where the baseline formula materially under- or overstates actual team quality.
-
-A title matters, but it is not an automatic trump card. The ladder intentionally allows dominant non-champions to outrank weaker champions.
-
-Recognition is **membership-only**. It never raises the grade after admission.
-
-## Reproducible baseline
-
-The provisional grade is:
-
-- 76
-- plus 32 × (win rate − .500)
-- plus 0.5 × point differential per game, bounded from −3 to +6
-- plus postseason credit:
-  - Super Bowl champion: +6
-  - Super Bowl runner-up: +3
-  - Conference Championship Game: +1.5
-  - Other playoff win: +0.5
-  - Playoff berth / missed playoffs: +0
-
-Then round to the nearest 0.5 and clamp to 74–100.
-
-The formula is a calibration baseline, **not** the product grade by itself. A neighbor audit applies explicit overrides when the formula misstates the season.
-
-## Locked distribution
-
-| Grade band | Team-seasons |
-| --- | ---: |
-| 95–100 | 24 |
-| 90–94.5 | 67 |
-| 85–89.5 | 75 |
-| 80–84.5 | 90 |
-| 74–79.5 | 37 |
-
-- Minimum: **74**
-- 25th percentile: **82.5**
-- Median: **86.5**
-- 75th percentile: **90.5**
-- Maximum: **100**
-- Mean: **86.42**
+No new distribution target was created for the 200-team pool, and grades were **not** changed to force a statistical shape.
 
 ## Anchor curve
+
+The previously locked anchors remain unchanged:
 
 - 2007 New England — **100.0**
 - 2004 New England — **99.5**
@@ -118,35 +99,24 @@ The formula is a calibration baseline, **not** the product grade by itself. A ne
 - 2008 Arizona — **84.5**
 - 2010 Seattle — **74.0**
 
-The curve deliberately demonstrates the product rule: championship outcome matters, but actual season quality still controls the grade.
+## Contradiction sanity check
 
-## Neighbor / contradiction audit
+The retained 200-team pool still passes the existing pairwise sanity check across win rate, point differential per game, and postseason depth.
 
-A full pairwise check was run on win rate, point differential per game, and postseason depth.
+**Dominance contradictions over 1.0 grade point: 0.**
 
-A contradiction is defined as a team-season that is at least as strong on all three dimensions, strictly stronger on at least one, but graded more than 1.0 point below the dominated season.
-
-**Contradictions found: 0.**
-
-## Card metadata
-
-Every row already carries the concise presentation tag requested for the future auction card, for example:
-
-- `16-0 · Super Bowl Runner-Up`
-- `12-4 · Super Bowl Champion`
-- `11-5 · Missed Playoffs`
-
-The exact Sports-Reference / Pro-Football-Reference URL binding is intentionally left for the presentation/source-link pass, not guessed in this grading artifact.
+This is a grading-consistency check, not a distribution exercise.
 
 ## Runtime boundary
 
-This PR is calibration only.
+This PR remains calibration only.
 
-Next step after approval:
+Next step:
 
-1. consume this fixed population and hidden ladder;
+1. use this fixed **200-team** authority;
 2. generate realistic seven-day boards;
-3. simulate the actual **five-player** market across candidate counts, bankrolls, scoring-team counts, max-win rules, and late-week elasticity;
-4. lock mechanics only after the market simulation identifies the best format.
+3. simulate the actual **five-player** market;
+4. compare candidate counts, bankrolls, scoring-team counts, max-win rules, and late-week elasticity;
+5. lock mechanics only after the market simulation identifies the most fun format.
 
 No live auction behavior changes here.
