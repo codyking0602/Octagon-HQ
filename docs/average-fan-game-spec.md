@@ -24,7 +24,7 @@ There is no 1st Grade row. Keeping 5th Grade is intentional because it is core t
 
 All eight tiles are visible before play. The player chooses the order. Wrong answers do not end HQ play.
 
-After the board, reveal only the Final subject. The player may **Walk Away** or play the optional Final. Peek / Copy / Save are unavailable on the Final.
+After the board, reveal only the Final subject. The Final question remains hidden. The decision screen must explicitly show the banked score, the +10 correct score, and the -10 wrong score before the player chooses **Walk Away / Bank Score** or **Play Final**. The player does not choose the subject. Once Play Final is chosen, walking away is no longer available. Peek / Copy / Save are unavailable on the Final.
 
 Money ladder presentation:
 1. $1,000
@@ -84,6 +84,8 @@ Current-event records use:
 - required `expiresAt`
 
 Once a shared current-event question is added, Average Fan automatically sees it. Once `expiresAt` passes, it automatically becomes ineligible.
+
+A current-event fact is keyed by `sourceId` across Daily games. If that source has already appeared in an earlier Daily for the same sport while it is still eligible, Average Fan must skip it and use another unused current event or evergreen content. A single Average Fan board uses at most one current-event question.
 
 New story authoring/ingestion is not itself automatic; the shared Bar Trivia current-event pool remains the source owner.
 
@@ -157,8 +159,8 @@ Shortening the board increases no-repeat runway. Do not discard strong questions
 Official Daily persistence, grading, history, standings, leaderboard detail, current-event expiry and scheduling remain server-owned by the existing Daily Challenge platform.
 
 Canonical versions after the four-grade calibration:
-- content: `average-fan-v3`
-- Daily runtime: `average-fan-daily-v2`
+- content: `average-fan-v4`
+- Daily runtime: `average-fan-daily-v3`
 - scoring: `average-fan-score-v2`
 
 A canonical Daily setup contains exactly eight board question IDs plus one separately protected Final. Server grading rejects legacy ten-question completion evidence under the v2 scoring contract.
