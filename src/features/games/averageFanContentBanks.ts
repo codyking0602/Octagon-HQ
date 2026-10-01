@@ -1342,6 +1342,17 @@ function methodLabel(method: string) {
   return "other";
 }
 
+const UFC_MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+] as const;
+
+function naturalFightDate(value: string) {
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day || month < 1 || month > 12) return value;
+  return `${UFC_MONTH_NAMES[month - 1]} ${day}, ${year}`;
+}
+
 function ufcCandidates() {
   const fighters = [...ufcFactualLedgerSubjects].sort((a, b) => a.id.localeCompare(b.id));
   const fighterNames = fighters.map((fighter) => fighter.name);
@@ -1433,9 +1444,9 @@ function ufcCandidates() {
         sport: "ufc",
         grade: 5,
         subject: "Fighters",
-        prompt: `Which UFC fighter owns wins over ${anchors[0]!.opponent}, ${anchors[1]!.opponent}, and ${anchors[2]!.opponent}?`,
+        prompt: `Which UFC fighter owns wins over ${anchors[0]!.opponent}, ${anchors[1]!.opponent}, and ${anchors[2]!.opponent}, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} has UFC wins over all three opponents.`,
+        explanation: `${fighter.name} has UFC wins over all three opponents, including the ${anchors[0]!.date.slice(0, 4)} win over ${anchors[0]!.opponent}.`,
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
@@ -1459,20 +1470,23 @@ function ufcCandidates() {
         fanMisses: wrongTitleOpponents,
         difficultyNudge: 1,
       }));
+      const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
+        .filter((opponent) => opponent !== titleFight.opponent)
+        .slice(0, 2);
+      const titleIdentityExtra = finalOtherOpponents[0]
+        ? ` and also fought ${finalOtherOpponents[0]}`
+        : "";
       questions.push(shortQuestion({
         id: `average-fan:ufc:g5:${fighter.id}:title-identity`,
         sport: "ufc",
         grade: 5,
         subject: "Championships",
-        prompt: `Which fighter recorded a ${titleFight.result} against ${titleFight.opponent} in a ${titleFight.date.slice(0, 4)} UFC title fight?`,
+        prompt: `Which fighter recorded a ${titleFight.result} against ${titleFight.opponent} in a UFC title fight on ${naturalFightDate(titleFight.date)}${titleIdentityExtra}?`,
         answer: fighter.name,
-        explanation: `${fighter.name} had that UFC title-fight result against ${titleFight.opponent} in ${titleFight.date.slice(0, 4)}.`,
+        explanation: `${fighter.name} had that UFC title-fight result against ${titleFight.opponent} on ${naturalFightDate(titleFight.date)}${titleIdentityExtra}.`,
         fanMisses: wrongNames,
         difficultyNudge: 2,
       }));
-      const finalOtherOpponents = unique(fighter.fights.map((fight) => fight.opponent))
-        .filter((opponent) => opponent !== titleFight.opponent)
-        .slice(0, 2);
       const finalOpponentPhrase = finalOtherOpponents.length === 2
         ? ` and also fought ${finalOtherOpponents[0]} and ${finalOtherOpponents[1]}`
         : finalOtherOpponents.length === 1

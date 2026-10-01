@@ -238,7 +238,10 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageSource).toContain("const firstUnsavedMiss = unsavedMisses[0] ?? null;");
     expect(pageSource).toContain("moneyAlive={moneyAlive}");
     expect(pageSource).toContain("lostAt={firstUnsavedMiss}");
-    expect(pageSource).toContain('moneyAlive ? "GO FOR $1M" : "PLAY FINAL"');
+    expect(pageSource).toContain("YOUR FINAL SUBJECT");
+    expect(pageSource).toContain("You have not seen the question yet.");
+    expect(pageSource).toContain("PLAY FINAL — RISK 10");
+    expect(pageSource).toContain("Math.max(0, boardScore - 10)");
     expect(pageCss).toContain(".average-fan-money-rail.is-frozen");
     expect(pageCss).toContain(".average-fan-money-row.is-lost");
     expect(pageCss).toContain(".average-fan-verdict");
