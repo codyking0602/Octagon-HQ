@@ -10,6 +10,7 @@ import {
   isDailyRankKeepCombo,
 } from "./DailyRankKeepComboStatus";
 import { OfficialTodayChallengeContent } from "./OfficialTodayChallengePage";
+import OwnerTomorrowAverageFanPreviewEntry from "./OwnerTomorrowAverageFanPreviewEntry";
 import type { PlaySport } from "./playRegistry";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import {
@@ -410,6 +411,13 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
           <small className="today-hub-leaderboard__swipe">← SWIPE FOR TODAY’S GAME</small>
         </div>
       </div>
+
+      <OwnerTomorrowAverageFanPreviewEntry
+        enabled={identity.profile?.canControlPicks === true}
+        sport={sport}
+        centralDay={projection.centralDay}
+        onNavigate={navigate}
+      />
 
       <div className="today-hub__pager" aria-label="Today’s Challenge carousel controls">
         <button
