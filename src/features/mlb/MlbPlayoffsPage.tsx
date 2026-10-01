@@ -19,6 +19,7 @@ import {
 import { useMlbChampionship } from "./useMlbChampionship";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import { millionaireMoneyLabel, millionaireTimeLabel } from "../play/MillionaireCasualModel";
+import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
 import "../../styles/play-landing-shared.css";
 import "../../styles/today-challenge-hub.css";
 import "../../styles/daily-leaderboard-result-page.css";
@@ -249,8 +250,145 @@ function millionaireResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
     outcome: String(detail.outcome ?? publicResult.outcome ?? "lost"),
     finalMoney: Number(detail.final_money ?? publicResult.final_money ?? 0),
     completedQuestions: Number(detail.completed_questions ?? publicResult.completed_questions ?? 0),
+    firstMissQuestion: detail.first_miss_question == null ? null : Number(detail.first_miss_question),
     lifelinesUsed: Number(detail.lifelines_used ?? publicResult.lifelines_used ?? 0),
     timeRemainingMs: Number(detail.time_remaining_ms ?? publicResult.time_remaining_ms ?? 0),
+  };
+}
+
+function inferredLegacyMillionaireFirstMiss(entry: MlbPlayChallengeLeaderboardEntry) {
+  const summary = millionaireResultSummary(entry);
+  if (summary.firstMissQuestion) return summary.firstMissQuestion;
+  if (summary.outcome !== "lost") return null;
+  const inferredBase = entry.rawScore + (summary.lifelinesUsed * 2);
+  const survivalCorrect = (inferredBase - 20 - (summary.completedQuestions * 5)) / 5;
+  if (!Number.isInteger(survivalCorrect) || survivalCorrect < 0 || survivalCorrect > 7) return null;
+  return survivalCorrect + 1;
+}
+
+function millionaireQuestionRows(
+  entry: MlbPlayChallengeLeaderboardEntry,
+  challengeKey: string,
+  challengeDate: string,
+) {
+  const run = mlbMillionaireProductionRun(challengeKey, challengeDate);
+  if (!run) return [];
+
+  const rows = run.map((question, index) => ({
+    index,
+    prompt: question.prompt,
+    choices: question.choices,
+    selectedChoiceIds: [] as string[],
+    correctChoiceId: question.correctChoiceId,
+    explanation: question.explanation,
+    lifelines: [] as string[],
+    status: "unreached" as "correct" | "wrong" | "walked-away" | "timeout" | "unreached",
+  }));
+
+  const actions = Array.isArray(entry.resultDetail.action_history)
+    ? entry.resultDetail.action_history.filter((value): value is Record<string, unknown> => (
+        Boolean(value) && typeof value === "object" && !Array.isArray(value)
+      ))
+    : [];
+
+  if (actions.length) {
+    let currentIndex = 0;
+    let doubleDipActive = false;
+    let doubleDipMisses = 0;
+
+    for (const action of actions) {
+      if (currentIndex >= rows.length) break;
+      const row = rows[currentIndex]!;
+      const type = String(action.type ?? "");
+
+      if (type === "use_lifeline") {
+        const lifeline = String(action.lifeline ?? "");
+        if (lifeline && !row.lifelines.includes(lifeline)) row.lifelines.push(lifeline);
+        if (lifeline === "double-dip") {
+          doubleDipActive = true;
+          doubleDipMisses = 0;
+        }
+        continue;
+      }
+
+      if (type === "walk_away") {
+        row.status = "walked-away";
+        break;
+      }
+
+      if (type === "timeout") {
+        row.status = "timeout";
+        break;
+      }
+
+      if (type !== "answer") continue;
+
+      const choiceId = String(action.choice_id ?? "");
+      if (choiceId) row.selectedChoiceIds.push(choiceId);
+      const correct = choiceId === row.correctChoiceId;
+
+      if (correct) {
+        row.status = "correct";
+        currentIndex += 1;
+        doubleDipActive = false;
+        doubleDipMisses = 0;
+        continue;
+      }
+
+      if (doubleDipActive && doubleDipMisses === 0) {
+        row.status = "wrong";
+        doubleDipMisses = 1;
+        continue;
+      }
+
+      row.status = "wrong";
+      currentIndex += 1;
+      doubleDipActive = false;
+      doubleDipMisses = 0;
+    }
+
+    return rows;
+  }
+
+  const summary = millionaireResultSummary(entry);
+  if (summary.outcome === "won") {
+    rows.forEach((row) => { row.status = "correct"; });
+    return rows;
+  }
+  if (summary.outcome === "walked-away" && summary.completedQuestions === 7) {
+    rows.slice(0, 7).forEach((row) => { row.status = "correct"; });
+    rows[7]!.status = "walked-away";
+    return rows;
+  }
+
+  const firstMiss = inferredLegacyMillionaireFirstMiss(entry);
+  if (firstMiss) {
+    rows.slice(0, firstMiss - 1).forEach((row) => { row.status = "correct"; });
+    rows[firstMiss - 1]!.status = "wrong";
+  }
+  return rows;
+}
+
+function averageFanResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
+  const detail = entry.resultDetail;
+  const publicResult = entry.publicResult;
+  const resolved = Array.isArray(detail.resolved)
+    ? detail.resolved.filter((value): value is Record<string, unknown> => (
+        Boolean(value) && typeof value === "object" && !Array.isArray(value)
+      ))
+    : [];
+  const finalQuestion = detail.final_question && typeof detail.final_question === "object" && !Array.isArray(detail.final_question)
+    ? detail.final_question as Record<string, unknown>
+    : {};
+  return {
+    boardScore: Number(detail.board_score ?? publicResult.board_score ?? 0),
+    boardClears: Number(detail.board_clears ?? publicResult.board_clears ?? 0),
+    saves: Number(detail.saves ?? publicResult.saves ?? 0),
+    finalOutcome: String(detail.final_outcome ?? publicResult.final_outcome ?? ""),
+    fan: String(detail.fan ?? publicResult.fan ?? "").toUpperCase(),
+    resolved,
+    finalQuestion,
+    finalPlayerAnswer: String(detail.final_player_answer ?? ""),
   };
 }
 
@@ -268,10 +406,14 @@ function barTriviaResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
 function MlbPlayResultDetail({
   entry,
   challengeTitle,
+  challengeKey,
+  challengeDate,
   onClose,
 }: {
   entry: MlbPlayChallengeLeaderboardEntry;
   challengeTitle: string;
+  challengeKey: string;
+  challengeDate: string;
   onClose: () => void;
 }) {
   const games = gameRows(entry);
@@ -285,10 +427,13 @@ function MlbPlayResultDetail({
   const isHitTheNumber = entry.gameType === "hit_the_number";
   const isSportsFeud = entry.gameType === "sports_feud";
   const isBarTrivia = entry.gameType === "bar_trivia";
+  const isAverageFan = entry.gameType === "average_fan";
   const millionaire = millionaireResultSummary(entry);
+  const millionaireQuestions = millionaireQuestionRows(entry, challengeKey, challengeDate);
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
   const barTrivia = barTriviaResultSummary(entry);
+  const averageFan = averageFanResultSummary(entry);
 
   return (
     <div
@@ -319,18 +464,40 @@ function MlbPlayResultDetail({
           </div>
 
           {isMillionaire ? (
-            <div className="mlb-play-result-card__games">
-              <article>
-                <span>FINAL MONEY</span>
-                <strong>{millionaireMoneyLabel(millionaire.finalMoney)}</strong>
-                <small>{millionaire.completedQuestions} / 8 QUESTIONS CORRECT</small>
-              </article>
-              <article>
-                <span>RUN DETAILS</span>
-                <strong>{millionaire.lifelinesUsed}<small> LIFELINES</small></strong>
-                <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
-              </article>
-            </div>
+            <>
+              <div className="mlb-play-result-card__games">
+                <article>
+                  <span>FINAL MONEY</span>
+                  <strong>{millionaireMoneyLabel(millionaire.finalMoney)}</strong>
+                  <small>{millionaire.completedQuestions} / 8 QUESTIONS CORRECT</small>
+                </article>
+                <article>
+                  <span>RUN DETAILS</span>
+                  <strong>{millionaire.lifelinesUsed}<small> LIFELINES</small></strong>
+                  <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
+                </article>
+              </div>
+              {millionaireQuestions.length ? (
+                <div className="mlb-play-result-card__games">
+                  {millionaireQuestions.map((row) => {
+                    const selected = row.selectedChoiceIds
+                      .map((id) => row.choices.find((choice) => choice.id === id)?.text ?? id)
+                      .join(" → ");
+                    const correct = row.choices.find((choice) => choice.id === row.correctChoiceId)?.text ?? row.correctChoiceId;
+                    return (
+                      <article key={row.index}>
+                        <span>Q{row.index + 1} · {row.status.replace("-", " ").toUpperCase()}</span>
+                        <strong>{row.status === "correct" ? "✓" : row.status === "wrong" ? "✕" : row.status === "walked-away" ? "WALK" : "—"}</strong>
+                        <small>{row.prompt}</small>
+                        {selected ? <small>PICKED · {selected}</small> : null}
+                        {row.status !== "unreached" ? <small>ANSWER · {correct}</small> : null}
+                        {row.lifelines.length ? <small>{row.lifelines.map((value) => value.replace(/[-_]/g, " ").toUpperCase()).join(" · ")}</small> : null}
+                      </article>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </>
           ) : isWavelength && wavelengthRounds.length ? (
             <div className="mlb-play-result-card__games">
               {wavelengthRounds.map((round) => (
@@ -421,6 +588,53 @@ function MlbPlayResultDetail({
                 <small>{barTrivia.doubleRound.replace("round", "ROUND ").toUpperCase()} · DOUBLE ROUND</small>
               </article>
             </div>
+          ) : isAverageFan ? (
+            <>
+              <div className="mlb-play-result-card__games">
+                <article>
+                  <span>BOARD</span>
+                  <strong>{averageFan.boardScore}<small>/90</small></strong>
+                  <small>{averageFan.boardClears} / 8 CLEARS · {averageFan.saves} SAVES</small>
+                </article>
+                <article>
+                  <span>FINAL</span>
+                  <strong>{averageFan.finalOutcome ? averageFan.finalOutcome.replace("-", " ").toUpperCase() : "—"}</strong>
+                  <small>FAN · {averageFan.fan || "—"}</small>
+                </article>
+              </div>
+              {averageFan.resolved.length ? (
+                <div className="mlb-play-result-card__games">
+                  {averageFan.resolved.map((row, index) => (
+                    <article key={String(row.id ?? index)}>
+                      <span>Q{Number(row.order ?? index + 1)} · GRADE {Number(row.grade ?? 0)} · {String(row.subject ?? "")}</span>
+                      <strong>{row.correct === true ? "CORRECT" : row.saved === true ? "SAVED" : "MISS"}</strong>
+                      <small>{String(row.prompt ?? "")}</small>
+                      <small>PLAYER · {String(row.player_answer ?? "—")}</small>
+                      <small>FAN · {String(row.fan_answer ?? "—")}</small>
+                      <small>ANSWER · {String(row.correct_answer ?? "—")}</small>
+                      {row.peek_used === true || row.copied === true || row.save_consumed === true
+                        ? <small>{[
+                            row.peek_used === true ? "PEEK" : "",
+                            row.copied === true ? "COPY" : "",
+                            row.save_consumed === true ? (row.saved === true ? "SAVE WORKED" : "SAVE USED") : "",
+                          ].filter(Boolean).join(" · ")}</small>
+                        : null}
+                    </article>
+                  ))}
+                </div>
+              ) : null}
+              {Object.keys(averageFan.finalQuestion).length ? (
+                <div className="mlb-play-result-card__games">
+                  <article>
+                    <span>FINAL · {String(averageFan.finalQuestion.subject ?? "")}</span>
+                    <strong>{averageFan.finalOutcome.replace("-", " ").toUpperCase()}</strong>
+                    <small>{String(averageFan.finalQuestion.prompt ?? "")}</small>
+                    {averageFan.finalPlayerAnswer ? <small>PLAYER · {averageFan.finalPlayerAnswer}</small> : null}
+                    <small>ANSWER · {String(averageFan.finalQuestion.correct_answer ?? "—")}</small>
+                  </article>
+                </div>
+              ) : null}
+            </>
           ) : games.length ? (
             <div className="mlb-play-result-card__games">
               {games.map((game) => (
@@ -439,7 +653,7 @@ function MlbPlayResultDetail({
 
           <p>
             {isMillionaire
-              ? "Millionaire score follows the eight-question ladder with a 2-point deduction for each lifeline used."
+              ? "Reach Q8 clean: walk with 90, miss for 85, or hit for 100 before 2-point lifeline deductions. After an earlier miss, recovery scoring continues through Q8."
               : isWavelength
                 ? "The challenge score is the average of both Wavelength games."
                 : isWhoAmI
@@ -450,7 +664,9 @@ function MlbPlayResultDetail({
                       ? "The challenge score is the average of both Hit the Number games."
                       : isSportsFeud
                         ? `The challenge score is ${sportsFeud.mainPoints}/60 from the two main boards plus ${sportsFeud.fastPoints}/40 from Fast Money.`
-                        : "The challenge score is the average of both Find the Leader boards."}
+                        : isAverageFan
+                          ? "Average Fan keeps the board score when you walk, adds 10 for a correct Final, and subtracts 10 for a Final miss."
+                          : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>
@@ -583,6 +799,8 @@ export default function MlbPlayoffsPage() {
       <MlbPlayResultDetail
         entry={selectedEntry}
         challengeTitle={challenge.title}
+        challengeKey={challenge.id}
+        challengeDate={challenge.date ?? ""}
         onClose={() => setSelectedProfileId(null)}
       />
     );
