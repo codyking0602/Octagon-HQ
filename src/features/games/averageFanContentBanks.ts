@@ -1020,7 +1020,7 @@ function footballCandidates(league: "NFL" | "CFB") {
       answer: position,
       explanation: `${player.name} played ${position}.`,
       fanMisses: wrongPositions,
-      difficultyNudge: -1,
+      difficultyNudge: player.recognizabilityTier === "A" || player.recognizabilityTier === "B" ? -2 : -1,
     }));
 
     const tfTrue = index % 2 === 0;
@@ -1210,7 +1210,7 @@ function footballCandidates(league: "NFL" | "CFB") {
         answer: program.conference,
         wrongChoices: wrongConferences,
         explanation: `${program.name} was in the ${program.conference} for the ${conferenceSeason} season.`,
-        difficultyNudge: -1,
+        difficultyNudge: program.recognizabilityTier === "A" || program.recognizabilityTier === "B" ? -2 : -1,
       }));
       const tfTrue = index % 2 === 0;
       const shownConference = tfTrue ? program.conference : wrongConferences[0]!;
@@ -1318,7 +1318,7 @@ function ufcCandidates() {
       answer: primaryDivision,
       wrongChoices: wrongDivisions,
       explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
-      difficultyNudge: -1,
+      difficultyNudge: fighter.scope === "recognizable-expansion" ? -2 : -1,
     }));
 
     const tfTrue = index % 2 === 0;
@@ -1547,6 +1547,7 @@ function balancedTake(
   label: string,
 ) {
   const isNflOrdinary = /^nfl grade [1-5] evergreen$/.test(label);
+  const isOpeningGrade = / grade 2 evergreen$/.test(label);
   const isNflUpperGrade = /^nfl grade [45] evergreen$/.test(label);
   const isUfcUpperGrade = /^ufc grade [45] evergreen$/.test(label) || label === "ufc Finals";
   const latestPromptYear = (question: AverageFanQuestion) => {
@@ -1559,6 +1560,13 @@ function balancedTake(
     return year >= modernThreshold ? 0 : 2;
   };
   const candidateOrder = (left: AverageFanQuestion, right: AverageFanQuestion) => {
+    if (isOpeningGrade) {
+      const difficultyCompare = left.difficultyNudge - right.difficultyNudge;
+      if (difficultyCompare) return difficultyCompare;
+      const leftShort = left.format === "short-answer" ? 1 : 0;
+      const rightShort = right.format === "short-answer" ? 1 : 0;
+      if (leftShort !== rightShort) return leftShort - rightShort;
+    }
     if (isNflOrdinary) {
       const formatRank = (question: AverageFanQuestion) => question.format === "true-false" ? 0 : 1;
       const formatCompare = formatRank(left) - formatRank(right);

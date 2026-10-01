@@ -253,7 +253,17 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-  it("keeps the UFC bank on canonical UFC subjects and authored landmark coverage in rotation", () => {
+  it("keeps generated UFC opening-grade fighter recall on the reviewed recognizable expansion", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      if (question.grade !== 2 || question.subject !== "Fighters") continue;
+      const match = /^average-fan:ufc:g1:(.+):division$/.exec(question.id);
+      if (!match) continue;
+      expect(getUfcFactualSubject(match[1]!)?.scope, question.id).toBe("recognizable-expansion");
+      expect(question.format, question.id).toBe("four-choice");
+    }
+  });
+
+    it("keeps the UFC bank on canonical UFC subjects and authored landmark coverage in rotation", () => {
     const bank = AVERAGE_FAN_CONTENT_BANKS.ufc;
     const validSubjects = new Set(["Fighters", "Fights", "Championships", "Octagon IQ"]);
     for (const question of bank) {
