@@ -1,59 +1,32 @@
 # Are You Smarter Than an Average Fan? — Canonical Game + Content Spec
 
-**Status:** LIVE — canonical Daily game; launched October 1, 2026  
-**Date:** September 29, 2026  
+**Status:** LIVE canonical Daily game  
+**Calibration:** October 1, 2026  
 **Repository:** `codyking0602/Octagon-HQ`
 
-This document is the canonical implementation/content specification for **Are You Smarter Than an Average Fan?**. It converts the approved product design into an engineering contract. Do not reopen product discovery unless Cody changes a locked decision.
+This is the locked product and engineering contract for **Are You Smarter Than an Average Fan?**. Preserve the approved visual treatment and reuse the existing Daily platform.
 
-## 1. Product identity
+## Product identity
 
-Title: **Are You Smarter Than an Average Fan?**
+Sports: NFL, CFB, UFC, with MLB postseason appearances using the same gameplay contract.
 
-Sports:
-- NFL
-- CFB
-- UFC
+Football alternates CFB and NFL across official Average Fan appearances using publication history. Target cadence remains approximately five Football and five UFC appearances per month.
 
-Football appearances alternate CFB / NFL across official appearances using publication history. The October 1, 2026 launch uses CFB; the next Football Average Fan appearance uses NFL, then CFB, and so on. The alternation does not reset with the calendar month.
+## Game structure
 
-Target cadence is approximately five official Daily appearances per month in Football and five in UFC. Scheduling must use the existing immutable Daily schedule/version system. Never rewrite already-materialized days.
+The board contains **8 questions**:
+- 2nd Grade: 2 subjects
+- 3rd Grade: 2 subjects
+- 4th Grade: 2 subjects
+- 5th Grade: 2 subjects
 
-This is a Daily-only production game. The owner/Casual preview used during development was intentionally closed after approval. Official competition, persistence, history, streaks, standings, leaderboards, and reminders belong to the existing Daily Challenge platform.
+There is no 1st Grade row. Keeping 5th Grade is intentional because it is core to the show's identity.
 
-## 2. Existing owners to reuse
+All eight tiles are visible before play. The player chooses the order. Wrong answers do not end HQ play.
 
-Current main already has the systems this game needs:
+After the board, reveal only the Final subject. The player may **Walk Away** or play the optional Final. Peek / Copy / Save are unavailable on the Final.
 
-- Frontend Daily repository: `src/features/play/todayChallengeRepository.ts`
-- Frontend Daily action queue/runtime: `src/features/play/useTodayChallengeRuntime.ts`
-- Daily adapters/registry bridge: `src/features/play/todaysChallengeAdapters.ts`
-- Server-owned Daily runtime: `supabase/functions/daily-challenge-runtime/index.ts`
-- Daily leaderboard rows already carry `public_result`, `public_state`, and `result_detail`
-- Millionaire provides the closest reference for a dramatic money-ladder presentation without owning this game's mechanics
-- Bar Trivia provides the canonical current-event metadata shape and expiration behavior
-
-Do not create a second scheduler, Daily repository, persistence table, grading path, leaderboard backend, result-detail system, current-event expiry system, or history owner.
-
-## 3. Show structure
-
-Use the real-show structure as closely as practical while preserving HQ's non-elimination adaptation.
-
-Normal board:
-- 10 questions
-- five grades
-- two subject tiles per grade
-- all 10 tiles visible at once
-- player chooses tile order
-- every answer locks
-- wrong answers do not end the game
-
-Final:
-- after all 10 board questions, reveal only the Final subject
-- player chooses **Walk Away** or **Go for $1,000,000**
-- no Peek / Copy / Save on the Final
-
-Money ladder:
+Money ladder presentation:
 1. $1,000
 2. $2,000
 3. $5,000
@@ -61,344 +34,139 @@ Money ladder:
 5. $25,000
 6. $50,000
 7. $100,000
-8. $175,000
-9. $300,000
-10. $500,000
-11. Final $1,000,000
+8. $500,000
+9. Final $1,000,000
 
-The money ladder is presentation/drama. Official HQ score remains 0–100.
+The money ladder is presentation only. Official score remains 0–100.
 
-Final money presentation:
-- Walk Away: $500,000
-- Final correct: $1,000,000
-- Final wrong: $25,000
+## Difficulty calibration
 
-## 4. Subjects
+The game is designed to be fun before it is punishing.
 
-### NFL
-- Players
-- Teams
-- NFL History
-- X’s & O’s
+- **2nd Grade:** very accessible. Mainstream stars, teams, rules, iconic facts. A regular fan should feel good here.
+- **3rd Grade:** regular-fan knowledge.
+- **4th Grade:** meaningful challenge for someone who follows the sport.
+- **5th Grade:** legitimately hard sports-fan knowledge, but recognizable rather than cheap obscurity.
+- **Final:** hardest clean, defensible 5th-grade-quality question.
 
-NFL History includes broad league culture/history, stadiums, rivalries, iconic moments/games, franchise changes, coaches, records, eras, Super Bowls, and milestones.
+Legacy source records may still use Grade 1 internally before calibration. The playable bank remaps old 1→2, 2→3, 3→4 and old 4/5→5.
 
-### CFB
-- Players
-- Programs
-- Traditions
-- CFB History
+Hard does not mean old. Upper-grade history is valid, including deep Heisman or early-UFC facts, but difficulty must come from knowledge rather than arbitrary wording.
 
-### UFC
-- Fighters
-- Fights
-- Championships
-- Octagon IQ
+## Answer formats
 
-## 5. Question formats
-
-Target bank mix:
-- ~60% short answer
-- ~25% four-choice multiple choice
-- ~15% true/false
-
-Short answer must remain dominant so the game does not collapse into Millionaire.
-
-Canonical format IDs:
+Formats:
 - `short-answer`
 - `four-choice`
 - `true-false`
 
-Four-choice questions author exactly four visible choices. True/false questions do not need an authored choices array; the runtime supplies True / False.
+Do **not** preserve a target short-answer percentage at the expense of fun.
 
-## 6. Grade difficulty
+Use short answer when blank recall is natural: recognizable player/fighter names, teams/schools, common terminology, and famous landmark facts.
 
-- 1st: "I absolutely should know this." Mainstream stars/teams/basic facts.
-- 2nd: easy for a regular fan.
-- 3rd: requires actually following the sport.
-- 4th: strong fan knowledge.
-- 5th: legitimate sports-nerd difficulty without cheap obscurity.
-- Final: hard 5th-grade-quality question with one clean defensible answer.
+Default to four-choice when the fact already carries substantial recall burden, especially:
+- rivalry trophy names
+- exact historical years
+- exact draft slots or niche numbers
+- obscure opponents
+- deep statistical minutiae
+- other facts where recognition is fairer than unaided recall
 
-Editorial rule: **hard does not mean old**.
+Tolerant short-answer grading continues to accept reasonable punctuation, accent and small spelling variants without accepting authored wrong answers.
 
-Upper grades should skew roughly 70% modern-era hard / 30% historical hard, flexing by sport. Difficulty should come from deeper roster, award, season, matchup, title, rules, game-context, and history knowledge—not confusing wording or arbitrary stat minutiae.
+## Current events
 
-Each question has `difficultyNudge` from -3 to +3 percentage points. It is difficulty-signed:
-- +3 = harder, so fan accuracy drops three points
-- -3 = easier, so fan accuracy rises three points
+Average Fan reuses the **same current-event pool as Bar Trivia**. Do not build a second ingestion or expiry system.
 
-## 7. Canonical question schema
-
-Source owner: `src/features/games/averageFanEngine.ts`.
-
-Each record includes:
-
-- `id`
-- `sport`: `nfl | cfb | ufc`
-- `grade`: `1 | 2 | 3 | 4 | 5`
-- `subject`
-- `format`
-- `prompt`
-- `answer`
-- `aliases`
-- `choices` when format is four-choice
-- `explanation`
-- `contentType`: `evergreen | current-event`
-- `activeFrom` optional
-- `expiresAt` required for current-event questions
-- `difficultyNudge`
-- `fanMisses` for short-answer questions
-- `protectedFinal`
-- optional provenance fields `sourceId`, `sourceUrl`, `verifiedAt`
-
-Rules:
-- short-answer questions must author 1–3 plausible fan-miss answers
-- four-choice wrong fan answers come only from authored wrong choices
-- true/false wrong fan answer is the opposite truth value
-- protected Final questions must be grade 5
-- protected Final questions are excluded from ordinary board selection
-- ordinary grade-5 questions are not eligible for the Final unless explicitly authored as `protectedFinal: true`
-
-The runtime/public projection must not expose:
-- canonical answer
-- aliases
-- explanation before reveal
-- fan-miss answers
-- deterministic fan correctness
-- provenance/review metadata not needed by the client
-
-## 8. Current events
-
-Target mix: ~90% evergreen / ~10% current event.
-
-Average Fan reuses the same expiration metadata/behavior as Bar Trivia:
+Current-event records use:
 - `contentType: "current-event"`
 - optional `activeFrom`
-- `expiresAt`
+- required `expiresAt`
 
-PR1 extracts that date-window decision into `src/features/games/triviaContentExpiry.ts` and keeps Bar Trivia on the same canonical helper. Average Fan does not create a second expiry implementation.
+Once a shared current-event question is added, Average Fan automatically sees it. Once `expiresAt` passes, it automatically becomes ineligible.
 
-Current-event questions must include `expiresAt` so stale content actually ages out.
+New story authoring/ingestion is not itself automatic; the shared Bar Trivia current-event pool remains the source owner.
 
-Finals should normally be evergreen.
+Average Fan applies its own difficulty calibration on top of that pool. **Current events do not appear in 2nd Grade by default**, even when the Bar Trivia source labels them easy/Round 1.
 
-## 9. Board construction contract
+Finals should normally remain evergreen.
 
-A normal run contains exactly:
-- two grade-1 questions
-- two grade-2 questions
-- two grade-3 questions
-- two grade-4 questions
-- two grade-5 questions
-- one separately protected Final question
+## Scoring
 
-The entire 10-tile board is public before play. Question prompts/answers remain hidden until the player selects a tile.
+Perfect 8-question board: **90**.
 
-Subject distribution should be balanced across the sport bank over time; individual boards may repeat a subject if needed. Do not force an artificial one-of-each distribution that makes generation brittle.
+With at least one unsaved miss:
 
-Protected Final questions are selected separately and cannot be consumed by the board selector.
+`board score = 68 + (2 × first unsaved miss question number) - (5 × each additional unsaved miss)`
 
-Question order for scoring is the player's chosen order: the first tile answered is Q1, second tile Q2, etc., regardless of grade.
+Cap board score at 90.
 
-## 10. Scoring
+Reference points:
+- first miss Q1 → 70
+- first miss Q2 → 72
+- first miss Q4 → 76
+- first miss Q6 → 80
+- first miss Q8 → 84
+- perfect board → 90
 
-Perfect 10-question board: **90**.
-
-If there is at least one unsaved miss:
-
-`board score = 64 + (2 × first unsaved miss question number) - (5 × each additional unsaved miss)`
-
-Cap at 90 and keep the final result within 0–100.
-
-Locked reference points:
-- first miss Q2 -> 68
-- first miss Q5 -> 74
-- first miss Q8 -> 80
-- first miss Q10 -> 84
-- perfect board -> 90
-
-A successful Save does not count as a miss and preserves the clean run.
+A successful Save does not count as an unsaved miss.
 
 Final:
-- Walk Away -> board score
-- Final correct -> +10, cap 100
-- Final wrong -> -10
+- Walk Away → board score
+- correct Final → +10, cap 100
+- wrong Final → -10
 
-Perfect board:
-- walk = 90
-- correct Final = 100
-- wrong Final = 80
+An 80 should still feel like a good run.
 
-## 11. The five Average Fans
+## Fans and help
 
-V1 fans:
-- Cody
-- Shane
-- Troy
-- Tyler
-- Lib
+Fans: Cody, Shane, Troy, Tyler, Lib. Each fan remains equally useful overall while subject strengths differ.
 
-The opening uses a report-card/classmate-selection treatment. The player selects one fan and confirms. That fan is locked for the entire run. No switching.
+Base fan accuracy for the playable grades:
+- 2nd: 93%
+- 3rd: 88%
+- 4th: 82%
+- 5th: 74%
 
-All five should be equally useful overall. Their subject profiles differ, but there is no objectively best fan.
+Subject report-card modifiers remain centered per fan/sport and `difficultyNudge` remains ±3 percentage points.
 
-Base grade accuracy:
-- 1st: 93%
-- 2nd: 88%
-- 3rd: 82%
-- 4th: 76%
-- 5th: 70%
+Peek, Copy and Save are each available once:
+- **Peek:** reveal the fan's locked answer, then player answers.
+- **Copy:** commit to the fan's locked answer without seeing it first.
+- **Save:** automatic when the player is wrong. If the fan is right, the miss is saved; if the fan is also wrong, Save is consumed and the miss remains.
 
-Raw report-card modifiers:
-- A+ +10
-- A +7
-- A- +4
-- B+ +2
-- B 0
-- B- -2
-- C+ -5
-- C -8
+That unsuccessful Save behavior is intentional.
 
-For each fan and sport, center the four raw subject modifiers by subtracting that fan/sport mean. This preserves equal average usefulness while exaggerating specialties.
+## Durable bank
 
-Example Shane UFC:
-- authored raw grades: A+ / A / A- / C+
-- raw modifiers: +10 / +7 / +4 / -5
-- mean: +4
-- centered: +6 / +3 / 0 / -9
-
-Fan accuracy:
-`base grade accuracy + centered subject modifier - difficultyNudge`
-
-Clamp to 55%–98%.
-
-V1 report cards are encoded in `AVERAGE_FAN_REPORT_CARDS` and match the approved NFL/CFB/UFC tables.
-
-## 12. Deterministic fan answers
-
-Every selected fan has one locked answer to every question.
-
-Determinism key:
-`content version + question id + fan`
-
-Do not include:
-- player identity
-- Daily date
-- device
-- session
-- answer order
-
-Therefore every HQ player sees the same Cody/Shane/etc. answer on the same question.
-
-Correct/wrong decision uses a stable hash roll against the computed fan accuracy.
-
-Wrong answer source:
-- four-choice: deterministic authored wrong option
-- true/false: opposite truth value
-- short-answer: deterministic selection from the question's 1–3 authored `fanMisses`
-
-Never synthesize nonsense miss text at runtime.
-
-## 13. Peek / Copy / Save
-
-Each is available once per game.
-
-Peek:
-- fan answer is already locked
-- reveal that answer
-- player still submits their own answer
-
-Copy:
-- player commits to the fan's already-locked answer without seeing it first
-
-Save:
-- automatic one-time rescue when player is wrong and fan is right
-- successful Save preserves the clean run and does not count as an unsaved miss
-- if player is wrong and fan is wrong, Save is consumed under show-like behavior and the miss remains
-
-Peek and Copy do not cost HQ leaderboard points.
-
-No Peek / Copy / Save on Final.
-
-PR2 owns the exact UI/state transitions; PR1 owns the deterministic answer authority they consume.
-
-## 14. Content-bank targets
-
-Six-month no-repeat target:
+Keep the durable six-month bank:
 - NFL: 220
 - CFB: 220
 - UFC: 440
-- total durable bank: 880
+- total: 880
 
-Each official appearance consumes 10 board questions + 1 Final.
+Ordinary playable shape:
+- NFL: 40 Grade 2 / 40 Grade 3 / 40 Grade 4 / 85 Grade 5 + 15 protected Finals
+- CFB: 40 / 40 / 40 / 85 + 15 protected Finals
+- UFC: 80 / 80 / 80 / 170 + 30 protected Finals
 
-Approximate football bank shape:
-- grades 1–4: ~40 each
-- grade 5 ordinary board: ~45
-- protected Final: ~15
+Shortening the board increases no-repeat runway. Do not discard strong questions merely because their old grade or answer format was wrong; regrade or reformat them.
 
-UFC approximately doubles that.
+## Persistence and runtime
 
-Balance:
-- four subjects
-- grade bands
-- 60/25/15 format mix
-- ~10% current events
-- modern/historical hard mix
+Official Daily persistence, grading, history, standings, leaderboard detail, current-event expiry and scheduling remain server-owned by the existing Daily Challenge platform.
 
-Do not casually consume protected Final questions as ordinary fifth-grade tiles.
+Canonical versions after the four-grade calibration:
+- content: `average-fan-v3`
+- Daily runtime: `average-fan-daily-v2`
+- scoring: `average-fan-score-v2`
 
-## 15. Differentiation from Millionaire
+A canonical Daily setup contains exactly eight board question IDs plus one separately protected Final. Server grading rejects legacy ten-question completion evidence under the v2 scoring contract.
 
-Millionaire:
-- 8 linear questions
-- four-choice
-- 50/50 / Stat Sheet / Double Dip
-- faster ladder survival
+MLB Average Fan uses the same 2nd–5th Grade / 8-question board and scoring experience.
 
-Average Fan:
-- open 10-tile subject board
-- player chooses order
-- mixed short answer / four-choice / true-false
-- one selected fan for the whole run
-- report-card strengths/weaknesses
-- Peek / Copy / Save
-- Final subject is shown before risk decision
+## Design intent
 
-The money ladder does not justify reusing Millionaire's linear question runtime.
+Preserve the approved classroom/chalkboard presentation, fan selector, report cards, money rail, Peek / Copy / Save treatment, non-elimination verdict, and Final.
 
-## 16. Persistence/result detail
-
-Official Daily persistence remains server-owned.
-
-The Daily result payload should eventually retain enough public-safe detail to reconstruct a completed run for leaderboard click-through:
-- selected fan
-- chosen tile order
-- per-question grade/subject/format/prompt
-- player submitted answer
-- fan answer only after the question was resolved
-- correct answer/explanation after resolution
-- whether Peek/Copy/Save was used
-- whether a miss was saved
-- running money
-- board score
-- Final subject
-- Final decision/outcome
-- final normalized score
-
-Do not expose hidden future questions, answers, fan outcomes, or Final prompt before the appropriate reveal.
-
-Use the existing `result_detail` path already returned by Daily leaderboard rows.
-
-## 17. Implementation history — COMPLETE
-
-The staged implementation is complete:
-
-- engine/schema and deterministic fan model
-- approved playable preview
-- NFL / CFB / UFC content banks and current-event expiry integration
-- official Daily integration, Football CFB/NFL alternation, persistence, grading, standings, leaderboard detail, and result reconstruction
-- final QA/polish and closure of Casual/preview discovery
-
-Do not reopen the old PR1–PR5 sequence. Future work should be narrow content calibration, factual corrections, or presentation polish against the canonical Daily implementation on current `main`.
+Equivalent Football, UFC and MLB Average Fan experiences should feel like the same product. Mobile landscape overflow/truncation and stale 10-question/1st-grade UI assumptions are product bugs.
