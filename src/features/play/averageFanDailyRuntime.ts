@@ -369,7 +369,7 @@ function finalSubmission(
   const fan = selectedFan(state.fan);
   if (!fan) throw new Error("Average Fan selected fan is unavailable.");
   const resolved = resolvedRows(state);
-  if (resolved.length !== 10) throw new Error("Average Fan board must be complete before Final settlement.");
+  if (resolved.length !== AVERAGE_FAN_BOARD_QUESTION_COUNT) throw new Error("Average Fan board must be complete before Final settlement.");
   const boardScore = boardScoreFromResolved(resolved);
   const score = scoreAverageFanFinal(boardScore, outcome);
   return {

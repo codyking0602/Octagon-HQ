@@ -1525,7 +1525,14 @@ function calibratedPlayableQuestion(question: AverageFanQuestion) {
   const misses = question.fanMisses ?? [];
   const blankRecallNeedsChoices = /\btroph(?:y|ies)\b/i.test(question.prompt)
     || /^\d{4}$/.test(question.answer.trim())
-    || (legacyGrade === 5 && !question.protectedFinal);
+    || (
+      legacyGrade >= 4
+      && /\b(?:draft(?:ed)?|overall pick|pick number|yards?|touchdowns?|sacks?|interceptions?|seconds?|minutes?|score)\b/i.test(question.prompt)
+    )
+    || (
+      legacyGrade === 5
+      && /\b(?:against whom|which opponent|came against whom|who did .+ (?:beat|defeat|face))\b/i.test(question.prompt)
+    );
 
   if (question.format === "short-answer" && blankRecallNeedsChoices && misses.length === 3) {
     return assertAverageFanQuestion({
@@ -1549,6 +1556,7 @@ function balancedTake(
   const isNflOrdinary = /^nfl grade [1-5] evergreen$/.test(label);
   const isOpeningGrade = / grade 2 evergreen$/.test(label);
   const isNflUpperGrade = /^nfl grade [45] evergreen$/.test(label);
+  const isCfbUpperGrade = /^cfb grade 5 evergreen$/.test(label);
   const isUfcUpperGrade = /^ufc grade [45] evergreen$/.test(label) || label === "ufc Finals";
   const latestPromptYear = (question: AverageFanQuestion) => {
     const years = [...question.prompt.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0]));
@@ -1575,6 +1583,10 @@ function balancedTake(
         const eraCompare = eraRank(left, 2000) - eraRank(right, 2000);
         if (eraCompare) return eraCompare;
       }
+    }
+    if (isCfbUpperGrade) {
+      const eraCompare = eraRank(left, 2000) - eraRank(right, 2000);
+      if (eraCompare) return eraCompare;
     }
     if (isUfcUpperGrade) {
       const eraCompare = eraRank(left, 2010) - eraRank(right, 2010);

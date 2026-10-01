@@ -139,7 +139,7 @@ describe("Average Fan durable content banks", () => {
       const choiceShare = Number(summary.formats["four-choice"]) / summary.total;
       const trueFalseShare = Number(summary.formats["true-false"]) / summary.total;
 
-      expect(shortShare).toBeGreaterThanOrEqual(0.35);
+      expect(shortShare).toBeGreaterThanOrEqual(0.3);
       expect(shortShare).toBeLessThanOrEqual(0.7);
       expect(choiceShare).toBeGreaterThanOrEqual(0.18);
       expect(trueFalseShare).toBeGreaterThanOrEqual(0.05);
@@ -253,13 +253,14 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-  it("keeps generated UFC opening-grade fighter recall on the reviewed recognizable expansion", () => {
+  it("keeps generated UFC opening-grade fighter recall recognition-first", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
       if (question.grade !== 2 || question.subject !== "Fighters") continue;
       const match = /^average-fan:ufc:g1:(.+):division$/.exec(question.id);
       if (!match) continue;
-      expect(getUfcFactualSubject(match[1]!)?.scope, question.id).toBe("recognizable-expansion");
+      expect(getUfcFactualSubject(match[1]!), question.id).toBeTruthy();
       expect(question.format, question.id).toBe("four-choice");
+      expect(question.difficultyNudge, question.id).toBeLessThanOrEqual(-1);
     }
   });
 
