@@ -39,6 +39,8 @@ describe("daily challenge runtime bundle prerequisites", () => {
   it("executes every generated Football publication artifact before deployment can accept it", () => {
     expect(bundlerSource).toContain("pathToFileURL(output).href");
     expect(bundlerSource).toContain("generatedRuntime.buildFootballDailyPersistenceSetup(");
+    expect(bundlerSource).toContain('fileName: "average-fan.generated.mjs"');
+    expect(bundlerSource).toContain('"advanceAverageFanDailyRuntime", "buildAverageFanDailySetup"');
     expect(bundlerSource).toContain('fileName: "football-publication.generated.mjs"');
     for (const gameType of [
       "who_am_i",
