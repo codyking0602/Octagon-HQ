@@ -1,5 +1,5 @@
 {
-  "version": "nfl-best-team-seasons-grading-2026-10-v1-locked",
+  "version": "nfl-best-team-seasons-grading-2026-10-v2-locked",
   "status": "audit-locked-not-runtime",
   "source_main_sha": "c767ac1a1ea6a01531933d802f493074b14bfe71",
   "subject_key": "nfl-best-team-seasons-since-2000",
@@ -12,25 +12,62 @@
     "data/generated/football/relationships/nfl-team-season-results-1999-2025.json"
   ],
   "population": {
-    "count": 293,
+    "source_graded_count": 293,
+    "count": 200,
     "era_counts": {
-      "2000-2004": 34,
-      "2005-2009": 47,
-      "2010-2014": 65,
-      "2015-2019": 61,
-      "2020-2025": 86
+      "2000-2004": 30,
+      "2005-2009": 35,
+      "2010-2014": 40,
+      "2015-2019": 40,
+      "2020-2025": 55
+    },
+    "year_counts": {
+      "2000": 6,
+      "2001": 6,
+      "2002": 6,
+      "2003": 6,
+      "2004": 6,
+      "2005": 7,
+      "2006": 7,
+      "2007": 7,
+      "2008": 7,
+      "2009": 7,
+      "2010": 8,
+      "2011": 8,
+      "2012": 8,
+      "2013": 8,
+      "2014": 8,
+      "2015": 8,
+      "2016": 8,
+      "2017": 8,
+      "2018": 8,
+      "2019": 8,
+      "2020": 9,
+      "2021": 9,
+      "2022": 9,
+      "2023": 9,
+      "2024": 9,
+      "2025": 10
     },
     "philosophy": [
+      "The 293-season grading pass remains the source ladder; the auction-eligible pool is intentionally tighter.",
       "Population and grading are separate decisions.",
-      "Pre-2010 seasons must clear a materially higher dominance, postseason, or recognizability bar.",
-      "2010 onward uses broad inclusion: every playoff team plus every 10-win non-playoff team.",
-      "Recognition can admit a season to the pool but never increases its hidden grade."
+      "Older seasons require stronger performance or a concrete historical identity hook; recent seasons are broader but still curated.",
+      "Recognition can protect a season from the pool cut but never changes its hidden grade."
     ],
-    "rules": {
-      "2000-2004": "Super Bowl participant, conference championship participant, 13+ wins, or 12+ wins with at least +5.0 points per game; plus explicitly documented identity hooks.",
-      "2005-2009": "Super Bowl participant, conference championship participant, 12+ wins, 11+ wins with a playoff berth, or 10+ wins with a playoff victory; plus explicitly documented identity hooks.",
-      "2010-2025": "Every playoff team or every team with at least 10 regular-season wins."
+    "yearly_caps": {
+      "2025": 10,
+      "2000-2004": 6,
+      "2005-2009": 7,
+      "2010-2019": 8,
+      "2020-2024": 9
     },
+    "selection_order": [
+      "Protect every conference championship participant.",
+      "Protect the explicitly documented identity-hook seasons.",
+      "Fill the remaining yearly slots by the already-locked hidden grade.",
+      "Do not alter grades to manufacture a target distribution."
+    ],
     "recognition_hooks": [
       {
         "season": 2000,
@@ -61,6 +98,31 @@
         "season": 2008,
         "franchise_id": "NE",
         "reason": "11-5 Matt Cassel season after Tom Brady's injury; a historically notable non-playoff team."
+      },
+      {
+        "season": 2010,
+        "franchise_id": "SEA",
+        "reason": "7-9 division winner with the Beast Quake playoff upset; an iconic lower-grade season."
+      },
+      {
+        "season": 2011,
+        "franchise_id": "DEN",
+        "reason": "Tebow-era 8-8 team with the overtime playoff win over Pittsburgh; an iconic value/trap season."
+      },
+      {
+        "season": 2012,
+        "franchise_id": "WAS",
+        "reason": "RGIII rookie-season division champion; one of the most recognizable teams of the early 2010s."
+      },
+      {
+        "season": 2020,
+        "franchise_id": "CLE",
+        "reason": "Cleveland's first playoff win in more than two decades makes this 11-5 season historically recognizable."
+      },
+      {
+        "season": 2023,
+        "franchise_id": "GB",
+        "reason": "Jordan Love's first playoff team and road upset of Dallas make this 9-8 season a useful modern identity/value candidate."
       }
     ]
   },
@@ -313,24 +375,8 @@
         "regular-season point differential per game",
         "postseason depth"
       ],
-      "inversion_definition": "A season dominates another on all three dimensions with at least one strict advantage, yet is graded more than 1.0 point lower.",
+      "inversion_definition": "Within the 200-team auction pool, a season dominates another on all three dimensions with at least one strict advantage, yet is graded more than 1.0 point lower.",
       "inversions_over_1_point": 0
-    },
-    "locked_distribution": {
-      "count": 293,
-      "min": 74,
-      "p25": 82.5,
-      "median": 86.5,
-      "p75": 90.5,
-      "max": 100,
-      "mean": 86.42,
-      "bands": {
-        "95-100": 24,
-        "90-94.5": 67,
-        "85-89.5": 75,
-        "80-84.5": 90,
-        "74-79.5": 37
-      }
     },
     "anchors": [
       [
@@ -415,7 +461,7 @@
       ]
     ]
   },
-  "runtime_note": "This artifact does not change the live Weekly Auction, board generator, bankroll, roster/scoring-team count, or browser payloads. It is the locked population + hidden-grade input for the next NFL auction simulation step.",
+  "runtime_note": "This artifact does not change the live Weekly Auction, board generator, bankroll, roster/scoring-team count, or browser payloads. It locks the 200-team auction-eligible population and preserves the existing hidden grades for five-player market simulation.",
   "items": [
     {
       "item_reference": "nfl-best-bal-2000",
@@ -449,7 +495,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 96,
-      "hidden_grade": 98
+      "hidden_grade": 98,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lar-2000",
@@ -483,7 +530,8 @@
       "membership_basis": "recognition-hook",
       "recognition_hook": "Defending-champion Greatest Show on Turf follow-up; one of the era's defining offenses.",
       "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 82,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-lv-2000",
@@ -517,7 +565,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-min-2000",
@@ -551,7 +600,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83.5,
-      "hidden_grade": 83.5
+      "hidden_grade": 83.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-nyg-2000",
@@ -585,7 +635,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ten-2000",
@@ -619,7 +670,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-chi-2001",
@@ -653,41 +705,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
-    },
-    {
-      "item_reference": "nfl-best-gb-2001",
-      "season_year": 2001,
-      "franchise_id": "GB",
-      "team_name": "Green Bay Packers",
-      "display_label": "Green Bay Packers · 2001",
-      "record": "12-4",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "12-4 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 12,
-        "losses": 4,
-        "ties": 0,
-        "win_rate": 0.75,
-        "points_for": 432,
-        "points_against": 326,
-        "point_differential": 106,
-        "point_differential_per_game": 6.63
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-lar-2001",
@@ -721,7 +740,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 97,
-      "hidden_grade": 97
+      "hidden_grade": 97,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lv-2001",
@@ -755,7 +775,8 @@
       "membership_basis": "recognition-hook",
       "recognition_hook": "Tuck Rule postseason team; a highly recognizable Raiders season.",
       "provisional_grade": 83,
-      "hidden_grade": 83
+      "hidden_grade": 83,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-ne-2001",
@@ -789,7 +810,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-phi-2001",
@@ -823,7 +845,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88.5,
-      "hidden_grade": 88.5
+      "hidden_grade": 88.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2001",
@@ -857,41 +880,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 92
-    },
-    {
-      "item_reference": "nfl-best-sf-2001",
-      "season_year": 2001,
-      "franchise_id": "SF",
-      "team_name": "San Francisco 49ers",
-      "display_label": "San Francisco 49ers · 2001",
-      "record": "12-4",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "12-4 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 12,
-        "losses": 4,
-        "ties": 0,
-        "win_rate": 0.75,
-        "points_for": 424,
-        "points_against": 307,
-        "point_differential": 117,
-        "point_differential_per_game": 7.31
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 92,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-atl-2002",
@@ -925,7 +915,8 @@
       "membership_basis": "recognition-hook",
       "recognition_hook": "Michael Vick-led Lambeau playoff upset gives the season a lasting identity hook.",
       "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 82.5,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-lv-2002",
@@ -959,7 +950,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-phi-2002",
@@ -993,7 +985,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91,
-      "hidden_grade": 91
+      "hidden_grade": 91,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sf-2002",
@@ -1027,7 +1020,8 @@
       "membership_basis": "recognition-hook",
       "recognition_hook": "Jeff Garcia/Terrell Owens team with the 24-point playoff comeback against the Giants.",
       "provisional_grade": 80.5,
-      "hidden_grade": 80.5
+      "hidden_grade": 80.5,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-tb-2002",
@@ -1061,7 +1055,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 96,
-      "hidden_grade": 97.5
+      "hidden_grade": 97.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ten-2002",
@@ -1095,7 +1090,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84.5,
-      "hidden_grade": 84.5
+      "hidden_grade": 84.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-car-2003",
@@ -1129,7 +1125,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-gb-2003",
@@ -1163,7 +1160,8 @@
       "membership_basis": "recognition-hook",
       "recognition_hook": "Favre-era playoff team strongly associated with the 4th-and-26 divisional loss.",
       "provisional_grade": 85,
-      "hidden_grade": 85
+      "hidden_grade": 85,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-ind-2003",
@@ -1197,7 +1195,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-kc-2003",
@@ -1231,41 +1230,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
-    },
-    {
-      "item_reference": "nfl-best-lar-2003",
-      "season_year": 2003,
-      "franchise_id": "LAR",
-      "team_name": "St. Louis Rams",
-      "display_label": "St. Louis Rams · 2003",
-      "record": "12-4",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "12-4 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 12,
-        "losses": 4,
-        "ties": 0,
-        "win_rate": 0.75,
-        "points_for": 470,
-        "points_against": 357,
-        "point_differential": 113,
-        "point_differential_per_game": 7.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2003",
@@ -1299,7 +1265,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 98,
-      "hidden_grade": 97
+      "hidden_grade": 97,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-phi-2003",
@@ -1333,41 +1300,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
-    },
-    {
-      "item_reference": "nfl-best-ten-2003",
-      "season_year": 2003,
-      "franchise_id": "TEN",
-      "team_name": "Tennessee Titans",
-      "display_label": "Tennessee Titans · 2003",
-      "record": "12-4",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "12-4 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 12,
-        "losses": 4,
-        "ties": 0,
-        "win_rate": 0.75,
-        "points_for": 469,
-        "points_against": 358,
-        "point_differential": 111,
-        "point_differential_per_game": 6.94
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-atl-2004",
@@ -1401,7 +1335,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84,
-      "hidden_grade": 84
+      "hidden_grade": 84,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ind-2004",
@@ -1435,7 +1370,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-lac-2004",
@@ -1469,7 +1405,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2004",
@@ -1503,7 +1440,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 100,
-      "hidden_grade": 99.5
+      "hidden_grade": 99.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-phi-2004",
@@ -1537,7 +1475,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94,
-      "hidden_grade": 94
+      "hidden_grade": 94,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2004",
@@ -1571,7 +1510,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 94
+      "hidden_grade": 94,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-car-2005",
@@ -1605,75 +1545,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
-    },
-    {
-      "item_reference": "nfl-best-chi-2005",
-      "season_year": 2005,
-      "franchise_id": "CHI",
-      "team_name": "Chicago Bears",
-      "display_label": "Chicago Bears · 2005",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 281,
-        "points_against": 231,
-        "point_differential": 50,
-        "point_differential_per_game": 3.13
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83.5,
-      "hidden_grade": 83.5
-    },
-    {
-      "item_reference": "nfl-best-cin-2005",
-      "season_year": 2005,
-      "franchise_id": "CIN",
-      "team_name": "Cincinnati Bengals",
-      "display_label": "Cincinnati Bengals · 2005",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 438,
-        "points_against": 381,
-        "point_differential": 57,
-        "point_differential_per_game": 3.56
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 84,
-      "hidden_grade": 84
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-den-2005",
@@ -1707,7 +1580,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ind-2005",
@@ -1741,7 +1615,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94,
-      "hidden_grade": 93.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-jax-2005",
@@ -1775,41 +1650,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86,
-      "hidden_grade": 86
-    },
-    {
-      "item_reference": "nfl-best-ne-2005",
-      "season_year": 2005,
-      "franchise_id": "NE",
-      "team_name": "New England Patriots",
-      "display_label": "New England Patriots · 2005",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 420,
-        "points_against": 368,
-        "point_differential": 52,
-        "point_differential_per_game": 3.25
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 86,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-nyg-2005",
@@ -1843,7 +1685,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84.5,
-      "hidden_grade": 84.5
+      "hidden_grade": 84.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-pit-2005",
@@ -1877,7 +1720,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 93.5,
-      "hidden_grade": 93.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sea-2005",
@@ -1911,75 +1755,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 95
-    },
-    {
-      "item_reference": "nfl-best-tb-2005",
-      "season_year": 2005,
-      "franchise_id": "TB",
-      "team_name": "Tampa Bay Buccaneers",
-      "display_label": "Tampa Bay Buccaneers · 2005",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 310,
-        "points_against": 291,
-        "point_differential": 19,
-        "point_differential_per_game": 1.19
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
-    },
-    {
-      "item_reference": "nfl-best-was-2005",
-      "season_year": 2005,
-      "franchise_id": "WAS",
-      "team_name": "Washington Redskins",
-      "display_label": "Washington Redskins · 2005",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 386,
-        "points_against": 323,
-        "point_differential": 63,
-        "point_differential_per_game": 3.94
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 95,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2006",
@@ -2013,7 +1790,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-chi-2006",
@@ -2047,7 +1825,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 95
+      "hidden_grade": 95,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ind-2006",
@@ -2081,7 +1860,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 93.5,
-      "hidden_grade": 93.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lac-2006",
@@ -2115,7 +1895,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94,
-      "hidden_grade": 93.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2006",
@@ -2149,7 +1930,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91,
-      "hidden_grade": 91
+      "hidden_grade": 91,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-no-2006",
@@ -2183,7 +1965,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83.5,
-      "hidden_grade": 83.5
+      "hidden_grade": 83.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-phi-2006",
@@ -2217,7 +2000,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 82.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-dal-2007",
@@ -2251,7 +2035,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-gb-2007",
@@ -2285,7 +2070,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92.5,
-      "hidden_grade": 92.5
+      "hidden_grade": 92.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ind-2007",
@@ -2319,7 +2105,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 92
+      "hidden_grade": 92,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-jax-2007",
@@ -2353,7 +2140,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85.5,
-      "hidden_grade": 85.5
+      "hidden_grade": 85.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-lac-2007",
@@ -2387,7 +2175,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 87.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ne-2007",
@@ -2421,7 +2210,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 100,
-      "hidden_grade": 100
+      "hidden_grade": 100,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-nyg-2007",
@@ -2455,41 +2245,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 88.5
-    },
-    {
-      "item_reference": "nfl-best-sea-2007",
-      "season_year": 2007,
-      "franchise_id": "SEA",
-      "team_name": "Seattle Seahawks",
-      "display_label": "Seattle Seahawks · 2007",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 448,
-        "points_against": 347,
-        "point_differential": 101,
-        "point_differential_per_game": 6.31
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83.5,
-      "hidden_grade": 83.5
+      "hidden_grade": 88.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ari-2008",
@@ -2523,41 +2280,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 82,
-      "hidden_grade": 84.5
-    },
-    {
-      "item_reference": "nfl-best-atl-2008",
-      "season_year": 2008,
-      "franchise_id": "ATL",
-      "team_name": "Atlanta Falcons",
-      "display_label": "Atlanta Falcons · 2008",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 415,
-        "points_against": 355,
-        "point_differential": 60,
-        "point_differential_per_game": 3.75
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 84,
-      "hidden_grade": 84
+      "hidden_grade": 84.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2008",
@@ -2591,109 +2315,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88.5,
-      "hidden_grade": 88.5
-    },
-    {
-      "item_reference": "nfl-best-car-2008",
-      "season_year": 2008,
-      "franchise_id": "CAR",
-      "team_name": "Carolina Panthers",
-      "display_label": "Carolina Panthers · 2008",
-      "record": "12-4",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "12-4 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 12,
-        "losses": 4,
-        "ties": 0,
-        "win_rate": 0.75,
-        "points_for": 427,
-        "points_against": 362,
-        "point_differential": 65,
-        "point_differential_per_game": 4.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 86,
-      "hidden_grade": 86
-    },
-    {
-      "item_reference": "nfl-best-ind-2008",
-      "season_year": 2008,
-      "franchise_id": "IND",
-      "team_name": "Indianapolis Colts",
-      "display_label": "Indianapolis Colts · 2008",
-      "record": "12-4",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "12-4 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 12,
-        "losses": 4,
-        "ties": 0,
-        "win_rate": 0.75,
-        "points_for": 394,
-        "points_against": 321,
-        "point_differential": 73,
-        "point_differential_per_game": 4.56
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 86.5,
-      "hidden_grade": 86.5
-    },
-    {
-      "item_reference": "nfl-best-mia-2008",
-      "season_year": 2008,
-      "franchise_id": "MIA",
-      "team_name": "Miami Dolphins",
-      "display_label": "Miami Dolphins · 2008",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 354,
-        "points_against": 344,
-        "point_differential": 10,
-        "point_differential_per_game": 0.63
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 88.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ne-2008",
@@ -2727,7 +2350,8 @@
       "membership_basis": "recognition-hook",
       "recognition_hook": "11-5 Matt Cassel season after Tom Brady's injury; a historically notable non-playoff team.",
       "provisional_grade": 85,
-      "hidden_grade": 85
+      "hidden_grade": 85,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-nyg-2008",
@@ -2761,7 +2385,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-phi-2008",
@@ -2795,7 +2420,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85,
-      "hidden_grade": 85
+      "hidden_grade": 85,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2008",
@@ -2829,7 +2455,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94.5,
-      "hidden_grade": 95.5
+      "hidden_grade": 95.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ten-2008",
@@ -2863,41 +2490,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
-    },
-    {
-      "item_reference": "nfl-best-ari-2009",
-      "season_year": 2009,
-      "franchise_id": "ARI",
-      "team_name": "Arizona Cardinals",
-      "display_label": "Arizona Cardinals · 2009",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 440,
-        "points_against": 415,
-        "point_differential": 25,
-        "point_differential_per_game": 1.56
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81.5,
-      "hidden_grade": 81.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-dal-2009",
@@ -2931,7 +2525,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85.5,
-      "hidden_grade": 85.5
+      "hidden_grade": 85.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-gb-2009",
@@ -2965,7 +2560,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87,
-      "hidden_grade": 87
+      "hidden_grade": 87,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ind-2009",
@@ -2999,7 +2595,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 95
+      "hidden_grade": 95,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lac-2009",
@@ -3033,7 +2630,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-min-2009",
@@ -3067,7 +2665,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-no-2009",
@@ -3101,7 +2700,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 98,
-      "hidden_grade": 97.5
+      "hidden_grade": 97.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-nyj-2009",
@@ -3135,41 +2735,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83,
-      "hidden_grade": 83
-    },
-    {
-      "item_reference": "nfl-best-phi-2009",
-      "season_year": 2009,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2009",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 443,
-        "points_against": 371,
-        "point_differential": 72,
-        "point_differential_per_game": 4.5
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 84.5,
-      "hidden_grade": 84.5
+      "hidden_grade": 83,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-atl-2010",
@@ -3203,7 +2770,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-bal-2010",
@@ -3237,7 +2805,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 87.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-chi-2010",
@@ -3271,7 +2840,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85,
-      "hidden_grade": 85
+      "hidden_grade": 85,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-gb-2010",
@@ -3305,75 +2875,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 94.5
-    },
-    {
-      "item_reference": "nfl-best-ind-2010",
-      "season_year": 2010,
-      "franchise_id": "IND",
-      "team_name": "Indianapolis Colts",
-      "display_label": "Indianapolis Colts · 2010",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 451,
-        "points_against": 405,
-        "point_differential": 46,
-        "point_differential_per_game": 2.88
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81.5,
-      "hidden_grade": 81.5
-    },
-    {
-      "item_reference": "nfl-best-kc-2010",
-      "season_year": 2010,
-      "franchise_id": "KC",
-      "team_name": "Kansas City Chiefs",
-      "display_label": "Kansas City Chiefs · 2010",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 373,
-        "points_against": 356,
-        "point_differential": 17,
-        "point_differential_per_game": 1.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80.5,
-      "hidden_grade": 80.5
+      "hidden_grade": 94.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ne-2010",
@@ -3407,75 +2910,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94,
-      "hidden_grade": 93.5
-    },
-    {
-      "item_reference": "nfl-best-no-2010",
-      "season_year": 2010,
-      "franchise_id": "NO",
-      "team_name": "New Orleans Saints",
-      "display_label": "New Orleans Saints · 2010",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 420,
-        "points_against": 348,
-        "point_differential": 72,
-        "point_differential_per_game": 4.5
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 84.5,
-      "hidden_grade": 84.5
-    },
-    {
-      "item_reference": "nfl-best-nyg-2010",
-      "season_year": 2010,
-      "franchise_id": "NYG",
-      "team_name": "New York Giants",
-      "display_label": "New York Giants · 2010",
-      "record": "10-6",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-6 · Missed Playoffs",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 394,
-        "points_against": 347,
-        "point_differential": 47,
-        "point_differential_per_game": 2.94
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81.5,
-      "hidden_grade": 81.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-nyj-2010",
@@ -3509,41 +2945,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85.5,
-      "hidden_grade": 85.5
-    },
-    {
-      "item_reference": "nfl-best-phi-2010",
-      "season_year": 2010,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2010",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 455,
-        "points_against": 398,
-        "point_differential": 57,
-        "point_differential_per_game": 3.56
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 85.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2010",
@@ -3577,7 +2980,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sea-2010",
@@ -3611,75 +3015,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 74,
-      "hidden_grade": 74
-    },
-    {
-      "item_reference": "nfl-best-tb-2010",
-      "season_year": 2010,
-      "franchise_id": "TB",
-      "team_name": "Tampa Bay Buccaneers",
-      "display_label": "Tampa Bay Buccaneers · 2010",
-      "record": "10-6",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-6 · Missed Playoffs",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 341,
-        "points_against": 318,
-        "point_differential": 23,
-        "point_differential_per_game": 1.44
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80.5,
-      "hidden_grade": 80.5
-    },
-    {
-      "item_reference": "nfl-best-atl-2011",
-      "season_year": 2011,
-      "franchise_id": "ATL",
-      "team_name": "Atlanta Falcons",
-      "display_label": "Atlanta Falcons · 2011",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 404,
-        "points_against": 374,
-        "point_differential": 30,
-        "point_differential_per_game": 1.88
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81,
-      "hidden_grade": 81
+      "hidden_grade": 74,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-bal-2011",
@@ -3713,41 +3050,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
-    },
-    {
-      "item_reference": "nfl-best-cin-2011",
-      "season_year": 2011,
-      "franchise_id": "CIN",
-      "team_name": "Cincinnati Bengals",
-      "display_label": "Cincinnati Bengals · 2011",
-      "record": "9-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 354,
-        "points_against": 354,
-        "point_differential": 0,
-        "point_differential_per_game": 0
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78,
-      "hidden_grade": 78
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-den-2011",
@@ -3781,41 +3085,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 74,
-      "hidden_grade": 74
-    },
-    {
-      "item_reference": "nfl-best-det-2011",
-      "season_year": 2011,
-      "franchise_id": "DET",
-      "team_name": "Detroit Lions",
-      "display_label": "Detroit Lions · 2011",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 502,
-        "points_against": 432,
-        "point_differential": 70,
-        "point_differential_per_game": 4.38
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 74,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-gb-2011",
@@ -3849,41 +3120,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 96,
-      "hidden_grade": 94.5
-    },
-    {
-      "item_reference": "nfl-best-hou-2011",
-      "season_year": 2011,
-      "franchise_id": "HOU",
-      "team_name": "Houston Texans",
-      "display_label": "Houston Texans · 2011",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 425,
-        "points_against": 308,
-        "point_differential": 117,
-        "point_differential_per_game": 7.31
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 84,
-      "hidden_grade": 84
+      "hidden_grade": 94.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2011",
@@ -3917,7 +3155,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 95
+      "hidden_grade": 95,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-no-2011",
@@ -3951,7 +3190,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92.5,
-      "hidden_grade": 92.5
+      "hidden_grade": 92.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-nyg-2011",
@@ -3985,7 +3225,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85.5,
-      "hidden_grade": 86
+      "hidden_grade": 86,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2011",
@@ -4019,7 +3260,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87,
-      "hidden_grade": 87
+      "hidden_grade": 87,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sf-2011",
@@ -4053,7 +3295,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92.5,
-      "hidden_grade": 92.5
+      "hidden_grade": 92.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-atl-2012",
@@ -4087,7 +3330,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91,
-      "hidden_grade": 91
+      "hidden_grade": 91,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2012",
@@ -4121,75 +3365,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89.5
-    },
-    {
-      "item_reference": "nfl-best-chi-2012",
-      "season_year": 2012,
-      "franchise_id": "CHI",
-      "team_name": "Chicago Bears",
-      "display_label": "Chicago Bears · 2012",
-      "record": "10-6",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-6 · Missed Playoffs",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 375,
-        "points_against": 277,
-        "point_differential": 98,
-        "point_differential_per_game": 6.13
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83,
-      "hidden_grade": 83
-    },
-    {
-      "item_reference": "nfl-best-cin-2012",
-      "season_year": 2012,
-      "franchise_id": "CIN",
-      "team_name": "Cincinnati Bengals",
-      "display_label": "Cincinnati Bengals · 2012",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 404,
-        "points_against": 339,
-        "point_differential": 65,
-        "point_differential_per_game": 4.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 89.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-den-2012",
@@ -4223,41 +3400,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 92
-    },
-    {
-      "item_reference": "nfl-best-gb-2012",
-      "season_year": 2012,
-      "franchise_id": "GB",
-      "team_name": "Green Bay Packers",
-      "display_label": "Green Bay Packers · 2012",
-      "record": "11-5",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "11-5 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 488,
-        "points_against": 391,
-        "point_differential": 97,
-        "point_differential_per_game": 6.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 85.5,
-      "hidden_grade": 85.5
+      "hidden_grade": 92,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-hou-2012",
@@ -4291,75 +3435,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87,
-      "hidden_grade": 87
-    },
-    {
-      "item_reference": "nfl-best-ind-2012",
-      "season_year": 2012,
-      "franchise_id": "IND",
-      "team_name": "Indianapolis Colts",
-      "display_label": "Indianapolis Colts · 2012",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 366,
-        "points_against": 411,
-        "point_differential": -45,
-        "point_differential_per_game": -2.81
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80.5,
-      "hidden_grade": 80.5
-    },
-    {
-      "item_reference": "nfl-best-min-2012",
-      "season_year": 2012,
-      "franchise_id": "MIN",
-      "team_name": "Minnesota Vikings",
-      "display_label": "Minnesota Vikings · 2012",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 389,
-        "points_against": 372,
-        "point_differential": 17,
-        "point_differential_per_game": 1.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80.5,
-      "hidden_grade": 80.5
+      "hidden_grade": 87,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2012",
@@ -4393,7 +3470,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sea-2012",
@@ -4427,7 +3505,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sf-2012",
@@ -4461,7 +3540,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-was-2012",
@@ -4495,41 +3575,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 81,
-      "hidden_grade": 81
-    },
-    {
-      "item_reference": "nfl-best-ari-2013",
-      "season_year": 2013,
-      "franchise_id": "ARI",
-      "team_name": "Arizona Cardinals",
-      "display_label": "Arizona Cardinals · 2013",
-      "record": "10-6",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-6 · Missed Playoffs",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 379,
-        "points_against": 324,
-        "point_differential": 55,
-        "point_differential_per_game": 3.44
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81.5,
-      "hidden_grade": 81.5
+      "hidden_grade": 81,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-car-2013",
@@ -4563,7 +3610,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 87.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-cin-2013",
@@ -4597,7 +3645,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85.5,
-      "hidden_grade": 85.5
+      "hidden_grade": 85.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-den-2013",
@@ -4631,75 +3680,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 95
-    },
-    {
-      "item_reference": "nfl-best-gb-2013",
-      "season_year": 2013,
-      "franchise_id": "GB",
-      "team_name": "Green Bay Packers",
-      "display_label": "Green Bay Packers · 2013",
-      "record": "8-7-1",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "8-7-1 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 8,
-        "losses": 7,
-        "ties": 1,
-        "win_rate": 0.5313,
-        "points_for": 437,
-        "points_against": 451,
-        "point_differential": -14,
-        "point_differential_per_game": -0.88
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 76.5,
-      "hidden_grade": 76.5
-    },
-    {
-      "item_reference": "nfl-best-ind-2013",
-      "season_year": 2013,
-      "franchise_id": "IND",
-      "team_name": "Indianapolis Colts",
-      "display_label": "Indianapolis Colts · 2013",
-      "record": "11-5",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "11-5 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 458,
-        "points_against": 423,
-        "point_differential": 35,
-        "point_differential_per_game": 2.19
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83.5,
-      "hidden_grade": 83.5
+      "hidden_grade": 95,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-kc-2013",
@@ -4733,41 +3715,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86,
-      "hidden_grade": 86
-    },
-    {
-      "item_reference": "nfl-best-lac-2013",
-      "season_year": 2013,
-      "franchise_id": "LAC",
-      "team_name": "San Diego Chargers",
-      "display_label": "San Diego Chargers · 2013",
-      "record": "9-7",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "9-7 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 440,
-        "points_against": 382,
-        "point_differential": 58,
-        "point_differential_per_game": 3.63
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80.5,
-      "hidden_grade": 80.5
+      "hidden_grade": 86,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2013",
@@ -4801,7 +3750,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-no-2013",
@@ -4835,41 +3785,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86,
-      "hidden_grade": 86
-    },
-    {
-      "item_reference": "nfl-best-phi-2013",
-      "season_year": 2013,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2013",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 466,
-        "points_against": 408,
-        "point_differential": 58,
-        "point_differential_per_game": 3.63
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 86,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sea-2013",
@@ -4903,7 +3820,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 98,
-      "hidden_grade": 99
+      "hidden_grade": 99,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sf-2013",
@@ -4937,41 +3855,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
-    },
-    {
-      "item_reference": "nfl-best-ari-2014",
-      "season_year": 2014,
-      "franchise_id": "ARI",
-      "team_name": "Arizona Cardinals",
-      "display_label": "Arizona Cardinals · 2014",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 326,
-        "points_against": 326,
-        "point_differential": 0,
-        "point_differential_per_game": 0
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2014",
@@ -5005,75 +3890,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84,
-      "hidden_grade": 84
-    },
-    {
-      "item_reference": "nfl-best-car-2014",
-      "season_year": 2014,
-      "franchise_id": "CAR",
-      "team_name": "Carolina Panthers",
-      "display_label": "Carolina Panthers · 2014",
-      "record": "7-8-1",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "7-8-1 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 7,
-        "losses": 8,
-        "ties": 1,
-        "win_rate": 0.4688,
-        "points_for": 383,
-        "points_against": 421,
-        "point_differential": -38,
-        "point_differential_per_game": -2.38
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 74.5,
-      "hidden_grade": 74.5
-    },
-    {
-      "item_reference": "nfl-best-cin-2014",
-      "season_year": 2014,
-      "franchise_id": "CIN",
-      "team_name": "Cincinnati Bengals",
-      "display_label": "Cincinnati Bengals · 2014",
-      "record": "10-5-1",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-5-1 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 5,
-        "ties": 1,
-        "win_rate": 0.6563,
-        "points_for": 375,
-        "points_against": 370,
-        "point_differential": 5,
-        "point_differential_per_game": 0.31
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81,
-      "hidden_grade": 81
+      "hidden_grade": 84,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-dal-2014",
@@ -5107,7 +3925,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-den-2014",
@@ -5141,41 +3960,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 87.5
-    },
-    {
-      "item_reference": "nfl-best-det-2014",
-      "season_year": 2014,
-      "franchise_id": "DET",
-      "team_name": "Detroit Lions",
-      "display_label": "Detroit Lions · 2014",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 341,
-        "points_against": 306,
-        "point_differential": 35,
-        "point_differential_per_game": 2.19
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83,
-      "hidden_grade": 83
+      "hidden_grade": 87.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-gb-2014",
@@ -5209,7 +3995,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ind-2014",
@@ -5243,7 +4030,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86,
-      "hidden_grade": 86
+      "hidden_grade": 86,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ne-2014",
@@ -5277,41 +4065,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 96,
-      "hidden_grade": 96
-    },
-    {
-      "item_reference": "nfl-best-phi-2014",
-      "season_year": 2014,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2014",
-      "record": "10-6",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-6 · Missed Playoffs",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 474,
-        "points_against": 400,
-        "point_differential": 74,
-        "point_differential_per_game": 4.63
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 96,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2014",
@@ -5345,7 +4100,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83.5,
-      "hidden_grade": 83.5
+      "hidden_grade": 83.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sea-2014",
@@ -5379,7 +4135,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 92
+      "hidden_grade": 92,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ari-2015",
@@ -5413,7 +4170,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 92
+      "hidden_grade": 92,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-car-2015",
@@ -5447,7 +4205,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 99,
-      "hidden_grade": 97
+      "hidden_grade": 97,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-cin-2015",
@@ -5481,7 +4240,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88.5,
-      "hidden_grade": 88.5
+      "hidden_grade": 88.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-den-2015",
@@ -5515,75 +4275,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92.5,
-      "hidden_grade": 94
-    },
-    {
-      "item_reference": "nfl-best-gb-2015",
-      "season_year": 2015,
-      "franchise_id": "GB",
-      "team_name": "Green Bay Packers",
-      "display_label": "Green Bay Packers · 2015",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 423,
-        "points_against": 367,
-        "point_differential": 56,
-        "point_differential_per_game": 3.5
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
-    },
-    {
-      "item_reference": "nfl-best-hou-2015",
-      "season_year": 2015,
-      "franchise_id": "HOU",
-      "team_name": "Houston Texans",
-      "display_label": "Houston Texans · 2015",
-      "record": "9-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 339,
-        "points_against": 343,
-        "point_differential": -4,
-        "point_differential_per_game": -0.25
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78,
-      "hidden_grade": 78
+      "hidden_grade": 94,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-kc-2015",
@@ -5617,7 +4310,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87,
-      "hidden_grade": 87
+      "hidden_grade": 87,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-min-2015",
@@ -5651,7 +4345,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84,
-      "hidden_grade": 84
+      "hidden_grade": 84,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2015",
@@ -5685,75 +4380,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
-    },
-    {
-      "item_reference": "nfl-best-nyj-2015",
-      "season_year": 2015,
-      "franchise_id": "NYJ",
-      "team_name": "New York Jets",
-      "display_label": "New York Jets · 2015",
-      "record": "10-6",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-6 · Missed Playoffs",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 387,
-        "points_against": 314,
-        "point_differential": 73,
-        "point_differential_per_game": 4.56
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
-    },
-    {
-      "item_reference": "nfl-best-pit-2015",
-      "season_year": 2015,
-      "franchise_id": "PIT",
-      "team_name": "Pittsburgh Steelers",
-      "display_label": "Pittsburgh Steelers · 2015",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 457,
-        "points_against": 358,
-        "point_differential": 99,
-        "point_differential_per_game": 6.19
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83.5,
-      "hidden_grade": 83.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sea-2015",
@@ -5787,41 +4415,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85,
-      "hidden_grade": 85
-    },
-    {
-      "item_reference": "nfl-best-was-2015",
-      "season_year": 2015,
-      "franchise_id": "WAS",
-      "team_name": "Washington Redskins",
-      "display_label": "Washington Redskins · 2015",
-      "record": "9-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 406,
-        "points_against": 414,
-        "point_differential": -8,
-        "point_differential_per_game": -0.5
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78,
-      "hidden_grade": 78
+      "hidden_grade": 85,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-atl-2016",
@@ -5855,7 +4450,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-dal-2016",
@@ -5889,41 +4485,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89.5,
-      "hidden_grade": 89.5
-    },
-    {
-      "item_reference": "nfl-best-det-2016",
-      "season_year": 2016,
-      "franchise_id": "DET",
-      "team_name": "Detroit Lions",
-      "display_label": "Detroit Lions · 2016",
-      "record": "9-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 352,
-        "points_against": 384,
-        "point_differential": -32,
-        "point_differential_per_game": -2
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 77,
-      "hidden_grade": 77
+      "hidden_grade": 89.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-gb-2016",
@@ -5957,41 +4520,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83,
-      "hidden_grade": 83
-    },
-    {
-      "item_reference": "nfl-best-hou-2016",
-      "season_year": 2016,
-      "franchise_id": "HOU",
-      "team_name": "Houston Texans",
-      "display_label": "Houston Texans · 2016",
-      "record": "9-7",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "9-7 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 322,
-        "points_against": 376,
-        "point_differential": -54,
-        "point_differential_per_game": -3.38
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 77,
-      "hidden_grade": 77
+      "hidden_grade": 83,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-kc-2016",
@@ -6025,7 +4555,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-lv-2016",
@@ -6059,41 +4590,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84.5,
-      "hidden_grade": 84.5
-    },
-    {
-      "item_reference": "nfl-best-mia-2016",
-      "season_year": 2016,
-      "franchise_id": "MIA",
-      "team_name": "Miami Dolphins",
-      "display_label": "Miami Dolphins · 2016",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 375,
-        "points_against": 410,
-        "point_differential": -35,
-        "point_differential_per_game": -2.19
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79,
-      "hidden_grade": 79
+      "hidden_grade": 84.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2016",
@@ -6127,41 +4625,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 100,
-      "hidden_grade": 99
-    },
-    {
-      "item_reference": "nfl-best-nyg-2016",
-      "season_year": 2016,
-      "franchise_id": "NYG",
-      "team_name": "New York Giants",
-      "display_label": "New York Giants · 2016",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 323,
-        "points_against": 322,
-        "point_differential": 1,
-        "point_differential_per_game": 0.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 99,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2016",
@@ -6195,7 +4660,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86,
-      "hidden_grade": 86
+      "hidden_grade": 86,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sea-2016",
@@ -6229,75 +4695,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83.5,
-      "hidden_grade": 83.5
-    },
-    {
-      "item_reference": "nfl-best-atl-2017",
-      "season_year": 2017,
-      "franchise_id": "ATL",
-      "team_name": "Atlanta Falcons",
-      "display_label": "Atlanta Falcons · 2017",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 389,
-        "points_against": 343,
-        "point_differential": 46,
-        "point_differential_per_game": 2.88
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
-    },
-    {
-      "item_reference": "nfl-best-buf-2017",
-      "season_year": 2017,
-      "franchise_id": "BUF",
-      "team_name": "Buffalo Bills",
-      "display_label": "Buffalo Bills · 2017",
-      "record": "9-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 305,
-        "points_against": 369,
-        "point_differential": -64,
-        "point_differential_per_game": -4
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 76,
-      "hidden_grade": 76
+      "hidden_grade": 83.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-car-2017",
@@ -6331,7 +4730,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83,
-      "hidden_grade": 83
+      "hidden_grade": 83,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-jax-2017",
@@ -6365,41 +4765,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
-    },
-    {
-      "item_reference": "nfl-best-kc-2017",
-      "season_year": 2017,
-      "franchise_id": "KC",
-      "team_name": "Kansas City Chiefs",
-      "display_label": "Kansas City Chiefs · 2017",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 436,
-        "points_against": 361,
-        "point_differential": 75,
-        "point_differential_per_game": 4.69
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lar-2017",
@@ -6433,7 +4800,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-min-2017",
@@ -6467,7 +4835,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91,
-      "hidden_grade": 91
+      "hidden_grade": 91,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ne-2017",
@@ -6501,7 +4870,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94.5,
-      "hidden_grade": 94.5
+      "hidden_grade": 94.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-no-2017",
@@ -6535,7 +4905,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-phi-2017",
@@ -6569,7 +4940,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 98,
-      "hidden_grade": 97.5
+      "hidden_grade": 97.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-pit-2017",
@@ -6603,41 +4975,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
-    },
-    {
-      "item_reference": "nfl-best-ten-2017",
-      "season_year": 2017,
-      "franchise_id": "TEN",
-      "team_name": "Tennessee Titans",
-      "display_label": "Tennessee Titans · 2017",
-      "record": "9-7",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "9-7 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 370,
-        "points_against": 412,
-        "point_differential": -42,
-        "point_differential_per_game": -2.63
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 77,
-      "hidden_grade": 77
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-bal-2018",
@@ -6671,7 +5010,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83,
-      "hidden_grade": 83
+      "hidden_grade": 83,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-chi-2018",
@@ -6705,41 +5045,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88.5,
-      "hidden_grade": 88.5
-    },
-    {
-      "item_reference": "nfl-best-dal-2018",
-      "season_year": 2018,
-      "franchise_id": "DAL",
-      "team_name": "Dallas Cowboys",
-      "display_label": "Dallas Cowboys · 2018",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 385,
-        "points_against": 376,
-        "point_differential": 9,
-        "point_differential_per_game": 0.56
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81,
-      "hidden_grade": 81
+      "hidden_grade": 88.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-hou-2018",
@@ -6773,41 +5080,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84.5,
-      "hidden_grade": 84.5
-    },
-    {
-      "item_reference": "nfl-best-ind-2018",
-      "season_year": 2018,
-      "franchise_id": "IND",
-      "team_name": "Indianapolis Colts",
-      "display_label": "Indianapolis Colts · 2018",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 467,
-        "points_against": 382,
-        "point_differential": 85,
-        "point_differential_per_game": 5.31
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83,
-      "hidden_grade": 83
+      "hidden_grade": 84.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-kc-2018",
@@ -6841,7 +5115,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lac-2018",
@@ -6875,7 +5150,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 87.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-lar-2018",
@@ -6909,7 +5185,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 93.5,
-      "hidden_grade": 93.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ne-2018",
@@ -6943,7 +5220,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92.5,
-      "hidden_grade": 93
+      "hidden_grade": 93,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-no-2018",
@@ -6977,75 +5255,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92.5,
-      "hidden_grade": 92.5
-    },
-    {
-      "item_reference": "nfl-best-phi-2018",
-      "season_year": 2018,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2018",
-      "record": "9-7",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "9-7 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 397,
-        "points_against": 383,
-        "point_differential": 14,
-        "point_differential_per_game": 0.88
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79,
-      "hidden_grade": 79
-    },
-    {
-      "item_reference": "nfl-best-sea-2018",
-      "season_year": 2018,
-      "franchise_id": "SEA",
-      "team_name": "Seattle Seahawks",
-      "display_label": "Seattle Seahawks · 2018",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 450,
-        "points_against": 371,
-        "point_differential": 79,
-        "point_differential_per_game": 4.94
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 92.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2019",
@@ -7079,41 +5290,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94,
-      "hidden_grade": 93.5
-    },
-    {
-      "item_reference": "nfl-best-buf-2019",
-      "season_year": 2019,
-      "franchise_id": "BUF",
-      "team_name": "Buffalo Bills",
-      "display_label": "Buffalo Bills · 2019",
-      "record": "10-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-6 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 333,
-        "points_against": 281,
-        "point_differential": 52,
-        "point_differential_per_game": 3.25
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81.5,
-      "hidden_grade": 81.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-gb-2019",
@@ -7147,41 +5325,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
-    },
-    {
-      "item_reference": "nfl-best-hou-2019",
-      "season_year": 2019,
-      "franchise_id": "HOU",
-      "team_name": "Houston Texans",
-      "display_label": "Houston Texans · 2019",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 431,
-        "points_against": 455,
-        "point_differential": -24,
-        "point_differential_per_game": -1.5
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80,
-      "hidden_grade": 80
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-kc-2019",
@@ -7215,7 +5360,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 96,
-      "hidden_grade": 96
+      "hidden_grade": 96,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-min-2019",
@@ -7249,7 +5395,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83.5,
-      "hidden_grade": 83.5
+      "hidden_grade": 83.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ne-2019",
@@ -7283,7 +5430,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-no-2019",
@@ -7317,75 +5465,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89.5,
-      "hidden_grade": 89.5
-    },
-    {
-      "item_reference": "nfl-best-phi-2019",
-      "season_year": 2019,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2019",
-      "record": "9-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 9,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5625,
-        "points_for": 394,
-        "points_against": 371,
-        "point_differential": 23,
-        "point_differential_per_game": 1.44
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78.5,
-      "hidden_grade": 78.5
-    },
-    {
-      "item_reference": "nfl-best-sea-2019",
-      "season_year": 2019,
-      "franchise_id": "SEA",
-      "team_name": "Seattle Seahawks",
-      "display_label": "Seattle Seahawks · 2019",
-      "record": "11-5",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "11-5 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 445,
-        "points_against": 435,
-        "point_differential": 10,
-        "point_differential_per_game": 0.63
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83,
-      "hidden_grade": 83
+      "hidden_grade": 89.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sf-2019",
@@ -7419,7 +5500,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 95
+      "hidden_grade": 95,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ten-2019",
@@ -7453,7 +5535,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 82,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2020",
@@ -7487,7 +5570,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 87.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-buf-2020",
@@ -7521,41 +5605,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
-    },
-    {
-      "item_reference": "nfl-best-chi-2020",
-      "season_year": 2020,
-      "franchise_id": "CHI",
-      "team_name": "Chicago Bears",
-      "display_label": "Chicago Bears · 2020",
-      "record": "8-8",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "8-8 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 8,
-        "losses": 8,
-        "ties": 0,
-        "win_rate": 0.5,
-        "points_for": 381,
-        "points_against": 391,
-        "point_differential": -10,
-        "point_differential_per_game": -0.63
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 75.5,
-      "hidden_grade": 75.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-cle-2020",
@@ -7589,7 +5640,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 82.5,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-gb-2020",
@@ -7623,41 +5675,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 92
-    },
-    {
-      "item_reference": "nfl-best-ind-2020",
-      "season_year": 2020,
-      "franchise_id": "IND",
-      "team_name": "Indianapolis Colts",
-      "display_label": "Indianapolis Colts · 2020",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 475,
-        "points_against": 389,
-        "point_differential": 86,
-        "point_differential_per_game": 5.38
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 84.5,
-      "hidden_grade": 84.5
+      "hidden_grade": 92,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-kc-2020",
@@ -7691,75 +5710,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94.5,
-      "hidden_grade": 94.5
-    },
-    {
-      "item_reference": "nfl-best-lar-2020",
-      "season_year": 2020,
-      "franchise_id": "LAR",
-      "team_name": "Los Angeles Rams",
-      "display_label": "Los Angeles Rams · 2020",
-      "record": "10-6",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-6 · Won Playoff Game",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 420,
-        "points_against": 348,
-        "point_differential": 72,
-        "point_differential_per_game": 4.5
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83,
-      "hidden_grade": 83
-    },
-    {
-      "item_reference": "nfl-best-mia-2020",
-      "season_year": 2020,
-      "franchise_id": "MIA",
-      "team_name": "Miami Dolphins",
-      "display_label": "Miami Dolphins · 2020",
-      "record": "10-6",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-6 · Missed Playoffs",
-      "regular_season": {
-        "games": 16,
-        "wins": 10,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.625,
-        "points_for": 404,
-        "points_against": 338,
-        "point_differential": 66,
-        "point_differential_per_game": 4.13
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 94.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-no-2020",
@@ -7793,7 +5745,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-pit-2020",
@@ -7827,7 +5780,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87,
-      "hidden_grade": 87
+      "hidden_grade": 87,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sea-2020",
@@ -7861,7 +5815,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-tb-2020",
@@ -7895,109 +5850,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 93.5,
-      "hidden_grade": 94.5
-    },
-    {
-      "item_reference": "nfl-best-ten-2020",
-      "season_year": 2020,
-      "franchise_id": "TEN",
-      "team_name": "Tennessee Titans",
-      "display_label": "Tennessee Titans · 2020",
-      "record": "11-5",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-5 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 11,
-        "losses": 5,
-        "ties": 0,
-        "win_rate": 0.6875,
-        "points_for": 504,
-        "points_against": 459,
-        "point_differential": 45,
-        "point_differential_per_game": 2.81
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 83.5,
-      "hidden_grade": 83.5
-    },
-    {
-      "item_reference": "nfl-best-was-2020",
-      "season_year": 2020,
-      "franchise_id": "WAS",
-      "team_name": "Washington Football Team",
-      "display_label": "Washington Football Team · 2020",
-      "record": "7-9",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "7-9 · Playoff Team",
-      "regular_season": {
-        "games": 16,
-        "wins": 7,
-        "losses": 9,
-        "ties": 0,
-        "win_rate": 0.4375,
-        "points_for": 358,
-        "points_against": 360,
-        "point_differential": -2,
-        "point_differential_per_game": -0.13
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 74,
-      "hidden_grade": 74
-    },
-    {
-      "item_reference": "nfl-best-ari-2021",
-      "season_year": 2021,
-      "franchise_id": "ARI",
-      "team_name": "Arizona Cardinals",
-      "display_label": "Arizona Cardinals · 2021",
-      "record": "11-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-6 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 11,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.6471,
-        "points_for": 460,
-        "points_against": 400,
-        "point_differential": 60,
-        "point_differential_per_game": 3.53
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 94.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-buf-2021",
@@ -8031,7 +5885,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87,
-      "hidden_grade": 87
+      "hidden_grade": 87,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-cin-2021",
@@ -8065,7 +5920,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84.5,
-      "hidden_grade": 84.5
+      "hidden_grade": 84.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-dal-2021",
@@ -8099,7 +5955,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87.5,
-      "hidden_grade": 87.5
+      "hidden_grade": 87.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-gb-2021",
@@ -8133,7 +5990,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-kc-2021",
@@ -8167,7 +6025,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lar-2021",
@@ -8201,143 +6060,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 93.5
-    },
-    {
-      "item_reference": "nfl-best-lv-2021",
-      "season_year": 2021,
-      "franchise_id": "LV",
-      "team_name": "Las Vegas Raiders",
-      "display_label": "Las Vegas Raiders · 2021",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 393,
-        "points_against": 465,
-        "point_differential": -72,
-        "point_differential_per_game": -4.24
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 76.5,
-      "hidden_grade": 76.5
-    },
-    {
-      "item_reference": "nfl-best-ne-2021",
-      "season_year": 2021,
-      "franchise_id": "NE",
-      "team_name": "New England Patriots",
-      "display_label": "New England Patriots · 2021",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 479,
-        "points_against": 350,
-        "point_differential": 129,
-        "point_differential_per_game": 7.59
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82.5,
-      "hidden_grade": 82.5
-    },
-    {
-      "item_reference": "nfl-best-phi-2021",
-      "season_year": 2021,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2021",
-      "record": "9-8",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-8 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 9,
-        "losses": 8,
-        "ties": 0,
-        "win_rate": 0.5294,
-        "points_for": 459,
-        "points_against": 416,
-        "point_differential": 43,
-        "point_differential_per_game": 2.53
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78,
-      "hidden_grade": 78
-    },
-    {
-      "item_reference": "nfl-best-pit-2021",
-      "season_year": 2021,
-      "franchise_id": "PIT",
-      "team_name": "Pittsburgh Steelers",
-      "display_label": "Pittsburgh Steelers · 2021",
-      "record": "9-7-1",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7-1 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 9,
-        "losses": 7,
-        "ties": 1,
-        "win_rate": 0.5588,
-        "points_for": 364,
-        "points_against": 440,
-        "point_differential": -76,
-        "point_differential_per_game": -4.47
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 75.5,
-      "hidden_grade": 75.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sf-2021",
@@ -8371,7 +6095,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 82.5,
-      "hidden_grade": 82.5
+      "hidden_grade": 82.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-tb-2021",
@@ -8405,7 +6130,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 90
+      "hidden_grade": 90,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-ten-2021",
@@ -8439,7 +6165,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84.5,
-      "hidden_grade": 84.5
+      "hidden_grade": 84.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-bal-2022",
@@ -8473,7 +6200,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 79.5,
-      "hidden_grade": 79.5
+      "hidden_grade": 79.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-buf-2022",
@@ -8507,7 +6235,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 91.5
+      "hidden_grade": 91.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-cin-2022",
@@ -8541,7 +6270,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-dal-2022",
@@ -8575,7 +6305,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 87,
-      "hidden_grade": 87
+      "hidden_grade": 87,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-jax-2022",
@@ -8609,7 +6340,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 79,
-      "hidden_grade": 79
+      "hidden_grade": 79,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-kc-2022",
@@ -8643,75 +6375,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 96.5,
-      "hidden_grade": 96.5
-    },
-    {
-      "item_reference": "nfl-best-lac-2022",
-      "season_year": 2022,
-      "franchise_id": "LAC",
-      "team_name": "Los Angeles Chargers",
-      "display_label": "Los Angeles Chargers · 2022",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 421,
-        "points_against": 415,
-        "point_differential": 6,
-        "point_differential_per_game": 0.35
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79,
-      "hidden_grade": 79
-    },
-    {
-      "item_reference": "nfl-best-mia-2022",
-      "season_year": 2022,
-      "franchise_id": "MIA",
-      "team_name": "Miami Dolphins",
-      "display_label": "Miami Dolphins · 2022",
-      "record": "9-8",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-8 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 9,
-        "losses": 8,
-        "ties": 0,
-        "win_rate": 0.5294,
-        "points_for": 428,
-        "points_against": 433,
-        "point_differential": -5,
-        "point_differential_per_game": -0.29
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 77,
-      "hidden_grade": 77
+      "hidden_grade": 96.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-min-2022",
@@ -8745,41 +6410,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84,
-      "hidden_grade": 84
-    },
-    {
-      "item_reference": "nfl-best-nyg-2022",
-      "season_year": 2022,
-      "franchise_id": "NYG",
-      "team_name": "New York Giants",
-      "display_label": "New York Giants · 2022",
-      "record": "9-7-1",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "9-7-1 · Won Playoff Game",
-      "regular_season": {
-        "games": 17,
-        "wins": 9,
-        "losses": 7,
-        "ties": 1,
-        "win_rate": 0.5588,
-        "points_for": 403,
-        "points_against": 433,
-        "point_differential": -30,
-        "point_differential_per_game": -1.76
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 77.5,
-      "hidden_grade": 77.5
+      "hidden_grade": 84,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-phi-2022",
@@ -8813,41 +6445,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 95,
-      "hidden_grade": 95
-    },
-    {
-      "item_reference": "nfl-best-sea-2022",
-      "season_year": 2022,
-      "franchise_id": "SEA",
-      "team_name": "Seattle Seahawks",
-      "display_label": "Seattle Seahawks · 2022",
-      "record": "9-8",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-8 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 9,
-        "losses": 8,
-        "ties": 0,
-        "win_rate": 0.5294,
-        "points_for": 430,
-        "points_against": 442,
-        "point_differential": -12,
-        "point_differential_per_game": -0.71
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 76.5,
-      "hidden_grade": 76.5
+      "hidden_grade": 95,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sf-2022",
@@ -8881,41 +6480,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91,
-      "hidden_grade": 91
-    },
-    {
-      "item_reference": "nfl-best-tb-2022",
-      "season_year": 2022,
-      "franchise_id": "TB",
-      "team_name": "Tampa Bay Buccaneers",
-      "display_label": "Tampa Bay Buccaneers · 2022",
-      "record": "8-9",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "8-9 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 8,
-        "losses": 9,
-        "ties": 0,
-        "win_rate": 0.4706,
-        "points_for": 327,
-        "points_against": 389,
-        "point_differential": -62,
-        "point_differential_per_game": -3.65
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 74,
-      "hidden_grade": 74
+      "hidden_grade": 91,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2023",
@@ -8949,7 +6515,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 92,
-      "hidden_grade": 93.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-buf-2023",
@@ -8983,7 +6550,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 85.5,
-      "hidden_grade": 85.5
+      "hidden_grade": 85.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-cle-2023",
@@ -9017,7 +6585,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 81,
-      "hidden_grade": 81
+      "hidden_grade": 81,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-dal-2023",
@@ -9051,7 +6620,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-det-2023",
@@ -9085,7 +6655,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86,
-      "hidden_grade": 86
+      "hidden_grade": 86,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-gb-2023",
@@ -9119,41 +6690,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 79,
-      "hidden_grade": 79
-    },
-    {
-      "item_reference": "nfl-best-hou-2023",
-      "season_year": 2023,
-      "franchise_id": "HOU",
-      "team_name": "Houston Texans",
-      "display_label": "Houston Texans · 2023",
-      "record": "10-7",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-7 · Won Playoff Game",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 432,
-        "points_against": 401,
-        "point_differential": 31,
-        "point_differential_per_game": 1.82
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80,
-      "hidden_grade": 80
+      "hidden_grade": 79,
+      "auction_pool_selection_basis": "recognition-hook"
     },
     {
       "item_reference": "nfl-best-kc-2023",
@@ -9187,41 +6725,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90,
-      "hidden_grade": 91
-    },
-    {
-      "item_reference": "nfl-best-lar-2023",
-      "season_year": 2023,
-      "franchise_id": "LAR",
-      "team_name": "Los Angeles Rams",
-      "display_label": "Los Angeles Rams · 2023",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 427,
-        "points_against": 401,
-        "point_differential": 26,
-        "point_differential_per_game": 1.53
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79.5,
-      "hidden_grade": 79.5
+      "hidden_grade": 91,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-mia-2023",
@@ -9255,75 +6760,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83,
-      "hidden_grade": 83
-    },
-    {
-      "item_reference": "nfl-best-phi-2023",
-      "season_year": 2023,
-      "franchise_id": "PHI",
-      "team_name": "Philadelphia Eagles",
-      "display_label": "Philadelphia Eagles · 2023",
-      "record": "11-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-6 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 11,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.6471,
-        "points_for": 442,
-        "points_against": 460,
-        "point_differential": -18,
-        "point_differential_per_game": -1.06
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 80,
-      "hidden_grade": 80
-    },
-    {
-      "item_reference": "nfl-best-pit-2023",
-      "season_year": 2023,
-      "franchise_id": "PIT",
-      "team_name": "Pittsburgh Steelers",
-      "display_label": "Pittsburgh Steelers · 2023",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 321,
-        "points_against": 355,
-        "point_differential": -34,
-        "point_differential_per_game": -2
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78,
-      "hidden_grade": 78
+      "hidden_grade": 83,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sf-2023",
@@ -9357,41 +6795,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 93.5
-    },
-    {
-      "item_reference": "nfl-best-tb-2023",
-      "season_year": 2023,
-      "franchise_id": "TB",
-      "team_name": "Tampa Bay Buccaneers",
-      "display_label": "Tampa Bay Buccaneers · 2023",
-      "record": "9-8",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "9-8 · Won Playoff Game",
-      "regular_season": {
-        "games": 17,
-        "wins": 9,
-        "losses": 8,
-        "ties": 0,
-        "win_rate": 0.5294,
-        "points_for": 403,
-        "points_against": 365,
-        "point_differential": 38,
-        "point_differential_per_game": 2.24
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78.5,
-      "hidden_grade": 78.5
+      "hidden_grade": 93.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-bal-2024",
@@ -9425,7 +6830,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88,
-      "hidden_grade": 88
+      "hidden_grade": 88,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-buf-2024",
@@ -9459,41 +6865,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 91.5,
-      "hidden_grade": 92.5
-    },
-    {
-      "item_reference": "nfl-best-den-2024",
-      "season_year": 2024,
-      "franchise_id": "DEN",
-      "team_name": "Denver Broncos",
-      "display_label": "Denver Broncos · 2024",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 432,
-        "points_against": 342,
-        "point_differential": 90,
-        "point_differential_per_game": 5.29
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81.5,
-      "hidden_grade": 81.5
+      "hidden_grade": 92.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-det-2024",
@@ -9527,7 +6900,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94,
-      "hidden_grade": 93
+      "hidden_grade": 93,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-gb-2024",
@@ -9561,41 +6935,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84,
-      "hidden_grade": 84
-    },
-    {
-      "item_reference": "nfl-best-hou-2024",
-      "season_year": 2024,
-      "franchise_id": "HOU",
-      "team_name": "Houston Texans",
-      "display_label": "Houston Texans · 2024",
-      "record": "10-7",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-7 · Won Playoff Game",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 418,
-        "points_against": 407,
-        "point_differential": 11,
-        "point_differential_per_game": 0.65
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79.5,
-      "hidden_grade": 79.5
+      "hidden_grade": 84,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-kc-2024",
@@ -9629,7 +6970,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 93,
-      "hidden_grade": 92.5
+      "hidden_grade": 92.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-lac-2024",
@@ -9663,41 +7005,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 83,
-      "hidden_grade": 83
-    },
-    {
-      "item_reference": "nfl-best-lar-2024",
-      "season_year": 2024,
-      "franchise_id": "LAR",
-      "team_name": "Los Angeles Rams",
-      "display_label": "Los Angeles Rams · 2024",
-      "record": "10-7",
-      "postseason_finish": "Won Playoff Game",
-      "card_tag": "10-7 · Won Playoff Game",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 416,
-        "points_against": 423,
-        "point_differential": -7,
-        "point_differential_per_game": -0.41
-      },
-      "postseason": {
-        "berth": true,
-        "games": 2,
-        "wins": 1,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79,
-      "hidden_grade": 79
+      "hidden_grade": 83,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-min-2024",
@@ -9731,7 +7040,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-phi-2024",
@@ -9765,109 +7075,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 98.5,
-      "hidden_grade": 98.5
-    },
-    {
-      "item_reference": "nfl-best-pit-2024",
-      "season_year": 2024,
-      "franchise_id": "PIT",
-      "team_name": "Pittsburgh Steelers",
-      "display_label": "Pittsburgh Steelers · 2024",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 394,
-        "points_against": 375,
-        "point_differential": 19,
-        "point_differential_per_game": 1.12
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79.5,
-      "hidden_grade": 79.5
-    },
-    {
-      "item_reference": "nfl-best-sea-2024",
-      "season_year": 2024,
-      "franchise_id": "SEA",
-      "team_name": "Seattle Seahawks",
-      "display_label": "Seattle Seahawks · 2024",
-      "record": "10-7",
-      "postseason_finish": "Missed Playoffs",
-      "card_tag": "10-7 · Missed Playoffs",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 375,
-        "points_against": 368,
-        "point_differential": 7,
-        "point_differential_per_game": 0.41
-      },
-      "postseason": {
-        "berth": false,
-        "games": 0,
-        "wins": 0,
-        "losses": 0,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 79,
-      "hidden_grade": 79
-    },
-    {
-      "item_reference": "nfl-best-tb-2024",
-      "season_year": 2024,
-      "franchise_id": "TB",
-      "team_name": "Tampa Bay Buccaneers",
-      "display_label": "Tampa Bay Buccaneers · 2024",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 522,
-        "points_against": 408,
-        "point_differential": 114,
-        "point_differential_per_game": 6.71
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 98.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-was-2024",
@@ -9901,7 +7110,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-buf-2025",
@@ -9935,41 +7145,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
-    },
-    {
-      "item_reference": "nfl-best-car-2025",
-      "season_year": 2025,
-      "franchise_id": "CAR",
-      "team_name": "Carolina Panthers",
-      "display_label": "Carolina Panthers · 2025",
-      "record": "8-9",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "8-9 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 8,
-        "losses": 9,
-        "ties": 0,
-        "win_rate": 0.4706,
-        "points_for": 342,
-        "points_against": 414,
-        "point_differential": -72,
-        "point_differential_per_game": -4.24
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 74,
-      "hidden_grade": 74
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-chi-2025",
@@ -10003,7 +7180,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 82,
-      "hidden_grade": 82
+      "hidden_grade": 82,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-den-2025",
@@ -10037,41 +7215,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 90.5,
-      "hidden_grade": 90.5
-    },
-    {
-      "item_reference": "nfl-best-gb-2025",
-      "season_year": 2025,
-      "franchise_id": "GB",
-      "team_name": "Green Bay Packers",
-      "display_label": "Green Bay Packers · 2025",
-      "record": "9-7-1",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "9-7-1 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 9,
-        "losses": 7,
-        "ties": 1,
-        "win_rate": 0.5588,
-        "points_for": 418,
-        "points_against": 391,
-        "point_differential": 27,
-        "point_differential_per_game": 1.59
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78.5,
-      "hidden_grade": 78.5
+      "hidden_grade": 90.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-hou-2025",
@@ -10105,7 +7250,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 86.5,
-      "hidden_grade": 86.5
+      "hidden_grade": 86.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-jax-2025",
@@ -10139,41 +7285,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 88.5,
-      "hidden_grade": 88.5
-    },
-    {
-      "item_reference": "nfl-best-lac-2025",
-      "season_year": 2025,
-      "franchise_id": "LAC",
-      "team_name": "Los Angeles Chargers",
-      "display_label": "Los Angeles Chargers · 2025",
-      "record": "11-6",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "11-6 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 11,
-        "losses": 6,
-        "ties": 0,
-        "win_rate": 0.6471,
-        "points_for": 371,
-        "points_against": 356,
-        "point_differential": 15,
-        "point_differential_per_game": 0.88
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 81,
-      "hidden_grade": 81
+      "hidden_grade": 88.5,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-lar-2025",
@@ -10207,7 +7320,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 89,
-      "hidden_grade": 89
+      "hidden_grade": 89,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-ne-2025",
@@ -10241,7 +7355,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 94.5,
-      "hidden_grade": 94.5
+      "hidden_grade": 94.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-phi-2025",
@@ -10275,41 +7390,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 82,
-      "hidden_grade": 82
-    },
-    {
-      "item_reference": "nfl-best-pit-2025",
-      "season_year": 2025,
-      "franchise_id": "PIT",
-      "team_name": "Pittsburgh Steelers",
-      "display_label": "Pittsburgh Steelers · 2025",
-      "record": "10-7",
-      "postseason_finish": "Playoff Team",
-      "card_tag": "10-7 · Playoff Team",
-      "regular_season": {
-        "games": 17,
-        "wins": 10,
-        "losses": 7,
-        "ties": 0,
-        "win_rate": 0.5882,
-        "points_for": 403,
-        "points_against": 417,
-        "point_differential": -14,
-        "point_differential_per_game": -0.82
-      },
-      "postseason": {
-        "berth": true,
-        "games": 1,
-        "wins": 0,
-        "losses": 1,
-        "conference_championship_game": false,
-        "super_bowl_appearance": false,
-        "super_bowl_champion": false
-      },
-      "membership_basis": "performance-rule",
-      "recognition_hook": null,
-      "provisional_grade": 78.5,
-      "hidden_grade": 78.5
+      "hidden_grade": 82,
+      "auction_pool_selection_basis": "grade-fill"
     },
     {
       "item_reference": "nfl-best-sea-2025",
@@ -10343,7 +7425,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 98.5,
-      "hidden_grade": 98.5
+      "hidden_grade": 98.5,
+      "auction_pool_selection_basis": "protected-postseason"
     },
     {
       "item_reference": "nfl-best-sf-2025",
@@ -10377,7 +7460,8 @@
       "membership_basis": "performance-rule",
       "recognition_hook": null,
       "provisional_grade": 84,
-      "hidden_grade": 84
+      "hidden_grade": 84,
+      "auction_pool_selection_basis": "grade-fill"
     }
   ]
 }
