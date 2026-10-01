@@ -98,20 +98,28 @@ describe("Average Fan durable content banks", () => {
       }
     }
 
-    expect(shortAnswerCount).toBeGreaterThanOrEqual(440);
-    expect(typoCount).toBeGreaterThan(300);
+    expect(shortAnswerCount).toBeGreaterThanOrEqual(300);
+    expect(typoCount).toBeGreaterThan(220);
   });
 
-  it("preserves the locked ordinary grade shape", () => {
+  it("regrades the durable banks to the four playable grades", () => {
     expect(averageFanBankSummary("nfl").grades).toEqual({
-      1: 40, 2: 40, 3: 40, 4: 40, 5: 45,
+      2: 40, 3: 40, 4: 40, 5: 85,
     });
     expect(averageFanBankSummary("cfb").grades).toEqual({
-      1: 40, 2: 40, 3: 40, 4: 40, 5: 45,
+      2: 40, 3: 40, 4: 40, 5: 85,
     });
     expect(averageFanBankSummary("ufc").grades).toEqual({
-      1: 80, 2: 80, 3: 80, 4: 80, 5: 90,
+      2: 80, 3: 80, 4: 80, 5: 170,
     });
+
+    for (const sport of sports) {
+      const ordinary = AVERAGE_FAN_CONTENT_BANKS[sport].filter((question) => !question.protectedFinal);
+      expect(ordinary.every((question) => question.grade >= 2 && question.grade <= 5), sport).toBe(true);
+      const opening = ordinary.filter((question) => question.grade === 2);
+      expect(opening.some((question) => question.contentType === "current-event"), sport).toBe(false);
+      expect(opening.every((question) => question.difficultyNudge <= -1), sport).toBe(true);
+    }
   });
 
   it("keeps every sport multi-subject rather than collapsing into identity trivia", () => {
@@ -131,9 +139,9 @@ describe("Average Fan durable content banks", () => {
       const choiceShare = Number(summary.formats["four-choice"]) / summary.total;
       const trueFalseShare = Number(summary.formats["true-false"]) / summary.total;
 
-      expect(shortShare).toBeGreaterThanOrEqual(0.5);
-      expect(shortShare).toBeLessThanOrEqual(0.75);
-      expect(choiceShare).toBeGreaterThanOrEqual(0.12);
+      expect(shortShare).toBeGreaterThanOrEqual(0.3);
+      expect(shortShare).toBeLessThanOrEqual(0.7);
+      expect(choiceShare).toBeGreaterThanOrEqual(0.18);
       expect(trueFalseShare).toBeGreaterThanOrEqual(0.05);
     }
   });
@@ -178,8 +186,8 @@ describe("Average Fan durable content banks", () => {
       acc[question.format] = (acc[question.format] ?? 0) + 1;
       return acc;
     }, {});
-    expect(counts["short-answer"]).toBeGreaterThan(80);
-    expect(counts["four-choice"]).toBeGreaterThan(35);
+    expect(counts["short-answer"]).toBeGreaterThan(50);
+    expect(counts["four-choice"]).toBeGreaterThan(45);
     expect(counts["true-false"]).toBeGreaterThanOrEqual(20);
   });
 
@@ -222,7 +230,14 @@ describe("Average Fan durable content banks", () => {
     expect(answers.has("False")).toBe(true);
   });
 
-  it("never uses another valid UFC opponent as a wrong opponent choice", () => {
+  it("keeps rivalry-trophy name recall out of short answer", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.cfb) {
+      if (!/play for which (?:rivalry )?trophy/i.test(question.prompt)) continue;
+      expect(question.format, question.id).toBe("four-choice");
+    }
+  });
+
+    it("never uses another valid UFC opponent as a wrong opponent choice", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
       const match = /^average-fan:ufc:g3:(.+):opponent$/.exec(question.id);
       if (!match || !question.choices) continue;
@@ -238,7 +253,18 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
-  it("keeps the UFC bank on canonical UFC subjects and authored landmark coverage in rotation", () => {
+  it("keeps generated UFC opening-grade fighter recall recognition-first", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      if (question.grade !== 2 || question.subject !== "Fighters") continue;
+      const match = /^average-fan:ufc:g1:(.+):division$/.exec(question.id);
+      if (!match) continue;
+      expect(getUfcFactualSubject(match[1]!), question.id).toBeTruthy();
+      expect(question.format, question.id).toBe("four-choice");
+      expect(question.difficultyNudge, question.id).toBeLessThanOrEqual(-1);
+    }
+  });
+
+    it("keeps the UFC bank on canonical UFC subjects and authored landmark coverage in rotation", () => {
     const bank = AVERAGE_FAN_CONTENT_BANKS.ufc;
     const validSubjects = new Set(["Fighters", "Fights", "Championships", "Octagon IQ"]);
     for (const question of bank) {
@@ -303,6 +329,7 @@ describe("Average Fan durable content banks", () => {
       expect(bank).toHaveLength(AVERAGE_FAN_BANK_TARGETS[sport]);
       for (const question of bank.filter((row) => row.contentType === "current-event")) {
         expect(question.protectedFinal, question.id).toBe(false);
+        expect(question.grade, question.id).toBeGreaterThanOrEqual(3);
       }
     }
   });
@@ -321,7 +348,7 @@ describe("Average Fan durable content banks", () => {
     for (const sport of sports) {
       const identitySubject = sport === "ufc" ? "Fighters" : "Players";
       const dated = AVERAGE_FAN_CONTENT_BANKS[sport]
-        .filter((question) => question.grade >= 4 && question.subject === identitySubject)
+        .filter((question) => question.grade === 5 && question.subject === identitySubject)
         .map((question) => ({
           question,
           years: [...question.prompt.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0])),

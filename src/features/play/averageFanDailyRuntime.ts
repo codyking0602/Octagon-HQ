@@ -1,6 +1,8 @@
 import {
+  AVERAGE_FAN_BOARD_QUESTION_COUNT,
   AVERAGE_FAN_CONTENT_VERSION,
   AVERAGE_FAN_FANS,
+  AVERAGE_FAN_PLAYABLE_GRADES,
   averageFanAnswersMatch,
   averageFanFanAnswer,
   averageFanPublicQuestion,
@@ -20,8 +22,8 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const AVERAGE_FAN_DAILY_CONTENT_VERSION = "average-fan-daily-v1" as const;
-export const AVERAGE_FAN_DAILY_SCORING_VERSION = "average-fan-score-v1" as const;
+export const AVERAGE_FAN_DAILY_CONTENT_VERSION = "average-fan-daily-v2" as const;
+export const AVERAGE_FAN_DAILY_SCORING_VERSION = "average-fan-score-v2" as const;
 
 type AverageFanDailyScope = "ufc" | "football";
 type AverageFanDailySport = Exclude<AverageFanSport, "mlb">;
@@ -126,7 +128,7 @@ function boardFor(
   const selected: AverageFanQuestion[] = [];
   const subjectCounts = new Map<string, number>();
 
-  for (const grade of [1, 2, 3, 4, 5] as const) {
+  for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
     const gradeSelected: AverageFanQuestion[] = [];
     if (current?.grade === grade) {
       gradeSelected.push(current);
@@ -144,7 +146,7 @@ function boardFor(
         const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
         if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
 
-        if (grade <= 2) {
+        if (grade <= 3) {
           const leftShortAnswer = left.format === "short-answer" ? 1 : 0;
           const rightShortAnswer = right.format === "short-answer" ? 1 : 0;
           if (leftShortAnswer !== rightShortAnswer) return leftShortAnswer - rightShortAnswer;
@@ -167,8 +169,8 @@ function boardFor(
     selected.push(...gradeSelected);
   }
 
-  if (selected.length !== 10 || new Set(selected.map((question) => question.id)).size !== 10) {
-    throw new Error("Average Fan Daily board must contain ten unique questions.");
+  if (selected.length !== AVERAGE_FAN_BOARD_QUESTION_COUNT || new Set(selected.map((question) => question.id)).size !== AVERAGE_FAN_BOARD_QUESTION_COUNT) {
+    throw new Error("Average Fan Daily board must contain eight unique questions.");
   }
   return selected;
 }
@@ -238,7 +240,7 @@ export function buildAverageFanDailySetup(
     publicSetup: {
       sport,
       board: questions.map(publicTile),
-      question_count: 10,
+      question_count: AVERAGE_FAN_BOARD_QUESTION_COUNT,
       initial_state: {
         complete: false,
         phase: "fan-select",
@@ -288,7 +290,7 @@ export function buildAverageFanDailySetup(
 
 function fullQuestions(value: unknown) {
   const rows = records(value);
-  if (rows.length !== 10) throw new Error("Average Fan official board evidence must contain ten questions.");
+  if (rows.length !== AVERAGE_FAN_BOARD_QUESTION_COUNT) throw new Error("Average Fan official board evidence must contain eight questions.");
   return rows as unknown as AverageFanQuestion[];
 }
 
@@ -367,7 +369,7 @@ function finalSubmission(
   const fan = selectedFan(state.fan);
   if (!fan) throw new Error("Average Fan selected fan is unavailable.");
   const resolved = resolvedRows(state);
-  if (resolved.length !== 10) throw new Error("Average Fan board must be complete before Final settlement.");
+  if (resolved.length !== AVERAGE_FAN_BOARD_QUESTION_COUNT) throw new Error("Average Fan board must be complete before Final settlement.");
   const boardScore = boardScoreFromResolved(resolved);
   const score = scoreAverageFanFinal(boardScore, outcome);
   return {
@@ -483,7 +485,7 @@ export function advanceAverageFanDailyRuntime(
       };
     }
 
-    if (resolved.length >= 10) {
+    if (resolved.length >= AVERAGE_FAN_BOARD_QUESTION_COUNT) {
       return {
         submissionState: { final_submission: null },
         publicState: {
@@ -512,7 +514,7 @@ export function advanceAverageFanDailyRuntime(
 
   if (phase === "verdict" && action.continue === true) {
     const resolved = resolvedRows(state);
-    if (resolved.length >= 10) {
+    if (resolved.length >= AVERAGE_FAN_BOARD_QUESTION_COUNT) {
       return {
         submissionState: { final_submission: null },
         publicState: {

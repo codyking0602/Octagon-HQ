@@ -21,7 +21,7 @@ import {
   useAverageFanOpeningStageScale,
   useAverageFanScreenLock,
 } from "./AverageFanPrototypePage";
-import { averageFanMoneyLabel } from "./AverageFanPrototypeModel";
+import { averageFanGradeLabel, averageFanMoneyLabel } from "./AverageFanPrototypeModel";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
 type JsonRecord = Record<string, unknown>;
@@ -239,7 +239,7 @@ export function OfficialAverageFanDailyView({
           ) : questionVisible ? (
             <section className="average-fan-question-card">
               <header>
-                <b>{current.grade === 1 ? "1ST GRADE" : current.grade === 2 ? "2ND GRADE" : current.grade === 3 ? "3RD GRADE" : `${current.grade}TH GRADE`}</b>
+                <b>{averageFanGradeLabel(current.grade).toUpperCase()}</b>
                 <span>{current.subject}</span>
               </header>
               <h2>{current.prompt}</h2>
@@ -280,7 +280,7 @@ export function OfficialAverageFanDailyView({
               </span>
               <div className="average-fan-result-score"><strong>{finalScore}</strong><small>HQ PTS</small></div>
               <div className="average-fan-result-stats">
-                <div><b>{resolved.filter((item) => item.correct || item.saved).length}/10</b><span>Board clears</span></div>
+                <div><b>{resolved.filter((item) => item.correct || item.saved).length}/{board.length}</b><span>Board clears</span></div>
                 <div><b>{resolved.filter((item) => item.saved).length}</b><span>Saves</span></div>
                 <div><b>{finalMoney ? averageFanMoneyLabel(finalMoney) : "ENDED"}</b><span>Money run</span></div>
               </div>
@@ -327,7 +327,7 @@ export function OfficialAverageFanDailyView({
                   <small>{lastResolution.saved === true ? "Your fan got it right — Save keeps the clean run alive." : "Save was used, but your fan missed too."}</small>
                 ) : null}
                 <button type="button" disabled={busy} onClick={() => onAdvance({ continue: true })}>
-                  {resolved.length >= 10 ? "SEE FINAL SUBJECT" : "BACK TO BOARD"}
+                  {resolved.length >= board.length ? "SEE FINAL SUBJECT" : "BACK TO BOARD"}
                 </button>
               </div>
             )}

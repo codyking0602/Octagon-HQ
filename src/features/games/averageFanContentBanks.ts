@@ -5,9 +5,11 @@ import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEven
 import type { BarTriviaQuestion } from "./barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "../play/barTriviaQuestionBank";
 import {
+  AVERAGE_FAN_PLAYABLE_GRADES,
   AVERAGE_FAN_SUBJECTS,
   assertAverageFanQuestion,
   type AverageFanGrade,
+  type AverageFanPlayableGrade,
   type AverageFanQuestion,
   type AverageFanSport,
   type AverageFanSubject,
@@ -31,20 +33,18 @@ export const AVERAGE_FAN_CURRENT_EVENT_POOL_TARGETS = {
   ufc: 10,
 } as const;
 
-const FOOTBALL_GRADE_TARGETS: Record<AverageFanGrade, number> = {
-  1: 40,
+const FOOTBALL_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
   2: 40,
   3: 40,
   4: 40,
-  5: 45,
+  5: 85,
 };
 
-const UFC_GRADE_TARGETS: Record<AverageFanGrade, number> = {
-  1: 80,
+const UFC_GRADE_TARGETS: Record<AverageFanPlayableGrade, number> = {
   2: 80,
   3: 80,
   4: 80,
-  5: 90,
+  5: 170,
 };
 
 const NFL_TEAM_NAMES: Readonly<Record<string, string>> = {
@@ -535,9 +535,9 @@ const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
   { id: "red-river", grade: 1, prompt: "Which programs play the Red River rivalry?", answer: "Texas and Oklahoma", wrong: ["USC and UCLA", "Iowa and Iowa State"], explanation: "Texas and Oklahoma meet in the Red River rivalry." },
   { id: "army-navy", grade: 1, prompt: "Which service academies play the Army–Navy Game?", answer: "Army and Navy", wrong: ["Army and Air Force", "Navy and Air Force"], explanation: "The Army–Navy Game matches the U.S. Military Academy and U.S. Naval Academy." },
   { id: "egg-bowl", grade: 2, prompt: "Which two programs play the Egg Bowl?", answer: "Ole Miss and Mississippi State", wrong: ["Alabama and Auburn", "Clemson and South Carolina", "Arkansas and LSU"], explanation: "The Egg Bowl is Ole Miss versus Mississippi State." },
-  { id: "paul-bunyan", grade: 3, prompt: "Michigan and Michigan State play for which trophy?", answer: "Paul Bunyan Trophy", wrong: ["Little Brown Jug", "Old Oaken Bucket"], explanation: "Michigan and Michigan State compete for the Paul Bunyan Trophy." },
-  { id: "axe", grade: 2, prompt: "Minnesota and Wisconsin play for which trophy?", answer: "Paul Bunyan's Axe", wrong: ["Floyd of Rosedale", "Heartland Trophy"], explanation: "Minnesota and Wisconsin compete for Paul Bunyan's Axe." },
-  { id: "cy-hawk", grade: 2, prompt: "Which two programs play for the Cy-Hawk Trophy?", answer: "Iowa and Iowa State", wrong: ["Iowa and Minnesota", "Iowa State and Kansas State"], explanation: "The Cy-Hawk Trophy belongs to the Iowa–Iowa State rivalry." },
+  { id: "paul-bunyan", grade: 3, prompt: "Michigan and Michigan State play for which trophy?", answer: "Paul Bunyan Trophy", wrong: ["Little Brown Jug", "Old Oaken Bucket", "Floyd of Rosedale"], explanation: "Michigan and Michigan State compete for the Paul Bunyan Trophy." },
+  { id: "axe", grade: 2, prompt: "Minnesota and Wisconsin play for which trophy?", answer: "Paul Bunyan's Axe", wrong: ["Floyd of Rosedale", "Heartland Trophy", "Old Oaken Bucket"], explanation: "Minnesota and Wisconsin compete for Paul Bunyan's Axe." },
+  { id: "cy-hawk", grade: 2, prompt: "Which two programs play for the Cy-Hawk Trophy?", answer: "Iowa and Iowa State", wrong: ["Iowa and Minnesota", "Iowa State and Kansas State", "Iowa and Wisconsin"], explanation: "The Cy-Hawk Trophy belongs to the Iowa–Iowa State rivalry." },
   { id: "palmetto", grade: 2, prompt: "Which two programs meet in South Carolina's Palmetto Bowl rivalry?", answer: "Clemson and South Carolina", wrong: ["Georgia and Georgia Tech", "Florida and Florida State", "Kentucky and Louisville"], explanation: "Clemson and South Carolina meet in the Palmetto Bowl rivalry." },
   { id: "bedlam", grade: 2, prompt: "Which two programs are associated with the Bedlam rivalry?", answer: "Oklahoma and Oklahoma State", wrong: ["Oklahoma and Texas", "Oklahoma State and Texas Tech"], explanation: "Bedlam traditionally refers to Oklahoma versus Oklahoma State." },
   { id: "howards-rock", grade: 3, prompt: "Which program is associated with Howard's Rock?", answer: "Clemson", wrong: ["Auburn", "Tennessee"], explanation: "Clemson players touch Howard's Rock before running down the hill into Memorial Stadium." },
@@ -549,11 +549,11 @@ const CFB_TRADITION_FACTS: readonly KnowledgeFact[] = [
   { id: "sooner-schooner", grade: 2, prompt: "Which program is associated with the Sooner Schooner?", answer: "Oklahoma", wrong: ["Oklahoma State", "Texas Tech", "Nebraska"], explanation: "The Sooner Schooner is an Oklahoma game-day tradition." },
   { id: "renegade", grade: 3, prompt: "Chief Osceola and Renegade are associated with which program?", answer: "Florida State", wrong: ["Florida", "Miami"], explanation: "Florida State's pregame tradition features Chief Osceola and Renegade." },
   { id: "sailgating", grade: 4, prompt: "Which program is famous for “sailgating” to games on the Tennessee River?", answer: "Tennessee", wrong: ["Kentucky", "Arkansas"], explanation: "Fans can arrive by boat near Tennessee's Neyland Stadium, a tradition known as sailgating." },
-  { id: "victory-bell", grade: 3, prompt: "USC and UCLA compete for which rivalry trophy?", answer: "Victory Bell", wrong: ["Jeweled Shillelagh", "Stanford Axe"], explanation: "USC and UCLA play for the Victory Bell." },
+  { id: "victory-bell", grade: 3, prompt: "USC and UCLA compete for which rivalry trophy?", answer: "Victory Bell", wrong: ["Jeweled Shillelagh", "Stanford Axe", "Old Oaken Bucket"], explanation: "USC and UCLA play for the Victory Bell." },
   { id: "floyd-rosedale", grade: 5, prompt: "Iowa and Minnesota play for which trophy?", answer: "Floyd of Rosedale", wrong: ["Heartland Trophy", "Little Brown Jug", "Paul Bunyan's Axe"], explanation: "Iowa and Minnesota compete for Floyd of Rosedale." },
-  { id: "old-oaken-bucket", grade: 5, prompt: "Indiana and Purdue play for which trophy?", answer: "Old Oaken Bucket", wrong: ["Old Brass Spittoon", "Illibuck"], explanation: "Indiana and Purdue compete for the Old Oaken Bucket." },
-  { id: "jeweled-shillelagh", grade: 5, prompt: "Notre Dame and USC play for which trophy?", answer: "Jeweled Shillelagh", wrong: ["Victory Bell", "Legends Trophy"], explanation: "Notre Dame and USC compete for the Jeweled Shillelagh." },
-  { id: "stanford-axe", grade: 5, prompt: "Stanford and California play for which trophy?", answer: "Stanford Axe", wrong: ["Territorial Cup", "Victory Bell"], explanation: "Stanford and Cal compete for the Stanford Axe." },
+  { id: "old-oaken-bucket", grade: 5, prompt: "Indiana and Purdue play for which trophy?", answer: "Old Oaken Bucket", wrong: ["Old Brass Spittoon", "Illibuck", "Little Brown Jug"], explanation: "Indiana and Purdue compete for the Old Oaken Bucket." },
+  { id: "jeweled-shillelagh", grade: 5, prompt: "Notre Dame and USC play for which trophy?", answer: "Jeweled Shillelagh", wrong: ["Victory Bell", "Legends Trophy", "Paul Bunyan Trophy"], explanation: "Notre Dame and USC compete for the Jeweled Shillelagh." },
+  { id: "stanford-axe", grade: 5, prompt: "Stanford and California play for which trophy?", answer: "Stanford Axe", wrong: ["Territorial Cup", "Victory Bell", "Paul Bunyan's Axe"], explanation: "Stanford and Cal compete for the Stanford Axe." },
   { id: "golden-boot", grade: 5, prompt: "LSU and Arkansas play for which trophy?", answer: "Golden Boot", wrong: ["Magnolia Bowl Trophy", "Tiger Rag", "Floyd of Rosedale"], explanation: "LSU and Arkansas compete for the Golden Boot." },
 ];
 
@@ -575,9 +575,9 @@ const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
   { id: "tennessee-first-bcs", grade: 5, subject: "Programs", prompt: "Which program won the first BCS National Championship Game after the 1998 season?", answer: "Tennessee", wrong: ["Florida State", "Nebraska", "Ohio State"], explanation: "Tennessee beat Florida State in the Fiesta Bowl to win the first BCS national championship." },
   { id: "utah-sugar-alabama", grade: 5, subject: "Programs", prompt: "Which program completed a 13-0 season by beating Alabama in the Sugar Bowl after the 2008 season?", answer: "Utah", wrong: ["Boise State", "TCU"], explanation: "Utah finished 13-0 after defeating Alabama 31-17 in the Sugar Bowl." },
 
-  { id: "little-brown-jug", grade: 5, subject: "Traditions", prompt: "Michigan and Minnesota play for which rivalry trophy?", answer: "Little Brown Jug", wrong: ["Paul Bunyan Trophy", "Heartland Trophy"], explanation: "Michigan and Minnesota compete for the Little Brown Jug." },
+  { id: "little-brown-jug", grade: 5, subject: "Traditions", prompt: "Michigan and Minnesota play for which rivalry trophy?", answer: "Little Brown Jug", wrong: ["Paul Bunyan Trophy", "Heartland Trophy", "Old Oaken Bucket"], explanation: "Michigan and Minnesota compete for the Little Brown Jug." },
   { id: "old-brass-spittoon", grade: 5, subject: "Traditions", prompt: "Indiana and Michigan State play for which rivalry trophy?", answer: "Old Brass Spittoon", wrong: ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], explanation: "Indiana and Michigan State compete for the Old Brass Spittoon." },
-  { id: "illibuck", grade: 5, subject: "Traditions", prompt: "Illinois and Ohio State play for which rivalry trophy?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
+  { id: "illibuck", grade: 5, subject: "Traditions", prompt: "Illinois and Ohio State play for which rivalry trophy?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
 
   { id: "stanford-usc-2007", grade: 5, subject: "CFB History", prompt: "Which powerhouse did Stanford upset 24-23 in 2007 during Jim Harbaugh's first season as head coach?", answer: "USC", wrong: ["Oregon", "UCLA"], explanation: "Stanford stunned USC 24-23 at the Los Angeles Memorial Coliseum in 2007." },
   { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", answer: "Jalen Watts-Jackson", wrong: ["LJ Scott", "Aaron Burbridge", "Connor Cook"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
@@ -684,7 +684,8 @@ function knowledgeQuestions(
   facts: readonly KnowledgeFact[],
 ) {
   return facts.map((fact, index) => (
-    index % 4 === 0
+    (index % 4 === 0
+      || ((/\btroph(?:y|ies)\b/i.test(fact.prompt) || /^\d{4}$/.test(fact.answer.trim())) && fact.wrong.length === 3))
       ? choiceQuestion({
           id: `${prefix}:${fact.id}:choice`,
           sport,
@@ -779,7 +780,8 @@ function nflKnowledgeQuestions(
   facts: readonly KnowledgeFact[],
 ) {
   return facts.map((fact, index) => (
-    index % 3 === 0
+    (index % 3 === 0
+      || ((/\btroph(?:y|ies)\b/i.test(fact.prompt) || /^\d{4}$/.test(fact.answer.trim())) && fact.wrong.length === 3))
       ? choiceQuestion({
           id: `${prefix}:${fact.id}:choice`,
           sport: "nfl",
@@ -863,7 +865,10 @@ function authoredCfbQuestion(question: BarTriviaQuestion): AverageFanQuestion {
     verifiedAt: question.verifiedAt,
   };
 
-  if (formatRoll <= 3 || protectedFinal) {
+  const blankRecallNeedsChoices = /\btroph(?:y|ies)\b/i.test(question.prompt)
+    || /^\d{4}$/.test(question.answer.trim());
+
+  if (grade === 1 || formatRoll <= 3 || protectedFinal || blankRecallNeedsChoices) {
     return assertAverageFanQuestion({
       ...common,
       format: "four-choice",
@@ -1015,7 +1020,7 @@ function footballCandidates(league: "NFL" | "CFB") {
       answer: position,
       explanation: `${player.name} played ${position}.`,
       fanMisses: wrongPositions,
-      difficultyNudge: -1,
+      difficultyNudge: player.recognizabilityTier === "A" || player.recognizabilityTier === "B" ? -2 : -1,
     }));
 
     const tfTrue = index % 2 === 0;
@@ -1196,16 +1201,16 @@ function footballCandidates(league: "NFL" | "CFB") {
       if (!program.conference) continue;
       const conferenceSeason = program.conferenceSeason ?? 2025;
       const wrongConferences = peerValues(conferences, program.conference, `${program.id}:conference`);
-      questions.push(shortQuestion({
+      questions.push(choiceQuestion({
         id: `average-fan:cfb:g1:${program.id}:conference`,
         sport: "cfb",
         grade: 1,
         subject: "Programs",
         prompt: `For the ${conferenceSeason} season, which conference was ${program.name} in?`,
         answer: program.conference,
+        wrongChoices: wrongConferences,
         explanation: `${program.name} was in the ${program.conference} for the ${conferenceSeason} season.`,
-        fanMisses: wrongConferences,
-        difficultyNudge: -1,
+        difficultyNudge: program.recognizabilityTier === "A" || program.recognizabilityTier === "B" ? -2 : -1,
       }));
       const tfTrue = index % 2 === 0;
       const shownConference = tfTrue ? program.conference : wrongConferences[0]!;
@@ -1304,16 +1309,16 @@ function ufcCandidates() {
   for (const [index, fighter] of fighters.entries()) {
     const primaryDivision = formatDivision(fighter.primaryDivision);
     const wrongDivisions = peerValues(divisions, primaryDivision, `${fighter.id}:division`);
-    questions.push(shortQuestion({
+    questions.push(choiceQuestion({
       id: `average-fan:ufc:g1:${fighter.id}:division`,
       sport: "ufc",
       grade: 1,
       subject: "Fighters",
       prompt: `Which UFC division is ${fighter.name} primarily associated with?`,
       answer: primaryDivision,
+      wrongChoices: wrongDivisions,
       explanation: `${fighter.name}'s primary UFC division is ${primaryDivision}.`,
-      fanMisses: wrongDivisions,
-      difficultyNudge: -1,
+      difficultyNudge: fighter.scope === "recognizable-expansion" ? -2 : -1,
     }));
 
     const tfTrue = index % 2 === 0;
@@ -1496,6 +1501,52 @@ function ufcCandidates() {
   return questions;
 }
 
+function calibratedPlayableGrade(question: AverageFanQuestion): AverageFanPlayableGrade {
+  if (question.protectedFinal) return 5;
+
+  // Current events are fun, but even an "easy" weekly story can be niche. Keep them
+  // out of the opening grade unless a future editor explicitly creates a Grade-2 gate.
+  if (question.contentType === "current-event") {
+    if (question.grade <= 1) return 3;
+    if (question.grade === 2) return 3;
+    if (question.grade === 3) return 4;
+    return 5;
+  }
+
+  if (question.grade <= 1) return 2;
+  if (question.grade === 2) return 3;
+  if (question.grade === 3) return 4;
+  return 5;
+}
+
+function calibratedPlayableQuestion(question: AverageFanQuestion) {
+  const legacyGrade = question.grade;
+  const grade = calibratedPlayableGrade(question);
+  const misses = question.fanMisses ?? [];
+  const blankRecallNeedsChoices = /\btroph(?:y|ies)\b/i.test(question.prompt)
+    || /^\d{4}$/.test(question.answer.trim())
+    || (
+      legacyGrade >= 4
+      && /\b(?:draft(?:ed)?|overall pick|pick number|yards?|touchdowns?|sacks?|interceptions?|seconds?|minutes?|score)\b/i.test(question.prompt)
+    )
+    || (
+      legacyGrade === 5
+      && /\b(?:against whom|which opponent|came against whom|who did .+ (?:beat|defeat|face))\b/i.test(question.prompt)
+    );
+
+  if (question.format === "short-answer" && blankRecallNeedsChoices && misses.length === 3) {
+    return assertAverageFanQuestion({
+      ...question,
+      grade,
+      format: "four-choice",
+      choices: fourChoiceOrder(`${question.id}:calibrated-choice`, question.answer, misses),
+      fanMisses: undefined,
+    });
+  }
+
+  return assertAverageFanQuestion({ ...question, grade });
+}
+
 function balancedTake(
   candidates: readonly AverageFanQuestion[],
   target: number,
@@ -1503,7 +1554,9 @@ function balancedTake(
   label: string,
 ) {
   const isNflOrdinary = /^nfl grade [1-5] evergreen$/.test(label);
+  const isOpeningGrade = / grade 2 evergreen$/.test(label);
   const isNflUpperGrade = /^nfl grade [45] evergreen$/.test(label);
+  const isCfbUpperGrade = /^cfb grade 5 evergreen$/.test(label);
   const isUfcUpperGrade = /^ufc grade [45] evergreen$/.test(label) || label === "ufc Finals";
   const latestPromptYear = (question: AverageFanQuestion) => {
     const years = [...question.prompt.matchAll(/\b(?:19|20)\d{2}\b/g)].map((match) => Number(match[0]));
@@ -1515,6 +1568,13 @@ function balancedTake(
     return year >= modernThreshold ? 0 : 2;
   };
   const candidateOrder = (left: AverageFanQuestion, right: AverageFanQuestion) => {
+    if (isOpeningGrade) {
+      const difficultyCompare = left.difficultyNudge - right.difficultyNudge;
+      if (difficultyCompare) return difficultyCompare;
+      const leftShort = left.format === "short-answer" ? 1 : 0;
+      const rightShort = right.format === "short-answer" ? 1 : 0;
+      if (leftShort !== rightShort) return leftShort - rightShort;
+    }
     if (isNflOrdinary) {
       const formatRank = (question: AverageFanQuestion) => question.format === "true-false" ? 0 : 1;
       const formatCompare = formatRank(left) - formatRank(right);
@@ -1524,15 +1584,49 @@ function balancedTake(
         if (eraCompare) return eraCompare;
       }
     }
+    if (isCfbUpperGrade) {
+      const eraCompare = eraRank(left, 2000) - eraRank(right, 2000);
+      if (eraCompare) return eraCompare;
+    }
     if (isUfcUpperGrade) {
       const eraCompare = eraRank(left, 2010) - eraRank(right, 2010);
       if (eraCompare) return eraCompare;
     }
     return left.id.localeCompare(right.id);
   };
+  const selectionCandidates = (() => {
+    if (!isCfbUpperGrade) return candidates;
+
+    // Grade 5 should be hard because the knowledge is deep, not because the player
+    // happened to play decades ago. Cap pre-2000 dated player identities so the
+    // dated Player slice remains at least 65% modern while undated landmark/player
+    // questions can still compete naturally.
+    const playerCandidates = candidates.filter((question) => question.subject === "Players");
+    const modernDated = playerCandidates.filter((question) => {
+      const year = latestPromptYear(question);
+      return year != null && year >= 2000;
+    });
+    const historicalDated = playerCandidates
+      .filter((question) => {
+        const year = latestPromptYear(question);
+        return year != null && year < 2000;
+      })
+      .sort(candidateOrder);
+    const historicalCap = Math.floor(modernDated.length * 0.35 / 0.65);
+    const allowedHistorical = new Set(
+      historicalDated.slice(0, historicalCap).map((question) => question.id),
+    );
+
+    return candidates.filter((question) => {
+      if (question.subject !== "Players") return true;
+      const year = latestPromptYear(question);
+      return year == null || year >= 2000 || allowedHistorical.has(question.id);
+    });
+  })();
+
   const bySubject = new Map(subjects.map((subject) => [
     subject,
-    candidates.filter((question) => question.subject === subject).sort(candidateOrder),
+    selectionCandidates.filter((question) => question.subject === subject).sort(candidateOrder),
   ] as const));
   const offsets = new Map(subjects.map((subject) => [subject, 0]));
   const selected: AverageFanQuestion[] = [];
@@ -1559,12 +1653,13 @@ function balancedTake(
 function buildBank(
   sport: AverageFanSport,
   candidates: readonly AverageFanQuestion[],
-  gradeTargets: Record<AverageFanGrade, number>,
+  gradeTargets: Record<AverageFanPlayableGrade, number>,
   finalTarget: number,
 ) {
   const subjects = AVERAGE_FAN_SUBJECTS[sport] as readonly AverageFanSubject[];
-  const ordinary = ([1, 2, 3, 4, 5] as const).flatMap((grade) => {
-    const current = candidates
+  const playableCandidates = candidates.map(calibratedPlayableQuestion);
+  const ordinary = AVERAGE_FAN_PLAYABLE_GRADES.flatMap((grade) => {
+    const current = playableCandidates
       .filter((question) => (
         !question.protectedFinal
         && question.grade === grade
@@ -1576,7 +1671,7 @@ function buildBank(
     }
     const evergreenTarget = gradeTargets[grade] - current.length;
     const evergreen = balancedTake(
-      candidates.filter((question) => (
+      playableCandidates.filter((question) => (
         !question.protectedFinal
         && question.grade === grade
         && question.contentType === "evergreen"
@@ -1588,7 +1683,7 @@ function buildBank(
     return [...current, ...evergreen];
   });
   const finals = balancedTake(
-    candidates.filter((question) => question.protectedFinal),
+    playableCandidates.filter((question) => question.protectedFinal),
     finalTarget,
     subjects,
     `${sport} Finals`,
@@ -1644,7 +1739,7 @@ export function averageFanBankSummary(sport: Exclude<AverageFanSport, "mlb">) {
       ]),
     ),
     grades: Object.fromEntries(
-      [1, 2, 3, 4, 5].map((grade) => [
+      AVERAGE_FAN_PLAYABLE_GRADES.map((grade) => [
         grade,
         bank.filter((question) => question.grade === grade && !question.protectedFinal).length,
       ]),

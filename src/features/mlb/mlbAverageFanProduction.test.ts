@@ -46,16 +46,16 @@ describe("MLB Average Fan production runs", () => {
     expect(MLB_AVERAGE_FAN_PRODUCTION_RUNS).toHaveLength(2);
   });
 
-  it("uses ten unique board questions, two per grade, plus one protected Final", () => {
+  it("uses eight unique board questions, two per playable grade, plus one protected Final", () => {
     for (const run of MLB_AVERAGE_FAN_PRODUCTION_RUNS) {
-      expect(run.questions).toHaveLength(10);
-      expect(new Set(run.questions.map((question) => question.id)).size).toBe(10);
+      expect(run.questions).toHaveLength(8);
+      expect(new Set(run.questions.map((question) => question.id)).size).toBe(8);
       expect(run.questions.every((question) => question.sport === "mlb" && !question.protectedFinal)).toBe(true);
       expect(run.finalQuestion.sport).toBe("mlb");
       expect(run.finalQuestion.grade).toBe(5);
       expect(run.finalQuestion.protectedFinal).toBe(true);
 
-      for (const grade of [1, 2, 3, 4, 5] as const) {
+      for (const grade of [2, 3, 4, 5] as const) {
         expect(run.questions.filter((question) => question.grade === grade)).toHaveLength(2);
       }
 
@@ -66,10 +66,10 @@ describe("MLB Average Fan production runs", () => {
 
   it("locks MLB to the same staggered-subject and easy-to-hard grade standards", () => {
     for (const run of MLB_AVERAGE_FAN_PRODUCTION_RUNS) {
-      for (const grade of [1, 2, 3, 4, 5] as const) {
+      for (const grade of [2, 3, 4, 5] as const) {
         const gradeQuestions = run.questions.filter((question) => question.grade === grade);
         expect(new Set(gradeQuestions.map((question) => question.subject)).size, `${run.challengeKey} grade ${grade}`).toBe(2);
-        if (grade <= 2) {
+        if (grade <= 3) {
           expect(
             gradeQuestions.filter((question) => question.format === "short-answer").length,
             `${run.challengeKey} grade ${grade}`,
@@ -77,10 +77,10 @@ describe("MLB Average Fan production runs", () => {
         }
       }
 
-      expect(run.questions.filter((question) => question.grade === 1).every((question) => question.difficultyNudge <= -2)).toBe(true);
-      expect(run.questions.filter((question) => question.grade === 2).every((question) => question.difficultyNudge <= -1)).toBe(true);
-      expect(run.questions.filter((question) => question.grade === 4).every((question) => question.difficultyNudge >= 1)).toBe(true);
-      expect(run.questions.filter((question) => question.grade === 5).every((question) => question.difficultyNudge >= 2)).toBe(true);
+      expect(run.questions.filter((question) => question.grade === 2).every((question) => question.difficultyNudge <= -2)).toBe(true);
+      expect(run.questions.filter((question) => question.grade === 3).every((question) => question.difficultyNudge <= -1)).toBe(true);
+      expect(run.questions.filter((question) => question.grade === 4).every((question) => question.difficultyNudge <= 0)).toBe(true);
+      expect(run.questions.filter((question) => question.grade === 5).every((question) => question.difficultyNudge >= 1)).toBe(true);
     }
   });
 
@@ -113,21 +113,19 @@ describe("MLB Average Fan production runs", () => {
       }
     }
 
-    expect(shortAnswerCount).toBe(14);
-    expect(typoCount).toBeGreaterThanOrEqual(12);
+    expect(shortAnswerCount).toBe(11);
+    expect(typoCount).toBeGreaterThanOrEqual(9);
   });
 
-  it("keeps each MLB board on the approved six short / three choice / one true-false mix", () => {
+  it("keeps each MLB board mixed-format after the shorter calibration", () => {
     for (const run of MLB_AVERAGE_FAN_PRODUCTION_RUNS) {
       const counts = run.questions.reduce<Record<string, number>>((acc, question) => {
         acc[question.format] = (acc[question.format] ?? 0) + 1;
         return acc;
       }, {});
-      expect(counts).toEqual({
-        "four-choice": 3,
-        "short-answer": 6,
-        "true-false": 1,
-      });
+      expect(counts["short-answer"]).toBeGreaterThanOrEqual(4);
+      expect(counts["four-choice"]).toBeGreaterThanOrEqual(2);
+      expect(counts["true-false"]).toBe(1);
     }
   });
 

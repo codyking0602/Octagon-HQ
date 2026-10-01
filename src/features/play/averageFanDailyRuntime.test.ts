@@ -7,7 +7,11 @@ import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
 } from "./todaysChallengeRuntime";
-import type { AverageFanQuestion } from "../games/averageFanEngine";
+import {
+  AVERAGE_FAN_BOARD_QUESTION_COUNT,
+  AVERAGE_FAN_PLAYABLE_GRADES,
+  type AverageFanQuestion,
+} from "../games/averageFanEngine";
 
 function contextFrom(
   publication: ReturnType<typeof buildAverageFanDailySetup>,
@@ -29,12 +33,12 @@ describe("Average Fan canonical Daily runtime", () => {
   it("builds two questions per grade without leaking answers", () => {
     const publication = buildAverageFanDailySetup("ufc", "2026-10-01", "test-v1");
     const board = publication.publicSetup.board as Array<Record<string, unknown>>;
-    expect(board).toHaveLength(10);
-    for (const grade of [1, 2, 3, 4, 5]) {
+    expect(board).toHaveLength(AVERAGE_FAN_BOARD_QUESTION_COUNT);
+    for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
       expect(board.filter((row) => row.grade === grade)).toHaveLength(2);
     }
     expect(JSON.stringify(publication.publicSetup)).not.toContain('"answer"');
-    expect(publication.privateSetupEvidence.question_ids).toHaveLength(10);
+    expect(publication.privateSetupEvidence.question_ids).toHaveLength(AVERAGE_FAN_BOARD_QUESTION_COUNT);
     expect((publication.privateSetupEvidence.final_question as AverageFanQuestion).protectedFinal).toBe(true);
   });
 
@@ -43,17 +47,19 @@ describe("Average Fan canonical Daily runtime", () => {
       const publication = buildAverageFanDailySetup(scope, "2026-10-01", `${scope}-stagger-v1`, []);
       const questions = publication.privateSetupEvidence.questions as AverageFanQuestion[];
 
-      for (const grade of [1, 2, 3, 4, 5] as const) {
+      for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
         const gradeQuestions = questions.filter((question) => question.grade === grade);
         expect(gradeQuestions, `${scope} grade ${grade}`).toHaveLength(2);
         expect(new Set(gradeQuestions.map((question) => question.subject)).size, `${scope} grade ${grade}`).toBe(2);
-        if (grade <= 2) {
+        if (grade <= 3) {
           expect(
             gradeQuestions.filter((question) => question.format === "short-answer").length,
             `${scope} grade ${grade}`,
           ).toBeLessThanOrEqual(1);
         }
       }
+
+      expect(questions.some((question) => question.grade === 2 && question.contentType === "current-event"), scope).toBe(false);
     }
   });
 

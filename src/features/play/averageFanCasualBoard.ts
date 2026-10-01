@@ -1,6 +1,7 @@
 import { AVERAGE_FAN_CONTENT_BANKS } from "../games/averageFanContentBanks";
 import {
-  AVERAGE_FAN_GRADES,
+  AVERAGE_FAN_BOARD_QUESTION_COUNT,
+  AVERAGE_FAN_PLAYABLE_GRADES,
   averageFanQuestionEligibleForBoard,
   averageFanQuestionEligibleForFinal,
   type AverageFanQuestion,
@@ -50,7 +51,7 @@ export function buildAverageFanCasualBoard(
   const selected: AverageFanQuestion[] = [];
   const subjectCounts = new Map<string, number>();
 
-  for (const grade of AVERAGE_FAN_GRADES) {
+  for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
     const gradeSelected: AverageFanQuestion[] = [];
     if (currentEvent?.grade === grade) {
       gradeSelected.push(currentEvent);
@@ -77,6 +78,14 @@ export function buildAverageFanCasualBoard(
         const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
         if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
 
+        if (grade <= 3) {
+          const leftShortAnswer = left.format === "short-answer" ? 1 : 0;
+          const rightShortAnswer = right.format === "short-answer" ? 1 : 0;
+          if (leftShortAnswer !== rightShortAnswer) return leftShortAnswer - rightShortAnswer;
+          const difficultyDelta = left.difficultyNudge - right.difficultyNudge;
+          if (difficultyDelta !== 0) return difficultyDelta;
+        }
+
         const leftFormatRepeat = gradeSelected.some((question) => question.format === left.format) ? 1 : 0;
         const rightFormatRepeat = gradeSelected.some((question) => question.format === right.format) ? 1 : 0;
         if (leftFormatRepeat !== rightFormatRepeat) return leftFormatRepeat - rightFormatRepeat;
@@ -97,8 +106,8 @@ export function buildAverageFanCasualBoard(
     selected.push(...gradeSelected);
   }
 
-  if (selected.length !== 10 || new Set(selected.map((question) => question.id)).size !== 10) {
-    throw new Error("Average Fan Casual board must contain ten unique questions.");
+  if (selected.length !== AVERAGE_FAN_BOARD_QUESTION_COUNT || new Set(selected.map((question) => question.id)).size !== AVERAGE_FAN_BOARD_QUESTION_COUNT) {
+    throw new Error("Average Fan Casual board must contain eight unique questions.");
   }
 
   const evergreenFinals = finalEligible.filter((question) => question.contentType === "evergreen");

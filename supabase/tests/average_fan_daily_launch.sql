@@ -74,7 +74,7 @@ begin
     'public.publish_daily_challenge_setup(date,text,text,text,text,text,jsonb,jsonb,jsonb,jsonb,text)'::regprocedure::oid
   ) into v_publication_definition;
   if position(
-    'p_game_type = ''average_fan'' and p_scoring_version = ''average-fan-score-v1'''
+    'p_game_type = ''average_fan'' and p_scoring_version = ''average-fan-score-v2'''
     in v_publication_definition
   ) = 0 then
     raise exception 'Average Fan scoring version is missing from the canonical Daily publication gate';
@@ -85,8 +85,8 @@ begin
     'play-rotation-v19-average-fan-delay-oct1',
     'average_fan',
     'average-fan-test-ufc',
-    'average-fan-daily-v1',
-    'average-fan-score-v1',
+    'average-fan-daily-v2',
+    'average-fan-score-v2',
     '{}'::jsonb,
     '{}'::jsonb,
     '{}'::jsonb,
@@ -99,8 +99,8 @@ begin
     'football-daily-v19-average-fan-delay-oct1',
     'average_fan',
     'average-fan-test-football',
-    'average-fan-daily-v1',
-    'average-fan-score-v1',
+    'average-fan-daily-v2',
+    'average-fan-score-v2',
     '{}'::jsonb,
     '{}'::jsonb,
     '{}'::jsonb,
@@ -109,9 +109,9 @@ begin
   ) into strict v_football_publication;
 
   if v_ufc_publication->>'game_type' <> 'average_fan'
-    or v_ufc_publication->>'scoring_version' <> 'average-fan-score-v1'
+    or v_ufc_publication->>'scoring_version' <> 'average-fan-score-v2'
     or v_football_publication->>'game_type' <> 'average_fan'
-    or v_football_publication->>'scoring_version' <> 'average-fan-score-v1' then
+    or v_football_publication->>'scoring_version' <> 'average-fan-score-v2' then
     raise exception 'Average Fan Daily publication contract failed for UFC or Football';
   end if;
 
@@ -121,12 +121,12 @@ begin
       'proof', 'average-fan-proof',
       'fan', 'shane',
       'sport', 'nfl',
-      'board_score', 63,
+      'board_score', 67,
       'final_outcome', 'correct',
-      'normalized_score', 73,
-      'native_score', 73,
+      'normalized_score', 77,
+      'native_score', 77,
       'unsaved_miss_question_numbers', jsonb_build_array(2, 7),
-      'board_question_ids', jsonb_build_array('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'),
+      'board_question_ids', jsonb_build_array('q1','q2','q3','q4','q5','q6','q7','q8'),
       'final_question_id', 'final-1',
       'saves', 0
     ),
@@ -136,10 +136,10 @@ begin
     )
   );
 
-  if v_grade.native_score <> 73
-    or v_grade.normalized_score <> 73
-    or v_grade.public_result->>'score' <> '73'
-    or v_grade.public_result->>'board_score' <> '63'
+  if v_grade.native_score <> 77
+    or v_grade.normalized_score <> 77
+    or v_grade.public_result->>'score' <> '77'
+    or v_grade.public_result->>'board_score' <> '67'
     or v_grade.public_result->>'final_outcome' <> 'correct'
     or v_grade.public_result->>'fan' <> 'shane'
     or v_grade.public_result->>'sport' <> 'nfl' then
@@ -149,17 +149,17 @@ begin
   select * into strict v_canonical_grade
   from private.grade_daily_challenge(
     'average_fan',
-    'average-fan-score-v1',
+    'average-fan-score-v2',
     jsonb_build_object(
       'proof', 'average-fan-proof',
       'fan', 'shane',
       'sport', 'nfl',
-      'board_score', 63,
+      'board_score', 67,
       'final_outcome', 'correct',
-      'normalized_score', 73,
-      'native_score', 73,
+      'normalized_score', 77,
+      'native_score', 77,
       'unsaved_miss_question_numbers', jsonb_build_array(2, 7),
-      'board_question_ids', jsonb_build_array('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'),
+      'board_question_ids', jsonb_build_array('q1','q2','q3','q4','q5','q6','q7','q8'),
       'final_question_id', 'final-1',
       'saves', 0
     ),
@@ -169,7 +169,7 @@ begin
     )
   );
 
-  if v_canonical_grade.normalized_score <> 73 then
+  if v_canonical_grade.normalized_score <> 77 then
     raise exception 'canonical Daily grader did not route Average Fan correctly: %',
       row_to_json(v_canonical_grade);
   end if;
@@ -186,7 +186,7 @@ begin
         'normalized_score', 90,
         'native_score', 90,
         'unsaved_miss_question_numbers', '[]'::jsonb,
-        'board_question_ids', jsonb_build_array('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'),
+        'board_question_ids', jsonb_build_array('q1','q2','q3','q4','q5','q6','q7','q8'),
         'final_question_id', 'final-1',
         'saves', 0
       ),
@@ -200,12 +200,38 @@ begin
       end if;
   end;
 
+  begin
+    perform *
+    from private.grade_average_fan_daily(
+      jsonb_build_object(
+        'proof', 'average-fan-proof',
+        'fan', 'shane',
+        'sport', 'nfl',
+        'board_score', 90,
+        'final_outcome', 'walk-away',
+        'normalized_score', 90,
+        'native_score', 90,
+        'unsaved_miss_question_numbers', '[]'::jsonb,
+        'board_question_ids', jsonb_build_array('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'),
+        'final_question_id', 'final-1',
+        'saves', 0
+      ),
+      jsonb_build_object('proof', 'average-fan-proof', 'max_score', 100)
+    );
+    raise exception 'Average Fan grader accepted a legacy ten-question board';
+  exception
+    when others then
+      if sqlerrm = 'Average Fan grader accepted a legacy ten-question board' then
+        raise;
+      end if;
+  end;
+
   select pg_get_functiondef(
     'private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)'::regprocedure::oid
   ) into v_grader_definition;
   if position('p_game_type = ''average_fan''' in v_grader_definition) = 0
     or position('grade_average_fan_daily' in v_grader_definition) = 0
-    or position('p_scoring_version <> ''average-fan-score-v1''' in v_grader_definition) = 0 then
+    or position('p_scoring_version <> ''average-fan-score-v2''' in v_grader_definition) = 0 then
     raise exception 'Average Fan is missing from the canonical Daily grader or scoring gate';
   end if;
 

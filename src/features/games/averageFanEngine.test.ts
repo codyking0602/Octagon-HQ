@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   AVERAGE_FAN_FANS,
   AVERAGE_FAN_FORMATS,
+  AVERAGE_FAN_PLAYABLE_GRADES,
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_REPORT_GRADE_MODIFIER,
   AVERAGE_FAN_SUBJECTS,
@@ -85,6 +86,7 @@ describe("Average Fan canonical question contract", () => {
 
   it("locks multiple choice to four authored answers and rejects the legacy three-choice contract", () => {
     expect(AVERAGE_FAN_FORMATS).toEqual(["short-answer", "four-choice", "true-false"]);
+    expect(AVERAGE_FAN_PLAYABLE_GRADES).toEqual([2, 3, 4, 5]);
 
     expect(validateAverageFanQuestion(fixture({
       format: "four-choice",
@@ -228,14 +230,14 @@ describe("Average Fan report-card intelligence", () => {
       grade: 4,
       subject: "Fighters",
       difficultyNudge: 0,
-    }), "shane")).toBe(83.25);
+    }), "shane")).toBe(89.25);
 
     expect(averageFanFanAccuracy(fixture({
       sport: "ufc",
       grade: 4,
       subject: "Octagon IQ",
       difficultyNudge: 0,
-    }), "shane")).toBe(68.25);
+    }), "shane")).toBe(74.25);
 
     expect(averageFanFanAccuracy(fixture({
       sport: "ufc",
@@ -265,17 +267,19 @@ describe("Average Fan report-card intelligence", () => {
 });
 
 describe("Average Fan scoring", () => {
-  it("preserves the locked board calibration", () => {
+  it("preserves the locked eight-question board calibration", () => {
     expect(scoreAverageFanBoard([])).toBe(90);
-    expect(scoreAverageFanBoard([2])).toBe(68);
-    expect(scoreAverageFanBoard([5])).toBe(74);
-    expect(scoreAverageFanBoard([8])).toBe(80);
-    expect(scoreAverageFanBoard([10])).toBe(84);
+    expect(scoreAverageFanBoard([1])).toBe(70);
+    expect(scoreAverageFanBoard([2])).toBe(72);
+    expect(scoreAverageFanBoard([4])).toBe(76);
+    expect(scoreAverageFanBoard([6])).toBe(80);
+    expect(scoreAverageFanBoard([8])).toBe(84);
+    expect(() => scoreAverageFanBoard([9])).toThrow();
   });
 
   it("charges five points for every additional unsaved miss", () => {
-    expect(scoreAverageFanBoard([8, 10])).toBe(75);
-    expect(scoreAverageFanBoard([8, 9, 10])).toBe(70);
+    expect(scoreAverageFanBoard([6, 8])).toBe(75);
+    expect(scoreAverageFanBoard([6, 7, 8])).toBe(70);
   });
 
   it("scores the final as bank, plus ten, or minus ten", () => {
