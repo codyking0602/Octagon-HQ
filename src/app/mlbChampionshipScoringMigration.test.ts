@@ -5,8 +5,8 @@ const foundationMigration = readFileSync(
   "supabase/migrations/202612310182_mlb_postseason_championship.sql",
   "utf8",
 );
-const elevenGameMigration = readFileSync(
-  "supabase/migrations/202612310208_mlb_bar_trivia_and_eleven_game_scoring.sql",
+const sixteenGameMigration = readFileSync(
+  "supabase/migrations/202612310213_mlb_sixteen_game_schedule.sql",
   "utf8",
 );
 
@@ -18,8 +18,7 @@ describe("MLB postseason championship scoring", () => {
     expect(foundationMigration).toContain("'series_max', 43");
     expect(foundationMigration).toContain("'bracket_max', 32");
     expect(foundationMigration).toContain("'play_max', 25");
-    expect(elevenGameMigration).toContain("eleven official challenges");
-    expect(elevenGameMigration).toContain("25 championship points total");
+    expect(sixteenGameMigration).toContain("25 championship points total");
   });
 
   it("weights live series picks most", () => {
@@ -36,22 +35,26 @@ describe("MLB postseason championship scoring", () => {
     expect(foundationMigration).toContain("when 'world_series' then 10");
   });
 
-  it("splits all eleven challenge placement ladders into the same 25-point lane", () => {
-    expect(elevenGameMigration).toContain("generate_series(");
-    expect(elevenGameMigration).toContain("when 1 then 25::numeric / 11::numeric");
-    expect(elevenGameMigration).toContain("when 2 then 20::numeric / 11::numeric");
-    expect(elevenGameMigration).toContain("when 3 then 15::numeric / 11::numeric");
-    expect(elevenGameMigration).toContain("when 4 then 10::numeric / 11::numeric");
-    expect(elevenGameMigration).toContain("when 5 then 5::numeric / 11::numeric");
-    expect(elevenGameMigration).toContain("ranked.rank_start + ranked.tie_count - 1");
-    expect(elevenGameMigration).toContain("25::numeric");
+  it("splits all sixteen challenge placement ladders into the same 25-point lane", () => {
+    expect(sixteenGameMigration).toContain("generate_series(");
+    expect(sixteenGameMigration).toContain("when 1 then 25::numeric / 16::numeric");
+    expect(sixteenGameMigration).toContain("when 2 then 20::numeric / 16::numeric");
+    expect(sixteenGameMigration).toContain("when 3 then 15::numeric / 16::numeric");
+    expect(sixteenGameMigration).toContain("when 4 then 10::numeric / 16::numeric");
+    expect(sixteenGameMigration).toContain("when 5 then 5::numeric / 16::numeric");
+    expect(sixteenGameMigration).toContain("ranked.rank_start + ranked.tie_count - 1");
+    expect(sixteenGameMigration).toContain("25::numeric");
   });
 
-  it("adds exactly one spoiler-free Bar Trivia scoring slot on October 21", () => {
-    expect(elevenGameMigration).toContain("slot between 1 and 11");
-    expect(elevenGameMigration).toContain("'mlb-2026-play-11'");
-    expect(elevenGameMigration).toContain("date '2026-10-21'");
-    expect(elevenGameMigration).toContain("'bar_trivia'");
-    expect(elevenGameMigration).not.toContain("October Legend");
+  it("adds exactly five reserved scoring slots through October 27", () => {
+    expect(sixteenGameMigration).toContain("slot between 1 and 16");
+    expect(sixteenGameMigration).toContain("'mlb-2026-play-12'");
+    expect(sixteenGameMigration).toContain("'mlb-2026-play-13'");
+    expect(sixteenGameMigration).toContain("'mlb-2026-play-14'");
+    expect(sixteenGameMigration).toContain("'mlb-2026-play-15'");
+    expect(sixteenGameMigration).toContain("'mlb-2026-play-16'");
+    expect(sixteenGameMigration).toContain("date '2026-10-27'");
+    expect(sixteenGameMigration).toContain("'average_fan'");
+    expect(sixteenGameMigration).toContain("'bar_trivia'");
   });
 });

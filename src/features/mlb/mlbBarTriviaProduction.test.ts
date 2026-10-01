@@ -8,9 +8,9 @@ import {
 } from "./mlbBarTriviaProduction";
 
 describe("MLB Bar Trivia production run", () => {
-  it("locks the October 21 official identity and approved 3-3-3-1 game shape", () => {
+  it("locks the October 11 official identity and approved 3-3-3-1 game shape", () => {
     expect(MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY).toBe("mlb-2026-play-11");
-    expect(MLB_BAR_TRIVIA_PRODUCTION_DATE).toBe("2026-10-21");
+    expect(MLB_BAR_TRIVIA_PRODUCTION_DATE).toBe("2026-10-11");
     expect(MLB_BAR_TRIVIA_DOUBLE_ROUND).toBe("round2");
     expect(MLB_BAR_TRIVIA_PRODUCTION_RUN).toHaveLength(10);
     expect(MLB_BAR_TRIVIA_PRODUCTION_RUN.map((question) => question.round)).toEqual(BAR_TRIVIA_ROUND_SLOTS);
