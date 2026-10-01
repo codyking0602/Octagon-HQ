@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
 import { buildMlbMillionaireQuestionDetails } from "./mlbMillionaireLeaderboard";
 
-const run = mlbMillionaireProductionRun("mlb-2026-play-03", "2026-10-01");
+const run = mlbMillionaireProductionRun("mlb-2026-play-03", "2026-10-01")!;
 
 describe("MLB Millionaire leaderboard details", () => {
   it("reconstructs the exact question path for newly recorded results", () => {
