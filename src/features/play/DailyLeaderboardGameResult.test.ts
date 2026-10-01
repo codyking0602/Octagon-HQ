@@ -368,74 +368,77 @@ describe("Daily leaderboard game result reconstruction", () => {
     });
   });
 
-  it("reconstructs Average Fan board answers and help usage from sanitized result detail", () => {
-    const projection = baseProjection({
-      gameType: "average_fan",
-      publicSetup: { sport: "nfl", question_count: 8 },
-      publicState: { complete: true, board_score: 85 },
-      revealSetup: {
-        sport: "nfl",
-        questions: [{
-          id: "nfl-g2-a",
-          grade: 2,
-          subject: "Players",
-          format: "short-answer",
-          prompt: "Who is the player?",
-          answer: "Player One",
-          explanation: "Canonical explanation.",
-        }],
-      },
-      officialAttempt: {
-        nativeScore: 95,
-        normalizedScore: 95,
-        completedAt: "2026-10-01T12:00:00Z",
-        publicResult: {
-          score: 95,
-          board_score: 85,
-          final_outcome: "correct",
-          fan: "shane",
-          sport: "nfl",
-          saves: 1,
+  it("reconstructs Average Fan board answers and help usage for UFC, NFL, and CFB", () => {
+    for (const sport of ["ufc", "nfl", "cfb"] as const) {
+      const questionId = `${sport}-g2-a`;
+      const projection = baseProjection({
+        gameType: "average_fan",
+        publicSetup: { sport, question_count: 8 },
+        publicState: { complete: true, board_score: 85 },
+        revealSetup: {
+          sport,
+          questions: [{
+            id: questionId,
+            grade: 2,
+            subject: "Players",
+            format: "short-answer",
+            prompt: "Who is the player?",
+            answer: "Player One",
+            explanation: "Canonical explanation.",
+          }],
         },
-      },
-    });
+        officialAttempt: {
+          nativeScore: 95,
+          normalizedScore: 95,
+          completedAt: "2026-10-01T12:00:00Z",
+          publicResult: {
+            score: 95,
+            board_score: 85,
+            final_outcome: "correct",
+            fan: "shane",
+            sport,
+            saves: 1,
+          },
+        },
+      });
 
-    expect(buildAverageFanLeaderboardQuestions(projection, {
-      resolved: [{
-        question: {
-          id: "nfl-g2-a",
-          grade: 2,
-          subject: "Players",
-          format: "short-answer",
-          prompt: "Who is the player?",
-        },
-        player_answer: "Player 1",
-        fan_answer: "Player One",
-        correct_answer: "Player One",
+      expect(buildAverageFanLeaderboardQuestions(projection, {
+        resolved: [{
+          question: {
+            id: questionId,
+            grade: 2,
+            subject: "Players",
+            format: "short-answer",
+            prompt: "Who is the player?",
+          },
+          player_answer: "Player 1",
+          fan_answer: "Player One",
+          correct_answer: "Player One",
+          explanation: "Canonical explanation.",
+          correct: false,
+          copied: false,
+          peek_used: true,
+          save_consumed: true,
+          saved: true,
+          order: 1,
+        }],
+      })).toEqual([{
+        index: 0,
+        id: questionId,
+        grade: 2,
+        subject: "Players",
+        prompt: "Who is the player?",
+        playerAnswer: "Player 1",
+        fanAnswer: "Player One",
+        correctAnswer: "Player One",
         explanation: "Canonical explanation.",
         correct: false,
         copied: false,
-        peek_used: true,
-        save_consumed: true,
+        peekUsed: true,
+        saveConsumed: true,
         saved: true,
-        order: 1,
-      }],
-    })).toEqual([{
-      index: 0,
-      id: "nfl-g2-a",
-      grade: 2,
-      subject: "Players",
-      prompt: "Who is the player?",
-      playerAnswer: "Player 1",
-      fanAnswer: "Player One",
-      correctAnswer: "Player One",
-      explanation: "Canonical explanation.",
-      correct: false,
-      copied: false,
-      peekUsed: true,
-      saveConsumed: true,
-      saved: true,
-    }]);
+      }]);
+    }
   });
 
   it("keeps the player's raw Fast Money text while showing the canonical match", () => {
