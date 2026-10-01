@@ -22,6 +22,7 @@ import {
   MILLIONAIRE_DAILY_RUN_COUNT,
   millionaireDailyRun,
 } from "./millionaireDailyQuestionBank";
+import { footballThemedMillionaireRunForDay } from "./footballTeamThemeDailyPacks";
 import type {
   OfficialDailyAdvanceResult,
   OfficialDailyRuntimeContext,
@@ -347,7 +348,8 @@ export function buildMillionaireDailySetup(
   const league = millionaireDailyLeague(sport, day);
   const runIndex = millionaireDailyRunIndex(sport, day);
   const hostNumber = millionaireDailyHostNumber(sport, day);
-  const run = balanceRun(millionaireDailyRun(league, runIndex), runIndex);
+  const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
+  const run = balanceRun(themedRun ?? millionaireDailyRun(league, runIndex), runIndex);
   assertMillionaireRun(run);
   const state = createMillionaireState(run);
   const proof = proofFor(run, league, day, scheduleVersion);
