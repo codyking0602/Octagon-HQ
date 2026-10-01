@@ -466,18 +466,48 @@ function MlbPlayResultDetail({
           </div>
 
           {isMillionaire ? (
-            <div className="mlb-play-result-card__games">
-              <article>
-                <span>FINAL MONEY</span>
-                <strong>{millionaireMoneyLabel(millionaire.finalMoney)}</strong>
-                <small>{millionaire.completedQuestions} / 8 QUESTIONS CORRECT</small>
-              </article>
-              <article>
-                <span>RUN DETAILS</span>
-                <strong>{millionaire.lifelinesUsed}<small> LIFELINES</small></strong>
-                <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
-              </article>
-            </div>
+            <>
+              <div className="mlb-play-result-card__games">
+                <article>
+                  <span>FINAL MONEY</span>
+                  <strong>{millionaireMoneyLabel(millionaire.finalMoney)}</strong>
+                  <small>{millionaire.completedQuestions} / 8 QUESTIONS CORRECT</small>
+                </article>
+                <article>
+                  <span>RUN DETAILS</span>
+                  <strong>{millionaire.lifelinesUsed}<small> LIFELINES</small></strong>
+                  <small>
+                    {millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}
+                    {millionaire.firstMissQuestion ? " · FIRST MISS Q" + millionaire.firstMissQuestion : ""}
+                  </small>
+                </article>
+              </div>
+              {millionaireQuestions.length ? (
+                <div className="mlb-play-result-card__games">
+                  {millionaireQuestions.map((question) => {
+                    const selected = question.choices.filter((choice) => question.selectedChoiceIds.includes(choice.id));
+                    const correct = question.choices.find((choice) => choice.id === question.correctChoiceId);
+                    const label = question.status === "historical"
+                      ? "DETAIL NOT STORED"
+                      : question.status.replace("-", " ").toUpperCase();
+                    return (
+                      <article key={question.index}>
+                        <span>Q{question.index} · {label}</span>
+                        <strong>{question.prompt}</strong>
+                        {selected.length ? <small>PICKED · {selected.map((choice) => choice.text).join(" → ")}</small> : null}
+                        {correct ? <small>CORRECT · {correct.text}</small> : null}
+                        {question.lifelines.length ? (
+                          <small>
+                            LIFELINES · {question.lifelines.map((value) => value.replace(/[-_]/g, " ").toUpperCase()).join(" · ")}
+                          </small>
+                        ) : null}
+                        {question.explanation ? <small>{question.explanation}</small> : null}
+                      </article>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </>
           ) : isWavelength && wavelengthRounds.length ? (
             <div className="mlb-play-result-card__games">
               {wavelengthRounds.map((round) => (
