@@ -46,6 +46,57 @@
   scroll-snap-stop: always;
 }
 
+.today-hub-owner-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -2px 8px 0;
+  padding: 9px 11px;
+  border: 1px dashed color-mix(in srgb, var(--ufc-red) 48%, var(--border));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface-raised) 94%, var(--ufc-red) 6%);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.today-hub-owner-preview > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.today-hub-owner-preview small,
+.today-hub-owner-preview em {
+  color: var(--ufc-red-strong);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.today-hub-owner-preview strong {
+  overflow: hidden;
+  font-size: 0.78rem;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.today-hub-owner-preview em {
+  flex: 0 0 auto;
+  font-style: italic;
+}
+
+.today-hub-owner-preview:hover,
+.today-hub-owner-preview:focus-visible {
+  border-style: solid;
+  outline: none;
+}
+
 .today-hub__pager {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -487,6 +538,16 @@
   }
 }
 
+
+.today-hub[data-sport="football"] .today-hub-owner-preview {
+  border-color: color-mix(in srgb, var(--football-accent) 48%, var(--border));
+  background: color-mix(in srgb, var(--surface-raised) 94%, var(--football-accent) 6%);
+}
+
+.today-hub[data-sport="football"] .today-hub-owner-preview small,
+.today-hub[data-sport="football"] .today-hub-owner-preview em {
+  color: var(--football-accent);
+}
 
 .today-hub[data-sport="football"] .today-hub__pager button.is-active::before,
 .today-hub[data-sport="football"] .today-hub-card::before,
