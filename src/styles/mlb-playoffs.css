@@ -3787,6 +3787,11 @@
   letter-spacing: .06em;
 }
 
+.mlb-millionaire-result-path__legacy {
+  margin: 0;
+  line-height: 1.45;
+}
+
 .mlb-millionaire-result-path__question strong {
   font-size: .75rem;
   line-height: 1.25;
