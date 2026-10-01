@@ -298,6 +298,7 @@ function MlbPlayResultDetail({
   const millionaireQuestions = millionaireRun
     ? buildMlbMillionaireQuestionDetails(millionaireRun, entry.resultDetail, entry.publicResult)
     : [];
+  const millionaireHasExactHistory = millionaireQuestions.some((row) => row.detailRecorded);
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
   const barTrivia = barTriviaResultSummary(entry);
@@ -351,6 +352,11 @@ function MlbPlayResultDetail({
                     <span>QUESTION-BY-QUESTION</span>
                     <strong>HOW THE RUN UNFOLDED</strong>
                   </header>
+                  {!millionaireHasExactHistory ? (
+                    <p className="mlb-millionaire-result-path__legacy">
+                      This completed run predates question-level tracking. The progression shown is what can be proven; exact picks and lifeline timing were not recorded.
+                    </p>
+                  ) : null}
                   {millionaireQuestions.map((row) => {
                     const statusLabel = row.status === "walked-away"
                       ? "WALKED AWAY"
@@ -392,11 +398,6 @@ function MlbPlayResultDetail({
                         {row.lifelines.length ? (
                           <small className="mlb-millionaire-result-path__lifelines">
                             LIFELINES · {row.lifelines.map((value) => value.replace(/[-_]/g, " ").toUpperCase()).join(" · ")}
-                          </small>
-                        ) : null}
-                        {!row.detailRecorded && row.status !== "detail-not-recorded" ? (
-                          <small className="mlb-millionaire-result-path__legacy">
-                            Exact pick and lifeline timing were not recorded for this completed run.
                           </small>
                         ) : null}
                       </article>
