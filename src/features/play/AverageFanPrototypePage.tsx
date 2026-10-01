@@ -877,7 +877,7 @@ export function AverageFanGame({
     else setPhase("board");
   }
 
-  function emitSettled(outcome: FinalOutcome) {
+  function emitSettled(outcome: FinalOutcome, settledFinalAnswer: string | null = null) {
     const score = scoreAverageFanFinal(boardScore, outcome);
     const money = moneyAlive
       ? (outcome === "correct" ? 1_000_000 : outcome === "wrong" ? 25_000 : 500_000)
@@ -913,7 +913,7 @@ export function AverageFanGame({
         correctAnswer: finalQuestion.answer,
         explanation: finalQuestion.explanation,
       },
-      finalPlayerAnswer: outcome === "walk-away" ? null : finalAnswer.trim(),
+      finalPlayerAnswer: outcome === "walk-away" ? null : (settledFinalAnswer ?? finalAnswer.trim()),
     });
   }
 
@@ -934,7 +934,7 @@ export function AverageFanGame({
       setFinalOutcome(outcome);
       setPhase("final-reveal");
     });
-    emitSettled(outcome);
+    emitSettled(outcome, candidate);
   }
 
   const questionVisible = current && (phase === "question" || phase === "reveal");
