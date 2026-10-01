@@ -33,14 +33,74 @@ import "./MillionairePortrait.css";
 import "./MillionairePortraitRefine.css";
 import "./MillionaireFixedStage.css";
 
+export type MillionaireCasualQuestionResult = {
+  index: number;
+  id: string;
+  prompt: string;
+  choices: Array<{ id: string; text: string }>;
+  selectedChoiceIds: MillionaireChoiceId[];
+  correctChoiceId: MillionaireChoiceId;
+  explanation: string;
+  lifelines: MillionaireLifeline[];
+  status: "correct" | "wrong" | "walked-away" | "timeout" | "unreached";
+};
+
+type MillionaireCasualHistoryAction =
+  | { type: "answer"; questionIndex: number; choiceId: MillionaireChoiceId }
+  | { type: "use_lifeline"; questionIndex: number; lifeline: MillionaireLifeline }
+  | { type: "walk_away"; questionIndex: number }
+  | { type: "timeout"; questionIndex: number };
+
 export type MillionaireCasualSettledResult = {
   outcome: "won" | "lost" | "walked-away";
   finalMoney: number;
   score: number;
+  baseScore: number;
   completedQuestions: number;
+  firstMissQuestion: number | null;
   lifelinesUsed: number;
   timeRemainingMs: number;
+  questions: MillionaireCasualQuestionResult[];
 };
+
+function millionaireCasualQuestionResults(
+  run: MillionaireRun,
+  history: readonly MillionaireCasualHistoryAction[],
+): MillionaireCasualQuestionResult[] {
+  return run.map((question, index) => {
+    const actions = history.filter((action) => action.questionIndex === index);
+    const selectedChoiceIds = actions
+      .filter((action): action is Extract<MillionaireCasualHistoryAction, { type: "answer" }> => action.type === "answer")
+      .map((action) => action.choiceId);
+    const lifelines = actions
+      .filter((action): action is Extract<MillionaireCasualHistoryAction, { type: "use_lifeline" }> => action.type === "use_lifeline")
+      .map((action) => action.lifeline);
+    const walkedAway = actions.some((action) => action.type === "walk_away");
+    const timedOut = actions.some((action) => action.type === "timeout");
+    const correct = selectedChoiceIds.includes(question.correctChoiceId);
+    const status = walkedAway
+      ? "walked-away"
+      : timedOut
+        ? "timeout"
+        : correct
+          ? "correct"
+          : selectedChoiceIds.length
+            ? "wrong"
+            : "unreached";
+
+    return {
+      index,
+      id: question.id,
+      prompt: question.prompt,
+      choices: question.choices.map((choice) => ({ id: choice.id, text: choice.text })),
+      selectedChoiceIds,
+      correctChoiceId: question.correctChoiceId,
+      explanation: question.explanation,
+      lifelines,
+      status,
+    };
+  });
+}
 
 type MillionaireCasualPageProps = {
   scope: "ufc" | "football" | "mlb";
@@ -216,6 +276,7 @@ function MillionaireGame({
   const [eliminationPromptOpen, setEliminationPromptOpen] = useState(false);
   const timerIds = useRef<number[]>([]);
   const timeoutQueued = useRef(false);
+  const actionHistoryRef = useRef<MillionaireCasualHistoryAction[]>([]);
 
   useFullscreenGameChrome();
 
@@ -253,9 +314,12 @@ function MillionaireGame({
       outcome: nextState.status,
       finalMoney: nextState.finalMoney ?? 0,
       score: nextState.score,
+      baseScore: nextState.baseScore,
       completedQuestions: nextState.completedQuestions,
+      firstMissQuestion: nextState.firstMissQuestionIndex === null ? null : nextState.firstMissQuestionIndex + 1,
       lifelinesUsed: Object.values(nextState.lifelinesUsed).filter(Boolean).length,
       timeRemainingMs: Math.max(0, Math.floor(timeRemainingMs)),
+      questions: millionaireCasualQuestionResults(run, actionHistoryRef.current),
     });
   }
 
@@ -295,6 +359,7 @@ function MillionaireGame({
   useEffect(() => {
     if (timeRemainingMs > 0 || phase !== "answering" || gameState.status !== "playing" || timeoutQueued.current) return;
     timeoutQueued.current = true;
+    actionHistoryRef.current.push({ type: "timeout", questionIndex: gameState.currentQuestionIndex });
     queueReveal(millionaireTimeoutTransition(run, gameState), null);
   }, [timeRemainingMs, phase, gameState, run]);
 
@@ -302,6 +367,7 @@ function MillionaireGame({
     if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || eliminationPromptOpen || !currentQuestion) return;
     if (gameState.questionState.removedChoiceIds.includes(choiceId) || gameState.questionState.doubleDipWrongChoiceIds.includes(choiceId)) return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "answer", choiceId });
+    actionHistoryRef.current.push({ type: "answer", questionIndex: gameState.currentQuestionIndex, choiceId });
     if (result.answerOutcome === "double-dip-continue") {
       setGameState(result.state);
       setDoubleDipFlashChoiceId(choiceId);
@@ -315,6 +381,7 @@ function MillionaireGame({
     if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || eliminationPromptOpen || q8) return;
     if (lifeline === "stat-sheet" && gameState.questionState.statSheetRevealed) return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "use_lifeline", lifeline });
+    actionHistoryRef.current.push({ type: "use_lifeline", questionIndex: gameState.currentQuestionIndex, lifeline });
     setGameState(result.state);
     if (result.lifelineReveal?.type === "stat-sheet") {
       setStatSheetText(result.lifelineReveal.text);
@@ -325,6 +392,7 @@ function MillionaireGame({
   function walkAway() {
     if (!millionaireCanWalkAway(gameState) || phase !== "answering") return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "walk_away" });
+    actionHistoryRef.current.push({ type: "walk_away", questionIndex: gameState.currentQuestionIndex });
     setGameState(result.state);
     setWalkPromptOpen(false);
     setPhase("settled");
@@ -335,6 +403,7 @@ function MillionaireGame({
     timerIds.current.forEach((id) => window.clearTimeout(id));
     timerIds.current = [];
     timeoutQueued.current = false;
+    actionHistoryRef.current = [];
     setGameState(createMillionaireState(run));
     setTimeRemainingMs(MILLIONAIRE_TIME_BANK_MS);
     setPhase("answering");
