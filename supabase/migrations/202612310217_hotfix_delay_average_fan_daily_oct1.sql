@@ -26,9 +26,17 @@ declare
   v_football_cycle text[];
   v_ufc_cycle text[];
   v_attempt_count integer;
+  v_stale_daily_count integer;
 begin
-  if v_central_today <> v_today then
-    raise exception 'Oct. 1 Daily swap is only safe on %, current Central day is %',
+  select count(*)::integer
+  into v_stale_daily_count
+  from private.daily_challenges daily
+  where daily.central_day = v_today
+    and daily.game_type = 'average_fan'
+    and daily.schedule_version in (v_football_source, v_ufc_source);
+
+  if v_stale_daily_count > 0 and v_central_today <> v_today then
+    raise exception 'Oct. 1 Daily row replacement is only safe on %, current Central day is %',
       v_today,
       v_central_today;
   end if;
