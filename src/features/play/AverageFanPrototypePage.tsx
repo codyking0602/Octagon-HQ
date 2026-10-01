@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { flushSync } from "react-dom";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   AVERAGE_FAN_REPORT_CARDS,
@@ -785,8 +786,6 @@ export function AverageFanGame({
       playerAnswer,
       saveAvailable: !saveUsed,
     });
-    if (resolution.saveConsumed) setSaveUsed(true);
-
     const item: ResolvedQuestion = {
       question: current,
       playerAnswer,
@@ -798,9 +797,13 @@ export function AverageFanGame({
       saved: resolution.saved,
       order: resolved.length + 1,
     };
-    setResolved((items) => [...items, item]);
-    setLastResolution(item);
-    setPhase("reveal");
+    // Paint the reveal before iOS starts settling the landscape keyboard/viewport.
+    flushSync(() => {
+      if (resolution.saveConsumed) setSaveUsed(true);
+      setResolved((items) => [...items, item]);
+      setLastResolution(item);
+      setPhase("reveal");
+    });
   }
 
   function submitCurrent(valueOverride?: string) {
@@ -860,9 +863,11 @@ export function AverageFanGame({
   }
 
   function walkAway() {
-    setFinalOutcome("walk-away");
+    flushSync(() => {
+      setFinalOutcome("walk-away");
+      setPhase("result");
+    });
     emitSettled("walk-away");
-    setPhase("result");
   }
 
   function submitFinal(valueOverride?: string) {
@@ -870,9 +875,11 @@ export function AverageFanGame({
     if (!candidate || phase !== "final-question") return;
     if (valueOverride !== undefined) setFinalAnswer(candidate);
     const outcome: FinalOutcome = averageFanAnswersMatch(finalQuestion, candidate) ? "correct" : "wrong";
-    setFinalOutcome(outcome);
+    flushSync(() => {
+      setFinalOutcome(outcome);
+      setPhase("final-reveal");
+    });
     emitSettled(outcome);
-    setPhase("final-reveal");
   }
 
   const questionVisible = current && (phase === "question" || phase === "reveal");

@@ -27,6 +27,7 @@ const FootballWeeklyBuildQbPreviewPage = lazy(() => import("../features/back-roo
 const FootballWeeklySuperteamPreviewPage = lazy(() => import("../features/back-room/FootballWeeklySuperteamPreviewPage"));
 const FootballWeeklySuperteamLabPage = lazy(() => import("../features/back-room/FootballWeeklySuperteamLabPage"));
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
+const OwnerAverageFanDailyPreviewPage = lazy(() => import("../features/play/OwnerAverageFanDailyPreviewPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
 const DailyOnlyGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute").then((module) => ({
@@ -80,7 +81,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/sports-feud", element: <TodayChallengeGameRoute gameType="sports_feud" casual={<FamilyFeudPrototypePage scope="ufc" />} /> },
       { path: "play/bar-trivia", element: <TodayChallengeGameRoute gameType="bar_trivia" casual={<Navigate to="/play" replace />} /> },
       { path: "play/average-fan", element: <TodayChallengeGameRoute gameType="average_fan" casual={<Navigate to="/play" replace />} /> },
-      { path: "play/average-fan-preview", element: <Navigate to="/play" replace /> },
+      { path: "play/average-fan-preview", element: <OwnerAverageFanDailyPreviewPage /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
       { path: "football/picks", element: <FootballPicksRoute /> },

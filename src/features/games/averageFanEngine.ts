@@ -219,13 +219,17 @@ export function averageFanFanAccuracy(
 
 export function averageFanAnswersMatch(
   question: Pick<AverageFanQuestion, "answer" | "aliases">
-    & Partial<Pick<AverageFanQuestion, "format">>,
+    & Partial<Pick<AverageFanQuestion, "format" | "fanMisses">>,
   value: string,
 ) {
   const candidate = normalizePlayerAnswer(value);
   const accepted = [question.answer, ...question.aliases].map(normalizePlayerAnswer);
   if (accepted.includes(candidate)) return true;
   if (question.format !== "short-answer") return false;
+
+  const authoredMisses = (question.fanMisses ?? []).map(normalizePlayerAnswer);
+  if (authoredMisses.includes(candidate)) return false;
+
   return accepted.some((answer) => tolerantShortAnswerMatch(candidate, answer));
 }
 

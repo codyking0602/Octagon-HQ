@@ -9,9 +9,43 @@ import {
 import { queryFootballSubjects } from "../back-room/footballSubjectRegistry";
 import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
-import { validateAverageFanQuestion, type AverageFanSport } from "./averageFanEngine";
+import {
+  averageFanAnswersMatch,
+  validateAverageFanQuestion,
+  type AverageFanQuestion,
+  type AverageFanSport,
+} from "./averageFanEngine";
 
 const sports: readonly Exclude<AverageFanSport, "mlb">[] = ["nfl", "cfb", "ufc"];
+
+function normalizedHumanInput(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[^a-zA-Z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toUpperCase();
+}
+
+function singleCharacterTypo(question: AverageFanQuestion) {
+  const base = normalizedHumanInput(question.answer).toLocaleLowerCase();
+  if (base.length < 7 || /^\d+$/.test(base.replace(/\s+/g, ""))) return null;
+
+  const blocked = new Set(
+    [...question.aliases, ...(question.fanMisses ?? [])].map((value) => (
+      normalizedHumanInput(value).toLocaleLowerCase()
+    )),
+  );
+  for (let index = 1; index < base.length - 1; index += 1) {
+    if (!/[a-z0-9]/.test(base[index]!)) continue;
+    if (base[index - 1] === " " || base[index + 1] === " ") continue;
+    const candidate = base.slice(0, index) + base.slice(index + 1);
+    if (candidate.length >= 7 && !blocked.has(candidate)) return candidate;
+  }
+  return null;
+}
 
 describe("Average Fan durable content banks", () => {
   it("hits the locked six-month bank sizes and protected Final counts", () => {
@@ -33,6 +67,39 @@ describe("Average Fan durable content banks", () => {
       }
     }
     expect(globalIds.size).toBe(880);
+  });
+
+  it("runs every banked short answer through tolerant human-input grading without accepting authored misses", () => {
+    let shortAnswerCount = 0;
+    let typoCount = 0;
+
+    for (const sport of sports) {
+      for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
+        if (question.format !== "short-answer") continue;
+        shortAnswerCount += 1;
+
+        for (const accepted of [question.answer, ...question.aliases]) {
+          expect(averageFanAnswersMatch(question, accepted), `${question.id}: exact ${accepted}`).toBe(true);
+          expect(
+            averageFanAnswersMatch(question, normalizedHumanInput(accepted)),
+            `${question.id}: normalized ${accepted}`,
+          ).toBe(true);
+        }
+
+        const typo = singleCharacterTypo(question);
+        if (typo) {
+          typoCount += 1;
+          expect(averageFanAnswersMatch(question, typo), `${question.id}: typo ${typo}`).toBe(true);
+        }
+
+        for (const miss of question.fanMisses ?? []) {
+          expect(averageFanAnswersMatch(question, miss), `${question.id}: authored miss ${miss}`).toBe(false);
+        }
+      }
+    }
+
+    expect(shortAnswerCount).toBeGreaterThanOrEqual(440);
+    expect(typoCount).toBeGreaterThan(300);
   });
 
   it("preserves the locked ordinary grade shape", () => {

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import {
   AverageFanGame,
   FanSelector,
@@ -11,6 +12,10 @@ import type { AverageFanFan } from "../games/averageFanEngine";
 import type { MlbAverageFanProductionConfig } from "./mlbAverageFanProduction";
 
 type Scene = "intro" | "fan-select" | "game";
+
+function mlbAverageFanTakeover(content: ReactNode) {
+  return typeof document === "undefined" ? content : createPortal(content, document.body);
+}
 
 export default function MlbAverageFanChallenge({
   config,
@@ -29,7 +34,7 @@ export default function MlbAverageFanChallenge({
   const [rulesOpen, setRulesOpen] = useState(false);
 
   if (scene === "fan-select") {
-    return (
+    return mlbAverageFanTakeover(
       <FanSelector
         sport="mlb"
         onBack={() => setScene("intro")}
@@ -37,12 +42,12 @@ export default function MlbAverageFanChallenge({
           setFan(selectedFan);
           setScene("game");
         }}
-      />
+      />,
     );
   }
 
   if (scene === "game") {
-    return (
+    return mlbAverageFanTakeover(
       <AverageFanGame
         key={gameKey}
         fan={fan}
@@ -54,11 +59,11 @@ export default function MlbAverageFanChallenge({
           setGameKey((value) => value + 1);
           setScene("fan-select");
         }}
-      />
+      />,
     );
   }
 
-  return (
+  return mlbAverageFanTakeover(
     <div className="average-fan-intro average-fan-intro--plate">
       <section
         className="average-fan-intro-stage"
@@ -102,6 +107,6 @@ export default function MlbAverageFanChallenge({
       </button>
 
       {rulesOpen ? <RulesModal onClose={() => setRulesOpen(false)} /> : null}
-    </div>
+    </div>,
   );
 }
