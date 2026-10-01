@@ -443,6 +443,15 @@ function MlbPlayResultDetail({
   const millionaireLegacyDetailLimited = isMillionaire
     && !Array.isArray(entry.resultDetail.action_history)
     && millionaire.outcome === "lost";
+  const millionaireLegacyFirstMiss = millionaireLegacyDetailLimited
+    ? inferredLegacyMillionaireFirstMiss(entry)
+    : null;
+  const millionaireLegacyRecoveryCorrect = millionaireLegacyFirstMiss
+    ? Math.max(0, millionaire.completedQuestions - (millionaireLegacyFirstMiss - 1))
+    : 0;
+  const millionaireLegacyRecoveryTotal = millionaireLegacyFirstMiss
+    ? Math.max(0, 8 - millionaireLegacyFirstMiss)
+    : 0;
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
   const barTrivia = barTriviaResultSummary(entry);
@@ -490,28 +499,89 @@ function MlbPlayResultDetail({
                   <small>{millionaireTimeLabel(millionaire.timeRemainingMs)} REMAINING · {millionaire.outcome.replace("-", " ").toUpperCase()}</small>
                 </article>
               </div>
-              {millionaireLegacyDetailLimited ? (
-                <p>Question-by-question recovery detail was not stored for this earlier completed run. The clean opening and first miss are shown; later recovery answers are marked DETAIL UNAVAILABLE.</p>
-              ) : null}
               {millionaireQuestions.length ? (
-                <div className="mlb-play-result-card__games">
-                  {millionaireQuestions.map((row) => {
-                    const selected = row.selectedChoiceIds
-                      .map((id) => row.choices.find((choice) => choice.id === id)?.text ?? id)
-                      .join(" → ");
-                    const correct = row.choices.find((choice) => choice.id === row.correctChoiceId)?.text ?? row.correctChoiceId;
-                    return (
-                      <article key={row.index}>
-                        <span>Q{row.index + 1} · {row.status.replace(/-/g, " ").toUpperCase()}</span>
-                        <strong>{row.status === "correct" ? "✓" : row.status === "wrong" ? "✕" : row.status === "walked-away" ? "WALK" : "—"}</strong>
-                        <small>{row.prompt}</small>
-                        {selected ? <small>PICKED · {selected}</small> : null}
-                        {row.status !== "unreached" && row.status !== "detail-unavailable" ? <small>ANSWER · {correct}</small> : null}
-                        {row.lifelines.length ? <small>{row.lifelines.map((value) => value.replace(/[-_]/g, " ").toUpperCase()).join(" · ")}</small> : null}
-                      </article>
-                    );
-                  })}
-                </div>
+                <section className="mlb-millionaire-recap">
+                  <header>
+                    <span>QUESTION RECAP</span>
+                    <h3>How the run unfolded</h3>
+                  </header>
+                  <div className="mlb-millionaire-recap__questions">
+                    {millionaireQuestions
+                      .filter((row) => row.status !== "detail-unavailable")
+                      .map((row) => {
+                        const selected = row.selectedChoiceIds
+                          .map((id) => row.choices.find((choice) => choice.id === id)?.text ?? id)
+                          .join(" → ");
+                        const correct = row.choices.find((choice) => choice.id === row.correctChoiceId)?.text ?? row.correctChoiceId;
+                        const statusLabel = row.status === "correct"
+                          ? "CORRECT"
+                          : row.status === "wrong"
+                            ? "MISS"
+                            : row.status === "walked-away"
+                              ? "WALKED"
+                              : row.status === "timeout"
+                                ? "TIME"
+                                : "UNREACHED";
+                        const expandable = row.status !== "unreached";
+                        const summary = (
+                          <>
+                            <b>Q{row.index + 1}</b>
+                            <span><strong>{row.prompt}</strong></span>
+                            <em>{statusLabel}</em>
+                          </>
+                        );
+                        if (!expandable) {
+                          return <div className="mlb-millionaire-recap__row is-unreached" key={row.index}>{summary}</div>;
+                        }
+                        return (
+                          <details
+                            className={`mlb-millionaire-recap__row is-${row.status}`}
+                            key={row.index}
+                            open={row.status === "wrong"}
+                          >
+                            <summary>{summary}</summary>
+                            <div className="mlb-millionaire-recap__detail">
+                              <div className="mlb-millionaire-recap__choices">
+                                {row.choices.map((choice, choiceIndex) => {
+                                  const picked = row.selectedChoiceIds.includes(choice.id);
+                                  const isCorrect = choice.id === row.correctChoiceId;
+                                  return (
+                                    <div
+                                      className={[
+                                        picked ? "is-selected" : "",
+                                        isCorrect ? "is-correct" : "",
+                                        picked && !isCorrect ? "is-wrong" : "",
+                                      ].filter(Boolean).join(" ")}
+                                      key={choice.id}
+                                    >
+                                      <b>{["A", "B", "C", "D"][choiceIndex] ?? choice.id}</b>
+                                      <span>{choice.text}</span>
+                                      <em>{isCorrect ? "CORRECT" : picked ? "PICKED" : ""}</em>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                              {row.lifelines.length ? (
+                                <div className="mlb-millionaire-recap__tags">
+                                  {row.lifelines.map((value) => <span key={value}>{value.replace(/[-_]/g, " ").toUpperCase()}</span>)}
+                                </div>
+                              ) : null}
+                              {row.explanation ? <p>{row.explanation}</p> : null}
+                              {!selected && row.status === "wrong" ? <small>Historical pick was not stored.</small> : null}
+                              {row.status === "wrong" && correct ? <small>ANSWER · {correct}</small> : null}
+                            </div>
+                          </details>
+                        );
+                      })}
+                  </div>
+                  {millionaireLegacyDetailLimited && millionaireLegacyFirstMiss ? (
+                    <div className="mlb-millionaire-recap__legacy">
+                      <span>RECOVERY</span>
+                      <strong>{millionaireLegacyRecoveryCorrect} / {millionaireLegacyRecoveryTotal} correct after the first miss</strong>
+                      <p>Individual recovery answers were not stored for this earlier run.</p>
+                    </div>
+                  ) : null}
+                </section>
               ) : null}
             </>
           ) : isWavelength && wavelengthRounds.length ? (
