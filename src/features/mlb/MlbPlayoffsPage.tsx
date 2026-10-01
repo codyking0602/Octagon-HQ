@@ -352,18 +352,27 @@ function millionaireQuestionRows(
 
   const summary = millionaireResultSummary(entry);
   if (summary.outcome === "won") {
-    rows.forEach((row) => { row.status = "correct"; });
+    rows.forEach((row) => {
+      row.status = "correct";
+      row.selectedChoiceIds = [row.correctChoiceId];
+    });
     return rows;
   }
   if (summary.outcome === "walked-away" && summary.completedQuestions === 7) {
-    rows.slice(0, 7).forEach((row) => { row.status = "correct"; });
+    rows.slice(0, 7).forEach((row) => {
+      row.status = "correct";
+      row.selectedChoiceIds = [row.correctChoiceId];
+    });
     rows[7]!.status = "walked-away";
     return rows;
   }
 
   const firstMiss = inferredLegacyMillionaireFirstMiss(entry);
   if (firstMiss) {
-    rows.slice(0, firstMiss - 1).forEach((row) => { row.status = "correct"; });
+    rows.slice(0, firstMiss - 1).forEach((row) => {
+      row.status = "correct";
+      row.selectedChoiceIds = [row.correctChoiceId];
+    });
     rows[firstMiss - 1]!.status = "wrong";
     rows.slice(firstMiss).forEach((row) => { row.status = "detail-unavailable"; });
   }
