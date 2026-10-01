@@ -72,10 +72,10 @@ begin
 
   select * into v_grade
   from private.grade_millionaire_daily(
-    '{"proof":"proof","outcome":"lost","completed_questions":7,"first_miss_question":8,"final_money":100000,"base_score":90,"lifelines_used":0,"time_remaining_ms":31000}'::jsonb,
+    '{"proof":"proof","outcome":"lost","completed_questions":7,"first_miss_question":8,"final_money":100000,"base_score":85,"lifelines_used":0,"time_remaining_ms":31000}'::jsonb,
     '{"proof":"proof"}'::jsonb
   );
-  if v_grade.normalized_score <> 90
+  if v_grade.normalized_score <> 85
     or v_grade.public_result->>'first_miss_question' <> '8'
     or v_grade.public_result->>'final_money' <> '100000' then
     raise exception 'Millionaire Q8-risk grading is invalid: %', row_to_json(v_grade);
