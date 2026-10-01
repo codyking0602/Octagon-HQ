@@ -227,7 +227,7 @@ describe("Average Fan locked gameplay stage", () => {
   it("commits local and MLB answer reveals synchronously before completion callbacks", () => {
     expect(pageSource).toContain('import { flushSync } from "react-dom";');
     expect(pageSource).toMatch(/function resolveAnswer[\s\S]*?flushSync\(\(\) => \{[\s\S]*?setPhase\("reveal"\);/);
-    expect(pageSource).toMatch(/function submitFinal[\s\S]*?flushSync\(\(\) => \{[\s\S]*?setPhase\("final-reveal"\);[\s\S]*?\}\);[\s\S]*?emitSettled\(outcome\);/);
+    expect(pageSource).toMatch(/function submitFinal[\s\S]*?flushSync\(\(\) => \{[\s\S]*?setPhase\("final-reveal"\);[\s\S]*?\}\);[\s\S]*?emitSettled\(outcome,\s*candidate\);/);
   });
 
   it("stops the money story on the first unsaved miss while keeping HQ play alive", () => {
