@@ -566,7 +566,7 @@ const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
   { id: "elliott-2014-title-rushing", grade: 5, subject: "Players", prompt: "Which Ohio State running back rushed for 246 yards against Oregon in the national championship game after the 2014 season?", answer: "Ezekiel Elliott", wrong: ["Carlos Hyde", "J. K. Dobbins"], explanation: "Ezekiel Elliott rushed for 246 yards and four touchdowns in Ohio State's championship win over Oregon." },
   { id: "watson-2016-title-420", grade: 5, subject: "Players", prompt: "Which Clemson quarterback threw for 420 yards in the national championship win over Alabama after the 2016 season?", answer: "Deshaun Watson", wrong: ["Tajh Boyd", "Kelly Bryant"], explanation: "Deshaun Watson threw for 420 yards and three touchdowns as Clemson beat Alabama for the title." },
   { id: "daniels-2023-heisman", grade: 5, subject: "Players", prompt: "Which LSU quarterback won the 2023 Heisman Trophy after accounting for 50 touchdowns that season?", answer: "Jayden Daniels", wrong: ["Bo Nix", "Michael Penix Jr.", "Caleb Williams"], explanation: "Jayden Daniels won the 2023 Heisman after throwing 40 touchdown passes and rushing for 10 scores." },
-  { id: "hunter-biletnikoff-bednarik", grade: 5, subject: "Players", prompt: "Which Colorado star won both the Biletnikoff Award and the Bednarik Award in 2024?", answer: "Travis Hunter", wrong: ["Tetairoa McMillan", "Will Johnson"], explanation: "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player." },
+  { id: "hunter-biletnikoff-bednarik", grade: 5, subject: "Players", prompt: "Who pulled off the rare 2024 sweep of the Biletnikoff and Bednarik awards?", answer: "Travis Hunter", wrong: ["Tetairoa McMillan", "Will Johnson"], explanation: "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player." },
   { id: "bennett-double-cfp-mvp", grade: 5, subject: "Players", prompt: "Which Georgia quarterback was the offensive MVP of both the Orange Bowl semifinal and the national championship game during the 2021 title run?", answer: "Stetson Bennett", wrong: ["JT Daniels", "Jake Fromm"], explanation: "Stetson Bennett earned offensive MVP honors in Georgia's CFP semifinal win over Michigan and its championship win over Alabama." },
   { id: "renfrow-title-catch", grade: 5, subject: "Players", prompt: "Who caught Clemson's game-winning touchdown with one second left against Alabama in the 2016 season's CFP title game?", answer: "Hunter Renfrow", wrong: ["Mike Williams", "Artavis Scott", "Jordan Leggett"], explanation: "Hunter Renfrow caught Deshaun Watson's two-yard touchdown with one second left to give Clemson the national title." },
   { id: "wuerffel-heisman-title", grade: 5, subject: "Players", prompt: "Which Florida quarterback won the 1996 Heisman Trophy and then led the Gators to the national championship?", answer: "Danny Wuerffel", wrong: ["Rex Grossman", "Jesse Palmer"], explanation: "Danny Wuerffel won the 1996 Heisman Trophy and quarterbacked Florida to its first national championship." },
@@ -576,11 +576,11 @@ const CFB_CURATED_GRADE_FIVE_FACTS: readonly CfbCuratedGradeFiveFact[] = [
   { id: "utah-sugar-alabama", grade: 5, subject: "Programs", prompt: "Which program completed a 13-0 season by beating Alabama in the Sugar Bowl after the 2008 season?", answer: "Utah", wrong: ["Boise State", "TCU"], explanation: "Utah finished 13-0 after defeating Alabama 31-17 in the Sugar Bowl." },
 
   { id: "little-brown-jug", grade: 5, subject: "Traditions", prompt: "Michigan and Minnesota play for which rivalry trophy?", answer: "Little Brown Jug", wrong: ["Paul Bunyan Trophy", "Heartland Trophy", "Old Oaken Bucket"], explanation: "Michigan and Minnesota compete for the Little Brown Jug." },
-  { id: "old-brass-spittoon", grade: 5, subject: "Traditions", prompt: "Indiana and Michigan State play for which rivalry trophy?", answer: "Old Brass Spittoon", wrong: ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], explanation: "Indiana and Michigan State compete for the Old Brass Spittoon." },
-  { id: "illibuck", grade: 5, subject: "Traditions", prompt: "Illinois and Ohio State play for which rivalry trophy?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
+  { id: "old-brass-spittoon", grade: 5, subject: "Traditions", prompt: "What trophy is at stake when Indiana meets Michigan State?", answer: "Old Brass Spittoon", wrong: ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], explanation: "Indiana and Michigan State compete for the Old Brass Spittoon." },
+  { id: "illibuck", grade: 5, subject: "Traditions", prompt: "What wooden-turtle trophy goes to the winner of Illinois–Ohio State?", answer: "Illibuck", wrong: ["Illini-Buckeye Cup", "Victory Bell", "Old Brass Spittoon"], explanation: "Illinois and Ohio State compete for the Illibuck trophy." },
 
   { id: "stanford-usc-2007", grade: 5, subject: "CFB History", prompt: "Which powerhouse did Stanford upset 24-23 in 2007 during Jim Harbaugh's first season as head coach?", answer: "USC", wrong: ["Oregon", "UCLA"], explanation: "Stanford stunned USC 24-23 at the Los Angeles Memorial Coliseum in 2007." },
-  { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", answer: "Jalen Watts-Jackson", wrong: ["LJ Scott", "Aaron Burbridge", "Connor Cook"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
+  { id: "watts-jackson-2015", grade: 5, subject: "CFB History", prompt: "Name the Michigan State player who took Michigan's mishandled final punt to the end zone in 2015.", answer: "Jalen Watts-Jackson", wrong: ["LJ Scott", "Aaron Burbridge", "Connor Cook"], explanation: "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired." },
   { id: "kick-six-chris-davis", grade: 5, subject: "CFB History", prompt: "Who returned Alabama's missed field goal for Auburn's Kick Six touchdown in 2013?", answer: "Chris Davis", wrong: ["Tre Mason", "Ricardo Louis"], explanation: "Chris Davis returned the missed field goal for the walk-off touchdown that gave Auburn the 2013 Iron Bowl." },
 ];
 
@@ -915,13 +915,13 @@ const CFB_CURATED_TRUE_FALSE: readonly AverageFanQuestion[] = [
 
 const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   ["00-player-mendoza", "Players", "Before his Heisman-winning championship season at Indiana, Fernando Mendoza played for which school?", "California", ["Stanford", "UCLA", "Arizona State"], "Fernando Mendoza transferred from California to Indiana before his 2025 Heisman and national-title season."],
-  ["01-player-bennett-mvps", "Players", "Which Georgia quarterback was offensive MVP of both the CFP semifinal and national championship game during the 2021 title run?", "Stetson Bennett", ["JT Daniels", "Jake Fromm", "Bryce Young"], "Stetson Bennett earned offensive MVP honors in Georgia's semifinal win over Michigan and championship win over Alabama."],
+  ["01-player-bennett-mvps", "Players", "During Georgia's 2021 championship run, who was named offensive MVP in both College Football Playoff games?", "Stetson Bennett", ["JT Daniels", "Jake Fromm", "Bryce Young"], "Stetson Bennett earned offensive MVP honors in Georgia's semifinal win over Michigan and championship win over Alabama."],
   ["02-player-hunter-awards", "Players", "Which Colorado star won both the Biletnikoff Award and the Bednarik Award in 2024?", "Travis Hunter", ["Tetairoa McMillan", "Will Johnson", "Ashton Jeanty"], "Travis Hunter won the 2024 Biletnikoff Award as the top receiver and the Bednarik Award as the top defensive player."],
   ["03-player-griffin", "Players", "Archie Griffin won his back-to-back Heisman Trophies in which two seasons?", "1974 and 1975", ["1973 and 1974", "1975 and 1976", "1972 and 1973"], "Ohio State running back Archie Griffin won the Heisman in 1974 and 1975."],
 
-  ["00-program-tennessee-bcs", "Programs", "Which program won the first BCS national championship after the 1998 season?", "Tennessee", ["Florida State", "Nebraska", "Ohio State"], "Tennessee beat Florida State in the Fiesta Bowl to win the first BCS national championship."],
-  ["01-program-utah-sugar", "Programs", "Which program completed a 13–0 season by beating Alabama in the Sugar Bowl after the 2008 season?", "Utah", ["Boise State", "TCU", "BYU"], "Utah finished 13–0 after defeating Alabama 31–17 in the Sugar Bowl."],
-  ["02-program-four-seed", "Programs", "Which program became the first No. 4 seed to win the College Football Playoff after the 2014 season?", "Ohio State", ["TCU", "Florida State", "Oregon"], "Ohio State entered the inaugural CFP as the No. 4 seed, beat Alabama, then defeated Oregon for the title."],
+  ["00-program-tennessee-bcs", "Programs", "The first BCS champion came out of the 1998 season. Which program was it?", "Tennessee", ["Florida State", "Nebraska", "Ohio State"], "Tennessee beat Florida State in the Fiesta Bowl to win the first BCS national championship."],
+  ["01-program-utah-sugar", "Programs", "Which unbeaten team capped the 2008 season by beating Alabama 31–17 in the Sugar Bowl?", "Utah", ["Boise State", "TCU", "BYU"], "Utah finished 13–0 after defeating Alabama 31–17 in the Sugar Bowl."],
+  ["02-program-four-seed", "Programs", "Who won the inaugural four-team College Football Playoff from the No. 4 seed?", "Ohio State", ["TCU", "Florida State", "Oregon"], "Ohio State entered the inaugural CFP as the No. 4 seed, beat Alabama, then defeated Oregon for the title."],
   ["03-program-first-cfp-one", "Programs", "Which program was the first team ever ranked No. 1 by the College Football Playoff selection committee?", "Mississippi State", ["Alabama", "Florida State", "Oregon"], "Mississippi State held the first No. 1 ranking released by the CFP committee in 2014."],
 
   ["00-tradition-spittoon", "Traditions", "Indiana and Michigan State play for which rivalry trophy?", "Old Brass Spittoon", ["Old Oaken Bucket", "Land Grant Trophy", "Paul Bunyan Trophy"], "Indiana and Michigan State compete for the Old Brass Spittoon."],
@@ -932,7 +932,7 @@ const CFB_CURATED_FINALS: readonly AverageFanQuestion[] = [
   ["00-history-first-ap", "CFB History", "Which school finished No. 1 in the first final Associated Press college football poll in 1936?", "Minnesota", ["Notre Dame", "Alabama", "Pittsburgh"], "Minnesota finished atop the first final AP poll in 1936."],
   ["01-history-first-rose", "CFB History", "Michigan beat which school 49–0 in the first Rose Bowl game in 1902?", "Stanford", ["California", "USC", "Washington"], "Michigan defeated Stanford 49–0 in the inaugural Tournament East-West football game, now known as the Rose Bowl."],
   ["02-history-watts-jackson", "CFB History", "Who scored Michigan State's winning touchdown on the botched-punt return against Michigan in 2015?", "Jalen Watts-Jackson", ["LJ Scott", "Aaron Burbridge", "Connor Cook"], "Jalen Watts-Jackson returned the mishandled punt for the game-winning touchdown as time expired."],
-  ["03-history-first-heisman", "CFB History", "Who won the first Heisman Trophy in 1935?", "Jay Berwanger", ["Davey O'Brien", "Doc Blanchard", "Tom Harmon"], "University of Chicago halfback Jay Berwanger won the inaugural Downtown Athletic Club Trophy, later renamed the Heisman."],
+  ["03-history-first-heisman", "CFB History", "The inaugural Downtown Athletic Club Trophy, later renamed the Heisman, went to which Chicago halfback?", "Jay Berwanger", ["Davey O'Brien", "Doc Blanchard", "Tom Harmon"], "University of Chicago halfback Jay Berwanger won the inaugural Downtown Athletic Club Trophy, later renamed the Heisman."],
 ].map(([id, subject, prompt, answer, wrong, explanation]) => assertAverageFanQuestion({
   id: `average-fan:cfb:authored:cfb-final-${id}`,
   sport: "cfb",
@@ -1744,29 +1744,14 @@ export const averageFanNflQuestionBank = buildBank(
   AVERAGE_FAN_FINAL_TARGETS.nfl,
 );
 
-const CFB_REVIEWED_FINAL_DUPLICATE_FRAGMENTS = [
-  ":00-g5:bennett-double-cfp-mvp:",
-  ":00-g5:hunter-biletnikoff-bednarik:",
-  ":00-g5:tennessee-first-bcs:",
-  ":00-g5:utah-sugar-alabama:",
-  ":00-g5:ohio-state-four-seed:",
-  ":00-g5:old-brass-spittoon:",
-  ":00-g5:illibuck:",
-  ":00-g5:watts-jackson-2015:",
-  ":tradition:old-brass-spittoon:",
-  ":tradition:illibuck:",
-  ":authored:cfb-r3-first-heisman",
-] as const;
-
 const CFB_REVIEWED_FINAL_ALTERNATE_IDS = new Set([
   "average-fan:cfb:authored:cfb-final-first-ap-champ",
   "average-fan:cfb:authored:cfb-final-1902-rose",
 ]);
 
-const averageFanCfbCandidates = footballCandidates("CFB").filter((question) => (
-  !CFB_REVIEWED_FINAL_ALTERNATE_IDS.has(question.id)
-  && !CFB_REVIEWED_FINAL_DUPLICATE_FRAGMENTS.some((fragment) => question.id.includes(fragment))
-));
+const averageFanCfbCandidates = footballCandidates("CFB").filter(
+  (question) => !CFB_REVIEWED_FINAL_ALTERNATE_IDS.has(question.id),
+);
 
 export const averageFanCfbQuestionBank = buildBank(
   "cfb",
