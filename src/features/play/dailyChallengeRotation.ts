@@ -64,6 +64,19 @@ export const UFC_LOCKED_WEIGHTED_CYCLE: readonly OfficialDailyGameType[] = [
   "wavelength",
 ];
 
+export const DAILY_GAME_DATE_OVERRIDES: Readonly<
+  Record<"football" | "ufc", Readonly<Record<string, OfficialDailyGameType>>>
+> = {
+  football: {
+    "2026-10-01": "bar_trivia",
+    "2026-10-02": "average_fan",
+  },
+  ufc: {
+    "2026-10-01": "who_am_i",
+    "2026-10-02": "average_fan",
+  },
+};
+
 function dayNumber(day: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error("Daily rotation day must use YYYY-MM-DD.");
   const [year, month, date] = day.split("-").map(Number);
@@ -76,6 +89,9 @@ export function lockedWeightedGameForDay(
   sport: "football" | "ufc",
   day: string,
 ): OfficialDailyGameType {
+  const override = DAILY_GAME_DATE_OVERRIDES[sport][day];
+  if (override) return override;
+
   const cycle = sport === "football" ? FOOTBALL_LOCKED_WEIGHTED_CYCLE : UFC_LOCKED_WEIGHTED_CYCLE;
   const offset = dayNumber(day) - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
   const index = ((offset % cycle.length) + cycle.length) % cycle.length;
