@@ -10,6 +10,7 @@ import type {
 } from "../play/footballWeeklyAuctionRepository";
 import {
   footballWeeklySuperteamIdentity,
+  footballWeeklySuperteamSportsReferenceUrl,
   footballWeeklySuperteamStyle,
 } from "./footballWeeklySuperteamVisualIdentity";
 import { FootballWeeklySuperteamTableDialog } from "./FootballWeeklySuperteamTableDialog";
@@ -70,6 +71,22 @@ function TeamMark({ school }: { school: string }) {
   );
 }
 
+function SportsReferenceName({ displayName }: { displayName: string }) {
+  return (
+    <a
+      className="football-weekly-superteam__sports-reference-link"
+      href={footballWeeklySuperteamSportsReferenceUrl(displayName)}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={displayName + " on Sports-Reference"}
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
+    >
+      {displayName}
+    </a>
+  );
+}
+
 function candidateEligible(
   card: FootballWeeklySuperteamCard,
   collection: FootballWeeklySuperteamState["collection"],
@@ -102,7 +119,7 @@ function PriorResults({ results }: { results: FootballWeeklySuperteamState["prio
       {results.map((result) => (
         <article key={result.slot}>
           <div>
-            <span>{result.display_name} · {result.school} {result.season_year}</span>
+            <span><SportsReferenceName displayName={result.display_name} /> · {result.school} {result.season_year}</span>
             <strong>
               {result.winner_display_name
                 ? result.winner_display_name + " · $" + result.winning_bid + " · " + (result.roster_slot ?? "ROSTER")
@@ -148,7 +165,7 @@ function RosterStrip({ collection }: { collection: FootballWeeklySuperteamState[
               )}
               <div>
                 <small>{slot}</small>
-                <strong>{item?.display_name ?? "OPEN"}</strong>
+                <strong>{item ? <SportsReferenceName displayName={item.display_name} /> : "OPEN"}</strong>
                 <span>{item ? item.school + " · " + item.season_year : "$1 reserved"}</span>
               </div>
             </article>
@@ -215,7 +232,7 @@ function CandidateCard({
         <TeamMark school={card.school} />
         <div>
           <small>{card.group_key.toUpperCase()} · {card.eligible_slots.join(" / ").toUpperCase()}</small>
-          <strong>{card.display_name}</strong>
+          <strong><SportsReferenceName displayName={card.display_name} /></strong>
           <span>{card.school} · {card.season_year}</span>
         </div>
       </div>
@@ -339,7 +356,7 @@ export function FootballWeeklySuperteamFinalResult({
               const item = roster.find((entry) => entry.roster_slot === slot);
               return (
                 <article key={slot}>
-                  <small>{slot}</small><strong>{item?.display_name ?? "—"}</strong>
+                  <small>{slot}</small><strong>{item ? <SportsReferenceName displayName={item.display_name} /> : "—"}</strong>
                   <span>{item ? item.school + " · " + item.season_year + " · $" + item.winning_bid : "—"}</span>
                 </article>
               );
