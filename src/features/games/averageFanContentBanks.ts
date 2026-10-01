@@ -1701,6 +1701,112 @@ function balancedTake(
   return selected;
 }
 
+const PERSON_SHORT_ANSWER_PROMPT = /^(?:who\b|which\b.*\b(?:fighter|player|quarterback|running back|receiver|tight end|linebacker|defender|cornerback|safety|coach|halfback|heisman winner|mvp)\b|what\b.*\b(?:fighter|player|quarterback|running back|receiver|coach)\b|name\b.*\b(?:fighter|player|opponent|quarterback|running back|receiver|coach)\b)/i;
+const PERSON_NAME_SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
+const PERSON_SURNAME_PREFIXES = new Set(["st", "de", "del", "da", "dos", "van", "von", "la", "le"]);
+
+function normalizedAliasKey(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function personSurnameAlias(value: string) {
+  const tokens = value.trim().split(/\s+/).filter(Boolean);
+  if (tokens.length < 2 || /\d/.test(value)) return null;
+
+  let lastIndex = tokens.length - 1;
+  const lastKey = normalizedAliasKey(tokens[lastIndex]!);
+  if (PERSON_NAME_SUFFIXES.has(lastKey) && lastIndex >= 2) lastIndex -= 1;
+
+  const last = tokens[lastIndex]!;
+  const previous = lastIndex > 0 ? tokens[lastIndex - 1]! : "";
+  const previousKey = normalizedAliasKey(previous);
+  const surname = PERSON_SURNAME_PREFIXES.has(previousKey) ? `${previous} ${last}` : last;
+  const normalized = normalizedAliasKey(surname);
+  return normalized.length >= 4 ? surname : null;
+}
+
+function questionExpectsPerson(question: AverageFanQuestion) {
+  return question.format === "short-answer"
+    && PERSON_SHORT_ANSWER_PROMPT.test(question.prompt.trim())
+    && personSurnameAlias(question.answer) != null;
+}
+
+function nflTeamHumanAliases(value: string) {
+  const teams = Object.values(NFL_TEAM_NAMES);
+  const exact = teams.find((team) => normalizeAcceptedValue(team) === normalizeAcceptedValue(value));
+  if (!exact) return [] as string[];
+
+  const words = exact.split(/\s+/);
+  const nickname = words.at(-1)!;
+  const city = words.slice(0, -1).join(" ");
+  const cityOwners = teams.filter((team) => team.startsWith(`${city} `));
+  return cityOwners.length === 1 ? [nickname, city] : [nickname];
+}
+
+const COMMON_SHORT_ANSWER_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  "run pass option": ["RPO"],
+  "college football playoff": ["CFP"],
+  "most valuable player": ["MVP"],
+  "national football league": ["NFL"],
+  "ultimate fighting championship": ["UFC"],
+  "defensive pass interference": ["DPI"],
+  "offensive pass interference": ["OPI"],
+};
+
+function enrichHumanShortAnswerAliases(bank: readonly AverageFanQuestion[]) {
+  const surnameOwners = new Map<string, Set<string>>();
+
+  for (const question of bank.filter(questionExpectsPerson)) {
+    for (const value of [question.answer, ...question.aliases, ...(question.fanMisses ?? [])]) {
+      const surname = personSurnameAlias(value);
+      if (!surname) continue;
+      const key = normalizedAliasKey(surname);
+      const owners = surnameOwners.get(key) ?? new Set<string>();
+      owners.add(normalizedAliasKey(value));
+      surnameOwners.set(key, owners);
+    }
+  }
+
+  return bank.map((question) => {
+    if (question.format !== "short-answer") return question;
+
+    const proposed: string[] = [];
+    if (questionExpectsPerson(question)) {
+      for (const accepted of [question.answer, ...question.aliases]) {
+        const surname = personSurnameAlias(accepted);
+        if (!surname) continue;
+        const owners = surnameOwners.get(normalizedAliasKey(surname));
+        if (owners?.size === 1) proposed.push(surname);
+      }
+    }
+
+    if (question.sport === "nfl") {
+      proposed.push(...nflTeamHumanAliases(question.answer));
+    }
+
+    proposed.push(...(COMMON_SHORT_ANSWER_ALIASES[normalizedAliasKey(question.answer)] ?? []));
+
+    const answerKey = normalizedAliasKey(question.answer);
+    const missKeys = new Set((question.fanMisses ?? []).map(normalizedAliasKey));
+    const seen = new Set<string>();
+    const aliases = [...question.aliases, ...proposed].filter((alias) => {
+      const key = normalizedAliasKey(alias);
+      if (!key || key === answerKey || missKeys.has(key) || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    return assertAverageFanQuestion({ ...question, aliases });
+  });
+}
+
 function buildBank(
   sport: AverageFanSport,
   candidates: readonly AverageFanQuestion[],
@@ -1742,7 +1848,7 @@ function buildBank(
   const bank = [...ordinary, ...finals];
   const ids = new Set(bank.map((question) => question.id));
   if (ids.size !== bank.length) throw new Error(`Average Fan ${sport} bank contains duplicate ids.`);
-  return bank;
+  return enrichHumanShortAnswerAliases(bank);
 }
 
 const averageFanNflCandidates = footballCandidates("NFL").filter((question) => (
