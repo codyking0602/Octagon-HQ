@@ -38,8 +38,9 @@ function singleCharacterTypo(question: AverageFanQuestion) {
       normalizedHumanInput(value).toLocaleLowerCase()
     )),
   );
-  for (let index = 0; index < base.length; index += 1) {
+  for (let index = 1; index < base.length - 1; index += 1) {
     if (!/[a-z0-9]/.test(base[index]!)) continue;
+    if (base[index - 1] === " " || base[index + 1] === " ") continue;
     const candidate = base.slice(0, index) + base.slice(index + 1);
     if (candidate.length >= 7 && !blocked.has(candidate)) return candidate;
   }
