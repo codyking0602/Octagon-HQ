@@ -22,6 +22,7 @@ export const MILLIONAIRE_OCTAGON_SCORE_BY_LEVEL = {
 export const MILLIONAIRE_CHECKPOINT_LEVELS = [3, 6] as const;
 export const MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS = [8] as const;
 export const MILLIONAIRE_LIFELINE_PENALTY = 2;
+export const MILLIONAIRE_Q8_MISS_BASE_SCORE = 85;
 
 export type MillionaireRun = readonly [
   MillionaireRuntimeQuestion,
@@ -117,7 +118,7 @@ export function millionaireScoreAfterLifelines(baseScore: number, usage: Million
 export function millionaireBaseScore(correctAnswers: number, firstMissQuestionIndex: number | null) {
   const safeCorrectAnswers = Math.max(0, Math.min(8, Math.trunc(correctAnswers)));
   if (safeCorrectAnswers === 0 && firstMissQuestionIndex === null) return 0;
-  if (safeCorrectAnswers === 7 && firstMissQuestionIndex === 7) return 85;
+  if (safeCorrectAnswers === 7 && firstMissQuestionIndex === 7) return MILLIONAIRE_Q8_MISS_BASE_SCORE;
   const survivalCorrect = firstMissQuestionIndex === null
     ? safeCorrectAnswers
     : Math.max(0, Math.min(7, Math.trunc(firstMissQuestionIndex)));
