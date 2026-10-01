@@ -15,6 +15,7 @@ import { buildFootballDailyPersistenceSetup as buildFootballAverageFanPersistenc
 import {
   DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
   FOOTBALL_LOCKED_WEIGHTED_CYCLE,
+  lockedWeightedGameForDay,
 } from "./dailyChallengeRotation";
 import type {
   OfficialDailyGameType,
@@ -33,6 +34,8 @@ export const FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION = "football-daily-v15-weig
 export const FOOTBALL_WEIGHTED_SCHEDULE_VERSION = "football-daily-v16-weighted-sep25" as const;
 export const FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION = "football-daily-v17-bar-trivia-sep29" as const;
 export const FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION = "football-daily-v18-average-fan-oct1" as const;
+export const FOOTBALL_AVERAGE_FAN_DEFERRED_SCHEDULE_VERSION = "football-daily-v19-average-fan-deferred-oct1" as const;
+export const FOOTBALL_AVERAGE_FAN_RESTORE_SCHEDULE_VERSION = "football-daily-v20-average-fan-restore-oct3" as const;
 const FOOTBALL_TODAY_CUTOVER_DAY = "2026-09-12";
 const FOOTBALL_MILLIONAIRE_CUTOVER_DAY = "2026-09-19";
 const FOOTBALL_SPORTS_FEUD_CUTOVER_DAY = "2026-09-23";
@@ -232,7 +235,8 @@ function dayNumber(day: string) {
 
 export function footballTodayScheduleVersionForDay(day: string): string {
   dayNumber(day);
-  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION;
+  if (day >= "2026-10-03") return FOOTBALL_AVERAGE_FAN_RESTORE_SCHEDULE_VERSION;
+  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_DEFERRED_SCHEDULE_VERSION;
   if (day >= "2026-09-29") return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
@@ -247,7 +251,8 @@ export function footballTodayScheduleVersionForDay(day: string): string {
 
 function footballTodaySetupScheduleVersionForDay(day: string): string {
   dayNumber(day);
-  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION;
+  if (day >= "2026-10-03") return FOOTBALL_AVERAGE_FAN_RESTORE_SCHEDULE_VERSION;
+  if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) return FOOTBALL_AVERAGE_FAN_DEFERRED_SCHEDULE_VERSION;
   if (day >= "2026-09-29") return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= FOOTBALL_WEIGHTED_CUTOVER_DAY) return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
@@ -262,10 +267,7 @@ function footballTodaySetupScheduleVersionForDay(day: string): string {
 export function footballTodayGameForDay(day: string): OfficialDailyGameType {
   const currentDayNumber = dayNumber(day);
   if (day >= DAILY_WEIGHTED_ROTATION_CUTOVER_DAY) {
-    const offset = currentDayNumber - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
-    const index = ((offset % FOOTBALL_LOCKED_WEIGHTED_CYCLE.length) + FOOTBALL_LOCKED_WEIGHTED_CYCLE.length)
-      % FOOTBALL_LOCKED_WEIGHTED_CYCLE.length;
-    return FOOTBALL_LOCKED_WEIGHTED_CYCLE[index]!;
+    return lockedWeightedGameForDay("football", day);
   }
   if (day === "2026-09-29") return "bar_trivia";
   if (day === "2026-09-30") return "wavelength";
