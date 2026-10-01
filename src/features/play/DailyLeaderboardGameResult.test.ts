@@ -408,7 +408,7 @@ describe("Daily leaderboard game result reconstruction", () => {
   it("reconstructs Average Fan board answers and help usage from sanitized result detail", () => {
     const projection = baseProjection({
       gameType: "average_fan",
-      publicSetup: { sport: "nfl", question_count: 10 },
+      publicSetup: { sport: "nfl", question_count: 8 },
       publicState: { complete: true, board_score: 85 },
       revealSetup: {
         sport: "nfl",
