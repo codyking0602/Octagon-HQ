@@ -144,7 +144,13 @@ set
       then jsonb_set(submission_evidence, '{base_score}', '85'::jsonb, true)
     else submission_evidence
   end
-where public_result->>'outcome' = 'lost'
+where exists (
+    select 1
+    from private.daily_challenges daily
+    where daily.id = daily_challenge_attempts.daily_challenge_id
+      and daily.game_type = 'millionaire'
+  )
+  and public_result->>'outcome' = 'lost'
   and public_result->>'completed_questions' = '7'
   and public_result->>'base_score' = '80'
   and public_result->>'final_money' = '100000';
@@ -178,7 +184,13 @@ set
       jsonb_set(submission_state, '{final_submission,base_score}', '85'::jsonb, true)
     else submission_state
   end
-where public_state->>'status' = 'lost'
+where exists (
+    select 1
+    from private.daily_challenges daily
+    where daily.id = daily_challenge_progress.daily_challenge_id
+      and daily.game_type = 'millionaire'
+  )
+  and public_state->>'status' = 'lost'
   and public_state->>'completed_questions' = '7'
   and public_state->>'base_score' = '80'
   and public_state->>'final_money' = '100000';
