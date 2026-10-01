@@ -15,6 +15,12 @@ const bundles = [
     requiredExports: ["advanceOfficialDailyRuntime", "buildOfficialDailySetup"],
   },
   {
+    label: "Average Fan Daily edge runtime",
+    entry: resolve(repoRoot, "src/features/play/averageFanDailyRuntime.ts"),
+    fileName: "average-fan.generated.mjs",
+    requiredExports: ["advanceAverageFanDailyRuntime", "buildAverageFanDailySetup"],
+  },
+  {
     label: "Football Daily publication runtime",
     entry: resolve(repoRoot, "src/features/play/footballDailyPublicationAll.ts"),
     fileName: "football-publication.generated.mjs",
