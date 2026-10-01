@@ -347,7 +347,7 @@ export async function loadHqDailyChallengeStreak(
 export interface OwnerAverageFanPreviewRepository {
   load(): Promise<TodayChallengeProjection>;
   advance(
-    projection: Pick<TodayChallengeProjection, "progressRevision" | "publicState">,
+    projection: Pick<TodayChallengeProjection, "progressRevision">,
     action: Record<string, unknown>,
   ): Promise<TodayChallengeProjection>;
 }
@@ -379,7 +379,6 @@ export function createOwnerAverageFanPreviewRepository(
         sport,
         day,
         revision: projection.progressRevision,
-        public_state: projection.publicState,
         action,
       }));
     },
