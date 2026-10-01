@@ -1594,9 +1594,39 @@ function balancedTake(
     }
     return left.id.localeCompare(right.id);
   };
+  const selectionCandidates = (() => {
+    if (!isCfbUpperGrade) return candidates;
+
+    // Grade 5 should be hard because the knowledge is deep, not because the player
+    // happened to play decades ago. Cap pre-2000 dated player identities so the
+    // dated Player slice remains at least 65% modern while undated landmark/player
+    // questions can still compete naturally.
+    const playerCandidates = candidates.filter((question) => question.subject === "Players");
+    const modernDated = playerCandidates.filter((question) => {
+      const year = latestPromptYear(question);
+      return year != null && year >= 2000;
+    });
+    const historicalDated = playerCandidates
+      .filter((question) => {
+        const year = latestPromptYear(question);
+        return year != null && year < 2000;
+      })
+      .sort(candidateOrder);
+    const historicalCap = Math.floor(modernDated.length * 0.35 / 0.65);
+    const allowedHistorical = new Set(
+      historicalDated.slice(0, historicalCap).map((question) => question.id),
+    );
+
+    return candidates.filter((question) => {
+      if (question.subject !== "Players") return true;
+      const year = latestPromptYear(question);
+      return year == null || year >= 2000 || allowedHistorical.has(question.id);
+    });
+  })();
+
   const bySubject = new Map(subjects.map((subject) => [
     subject,
-    candidates.filter((question) => question.subject === subject).sort(candidateOrder),
+    selectionCandidates.filter((question) => question.subject === subject).sort(candidateOrder),
   ] as const));
   const offsets = new Map(subjects.map((subject) => [subject, 0]));
   const selected: AverageFanQuestion[] = [];
