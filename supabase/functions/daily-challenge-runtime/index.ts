@@ -1050,6 +1050,39 @@ function ownerAverageFanPreviewPayload(
   };
 }
 
+async function gradeOwnerAverageFanPreview(
+  admin: SupabaseClient,
+  profileId: string,
+  publication: JsonRecord,
+  gradingEvidence: JsonRecord,
+  submission: JsonRecord,
+  runtimeScore: number,
+) {
+  const gradingResponse = await admin.rpc("grade_owner_average_fan_daily_preview", {
+    p_profile_id: profileId,
+    p_scoring_version: requiredString(publication.scoringVersion, "Average Fan preview scoring version"),
+    p_submission: submission,
+    p_grading_evidence: gradingEvidence,
+  });
+  if (gradingResponse.error || !Array.isArray(gradingResponse.data) || !gradingResponse.data[0]) {
+    throw new Error("Average Fan owner preview canonical grading failed.");
+  }
+  const grade = requiredRecord(gradingResponse.data[0], "Average Fan owner preview grade");
+  const normalizedScore = Number(grade.normalized_score);
+  if (!Number.isInteger(normalizedScore) || normalizedScore !== runtimeScore) {
+    throw new Error("Average Fan owner preview runtime and canonical grader disagree.");
+  }
+  return {
+    attempt_kind: "owner_preview",
+    native_score: Number(grade.native_score),
+    normalized_score: normalizedScore,
+    completed_at: new Date().toISOString(),
+    content_version: requiredString(publication.contentVersion, "Average Fan preview content version"),
+    scoring_version: requiredString(publication.scoringVersion, "Average Fan preview scoring version"),
+    public_result: requiredRecord(grade.public_result, "Average Fan preview public result"),
+  };
+}
+
 async function ownerAverageFanPreview(
   admin: SupabaseClient,
   profileId: string,
@@ -1098,6 +1131,37 @@ async function ownerAverageFanPreview(
   );
   const publicSetup = requiredRecord(publication.publicSetup, "Average Fan preview public setup");
   const initialState = requiredRecord(publicSetup.initial_state, "Average Fan preview initial state");
+  const gradingEvidence = requiredRecord(publication.privateGradingEvidence, "Average Fan preview grading evidence");
+
+  const progressResponse = await admin.rpc("get_owner_average_fan_daily_preview_progress", {
+    p_profile_id: profileId,
+    p_day: day,
+    p_sport: sport,
+    p_initial_state: initialState,
+  });
+  if (progressResponse.error) {
+    throw new Error("Average Fan owner preview progress could not be loaded.");
+  }
+  const progress = requiredRecord(progressResponse.data, "Average Fan owner preview progress");
+  const revision = Number(progress.revision ?? 0);
+  const submissionState = requiredRecord(progress.submission_state, "Average Fan owner preview submission state");
+  const publicState = requiredRecord(progress.public_state, "Average Fan owner preview public state");
+
+  const completedAttempt = async () => {
+    if (publicState.complete !== true) return null;
+    const submission = requiredRecord(
+      submissionState.final_submission,
+      "Average Fan preview completed submission",
+    );
+    return gradeOwnerAverageFanPreview(
+      admin,
+      profileId,
+      publication,
+      gradingEvidence,
+      submission,
+      Number(publicState.final_score),
+    );
+  };
 
   if (body.mode === "owner-preview-get") {
     return json(ownerAverageFanPreviewPayload(
@@ -1105,15 +1169,27 @@ async function ownerAverageFanPreview(
       sport,
       day,
       scheduleVersion,
-      initialState,
-      0,
+      publicState,
+      revision,
+      await completedAttempt(),
     ));
   }
 
-  const publicState = requiredRecord(body.public_state, "Average Fan preview public state");
-  const revision = Number.isInteger(body.revision) && Number(body.revision) >= 0
-    ? Number(body.revision)
-    : 0;
+  if (!Number.isInteger(body.revision) || Number(body.revision) !== revision) {
+    return safeError(409, "STALE_PROGRESS", "Average Fan owner preview progress changed. Reload and continue.");
+  }
+  if (publicState.complete === true) {
+    return json(ownerAverageFanPreviewPayload(
+      publication,
+      sport,
+      day,
+      scheduleVersion,
+      publicState,
+      revision,
+      await completedAttempt(),
+    ));
+  }
+
   const action = requiredRecord(body.action, "Average Fan preview action");
   const context: OfficialDailyRuntimeContext = {
     gameType: "average_fan",
@@ -1121,39 +1197,42 @@ async function ownerAverageFanPreview(
     publicSetup,
     revealSetup: requiredRecord(publication.revealSetup, "Average Fan preview reveal setup"),
     privateSetupEvidence: requiredRecord(publication.privateSetupEvidence, "Average Fan preview setup evidence"),
-    privateGradingEvidence: requiredRecord(publication.privateGradingEvidence, "Average Fan preview grading evidence"),
-    submissionState: {},
+    privateGradingEvidence: gradingEvidence,
+    submissionState,
     publicState,
   };
   const advanced = runtime.advanceAverageFanDailyRuntime(context, action);
+  const savedResponse = await admin.rpc("save_owner_average_fan_daily_preview_progress", {
+    p_profile_id: profileId,
+    p_day: day,
+    p_sport: sport,
+    p_expected_revision: revision,
+    p_submission_state: advanced.submissionState,
+    p_public_state: advanced.publicState,
+  });
+  if (savedResponse.error) {
+    if (savedResponse.error.code === "40001") {
+      return safeError(409, "STALE_PROGRESS", "Average Fan owner preview progress changed. Reload and continue.");
+    }
+    throw new Error("Average Fan owner preview progress could not be saved.");
+  }
+
+  const saved = requiredRecord(savedResponse.data, "Saved Average Fan owner preview progress");
+  const savedRevision = Number(saved.revision);
+  const savedSubmission = requiredRecord(saved.submission_state, "Saved Average Fan preview submission state");
+  const savedPublicState = requiredRecord(saved.public_state, "Saved Average Fan preview public state");
 
   let officialAttempt: JsonRecord | null = null;
   if (advanced.complete) {
-    const submission = requiredRecord(advanced.finalSubmission, "Average Fan preview final submission");
-    const gradingResponse = await admin.rpc("grade_owner_average_fan_daily_preview", {
-      p_profile_id: profileId,
-      p_scoring_version: requiredString(publication.scoringVersion, "Average Fan preview scoring version"),
-      p_submission: submission,
-      p_grading_evidence: context.privateGradingEvidence,
-    });
-    if (gradingResponse.error || !Array.isArray(gradingResponse.data) || !gradingResponse.data[0]) {
-      throw new Error("Average Fan owner preview canonical grading failed.");
-    }
-    const grade = requiredRecord(gradingResponse.data[0], "Average Fan owner preview grade");
-    const normalizedScore = Number(grade.normalized_score);
-    const runtimeScore = Number(advanced.publicState.final_score);
-    if (!Number.isInteger(normalizedScore) || normalizedScore !== runtimeScore) {
-      throw new Error("Average Fan owner preview runtime and canonical grader disagree.");
-    }
-    officialAttempt = {
-      attempt_kind: "owner_preview",
-      native_score: Number(grade.native_score),
-      normalized_score: normalizedScore,
-      completed_at: new Date().toISOString(),
-      content_version: requiredString(publication.contentVersion, "Average Fan preview content version"),
-      scoring_version: requiredString(publication.scoringVersion, "Average Fan preview scoring version"),
-      public_result: requiredRecord(grade.public_result, "Average Fan preview public result"),
-    };
+    const submission = requiredRecord(savedSubmission.final_submission, "Average Fan preview final submission");
+    officialAttempt = await gradeOwnerAverageFanPreview(
+      admin,
+      profileId,
+      publication,
+      gradingEvidence,
+      submission,
+      Number(savedPublicState.final_score),
+    );
   }
 
   return json(ownerAverageFanPreviewPayload(
@@ -1161,8 +1240,8 @@ async function ownerAverageFanPreview(
     sport,
     day,
     scheduleVersion,
-    advanced.publicState,
-    revision + 1,
+    savedPublicState,
+    savedRevision,
     officialAttempt,
   ));
 }
