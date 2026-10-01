@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import {
   type AverageFanFan,
   type AverageFanQuestion,
@@ -24,6 +25,10 @@ import { averageFanMoneyLabel } from "./AverageFanPrototypeModel";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
 
 type JsonRecord = Record<string, unknown>;
+
+function averageFanTakeover(content: ReactNode) {
+  return typeof document === "undefined" ? content : createPortal(content, document.body);
+}
 
 function record(value: unknown): JsonRecord {
   return value && typeof value === "object" && !Array.isArray(value) ? value as JsonRecord : {};
@@ -154,7 +159,7 @@ export function OfficialAverageFanDailyView({
   }, [current?.id, finalQuestion?.id]);
 
   if (!fan && scene === "intro") {
-    return (
+    return averageFanTakeover(
       <div className="average-fan-intro average-fan-intro--plate">
         <section
           className="average-fan-intro-stage"
@@ -188,19 +193,19 @@ export function OfficialAverageFanDailyView({
         </section>
         <button className="average-fan-exit" type="button" onClick={onExit} aria-label="Exit Average Fan">‹ HQ</button>
         {rulesOpen ? <RulesModal onClose={() => setRulesOpen(false)} /> : null}
-      </div>
+      </div>,
     );
   }
 
   if (!fan) {
-    return (
+    return averageFanTakeover(
       <FanSelector
         sport={sport}
         onBack={() => setScene("intro")}
         onConfirm={(selectedFan) => {
           if (!busy) onAdvance({ fan: selectedFan });
         }}
-      />
+      />,
     );
   }
 
@@ -213,7 +218,7 @@ export function OfficialAverageFanDailyView({
   const finalCorrectAnswer = String(state.final_correct_answer ?? "");
   const finalExplanation = String(state.final_explanation ?? "");
 
-  return (
+  return averageFanTakeover(
     <div className="average-fan-game">
       <button className="average-fan-exit" type="button" onClick={onExit} aria-label="Exit Average Fan">‹ HQ</button>
       <section
@@ -377,7 +382,7 @@ export function OfficialAverageFanDailyView({
         ) : null}
         <GameplayFanDesk fan={fan} />
       </section>
-    </div>
+    </div>,
   );
 }
 

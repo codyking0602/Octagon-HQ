@@ -347,7 +347,8 @@ export async function loadHqDailyChallengeStreak(
 export interface TodayChallengeRepository {
   loadToday(): Promise<TodayChallengeProjection>;
   advance(
-    projection: Pick<TodayChallengeProjection, "id" | "progressRevision" | "actionHistory">,
+    projection: Pick<TodayChallengeProjection, "id" | "progressRevision" | "actionHistory">
+      & Partial<Pick<TodayChallengeProjection, "gameType">>,
     action: Record<string, unknown>,
     clientActionId?: string,
   ): Promise<TodayChallengeProjection>;
@@ -378,6 +379,7 @@ export function createTodayChallengeRepository(
         mode: "advance",
         sport,
         daily_challenge_id: projection.id,
+        ...(projection.gameType === "average_fan" ? { game_type: "average_fan" } : {}),
         revision: projection.progressRevision,
         action,
         ...(clientActionId ? { client_action_id: clientActionId } : {}),

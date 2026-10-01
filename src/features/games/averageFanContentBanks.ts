@@ -221,6 +221,7 @@ type KnowledgeFact = {
   grade: AverageFanGrade;
   prompt: string;
   answer: string;
+  aliases?: readonly string[];
   wrong: readonly [string, string] | readonly [string, string, string];
   explanation: string;
 };
@@ -625,7 +626,7 @@ const UFC_IQ_FACTS: readonly KnowledgeFact[] = [
   { id: "hip-escape", grade: 5, prompt: "What grappling movement is also commonly called a shrimp?", answer: "Hip escape", wrong: ["Granby roll", "Technical stand-up"], explanation: "The hip escape, often called a shrimp, creates space by moving the hips away from pressure." },
   { id: "frame", grade: 5, prompt: "What grappling term describes using the forearm or other skeletal structure to create and maintain space?", answer: "Frame", wrong: ["Hook", "Whizzer"], explanation: "A frame uses skeletal structure, often the forearm, to manage distance and resist pressure." },
   { id: "pummeling", grade: 5, prompt: "What clinch drill or exchange involves fighting for inside arm position and underhooks?", answer: "Pummeling", wrong: ["Shrimping", "Posting", "Hand fighting"], explanation: "Pummeling is the hand-and-arm battle for inside position and underhooks in the clinch." },
-  { id: "cage-cutting", grade: 5, prompt: "What striking-footwork concept limits an opponent\'s escape routes instead of simply following them around the cage?", answer: "Cage cutting", wrong: ["Level changing", "Wall walking"], explanation: "Cage cutting uses angles and positioning to reduce an opponent\'s available space and exits." },
+  { id: "cage-cutting", grade: 5, prompt: "What striking-footwork concept limits an opponent\'s escape routes instead of simply following them around the cage?", answer: "Cage cutting", aliases: ["Cutting off", "Cutting off the cage", "Cut off the cage"], wrong: ["Level changing", "Wall walking"], explanation: "Cage cutting uses angles and positioning to reduce an opponent\'s available space and exits." },
 ];
 
 const UFC_HISTORY_FACTS: readonly KnowledgeFact[] = [
@@ -702,6 +703,7 @@ function knowledgeQuestions(
           subject,
           prompt: fact.prompt,
           answer: fact.answer,
+          aliases: fact.aliases,
           explanation: fact.explanation,
           fanMisses: fact.wrong,
           difficultyNudge: fact.grade >= 4 ? 1 : fact.grade === 1 ? -1 : 0,

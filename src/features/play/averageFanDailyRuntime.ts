@@ -133,26 +133,36 @@ function boardFor(
       subjectCounts.set(current.subject, (subjectCounts.get(current.subject) ?? 0) + 1);
     }
 
-    const ordered = deterministicOrder(
+    const candidates = deterministicOrder(
       poolForGrade(grade).filter((question) => question.id !== current?.id),
       `${seed}|grade|${grade}`,
-    ).sort((left, right) => {
-      const subjectDelta = (subjectCounts.get(left.subject) ?? 0) - (subjectCounts.get(right.subject) ?? 0);
-      if (subjectDelta !== 0) return subjectDelta;
-      const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
-      const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
-      if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
-      const leftFormatRepeat = gradeSelected.some((question) => question.format === left.format) ? 1 : 0;
-      const rightFormatRepeat = gradeSelected.some((question) => question.format === right.format) ? 1 : 0;
-      return leftFormatRepeat - rightFormatRepeat;
-    });
+    );
 
     while (gradeSelected.length < 2) {
-      const next = ordered.find((question) => !gradeSelected.some((picked) => picked.id === question.id));
+      const ordered = [...candidates].sort((left, right) => {
+        const leftSubjectRepeat = gradeSelected.some((question) => question.subject === left.subject) ? 1 : 0;
+        const rightSubjectRepeat = gradeSelected.some((question) => question.subject === right.subject) ? 1 : 0;
+        if (leftSubjectRepeat !== rightSubjectRepeat) return leftSubjectRepeat - rightSubjectRepeat;
+
+        if (grade <= 2) {
+          const leftShortAnswer = left.format === "short-answer" ? 1 : 0;
+          const rightShortAnswer = right.format === "short-answer" ? 1 : 0;
+          if (leftShortAnswer !== rightShortAnswer) return leftShortAnswer - rightShortAnswer;
+          const difficultyDelta = left.difficultyNudge - right.difficultyNudge;
+          if (difficultyDelta !== 0) return difficultyDelta;
+        }
+
+        const subjectDelta = (subjectCounts.get(left.subject) ?? 0) - (subjectCounts.get(right.subject) ?? 0);
+        if (subjectDelta !== 0) return subjectDelta;
+        const leftFormatRepeat = gradeSelected.some((question) => question.format === left.format) ? 1 : 0;
+        const rightFormatRepeat = gradeSelected.some((question) => question.format === right.format) ? 1 : 0;
+        return leftFormatRepeat - rightFormatRepeat;
+      });
+      const next = ordered[0];
       if (!next) throw new Error(`Average Fan ${sport} grade ${grade} cannot build two Daily questions.`);
       gradeSelected.push(next);
       subjectCounts.set(next.subject, (subjectCounts.get(next.subject) ?? 0) + 1);
-      ordered.splice(ordered.indexOf(next), 1);
+      candidates.splice(candidates.indexOf(next), 1);
     }
     selected.push(...gradeSelected);
   }

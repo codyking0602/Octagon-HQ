@@ -5,6 +5,7 @@ import {
   AVERAGE_FAN_REPORT_CARDS,
   AVERAGE_FAN_REPORT_GRADE_MODIFIER,
   AVERAGE_FAN_SUBJECTS,
+  averageFanAnswersMatch,
   averageFanCenteredSubjectModifier,
   averageFanFanAccuracy,
   averageFanFanAnswer,
@@ -108,6 +109,36 @@ describe("Average Fan canonical question contract", () => {
       choices: undefined,
       fanMisses: undefined,
     }))).toContain("format is unsupported");
+  });
+
+  it("accepts punctuation and small short-answer typos without making choices fuzzy", () => {
+    expect(averageFanAnswersMatch(fixture({
+      format: "short-answer",
+      answer: "Georges St-Pierre",
+      aliases: [],
+    }), "George St-pierre")).toBe(true);
+    expect(averageFanAnswersMatch(fixture({
+      format: "short-answer",
+      answer: "Alistair Overeem",
+      aliases: [],
+    }), "Alister Overeem")).toBe(true);
+    expect(averageFanAnswersMatch(fixture({
+      format: "short-answer",
+      answer: "St-Pierre",
+      aliases: [],
+    }), "St Pierre")).toBe(true);
+    expect(averageFanAnswersMatch(fixture({
+      format: "short-answer",
+      answer: "Art Jimmerson",
+      aliases: [],
+    }), "Kevin Rosier")).toBe(false);
+    expect(averageFanAnswersMatch(fixture({
+      format: "four-choice",
+      answer: "Georges St-Pierre",
+      aliases: [],
+      choices: ["Georges St-Pierre", "Matt Hughes", "B.J. Penn", "Carlos Condit"],
+      fanMisses: undefined,
+    }), "George St-Pierre")).toBe(false);
   });
 
   it("protects dedicated finals from ordinary board eligibility", () => {

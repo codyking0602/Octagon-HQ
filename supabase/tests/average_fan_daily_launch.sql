@@ -81,8 +81,8 @@ begin
   end if;
 
   select public.publish_daily_challenge_setup(
-    date '2026-10-01',
-    v_ufc.version,
+    date '2026-10-02',
+    'play-rotation-v19-average-fan-delay-oct1',
     'average_fan',
     'average-fan-test-ufc',
     'average-fan-daily-v1',
@@ -95,8 +95,8 @@ begin
   ) into strict v_ufc_publication;
 
   select public.publish_daily_challenge_setup(
-    date '2026-10-01',
-    v_football.version,
+    date '2026-10-02',
+    'football-daily-v19-average-fan-delay-oct1',
     'average_fan',
     'average-fan-test-football',
     'average-fan-daily-v1',
@@ -204,8 +204,9 @@ begin
     'private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)'::regprocedure::oid
   ) into v_grader_definition;
   if position('p_game_type = ''average_fan''' in v_grader_definition) = 0
-    or position('grade_average_fan_daily' in v_grader_definition) = 0 then
-    raise exception 'Average Fan is missing from the canonical Daily grader';
+    or position('grade_average_fan_daily' in v_grader_definition) = 0
+    or position('p_scoring_version <> ''average-fan-score-v1''' in v_grader_definition) = 0 then
+    raise exception 'Average Fan is missing from the canonical Daily grader or scoring gate';
   end if;
 
   select pg_get_functiondef(

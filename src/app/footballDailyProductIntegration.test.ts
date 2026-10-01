@@ -64,13 +64,25 @@ describe("Football Daily product integration", () => {
   });
 
   it("never lets the Weekly Auction gate strand an already-started Football Daily", () => {
-    expect(runtime).toContain("const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0");
-    expect(runtime).toContain("|| Boolean(asRecord(context.official_attempt))");
-    expect(runtime).toContain("if (!continuingFootballDaily) {");
-    expect(runtime.indexOf("let context = await getContext(admin, materialized.dailyChallengeId, profileId)"))
-      .toBeLessThan(runtime.indexOf("const continuingFootballDaily"));
-    expect(runtime.indexOf("const continuingFootballDaily"))
-      .toBeLessThan(runtime.indexOf('football_weekly_auction_daily_gate'));
+    const legacyFootballStart = runtime.indexOf('if (body.sport === "football") {');
+    const legacyFootball = runtime.slice(legacyFootballStart);
+    expect(legacyFootball).toContain("const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0");
+    expect(legacyFootball).toContain("|| Boolean(asRecord(context.official_attempt))");
+    expect(legacyFootball).toContain("if (!continuingFootballDaily) {");
+    expect(legacyFootball.indexOf("let context = await getContext(admin, materialized.dailyChallengeId, profileId)"))
+      .toBeLessThan(legacyFootball.indexOf("const continuingFootballDaily"));
+    expect(legacyFootball.indexOf("const continuingFootballDaily"))
+      .toBeLessThan(legacyFootball.indexOf('football_weekly_auction_daily_gate'));
+
+    const averageFanFastStart = runtime.indexOf("async function advanceExistingAverageFan(");
+    const averageFanFastEnd = runtime.indexOf("async function continueTwoGameWithoutIntermission(", averageFanFastStart);
+    const averageFanFastPath = runtime.slice(averageFanFastStart, averageFanFastEnd);
+    expect(averageFanFastPath).toContain("const hasStartedFootballDaily = Number(context.progress_revision ?? 0) > 0");
+    expect(averageFanFastPath).toContain("if (!hasStartedFootballDaily) {");
+    expect(averageFanFastPath.indexOf("let context = await getContext(admin, requestedDailyId, profileId)"))
+      .toBeLessThan(averageFanFastPath.indexOf("const hasStartedFootballDaily"));
+    expect(averageFanFastPath.indexOf("const hasStartedFootballDaily"))
+      .toBeLessThan(averageFanFastPath.indexOf('football_weekly_auction_daily_gate'));
   });
 
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {
