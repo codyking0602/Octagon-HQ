@@ -8,6 +8,8 @@ import {
   createMillionaireState,
   currentMillionaireQuestion,
   millionaireCanWalkAway,
+  millionaireScoreAfterLifelines,
+  MILLIONAIRE_Q8_MISS_BASE_SCORE,
   type MillionaireLifeline,
   type MillionaireRun,
   type MillionaireState,
@@ -33,14 +35,74 @@ import "./MillionairePortrait.css";
 import "./MillionairePortraitRefine.css";
 import "./MillionaireFixedStage.css";
 
+export type MillionaireCasualQuestionResult = {
+  index: number;
+  id: string;
+  prompt: string;
+  choices: Array<{ id: string; text: string }>;
+  selectedChoiceIds: MillionaireChoiceId[];
+  correctChoiceId: MillionaireChoiceId;
+  explanation: string;
+  lifelines: MillionaireLifeline[];
+  status: "correct" | "wrong" | "walked-away" | "timeout" | "unreached";
+};
+
+type MillionaireCasualHistoryAction =
+  | { type: "answer"; questionIndex: number; choiceId: MillionaireChoiceId }
+  | { type: "use_lifeline"; questionIndex: number; lifeline: MillionaireLifeline }
+  | { type: "walk_away"; questionIndex: number }
+  | { type: "timeout"; questionIndex: number };
+
 export type MillionaireCasualSettledResult = {
   outcome: "won" | "lost" | "walked-away";
   finalMoney: number;
   score: number;
+  baseScore: number;
   completedQuestions: number;
+  firstMissQuestion: number | null;
   lifelinesUsed: number;
   timeRemainingMs: number;
+  questions: MillionaireCasualQuestionResult[];
 };
+
+function millionaireCasualQuestionResults(
+  run: MillionaireRun,
+  history: readonly MillionaireCasualHistoryAction[],
+): MillionaireCasualQuestionResult[] {
+  return run.map((question, index) => {
+    const actions = history.filter((action) => action.questionIndex === index);
+    const selectedChoiceIds = actions
+      .filter((action): action is Extract<MillionaireCasualHistoryAction, { type: "answer" }> => action.type === "answer")
+      .map((action) => action.choiceId);
+    const lifelines = actions
+      .filter((action): action is Extract<MillionaireCasualHistoryAction, { type: "use_lifeline" }> => action.type === "use_lifeline")
+      .map((action) => action.lifeline);
+    const walkedAway = actions.some((action) => action.type === "walk_away");
+    const timedOut = actions.some((action) => action.type === "timeout");
+    const correct = selectedChoiceIds.includes(question.correctChoiceId);
+    const status = walkedAway
+      ? "walked-away"
+      : timedOut
+        ? "timeout"
+        : correct
+          ? "correct"
+          : selectedChoiceIds.length
+            ? "wrong"
+            : "unreached";
+
+    return {
+      index,
+      id: question.id,
+      prompt: question.prompt,
+      choices: question.choices.map((choice) => ({ id: choice.id, text: choice.text })),
+      selectedChoiceIds,
+      correctChoiceId: question.correctChoiceId,
+      explanation: question.explanation,
+      lifelines,
+      status,
+    };
+  });
+}
 
 type MillionaireCasualPageProps = {
   scope: "ufc" | "football" | "mlb";
@@ -138,7 +200,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
               <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: winnings lock at $5,000.</span></p>
               <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: winnings lock at $100,000.</span></p>
               <p><strong>MISS A QUESTION</strong><span>Your Millionaire run ends, but you finish all 8 questions for your score.</span></p>
-              <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
+              <p><strong>WALK AWAY</strong><span>Before Q8, bank 90 base PTS, or play for 100. A Q8 miss falls to 85 base PTS.</span></p>
             </div>
             <h3>LIFELINES</h3>
             <div className="millionaire-rules__lifelines">
@@ -216,6 +278,7 @@ function MillionaireGame({
   const [eliminationPromptOpen, setEliminationPromptOpen] = useState(false);
   const timerIds = useRef<number[]>([]);
   const timeoutQueued = useRef(false);
+  const actionHistoryRef = useRef<MillionaireCasualHistoryAction[]>([]);
 
   useFullscreenGameChrome();
 
@@ -226,6 +289,9 @@ function MillionaireGame({
   const stageScale = useMillionaireStageScale();
   const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
+  const q8WalkScore = millionaireScoreAfterLifelines(MILLIONAIRE_BASE_PTS.Q7, gameState.lifelinesUsed);
+  const q8MissScore = millionaireScoreAfterLifelines(MILLIONAIRE_Q8_MISS_BASE_SCORE, gameState.lifelinesUsed);
+  const q8WinScore = millionaireScoreAfterLifelines(MILLIONAIRE_BASE_PTS.Q8, gameState.lifelinesUsed);
 
   function schedule(callback: () => void, delay: number) {
     const id = window.setTimeout(() => {
@@ -253,9 +319,12 @@ function MillionaireGame({
       outcome: nextState.status,
       finalMoney: nextState.finalMoney ?? 0,
       score: nextState.score,
+      baseScore: nextState.baseScore,
       completedQuestions: nextState.completedQuestions,
+      firstMissQuestion: nextState.firstMissQuestionIndex === null ? null : nextState.firstMissQuestionIndex + 1,
       lifelinesUsed: Object.values(nextState.lifelinesUsed).filter(Boolean).length,
       timeRemainingMs: Math.max(0, Math.floor(timeRemainingMs)),
+      questions: millionaireCasualQuestionResults(run, actionHistoryRef.current),
     });
   }
 
@@ -295,6 +364,7 @@ function MillionaireGame({
   useEffect(() => {
     if (timeRemainingMs > 0 || phase !== "answering" || gameState.status !== "playing" || timeoutQueued.current) return;
     timeoutQueued.current = true;
+    actionHistoryRef.current.push({ type: "timeout", questionIndex: gameState.currentQuestionIndex });
     queueReveal(millionaireTimeoutTransition(run, gameState), null);
   }, [timeRemainingMs, phase, gameState, run]);
 
@@ -302,6 +372,7 @@ function MillionaireGame({
     if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || eliminationPromptOpen || !currentQuestion) return;
     if (gameState.questionState.removedChoiceIds.includes(choiceId) || gameState.questionState.doubleDipWrongChoiceIds.includes(choiceId)) return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "answer", choiceId });
+    actionHistoryRef.current.push({ type: "answer", questionIndex: gameState.currentQuestionIndex, choiceId });
     if (result.answerOutcome === "double-dip-continue") {
       setGameState(result.state);
       setDoubleDipFlashChoiceId(choiceId);
@@ -315,6 +386,7 @@ function MillionaireGame({
     if (phase !== "answering" || gameState.status !== "playing" || walkPromptOpen || eliminationPromptOpen || q8) return;
     if (lifeline === "stat-sheet" && gameState.questionState.statSheetRevealed) return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "use_lifeline", lifeline });
+    actionHistoryRef.current.push({ type: "use_lifeline", questionIndex: gameState.currentQuestionIndex, lifeline });
     setGameState(result.state);
     if (result.lifelineReveal?.type === "stat-sheet") {
       setStatSheetText(result.lifelineReveal.text);
@@ -325,6 +397,7 @@ function MillionaireGame({
   function walkAway() {
     if (!millionaireCanWalkAway(gameState) || phase !== "answering") return;
     const result = advanceMillionaireRuntime(run, gameState, { type: "walk_away" });
+    actionHistoryRef.current.push({ type: "walk_away", questionIndex: gameState.currentQuestionIndex });
     setGameState(result.state);
     setWalkPromptOpen(false);
     setPhase("settled");
@@ -335,6 +408,7 @@ function MillionaireGame({
     timerIds.current.forEach((id) => window.clearTimeout(id));
     timerIds.current = [];
     timeoutQueued.current = false;
+    actionHistoryRef.current = [];
     setGameState(createMillionaireState(run));
     setTimeRemainingMs(MILLIONAIRE_TIME_BANK_MS);
     setPhase("answering");
@@ -416,10 +490,16 @@ function MillionaireGame({
 
       {walkPromptOpen && currentQuestion && !eliminationPromptOpen ? (
         <section className="millionaire-decision" aria-label="Walk away decision">
-          <span>WALK AWAY?</span><strong>You have {millionaireMoneyLabel(gameState.currentMoney)} guaranteed.</strong><p>Play for {millionaireMoneyLabel(currentQuestion.money)} or walk away now.</p>
+          <span>WALK AWAY?</span>
+          <strong>You have {millionaireMoneyLabel(gameState.currentMoney)} and {q8WalkScore} PTS guaranteed.</strong>
+          <p>Play Q8: get it right for {q8WinScore} PTS. Miss it and finish with {q8MissScore} PTS.</p>
           <div>
-            <button type="button" className="is-play" onClick={() => setWalkPromptOpen(false)}><small>PLAY FOR</small><b>{millionaireMoneyLabel(currentQuestion.money)}</b><em>{MILLIONAIRE_BASE_PTS[currentQuestion.level]} PTS</em></button>
-            <button type="button" onClick={walkAway}><small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(gameState.currentMoney)}</b><em>{MILLIONAIRE_BASE_PTS[MILLIONAIRE_LEVELS[Math.max(0, gameState.completedQuestions - 1)]!]} PTS</em></button>
+            <button type="button" className="is-play" onClick={() => setWalkPromptOpen(false)}>
+              <small>PLAY FOR</small><b>{millionaireMoneyLabel(currentQuestion.money)}</b><em>HIT {q8WinScore} · MISS {q8MissScore}</em>
+            </button>
+            <button type="button" onClick={walkAway}>
+              <small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(gameState.currentMoney)}</b><em>{q8WalkScore} PTS</em>
+            </button>
           </div>
         </section>
       ) : null}

@@ -730,6 +730,30 @@ export type AverageFanSettledResult = {
   finalOutcome: FinalOutcome;
   finalMoney: number | null;
   fan: AverageFanFan;
+  resolved: Array<{
+    order: number;
+    id: string;
+    grade: number;
+    subject: string;
+    prompt: string;
+    playerAnswer: string;
+    fanAnswer: string;
+    correctAnswer: string;
+    explanation: string;
+    correct: boolean;
+    copied: boolean;
+    peekUsed: boolean;
+    saveConsumed: boolean;
+    saved: boolean;
+  }>;
+  finalQuestion: {
+    id: string;
+    subject: string;
+    prompt: string;
+    correctAnswer: string;
+    explanation: string;
+  };
+  finalPlayerAnswer: string | null;
 };
 
 export function AverageFanGame({
@@ -853,7 +877,7 @@ export function AverageFanGame({
     else setPhase("board");
   }
 
-  function emitSettled(outcome: FinalOutcome) {
+  function emitSettled(outcome: FinalOutcome, settledFinalAnswer: string | null = null) {
     const score = scoreAverageFanFinal(boardScore, outcome);
     const money = moneyAlive
       ? (outcome === "correct" ? 1_000_000 : outcome === "wrong" ? 25_000 : 500_000)
@@ -866,6 +890,30 @@ export function AverageFanGame({
       finalOutcome: outcome,
       finalMoney: money,
       fan,
+      resolved: resolved.map((item) => ({
+        order: item.order,
+        id: item.question.id,
+        grade: item.question.grade,
+        subject: item.question.subject,
+        prompt: item.question.prompt,
+        playerAnswer: item.playerAnswer,
+        fanAnswer: item.fanAnswer,
+        correctAnswer: item.question.answer,
+        explanation: item.question.explanation,
+        correct: item.correct,
+        copied: item.copied,
+        peekUsed: item.peekUsed,
+        saveConsumed: item.saveConsumed,
+        saved: item.saved,
+      })),
+      finalQuestion: {
+        id: finalQuestion.id,
+        subject: finalQuestion.subject,
+        prompt: finalQuestion.prompt,
+        correctAnswer: finalQuestion.answer,
+        explanation: finalQuestion.explanation,
+      },
+      finalPlayerAnswer: outcome === "walk-away" ? null : (settledFinalAnswer ?? finalAnswer.trim()),
     });
   }
 
@@ -886,7 +934,7 @@ export function AverageFanGame({
       setFinalOutcome(outcome);
       setPhase("final-reveal");
     });
-    emitSettled(outcome);
+    emitSettled(outcome, candidate);
   }
 
   const questionVisible = current && (phase === "question" || phase === "reveal");

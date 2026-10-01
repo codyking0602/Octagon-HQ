@@ -199,8 +199,19 @@ describe("Millionaire progression and settlement", () => {
       completedQuestions: 7,
       firstMissQuestionIndex: 7,
       finalMoney: 100_000,
-      baseScore: 90,
-      score: 90,
+      baseScore: 85,
+      score: 85,
+    });
+
+    let q7Recovery = q7Miss.state;
+    q7Recovery = advanceMillionaireRuntime(run, q7Recovery, { type: "answer", choiceId: "A" }).state;
+    expect(q7Recovery).toMatchObject({
+      status: "lost",
+      completedQuestions: 7,
+      firstMissQuestionIndex: 6,
+      finalMoney: 100_000,
+      baseScore: 85,
+      score: 85,
     });
   });
 
