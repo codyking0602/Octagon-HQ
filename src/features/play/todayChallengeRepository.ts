@@ -344,6 +344,48 @@ export async function loadHqDailyChallengeStreak(
   return { currentStreak: row.current_streak, bestStreak: row.best_streak };
 }
 
+export interface OwnerAverageFanPreviewRepository {
+  load(): Promise<TodayChallengeProjection>;
+  advance(
+    projection: Pick<TodayChallengeProjection, "progressRevision" | "publicState">,
+    action: Record<string, unknown>,
+  ): Promise<TodayChallengeProjection>;
+}
+
+export function createOwnerAverageFanPreviewRepository(
+  day: string,
+  sport: Extract<PlaySport, "ufc" | "football">,
+  suppliedClient?: TodayChallengeClient | null,
+): OwnerAverageFanPreviewRepository | null {
+  const client = suppliedClient === undefined
+    ? getSupabaseClient() as unknown as TodayChallengeClient | null
+    : suppliedClient;
+  if (!client) return null;
+  const parseProjection = sport === "football"
+    ? parseFootballTodayChallengeProjection
+    : parseTodayChallengeProjection;
+
+  return {
+    async load() {
+      return parseProjection(await invokeRuntime(client, {
+        mode: "owner-preview-get",
+        sport,
+        day,
+      }));
+    },
+    async advance(projection, action) {
+      return parseProjection(await invokeRuntime(client, {
+        mode: "owner-preview-advance",
+        sport,
+        day,
+        revision: projection.progressRevision,
+        public_state: projection.publicState,
+        action,
+      }));
+    },
+  };
+}
+
 export interface TodayChallengeRepository {
   loadToday(): Promise<TodayChallengeProjection>;
   advance(
