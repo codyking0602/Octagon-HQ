@@ -5,13 +5,16 @@ import {
 } from "./triviaContentExpiry";
 
 export const AVERAGE_FAN_GAME_ID = "average-fan" as const;
-export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v2" as const;
+export const AVERAGE_FAN_CONTENT_VERSION = "average-fan-v3" as const;
 export const AVERAGE_FAN_FANS = ["cody", "shane", "troy", "tyler", "lib"] as const;
 export const AVERAGE_FAN_GRADES = [1, 2, 3, 4, 5] as const;
+export const AVERAGE_FAN_PLAYABLE_GRADES = [2, 3, 4, 5] as const;
+export const AVERAGE_FAN_BOARD_QUESTION_COUNT = 8 as const;
 export const AVERAGE_FAN_FORMATS = ["short-answer", "four-choice", "true-false"] as const;
 
 export type AverageFanFan = (typeof AVERAGE_FAN_FANS)[number];
 export type AverageFanGrade = (typeof AVERAGE_FAN_GRADES)[number];
+export type AverageFanPlayableGrade = (typeof AVERAGE_FAN_PLAYABLE_GRADES)[number];
 export type AverageFanQuestionFormat = (typeof AVERAGE_FAN_FORMATS)[number];
 export type AverageFanSport = "nfl" | "cfb" | "ufc" | "mlb";
 
@@ -31,11 +34,12 @@ export type AverageFanSubject =
 export type AverageFanReportGrade = "A+" | "A" | "A-" | "B+" | "B" | "B-" | "C+" | "C";
 
 export const AVERAGE_FAN_BASE_ACCURACY = {
+  // Grade 1 remains schema-valid for legacy source facts, but production boards start at Grade 2.
   1: 93,
-  2: 88,
-  3: 82,
-  4: 76,
-  5: 70,
+  2: 93,
+  3: 88,
+  4: 82,
+  5: 74,
 } as const satisfies Record<AverageFanGrade, number>;
 
 export const AVERAGE_FAN_REPORT_GRADE_MODIFIER = {
@@ -395,11 +399,11 @@ export function averageFanFanAnswer(
 
 export function scoreAverageFanBoard(unsavedMissQuestionNumbers: readonly number[]) {
   const misses = [...new Set(unsavedMissQuestionNumbers)].sort((a, b) => a - b);
-  if (misses.some((value) => !Number.isInteger(value) || value < 1 || value > 10)) {
-    throw new Error("Average Fan miss question numbers must be integers from 1 through 10.");
+  if (misses.some((value) => !Number.isInteger(value) || value < 1 || value > AVERAGE_FAN_BOARD_QUESTION_COUNT)) {
+    throw new Error(`Average Fan miss question numbers must be integers from 1 through ${AVERAGE_FAN_BOARD_QUESTION_COUNT}.`);
   }
   if (!misses.length) return 90;
-  const raw = 64 + (2 * misses[0]!) - (5 * (misses.length - 1));
+  const raw = 68 + (2 * misses[0]!) - (5 * (misses.length - 1));
   return Math.max(0, Math.min(90, raw));
 }
 

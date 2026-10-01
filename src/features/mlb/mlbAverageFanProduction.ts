@@ -49,7 +49,7 @@ function q(seed: QuestionSeed): AverageFanQuestion {
 const FIRST_BOARD = [
   q({
     id: "mlb-average-fan-oct7-g1-ohtani",
-    grade: 1,
+    grade: 2,
     subject: "Players",
     format: "four-choice",
     prompt: "Which modern star became famous for excelling in MLB as both a pitcher and a hitter?",
@@ -60,7 +60,7 @@ const FIRST_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct7-g1-fenway",
-    grade: 1,
+    grade: 2,
     subject: "Teams",
     format: "short-answer",
     prompt: "Which MLB team plays its home games at Fenway Park?",
@@ -72,7 +72,7 @@ const FIRST_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct7-g2-jackie",
-    grade: 2,
+    grade: 3,
     subject: "MLB History",
     format: "short-answer",
     prompt: "Who broke Major League Baseball’s modern color barrier with the Brooklyn Dodgers in 1947?",
@@ -84,7 +84,7 @@ const FIRST_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct7-g2-nine-innings",
-    grade: 2,
+    grade: 3,
     subject: "Baseball IQ",
     format: "true-false",
     prompt: "A standard regulation Major League game is scheduled for nine innings.",
@@ -94,7 +94,7 @@ const FIRST_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct7-g3-judge-62",
-    grade: 3,
+    grade: 4,
     subject: "Players",
     format: "short-answer",
     prompt: "Who hit 62 home runs in 2022 to set the American League single-season record?",
@@ -105,7 +105,7 @@ const FIRST_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct7-g3-cubs-2016",
-    grade: 3,
+    grade: 4,
     subject: "Teams",
     format: "four-choice",
     prompt: "Which franchise won the 2016 World Series to end a 108-year championship drought?",
@@ -115,7 +115,7 @@ const FIRST_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct7-g4-dimaggio-56",
-    grade: 4,
+    grade: 5,
     subject: "MLB History",
     format: "short-answer",
     prompt: "Whose 56-game hitting streak in 1941 remains the Major League record?",
@@ -127,7 +127,7 @@ const FIRST_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct7-g4-whip",
-    grade: 4,
+    grade: 5,
     subject: "Baseball IQ",
     format: "short-answer",
     prompt: "What pitching statistic abbreviates walks plus hits allowed per inning pitched?",
@@ -136,29 +136,6 @@ const FIRST_BOARD = [
     fanMisses: ["ERA", "FIP", "OPS"],
     explanation: "WHIP stands for walks plus hits per inning pitched.",
     difficultyNudge: 1,
-  }),
-  q({
-    id: "mlb-average-fan-oct7-g5-ryan-strikeouts",
-    grade: 5,
-    subject: "Players",
-    format: "four-choice",
-    prompt: "Who is MLB’s career strikeout leader with 5,714?",
-    answer: "Nolan Ryan",
-    choices: ["Randy Johnson", "Roger Clemens", "Nolan Ryan", "Steve Carlton"],
-    explanation: "Nolan Ryan recorded 5,714 strikeouts, the most in Major League history.",
-    difficultyNudge: 2,
-  }),
-  q({
-    id: "mlb-average-fan-oct7-g5-williams-406",
-    grade: 5,
-    subject: "MLB History",
-    format: "short-answer",
-    prompt: "Who hit .406 in 1941 and remains the last Major Leaguer to bat .400 in a season?",
-    answer: "Ted Williams",
-    aliases: ["Williams"],
-    fanMisses: ["Tony Gwynn", "George Brett", "Joe DiMaggio"],
-    explanation: "Ted Williams batted .406 in 1941.",
-    difficultyNudge: 2,
   }),
 ] as const;
 
@@ -179,7 +156,7 @@ const FIRST_FINAL = q({
 const SECOND_BOARD = [
   q({
     id: "mlb-average-fan-oct23-g1-big-papi",
-    grade: 1,
+    grade: 2,
     subject: "Players",
     format: "short-answer",
     prompt: "Which Red Sox slugger was famously known as “Big Papi”?",
@@ -191,7 +168,7 @@ const SECOND_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct23-g1-wrigley",
-    grade: 1,
+    grade: 2,
     subject: "Teams",
     format: "four-choice",
     prompt: "Which team plays its home games at Wrigley Field?",
@@ -202,7 +179,7 @@ const SECOND_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct23-g2-ruth-pitcher",
-    grade: 2,
+    grade: 3,
     subject: "MLB History",
     format: "true-false",
     prompt: "Babe Ruth was a successful Major League pitcher before becoming baseball’s most famous home-run slugger.",
@@ -212,7 +189,7 @@ const SECOND_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct23-g2-three-strikes",
-    grade: 2,
+    grade: 3,
     subject: "Baseball IQ",
     format: "short-answer",
     prompt: "How many strikes normally make a strikeout?",
@@ -224,7 +201,7 @@ const SECOND_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct23-g3-canseco-4040",
-    grade: 3,
+    grade: 4,
     subject: "Players",
     format: "four-choice",
     prompt: "Who became the first MLB player with 40 home runs and 40 stolen bases in the same season?",
@@ -235,7 +212,7 @@ const SECOND_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct23-g3-giants-three",
-    grade: 3,
+    grade: 4,
     subject: "Teams",
     format: "short-answer",
     prompt: "Which team won the World Series in 2010, 2012 and 2014?",
@@ -246,7 +223,7 @@ const SECOND_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct23-g4-larsen-perfect",
-    grade: 4,
+    grade: 5,
     subject: "MLB History",
     format: "short-answer",
     prompt: "Who threw the only perfect game in World Series history?",
@@ -258,7 +235,7 @@ const SECOND_BOARD = [
   }),
   q({
     id: "mlb-average-fan-oct23-g4-ops",
-    grade: 4,
+    grade: 5,
     subject: "Baseball IQ",
     format: "four-choice",
     prompt: "Which common hitting statistic adds on-base percentage and slugging percentage?",
@@ -266,30 +243,6 @@ const SECOND_BOARD = [
     choices: ["ERA", "OPS", "WHIP", "WAR"],
     explanation: "OPS stands for on-base plus slugging.",
     difficultyNudge: 1,
-  }),
-  q({
-    id: "mlb-average-fan-oct23-g5-rickey-steals",
-    grade: 5,
-    subject: "Players",
-    format: "short-answer",
-    prompt: "Who holds the Major League career stolen-base record with 1,406?",
-    answer: "Rickey Henderson",
-    aliases: ["Henderson", "Rickey"],
-    fanMisses: ["Lou Brock", "Tim Raines", "Vince Coleman"],
-    explanation: "Rickey Henderson stole a record 1,406 bases in his Major League career.",
-    difficultyNudge: 2,
-  }),
-  q({
-    id: "mlb-average-fan-oct23-g5-ripken-streak",
-    grade: 5,
-    subject: "MLB History",
-    format: "short-answer",
-    prompt: "Who played in a record 2,632 consecutive Major League games?",
-    answer: "Cal Ripken Jr.",
-    aliases: ["Cal Ripken", "Ripken"],
-    fanMisses: ["Lou Gehrig", "Pete Rose", "Eddie Murray"],
-    explanation: "Cal Ripken Jr. played in 2,632 consecutive games from 1982 through 1998.",
-    difficultyNudge: 2,
   }),
 ] as const;
 
