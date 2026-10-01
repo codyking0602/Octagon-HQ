@@ -199,8 +199,8 @@ describe("Millionaire progression and settlement", () => {
       completedQuestions: 7,
       firstMissQuestionIndex: 7,
       finalMoney: 100_000,
-      baseScore: 90,
-      score: 90,
+      baseScore: 85,
+      score: 85,
     });
   });
 
@@ -231,6 +231,24 @@ describe("Millionaire progression and settlement", () => {
       score: 23,
       finalMoney: 0,
     });
+  });
+
+  it("makes the clean Q8 decision 85 miss / 90 walk / 100 hit before lifeline penalties", () => {
+    const run = fixtureRun();
+
+    let state = answerCorrect(run, createMillionaireState(run), 7);
+    state = advanceMillionaireRuntime(run, state, { type: "use_lifeline", lifeline: "fifty-fifty" }).state;
+    state = advanceMillionaireRuntime(run, state, { type: "use_lifeline", lifeline: "stat-sheet" }).state;
+    state = advanceMillionaireRuntime(run, state, { type: "use_lifeline", lifeline: "double-dip" }).state;
+
+    const walked = advanceMillionaireRuntime(run, state, { type: "walk_away" }).state;
+    expect(walked).toMatchObject({ baseScore: 90, score: 84, finalMoney: 500_000 });
+
+    const missed = advanceMillionaireRuntime(run, state, { type: "answer", choiceId: "B" }).state;
+    expect(missed).toMatchObject({ baseScore: 85, score: 79, finalMoney: 100_000 });
+
+    const won = advanceMillionaireRuntime(run, state, { type: "answer", choiceId: "A" }).state;
+    expect(won).toMatchObject({ baseScore: 100, score: 94, finalMoney: 1_000_000 });
   });
 
   it("offers the walk-away decision only before Q8 and preserves the earned 90-point result", () => {
