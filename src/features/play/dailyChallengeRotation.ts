@@ -76,6 +76,11 @@ export function lockedWeightedGameForDay(
   sport: "football" | "ufc",
   day: string,
 ): OfficialDailyGameType {
+  // Oct. 1 launch hotfix: pull the Oct. 2 game forward and retry Average Fan on Oct. 2.
+  // Every Oct. 3+ slot remains on the original locked cycle/date.
+  if (day === "2026-10-01") return sport === "football" ? "bar_trivia" : "who_am_i";
+  if (day === "2026-10-02") return "average_fan";
+
   const cycle = sport === "football" ? FOOTBALL_LOCKED_WEIGHTED_CYCLE : UFC_LOCKED_WEIGHTED_CYCLE;
   const offset = dayNumber(day) - dayNumber(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY);
   const index = ((offset % cycle.length) + cycle.length) % cycle.length;
