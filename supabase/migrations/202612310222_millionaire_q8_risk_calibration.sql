@@ -126,22 +126,29 @@ $$;
 revoke all on function private.grade_millionaire_daily(jsonb, jsonb)
   from public, anon, authenticated;
 
--- Re-score any already-completed legacy clean-Q8 misses from the old 80-point
--- risk rule to the new 85-point risk rule. Keep every related canonical store
--- aligned so history, leaderboard detail, and saved result agree.
+-- Re-score already-completed clean-Q8 misses to the new 85-point base.
+-- Legacy pre-recovery Daily used 80; finish-the-board Daily/MLB used 90.
+-- Preserve lifeline deductions by shifting the saved score by (85 - old base).
+
 update private.daily_challenge_attempts
 set
-  native_score = least(100, native_score + 5),
-  normalized_score = least(100, normalized_score + 5),
+  native_score = greatest(0, least(100, native_score + (85 - (public_result->>'base_score')::integer))),
+  normalized_score = greatest(0, least(100, normalized_score + (85 - (public_result->>'base_score')::integer))),
   public_result = jsonb_set(
-    jsonb_set(public_result, '{base_score}', '85'::jsonb, true),
+    jsonb_set(
+      jsonb_set(public_result, '{base_score}', '85'::jsonb, true),
+      '{first_miss_question}', '8'::jsonb, true
+    ),
     '{score}',
-    to_jsonb(least(100, normalized_score + 5)),
+    to_jsonb(greatest(0, least(100, normalized_score + (85 - (public_result->>'base_score')::integer)))),
     true
   ),
   submission_evidence = case
-    when jsonb_typeof(submission_evidence) = 'object'
-      then jsonb_set(submission_evidence, '{base_score}', '85'::jsonb, true)
+    when jsonb_typeof(submission_evidence) = 'object' then
+      jsonb_set(
+        jsonb_set(submission_evidence, '{base_score}', '85'::jsonb, true),
+        '{first_miss_question}', '8'::jsonb, true
+      )
     else submission_evidence
   end
 where exists (
@@ -152,36 +159,59 @@ where exists (
   )
   and public_result->>'outcome' = 'lost'
   and public_result->>'completed_questions' = '7'
-  and public_result->>'base_score' = '80'
-  and public_result->>'final_money' = '100000';
+  and public_result->>'base_score' in ('80', '90')
+  and public_result->>'final_money' = '100000'
+  and (
+    public_result->>'first_miss_question' = '8'
+    or (
+      public_result->>'first_miss_question' is null
+      and public_result->>'base_score' = '80'
+    )
+  );
 
 update private.daily_challenge_history
 set
-  native_score = least(100, native_score + 5),
-  normalized_score = least(100, normalized_score + 5),
+  native_score = greatest(0, least(100, native_score + (85 - (public_result->>'base_score')::integer))),
+  normalized_score = greatest(0, least(100, normalized_score + (85 - (public_result->>'base_score')::integer))),
   public_result = jsonb_set(
-    jsonb_set(public_result, '{base_score}', '85'::jsonb, true),
+    jsonb_set(
+      jsonb_set(public_result, '{base_score}', '85'::jsonb, true),
+      '{first_miss_question}', '8'::jsonb, true
+    ),
     '{score}',
-    to_jsonb(least(100, normalized_score + 5)),
+    to_jsonb(greatest(0, least(100, normalized_score + (85 - (public_result->>'base_score')::integer)))),
     true
   )
 where game_type = 'millionaire'
   and public_result->>'outcome' = 'lost'
   and public_result->>'completed_questions' = '7'
-  and public_result->>'base_score' = '80'
-  and public_result->>'final_money' = '100000';
+  and public_result->>'base_score' in ('80', '90')
+  and public_result->>'final_money' = '100000'
+  and (
+    public_result->>'first_miss_question' = '8'
+    or (
+      public_result->>'first_miss_question' is null
+      and public_result->>'base_score' = '80'
+    )
+  );
 
 update private.daily_challenge_progress
 set
   public_state = jsonb_set(
     jsonb_set(public_state, '{base_score}', '85'::jsonb, true),
     '{score}',
-    to_jsonb(least(100, coalesce((public_state->>'score')::integer, 0) + 5)),
+    to_jsonb(greatest(
+      0,
+      least(100, coalesce((public_state->>'score')::integer, 0) + (85 - (public_state->>'base_score')::integer))
+    )),
     true
   ),
   submission_state = case
     when jsonb_typeof(submission_state->'final_submission') = 'object' then
-      jsonb_set(submission_state, '{final_submission,base_score}', '85'::jsonb, true)
+      jsonb_set(
+        jsonb_set(submission_state, '{final_submission,base_score}', '85'::jsonb, true),
+        '{final_submission,first_miss_question}', '8'::jsonb, true
+      )
     else submission_state
   end
 where exists (
@@ -192,7 +222,37 @@ where exists (
   )
   and public_state->>'status' = 'lost'
   and public_state->>'completed_questions' = '7'
-  and public_state->>'base_score' = '80'
-  and public_state->>'final_money' = '100000';
+  and public_state->>'base_score' in ('80', '90')
+  and public_state->>'final_money' = '100000'
+  and (
+    submission_state#>>'{final_submission,first_miss_question}' = '8'
+    or (
+      submission_state#>>'{final_submission,first_miss_question}' is null
+      and public_state->>'base_score' = '80'
+    )
+  );
+
+-- MLB postseason Millionaire originally stored only summary fields. A clean Q8 miss
+-- is still identifiable: 7 correct, $100K checkpoint, lost outcome, and a 90-point
+-- pre-lifeline base reconstructed from raw score + 2 points per used lifeline.
+update public.mlb_postseason_challenge_results
+set
+  raw_score = greatest(0, raw_score - 5),
+  public_result = jsonb_set(
+    jsonb_set(
+      jsonb_set(public_result, '{score}', to_jsonb(greatest(0, raw_score - 5)), true),
+      '{base_score}', '85'::jsonb, true
+    ),
+    '{first_miss_question}', '8'::jsonb, true
+  ),
+  result_detail = jsonb_set(
+    jsonb_set(result_detail, '{base_score}', '85'::jsonb, true),
+    '{first_miss_question}', '8'::jsonb, true
+  )
+where game_type = 'millionaire'
+  and public_result->>'outcome' = 'lost'
+  and public_result->>'completed_questions' = '7'
+  and public_result->>'final_money' = '100000'
+  and raw_score + (2 * coalesce((public_result->>'lifelines_used')::integer, 0)) = 90;
 
 notify pgrst, 'reload schema';
