@@ -11,6 +11,7 @@ import {
   type BarTriviaState,
 } from "../games/barTriviaEngine";
 import { BAR_TRIVIA_QUESTION_BANK } from "./barTriviaQuestionBank";
+import { footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
 import { seededLineupRandom, stableLineupHash } from "./lineupModel";
 import type {
   OfficialDailyAdvanceResult,
@@ -114,10 +115,13 @@ export function buildBarTriviaDailySetup(
     day,
     "questions",
   );
-  const run = buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
-    random,
-    now: `${day}T12:00:00.000Z`,
-  });
+  const themedRun = league === "nfl" ? footballThemedBarTriviaRunForDay(day) : null;
+  const run = themedRun
+    ? [...themedRun]
+    : buildBarTriviaRun(BAR_TRIVIA_QUESTION_BANK, league, {
+        random,
+        now: `${day}T12:00:00.000Z`,
+      });
   const doubleRound = pickBarTriviaDoubleRound(seededLineupRandom(
     BAR_TRIVIA_DAILY_CONTENT_VERSION,
     league,
