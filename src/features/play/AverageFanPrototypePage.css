@@ -3699,3 +3699,57 @@ button.average-fan-help-button {
   font-weight: 1000;
   cursor: pointer;
 }
+
+
+/* Final decision risk treatment — intentionally appended after the locked gameplay overrides. */
+.average-fan-final-stakes.average-fan-final-stakes--three {
+  width: min(720px, 100%);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.average-fan-final-card .average-fan-final-warning {
+  display: block;
+  margin: 10px 0 0;
+  color: #ffe68a;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.average-fan-final-card .average-fan-final-stakes em {
+  display: block;
+  margin-top: 4px;
+  color: rgba(251,248,232,.72);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.average-fan-final-card .average-fan-final-stakes .is-upside {
+  border-color: rgba(92, 232, 135, .72);
+  background: rgba(7, 82, 40, .48);
+}
+
+.average-fan-final-card .average-fan-final-stakes .is-risk {
+  border-color: rgba(255, 118, 118, .76);
+  background: rgba(104, 20, 20, .48);
+}
+
+@media (max-width: 760px) and (orientation: landscape) {
+  .average-fan-final-stakes.average-fan-final-stakes--three {
+    gap: 6px;
+  }
+
+  .average-fan-final-stakes.average-fan-final-stakes--three > div {
+    padding: 8px 4px;
+  }
+
+  .average-fan-final-card .average-fan-final-stakes strong {
+    font-size: 18px;
+  }
+
+  .average-fan-final-card .average-fan-final-stakes em,
+  .average-fan-final-card .average-fan-final-warning {
+    font-size: 10px;
+  }
+}

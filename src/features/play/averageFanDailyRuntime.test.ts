@@ -94,7 +94,7 @@ describe("Average Fan canonical Daily runtime", () => {
       used_current_event_source_ids: allCurrentSources,
     }]);
     const questions = sourceSweep.privateSetupEvidence.questions as AverageFanQuestion[];
-    expect(questions.filter((question) => question.contentType === "current-event").length).toBeLessThanOrEqual(1);
+    expect(questions.filter((question) => question.contentType === "current-event")).toHaveLength(0);
   });
 
   it("starts Football with CFB and alternates CFB/NFL by appearance", () => {
