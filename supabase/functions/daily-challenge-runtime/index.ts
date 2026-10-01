@@ -93,9 +93,20 @@ type FootballAdvanceRuntimeModule = {
   advanceFootballOfficialDailyRuntime: DailyAdvanceRuntime;
 };
 
+type AverageFanRuntimeModule = {
+  buildAverageFanDailySetup: (
+    scope: "ufc" | "football",
+    day: string,
+    scheduleVersion: string,
+    publicationHistory?: unknown,
+  ) => JsonRecord;
+  advanceAverageFanDailyRuntime: DailyAdvanceRuntime;
+};
+
 let ufcRuntimePromise: Promise<UfcRuntimeModule> | null = null;
 let footballPublicationRuntimePromise: Promise<FootballPublicationRuntimeModule> | null = null;
 let footballAdvanceRuntimePromise: Promise<FootballAdvanceRuntimeModule> | null = null;
+let averageFanRuntimePromise: Promise<AverageFanRuntimeModule> | null = null;
 
 function loadUfcRuntime() {
   if (!ufcRuntimePromise) {
@@ -116,6 +127,13 @@ function loadFootballAdvanceRuntime() {
     footballAdvanceRuntimePromise = import("./football-advance.generated.mjs") as Promise<FootballAdvanceRuntimeModule>;
   }
   return footballAdvanceRuntimePromise;
+}
+
+function loadAverageFanRuntime() {
+  if (!averageFanRuntimePromise) {
+    averageFanRuntimePromise = import("./average-fan.generated.mjs") as Promise<AverageFanRuntimeModule>;
+  }
+  return averageFanRuntimePromise;
 }
 
 function asRecord(value: unknown): JsonRecord | null {
@@ -482,23 +500,30 @@ async function materializeToday(admin: SupabaseClient) {
     };
   }
 
-  const ufcRuntime = await loadUfcRuntime();
   let gameType = expectedGame;
   let fallbackReason: string | null = null;
   let publication;
+  let ufcRuntime: UfcRuntimeModule | null = null;
   try {
     const publicationHistory = gameType === "who_am_i"
       ? await whoAmIPublicationHistory(admin, "ufc", day)
       : gameType === "average_fan"
         ? await averageFanPublicationHistory(admin, "ufc", day)
         : undefined;
-    publication = gameType === "keep_4_cut_4"
-      ? buildDailyComboSetup(day, scheduleVersion, ufcRuntime)
-      : ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion, publicationHistory);
+    if (gameType === "average_fan") {
+      const averageFanRuntime = await loadAverageFanRuntime();
+      publication = averageFanRuntime.buildAverageFanDailySetup("ufc", day, scheduleVersion, publicationHistory);
+    } else {
+      ufcRuntime = await loadUfcRuntime();
+      publication = gameType === "keep_4_cut_4"
+        ? buildDailyComboSetup(day, scheduleVersion, ufcRuntime)
+        : ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion, publicationHistory);
+    }
   } catch {
     if (gameType === "find_leader") throw new Error("The official Find the Leader fallback could not be materialized.");
     fallbackReason = `materialization_failed:${gameType}`;
     gameType = "find_leader";
+    ufcRuntime ??= await loadUfcRuntime();
     publication = ufcRuntime.buildOfficialDailySetup(gameType, day, scheduleVersion);
   }
 
@@ -563,18 +588,31 @@ async function materializeFootballToday(admin: SupabaseClient) {
     };
   }
 
-  const footballRuntime = await loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType);
   const publicationHistory = expectedGame === "who_am_i"
     ? await whoAmIPublicationHistory(admin, "football", day)
     : expectedGame === "average_fan"
       ? await averageFanPublicationHistory(admin, "football", day)
       : undefined;
-  const publication = footballRuntime.buildFootballDailyPersistenceSetup(
-    day,
-    scheduleVersion,
-    expectedGame as OfficialDailyGameType,
-    publicationHistory,
-  ) as JsonRecord;
+  const publication = expectedGame === "average_fan"
+    ? {
+        gameType: expectedGame,
+        scheduleVersion,
+        ...(await loadAverageFanRuntime()).buildAverageFanDailySetup(
+          "football",
+          day,
+          scheduleVersion,
+          publicationHistory,
+        ),
+      }
+    : await (async () => {
+        const footballRuntime = await loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType);
+        return footballRuntime.buildFootballDailyPersistenceSetup(
+          day,
+          scheduleVersion,
+          expectedGame as OfficialDailyGameType,
+          publicationHistory,
+        ) as JsonRecord;
+      })();
   const publicationSchedule = requiredString(publication.scheduleVersion, "Football daily schedule version");
   const publicationGame = requiredString(publication.gameType, "Football daily game type");
   if (publicationSchedule !== scheduleVersion || publicationGame !== expectedGame) {
@@ -730,7 +768,7 @@ function footballPublicPayload(context: OfficialDailyRuntimeContext & JsonRecord
 
 function normalizeLegacyFootballProgress(
   context: OfficialDailyRuntimeContext & JsonRecord,
-  footballRuntime: FootballAdvanceRuntimeModule,
+  advanceFootballRuntime: DailyAdvanceRuntime,
 ) {
   const history = footballActionHistory(context);
   if (!history.length || isDailyCombo(context)) return context;
@@ -751,7 +789,7 @@ function normalizeLegacyFootballProgress(
   };
 
   for (const action of history) {
-    const advanced = footballRuntime.advanceFootballOfficialDailyRuntime(replayContext, action);
+    const advanced = advanceFootballRuntime(replayContext, action);
     replayContext = {
       ...replayContext,
       submissionState: advanced.submissionState,
@@ -967,13 +1005,15 @@ Deno.serve(async (request) => {
         return safeError(409, "STALE_PROGRESS", "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state.");
       }
 
-      const footballRuntime = await loadFootballAdvanceRuntime();
-      context = normalizeLegacyFootballProgress(context, footballRuntime);
+      const advanceFootballRuntime = context.gameType === "average_fan"
+        ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
+        : (await loadFootballAdvanceRuntime()).advanceFootballOfficialDailyRuntime;
+      context = normalizeLegacyFootballProgress(context, advanceFootballRuntime);
       const history = footballActionHistory(context);
       const action = requiredRecord(body.action, "Football daily action");
       const advanced = isDailyCombo(context)
-        ? advanceDailyCombo(context, action, footballRuntime.advanceFootballOfficialDailyRuntime)
-        : footballRuntime.advanceFootballOfficialDailyRuntime(context, action);
+        ? advanceDailyCombo(context, action, advanceFootballRuntime)
+        : advanceFootballRuntime(context, action);
       const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
         p_daily_challenge_id: materialized.dailyChallengeId,
         p_profile_id: profileId,
@@ -1023,10 +1063,12 @@ Deno.serve(async (request) => {
       return safeError(409, "STALE_PROGRESS", "Official daily progress changed on another device. Refresh and continue from the latest state.");
     }
 
-    const ufcRuntime = await loadUfcRuntime();
+    const advanceUfcRuntime = context.gameType === "average_fan"
+      ? (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime
+      : (await loadUfcRuntime()).advanceOfficialDailyRuntime;
     const advanced = isDailyCombo(context)
-      ? advanceDailyCombo(context, body.action, ufcRuntime.advanceOfficialDailyRuntime)
-      : ufcRuntime.advanceOfficialDailyRuntime(context, body.action);
+      ? advanceDailyCombo(context, body.action, advanceUfcRuntime)
+      : advanceUfcRuntime(context, body.action);
     const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
       p_daily_challenge_id: materialized.dailyChallengeId,
       p_profile_id: profileId,
