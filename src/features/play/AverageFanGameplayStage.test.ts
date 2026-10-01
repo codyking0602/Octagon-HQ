@@ -199,14 +199,14 @@ describe("Average Fan locked gameplay stage", () => {
     expect(pageSource).not.toContain("Q{displayedQuestionNumber}");
   });
 
-  it("keeps the approved implementation covered while closing Casual app access", () => {
+  it("keeps the approved implementation covered while closing public Casual app access", () => {
     expect(pageSource).toContain('searchParams.get("screen") === "gameplay"');
     expect(pageSource).toContain('searchParams.get("fan")');
     expect(pageSource).toContain('buildAverageFanCasualBoard(casualSport');
     expect(pageSource).toContain('searchParams.get("sport")');
     expect(pageSource).toContain('requestedSport === "nfl" || requestedSport === "cfb" || requestedSport === "ufc"');
     expect(routerSource).toContain('path: "play/average-fan", element: <TodayChallengeGameRoute gameType="average_fan" casual={<Navigate to="/play" replace />} />');
-    expect(routerSource).toContain('path: "play/average-fan-preview", element: <Navigate to="/play" replace />');
+    expect(routerSource).toContain('path: "play/average-fan-preview", element: <OwnerAverageFanDailyPreviewPage />');
     expect(routerSource).not.toContain('<AverageFanPrototypePage />');
     expect(appShellSource).toContain('location.pathname === "/play/average-fan"');
     expect(appShellSource).toMatch(/\{isAverageFanGame \? \(\s*<main[\s\S]*?<Outlet \/>[\s\S]*?\) : \(\s*<BrandedPullToRefresh>/);
