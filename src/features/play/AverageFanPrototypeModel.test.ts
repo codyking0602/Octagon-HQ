@@ -10,9 +10,9 @@ import {
 } from "./AverageFanPrototypeModel";
 
 describe("Average Fan owner preview pack", () => {
-  it("builds the locked 10-tile board with two questions per grade", () => {
-    expect(AVERAGE_FAN_UFC_PREVIEW_BOARD).toHaveLength(10);
-    for (const grade of [1, 2, 3, 4, 5]) {
+  it("builds the locked eight-tile board with two questions per playable grade", () => {
+    expect(AVERAGE_FAN_UFC_PREVIEW_BOARD).toHaveLength(8);
+    for (const grade of [2, 3, 4, 5]) {
       expect(AVERAGE_FAN_UFC_PREVIEW_BOARD.filter((question) => question.grade === grade)).toHaveLength(2);
     }
     expect(AVERAGE_FAN_UFC_PREVIEW_BOARD.every((question) => !question.protectedFinal)).toBe(true);
@@ -79,12 +79,10 @@ describe("Average Fan owner preview pack", () => {
       25_000,
       50_000,
       100_000,
-      175_000,
-      300_000,
       500_000,
     ]);
     expect(averageFanMoneyLabel(1_000_000)).toBe("$1,000,000");
-    expect(averageFanGradeLabel(1)).toBe("1st Grade");
+    expect(averageFanGradeLabel(2)).toBe("2nd Grade");
     expect(averageFanGradeLabel(5)).toBe("5th Grade");
   });
 });

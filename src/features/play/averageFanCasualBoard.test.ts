@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { AVERAGE_FAN_GRADES, type AverageFanSport } from "../games/averageFanEngine";
+import {
+  AVERAGE_FAN_BOARD_QUESTION_COUNT,
+  AVERAGE_FAN_PLAYABLE_GRADES,
+  type AverageFanSport,
+} from "../games/averageFanEngine";
 import { buildAverageFanCasualBoard } from "./averageFanCasualBoard";
 
 const SPORTS: readonly Exclude<AverageFanSport, "mlb">[] = ["nfl", "cfb", "ufc"];
@@ -13,10 +17,10 @@ describe("Average Fan canonical Casual board", () => {
     );
 
     expect(board.sport).toBe(sport);
-    expect(board.questions).toHaveLength(10);
-    expect(new Set(board.questions.map((question) => question.id)).size).toBe(10);
+    expect(board.questions).toHaveLength(AVERAGE_FAN_BOARD_QUESTION_COUNT);
+    expect(new Set(board.questions.map((question) => question.id)).size).toBe(AVERAGE_FAN_BOARD_QUESTION_COUNT);
 
-    for (const grade of AVERAGE_FAN_GRADES) {
+    for (const grade of AVERAGE_FAN_PLAYABLE_GRADES) {
       expect(board.questions.filter((question) => question.grade === grade)).toHaveLength(2);
     }
 
