@@ -85,6 +85,60 @@ describe("Daily leaderboard game result reconstruction", () => {
     expect(rows[2]?.status).toBe("unreached");
   });
 
+  it("keeps reconstructing Millionaire questions after the first miss", () => {
+    const questions = Array.from({ length: 8 }, (_, index) => ({
+      id: `finish-q${index + 1}`,
+      prompt: `Finish question ${index + 1}`,
+      choices: [
+        { id: "A", text: "A" },
+        { id: "B", text: "B" },
+        { id: "C", text: "C" },
+        { id: "D", text: "D" },
+      ],
+    }));
+    const projection = baseProjection({
+      publicSetup: { questions },
+      revealSetup: {
+        questions: questions.map((question) => ({
+          id: question.id,
+          correct_choice_id: "A",
+        })),
+      },
+      officialAttempt: {
+        nativeScore: 55,
+        normalizedScore: 55,
+        completedAt: "2026-09-29T12:00:00Z",
+        publicResult: {
+          outcome: "lost",
+          completed_questions: 7,
+          first_miss_question: 2,
+          final_money: 0,
+          lifelines_used: 0,
+          time_remaining_ms: 42000,
+        },
+      },
+    });
+
+    const rows = buildMillionaireLeaderboardQuestions(projection, {
+      action_history: [
+        { type: "answer", choice_id: "A" },
+        { type: "answer", choice_id: "B" },
+        ...Array.from({ length: 6 }, () => ({ type: "answer", choice_id: "A" })),
+      ],
+    });
+
+    expect(rows.map((row) => row.status)).toEqual([
+      "correct",
+      "wrong",
+      "correct",
+      "correct",
+      "correct",
+      "correct",
+      "correct",
+      "correct",
+    ]);
+  });
+
   it("reconstructs both Who Am I rounds with guesses, recovery, and seen clues", () => {
     const projection = baseProjection({
       sport: "ufc",
@@ -371,13 +425,13 @@ describe("Daily leaderboard game result reconstruction", () => {
   it("reconstructs Average Fan board answers and help usage from sanitized result detail", () => {
     const projection = baseProjection({
       gameType: "average_fan",
-      publicSetup: { sport: "nfl", question_count: 10 },
+      publicSetup: { sport: "nfl", question_count: 8 },
       publicState: { complete: true, board_score: 85 },
       revealSetup: {
         sport: "nfl",
         questions: [{
           id: "nfl-g1-a",
-          grade: 1,
+          grade: 2,
           subject: "Players",
           format: "short-answer",
           prompt: "Who is the player?",
@@ -404,7 +458,7 @@ describe("Daily leaderboard game result reconstruction", () => {
       resolved: [{
         question: {
           id: "nfl-g1-a",
-          grade: 1,
+          grade: 2,
           subject: "Players",
           format: "short-answer",
           prompt: "Who is the player?",
@@ -423,7 +477,7 @@ describe("Daily leaderboard game result reconstruction", () => {
     })).toEqual([{
       index: 0,
       id: "nfl-g1-a",
-      grade: 1,
+      grade: 2,
       subject: "Players",
       prompt: "Who is the player?",
       playerAnswer: "Player 1",
