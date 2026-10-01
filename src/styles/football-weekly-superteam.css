@@ -1336,3 +1336,21 @@
     padding: 10px 10px calc(96px + env(safe-area-inset-bottom));
   }
 }
+
+
+.football-weekly-superteam__sports-reference-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.football-weekly-superteam__sports-reference-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.football-weekly-superteam__sports-reference-link:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
