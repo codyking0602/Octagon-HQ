@@ -204,8 +204,9 @@ begin
     'private.grade_daily_challenge_pre_combo(text,text,jsonb,jsonb)'::regprocedure::oid
   ) into v_grader_definition;
   if position('p_game_type = ''average_fan''' in v_grader_definition) = 0
-    or position('grade_average_fan_daily' in v_grader_definition) = 0 then
-    raise exception 'Average Fan is missing from the canonical Daily grader';
+    or position('grade_average_fan_daily' in v_grader_definition) = 0
+    or position('p_scoring_version <> ''average-fan-score-v1''' in v_grader_definition) = 0 then
+    raise exception 'Average Fan is missing from the canonical Daily grader or scoring gate';
   end if;
 
   select pg_get_functiondef(

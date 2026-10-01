@@ -828,6 +828,139 @@ async function finalizePending(
   return getContext(admin, String(context.daily_challenge_id), profileId);
 }
 
+async function advanceExistingAverageFan(
+  admin: SupabaseClient,
+  userClient: SupabaseClient,
+  profileId: string,
+  body: JsonRecord,
+  sport: "ufc" | "football",
+): Promise<Response | null> {
+  if (body.mode !== "advance" || body.game_type !== "average_fan") return null;
+  const requestedDailyId = typeof body.daily_challenge_id === "string"
+    ? body.daily_challenge_id
+    : "";
+  if (!requestedDailyId) return null;
+
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", {
+    p_sport: sport,
+  });
+  if (requested.error) {
+    throw new Error("The Average Fan Daily identity could not be checked.");
+  }
+  const preview = requiredRecord(requested.data, "Average Fan Daily identity");
+  if (
+    preview.required === true
+    || preview.published_game !== "average_fan"
+    || preview.daily_challenge_id !== requestedDailyId
+  ) {
+    return null;
+  }
+
+  let context = await getContext(admin, requestedDailyId, profileId);
+  context = await finalizePending(userClient, admin, context, profileId);
+  if (context.gameType !== "average_fan") return null;
+
+  if (sport === "football") {
+    const hasStartedFootballDaily = Number(context.progress_revision ?? 0) > 0
+      || Boolean(asRecord(context.official_attempt));
+    if (!hasStartedFootballDaily) {
+      const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
+        p_profile_id: profileId,
+      });
+      if (weeklyGate.error) {
+        throw new Error("Football Weekly Auction gate could not be checked.");
+      }
+      const weeklyGateState = requiredRecord(weeklyGate.data, "Football Weekly Auction gate");
+      if (weeklyGateState.required === true) {
+        return safeError(
+          409,
+          "WEEKLY_AUCTION_REQUIRED",
+          "Submit today’s Weekly Auction bids before starting Football Daily.",
+          {
+            central_day: requiredString(preview.central_day, "Football preview Central day"),
+            schedule_version: requiredString(preview.schedule_version, "Football preview schedule version"),
+            game_type: requiredString(preview.expected_game, "Football preview game"),
+          },
+        );
+      }
+    }
+  }
+
+  const clientActionId = requestedClientActionId(body);
+  if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) {
+    return json(sport === "football" ? footballPublicPayload(context) : publicPayload(context));
+  }
+  if (asRecord(context.official_attempt)) {
+    return safeError(
+      409,
+      "OFFICIAL_ATTEMPT_COMPLETE",
+      sport === "football"
+        ? "The official Football first attempt is already complete."
+        : "The official first attempt is already complete.",
+    );
+  }
+  if (!Number.isInteger(body.revision) || Number(body.revision) !== Number(context.progress_revision)) {
+    return safeError(
+      409,
+      "STALE_PROGRESS",
+      sport === "football"
+        ? "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state."
+        : "Official daily progress changed on another device. Refresh and continue from the latest state.",
+    );
+  }
+
+  const action = requiredRecord(body.action, "Average Fan daily action");
+  const history = sport === "football" ? footballActionHistory(context) : [];
+  const advanced = (await loadAverageFanRuntime()).advanceAverageFanDailyRuntime(context, action);
+  const persistedSubmissionState = submissionStateWithClientActionId(
+    sport === "football"
+      ? {
+          ...advanced.submissionState,
+          action_history: [...history, action],
+        }
+      : advanced.submissionState,
+    dailyClientActionIds(context),
+    clientActionId,
+  );
+  const saved = await admin.rpc("save_daily_challenge_runtime_progress", {
+    p_daily_challenge_id: requestedDailyId,
+    p_profile_id: profileId,
+    p_expected_revision: Number(context.progress_revision),
+    p_submission_state: persistedSubmissionState,
+    p_public_state: advanced.publicState,
+  });
+  if (saved.error) {
+    if (saved.error.code === "40001") {
+      return safeError(
+        409,
+        "STALE_PROGRESS",
+        sport === "football"
+          ? "Football Today’s Challenge progress changed on another device. Refresh and continue from the latest state."
+          : "Official daily progress changed on another device. Refresh and continue from the latest state.",
+      );
+    }
+    throw new Error("The Average Fan Daily progress could not be saved.");
+  }
+
+  if (advanced.complete) {
+    context = await getContext(admin, requestedDailyId, profileId);
+    context = await finalizePending(userClient, admin, context, profileId);
+  } else {
+    const savedProgress = requiredRecord(saved.data, "Saved Average Fan Daily progress");
+    const publicState = requiredRecord(savedProgress.public_state, "Saved Average Fan Daily public state");
+    context = {
+      ...context,
+      progress_revision: Number(savedProgress.revision),
+      submission_state: persistedSubmissionState,
+      submissionState: persistedSubmissionState,
+      public_state: publicState,
+      publicState,
+    };
+  }
+
+  return json(sport === "football" ? footballPublicPayload(context) : publicPayload(context));
+}
+
 async function continueTwoGameWithoutIntermission(
   admin: SupabaseClient,
   context: OfficialDailyRuntimeContext & JsonRecord,
@@ -941,6 +1074,15 @@ Deno.serve(async (request) => {
       auth: { autoRefreshToken: false, persistSession: false },
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
+
+    const averageFanFastResponse = await advanceExistingAverageFan(
+      admin,
+      userClient,
+      profileId,
+      body,
+      body.sport === "football" ? "football" : "ufc",
+    );
+    if (averageFanFastResponse) return averageFanFastResponse;
 
     if (body.sport === "football") {
       const previewRequest = await admin.rpc("get_daily_challenge_materialization_request", {

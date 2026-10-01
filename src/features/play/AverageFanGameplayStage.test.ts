@@ -6,6 +6,7 @@ const pageSource = readFileSync("src/features/play/AverageFanPrototypePage.tsx",
 const pageCss = readFileSync("src/features/play/AverageFanPrototypePage.css", "utf8");
 const routerSource = readFileSync("src/app/router.tsx", "utf8");
 const appShellSource = readFileSync("src/app/AppShell.tsx", "utf8");
+const officialDailySource = readFileSync("src/features/play/OfficialAverageFanDailyView.tsx", "utf8");
 
 const portraitPaths = [
   "public/assets/average-fan/average-fan-shane.png",
@@ -208,6 +209,12 @@ describe("Average Fan locked gameplay stage", () => {
     expect(routerSource).not.toContain('<AverageFanPrototypePage />');
     expect(appShellSource).toContain('location.pathname === "/play/average-fan"');
     expect(appShellSource).toMatch(/\{isAverageFanGame \? \(\s*<main[\s\S]*?<Outlet \/>[\s\S]*?\) : \(\s*<BrandedPullToRefresh>/);
+  });
+
+  it("portals official Daily into document.body so app chrome cannot block the game", () => {
+    expect(officialDailySource).toContain('import { createPortal } from "react-dom";');
+    expect(officialDailySource).toContain("createPortal(content, document.body)");
+    expect(officialDailySource).toContain("return averageFanTakeover(");
   });
 
   it("stops the money story on the first unsaved miss while keeping HQ play alive", () => {

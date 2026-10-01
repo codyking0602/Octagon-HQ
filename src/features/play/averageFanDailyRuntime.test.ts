@@ -38,6 +38,25 @@ describe("Average Fan canonical Daily runtime", () => {
     expect((publication.privateSetupEvidence.final_question as AverageFanQuestion).protectedFinal).toBe(true);
   });
 
+  it("stagger subjects within every grade and gives the opening grades easier answer formats", () => {
+    for (const scope of ["ufc", "football"] as const) {
+      const publication = buildAverageFanDailySetup(scope, "2026-10-01", `${scope}-stagger-v1`, []);
+      const questions = publication.privateSetupEvidence.questions as AverageFanQuestion[];
+
+      for (const grade of [1, 2, 3, 4, 5] as const) {
+        const gradeQuestions = questions.filter((question) => question.grade === grade);
+        expect(gradeQuestions, `${scope} grade ${grade}`).toHaveLength(2);
+        expect(new Set(gradeQuestions.map((question) => question.subject)).size, `${scope} grade ${grade}`).toBe(2);
+        if (grade <= 2) {
+          expect(
+            gradeQuestions.filter((question) => question.format === "short-answer").length,
+            `${scope} grade ${grade}`,
+          ).toBeLessThanOrEqual(1);
+        }
+      }
+    }
+  });
+
   it("starts Football with CFB and alternates CFB/NFL by appearance", () => {
     const first = buildAverageFanDailySetup("football", "2026-10-01", "football-v1", []);
     expect(first.publicSetup.sport).toBe("cfb");

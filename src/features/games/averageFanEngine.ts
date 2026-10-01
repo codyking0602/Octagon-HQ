@@ -138,6 +138,47 @@ function normalizeAnswer(value: string) {
   return value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
 }
 
+function normalizePlayerAnswer(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function boundedEditDistance(left: string, right: string, limit: number) {
+  if (Math.abs(left.length - right.length) > limit) return limit + 1;
+  let previous = Array.from({ length: right.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= left.length; i += 1) {
+    const current = [i];
+    let rowMinimum = current[0]!;
+    for (let j = 1; j <= right.length; j += 1) {
+      const value = Math.min(
+        previous[j]! + 1,
+        current[j - 1]! + 1,
+        previous[j - 1]! + (left[i - 1] === right[j - 1] ? 0 : 1),
+      );
+      current.push(value);
+      rowMinimum = Math.min(rowMinimum, value);
+    }
+    if (rowMinimum > limit) return limit + 1;
+    previous = current;
+  }
+  return previous[right.length]!;
+}
+
+function tolerantShortAnswerMatch(candidate: string, accepted: string) {
+  if (candidate === accepted) return true;
+  if (candidate.length < 7 || accepted.length < 7) return false;
+  if (/^\d+$/.test(candidate) || /^\d+$/.test(accepted)) return false;
+  const maxLength = Math.max(candidate.length, accepted.length);
+  const limit = maxLength >= 14 ? 2 : 1;
+  return boundedEditDistance(candidate, accepted, limit) <= limit;
+}
+
 function reportRow(sport: AverageFanSport, fan: AverageFanFan) {
   return AVERAGE_FAN_REPORT_CARDS[sport][fan] as Record<string, AverageFanReportGrade>;
 }
@@ -177,12 +218,15 @@ export function averageFanFanAccuracy(
 }
 
 export function averageFanAnswersMatch(
-  question: Pick<AverageFanQuestion, "answer" | "aliases">,
+  question: Pick<AverageFanQuestion, "answer" | "aliases">
+    & Partial<Pick<AverageFanQuestion, "format">>,
   value: string,
 ) {
-  const candidate = normalizeAnswer(value);
-  return [question.answer, ...question.aliases]
-    .some((accepted) => normalizeAnswer(accepted) === candidate);
+  const candidate = normalizePlayerAnswer(value);
+  const accepted = [question.answer, ...question.aliases].map(normalizePlayerAnswer);
+  if (accepted.includes(candidate)) return true;
+  if (question.format !== "short-answer") return false;
+  return accepted.some((answer) => tolerantShortAnswerMatch(candidate, answer));
 }
 
 export function validateAverageFanQuestion(question: AverageFanQuestion): string[] {

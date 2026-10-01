@@ -98,6 +98,21 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).not.toContain('import("./football-runtime.generated.mjs")');
   });
 
+  it("fast-paths active Average Fan actions without repeating Daily materialization", () => {
+    const start = runtime.indexOf("async function advanceExistingAverageFan(");
+    const end = runtime.indexOf("async function continueTwoGameWithoutIntermission(", start);
+    const fastPath = runtime.slice(start, end);
+
+    expect(start).toBeGreaterThan(-1);
+    expect(end).toBeGreaterThan(start);
+    expect(fastPath).toContain('body.game_type !== "average_fan"');
+    expect(fastPath).toContain('"get_daily_challenge_materialization_request"');
+    expect(fastPath).not.toContain("materializeToday(");
+    expect(fastPath).not.toContain("materializeFootballToday(");
+    expect(fastPath).toContain("if (advanced.complete)");
+    expect(fastPath).toContain('requiredRecord(saved.data, "Saved Average Fan Daily progress")');
+  });
+
   it("pre-materializes UFC and Football Daily in separate scheduled invocations", () => {
     expect(runtime).toContain('const scheduledSport = body.sport == null ? "ufc" : body.sport;');
     expect(runtime).toContain('scheduledSport === "football"');

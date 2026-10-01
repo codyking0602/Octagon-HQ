@@ -79,6 +79,36 @@ describe("Today’s Challenge runtime repository", () => {
     expect(advanced.progressRevision).toBe(3);
   });
 
+  it("tags Average Fan advances so the backend can skip repeat materialization work", async () => {
+    const averageFan = runtimeProjection({
+      game_type: "average_fan",
+      setup_key: "average-fan:test",
+      content_version: "average-fan-daily-v1",
+      scoring_version: "average-fan-score-v1",
+      public_setup: { sport: "ufc", board: [] },
+      public_state: { phase: "fan-select", complete: false },
+    });
+    const { client, invoke } = clientWithResponses([
+      { data: averageFan, error: null },
+      { data: { ...averageFan, progress_revision: 3 }, error: null },
+    ]);
+    const repository = createTodayChallengeRepository(client as never)!;
+
+    const today = await repository.loadToday();
+    await repository.advance(today, { fan: "shane" });
+
+    expect(invoke).toHaveBeenNthCalledWith(2, "daily-challenge-runtime", {
+      body: {
+        mode: "advance",
+        sport: "ufc",
+        daily_challenge_id: dailyId,
+        game_type: "average_fan",
+        revision: 2,
+        action: { fan: "shane" },
+      },
+    });
+  });
+
   it("sends exactly one Football backend request per Hit the Number toggle", async () => {
     const football = (revision: number, selectedIds: string[]) => runtimeProjection({
       sport: "football",

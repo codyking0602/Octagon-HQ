@@ -19,6 +19,15 @@ on:
       - "src/features/play/millionaireDailyRuntime.test.ts"
       - "src/features/play/familyFeudDailyRuntime.ts"
       - "src/features/play/familyFeudDailyRuntime.test.ts"
+      - "src/features/play/averageFanDailyRuntime.ts"
+      - "src/features/play/averageFanDailyRuntime.test.ts"
+      - "src/features/games/averageFanEngine.ts"
+      - "src/features/games/averageFanEngine.test.ts"
+      - "src/features/games/averageFanContentBanks.ts"
+      - "supabase/migrations/202612310212_average_fan_daily_launch.sql"
+      - "supabase/migrations/202612310216_average_fan_daily_scoring_publication.sql"
+      - "supabase/migrations/202612310218_average_fan_daily_completion_scoring.sql"
+      - "supabase/tests/average_fan_daily_launch.sql"
       - "src/features/play/*SportsFeud*"
       - "src/features/games/familyFeudEngine.ts"
       - "src/features/play/footballDailyPublicationMillionaire.ts"
@@ -222,6 +231,10 @@ jobs:
       - name: Execute Bar Trivia Daily rotation proof
         shell: bash
         run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/bar_trivia_daily_rotation.sql
+
+      - name: Execute Average Fan Daily launch and scoring proof
+        shell: bash
+        run: psql "$DB_URL" --set ON_ERROR_STOP=on --file supabase/tests/average_fan_daily_launch.sql
 
       - name: Execute persisted Football Daily runtime proof
         shell: bash
