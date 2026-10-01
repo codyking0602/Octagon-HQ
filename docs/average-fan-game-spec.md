@@ -1,7 +1,7 @@
 # Are You Smarter Than an Average Fan? — Canonical Game + Content Spec
 
-**Status:** LIVE canonical Daily game  
-**Calibration:** October 1, 2026  
+**Status:** LIVE canonical Daily game
+**Calibration:** October 1, 2026
 **Repository:** `codyking0602/Octagon-HQ`
 
 This is the locked product and engineering contract for **Are You Smarter Than an Average Fan?**. Preserve the approved visual treatment and reuse the existing Daily platform.
