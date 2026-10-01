@@ -199,8 +199,8 @@ describe("Millionaire progression and settlement", () => {
       completedQuestions: 7,
       firstMissQuestionIndex: 7,
       finalMoney: 100_000,
-      baseScore: 90,
-      score: 90,
+      baseScore: 85,
+      score: 85,
     });
   });
 
@@ -247,6 +247,25 @@ describe("Millionaire progression and settlement", () => {
     expect(millionaireCanWalkAway(beforeQ8)).toBe(true);
     expect(advanceMillionaireRuntime(run, beforeQ8, { type: "walk_away" }).state)
       .toMatchObject({ status: "walked-away", finalMoney: 500_000, baseScore: 90, score: 90 });
+  });
+
+  it("makes the clean Q8 decision a 90 / 85 / 100 risk before lifeline deductions", () => {
+    const run = fixtureRun();
+    let beforeQ8 = createMillionaireState(run);
+    beforeQ8 = advanceMillionaireRuntime(run, beforeQ8, { type: "use_lifeline", lifeline: "stat-sheet" }).state;
+    beforeQ8 = answerCorrect(run, beforeQ8, 1);
+    beforeQ8 = advanceMillionaireRuntime(run, beforeQ8, { type: "use_lifeline", lifeline: "fifty-fifty" }).state;
+    beforeQ8 = answerCorrect(run, beforeQ8, 1);
+    beforeQ8 = advanceMillionaireRuntime(run, beforeQ8, { type: "use_lifeline", lifeline: "double-dip" }).state;
+    beforeQ8 = answerCorrect(run, beforeQ8, 5);
+
+    const walk = advanceMillionaireRuntime(run, beforeQ8, { type: "walk_away" }).state;
+    const miss = advanceMillionaireRuntime(run, beforeQ8, { type: "answer", choiceId: "B" }).state;
+    const hit = advanceMillionaireRuntime(run, beforeQ8, { type: "answer", choiceId: "A" }).state;
+
+    expect(walk).toMatchObject({ baseScore: 90, score: 84 });
+    expect(miss).toMatchObject({ baseScore: 85, score: 79 });
+    expect(hit).toMatchObject({ baseScore: 100, score: 94 });
   });
 
   it("awards $1,000,000 and 100 for a perfect no-lifeline run", () => {

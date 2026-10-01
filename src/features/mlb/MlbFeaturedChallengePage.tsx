@@ -231,8 +231,16 @@ export default function MlbFeaturedChallengePage() {
           outcome: result.outcome,
           final_money: result.finalMoney,
           completed_questions: result.completedQuestions,
+          first_miss_question: result.firstMissQuestion,
           lifelines_used: result.lifelinesUsed,
           time_remaining_ms: result.timeRemainingMs,
+          action_history: result.actionHistory.map((action) => (
+            action.type === "answer"
+              ? { type: "answer", choice_id: action.choiceId }
+              : action.type === "use_lifeline"
+                ? { type: "use_lifeline", lifeline: action.lifeline }
+                : { type: action.type }
+          )),
         },
       });
       await reloadOverview();
@@ -302,6 +310,30 @@ export default function MlbFeaturedChallengePage() {
           final_outcome: result.finalOutcome,
           final_money: result.finalMoney,
           fan: result.fan,
+          resolved: result.resolved.map((row) => ({
+            order: row.order,
+            id: row.id,
+            grade: row.grade,
+            subject: row.subject,
+            prompt: row.prompt,
+            player_answer: row.playerAnswer,
+            fan_answer: row.fanAnswer,
+            correct_answer: row.correctAnswer,
+            explanation: row.explanation,
+            correct: row.correct,
+            peek_used: row.peekUsed,
+            copied: row.copied,
+            save_consumed: row.saveConsumed,
+            saved: row.saved,
+          })),
+          final_question: {
+            id: result.finalQuestion.id,
+            subject: result.finalQuestion.subject,
+            prompt: result.finalQuestion.prompt,
+            correct_answer: result.finalQuestion.correctAnswer,
+            explanation: result.finalQuestion.explanation,
+          },
+          final_player_answer: result.finalPlayerAnswer,
         },
       });
       setPracticeMode(true);
@@ -456,7 +488,7 @@ export default function MlbFeaturedChallengePage() {
             <h1>Are You Smarter Than an Average Fan?</h1>
             <strong>{savedResult.rawScore}<small>/100</small></strong>
             <div className="mlb-find-saved-result__games">
-              <span><small>BOARD CLEARS</small><b>{clears}/10</b></span>
+              <span><small>BOARD CLEARS</small><b>{clears}/8</b></span>
               <span><small>SAVES</small><b>{saves}</b></span>
               <span><small>FINAL</small><b>{finalOutcome.replace("-", " ").toUpperCase() || "—"}</b></span>
             </div>

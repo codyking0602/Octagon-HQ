@@ -85,6 +85,43 @@ describe("Daily leaderboard game result reconstruction", () => {
     expect(rows[2]?.status).toBe("unreached");
   });
 
+  it("keeps reconstructing Millionaire recovery questions after the first miss", () => {
+    const questions = Array.from({ length: 8 }, (_, index) => ({
+      id: `q${index + 1}`,
+      prompt: `Question ${index + 1}`,
+      choices: [
+        { id: "A", text: `A${index + 1}` },
+        { id: "B", text: `B${index + 1}` },
+        { id: "C", text: `C${index + 1}` },
+        { id: "D", text: `D${index + 1}` },
+      ],
+    }));
+    const projection = baseProjection({
+      publicSetup: { questions },
+      revealSetup: {
+        questions: questions.map((question) => ({
+          id: question.id,
+          correct_choice_id: "A",
+        })),
+      },
+    });
+
+    const rows = buildMillionaireLeaderboardQuestions(projection, {
+      action_history: [
+        { type: "answer", choice_id: "A" },
+        { type: "answer", choice_id: "B" },
+        { type: "answer", choice_id: "A" },
+        { type: "answer", choice_id: "A" },
+      ],
+    });
+
+    expect(rows[0]?.status).toBe("correct");
+    expect(rows[1]?.status).toBe("wrong");
+    expect(rows[2]?.status).toBe("correct");
+    expect(rows[3]?.status).toBe("correct");
+    expect(rows[4]?.status).toBe("unreached");
+  });
+
   it("reconstructs both Who Am I rounds with guesses, recovery, and seen clues", () => {
     const projection = baseProjection({
       sport: "ufc",
@@ -371,7 +408,7 @@ describe("Daily leaderboard game result reconstruction", () => {
   it("reconstructs Average Fan board answers and help usage from sanitized result detail", () => {
     const projection = baseProjection({
       gameType: "average_fan",
-      publicSetup: { sport: "nfl", question_count: 10 },
+      publicSetup: { sport: "nfl", question_count: 8 },
       publicState: { complete: true, board_score: 85 },
       revealSetup: {
         sport: "nfl",
