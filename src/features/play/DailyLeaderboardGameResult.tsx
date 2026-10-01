@@ -611,7 +611,7 @@ function AverageFanLeaderboardResult({
       <section className="leaderboard-average-fan-board">
         <header>
           <div>
-            <span>{sport || "SPORT"} · 10-QUESTION BOARD</span>
+            <span>{sport || "SPORT"} · 8-QUESTION BOARD</span>
             <h3>How the board unfolded</h3>
           </div>
           <b>{savedCount ? `${savedCount} SAVE` : "NO SAVE USED"}</b>
