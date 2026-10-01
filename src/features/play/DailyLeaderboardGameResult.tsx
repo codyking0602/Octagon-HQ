@@ -289,7 +289,9 @@ export function buildMillionaireLeaderboardQuestions(
     }
 
     row.status = "wrong";
-    settled = true;
+    currentIndex += 1;
+    doubleDipActive = false;
+    doubleDipMisses = 0;
   }
 
   const result = projection.officialAttempt?.publicResult ?? {};
@@ -583,7 +585,9 @@ function AverageFanLeaderboardResult({
   const fan = String(result.fan ?? resultDetail.fan ?? "").toUpperCase();
   const sport = String(result.sport ?? projection.publicSetup.sport ?? "").toUpperCase();
   const finalOutcome = String(result.final_outcome ?? resultDetail.final_outcome ?? "");
-  const finalQuestion = record(resultDetail.final_question);
+  const detailFinalQuestion = record(resultDetail.final_question);
+  const revealFinalQuestion = record(projection.revealSetup?.final_question);
+  const finalQuestion = Object.keys(detailFinalQuestion).length ? detailFinalQuestion : revealFinalQuestion;
   const finalPrompt = String(finalQuestion.prompt ?? "");
   const finalSubject = String(resultDetail.final_subject ?? finalQuestion.subject ?? "");
   const finalPlayerAnswer = String(resultDetail.final_player_answer ?? "");
@@ -591,6 +595,7 @@ function AverageFanLeaderboardResult({
   const finalExplanation = String(resultDetail.final_explanation ?? "");
   const savedCount = rows.filter((row) => row.saved).length;
   const unsavedMisses = rows.filter((row) => !row.correct && !row.saved).length;
+  const boardQuestionCount = Number(projection.publicSetup.question_count ?? rows.length ?? 8);
 
   return (
     <div className="leaderboard-game-result leaderboard-game-result--average-fan">
@@ -611,7 +616,7 @@ function AverageFanLeaderboardResult({
       <section className="leaderboard-average-fan-board">
         <header>
           <div>
-            <span>{sport || "SPORT"} · 10-QUESTION BOARD</span>
+            <span>{sport || "SPORT"} · {boardQuestionCount}-QUESTION BOARD</span>
             <h3>How the board unfolded</h3>
           </div>
           <b>{savedCount ? `${savedCount} SAVE` : "NO SAVE USED"}</b>
