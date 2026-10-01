@@ -169,31 +169,9 @@ where exists (
     )
   );
 
-update private.daily_challenge_history
-set
-  native_score = greatest(0, least(100, native_score + (85 - (public_result->>'base_score')::integer))),
-  normalized_score = greatest(0, least(100, normalized_score + (85 - (public_result->>'base_score')::integer))),
-  public_result = jsonb_set(
-    jsonb_set(
-      jsonb_set(public_result, '{base_score}', '85'::jsonb, true),
-      '{first_miss_question}', '8'::jsonb, true
-    ),
-    '{score}',
-    to_jsonb(greatest(0, least(100, normalized_score + (85 - (public_result->>'base_score')::integer)))),
-    true
-  )
-where game_type = 'millionaire'
-  and public_result->>'outcome' = 'lost'
-  and public_result->>'completed_questions' = '7'
-  and public_result->>'base_score' in ('80', '90')
-  and public_result->>'final_money' = '100000'
-  and (
-    public_result->>'first_miss_question' = '8'
-    or (
-      public_result->>'first_miss_question' is null
-      and public_result->>'base_score' = '80'
-    )
-  );
+-- private.daily_challenge_history is a read-only UNION view over official
+-- attempts plus legacy Find the Leader. Updating daily_challenge_attempts above
+-- automatically updates the generalized Millionaire rows exposed by the view.
 
 update private.daily_challenge_progress
 set
