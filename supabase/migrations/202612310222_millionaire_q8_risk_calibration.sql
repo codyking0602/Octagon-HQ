@@ -129,6 +129,11 @@ revoke all on function private.grade_millionaire_daily(jsonb, jsonb)
 -- Re-score already-completed clean-Q8 misses to the new 85-point base.
 -- Legacy pre-recovery Daily used 80; finish-the-board Daily/MLB used 90.
 -- Preserve lifeline deductions by shifting the saved score by (85 - old base).
+-- Official Daily attempts are normally immutable; use the same transaction-local
+-- maintenance gate as the sanctioned two-game cutover, and close it immediately
+-- after the historical correction.
+
+select set_config('octagon.daily_two_game_cutover', 'on', true);
 
 update private.daily_challenge_attempts
 set
@@ -168,6 +173,8 @@ where exists (
       and public_result->>'base_score' = '80'
     )
   );
+
+select set_config('octagon.daily_two_game_cutover', 'off', true);
 
 -- private.daily_challenge_history is a read-only UNION view over official
 -- attempts plus legacy Find the Leader. Updating daily_challenge_attempts above
