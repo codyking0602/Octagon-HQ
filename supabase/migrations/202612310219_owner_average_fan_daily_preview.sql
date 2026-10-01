@@ -31,7 +31,7 @@ language plpgsql
 stable
 security definer
 set search_path = ''
-as $
+as $$
 declare
   v_progress private.owner_average_fan_daily_preview_progress;
 begin
@@ -63,7 +63,7 @@ begin
     'updated_at', v_progress.updated_at
   );
 end;
-$;
+$$;
 
 revoke all on function public.get_owner_average_fan_daily_preview_progress(uuid, date, text, jsonb)
   from public, anon, authenticated;
@@ -82,7 +82,7 @@ returns jsonb
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $$
 declare
   v_progress private.owner_average_fan_daily_preview_progress;
 begin
@@ -150,7 +150,7 @@ begin
     'updated_at', v_progress.updated_at
   );
 end;
-$;
+$$;
 
 revoke all on function public.save_owner_average_fan_daily_preview_progress(
   uuid, date, text, integer, jsonb, jsonb
