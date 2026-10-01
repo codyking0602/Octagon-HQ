@@ -22,6 +22,7 @@ export const MILLIONAIRE_OCTAGON_SCORE_BY_LEVEL = {
 export const MILLIONAIRE_CHECKPOINT_LEVELS = [3, 6] as const;
 export const MILLIONAIRE_WALK_AWAY_QUESTION_LEVELS = [8] as const;
 export const MILLIONAIRE_LIFELINE_PENALTY = 2;
+export const MILLIONAIRE_Q8_MISS_BASE_SCORE = 85;
 
 export type MillionaireRun = readonly [
   MillionaireRuntimeQuestion,
@@ -344,7 +345,12 @@ function answer(run: MillionaireRun, state: MillionaireState, choiceId: Milliona
   const firstMissQuestionIndex = state.firstMissQuestionIndex ?? state.currentQuestionIndex;
   const finalMoney = state.finalMoney ?? millionaireCheckpointMoney(state.currentQuestionIndex);
   const reachedEnd = state.currentQuestionIndex === 7;
-  const scoring = scoringState(state.completedQuestions, firstMissQuestionIndex, state.lifelinesUsed);
+  const scoring = reachedEnd && state.firstMissQuestionIndex === null
+    ? {
+        baseScore: MILLIONAIRE_Q8_MISS_BASE_SCORE,
+        score: millionaireScoreAfterLifelines(MILLIONAIRE_Q8_MISS_BASE_SCORE, state.lifelinesUsed),
+      }
+    : scoringState(state.completedQuestions, firstMissQuestionIndex, state.lifelinesUsed);
   return {
     state: {
       ...state,
