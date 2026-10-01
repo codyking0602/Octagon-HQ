@@ -134,8 +134,10 @@ $$;
 revoke all on function private.grade_millionaire_daily(jsonb, jsonb)
   from public, anon, authenticated;
 
--- Canonical Daily backfill: only rows explicitly marked as a Q8 first miss
--- under the temporary 90-base rule are changed.
+-- Canonical Daily backfill: only underlying official attempt rows explicitly
+-- marked as a Q8 first miss under the temporary 90-base rule are changed.
+-- private.daily_challenge_history is a UNION view over these rows, so it follows
+-- the corrected attempt automatically.
 update private.daily_challenge_attempts
 set
   native_score = greatest(0, 85 - (2 * coalesce((public_result->>'lifelines_used')::integer, 0))),
@@ -145,20 +147,6 @@ set
     'score', greatest(0, 85 - (2 * coalesce((public_result->>'lifelines_used')::integer, 0)))
   )
 where public_result->>'outcome' = 'lost'
-  and coalesce((public_result->>'completed_questions')::integer, -1) = 7
-  and coalesce((public_result->>'first_miss_question')::integer, 0) = 8
-  and coalesce((public_result->>'base_score')::integer, -1) = 90;
-
-update private.daily_challenge_history
-set
-  native_score = greatest(0, 85 - (2 * coalesce((public_result->>'lifelines_used')::integer, 0))),
-  normalized_score = greatest(0, 85 - (2 * coalesce((public_result->>'lifelines_used')::integer, 0))),
-  public_result = public_result || jsonb_build_object(
-    'base_score', 85,
-    'score', greatest(0, 85 - (2 * coalesce((public_result->>'lifelines_used')::integer, 0)))
-  )
-where game_type = 'millionaire'
-  and public_result->>'outcome' = 'lost'
   and coalesce((public_result->>'completed_questions')::integer, -1) = 7
   and coalesce((public_result->>'first_miss_question')::integer, 0) = 8
   and coalesce((public_result->>'base_score')::integer, -1) = 90;
