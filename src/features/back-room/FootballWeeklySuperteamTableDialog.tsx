@@ -8,6 +8,7 @@ import {
 } from "../play/footballWeeklySuperteamTableRepository";
 import {
   footballWeeklySuperteamIdentity,
+  footballWeeklySuperteamSportsReferenceUrl,
   footballWeeklySuperteamStyle,
 } from "./footballWeeklySuperteamVisualIdentity";
 
@@ -35,7 +36,17 @@ function RosterRow({ item }: { item: FootballWeeklySuperteamTableRosterItem }) {
       <TeamMark school={item.school} />
       <div>
         <small>{item.roster_slot}</small>
-        <strong>{item.display_name}</strong>
+        <strong>
+          <a
+            className="football-weekly-superteam__sports-reference-link"
+            href={footballWeeklySuperteamSportsReferenceUrl(item.display_name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={item.display_name + " on Sports-Reference"}
+          >
+            {item.display_name}
+          </a>
+        </strong>
         <span>{item.school} · {item.season_year}</span>
       </div>
       <b>WON {"$"}{item.price_paid}</b>
