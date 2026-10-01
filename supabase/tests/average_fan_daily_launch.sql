@@ -9,6 +9,9 @@ declare
   v_football private.daily_challenge_schedule_versions%rowtype;
   v_grade record;
   v_canonical_grade record;
+  v_ufc_publication jsonb;
+  v_football_publication jsonb;
+  v_publication_definition text;
   v_grader_definition text;
   v_standings_definition text;
   v_leaderboard_definition text;
@@ -65,6 +68,51 @@ begin
       and pg_get_constraintdef(oid) like '%average_fan%'
   ) then
     raise exception 'Average Fan is missing from canonical Daily supported-game constraints';
+  end if;
+
+  select pg_get_functiondef(
+    'public.publish_daily_challenge_setup(date,text,text,text,text,text,jsonb,jsonb,jsonb,jsonb,text)'::regprocedure::oid
+  ) into v_publication_definition;
+  if position(
+    'p_game_type = ''average_fan'' and p_scoring_version = ''average-fan-score-v1'''
+    in v_publication_definition
+  ) = 0 then
+    raise exception 'Average Fan scoring version is missing from the canonical Daily publication gate';
+  end if;
+
+  select public.publish_daily_challenge_setup(
+    date '2026-10-01',
+    v_ufc.version,
+    'average_fan',
+    'average-fan-test-ufc',
+    'average-fan-daily-v1',
+    'average-fan-score-v1',
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb,
+    null
+  ) into strict v_ufc_publication;
+
+  select public.publish_daily_challenge_setup(
+    date '2026-10-01',
+    v_football.version,
+    'average_fan',
+    'average-fan-test-football',
+    'average-fan-daily-v1',
+    'average-fan-score-v1',
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb,
+    '{}'::jsonb,
+    null
+  ) into strict v_football_publication;
+
+  if v_ufc_publication->>'game_type' <> 'average_fan'
+    or v_ufc_publication->>'scoring_version' <> 'average-fan-score-v1'
+    or v_football_publication->>'game_type' <> 'average_fan'
+    or v_football_publication->>'scoring_version' <> 'average-fan-score-v1' then
+    raise exception 'Average Fan Daily publication contract failed for UFC or Football';
   end if;
 
   select * into strict v_grade
