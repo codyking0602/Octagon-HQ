@@ -150,20 +150,8 @@ where public_result->>'first_miss_question' = '8'
   and public_result->>'outcome' = 'lost'
   and coalesce((public_result->>'completed_questions')::integer, -1) = 7;
 
-update private.daily_challenge_history
-set
-  native_score = greatest(0, 85 - (coalesce((public_result->>'lifelines_used')::integer, 0) * 2)),
-  normalized_score = greatest(0, 85 - (coalesce((public_result->>'lifelines_used')::integer, 0) * 2)),
-  public_result = jsonb_set(
-    jsonb_set(public_result, '{base_score}', '85'::jsonb, true),
-    '{score}',
-    to_jsonb(greatest(0, 85 - (coalesce((public_result->>'lifelines_used')::integer, 0) * 2))),
-    true
-  )
-where game_type = 'millionaire'
-  and public_result->>'first_miss_question' = '8'
-  and public_result->>'outcome' = 'lost'
-  and coalesce((public_result->>'completed_questions')::integer, -1) = 7;
+-- private.daily_challenge_history is a UNION-backed view over attempts, so the
+-- attempt update above automatically flows through to Daily history/standings.
 
 -- Today's MLB Millionaire originally stored only a terminal summary. Add the
 -- deterministically recoverable first-miss/base fields for those completed
