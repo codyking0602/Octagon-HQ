@@ -31,6 +31,8 @@ import {
   FOOTBALL_WEIGHTED_SCHEDULE_VERSION,
   FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION,
   FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION,
+  FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION,
+  FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION,
 } from "./footballTodayChallengeSession";
 
 type JsonRecord = Record<string, unknown>;
@@ -48,7 +50,8 @@ function isoDay(offset: number) {
 }
 
 function setupScheduleVersion(day: string) {
-  if (day >= "2026-10-01") return FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION;
+  if (day >= "2026-10-03") return FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION;
+  if (day >= "2026-10-01") return FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION;
   if (day >= "2026-09-29") return FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION;
   if (day >= "2026-09-25") return FOOTBALL_WEIGHTED_SCHEDULE_VERSION;
   if (day >= "2026-09-24") return FOOTBALL_WEIGHTED_SEP24_SCHEDULE_VERSION;
@@ -84,7 +87,7 @@ function blindResumeActions(day: string, revealStage: 1 | 2 | 3, correct: boolea
 }
 
 describe("Football Today’s Challenge session", () => {
-  it("preserves historical Football days, Sep 29 Bar Trivia, and launches Average Fan on October 1", () => {
+  it("preserves historical Football days and delays the Average Fan launch to October 2", () => {
     expect([
       footballTodayGameForDay("2026-08-22"),
       footballTodayGameForDay("2026-08-23"),
@@ -133,9 +136,15 @@ describe("Football Today’s Challenge session", () => {
 
     expect(footballTodayGameForDay("2026-09-30")).toBe("wavelength");
     expect(footballTodayScheduleVersionForDay("2026-09-30")).toBe(FOOTBALL_BAR_TRIVIA_SCHEDULE_VERSION);
-    expect(footballTodayGameForDay("2026-10-01")).toBe("average_fan");
-    expect(footballTodayScheduleVersionForDay("2026-10-01")).toBe(FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION);
+    expect(footballTodayGameForDay("2026-10-01")).toBe("bar_trivia");
+    expect(footballTodayScheduleVersionForDay("2026-10-01")).toBe(FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION);
+    expect(footballTodayGameForDay("2026-10-02")).toBe("average_fan");
+    expect(footballTodayScheduleVersionForDay("2026-10-02")).toBe(FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION);
+    expect(footballTodayGameForDay("2026-10-03")).toBe("millionaire");
+    expect(footballTodayScheduleVersionForDay("2026-10-03")).toBe(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION);
     expect(FOOTBALL_AVERAGE_FAN_SCHEDULE_VERSION).toBe("football-daily-v18-average-fan-oct1");
+    expect(FOOTBALL_AVERAGE_FAN_DELAY_SCHEDULE_VERSION).toBe("football-daily-v19-average-fan-delay-oct1");
+    expect(FOOTBALL_AVERAGE_FAN_RESUME_SCHEDULE_VERSION).toBe("football-daily-v20-resume-v18-oct3");
 
     const future = Array.from({ length: 27 }, (_unused, offset) => {
       const day = new Date(Date.UTC(2026, 9, 1 + offset)).toISOString().slice(0, 10);
