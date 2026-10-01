@@ -48,3 +48,13 @@ export function footballWeeklySuperteamStyle(identity: FootballWeeklySuperteamId
     "--superteam-secondary": identity.secondary,
   } as CSSProperties;
 }
+
+
+/**
+ * Sports-Reference CFB player handles include non-semantic numeric suffixes that cannot
+ * be derived safely from a player's name. Use Sports-Reference's own resolver rather
+ * than guessing a direct player slug and risking the wrong athlete.
+ */
+export function footballWeeklySuperteamSportsReferenceUrl(displayName: string) {
+  return `https://www.sports-reference.com/cfb/search/search.fcgi?search=${encodeURIComponent(displayName)}`;
+}
