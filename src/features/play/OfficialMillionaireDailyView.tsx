@@ -244,6 +244,13 @@ export function OfficialMillionaireDailyView({
   const displayDoubleDipMisses = answerFeedback?.doubleDipMisses ?? doubleDipMisses;
   const q8 = displayIndex === 7;
   const currentMoney = Number(state.current_money ?? 0);
+  const lifelineCount = Number(lifelinesUsed.fifty_fifty === true)
+    + Number(lifelinesUsed.stat_sheet === true)
+    + Number(lifelinesUsed.double_dip === true);
+  const lifelinePenalty = lifelineCount * 2;
+  const q8WalkScore = Math.max(0, 90 - lifelinePenalty);
+  const q8MissScore = Math.max(0, 85 - lifelinePenalty);
+  const q8HitScore = Math.max(0, 100 - lifelinePenalty);
   const result = projection.officialAttempt && !answerFeedback ? officialResult(projection) : null;
   const visualPhase = answerFeedback?.phase ?? "answering";
 
@@ -305,7 +312,7 @@ export function OfficialMillionaireDailyView({
                 <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: winnings lock at $5,000.</span></p>
                 <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: winnings lock at $100,000.</span></p>
                 <p><strong>MISS A QUESTION</strong><span>Your Millionaire run ends, but you finish all 8 questions for your score.</span></p>
-                <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
+                <p><strong>WALK AWAY</strong><span>Before Q8, bank your Q7 score. Play Q8: +10 if right, -5 if wrong.</span></p>
               </div>
               <h3>LIFELINES</h3>
               <div className="millionaire-rules__lifelines">
@@ -402,13 +409,13 @@ export function OfficialMillionaireDailyView({
           <section className="millionaire-decision" aria-label="Walk away decision">
             <span>WALK AWAY?</span>
             <strong>You have {millionaireMoneyLabel(currentMoney)} guaranteed.</strong>
-            <p>Play for $1,000,000 and 100 PTS, or bank your Q7 result.</p>
+            <p>Bank {q8WalkScore} PTS, or play Q8: {q8HitScore} if right · {q8MissScore} if wrong.</p>
             <div>
               <button type="button" className="is-play" onClick={() => setWalkPromptOpen(false)}>
-                <small>PLAY FOR</small><b>$1,000,000</b><em>100 PTS</em>
+                <small>PLAY FOR</small><b>$1,000,000</b><em>{q8HitScore} / {q8MissScore} PTS</em>
               </button>
               <button type="button" onClick={() => advance({ type: "walk_away" })}>
-                <small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(currentMoney)}</b><em>90 PTS</em>
+                <small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(currentMoney)}</b><em>{q8WalkScore} PTS</em>
               </button>
             </div>
           </section>
