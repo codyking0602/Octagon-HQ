@@ -733,7 +733,7 @@ function currentEventSubject(question: BarTriviaQuestion): AverageFanSubject {
   return "Fights";
 }
 
-function currentEventCandidates(sport: AverageFanSport) {
+function currentEventCandidates(sport: Exclude<AverageFanSport, "mlb">) {
   return BAR_TRIVIA_CURRENT_EVENT_QUESTIONS
     .filter((question) => question.league === sport)
     .sort((a, b) => {
@@ -988,7 +988,7 @@ function displayNflTeam(code: string) {
 }
 
 function footballCandidates(league: "NFL" | "CFB") {
-  const sport: AverageFanSport = league === "NFL" ? "nfl" : "cfb";
+  const sport = league === "NFL" ? "nfl" as const : "cfb" as const;
   const players = footballPlayers(league).filter((player) => league !== "NFL" || player.casualEligible);
   const playerNames = players.map((player) => player.name);
   const schools = unique(players.map((player) => player.school ?? ""));
@@ -1630,7 +1630,7 @@ export const AVERAGE_FAN_CONTENT_BANKS = {
   ufc: averageFanUfcQuestionBank,
 } as const;
 
-export function averageFanBankSummary(sport: AverageFanSport) {
+export function averageFanBankSummary(sport: Exclude<AverageFanSport, "mlb">) {
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
   return {
     total: bank.length,

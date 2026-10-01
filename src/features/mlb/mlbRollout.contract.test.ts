@@ -20,6 +20,8 @@ const pullForwardMigration = readFileSync("supabase/migrations/202612310204_mlb_
 const publicLaunchMigration = readFileSync("supabase/migrations/202612310205_mlb_public_launch.sql", "utf8");
 const barTriviaMigration = readFileSync("supabase/migrations/202612310208_mlb_bar_trivia_and_eleven_game_scoring.sql", "utf8");
 const sixteenGameScheduleMigration = readFileSync("supabase/migrations/202612310213_mlb_sixteen_game_schedule.sql", "utf8");
+const authoredAdditionsMigration = readFileSync("supabase/migrations/202612310214_mlb_added_authored_challenges_ready.sql", "utf8");
+const averageFanReadyMigration = readFileSync("supabase/migrations/202612310215_mlb_average_fan_ready.sql", "utf8");
 const challengeSchedule = readFileSync("src/features/mlb/mlbChallengeSchedule.ts", "utf8");
 const mlbRepository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const championshipModel = readFileSync("src/features/mlb/mlbChampionship.ts", "utf8");
@@ -30,6 +32,8 @@ const mlbPicks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const mlbPlay = readFileSync("src/features/mlb/MlbPlayoffsPage.tsx", "utf8");
 const mlbChallengePage = readFileSync("src/features/mlb/MlbFeaturedChallengePage.tsx", "utf8");
 const mlbBarTriviaProduction = readFileSync("src/features/mlb/mlbBarTriviaProduction.ts", "utf8");
+const mlbAverageFanProduction = readFileSync("src/features/mlb/mlbAverageFanProduction.ts", "utf8");
+const averageFanSharedGame = readFileSync("src/features/play/AverageFanPrototypePage.tsx", "utf8");
 const barTriviaRunner = readFileSync("src/features/play/BarTriviaCasualPage.tsx", "utf8");
 const mlbHome = readFileSync("src/features/mlb/MlbHomeHq.tsx", "utf8");
 const mlbSeries = readFileSync("src/features/mlb/MlbSeriesBreakdownPage.tsx", "utf8");
@@ -194,13 +198,25 @@ describe("MLB Playoffs rollout gate", () => {
 
   it("routes the moved October 11 Bar Trivia through the exact shared Bar Trivia runner", () => {
     expect(mlbChallengePage).toContain('challenge.game_type === "bar_trivia"');
-    expect(mlbChallengePage).toContain("MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY");
-    expect(mlbChallengePage).toContain("MLB_BAR_TRIVIA_PRODUCTION_RUN");
+    expect(mlbChallengePage).toContain("mlbBarTriviaProductionConfig");
     expect(mlbChallengePage).toContain("<BarTriviaCasualPage");
-    expect(mlbChallengePage).toContain("runOverride={MLB_BAR_TRIVIA_PRODUCTION_RUN}");
+    expect(mlbChallengePage).toContain("runOverride={barTriviaConfig.run}");
     expect(barTriviaRunner).toContain("<BarTriviaGameView");
     expect(mlbBarTriviaProduction).toContain('"2026-10-11"');
     expect(mlbBarTriviaProduction).toContain('"mlb-2026-play-11"');
+    expect(mlbBarTriviaProduction).toContain('"2026-10-27"');
+    expect(mlbBarTriviaProduction).toContain('"mlb-2026-play-16"');
+  });
+
+  it("routes both MLB Average Fan dates through the exact shared classroom game", () => {
+    expect(mlbChallengePage).toContain('challenge.game_type === "average_fan"');
+    expect(mlbChallengePage).toContain("MlbAverageFanChallenge");
+    expect(mlbChallengePage).toContain("mlbAverageFanProductionConfig");
+    expect(mlbAverageFanProduction).toContain('"mlb-2026-play-12"');
+    expect(mlbAverageFanProduction).toContain('"mlb-2026-play-15"');
+    expect(averageFanSharedGame).toContain("export function AverageFanGame");
+    expect(averageFanSharedGame).toContain("YOU ARE NOT SMARTER THAN AN AVERAGE FAN");
+    expect(averageFanSharedGame).toContain("<GameplayFanDesk fan={fan} />");
   });
 
   it("routes the moved Hit the Number and both Millionaire dates through production runners", () => {
@@ -264,6 +280,14 @@ describe("MLB Playoffs rollout gate", () => {
     expect(sixteenGameScheduleMigration).toContain("'mlb-2026-play-16'");
     expect(sixteenGameScheduleMigration).toContain("slot between 1 and 16");
     expect(sixteenGameScheduleMigration).toContain("content_ready = excluded.content_ready");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-13'");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-14'");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-16'");
+    expect(authoredAdditionsMigration).toContain("content_ready = true");
+    expect(authoredAdditionsMigration).toContain("'mlb-2026-play-12', 'mlb-2026-play-15'");
+    expect(averageFanReadyMigration).toContain("'mlb-2026-play-12'");
+    expect(averageFanReadyMigration).toContain("'mlb-2026-play-15'");
+    expect(averageFanReadyMigration).toContain("all sixteen 2026 MLB Play challenges must be production-ready");
     expect(mlbRepository).toContain('rpc("get_mlb_postseason_active_challenge"');
     expect(mlbRepository).toContain("resolveMlbFeaturedChallenge()");
   });

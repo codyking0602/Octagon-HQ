@@ -8,8 +8,10 @@ import {
 } from "../games/averageFanEngine";
 import { stableLineupHash } from "./lineupModel";
 
+type AverageFanCasualSport = Exclude<AverageFanSport, "mlb">;
+
 export interface AverageFanCasualBoard {
-  sport: AverageFanSport;
+  sport: AverageFanCasualSport;
   questions: readonly AverageFanQuestion[];
   finalQuestion: AverageFanQuestion;
 }
@@ -29,7 +31,7 @@ function rankCandidates(
 }
 
 export function buildAverageFanCasualBoard(
-  sport: AverageFanSport,
+  sport: AverageFanCasualSport,
   seed: string,
   now: Date | string = new Date(),
 ): AverageFanCasualBoard {

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { AVERAGE_FAN_GRADES, type AverageFanSport } from "../games/averageFanEngine";
 import { buildAverageFanCasualBoard } from "./averageFanCasualBoard";
 
-const SPORTS: readonly AverageFanSport[] = ["nfl", "cfb", "ufc"];
+const SPORTS: readonly Exclude<AverageFanSport, "mlb">[] = ["nfl", "cfb", "ufc"];
 
 describe("Average Fan canonical Casual board", () => {
   it.each(SPORTS)("builds a complete %s game from the canonical bank", (sport) => {

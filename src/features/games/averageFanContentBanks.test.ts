@@ -11,7 +11,7 @@ import { getUfcFactualSubject } from "../back-room/ufcFactualLedger";
 import { BAR_TRIVIA_CURRENT_EVENT_QUESTIONS } from "../play/barTriviaCurrentEvents";
 import { validateAverageFanQuestion, type AverageFanSport } from "./averageFanEngine";
 
-const sports: readonly AverageFanSport[] = ["nfl", "cfb", "ufc"];
+const sports: readonly Exclude<AverageFanSport, "mlb">[] = ["nfl", "cfb", "ufc"];
 
 describe("Average Fan durable content banks", () => {
   it("hits the locked six-month bank sizes and protected Final counts", () => {

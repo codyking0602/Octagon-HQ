@@ -78,7 +78,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-07",
     game_type: "average_fan",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-05",
@@ -111,7 +111,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-13",
     game_type: "find_leader",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-08",
@@ -144,7 +144,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-19",
     game_type: "who_am_i",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-09",
@@ -166,7 +166,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-23",
     game_type: "average_fan",
-    ready: false,
+    ready: true,
   },
   {
     id: "mlb-2026-play-10",
@@ -188,7 +188,7 @@ export const MLB_POSTSEASON_CHALLENGE_SCHEDULE: readonly MlbScheduledChallengeDe
     route: "/mlb/challenge",
     date: "2026-10-27",
     game_type: "bar_trivia",
-    ready: false,
+    ready: true,
   },
 ] as const;
 

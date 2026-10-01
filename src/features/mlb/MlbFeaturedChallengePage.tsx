@@ -5,6 +5,7 @@ import { useIdentity } from "../identity/IdentityProvider";
 import {
   MLB_FIND_LEADER_PRODUCTION_BOARDS,
   formatMlbFindLeaderValue,
+  mlbFindLeaderProductionBoards,
   type MlbFindLeaderBoard,
 } from "./mlbFindLeaderProduction";
 import {
@@ -31,18 +32,13 @@ import {
   MLB_BLIND_RESUME_PRODUCTION_DATE,
 } from "./mlbBlindResumeProduction";
 import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
-import {
-  MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY,
-  MLB_WHO_AM_I_PRODUCTION_DATE,
-} from "./mlbWhoAmIProduction";
+import MlbAverageFanChallenge from "./MlbAverageFanChallenge";
+import { mlbAverageFanProductionConfig } from "./mlbAverageFanProduction";
+import type { AverageFanSettledResult } from "../play/AverageFanPrototypePage";
+import { mlbWhoAmIProductionConfig } from "./mlbWhoAmIProduction";
 import MillionaireCasualPage, { type MillionaireCasualSettledResult } from "../play/MillionaireCasualPage";
 import BarTriviaCasualPage, { type BarTriviaSettledResult } from "../play/BarTriviaCasualPage";
-import {
-  MLB_BAR_TRIVIA_DOUBLE_ROUND,
-  MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY,
-  MLB_BAR_TRIVIA_PRODUCTION_DATE,
-  MLB_BAR_TRIVIA_PRODUCTION_RUN,
-} from "./mlbBarTriviaProduction";
+import { mlbBarTriviaProductionConfig } from "./mlbBarTriviaProduction";
 import "../../styles/football-find-leader.css";
 import "../../styles/mlb-playoffs.css";
 
@@ -133,7 +129,12 @@ export default function MlbFeaturedChallengePage() {
       && !previewMode
       && challenge?.ready === true
       && challenge?.is_live === true
-      && (challenge?.game_type === "find_leader" || challenge?.game_type === "millionaire" || challenge?.game_type === "bar_trivia"),
+      && (
+        challenge?.game_type === "find_leader"
+        || challenge?.game_type === "millionaire"
+        || challenge?.game_type === "bar_trivia"
+        || challenge?.game_type === "average_fan"
+      ),
     season: liveHub?.season ?? 2026,
     challengeKey,
   });
@@ -145,10 +146,13 @@ export default function MlbFeaturedChallengePage() {
   const [completedGames, setCompletedGames] = useState<CompletedGame[]>([]);
   const [recording, setRecording] = useState(false);
   const [recordError, setRecordError] = useState("");
-  const board = MLB_FIND_LEADER_PRODUCTION_BOARDS[boardIndex] ?? MLB_FIND_LEADER_PRODUCTION_BOARDS[0]!;
+  const findLeaderBoards = challenge?.game_type === "find_leader"
+    ? mlbFindLeaderProductionBoards(challenge.id, challenge.date ?? "") ?? MLB_FIND_LEADER_PRODUCTION_BOARDS
+    : MLB_FIND_LEADER_PRODUCTION_BOARDS;
+  const board = findLeaderBoards[boardIndex] ?? findLeaderBoards[0]!;
   const leader = boardLeader(board);
   const eliminatedSet = useMemo(() => new Set(eliminated), [eliminated]);
-  const finalScore = completedScores.length === MLB_FIND_LEADER_PRODUCTION_BOARDS.length
+  const finalScore = completedScores.length === findLeaderBoards.length
     ? Math.round(completedScores.reduce((sum, score) => sum + score, 0) / completedScores.length)
     : null;
 
@@ -272,6 +276,42 @@ export default function MlbFeaturedChallengePage() {
     }
   }
 
+  async function saveOfficialAverageFanResult(result: AverageFanSettledResult) {
+    setRecording(true);
+    setRecordError("");
+    try {
+      await recordMlbPlayChallengeResult({
+        season: liveHub?.season ?? 2026,
+        challengeKey,
+        rawScore: result.score,
+        gameType: "average_fan",
+        publicResult: {
+          score: result.score,
+          board_score: result.boardScore,
+          board_clears: result.boardClears,
+          saves: result.saves,
+          final_outcome: result.finalOutcome,
+          final_money: result.finalMoney,
+          fan: result.fan,
+        },
+        resultDetail: {
+          score: result.score,
+          board_score: result.boardScore,
+          board_clears: result.boardClears,
+          saves: result.saves,
+          final_outcome: result.finalOutcome,
+          final_money: result.finalMoney,
+          fan: result.fan,
+        },
+      });
+      setPracticeMode(true);
+    } catch (nextError) {
+      setRecordError(nextError instanceof Error ? nextError.message : "Your official MLB Average Fan result could not be recorded.");
+    } finally {
+      setRecording(false);
+    }
+  }
+
   function finishBoard(nextResult: ResultState, eliminatedIds: string[]) {
     const fatal = nextResult.fatalId
       ? board.candidates.find((candidate) => candidate.id === nextResult.fatalId) ?? null
@@ -290,7 +330,7 @@ export default function MlbFeaturedChallengePage() {
     setCompletedScores(nextScores);
     setCompletedGames(nextGames);
 
-    const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
+    const isLastBoard = boardIndex === findLeaderBoards.length - 1;
     if (isLastBoard && !practiceMode) {
       const score = Math.round(nextScores.reduce((sum, value) => sum + value, 0) / nextScores.length);
       void saveOfficialResult(score, nextGames);
@@ -313,7 +353,7 @@ export default function MlbFeaturedChallengePage() {
     }
   }
 
-  const isLastBoard = boardIndex === MLB_FIND_LEADER_PRODUCTION_BOARDS.length - 1;
+  const isLastBoard = boardIndex === findLeaderBoards.length - 1;
   const savedResult = overview?.ownResult ?? null;
 
   if (previewMode) {
@@ -350,10 +390,9 @@ export default function MlbFeaturedChallengePage() {
   }
 
   if (challenge.game_type === "who_am_i") {
-    const isProductionWhoAmI = challenge.id === MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY
-      && challenge.date === MLB_WHO_AM_I_PRODUCTION_DATE;
+    const whoAmIConfig = mlbWhoAmIProductionConfig(challenge.id, challenge.date ?? "");
 
-    if (!isProductionWhoAmI) {
+    if (!whoAmIConfig) {
       return (
         <div className="page mlb-find-leader-page">
           <section className="mlb-find-saved-result">
@@ -372,7 +411,85 @@ export default function MlbFeaturedChallengePage() {
       <MlbWhoAmIProductionChallenge
         key={challenge.id}
         season={liveHub?.season ?? 2026}
-        challengeKey={challenge.id}
+        config={whoAmIConfig}
+      />
+    );
+  }
+
+  if (challenge.game_type === "average_fan") {
+    const averageFanConfig = mlbAverageFanProductionConfig(challenge.id, challenge.date ?? "");
+
+    if (!averageFanConfig) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>{challenge.title}</h1>
+            <p>This Average Fan date is not activated yet.</p>
+            <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+              MLB PLAY
+            </button>
+          </section>
+        </div>
+      );
+    }
+
+    if (overviewLoading && !overview && !practiceMode) {
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+            <h1>Loading your challenge…</h1>
+          </section>
+        </div>
+      );
+    }
+
+    if (savedResult && !practiceMode) {
+      const clears = Number(savedResult.publicResult.board_clears ?? 0);
+      const saves = Number(savedResult.publicResult.saves ?? 0);
+      const finalOutcome = String(savedResult.publicResult.final_outcome ?? "");
+      return (
+        <div className="page mlb-find-leader-page">
+          <section className="mlb-find-saved-result">
+            <p className="eyebrow">OFFICIAL RESULT</p>
+            <h1>Are You Smarter Than an Average Fan?</h1>
+            <strong>{savedResult.rawScore}<small>/100</small></strong>
+            <div className="mlb-find-saved-result__games">
+              <span><small>BOARD CLEARS</small><b>{clears}/10</b></span>
+              <span><small>SAVES</small><b>{saves}</b></span>
+              <span><small>FINAL</small><b>{finalOutcome.replace("-", " ").toUpperCase() || "—"}</b></span>
+            </div>
+            <p>Your official score is locked. Replays do not change the postseason standings.</p>
+            {recordError ? <p>{recordError}</p> : null}
+            <div className="mlb-find-final-actions">
+              <button
+                className="primary-action"
+                type="button"
+                onClick={() => {
+                  setPracticeMode(true);
+                  setRecordError("");
+                }}
+              >
+                PLAY AGAIN
+              </button>
+              <button className="find-secondary-action" type="button" onClick={() => navigate("/mlb")}>
+                MLB PLAY
+              </button>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    return (
+      <MlbAverageFanChallenge
+        key={challenge.id}
+        config={averageFanConfig}
+        onExit={() => navigate("/mlb")}
+        onSettled={(nextResult) => {
+          if (!practiceMode) void saveOfficialAverageFanResult(nextResult);
+        }}
       />
     );
   }
@@ -541,10 +658,9 @@ export default function MlbFeaturedChallengePage() {
   }
 
   if (challenge.game_type === "bar_trivia") {
-    const isProductionBarTrivia = challenge.id === MLB_BAR_TRIVIA_PRODUCTION_CHALLENGE_KEY
-      && challenge.date === MLB_BAR_TRIVIA_PRODUCTION_DATE;
+    const barTriviaConfig = mlbBarTriviaProductionConfig(challenge.id, challenge.date ?? "");
 
-    if (!isProductionBarTrivia) {
+    if (!barTriviaConfig) {
       return (
         <div className="page mlb-find-leader-page">
           <section className="mlb-find-saved-result">
@@ -598,8 +714,8 @@ export default function MlbFeaturedChallengePage() {
     return (
       <BarTriviaCasualPage
         scope="mlb"
-        runOverride={MLB_BAR_TRIVIA_PRODUCTION_RUN}
-        doubleRoundOverride={MLB_BAR_TRIVIA_DOUBLE_ROUND}
+        runOverride={barTriviaConfig.run}
+        doubleRoundOverride={barTriviaConfig.doubleRound}
         onSettled={(nextResult) => void saveOfficialBarTriviaResult(nextResult)}
         resultActions={(
           <button className="bar-trivia__primary" type="button" onClick={() => navigate("/mlb")} disabled={recording}>
@@ -678,9 +794,9 @@ export default function MlbFeaturedChallengePage() {
 
   return (
     <div className="page football-find-leader-page mlb-find-leader-page">
-      <div className="mlb-find-series-progress" aria-label={`Game ${boardIndex + 1} of ${MLB_FIND_LEADER_PRODUCTION_BOARDS.length}`}>
+      <div className="mlb-find-series-progress" aria-label={`Game ${boardIndex + 1} of ${findLeaderBoards.length}`}>
         <span>FIND THE LEADER</span>
-        <strong>GAME {boardIndex + 1} OF {MLB_FIND_LEADER_PRODUCTION_BOARDS.length}</strong>
+        <strong>GAME {boardIndex + 1} OF {findLeaderBoards.length}</strong>
       </div>
 
       <FootballFindLeaderPresentation

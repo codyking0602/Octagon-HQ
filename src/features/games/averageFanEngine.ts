@@ -13,18 +13,20 @@ export const AVERAGE_FAN_FORMATS = ["short-answer", "four-choice", "true-false"]
 export type AverageFanFan = (typeof AVERAGE_FAN_FANS)[number];
 export type AverageFanGrade = (typeof AVERAGE_FAN_GRADES)[number];
 export type AverageFanQuestionFormat = (typeof AVERAGE_FAN_FORMATS)[number];
-export type AverageFanSport = "nfl" | "cfb" | "ufc";
+export type AverageFanSport = "nfl" | "cfb" | "ufc" | "mlb";
 
 export const AVERAGE_FAN_SUBJECTS = {
   nfl: ["Players", "Teams", "NFL History", "X’s & O’s"],
   cfb: ["Players", "Programs", "Traditions", "CFB History"],
   ufc: ["Fighters", "Fights", "Championships", "Octagon IQ"],
+  mlb: ["Players", "Teams", "MLB History", "Baseball IQ"],
 } as const;
 
 export type AverageFanSubject =
   | (typeof AVERAGE_FAN_SUBJECTS.nfl)[number]
   | (typeof AVERAGE_FAN_SUBJECTS.cfb)[number]
-  | (typeof AVERAGE_FAN_SUBJECTS.ufc)[number];
+  | (typeof AVERAGE_FAN_SUBJECTS.ufc)[number]
+  | (typeof AVERAGE_FAN_SUBJECTS.mlb)[number];
 
 export type AverageFanReportGrade = "A+" | "A" | "A-" | "B+" | "B" | "B-" | "C+" | "C";
 
@@ -77,6 +79,13 @@ export const AVERAGE_FAN_REPORT_CARDS = {
     troy: { Fighters: "B+", Fights: "A", Championships: "B-", "Octagon IQ": "A-" },
     tyler: { Fighters: "A-", Fights: "B+", Championships: "A", "Octagon IQ": "B-" },
     lib: { Fighters: "A-", Fights: "A", Championships: "B+", "Octagon IQ": "B-" },
+  },
+  mlb: {
+    cody: { Players: "A", Teams: "B+", "MLB History": "A-", "Baseball IQ": "B-" },
+    shane: { Players: "A+", Teams: "B+", "MLB History": "A-", "Baseball IQ": "C+" },
+    troy: { Players: "B+", Teams: "A", "MLB History": "B-", "Baseball IQ": "A-" },
+    tyler: { Players: "B", Teams: "B", "MLB History": "A", "Baseball IQ": "A-" },
+    lib: { Players: "A-", Teams: "A", "MLB History": "B-", "Baseball IQ": "B+" },
   },
 } as const satisfies ReportCards;
 

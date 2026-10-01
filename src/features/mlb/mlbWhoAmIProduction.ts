@@ -100,6 +100,122 @@ export const MLB_WHO_AM_I_PRODUCTION_ROUNDS: readonly [WhoAmIRound, WhoAmIRound]
   },
 ] as const;
 
+
+export const MLB_WHO_AM_I_SECOND_PRODUCTION_DATE = "2026-10-19" as const;
+export const MLB_WHO_AM_I_SECOND_PRODUCTION_CHALLENGE_KEY = "mlb-2026-play-14" as const;
+export const MLB_WHO_AM_I_SECOND_PRODUCTION_SCHEDULE_VERSION = "mlb-who-am-i-oct19-v1" as const;
+export const MLB_WHO_AM_I_SECOND_PRODUCTION_SCRIPT_IDS = [
+  "mlb-2026-10-19-round-1",
+  "mlb-2026-10-19-round-2",
+] as const;
+
+export const MLB_WHO_AM_I_SECOND_PRODUCTION_ROUNDS: readonly [WhoAmIRound, WhoAmIRound] = [
+  {
+    sport: "mlb",
+    league: "MLB",
+    subjects,
+    hiddenSubject: subject("mlb-mariano-rivera"),
+    clues: [
+      clue("mlb-oct19-r1-01", "I spent my entire 19-season Major League career with one franchise.", "broad"),
+      clue("mlb-oct19-r1-02", "I was a right-handed pitcher who became famous for working at the end of games.", "broad"),
+      clue("mlb-oct19-r1-03", "I was selected to 13 All-Star Games.", "helpful"),
+      clue("mlb-oct19-r1-04", "I won five World Series championships.", "helpful"),
+      clue("mlb-oct19-r1-05", "I was named World Series MVP in 1999.", "strong"),
+      clue("mlb-oct19-r1-06", "I was named ALCS MVP in 2003.", "strong"),
+      clue("mlb-oct19-r1-07", "I finished my postseason career with 42 saves and a 0.70 ERA.", "strong"),
+      clue("mlb-oct19-r1-08", "I retired as MLB’s all-time leader with 652 regular-season saves.", "strong"),
+      clue("mlb-oct19-r1-09", "In 2019, I became the first player ever elected unanimously to the Baseball Hall of Fame.", "giveaway"),
+      clue("mlb-oct19-r1-10", "My signature pitch was a cutter, and I was the final Major Leaguer to wear No. 42.", "giveaway"),
+    ],
+  },
+  {
+    sport: "mlb",
+    league: "MLB",
+    subjects,
+    hiddenSubject: subject("mlb-ichiro-suzuki"),
+    clues: [
+      clue("mlb-oct19-r2-01", "I did not make my Major League debut until age 27 after first becoming a star in Japan.", "broad"),
+      clue("mlb-oct19-r2-02", "I was a left-handed hitter who spent most of my Major League career in right field.", "broad"),
+      clue("mlb-oct19-r2-03", "I played for Seattle, the Yankees and Miami before finishing back in Seattle.", "helpful"),
+      clue("mlb-oct19-r2-04", "I won 10 consecutive Gold Glove Awards to begin my Major League career.", "helpful"),
+      clue("mlb-oct19-r2-05", "In 2001, I won both American League Rookie of the Year and MVP.", "strong"),
+      clue("mlb-oct19-r2-06", "I recorded at least 200 hits in 10 consecutive Major League seasons.", "strong"),
+      clue("mlb-oct19-r2-07", "I finished my Major League career with 3,089 hits and 509 stolen bases.", "strong"),
+      clue("mlb-oct19-r2-08", "I set the Major League single-season record with 262 hits in 2004.", "strong"),
+      clue("mlb-oct19-r2-09", "In 2025, I became the first Japanese-born player elected to the Baseball Hall of Fame.", "giveaway"),
+      clue("mlb-oct19-r2-10", "I was the first Japanese-born position player to appear in the Major Leagues.", "giveaway"),
+    ],
+  },
+] as const;
+
+export const MLB_WHO_AM_I_SECOND_PRODUCTION_SOURCE_NOTES = [
+  {
+    round: 1,
+    authority: "MLB.com",
+    url: "https://www.mlb.com/yankees/history/retired-numbers",
+    verifiedAt: "2026-09-30",
+  },
+  {
+    round: 1,
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/first-ballot-mlb-hall-of-famers-c300943350",
+    verifiedAt: "2026-09-30",
+  },
+  {
+    round: 2,
+    authority: "MLB.com",
+    url: "https://www.mlb.com/mariners/fans/hall-of-fame/members/suzuki",
+    verifiedAt: "2026-09-30",
+  },
+  {
+    round: 2,
+    authority: "MLB.com",
+    url: "https://www.mlb.com/news/best-japanese-baseball-players-of-all-time-c262514038",
+    verifiedAt: "2026-09-30",
+  },
+] as const;
+
+export type MlbWhoAmIProductionConfig = {
+  challengeKey: string;
+  challengeDate: string;
+  scheduleVersion: string;
+  scriptIds: readonly [string, string];
+  rounds: readonly [WhoAmIRound, WhoAmIRound];
+};
+
+export function mlbWhoAmIProductionConfig(
+  challengeKey: string,
+  challengeDate: string,
+): MlbWhoAmIProductionConfig | null {
+  if (
+    challengeKey === MLB_WHO_AM_I_PRODUCTION_CHALLENGE_KEY
+    && challengeDate === MLB_WHO_AM_I_PRODUCTION_DATE
+  ) {
+    return {
+      challengeKey,
+      challengeDate,
+      scheduleVersion: MLB_WHO_AM_I_PRODUCTION_SCHEDULE_VERSION,
+      scriptIds: MLB_WHO_AM_I_PRODUCTION_SCRIPT_IDS,
+      rounds: MLB_WHO_AM_I_PRODUCTION_ROUNDS,
+    };
+  }
+
+  if (
+    challengeKey === MLB_WHO_AM_I_SECOND_PRODUCTION_CHALLENGE_KEY
+    && challengeDate === MLB_WHO_AM_I_SECOND_PRODUCTION_DATE
+  ) {
+    return {
+      challengeKey,
+      challengeDate,
+      scheduleVersion: MLB_WHO_AM_I_SECOND_PRODUCTION_SCHEDULE_VERSION,
+      scriptIds: MLB_WHO_AM_I_SECOND_PRODUCTION_SCRIPT_IDS,
+      rounds: MLB_WHO_AM_I_SECOND_PRODUCTION_ROUNDS,
+    };
+  }
+
+  return null;
+}
+
 export const MLB_WHO_AM_I_PRODUCTION_SOURCE_NOTES = [
   {
     round: 1,

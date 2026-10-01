@@ -2,7 +2,10 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import MlbWhoAmIProductionChallenge from "./MlbWhoAmIProductionChallenge";
-import { MLB_WHO_AM_I_PRODUCTION_ROUNDS } from "./mlbWhoAmIProduction";
+import {
+  MLB_WHO_AM_I_PRODUCTION_ROUNDS,
+  mlbWhoAmIProductionConfig,
+} from "./mlbWhoAmIProduction";
 
 const { recordResult, reloadOverview } = vi.hoisted(() => ({
   recordResult: vi.fn(async (input: Record<string, unknown>) => ({
@@ -49,9 +52,12 @@ function solveCurrentRound(name: string) {
 
 describe("MLB Who Am I production challenge", () => {
   it("plays two rounds, averages them, and records one official score", async () => {
+    const config = mlbWhoAmIProductionConfig("mlb-2026-play-04", "2026-10-03");
+    expect(config).not.toBeNull();
+
     render(
       <MemoryRouter>
-        <MlbWhoAmIProductionChallenge challengeKey="mlb-2026-play-04" season={2026} />
+        <MlbWhoAmIProductionChallenge config={config!} season={2026} />
       </MemoryRouter>,
     );
 
