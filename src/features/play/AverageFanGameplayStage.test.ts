@@ -7,6 +7,7 @@ const pageCss = readFileSync("src/features/play/AverageFanPrototypePage.css", "u
 const routerSource = readFileSync("src/app/router.tsx", "utf8");
 const appShellSource = readFileSync("src/app/AppShell.tsx", "utf8");
 const officialDailySource = readFileSync("src/features/play/OfficialAverageFanDailyView.tsx", "utf8");
+const mlbAverageFanSource = readFileSync("src/features/mlb/MlbAverageFanChallenge.tsx", "utf8");
 
 const portraitPaths = [
   "public/assets/average-fan/average-fan-shane.png",
@@ -215,6 +216,18 @@ describe("Average Fan locked gameplay stage", () => {
     expect(officialDailySource).toContain('import { createPortal } from "react-dom";');
     expect(officialDailySource).toContain("createPortal(content, document.body)");
     expect(officialDailySource).toContain("return averageFanTakeover(");
+  });
+
+  it("gives MLB the same document-body takeover as official Daily", () => {
+    expect(mlbAverageFanSource).toContain('import { createPortal } from "react-dom";');
+    expect(mlbAverageFanSource).toContain("createPortal(content, document.body)");
+    expect(mlbAverageFanSource.match(/return mlbAverageFanTakeover\(/g)).toHaveLength(3);
+  });
+
+  it("commits local and MLB answer reveals synchronously before completion callbacks", () => {
+    expect(pageSource).toContain('import { flushSync } from "react-dom";');
+    expect(pageSource).toMatch(/function resolveAnswer[\s\S]*?flushSync\(\(\) => \{[\s\S]*?setPhase\("reveal"\);/);
+    expect(pageSource).toMatch(/function submitFinal[\s\S]*?flushSync\(\(\) => \{[\s\S]*?setPhase\("final-reveal"\);[\s\S]*?\}\);[\s\S]*?emitSettled\(outcome\);/);
   });
 
   it("stops the money story on the first unsaved miss while keeping HQ play alive", () => {
