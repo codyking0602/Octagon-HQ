@@ -81,8 +81,8 @@ begin
   end if;
 
   select public.publish_daily_challenge_setup(
-    date '2026-10-01',
-    v_ufc.version,
+    date '2026-10-02',
+    'play-rotation-v19-average-fan-delay-oct1',
     'average_fan',
     'average-fan-test-ufc',
     'average-fan-daily-v1',
@@ -95,8 +95,8 @@ begin
   ) into strict v_ufc_publication;
 
   select public.publish_daily_challenge_setup(
-    date '2026-10-01',
-    v_football.version,
+    date '2026-10-02',
+    'football-daily-v19-average-fan-delay-oct1',
     'average_fan',
     'average-fan-test-football',
     'average-fan-daily-v1',
