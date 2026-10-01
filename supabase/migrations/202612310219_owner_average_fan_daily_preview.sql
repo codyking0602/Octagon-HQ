@@ -1,6 +1,6 @@
--- Owner-only, non-persistent preview support for a future Average Fan Daily.
--- The edge runtime uses these service-only wrappers to resolve the canonical schedule
--- and run the same canonical scoring gate without creating Daily progress or attempts.
+-- Owner-only, isolated preview support for a future Average Fan Daily.
+-- Preview progress is server-owned in a dedicated private table; official Daily progress,
+-- attempts, streaks, and leaderboards remain untouched.
 
 
 create table if not exists private.owner_average_fan_daily_preview_progress (
