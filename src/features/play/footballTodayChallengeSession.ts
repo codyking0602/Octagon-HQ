@@ -14,7 +14,6 @@ import { buildFootballDailyPersistenceSetup as buildFootballBarTriviaPersistence
 import { buildFootballDailyPersistenceSetup as buildFootballAverageFanPersistenceSetup } from "./footballDailyPublicationAverageFan";
 import {
   DAILY_WEIGHTED_ROTATION_CUTOVER_DAY,
-  FOOTBALL_LOCKED_WEIGHTED_CYCLE,
   lockedWeightedGameForDay,
 } from "./dailyChallengeRotation";
 import type {
