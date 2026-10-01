@@ -371,13 +371,13 @@ describe("Daily leaderboard game result reconstruction", () => {
   it("reconstructs Average Fan board answers and help usage from sanitized result detail", () => {
     const projection = baseProjection({
       gameType: "average_fan",
-      publicSetup: { sport: "nfl", question_count: 10 },
+      publicSetup: { sport: "nfl", question_count: 8 },
       publicState: { complete: true, board_score: 85 },
       revealSetup: {
         sport: "nfl",
         questions: [{
-          id: "nfl-g1-a",
-          grade: 1,
+          id: "nfl-g2-a",
+          grade: 2,
           subject: "Players",
           format: "short-answer",
           prompt: "Who is the player?",
@@ -403,8 +403,8 @@ describe("Daily leaderboard game result reconstruction", () => {
     expect(buildAverageFanLeaderboardQuestions(projection, {
       resolved: [{
         question: {
-          id: "nfl-g1-a",
-          grade: 1,
+          id: "nfl-g2-a",
+          grade: 2,
           subject: "Players",
           format: "short-answer",
           prompt: "Who is the player?",
@@ -422,8 +422,8 @@ describe("Daily leaderboard game result reconstruction", () => {
       }],
     })).toEqual([{
       index: 0,
-      id: "nfl-g1-a",
-      grade: 1,
+      id: "nfl-g2-a",
+      grade: 2,
       subject: "Players",
       prompt: "Who is the player?",
       playerAnswer: "Player 1",
