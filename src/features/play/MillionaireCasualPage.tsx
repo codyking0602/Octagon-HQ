@@ -8,6 +8,8 @@ import {
   createMillionaireState,
   currentMillionaireQuestion,
   millionaireCanWalkAway,
+  millionaireScoreAfterLifelines,
+  MILLIONAIRE_Q8_MISS_BASE_SCORE,
   type MillionaireLifeline,
   type MillionaireRun,
   type MillionaireState,
@@ -198,7 +200,7 @@ function MillionaireRulesIntro({ league, onStart, onBack }: { league: Millionair
               <p><strong>$5,000 CHECKPOINT</strong><span>Clear Q3. Miss Q4–Q6: winnings lock at $5,000.</span></p>
               <p><strong>$100,000 CHECKPOINT</strong><span>Clear Q6. Miss Q7–Q8: winnings lock at $100,000.</span></p>
               <p><strong>MISS A QUESTION</strong><span>Your Millionaire run ends, but you finish all 8 questions for your score.</span></p>
-              <p><strong>WALK AWAY</strong><span>Before Q8, bank $500,000 / 90 PTS or risk the checkpoint for $1,000,000 / 100 PTS.</span></p>
+              <p><strong>WALK AWAY</strong><span>Before Q8, bank 90 base PTS, or play for 100. A Q8 miss falls to 85 base PTS.</span></p>
             </div>
             <h3>LIFELINES</h3>
             <div className="millionaire-rules__lifelines">
@@ -287,6 +289,9 @@ function MillionaireGame({
   const stageScale = useMillionaireStageScale();
   const stageBackground = league === "mlb" ? MILLIONAIRE_MLB_STAGE_PLATE : millionaireHostAsset(league);
   const usedLifelines = Object.values(gameState.lifelinesUsed).filter(Boolean).length;
+  const q8WalkScore = millionaireScoreAfterLifelines(MILLIONAIRE_BASE_PTS.Q7, gameState.lifelinesUsed);
+  const q8MissScore = millionaireScoreAfterLifelines(MILLIONAIRE_Q8_MISS_BASE_SCORE, gameState.lifelinesUsed);
+  const q8WinScore = millionaireScoreAfterLifelines(MILLIONAIRE_BASE_PTS.Q8, gameState.lifelinesUsed);
 
   function schedule(callback: () => void, delay: number) {
     const id = window.setTimeout(() => {
@@ -485,10 +490,16 @@ function MillionaireGame({
 
       {walkPromptOpen && currentQuestion && !eliminationPromptOpen ? (
         <section className="millionaire-decision" aria-label="Walk away decision">
-          <span>WALK AWAY?</span><strong>You have {millionaireMoneyLabel(gameState.currentMoney)} guaranteed.</strong><p>Play for {millionaireMoneyLabel(currentQuestion.money)} or walk away now.</p>
+          <span>WALK AWAY?</span>
+          <strong>You have {millionaireMoneyLabel(gameState.currentMoney)} and {q8WalkScore} PTS guaranteed.</strong>
+          <p>Play Q8: get it right for {q8WinScore} PTS. Miss it and finish with {q8MissScore} PTS.</p>
           <div>
-            <button type="button" className="is-play" onClick={() => setWalkPromptOpen(false)}><small>PLAY FOR</small><b>{millionaireMoneyLabel(currentQuestion.money)}</b><em>{MILLIONAIRE_BASE_PTS[currentQuestion.level]} PTS</em></button>
-            <button type="button" onClick={walkAway}><small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(gameState.currentMoney)}</b><em>{MILLIONAIRE_BASE_PTS[MILLIONAIRE_LEVELS[Math.max(0, gameState.completedQuestions - 1)]!]} PTS</em></button>
+            <button type="button" className="is-play" onClick={() => setWalkPromptOpen(false)}>
+              <small>PLAY FOR</small><b>{millionaireMoneyLabel(currentQuestion.money)}</b><em>HIT {q8WinScore} · MISS {q8MissScore}</em>
+            </button>
+            <button type="button" onClick={walkAway}>
+              <small>WALK AWAY WITH</small><b>{millionaireMoneyLabel(gameState.currentMoney)}</b><em>{q8WalkScore} PTS</em>
+            </button>
           </div>
         </section>
       ) : null}
