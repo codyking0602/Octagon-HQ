@@ -35,6 +35,15 @@ function firstMissFromLegacy(
 ) {
   const explicit = Number(detail.first_miss_question ?? publicResult.first_miss_question ?? 0);
   if (Number.isInteger(explicit) && explicit >= 1 && explicit <= 8) return explicit;
+
+  if (outcome === "lost") {
+    const score = Number(publicResult.score ?? detail.score ?? Number.NaN);
+    const lifelines = Number(publicResult.lifelines_used ?? detail.lifelines_used ?? 0);
+    const baseScore = score + (lifelines * 2);
+    const derived = ((baseScore - 20 - (completedQuestions * 5)) / 5) + 1;
+    if (Number.isInteger(derived) && derived >= 1 && derived <= 8) return derived;
+  }
+
   if (outcome === "lost" && completedQuestions >= 0 && completedQuestions < 8) {
     return Math.min(8, completedQuestions + 1);
   }
