@@ -48,10 +48,14 @@ describe("locked Daily Challenge rotation", () => {
     });
   });
 
-  it("launches Average Fan in both sports on October 1", () => {
+  it("defers the Oct 1 Average Fan launch by one day without moving later games", () => {
     expect(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY).toBe("2026-10-01");
-    expect(lockedWeightedGameForDay("football", "2026-10-01")).toBe("average_fan");
-    expect(lockedWeightedGameForDay("ufc", "2026-10-01")).toBe("average_fan");
+    expect(lockedWeightedGameForDay("football", "2026-10-01")).toBe("bar_trivia");
+    expect(lockedWeightedGameForDay("ufc", "2026-10-01")).toBe("who_am_i");
+    expect(lockedWeightedGameForDay("football", "2026-10-02")).toBe("average_fan");
+    expect(lockedWeightedGameForDay("ufc", "2026-10-02")).toBe("average_fan");
+    expect(lockedWeightedGameForDay("football", "2026-10-03")).toBe("millionaire");
+    expect(lockedWeightedGameForDay("ufc", "2026-10-03")).toBe("blind_resume");
   });
 
   it("continues Football Bar Trivia NFL/CFB alternation after the Sep 29 NFL debut", () => {
@@ -62,7 +66,7 @@ describe("locked Daily Challenge rotation", () => {
       .map((offset) => addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset));
 
     expect(appearances).toEqual([
-      "2026-10-02",
+      "2026-10-01",
       "2026-10-14",
       "2026-10-22",
       "2026-10-29",
@@ -74,13 +78,13 @@ describe("locked Daily Challenge rotation", () => {
     ]);
   });
 
-  it("avoids UFC/Football challenge collisions after launch whenever possible", () => {
+  it("keeps the one intentional UFC/Football collision on the deferred Average Fan day", () => {
     const collisions = Array.from({ length: 180 }, (_, offset) => offset)
       .filter((offset) => {
         const day = addDays(DAILY_WEIGHTED_ROTATION_CUTOVER_DAY, offset);
         return lockedWeightedGameForDay("football", day) === lockedWeightedGameForDay("ufc", day);
       });
 
-    expect(collisions).toEqual([0]);
+    expect(collisions).toEqual([1]);
   });
 });
