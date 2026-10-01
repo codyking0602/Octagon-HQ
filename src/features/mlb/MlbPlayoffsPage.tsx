@@ -598,6 +598,39 @@ function MlbPlayResultDetail({
                 <small>{barTrivia.doubleRound.replace("round", "ROUND ").toUpperCase()} · DOUBLE ROUND</small>
               </article>
             </div>
+          ) : isAverageFan ? (
+            <div className="mlb-play-result-card__games">
+              {averageFan.rows.length ? averageFan.rows.map((row) => (
+                <article key={row.order}>
+                  <span>Q{row.order} · GRADE {row.grade} · {row.subject.toUpperCase()}</span>
+                  <strong>{row.prompt}</strong>
+                  <small>{row.correct ? "CORRECT" : row.saved ? "SAVED" : "MISS"} · PLAYER {row.playerAnswer || "—"}</small>
+                  <small>FAN {row.fanAnswer || "—"} · ANSWER {row.correctAnswer || "—"}</small>
+                  {row.peekUsed || row.copied || row.saveConsumed ? (
+                    <small>
+                      {[row.peekUsed ? "PEEK" : "", row.copied ? "COPY" : "", row.saveConsumed ? (row.saved ? "SAVE WORKED" : "SAVE USED") : ""]
+                        .filter(Boolean).join(" · ")}
+                    </small>
+                  ) : null}
+                </article>
+              )) : (
+                <article>
+                  <span>BOARD DETAIL</span>
+                  <strong>Summary-only historical result</strong>
+                  <small>This completed run did not store question-by-question answers.</small>
+                </article>
+              )}
+              {Object.keys(averageFan.finalQuestion).length ? (
+                <article>
+                  <span>FINAL</span>
+                  <strong>{String(averageFan.finalQuestion.prompt ?? "")}</strong>
+                  {averageFan.finalPlayerAnswer
+                    ? <small>PLAYER · {averageFan.finalPlayerAnswer}</small>
+                    : <small>BANKED SCORE</small>}
+                  <small>ANSWER · {String(averageFan.finalQuestion.correct_answer ?? "—")}</small>
+                </article>
+              ) : null}
+            </div>
           ) : games.length ? (
             <div className="mlb-play-result-card__games">
               {games.map((game) => (
@@ -627,7 +660,9 @@ function MlbPlayResultDetail({
                       ? "The challenge score is the average of both Hit the Number games."
                       : isSportsFeud
                         ? `The challenge score is ${sportsFeud.mainPoints}/60 from the two main boards plus ${sportsFeud.fastPoints}/40 from Fast Money.`
-                        : "The challenge score is the average of both Find the Leader boards."}
+                        : isAverageFan
+                          ? "Average Fan keeps the full board path, fan help, and Final result in the leaderboard drill-down."
+                          : "The challenge score is the average of both Find the Leader boards."}
           </p>
         </section>
       </div>
