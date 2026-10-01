@@ -1744,9 +1744,33 @@ export const averageFanNflQuestionBank = buildBank(
   AVERAGE_FAN_FINAL_TARGETS.nfl,
 );
 
+const CFB_REVIEWED_FINAL_DUPLICATE_FRAGMENTS = [
+  ":00-g5:bennett-double-cfp-mvp:",
+  ":00-g5:hunter-biletnikoff-bednarik:",
+  ":00-g5:tennessee-first-bcs:",
+  ":00-g5:utah-sugar-alabama:",
+  ":00-g5:ohio-state-four-seed:",
+  ":00-g5:old-brass-spittoon:",
+  ":00-g5:illibuck:",
+  ":00-g5:watts-jackson-2015:",
+  ":tradition:old-brass-spittoon:",
+  ":tradition:illibuck:",
+  ":authored:cfb-r3-first-heisman",
+] as const;
+
+const CFB_REVIEWED_FINAL_ALTERNATE_IDS = new Set([
+  "average-fan:cfb:authored:cfb-final-first-ap-champ",
+  "average-fan:cfb:authored:cfb-final-1902-rose",
+]);
+
+const averageFanCfbCandidates = footballCandidates("CFB").filter((question) => (
+  !CFB_REVIEWED_FINAL_ALTERNATE_IDS.has(question.id)
+  && !CFB_REVIEWED_FINAL_DUPLICATE_FRAGMENTS.some((fragment) => question.id.includes(fragment))
+));
+
 export const averageFanCfbQuestionBank = buildBank(
   "cfb",
-  footballCandidates("CFB"),
+  averageFanCfbCandidates,
   FOOTBALL_GRADE_TARGETS,
   AVERAGE_FAN_FINAL_TARGETS.cfb,
 );
