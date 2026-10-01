@@ -176,7 +176,9 @@ function boundedEditDistance(left: string, right: string, limit: number) {
 
 function tolerantShortAnswerMatch(candidate: string, accepted: string) {
   if (candidate === accepted) return true;
-  if (candidate.length < 7 || accepted.length < 7) return false;
+  // Keep short trivia terms exact, but allow a one-character deletion from a
+  // seven-plus-character accepted answer/alias (e.g. Weidman -> weidmn).
+  if (candidate.length < 6 || accepted.length < 7) return false;
   if (/^\d+$/.test(candidate) || /^\d+$/.test(accepted)) return false;
   const maxLength = Math.max(candidate.length, accepted.length);
   const limit = maxLength >= 14 ? 2 : 1;

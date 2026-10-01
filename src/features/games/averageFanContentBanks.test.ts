@@ -47,6 +47,27 @@ function singleCharacterTypo(question: AverageFanQuestion) {
   return null;
 }
 
+function humanSurnameCandidate(value: string) {
+  const tokens = value.trim().split(/\s+/).filter(Boolean);
+  if (tokens.length < 2 || /\d/.test(value)) return null;
+  const suffixes = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
+  let index = tokens.length - 1;
+  if (suffixes.has(normalizedHumanInput(tokens[index]!).toLocaleLowerCase()) && index >= 2) index -= 1;
+  const candidate = tokens[index]!;
+  return normalizedHumanInput(candidate).length >= 4 ? candidate : null;
+}
+
+function oneCharacterHumanTypo(value: string) {
+  const normalized = normalizedHumanInput(value).toLocaleLowerCase();
+  if (normalized.length < 7) return null;
+  for (let index = 1; index < normalized.length - 1; index += 1) {
+    if (!/[a-z0-9]/.test(normalized[index]!)) continue;
+    const candidate = normalized.slice(0, index) + normalized.slice(index + 1);
+    if (candidate.length >= 6) return candidate;
+  }
+  return null;
+}
+
 describe("Average Fan durable content banks", () => {
   it("hits the locked six-month bank sizes and protected Final counts", () => {
     for (const sport of sports) {
@@ -100,6 +121,52 @@ describe("Average Fan durable content banks", () => {
 
     expect(shortAnswerCount).toBeGreaterThanOrEqual(300);
     expect(typoCount).toBeGreaterThan(220);
+  });
+
+  it("accepts realistic human short-answer variants across the full bank", () => {
+    let surnameVariantCount = 0;
+    let surnameTypoCount = 0;
+
+    for (const sport of sports) {
+      for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
+        if (question.format !== "short-answer") continue;
+
+        const surname = humanSurnameCandidate(question.answer);
+        if (surname && question.aliases.some((alias) => (
+          normalizedHumanInput(alias) === normalizedHumanInput(surname)
+        ))) {
+          surnameVariantCount += 1;
+          expect(
+            averageFanAnswersMatch(question, surname),
+            `${question.id}: surname ${surname}`,
+          ).toBe(true);
+
+          const typo = oneCharacterHumanTypo(surname);
+          if (typo) {
+            surnameTypoCount += 1;
+            expect(
+              averageFanAnswersMatch(question, typo),
+              `${question.id}: surname typo ${typo}`,
+            ).toBe(true);
+          }
+        }
+      }
+    }
+
+    expect(surnameVariantCount).toBeGreaterThan(60);
+    expect(surnameTypoCount).toBeGreaterThan(35);
+  });
+
+  it("regresses the exact Weidman false-negative from owner preview", () => {
+    const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
+      (row) => row.id === "average-fan:ufc:authored-history:silva-weidman:short",
+    );
+    expect(question).toBeTruthy();
+    expect(question?.answer).toBe("Chris Weidman");
+    expect(question?.aliases).toContain("Weidman");
+    expect(averageFanAnswersMatch(question!, "weidman")).toBe(true);
+    expect(averageFanAnswersMatch(question!, "weidmn")).toBe(true);
+    expect(averageFanAnswersMatch(question!, "Chris")).toBe(false);
   });
 
   it("regrades the durable banks to the four playable grades", () => {
