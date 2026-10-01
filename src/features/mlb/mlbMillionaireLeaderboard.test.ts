@@ -45,12 +45,13 @@ describe("MLB Millionaire leaderboard details", () => {
     const rows = buildMlbMillionaireQuestionDetails(run, {
       outcome: "lost",
       completed_questions: 5,
-      first_miss_question: 3,
+      lifelines_used: 1,
       legacy_detail_limited: true,
     }, {
       outcome: "lost",
+      score: 53,
       completed_questions: 5,
-      first_miss_question: 3,
+      lifelines_used: 1,
     });
 
     expect(rows.slice(0, 4).map((row) => row.status)).toEqual([
