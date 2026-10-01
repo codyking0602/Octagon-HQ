@@ -12,6 +12,7 @@ import {
   AVERAGE_FAN_PLAYABLE_GRADES,
   type AverageFanQuestion,
 } from "../games/averageFanEngine";
+import { AVERAGE_FAN_CONTENT_BANKS } from "../games/averageFanContentBanks";
 
 function contextFrom(
   publication: ReturnType<typeof buildAverageFanDailySetup>,
@@ -61,6 +62,39 @@ describe("Average Fan canonical Daily runtime", () => {
 
       expect(questions.some((question) => question.grade === 2 && question.contentType === "current-event"), scope).toBe(false);
     }
+  });
+
+  it("uses at most one current event and blocks facts already used by another Daily game", () => {
+    const baseline = buildAverageFanDailySetup("ufc", "2026-10-02", "ufc-current-v1", []);
+    const baselineQuestions = baseline.privateSetupEvidence.questions as AverageFanQuestion[];
+    const current = baselineQuestions.filter((question) => question.contentType === "current-event");
+    expect(current.length).toBeLessThanOrEqual(1);
+
+    if (current[0]?.sourceId) {
+      const blocked = buildAverageFanDailySetup("ufc", "2026-10-02", "ufc-current-v1", [{
+        used_current_event_source_ids: [current[0].sourceId],
+      }]);
+      const blockedQuestions = blocked.privateSetupEvidence.questions as AverageFanQuestion[];
+      expect(blockedQuestions.some((question) => question.sourceId === current[0]!.sourceId)).toBe(false);
+      expect(blockedQuestions.filter((question) => question.contentType === "current-event").length).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("falls back to evergreen when every active current-event source has already appeared", () => {
+    const allCurrentSources = [
+      ...new Set(
+        AVERAGE_FAN_CONTENT_BANKS.ufc
+          .filter((question) => question.contentType === "current-event" && question.sourceId)
+          .map((question) => question.sourceId!),
+      ),
+    ];
+
+    // The publication-history metadata may contain more sources than the selected board.
+    const sourceSweep = buildAverageFanDailySetup("ufc", "2026-10-02", "ufc-current-all-v1", [{
+      used_current_event_source_ids: allCurrentSources,
+    }]);
+    const questions = sourceSweep.privateSetupEvidence.questions as AverageFanQuestion[];
+    expect(questions.filter((question) => question.contentType === "current-event").length).toBeLessThanOrEqual(1);
   });
 
   it("starts Football with CFB and alternates CFB/NFL by appearance", () => {
@@ -128,7 +162,15 @@ describe("Average Fan canonical Daily runtime", () => {
     }
 
     expect(result.publicState.phase).toBe("final-decision");
+    expect(result.publicState.final_subject).toBe((publication.privateSetupEvidence.final_question as AverageFanQuestion).subject);
+    expect(result.publicState.final_question).toBeNull();
+    expect(JSON.stringify(result.publicState)).not.toContain(
+      JSON.stringify((publication.privateSetupEvidence.final_question as AverageFanQuestion).prompt),
+    );
     result = advanceAverageFanDailyRuntime(contextFrom(publication, result), { final_decision: "go" });
+    expect((result.publicState.final_question as Record<string, unknown>).id).toBe(
+      (publication.privateSetupEvidence.final_question as AverageFanQuestion).id,
+    );
     const finalQuestion = publication.privateSetupEvidence.final_question as AverageFanQuestion;
     result = advanceAverageFanDailyRuntime(contextFrom(publication, result), { answer: finalQuestion.answer });
     expect(result.complete).toBe(true);

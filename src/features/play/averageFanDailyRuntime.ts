@@ -22,7 +22,7 @@ import type {
   OfficialDailySetupPublication,
 } from "./todaysChallengeRuntime";
 
-export const AVERAGE_FAN_DAILY_CONTENT_VERSION = "average-fan-daily-v2" as const;
+export const AVERAGE_FAN_DAILY_CONTENT_VERSION = "average-fan-daily-v3" as const;
 export const AVERAGE_FAN_DAILY_SCORING_VERSION = "average-fan-score-v2" as const;
 
 type AverageFanDailyScope = "ufc" | "football";
@@ -50,6 +50,12 @@ function records(value: unknown) {
 
 function strings(value: unknown) {
   return Array.isArray(value) ? value.filter((row): row is string => typeof row === "string") : [];
+}
+
+function usedCurrentEventSourceIds(value: unknown) {
+  return new Set(
+    records(value).flatMap((row) => strings(row.used_current_event_source_ids)),
+  );
 }
 
 function parsePublicationHistory(value: unknown): AverageFanPublicationHistoryRow[] {
@@ -103,6 +109,7 @@ function boardFor(
   day: string,
   scheduleVersion: string,
   history: readonly AverageFanPublicationHistoryRow[],
+  blockedCurrentEventSourceIds: ReadonlySet<string>,
 ) {
   const now = `${day}T12:00:00.000Z`;
   const bank = AVERAGE_FAN_CONTENT_BANKS[sport] as readonly AverageFanQuestion[];
@@ -113,15 +120,20 @@ function boardFor(
   );
   const active = bank.filter((question) => averageFanQuestionEligibleForBoard(question, now));
   const fresh = active.filter((question) => !used.has(question.id));
+  const evergreenActive = active.filter((question) => question.contentType === "evergreen");
+  const evergreenFresh = fresh.filter((question) => question.contentType === "evergreen");
   const poolForGrade = (grade: number) => {
-    const freshGrade = fresh.filter((question) => question.grade === grade);
+    const freshGrade = evergreenFresh.filter((question) => question.grade === grade);
     if (freshGrade.length >= 2) return freshGrade;
-    return active.filter((question) => question.grade === grade);
+    return evergreenActive.filter((question) => question.grade === grade);
   };
 
   const seed = `${AVERAGE_FAN_DAILY_CONTENT_VERSION}|${sport}|${scheduleVersion}|${day}`;
   const currentCandidates = deterministicOrder(
-    fresh.filter((question) => question.contentType === "current-event"),
+    fresh.filter((question) => (
+      question.contentType === "current-event"
+      && (!question.sourceId || !blockedCurrentEventSourceIds.has(question.sourceId))
+    )),
     `${seed}|current`,
   );
   const current = currentCandidates[0] ?? null;
@@ -219,8 +231,9 @@ export function buildAverageFanDailySetup(
   if (!scheduleVersion.trim()) throw new Error("Average Fan Daily schedule version is required.");
 
   const history = parsePublicationHistory(publicationHistory);
+  const blockedCurrentEventSourceIds = usedCurrentEventSourceIds(publicationHistory);
   const sport = dailySport(scope, history);
-  const questions = boardFor(sport, day, scheduleVersion, history);
+  const questions = boardFor(sport, day, scheduleVersion, history, blockedCurrentEventSourceIds);
   const finalQuestion = finalFor(sport, day, scheduleVersion, history);
   const questionIds = questions.map((question) => question.id);
   const proof = `${AVERAGE_FAN_DAILY_CONTENT_VERSION}:${stableLineupHash([

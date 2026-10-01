@@ -686,31 +686,37 @@ export function FinalDecision({
   onWalk: () => void;
   onGo: () => void;
 }) {
+  const correctScore = Math.min(100, boardScore + 10);
+  const wrongScore = Math.max(0, boardScore - 10);
+
   return (
     <section className="average-fan-final-card">
-      <p>FINAL QUESTION</p>
+      <p>YOUR FINAL SUBJECT</p>
       <h2>{subject}</h2>
-      <span>
-        {moneyAlive
-          ? <>You've cleared the board with <strong>{boardScore} HQ PTS</strong>.</>
-          : <>The money run is over. You have <strong>{boardScore} HQ PTS</strong> — the Final is worth ±10.</>}
+      <span className="average-fan-final-card__decision-copy">
+        <strong>You have not seen the question yet.</strong> Choose now: bank your score, or risk 10 points to play the Final.
       </span>
-      <div className="average-fan-final-stakes">
-        {moneyAlive ? (
-          <>
-            <div><small>WALK AWAY</small><strong>$500,000</strong></div>
-            <div><small>GO FOR IT</small><strong>$1,000,000</strong></div>
-          </>
-        ) : (
-          <>
-            <div><small>BANK SCORE</small><strong>{boardScore} PTS</strong></div>
-            <div><small>PLAY FINAL</small><strong>±10 PTS</strong></div>
-          </>
-        )}
+      <div className="average-fan-final-stakes average-fan-final-stakes--three">
+        <div>
+          <small>BANK IT</small>
+          <strong>{boardScore} PTS</strong>
+          {moneyAlive ? <em>$500,000</em> : null}
+        </div>
+        <div className="is-upside">
+          <small>FINAL CORRECT</small>
+          <strong>{correctScore} PTS</strong>
+          {moneyAlive ? <em>$1,000,000</em> : <em>+10</em>}
+        </div>
+        <div className="is-risk">
+          <small>FINAL WRONG</small>
+          <strong>{wrongScore} PTS</strong>
+          <em>{moneyAlive ? "$25,000 · -10" : "-10"}</em>
+        </div>
       </div>
+      <strong className="average-fan-final-warning">Once you choose Play Final, you cannot walk away.</strong>
       <div className="average-fan-final-actions">
-        <button type="button" onClick={onWalk}>{moneyAlive ? "WALK AWAY" : "BANK HQ SCORE"}</button>
-        <button type="button" className="is-go" onClick={onGo}>{moneyAlive ? "GO FOR $1M" : "PLAY FINAL"}</button>
+        <button type="button" onClick={onWalk}>BANK {boardScore} PTS</button>
+        <button type="button" className="is-go" onClick={onGo}>PLAY FINAL — RISK 10</button>
       </div>
     </section>
   );

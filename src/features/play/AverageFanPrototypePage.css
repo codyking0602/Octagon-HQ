@@ -2128,12 +2128,25 @@ button.average-fan-help-button {
   font-size: clamp(13px, 1.2vw, 19px);
 }
 
+.average-fan-final-card__decision-copy {
+  max-width: 760px;
+  line-height: 1.35;
+}
+
+.average-fan-final-card__decision-copy strong {
+  color: #fff;
+}
+
 .average-fan-final-stakes {
-  width: min(690px, 90%);
-  margin: clamp(24px, 4vh, 40px) 0 16px;
+  width: min(760px, 92%);
+  margin: clamp(20px, 3vh, 32px) 0 12px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+}
+
+.average-fan-final-stakes--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .average-fan-final-stakes > div {
@@ -2155,6 +2168,32 @@ button.average-fan-help-button {
   display: block;
   margin-top: 3px;
   font-size: clamp(21px, 2.4vw, 38px);
+}
+
+.average-fan-final-stakes em {
+  display: block;
+  margin-top: 4px;
+  color: rgba(255,255,255,.7);
+  font-size: clamp(10px, .85vw, 14px);
+  font-style: normal;
+  font-weight: 900;
+}
+
+.average-fan-final-stakes .is-upside {
+  border-color: rgba(67,229,117,.55);
+  background: rgba(7,82,40,.58);
+}
+
+.average-fan-final-stakes .is-risk {
+  border-color: rgba(255,112,112,.58);
+  background: rgba(104,20,20,.58);
+}
+
+.average-fan-final-warning {
+  margin: 0 0 12px;
+  color: #ffd66b;
+  font-size: clamp(11px, .9vw, 15px);
+  letter-spacing: .02em;
 }
 
 .average-fan-final-actions {

@@ -253,6 +253,35 @@ describe("Average Fan durable content banks", () => {
     }
   });
 
+  it("keeps UFC division choices to real standard UFC weight classes", () => {
+    const allowed = new Set([
+      "Flyweight", "Bantamweight", "Featherweight", "Lightweight",
+      "Welterweight", "Middleweight", "Light Heavyweight", "Heavyweight",
+      "Women's Strawweight", "Women's Flyweight", "Women's Bantamweight", "Women's Featherweight",
+    ]);
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
+      if (!/^average-fan:ufc:g1:.*:division$/.test(question.id)) continue;
+      expect(question.format, question.id).toBe("four-choice");
+      expect(question.choices?.every((choice) => allowed.has(choice)), question.id).toBe(true);
+    }
+  });
+
+  it("keeps single-leg takedown out of fourth grade", () => {
+    const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
+      (row) => row.id === "average-fan:ufc:iq:single-leg:short"
+        || row.id === "average-fan:ufc:iq:single-leg:choice",
+    );
+    expect(question, "single-leg").toBeTruthy();
+    expect(question?.grade).toBe(3);
+  });
+
+  it("uses natural UFC title-fight year wording instead of raw ISO dates", () => {
+    for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc.filter((row) => row.id.includes(":title-identity"))) {
+      expect(question.prompt, question.id).not.toMatch(/\b20\d{2}-\d{2}-\d{2}\b/);
+      expect(question.explanation, question.id).not.toMatch(/\b20\d{2}-\d{2}-\d{2}\b/);
+    }
+  });
+
   it("keeps generated UFC opening-grade fighter recall recognition-first", () => {
     for (const question of AVERAGE_FAN_CONTENT_BANKS.ufc) {
       if (question.grade !== 2 || question.subject !== "Fighters") continue;
@@ -367,11 +396,26 @@ describe("Average Fan durable content banks", () => {
       for (const question of AVERAGE_FAN_CONTENT_BANKS[sport]) {
         if (question.contentType !== "current-event") continue;
         expect(question.expiresAt, question.id).toBeTruthy();
+        expect(question.sourceId, question.id).toBeTruthy();
       }
     }
   });
 
-  it("keeps protected Finals fifth-grade and out of the ordinary grade counts", () => {
+  it("keeps the reviewed CFB Final pool harder than the removed signature-result questions", () => {
+    const finals = AVERAGE_FAN_CONTENT_BANKS.cfb.filter((question) => question.protectedFinal);
+    const banned = [
+      "average-fan:cfb:authored:cfb-final-00-program-indiana",
+      "average-fan:cfb:authored:cfb-final-01-program-texas-rose",
+      "average-fan:cfb:authored:cfb-final-02-program-boise-fiesta",
+      "average-fan:cfb:authored:cfb-final-03-program-app-state",
+    ];
+    expect(finals.some((question) => banned.includes(question.id))).toBe(false);
+    expect(finals.filter((question) => question.id.includes(":authored:cfb-final-")).every(
+      (question) => question.difficultyNudge === 3,
+    )).toBe(true);
+  });
+
+    it("keeps protected Finals fifth-grade and out of the ordinary grade counts", () => {
     for (const sport of sports) {
       const bank = AVERAGE_FAN_CONTENT_BANKS[sport];
       for (const question of bank.filter((row) => row.protectedFinal)) {
