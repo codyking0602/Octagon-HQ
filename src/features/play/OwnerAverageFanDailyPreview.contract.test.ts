@@ -41,7 +41,8 @@ describe("owner Average Fan canonical Daily preview", () => {
     expect(previewSource).toContain("advanceAverageFanDailyRuntime(context, action)");
     expect(previewSource).toContain('"get_owner_average_fan_daily_preview_progress"');
     expect(previewSource).toContain('"save_owner_average_fan_daily_preview_progress"');
-    expect(previewSource).toContain('"grade_owner_average_fan_daily_preview"');
+    expect(edgeSource).toContain('"grade_owner_average_fan_daily_preview"');
+    expect(previewSource).toContain("gradeOwnerAverageFanPreview(");
     expect(previewSource).not.toContain("save_daily_challenge_runtime_progress");
     expect(previewSource).not.toContain("finalizePending");
   });
