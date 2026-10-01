@@ -32,9 +32,9 @@ describe("Average Fan Daily-only registry", () => {
     expect(playGamesForSport("ufc").some((game) => game.id === "average-fan")).toBe(false);
   });
 
-  it("closes the former Casual and preview URLs while preserving the Daily route", () => {
+  it("closes public Casual access while preserving the Daily route and hidden owner preview", () => {
     expect(router).toContain('path: "play/average-fan", element: <TodayChallengeGameRoute gameType="average_fan" casual={<Navigate to="/play" replace />} />');
-    expect(router).toContain('path: "play/average-fan-preview", element: <Navigate to="/play" replace />');
+    expect(router).toContain('path: "play/average-fan-preview", element: <OwnerAverageFanDailyPreviewPage />');
     expect(router).not.toContain("AverageFanPrototypePage");
   });
 });
