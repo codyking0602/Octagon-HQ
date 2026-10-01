@@ -233,13 +233,17 @@ describe("Millionaire progression and settlement", () => {
     });
   });
 
-  it("makes the clean Q8 decision 85 miss / 90 walk / 100 hit before lifeline penalties", () => {
+  it("makes the clean Q8 decision 79 miss / 84 walk / 94 hit after all three lifelines", () => {
     const run = fixtureRun();
+    let state = createMillionaireState(run);
 
-    let state = answerCorrect(run, createMillionaireState(run), 7);
     state = advanceMillionaireRuntime(run, state, { type: "use_lifeline", lifeline: "fifty-fifty" }).state;
+    state = advanceMillionaireRuntime(run, state, { type: "answer", choiceId: "A" }).state;
     state = advanceMillionaireRuntime(run, state, { type: "use_lifeline", lifeline: "stat-sheet" }).state;
+    state = advanceMillionaireRuntime(run, state, { type: "answer", choiceId: "A" }).state;
     state = advanceMillionaireRuntime(run, state, { type: "use_lifeline", lifeline: "double-dip" }).state;
+    state = advanceMillionaireRuntime(run, state, { type: "answer", choiceId: "A" }).state;
+    state = answerCorrect(run, state, 4);
 
     const walked = advanceMillionaireRuntime(run, state, { type: "walk_away" }).state;
     expect(walked).toMatchObject({ baseScore: 90, score: 84, finalMoney: 500_000 });
