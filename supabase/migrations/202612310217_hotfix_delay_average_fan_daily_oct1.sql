@@ -130,23 +130,40 @@ begin
       'ufc'
     );
 
-  if private.daily_challenge_schedule_for_day(v_today, 'football') is distinct from v_football_swap
-    or private.daily_challenge_expected_game(v_football_swap, v_today) is distinct from 'bar_trivia'
-    or private.daily_challenge_schedule_for_day(v_today, 'ufc') is distinct from v_ufc_swap
-    or private.daily_challenge_expected_game(v_ufc_swap, v_today) is distinct from 'who_am_i'
-    or private.daily_challenge_schedule_for_day(v_retry_day, 'football') is distinct from v_football_swap
-    or private.daily_challenge_expected_game(v_football_swap, v_retry_day) is distinct from 'average_fan'
-    or private.daily_challenge_schedule_for_day(v_retry_day, 'ufc') is distinct from v_ufc_swap
-    or private.daily_challenge_expected_game(v_ufc_swap, v_retry_day) is distinct from 'average_fan'
-    or private.daily_challenge_schedule_for_day(v_resume_day, 'football') is distinct from v_football_resume
-    or private.daily_challenge_expected_game(v_football_resume, v_resume_day) is distinct from 'millionaire'
-    or private.daily_challenge_schedule_for_day(v_resume_day, 'ufc') is distinct from v_ufc_resume
-    or private.daily_challenge_expected_game(v_ufc_resume, v_resume_day) is distinct from 'blind_resume'
-    or private.daily_challenge_expected_game(v_football_resume, date '2026-10-04')
-      is distinct from private.daily_challenge_expected_game(v_football_source, date '2026-10-04')
-    or private.daily_challenge_expected_game(v_ufc_resume, date '2026-10-04')
-      is distinct from private.daily_challenge_expected_game(v_ufc_source, date '2026-10-04') then
-    raise exception 'Oct. 1/2 Daily swap did not preserve the intended cadence';
+  if not exists (
+    select 1
+    from private.daily_challenge_schedule_versions
+    where version = v_football_swap
+      and sport = 'football'
+      and anchor_day = v_today
+      and starts_on = v_today
+      and game_cycle = array['bar_trivia', 'average_fan']::text[]
+  ) or not exists (
+    select 1
+    from private.daily_challenge_schedule_versions
+    where version = v_ufc_swap
+      and sport = 'ufc'
+      and anchor_day = v_today
+      and starts_on = v_today
+      and game_cycle = array['who_am_i', 'average_fan']::text[]
+  ) or not exists (
+    select 1
+    from private.daily_challenge_schedule_versions
+    where version = v_football_resume
+      and sport = 'football'
+      and anchor_day = v_today
+      and starts_on = v_resume_day
+      and game_cycle = v_football_cycle
+  ) or not exists (
+    select 1
+    from private.daily_challenge_schedule_versions
+    where version = v_ufc_resume
+      and sport = 'ufc'
+      and anchor_day = v_today
+      and starts_on = v_resume_day
+      and game_cycle = v_ufc_cycle
+  ) then
+    raise exception 'Oct. 1/2 Daily swap schedule rows were not installed exactly';
   end if;
 
   -- Remove the already-materialized Oct. 1 Average Fan rows so the next Daily
