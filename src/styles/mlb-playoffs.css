@@ -4087,3 +4087,26 @@
     padding: 9px 12px 11px;
   }
 }
+
+
+.mlb-millionaire-recap{overflow:hidden;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+.mlb-millionaire-recap>header{padding:14px;border-bottom:1px solid var(--border)}
+.mlb-millionaire-recap>header span,.mlb-millionaire-recap__legacy>span{color:var(--text-muted);font-size:.64rem;font-weight:900;letter-spacing:.1em}
+.mlb-millionaire-recap>header h3{margin:3px 0 0;font-size:.95rem}
+.mlb-millionaire-recap__questions{display:grid;gap:1px;background:var(--border)}
+.mlb-millionaire-recap__row{min-width:0;background:var(--surface-raised)}
+.mlb-millionaire-recap__row summary,.mlb-millionaire-recap__row.is-unreached{display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:9px;min-width:0;padding:10px 12px;list-style:none}
+.mlb-millionaire-recap__row summary{cursor:pointer}.mlb-millionaire-recap__row summary::-webkit-details-marker{display:none}
+.mlb-millionaire-recap__row>summary>b,.mlb-millionaire-recap__row.is-unreached>b{color:var(--text-muted);font-size:.68rem}
+.mlb-millionaire-recap__row>summary>span,.mlb-millionaire-recap__row.is-unreached>span{min-width:0}
+.mlb-millionaire-recap__row>summary strong,.mlb-millionaire-recap__row.is-unreached strong{overflow-wrap:anywhere;font-size:.78rem;line-height:1.25}
+.mlb-millionaire-recap__row>summary em,.mlb-millionaire-recap__row.is-unreached>em{font-size:.56rem;font-style:normal;font-weight:900;white-space:nowrap}
+.mlb-millionaire-recap__row.is-correct>summary em{color:#75c98a}.mlb-millionaire-recap__row.is-wrong>summary em{color:#ff827f}.mlb-millionaire-recap__row.is-unreached{opacity:.45}
+.mlb-millionaire-recap__detail{display:grid;gap:9px;padding:0 12px 13px 53px}.mlb-millionaire-recap__choices{display:grid;gap:6px}
+.mlb-millionaire-recap__choices>div{display:grid;grid-template-columns:22px minmax(0,1fr) auto;align-items:center;gap:8px;min-height:38px;padding:7px 9px;border:1px solid var(--border);border-radius:9px}
+.mlb-millionaire-recap__choices>div.is-selected{border-width:2px}.mlb-millionaire-recap__choices>div.is-correct{border-color:#75c98a}.mlb-millionaire-recap__choices>div.is-wrong{border-color:#ff827f}
+.mlb-millionaire-recap__choices b,.mlb-millionaire-recap__choices span{font-size:.72rem}.mlb-millionaire-recap__choices em{font-size:.52rem;font-style:normal;font-weight:900}
+.mlb-millionaire-recap__tags{display:flex;flex-wrap:wrap;gap:5px}.mlb-millionaire-recap__tags span{padding:4px 6px;border:1px solid var(--border);border-radius:999px;color:var(--text-muted);font-size:.52rem;font-weight:900}
+.mlb-millionaire-recap__detail>p,.mlb-millionaire-recap__legacy p{margin:0;color:var(--text-secondary);font-size:.7rem;line-height:1.35}.mlb-millionaire-recap__detail>small{color:var(--text-muted);font-size:.58rem;font-weight:800}
+.mlb-millionaire-recap__legacy{display:grid;gap:5px;padding:14px;border-top:1px solid var(--border)}.mlb-millionaire-recap__legacy strong{font-size:.86rem}
+@media(max-width:520px){.mlb-millionaire-recap__detail{padding-left:12px}}
