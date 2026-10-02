@@ -22,6 +22,10 @@ import {
   FootballWeeklySuperteamGate,
 } from "./FootballWeeklySuperteamGate";
 import {
+  FootballWeeklyNflTeamSeasonFinalResult,
+  FootballWeeklyNflTeamSeasonGate,
+} from "./FootballWeeklyNflTeamSeasonGate";
+import {
   footballWeeklyAuctionTeamIdentity,
   footballWeeklyAuctionTeamStyle,
   type FootballWeeklyAuctionTeamIdentity,
@@ -452,6 +456,7 @@ export function FootballWeeklyAuctionGate({
   error,
   forceBoard = false,
   onSubmit,
+  onSubmitWildcard,
   onAcknowledgeFinal,
   onContinue,
 }: {
@@ -460,6 +465,7 @@ export function FootballWeeklyAuctionGate({
   error: string | null;
   forceBoard?: boolean;
   onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
+  onSubmitWildcard: (entries: number, rankings: string[]) => Promise<void>;
   onAcknowledgeFinal: (weekStart: string) => Promise<void>;
   onContinue: () => void;
 }) {
@@ -476,6 +482,15 @@ export function FootballWeeklyAuctionGate({
     if (state.previous_final.subject_key === "nfl-build-qb") {
       return (
         <FootballWeeklyBuildQbFinalResult
+          result={state.previous_final}
+          busy={busy}
+          onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
+        />
+      );
+    }
+    if (state.previous_final.subject_key === "nfl-best-team-seasons-since-2000") {
+      return (
+        <FootballWeeklyNflTeamSeasonFinalResult
           result={state.previous_final}
           busy={busy}
           onAcknowledge={() => void onAcknowledgeFinal(state.previous_final!.week_start)}
@@ -512,6 +527,20 @@ export function FootballWeeklyAuctionGate({
         error={error}
         forceBoard={forceBoard}
         onSubmit={onSubmit}
+        onContinue={onContinue}
+      />
+    );
+  }
+
+  if (state.subject_key === "nfl-best-team-seasons-since-2000") {
+    return (
+      <FootballWeeklyNflTeamSeasonGate
+        state={state}
+        busy={busy}
+        error={error}
+        forceBoard={forceBoard}
+        onSubmit={onSubmit}
+        onSubmitWildcard={onSubmitWildcard}
         onContinue={onContinue}
       />
     );
