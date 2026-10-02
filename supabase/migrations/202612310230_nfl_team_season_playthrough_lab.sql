@@ -471,7 +471,7 @@ returns jsonb
 language plpgsql
 security definer
 set search_path=''
-as $
+as $lab_get$
 declare
   v_owner uuid;
   v_day integer;
@@ -499,7 +499,7 @@ begin
 
   return private.football_weekly_nfl_team_season_lab_state(v_owner,p_seat_index);
 end;
-$;
+$lab_get$;
 revoke all on function public.get_my_football_weekly_nfl_team_season_lab(integer)
   from public,anon;
 grant execute on function public.get_my_football_weekly_nfl_team_season_lab(integer)
