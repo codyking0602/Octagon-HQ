@@ -347,6 +347,9 @@ begin
   if p_profile_id is null then raise exception 'profile required'; end if;
   if p_entries not between 0 and 5 then raise exception 'Wildcard entries must be between 0 and 5'; end if;
   if coalesce(array_length(p_rankings,1),0)>4 then raise exception 'Wildcard ranking accepts at most four teams'; end if;
+  if p_entries>0 and coalesce(array_length(p_rankings,1),0)=0 then
+    raise exception 'Wildcard entries require at least one acceptable ranked team';
+  end if;
   if coalesce(array_length(p_rankings,1),0)<>coalesce(array_length(array(select distinct unnest(p_rankings)),1),0) then
     raise exception 'Wildcard ranking cannot contain duplicates';
   end if;
@@ -492,7 +495,9 @@ begin
   from private.football_weekly_nfl_team_season_wildcard_submissions submission
   where submission.week_start=p_week_start;
 
-  if p_at<v_lock_at and v_submissions<v_participants then
+  -- Entries stay sealed and editable for the whole Day 7 window. Merely having
+  -- every participant submit early must never freeze the field or reroll the finale.
+  if p_at<v_lock_at then
     return;
   end if;
 
@@ -927,8 +932,8 @@ begin
     v_week_start,v_profile,p_entries,v_rankings,p_at
   );
 
-  -- Resolution is idempotent. Before lock it resolves only if every field member
-  -- has submitted; at/after lock missing players become zero-entry passes.
+  -- Resolution is idempotent and remains a no-op until the Day 7 lock.
+  -- The shared Weekly Auction maintainer will call the resolver at the deadline.
   perform private.resolve_football_weekly_nfl_team_season_wildcard(
     v_week_start,p_at
   );
