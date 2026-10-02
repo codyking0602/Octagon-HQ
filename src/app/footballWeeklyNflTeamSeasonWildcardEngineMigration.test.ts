@@ -42,7 +42,10 @@ describe("NFL team-season Weekly Auction Day 7 Wildcard engine", () => {
     expect(reapingBlock).toContain("submission.entry_count>0");
   });
 
-  it("persists draw order so refreshes cannot reroll the wheels", () => {
+  it("keeps entries editable until the Day 7 lock and then persists the wheel result", () => {
+    expect(migration).toContain("if p_at<v_lock_at then");
+    expect(migration).toContain("return;");
+    expect(migration).toContain("Merely having");
     expect(migration).toContain("football_weekly_nfl_team_season_wildcard_priority_draws");
     expect(migration).toContain("football_weekly_nfl_team_season_wildcard_resolutions");
     expect(migration).toContain("if exists(");
