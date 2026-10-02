@@ -205,6 +205,7 @@ export default function FootballWeeklyNflTeamSeasonLabPage() {
               busy={busy}
               onAcknowledge={() => undefined}
               showNewWeekAction={false}
+              playerLabel={lab.seats.find((seat) => seat.seat_index === seatIndex)?.display_name}
             />
           ) : lab.state ? (
             <FootballWeeklyNflTeamSeasonGate
