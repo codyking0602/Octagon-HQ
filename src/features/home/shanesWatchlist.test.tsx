@@ -9,13 +9,14 @@ import { shanesWatchlist, watchMovement } from "./shanesWatchlist";
 describe("Shane's ranked watchlist", () => {
   it("keeps one ordered Top 15 model and the approved fight-highlight links", () => {
     expect(shanesWatchlist.capacity).toBe(15);
-    expect(shanesWatchlist.lastUpdated).toBe("September 2026");
-    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(shanesWatchlist.lastUpdated).toBe("October 2026");
+    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     expect(shanesWatchlist.fighters.map((fighter) => fighter.id)).toEqual([
       "quillan-salkilld",
       "raul-rosas-jr",
       "abdul-rakhman-yakhyaev",
       "bilal-hasan",
+      "ateba-gautier",
       "fatima-kline",
       "daniil-donchenko",
       "ty-miller",
@@ -69,22 +70,40 @@ describe("Shane's ranked watchlist", () => {
     });
     expect(watchMovement(bilal)).toEqual({ label: "↓1", direction: "down" });
 
-    const fatima = shanesWatchlist.fighters[4];
-    expect(fatima).toMatchObject({ id: "fatima-kline", rank: 5, previousRank: 5 });
-    expect(watchMovement(fatima)).toEqual({ label: "—", direction: "same" });
+    const ateba = shanesWatchlist.fighters[4];
+    expect(ateba).toMatchObject({
+      id: "ateba-gautier",
+      rank: 5,
+      previousRank: null,
+      nickname: "The Storm",
+      division: "Middleweight",
+      age: 24,
+      country: "Cameroon",
+      ufcRecord: "5–0",
+      ufcWinStreak: "5",
+      ufcFinishes: "4",
+      photoUrl: "/assets/fighters/ateba-gautier-thumb.webp",
+      videoUrl: "https://youtube.com/shorts/NwjKZahYvbw?is=PXQ2DXkjJvRt8bVm",
+    });
+    expect(existsSync("public/assets/fighters/ateba-gautier-thumb.webp")).toBe(true);
+    expect(watchMovement(ateba)).toEqual({ label: "NEW", direction: "new" });
 
-    const daniil = shanesWatchlist.fighters[5];
-    expect(daniil).toMatchObject({ id: "daniil-donchenko", rank: 6, previousRank: 6 });
-    expect(watchMovement(daniil)).toEqual({ label: "—", direction: "same" });
+    const fatima = shanesWatchlist.fighters[5];
+    expect(fatima).toMatchObject({ id: "fatima-kline", rank: 6, previousRank: 5 });
+    expect(watchMovement(fatima)).toEqual({ label: "↓1", direction: "down" });
 
-    const ty = shanesWatchlist.fighters[6];
-    expect(ty).toMatchObject({ id: "ty-miller", rank: 7, previousRank: 7 });
-    expect(watchMovement(ty)).toEqual({ label: "—", direction: "same" });
+    const daniil = shanesWatchlist.fighters[6];
+    expect(daniil).toMatchObject({ id: "daniil-donchenko", rank: 7, previousRank: 6 });
+    expect(watchMovement(daniil)).toEqual({ label: "↓1", direction: "down" });
 
-    const gable = shanesWatchlist.fighters[7];
+    const ty = shanesWatchlist.fighters[7];
+    expect(ty).toMatchObject({ id: "ty-miller", rank: 8, previousRank: 7 });
+    expect(watchMovement(ty)).toEqual({ label: "↓1", direction: "down" });
+
+    const gable = shanesWatchlist.fighters[8];
     expect(gable).toMatchObject({
       id: "gable-steveson",
-      rank: 8,
+      rank: 9,
       previousRank: 8,
       status: "Concern",
       ufcRecord: "1–1",
@@ -93,7 +112,7 @@ describe("Shane's ranked watchlist", () => {
       photoUrl: "/assets/fighters/gable-steveson-thumb.webp",
     });
     expect(existsSync("public/assets/fighters/gable-steveson-thumb.webp")).toBe(true);
-    expect(watchMovement(gable)).toEqual({ label: "—", direction: "same" });
+    expect(watchMovement(gable)).toEqual({ label: "↓1", direction: "down" });
   });
 
   it("keeps the Home preview to a compact top-three board", () => {
