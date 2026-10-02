@@ -84,6 +84,13 @@ describe("Football team-themed Daily packs", () => {
     const traditions = pack.fastMoney.find((question) => question.id.endsWith("fast-traditions"))!;
     expect(matchFamilyFeudAnswer(pack, traditions, "Hook em").status).toBe("matched");
 
+    const fastAnswerNames = pack.fastMoney.flatMap((question) =>
+      question.answers.map((ranked) =>
+        pack.entities.find((entity) => entity.id === ranked.entityId)?.displayName ?? "",
+      ),
+    );
+    expect(new Set(fastAnswerNames).size).toBe(fastAnswerNames.length);
+
     const normal = buildSportsFeudPack("cfb", "2026-11-26");
     expect([...normal.mainBoards, ...normal.fastMoney].some((question) => question.id.startsWith("theme-"))).toBe(false);
   });
