@@ -50,7 +50,7 @@ function themedMillionaireRun(prefix: string, seeds: readonly ThemedMillionaireS
       choices: MILLIONAIRE_CHOICE_IDS.map((id, choiceIndex) => ({
         id,
         text: seed.choices[choiceIndex]!,
-      })) as MillionaireRuntimeQuestion["choices"],
+      })) as unknown as MillionaireRuntimeQuestion["choices"],
       correctChoiceId,
       explanation: seed.explanation,
       statSheet: q8 ? null : seed.statSheet,
