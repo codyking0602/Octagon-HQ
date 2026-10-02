@@ -471,8 +471,11 @@ returns jsonb
 language plpgsql
 security definer
 set search_path=''
-as $$
-declare v_owner uuid;
+as $
+declare
+  v_owner uuid;
+  v_day integer;
+  v_week_start date;
 begin
   v_owner:=private.football_weekly_superteam_lab_owner();
   if auth.uid() is distinct from v_owner then
@@ -484,9 +487,19 @@ begin
   ) then
     perform private.reset_football_weekly_nfl_team_season_lab(v_owner);
   end if;
+
+  select current_day,lab_week_start
+  into v_day,v_week_start
+  from private.football_weekly_nfl_team_season_lab_runs
+  where owner_profile_id=v_owner;
+
+  if v_day=7 then
+    perform private.materialize_football_weekly_nfl_team_season_wildcard(v_week_start);
+  end if;
+
   return private.football_weekly_nfl_team_season_lab_state(v_owner,p_seat_index);
 end;
-$$;
+$;
 revoke all on function public.get_my_football_weekly_nfl_team_season_lab(integer)
   from public,anon;
 grant execute on function public.get_my_football_weekly_nfl_team_season_lab(integer)
@@ -657,6 +670,12 @@ begin
     update private.football_weekly_nfl_team_season_lab_runs
     set current_day=current_day+1,updated_at=now()
     where owner_profile_id=v_owner;
+
+    if v_run.current_day=6 then
+      perform private.materialize_football_weekly_nfl_team_season_wildcard(
+        v_run.lab_week_start
+      );
+    end if;
   else
     v_resolve_at:=((v_run.lab_week_start+7)::date+time '00:01')
       at time zone 'America/Chicago';
