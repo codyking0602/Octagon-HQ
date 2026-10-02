@@ -77,12 +77,12 @@ export default function FootballWeeklyNflTeamSeasonLabPage() {
     }
   }
 
-  async function submitWildcard(entries: number, rankings: string[]) {
+  async function submitWildcard(entries: number, rankings: string[], cutItemReference: string | null) {
     if (!repository || busy) return;
     setBusy(true);
     setError(null);
     try {
-      setLab(await repository.submitNflTeamSeasonLabWildcard(seatIndex, entries, rankings));
+      setLab(await repository.submitNflTeamSeasonLabWildcard(seatIndex, entries, rankings, cutItemReference));
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "That lab Wildcard choice could not be saved.");
     } finally {
