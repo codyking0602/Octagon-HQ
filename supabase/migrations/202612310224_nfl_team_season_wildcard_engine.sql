@@ -345,7 +345,7 @@ declare
   v_rank integer:=0;
 begin
   if p_profile_id is null then raise exception 'profile required'; end if;
-  if p_entries not between 0 and 5 then raise exception 'Wildcard entries must be between 0 and 5'; end if;
+  if p_entries is null or p_entries not between 0 and 5 then raise exception 'Wildcard entries must be between 0 and 5'; end if;
   if coalesce(array_length(p_rankings,1),0)>4 then raise exception 'Wildcard ranking accepts at most four teams'; end if;
   if p_entries>0 and coalesce(array_length(p_rankings,1),0)=0 then
     raise exception 'Wildcard entries require at least one acceptable ranked team';
@@ -920,7 +920,7 @@ declare
   v_rankings text[];
 begin
   if v_profile is null then raise exception 'sign in required'; end if;
-  if jsonb_typeof(p_rankings)<>'array' then raise exception 'Wildcard rankings must be an array'; end if;
+  if p_rankings is null or jsonb_typeof(p_rankings)<>'array' then raise exception 'Wildcard rankings must be an array'; end if;
 
   select coalesce(array_agg(value order by ordinal),array[]::text[])
   into v_rankings
