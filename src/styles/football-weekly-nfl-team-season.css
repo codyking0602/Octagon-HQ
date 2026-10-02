@@ -51,6 +51,94 @@
   line-height: 1.4;
 }
 
+.football-weekly-nfl-team-season__explainer {
+  display: grid;
+  gap: 8px;
+}
+
+.football-weekly-nfl-team-season__explainer article {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border: 1px solid rgba(255, 255, 255, .075);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .04);
+}
+
+.football-weekly-nfl-team-season__explainer article > b {
+  color: #a8dcf8;
+  font-size: .62rem;
+  letter-spacing: .07em;
+}
+
+.football-weekly-nfl-team-season__explainer article > strong {
+  font-size: .82rem;
+  line-height: 1.25;
+}
+
+.football-weekly-nfl-team-season__explainer article > span {
+  color: rgba(255, 255, 255, .62);
+  font-size: .76rem;
+  line-height: 1.38;
+}
+
+.football-weekly-nfl-team-season__rules-details {
+  border: 1px solid rgba(126, 199, 242, .15);
+  border-radius: 12px;
+  background: rgba(126, 199, 242, .045);
+  overflow: hidden;
+}
+
+.football-weekly-nfl-team-season__rules-details summary {
+  padding: 11px 12px;
+  cursor: pointer;
+  color: #a8dcf8;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .065em;
+}
+
+.football-weekly-nfl-team-season__rules-details > div {
+  display: grid;
+  gap: 6px;
+  padding: 0 12px 12px;
+}
+
+.football-weekly-nfl-team-season__rules-details p {
+  margin: 0;
+  color: rgba(255, 255, 255, .64);
+  font-size: .75rem;
+  line-height: 1.4;
+}
+
+.football-weekly-nfl-team-season__safe-pass {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border: 1px solid rgba(32, 180, 134, .24);
+  border-radius: 12px;
+  background: rgba(32, 180, 134, .08);
+}
+
+.football-weekly-nfl-team-season__safe-pass b {
+  color: #75e0be;
+  font-size: .72rem;
+  letter-spacing: .06em;
+}
+
+.football-weekly-nfl-team-season__safe-pass span {
+  color: rgba(255, 255, 255, .65);
+  font-size: .75rem;
+  line-height: 1.35;
+}
+
+.football-weekly-nfl-team-season__wildcard-cover {
+  border-color: rgba(235, 111, 146, .2);
+  background:
+    radial-gradient(circle at 100% 0, rgba(235, 111, 146, .1), transparent 34%),
+    linear-gradient(155deg, rgba(10, 19, 27, .98), rgba(16, 29, 39, .98));
+}
+
 .football-weekly-nfl-team-season__cover > button,
 .football-weekly-nfl-team-season__primary {
   min-height: 48px;
@@ -481,6 +569,33 @@
 .football-weekly-nfl-team-season__resolution {
   display: grid;
   gap: 10px;
+}
+
+.football-weekly-nfl-team-season__no-entry-result {
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+  border: 1px solid rgba(126, 199, 242, .16);
+  border-radius: 13px;
+  background: rgba(126, 199, 242, .055);
+}
+
+.football-weekly-nfl-team-season__no-entry-result small {
+  color: rgba(255, 255, 255, .48);
+  font-size: .62rem;
+  font-weight: 900;
+  letter-spacing: .065em;
+}
+
+.football-weekly-nfl-team-season__no-entry-result strong {
+  color: #fff;
+  font-size: 1rem;
+}
+
+.football-weekly-nfl-team-season__no-entry-result span {
+  color: rgba(255, 255, 255, .62);
+  font-size: .76rem;
+  line-height: 1.4;
 }
 
 .football-weekly-nfl-team-season__wheel-grid {
