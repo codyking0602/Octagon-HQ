@@ -379,6 +379,12 @@ const superteamAvailableSchema = z.object({
   bids: z.record(z.string(), superteamBidSchema).default({}),
 });
 
+const nflTeamSeasonBidSchema = z.union([
+  superteamBidSchema,
+  z.coerce.number().int().min(0).max(50),
+]);
+const nflTeamSeasonBidMapSchema = z.record(z.string(), nflTeamSeasonBidSchema);
+
 const nflTeamSeasonAvailableSchema = z.object({
   ...commonActiveFields,
   subject_key: z.literal("nfl-best-team-seasons-since-2000"),
@@ -387,10 +393,7 @@ const nflTeamSeasonAvailableSchema = z.object({
   teams: z.array(nflTeamSeasonCardSchema).max(7),
   prior_results: z.array(nflTeamSeasonPriorResultSchema).default([]),
   collection: z.array(nflTeamSeasonCollectionSchema).default([]),
-  bids: z.record(
-    z.string(),
-    z.union([superteamBidSchema, z.coerce.number().int().min(0).max(50)]),
-  ).default({}),
+  bids: nflTeamSeasonBidMapSchema.default({}),
   wildcard: nflWildcardStateSchema.nullable(),
 });
 
@@ -500,6 +503,25 @@ async function rpc(client: Client, name: string, args?: Record<string, unknown>)
   return data;
 }
 
+async function withNflTeamSeasonLabRankedBids(
+  client: Client,
+  lab: FootballWeeklyNflTeamSeasonLabState,
+) {
+  if (!lab.state || lab.day_index < 1 || lab.day_index > 6) return lab;
+  const rankedBids = nflTeamSeasonBidMapSchema.parse(await rpc(
+    client,
+    "get_my_football_weekly_nfl_team_season_lab_ranked_bids",
+    { p_seat_index: lab.seat_index },
+  ));
+  return {
+    ...lab,
+    state: {
+      ...lab.state,
+      bids: rankedBids,
+    },
+  };
+}
+
 export interface FootballWeeklyAuctionRepository {
   load(): Promise<FootballWeeklyAuctionState>;
   loadHistory(): Promise<FootballWeeklyFinal[]>;
@@ -556,9 +578,10 @@ export function createFootballWeeklyAuctionRepository(
       }));
     },
     async loadNflTeamSeasonLab(seatIndex = 1) {
-      return nflTeamSeasonLabSchema.parse(await rpc(client, "get_my_football_weekly_nfl_team_season_lab", {
+      const lab = nflTeamSeasonLabSchema.parse(await rpc(client, "get_my_football_weekly_nfl_team_season_lab", {
         p_seat_index: seatIndex,
       }));
+      return withNflTeamSeasonLabRankedBids(client, lab);
     },
     async resetNflTeamSeasonLab() {
       return nflTeamSeasonLabSchema.parse(await rpc(client, "reset_my_football_weekly_nfl_team_season_lab"));
@@ -566,10 +589,11 @@ export function createFootballWeeklyAuctionRepository(
     async submitNflTeamSeasonLab(seatIndex, bids) {
       const payload: Record<string, FootballWeeklyAuctionBidInput> = {};
       for (const [slot, value] of Object.entries(bids)) payload[slot] = value;
-      return nflTeamSeasonLabSchema.parse(await rpc(client, "submit_my_football_weekly_nfl_team_season_lab_bids", {
+      const lab = nflTeamSeasonLabSchema.parse(await rpc(client, "submit_my_football_weekly_nfl_team_season_lab_bids", {
         p_seat_index: seatIndex,
         p_bids: payload,
       }));
+      return withNflTeamSeasonLabRankedBids(client, lab);
     },
     async submitNflTeamSeasonLabWildcard(seatIndex, entries, rankings) {
       return nflTeamSeasonLabSchema.parse(await rpc(client, "submit_my_football_weekly_nfl_team_season_lab_wildcard", {
