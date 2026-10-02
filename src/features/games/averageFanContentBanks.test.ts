@@ -166,6 +166,7 @@ describe("Average Fan durable content banks", () => {
     expect(question?.aliases).toContain("Weidman");
     expect(averageFanAnswersMatch(question!, "weidman")).toBe(true);
     expect(averageFanAnswersMatch(question!, "weidmn")).toBe(true);
+    expect(averageFanAnswersMatch(question!, "Chris Wiedman")).toBe(true);
     expect(averageFanAnswersMatch(question!, "Chris")).toBe(false);
   });
 
