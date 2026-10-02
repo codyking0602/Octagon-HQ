@@ -110,6 +110,15 @@ begin
   )>0 then
     raise exception 'active NFL Team-Seasons getter leaks hidden grades';
   end if;
+
+  if position(
+    'return private.get_my_football_weekly_nfl_team_season(p_at)'
+    in lower(pg_get_functiondef(
+      'public.submit_my_football_weekly_nfl_team_season_wildcard(integer,jsonb,timestamptz)'::regprocedure
+    ))
+  )=0 then
+    raise exception 'public Wildcard submit does not return the full Weekly Auction state';
+  end if;
 end;
 $nfl_team_season_runtime$;
 
