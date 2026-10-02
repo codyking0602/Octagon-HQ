@@ -163,7 +163,7 @@ export default function FootballWeeklyAuctionCenterPage() {
           <span>
             <small>OWNER QA · NFL TEAM-SEASONS</small>
             <strong>BEST NFL TEAM-SEASONS PLAYTHROUGH</strong>
-            <em>Control five seats through six auction days and the full Wildcard/Reaping finale.</em>
+            <em>Control five seats through six auction days and the full Wildcard/Risk Draw finale.</em>
           </span>
           <b>OPEN →</b>
         </button>
