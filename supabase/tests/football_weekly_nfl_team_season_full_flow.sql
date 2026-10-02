@@ -179,12 +179,20 @@ begin
 
   v_resolve_at:=((v_week+7)+time '00:00:01')
     at time zone 'America/Chicago';
-  perform private.resolve_football_weekly_nfl_team_season_wildcard(
-    v_week,v_resolve_at
-  );
-  perform private.finalize_football_weekly_nfl_team_season_week(
-    v_week,v_resolve_at
-  );
+
+  -- The first request after Monday can be a Tuesday request for the next
+  -- calendar auction week. The maintainer must still finish the prior NFL
+  -- finale from its persisted submissions without rerolling either wheel.
+  perform private.maintain_football_weekly_auction(v_resolve_at);
+
+  if not exists(
+    select 1
+    from private.football_weekly_auction_weeks week
+    where week.week_start=v_week
+      and week.finalized_at is not null
+  ) then
+    raise exception 'Tuesday rollover did not finalize the prior NFL Team-Seasons week';
+  end if;
 
   select count(*)::integer into v_count
   from private.football_weekly_nfl_team_season_wildcard_priority_draws
