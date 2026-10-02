@@ -155,7 +155,8 @@ describe("Football Weekly Auction live contract", () => {
     expect(runtime).toContain("WEEKLY_AUCTION_REQUIRED");
     expect(page).toContain("createFootballWeeklyAuctionRepository");
     expect(page).toContain("FootballWeeklyAuctionGate");
-    expect(page).toContain("WEEKLY AUCTION · EDIT BIDS");
+    expect(page).toContain('"EDIT BIDS"');
+    expect(page).toContain('"EDIT WILDCARD"');
   });
 
   it("preserves the transition title and carries the Sep 14 win into the first native Tuesday week", () => {
