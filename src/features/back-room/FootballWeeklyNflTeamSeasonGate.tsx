@@ -198,7 +198,9 @@ function PriorResults({ state }: { state: FootballWeeklyNflTeamSeasonState }) {
       {state.prior_results.map((result) => (
         <details key={result.item_reference}>
           <summary>
-            <span>{result.team_name} <b>{result.season_year}</b></span>
+            <span>
+              <TeamSeasonLink teamCode={result.team_code} teamName={result.team_name} seasonYear={result.season_year} />
+            </span>
             <strong>{(result.winner_display_name ?? "Unclaimed") + " · " + (result.winning_bid ? "$" + result.winning_bid : "Pass")}</strong>
           </summary>
           <div>
@@ -405,8 +407,7 @@ function RankingBoard({
             <button type="button" className={rank >= 0 ? "is-selected" : ""} key={team.item_reference} disabled={disabled} onClick={() => toggle(team.item_reference)}>
               <TeamMark teamCode={team.team_code} label={team.primary_name} />
               <span className="football-weekly-nfl-team-season__wildcard-name">
-                <strong>{team.primary_name}</strong>
-                <b className="football-weekly-nfl-team-season__year">{team.season_year}</b>
+                <TeamSeasonLink teamCode={team.team_code} teamName={team.primary_name} seasonYear={team.season_year} />
               </span>
               <em>{rank >= 0 ? "PRIORITY #" + (rank + 1) : "TAP TO ACCEPT"}</em>
             </button>
@@ -683,7 +684,9 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
         {result.collection.map((team) => (
           <article className={team.counts ? "is-counting" : ""} key={team.item_reference}>
             <TeamMark teamCode={team.team_code} label={team.team_name} />
-            <div className="football-weekly-nfl-team-season__final-name"><strong>{team.team_name}</strong><b className="football-weekly-nfl-team-season__year">{team.season_year}</b></div>
+            <div className="football-weekly-nfl-team-season__final-name">
+              <TeamSeasonLink teamCode={team.team_code} teamName={team.team_name} seasonYear={team.season_year} />
+            </div>
             <em>{team.source === "wildcard" ? "WILDCARD" : team.source === "autofill" ? "AUTOFILL" : team.winning_bid ? "$" + team.winning_bid : "WON"}</em>
             <span>{team.grade.toFixed(1)}</span>
           </article>
