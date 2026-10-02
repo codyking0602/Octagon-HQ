@@ -4,6 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyChallengeStandings } from "./DailyChallengeStandings";
 import { DailyLeaderboardGameResult } from "./DailyLeaderboardGameResult";
+import {
+  FootballSpecialDailyHubMark,
+  footballSpecialDailyStyle,
+  footballSpecialDailyThemeForDay,
+} from "./footballSpecialDailyTheme";
 import { dailyTwoGameLeaderboardPublicState } from "./DailyTwoGameStatus";
 import {
   dailyRankKeepComboStage,
@@ -20,6 +25,7 @@ import {
 } from "./todayChallengeRepository";
 import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
 import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
+import "../../styles/football-special-daily.css";
 
 const FootballTodayChallengeResult = lazy(() =>
   import("../back-room/FootballTodayChallengePage").then((module) => ({
@@ -116,6 +122,9 @@ function DailyAnswerDetail({
   sport: PlaySport;
 }) {
   const navigate = useNavigate();
+  const specialTheme = sport === "football"
+    ? footballSpecialDailyThemeForDay(projection.centralDay)
+    : null;
   const resultProjection: TodayChallengeProjection = {
     ...projection,
     gameType: entry.gameType,
@@ -147,7 +156,11 @@ function DailyAnswerDetail({
           </span>
         </span>
       </header>
-      <div className="today-hub-official-result__body official-daily-page">
+      <div
+        className="today-hub-official-result__body official-daily-page"
+        style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}
+      >
+        {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
         {(sport === "ufc" || sport === "football")
           && (entry.gameType === "find_leader" || entry.gameType === "wavelength" || entry.gameType === "hit_the_number")
           && record(entry.publicResult.daily_series).format_version === "daily-two-game-average-v1" ? (
@@ -251,6 +264,9 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
     sport,
   });
   const projection = runtime.projection;
+  const specialTheme = sport === "football" && projection
+    ? footballSpecialDailyThemeForDay(projection.centralDay)
+    : null;
   const adapter = useMemo(
     () => todayChallengeAdapter(projection?.gameType),
     [projection?.gameType],
@@ -367,18 +383,25 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
   };
 
   return (
-    <section className="today-hub" data-game={projection.gameType} data-sport={sport}>
+    <section
+      className="today-hub"
+      data-game={projection.gameType}
+      data-sport={sport}
+      data-special-daily={specialTheme ? "true" : undefined}
+      style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}
+    >
       <div
         className="today-hub__carousel"
         ref={carouselRef}
         onScroll={updatePanelFromScroll}
         aria-label="Today’s Challenge and leaderboard"
       >
-        <button className="today-hub-card" type="button" onClick={() => navigate(dailyRoute)}>
+        <button className={specialTheme ? "today-hub-card is-special-daily" : "today-hub-card"} type="button" onClick={() => navigate(dailyRoute)}>
           <div className="today-hub-card__topline">
             <span>{combo ? "TODAY’S DAILY DOUBLE" : "TODAY’S CHALLENGE"}</span>
             <b>{dayLabel(projection.centralDay).toUpperCase()}</b>
           </div>
+          {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
           <div className="today-hub-card__body">
             <small>
               {completed && projection.officialAttempt

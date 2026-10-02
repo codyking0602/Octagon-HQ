@@ -8,6 +8,11 @@ import { OfficialSportsFeudDailyView } from "../play/OfficialSportsFeudDailyView
 import { OfficialBarTriviaDailyView } from "../play/OfficialBarTriviaDailyView";
 import { OfficialAverageFanDailyView } from "../play/OfficialAverageFanDailyView";
 import {
+  FootballSpecialDailyChrome,
+  footballSpecialDailyStyle,
+  footballSpecialDailyThemeForDay,
+} from "../play/footballSpecialDailyTheme";
+import {
   DailyTwoGamePresentationIntermission,
   DailyTwoGameStatus,
   dailyTwoGameActiveScore,
@@ -46,6 +51,7 @@ import {
 import type { FootballRankFiveItem, FootballRankFivePackId } from "./footballRankFiveModel";
 import "../../styles/today-challenge-hub.css";
 import "../../styles/football-today-challenge.css";
+import "../../styles/football-special-daily.css";
 
 const GAME_LABELS = {
   find_leader: "FIND THE LEADER",
@@ -752,6 +758,15 @@ export default function FootballTodayChallengePage() {
   ) : null;
 
   const blindResume = projection.gameType === "blind_resume";
+  const specialTheme = footballSpecialDailyThemeForDay(projection.centralDay);
+  const specialStyle = specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined;
+  const specialChrome = specialTheme ? (
+    <FootballSpecialDailyChrome
+      theme={specialTheme}
+      score={projection.officialAttempt?.normalizedScore ?? null}
+      showIntro={!projection.officialAttempt && projection.progressRevision === 0}
+    />
+  ) : null;
   const twoGameSeries = dailyTwoGameSeriesState(projection);
   const presentationHandoff = dailyTwoGamePresentationIntermissionState(projection);
 
@@ -833,7 +848,11 @@ export default function FootballTodayChallengePage() {
 
   if (projection.gameType === "sports_feud") {
     return (
-      <div className="official-daily-page">
+      <div
+        className={specialTheme ? "official-daily-page football-special-daily-page" : "official-daily-page"}
+        style={specialStyle}
+      >
+        {specialChrome}
         {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         <OfficialSportsFeudDailyView
@@ -863,7 +882,11 @@ export default function FootballTodayChallengePage() {
 
   if (projection.gameType === "bar_trivia") {
     return (
-      <div className="official-daily-page">
+      <div
+        className={specialTheme ? "official-daily-page football-special-daily-page" : "official-daily-page"}
+        style={specialStyle}
+      >
+        {specialChrome}
         {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         <OfficialBarTriviaDailyView
@@ -878,7 +901,11 @@ export default function FootballTodayChallengePage() {
 
   if (projection.gameType === "millionaire") {
     return (
-      <div className="official-daily-page">
+      <div
+        className={specialTheme ? "official-daily-page football-special-daily-page" : "official-daily-page"}
+        style={specialStyle}
+      >
+        {specialChrome}
         {weeklyEditControl}
         {error ? <div className="football-today-error">{error}</div> : null}
         {busy ? <div className="football-today-busy">LOCKING…</div> : null}
