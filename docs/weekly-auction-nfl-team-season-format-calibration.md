@@ -2,265 +2,249 @@
 
 ## Scope
 
-This records the calibration work for the proposed NFL Weekly Auction subject:
+This records the locked format calibration for the proposed NFL Weekly Auction subject:
 
 **Best NFL Team-Seasons Since 2000**
 
-It builds on the locked 200-team auction authority in `nfl-best-teams-grading-v1.json`.
+Population and hidden grades are owned by `nfl-best-teams-grading-v1.json`. The six normal-day theme generator is documented separately in `weekly-auction-nfl-team-season-themed-generator-audit.md`.
 
-This remains **calibration only**. It does not change the live Weekly Auction runtime.
+This remains a staged implementation until the subject is wired into the live Weekly Auction rotation.
 
 ## Weekly arc
 
-The preferred structure is now:
+- **Days 1–6:** normal themed sealed-bid auctions.
+- **Day 7:** four-card Wildcard replacement finale.
+- **After Wildcard:** incomplete collections receive worst-unclaimed autofill from normal Days 1–6.
+- **Next week:** the player Reaped on Day 7 receives the one-week bankroll penalty.
 
-- **Days 1–6:** normal themed auctions.
-- **Day 7:** Wildcard replacement round.
-- **After Wildcard:** incomplete collections receive worst-unclaimed autofill.
-
-The goal is to preserve the crisp daily workload while giving the week a real finale.
+Day 7 replaces a normal auction day. It is not an eighth day and does not add another trivia/game requirement.
 
 ## Five-player normal-auction baseline
 
 For the current five-player field:
 
-- 4 team-seasons visible per normal day.
+- 4 team-seasons per normal day.
 - 6 normal auction days.
-- 24 normal lots total.
-- $50 bankroll.
-- Best 4 owned teams determine the score.
-- Maximum 2 wins per day.
-- Maximum **5 normal-auction wins per player** for the week.
+- 24 normal lots.
+- $50 starting bankroll.
+- Best 4 team-seasons determine the final score.
+- Maximum 2 normal-auction wins per day.
+- Maximum 5 normal-auction wins per player for the week.
 
-The five-team weekly ownership cap is important. It gives each player one genuine bench/upgrade slot while preserving enough unclaimed inventory to guarantee completion through autofill.
+The five-team cap gives one real bench/upgrade slot while protecting enough unclaimed inventory for completion.
 
-### 12,000-week completion simulation
+### Completion calibration
 
-Using the locked 200-team authority:
+The five-player / 24-lot / max-five structure produced:
 
-- Pre-autofill player-weeks short of four teams: **0.007%**
-- Post-autofill player-weeks short of four teams: **0.000%**
-- Average normal-auction wins/player: **4.55**
-- Average unclaimed normal teams/week: **1.25**
-- Average cash remaining after Day 6: **$2.06**
-- Tied high bids: **21.6%** of normal lots
-- Players finishing Day 6 with exactly 4 normal wins: **44.91%**
-- Players finishing Day 6 with exactly 5 normal wins: **55.08%**
+- pre-autofill player-weeks short of four: **0.007%**
+- post-autofill player-weeks short of four: **0.000%**
+- average normal wins/player: **4.55**
+- average unclaimed normal teams/week: **1.25**
+- average cash remaining after Day 6: **$2.06**
+- exactly four normal wins: **44.91%**
+- exactly five normal wins: **55.08%**
 
-The result is the intended shape: nearly everyone earns four teams naturally, roughly half earn one extra upgrade team, and the worst-unclaimed autofill remains a true safety net rather than a routine roster-building path.
+Autofill is therefore a safety net rather than a normal path to building the collection.
 
-## Why the five-team ownership cap matters
+## Elastic normal supply
 
-With five players, four scoring teams each, and 24 normal lots, capping each player at five normal wins creates a mathematical completion guard.
+The subject should size future unrevealed normal supply to the active field while never rerolling an exposed card.
 
-If one player is short of four, the other four players cannot absorb enough of the 24 lots to eliminate every unclaimed team required to fill that deficit.
+Current six-day baseline:
 
-That means the rule:
-
-> incomplete players receive the worst unclaimed team-seasons that actually appeared during the six normal auction days
-
-can guarantee completion without inventing unseen emergency candidates.
-
-## Elastic field sizing
-
-The subject should not assume five players forever.
-
-Normal-day supply must use the current **active** field, not a hard-coded launch field.
-
-Base six-day supply target for this subject:
-
-| Active players | Base normal cards/day |
+| Active players | Normal cards/day |
 | ---: | ---: |
 | 3 | 3 |
-| 4 | 3, with at least one extra reserve reveal during the six-day window when needed for completion capacity |
+| 4 | 3, plus reserve capacity when needed |
 | 5 | 4 |
 | 6 | 5 |
 | 7 | 6 |
 | 8 | 7 |
 
-The core invariant is more important than the literal table:
-
-- best 4 score;
-- max 5 normal wins/player;
-- enough total revealed normal inventory must remain available for worst-unclaimed autofill to complete every active player;
-- future reserve cards may expand or contract;
-- already exposed cards never reroll.
-
-For 5 players, 4/day for six days is exactly the preferred calibrated shape.
-
-## Shared Weekly Auction field behavior
-
-This should become a base Weekly Auction standard rather than an NFL-only patch.
-
-- Prebuild reserve inventory server-side.
-- Never reroll a card already exposed.
-- Let future unrevealed supply expand or contract with the active field.
-- Keep a player eligible even if they miss a day.
-- A player who misses two consecutive auction days stops counting toward future supply sizing until they return.
-- Allow new entrants only through the existing early-week cutoff window; after cutoff, they wait for the next Weekly Auction.
-- Each subject supplies its own `cards_for_active_field` / completion-capacity rule; the shared engine owns participation and reserve behavior.
+The invariant matters more than the table: enough normal inventory must remain to complete every active player's best-four collection under the max-five ownership cap.
 
 ## Themed normal days
 
-Normal-day themes should create identity without forcing grade distributions.
+Normal themes create identity but do **not** force hidden grade shapes.
 
-Useful rotating theme families include:
+Current theme families include:
 
 - Division Spotlight
+- Season Spotlight
+- Era Spotlight
+- Rivalry
+- Franchise History
+- Great Teams That Fell Short
 - AFC vs NFC
-- Era day
-- Playoff Story / Great Teams That Did Not Win It
-- Rivalry / Franchise History
-- Wildcard / mixed day
+- Open Field
 
-The theme controls **candidate eligibility**, not the hidden grade shape.
+Only today's theme is revealed. Future themes remain server-owned.
 
-Future themes remain server-owned and unrevealed.
+## Day 7 Wildcard board
 
-## Day 7 Wildcard
+Day 7 reveals **4 Wildcard team-seasons before any player chooses entries**.
 
-Wildcard is a one-for-one optional replacement round.
+The player can therefore compare the visible Wildcards with the collection they already built and decide how aggressively to participate.
 
-- Wildcard does **not** fill an empty collection slot.
-- A player must already have a legitimate collection to use it.
-- Maximum one Wildcard replacement per player.
-- A claimed Wildcard team replaces one existing owned team.
-- Money is irrelevant to Wildcard.
-- Players rank the Wildcard candidates they would accept or pass.
-- Players voluntarily submit 0–5 priority entries.
-- Each entry must be backed by a distinct team already owned by that player.
-- More entries increase claim-order odds linearly.
-- Later entries increase Danger exposure faster than they increase Priority value.
-- Exactly **2 players** are hit by Danger in a five-player / two-Wildcard finale.
-- A Danger hit applies a temporary **-7 scoring modifier** to one of the teams that player put at risk for the Wildcard round.
-- The underlying hidden grade never changes.
-- A Wildcard replacement can still replace the wounded team if the player's ranked claim reaches it.
-- This is the current **recommended** mechanic pending product approval; it is not live.
+Wildcard rules:
 
-The danger mechanic stays completely inside Weekly Auction and does not alter unrelated Daily Challenge timers or future-game clocks.
+- four visible Wildcard team-seasons;
+- maximum one Wildcard claim per player;
+- Wildcard is upgrade-only and cannot fill an empty collection slot;
+- player ranks only the Wildcards they would accept;
+- player then chooses **0–5 entries**;
+- money is not bid on Wildcard Day.
 
-## Wildcard quality calibration
+The approved four-card quality shape is approximately:
 
-The locked 200-team pool has:
+- **90.5**
+- **89.0**
+- **87.5**
+- **85.5**
 
-- mean hidden grade: **88.99**
-- standard deviation: **4.79**
+Those are calibration targets, not fixed slot grades. Cards are shuffled and selected with natural variation. The board should average roughly **88.0–88.5**, slightly below the 200-team pool mean of **88.99**, because the four-choice replacement structure is already valuable.
 
-A full +1 SD Wildcard target would therefore average about **93.8**.
+A 30,000-week themed-board audit and separate Wildcard simulations showed that four elevated Wildcards would rewrite too much of the first six days. The current four-card calibration keeps Day 7 important without making it the whole week.
 
-That is too strong.
+## Literal ticket system
 
-### Initial four-card test
+Entries are literal weighted-wheel tickets.
 
-At five players, four Wildcard candidates produced too much rewriting of the first six days:
+Priority weight is exactly the number of entries:
 
-- +0.5 SD Wildcard average (~91.5): weekly winner changed about **38%**
-- +1.0 SD Wildcard average (~94.0): weekly winner changed about **41%**
-- at +1.0 SD, a Wildcard team appeared in roughly **79%** of player scoring fours
+| Entries | Priority tickets | Reaping tickets |
+| ---: | ---: | ---: |
+| 0 | 0 | 0 |
+| 1 | 1 | 1 |
+| 2 | 2 | 2 |
+| 3 | 3 | 3 |
+| 4 | 4 | 4 |
+| 5 | 5 | 5 |
 
-### Scarcer Wildcard test
+There is no triangular Danger formula and no hidden personal percentage schedule.
 
-Two Wildcard candidates produced a much healthier finale.
+Example: if four players each choose four entries, the wheel contains 16 equal tickets. Each player owns **4/16 = 25%** of the first Priority spin and **25%** of the separate Reaping spin.
 
-| Wildcard quality | Actual avg | Player-weeks with Wildcard in final four | Weekly winner changed |
-| --- | ---: | ---: | ---: |
-| Normal pool average | 89.0 | 36.5% | 24.5% |
-| +0.25 SD | 90.0 | 38.8% | 28.6% |
-| +0.50 SD | 91.5 | 39.9% | 35.2% |
+Five entries never guarantees a result. It only increases the player's share of both wheels.
 
-### Current recommendation
+### Zero entries
 
-For a five-player field:
+**0 entries = 0 upside and 0 Reaping risk.**
 
-- **2 Wildcard team-seasons**
-- target board average around **+0.25 SD** above the normal pool, roughly **90.0–90.5**
-- natural internal spread; do not force every Wildcard candidate to be elite
-- one replacement maximum
+A player with zero entries:
 
-The Wildcard is already structurally valuable because it is an optional replacement after six auction days. It does not need a full standard-deviation grade boost.
+- is absent from the Priority wheel;
+- cannot claim a Wildcard;
+- is absent from the Reaping wheel;
+- cannot receive the next-week bankroll penalty from that finale.
 
-## Wildcard entry / Danger calibration
+Passing is a real strategic choice.
 
-### Rejected versions
+## Priority wheel
 
-Several simpler mechanics were stress-tested and rejected:
+After entries lock:
 
-- **Danger eliminates the selected player from Wildcard:** too weak. Rational players chose five entries in more than 92% of modeled decisions.
-- **One communal Danger draw with linear ticket weights:** still clustered heavily at four or five entries because everyone maxing normalized the shared downside.
-- **Personal Danger chance increasing linearly with entries:** produced better entry spread, but could hit too many players in the same week and made Day 7 feel overly chaotic.
-- **Actually removing a team when Danger hit:** occasionally fought the completion/autofill guarantee.
+1. build the Priority wheel from every player with 1–5 entries;
+2. spin using linear ticket weights;
+3. persist the winner as Priority #1;
+4. remove that player from the wheel;
+5. spin again from the remaining entrants;
+6. continue until every entrant has a persisted Priority order.
 
-### Recommended Hunger Games structure
+Claim resolution follows that order.
 
-Priority and Danger use the same voluntary 0–5 entry decision, but they value aggression differently.
+For each player, the engine checks the ranked acceptable Wildcards in order. Already-claimed cards are skipped. A player can receive at most one Wildcard.
 
-**Priority weight**
+The draw order is persisted server-side. Refreshing the app cannot reroll it.
 
-- 1 entry -> 1
-- 2 entries -> 2
-- 3 entries -> 3
-- 4 entries -> 4
-- 5 entries -> 5
+## Reaping wheel
 
-**Danger weight**
+After Priority / claim resolution, run a **separate** wheel using the same entry counts.
 
-- 1 entry -> 1
-- 2 entries -> 3
-- 3 entries -> 6
-- 4 entries -> 10
-- 5 entries -> 15
+Important:
 
-This is the triangular progression `n(n+1)/2`.
+- all players with 1–5 entries are eligible;
+- a player can be Reaped even if they failed to win a Wildcard;
+- players with 0 entries are excluded;
+- exactly one player is Reaped when at least one player entered;
+- the Reaping result is persisted server-side.
 
-The result is deliberate diminishing safety: going from four to five entries buys only one more Priority unit but adds five more Danger units.
+The same aggression therefore buys more Priority chance and more downside exposure.
 
-For a five-player field with two Wildcard teams:
+## Reaping consequence
 
-1. each player chooses 0–5 entries;
-2. each entry is backed by a distinct currently owned team;
-3. two distinct players are drawn as Danger victims using Danger weight;
-4. one of each victim's backed teams is selected from that player's risked set;
-5. that team takes a temporary **-7 Wildcard Danger modifier** for this week's final scoring;
-6. the same hidden grade remains authoritative everywhere else;
-7. Priority order for the two Wildcard claims is then drawn using ordinary linear entry weight;
-8. ranked claims resolve automatically;
-9. a player may replace the wounded team if their claim reaches a desired Wildcard candidate.
+The Reaped player receives a **one-week -$5 starting-bankroll adjustment for the next calendar Weekly Auction**.
 
-A player cannot be a Danger victim twice in the same finale.
+For the approved $50 NFL Team-Seasons bankroll, that means:
 
-### 15,000-week strategy simulation
+> **$50 normal start → $45 next week**
 
-Using two Wildcard candidates averaging roughly +0.25 SD above the normal pool and the five-player field:
+The implementation stores the consequence as a one-week `-5` adjustment so the penalty remains meaningful if the following rotation subject has a different normal starting bankroll.
 
-- Players entered the Wildcard: **91.6%**
-- Average entries/player: **3.64**
-- Exactly two Danger victims/week: **2.00**
-- Average final-score loss per Danger victim before any Wildcard repair: **1.24 points**
-- Wildcard claims/week: **1.96**
-- Weekly winner changed by the complete Day 7 event: **30.4%**
-- Top-two set changed: **43.7%**
+The penalty never compounds within one week. A repeated Reaping in consecutive finales creates another single -$5 adjustment for the next week, not a -$10 stack.
 
-Modeled entry choices:
+No immunity is granted after a Reaping. Immunity would let a protected player safely max five entries the following week.
 
-| Entries | Share |
-| ---: | ---: |
-| 0 | 8.4% |
-| 1 | 4.8% |
-| 2 | 7.3% |
-| 3 | 8.6% |
-| 4 | 35.7% |
-| 5 | 35.2% |
+## Full repeated-week simulation
 
-The important result is not an even distribution. High-upside boards should still tempt aggressive players into four or five entries. The improvement over the rejected mechanics is that maximum entries are no longer an automatic dominant choice: lower-entry strategies remain rational when the available upgrade is modest or the player does not want to expose stronger owned teams.
+The complete five-player system was simulated across **50,000 consecutive weeks** with the four-card Wildcard structure and carry-forward bankroll consequence.
 
-This preserves the intended Hunger Games decision: **more upside requires exposing more of the collection already built.**
+Results:
+
+- Wildcard board average: **88.12**
+- Wildcard claims: **2.86/week**
+- player-weeks with a Wildcard in the final scoring four: **57.2%**
+- weekly winner changed by Wildcard: **24.1%**
+- top-two group changed: **35.3%**
+- average entries/player: **3.37**
+- entry distribution:
+  - 0: **12.3%**
+  - 1: **6.2%**
+  - 2: **10.0%**
+  - 3: **13.1%**
+  - 4: **20.2%**
+  - 5: **38.1%**
+- final incomplete collections: **0%**
+
+Starting the following normal auction with the penalty was materially meaningful in the model:
+
+- $50 starting bankroll modeled normal-auction win rate: **21.8%**
+- $45 starting bankroll modeled normal-auction win rate: **12.6%**
+
+A separate 200,000-week Reaping stress test found the same player was Reaped again the following week about **23%** of the time. The penalty still remained a single one-week -$5 adjustment.
+
+## Completion autofill
+
+Wildcard is an upgrade mechanism, not a completion mechanism.
+
+After Wildcard resolution:
+
+1. identify every participant still below four normal teams;
+2. consider only unclaimed team-seasons that actually appeared during Days 1–6;
+3. assign the worst hidden-grade eligible unclaimed team first;
+4. continue until every player has four teams.
+
+Do not use unseen emergency cards. Do not use unclaimed Day 7 Wildcards for completion.
+
+## Server-owned information
+
+Before resolution, the client may see:
+
+- the four Wildcard team-seasons;
+- its own 0–5 entry selection;
+- its own ranked acceptable Wildcards.
+
+Before resolution, the client must **not** see:
+
+- other players' entry counts;
+- Priority draw order;
+- Reaping result;
+- hidden grades;
+- future themes.
+
+After resolution, the persisted Priority wheel result, claims, and Reaping result may be shown for the finale presentation.
 
 ## Runtime boundary
 
-Nothing in this document is live.
-
-The live implementation should wait until:
-1. the Wildcard danger penalty is locked;
-2. the adaptive-field standard is generalized across Weekly Auction subjects;
-3. themed board generation is validated against the 200-team authority;
-4. exact-head CI is green.
+The Wildcard engine migration supplies the dormant server-owned data model and resolver. The next integration step is to wire the NFL Team-Seasons subject population, six normal-day generator, normal bidding/final scoring, Day 7 state, and starting-bankroll adjustment into the shared Weekly Auction router.
