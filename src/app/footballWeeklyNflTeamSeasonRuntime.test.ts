@@ -9,6 +9,10 @@ const wildcard = readFileSync(
   "supabase/migrations/202612310228_nfl_team_season_wildcard_engine.sql",
   "utf8",
 );
+const rankedBids = readFileSync(
+  "supabase/migrations/202612310231_nfl_team_season_ranked_bids_and_presentation.sql",
+  "utf8",
+);
 const repository = readFileSync(
   "src/features/play/footballWeeklyAuctionRepository.ts",
   "utf8",
@@ -19,6 +23,10 @@ const gate = readFileSync(
 );
 const styles = readFileSync(
   "src/styles/football-weekly-nfl-team-season.css",
+  "utf8",
+);
+const tableStyles = readFileSync(
+  "src/styles/football-weekly-auction-table.css",
   "utf8",
 );
 
@@ -122,6 +130,44 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(getter).not.toContain("'hidden_grade',");
     expect(runtime).toContain("'grade',item.hidden_grade");
     expect(gate).toContain("Future themes stay hidden.");
+  });
+
+
+  it("inherits the ranked conditional overcommit model from CFB Superteam", () => {
+    expect(rankedBids).toContain("football_weekly_superteam_bid_preferences");
+    expect(rankedBids).toContain("claim_rank");
+    expect(rankedBids).toContain("submitted bids may exceed bankroll in total");
+    expect(rankedBids).toContain("candidate.amount<=candidate.starting_bankroll-candidate.spent");
+    expect(rankedBids).not.toContain("Your two highest possible wins exceed your remaining bankroll");
+    expect(gate).toContain("YOU CAN BID MORE THAN YOUR BANKROLL IN TOTAL");
+    expect(gate).toContain("CLAIM PRIORITY");
+    expect(gate).toContain("Hold + drag a team card to reorder claims.");
+    expect(gate).toContain("MAX SPEND TODAY");
+    expect(gate).not.toContain("MAX SPEND RISK");
+  });
+
+  it("uses exact postseason outcomes and clickable team-season identities", () => {
+    for (const outcome of [
+      "Lost Wild Card",
+      "Lost Divisional",
+      "Lost Conference Championship",
+      "Lost Super Bowl",
+      "Won Super Bowl",
+      "Missed Playoffs",
+    ]) {
+      expect(rankedBids).toContain(outcome);
+    }
+    expect(rankedBids).toContain("nfl-best-ind-2005");
+    expect(rankedBids).toContain("14-2 · Lost Divisional");
+    expect(gate).toContain("pro-football-reference.com/teams/");
+    expect(gate).toContain("TeamSeasonLink");
+  });
+
+  it("pins the compact status and Auction Table to the top on mobile", () => {
+    expect(styles).toContain("position: sticky;");
+    expect(styles).toContain("top: calc(58px + var(--safe-top));");
+    expect(tableStyles).toContain("align-items: flex-start;");
+    expect(tableStyles).toContain("calc(58px + var(--safe-top))");
   });
 
   it("makes literal-ticket risk and zero-entry safety explicit in the UI", () => {
