@@ -217,6 +217,43 @@ begin
   )>0 then
     raise exception 'active NFL Team-Seasons getter leaks hidden grades';
   end if;
+  if exists(
+    select 1
+    from private.nfl_best_team_seasons_v1_authority authority
+    where authority.postseason_finish not in (
+      'Lost Wild Card','Lost Divisional','Lost Conference Championship',
+      'Lost Super Bowl','Won Super Bowl','Missed Playoffs'
+    )
+  ) then
+    raise exception 'NFL Team-Seasons uses a vague postseason outcome label';
+  end if;
+
+  if (
+    select authority.card_tag
+    from private.nfl_best_team_seasons_v1_authority authority
+    where authority.item_reference='nfl-best-ind-2005'
+  )<>'14-2 · Lost Divisional' then
+    raise exception '2005 Indianapolis must show its exact divisional-round exit';
+  end if;
+
+  if position(
+    'football_weekly_superteam_bid_preferences'
+    in lower(pg_get_functiondef(
+      'private.submit_football_weekly_nfl_team_season_bids_for_profile(date,integer,uuid,jsonb,timestamptz)'::regprocedure
+    ))
+  )=0 then
+    raise exception 'NFL Team-Seasons submit path does not persist claim priority';
+  end if;
+
+  if position(
+    'candidate.amount<=candidate.starting_bankroll-candidate.spent'
+    in lower(pg_get_functiondef(
+      'private.resolve_football_weekly_nfl_team_season_day(date,integer,timestamptz)'::regprocedure
+    ))
+  )=0 then
+    raise exception 'NFL Team-Seasons resolver does not enforce conditional affordability';
+  end if;
+
 
   if position(
     'return private.get_my_football_weekly_nfl_team_season(p_at)'
