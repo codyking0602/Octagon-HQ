@@ -93,6 +93,49 @@ begin
       perform private.submit_football_weekly_nfl_team_season_bids_for_profile(
         v_week,v_day,v_profiles[v_player],v_bids,v_submit_at
       );
+
+      -- Day 6 explicitly proves the ranked conditional-overcommit contract:
+      -- Player 1 has $35 left, yet can submit two $30 claims because P1/P2
+      -- determines which claim remains affordable after a win.
+      if v_day=6 and v_player=1 then
+        v_bids:=jsonb_build_object(
+          '1',jsonb_build_object('amount',30,'priority',2),
+          '2',jsonb_build_object('amount',30,'priority',1),
+          '3',jsonb_build_object('amount',0,'priority',3),
+          '4',jsonb_build_object('amount',0,'priority',4)
+        );
+        perform private.submit_football_weekly_nfl_team_season_bids_for_profile(
+          v_week,v_day,v_profiles[v_player],v_bids,v_submit_at
+        );
+
+        if (
+          select coalesce(sum(bid.amount),0)
+          from private.football_weekly_auction_bids bid
+          where bid.week_start=v_week
+            and bid.day_index=v_day
+            and bid.profile_id=v_profiles[v_player]
+        )<>60 then
+          raise exception 'ranked conditional overcommit was not persisted';
+        end if;
+
+        if (
+          select preference.claim_rank
+          from private.football_weekly_superteam_bid_preferences preference
+          where preference.week_start=v_week
+            and preference.day_index=v_day
+            and preference.profile_id=v_profiles[v_player]
+            and preference.slot=2
+        )<>1 then
+          raise exception 'NFL Team-Seasons P1 claim priority did not persist';
+        end if;
+
+        -- Restore the intended all-pass Day 6 inventory before resolution so
+        -- the remainder of this proof still exercises completion autofill.
+        v_bids:=jsonb_build_object('1',0,'2',0,'3',0,'4',0);
+        perform private.submit_football_weekly_nfl_team_season_bids_for_profile(
+          v_week,v_day,v_profiles[v_player],v_bids,v_submit_at
+        );
+      end if;
     end loop;
 
     v_resolve_at:=((v_week+v_day)+time '00:00:01')
