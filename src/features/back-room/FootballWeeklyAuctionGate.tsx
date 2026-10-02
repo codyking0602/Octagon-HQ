@@ -465,7 +465,7 @@ export function FootballWeeklyAuctionGate({
   error: string | null;
   forceBoard?: boolean;
   onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
-  onSubmitWildcard: (entries: number, rankings: string[]) => Promise<void>;
+  onSubmitWildcard: (entries: number, rankings: string[], cutItemReference: string | null) => Promise<void>;
   onAcknowledgeFinal: (weekStart: string) => Promise<void>;
   onContinue: () => void;
 }) {
