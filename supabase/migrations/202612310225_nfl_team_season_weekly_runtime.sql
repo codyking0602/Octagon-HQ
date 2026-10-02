@@ -979,10 +979,1188 @@ begin
 
   if exists(
     select 1
-    from jsonb_object_keys(p_bids) key
-    where key ~ '^[0-9]+$'
-      and key::integer>v_card_count
-      and coalesce((p_bids->>key)::integer,0)<>0
+    from jsonb_object_keys(p_bids) as keys(key)
+    where keys.key ~ '^[0-9]+
+  ) then
+    raise exception 'A bid targets a card that is not on today''s board';
+  end if;
+
+  select coalesce(sum(value),0)::integer into v_top_commit
+  from (
+    select value
+    from unnest(v_amounts) value
+    order by value desc
+    limit v_max_wins
+  ) possible_wins;
+
+  if v_top_commit>v_bankroll then
+    raise exception 'Your highest possible wins exceed the $% remaining bankroll',v_bankroll;
+  end if;
+
+  insert into private.football_weekly_auction_daily_entries(
+    week_start,day_index,profile_id,submitted_at,updated_at
+  ) values (
+    p_week_start,p_day_index,p_profile_id,p_at,p_at
+  )
+  on conflict(week_start,day_index,profile_id)
+  do update set updated_at=excluded.updated_at;
+
+  for v_slot in 1..v_card_count loop
+    v_bid:=coalesce((p_bids->>v_slot::text)::integer,0);
+    insert into private.football_weekly_auction_bids(
+      week_start,day_index,profile_id,slot,amount,updated_at
+    ) values (
+      p_week_start,p_day_index,p_profile_id,v_slot,v_bid,p_at
+    )
+    on conflict(week_start,day_index,profile_id,slot)
+    do update set amount=excluded.amount,updated_at=excluded.updated_at;
+  end loop;
+end;
+$$;
+revoke all on function private.submit_football_weekly_nfl_team_season_bids_for_profile(
+  date,integer,uuid,jsonb,timestamptz
+) from public,anon,authenticated;
+
+create or replace function private.resolve_football_weekly_nfl_team_season_day(
+  p_week_start date,p_day_index integer,p_at timestamptz default now()
+)
+returns void
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare
+  v_card_count integer;
+  v_slot integer;
+  v_winner uuid;
+  v_amount integer;
+  v_lock_at timestamptz;
+begin
+  if p_day_index not between 1 and 6 then
+    raise exception 'NFL team-season normal resolver only owns Days 1-6';
+  end if;
+
+  v_card_count:=private.football_weekly_auction_cards_for_day(p_week_start,p_day_index);
+  select min(lock_at) into v_lock_at
+  from private.football_weekly_auction_board
+  where week_start=p_week_start and day_index=p_day_index;
+
+  if v_lock_at is null then raise exception 'NFL team-season day is not materialized'; end if;
+  if p_at<v_lock_at then return; end if;
+
+  for v_slot in 1..v_card_count loop
+    if exists(
+      select 1 from private.football_weekly_auction_awards
+      where week_start=p_week_start and day_index=p_day_index and slot=v_slot
+    ) then continue; end if;
+
+    v_winner:=null;
+    v_amount:=0;
+
+    select bid.profile_id,bid.amount
+    into v_winner,v_amount
+    from private.football_weekly_auction_bids bid
+    where bid.week_start=p_week_start
+      and bid.day_index=p_day_index
+      and bid.slot=v_slot
+      and bid.amount>0
+      and (
+        select count(*)
+        from private.football_weekly_auction_awards award
+        where award.week_start=p_week_start
+          and award.profile_id=bid.profile_id
+          and award.day_index between 1 and 6
+      )<5
+      and (
+        select count(*)
+        from private.football_weekly_auction_awards award
+        where award.week_start=p_week_start
+          and award.day_index=p_day_index
+          and award.profile_id=bid.profile_id
+      )<2
+      and (
+        coalesce((
+          select sum(award.winning_bid)
+          from private.football_weekly_auction_awards award
+          where award.week_start=p_week_start
+            and award.profile_id=bid.profile_id
+            and award.day_index between 1 and 6
+        ),0)+bid.amount
+      )<=private.football_weekly_auction_starting_bankroll(
+        p_week_start,bid.profile_id,50
+      )
+    order by
+      bid.amount desc,
+      (
+        select count(*)
+        from private.football_weekly_auction_awards award
+        where award.week_start=p_week_start
+          and award.profile_id=bid.profile_id
+          and award.day_index<p_day_index
+      ) asc,
+      (
+        select coalesce(sum(award.winning_bid),0)
+        from private.football_weekly_auction_awards award
+        where award.week_start=p_week_start
+          and award.profile_id=bid.profile_id
+          and award.day_index<p_day_index
+      ) asc,
+      random()
+    limit 1;
+
+    insert into private.football_weekly_auction_awards(
+      week_start,day_index,slot,profile_id,winning_bid,resolved_at
+    ) values (
+      p_week_start,p_day_index,v_slot,v_winner,coalesce(v_amount,0),p_at
+    );
+  end loop;
+end;
+$$;
+revoke all on function private.resolve_football_weekly_nfl_team_season_day(date,integer,timestamptz)
+  from public,anon,authenticated;
+
+create or replace function private.football_weekly_nfl_team_season_collection_rows(
+  p_week_start date
+)
+returns table(
+  profile_id uuid,
+  item_reference text,
+  winning_bid integer,
+  acquisition text
+)
+language sql
+stable security definer
+set search_path=''
+as $$
+  with normal_owned as (
+    select
+      award.profile_id,
+      board.season_reference as item_reference,
+      award.winning_bid,
+      'normal'::text as acquisition
+    from private.football_weekly_auction_awards award
+    join private.football_weekly_auction_board board
+      on board.week_start=award.week_start
+     and board.day_index=award.day_index
+     and board.slot=award.slot
+    where award.week_start=p_week_start
+      and award.day_index between 1 and 6
+      and award.profile_id is not null
+      and not exists(
+        select 1
+        from private.football_weekly_nfl_team_season_wildcard_claims claim
+        where claim.week_start=p_week_start
+          and claim.profile_id=award.profile_id
+          and claim.replaced_item_reference=board.season_reference
+      )
+  ),
+  wildcard_owned as (
+    select
+      claim.profile_id,
+      claim.item_reference,
+      0::integer as winning_bid,
+      'wildcard'::text as acquisition
+    from private.football_weekly_nfl_team_season_wildcard_claims claim
+    where claim.week_start=p_week_start
+  ),
+  autofill_owned as (
+    select
+      fill.profile_id,
+      fill.item_reference,
+      0::integer as winning_bid,
+      'autofill'::text as acquisition
+    from private.football_weekly_nfl_team_season_autofill fill
+    where fill.week_start=p_week_start
+  )
+  select * from normal_owned
+  union all select * from wildcard_owned
+  union all select * from autofill_owned;
+$$;
+revoke all on function private.football_weekly_nfl_team_season_collection_rows(date)
+  from public,anon,authenticated;
+
+create or replace function private.finalize_football_weekly_nfl_team_season_week(
+  p_week_start date,p_at timestamptz default now()
+)
+returns void
+language plpgsql
+security definer
+set search_path=''
+as $$
+begin
+  if exists(
+    select 1 from private.football_weekly_auction_weeks
+    where week_start=p_week_start and finalized_at is not null
+  ) then return; end if;
+
+  if not exists(
+    select 1
+    from private.football_weekly_nfl_team_season_wildcard_resolutions resolution
+    where resolution.week_start=p_week_start
+  ) then return; end if;
+
+  if exists(
+    select 1
+    from private.football_weekly_auction_participants participant
+    where participant.week_start=p_week_start
+      and (
+        select count(*)
+        from private.football_weekly_nfl_team_season_collection_rows(p_week_start) owned
+        where owned.profile_id=participant.profile_id
+      )<4
+  ) then
+    raise exception 'NFL team-season completion contract failed before final scoring';
+  end if;
+
+  delete from private.football_weekly_auction_results
+  where week_start=p_week_start;
+
+  insert into private.football_weekly_auction_results(
+    week_start,profile_id,owned_count,final_score,scoring_cost,scoring_refs,tie_random
+  )
+  with owned as (
+    select
+      collection.profile_id,
+      collection.item_reference,
+      collection.winning_bid,
+      item.hidden_grade,
+      row_number() over(
+        partition by collection.profile_id
+        order by item.hidden_grade desc,collection.winning_bid asc,collection.item_reference
+      ) as scoring_order
+    from private.football_weekly_nfl_team_season_collection_rows(p_week_start) collection
+    join private.football_weekly_auction_items item
+      on item.item_reference=collection.item_reference
+  ),
+  summarized as (
+    select
+      participant.profile_id,
+      count(owned.item_reference)::integer as owned_count,
+      round(avg(owned.hidden_grade) filter(where owned.scoring_order<=4),2) as final_score,
+      coalesce(sum(owned.winning_bid) filter(where owned.scoring_order<=4),0)::integer as scoring_cost,
+      coalesce(
+        array_agg(owned.item_reference order by owned.scoring_order)
+          filter(where owned.scoring_order<=4),
+        array[]::text[]
+      ) as scoring_refs
+    from private.football_weekly_auction_participants participant
+    left join owned on owned.profile_id=participant.profile_id
+    where participant.week_start=p_week_start
+    group by participant.profile_id
+  )
+  select
+    p_week_start,profile_id,owned_count,final_score,scoring_cost,scoring_refs,random()
+  from summarized;
+
+  with ranked as (
+    select
+      profile_id,
+      row_number() over(
+        order by final_score desc,scoring_cost asc,tie_random,profile_id
+      )::integer as final_rank
+    from private.football_weekly_auction_results
+    where week_start=p_week_start
+  )
+  update private.football_weekly_auction_results result
+  set final_rank=ranked.final_rank,
+      is_winner=ranked.final_rank=1
+  from ranked
+  where result.week_start=p_week_start
+    and result.profile_id=ranked.profile_id;
+
+  update private.football_weekly_auction_weeks
+  set finalized_at=p_at
+  where week_start=p_week_start;
+end;
+$$;
+revoke all on function private.finalize_football_weekly_nfl_team_season_week(date,timestamptz)
+  from public,anon,authenticated;
+
+create or replace function private.football_weekly_nfl_team_season_final_payload(
+  p_week_start date,p_profile_id uuid
+)
+returns jsonb
+language plpgsql
+stable security definer
+set search_path=''
+as $$
+declare
+  v_standings jsonb;
+  v_collections jsonb;
+  v_collection jsonb;
+  v_all_teams jsonb;
+  v_mine jsonb;
+  v_wildcard jsonb;
+begin
+  select coalesce(jsonb_agg(jsonb_build_object(
+    'rank',result.final_rank,
+    'profile_id',result.profile_id,
+    'display_name',profile.display_name,
+    'final_score',result.final_score,
+    'scoring_cost',result.scoring_cost,
+    'owned_count',result.owned_count,
+    'is_winner',result.is_winner,
+    'is_current_user',result.profile_id=p_profile_id
+  ) order by result.final_rank,profile.display_name),'[]'::jsonb)
+  into v_standings
+  from private.football_weekly_auction_results result
+  join public.profiles profile on profile.id=result.profile_id
+  where result.week_start=p_week_start;
+
+  with enriched as (
+    select
+      owned.profile_id,
+      profile.display_name,
+      owned.item_reference,
+      item.primary_name as team_name,
+      item.team_code,
+      item.season_year,
+      item.display_label,
+      item.hidden_grade as grade,
+      owned.winning_bid,
+      owned.acquisition,
+      result.scoring_refs
+    from private.football_weekly_nfl_team_season_collection_rows(p_week_start) owned
+    join private.football_weekly_auction_items item on item.item_reference=owned.item_reference
+    join public.profiles profile on profile.id=owned.profile_id
+    join private.football_weekly_auction_results result
+      on result.week_start=p_week_start and result.profile_id=owned.profile_id
+  ),
+  grouped as (
+    select
+      profile_id,
+      display_name,
+      jsonb_agg(jsonb_build_object(
+        'item_reference',item_reference,
+        'team_name',team_name,
+        'team_code',team_code,
+        'season_year',season_year,
+        'display_label',display_label,
+        'grade',grade,
+        'winning_bid',winning_bid,
+        'acquisition',acquisition,
+        'counts',item_reference=any(scoring_refs)
+      ) order by grade desc,winning_bid,item_reference) as items
+    from enriched
+    group by profile_id,display_name
+  )
+  select coalesce(jsonb_agg(jsonb_build_object(
+    'profile_id',profile_id,
+    'display_name',display_name,
+    'items',items
+  ) order by display_name),'[]'::jsonb)
+  into v_collections
+  from grouped;
+
+  select coalesce(entry.value->'items','[]'::jsonb)
+  into v_collection
+  from jsonb_array_elements(v_collections) as entry(value)
+  where entry.value->>'profile_id'=p_profile_id::text
+  limit 1;
+  v_collection:=coalesce(v_collection,'[]'::jsonb);
+
+  with normal as (
+    select
+      board.day_index,
+      board.slot,
+      board.theme,
+      board.season_reference as item_reference,
+      item.primary_name as team_name,
+      item.team_code,
+      item.season_year,
+      item.display_label,
+      item.hidden_grade as grade,
+      award.winning_bid,
+      award.profile_id as auction_winner_profile_id,
+      winner.display_name as auction_winner_display_name,
+      case
+        when claim.replaced_item_reference is not null then null
+        else coalesce(award.profile_id,fill.profile_id)
+      end as final_owner_profile_id,
+      case
+        when claim.replaced_item_reference is not null then null
+        else coalesce(winner.display_name,fill_profile.display_name)
+      end as final_owner_display_name,
+      case when fill.profile_id is not null then 'autofill' else 'normal' end as acquisition,
+      claim.replaced_item_reference is not null as was_replaced
+    from private.football_weekly_auction_board board
+    join private.football_weekly_auction_items item on item.item_reference=board.season_reference
+    left join private.football_weekly_auction_awards award
+      on award.week_start=board.week_start and award.day_index=board.day_index and award.slot=board.slot
+    left join public.profiles winner on winner.id=award.profile_id
+    left join private.football_weekly_nfl_team_season_autofill fill
+      on fill.week_start=board.week_start and fill.item_reference=board.season_reference
+    left join public.profiles fill_profile on fill_profile.id=fill.profile_id
+    left join private.football_weekly_nfl_team_season_wildcard_claims claim
+      on claim.week_start=board.week_start
+     and claim.profile_id=award.profile_id
+     and claim.replaced_item_reference=board.season_reference
+    where board.week_start=p_week_start and board.day_index between 1 and 6
+  ),
+  wildcard as (
+    select
+      7 as day_index,
+      board.slot,
+      'Wildcard'::text as theme,
+      board.item_reference,
+      item.primary_name as team_name,
+      item.team_code,
+      item.season_year,
+      item.display_label,
+      item.hidden_grade as grade,
+      0::integer as winning_bid,
+      claim.profile_id as auction_winner_profile_id,
+      profile.display_name as auction_winner_display_name,
+      claim.profile_id as final_owner_profile_id,
+      profile.display_name as final_owner_display_name,
+      'wildcard'::text as acquisition,
+      false as was_replaced
+    from private.football_weekly_nfl_team_season_wildcard_board board
+    join private.football_weekly_auction_items item on item.item_reference=board.item_reference
+    left join private.football_weekly_nfl_team_season_wildcard_claims claim
+      on claim.week_start=board.week_start and claim.item_reference=board.item_reference
+    left join public.profiles profile on profile.id=claim.profile_id
+    where board.week_start=p_week_start
+  ),
+  combined as (
+    select * from normal
+    union all
+    select * from wildcard
+  )
+  select coalesce(jsonb_agg(to_jsonb(combined) order by day_index,slot),'[]'::jsonb)
+  into v_all_teams
+  from combined;
+
+  select to_jsonb(result) into v_mine
+  from private.football_weekly_auction_results result
+  where result.week_start=p_week_start and result.profile_id=p_profile_id;
+
+  v_wildcard:=private.football_weekly_nfl_team_season_wildcard_state(
+    p_week_start,p_profile_id,
+    ((p_week_start+6)::date+time '12:00') at time zone 'America/Chicago'
+  );
+
+  return jsonb_build_object(
+    'subject_key','nfl-best-team-seasons-since-2000',
+    'week_start',p_week_start,
+    'standings',v_standings,
+    'collections',v_collections,
+    'collection',v_collection,
+    'all_teams',v_all_teams,
+    'wildcard',v_wildcard,
+    'my_result',coalesce(v_mine,'{}'::jsonb)
+  );
+end;
+$$;
+revoke all on function private.football_weekly_nfl_team_season_final_payload(date,uuid)
+  from public,anon,authenticated;
+
+create or replace function private.get_football_weekly_nfl_team_season_state(
+  p_week_start date,p_profile_id uuid,p_at timestamptz
+)
+returns jsonb
+language plpgsql
+stable security definer
+set search_path=''
+as $$
+declare
+  v_day integer;
+  v_starting integer;
+  v_spent integer;
+  v_bankroll integer;
+  v_owned integer;
+  v_submitted boolean;
+  v_show_intro boolean;
+  v_theme text;
+  v_cards jsonb:='[]'::jsonb;
+  v_bids jsonb:='{}'::jsonb;
+  v_prior_results jsonb:='[]'::jsonb;
+  v_collection jsonb:='[]'::jsonb;
+  v_wildcard jsonb:=null;
+begin
+  v_day:=private.football_weekly_auction_day_index(p_at,p_week_start);
+
+  if not exists(
+    select 1 from private.football_weekly_auction_participants participant
+    where participant.week_start=p_week_start and participant.profile_id=p_profile_id
+  ) then
+    return jsonb_build_object(
+      'available',false,
+      'subject_key','nfl-best-team-seasons-since-2000',
+      'locked_this_week',true,
+      'week_start',p_week_start,
+      'eligible_week_start',p_week_start+7
+    );
+  end if;
+
+  v_starting:=private.football_weekly_auction_starting_bankroll(
+    p_week_start,p_profile_id,50
+  );
+
+  select
+    coalesce(sum(award.winning_bid),0)::integer,
+    count(*)::integer
+  into v_spent,v_owned
+  from private.football_weekly_auction_awards award
+  where award.week_start=p_week_start
+    and award.profile_id=p_profile_id
+    and award.day_index between 1 and 6;
+
+  v_bankroll:=greatest(v_starting-v_spent,0);
+
+  select not exists(
+    select 1 from private.football_weekly_auction_daily_entries entry
+    where entry.week_start=p_week_start and entry.profile_id=p_profile_id
+  ) and not exists(
+    select 1
+    from private.football_weekly_nfl_team_season_wildcard_submissions submission
+    where submission.week_start=p_week_start and submission.profile_id=p_profile_id
+  ) into v_show_intro;
+
+  if v_day between 1 and 6 then
+    select min(board.theme),
+      coalesce(jsonb_agg(jsonb_build_object(
+        'slot',board.slot,
+        'item_reference',item.item_reference,
+        'team_name',item.primary_name,
+        'team_code',item.team_code,
+        'season_year',item.season_year,
+        'display_label',item.display_label,
+        'record',item.grading_inputs->>'record',
+        'postseason_finish',item.grading_inputs->>'postseason_finish',
+        'card_tag',item.grading_inputs->>'card_tag',
+        'lock_at',board.lock_at
+      ) order by board.slot),'[]'::jsonb)
+    into v_theme,v_cards
+    from private.football_weekly_auction_board board
+    join private.football_weekly_auction_items item on item.item_reference=board.season_reference
+    where board.week_start=p_week_start and board.day_index=v_day;
+
+    select exists(
+      select 1 from private.football_weekly_auction_daily_entries entry
+      where entry.week_start=p_week_start and entry.day_index=v_day and entry.profile_id=p_profile_id
+    ) into v_submitted;
+
+    select coalesce(jsonb_object_agg(bid.slot::text,bid.amount),'{}'::jsonb)
+    into v_bids
+    from private.football_weekly_auction_bids bid
+    where bid.week_start=p_week_start and bid.day_index=v_day and bid.profile_id=p_profile_id;
+  else
+    v_theme:='Wildcard';
+    v_wildcard:=private.football_weekly_nfl_team_season_wildcard_state(
+      p_week_start,p_profile_id,p_at
+    );
+    v_submitted:=coalesce((v_wildcard->>'submitted')::boolean,false);
+  end if;
+
+  if v_day>1 then
+    with target as (
+      select least(v_day-1,6) as day_index
+    )
+    select coalesce(jsonb_agg(result_row.payload order by result_row.slot),'[]'::jsonb)
+    into v_prior_results
+    from (
+      select
+        board.slot,
+        jsonb_build_object(
+          'slot',board.slot,
+          'item_reference',item.item_reference,
+          'team_name',item.primary_name,
+          'team_code',item.team_code,
+          'season_year',item.season_year,
+          'display_label',item.display_label,
+          'record',item.grading_inputs->>'record',
+          'postseason_finish',item.grading_inputs->>'postseason_finish',
+          'winning_bid',award.winning_bid,
+          'winner_profile_id',award.profile_id,
+          'winner_display_name',winner.display_name,
+          'bids',coalesce((
+            select jsonb_agg(jsonb_build_object(
+              'profile_id',entry.profile_id,
+              'display_name',bidder.display_name,
+              'amount',coalesce(bid.amount,0)
+            ) order by coalesce(bid.amount,0) desc,bidder.display_name)
+            from private.football_weekly_auction_daily_entries entry
+            join public.profiles bidder on bidder.id=entry.profile_id
+            left join private.football_weekly_auction_bids bid
+              on bid.week_start=entry.week_start
+             and bid.day_index=entry.day_index
+             and bid.profile_id=entry.profile_id
+             and bid.slot=board.slot
+            where entry.week_start=p_week_start
+              and entry.day_index=(select day_index from target)
+          ),'[]'::jsonb)
+        ) as payload
+      from private.football_weekly_auction_board board
+      join private.football_weekly_auction_items item on item.item_reference=board.season_reference
+      join private.football_weekly_auction_awards award
+        on award.week_start=board.week_start and award.day_index=board.day_index and award.slot=board.slot
+      left join public.profiles winner on winner.id=award.profile_id
+      where board.week_start=p_week_start
+        and board.day_index=(select day_index from target)
+    ) result_row;
+  end if;
+
+  select coalesce(jsonb_agg(jsonb_build_object(
+    'item_reference',item.item_reference,
+    'team_name',item.primary_name,
+    'team_code',item.team_code,
+    'season_year',item.season_year,
+    'display_label',item.display_label,
+    'record',item.grading_inputs->>'record',
+    'postseason_finish',item.grading_inputs->>'postseason_finish',
+    'winning_bid',award.winning_bid
+  ) order by award.day_index,award.slot),'[]'::jsonb)
+  into v_collection
+  from private.football_weekly_auction_awards award
+  join private.football_weekly_auction_board board
+    on board.week_start=award.week_start and board.day_index=award.day_index and board.slot=award.slot
+  join private.football_weekly_auction_items item on item.item_reference=board.season_reference
+  where award.week_start=p_week_start
+    and award.profile_id=p_profile_id
+    and award.day_index between 1 and 6;
+
+  return jsonb_build_object(
+    'available',true,
+    'subject_key','nfl-best-team-seasons-since-2000',
+    'week_start',p_week_start,
+    'week_end',p_week_start+6,
+    'day_index',v_day,
+    'phase',case when v_day=7 then 'wildcard' else 'normal' end,
+    'starting_bankroll',v_starting,
+    'bankroll',v_bankroll,
+    'owned_count',v_owned,
+    'reserve_floor',0,
+    'max_commit',v_bankroll,
+    'submitted_today',v_submitted,
+    'show_intro',v_show_intro,
+    'theme',v_theme,
+    'teams',v_cards,
+    'bids',v_bids,
+    'prior_results',v_prior_results,
+    'collection',v_collection,
+    'wildcard',v_wildcard,
+    'previous_final',null
+  );
+end;
+$$;
+revoke all on function private.get_football_weekly_nfl_team_season_state(date,uuid,timestamptz)
+  from public,anon,authenticated;
+
+create or replace function private.get_my_football_weekly_nfl_team_season(
+  p_at timestamptz default now()
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare
+  v_profile uuid:=auth.uid();
+  v_week_start date;
+  v_previous_week date;
+  v_state jsonb;
+  v_previous_final jsonb:=null;
+begin
+  if v_profile is null then raise exception 'sign in required'; end if;
+
+  perform private.maintain_football_weekly_auction(p_at);
+  v_week_start:=private.football_weekly_auction_week_start(p_at);
+  v_previous_week:=v_week_start-7;
+
+  if private.football_weekly_auction_day_index(p_at,v_week_start)=7 then
+    perform private.materialize_football_weekly_nfl_team_season_wildcard(v_week_start);
+  end if;
+
+  v_state:=private.get_football_weekly_nfl_team_season_state(
+    v_week_start,v_profile,p_at
+  );
+
+  if exists(
+    select 1 from private.football_weekly_auction_results result
+    where result.week_start=v_previous_week and result.profile_id=v_profile
+  ) and not exists(
+    select 1 from private.football_weekly_auction_final_views view_row
+    where view_row.week_start=v_previous_week and view_row.profile_id=v_profile
+  ) then
+    v_previous_final:=private.football_weekly_auction_final_payload(v_previous_week,v_profile);
+  end if;
+
+  return v_state || jsonb_build_object('previous_final',v_previous_final);
+end;
+$$;
+revoke all on function private.get_my_football_weekly_nfl_team_season(timestamptz)
+  from public,anon,authenticated;
+
+create or replace function private.submit_my_football_weekly_nfl_team_season_bids(
+  p_bids jsonb,p_at timestamptz default now()
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare
+  v_profile uuid:=auth.uid();
+  v_week_start date;
+  v_day integer;
+begin
+  if v_profile is null then raise exception 'sign in required'; end if;
+  perform private.maintain_football_weekly_auction(p_at);
+  v_week_start:=private.football_weekly_auction_week_start(p_at);
+  v_day:=private.football_weekly_auction_day_index(p_at,v_week_start);
+
+  perform private.submit_football_weekly_nfl_team_season_bids_for_profile(
+    v_week_start,v_day,v_profile,p_bids,p_at
+  );
+
+  return private.get_my_football_weekly_nfl_team_season(p_at);
+end;
+$$;
+revoke all on function private.submit_my_football_weekly_nfl_team_season_bids(jsonb,timestamptz)
+  from public,anon,authenticated;
+
+-- Route the shared lifecycle by subject.
+create or replace function private.materialize_football_weekly_auction_week(p_week_start date)
+returns void
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare v_subject text;
+begin
+  if p_week_start<date '2026-09-15' then return; end if;
+  if extract(isodow from p_week_start)<>2 then
+    raise exception 'Football Weekly Auction week must start Tuesday';
+  end if;
+
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=p_week_start;
+
+  if v_subject is null then
+    v_subject:=private.football_weekly_auction_subject_for_week(p_week_start);
+    if v_subject is null then raise exception 'Football Weekly Auction has no eligible subject'; end if;
+    insert into private.football_weekly_auction_weeks(week_start,subject_key)
+    values(p_week_start,v_subject)
+    on conflict(week_start) do nothing;
+    select subject_key into v_subject
+    from private.football_weekly_auction_weeks
+    where week_start=p_week_start;
+  end if;
+
+  if v_subject='nfl-best-team-seasons-since-2000' then
+    perform private.materialize_football_weekly_nfl_team_season_week(p_week_start);
+  elsif v_subject='cfb-superteam' then
+    perform private.materialize_football_weekly_superteam_week(p_week_start);
+  elsif v_subject='nfl-build-qb' then
+    perform private.materialize_football_weekly_build_qb_week(p_week_start);
+  else
+    perform private.materialize_football_weekly_auction_week_cfb(p_week_start);
+  end if;
+end;
+$$;
+revoke all on function private.materialize_football_weekly_auction_week(date)
+  from public,anon,authenticated;
+
+create or replace function private.resolve_football_weekly_auction_day(
+  p_week_start date,p_day_index integer,p_at timestamptz default now()
+)
+returns void
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare v_subject text;
+begin
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=p_week_start;
+
+  if v_subject='nfl-best-team-seasons-since-2000' then
+    perform private.resolve_football_weekly_nfl_team_season_day(p_week_start,p_day_index,p_at);
+  elsif v_subject='cfb-superteam' then
+    perform private.resolve_football_weekly_superteam_day(p_week_start,p_day_index,p_at);
+  elsif v_subject='nfl-build-qb' then
+    perform private.resolve_football_weekly_build_qb_day(p_week_start,p_day_index,p_at);
+  else
+    perform private.resolve_football_weekly_auction_day_cfb(p_week_start,p_day_index,p_at);
+  end if;
+end;
+$$;
+revoke all on function private.resolve_football_weekly_auction_day(date,integer,timestamptz)
+  from public,anon,authenticated;
+
+create or replace function private.finalize_football_weekly_auction_week(
+  p_week_start date,p_at timestamptz default now()
+)
+returns void
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare v_subject text;
+begin
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=p_week_start;
+
+  if v_subject='nfl-best-team-seasons-since-2000' then
+    perform private.finalize_football_weekly_nfl_team_season_week(p_week_start,p_at);
+  elsif v_subject='cfb-superteam' then
+    perform private.finalize_football_weekly_superteam_week(p_week_start,p_at);
+  elsif v_subject='nfl-build-qb' then
+    perform private.finalize_football_weekly_build_qb_week(p_week_start,p_at);
+  else
+    perform private.finalize_football_weekly_auction_week_cfb(p_week_start,p_at);
+  end if;
+end;
+$$;
+revoke all on function private.finalize_football_weekly_auction_week(date,timestamptz)
+  from public,anon,authenticated;
+
+create or replace function private.football_weekly_auction_final_payload(
+  p_week_start date,p_profile_id uuid
+)
+returns jsonb
+language plpgsql
+stable security definer
+set search_path=''
+as $$
+declare v_subject text;
+begin
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=p_week_start;
+
+  if v_subject='nfl-best-team-seasons-since-2000' then
+    return private.football_weekly_nfl_team_season_final_payload(p_week_start,p_profile_id);
+  elsif v_subject='cfb-superteam' then
+    return private.football_weekly_superteam_final_payload(p_week_start,p_profile_id);
+  elsif v_subject='nfl-build-qb' then
+    return private.football_weekly_build_qb_final_payload(p_week_start,p_profile_id);
+  end if;
+
+  return private.football_weekly_auction_final_payload_cfb(p_week_start,p_profile_id)
+    || jsonb_build_object('subject_key',coalesce(v_subject,'cfb-best-teams-since-2000'));
+end;
+$$;
+revoke all on function private.football_weekly_auction_final_payload(date,uuid)
+  from public,anon,authenticated;
+
+create or replace function private.maintain_football_weekly_auction(
+  p_at timestamptz default now()
+)
+returns void
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare
+  v_week_start date;
+  v_subject text;
+  v_day_index integer;
+  v_join_lock_at timestamptz;
+  v_due record;
+  v_week record;
+  v_day integer;
+  v_wc_lock timestamptz;
+begin
+  if (p_at at time zone 'America/Chicago')::date<date '2026-09-15' then return; end if;
+
+  v_week_start:=private.football_weekly_auction_week_start(p_at);
+  perform private.materialize_football_weekly_auction_week(v_week_start);
+  perform private.materialize_football_weekly_auction_participants(v_week_start);
+
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=v_week_start;
+
+  -- Keep every unresolved production NFL week complete even if nobody opened
+  -- the app on a particular day. Hidden future supply becomes exposed only once
+  -- its day boundary has actually arrived.
+  for v_week in
+    select week.week_start
+    from private.football_weekly_auction_weeks week
+    where week.subject_key='nfl-best-team-seasons-since-2000'
+      and week.week_start>=date '2026-09-15'
+      and week.finalized_at is null
+      and week.week_start<=v_week_start
+    order by week.week_start
+  loop
+    for v_day in 1..6 loop
+      if p_at>=((v_week.week_start+(v_day-1))::timestamp at time zone 'America/Chicago') then
+        perform private.materialize_football_weekly_nfl_team_season_day(
+          v_week.week_start,v_day,p_at
+        );
+      end if;
+    end loop;
+
+    if p_at>=((v_week.week_start+6)::timestamp at time zone 'America/Chicago') then
+      perform private.materialize_football_weekly_nfl_team_season_wildcard(v_week.week_start);
+    end if;
+  end loop;
+
+  select min(board.lock_at) into v_join_lock_at
+  from private.football_weekly_auction_board board
+  where board.week_start=v_week_start
+    and board.day_index=case when v_subject='cfb-superteam' then 4 else 1 end;
+
+  if v_join_lock_at is null then
+    raise exception 'Weekly Auction join boundary is incomplete';
+  end if;
+
+  if p_at>=v_join_lock_at then
+    update private.football_weekly_auction_weeks week
+    set field_locked_at=coalesce(week.field_locked_at,v_join_lock_at)
+    where week.week_start=v_week_start;
+  end if;
+
+  for v_due in
+    select board.week_start,board.day_index
+    from private.football_weekly_auction_board board
+    where not exists(
+      select 1
+      from private.football_weekly_superteam_lab_runs lab
+      where lab.lab_week_start=board.week_start
+    )
+    group by board.week_start,board.day_index
+    having min(board.lock_at)<=p_at
+       and (
+         select count(*)
+         from private.football_weekly_auction_awards award
+         where award.week_start=board.week_start
+           and award.day_index=board.day_index
+       )<private.football_weekly_auction_cards_for_day(board.week_start,board.day_index)
+    order by board.week_start,board.day_index
+  loop
+    perform private.resolve_football_weekly_auction_day(
+      v_due.week_start,v_due.day_index,p_at
+    );
+  end loop;
+
+  for v_week in
+    select week.week_start
+    from private.football_weekly_auction_weeks week
+    where week.subject_key='nfl-best-team-seasons-since-2000'
+      and week.week_start>=date '2026-09-15'
+      and week.finalized_at is null
+      and exists(
+        select 1
+        from private.football_weekly_nfl_team_season_wildcard_board wildcard
+        where wildcard.week_start=week.week_start
+        having max(wildcard.lock_at)<=p_at
+      )
+    order by week.week_start
+  loop
+    select max(wildcard.lock_at) into v_wc_lock
+    from private.football_weekly_nfl_team_season_wildcard_board wildcard
+    where wildcard.week_start=v_week.week_start;
+
+    perform private.resolve_football_weekly_nfl_team_season_wildcard(
+      v_week.week_start,greatest(p_at,v_wc_lock)
+    );
+    perform private.finalize_football_weekly_nfl_team_season_week(
+      v_week.week_start,greatest(p_at,v_wc_lock)
+    );
+  end loop;
+
+  for v_week in
+    select week.week_start
+    from private.football_weekly_auction_weeks week
+    where week.finalized_at is null
+      and week.subject_key<>'nfl-best-team-seasons-since-2000'
+      and not exists(
+        select 1
+        from private.football_weekly_superteam_lab_runs lab
+        where lab.lab_week_start=week.week_start
+      )
+      and (
+        select count(*)
+        from private.football_weekly_auction_awards award
+        where award.week_start=week.week_start
+      )=private.football_weekly_auction_cards_per_week(week.week_start)
+  loop
+    perform private.finalize_football_weekly_auction_week(v_week.week_start,p_at);
+  end loop;
+end;
+$$;
+revoke all on function private.maintain_football_weekly_auction(timestamptz)
+  from public,anon,authenticated;
+
+create or replace function public.get_my_football_weekly_auction(
+  p_at timestamptz default now()
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare
+  v_profile uuid:=auth.uid();
+  v_week_start date;
+  v_subject text;
+begin
+  if v_profile is null then raise exception 'sign in required'; end if;
+
+  perform private.maintain_football_weekly_auction(p_at);
+  v_week_start:=private.football_weekly_auction_week_start(p_at);
+  perform private.ensure_football_weekly_auction_participant(v_week_start,v_profile,p_at);
+
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=v_week_start;
+
+  if v_subject='nfl-best-team-seasons-since-2000' then
+    return private.get_my_football_weekly_nfl_team_season(p_at);
+  elsif v_subject='cfb-superteam' then
+    return private.get_my_football_weekly_superteam(p_at);
+  elsif v_subject='nfl-build-qb' then
+    return private.get_my_football_weekly_build_qb(p_at);
+  end if;
+
+  return private.get_my_football_weekly_auction_cfb(p_at)
+    || jsonb_build_object('subject_key',coalesce(v_subject,'cfb-best-teams-since-2000'));
+end;
+$$;
+revoke all on function public.get_my_football_weekly_auction(timestamptz)
+  from public,anon;
+grant execute on function public.get_my_football_weekly_auction(timestamptz)
+  to authenticated;
+
+create or replace function public.submit_my_football_weekly_auction_bids(
+  p_bids jsonb,p_at timestamptz default now()
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare
+  v_profile uuid:=auth.uid();
+  v_week_start date;
+  v_subject text;
+begin
+  if v_profile is null then raise exception 'sign in required'; end if;
+
+  perform private.maintain_football_weekly_auction(p_at);
+  v_week_start:=private.football_weekly_auction_week_start(p_at);
+  perform private.ensure_football_weekly_auction_participant(v_week_start,v_profile,p_at);
+
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=v_week_start;
+
+  if v_subject='nfl-best-team-seasons-since-2000' then
+    return private.submit_my_football_weekly_nfl_team_season_bids(p_bids,p_at);
+  elsif v_subject='cfb-superteam' then
+    return private.submit_my_football_weekly_superteam_bids(p_bids,p_at);
+  elsif v_subject='nfl-build-qb' then
+    return private.submit_my_football_weekly_build_qb_bids(p_bids,p_at);
+  end if;
+
+  return private.submit_my_football_weekly_auction_bids_cfb(p_bids,p_at);
+end;
+$$;
+revoke all on function public.submit_my_football_weekly_auction_bids(jsonb,timestamptz)
+  from public,anon;
+grant execute on function public.submit_my_football_weekly_auction_bids(jsonb,timestamptz)
+  to authenticated;
+
+-- Reaping follows the player into the next calendar Weekly Auction regardless
+-- of which subject rotates next. Patch the existing subject getters/submission
+-- functions to use the shared starting-bankroll adjustment without changing
+-- any subject's normal default bankroll.
+do $apply_shared_reaping_bankroll$
+declare
+  d text;
+  n text;
+begin
+  d:=pg_get_functiondef('private.get_my_football_weekly_auction_cfb(timestamptz)'::regprocedure);
+  n:=replace(d,'40 - coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40) - coalesce(sum(award.winning_bid),0)::integer');
+  if n=d then raise exception 'CFB Weekly getter bankroll patch drifted'; end if;
+  execute n;
+
+  d:=pg_get_functiondef('private.submit_my_football_weekly_auction_bids_cfb(jsonb,timestamptz)'::regprocedure);
+  n:=replace(d,'40 - coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40) - coalesce(sum(award.winning_bid),0)::integer');
+  if n=d then raise exception 'CFB Weekly submit bankroll patch drifted'; end if;
+  execute n;
+
+  d:=pg_get_functiondef('private.get_my_football_weekly_build_qb(timestamptz)'::regprocedure);
+  n:=replace(d,'40-coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40)-coalesce(sum(award.winning_bid),0)::integer');
+  if n=d then raise exception 'Build a QB getter bankroll patch drifted'; end if;
+  execute n;
+
+  d:=pg_get_functiondef('private.submit_my_football_weekly_build_qb_bids(jsonb,timestamptz)'::regprocedure);
+  n:=replace(d,'40-coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40)-coalesce(sum(award.winning_bid),0)::integer');
+  if n=d then raise exception 'Build a QB submit bankroll patch drifted'; end if;
+  execute n;
+
+  d:=pg_get_functiondef('private.get_my_football_weekly_superteam(timestamptz)'::regprocedure);
+  n:=replace(d,'50-coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,50)-coalesce(sum(award.winning_bid),0)::integer');
+  if n=d then raise exception 'CFB Superteam getter bankroll patch drifted'; end if;
+  execute n;
+
+  d:=pg_get_functiondef('private.submit_football_weekly_superteam_bids_for_profile(date,integer,uuid,jsonb,timestamptz)'::regprocedure);
+  n:=replace(d,'50-coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(p_week_start,p_profile_id,50)-coalesce(sum(award.winning_bid),0)::integer');
+  if n=d then raise exception 'CFB Superteam submit bankroll patch drifted'; end if;
+  execute n;
+end
+$apply_shared_reaping_bankroll$;
+
+-- Runtime contracts: no hidden-grade leakage is asserted in frontend/RPC tests;
+-- these database checks lock the canonical population and rotation authority.
+do $nfl_team_season_runtime_contract$
+declare
+  v_count integer;
+begin
+  select count(*)::integer into v_count
+  from private.nfl_best_team_seasons_v1_authority;
+  if v_count<>200 then
+    raise exception 'NFL team-season authority must contain exactly 200 seasons';
+  end if;
+
+  if (
+    select min(hidden_grade) from private.nfl_best_team_seasons_v1_authority
+  )<>74.0 or (
+    select max(hidden_grade) from private.nfl_best_team_seasons_v1_authority
+  )<>100.0 then
+    raise exception 'NFL team-season authority grade range drifted';
+  end if;
+
+  if (select hidden_grade from private.nfl_best_team_seasons_v1_authority where item_reference='nfl-best-ne-2007')<>100.0
+    or (select hidden_grade from private.nfl_best_team_seasons_v1_authority where item_reference='nfl-best-sea-2013')<>99.0
+    or (select hidden_grade from private.nfl_best_team_seasons_v1_authority where item_reference='nfl-best-sea-2010')<>74.0
+  then
+    raise exception 'NFL team-season anchor grades drifted';
+  end if;
+
+  if private.football_weekly_nfl_team_season_cards_for_field(3)<>3
+    or private.football_weekly_nfl_team_season_cards_for_field(4)<>3
+    or private.football_weekly_nfl_team_season_cards_for_field(5)<>4
+    or private.football_weekly_nfl_team_season_cards_for_field(6)<>5
+    or private.football_weekly_nfl_team_season_cards_for_field(7)<>6
+    or private.football_weekly_nfl_team_season_cards_for_field(8)<>7
+  then
+    raise exception 'NFL team-season elastic supply contract drifted';
+  end if;
+
+  if private.football_weekly_auction_subject_for_week(date '2026-10-06')
+    <>'nfl-best-team-seasons-since-2000'
+  then
+    raise exception 'NFL team-season rotation slot drifted';
+  end if;
+end
+$nfl_team_season_runtime_contract$;
+
+      and keys.key::integer>v_card_count
+      and coalesce((p_bids->>keys.key)::integer,0)<>0
   ) then
     raise exception 'A bid targets a card that is not on today''s board';
   end if;
@@ -2079,14 +3257,14 @@ declare
   n text;
 begin
   d:=pg_get_functiondef('private.get_my_football_weekly_auction_cfb(timestamptz)'::regprocedure);
-  n:=replace(d,'40 - coalesce(sum(award.winning_bid), 0)::integer',
-    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40) - coalesce(sum(award.winning_bid), 0)::integer');
+  n:=replace(d,'40 - coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40) - coalesce(sum(award.winning_bid),0)::integer');
   if n=d then raise exception 'CFB Weekly getter bankroll patch drifted'; end if;
   execute n;
 
   d:=pg_get_functiondef('private.submit_my_football_weekly_auction_bids_cfb(jsonb,timestamptz)'::regprocedure);
-  n:=replace(d,'40 - coalesce(sum(award.winning_bid), 0)::integer',
-    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40) - coalesce(sum(award.winning_bid), 0)::integer');
+  n:=replace(d,'40 - coalesce(sum(award.winning_bid),0)::integer',
+    'private.football_weekly_auction_starting_bankroll(v_week_start,v_profile,40) - coalesce(sum(award.winning_bid),0)::integer');
   if n=d then raise exception 'CFB Weekly submit bankroll patch drifted'; end if;
   execute n;
 
