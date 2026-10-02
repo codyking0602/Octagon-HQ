@@ -29,6 +29,7 @@ describe("Football team-themed Daily packs", () => {
     expect(run.map((question) => question.level)).toEqual([
       "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8",
     ]);
+    expect(run.find((question) => question.level === "Q4")?.choices.find((choice) => choice.id === run.find((question) => question.level === "Q4")?.correctChoiceId)?.text).toBe("Sam Bradford");
     expect(run.find((question) => question.level === "Q8")?.statSheet).toBeNull();
 
     const normal = buildMillionaireDailySetup("football", "2026-10-03", "football-daily-v20-resume-v18-oct3");
@@ -54,7 +55,7 @@ describe("Football team-themed Daily packs", () => {
         "Bob Lilly",
         "Chuck Howley",
         "Randy White",
-        "Mel Renfro",
+        "Everson Walls",
       ]);
   });
 
@@ -113,6 +114,10 @@ describe("Football team-themed Daily packs", () => {
     expect(run[6]).toMatchObject({
       answer: "Terrance Williams",
       category: "Cowboys-Seahawks",
+    });
+    expect(run[8]).toMatchObject({
+      answer: "Robert Newhouse",
+      category: "Super Bowl History",
     });
     expect(run[9]).toMatchObject({
       answer: "Craig Morton",
