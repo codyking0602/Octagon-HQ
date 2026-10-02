@@ -5,6 +5,7 @@ const bidHistorySchema = z.object({
   profile_id: z.string().uuid(),
   display_name: z.string(),
   amount: z.coerce.number().int().min(0),
+  priority: z.coerce.number().int().min(1).max(12).nullable().optional(),
 });
 
 const finalStandingSchema = z.object({
@@ -247,6 +248,7 @@ const nflTeamSeasonCollectionSchema = z.object({
   team_code: z.string(),
   season_year: z.coerce.number().int().min(2000).max(2025),
   display_label: z.string(),
+  card_tag: z.string().nullable().optional(),
   winning_bid: z.coerce.number().int().min(0).max(50),
   source: z.enum(["normal", "wildcard", "autofill"]),
 });
@@ -385,7 +387,10 @@ const nflTeamSeasonAvailableSchema = z.object({
   teams: z.array(nflTeamSeasonCardSchema).max(7),
   prior_results: z.array(nflTeamSeasonPriorResultSchema).default([]),
   collection: z.array(nflTeamSeasonCollectionSchema).default([]),
-  bids: z.record(z.string(), z.coerce.number().int().min(0).max(50)).default({}),
+  bids: z.record(
+    z.string(),
+    z.union([superteamBidSchema, z.coerce.number().int().min(0).max(50)]),
+  ).default({}),
   wildcard: nflWildcardStateSchema.nullable(),
 });
 
