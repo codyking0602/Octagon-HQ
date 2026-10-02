@@ -174,12 +174,29 @@ function boundedEditDistance(left: string, right: string, limit: number) {
   return previous[right.length]!;
 }
 
+function isSingleAdjacentTransposition(candidate: string, accepted: string) {
+  if (candidate.length !== accepted.length || candidate.length < 7) return false;
+  const mismatches: number[] = [];
+  for (let index = 0; index < candidate.length; index += 1) {
+    if (candidate[index] === accepted[index]) continue;
+    mismatches.push(index);
+    if (mismatches.length > 2) return false;
+  }
+  if (mismatches.length !== 2) return false;
+  const [left, right] = mismatches;
+  return right === left + 1
+    && candidate[left] === accepted[right]
+    && candidate[right] === accepted[left];
+}
+
 function tolerantShortAnswerMatch(candidate: string, accepted: string) {
   if (candidate === accepted) return true;
-  // Keep short trivia terms exact, but allow a one-character deletion from a
-  // seven-plus-character accepted answer/alias (e.g. Weidman -> weidmn).
+  // Keep short trivia terms exact, but allow ordinary human typos on
+  // seven-plus-character accepted answers/aliases: one deletion or one
+  // adjacent transposition (e.g. Weidman -> weidmn / Wiedman).
   if (candidate.length < 6 || accepted.length < 7) return false;
   if (/^\d+$/.test(candidate) || /^\d+$/.test(accepted)) return false;
+  if (isSingleAdjacentTransposition(candidate, accepted)) return true;
   const maxLength = Math.max(candidate.length, accepted.length);
   const limit = maxLength >= 14 ? 2 : 1;
   return boundedEditDistance(candidate, accepted, limit) <= limit;
