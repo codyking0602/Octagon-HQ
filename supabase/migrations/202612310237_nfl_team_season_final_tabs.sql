@@ -1,5 +1,5 @@
 -- Standardize the NFL Team-Seasons final screen with the other Weekly Auctions.
--- Keep the all-card grade reveal, and also expose every player's effective
+-- Keep the all-card grade reveal (including all four Day 7 Wildcards), and also expose every player's effective
 -- post-Wildcard collection so the final Collections tab is truthful.
 
 create or replace function private.football_weekly_nfl_team_season_final_payload(
@@ -76,20 +76,19 @@ as $$
       on item.item_reference=effective.item_reference
     where participant.week_start=p_week_start
   ),
-  all_items as (
-    select coalesce(jsonb_agg(jsonb_build_object(
-      'day_index',board.day_index,
-      'slot',board.slot,
-      'item_reference',item.item_reference,
-      'team_name',item.primary_name,
-      'team_code',item.team_code,
-      'season_year',item.season_year,
-      'display_label',item.display_label,
-      'grade',item.hidden_grade,
-      'winning_bid',coalesce(award.winning_bid,0),
-      'winner_profile_id',award.profile_id,
-      'winner_display_name',profile.display_name
-    ) order by board.day_index,board.slot),'[]'::jsonb) as payload
+  all_item_rows as (
+    select
+      board.day_index,
+      board.slot,
+      item.item_reference,
+      item.primary_name as team_name,
+      item.team_code,
+      item.season_year,
+      item.display_label,
+      item.hidden_grade as grade,
+      coalesce(award.winning_bid,0)::integer as winning_bid,
+      award.profile_id as winner_profile_id,
+      profile.display_name as winner_display_name
     from private.football_weekly_auction_board board
     join private.football_weekly_auction_items item
       on item.item_reference=board.season_reference
@@ -101,6 +100,45 @@ as $$
     where board.week_start=p_week_start
       and board.day_index between 1 and 6
       and board.slot<=private.football_weekly_auction_cards_for_day(board.week_start,board.day_index)
+
+    union all
+
+    select
+      7 as day_index,
+      board.slot,
+      item.item_reference,
+      item.primary_name as team_name,
+      item.team_code,
+      item.season_year,
+      item.display_label,
+      item.hidden_grade as grade,
+      0 as winning_bid,
+      claim.profile_id as winner_profile_id,
+      profile.display_name as winner_display_name
+    from private.football_weekly_nfl_team_season_wildcard_board board
+    join private.football_weekly_auction_items item
+      on item.item_reference=board.item_reference
+    left join private.football_weekly_nfl_team_season_wildcard_claims claim
+      on claim.week_start=board.week_start
+     and claim.item_reference=board.item_reference
+    left join public.profiles profile on profile.id=claim.profile_id
+    where board.week_start=p_week_start
+  ),
+  all_items as (
+    select coalesce(jsonb_agg(jsonb_build_object(
+      'day_index',row.day_index,
+      'slot',row.slot,
+      'item_reference',row.item_reference,
+      'team_name',row.team_name,
+      'team_code',row.team_code,
+      'season_year',row.season_year,
+      'display_label',row.display_label,
+      'grade',row.grade,
+      'winning_bid',row.winning_bid,
+      'winner_profile_id',row.winner_profile_id,
+      'winner_display_name',row.winner_display_name
+    ) order by row.day_index,row.slot),'[]'::jsonb) as payload
+    from all_item_rows row
   ),
   mine as (
     select to_jsonb(result) as payload
