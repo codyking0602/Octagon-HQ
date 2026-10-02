@@ -66,7 +66,7 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(runtime).toContain("having count(*)>=4");
     expect(runtime).toContain("'franchise_history','rivalry','division','season'");
     expect(runtime).toContain("'fell_short','era','conference_clash','open_field'");
-    expect(runtime).toContain("count(distinct item.franchise_id)<>4");
+    expect(runtime).toContain("and not (candidate.franchise_id=any(v_day_franchises))");
     expect(runtime).toContain("'Natural'");
     expect(runtime).toContain("Great Teams That Fell Short");
     expect(runtime).toContain("AFC vs NFC");
