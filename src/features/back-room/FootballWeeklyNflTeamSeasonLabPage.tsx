@@ -110,6 +110,20 @@ export default function FootballWeeklyNflTeamSeasonLabPage() {
     }
   }
 
+  async function jumpToDay7() {
+    if (!repository || busy) return;
+    setBusy(true);
+    setError(null);
+    try {
+      setLab(await repository.jumpNflTeamSeasonLabToDay7(1));
+      setSeatIndex(1);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Day 7 could not be prepared.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (!owner) {
     return (
       <div className="page football-weekly-nfl-lab">
@@ -160,6 +174,18 @@ export default function FootballWeeklyNflTeamSeasonLabPage() {
                 </button>
               ))}
             </div>
+
+            {!lab.completed && lab.day_index < 7 ? (
+              <button
+                className="football-weekly-nfl-lab__jump"
+                type="button"
+                disabled={busy}
+                onClick={() => void jumpToDay7()}
+              >
+                <strong>JUMP TO DAY 7</strong>
+                <span>Fresh seeded QA run · real Days 1–6 engines · no live competition state</span>
+              </button>
+            ) : null}
 
             {!lab.completed ? (
               <button
