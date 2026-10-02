@@ -174,12 +174,26 @@ function boundedEditDistance(left: string, right: string, limit: number) {
   return previous[right.length]!;
 }
 
+function singleAdjacentTransposition(left: string, right: string) {
+  if (left.length !== right.length) return false;
+  const mismatches: number[] = [];
+  for (let index = 0; index < left.length; index += 1) {
+    if (left[index] !== right[index]) mismatches.push(index);
+    if (mismatches.length > 2) return false;
+  }
+  if (mismatches.length !== 2 || mismatches[1] !== mismatches[0]! + 1) return false;
+  const [first, second] = mismatches;
+  return left[first!] === right[second!] && left[second!] === right[first!];
+}
+
 function tolerantShortAnswerMatch(candidate: string, accepted: string) {
   if (candidate === accepted) return true;
-  // Keep short trivia terms exact, but allow a one-character deletion from a
-  // seven-plus-character accepted answer/alias (e.g. Weidman -> weidmn).
+  // Keep short trivia terms exact, but allow common one-keystroke mistakes on
+  // seven-plus-character accepted answers/aliases, including adjacent swaps
+  // such as Weidman -> Wiedman.
   if (candidate.length < 6 || accepted.length < 7) return false;
   if (/^\d+$/.test(candidate) || /^\d+$/.test(accepted)) return false;
+  if (singleAdjacentTransposition(candidate, accepted)) return true;
   const maxLength = Math.max(candidate.length, accepted.length);
   const limit = maxLength >= 14 ? 2 : 1;
   return boundedEditDistance(candidate, accepted, limit) <= limit;
