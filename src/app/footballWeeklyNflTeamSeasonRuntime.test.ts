@@ -176,10 +176,19 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(gate).toContain("Five entries never automatically beats one");
     expect(gate).toContain("PRIORITY WHEEL");
     expect(gate).toContain("REAPING WHEEL");
+    expect(gate).toContain("PRIORITY WHEEL SETS CLAIM ORDER");
+    expect(gate).toContain("REAPING IS A SEPARATE DRAW");
+    expect(gate).toContain("0 ENTRIES = NO RISK");
+    expect(gate).toContain("SHOW THE FOUR WILDCARDS");
+    expect(gate).toContain("EVERYONE PASSED");
+    expect(gate).toContain("there was no Priority draw, no Wildcard claim, and no Reaping draw");
+    expect(gate).toContain("WILDCARD CLAIM ORDER");
+    expect(gate).toContain("WILDCARDS WON");
     expect(gate).toContain("wheelStopRotation");
     expect(gate).toContain("selectedProfileId");
     expect(styles).toContain("@keyframes football-nfl-weekly-wheel-resolve");
     expect(styles).toContain("var(--wheel-stop, 0deg)");
+    expect(styles).toContain("football-weekly-nfl-team-season__no-entry-result");
   });
 
   it("keeps the exact season year outside truncating name text on mobile", () => {
