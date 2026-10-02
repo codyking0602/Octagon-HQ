@@ -17,10 +17,14 @@ describe("Football Weekly Auction TEST2 live-field guard", () => {
   });
 
   it("rejects TEST2 before the existing-participant fast path can re-admit it", () => {
-    const guardIndex = migration.indexOf("profile.normalized_name='TEST2'");
+    const functionIndex = migration.indexOf("create or replace function");
+    const guardIndex = migration.indexOf(
+      "profile.normalized_name='TEST2'",
+      functionIndex,
+    );
     const participantFastPathIndex = migration.indexOf(
       "from private.football_weekly_auction_participants participant",
-      migration.indexOf("create or replace function"),
+      functionIndex,
     );
 
     expect(guardIndex).toBeGreaterThan(-1);
