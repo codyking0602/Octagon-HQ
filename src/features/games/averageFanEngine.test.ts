@@ -136,6 +136,11 @@ describe("Average Fan canonical question contract", () => {
     }), "weidmn")).toBe(true);
     expect(averageFanAnswersMatch(fixture({
       format: "short-answer",
+      answer: "Chris Weidman",
+      aliases: ["Weidman"],
+    }), "Chris Wiedman")).toBe(true);
+    expect(averageFanAnswersMatch(fixture({
+      format: "short-answer",
       answer: "Nickel",
       aliases: [],
     }), "nickle")).toBe(false);
