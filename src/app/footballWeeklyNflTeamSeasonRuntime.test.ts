@@ -50,13 +50,23 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(runtime).toContain("slot not between 1 and 7");
   });
 
-  it("uses the approved theme families without forced grade-shape buckets", () => {
+  it("ports the approved weighted #1601 theme generator without forced grade shapes", () => {
     for (const family of [
       "'division'","'season'","'era'","'rivalry'","'franchise_history'",
       "'fell_short'","'conference_clash'","'open_field'",
     ]) {
       expect(runtime).toContain(family);
     }
+    expect(runtime).toContain("('division'::text,1.35::double precision,2)");
+    expect(runtime).toContain("('season',1.10,1)");
+    expect(runtime).toContain("('rivalry',1.15,1)");
+    expect(runtime).toContain("('franchise_history',0.90,1)");
+    expect(runtime).toContain("('open_field',1.50,2)");
+    expect(runtime).toContain("(2000+floor(random()*26)::integer)::text");
+    expect(runtime).toContain("having count(*)>=4");
+    expect(runtime).toContain("'franchise_history','rivalry','division','season'");
+    expect(runtime).toContain("'fell_short','era','conference_clash','open_field'");
+    expect(runtime).toContain("count(distinct item.franchise_id)<>4");
     expect(runtime).toContain("'Natural'");
     expect(runtime).toContain("Great Teams That Fell Short");
     expect(runtime).toContain("AFC vs NFC");
