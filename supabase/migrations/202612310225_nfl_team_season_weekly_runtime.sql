@@ -980,7 +980,9 @@ begin
   if exists(
     select 1
     from jsonb_object_keys(p_bids) as keys(key)
-    where keys.key ~ '^[0-9]+
+    where keys.key ~ '^[0-9]+$'
+      and keys.key::integer>v_card_count
+      and coalesce((p_bids->>keys.key)::integer,0)<>0
   ) then
     raise exception 'A bid targets a card that is not on today''s board';
   end if;
