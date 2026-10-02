@@ -75,20 +75,72 @@ function RulesCover({ onStart }: { onStart: () => void }) {
     <section className="football-weekly-nfl-team-season__cover surface-card">
       <p className="eyebrow">WEEKLY AUCTION · NFL</p>
       <h1>BEST TEAM-SEASONS SINCE 2000</h1>
-      <strong>Six auction days. One Wildcard finale. Best four count.</strong>
-      <div className="football-weekly-nfl-team-season__rules">
-        <div className="football-weekly-nfl-team-season__rules-callout">
-          <b>YOU CAN BID MORE THAN YOUR BANKROLL IN TOTAL</b>
-          <span>Your bids are conditional. Rank every team P1, P2, P3… and the engine works down your list, skipping anything you can no longer afford.</span>
-        </div>
-        <p><b>$50 bankroll</b> for Days 1–6. Win at most <b>2 teams per day</b> and <b>5 normal teams</b> for the week.</p>
-        <p><b>Claim priority creates the strategy.</b> P1 is the team you want most. Losing bids cost $0, and a lower-priority win cannot spend money you already used on a higher-priority claim.</p>
-        <p>Every card is an exact <b>franchise + season year</b>. Tap the team-season to open its Pro Football Reference page.</p>
-        <p><b>Day 7:</b> see four Wildcards first, rank only the ones you would accept, then choose 0–5 entries.</p>
-        <p>Each entry is one <b>Priority ticket</b> and one <b>Reaping ticket</b>. <b>0 entries is completely safe.</b></p>
-        <p>The Reaped player keeps this week’s score, but starts the next Weekly Auction with <b>$5 less</b>.</p>
+      <strong>Build your collection across six auction days. Your best four grades decide the week.</strong>
+
+      <div className="football-weekly-nfl-team-season__explainer">
+        <article>
+          <b>1 · BID + RANK</b>
+          <strong>YOU CAN BID MORE THAN YOUR BANKROLL IN TOTAL</strong>
+          <span>Put a bid on any teams you want, then rank them P1, P2, P3… P1 is the team you want most.</span>
+        </article>
+        <article>
+          <b>2 · CLAIMS RUN IN YOUR ORDER</b>
+          <strong>YOUR BIDS ARE CONDITIONAL</strong>
+          <span>The engine tries P1 first, then P2, and so on. If a later win no longer fits your remaining bankroll, it is skipped. Losing bids cost $0.</span>
+        </article>
+        <article>
+          <b>3 · BUILD FIVE · SCORE FOUR</b>
+          <strong>$50 BANKROLL · MAX 2 WINS PER DAY</strong>
+          <span>You can win up to five normal team-seasons during Days 1–6. Only your four best grades count in the final score.</span>
+        </article>
       </div>
+
+      <details className="football-weekly-nfl-team-season__rules-details">
+        <summary>WHAT HAPPENS ON DAY 7?</summary>
+        <div>
+          <p>You will see four Wildcards before deciding whether to enter.</p>
+          <p>Every entry creates <b>one Priority ticket</b> and <b>one Reaping ticket</b>. More entries improve your odds on both wheels.</p>
+          <p><b>0 entries is completely safe:</b> no Wildcard chance and no Reaping risk.</p>
+          <p>The Reaped player keeps this week’s result, but starts the next Weekly Auction with <b>$5 less</b>.</p>
+        </div>
+      </details>
+
       <button type="button" onClick={onStart}>START WEEKLY AUCTION</button>
+    </section>
+  );
+}
+
+function WildcardRulesCover({ onStart }: { onStart: () => void }) {
+  return (
+    <section className="football-weekly-nfl-team-season__cover football-weekly-nfl-team-season__wildcard-cover surface-card">
+      <p className="eyebrow">DAY 7 · FINALE</p>
+      <h1>WILDCARD / REAPING</h1>
+      <strong>This is optional. See the four Wildcards, then decide how much risk you want.</strong>
+
+      <div className="football-weekly-nfl-team-season__explainer">
+        <article>
+          <b>1 · RANK ONLY TEAMS YOU WOULD TAKE</b>
+          <strong>THE WILDCARD MUST IMPROVE YOUR TEAM</strong>
+          <span>Rank the Wildcards you would accept. You only get one if it is still available and grades better than your current fourth scoring team.</span>
+        </article>
+        <article>
+          <b>2 · PRIORITY WHEEL SETS CLAIM ORDER</b>
+          <strong>1–5 ENTRIES = 1–5 PRIORITY TICKETS</strong>
+          <span>The wheel decides who gets to try first. More tickets improve your odds of going earlier; they do not guarantee a Wildcard.</span>
+        </article>
+        <article>
+          <b>3 · REAPING IS A SEPARATE DRAW</b>
+          <strong>THE SAME TICKETS GO ON A SECOND WHEEL</strong>
+          <span>One entrant is Reaped and starts the next Weekly Auction with $5 less. This week’s score is not reduced.</span>
+        </article>
+      </div>
+
+      <div className="football-weekly-nfl-team-season__safe-pass">
+        <b>0 ENTRIES = NO RISK</b>
+        <span>You cannot win a Wildcard, but you also cannot be Reaped.</span>
+      </div>
+
+      <button type="button" onClick={onStart}>SHOW THE FOUR WILDCARDS</button>
     </section>
   );
 }
@@ -513,6 +565,19 @@ function WheelGraphic({
 
 function WheelResult({ wildcard }: { wildcard: FootballWeeklyNflWildcardState }) {
   const reaped = wildcard.reaping;
+
+  if (!wildcard.priority_draws.length) {
+    return (
+      <section className="football-weekly-nfl-team-season__resolution">
+        <div className="football-weekly-nfl-team-season__no-entry-result">
+          <small>DAY 7 RESULT</small>
+          <strong>EVERYONE PASSED</strong>
+          <span>No one bought a Wildcard entry, so there was no Priority draw, no Wildcard claim, and no Reaping draw.</span>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="football-weekly-nfl-team-season__resolution">
       <div className="football-weekly-nfl-team-season__wheel-grid">
@@ -533,12 +598,12 @@ function WheelResult({ wildcard }: { wildcard: FootballWeeklyNflWildcardState })
       </div>
 
       <div className="football-weekly-nfl-team-season__draw-order">
-        <small>PERSISTED PRIORITY ORDER</small>
+        <small>WILDCARD CLAIM ORDER</small>
         <strong>{wildcard.priority_draws.length ? wildcard.priority_draws.map((draw) => draw.display_name).join(" → ") : "No entrants"}</strong>
       </div>
 
       <div className="football-weekly-nfl-team-season__claims">
-        <small>WILDCARD CLAIMS</small>
+        <small>WILDCARDS WON</small>
         {wildcard.claims.length ? wildcard.claims.map((claim) => {
           const team = wildcard.teams.find((candidate) => candidate.item_reference === claim.item_reference);
           return (
@@ -546,7 +611,7 @@ function WheelResult({ wildcard }: { wildcard: FootballWeeklyNflWildcardState })
               <b>#{claim.priority_order}</b><strong>{claim.display_name}</strong><span>{team ? team.primary_name + " " + team.season_year : claim.item_reference}</span>
             </div>
           );
-        }) : <p>No Wildcard improved an entered player’s fourth scoring team.</p>}
+        }) : <p>No entrant had an available Wildcard that improved their fourth scoring team.</p>}
       </div>
 
       <div className={"football-weekly-nfl-team-season__reaping-result" + (reaped ? " is-reaped" : "")}>
@@ -723,9 +788,20 @@ export function FootballWeeklyNflTeamSeasonGate({
   onContinue: () => void;
 }) {
   const [introDismissed, setIntroDismissed] = useState(false);
+  const [wildcardIntroDismissed, setWildcardIntroDismissed] = useState(false);
 
   if (state.show_intro && !introDismissed && !forceBoard) {
     return <RulesCover onStart={() => setIntroDismissed(true)} />;
+  }
+
+  if (
+    state.day_index === 7
+    && state.wildcard
+    && !state.wildcard.submitted
+    && !state.wildcard.resolved
+    && !wildcardIntroDismissed
+  ) {
+    return <WildcardRulesCover onStart={() => setWildcardIntroDismissed(true)} />;
   }
 
   return state.day_index === 7
