@@ -184,8 +184,22 @@ begin
               ),0)
             )
           order by
-            coalesce(preference.claim_rank,bid.slot),
             bid.amount desc,
+            (
+              select count(*)
+              from private.football_weekly_auction_awards won
+              where won.week_start=p_week_start
+                and won.profile_id=bid.profile_id
+                and won.day_index between 1 and 6
+            ) asc,
+            (
+              select coalesce(sum(won.winning_bid),0)
+              from private.football_weekly_auction_awards won
+              where won.week_start=p_week_start
+                and won.profile_id=bid.profile_id
+                and won.day_index between 1 and 6
+            ) asc,
+            coalesce(preference.claim_rank,bid.slot),
             md5(
               p_week_start::text||':'||p_day_index::text||':'||
               board.slot::text||':'||bid.profile_id::text
