@@ -28,6 +28,10 @@ import type {
   SportsFeudAuthoredQuestion,
   SportsFeudBankDomain,
 } from "./sportsFeudBankTypes";
+import {
+  FOOTBALL_THEMED_SPORTS_FEUD_QUESTIONS,
+  footballThemedSportsFeudPackForDay,
+} from "./footballTeamThemeDailyPacks";
 
 export const SPORTS_FEUD_BANK_VERSION = "sports-feud-bank-v1" as const;
 export const SPORTS_FEUD_HISTORICAL_LAUNCH_DAY = "2026-09-23" as const;
@@ -204,6 +208,9 @@ for (const question of [
 ]) {
   CURRENT_QUESTION_INDEX.set(question.id, { domain: "ufc", question });
 }
+for (const themed of FOOTBALL_THEMED_SPORTS_FEUD_QUESTIONS) {
+  CURRENT_QUESTION_INDEX.set(themed.question.id, themed);
+}
 
 export function sportsFeudCurrentEntityMetadata(
   entityId: string,
@@ -336,12 +343,17 @@ export function buildSportsFeudPack(
 ): FamilyFeudPack {
   const entities: FamilyFeudEntity[] = [];
   const useSep24UfcPrototype = domain === "ufc" && day === "2026-09-24";
-  const authoredMain = useSep24UfcPrototype
-    ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main
-    : selectMain(domain, day);
-  const authoredFast = useSep24UfcPrototype
-    ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney
-    : selectFast(domain, day, authoredMain);
+  const themedPack = footballThemedSportsFeudPackForDay(domain, day);
+  const authoredMain = themedPack
+    ? themedPack.main
+    : useSep24UfcPrototype
+      ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main
+      : selectMain(domain, day);
+  const authoredFast = themedPack
+    ? themedPack.fastMoney
+    : useSep24UfcPrototype
+      ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney
+      : selectFast(domain, day, authoredMain);
   const main = authoredMain.map((question) =>
     materializeQuestion(domain, question, MAIN_POINTS, entities));
   const fast = authoredFast.map((question) =>
