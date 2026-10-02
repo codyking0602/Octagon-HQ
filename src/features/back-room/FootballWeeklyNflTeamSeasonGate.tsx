@@ -407,7 +407,8 @@ function RankingBoard({
             <button type="button" className={rank >= 0 ? "is-selected" : ""} key={team.item_reference} disabled={disabled} onClick={() => toggle(team.item_reference)}>
               <TeamMark teamCode={team.team_code} label={team.primary_name} />
               <span className="football-weekly-nfl-team-season__wildcard-name">
-                <TeamSeasonLink teamCode={team.team_code} teamName={team.primary_name} seasonYear={team.season_year} />
+                <strong>{team.primary_name}</strong>
+                <b className="football-weekly-nfl-team-season__year">{team.season_year}</b>
               </span>
               <em>{rank >= 0 ? "PRIORITY #" + (rank + 1) : "TAP TO ACCEPT"}</em>
             </button>
