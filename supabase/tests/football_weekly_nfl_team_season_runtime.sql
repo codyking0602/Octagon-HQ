@@ -108,7 +108,7 @@ begin
       )
       or (
         theme.family='season'
-        and count(*) filter(where item.season_year=theme.variant::integer)<>4
+        and count(*) filter(where item.season_year=case when theme.family='season' then theme.variant::integer end)<>4
       )
       or (
         theme.family='era'
