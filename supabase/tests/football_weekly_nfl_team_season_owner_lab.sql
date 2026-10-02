@@ -12,6 +12,7 @@ declare
   ];
   v_dummy_week date:=date '2026-12-29';
   v_lab jsonb;
+  v_ranked jsonb;
   v_day integer;
   v_seat integer;
   v_final jsonb;
@@ -99,9 +100,26 @@ begin
     for v_seat in 1..5 loop
       v_lab:=public.submit_my_football_weekly_nfl_team_season_lab_bids(
         v_seat,
-        jsonb_build_object('1',0,'2',0,'3',0,'4',0)
+        case
+          when v_day=1 and v_seat=1 then jsonb_build_object(
+            '1',jsonb_build_object('amount',0,'priority',4),
+            '2',jsonb_build_object('amount',0,'priority',1),
+            '3',jsonb_build_object('amount',0,'priority',2),
+            '4',jsonb_build_object('amount',0,'priority',3)
+          )
+          else jsonb_build_object('1',0,'2',0,'3',0,'4',0)
+        end
       );
     end loop;
+
+    if v_day=1 then
+      v_ranked:=public.get_my_football_weekly_nfl_team_season_lab_ranked_bids(1);
+      if v_ranked#>>'{2,priority}'<>'1'
+        or v_ranked#>>'{1,priority}'<>'4'
+      then
+        raise exception 'owner lab did not preserve ranked NFL claim priorities: %',v_ranked;
+      end if;
+    end if;
 
     if (v_lab->>'submitted_count')::integer<>5 then
       raise exception 'owner lab Day % did not record all five submissions: %',v_day,v_lab;
