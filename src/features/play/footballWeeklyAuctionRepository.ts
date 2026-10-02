@@ -315,7 +315,7 @@ const nflTeamSeasonFinalProfileCollectionSchema = nflTeamSeasonFinalCollectionSc
 });
 
 const nflTeamSeasonFinalTeamSchema = z.object({
-  day_index: z.coerce.number().int().min(1).max(6),
+  day_index: z.coerce.number().int().min(1).max(7),
   slot: z.coerce.number().int().min(1).max(7),
   item_reference: z.string(),
   team_name: z.string(),
