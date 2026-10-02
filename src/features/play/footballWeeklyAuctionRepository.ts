@@ -309,6 +309,11 @@ const nflTeamSeasonFinalCollectionSchema = nflTeamSeasonCollectionSchema.extend(
   counts: z.boolean(),
 });
 
+const nflTeamSeasonFinalProfileCollectionSchema = nflTeamSeasonFinalCollectionSchema.extend({
+  profile_id: z.string().uuid(),
+  display_name: z.string(),
+});
+
 const nflTeamSeasonFinalTeamSchema = z.object({
   day_index: z.coerce.number().int().min(1).max(6),
   slot: z.coerce.number().int().min(1).max(7),
@@ -328,6 +333,7 @@ const nflTeamSeasonFinalSchema = z.object({
   week_start: z.string(),
   standings: z.array(finalStandingSchema),
   collection: z.array(nflTeamSeasonFinalCollectionSchema),
+  final_collections: z.array(nflTeamSeasonFinalProfileCollectionSchema).default([]),
   all_teams: z.array(nflTeamSeasonFinalTeamSchema),
   wildcard: nflWildcardStateSchema,
   my_result: myResultSchema.default({}),
