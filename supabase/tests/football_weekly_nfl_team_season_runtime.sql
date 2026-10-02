@@ -122,23 +122,12 @@ begin
         theme.family='rivalry'
         and (
           count(distinct item.franchise_id)<>2
-          or min(
-            case
-              when item.franchise_id in (
-                split_part(theme.variant,'|',1),
-                split_part(theme.variant,'|',2)
-              ) then 1 else 0
-            end
-          )<>1
-          or min(
-            case
-              when item.franchise_id=split_part(theme.variant,'|',1) then 1 else 0
-            end
-          )=max(
-            case
-              when item.franchise_id=split_part(theme.variant,'|',1) then 1 else 0
-            end
-          )
+          or count(*) filter(
+            where item.franchise_id=split_part(theme.variant,'|',1)
+          )<>2
+          or count(*) filter(
+            where item.franchise_id=split_part(theme.variant,'|',2)
+          )<>2
         )
       )
       or (
