@@ -66,6 +66,24 @@ describe("NFL best team-seasons population + hidden ladder", () => {
     expect(grade(2023, "GB")).toBe(79);
   });
 
+  it("uses exact playoff-exit labels without changing the locked grades", () => {
+    const allowed = new Set([
+      "Lost Wild Card",
+      "Lost Divisional",
+      "Lost Conference Championship",
+      "Lost Super Bowl",
+      "Won Super Bowl",
+      "Missed Playoffs",
+    ]);
+    expect(artifact.items.every((item: { postseason_finish: string }) => allowed.has(item.postseason_finish))).toBe(true);
+    expect(
+      artifact.items.find((item: { item_reference: string }) => item.item_reference === "nfl-best-ind-2005")?.card_tag,
+    ).toBe("14-2 · Lost Divisional");
+    expect(
+      artifact.items.find((item: { item_reference: string }) => item.item_reference === "nfl-best-jax-2025")?.card_tag,
+    ).toBe("13-4 · Lost Wild Card");
+  });
+
   it("preserves the top anchor curve and the grading sanity check", () => {
     const grade = (season: number, franchise: string) =>
       artifact.items.find(
