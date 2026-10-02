@@ -7,6 +7,7 @@ const auctionTableTeamSchema = z.object({
   team_code: z.string().nullable().optional(),
   season_year: z.coerce.number().int(),
   display_label: z.string(),
+  card_tag: z.string().nullable().optional(),
   price_paid: z.coerce.number().int().nonnegative(),
 });
 
