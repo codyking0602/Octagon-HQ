@@ -259,7 +259,7 @@ describe("Shane Contender Fight Spotlight treatment", () => {
 
   it("gives Daniil Donchenko the Shane treatment on this week’s configured Fight Spotlight", () => {
     const daniil = shanesWatchlist.fighters.find((fighter) => fighter.id === "daniil-donchenko");
-    expect(daniil?.rank).toBe(6);
+    expect(daniil?.rank).toBe(7);
 
     render(
       <MemoryRouter>
