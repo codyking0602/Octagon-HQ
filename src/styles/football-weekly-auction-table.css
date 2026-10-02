@@ -237,6 +237,45 @@
   white-space: nowrap;
 }
 
+.football-weekly-auction-table__team.is-nfl {
+  background: linear-gradient(105deg, rgba(32,180,134,.12), rgba(8,19,27,.94) 62%);
+}
+
+.football-weekly-auction-table__team.is-nfl::before {
+  background: #20b486;
+}
+
+.football-weekly-auction-table__team-copy {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1px 7px;
+  align-items: baseline;
+}
+
+.football-weekly-auction-table__team-copy .football-weekly-auction-table__team-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-auction-table__team-meta {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: #c4cfd7;
+  font-size: .66rem;
+  font-weight: 800;
+}
+
+.football-weekly-auction-table__team-meta b {
+  color: #54d2ad;
+}
+
+.football-weekly-auction-table__team-copy > small {
+  grid-column: 1 / -1;
+}
+
 .football-weekly-auction-table__message {
   margin: 0;
   padding: 18px 10px;

@@ -675,6 +675,21 @@ export default function FootballTodayChallengePage() {
     }
   }
 
+  async function submitWeeklyWildcard(entries: number, rankings: string[]) {
+    if (!weeklyRepository || weeklyBusy) return;
+    setWeeklyBusy(true);
+    setWeeklyError(null);
+    try {
+      const next = await weeklyRepository.submitNflTeamSeasonWildcard(entries, rankings);
+      setWeeklyState(next);
+      setShowWeeklyAuction(next.available);
+    } catch (reason) {
+      setWeeklyError(reason instanceof Error ? reason.message : "That Wildcard choice could not be saved.");
+    } finally {
+      setWeeklyBusy(false);
+    }
+  }
+
   async function acknowledgeWeeklyFinal(weekStart: string) {
     if (!weeklyRepository || weeklyBusy) return;
     setWeeklyBusy(true);
@@ -724,6 +739,7 @@ export default function FootballTodayChallengePage() {
           error={weeklyError}
           forceBoard={showWeeklyAuction && weeklyState.submitted_today}
           onSubmit={submitWeeklyBids}
+          onSubmitWildcard={submitWeeklyWildcard}
           onAcknowledgeFinal={acknowledgeWeeklyFinal}
           onContinue={() => {
             if (projection) {
@@ -753,7 +769,7 @@ export default function FootballTodayChallengePage() {
 
   const weeklyEditControl = weeklyState?.available && weeklyState.submitted_today ? (
     <button className="football-weekly-auction-edit" type="button" onClick={() => setShowWeeklyAuction(true)}>
-      WEEKLY AUCTION · EDIT BIDS
+      WEEKLY AUCTION · {weeklyState.subject_key === "nfl-best-team-seasons-since-2000" && weeklyState.day_index === 7 ? "EDIT WILDCARD" : "EDIT BIDS"}
     </button>
   ) : null;
 

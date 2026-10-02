@@ -120,6 +120,9 @@ jobs:
             supabase/tests/stage20_nfl_divisions_playable.sql \
             supabase/tests/stage20_nfl_divisions_simulation.sql \
             supabase/tests/football_weekly_auction_field_lock.sql \
+            supabase/tests/football_weekly_nfl_team_season_runtime.sql \
+            supabase/tests/football_weekly_nfl_team_season_wildcard_engine.sql \
+            supabase/tests/football_weekly_nfl_team_season_full_flow.sql \
             supabase/tests/stage21_draft_room_public_release.sql \
             supabase/tests/stage22_draft_room_launch_notification.sql \
             supabase/tests/stage23_ty_miller_contender_notification.sql \

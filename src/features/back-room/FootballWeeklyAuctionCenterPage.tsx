@@ -8,6 +8,7 @@ import {
 import { FootballWeeklyAuctionFinalResult } from "./FootballWeeklyAuctionGate";
 import { FootballWeeklyBuildQbFinalResult } from "./FootballWeeklyBuildQbGate";
 import { FootballWeeklySuperteamFinalResult } from "./FootballWeeklySuperteamGate";
+import { FootballWeeklyNflTeamSeasonFinalResult } from "./FootballWeeklyNflTeamSeasonGate";
 import { useIdentity } from "../identity/IdentityProvider";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import "../../styles/football-weekly-auction-center.css";
@@ -16,7 +17,9 @@ type CenterTab = "week" | "results";
 
 function subjectLabel(subjectKey: FootballWeeklyFinal["subject_key"] | "cfb-best-teams-since-2000") {
   if (subjectKey === "cfb-superteam") return "CFB SUPERTEAM";
-  return subjectKey === "nfl-build-qb" ? "NFL BUILD A QB" : "CFB BEST TEAMS SINCE 2000";
+  if (subjectKey === "nfl-build-qb") return "NFL BUILD A QB";
+  if (subjectKey === "nfl-best-team-seasons-since-2000") return "NFL BEST TEAM-SEASONS SINCE 2000";
+  return "CFB BEST TEAMS SINCE 2000";
 }
 
 function weekLabel(weekStart: string) {
@@ -36,9 +39,9 @@ function weekLabel(weekStart: string) {
 function archivedScore(result: FootballWeeklyFinal) {
   const me = result.my_result;
   if (me.final_score == null) return "NO FINAL SCORE";
-  return result.subject_key === "cfb-best-teams-since-2000"
-    ? `${me.final_score.toFixed(1)} BEST-3`
-    : `${me.final_score.toFixed(1)} AVG`;
+  if (result.subject_key === "cfb-best-teams-since-2000") return me.final_score.toFixed(1) + " BEST-3";
+  if (result.subject_key === "nfl-best-team-seasons-since-2000") return me.final_score.toFixed(1) + " BEST-4";
+  return me.final_score.toFixed(1) + " AVG";
 }
 
 export default function FootballWeeklyAuctionCenterPage() {
@@ -84,7 +87,14 @@ export default function FootballWeeklyAuctionCenterPage() {
           <button type="button" onClick={() => setSelectedResult(null)}>← ALL RESULTS</button>
           <span>{weekLabel(selectedResult.week_start)} · {subjectLabel(selectedResult.subject_key)}</span>
         </div>
-        {selectedResult.subject_key === "cfb-superteam" ? (
+        {selectedResult.subject_key === "nfl-best-team-seasons-since-2000" ? (
+          <FootballWeeklyNflTeamSeasonFinalResult
+            result={selectedResult}
+            busy={false}
+            onAcknowledge={() => undefined}
+            showNewWeekAction={false}
+          />
+        ) : selectedResult.subject_key === "cfb-superteam" ? (
           <FootballWeeklySuperteamFinalResult
             result={selectedResult}
             busy={false}
@@ -144,6 +154,20 @@ export default function FootballWeeklyAuctionCenterPage() {
           <b>OPEN →</b>
         </button>
       ) : null}
+      {owner ? (
+        <button
+          className="football-weekly-auction-center__lab"
+          type="button"
+          onClick={() => navigate("/football/weekly-nfl-team-season-lab")}
+        >
+          <span>
+            <small>OWNER QA · NFL TEAM-SEASONS</small>
+            <strong>BEST NFL TEAM-SEASONS PLAYTHROUGH</strong>
+            <em>Control five seats through six auction days and the full Wildcard/Reaping finale.</em>
+          </span>
+          <b>OPEN →</b>
+        </button>
+      ) : null}
 
       {loading ? <section className="football-weekly-auction-center__message surface-card">Loading Weekly Auction…</section> : null}
       {error ? <section className="football-weekly-auction-center__message surface-card is-error">{error}</section> : null}
@@ -156,7 +180,9 @@ export default function FootballWeeklyAuctionCenterPage() {
                 <small>{weekLabel(activeState.week_start)} · DAY {activeState.day_index} OF 7</small>
                 <strong>{subjectLabel(activeState.subject_key)}</strong>
               </div>
-              <span>{activeState.submitted_today ? "BIDS IN" : "TODAY OPEN"}</span>
+              <span>{activeState.subject_key === "nfl-best-team-seasons-since-2000" && activeState.day_index === 7
+                ? (activeState.submitted_today ? "CHOICE IN" : "WILDCARD OPEN")
+                : (activeState.submitted_today ? "BIDS IN" : "TODAY OPEN")}</span>
             </div>
             <div className="football-weekly-auction-center__metrics">
               <div><small>{activeState.subject_key === "nfl-build-qb" ? "TRAITS" : activeState.subject_key === "cfb-superteam" ? "ROSTER" : "TEAMS"}</small><strong>{activeState.owned_count}</strong></div>
@@ -168,7 +194,9 @@ export default function FootballWeeklyAuctionCenterPage() {
               type="button"
               onClick={() => navigate("/football/today?weekly=edit")}
             >
-              {activeState.submitted_today ? "EDIT TODAY’S BIDS" : "OPEN TODAY’S AUCTION"} →
+              {activeState.subject_key === "nfl-best-team-seasons-since-2000" && activeState.day_index === 7
+                ? (activeState.submitted_today ? "EDIT WILDCARD CHOICE" : "OPEN WILDCARD FINALE")
+                : (activeState.submitted_today ? "EDIT TODAY’S BIDS" : "OPEN TODAY’S AUCTION")} →
             </button>
           </section>
         ) : (

@@ -10,6 +10,8 @@ import {
   footballWeeklyAuctionTeamStyle,
   type FootballWeeklyAuctionTeamIdentity,
 } from "./footballWeeklyAuctionPresentation";
+import { footballNflTeamMediaId } from "./footballMediaIdentity";
+import { footballTeamAssets } from "./footballSubjectAssets";
 
 function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIdentity; school: string }) {
   const [logoFailed, setLogoFailed] = useState(false);
@@ -24,6 +26,20 @@ function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIde
       )}
     </span>
   );
+} 
+
+function NflTeamMark({ teamCode, label }: { teamCode: string; label: string }) {
+  const [logoFailed, setLogoFailed] = useState(false);
+  const asset = footballTeamAssets[footballNflTeamMediaId(teamCode)] ?? null;
+  return (
+    <span className="football-weekly-auction-table__mark" aria-hidden="true">
+      {asset && !logoFailed ? (
+        <img src={asset.src} alt="" onError={() => setLogoFailed(true)} />
+      ) : (
+        <span>{teamCode || label.slice(0, 2).toUpperCase()}</span>
+      )}
+    </span>
+  );
 }
 
 function rankedResume(identity: FootballWeeklyAuctionTeamIdentity) {
@@ -35,7 +51,7 @@ function rankedResume(identity: FootballWeeklyAuctionTeamIdentity) {
 }
 
 function TeamRow({ team }: { team: FootballWeeklyAuctionTableTeam }) {
-  const identity = footballWeeklyAuctionTeamIdentity(
+  const identity = team.team_code ? null : footballWeeklyAuctionTeamIdentity(
     team.season_reference,
     team.school,
     team.season_year,
@@ -43,13 +59,18 @@ function TeamRow({ team }: { team: FootballWeeklyAuctionTableTeam }) {
 
   return (
     <article
-      className="football-weekly-auction-table__team"
-      style={footballWeeklyAuctionTeamStyle(identity)}
+      className={"football-weekly-auction-table__team" + (team.team_code ? " is-nfl" : "")}
+      style={identity ? footballWeeklyAuctionTeamStyle(identity) : undefined}
     >
-      <TeamMark identity={identity} school={team.school} />
-      <div>
-        <strong>{team.school} <span>· {team.season_year} · WON ${team.price_paid}</span></strong>
-        <small>{rankedResume(identity)}</small>
+      {team.team_code
+        ? <NflTeamMark teamCode={team.team_code} label={team.school} />
+        : <TeamMark identity={identity!} school={team.school} />}
+      <div className="football-weekly-auction-table__team-copy">
+        <strong className="football-weekly-auction-table__team-name">{team.school}</strong>
+        <span className="football-weekly-auction-table__team-meta">
+          <b>{team.season_year}</b> · WON {"$"}{team.price_paid}
+        </span>
+        {identity ? <small>{rankedResume(identity)}</small> : <small>Exact NFL team-season</small>}
       </div>
     </article>
   );

@@ -1,0 +1,152 @@
+.football-weekly-nfl-lab {
+  width: min(100%, 820px);
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+.football-weekly-nfl-lab__header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 6px 0 2px;
+}
+
+.football-weekly-nfl-lab__header > button {
+  min-height: 38px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .05);
+  color: #fff;
+  font-weight: 900;
+}
+
+.football-weekly-nfl-lab__header h1 {
+  margin: 0;
+  font-size: clamp(1.35rem, 5vw, 2.1rem);
+  line-height: 1;
+}
+
+.football-weekly-nfl-lab__header span {
+  display: block;
+  margin-top: 5px;
+  color: rgba(255, 255, 255, .52);
+  font-size: .76rem;
+}
+
+.football-weekly-nfl-lab__controls {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(80, 199, 217, .16);
+}
+
+.football-weekly-nfl-lab__run {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.football-weekly-nfl-lab__run span {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.football-weekly-nfl-lab__run small,
+.football-weekly-nfl-lab__seats small {
+  color: rgba(255, 255, 255, .43);
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .07em;
+}
+
+.football-weekly-nfl-lab__seats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.football-weekly-nfl-lab__seats button {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .035);
+  color: #fff;
+  text-align: left;
+}
+
+.football-weekly-nfl-lab__seats button.is-active {
+  border-color: rgba(32, 180, 134, .62);
+  background: rgba(32, 180, 134, .09);
+}
+
+.football-weekly-nfl-lab__seats strong,
+.football-weekly-nfl-lab__seats span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-nfl-lab__seats strong {
+  font-size: .76rem;
+}
+
+.football-weekly-nfl-lab__seats span {
+  color: rgba(255, 255, 255, .5);
+  font-size: .58rem;
+}
+
+.football-weekly-nfl-lab__resolve {
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1b9d79, #29c9a0);
+  color: #06150f;
+  font-weight: 1000;
+}
+
+.football-weekly-nfl-lab__resolve:disabled {
+  background: rgba(255, 255, 255, .07);
+  color: rgba(255, 255, 255, .36);
+}
+
+.football-weekly-nfl-lab__error,
+.football-weekly-nfl-lab__message {
+  margin: 0;
+  padding: 12px;
+}
+
+.football-weekly-nfl-lab__error {
+  border: 1px solid rgba(235, 111, 146, .2);
+  border-radius: 10px;
+  background: rgba(235, 111, 146, .08);
+  color: #ffb4c8;
+}
+
+@media (max-width: 680px) {
+  .football-weekly-nfl-lab__header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .football-weekly-nfl-lab__header > button:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .football-weekly-nfl-lab__seats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .football-weekly-nfl-lab__seats button:first-child {
+    grid-column: 1 / -1;
+  }
+}
