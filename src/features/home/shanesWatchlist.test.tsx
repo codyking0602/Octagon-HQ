@@ -119,22 +119,21 @@ describe("Shane's ranked watchlist", () => {
 
     expect(screen.getByRole("heading", { name: "Shane King’s Contender Series" })).toBeInTheDocument();
     expect(screen.getByText("A living Top 15 of UFC prospects to watch as their careers develop.")).toBeInTheDocument();
-    expect(screen.getByText("8 OF 15 SPOTS FILLED")).toBeInTheDocument();
+    expect(screen.getByText("9 OF 15 SPOTS FILLED")).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
     expect(screen.getByText("Bilal Hasan")).toBeInTheDocument();
-    expect(screen.getByText("7 SPOTS OPEN")).toBeInTheDocument();
+    expect(screen.getByText("6 SPOTS OPEN")).toBeInTheDocument();
     expect(screen.getByText("Nobody else has earned a place on Shane’s board yet.")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(container.querySelectorAll("details")).toHaveLength(0);
 
-    const movementSummary = screen.getByLabelText("September 2026 movement summary");
+    const movementSummary = screen.getByLabelText("October 2026 movement summary");
     expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
     expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
     expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("0")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("3")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("5")).toBeInTheDocument();
+    expect(within(movementSummary).getAllByText("1")).toHaveLength(2);
+    expect(within(movementSummary).getByText("7")).toBeInTheDocument();
   });
 
   it("opens the real scouting snapshot as three readable beats with UFC-only numbers", () => {
@@ -195,13 +194,13 @@ describe("Shane's ranked watchlist", () => {
     );
   });
 
-  it("keeps Daniil at #6 after the Soriano win and adds Ty Miller at #7", () => {
+  it("moves Daniil to #7 and Ty Miller to #8 after Gautier enters at #5", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Daniil Donchenko" }));
     const daniilDialog = screen.getByRole("dialog", { name: "Daniil Donchenko" });
-    expect(within(daniilDialog).getByText("SHANE’S RANKING · #6")).toBeInTheDocument();
+    expect(within(daniilDialog).getByText("SHANE’S RANKING · #7")).toBeInTheDocument();
     expect(within(daniilDialog).getByText("4–0")).toBeInTheDocument();
     expect(within(daniilDialog).getByText(/controlled Punahele Soriano over three rounds/i)).toBeInTheDocument();
     expect(within(daniilDialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
@@ -212,7 +211,7 @@ describe("Shane's ranked watchlist", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Ty Miller" }));
     const tyDialog = screen.getByRole("dialog", { name: "Ty Miller" });
-    expect(within(tyDialog).getByText("SHANE’S RANKING · #7")).toBeInTheDocument();
+    expect(within(tyDialog).getByText("SHANE’S RANKING · #8")).toBeInTheDocument();
     expect(within(tyDialog).getByText("“Thriller”")).toBeInTheDocument();
     expect(within(tyDialog).getByText("2–0")).toBeInTheDocument();
     expect(within(tyDialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
@@ -238,6 +237,23 @@ describe("Shane's ranked watchlist", () => {
   });
 
 
+  it("adds Ateba Gautier at #5 with the supplied highlight and current UFC résumé", () => {
+    window.history.replaceState({}, "", "/fighters-to-watch");
+    render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Ateba Gautier" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Ateba Gautier" });
+    expect(within(dialog).getByText("SHANE’S RANKING · #5")).toBeInTheDocument();
+    expect(within(dialog).getByText("“The Storm”")).toBeInTheDocument();
+    expect(within(dialog).getByText("5–0")).toBeInTheDocument();
+    expect(within(dialog).getByText(/first five UFC fights and finishing four of them/i)).toBeInTheDocument();
+    expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtube.com/shorts/NwjKZahYvbw?is=PXQ2DXkjJvRt8bVm",
+    );
+  });
+
   it("uses the correct female board label on Fatima Kline's scouting report", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
@@ -245,7 +261,7 @@ describe("Shane's ranked watchlist", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Fatima Kline" }));
 
     const dialog = screen.getByRole("dialog", { name: "Fatima Kline" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #5")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #6")).toBeInTheDocument();
     expect(within(dialog).getByText("WHY SHE’S ON THE BOARD")).toBeInTheDocument();
     expect(within(dialog).queryByText("WHY HE’S ON THE BOARD")).not.toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
@@ -259,7 +275,7 @@ describe("Shane's ranked watchlist", () => {
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     const dialog = screen.getByRole("dialog", { name: "Gable Steveson" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #8")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #9")).toBeInTheDocument();
     expect(within(dialog).getByText("SCOUTING SNAPSHOT")).toBeInTheDocument();
     expect(within(dialog).getByText(/knocked him out with a left hand just 12 seconds into Round 1/i)).toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
