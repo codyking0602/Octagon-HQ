@@ -77,7 +77,7 @@ begin
         order by slot_number
       )
       into v_bids
-      from generate_series(1,v_card_count) slot_number;
+      from generate_series(1,v_card_count) as slots(slot_number);
 
       v_submit_at:=(
         (v_run.lab_week_start+(v_day-1))::date+time '12:00'
