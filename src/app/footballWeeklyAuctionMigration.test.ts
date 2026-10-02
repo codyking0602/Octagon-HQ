@@ -64,7 +64,8 @@ describe("Football Weekly Auction live contract", () => {
     expect(auctionTableDialog).toContain("player.bankroll");
     expect(auctionTableDialog).toContain("player.owned_count");
     expect(auctionTableDialog).toContain("player.teams.map");
-    expect(auctionTableDialog).not.toContain("winning_bid");
+    expect(auctionTableDialog).not.toContain("state.bids");
+    expect(auctionTableDialog).not.toContain("football_weekly_auction_bids");
 
     const publicTableFunction = auctionTableMigration.slice(
       auctionTableMigration.indexOf("create or replace function public.get_football_weekly_auction_table"),
