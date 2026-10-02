@@ -13,6 +13,10 @@ const rankedBids = readFileSync(
   "supabase/migrations/202612310231_nfl_team_season_ranked_bids_and_presentation.sql",
   "utf8",
 );
+const lockedFinal = readFileSync(
+  "supabase/migrations/202612310237_nfl_team_season_final_tabs.sql",
+  "utf8",
+);
 const repository = readFileSync(
   "src/features/play/footballWeeklyAuctionRepository.ts",
   "utf8",
@@ -195,4 +199,25 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(styles).toContain("white-space: nowrap;");
     expect(repository).toContain('z.literal("nfl-best-team-seasons-since-2000")');
   });
+  it("locks the seven-day intro and standardized final recap", () => {
+    expect(gate).toContain("DAYS 1–6");
+    expect(gate).toContain("BUILD UP TO FIVE TEAMS");
+    expect(gate).toContain("DAY 7 · WILDCARD");
+    expect(gate).toContain("OPTIONAL · NO MONEY INVOLVED");
+    expect(gate).toContain("BEST FOUR GRADES COUNT");
+    expect(gate).toContain('type FinalTab = "standings" | "collections" | "grades"');
+    expect(gate).toContain(">Standings</button>");
+    expect(gate).toContain(">Collections</button>");
+    expect(gate).toContain(">All Grades</button>");
+    expect(gate).toContain("Select player collection");
+    expect(gate).toContain("Every grade is revealed.");
+    expect(gate).toContain("DAY 7 · WILDCARD RESULT");
+    expect(styles).toContain("football-weekly-nfl-team-season__final-tabs");
+    expect(styles).toContain("football-weekly-nfl-team-season__player-picker");
+    expect(styles).toContain("football-weekly-nfl-team-season__all-grades");
+    expect(lockedFinal).toContain("final_collections as (");
+    expect(lockedFinal).toContain("'final_collections',final_collections.payload");
+    expect(repository).toContain("final_collections: z.array(nflTeamSeasonFinalProfileCollectionSchema)");
+  });
+
 });
