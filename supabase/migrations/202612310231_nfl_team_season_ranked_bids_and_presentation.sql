@@ -737,3 +737,91 @@ begin
   end if;
 end;
 $nfl_ranked_bid_contract$;
+
+
+-- Keep resolved NFL collections just as informative as the live cards.
+create or replace function public.get_football_weekly_auction_table(p_at timestamptz default now())
+returns jsonb
+language plpgsql
+security definer
+set search_path=''
+as $$
+declare
+  v_profile uuid:=auth.uid();
+  v_week_start date;
+  v_subject text;
+  v_default_bankroll integer;
+  v_table jsonb:='[]'::jsonb;
+begin
+  if v_profile is null then raise exception 'sign in required'; end if;
+  if (p_at at time zone 'America/Chicago')::date<date '2026-09-15' then return '[]'::jsonb; end if;
+
+  perform private.maintain_football_weekly_auction(p_at);
+  v_week_start:=private.football_weekly_auction_week_start(p_at);
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks where week_start=v_week_start;
+
+  if v_subject<>'nfl-best-team-seasons-since-2000' then
+    -- Preserve the existing generic CFB table only for CFB best-team weeks.
+    -- Build-a-QB and Superteam own their dedicated table presentations.
+    if v_subject<>'cfb-best-teams-since-2000' then return '[]'::jsonb; end if;
+    v_default_bankroll:=40;
+  else
+    v_default_bankroll:=50;
+  end if;
+
+  with participants as (
+    select participant.profile_id
+    from private.football_weekly_auction_participants participant
+    where participant.week_start=v_week_start
+  ), summaries as (
+    select
+      participant.profile_id,
+      coalesce(profile.display_name,'Player') as display_name,
+      participant.profile_id=v_profile as is_current_user,
+      private.football_weekly_auction_starting_bankroll(
+        v_week_start,participant.profile_id,v_default_bankroll
+      )-coalesce(sum(award.winning_bid),0)::integer as bankroll,
+      count(award.profile_id)::integer as owned_count,
+      coalesce(jsonb_agg(jsonb_build_object(
+        'season_reference',board.season_reference,
+        'school',coalesce(item.primary_name,pool.school),
+        'team_code',item.team_code,
+        'season_year',coalesce(item.season_year,pool.season_year),
+        'display_label',coalesce(item.display_label,pool.display_label),
+        'card_tag',item.grading_inputs->>'card_tag',
+        'price_paid',award.winning_bid
+      ) order by award.day_index,award.slot)
+        filter(where award.profile_id is not null),'[]'::jsonb) as teams
+    from participants participant
+    join public.profiles profile on profile.id=participant.profile_id
+    left join private.football_weekly_auction_awards award
+      on award.week_start=v_week_start and award.profile_id=participant.profile_id
+    left join private.football_weekly_auction_board board
+      on board.week_start=award.week_start
+     and board.day_index=award.day_index
+     and board.slot=award.slot
+    left join private.football_weekly_auction_items item
+      on item.item_reference=board.season_reference
+    left join private.draft_room_cfb_best_teams_pool pool
+      on pool.season_reference=board.season_reference
+    group by participant.profile_id,profile.display_name
+  )
+  select coalesce(jsonb_agg(jsonb_build_object(
+    'profile_id',summary.profile_id,
+    'display_name',summary.display_name,
+    'is_current_user',summary.is_current_user,
+    'bankroll',summary.bankroll,
+    'owned_count',summary.owned_count,
+    'teams',summary.teams
+  ) order by summary.is_current_user desc,lower(summary.display_name),summary.profile_id),'[]'::jsonb)
+  into v_table
+  from summaries summary;
+
+  return v_table;
+end;
+$$;
+revoke all on function public.get_football_weekly_auction_table(timestamptz)
+  from public,anon;
+grant execute on function public.get_football_weekly_auction_table(timestamptz)
+  to authenticated;
