@@ -63,6 +63,14 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(runtime).toContain("Open Field");
   });
 
+  it("sweeps unresolved NFL finales across the Tuesday week boundary", () => {
+    expect(runtime).toContain("Sweep every unresolved NFL Team-Seasons finale");
+    expect(runtime).toContain("week.subject_key='nfl-best-team-seasons-since-2000'");
+    expect(runtime).toContain("week.week_start+6");
+    expect(runtime).toContain("resolve_football_weekly_nfl_team_season_wildcard");
+    expect(runtime).toContain("finalize_football_weekly_nfl_team_season_week");
+  });
+
   it("routes Day 7 through the persisted Wildcard/Reaping engine", () => {
     expect(runtime).toContain("materialize_football_weekly_nfl_team_season_wildcard");
     expect(runtime).toContain("resolve_football_weekly_nfl_team_season_wildcard");
