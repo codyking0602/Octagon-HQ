@@ -134,7 +134,7 @@ const TEXAS_OKLAHOMA_MILLIONAIRE = themedMillionaireRun("theme-texas-ou-2026", [
   },
 ]);
 
-const COWBOYS_EAGLES_MILLIONAIREconst COWBOYS_EAGLES_MILLIONAIRE = themedMillionaireRun("theme-cowboys-eagles-2026", [
+const COWBOYS_EAGLES_MILLIONAIRE = themedMillionaireRun("theme-cowboys-eagles-2026", [
   {
     type: "stadium",
     prompt: "What is the home stadium of the Dallas Cowboys?",
@@ -201,7 +201,7 @@ const COWBOYS_EAGLES_MILLIONAIREconst COWBOYS_EAGLES_MILLIONAIRE = themedMillion
   },
 ]);
 
-export function footballThemedMillionaireRunForDayexport function footballThemedMillionaireRunForDay(day: string): MillionaireRun | null {
+export function footballThemedMillionaireRunForDay(day: string): MillionaireRun | null {
   if (day === "2026-10-10") return TEXAS_OKLAHOMA_MILLIONAIRE;
   if (day === "2026-10-26") return COWBOYS_EAGLES_MILLIONAIRE;
   return null;
@@ -320,7 +320,7 @@ const COWBOYS_SEAHAWKS_BAR_TRIVIA: readonly BarTriviaQuestion[] = [
   }),
 ];
 
-export function footballThemedBarTriviaRunForDayexport function footballThemedBarTriviaRunForDay(day: string): readonly BarTriviaQuestion[] | null {
+export function footballThemedBarTriviaRunForDay(day: string): readonly BarTriviaQuestion[] | null {
   return day === "2026-12-07" ? COWBOYS_SEAHAWKS_BAR_TRIVIA : null;
 }
 
@@ -375,7 +375,7 @@ const TEXAS_AM_SPORTS_FEUD_MAIN: readonly SportsFeudAuthoredQuestion[] = [
   },
 ];
 
-const TEXAS_AM_SPORTS_FEUD_FASTconst TEXAS_AM_SPORTS_FEUD_FAST: readonly SportsFeudAuthoredQuestion[] = [
+const TEXAS_AM_SPORTS_FEUD_FAST: readonly SportsFeudAuthoredQuestion[] = [
   {
     id: "theme-texas-am-2026-fast-coaches",
     category: "Texas Coaches",
@@ -469,7 +469,7 @@ const TEXAS_AM_SPORTS_FEUD_FASTconst TEXAS_AM_SPORTS_FEUD_FAST: readonly SportsF
   },
 ];
 
-export interface FootballThemedSportsFeudPackexport interface FootballThemedSportsFeudPack {
+export interface FootballThemedSportsFeudPack {
   domain: SportsFeudBankDomain;
   main: readonly SportsFeudAuthoredQuestion[];
   fastMoney: readonly SportsFeudAuthoredQuestion[];
