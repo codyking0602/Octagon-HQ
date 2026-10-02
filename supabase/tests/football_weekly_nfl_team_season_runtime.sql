@@ -69,6 +69,124 @@ begin
   end if;
 
   if exists(
+    select family
+    from private.football_weekly_nfl_team_season_themes
+    where week_start=v_week
+    group by family
+    having count(*)>case when family in ('division','open_field') then 2 else 1 end
+  ) then
+    raise exception 'NFL Team-Seasons theme-family weekly caps drifted';
+  end if;
+
+  if (
+    select count(distinct public_theme)
+    from private.football_weekly_nfl_team_season_themes
+    where week_start=v_week
+  )<>6 then
+    raise exception 'NFL Team-Seasons repeated a public theme label';
+  end if;
+
+  if exists(
+    select theme.day_index
+    from private.football_weekly_nfl_team_season_themes theme
+    join private.football_weekly_auction_board board
+      on board.week_start=theme.week_start
+     and board.day_index=theme.day_index
+     and board.slot<=4
+    join private.nfl_best_team_seasons_v1_authority item
+      on item.item_reference=board.season_reference
+    where theme.week_start=v_week
+    group by theme.day_index,theme.family,theme.variant
+    having
+      count(*)<>4
+      or (
+        theme.family='division'
+        and (
+          count(distinct item.franchise_id)<>4
+          or count(*) filter(where item.division=theme.variant)<>4
+        )
+      )
+      or (
+        theme.family='season'
+        and count(*) filter(where item.season_year=theme.variant::integer)<>4
+      )
+      or (
+        theme.family='era'
+        and count(*) filter(where
+          (theme.variant='2000s' and item.season_year between 2000 and 2009)
+          or (theme.variant='2010s' and item.season_year between 2010 and 2019)
+          or (theme.variant='2020s' and item.season_year between 2020 and 2025)
+        )<>4
+      )
+      or (
+        theme.family='rivalry'
+        and (
+          count(distinct item.franchise_id)<>2
+          or min(
+            case
+              when item.franchise_id in (
+                split_part(theme.variant,'|',1),
+                split_part(theme.variant,'|',2)
+              ) then 1 else 0
+            end
+          )<>1
+          or min(
+            case
+              when item.franchise_id=split_part(theme.variant,'|',1) then 1 else 0
+            end
+          )=max(
+            case
+              when item.franchise_id=split_part(theme.variant,'|',1) then 1 else 0
+            end
+          )
+        )
+      )
+      or (
+        theme.family='franchise_history'
+        and (
+          count(distinct item.franchise_id)<>1
+          or min(item.franchise_id)<>theme.variant
+        )
+      )
+      or (
+        theme.family='fell_short'
+        and count(*) filter(where item.fell_short)<>4
+      )
+      or (
+        theme.family='conference_clash'
+        and (
+          count(*) filter(where item.conference='AFC')<>2
+          or count(*) filter(where item.conference='NFC')<>2
+          or count(distinct item.franchise_id)<>4
+        )
+      )
+      or (
+        theme.family in ('season','era','fell_short','open_field')
+        and count(distinct item.franchise_id)<>4
+      )
+  ) then
+    raise exception 'NFL Team-Seasons exposed board violates its approved theme eligibility';
+  end if;
+
+  if exists(
+    select item.franchise_id
+    from private.football_weekly_auction_board board
+    join private.nfl_best_team_seasons_v1_authority item
+      on item.item_reference=board.season_reference
+    where board.week_start=v_week and board.slot<=4
+    group by item.franchise_id
+    having count(*)>case
+      when item.franchise_id=(
+        select variant
+        from private.football_weekly_nfl_team_season_themes
+        where week_start=v_week and family='franchise_history'
+        limit 1
+      ) then 4 else 3 end
+  ) then
+    raise exception 'NFL Team-Seasons exposed week overexposed a franchise';
+  end if;
+
+  if exists(
     select 1
     from private.football_weekly_auction_board
     where week_start=v_week
