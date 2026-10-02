@@ -186,6 +186,8 @@ export default function FootballWeeklyNflTeamSeasonLabPage() {
               busy={busy}
               error={error}
               forceBoard
+              tableMode="lab"
+              tableSeatIndex={seatIndex}
               onSubmit={submitBids}
               onSubmitWildcard={submitWildcard}
               onContinue={continueToNextSeat}
