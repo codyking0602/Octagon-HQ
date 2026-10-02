@@ -217,7 +217,10 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(styles).toContain("football-weekly-nfl-team-season__all-grades");
     expect(lockedFinal).toContain("final_collections as (");
     expect(lockedFinal).toContain("'final_collections',final_collections.payload");
+    expect(lockedFinal).toContain("7 as day_index");
+    expect(lockedFinal).toContain("football_weekly_nfl_team_season_wildcard_board");
     expect(repository).toContain("final_collections: z.array(nflTeamSeasonFinalProfileCollectionSchema)");
+    expect(repository).toContain("day_index: z.coerce.number().int().min(1).max(7)");
   });
 
 });
