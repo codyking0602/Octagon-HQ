@@ -1767,6 +1767,66 @@ $$;
 revoke all on function private.submit_my_football_weekly_nfl_team_season_bids(jsonb,timestamptz)
   from public,anon,authenticated;
 
+create or replace function public.submit_my_football_weekly_nfl_team_season_wildcard(
+  p_entries integer,
+  p_rankings jsonb,
+  p_at timestamptz default now()
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path=''
+as $nfl_wildcard_submit$
+declare
+  v_profile uuid:=auth.uid();
+  v_week_start date;
+  v_subject text;
+  v_rankings text[];
+begin
+  if v_profile is null then
+    raise exception 'sign in required';
+  end if;
+  if p_rankings is null or jsonb_typeof(p_rankings)<>'array' then
+    raise exception 'Wildcard rankings must be an array';
+  end if;
+
+  perform private.maintain_football_weekly_auction(p_at);
+  v_week_start:=private.football_weekly_auction_week_start(p_at);
+
+  select subject_key into v_subject
+  from private.football_weekly_auction_weeks
+  where week_start=v_week_start;
+
+  if v_subject<>'nfl-best-team-seasons-since-2000'
+    or private.football_weekly_auction_day_index(p_at,v_week_start)<>7
+  then
+    raise exception 'NFL Team-Seasons Wildcard is only available on its Day 7';
+  end if;
+
+  select coalesce(array_agg(value order by ordinal),array[]::text[])
+  into v_rankings
+  from jsonb_array_elements_text(p_rankings) with ordinality ranked(value,ordinal);
+
+  perform private.submit_football_weekly_nfl_team_season_wildcard(
+    v_week_start,v_profile,p_entries,v_rankings,p_at
+  );
+
+  -- Idempotent before the deadline; once the lock has passed, the shared
+  -- maintainer or this submit path can persist the exact same resolution.
+  perform private.resolve_football_weekly_nfl_team_season_wildcard(
+    v_week_start,p_at
+  );
+
+  -- Return the complete Weekly Auction state expected by the shared frontend,
+  -- not only the nested Wildcard fragment.
+  return private.get_my_football_weekly_nfl_team_season(p_at);
+end;
+$nfl_wildcard_submit$;
+revoke all on function public.submit_my_football_weekly_nfl_team_season_wildcard(integer,jsonb,timestamptz)
+  from public,anon;
+grant execute on function public.submit_my_football_weekly_nfl_team_season_wildcard(integer,jsonb,timestamptz)
+  to authenticated;
+
 create or replace function public.get_my_football_weekly_auction(
   p_at timestamptz default now()
 )
