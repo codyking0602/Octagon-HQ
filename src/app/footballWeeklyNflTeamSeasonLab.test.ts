@@ -80,12 +80,13 @@ describe("NFL Team-Seasons owner playthrough lab", () => {
   it("wires the five-seat page through repository RPCs and the production presentation", () => {
     expect(repository).toContain('"get_my_football_weekly_nfl_team_season_lab"');
     expect(repository).toContain('"submit_my_football_weekly_nfl_team_season_lab_bids"');
-    expect(repository).toContain('"submit_my_football_weekly_nfl_team_season_lab_wildcard"');
+    expect(repository).toContain('"submit_my_football_weekly_nfl_team_season_lab_wildcard_v2"');
     expect(repository).toContain('"advance_my_football_weekly_nfl_team_season_lab"');
     expect(repository).toContain('"get_my_football_weekly_nfl_team_season_lab_ranked_bids"');
     expect(page).toContain("<FootballWeeklyNflTeamSeasonGate");
     expect(page).toContain("<FootballWeeklyNflTeamSeasonFinalResult");
     expect(page).toContain('tableMode="lab"');
     expect(page).toContain("tableSeatIndex={seatIndex}");
+    expect(page).toContain("playerLabel={lab.seats.find");
   });
 });
