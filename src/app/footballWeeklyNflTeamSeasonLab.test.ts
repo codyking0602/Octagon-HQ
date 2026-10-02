@@ -33,6 +33,7 @@ describe("NFL Team-Seasons owner playthrough lab", () => {
     expect(migration).toContain("private.resolve_football_weekly_nfl_team_season_day");
     expect(migration).toContain("private.submit_football_weekly_nfl_team_season_wildcard");
     expect(migration).toContain("private.resolve_football_weekly_nfl_team_season_wildcard");
+    expect(migration).toContain("private.materialize_football_weekly_nfl_team_season_wildcard");
     expect(migration).toContain("private.finalize_football_weekly_nfl_team_season_week");
   });
 
