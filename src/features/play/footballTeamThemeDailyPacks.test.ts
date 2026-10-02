@@ -49,12 +49,12 @@ describe("Football team-themed Daily packs", () => {
       .toEqual([
         "AT&T Stadium",
         "Emmitt Smith",
-        "Drew Pearson",
-        "Troy Aikman",
-        "Tom Landry",
+        "Tony Romo",
+        "Jimmy Johnson",
         "Bob Lilly",
-        "Larry Brown",
-        "Harvey Martin",
+        "Chuck Howley",
+        "Randy White",
+        "Mel Renfro",
       ]);
   });
 
@@ -71,6 +71,12 @@ describe("Football team-themed Daily packs", () => {
 
     const quarterbacks = pack.mainBoards.find((question) => question.id.endsWith("main-quarterbacks"))!;
     expect(matchFamilyFeudAnswer(pack, quarterbacks, "VY").status).toBe("matched");
+
+    const seasons = pack.mainBoards.find((question) => question.id.endsWith("main-seasons"))!;
+    expect(matchFamilyFeudAnswer(pack, seasons, "2005").status).toBe("matched");
+
+    const showdown = pack.fastMoney.find((question) => question.id.endsWith("fast-lone-star-showdown"))!;
+    expect(matchFamilyFeudAnswer(pack, showdown, "12th Man").status).toBe("matched");
 
     const rivals = pack.fastMoney.find((question) => question.id.endsWith("fast-rivals"))!;
     expect(matchFamilyFeudAnswer(pack, rivals, "A&M").status).toBe("matched");
@@ -105,6 +111,16 @@ describe("Football team-themed Daily packs", () => {
       answer: "Craig Morton",
       round: "last-call",
     });
+
+    const millionaire = buildFootballTodayPersistenceSetup("2026-10-26");
+    const millionaireRun = millionaire.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+    const millionaireAnswers = new Set(
+      millionaireRun.map((question) =>
+        question.choices.find((choice) => choice.id === question.correctChoiceId)?.text,
+      ),
+    );
+    const barTriviaAnswers = new Set(run.map((question) => String(question.answer)));
+    expect([...barTriviaAnswers].filter((answer) => millionaireAnswers.has(answer))).toEqual([]);
 
     const normal = buildBarTriviaDailySetup("nfl", "2026-09-29", "football-daily-v17-bar-trivia-sep29");
     const normalRun = normal.privateSetupEvidence.questions as Array<Record<string, unknown>>;
