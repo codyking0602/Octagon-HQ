@@ -165,8 +165,38 @@ const bilalRojasSpotlight: SpotlightData = {
   watchSpotlights: [],
 };
 
+const gautierKopylovSpotlight: SpotlightData = {
+  kicker: "FIGHT SPOTLIGHT · MIDDLEWEIGHT",
+  preview: "One of the UFC’s most explosive young middleweights gets his first major veteran test. Gautier brings an 81-inch reach, four knockouts in five UFC wins and serious early finishing danger; Kopylov brings a proven southpaw striking game, 12 career knockouts and the experience to force Gautier through a more layered fight.",
+  red: {
+    slug: "ateba-gautier",
+    name: "Ateba Gautier",
+    record: "11-1",
+    age: "24",
+    height: "6'4\"",
+    reach: "81\"",
+    stance: "Switch",
+    edges: ["Four knockouts in five UFC wins", "Six-foot-four frame with 81-inch reach", "Explosive early finishing power"],
+  },
+  blue: {
+    slug: "roman-kopylov",
+    name: "Roman Kopylov",
+    record: "15-5",
+    age: "34",
+    height: "6'0\"",
+    reach: "75\"",
+    stance: "Southpaw",
+    edges: ["Veteran southpaw striking", "12 career knockout wins", "89% UFC takedown-defense profile"],
+  },
+  watchSpotlights: [{
+    label: "GAUTIER SPOTLIGHT ↗",
+    url: "https://youtube.com/shorts/NwjKZahYvbw?is=PXQ2DXkjJvRt8bVm",
+  }],
+};
+
 function staticSpotlightForBout(bout: PickBout): SpotlightData | null {
   const slugs = new Set([bout.redFighterSlug, bout.blueFighterSlug]);
+  if (slugs.has("ateba-gautier") && slugs.has("roman-kopylov")) return gautierKopylovSpotlight;
   if (slugs.has("bilal-hasan") && slugs.has("nilson-rojas")) return bilalRojasSpotlight;
   if (slugs.has("mateusz-gamrot") && slugs.has("quillan-salkilld")) return gamrotSalkilldSpotlight;
   if (slugs.has("uros-medic") && slugs.has("daniel-rodriguez")) return medicRodriguezSpotlight;
