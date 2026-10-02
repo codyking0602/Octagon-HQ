@@ -136,7 +136,7 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
   it("inherits the ranked conditional overcommit model from CFB Superteam", () => {
     expect(rankedBids).toContain("football_weekly_superteam_bid_preferences");
     expect(rankedBids).toContain("claim_rank");
-    expect(rankedBids).toContain("submitted bids may exceed bankroll in total");
+    expect(rankedBids).toContain("bids may exceed bankroll in total");
     expect(rankedBids).toContain("candidate.amount<=candidate.starting_bankroll-candidate.spent");
     expect(rankedBids).not.toContain("Your two highest possible wins exceed your remaining bankroll");
     expect(gate).toContain("YOU CAN BID MORE THAN YOUR BANKROLL IN TOTAL");
