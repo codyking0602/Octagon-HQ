@@ -98,10 +98,9 @@ function RulesCover({ onStart }: { onStart: () => void }) {
       <details className="football-weekly-nfl-team-season__rules-details">
         <summary>WHAT HAPPENS ON DAY 7?</summary>
         <div>
-          <p>You will see four Wildcards before deciding whether to enter.</p>
-          <p>Every entry creates <b>one Priority ticket</b> and <b>one Reaping ticket</b>. More entries improve your odds on both wheels.</p>
-          <p><b>0 entries is completely safe:</b> no Wildcard chance and no Reaping risk.</p>
-          <p>The Reaped player keeps this week’s result, but starts the next Weekly Auction with <b>$5 less</b>.</p>
+          <p>Pick the team you would cut, rank the Wildcards you would take, then choose <b>0–5 entries</b>.</p>
+          <p>Each entry adds one slice to <b>Claim Order</b> and one slice to the separate <b>Risk Draw</b>.</p>
+          <p><b>0 entries = safe pass.</b> The Risk Draw lands on one entrant, who starts next week at $45.</p>
         </div>
       </details>
 
@@ -114,30 +113,13 @@ function WildcardRulesCover({ onStart }: { onStart: () => void }) {
   return (
     <section className="football-weekly-nfl-team-season__cover football-weekly-nfl-team-season__wildcard-cover surface-card">
       <p className="eyebrow">DAY 7 · FINALE</p>
-      <h1>WILDCARD / REAPING</h1>
-      <strong>This is optional. See the four Wildcards, then decide how much risk you want.</strong>
+      <h1>WILDCARD ROUND</h1>
+      <strong>Optional. Make your strategy before you put any entries at risk.</strong>
 
-      <div className="football-weekly-nfl-team-season__explainer">
-        <article>
-          <b>1 · RANK ONLY TEAMS YOU WOULD TAKE</b>
-          <strong>THE WILDCARD MUST IMPROVE YOUR TEAM</strong>
-          <span>Rank the Wildcards you would accept. You only get one if it is still available and grades better than your current fourth scoring team.</span>
-        </article>
-        <article>
-          <b>2 · PRIORITY WHEEL SETS CLAIM ORDER</b>
-          <strong>1–5 ENTRIES = 1–5 PRIORITY TICKETS</strong>
-          <span>The wheel decides who gets to try first. More tickets improve your odds of going earlier; they do not guarantee a Wildcard.</span>
-        </article>
-        <article>
-          <b>3 · REAPING IS A SEPARATE DRAW</b>
-          <strong>THE SAME TICKETS GO ON A SECOND WHEEL</strong>
-          <span>One entrant is Reaped and starts the next Weekly Auction with $5 less. This week’s score is not reduced.</span>
-        </article>
-      </div>
-
-      <div className="football-weekly-nfl-team-season__safe-pass">
-        <b>0 ENTRIES = NO RISK</b>
-        <span>You cannot win a Wildcard, but you also cannot be Reaped.</span>
+      <div className="football-weekly-nfl-team-season__wildcard-quick-rules">
+        <p><b>1</b><span>Choose the team you would cut, then rank only the Wildcards you would actually take.</span></p>
+        <p><b>2</b><span>Each entry gives you one slice in Claim Order and one slice in the separate Risk Draw.</span></p>
+        <p><b>3</b><span>0 entries is a safe pass. The Risk Draw lands on one entrant, who starts next week at $45.</span></p>
       </div>
 
       <button type="button" onClick={onStart}>SHOW THE FOUR WILDCARDS</button>
@@ -440,6 +422,7 @@ function RankingBoard({
     if (disabled) return;
     onChange(rankings.includes(ref) ? rankings.filter((value) => value !== ref) : [...rankings, ref]);
   }
+
   function move(ref: string, delta: number) {
     const index = rankings.indexOf(ref);
     if (index < 0) return;
@@ -456,27 +439,42 @@ function RankingBoard({
         {wildcard.teams.map((team) => {
           const rank = rankings.indexOf(team.item_reference);
           return (
-            <button type="button" className={rank >= 0 ? "is-selected" : ""} key={team.item_reference} disabled={disabled} onClick={() => toggle(team.item_reference)}>
-              <TeamMark teamCode={team.team_code} label={team.primary_name} />
-              <span className="football-weekly-nfl-team-season__wildcard-name">
-                <strong>{team.primary_name}</strong>
-                <b className="football-weekly-nfl-team-season__year">{team.season_year}</b>
-              </span>
-              <em>{rank >= 0 ? "PRIORITY #" + (rank + 1) : "TAP TO ACCEPT"}</em>
-            </button>
+            <article className={rank >= 0 ? "is-selected" : ""} key={team.item_reference}>
+              <a
+                className="football-weekly-nfl-team-season__wildcard-link"
+                href={nflTeamSeasonUrl(team.team_code, team.season_year)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={team.primary_name + " " + team.season_year + " season"}
+              >
+                <TeamMark teamCode={team.team_code} label={team.primary_name} />
+                <span className="football-weekly-nfl-team-season__wildcard-name">
+                  <strong>{team.primary_name}</strong>
+                  <b className="football-weekly-nfl-team-season__year">{team.season_year}</b>
+                </span>
+              </a>
+              <button
+                type="button"
+                className={rank >= 0 ? "is-selected" : ""}
+                disabled={disabled}
+                onClick={() => toggle(team.item_reference)}
+              >
+                {rank >= 0 ? "P" + (rank + 1) : "ADD"}
+              </button>
+            </article>
           );
         })}
       </div>
 
       {rankings.length ? (
         <div className="football-weekly-nfl-team-season__ranking">
-          <small>YOUR ACCEPTABLE WILDCARDS · IN ORDER</small>
+          <small>YOUR WILDCARD ORDER</small>
           {rankings.map((ref, index) => {
             const team = wildcard.teams.find((candidate) => candidate.item_reference === ref);
             if (!team) return null;
             return (
               <div key={ref}>
-                <b>#{index + 1}</b>
+                <b>P{index + 1}</b>
                 <span>{team.primary_name} <strong>{team.season_year}</strong></span>
                 <button type="button" disabled={disabled || index === 0} onClick={() => move(ref, -1)}>↑</button>
                 <button type="button" disabled={disabled || index === rankings.length - 1} onClick={() => move(ref, 1)}>↓</button>
@@ -490,54 +488,106 @@ function RankingBoard({
   );
 }
 
+function CutSelector({
+  collection,
+  selected,
+  disabled,
+  onChange,
+}: {
+  collection: FootballWeeklyNflTeamSeasonState["collection"];
+  selected: string | null;
+  disabled: boolean;
+  onChange: (itemReference: string) => void;
+}) {
+  const normalTeams = collection.filter((team) => team.source === "normal");
+  return (
+    <section className="football-weekly-nfl-team-season__cut">
+      <div>
+        <small>YOUR CUT</small>
+        <strong>Which team comes out if you win a Wildcard?</strong>
+      </div>
+      <div className="football-weekly-nfl-team-season__cut-options">
+        {normalTeams.map((team) => (
+          <article className={selected === team.item_reference ? "is-selected" : ""} key={team.item_reference}>
+            <a
+              href={nflTeamSeasonUrl(team.team_code, team.season_year)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={team.team_name + " " + team.season_year + " season"}
+            >
+              <TeamMark teamCode={team.team_code} label={team.team_name} />
+              <span><strong>{team.team_name}</strong><b>{team.season_year}</b></span>
+            </a>
+            <button
+              type="button"
+              className={selected === team.item_reference ? "is-selected" : ""}
+              disabled={disabled}
+              onClick={() => onChange(team.item_reference)}
+            >
+              {selected === team.item_reference ? "CUT" : "CHOOSE"}
+            </button>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 const wheelPalette = ["#20b486", "#f7b84b", "#68a4ff", "#eb6f92", "#9d7bf0", "#f38c5d", "#50c7d9", "#d2d95a"];
 
+function wheelTickets(draws: FootballWeeklyNflWildcardState["priority_draws"]) {
+  const remaining = draws.map((draw) => draw.entry_count);
+  const tickets: FootballWeeklyNflWildcardState["priority_draws"] = [];
+  while (remaining.some((count) => count > 0)) {
+    draws.forEach((draw, index) => {
+      if (remaining[index] > 0) {
+        tickets.push(draw);
+        remaining[index] -= 1;
+      }
+    });
+  }
+  return tickets;
+}
+
 function wheelBackground(draws: FootballWeeklyNflWildcardState["priority_draws"]) {
-  const total = draws.reduce((sum, draw) => sum + draw.entry_count, 0);
-  if (!total) return "#24313b";
-  let cursor = 0;
-  const segments: string[] = [];
-  draws.forEach((draw, index) => {
-    const start = (cursor / total) * 360;
-    cursor += draw.entry_count;
-    const end = (cursor / total) * 360;
-    segments.push(wheelPalette[index % wheelPalette.length] + " " + start + "deg " + end + "deg");
-  });
-  return "conic-gradient(" + segments.join(",") + ")";
+  const tickets = wheelTickets(draws);
+  if (!tickets.length) return "#24313b";
+  const size = 360 / tickets.length;
+  const colorByProfile = new Map(draws.map((draw, index) => [draw.profile_id, wheelPalette[index % wheelPalette.length]]));
+  return "conic-gradient(" + tickets.map((ticket, index) => {
+    const start = index * size;
+    const end = (index + 1) * size;
+    return (colorByProfile.get(ticket.profile_id) ?? wheelPalette[0]) + " " + start + "deg " + end + "deg";
+  }).join(",") + ")";
 }
 
 function wheelStopRotation(
   draws: FootballWeeklyNflWildcardState["priority_draws"],
   selectedProfileId: string | null,
 ) {
-  if (!selectedProfileId) return 0;
-  const total = draws.reduce((sum, draw) => sum + draw.entry_count, 0);
-  if (!total) return 0;
-
-  let cursor = 0;
-  for (const draw of draws) {
-    const start = cursor;
-    cursor += draw.entry_count;
-    if (draw.profile_id === selectedProfileId) {
-      const midpoint = ((start + draw.entry_count / 2) / total) * 360;
-      return -midpoint;
-    }
-  }
-  return 0;
+  const tickets = wheelTickets(draws);
+  if (!selectedProfileId || !tickets.length) return 0;
+  const ownedIndexes = tickets
+    .map((ticket, index) => ticket.profile_id === selectedProfileId ? index : -1)
+    .filter((index) => index >= 0);
+  if (!ownedIndexes.length) return 0;
+  const selectedIndex = ownedIndexes[Math.floor(ownedIndexes.length / 2)];
+  const midpoint = ((selectedIndex + .5) / tickets.length) * 360;
+  return -midpoint;
 }
 
 function WheelGraphic({
   title,
-  mode,
+  centerLabel,
   draws,
   selectedProfileId,
-  selectedName,
+  spinning,
 }: {
   title: string;
-  mode: "priority" | "reaping";
+  centerLabel: string;
   draws: FootballWeeklyNflWildcardState["priority_draws"];
   selectedProfileId: string | null;
-  selectedName: string | null;
+  spinning: boolean;
 }) {
   const total = draws.reduce((sum, draw) => sum + draw.entry_count, 0);
   const style = {
@@ -545,26 +595,71 @@ function WheelGraphic({
     "--wheel-stop": wheelStopRotation(draws, selectedProfileId) + "deg",
   } as CSSProperties;
   return (
-    <div className={"football-weekly-nfl-team-season__wheel-card is-" + mode}>
+    <div className="football-weekly-nfl-team-season__draw-stage">
+      <small>{title}</small>
       <div className="football-weekly-nfl-team-season__wheel-shell">
         <span className="football-weekly-nfl-team-season__wheel-pointer" aria-hidden="true">▼</span>
-        <div className="football-weekly-nfl-team-season__wheel" style={style}><span>{mode === "priority" ? "PRIORITY" : "REAPING"}</span></div>
-      </div>
-      <small>{title}</small>
-      <strong>{selectedName ?? "No entrants"}</strong>
-      {total ? (
-        <div className="football-weekly-nfl-team-season__wheel-odds">
-          {draws.map((draw) => (
-            <span key={draw.profile_id}><b>{draw.display_name}</b><em>{draw.entry_count}/{total} tickets</em></span>
-          ))}
+        <div className={"football-weekly-nfl-team-season__wheel" + (spinning ? " is-spinning" : "")} style={style}>
+          <span>{centerLabel}</span>
         </div>
-      ) : null}
+      </div>
+      <div className="football-weekly-nfl-team-season__ticket-legend">
+        {draws.map((draw, index) => (
+          <span key={draw.profile_id}>
+            <i style={{ background: wheelPalette[index % wheelPalette.length] }} />
+            <b>{draw.display_name}</b>
+            <em>{draw.entry_count}/{total}</em>
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
 
+function ClaimSummary({ wildcard }: { wildcard: FootballWeeklyNflWildcardState }) {
+  return (
+    <>
+      <div className="football-weekly-nfl-team-season__draw-order">
+        <small>CLAIM ORDER</small>
+        <strong>{wildcard.priority_draws.map((draw) => draw.display_name).join(" → ")}</strong>
+      </div>
+
+      <div className="football-weekly-nfl-team-season__claims">
+        <small>WILDCARD SWAPS</small>
+        {wildcard.claims.length ? wildcard.claims.map((claim) => {
+          const team = wildcard.teams.find((candidate) => candidate.item_reference === claim.item_reference);
+          const replacement = claim.replaced_team_name
+            ? claim.replaced_team_name + " " + claim.replaced_season_year
+            : claim.replaced_item_reference;
+          return (
+            <div key={claim.profile_id}>
+              <b>#{claim.priority_order}</b>
+              <strong>{claim.display_name}</strong>
+              <span>{team ? team.primary_name + " " + team.season_year : claim.item_reference}<small> for {replacement}</small></span>
+            </div>
+          );
+        }) : <p>No Wildcard was claimed.</p>}
+      </div>
+    </>
+  );
+}
+
 function WheelResult({ wildcard }: { wildcard: FootballWeeklyNflWildcardState }) {
-  const reaped = wildcard.reaping;
+  const [phase, setPhase] = useState<"claim" | "risk" | "done">("claim");
+  const risk = wildcard.reaping;
+
+  useEffect(() => {
+    if (!wildcard.priority_draws.length) return;
+    const reduceMotion = typeof window !== "undefined"
+      && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const spinTime = reduceMotion ? 20 : 5000;
+    const riskTimer = window.setTimeout(() => setPhase("risk"), spinTime);
+    const doneTimer = window.setTimeout(() => setPhase("done"), spinTime * 2);
+    return () => {
+      window.clearTimeout(riskTimer);
+      window.clearTimeout(doneTimer);
+    };
+  }, [wildcard.week_start, wildcard.priority_draws.length]);
 
   if (!wildcard.priority_draws.length) {
     return (
@@ -572,7 +667,7 @@ function WheelResult({ wildcard }: { wildcard: FootballWeeklyNflWildcardState })
         <div className="football-weekly-nfl-team-season__no-entry-result">
           <small>DAY 7 RESULT</small>
           <strong>EVERYONE PASSED</strong>
-          <span>No one bought a Wildcard entry, so there was no Priority draw, no Wildcard claim, and no Reaping draw.</span>
+          <span>No one entered, so there was no Claim Order draw, no Wildcard swap, and no Risk Draw.</span>
         </div>
       </section>
     );
@@ -580,45 +675,35 @@ function WheelResult({ wildcard }: { wildcard: FootballWeeklyNflWildcardState })
 
   return (
     <section className="football-weekly-nfl-team-season__resolution">
-      <div className="football-weekly-nfl-team-season__wheel-grid">
+      {phase === "claim" ? (
         <WheelGraphic
-          title="PRIORITY WHEEL"
-          mode="priority"
+          title="CLAIM ORDER"
+          centerLabel="CLAIM"
           draws={wildcard.priority_draws}
           selectedProfileId={wildcard.priority_draws[0]?.profile_id ?? null}
-          selectedName={wildcard.priority_draws[0]?.display_name ?? null}
+          spinning
         />
+      ) : null}
+
+      {phase !== "claim" ? <ClaimSummary wildcard={wildcard} /> : null}
+
+      {phase === "risk" ? (
         <WheelGraphic
-          title="REAPING WHEEL"
-          mode="reaping"
+          title="RISK DRAW"
+          centerLabel="RISK"
           draws={wildcard.priority_draws}
-          selectedProfileId={reaped?.profile_id ?? null}
-          selectedName={reaped?.display_name ?? null}
+          selectedProfileId={risk?.profile_id ?? null}
+          spinning
         />
-      </div>
+      ) : null}
 
-      <div className="football-weekly-nfl-team-season__draw-order">
-        <small>WILDCARD CLAIM ORDER</small>
-        <strong>{wildcard.priority_draws.length ? wildcard.priority_draws.map((draw) => draw.display_name).join(" → ") : "No entrants"}</strong>
-      </div>
-
-      <div className="football-weekly-nfl-team-season__claims">
-        <small>WILDCARDS WON</small>
-        {wildcard.claims.length ? wildcard.claims.map((claim) => {
-          const team = wildcard.teams.find((candidate) => candidate.item_reference === claim.item_reference);
-          return (
-            <div key={claim.profile_id}>
-              <b>#{claim.priority_order}</b><strong>{claim.display_name}</strong><span>{team ? team.primary_name + " " + team.season_year : claim.item_reference}</span>
-            </div>
-          );
-        }) : <p>No entrant had an available Wildcard that improved their fourth scoring team.</p>}
-      </div>
-
-      <div className={"football-weekly-nfl-team-season__reaping-result" + (reaped ? " is-reaped" : "")}>
-        <small>THE REAPING</small>
-        <strong>{reaped ? reaped.display_name : "Nobody Reaped"}</strong>
-        <span>{reaped ? reaped.entry_count + " ticket" + (reaped.entry_count === 1 ? "" : "s") + " · next Weekly Auction starts $5 lower" : "Nobody entered, so the Reaping wheel stayed empty."}</span>
-      </div>
+      {phase === "done" ? (
+        <div className={"football-weekly-nfl-team-season__risk-result" + (risk ? " is-hit" : "")}>
+          <small>RISK DRAW</small>
+          <strong>{risk ? risk.display_name : "NO DRAW"}</strong>
+          <span>{risk ? "Starts next week at $45. This week’s score is unchanged." : "No one entered."}</span>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -633,7 +718,7 @@ function WildcardDay({
   state: FootballWeeklyNflTeamSeasonState;
   busy: boolean;
   error: string | null;
-  onSubmitWildcard: (entries: number, rankings: string[]) => Promise<void>;
+  onSubmitWildcard: (entries: number, rankings: string[], cutItemReference: string | null) => Promise<void>;
   onContinue: () => void;
 }) {
   const wildcard = state.wildcard;
@@ -641,20 +726,24 @@ function WildcardDay({
 
   const [entries, setEntries] = useState(wildcard.my_entries);
   const [rankings, setRankings] = useState<string[]>(wildcard.my_rankings);
+  const [cutItemReference, setCutItemReference] = useState<string | null>(wildcard.my_cut_item_reference);
   const [editing, setEditing] = useState(!wildcard.submitted);
 
   useEffect(() => {
     setEntries(wildcard.my_entries);
     setRankings(wildcard.my_rankings);
+    setCutItemReference(wildcard.my_cut_item_reference);
     setEditing(!wildcard.submitted);
-  }, [wildcard.my_entries, wildcard.my_rankings, wildcard.submitted]);
+  }, [wildcard.my_entries, wildcard.my_rankings, wildcard.my_cut_item_reference, wildcard.submitted]);
 
   if (wildcard.resolved) {
     return (
       <div className="football-weekly-nfl-team-season">
         <section className="football-weekly-nfl-team-season__wildcard-board surface-card">
-          <header className="football-weekly-nfl-team-season__board-head"><div><p className="eyebrow">DAY 7 · FINALE</p><h1>WILDCARD / REAPING</h1></div><span>RESOLVED</span></header>
-          <RankingBoard wildcard={wildcard} rankings={wildcard.my_rankings} disabled onChange={() => undefined} />
+          <header className="football-weekly-nfl-team-season__board-head">
+            <div><p className="eyebrow">DAY 7 · FINALE</p><h1>WILDCARD ROUND</h1></div>
+            <span>RESOLVED</span>
+          </header>
           <WheelResult wildcard={wildcard} />
           <button className="football-weekly-nfl-team-season__primary" type="button" onClick={onContinue}>CONTINUE</button>
         </section>
@@ -664,22 +753,40 @@ function WildcardDay({
 
   const cannotEnter = state.owned_count < 4;
   const submitted = wildcard.submitted && !editing;
-  const legal = entries === 0 || (!cannotEnter && rankings.length > 0);
+  const legal = entries === 0 || (!cannotEnter && rankings.length > 0 && Boolean(cutItemReference));
+  const cutTeam = state.collection.find((team) => team.item_reference === cutItemReference);
 
   return (
     <div className="football-weekly-nfl-team-season">
       <section className="football-weekly-nfl-team-season__wildcard-board surface-card">
-        <header className="football-weekly-nfl-team-season__board-head"><div><p className="eyebrow">DAY 7 · FINALE</p><h1>WILDCARD / REAPING</h1></div><span>NO BANKROLL BIDDING</span></header>
+        <header className="football-weekly-nfl-team-season__board-head">
+          <div><p className="eyebrow">DAY 7 · FINALE</p><h1>WILDCARD ROUND</h1></div>
+        </header>
 
         <div className="football-weekly-nfl-team-season__wildcard-copy">
-          <strong>See all four first. Then decide whether the upside is worth the risk.</strong>
-          <span>Rank only cards you would actually accept. A Wildcard is awarded only if it improves your current fourth scoring team.</span>
+          <strong>Choose your cut. Rank what you’d take. Choose your risk.</strong>
+          <span>Your entries determine your slices in both the Claim Order draw and the separate Risk Draw.</span>
         </div>
 
-        <RankingBoard wildcard={wildcard} rankings={rankings} disabled={submitted || busy || cannotEnter} onChange={setRankings} />
+        <CutSelector
+          collection={state.collection}
+          selected={cutItemReference}
+          disabled={submitted || busy || cannotEnter}
+          onChange={setCutItemReference}
+        />
+
+        <section className="football-weekly-nfl-team-season__wildcard-picks">
+          <div><small>YOUR WILDCARDS</small><strong>Rank only teams you would take for your selected cut.</strong></div>
+          <RankingBoard
+            wildcard={wildcard}
+            rankings={rankings}
+            disabled={submitted || busy || cannotEnter}
+            onChange={setRankings}
+          />
+        </section>
 
         <div className="football-weekly-nfl-team-season__tickets">
-          <div><small>YOUR ENTRIES</small><strong>{entries}</strong><span>Each entry = 1 Priority ticket + 1 Reaping ticket.</span></div>
+          <div><small>YOUR ENTRIES</small><strong>{entries}</strong><span>Each entry = 1 Claim Order slice + 1 Risk Draw slice.</span></div>
           <div className="football-weekly-nfl-team-season__ticket-buttons">
             {[0, 1, 2, 3, 4, 5].map((value) => (
               <button
@@ -687,27 +794,45 @@ function WildcardDay({
                 className={entries === value ? "is-active" : ""}
                 key={value}
                 disabled={submitted || busy || (cannotEnter && value > 0)}
-                onClick={() => { setEntries(value); if (value === 0) setRankings([]); }}
+                onClick={() => {
+                  setEntries(value);
+                  if (value === 0) {
+                    setRankings([]);
+                    setCutItemReference(null);
+                  }
+                }}
               >{value}</button>
             ))}
           </div>
-          <p><b>0 entries:</b> no Wildcard chance and no Reaping risk. Passing is a legitimate strategy.</p>
-          <p><b>Literal tickets:</b> four players at 4 entries means 16 tickets; each owns 25%. Five entries never automatically beats one.</p>
+          <p><b>0 entries:</b> pass safely. No Wildcard chance and no Risk Draw chance.</p>
         </div>
 
-        {cannotEnter ? <p className="football-weekly-nfl-team-season__error">Wildcard is an upgrade only. You need at least four normal teams to enter; this seat can safely pass with 0 entries.</p> : null}
-        {!legal ? <p className="football-weekly-nfl-team-season__error">Choose at least one acceptable Wildcard before buying entries.</p> : null}
+        {cannotEnter ? <p className="football-weekly-nfl-team-season__error">You need at least four normal teams to enter. This seat can pass safely with 0 entries.</p> : null}
+        {entries > 0 && !cutItemReference ? <p className="football-weekly-nfl-team-season__error">Choose the team you would cut.</p> : null}
+        {entries > 0 && rankings.length === 0 ? <p className="football-weekly-nfl-team-season__error">Add at least one Wildcard you would take.</p> : null}
         {error ? <p className="football-weekly-nfl-team-season__error">{error}</p> : null}
 
         {submitted ? (
           <div className="football-weekly-nfl-team-season__submitted">
-            <div><strong>WILDCARD CHOICE IN</strong><span>Other players’ ticket counts remain sealed until resolution.</span></div>
+            <div>
+              <strong>{entries === 0 ? "SAFE PASS IN" : "WILDCARD CHOICE IN"}</strong>
+              <span>{entries === 0 ? "0 entries · no Risk Draw chance." : entries + " entries · cut " + (cutTeam ? cutTeam.team_name + " " + cutTeam.season_year : "selected team") + "."}</span>
+            </div>
             <button type="button" disabled={busy} onClick={() => setEditing(true)}>EDIT CHOICE</button>
             <button className="football-weekly-nfl-team-season__primary" type="button" disabled={busy} onClick={onContinue}>CONTINUE</button>
           </div>
         ) : (
-          <button className="football-weekly-nfl-team-season__primary" type="button" disabled={busy || !legal} onClick={() => void onSubmitWildcard(entries, rankings)}>
-            {wildcard.submitted ? "SAVE WILDCARD CHANGES" : entries === 0 ? "PASS SAFELY · 0 ENTRIES" : "SUBMIT " + entries + " " + (entries === 1 ? "ENTRY" : "ENTRIES")}
+          <button
+            className="football-weekly-nfl-team-season__primary"
+            type="button"
+            disabled={busy || !legal}
+            onClick={() => void onSubmitWildcard(entries, rankings, cutItemReference)}
+          >
+            {wildcard.submitted
+              ? "SAVE WILDCARD CHANGES"
+              : entries === 0
+                ? "PASS SAFELY · 0 ENTRIES"
+                : "SUBMIT " + entries + " " + (entries === 1 ? "ENTRY" : "ENTRIES")}
           </button>
         )}
       </section>
@@ -720,19 +845,22 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
   busy,
   onAcknowledge,
   showNewWeekAction = true,
+  playerLabel,
 }: {
   result: FootballWeeklyNflTeamSeasonFinal;
   busy: boolean;
   onAcknowledge: () => void;
   showNewWeekAction?: boolean;
+  playerLabel?: string;
 }) {
   const me = result.my_result;
+  const ownerLabel = playerLabel ? playerLabel.toUpperCase() + "’S" : "YOUR";
   return (
     <section className="football-weekly-nfl-team-season__final surface-card">
       <header className="football-weekly-nfl-team-season__final-head"><p className="eyebrow">NFL WEEKLY AUCTION</p><h1>FINAL RESULTS</h1><span>Best four team-season grades decide the week.</span></header>
 
       <div className="football-weekly-nfl-team-season__finish">
-        <small>{me.is_winner ? "WEEKLY CHAMPION" : "YOUR FINISH"}</small>
+        <small>{me.is_winner ? "WEEKLY CHAMPION" : ownerLabel + " FINISH"}</small>
         <strong>{me.final_rank ? "#" + me.final_rank : "—"}</strong>
         <b>{me.final_score == null ? "—" : me.final_score.toFixed(1)}</b>
       </div>
@@ -746,7 +874,7 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
       </div>
 
       <div className="football-weekly-nfl-team-season__final-collection">
-        <small>YOUR FINAL COLLECTION</small>
+        <small>{ownerLabel} FINAL COLLECTION</small>
         {result.collection.map((team) => (
           <article className={team.counts ? "is-counting" : ""} key={team.item_reference}>
             <TeamMark teamCode={team.team_code} label={team.team_name} />
@@ -784,7 +912,7 @@ export function FootballWeeklyNflTeamSeasonGate({
   tableMode?: "live" | "lab";
   tableSeatIndex?: number;
   onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
-  onSubmitWildcard: (entries: number, rankings: string[]) => Promise<void>;
+  onSubmitWildcard: (entries: number, rankings: string[], cutItemReference: string | null) => Promise<void>;
   onContinue: () => void;
 }) {
   const [introDismissed, setIntroDismissed] = useState(false);
