@@ -86,8 +86,8 @@ function RulesCover({ onStart }: { onStart: () => void }) {
         </article>
         <article>
           <b>HOW BIDDING WORKS</b>
-          <strong>YOUR BIDS ARE CONDITIONAL</strong>
-          <span>You can bid more than your bankroll in total. Claims run P1, P2, P3… and any later win that no longer fits your remaining bankroll is skipped. Losing bids cost $0.</span>
+          <strong>YOU CAN BID MORE THAN YOUR BANKROLL IN TOTAL</strong>
+          <span>Your bids are conditional. Claims run P1, P2, P3… and any later win that no longer fits your remaining bankroll is skipped. Losing bids cost $0.</span>
         </article>
         <article>
           <b>DAY 7 · WILDCARD</b>
