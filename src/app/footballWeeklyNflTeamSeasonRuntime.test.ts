@@ -170,25 +170,22 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(tableStyles).toContain("calc(58px + var(--safe-top))");
   });
 
-  it("makes literal-ticket risk and zero-entry safety explicit in the UI", () => {
-    expect(gate).toContain("Each entry = 1 Priority ticket + 1 Reaping ticket.");
+  it("makes Claim Order and Risk Draw literal-ticket behavior explicit in the UI", () => {
+    expect(gate).toContain("Each entry = 1 Claim Order slice + 1 Risk Draw slice.");
     expect(gate).toContain("0 entries:");
-    expect(gate).toContain("Five entries never automatically beats one");
-    expect(gate).toContain("PRIORITY WHEEL");
-    expect(gate).toContain("REAPING WHEEL");
-    expect(gate).toContain("PRIORITY WHEEL SETS CLAIM ORDER");
-    expect(gate).toContain("REAPING IS A SEPARATE DRAW");
-    expect(gate).toContain("0 ENTRIES = NO RISK");
+    expect(gate).toContain("CLAIM ORDER");
+    expect(gate).toContain("RISK DRAW");
     expect(gate).toContain("SHOW THE FOUR WILDCARDS");
     expect(gate).toContain("EVERYONE PASSED");
-    expect(gate).toContain("there was no Priority draw, no Wildcard claim, and no Reaping draw");
-    expect(gate).toContain("WILDCARD CLAIM ORDER");
-    expect(gate).toContain("WILDCARDS WON");
+    expect(gate).toContain("there was no Claim Order draw, no Wildcard swap, and no Risk Draw");
+    expect(gate).toContain("WILDCARD SWAPS");
     expect(gate).toContain("wheelStopRotation");
     expect(gate).toContain("selectedProfileId");
+    expect(gate).toContain('useState<"claim" | "risk" | "done">("claim")');
     expect(styles).toContain("@keyframes football-nfl-weekly-wheel-resolve");
-    expect(styles).toContain("var(--wheel-stop, 0deg)");
+    expect(styles).toContain("animation: football-nfl-weekly-wheel-resolve 5s");
     expect(styles).toContain("football-weekly-nfl-team-season__no-entry-result");
+    expect(gate).not.toContain("WILDCARD / REAPING");
   });
 
   it("keeps the exact season year outside truncating name text on mobile", () => {
