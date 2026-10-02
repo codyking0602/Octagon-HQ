@@ -621,7 +621,7 @@ export function revealNflTeamSeasonAuctionDay(board, dayNumber) {
 export function simulateNflTeamSeasonThemeGenerator(
   pool,
   weeks = 30000,
-  seed = 0x33af41d9,
+  seed = 1,
 ) {
   const familyCounts = {};
   const themeLabels = new Set();
@@ -641,7 +641,7 @@ export function simulateNflTeamSeasonThemeGenerator(
   for (let index = 0; index < weeks; index += 1) {
     let board;
     try {
-      board = generateNflTeamSeasonThemedWeek(pool, seed + index * 7919);
+      board = generateNflTeamSeasonThemedWeek(pool, seed + index);
     } catch {
       generationFailures += 1;
       continue;
