@@ -390,16 +390,40 @@ returns void
 language plpgsql
 security definer
 set search_path=''
-as $$
+as $nfl_theme_week$
 declare
   v_existing integer;
+  v_attempt integer;
+  v_def_slot integer;
+  v_def_attempt integer;
+  v_def_index integer;
+  v_pick_index integer;
   v_day integer;
   v_slot integer;
+  v_actual_day integer;
   v_family text;
   v_variant text;
   v_theme text;
   v_ref text;
-  v_rivalry text;
+  v_franchise text;
+  v_conference text;
+  v_priority_family text;
+  v_history_franchise text;
+  v_chosen boolean;
+  v_family_counts jsonb;
+  v_weekly_counts jsonb;
+  v_used_labels text[];
+  v_used_refs text[];
+  v_day_franchises text[];
+  v_selected_refs text[];
+  v_def_families text[];
+  v_def_variants text[];
+  v_def_themes text[];
+  v_final_days integer[];
+  v_priority_order text[]:=array[
+    'franchise_history','rivalry','division','season',
+    'fell_short','era','conference_clash','open_field'
+  ];
 begin
   if extract(isodow from p_week_start)<>2 then
     raise exception 'Football Weekly Auction week must start Tuesday';
@@ -424,162 +448,320 @@ begin
     raise exception 'NFL Team-Seasons normal board is partial; refusing to reroll exposed cards';
   end if;
 
-  -- The audited JS generator remains the calibration authority. Runtime uses the
-  -- same eight approved families/eligibility rules, with a deterministic hash
-  -- permutation so future themes are server-owned and do not require a fixed schedule.
-  insert into private.football_weekly_nfl_team_season_themes(
-    week_start,day_index,family,variant,public_theme
-  )
-  with families(family) as (
-    values
-      ('division'),('season'),('era'),('rivalry'),('franchise_history'),
-      ('fell_short'),('conference_clash'),('open_field')
-  ),
-  ranked as (
-    select family,row_number() over(
-      order by md5(p_week_start::text||':family:'||family)
-    )::integer as day_index
-    from families
-  )
-  select p_week_start,day_index,family,null,null
-  from ranked
-  where day_index<=6
-  on conflict(week_start,day_index) do nothing;
+  -- Runtime mirrors the approved #1601 calibrated generator:
+  -- weighted families with weekly caps, unique public labels, priority-ordered
+  -- construction, distinct-franchise balancing where the theme permits it,
+  -- exact team-season uniqueness, and weekly franchise exposure limits.
+  <<attempt_loop>>
+  for v_attempt in 1..300 loop
+    delete from private.football_weekly_auction_board where week_start=p_week_start;
+    delete from private.football_weekly_nfl_team_season_themes where week_start=p_week_start;
 
-  for v_day in 1..6 loop
-    select family into v_family
-    from private.football_weekly_nfl_team_season_themes
-    where week_start=p_week_start and day_index=v_day;
+    v_family_counts:='{}'::jsonb;
+    v_weekly_counts:='{}'::jsonb;
+    v_used_labels:=array[]::text[];
+    v_used_refs:=array[]::text[];
+    v_def_families:=array[]::text[];
+    v_def_variants:=array[]::text[];
+    v_def_themes:=array[]::text[];
+    v_history_franchise:=null;
 
-    if v_family='division' then
-      select division into v_variant
-      from (select distinct division from private.nfl_best_team_seasons_v1_authority) d
-      order by md5(p_week_start::text||':division:'||d.division)
-      limit 1;
-      v_theme:=v_variant||' Spotlight';
-    elsif v_family='season' then
-      v_variant:=(2010+mod(abs(hashtext(p_week_start::text||':season')),16))::text;
-      v_theme:=v_variant||' Season Spotlight';
-    elsif v_family='era' then
-      v_variant:=(array['2000s','2010s','2020s'])[1+mod(abs(hashtext(p_week_start::text||':era')),3)];
-      v_theme:=v_variant||' Spotlight';
-    elsif v_family='rivalry' then
-      v_rivalry:=(array[
-        'DAL|PHI','GB|CHI','BAL|PIT','KC|LV','NE|NYJ','SF|LAR',
-        'ATL|NO','DEN|KC','NYG|PHI','SEA|SF','CLE|PIT','MIN|GB'
-      ])[1+mod(abs(hashtext(p_week_start::text||':rivalry')),12)];
-      v_variant:=v_rivalry;
-      v_theme:=private.football_weekly_nfl_team_short_name(split_part(v_rivalry,'|',1))
-        ||' vs '||
-        private.football_weekly_nfl_team_short_name(split_part(v_rivalry,'|',2));
-    elsif v_family='franchise_history' then
-      select franchise_id into v_variant
-      from private.nfl_best_team_seasons_v1_authority
-      group by franchise_id
-      having count(*)>=7
-      order by md5(p_week_start::text||':franchise:'||franchise_id)
-      limit 1;
-      v_theme:=private.football_weekly_nfl_team_short_name(v_variant)||' Through the Years';
-    elsif v_family='fell_short' then
-      v_variant:=null;
-      v_theme:='Great Teams That Fell Short';
-    elsif v_family='conference_clash' then
-      v_variant:=null;
-      v_theme:='AFC vs NFC';
-    else
-      v_variant:=null;
-      v_theme:='Open Field';
+    -- Choose six theme definitions using the calibrated weights/caps.
+    for v_def_slot in 1..6 loop
+      v_chosen:=false;
+
+      for v_def_attempt in 1..100 loop
+        v_family:=null;
+        select weighted.family into v_family
+        from (
+          select family,weight,cap
+          from (values
+            ('division'::text,1.35::double precision,2),
+            ('season',1.10,1),
+            ('era',1.00,1),
+            ('rivalry',1.15,1),
+            ('franchise_history',0.90,1),
+            ('fell_short',1.00,1),
+            ('conference_clash',1.00,1),
+            ('open_field',1.50,2)
+          ) family_weights(family,weight,cap)
+          where coalesce((v_family_counts->>family)::integer,0)<cap
+          order by -ln(greatest(random(),0.000000000001))/weight
+          limit 1
+        ) weighted;
+
+        if v_family is null then
+          continue attempt_loop;
+        end if;
+
+        if v_family='division' then
+          select division into v_variant
+          from (select distinct division from private.nfl_best_team_seasons_v1_authority) divisions
+          order by random()
+          limit 1;
+          v_theme:=v_variant||' Spotlight';
+        elsif v_family='season' then
+          v_variant:=(2000+floor(random()*26)::integer)::text;
+          v_theme:=v_variant||' Season Spotlight';
+        elsif v_family='era' then
+          v_variant:=(array['2000s','2010s','2020s'])[1+floor(random()*3)::integer];
+          v_theme:=v_variant||' Spotlight';
+        elsif v_family='rivalry' then
+          v_variant:=(array[
+            'DAL|PHI','GB|CHI','BAL|PIT','KC|LV','NE|NYJ','SF|LAR',
+            'ATL|NO','DEN|KC','NYG|PHI','SEA|SF','CLE|PIT','MIN|GB'
+          ])[1+floor(random()*12)::integer];
+          v_theme:=private.football_weekly_nfl_team_short_name(split_part(v_variant,'|',1))
+            ||' vs '||
+            private.football_weekly_nfl_team_short_name(split_part(v_variant,'|',2));
+        elsif v_family='franchise_history' then
+          select franchise_id into v_variant
+          from private.nfl_best_team_seasons_v1_authority
+          group by franchise_id
+          having count(*)>=4
+          order by random()
+          limit 1;
+          v_theme:=private.football_weekly_nfl_team_short_name(v_variant)||' Through the Years';
+        elsif v_family='fell_short' then
+          v_variant:=null;
+          v_theme:='Great Teams That Fell Short';
+        elsif v_family='conference_clash' then
+          v_variant:=null;
+          v_theme:='AFC vs NFC';
+        else
+          v_variant:=null;
+          v_theme:='Open Field';
+        end if;
+
+        if v_theme=any(v_used_labels) then
+          continue;
+        end if;
+
+        v_def_families:=array_append(v_def_families,v_family);
+        v_def_variants:=array_append(v_def_variants,v_variant);
+        v_def_themes:=array_append(v_def_themes,v_theme);
+        v_used_labels:=array_append(v_used_labels,v_theme);
+        v_family_counts:=jsonb_set(
+          v_family_counts,
+          array[v_family],
+          to_jsonb(coalesce((v_family_counts->>v_family)::integer,0)+1),
+          true
+        );
+        v_chosen:=true;
+        exit;
+      end loop;
+
+      if not v_chosen then
+        continue attempt_loop;
+      end if;
+    end loop;
+
+    select array_agg(n order by random())
+    into v_final_days
+    from generate_series(1,6) as day_order(n);
+
+    -- Build constrained families first, matching the audited generator's
+    -- BUILD_PRIORITY, then randomly place the completed theme days in the week.
+    foreach v_priority_family in array v_priority_order loop
+      for v_def_index in 1..6 loop
+        if v_def_families[v_def_index]<>v_priority_family then
+          continue;
+        end if;
+
+        v_family:=v_def_families[v_def_index];
+        v_variant:=v_def_variants[v_def_index];
+        v_theme:=v_def_themes[v_def_index];
+        v_actual_day:=v_final_days[v_def_index];
+        v_selected_refs:=array[]::text[];
+        v_day_franchises:=array[]::text[];
+
+        if v_family='franchise_history' then
+          v_history_franchise:=v_variant;
+          for v_pick_index in 1..4 loop
+            v_ref:=null;
+            select candidate.item_reference into v_ref
+            from private.nfl_best_team_seasons_v1_authority candidate
+            where candidate.franchise_id=v_variant
+              and not (candidate.item_reference=any(v_used_refs))
+            order by random()
+            limit 1;
+            if v_ref is null then continue attempt_loop; end if;
+            v_selected_refs:=array_append(v_selected_refs,v_ref);
+            v_used_refs:=array_append(v_used_refs,v_ref);
+          end loop;
+
+        elsif v_family='rivalry' then
+          foreach v_franchise in array array[
+            split_part(v_variant,'|',1),
+            split_part(v_variant,'|',2)
+          ] loop
+            for v_pick_index in 1..2 loop
+              v_ref:=null;
+              select candidate.item_reference into v_ref
+              from private.nfl_best_team_seasons_v1_authority candidate
+              where candidate.franchise_id=v_franchise
+                and not (candidate.item_reference=any(v_used_refs))
+              order by random()
+              limit 1;
+              if v_ref is null then continue attempt_loop; end if;
+              v_selected_refs:=array_append(v_selected_refs,v_ref);
+              v_used_refs:=array_append(v_used_refs,v_ref);
+            end loop;
+          end loop;
+
+        elsif v_family='division' then
+          for v_franchise in
+            select distinct candidate.franchise_id
+            from private.nfl_best_team_seasons_v1_authority candidate
+            where candidate.division=v_variant
+            order by candidate.franchise_id
+          loop
+            v_ref:=null;
+            select candidate.item_reference into v_ref
+            from private.nfl_best_team_seasons_v1_authority candidate
+            where candidate.franchise_id=v_franchise
+              and not (candidate.item_reference=any(v_used_refs))
+            order by random()
+            limit 1;
+            if v_ref is null then continue attempt_loop; end if;
+            v_selected_refs:=array_append(v_selected_refs,v_ref);
+            v_used_refs:=array_append(v_used_refs,v_ref);
+          end loop;
+          if coalesce(array_length(v_selected_refs,1),0)<>4 then
+            continue attempt_loop;
+          end if;
+
+        elsif v_family='conference_clash' then
+          foreach v_conference in array array['AFC','NFC'] loop
+            for v_pick_index in 1..2 loop
+              v_ref:=null;
+              v_franchise:=null;
+              select candidate.item_reference,candidate.franchise_id
+              into v_ref,v_franchise
+              from private.nfl_best_team_seasons_v1_authority candidate
+              where candidate.conference=v_conference
+                and not (candidate.item_reference=any(v_used_refs))
+                and not (candidate.franchise_id=any(v_day_franchises))
+                and coalesce((v_weekly_counts->>candidate.franchise_id)::integer,0)<2
+              order by
+                coalesce((v_weekly_counts->>candidate.franchise_id)::integer,0),
+                random()
+              limit 1;
+              if v_ref is null then continue attempt_loop; end if;
+              v_selected_refs:=array_append(v_selected_refs,v_ref);
+              v_day_franchises:=array_append(v_day_franchises,v_franchise);
+              v_used_refs:=array_append(v_used_refs,v_ref);
+            end loop;
+          end loop;
+
+        else
+          -- Season, era, fell-short and open-field use the same calibrated
+          -- least-used/distinct-franchise selection rule.
+          for v_pick_index in 1..4 loop
+            v_ref:=null;
+            v_franchise:=null;
+            select candidate.item_reference,candidate.franchise_id
+            into v_ref,v_franchise
+            from private.nfl_best_team_seasons_v1_authority candidate
+            where not (candidate.item_reference=any(v_used_refs))
+              and not (candidate.franchise_id=any(v_day_franchises))
+              and coalesce((v_weekly_counts->>candidate.franchise_id)::integer,0)<2
+              and (
+                (v_family='season' and candidate.season_year=v_variant::integer)
+                or (v_family='era' and (
+                  (v_variant='2000s' and candidate.season_year between 2000 and 2009)
+                  or (v_variant='2010s' and candidate.season_year between 2010 and 2019)
+                  or (v_variant='2020s' and candidate.season_year between 2020 and 2025)
+                ))
+                or (v_family='fell_short' and candidate.fell_short)
+                or v_family='open_field'
+              )
+            order by
+              coalesce((v_weekly_counts->>candidate.franchise_id)::integer,0),
+              random()
+            limit 1;
+            if v_ref is null then continue attempt_loop; end if;
+            v_selected_refs:=array_append(v_selected_refs,v_ref);
+            v_day_franchises:=array_append(v_day_franchises,v_franchise);
+            v_used_refs:=array_append(v_used_refs,v_ref);
+          end loop;
+        end if;
+
+        if coalesce(array_length(v_selected_refs,1),0)<>4 then
+          continue attempt_loop;
+        end if;
+
+        select array_agg(ref order by random())
+        into v_selected_refs
+        from unnest(v_selected_refs) as shuffled(ref);
+
+        insert into private.football_weekly_nfl_team_season_themes(
+          week_start,day_index,family,variant,public_theme
+        ) values (
+          p_week_start,v_actual_day,v_family,v_variant,v_theme
+        );
+
+        for v_slot in 1..4 loop
+          v_ref:=v_selected_refs[v_slot];
+          insert into private.football_weekly_auction_board(
+            week_start,day_index,theme,hidden_shape,slot,season_reference,lock_at,trait
+          ) values (
+            p_week_start,v_actual_day,v_theme,'Natural',v_slot,v_ref,
+            ((p_week_start+v_actual_day)::timestamp at time zone 'America/Chicago'),
+            null
+          );
+
+          select franchise_id into v_franchise
+          from private.nfl_best_team_seasons_v1_authority
+          where item_reference=v_ref;
+
+          v_weekly_counts:=jsonb_set(
+            v_weekly_counts,
+            array[v_franchise],
+            to_jsonb(coalesce((v_weekly_counts->>v_franchise)::integer,0)+1),
+            true
+          );
+        end loop;
+      end loop;
+    end loop;
+
+    if (select count(*) from private.football_weekly_auction_board
+        where week_start=p_week_start and slot<=4)<>24
+      or (select count(*) from private.football_weekly_nfl_team_season_themes
+          where week_start=p_week_start)<>6
+    then
+      continue attempt_loop;
     end if;
 
-    update private.football_weekly_nfl_team_season_themes
-    set variant=v_variant,public_theme=v_theme
-    where week_start=p_week_start and day_index=v_day;
+    if exists(
+      select authority.franchise_id
+      from private.football_weekly_auction_board board
+      join private.nfl_best_team_seasons_v1_authority authority
+        on authority.item_reference=board.season_reference
+      where board.week_start=p_week_start and board.slot<=4
+      group by authority.franchise_id
+      having count(*)>
+        case when authority.franchise_id=v_history_franchise then 4 else 3 end
+    ) then
+      continue attempt_loop;
+    end if;
 
-    for v_slot in 1..7 loop
-      v_ref:=null;
+    -- Prebuild hidden reserve cards under the same theme eligibility. Reserve
+    -- scarcity may leave a theme with fewer than seven total cards; exposed
+    -- cards are never rerolled and later supply logic uses only what exists.
+    for v_day in 1..6 loop
+      select family,variant,public_theme
+      into v_family,v_variant,v_theme
+      from private.football_weekly_nfl_team_season_themes
+      where week_start=p_week_start and day_index=v_day;
 
-      select candidate.item_reference into v_ref
-      from private.nfl_best_team_seasons_v1_authority candidate
-      where not exists(
-          select 1 from private.football_weekly_auction_board used
-          where used.week_start=p_week_start
-            and used.season_reference=candidate.item_reference
-        )
-        and (
-          (v_family='division' and candidate.division=v_variant)
-          or (v_family='season' and candidate.season_year=v_variant::integer)
-          or (v_family='era' and (
-            (v_variant='2000s' and candidate.season_year between 2000 and 2009)
-            or (v_variant='2010s' and candidate.season_year between 2010 and 2019)
-            or (v_variant='2020s' and candidate.season_year between 2020 and 2025)
-          ))
-          or (v_family='rivalry' and candidate.franchise_id in (
-            split_part(v_variant,'|',1),split_part(v_variant,'|',2)
-          ))
-          or (v_family='franchise_history' and candidate.franchise_id=v_variant)
-          or (v_family='fell_short' and candidate.fell_short)
-          or (v_family='conference_clash')
-          or (v_family='open_field')
-        )
-        and (
-          v_slot>4
-          or v_family='franchise_history'
-          or (
-            v_family='rivalry'
-            and (
-              select count(*)
-              from private.football_weekly_auction_board prior
-              join private.nfl_best_team_seasons_v1_authority prior_item
-                on prior_item.item_reference=prior.season_reference
-              where prior.week_start=p_week_start
-                and prior.day_index=v_day
-                and prior_item.franchise_id=candidate.franchise_id
-            )<2
-          )
-          or (
-            v_family='conference_clash'
-            and (
-              select count(*)
-              from private.football_weekly_auction_board prior
-              join private.nfl_best_team_seasons_v1_authority prior_item
-                on prior_item.item_reference=prior.season_reference
-              where prior.week_start=p_week_start
-                and prior.day_index=v_day
-                and prior_item.conference=candidate.conference
-            )<2
-          )
-          or (
-            v_family not in ('rivalry','conference_clash','franchise_history')
-            and not exists(
-              select 1
-              from private.football_weekly_auction_board prior
-              join private.nfl_best_team_seasons_v1_authority prior_item
-                on prior_item.item_reference=prior.season_reference
-              where prior.week_start=p_week_start
-                and prior.day_index=v_day
-                and prior_item.franchise_id=candidate.franchise_id
-            )
-          )
-        )
-      order by
-        (
-          select count(*)
-          from private.football_weekly_auction_board weekly
-          join private.nfl_best_team_seasons_v1_authority weekly_item
-            on weekly_item.item_reference=weekly.season_reference
-          where weekly.week_start=p_week_start
-            and weekly_item.franchise_id=candidate.franchise_id
-        ),
-        md5(p_week_start::text||':'||v_day::text||':'||v_slot::text||':'||candidate.item_reference)
-      limit 1;
-
-      if v_ref is null then
-        -- Reserve supply may relax same-day franchise balance, but never theme
-        -- eligibility or exact team-season uniqueness.
+      for v_slot in 5..7 loop
+        v_ref:=null;
         select candidate.item_reference into v_ref
         from private.nfl_best_team_seasons_v1_authority candidate
         where not exists(
-            select 1 from private.football_weekly_auction_board used
+            select 1
+            from private.football_weekly_auction_board used
             where used.week_start=p_week_start
               and used.season_reference=candidate.item_reference
           )
@@ -596,7 +778,7 @@ begin
             ))
             or (v_family='franchise_history' and candidate.franchise_id=v_variant)
             or (v_family='fell_short' and candidate.fell_short)
-            or (v_family in ('conference_clash','open_field'))
+            or v_family in ('conference_clash','open_field')
           )
         order by
           (
@@ -607,48 +789,29 @@ begin
             where weekly.week_start=p_week_start
               and weekly_item.franchise_id=candidate.franchise_id
           ),
-          md5(p_week_start::text||':reserve:'||v_day::text||':'||v_slot::text||':'||candidate.item_reference)
+          random()
         limit 1;
-      end if;
 
-      if v_ref is null then
-        exit;
-      end if;
+        if v_ref is null then exit; end if;
 
-      insert into private.football_weekly_auction_board(
-        week_start,day_index,theme,hidden_shape,slot,season_reference,lock_at,trait
-      ) values (
-        p_week_start,v_day,v_theme,'Natural',v_slot,v_ref,
-        ((p_week_start+v_day)::timestamp at time zone 'America/Chicago'),
-        null
-      );
+        insert into private.football_weekly_auction_board(
+          week_start,day_index,theme,hidden_shape,slot,season_reference,lock_at,trait
+        ) values (
+          p_week_start,v_day,v_theme,'Natural',v_slot,v_ref,
+          ((p_week_start+v_day)::timestamp at time zone 'America/Chicago'),
+          null
+        );
+      end loop;
     end loop;
 
-    if (select count(*) from private.football_weekly_auction_board where week_start=p_week_start and day_index=v_day)<4 then
-      raise exception 'NFL Team-Seasons theme % could not materialize its four-card base board',v_theme;
-    end if;
-  end loop;
+    return;
+  end loop attempt_loop;
 
-  if exists(
-    select 1
-    from private.football_weekly_nfl_team_season_themes
-    where week_start=p_week_start
-      and (public_theme is null or char_length(public_theme)=0)
-  ) then
-    raise exception 'NFL Team-Seasons generated incomplete theme metadata';
-  end if;
-
-  if exists(
-    select season_reference
-    from private.football_weekly_auction_board
-    where week_start=p_week_start and day_index between 1 and 6
-    group by season_reference
-    having count(*)>1
-  ) then
-    raise exception 'NFL Team-Seasons repeated an exact team-season within the week';
-  end if;
+  delete from private.football_weekly_auction_board where week_start=p_week_start;
+  delete from private.football_weekly_nfl_team_season_themes where week_start=p_week_start;
+  raise exception 'Unable to materialize a valid calibrated NFL Team-Seasons themed week';
 end;
-$$;
+$nfl_theme_week$;
 revoke all on function private.materialize_football_weekly_nfl_team_season_week(date)
   from public,anon,authenticated;
 
