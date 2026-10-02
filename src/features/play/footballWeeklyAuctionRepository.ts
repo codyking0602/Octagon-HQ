@@ -541,6 +541,7 @@ export interface FootballWeeklyAuctionRepository {
     rankings: string[],
   ): Promise<FootballWeeklyNflTeamSeasonLabState>;
   advanceNflTeamSeasonLab(seatIndex?: number): Promise<FootballWeeklyNflTeamSeasonLabState>;
+  jumpNflTeamSeasonLabToDay7(seatIndex?: number): Promise<FootballWeeklyNflTeamSeasonLabState>;
   submitNflTeamSeasonWildcard(entries: number, rankings: string[]): Promise<FootballWeeklyAuctionState>;
   submitSuperteamLab(
     seatIndex: number,
@@ -604,6 +605,11 @@ export function createFootballWeeklyAuctionRepository(
     },
     async advanceNflTeamSeasonLab(seatIndex = 1) {
       return nflTeamSeasonLabSchema.parse(await rpc(client, "advance_my_football_weekly_nfl_team_season_lab", {
+        p_seat_index: seatIndex,
+      }));
+    },
+    async jumpNflTeamSeasonLabToDay7(seatIndex = 1) {
+      return nflTeamSeasonLabSchema.parse(await rpc(client, "jump_my_football_weekly_nfl_team_season_lab_to_day7", {
         p_seat_index: seatIndex,
       }));
     },
