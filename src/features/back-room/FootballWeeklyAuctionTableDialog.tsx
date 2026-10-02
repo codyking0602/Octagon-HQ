@@ -5,6 +5,7 @@ import {
   type FootballWeeklyAuctionTablePlayer,
   type FootballWeeklyAuctionTableTeam,
 } from "../play/footballWeeklyAuctionTableRepository";
+import { createFootballWeeklyAuctionRepository } from "../play/footballWeeklyAuctionRepository";
 import {
   footballWeeklyAuctionTeamIdentity,
   footballWeeklyAuctionTeamStyle,
@@ -12,6 +13,22 @@ import {
 } from "./footballWeeklyAuctionPresentation";
 import { footballNflTeamMediaId } from "./footballMediaIdentity";
 import { footballTeamAssets } from "./footballSubjectAssets";
+
+const PFR_TEAM_CODES: Record<string, string> = {
+  ARI: "crd", ATL: "atl", BAL: "rav", BUF: "buf", CAR: "car", CHI: "chi",
+  CIN: "cin", CLE: "cle", DAL: "dal", DEN: "den", DET: "det", GB: "gnb",
+  HOU: "htx", IND: "clt", JAX: "jax", KC: "kan", LAC: "sdg", LAR: "ram",
+  LV: "rai", MIA: "mia", MIN: "min", NE: "nwe", NO: "nor", NYG: "nyg",
+  NYJ: "nyj", PHI: "phi", PIT: "pit", SEA: "sea", SF: "sfo", TB: "tam",
+  TEN: "oti", WAS: "was",
+};
+
+function nflSeasonUrl(teamCode: string, seasonYear: number) {
+  const code = PFR_TEAM_CODES[teamCode];
+  return code
+    ? `https://www.pro-football-reference.com/teams/${code}/${seasonYear}.htm`
+    : "https://www.pro-football-reference.com/";
+}
 
 function TeamMark({ identity, school }: { identity: FootballWeeklyAuctionTeamIdentity; school: string }) {
   const [logoFailed, setLogoFailed] = useState(false);
@@ -66,11 +83,22 @@ function TeamRow({ team }: { team: FootballWeeklyAuctionTableTeam }) {
         ? <NflTeamMark teamCode={team.team_code} label={team.school} />
         : <TeamMark identity={identity!} school={team.school} />}
       <div className="football-weekly-auction-table__team-copy">
-        <strong className="football-weekly-auction-table__team-name">{team.school}</strong>
+        {team.team_code ? (
+          <a
+            className="football-weekly-auction-table__team-name football-weekly-auction-table__nfl-link"
+            href={nflSeasonUrl(team.team_code, team.season_year)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {team.school}
+          </a>
+        ) : (
+          <strong className="football-weekly-auction-table__team-name">{team.school}</strong>
+        )}
         <span className="football-weekly-auction-table__team-meta">
           <b>{team.season_year}</b> · WON {"$"}{team.price_paid}
         </span>
-        {identity ? <small>{rankedResume(identity)}</small> : <small>Exact NFL team-season</small>}
+        {identity ? <small>{rankedResume(identity)}</small> : <small>{team.card_tag ?? "Exact NFL team-season"}</small>}
       </div>
     </article>
   );
@@ -116,8 +144,17 @@ function PlayerRow({
   );
 }
 
-export function FootballWeeklyAuctionTableDialog({ onClose }: { onClose: () => void }) {
+export function FootballWeeklyAuctionTableDialog({
+  mode = "live",
+  seatIndex = 1,
+  onClose,
+}: {
+  mode?: "live" | "lab";
+  seatIndex?: number;
+  onClose: () => void;
+}) {
   const repository = useMemo(() => createFootballWeeklyAuctionTableRepository(), []);
+  const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [players, setPlayers] = useState<FootballWeeklyAuctionTablePlayer[]>([]);
   const [expandedProfileId, setExpandedProfileId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -133,18 +170,46 @@ export function FootballWeeklyAuctionTableDialog({ onClose }: { onClose: () => v
 
   useEffect(() => {
     let active = true;
-    if (!repository) {
-      setError("Auction Table is unavailable right now.");
-      setLoading(false);
-      return () => { active = false; };
+
+    async function loadPlayers() {
+      if (mode === "lab") {
+        if (!weeklyRepository) throw new Error("Auction Table is unavailable right now.");
+        const labStates = await Promise.all(
+          [1, 2, 3, 4, 5].map((index) => weeklyRepository.loadNflTeamSeasonLab(index)),
+        );
+        return labStates.map((labState, index): FootballWeeklyAuctionTablePlayer => {
+          const labSeat = labState.seats.find((seat) => seat.seat_index === index + 1)!;
+          const state = labState.state;
+          return {
+            profile_id: labSeat.profile_id,
+            display_name: labSeat.display_name,
+            is_current_user: labSeat.seat_index === seatIndex,
+            bankroll: labSeat.bankroll,
+            owned_count: labSeat.owned_count,
+            teams: state?.collection.map((team) => ({
+              season_reference: team.item_reference,
+              school: team.team_name,
+              team_code: team.team_code,
+              season_year: team.season_year,
+              display_label: team.display_label,
+              card_tag: team.card_tag ?? null,
+              price_paid: team.winning_bid,
+            })) ?? [],
+          };
+        });
+      }
+
+      if (!repository) throw new Error("Auction Table is unavailable right now.");
+      return repository.load();
     }
 
-    repository.load()
+    setLoading(true);
+    setError(null);
+    loadPlayers()
       .then((nextPlayers) => {
         if (!active) return;
         setPlayers(nextPlayers);
         setExpandedProfileId(nextPlayers.find((player) => player.is_current_user)?.profile_id ?? null);
-        setError(null);
       })
       .catch((loadError: unknown) => {
         if (!active) return;
@@ -155,7 +220,7 @@ export function FootballWeeklyAuctionTableDialog({ onClose }: { onClose: () => v
       });
 
     return () => { active = false; };
-  }, [repository]);
+  }, [mode, repository, seatIndex, weeklyRepository]);
 
   return (
     <div className="football-weekly-auction-table__backdrop" role="presentation" onMouseDown={onClose}>
