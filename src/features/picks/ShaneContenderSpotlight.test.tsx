@@ -109,6 +109,19 @@ const daniilSpotlight: PickEventSpotlight = {
   generatedAt: "2026-08-31T18:30:00.000Z",
 };
 
+const gautierBout: PickBout = {
+  boutId: "main-ateba-gautier-roman-kopylov",
+  position: 5,
+  weightClass: "Middleweight",
+  redFighterSlug: "ateba-gautier",
+  redFighterName: "Ateba Gautier",
+  blueFighterSlug: "roman-kopylov",
+  blueFighterName: "Roman Kopylov",
+  redAmericanOdds: -210,
+  blueAmericanOdds: 175,
+  winnerFighterSlug: null,
+};
+
 const rosasBout: PickBout = {
   boutId: "main-event-raul-rosas-jr-raoni-barcelos",
   position: 1,
@@ -199,6 +212,31 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #1")).toHaveLength(2);
   });
 
+  it("gives Ateba Gautier the full Shane treatment on UFC 332 at #5", () => {
+    const gautier = shanesWatchlist.fighters.find((fighter) => fighter.id === "ateba-gautier");
+    expect(gautier?.rank).toBe(5);
+
+    render(
+      <MemoryRouter>
+        <MainEventSpotlight bout={gautierBout} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("FIGHT SPOTLIGHT")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #5")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #5")).toHaveLength(2);
+    expect(screen.getByText(gautier!.whyOnBoard)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "GAUTIER SPOTLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtube.com/shorts/NwjKZahYvbw?is=PXQ2DXkjJvRt8bVm",
+    );
+    expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
+      "href",
+      "/fighters-to-watch#ateba-gautier",
+    );
+  });
+
   it("gives Raul Rosas Jr. the Shane badge on the prepared Picks main event", () => {
     const rosas = shanesWatchlist.fighters.find((fighter) => fighter.id === "raul-rosas-jr");
     expect(rosas?.rank).toBe(2);
@@ -221,7 +259,7 @@ describe("Shane Contender Fight Spotlight treatment", () => {
 
   it("gives Daniil Donchenko the Shane treatment on this week’s configured Fight Spotlight", () => {
     const daniil = shanesWatchlist.fighters.find((fighter) => fighter.id === "daniil-donchenko");
-    expect(daniil?.rank).toBe(6);
+    expect(daniil?.rank).toBe(7);
 
     render(
       <MemoryRouter>
@@ -229,9 +267,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #6")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #7")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #6")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #7")).toHaveLength(2);
     expect(screen.getByText(daniil!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
       "href",
