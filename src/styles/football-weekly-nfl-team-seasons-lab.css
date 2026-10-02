@@ -1,0 +1,79 @@
+.nfl-ts-lab__intro {
+  width: min(100%, 680px);
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid rgba(121,200,244,.18);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(30,118,181,.2), transparent 52%),
+    linear-gradient(180deg, #122230, #071018);
+}
+
+.nfl-ts-lab__intro .eyebrow {
+  margin: 0;
+  color: #79c8f4;
+}
+
+.nfl-ts-lab__intro h1 {
+  margin: 7px 0;
+  font-size: clamp(1.85rem,7vw,2.65rem);
+  line-height: .94;
+  letter-spacing: -.035em;
+}
+
+.nfl-ts-lab__intro p {
+  max-width: 570px;
+  margin: 0 auto;
+  color: #adbbc5;
+  font-size: .76rem;
+  line-height: 1.42;
+}
+
+.nfl-ts-lab__intro > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.nfl-ts-lab__intro > div > button:not(.nfl-ts__primary) {
+  min-height: 49px;
+  padding: 0 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  background: #0c1821;
+  color: #fff;
+  font-size: .65rem;
+  font-weight: 900;
+}
+
+.nfl-ts-lab__intro .nfl-ts__primary {
+  margin: 0;
+}
+
+.football-weekly-superteam-lab__seats.nfl-ts-lab__seats {
+  grid-template-columns: repeat(5,minmax(0,1fr));
+}
+
+.nfl-ts-lab .football-weekly-superteam-lab__hero {
+  border-color: rgba(121,200,244,.15);
+}
+
+.nfl-ts-lab .football-weekly-superteam-lab__day-control > button {
+  border-color: rgba(121,200,244,.28);
+}
+
+@media (max-width: 700px) {
+  .nfl-ts-lab__intro > div {
+    grid-template-columns: 1fr;
+  }
+
+  .football-weekly-superteam-lab__seats.nfl-ts-lab__seats {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+  }
+
+  .football-weekly-superteam-lab__seats.nfl-ts-lab__seats > button:last-child {
+    grid-column: 1 / -1;
+  }
+}
