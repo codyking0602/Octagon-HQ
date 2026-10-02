@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202612310230_nfl_team_season_playthrough_lab.sql",
   "utf8",
 );
+const day7Shortcut = readFileSync(
+  "supabase/migrations/202612310233_nfl_team_season_lab_day7_shortcut.sql",
+  "utf8",
+);
 const page = readFileSync(
   "src/features/back-room/FootballWeeklyNflTeamSeasonLabPage.tsx",
   "utf8",
@@ -48,6 +52,19 @@ describe("NFL Team-Seasons owner playthrough lab", () => {
     expect(migration).toContain("if v_submitted<>5");
     expect(page).toContain("lab.submitted_count !== 5");
     expect(page).toContain("ALL FIVE SEATS MUST SUBMIT");
+  });
+
+  it("can seed a fresh isolated run directly to a meaningful Day 7", () => {
+    expect(day7Shortcut).toContain("jump_my_football_weekly_nfl_team_season_lab_to_day7");
+    expect(day7Shortcut).toContain("private.reset_football_weekly_nfl_team_season_lab");
+    expect(day7Shortcut).toContain("private.submit_football_weekly_nfl_team_season_bids_for_profile");
+    expect(day7Shortcut).toContain("private.resolve_football_weekly_nfl_team_season_day");
+    expect(day7Shortcut).toContain("if v_owned<>4");
+    expect(day7Shortcut).toContain("set current_day=7");
+    expect(day7Shortcut).toContain("private.materialize_football_weekly_nfl_team_season_wildcard");
+    expect(repository).toContain('"jump_my_football_weekly_nfl_team_season_lab_to_day7"');
+    expect(page).toContain("JUMP TO DAY 7");
+    expect(page).toContain("Fresh seeded QA run");
   });
 
   it("enforces owner-only access in both UI routing and RPCs", () => {
