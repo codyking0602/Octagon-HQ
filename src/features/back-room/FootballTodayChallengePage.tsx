@@ -675,12 +675,12 @@ export default function FootballTodayChallengePage() {
     }
   }
 
-  async function submitWeeklyWildcard(entries: number, rankings: string[]) {
+  async function submitWeeklyWildcard(entries: number, rankings: string[], cutItemReference: string | null) {
     if (!weeklyRepository || weeklyBusy) return;
     setWeeklyBusy(true);
     setWeeklyError(null);
     try {
-      const next = await weeklyRepository.submitNflTeamSeasonWildcard(entries, rankings);
+      const next = await weeklyRepository.submitNflTeamSeasonWildcard(entries, rankings, cutItemReference);
       setWeeklyState(next);
       setShowWeeklyAuction(next.available);
     } catch (reason) {
