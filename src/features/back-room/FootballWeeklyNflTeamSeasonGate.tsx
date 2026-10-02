@@ -5,12 +5,54 @@ import type {
   FootballWeeklyNflTeamSeasonFinal,
   FootballWeeklyNflTeamSeasonState,
   FootballWeeklyNflWildcardState,
+  FootballWeeklySuperteamBid,
 } from "../play/footballWeeklyAuctionRepository";
 import { footballNflTeamMediaId } from "./footballMediaIdentity";
 import { footballTeamAssets } from "./footballSubjectAssets";
 import { FootballWeeklyAuctionTableDialog } from "./FootballWeeklyAuctionTableDialog";
 
-type BidMap = Record<number, number>;
+type BidMap = Record<number, FootballWeeklySuperteamBid>;
+
+const PFR_TEAM_CODES: Record<string, string> = {
+  ARI: "crd", ATL: "atl", BAL: "rav", BUF: "buf", CAR: "car", CHI: "chi",
+  CIN: "cin", CLE: "cle", DAL: "dal", DEN: "den", DET: "det", GB: "gnb",
+  HOU: "htx", IND: "clt", JAX: "jax", KC: "kan", LAC: "sdg", LAR: "ram",
+  LV: "rai", MIA: "mia", MIN: "min", NE: "nwe", NO: "nor", NYG: "nyg",
+  NYJ: "nyj", PHI: "phi", PIT: "pit", SEA: "sea", SF: "sfo", TB: "tam",
+  TEN: "oti", WAS: "was",
+};
+
+function nflTeamSeasonUrl(teamCode: string, seasonYear: number) {
+  const pfrCode = PFR_TEAM_CODES[teamCode];
+  return pfrCode
+    ? `https://www.pro-football-reference.com/teams/${pfrCode}/${seasonYear}.htm`
+    : "https://www.pro-football-reference.com/";
+}
+
+function TeamSeasonLink({
+  teamCode,
+  teamName,
+  seasonYear,
+}: {
+  teamCode: string;
+  teamName: string;
+  seasonYear: number;
+}) {
+  return (
+    <a
+      className="football-weekly-nfl-team-season__season-link"
+      href={nflTeamSeasonUrl(teamCode, seasonYear)}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={teamName + " " + seasonYear + " season"}
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
+    >
+      <strong>{teamName}</strong>
+      <b className="football-weekly-nfl-team-season__year">{seasonYear}</b>
+    </a>
+  );
+}
 
 function nflAsset(teamCode: string) {
   return footballTeamAssets[footballNflTeamMediaId(teamCode)] ?? null;
@@ -35,8 +77,13 @@ function RulesCover({ onStart }: { onStart: () => void }) {
       <h1>BEST TEAM-SEASONS SINCE 2000</h1>
       <strong>Six auction days. One Wildcard finale. Best four count.</strong>
       <div className="football-weekly-nfl-team-season__rules">
+        <div className="football-weekly-nfl-team-season__rules-callout">
+          <b>YOU CAN BID MORE THAN YOUR BANKROLL IN TOTAL</b>
+          <span>Your bids are conditional. Rank every team P1, P2, P3… and the engine works down your list, skipping anything you can no longer afford.</span>
+        </div>
         <p><b>$50 bankroll</b> for Days 1–6. Win at most <b>2 teams per day</b> and <b>5 normal teams</b> for the week.</p>
-        <p>Every card is an exact <b>franchise + season year</b>. Hidden grades measure that specific season, not franchise reputation.</p>
+        <p><b>Claim priority creates the strategy.</b> P1 is the team you want most. Losing bids cost $0, and a lower-priority win cannot spend money you already used on a higher-priority claim.</p>
+        <p>Every card is an exact <b>franchise + season year</b>. Tap the team-season to open its Pro Football Reference page.</p>
         <p><b>Day 7:</b> see four Wildcards first, rank only the ones you would accept, then choose 0–5 entries.</p>
         <p>Each entry is one <b>Priority ticket</b> and one <b>Reaping ticket</b>. <b>0 entries is completely safe.</b></p>
         <p>The Reaped player keeps this week’s score, but starts the next Weekly Auction with <b>$5 less</b>.</p>
@@ -48,50 +95,97 @@ function RulesCover({ onStart }: { onStart: () => void }) {
 
 function NormalCard({
   card,
-  value,
+  bid,
   disabled,
   max,
-  onChange,
+  dragging,
+  priorityCount,
+  onAmount,
+  onPriority,
+  onDragStart,
+  onDragMove,
+  onDragEnd,
 }: {
   card: FootballWeeklyNflTeamSeasonState["teams"][number];
-  value: number;
+  bid: FootballWeeklySuperteamBid;
   disabled: boolean;
   max: number;
-  onChange: (value: number) => void;
+  dragging: boolean;
+  priorityCount: number;
+  onAmount: (value: number) => void;
+  onPriority: (value: number) => void;
+  onDragStart: () => void;
+  onDragMove: (clientY: number) => void;
+  onDragEnd: () => void;
 }) {
   return (
-    <article className="football-weekly-nfl-team-season__card">
-      <div className="football-weekly-nfl-team-season__identity">
+    <article
+      className={"football-weekly-nfl-team-season__card" + (dragging ? " is-dragging" : "")}
+      data-nfl-team-season-slot={card.slot}
+    >
+      <div
+        className="football-weekly-nfl-team-season__identity"
+        onPointerDown={(event) => {
+          if (disabled || (event.target as HTMLElement).closest("a,button,input,select")) return;
+          event.preventDefault();
+          event.currentTarget.setPointerCapture(event.pointerId);
+          onDragStart();
+        }}
+        onPointerMove={(event) => {
+          if (!disabled && event.buttons === 1) onDragMove(event.clientY);
+        }}
+        onPointerUp={(event) => {
+          if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+            event.currentTarget.releasePointerCapture(event.pointerId);
+          }
+          onDragEnd();
+        }}
+        onPointerCancel={onDragEnd}
+      >
+        <span className="football-weekly-nfl-team-season__drag-grip" aria-hidden="true">⋮⋮</span>
         <TeamMark teamCode={card.team_code} label={card.team_name} />
         <div className="football-weekly-nfl-team-season__identity-copy">
-          <span className="football-weekly-nfl-team-season__name-row">
-            <strong>{card.team_name}</strong>
-            <b className="football-weekly-nfl-team-season__year">{card.season_year}</b>
-          </span>
+          <TeamSeasonLink teamCode={card.team_code} teamName={card.team_name} seasonYear={card.season_year} />
           {card.card_tag ? <small>{card.card_tag}</small> : null}
         </div>
       </div>
-      <div className="football-weekly-nfl-team-season__bid">
-        <button type="button" disabled={disabled || value <= 0} onClick={() => onChange(Math.max(0, value - 1))}>−</button>
-        <label>
-          <span>BID</span><b>$</b>
-          <input
-            type="number"
-            inputMode="numeric"
-            min={0}
-            max={max}
-            step={1}
+      <div className="football-weekly-nfl-team-season__controls">
+        <label className="football-weekly-nfl-team-season__priority">
+          <span>CLAIM</span>
+          <select
+            value={bid.priority}
             disabled={disabled}
-            value={value}
-            onChange={(event) => {
-              const next = Math.floor(Number(event.currentTarget.value));
-              onChange(Number.isFinite(next) ? Math.max(0, Math.min(max, next)) : 0);
-            }}
-            aria-label={"Bid on " + card.team_name + " " + card.season_year}
-          />
+            onChange={(event) => onPriority(Number(event.currentTarget.value))}
+            aria-label={card.team_name + " " + card.season_year + " claim priority"}
+          >
+            {Array.from({ length: priorityCount }, (_, index) => index + 1).map((priority) => (
+              <option value={priority} key={priority}>P{priority}</option>
+            ))}
+          </select>
         </label>
-        <button type="button" disabled={disabled || value >= max} onClick={() => onChange(Math.min(max, value + 1))}>+</button>
+        <div className="football-weekly-nfl-team-season__bid">
+          <button type="button" disabled={disabled || bid.amount <= 0} onClick={() => onAmount(Math.max(0, bid.amount - 1))}>−</button>
+          <label>
+            <span>BID</span><b>$</b>
+            <input
+              type="number"
+              inputMode="numeric"
+              min={0}
+              max={max}
+              step={1}
+              disabled={disabled}
+              value={bid.amount}
+              onChange={(event) => {
+                const next = Math.floor(Number(event.currentTarget.value));
+                onAmount(Number.isFinite(next) ? Math.max(0, Math.min(max, next)) : 0);
+              }}
+              aria-label={"Bid on " + card.team_name + " " + card.season_year}
+            />
+          </label>
+          <button type="button" disabled={disabled || bid.amount >= max} onClick={() => onAmount(Math.min(max, bid.amount + 1))}>+</button>
+        </div>
       </div>
+      <em>$0 = PASS</em>
     </article>
   );
 }
@@ -109,7 +203,7 @@ function PriorResults({ state }: { state: FootballWeeklyNflTeamSeasonState }) {
           </summary>
           <div>
             {result.bids.map((bid) => (
-              <span key={bid.profile_id}><b>{bid.display_name}</b><strong>{bid.amount ? "$" + bid.amount : "Pass"}</strong></span>
+              <span key={bid.profile_id}><b>{bid.display_name}</b><strong>{bid.amount ? "$" + bid.amount + (bid.priority ? " · P" + bid.priority : "") : "Pass"}</strong></span>
             ))}
           </div>
         </details>
@@ -122,21 +216,31 @@ function NormalAuction({
   state,
   busy,
   error,
+  tableMode,
+  tableSeatIndex,
   onSubmit,
   onContinue,
 }: {
   state: FootballWeeklyNflTeamSeasonState;
   busy: boolean;
   error: string | null;
+  tableMode: "live" | "lab";
+  tableSeatIndex: number;
   onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
   onContinue: () => void;
 }) {
   const initial = useMemo<BidMap>(() => Object.fromEntries(
-    state.teams.map((team) => [team.slot, state.bids[String(team.slot)] ?? 0]),
-  ), [state.bids, state.teams]);
+    state.teams.map((team) => {
+      const stored = state.bids[String(team.slot)];
+      return [team.slot, typeof stored === "number"
+        ? { amount: stored, priority: team.slot }
+        : stored ?? { amount: 0, priority: team.slot }];
+    }),
+  ) as BidMap, [state.bids, state.teams]);
   const [bids, setBids] = useState<BidMap>(initial);
   const [editing, setEditing] = useState(!state.submitted_today);
   const [tableOpen, setTableOpen] = useState(false);
+  const [draggingSlot, setDraggingSlot] = useState<number | null>(null);
 
   useEffect(() => {
     setBids(initial);
@@ -144,23 +248,61 @@ function NormalAuction({
   }, [initial, state.submitted_today]);
 
   const maxWins = Math.min(2, Math.max(5 - state.owned_count, 0));
-  const spendRisk = Object.values(bids)
-    .sort((left, right) => right - left)
-    .slice(0, maxWins)
-    .reduce((sum, amount) => sum + amount, 0);
-  const legal = spendRisk <= state.bankroll;
+  const highestBid = Math.max(0, ...Object.values(bids).map((bid) => bid.amount));
+  const legal = highestBid <= state.bankroll;
   const submitted = state.submitted_today && !editing;
+  const orderedCards = [...state.teams].sort(
+    (left, right) => (bids[left.slot]?.priority ?? left.slot) - (bids[right.slot]?.priority ?? right.slot),
+  );
+
+  function changeAmount(slot: number, amount: number) {
+    setBids((current) => ({ ...current, [slot]: { ...current[slot]!, amount } }));
+  }
+
+  function changePriority(slot: number, priority: number) {
+    setBids((current) => {
+      const currentPriority = current[slot]!.priority;
+      const swapKey = Object.keys(current).find((key) => current[Number(key)]!.priority === priority);
+      const next = { ...current, [slot]: { ...current[slot]!, priority } };
+      if (swapKey) {
+        const swapSlot = Number(swapKey);
+        if (swapSlot !== slot) next[swapSlot] = { ...next[swapSlot]!, priority: currentPriority };
+      }
+      return next;
+    });
+  }
+
+  function moveDraggedClaim(clientY: number) {
+    if (draggingSlot === null) return;
+    const rows = Array.from(document.querySelectorAll<HTMLElement>("[data-nfl-team-season-slot]"));
+    const target = rows
+      .map((row) => ({
+        row,
+        distance: Math.abs((row.getBoundingClientRect().top + row.getBoundingClientRect().bottom) / 2 - clientY),
+      }))
+      .sort((left, right) => left.distance - right.distance)[0]?.row;
+    const targetSlot = Number(target?.dataset.nflTeamSeasonSlot ?? 0);
+    if (!targetSlot || targetSlot === draggingSlot) return;
+    const targetPriority = bids[targetSlot]?.priority;
+    if (targetPriority != null) changePriority(draggingSlot, targetPriority);
+  }
 
   return (
     <div className="football-weekly-nfl-team-season">
-      {tableOpen ? <FootballWeeklyAuctionTableDialog onClose={() => setTableOpen(false)} /> : null}
+      {tableOpen ? (
+        <FootballWeeklyAuctionTableDialog
+          mode={tableMode}
+          seatIndex={tableSeatIndex}
+          onClose={() => setTableOpen(false)}
+        />
+      ) : null}
 
       <div className="football-weekly-nfl-team-season__status">
-        <button type="button" onClick={() => setTableOpen(true)}>
-          <small>AUCTION TABLE</small><strong>{state.owned_count}</strong><span>YOUR TEAMS · VIEW ›</span>
+        <button type="button" onClick={() => setTableOpen(true)} aria-haspopup="dialog" aria-label="Open Auction Table">
+          <small>AUCTION TABLE</small><strong>VIEW ›</strong><span>TEAMS + BANKROLLS</span>
         </button>
         <div><small>BANKROLL</small><strong>{"$"}{state.bankroll}</strong><span>STARTED {"$"}{state.starting_bankroll}</span></div>
-        <div><small>MAX SPEND RISK</small><strong>{"$"}{spendRisk}</strong><span>TOP {maxWins} BIDS</span></div>
+        <div><small>MAX SPEND TODAY</small><strong>{"$"}{state.max_commit}</strong><span>UP TO {maxWins} WINS</span></div>
       </div>
 
       <PriorResults state={state} />
@@ -178,16 +320,27 @@ function NormalAuction({
         </div>
 
         <div className="football-weekly-nfl-team-season__cards">
-          {state.teams.map((card) => (
+          {orderedCards.map((card) => (
             <NormalCard
               key={card.item_reference}
               card={card}
-              value={bids[card.slot] ?? 0}
+              bid={bids[card.slot]!}
               disabled={submitted || busy || maxWins === 0}
               max={state.bankroll}
-              onChange={(value) => setBids((current) => ({ ...current, [card.slot]: value }))}
+              dragging={draggingSlot === card.slot}
+              priorityCount={state.teams.length}
+              onAmount={(amount) => changeAmount(card.slot, amount)}
+              onPriority={(priority) => changePriority(card.slot, priority)}
+              onDragStart={() => setDraggingSlot(card.slot)}
+              onDragMove={moveDraggedClaim}
+              onDragEnd={() => setDraggingSlot(null)}
             />
           ))}
+        </div>
+
+        <div className="football-weekly-nfl-team-season__priority-note">
+          <strong>CLAIM PRIORITY</strong>
+          <span>Hold + drag a team card to reorder claims. Your bids may total more than your bankroll; P1 is tried first, then P2, and so on. Claims that no longer fit are skipped.</span>
         </div>
 
         <div className="football-weekly-nfl-team-season__normal-note">
@@ -197,7 +350,7 @@ function NormalAuction({
 
         {!legal ? (
           <p className="football-weekly-nfl-team-season__error">
-            Your top {maxWins} bids could cost {"$"}{spendRisk}. Keep that at or below your {"$"}{state.bankroll} bankroll.
+            Any single bid can be at most {"$"}{state.bankroll}, your current bankroll.
           </p>
         ) : null}
         {error ? <p className="football-weekly-nfl-team-season__error">{error}</p> : null}
@@ -549,6 +702,8 @@ export function FootballWeeklyNflTeamSeasonGate({
   busy,
   error,
   forceBoard = false,
+  tableMode = "live",
+  tableSeatIndex = 1,
   onSubmit,
   onSubmitWildcard,
   onContinue,
@@ -557,6 +712,8 @@ export function FootballWeeklyNflTeamSeasonGate({
   busy: boolean;
   error: string | null;
   forceBoard?: boolean;
+  tableMode?: "live" | "lab";
+  tableSeatIndex?: number;
   onSubmit: (bids: Record<number, FootballWeeklyAuctionBidInput>) => Promise<void>;
   onSubmitWildcard: (entries: number, rankings: string[]) => Promise<void>;
   onContinue: () => void;
@@ -569,5 +726,13 @@ export function FootballWeeklyNflTeamSeasonGate({
 
   return state.day_index === 7
     ? <WildcardDay state={state} busy={busy} error={error} onSubmitWildcard={onSubmitWildcard} onContinue={onContinue} />
-    : <NormalAuction state={state} busy={busy} error={error} onSubmit={onSubmit} onContinue={onContinue} />;
+    : <NormalAuction
+        state={state}
+        busy={busy}
+        error={error}
+        tableMode={tableMode}
+        tableSeatIndex={tableSeatIndex}
+        onSubmit={onSubmit}
+        onContinue={onContinue}
+      />;
 }
