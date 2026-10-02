@@ -98,6 +98,12 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(runtime).not.toContain("bonus Daily Challenge");
   });
 
+  it("returns the full Weekly Auction state after a Day 7 save", () => {
+    expect(runtime).toContain("public.submit_my_football_weekly_nfl_team_season_wildcard");
+    expect(runtime).toContain("return private.get_my_football_weekly_nfl_team_season(p_at)");
+    expect(runtime).toContain("Wildcard is only available on its Day 7");
+  });
+
   it("keeps active-play payloads grade-free and reveals grades only in final payloads", () => {
     const getterStart = runtime.indexOf("create or replace function private.get_my_football_weekly_nfl_team_season(");
     const getterEnd = runtime.indexOf("create or replace function private.submit_my_football_weekly_nfl_team_season_bids(", getterStart);
