@@ -12,6 +12,7 @@ import { footballTeamAssets } from "./footballSubjectAssets";
 import { FootballWeeklyAuctionTableDialog } from "./FootballWeeklyAuctionTableDialog";
 
 type BidMap = Record<number, FootballWeeklySuperteamBid>;
+type FinalTab = "standings" | "collections" | "grades";
 
 const PFR_TEAM_CODES: Record<string, string> = {
   ARI: "crd", ATL: "atl", BAL: "rav", BUF: "buf", CAR: "car", CHI: "chi",
@@ -75,32 +76,37 @@ function RulesCover({ onStart }: { onStart: () => void }) {
     <section className="football-weekly-nfl-team-season__cover surface-card">
       <p className="eyebrow">WEEKLY AUCTION · NFL</p>
       <h1>BEST TEAM-SEASONS SINCE 2000</h1>
-      <strong>Build your collection across six auction days. Your best four grades decide the week.</strong>
+      <strong>Six auction days. One Wildcard finale. Best four team-seasons win the week.</strong>
 
       <div className="football-weekly-nfl-team-season__explainer">
         <article>
-          <b>1 · BID + RANK</b>
-          <strong>YOU CAN BID MORE THAN YOUR BANKROLL IN TOTAL</strong>
-          <span>Put a bid on any teams you want, then rank them P1, P2, P3… P1 is the team you want most.</span>
+          <b>DAYS 1–6</b>
+          <strong>BUILD UP TO FIVE TEAMS</strong>
+          <span>You have a $50 bankroll for the week. Bid + rank your claims each day, win at most two teams per day, and finish with up to five normal team-seasons.</span>
         </article>
         <article>
-          <b>2 · CLAIMS RUN IN YOUR ORDER</b>
+          <b>HOW BIDDING WORKS</b>
           <strong>YOUR BIDS ARE CONDITIONAL</strong>
-          <span>The engine tries P1 first, then P2, and so on. If a later win no longer fits your remaining bankroll, it is skipped. Losing bids cost $0.</span>
+          <span>You can bid more than your bankroll in total. Claims run P1, P2, P3… and any later win that no longer fits your remaining bankroll is skipped. Losing bids cost $0.</span>
         </article>
         <article>
-          <b>3 · BUILD FIVE · SCORE FOUR</b>
-          <strong>$50 BANKROLL · MAX 2 WINS PER DAY</strong>
-          <span>You can win up to five normal team-seasons during Days 1–6. Only your four best grades count in the final score.</span>
+          <b>DAY 7 · WILDCARD</b>
+          <strong>OPTIONAL · NO MONEY INVOLVED</strong>
+          <span>The auction is over. Four Wildcards appear. If you enter, choose which one of your teams you would replace, rank the Wildcards you would take, then choose 1–5 entries. No dollars are spent.</span>
+        </article>
+        <article>
+          <b>FINAL SCORE</b>
+          <strong>BEST FOUR GRADES COUNT</strong>
+          <span>Your fifth team is insurance. After the Wildcard round, every grade is revealed and the best-four average decides the standings.</span>
         </article>
       </div>
 
       <details className="football-weekly-nfl-team-season__rules-details">
-        <summary>WHAT HAPPENS ON DAY 7?</summary>
+        <summary>MORE ON THE WILDCARD ROUND</summary>
         <div>
-          <p>Pick the team you would cut, rank the Wildcards you would take, then choose <b>0–5 entries</b>.</p>
           <p>Each entry adds one slice to <b>Claim Order</b> and one slice to the separate <b>Risk Draw</b>.</p>
-          <p><b>0 entries = safe pass.</b> The Risk Draw lands on one entrant, who starts next week at $45.</p>
+          <p><b>0 entries = safe pass.</b> You cannot win a Wildcard, but you also cannot be hit by the Risk Draw.</p>
+          <p>The Risk Draw does not change this week’s score. It only makes that player start the next Weekly Auction with <b>$45 instead of $50</b>.</p>
         </div>
       </details>
 
@@ -853,11 +859,27 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
   showNewWeekAction?: boolean;
   playerLabel?: string;
 }) {
+  const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
   const ownerLabel = playerLabel ? playerLabel.toUpperCase() + "’S" : "YOUR";
+  const currentStanding = result.standings.find((entry) => entry.is_current_user) ?? result.standings[0] ?? null;
+  const [selectedProfileId, setSelectedProfileId] = useState(currentStanding?.profile_id ?? "");
+  const selectedStanding = result.standings.find((entry) => entry.profile_id === selectedProfileId) ?? currentStanding;
+  const selectedCollection = selectedStanding
+    ? result.final_collections.filter((team) => team.profile_id === selectedStanding.profile_id)
+    : [];
+
+  useEffect(() => {
+    setSelectedProfileId(currentStanding?.profile_id ?? "");
+  }, [currentStanding?.profile_id, result.week_start]);
+
   return (
     <section className="football-weekly-nfl-team-season__final surface-card">
-      <header className="football-weekly-nfl-team-season__final-head"><p className="eyebrow">NFL WEEKLY AUCTION</p><h1>FINAL RESULTS</h1><span>Best four team-season grades decide the week.</span></header>
+      <header className="football-weekly-nfl-team-season__final-head">
+        <p className="eyebrow">NFL WEEKLY AUCTION</p>
+        <h1>FINAL RESULTS</h1>
+        <span>Every grade is revealed. Best four team-season grades decide the week.</span>
+      </header>
 
       <div className="football-weekly-nfl-team-season__finish">
         <small>{me.is_winner ? "WEEKLY CHAMPION" : ownerLabel + " FINISH"}</small>
@@ -865,29 +887,86 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
         <b>{me.final_score == null ? "—" : me.final_score.toFixed(1)}</b>
       </div>
 
-      <div className="football-weekly-nfl-team-season__standings">
-        {result.standings.map((entry) => (
-          <div className={entry.is_current_user ? "is-current" : ""} key={entry.profile_id}>
-            <b>#{entry.rank ?? "—"}</b><strong>{entry.display_name}</strong><span>{entry.final_score?.toFixed(1) ?? "—"}</span>
-          </div>
-        ))}
-      </div>
+      <nav className="football-weekly-nfl-team-season__final-tabs" aria-label="NFL Team-Seasons final views">
+        <button className={tab === "standings" ? "is-active" : ""} type="button" onClick={() => setTab("standings")}>Standings</button>
+        <button className={tab === "collections" ? "is-active" : ""} type="button" onClick={() => setTab("collections")}>Collections</button>
+        <button className={tab === "grades" ? "is-active" : ""} type="button" onClick={() => setTab("grades")}>All Grades</button>
+      </nav>
 
-      <div className="football-weekly-nfl-team-season__final-collection">
-        <small>{ownerLabel} FINAL COLLECTION</small>
-        {result.collection.map((team) => (
-          <article className={team.counts ? "is-counting" : ""} key={team.item_reference}>
-            <TeamMark teamCode={team.team_code} label={team.team_name} />
-            <div className="football-weekly-nfl-team-season__final-name">
-              <TeamSeasonLink teamCode={team.team_code} teamName={team.team_name} seasonYear={team.season_year} />
+      {tab === "standings" ? (
+        <div className="football-weekly-nfl-team-season__standings">
+          {result.standings.map((entry) => (
+            <div className={entry.is_current_user ? "is-current" : ""} key={entry.profile_id}>
+              <b>#{entry.rank ?? "—"}</b>
+              <strong>{entry.display_name}</strong>
+              <span>{entry.final_score?.toFixed(1) ?? "—"}</span>
             </div>
-            <em>{team.source === "wildcard" ? "WILDCARD" : team.source === "autofill" ? "AUTOFILL" : team.winning_bid ? "$" + team.winning_bid : "WON"}</em>
-            <span>{team.grade.toFixed(1)}</span>
-          </article>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : null}
 
-      <WheelResult wildcard={result.wildcard} />
+      {tab === "collections" ? (
+        <div className="football-weekly-nfl-team-season__collections">
+          <div className="football-weekly-nfl-team-season__player-picker" aria-label="Select player collection">
+            {result.standings.map((entry) => (
+              <button
+                className={selectedStanding?.profile_id === entry.profile_id ? "is-active" : ""}
+                type="button"
+                key={entry.profile_id}
+                onClick={() => setSelectedProfileId(entry.profile_id)}
+              >
+                <strong>{entry.display_name}</strong>
+                <span>{entry.final_score == null ? "—" : entry.final_score.toFixed(1)}</span>
+              </button>
+            ))}
+          </div>
+
+          {selectedStanding ? (
+            <>
+              <div className="football-weekly-nfl-team-season__collection-summary">
+                <div>
+                  <small>COLLECTION</small>
+                  <strong>{selectedStanding.display_name}</strong>
+                </div>
+                <span>{selectedStanding.owned_count} teams · {selectedStanding.final_score?.toFixed(1) ?? "—"} best-4</span>
+              </div>
+
+              <div className="football-weekly-nfl-team-season__final-collection">
+                {selectedCollection.map((team) => (
+                  <article className={team.counts ? "is-counting" : ""} key={team.item_reference}>
+                    <TeamMark teamCode={team.team_code} label={team.team_name} />
+                    <div className="football-weekly-nfl-team-season__final-name">
+                      <TeamSeasonLink teamCode={team.team_code} teamName={team.team_name} seasonYear={team.season_year} />
+                    </div>
+                    <em>{team.source === "wildcard" ? "WILDCARD" : team.source === "autofill" ? "AUTOFILL" : team.winning_bid ? "$" + team.winning_bid : "WON"}</em>
+                    <span>{team.grade.toFixed(1)}</span>
+                  </article>
+                ))}
+              </div>
+            </>
+          ) : null}
+        </div>
+      ) : null}
+
+      {tab === "grades" ? (
+        <div className="football-weekly-nfl-team-season__all-grades">
+          {result.all_teams.map((team) => (
+            <article key={team.day_index + "-" + team.slot}>
+              <div>
+                <small>DAY {team.day_index}</small>
+                <TeamSeasonLink teamCode={team.team_code} teamName={team.team_name} seasonYear={team.season_year} />
+                <span>{team.winner_display_name ? team.winner_display_name + (team.winning_bid ? " · $" + team.winning_bid : "") : "UNCLAIMED"}</span>
+              </div>
+              <b>{team.grade.toFixed(1)}</b>
+            </article>
+          ))}
+        </div>
+      ) : null}
+
+      <details className="football-weekly-nfl-team-season__final-wildcard">
+        <summary>DAY 7 · WILDCARD RESULT</summary>
+        <WheelResult wildcard={result.wildcard} />
+      </details>
 
       {showNewWeekAction ? <button className="football-weekly-nfl-team-season__primary" type="button" disabled={busy} onClick={onAcknowledge}>START THE NEW WEEK</button> : null}
     </section>
