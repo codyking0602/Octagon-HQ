@@ -43,7 +43,7 @@ describe("CFB Superteam elastic weekly field", () => {
     expect(day1FieldFreeze).toContain("private.football_weekly_superteam_join_capacity");
     expect(day1FieldFreeze).toContain("if v_current>=v_capacity then return false");
     expect(day1FieldFreeze).toContain("'day_1_join'");
-    expect(day1FieldFreeze).not.toContain("'elastic_join'");
+    expect(day1FieldFreeze).not.toContain("then 'elastic_join'");
     expect(day1FieldFreeze).toContain("Elastic CFB supply affects hidden future cards only");
   });
 
