@@ -1371,19 +1371,33 @@ begin
     perform private.resolve_football_weekly_auction_day(v_due.week_start,v_due.day_index,p_at);
   end loop;
 
-  if v_subject='nfl-best-team-seasons-since-2000'
-    and private.football_weekly_auction_day_index(p_at,v_week_start)>=7
-  then
-    perform private.materialize_football_weekly_nfl_team_season_wildcard(v_week_start);
+  -- Sweep every unresolved NFL Team-Seasons finale whose Day 7 has begun.
+  -- This deliberately includes the prior calendar week so a first request just
+  -- after Tuesday rollover still resolves/persists Monday's Wildcard/Reaping
+  -- exactly once instead of stranding the completed week.
+  for v_week in
+    select week.week_start
+    from private.football_weekly_auction_weeks week
+    where week.finalized_at is null
+      and week.subject_key='nfl-best-team-seasons-since-2000'
+      and p_at>=((week.week_start+6)::timestamp at time zone 'America/Chicago')
+    order by week.week_start
+  loop
+    perform private.materialize_football_weekly_nfl_team_season_wildcard(v_week.week_start);
+
     select max(lock_at) into v_wild_lock
     from private.football_weekly_nfl_team_season_wildcard_board
-    where week_start=v_week_start;
+    where week_start=v_week.week_start;
+
     if v_wild_lock is not null and p_at>=v_wild_lock then
-      perform private.resolve_football_weekly_nfl_team_season_wildcard(v_week_start,p_at);
-      perform private.finalize_football_weekly_nfl_team_season_week(v_week_start,p_at);
+      perform private.resolve_football_weekly_nfl_team_season_wildcard(
+        v_week.week_start,p_at
+      );
+      perform private.finalize_football_weekly_nfl_team_season_week(
+        v_week.week_start,p_at
+      );
     end if;
-    return;
-  end if;
+  end loop;
 
   for v_week in
     select week.week_start
