@@ -128,11 +128,16 @@ Wildcard is a one-for-one optional replacement round.
 - Money is irrelevant to Wildcard.
 - Players rank the Wildcard candidates they would accept or pass.
 - Players voluntarily submit 0–5 priority entries.
-- More entries increase claim-order odds.
-- The same entries also increase exposure to a separate danger draw.
-- Final danger penalty is intentionally **not yet locked**.
+- Each entry must be backed by a distinct team already owned by that player.
+- More entries increase claim-order odds linearly.
+- Later entries increase Danger exposure faster than they increase Priority value.
+- Exactly **2 players** are hit by Danger in a five-player / two-Wildcard finale.
+- A Danger hit applies a temporary **-7 scoring modifier** to one of the teams that player put at risk for the Wildcard round.
+- The underlying hidden grade never changes.
+- A Wildcard replacement can still replace the wounded team if the player's ranked claim reaches it.
+- This is the current **recommended** mechanic pending product approval; it is not live.
 
-The danger mechanic should stay inside Weekly Auction rather than altering unrelated Daily Challenge timers.
+The danger mechanic stays completely inside Weekly Auction and does not alter unrelated Daily Challenge timers or future-game clocks.
 
 ## Wildcard quality calibration
 
@@ -174,25 +179,81 @@ For a five-player field:
 
 The Wildcard is already structurally valuable because it is an optional replacement after six auction days. It does not need a full standard-deviation grade boost.
 
-## Entry-risk observation
+## Wildcard entry / Danger calibration
 
-A weak flat danger penalty caused too many simulated players to simply max out at five entries.
+### Rejected versions
 
-The risk should therefore scale meaningfully with aggression.
+Several simpler mechanics were stress-tested and rejected:
 
-A promising direction is:
+- **Danger eliminates the selected player from Wildcard:** too weak. Rational players chose five entries in more than 92% of modeled decisions.
+- **One communal Danger draw with linear ticket weights:** still clustered heavily at four or five entries because everyone maxing normalized the shared downside.
+- **Personal Danger chance increasing linearly with entries:** produced better entry spread, but could hit too many players in the same week and made Day 7 feel overly chaotic.
+- **Actually removing a team when Danger hit:** occasionally fought the completion/autofill guarantee.
 
-- 0–5 voluntary entries;
-- each entry improves priority odds;
-- each entry also increases danger exposure;
-- if a player is hit by the danger draw, the Weekly Auction penalty should scale with how many entries they submitted.
+### Recommended Hunger Games structure
 
-Example direction only, not locked:
+Priority and Danger use the same voluntary 0–5 entry decision, but they value aggression differently.
 
-- 1 entry -> small next-auction bankroll penalty
-- 5 entries -> materially larger next-auction bankroll penalty
+**Priority weight**
 
-That preserves the intended Hunger Games decision: aggressive Wildcard pursuit should be a real strategic gamble, not an obvious max-entry button.
+- 1 entry -> 1
+- 2 entries -> 2
+- 3 entries -> 3
+- 4 entries -> 4
+- 5 entries -> 5
+
+**Danger weight**
+
+- 1 entry -> 1
+- 2 entries -> 3
+- 3 entries -> 6
+- 4 entries -> 10
+- 5 entries -> 15
+
+This is the triangular progression `n(n+1)/2`.
+
+The result is deliberate diminishing safety: going from four to five entries buys only one more Priority unit but adds five more Danger units.
+
+For a five-player field with two Wildcard teams:
+
+1. each player chooses 0–5 entries;
+2. each entry is backed by a distinct currently owned team;
+3. two distinct players are drawn as Danger victims using Danger weight;
+4. one of each victim's backed teams is selected from that player's risked set;
+5. that team takes a temporary **-7 Wildcard Danger modifier** for this week's final scoring;
+6. the same hidden grade remains authoritative everywhere else;
+7. Priority order for the two Wildcard claims is then drawn using ordinary linear entry weight;
+8. ranked claims resolve automatically;
+9. a player may replace the wounded team if their claim reaches a desired Wildcard candidate.
+
+A player cannot be a Danger victim twice in the same finale.
+
+### 15,000-week strategy simulation
+
+Using two Wildcard candidates averaging roughly +0.25 SD above the normal pool and the five-player field:
+
+- Players entered the Wildcard: **91.6%**
+- Average entries/player: **3.64**
+- Exactly two Danger victims/week: **2.00**
+- Average final-score loss per Danger victim before any Wildcard repair: **1.24 points**
+- Wildcard claims/week: **1.96**
+- Weekly winner changed by the complete Day 7 event: **30.4%**
+- Top-two set changed: **43.7%**
+
+Modeled entry choices:
+
+| Entries | Share |
+| ---: | ---: |
+| 0 | 8.4% |
+| 1 | 4.8% |
+| 2 | 7.3% |
+| 3 | 8.6% |
+| 4 | 35.7% |
+| 5 | 35.2% |
+
+The important result is not an even distribution. High-upside boards should still tempt aggressive players into four or five entries. The improvement over the rejected mechanics is that maximum entries are no longer an automatic dominant choice: lower-entry strategies remain rational when the available upgrade is modest or the player does not want to expose stronger owned teams.
+
+This preserves the intended Hunger Games decision: **more upside requires exposing more of the collection already built.**
 
 ## Runtime boundary
 
