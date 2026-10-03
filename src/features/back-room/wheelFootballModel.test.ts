@@ -164,9 +164,26 @@ describe("Wheel of Football current-NFL model", () => {
   });
 
   it("locks notable corrections from the final four-chat 32-team audit", () => {
-    expect(wheelPriorityJson.teams.BUF["Front Seven"]).toContain("Bradley Chubb");
-    expect(wheelPriorityJson.teams.MIA["Front Seven"].slice(0, 2)).toEqual([
-      "Zach Sieler", "Chop Robinson",
+    expect(wheelPriorityJson.teams.BUF.WR).toEqual([
+      "DJ Moore", "Khalil Shakir", "Keon Coleman",
+    ]);
+    expect(wheelPriorityJson.teams.BUF["Front Seven"]).toEqual([
+      "Greg Rousseau", "Bradley Chubb", "Ed Oliver",
+      "Terrel Bernard", "Dorian Williams", "T.J. Sanders",
+    ]);
+    expect(wheelPriorityJson.teams.MIA.WR).toEqual([
+      "Malik Washington", "Caleb Douglas", "Chris Bell",
+    ]);
+    expect(wheelPriorityJson.teams.MIA["Front Seven"]).toEqual([
+      "Jordyn Brooks", "Zach Sieler", "Chop Robinson",
+      "Josh Uche", "Jacob Rodriguez", "Willie Gay Jr.",
+    ]);
+    expect(wheelPriorityJson.teams.NE.WR).toEqual([
+      "A.J. Brown", "Romeo Doubs", "DeMario Douglas", "Mack Hollins",
+    ]);
+    expect(wheelPriorityJson.teams.NE["Front Seven"]).toEqual([
+      "Christian Barmore", "Harold Landry III", "Milton Williams",
+      "Dre'Mont Jones", "Robert Spillane",
     ]);
     expect(wheelPriorityJson.teams.NYJ.Flex).toEqual([
       "Breece Hall", "Garrett Wilson", "Adonai Mitchell", "Mason Taylor",
