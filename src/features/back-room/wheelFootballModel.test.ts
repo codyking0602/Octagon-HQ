@@ -51,20 +51,89 @@ describe("Wheel of Football current-NFL model", () => {
     expect(wheelFootballEligibleSlots("K")).toEqual([]);
   });
 
-  it("preserves ESPN roster order inside a slot instead of alphabetizing away depth/relevance", () => {
+  it("uses ESPN depth rank instead of raw roster order, including the Dallas regression", () => {
     const candidates = wheelFootballCandidatesFromEspn({
-      athletes: [{
-        position: "Defense",
-        items: [
-          { id: "starter", displayName: "Starter Star", position: { abbreviation: "S", displayName: "Safety" }, experience: { years: 5 } },
-          { id: "backup", displayName: "Backup Alpha", position: { abbreviation: "S", displayName: "Safety" }, experience: { years: 2 } },
+      roster: {
+        athletes: [{
+          position: "Offense",
+          items: [
+            { id: "howell", displayName: "Sam Howell", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 4 } },
+            { id: "milton", displayName: "Joe Milton III", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 2 } },
+            { id: "dak", displayName: "Dak Prescott", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 10 } },
+            { id: "wr-depth", displayName: "Depth Receiver", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 1 } },
+            { id: "pickens", displayName: "George Pickens", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 5 } },
+            { id: "lamb", displayName: "CeeDee Lamb", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 7 } },
+            { id: "slot", displayName: "Ryan Flournoy", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 3 } },
+          ],
+        }],
+      },
+      depthChart: {
+        positions: [
+          {
+            position: { abbreviation: "QB" },
+            athletes: [
+              { rank: 1, athlete: { id: "dak", displayName: "Dak Prescott" } },
+              { rank: 2, athlete: { id: "howell", displayName: "Sam Howell" } },
+              { rank: 3, athlete: { id: "milton", displayName: "Joe Milton III" } },
+            ],
+          },
+          {
+            position: { abbreviation: "LWR" },
+            athletes: [
+              { rank: 1, athlete: { id: "pickens", displayName: "George Pickens" } },
+              { rank: 2, athlete: { id: "wr-depth", displayName: "Depth Receiver" } },
+            ],
+          },
+          {
+            position: { abbreviation: "RWR" },
+            athletes: [{ rank: 1, athlete: { id: "lamb", displayName: "CeeDee Lamb" } }],
+          },
+          {
+            position: { abbreviation: "SWR" },
+            athletes: [{ rank: 1, athlete: { id: "slot", displayName: "Ryan Flournoy" } }],
+          },
         ],
-      }],
+      },
     });
 
-    expect(candidates.map((candidate) => candidate.name)).toEqual([
-      "Starter Star",
-      "Backup Alpha",
+    expect(wheelFootballShortlist(candidates, "QB").map((candidate) => candidate.name)).toEqual([
+      "Dak Prescott",
+    ]);
+    expect(wheelFootballShortlist(candidates, "WR").map((candidate) => candidate.name)).toEqual([
+      "George Pickens",
+      "CeeDee Lamb",
+      "Ryan Flournoy",
+    ]);
+  });
+
+  it("keeps an established injured current-roster player available even when a temporary starter leads the live depth chart", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      roster: {
+        athletes: [{
+          position: "Offense",
+          items: [
+            { id: "backup", displayName: "Temporary Starter", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 2 } },
+            { id: "star", displayName: "Established Starter", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 8 } },
+          ],
+        }],
+      },
+      depthChart: {
+        positions: [{
+          position: { abbreviation: "QB" },
+          athletes: [{ rank: 1, athlete: { id: "backup", displayName: "Temporary Starter" } }],
+        }],
+      },
+      injuries: {
+        injuries: [{
+          athlete: { id: "star", displayName: "Established Starter" },
+          status: "Out",
+        }],
+      },
+    });
+
+    expect(wheelFootballShortlist(candidates, "QB").map((candidate) => candidate.name)).toEqual([
+      "Temporary Starter",
+      "Established Starter",
     ]);
   });
 
