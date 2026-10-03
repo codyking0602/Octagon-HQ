@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import wheelPriorityJson from "../../../data/generated/football/wheel-football-priorities.json";
 import {
   WHEEL_FOOTBALL_DIVISIONS,
   WHEEL_FOOTBALL_ROSTER_SLOTS,
@@ -7,7 +8,28 @@ import {
   wheelFootballPoolTeams,
   wheelFootballShortlist,
   wheelFootballTeams,
+  type WheelFootballCandidate,
 } from "./wheelFootballModel";
+
+function candidate(
+  id: string,
+  name: string,
+  positionAbbreviation: string,
+  eligibleSlots: readonly (typeof WHEEL_FOOTBALL_ROSTER_SLOTS)[number][],
+  experienceYears: number | null,
+  rosterOrder: number,
+): WheelFootballCandidate {
+  return {
+    id,
+    name,
+    positionLabel: positionAbbreviation,
+    positionAbbreviation,
+    headshotUrl: null,
+    eligibleSlots,
+    experienceYears,
+    rosterOrder,
+  };
+}
 
 describe("Wheel of Football current-NFL model", () => {
   it("owns the complete NFL conference and division wheel pools", () => {
@@ -15,172 +37,321 @@ describe("Wheel of Football current-NFL model", () => {
     expect(wheelFootballPoolTeams("NFL")).toHaveLength(32);
     expect(wheelFootballPoolTeams("AFC")).toHaveLength(16);
     expect(wheelFootballPoolTeams("NFC")).toHaveLength(16);
-
     for (const division of WHEEL_FOOTBALL_DIVISIONS) {
       expect(wheelFootballPoolTeams("DIVISION", division)).toHaveLength(4);
     }
-
     expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(32);
     expect(wheelFootballTeams.find((team) => team.code === "DAL")).toMatchObject({
       primaryColor: "#003594",
       secondaryColor: "#869397",
     });
-    expect(WHEEL_FOOTBALL_ROSTER_SLOTS).toEqual([
-      "QB",
-      "RB",
-      "WR",
-      "Flex",
-      "Front Seven",
-      "Secondary",
-      "Head Coach",
-    ]);
   });
 
-  it("maps only eligible current-player positions into the seven Superteam slots", () => {
+  it("keeps the seven locked Superteam slots and position eligibility", () => {
+    expect(WHEEL_FOOTBALL_ROSTER_SLOTS).toEqual([
+      "QB", "RB", "WR", "Flex", "Front Seven", "Secondary", "Head Coach",
+    ]);
     expect(wheelFootballEligibleSlots("QB")).toEqual(["QB"]);
     expect(wheelFootballEligibleSlots("RB")).toEqual(["RB", "Flex"]);
     expect(wheelFootballEligibleSlots("WR")).toEqual(["WR", "Flex"]);
     expect(wheelFootballEligibleSlots("TE")).toEqual(["Flex"]);
     expect(wheelFootballEligibleSlots("DE")).toEqual(["Front Seven"]);
-    expect(wheelFootballEligibleSlots("DT")).toEqual(["Front Seven"]);
     expect(wheelFootballEligibleSlots("LB")).toEqual(["Front Seven"]);
     expect(wheelFootballEligibleSlots("CB")).toEqual(["Secondary"]);
     expect(wheelFootballEligibleSlots("S")).toEqual(["Secondary"]);
     expect(wheelFootballEligibleSlots("HC")).toEqual(["Head Coach"]);
     expect(wheelFootballEligibleSlots("OT")).toEqual([]);
-    expect(wheelFootballEligibleSlots("K")).toEqual([]);
   });
 
-  it("preserves ESPN roster order inside a slot instead of alphabetizing away depth/relevance", () => {
+  it("parses ESPN only as current roster/headshot authority and preserves source order", () => {
     const candidates = wheelFootballCandidatesFromEspn({
       athletes: [{
-        position: "Defense",
+        position: "Offense",
         items: [
-          { id: "starter", displayName: "Starter Star", position: { abbreviation: "S", displayName: "Safety" }, experience: { years: 5 } },
-          { id: "backup", displayName: "Backup Alpha", position: { abbreviation: "S", displayName: "Safety" }, experience: { years: 2 } },
+          { id: "qb2", displayName: "Backup Quarterback", position: { abbreviation: "QB", displayName: "Quarterback" } },
+          { id: "qb1", displayName: "Starting Quarterback", position: { abbreviation: "QB", displayName: "Quarterback" } },
+          { id: "rb1", displayName: "Running Back One", position: { abbreviation: "RB", displayName: "Running Back" } },
+          { id: "wr1", displayName: "Receiver One", position: { abbreviation: "WR", displayName: "Wide Receiver" } },
+          { id: "te1", displayName: "Tight End One", position: { abbreviation: "TE", displayName: "Tight End" } },
+          { id: "ot1", displayName: "Tackle One", position: { abbreviation: "OT", displayName: "Offensive Tackle" } },
         ],
       }],
+      coach: [{ id: "coach1", firstName: "Coach", lastName: "One" }],
     });
+    expect(candidates.map((item) => item.id)).toEqual([
+      "qb2", "qb1", "rb1", "wr1", "te1", "coach:coach1",
+    ]);
+    expect(candidates.find((item) => item.id === "rb1")?.eligibleSlots).toEqual(["RB", "Flex"]);
+  });
 
-    expect(candidates.map((candidate) => candidate.name)).toEqual([
-      "Starter Star",
-      "Backup Alpha",
+  it("audits all 32 teams and locks the Cowboys obvious names", () => {
+    expect(Object.keys(wheelPriorityJson.teams)).toHaveLength(32);
+    expect(Object.keys(wheelPriorityJson.teams).sort()).toEqual(
+      wheelFootballTeams.map((team) => team.code).sort(),
+    );
+    expect(wheelPriorityJson.teams.DAL.QB).toEqual(["Dak Prescott"]);
+    expect(wheelPriorityJson.teams.DAL.WR.slice(0, 2)).toEqual(["CeeDee Lamb", "George Pickens"]);
+    for (const [code, team] of Object.entries(wheelPriorityJson.teams)) {
+      expect(team.QB.length, `${code} QB`).toBeGreaterThanOrEqual(1);
+      expect(team.QB.length, `${code} QB`).toBeLessThanOrEqual(2);
+      expect(team.RB.length, `${code} RB`).toBeGreaterThanOrEqual(2);
+      expect(team.RB.length, `${code} RB`).toBeLessThanOrEqual(3);
+      expect(team.WR.length, `${code} WR`).toBeGreaterThanOrEqual(3);
+      expect(team.WR.length, `${code} WR`).toBeLessThanOrEqual(4);
+      expect(team["Front Seven"].length, `${code} front seven`).toBeGreaterThanOrEqual(5);
+      expect(team["Front Seven"].length, `${code} front seven`).toBeLessThanOrEqual(6);
+      expect(team.Secondary.length, `${code} secondary`).toBeGreaterThanOrEqual(5);
+      expect(team.Secondary.length, `${code} secondary`).toBeLessThanOrEqual(6);
+      expect(team.Flex.length, `${code} flex`).toBe(4);
+      expect(team["Head Coach"].length, `${code} head coach`).toBe(1);
+    }
+  });
+
+  it("uses the audited Dallas order instead of raw ESPN roster order", () => {
+    const roster = [
+      candidate("howell", "Sam Howell", "QB", ["QB"], 4, 0),
+      candidate("dak", "Dak Prescott", "QB", ["QB"], 10, 1),
+      candidate("depth", "Depth Receiver", "WR", ["WR", "Flex"], 2, 2),
+      candidate("pickens", "George Pickens", "WR", ["WR", "Flex"], 5, 3),
+      candidate("lamb", "CeeDee Lamb", "WR", ["WR", "Flex"], 7, 4),
+      candidate("flournoy", "Ryan Flournoy", "WR", ["WR", "Flex"], 3, 5),
+    ];
+    expect(wheelFootballShortlist(roster, "QB", "DAL").map((item) => item.name)).toEqual([
+      "Dak Prescott",
+    ]);
+    expect(wheelFootballShortlist(roster, "WR", "DAL").map((item) => item.name)).toEqual([
+      "CeeDee Lamb", "George Pickens", "Ryan Flournoy",
     ]);
   });
 
-  it("keeps Wheel choices intentionally small while allowing rare meaningful extra options", () => {
-    const candidate = (
-      id: string,
-      positionAbbreviation: string,
-      eligibleSlots: readonly (typeof WHEEL_FOOTBALL_ROSTER_SLOTS)[number][],
-      experienceYears: number | null,
-    ) => ({
-      id,
-      name: id,
-      positionLabel: positionAbbreviation,
-      positionAbbreviation,
-      headshotUrl: null,
-      eligibleSlots,
-      experienceYears,
-    });
+  it("locks the manually reviewed Cowboys and Rams football-priority ordering", () => {
+    expect(wheelPriorityJson.teams.DAL["Front Seven"]).toEqual([
+      "Quinnen Williams",
+      "Rashan Gary",
+      "Kenny Clark",
+      "DeMarvion Overshown",
+      "Donovan Ezeiruaku",
+      "Dee Winters",
+    ]);
+    expect(wheelPriorityJson.teams.DAL.Secondary).toEqual([
+      "DaRon Bland",
+      "Joey Porter Jr.",
+      "Caleb Downs",
+      "Malik Hooker",
+      "Markquese Bell",
+    ]);
 
+    expect(wheelPriorityJson.teams.LAR.WR).toEqual([
+      "Puka Nacua",
+      "Davante Adams",
+      "Konata Mumpfield",
+    ]);
+    expect(wheelPriorityJson.teams.LAR["Front Seven"]).toEqual([
+      "Myles Garrett",
+      "Aaron Donald",
+      "Kobie Turner",
+      "Braden Fiske",
+      "Byron Young",
+      "Nate Landman",
+    ]);
+    expect(wheelPriorityJson.teams.LAR.Secondary).toEqual([
+      "Trent McDuffie",
+      "Quentin Lake",
+      "Kam Curl",
+      "Jaylen Watson",
+      "Kamren Kinchens",
+    ]);
+  });
+
+  it("locks notable corrections from the final four-chat 32-team audit", () => {
+    expect(wheelPriorityJson.teams.BUF.WR).toEqual([
+      "DJ Moore", "Khalil Shakir", "Keon Coleman",
+    ]);
+    expect(wheelPriorityJson.teams.BUF["Front Seven"]).toEqual([
+      "Greg Rousseau", "Bradley Chubb", "Ed Oliver",
+      "Terrel Bernard", "Dorian Williams", "T.J. Sanders",
+    ]);
+    expect(wheelPriorityJson.teams.MIA.WR).toEqual([
+      "Malik Washington", "Caleb Douglas", "Chris Bell",
+    ]);
+    expect(wheelPriorityJson.teams.MIA["Front Seven"]).toEqual([
+      "Jordyn Brooks", "Zach Sieler", "Chop Robinson",
+      "Josh Uche", "Jacob Rodriguez", "Willie Gay Jr.",
+    ]);
+    expect(wheelPriorityJson.teams.NE.WR).toEqual([
+      "A.J. Brown", "Romeo Doubs", "DeMario Douglas", "Mack Hollins",
+    ]);
+    expect(wheelPriorityJson.teams.NE["Front Seven"]).toEqual([
+      "Christian Barmore", "Harold Landry III", "Milton Williams",
+      "Dre'Mont Jones", "Robert Spillane",
+    ]);
+    expect(wheelPriorityJson.teams.NYJ.Flex).toEqual([
+      "Breece Hall", "Garrett Wilson", "Adonai Mitchell", "Mason Taylor",
+    ]);
+    expect(wheelPriorityJson.teams.NYJ.Secondary).toEqual([
+      "Minkah Fitzpatrick", "Azareye'h Thomas", "Brandon Stephens",
+      "Dane Belton", "Jarvis Brownlee Jr.",
+    ]);
+    expect(wheelPriorityJson.teams.BAL.WR).toEqual([
+      "Zay Flowers", "Rashod Bateman", "Ja'Kobi Lane",
+    ]);
+    expect(wheelPriorityJson.teams.BAL["Front Seven"]).toEqual([
+      "Trey Hendrickson", "Roquan Smith", "Nnamdi Madubuike",
+      "Tavius Robinson", "Calais Campbell", "Trenton Simpson",
+    ]);
+    expect(wheelPriorityJson.teams.CIN.WR).toEqual([
+      "Ja'Marr Chase", "Tee Higgins", "Andrei Iosivas",
+    ]);
+    expect(wheelPriorityJson.teams.CLE.RB).toEqual([
+      "Quinshon Judkins", "Dylan Sampson",
+    ]);
+    expect(wheelPriorityJson.teams.CLE.WR).toEqual([
+      "Jerry Jeudy", "KC Concepcion Jr.", "Denzel Boston",
+    ]);
+    expect(wheelPriorityJson.teams.CLE["Front Seven"]).toEqual([
+      "Jared Verse",
+      "Mason Graham",
+      "Jeremiah Owusu-Koramoah",
+      "Quincy Williams",
+      "Carson Schwesinger",
+      "Isaiah McGuire",
+    ]);
+    expect(wheelPriorityJson.teams.HOU["Front Seven"]).toEqual([
+      "Will Anderson Jr.",
+      "Danielle Hunter",
+      "Azeez Al-Shaair",
+      "Jadeveon Clowney",
+      "Sheldon Rankins",
+      "Henry To'oTo'o",
+    ]);
+    expect(wheelPriorityJson.teams.IND.WR).toEqual([
+      "Keenan Allen", "Josh Downs", "Alec Pierce", "Darius Slayton",
+    ]);
+    expect(wheelPriorityJson.teams.JAX.WR).toEqual([
+      "Brian Thomas Jr.", "Travis Hunter", "Jakobi Meyers", "Parker Washington",
+    ]);
+    expect(wheelPriorityJson.teams.LAC["Front Seven"].slice(0, 3)).toEqual([
+      "Khalil Mack", "Tuli Tuipulotu", "Daiyan Henley",
+    ]);
+    expect(wheelPriorityJson.teams.DET.Secondary).toEqual([
+      "Brian Branch", "Kerby Joseph", "D.J. Reed", "Roger McCreary", "Ennis Rakestraw Jr.",
+    ]);
+    expect(wheelPriorityJson.teams.SF["Front Seven"]).toContain("Osa Odighizuwa");
+    expect(wheelPriorityJson.teams.SF["Front Seven"]).not.toContain("Matthew Judon");
+    expect(wheelPriorityJson.teams.SF.Secondary).toContain("Malik Mustapha");
+    expect(wheelPriorityJson.teams.SEA.RB).toEqual(["Jadarian Price", "Zach Charbonnet"]);
+    expect(wheelPriorityJson.teams.ARI.RB).toEqual([
+      "Jeremiyah Love", "Tyler Allgeier", "James Conner",
+    ]);
+    expect(wheelPriorityJson.teams.ARI.RB).not.toContain("Trey Benson");
+    expect(wheelPriorityJson.teams.CIN.Secondary).toEqual([
+      "Dax Hill", "DJ Turner II", "Jordan Battle", "Bryan Cook", "Tacario Davis",
+    ]);
+    expect(wheelPriorityJson.teams.PIT.Secondary).toEqual([
+      "Jalen Ramsey", "Jamel Dean", "Asante Samuel Jr.", "DeShon Elliott", "Jaquan Brisker",
+    ]);
+    expect(wheelPriorityJson.teams.ATL.Flex).toEqual([
+      "Bijan Robinson", "Drake London", "Kyle Pitts Sr.", "Jahan Dotson",
+    ]);
+    expect(wheelPriorityJson.teams.ATL["Front Seven"]).toEqual([
+      "James Pearce Jr.", "Gervon Dexter Sr.", "Za'Darius Smith",
+      "Jalon Walker", "Divine Deablo", "Maason Smith",
+    ]);
+    expect(wheelPriorityJson.teams.ATL.Secondary).toEqual([
+      "Jessie Bates III", "A.J. Terrell Jr.", "Xavier Watts",
+      "Mike Hughes", "C.J. Henderson", "Billy Bowman Jr.",
+    ]);
+  });
+
+  it("retains intentionally protected injury/reserve players while ESPN still says they are on the roster", () => {
+    const giants = [
+      candidate("winston", "Jameis Winston", "QB", ["QB"], 11, 0),
+      candidate("dart", "Jaxson Dart", "QB", ["QB"], 1, 1),
+      candidate("third", "Third Quarterback", "QB", ["QB"], 2, 2),
+    ];
+    expect(wheelFootballShortlist(giants, "QB", "NYG").map((item) => item.name)).toEqual([
+      "Jaxson Dart", "Jameis Winston",
+    ]);
+
+    const dolphins = [
+      candidate("other", "Other Back", "RB", ["RB", "Flex"], 3, 0),
+      candidate("wright", "Jaylen Wright", "RB", ["RB", "Flex"], 3, 1),
+      candidate("achane", "De'Von Achane", "RB", ["RB", "Flex"], 5, 2),
+    ];
+    expect(wheelFootballShortlist(dolphins, "RB", "MIA").map((item) => item.name)).toEqual([
+      "De'Von Achane", "Jaylen Wright",
+    ]);
+  });
+
+  it("never reintroduces a stale audited player who is absent from the current ESPN roster", () => {
+    const roster = [
+      candidate("replacement", "Current Replacement", "QB", ["QB"], 4, 0),
+      candidate("backup", "Current Backup", "QB", ["QB"], 3, 1),
+    ];
+    expect(wheelFootballShortlist(roster, "QB", "DAL")).toEqual([]);
+  });
+
+  it("keeps generic fallback pools small when no audited team identity is supplied", () => {
     expect(wheelFootballShortlist([
-      candidate("qb1", "QB", ["QB"], 7),
-      candidate("qb2", "QB", ["QB"], 6),
+      candidate("qb1", "qb1", "QB", ["QB"], 7, 0),
+      candidate("qb2", "qb2", "QB", ["QB"], 6, 1),
     ], "QB").map((item) => item.id)).toEqual(["qb1"]);
 
     expect(wheelFootballShortlist([
-      candidate("rookie-qb", "QB", ["QB"], 0),
-      candidate("veteran-qb", "QB", ["QB"], 8),
-      candidate("qb3", "QB", ["QB"], 3),
-    ], "QB").map((item) => item.id)).toEqual(["rookie-qb", "veteran-qb"]);
+      candidate("rookie", "rookie", "QB", ["QB"], 0, 0),
+      candidate("veteran", "veteran", "QB", ["QB"], 8, 1),
+    ], "QB").map((item) => item.id)).toEqual(["rookie", "veteran"]);
 
     expect(wheelFootballShortlist([
-      candidate("rb1", "RB", ["RB", "Flex"], 4),
-      candidate("rb2", "RB", ["RB", "Flex"], 2),
-      candidate("rb3", "RB", ["RB", "Flex"], 4),
-      candidate("rb4", "RB", ["RB", "Flex"], 1),
-    ], "RB").map((item) => item.id)).toEqual(["rb1", "rb2", "rb3"]);
+      candidate("rb1", "rb1", "RB", ["RB", "Flex"], 4, 0),
+      candidate("rb2", "rb2", "RB", ["RB", "Flex"], 2, 1),
+      candidate("rb3", "rb3", "RB", ["RB", "Flex"], 4, 2),
+    ], "RB")).toHaveLength(3);
 
-    expect(wheelFootballShortlist([
-      candidate("wr1", "WR", ["WR", "Flex"], 5),
-      candidate("wr2", "WR", ["WR", "Flex"], 4),
-      candidate("wr3", "WR", ["WR", "Flex"], 3),
-      candidate("wr4", "WR", ["WR", "Flex"], 2),
-      candidate("wr5", "WR", ["WR", "Flex"], 5),
-    ], "WR")).toHaveLength(4);
-
-    const secondary = Array.from({ length: 8 }, (_, index) => candidate(
-      `db${index + 1}`,
-      index % 2 ? "S" : "CB",
-      ["Secondary"],
-      index === 5 ? 3 : 1,
+    const secondary = Array.from({ length: 8 }, (_, index) => (
+      candidate(`db${index}`, `db${index}`, "S", ["Secondary"], index === 5 ? 3 : 1, index)
     ));
     expect(wheelFootballShortlist(secondary, "Secondary")).toHaveLength(6);
+  });
 
-    const frontSeven = Array.from({ length: 8 }, (_, index) => candidate(
-      `front${index + 1}`,
-      "LB",
-      ["Front Seven"],
-      index === 5 ? 1 : 4,
-    ));
-    expect(wheelFootballShortlist(frontSeven, "Front Seven")).toHaveLength(5);
-
-    const flex = [
-      candidate("flex1", "RB", ["RB", "Flex"], 4),
-      candidate("flex2", "RB", ["RB", "Flex"], 3),
-      candidate("flex3", "WR", ["WR", "Flex"], 5),
-      candidate("flex4", "WR", ["WR", "Flex"], 2),
-      candidate("flex5", "TE", ["Flex"], 5),
+  it("builds Flex from one RB, two WRs, and one TE when those current players exist", () => {
+    const roster = [
+      candidate("rb", "Javonte Williams", "RB", ["RB", "Flex"], 6, 0),
+      candidate("wr1", "George Pickens", "WR", ["WR", "Flex"], 5, 1),
+      candidate("wr2", "CeeDee Lamb", "WR", ["WR", "Flex"], 7, 2),
+      candidate("wr3", "Ryan Flournoy", "WR", ["WR", "Flex"], 3, 3),
+      candidate("te", "Jake Ferguson", "TE", ["Flex"], 5, 4),
     ];
-    expect(wheelFootballShortlist(flex, "Flex").map((item) => item.id)).toEqual([
-      "flex1",
-      "flex3",
-      "flex4",
-      "flex5",
+    expect(wheelFootballShortlist(roster, "Flex", "DAL").map((item) => item.name)).toEqual([
+      "Javonte Williams", "CeeDee Lamb", "George Pickens", "Jake Ferguson",
     ]);
   });
-
-  it("parses current ESPN roster groups into selectable players and the head coach", () => {
+  it("does not let injury metadata knock a curated current-roster star out of Wheel", () => {
     const candidates = wheelFootballCandidatesFromEspn({
-      athletes: [
-        {
-          position: "Offense",
-          items: [
-            { id: "qb1", displayName: "Quarterback One", position: { abbreviation: "QB", displayName: "Quarterback" } },
-            { id: "rb1", displayName: "Running Back One", position: { abbreviation: "RB", displayName: "Running Back" } },
-            { id: "wr1", displayName: "Receiver One", position: { abbreviation: "WR", displayName: "Wide Receiver" } },
-            { id: "te1", displayName: "Tight End One", position: { abbreviation: "TE", displayName: "Tight End" } },
-            { id: "ot1", displayName: "Tackle One", position: { abbreviation: "OT", displayName: "Offensive Tackle" } },
-          ],
-        },
-        {
-          position: "Defense",
-          items: [
-            { id: "edge1", displayName: "Edge One", position: { abbreviation: "DE", displayName: "Defensive End" } },
-            { id: "cb1", displayName: "Corner One", position: { abbreviation: "CB", displayName: "Cornerback" } },
-          ],
-        },
-      ],
-      coach: [{ id: "coach1", firstName: "Coach", lastName: "One" }],
+      athletes: [{
+        position: "Offense",
+        items: [
+          { id: "howell", displayName: "Sam Howell", position: { abbreviation: "QB", displayName: "Quarterback" } },
+          { id: "dak", displayName: "Dak Prescott", position: { abbreviation: "QB", displayName: "Quarterback" } },
+        ],
+      }],
+      injuries: [{ athlete: { id: "dak", displayName: "Dak Prescott" }, status: "Out" }],
+      depthCharts: [{ positions: [{ athletes: [{ athlete: { id: "howell" } }] }] }],
     });
 
-    expect(candidates.map((candidate) => candidate.id)).toEqual([
-      "qb1",
-      "rb1",
-      "wr1",
-      "te1",
-      "edge1",
-      "cb1",
-      "coach:coach1",
+    expect(wheelFootballShortlist(candidates, "QB", "DAL").map((item) => item.name)).toEqual([
+      "Dak Prescott",
     ]);
-    expect(candidates.find((candidate) => candidate.id === "rb1")?.eligibleSlots).toEqual(["RB", "Flex"]);
-    expect(candidates.find((candidate) => candidate.id === "edge1")?.eligibleSlots).toEqual(["Front Seven"]);
-    expect(candidates.find((candidate) => candidate.id === "cb1")?.eligibleSlots).toEqual(["Secondary"]);
-    expect(candidates.at(-1)).toMatchObject({
-      name: "Coach One",
-      positionAbbreviation: "HC",
-      eligibleSlots: ["Head Coach"],
-    });
   });
+
+  it("uses the curated head coach instead of a raw coach ordering fallback", () => {
+    const coaches = [
+      candidate("coach:other", "Assistant Coach", "HC", ["Head Coach"], null, 0),
+      candidate("coach:dallas", "Brian Schottenheimer", "HC", ["Head Coach"], null, 1),
+    ];
+    expect(wheelFootballShortlist(coaches, "Head Coach", "DAL").map((item) => item.name)).toEqual([
+      "Brian Schottenheimer",
+    ]);
+  });
+
 });

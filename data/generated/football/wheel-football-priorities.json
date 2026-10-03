@@ -1,0 +1,1339 @@
+{
+  "source": "Manual 32-team NFL Wheel audit using Ourlads 2026 depth/structure + ESPN/official roster verification",
+  "sourceUrl": "https://www.ourlads.com/nfldepthcharts/depthcharts.aspx",
+  "auditedAt": "2026-10-03",
+  "notes": "Product-owned Wheel priority order, manually reconciled across all 32 NFL teams on 2026-10-03. Ourlads is the primary human-reviewed depth/structure reference; ESPN current roster remains runtime membership/player-ID/headshot authority. Injured/IR/PUP players intentionally stay eligible when still on ESPN's team roster; departed players are omitted at shortlist hydration. Flex is intentionally mixed across meaningful RB/WR/TE options. No runtime Ourlads dependency.",
+  "teams": {
+    "ARI": {
+      "QB": [
+        "Jacoby Brissett"
+      ],
+      "RB": [
+        "Jeremiyah Love",
+        "Tyler Allgeier",
+        "James Conner"
+      ],
+      "WR": [
+        "Marvin Harrison Jr.",
+        "Michael Wilson",
+        "Kendrick Bourne"
+      ],
+      "TE": [
+        "Trey McBride"
+      ],
+      "Front Seven": [
+        "Josh Sweat",
+        "Walter Nolen III",
+        "Mack Wilson Sr.",
+        "Jack Gibbens",
+        "Zaven Collins",
+        "Dante Stills"
+      ],
+      "Secondary": [
+        "Budda Baker",
+        "Will Johnson",
+        "Andrew Wingard",
+        "Garrett Williams",
+        "Max Melton",
+        "Denzel Burke"
+      ],
+      "Flex": [
+        "Marvin Harrison Jr.",
+        "Trey McBride",
+        "Jeremiyah Love",
+        "Michael Wilson"
+      ],
+      "Head Coach": [
+        "Mike LaFleur"
+      ]
+    },
+    "ATL": {
+      "QB": [
+        "Michael Penix Jr."
+      ],
+      "RB": [
+        "Bijan Robinson",
+        "Brian Robinson"
+      ],
+      "WR": [
+        "Drake London",
+        "Jahan Dotson",
+        "Olamide Zaccheaus"
+      ],
+      "TE": [
+        "Kyle Pitts Sr."
+      ],
+      "Front Seven": [
+        "James Pearce Jr.",
+        "Gervon Dexter Sr.",
+        "Za'Darius Smith",
+        "Jalon Walker",
+        "Divine Deablo",
+        "Maason Smith"
+      ],
+      "Secondary": [
+        "Jessie Bates III",
+        "A.J. Terrell Jr.",
+        "Xavier Watts",
+        "Mike Hughes",
+        "C.J. Henderson",
+        "Billy Bowman Jr."
+      ],
+      "Flex": [
+        "Bijan Robinson",
+        "Drake London",
+        "Kyle Pitts Sr.",
+        "Jahan Dotson"
+      ],
+      "Head Coach": [
+        "Kevin Stefanski"
+      ]
+    },
+    "BAL": {
+      "QB": [
+        "Lamar Jackson"
+      ],
+      "RB": [
+        "Derrick Henry",
+        "Justice Hill"
+      ],
+      "WR": [
+        "Zay Flowers",
+        "Rashod Bateman",
+        "Ja'Kobi Lane"
+      ],
+      "TE": [
+        "Mark Andrews"
+      ],
+      "Front Seven": [
+        "Trey Hendrickson",
+        "Roquan Smith",
+        "Nnamdi Madubuike",
+        "Tavius Robinson",
+        "Calais Campbell",
+        "Trenton Simpson"
+      ],
+      "Secondary": [
+        "Kyle Hamilton",
+        "Marlon Humphrey",
+        "Nate Wiggins",
+        "Malaki Starks",
+        "Jaylinn Hawkins"
+      ],
+      "Flex": [
+        "Derrick Henry",
+        "Zay Flowers",
+        "Rashod Bateman",
+        "Mark Andrews"
+      ],
+      "Head Coach": [
+        "Jesse Minter"
+      ]
+    },
+    "BUF": {
+      "QB": [
+        "Josh Allen"
+      ],
+      "RB": [
+        "James Cook III",
+        "Ty Johnson"
+      ],
+      "WR": [
+        "DJ Moore",
+        "Khalil Shakir",
+        "Keon Coleman"
+      ],
+      "TE": [
+        "Dalton Kincaid"
+      ],
+      "Front Seven": [
+        "Greg Rousseau",
+        "Bradley Chubb",
+        "Ed Oliver",
+        "Terrel Bernard",
+        "Dorian Williams",
+        "T.J. Sanders"
+      ],
+      "Secondary": [
+        "Christian Benford",
+        "C.J. Gardner-Johnson",
+        "Maxwell Hairston",
+        "Cole Bishop",
+        "Dee Alford"
+      ],
+      "Flex": [
+        "James Cook III",
+        "DJ Moore",
+        "Khalil Shakir",
+        "Dalton Kincaid"
+      ],
+      "Head Coach": [
+        "Joe Brady"
+      ]
+    },
+    "CAR": {
+      "QB": [
+        "Bryce Young"
+      ],
+      "RB": [
+        "Chuba Hubbard",
+        "Jonathon Brooks"
+      ],
+      "WR": [
+        "Tetairoa McMillan",
+        "Jalen Coker",
+        "Xavier Legette"
+      ],
+      "TE": [
+        "Tommy Tremble"
+      ],
+      "Front Seven": [
+        "Derrick Brown",
+        "Devin Lloyd",
+        "Jaelan Phillips",
+        "Bobby Okereke",
+        "Princely Umanmielen",
+        "Lee Hunter"
+      ],
+      "Secondary": [
+        "Jaycee Horn",
+        "Tre'von Moehrig",
+        "Lathan Ransom",
+        "Will Lee III",
+        "Nick Scott",
+        "Akayleb Evans"
+      ],
+      "Flex": [
+        "Chuba Hubbard",
+        "Tetairoa McMillan",
+        "Jalen Coker",
+        "Darren Waller"
+      ],
+      "Head Coach": [
+        "Dave Canales"
+      ]
+    },
+    "CHI": {
+      "QB": [
+        "Caleb Williams"
+      ],
+      "RB": [
+        "D'Andre Swift",
+        "Kyle Monangai"
+      ],
+      "WR": [
+        "Rome Odunze",
+        "Luther Burden III",
+        "Kalif Raymond"
+      ],
+      "TE": [
+        "Colston Loveland"
+      ],
+      "Front Seven": [
+        "Montez Sweat",
+        "Grady Jarrett",
+        "T.J. Edwards",
+        "Austin Booker",
+        "Devin Bush",
+        "Dayo Odeyingbo"
+      ],
+      "Secondary": [
+        "Jaylon Johnson",
+        "Kyler Gordon",
+        "Dillon Thieneman",
+        "Tyrique Stevenson Sr.",
+        "Xavier Woods",
+        "Malik Muhammad II"
+      ],
+      "Flex": [
+        "D'Andre Swift",
+        "Rome Odunze",
+        "Luther Burden III",
+        "Colston Loveland"
+      ],
+      "Head Coach": [
+        "Ben Johnson"
+      ]
+    },
+    "CIN": {
+      "QB": [
+        "Joe Burrow"
+      ],
+      "RB": [
+        "Chase Brown",
+        "Samaje Perine"
+      ],
+      "WR": [
+        "Ja'Marr Chase",
+        "Tee Higgins",
+        "Andrei Iosivas"
+      ],
+      "TE": [
+        "Drew Sample"
+      ],
+      "Front Seven": [
+        "Dexter Lawrence II",
+        "Jonathan Allen",
+        "Boye Mafe",
+        "Myles Murphy",
+        "Demetrius Knight Jr.",
+        "Barrett Carter"
+      ],
+      "Secondary": [
+        "Dax Hill",
+        "DJ Turner II",
+        "Jordan Battle",
+        "Bryan Cook",
+        "Tacario Davis"
+      ],
+      "Flex": [
+        "Chase Brown",
+        "Ja'Marr Chase",
+        "Tee Higgins",
+        "Mike Gesicki"
+      ],
+      "Head Coach": [
+        "Zac Taylor"
+      ]
+    },
+    "CLE": {
+      "QB": [
+        "Deshaun Watson"
+      ],
+      "RB": [
+        "Quinshon Judkins",
+        "Dylan Sampson"
+      ],
+      "WR": [
+        "Jerry Jeudy",
+        "KC Concepcion Jr.",
+        "Denzel Boston"
+      ],
+      "TE": [
+        "Harold Fannin Jr."
+      ],
+      "Front Seven": [
+        "Jared Verse",
+        "Mason Graham",
+        "Jeremiah Owusu-Koramoah",
+        "Quincy Williams",
+        "Carson Schwesinger",
+        "Isaiah McGuire"
+      ],
+      "Secondary": [
+        "Denzel Ward",
+        "Tyson Campbell",
+        "Grant Delpit",
+        "Ronnie Hickman",
+        "Myles Harden"
+      ],
+      "Flex": [
+        "Quinshon Judkins",
+        "Jerry Jeudy",
+        "KC Concepcion Jr.",
+        "Harold Fannin Jr."
+      ],
+      "Head Coach": [
+        "Todd Monken"
+      ]
+    },
+    "DAL": {
+      "QB": [
+        "Dak Prescott"
+      ],
+      "RB": [
+        "Javonte Williams",
+        "Tyler Goodson"
+      ],
+      "WR": [
+        "CeeDee Lamb",
+        "George Pickens",
+        "Ryan Flournoy"
+      ],
+      "TE": [
+        "Jake Ferguson"
+      ],
+      "Front Seven": [
+        "Quinnen Williams",
+        "Rashan Gary",
+        "Kenny Clark",
+        "DeMarvion Overshown",
+        "Donovan Ezeiruaku",
+        "Dee Winters"
+      ],
+      "Secondary": [
+        "DaRon Bland",
+        "Joey Porter Jr.",
+        "Caleb Downs",
+        "Malik Hooker",
+        "Markquese Bell"
+      ],
+      "Flex": [
+        "Javonte Williams",
+        "CeeDee Lamb",
+        "George Pickens",
+        "Jake Ferguson"
+      ],
+      "Head Coach": [
+        "Brian Schottenheimer"
+      ]
+    },
+    "DEN": {
+      "QB": [
+        "Bo Nix"
+      ],
+      "RB": [
+        "J.K. Dobbins",
+        "RJ Harvey"
+      ],
+      "WR": [
+        "Courtland Sutton",
+        "Jaylen Waddle",
+        "Marvin Mims Jr.",
+        "Pat Bryant"
+      ],
+      "TE": [
+        "Evan Engram"
+      ],
+      "Front Seven": [
+        "Nik Bonitto",
+        "Zach Allen",
+        "Alex Singleton",
+        "Jonah Elliss",
+        "D.J. Jones",
+        "Justin Strnad"
+      ],
+      "Secondary": [
+        "Pat Surtain II",
+        "Talanoa Hufanga",
+        "Brandon Jones",
+        "Riley Moss",
+        "Ja'Quan McMillian"
+      ],
+      "Flex": [
+        "J.K. Dobbins",
+        "Courtland Sutton",
+        "Jaylen Waddle",
+        "Evan Engram"
+      ],
+      "Head Coach": [
+        "Sean Payton"
+      ]
+    },
+    "DET": {
+      "QB": [
+        "Jared Goff"
+      ],
+      "RB": [
+        "Jahmyr Gibbs",
+        "Isiah Pacheco"
+      ],
+      "WR": [
+        "Amon-Ra St. Brown",
+        "Jameson Williams",
+        "Isaac TeSlaa"
+      ],
+      "TE": [
+        "Sam LaPorta"
+      ],
+      "Front Seven": [
+        "Aidan Hutchinson",
+        "Alim McNeill",
+        "Jack Campbell",
+        "Derrick Barnes",
+        "Tyleik Williams",
+        "DJ Wonnum"
+      ],
+      "Secondary": [
+        "Brian Branch",
+        "Kerby Joseph",
+        "D.J. Reed",
+        "Roger McCreary",
+        "Ennis Rakestraw Jr."
+      ],
+      "Flex": [
+        "Jahmyr Gibbs",
+        "Amon-Ra St. Brown",
+        "Jameson Williams",
+        "Sam LaPorta"
+      ],
+      "Head Coach": [
+        "Dan Campbell"
+      ]
+    },
+    "GB": {
+      "QB": [
+        "Jordan Love"
+      ],
+      "RB": [
+        "Josh Jacobs",
+        "MarShawn Lloyd"
+      ],
+      "WR": [
+        "Christian Watson",
+        "Jayden Reed",
+        "Matthew Golden"
+      ],
+      "TE": [
+        "Tucker Kraft"
+      ],
+      "Front Seven": [
+        "Micah Parsons",
+        "Edgerrin Cooper",
+        "Zaire Franklin",
+        "Javon Hargrave",
+        "Devonte Wyatt",
+        "Lukas Van Ness"
+      ],
+      "Secondary": [
+        "Xavier McKinney",
+        "Evan Williams",
+        "Keisean Nixon",
+        "Javon Bullard",
+        "Brandon Cisse"
+      ],
+      "Flex": [
+        "Josh Jacobs",
+        "Christian Watson",
+        "Jayden Reed",
+        "Tucker Kraft"
+      ],
+      "Head Coach": [
+        "Matt LaFleur"
+      ]
+    },
+    "HOU": {
+      "QB": [
+        "C.J. Stroud"
+      ],
+      "RB": [
+        "David Montgomery",
+        "Woody Marks"
+      ],
+      "WR": [
+        "Nico Collins",
+        "Tank Dell",
+        "Kayshon Boutte",
+        "Xavier Hutchinson"
+      ],
+      "TE": [
+        "Dalton Schultz"
+      ],
+      "Front Seven": [
+        "Will Anderson Jr.",
+        "Danielle Hunter",
+        "Azeez Al-Shaair",
+        "Jadeveon Clowney",
+        "Sheldon Rankins",
+        "Henry To'oTo'o"
+      ],
+      "Secondary": [
+        "Derek Stingley Jr.",
+        "Jalen Pitre",
+        "Calen Bullock",
+        "Kamari Lassiter",
+        "Reed Blankenship"
+      ],
+      "Flex": [
+        "David Montgomery",
+        "Nico Collins",
+        "Tank Dell",
+        "Dalton Schultz"
+      ],
+      "Head Coach": [
+        "DeMeco Ryans"
+      ]
+    },
+    "IND": {
+      "QB": [
+        "Daniel Jones"
+      ],
+      "RB": [
+        "Jonathan Taylor",
+        "Seth McGowan"
+      ],
+      "WR": [
+        "Keenan Allen",
+        "Josh Downs",
+        "Alec Pierce",
+        "Darius Slayton"
+      ],
+      "TE": [
+        "Tyler Warren"
+      ],
+      "Front Seven": [
+        "DeForest Buckner",
+        "Laiatu Latu",
+        "Grover Stewart",
+        "Arden Key",
+        "Jaylon Carlies",
+        "Akeem Davis-Gaither"
+      ],
+      "Secondary": [
+        "Sauce Gardner",
+        "Charvarius Ward",
+        "Cam Bynum",
+        "AJ Haulcy",
+        "Justin Walley"
+      ],
+      "Flex": [
+        "Jonathan Taylor",
+        "Keenan Allen",
+        "Josh Downs",
+        "Tyler Warren"
+      ],
+      "Head Coach": [
+        "Shane Steichen"
+      ]
+    },
+    "JAX": {
+      "QB": [
+        "Trevor Lawrence"
+      ],
+      "RB": [
+        "Bhayshul Tuten",
+        "Chris Rodriguez Jr."
+      ],
+      "WR": [
+        "Brian Thomas Jr.",
+        "Travis Hunter",
+        "Jakobi Meyers",
+        "Parker Washington"
+      ],
+      "TE": [
+        "Brenton Strange"
+      ],
+      "Front Seven": [
+        "Josh Hines-Allen",
+        "Travon Walker",
+        "Foyesade Oluokun",
+        "Arik Armstead",
+        "DaVon Hamilton",
+        "Ventrell Miller"
+      ],
+      "Secondary": [
+        "Travis Hunter",
+        "Jourdan Lewis",
+        "Eric Murray",
+        "Antonio Johnson",
+        "Montaric Brown"
+      ],
+      "Flex": [
+        "Bhayshul Tuten",
+        "Brian Thomas Jr.",
+        "Travis Hunter",
+        "Brenton Strange"
+      ],
+      "Head Coach": [
+        "Liam Coen"
+      ]
+    },
+    "KC": {
+      "QB": [
+        "Patrick Mahomes"
+      ],
+      "RB": [
+        "Kenneth Walker",
+        "Emmett Johnson"
+      ],
+      "WR": [
+        "Rashee Rice",
+        "Xavier Worthy",
+        "Tyquan Thornton"
+      ],
+      "TE": [
+        "Travis Kelce"
+      ],
+      "Front Seven": [
+        "Chris Jones",
+        "George Karlaftis",
+        "Nick Bolton",
+        "Drue Tranquill",
+        "Peter Woods",
+        "Felix Anudike-Uzomah"
+      ],
+      "Secondary": [
+        "L'Jarius Sneed",
+        "Mansoor Delane",
+        "Chamarri Conner",
+        "Nohl Williams",
+        "Alohi Gilman"
+      ],
+      "Flex": [
+        "Kenneth Walker",
+        "Rashee Rice",
+        "Xavier Worthy",
+        "Travis Kelce"
+      ],
+      "Head Coach": [
+        "Andy Reid"
+      ]
+    },
+    "LAC": {
+      "QB": [
+        "Justin Herbert"
+      ],
+      "RB": [
+        "Omarion Hampton",
+        "Keaton Mitchell"
+      ],
+      "WR": [
+        "Ladd McConkey",
+        "Quentin Johnston",
+        "Tre' Harris"
+      ],
+      "TE": [
+        "Charlie Kolar",
+        "David Njoku"
+      ],
+      "Front Seven": [
+        "Khalil Mack",
+        "Tuli Tuipulotu",
+        "Daiyan Henley",
+        "Denzel Perryman",
+        "Dalvin Tomlinson",
+        "Teair Tart"
+      ],
+      "Secondary": [
+        "Derwin James Jr.",
+        "Tarheeb Still",
+        "Elijah Molden",
+        "Cam Hart",
+        "Tony Jefferson"
+      ],
+      "Flex": [
+        "Omarion Hampton",
+        "Ladd McConkey",
+        "Quentin Johnston",
+        "David Njoku"
+      ],
+      "Head Coach": [
+        "Jim Harbaugh"
+      ]
+    },
+    "LAR": {
+      "QB": [
+        "Matthew Stafford"
+      ],
+      "RB": [
+        "Kyren Williams",
+        "Blake Corum"
+      ],
+      "WR": [
+        "Puka Nacua",
+        "Davante Adams",
+        "Konata Mumpfield"
+      ],
+      "TE": [
+        "Colby Parkinson"
+      ],
+      "Front Seven": [
+        "Myles Garrett",
+        "Aaron Donald",
+        "Kobie Turner",
+        "Braden Fiske",
+        "Byron Young",
+        "Nate Landman"
+      ],
+      "Secondary": [
+        "Trent McDuffie",
+        "Quentin Lake",
+        "Kam Curl",
+        "Jaylen Watson",
+        "Kamren Kinchens"
+      ],
+      "Flex": [
+        "Kyren Williams",
+        "Puka Nacua",
+        "Davante Adams",
+        "Colby Parkinson"
+      ],
+      "Head Coach": [
+        "Sean McVay"
+      ]
+    },
+    "LV": {
+      "QB": [
+        "Kirk Cousins",
+        "Fernando Mendoza"
+      ],
+      "RB": [
+        "Ashton Jeanty",
+        "Mike Washington Jr."
+      ],
+      "WR": [
+        "Tre Tucker",
+        "Jack Bech",
+        "Jalen Nailor"
+      ],
+      "TE": [
+        "Brock Bowers"
+      ],
+      "Front Seven": [
+        "Maxx Crosby",
+        "Kwity Paye",
+        "Nakobe Dean",
+        "Quay Walker",
+        "Adam Butler",
+        "Tonka Hemingway"
+      ],
+      "Secondary": [
+        "Taron Johnson",
+        "Jeremy Chinn",
+        "Eric Stokes",
+        "Hezekiah Masses",
+        "Treydan Stukes"
+      ],
+      "Flex": [
+        "Ashton Jeanty",
+        "Tre Tucker",
+        "Jack Bech",
+        "Brock Bowers"
+      ],
+      "Head Coach": [
+        "Klint Kubiak"
+      ]
+    },
+    "MIA": {
+      "QB": [
+        "Malik Willis"
+      ],
+      "RB": [
+        "De'Von Achane",
+        "Jaylen Wright"
+      ],
+      "WR": [
+        "Malik Washington",
+        "Caleb Douglas",
+        "Chris Bell"
+      ],
+      "TE": [
+        "Greg Dulcich"
+      ],
+      "Front Seven": [
+        "Jordyn Brooks",
+        "Zach Sieler",
+        "Chop Robinson",
+        "Josh Uche",
+        "Jacob Rodriguez",
+        "Willie Gay Jr."
+      ],
+      "Secondary": [
+        "Chris Johnson",
+        "JuJu Brents",
+        "Dante Trader Jr.",
+        "Michael Taaffe",
+        "Jason Marshall Jr."
+      ],
+      "Flex": [
+        "De'Von Achane",
+        "Malik Washington",
+        "Caleb Douglas",
+        "Greg Dulcich"
+      ],
+      "Head Coach": [
+        "Jeff Hafley"
+      ]
+    },
+    "MIN": {
+      "QB": [
+        "Kyler Murray"
+      ],
+      "RB": [
+        "Aaron Jones Sr.",
+        "Jordan Mason"
+      ],
+      "WR": [
+        "Justin Jefferson",
+        "Jordan Addison",
+        "Jauan Jennings"
+      ],
+      "TE": [
+        "T.J. Hockenson"
+      ],
+      "Front Seven": [
+        "Dallas Turner",
+        "Andrew Van Ginkel",
+        "Blake Cashman",
+        "Jalen Redmond",
+        "Eric Wilson",
+        "Tyrion Ingram-Dawkins"
+      ],
+      "Secondary": [
+        "Byron Murphy Jr.",
+        "Joshua Metellus",
+        "Harrison Smith",
+        "Isaiah Rodgers",
+        "Jay Ward"
+      ],
+      "Flex": [
+        "Aaron Jones Sr.",
+        "Justin Jefferson",
+        "Jordan Addison",
+        "T.J. Hockenson"
+      ],
+      "Head Coach": [
+        "Kevin O'Connell"
+      ]
+    },
+    "NE": {
+      "QB": [
+        "Drake Maye"
+      ],
+      "RB": [
+        "Rhamondre Stevenson",
+        "TreVeyon Henderson"
+      ],
+      "WR": [
+        "A.J. Brown",
+        "Romeo Doubs",
+        "DeMario Douglas",
+        "Mack Hollins"
+      ],
+      "TE": [
+        "Hunter Henry"
+      ],
+      "Front Seven": [
+        "Christian Barmore",
+        "Harold Landry III",
+        "Milton Williams",
+        "Dre'Mont Jones",
+        "Robert Spillane"
+      ],
+      "Secondary": [
+        "Christian Gonzalez",
+        "Carlton Davis III",
+        "Kevin Byard III",
+        "Marcus Jones",
+        "Craig Woodson"
+      ],
+      "Flex": [
+        "Rhamondre Stevenson",
+        "A.J. Brown",
+        "Romeo Doubs",
+        "Hunter Henry"
+      ],
+      "Head Coach": [
+        "Mike Vrabel"
+      ]
+    },
+    "NO": {
+      "QB": [
+        "Tyler Shough"
+      ],
+      "RB": [
+        "Travis Etienne Jr.",
+        "Alvin Kamara"
+      ],
+      "WR": [
+        "Chris Olave",
+        "Devaughn Vele",
+        "Bryce Lance"
+      ],
+      "TE": [
+        "Juwan Johnson"
+      ],
+      "Front Seven": [
+        "Chase Young",
+        "Cameron Jordan",
+        "Carl Granderson",
+        "Kaden Elliss",
+        "Bryan Bresee",
+        "Pete Werner"
+      ],
+      "Secondary": [
+        "Justin Reid",
+        "Kool-Aid McKinstry",
+        "Julian Blackmon",
+        "Jonas Sanker",
+        "Quincy Riley"
+      ],
+      "Flex": [
+        "Chris Olave",
+        "Travis Etienne Jr.",
+        "Alvin Kamara",
+        "Juwan Johnson"
+      ],
+      "Head Coach": [
+        "Kellen Moore"
+      ]
+    },
+    "NYG": {
+      "QB": [
+        "Jaxson Dart",
+        "Jameis Winston"
+      ],
+      "RB": [
+        "Cam Skattebo",
+        "Najee Harris"
+      ],
+      "WR": [
+        "Malik Nabers",
+        "Darnell Mooney",
+        "Malachi Fields"
+      ],
+      "TE": [
+        "Isaiah Likely"
+      ],
+      "Front Seven": [
+        "Brian Burns",
+        "Abdul Carter",
+        "Kayvon Thibodeaux",
+        "Tremaine Edmunds",
+        "Arvell Reese",
+        "D.J. Reader"
+      ],
+      "Secondary": [
+        "Paulson Adebo",
+        "Deonte Banks",
+        "Tyler Nubin",
+        "Jevón Holland",
+        "Greg Newsome II",
+        "Dru Phillips"
+      ],
+      "Flex": [
+        "Cam Skattebo",
+        "Malik Nabers",
+        "Darnell Mooney",
+        "Isaiah Likely"
+      ],
+      "Head Coach": [
+        "John Harbaugh"
+      ]
+    },
+    "NYJ": {
+      "QB": [
+        "Geno Smith"
+      ],
+      "RB": [
+        "Breece Hall",
+        "Braelon Allen"
+      ],
+      "WR": [
+        "Garrett Wilson",
+        "Adonai Mitchell",
+        "Isaiah Williams"
+      ],
+      "TE": [
+        "Mason Taylor"
+      ],
+      "Front Seven": [
+        "David Bailey",
+        "Will McDonald IV",
+        "Jamien Sherwood",
+        "Demario Davis",
+        "T'Vondre Sweat",
+        "Harrison Phillips"
+      ],
+      "Secondary": [
+        "Minkah Fitzpatrick",
+        "Azareye'h Thomas",
+        "Brandon Stephens",
+        "Dane Belton",
+        "Jarvis Brownlee Jr."
+      ],
+      "Flex": [
+        "Breece Hall",
+        "Garrett Wilson",
+        "Adonai Mitchell",
+        "Mason Taylor"
+      ],
+      "Head Coach": [
+        "Aaron Glenn"
+      ]
+    },
+    "PHI": {
+      "QB": [
+        "Jalen Hurts"
+      ],
+      "RB": [
+        "Saquon Barkley",
+        "Tank Bigsby"
+      ],
+      "WR": [
+        "DeVonta Smith",
+        "Dontayvion Wicks",
+        "Makai Lemon"
+      ],
+      "TE": [
+        "Dallas Goedert"
+      ],
+      "Front Seven": [
+        "Jalen Carter",
+        "Zack Baun",
+        "Jonathan Greenard",
+        "Jalyx Hunt",
+        "Jihaad Campbell",
+        "Jordan Davis"
+      ],
+      "Secondary": [
+        "Quinyon Mitchell",
+        "Cooper DeJean",
+        "Riq Woolen",
+        "Andrew Mukuba",
+        "Marcus Epps"
+      ],
+      "Flex": [
+        "Saquon Barkley",
+        "DeVonta Smith",
+        "Dontayvion Wicks",
+        "Dallas Goedert"
+      ],
+      "Head Coach": [
+        "Nick Sirianni"
+      ]
+    },
+    "PIT": {
+      "QB": [
+        "Aaron Rodgers"
+      ],
+      "RB": [
+        "Jaylen Warren",
+        "Rico Dowdle"
+      ],
+      "WR": [
+        "DK Metcalf",
+        "Michael Pittman Jr.",
+        "Roman Wilson"
+      ],
+      "TE": [
+        "Pat Freiermuth"
+      ],
+      "Front Seven": [
+        "T.J. Watt",
+        "Cameron Heyward",
+        "Alex Highsmith",
+        "Patrick Queen",
+        "Payton Wilson",
+        "Derrick Harmon"
+      ],
+      "Secondary": [
+        "Jalen Ramsey",
+        "Jamel Dean",
+        "Asante Samuel Jr.",
+        "DeShon Elliott",
+        "Jaquan Brisker"
+      ],
+      "Flex": [
+        "Jaylen Warren",
+        "DK Metcalf",
+        "Michael Pittman Jr.",
+        "Pat Freiermuth"
+      ],
+      "Head Coach": [
+        "Mike McCarthy"
+      ]
+    },
+    "SEA": {
+      "QB": [
+        "Sam Darnold"
+      ],
+      "RB": [
+        "Jadarian Price",
+        "Zach Charbonnet"
+      ],
+      "WR": [
+        "Jaxon Smith-Njigba",
+        "Cooper Kupp",
+        "Rashid Shaheed"
+      ],
+      "TE": [
+        "AJ Barner"
+      ],
+      "Front Seven": [
+        "Leonard Williams",
+        "Ernest Jones IV",
+        "Byron Murphy II",
+        "Demarcus Lawrence",
+        "Derick Hall",
+        "Drake Thomas"
+      ],
+      "Secondary": [
+        "Devon Witherspoon",
+        "Julian Love",
+        "Terrion Arnold",
+        "Nick Emmanwori",
+        "Josh Jobe",
+        "Ty Okada"
+      ],
+      "Flex": [
+        "Jaxon Smith-Njigba",
+        "Jadarian Price",
+        "Cooper Kupp",
+        "AJ Barner"
+      ],
+      "Head Coach": [
+        "Mike Macdonald"
+      ]
+    },
+    "SF": {
+      "QB": [
+        "Brock Purdy"
+      ],
+      "RB": [
+        "Christian McCaffrey",
+        "Isaac Guerendo"
+      ],
+      "WR": [
+        "Mike Evans",
+        "Deebo Samuel Sr.",
+        "Ricky Pearsall",
+        "Jacob Cowing"
+      ],
+      "TE": [
+        "George Kittle"
+      ],
+      "Front Seven": [
+        "Nick Bosa",
+        "Fred Warner",
+        "Dre Greenlaw",
+        "Osa Odighizuwa",
+        "Keion White",
+        "Mykel Williams"
+      ],
+      "Secondary": [
+        "Deommodore Lenoir",
+        "Renardo Green",
+        "Malik Mustapha",
+        "Ji'Ayir Brown",
+        "Marques Sigle",
+        "Upton Stout"
+      ],
+      "Flex": [
+        "Christian McCaffrey",
+        "Mike Evans",
+        "Deebo Samuel Sr.",
+        "George Kittle"
+      ],
+      "Head Coach": [
+        "Kyle Shanahan"
+      ]
+    },
+    "TB": {
+      "QB": [
+        "Baker Mayfield"
+      ],
+      "RB": [
+        "Bucky Irving",
+        "Kenny Gainwell"
+      ],
+      "WR": [
+        "Emeka Egbuka",
+        "Chris Godwin Jr.",
+        "Jalen McMillan",
+        "Ted Hurst III"
+      ],
+      "TE": [
+        "Cade Otton"
+      ],
+      "Front Seven": [
+        "Vita Vea",
+        "Calijah Kancey",
+        "Yaya Diaby",
+        "Rueben Bain Jr.",
+        "Alex Anzalone",
+        "Josiah Trotter"
+      ],
+      "Secondary": [
+        "Antoine Winfield Jr.",
+        "Zyon McCollum",
+        "Tykee Smith",
+        "Jacob Parrish",
+        "Keionte Scott"
+      ],
+      "Flex": [
+        "Bucky Irving",
+        "Emeka Egbuka",
+        "Chris Godwin Jr.",
+        "Cade Otton"
+      ],
+      "Head Coach": [
+        "Todd Bowles"
+      ]
+    },
+    "TEN": {
+      "QB": [
+        "Cam Ward"
+      ],
+      "RB": [
+        "Tony Pollard",
+        "Tyjae Spears"
+      ],
+      "WR": [
+        "Calvin Ridley",
+        "Carnell Tate",
+        "Wan'Dale Robinson"
+      ],
+      "TE": [
+        "Gunnar Helm"
+      ],
+      "Front Seven": [
+        "Jeffery Simmons",
+        "Jermaine Johnson II",
+        "John Franklin-Myers",
+        "Keldric Faulk",
+        "Anthony Hill Jr.",
+        "Cedric Gray"
+      ],
+      "Secondary": [
+        "Amani Hooker",
+        "Alontae Taylor",
+        "Kevin Winston Jr.",
+        "Cor'Dale Flott",
+        "Marcus Harris"
+      ],
+      "Flex": [
+        "Tony Pollard",
+        "Calvin Ridley",
+        "Carnell Tate",
+        "Gunnar Helm"
+      ],
+      "Head Coach": [
+        "Robert Saleh"
+      ]
+    },
+    "WSH": {
+      "QB": [
+        "Jayden Daniels"
+      ],
+      "RB": [
+        "Jacory Croskey-Merritt",
+        "Rachaad White"
+      ],
+      "WR": [
+        "Terry McLaurin",
+        "Stefon Diggs",
+        "Dyami Brown"
+      ],
+      "TE": [
+        "Chig Okonkwo"
+      ],
+      "Front Seven": [
+        "Daron Payne",
+        "Frankie Luvu",
+        "Odafe Oweh",
+        "Sonny Styles",
+        "Javon Kinlaw",
+        "K'Lavon Chaisson"
+      ],
+      "Secondary": [
+        "Mike Sainristil",
+        "Trey Amos",
+        "Amik Robertson",
+        "Rasul Douglas",
+        "Quan Martin",
+        "Nick Cross"
+      ],
+      "Flex": [
+        "Jacory Croskey-Merritt",
+        "Terry McLaurin",
+        "Stefon Diggs",
+        "Chig Okonkwo"
+      ],
+      "Head Coach": [
+        "Dan Quinn"
+      ]
+    }
+  },
+  "coachSourceUrl": "https://www.nfl.com/news/nfl-coaching-gm-tracker-latest-news-interviews-developments-2026-hiring-cycle"
+}
