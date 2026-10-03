@@ -194,6 +194,23 @@ begin
 
   update public.mlb_playoff_seasons
   set current_round = 'division_series',
+      spotlight = jsonb_build_object(
+        'series_id', 'al-ds-2',
+        'title', 'White Sox vs. Guardians',
+        'round', 'AL DIVISION SERIES',
+        'status', 'Division Series · Best of 5',
+        'overview', 'Chicago won the season series 7-6 and outscored Cleveland 58-57, but the Guardians took the AL Central by one game. The division race now continues in October.',
+        'keys', jsonb_build_array(
+          'Seven of 13 regular-season meetings were decided by one run',
+          'Chicago''s pressure against Cleveland''s run prevention'
+        ),
+        'player_to_watch', 'José Ramírez',
+        'player_context', 'Cleveland Guardians · middle-of-order catalyst',
+        'stats', jsonb_build_array(
+          'White Sox won 2026 season series 7-6',
+          'Cleveland won AL Central by 1 game'
+        )
+      ),
       updated_at = now()
   where season = 2026
     and public_enabled = true
