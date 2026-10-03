@@ -238,6 +238,27 @@ export const emptyPickHistory: PickHistory = {
   events: [],
 };
 
+export function pickEventDisplayStartsAt(event: PickEvent) {
+  const canonicalStart = Date.parse(event.startsAt);
+  const pickWindowStart = Date.parse(event.locksAt);
+  const numberedUfcEvent = event.sport !== "football" && /^UFC\s+\d+\b/i.test(event.name);
+  const includesPrelims = event.bouts.some((bout) => (
+    bout.includedInPicks !== false && bout.cardSegment === "prelim"
+  ));
+
+  if (
+    numberedUfcEvent
+    && includesPrelims
+    && Number.isFinite(canonicalStart)
+    && Number.isFinite(pickWindowStart)
+    && pickWindowStart < canonicalStart
+  ) {
+    return event.locksAt;
+  }
+
+  return event.startsAt;
+}
+
 export function pickEventPresentation(event: PickEvent, now = Date.now()): PickEventPresentation {
   if (event.status === "complete") {
     return { state: "complete", eyebrow: "EVENT COMPLETE", status: "COMPLETE" };
@@ -248,7 +269,7 @@ export function pickEventPresentation(event: PickEvent, now = Date.now()): PickE
     const result = bout.resultStatus ?? "pending";
     return result !== "pending" && result !== "cancelled";
   });
-  const eventStarted = Date.parse(event.startsAt) <= now;
+  const eventStarted = Date.parse(pickEventDisplayStartsAt(event)) <= now;
 
   if (eventStarted || hasRecordedFightResult) {
     return { state: "awaiting_results", eyebrow: "EVENT IN PROGRESS", status: "AWAITING RESULTS" };
