@@ -727,13 +727,13 @@ function MatchScreen({ code }: { code: string }) {
           <section className="football-wheel-final-grade surface-card" aria-label="Final Wheel of Football grades">
             <div className={state.result.winner_profile_id === state.creator.id ? "is-winner" : ""}>
               <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
-              <strong>{state.result.creator_final_grade}</strong>
+              <strong>{state.result.creator_final_grade.toFixed(1)}</strong>
               <span>FINAL GRADE</span>
             </div>
             <b>VS</b>
             <div className={state.result.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
               <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
-              <strong>{state.result.recipient_final_grade}</strong>
+              <strong>{state.result.recipient_final_grade.toFixed(1)}</strong>
               <span>FINAL GRADE</span>
             </div>
           </section>

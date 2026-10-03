@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { footballWeeklySuperteamAuctionScore } from "./footballWeeklySuperteamAuctionScore";
 
 const priority = JSON.parse(
   readFileSync("data/generated/football/wheel-football-priorities.json", "utf8"),
@@ -23,7 +22,10 @@ function normalized(value: string) {
 }
 
 function finalGrade(raw: number) {
-  return Math.max(0, Math.min(100, footballWeeklySuperteamAuctionScore(raw)!));
+  const score = raw <= 95
+    ? Math.max(0, 95 + (2.5 * (raw - 95)))
+    : Math.min(100, raw);
+  return Math.round(score * 10) / 10;
 }
 
 describe("Wheel NFL grade distribution sanity", () => {
@@ -63,21 +65,34 @@ describe("Wheel NFL grade distribution sanity", () => {
     expect(grades.size).toBe(626);
   });
 
-  it("uses the same 5x separation curve as Weekly Superteam, clamped for Wheel", () => {
-    expect(finalGrade(90)).toBe(70);
-    expect(finalGrade(92)).toBe(80);
-    expect(finalGrade(94)).toBe(90);
-    expect(finalGrade(96)).toBe(100);
-    expect(finalGrade(72)).toBe(0);
-    expect(finalGrade(99)).toBe(100);
+  it("uses the approved 2.5x separation curve with a monotonic elite tail", () => {
+    expect(finalGrade(88)).toBe(77.5);
+    expect(finalGrade(89)).toBe(80);
+    expect(finalGrade(90)).toBe(82.5);
+    expect(finalGrade(92)).toBe(87.5);
+    expect(finalGrade(94)).toBe(92.5);
+    expect(finalGrade(95)).toBe(95);
+    expect(finalGrade(96)).toBe(96);
+    expect(finalGrade(99)).toBe(99);
+    expect(finalGrade(100)).toBe(100);
   });
 
-  it("keeps equal raw-grade gaps equally meaningful instead of exaggerating the bottom", () => {
-    const oneSlotImpact = (high: number, low: number) => ((high - low) / 7) * 5;
-    expect(oneSlotImpact(97, 92)).toBeCloseTo(3.57, 2);
-    expect(oneSlotImpact(92, 87)).toBeCloseTo(3.57, 2);
-    expect(oneSlotImpact(87, 82)).toBeCloseTo(3.57, 2);
-    expect(oneSlotImpact(82, 76)).toBeCloseTo(4.29, 2);
+  it("keeps every plausible distinct seven-pick total visibly distinct at one decimal", () => {
+    const seen = new Map<string, number>();
+    for (let total = 7 * 70; total <= 7 * 100; total += 1) {
+      const displayed = finalGrade(total / 7).toFixed(1);
+      expect(seen.has(displayed), `duplicate display grade ${displayed} for totals ${seen.get(displayed)} and ${total}`).toBe(false);
+      seen.set(displayed, total);
+    }
+  });
+
+  it("uses exact hidden totals as the tie definition", () => {
+    const winner = (leftTotal: number, rightTotal: number) => (
+      leftTotal === rightTotal ? "tie" : leftTotal > rightTotal ? "left" : "right"
+    );
+    expect(winner(644, 644)).toBe("tie");
+    expect(winner(644, 643)).toBe("left");
+    expect(winner(643, 644)).toBe("right");
   });
 
   it("produces a healthy final-grade range across 20k greedy current-roster builds", () => {
@@ -122,11 +137,11 @@ describe("Wheel NFL grade distribution sanity", () => {
 
     results.sort((left, right) => left - right);
     const percentile = (p: number) => results[Math.floor((results.length - 1) * p)]!;
-    expect(percentile(0.05)).toBeGreaterThanOrEqual(60);
-    expect(percentile(0.05)).toBeLessThanOrEqual(70);
-    expect(percentile(0.5)).toBeGreaterThanOrEqual(77);
-    expect(percentile(0.5)).toBeLessThanOrEqual(84);
-    expect(percentile(0.95)).toBeGreaterThanOrEqual(92);
+    expect(percentile(0.05)).toBeGreaterThanOrEqual(75);
+    expect(percentile(0.05)).toBeLessThanOrEqual(85);
+    expect(percentile(0.5)).toBeGreaterThanOrEqual(85);
+    expect(percentile(0.5)).toBeLessThanOrEqual(92);
+    expect(percentile(0.95)).toBeGreaterThanOrEqual(94);
     expect(percentile(0.95)).toBeLessThanOrEqual(100);
   });
 });
