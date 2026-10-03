@@ -194,23 +194,6 @@ begin
 
   update public.mlb_playoff_seasons
   set current_round = 'division_series',
-      spotlight = jsonb_build_object(
-        'series_id', 'nl-ds-2',
-        'title', 'Braves vs. Dodgers',
-        'round', 'NL DIVISION SERIES',
-        'status', 'Division Series · Best of 5',
-        'overview', 'Atlanta won the 2026 season series 5-1. Now the clubs meet for the sixth time in postseason play, with Los Angeles rested and Atlanta coming straight out of a three-game Wild Card Series.',
-        'keys', jsonb_build_array(
-          'Atlanta won the 2026 season series 5-1',
-          'A rested Dodgers rotation meets an Atlanta staff coming off a three-game Wild Card series'
-        ),
-        'player_to_watch', 'Kyle Tucker',
-        'player_context', 'Los Angeles Dodgers · right field',
-        'stats', jsonb_build_array(
-          'Braves won 2026 season series 5-1',
-          'Sixth postseason meeting'
-        )
-      ),
       updated_at = now()
   where season = 2026
     and public_enabled = true
@@ -524,7 +507,6 @@ begin
     from public.mlb_playoff_seasons
     where season = 2026
       and current_round = 'division_series'
-      and spotlight ->> 'series_id' = 'nl-ds-2'
   ) then
     raise exception '2026 Division Series transition did not advance the live season';
   end if;
