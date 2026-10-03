@@ -114,8 +114,15 @@ async function fetchDepthChart(code, teamId) {
   throw new Error(`${code} depth chart unavailable`);
 }
 
-const FRONT = new Set(["DE", "DT", "NT", "DL", "LB", "ILB", "OLB", "EDGE"]);
-const SECONDARY = new Set(["CB", "S", "FS", "SS", "DB"]);
+const RECEIVER = new Set(["WR", "LWR", "RWR", "SWR"]);
+const FRONT = new Set([
+  "DE", "LDE", "RDE", "DT", "NT", "DL",
+  "LB", "ILB", "OLB", "WLB", "SLB", "MLB", "LILB", "RILB", "EDGE",
+]);
+const SECONDARY = new Set([
+  "CB", "LCB", "RCB", "NB", "NCB",
+  "S", "FS", "SS", "DB",
+]);
 const failures = [];
 const summaries = [];
 
@@ -125,7 +132,7 @@ for (const [code, teamId] of Object.entries(teams)) {
   const starters = rows.filter((row) => row.rank === 1);
   const qb = starters.filter((row) => row.position === "QB");
   const rb = starters.filter((row) => row.position === "RB");
-  const wr = starters.filter((row) => row.position === "WR");
+  const wr = starters.filter((row) => RECEIVER.has(row.position));
   const front = starters.filter((row) => FRONT.has(row.position));
   const secondary = starters.filter((row) => SECONDARY.has(row.position));
 
