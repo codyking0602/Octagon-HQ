@@ -215,7 +215,7 @@ function firstInitial(value) {
   return normalizeName(value).slice(0, 1);
 }
 
-function reconcileName(sourceName, espnPlayers) {
+function reconcileName(sourceName, espnPlayers, warnings) {
   const key = normalizeName(sourceName);
   const exact = espnPlayers.filter((player) => normalizeName(player.name) === key);
   if (exact.length === 1) return exact[0].name;
@@ -225,7 +225,13 @@ function reconcileName(sourceName, espnPlayers) {
   const close = espnPlayers.filter((player) => (
     lastNameKey(player.name) === last && firstInitial(player.name) === initial
   ));
-  return close.length === 1 ? close[0].name : null;
+  if (close.length === 1) return close[0].name;
+
+  warnings.push({
+    sourceName,
+    reason: "Ourlads current depth-chart name not present uniquely in ESPN current roster payload",
+  });
+  return sourceName;
 }
 
 function unique(values) {
@@ -259,7 +265,8 @@ function requireCount(school, slot, values, min, max, details = null) {
 }
 
 function buildPriority(school, rows, roster) {
-  const reconcile = (name) => reconcileName(name, roster.players);
+  const reconciliationWarnings = [];
+  const reconcile = (name) => reconcileName(name, roster.players, reconciliationWarnings);
   const offense = rows.filter((row) => row.section === "offense");
   const defense = rows.filter((row) => row.section === "defense");
 
@@ -302,6 +309,7 @@ function buildPriority(school, rows, roster) {
     "Front Seven": frontSeven,
     Secondary: secondary,
     "Head Coach": [roster.coach],
+    reconciliationWarnings,
   };
 }
 
@@ -357,17 +365,17 @@ for (const school of schools) {
     rosterUrl: espnUrl,
     ...priority,
   };
-  console.log("PASS " + school.school + ": QB " + priority.QB.join(" / ") + "; " + priority["Front Seven"].length + " front; " + priority.Secondary.length + " secondary; HC " + priority["Head Coach"][0]);
+  console.log("PASS " + school.school + ": QB " + priority.QB.join(" / ") + "; " + priority["Front Seven"].length + " front; " + priority.Secondary.length + " secondary; HC " + priority["Head Coach"][0] + "; warnings " + priority.reconciliationWarnings.length);
 }
 
 const output = {
-  source: "Ourlads 2026 NCAA depth charts reconciled to ESPN current CFB rosters",
+  source: "Ourlads 2026 NCAA depth charts with ESPN current-roster identity reconciliation",
   sourceUrl: OURLADS_INDEX_URL,
   espnSourceTemplate: "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/{espnId}/roster",
   generatedAt: AUDIT_DATE,
   season: 2026,
   status: "generated-baseline-pending-manual-conference-audit",
-  notes: "Step 2 current-CFB Wheel baseline. Ourlads owns depth-chart structure; ESPN owns current roster identity and current head coach. The generator selects a deliberately small starter-first pool under the same ceilings as NFL Wheel. Raw ESPN roster order never determines priority. Step 3 must manually audit football importance and reorder/replace edge cases conference by conference before CFB Wheel runtime launch.",
+  notes: "Step 2 current-CFB Wheel baseline. Ourlads owns current depth-chart inclusion and structure; ESPN normalizes current roster identity where it matches and supplies head coach metadata. ESPN omissions do not silently delete an Ourlads depth-chart player; unmatched names are retained and explicitly flagged for Step 3 verification. The generator selects a deliberately small starter-first pool under the same ceilings as NFL Wheel. Raw ESPN roster order never determines priority. Step 3 must manually audit football importance and reorder/replace edge cases conference by conference before CFB Wheel runtime launch.",
   caps: CAPS,
   teamCount: Object.keys(teams).length,
   teams,
