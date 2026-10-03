@@ -232,6 +232,7 @@ function CandidatePicker({
   team,
   candidates,
   roster,
+  usedAthleteIds,
   selectedSlot,
   loading,
   busy,
@@ -243,6 +244,7 @@ function CandidatePicker({
   team: WheelFootballTeam;
   candidates: readonly WheelFootballCandidate[];
   roster: readonly WheelFootballPick[];
+  usedAthleteIds: ReadonlySet<string>;
   selectedSlot: WheelFootballRosterSlot | null;
   loading: boolean;
   busy: boolean;
@@ -251,9 +253,8 @@ function CandidatePicker({
   onPick: (candidate: WheelFootballCandidate) => void;
   onRetry: () => void;
 }) {
-  const usedIds = new Set(roster.map((pick) => pick.athlete_id));
   const slots = openSlots(roster);
-  const available = candidates.filter((candidate) => !usedIds.has(candidate.id));
+  const available = candidates.filter((candidate) => !usedAthleteIds.has(candidate.id));
   const visible = selectedSlot
     ? wheelFootballShortlist(available, selectedSlot, team.code)
     : [];
@@ -552,6 +553,11 @@ function MatchScreen({ code }: { code: string }) {
 
   const isMyTurn = Boolean(state && activeProfileId && state.current_turn_profile_id === activeProfileId);
   const myRoster = state ? rosterForProfile(state, activeProfileId) : [];
+  const usedAthleteIds = new Set(
+    state
+      ? [...state.creator_roster, ...state.recipient_roster].map((pick) => pick.athlete_id)
+      : [],
+  );
   const opponent = state ? otherParticipant(state, activeProfileId) : null;
   const division = state ? divisionFromState(state.division) : null;
   const poolTeams = state ? wheelFootballPoolTeams(state.pool_scope, division) : [];
@@ -802,6 +808,7 @@ function MatchScreen({ code }: { code: string }) {
           team={pendingTeam}
           candidates={candidates}
           roster={myRoster}
+          usedAthleteIds={usedAthleteIds}
           selectedSlot={selectedSlot}
           loading={rosterLoading}
           busy={busy}
