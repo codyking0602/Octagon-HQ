@@ -531,6 +531,8 @@ begin
 end;
 $$;
 
-select public.dispatch_due_mlb_notifications(now());
+-- The canonical notification scheduler observes the completed Wild Card rows and
+-- newly published Division Series after deployment. Do not bypass the dispatcher's
+-- service-role guard from migration context.
 
 notify pgrst, 'reload schema';
