@@ -198,6 +198,38 @@ function candidateExperienceYears(item: Record<string, unknown>) {
   return null;
 }
 
+function candidateHasRosterInjuryStatus(
+  item: Record<string, unknown>,
+  groupPosition: string | null,
+) {
+  const group = groupPosition?.toLowerCase() ?? "";
+  if (/injured|reserve|\bout\b|pup|physically unable/.test(group)) return true;
+
+  const status = asRecord(item.status);
+  const statusText = [
+    text(status?.name),
+    text(status?.displayName),
+    text(status?.description),
+    text(status?.type),
+    text(item.status),
+  ].filter(Boolean).join(" ").toLowerCase();
+  if (/injured|reserve|\bir\b|\bout\b|pup|physically unable/.test(statusText)) return true;
+
+  const injuries = Array.isArray(item.injuries) ? item.injuries : [];
+  return injuries.some((rawInjury) => {
+    const injury = asRecord(rawInjury);
+    if (!injury) return false;
+    const injuryText = [
+      text(injury.status),
+      text(asRecord(injury.status)?.name),
+      text(asRecord(injury.status)?.displayName),
+      text(injury.type),
+      text(injury.description),
+    ].filter(Boolean).join(" ").toLowerCase();
+    return /injured|reserve|\bir\b|\bout\b|doubtful|questionable|pup/.test(injuryText);
+  });
+}
+
 function normalizedPlayerName(value: string) {
   return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
 }
@@ -325,7 +357,9 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
         experienceYears: candidateExperienceYears(item),
         depthRank: depthPlacement?.rank ?? null,
         depthPositionIndex: depthPlacement?.positionIndex ?? null,
-        isInjured: injured.ids.has(id) || injured.names.has(normalizedPlayerName(name)),
+        isInjured: candidateHasRosterInjuryStatus(item, groupPosition)
+          || injured.ids.has(id)
+          || injured.names.has(normalizedPlayerName(name)),
       });
     }
   }

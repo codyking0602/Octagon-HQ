@@ -138,6 +138,38 @@ describe("Wheel of Football current-NFL model", () => {
     ]);
   });
 
+  it("treats ESPN injured-reserve roster groups as injury protection even without a separate injury feed", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      roster: {
+        athletes: [
+          {
+            position: "Offense",
+            items: [
+              { id: "temporary", displayName: "Temporary QB", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 2 } },
+            ],
+          },
+          {
+            position: "injuredReserveOrOut",
+            items: [
+              { id: "established", displayName: "Established QB", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 8 } },
+            ],
+          },
+        ],
+      },
+      depthChart: {
+        positions: [{
+          position: { abbreviation: "QB" },
+          athletes: [{ rank: 1, athlete: { id: "temporary", displayName: "Temporary QB" } }],
+        }],
+      },
+    });
+
+    expect(wheelFootballShortlist(candidates, "QB").map((candidate) => candidate.name)).toEqual([
+      "Temporary QB",
+      "Established QB",
+    ]);
+  });
+
   it("keeps an established injured current-roster player available even when a temporary starter leads the live depth chart", () => {
     const candidates = wheelFootballCandidatesFromEspn({
       roster: {
