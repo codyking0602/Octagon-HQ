@@ -56,6 +56,9 @@ describe("Wheel of Football locked grading runtime", () => {
     expect(migration).toContain("authority.team_code = v_team");
     expect(migration).toContain("authority.position_group = v_group");
     expect(migration).toContain("authority.name_key = v_key");
+    expect(migration).toContain("authority.effective_date <= current_date");
+    expect(migration).toContain("order by authority.effective_date desc");
+    expect(migration).toContain("primary key (team_code, position_group, name_key, effective_date)");
     expect(migration).toContain("Missing locked Wheel grade");
     expect(migration).not.toContain("fallback");
     expect(migration).not.toMatch(/coalesce\s*\(\s*authority\.hidden_grade/i);
@@ -79,6 +82,14 @@ describe("Wheel of Football locked grading runtime", () => {
     expect(repository).not.toContain("raw_grade");
     expect(page).not.toContain("hidden_grade");
     expect(page).not.toContain("raw_grade");
+  });
+
+  it("keeps future authority revisions append-only while stored picks stay frozen", () => {
+    expect(migration).toContain("primary key (team_code, position_group, name_key, effective_date)");
+    expect(migration).toContain("on conflict (team_code, position_group, name_key, effective_date) do update");
+    expect(migration).toContain("order by authority.effective_date desc");
+    expect(migration).toContain("before insert on private.wheel_football_picks");
+    expect(migration).not.toContain("after update on private.wheel_football_grade_authority");
   });
 
   it("persists only final grades for natural completions and preserves pre-runtime history", () => {
