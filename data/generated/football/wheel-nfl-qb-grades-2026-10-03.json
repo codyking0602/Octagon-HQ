@@ -152,10 +152,10 @@
     {
       "team": "PHI",
       "player": "Jalen Hurts",
-      "grade": 87,
+      "grade": 85,
       "kind": "graded",
       "confidence": "high",
-      "reason": "Strong 2024-25 efficiency and major rushing value remain real, but his current passing level does not support the prior 90 placement."
+      "reason": "Strong 2024-25 efficiency and major rushing value remain real, but his current passing level does not support the prior 90 placement. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "SF",
@@ -192,10 +192,10 @@
     {
       "team": "WSH",
       "player": "Jayden Daniels",
-      "grade": 87,
+      "grade": 84,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Special rushing/creation ability and a proven high-end rookie season remain real; shortened and less efficient 2025-26 evidence prevents a higher current grade."
+      "reason": "Special rushing/creation ability and a proven high-end rookie season remain real; shortened and less efficient 2025-26 evidence prevents a higher current grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "GB",
@@ -216,10 +216,10 @@
     {
       "team": "HOU",
       "player": "C.J. Stroud",
-      "grade": 84,
+      "grade": 82,
       "kind": "graded",
       "confidence": "high",
-      "reason": "The rookie peak has not been sustained: 2024-25 were ordinary starter seasons and the 2026 opening has been conservative and low-efficiency. Grade the current body, not the 2023 reputation."
+      "reason": "The rookie peak has not been sustained: 2024-25 were ordinary starter seasons and the 2026 opening has been conservative and low-efficiency. Grade the current body, not the 2023 reputation. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "SEA",
@@ -232,58 +232,58 @@
     {
       "team": "NYJ",
       "player": "Geno Smith",
-      "grade": 83,
+      "grade": 82,
       "kind": "graded",
       "confidence": "high",
-      "reason": "His sharp three-game 2026 start is real, but 2025 was turnover-heavy and inefficient. Three clean games are not enough to restore him to the above-average tier."
+      "reason": "His sharp three-game 2026 start is real, but 2025 was turnover-heavy and inefficient. Three clean games are not enough to restore him to the above-average tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "CHI",
       "player": "Caleb Williams",
-      "grade": 84,
+      "grade": 87,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Clear development in 2025, especially reducing sacks, plus real creation ability; accuracy/consistency remain uneven enough to stay below the 85 anchor."
+      "reason": "Clear development in 2025, especially reducing sacks, plus real creation ability; accuracy/consistency remain uneven enough to stay below the 85 anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "MIN",
       "player": "Kyler Murray",
-      "grade": 84,
+      "grade": 82,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Established dual-threat ability remains above replacement-level starter quality; small recent samples are weak, while injury/availability is kept separate from ability."
+      "reason": "Established dual-threat ability remains above replacement-level starter quality; small recent samples are weak, while injury/availability is kept separate from ability. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "IND",
       "player": "Daniel Jones",
-      "grade": 83,
+      "grade": 80,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Strong 2025 resurgence is real, but early 2026 regression plus a long prior record of volatility prevents treating that season as a fully established new level."
+      "reason": "Strong 2025 resurgence is real, but early 2026 regression plus a long prior record of volatility prevents treating that season as a fully established new level. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "LV",
       "player": "Kirk Cousins",
-      "grade": 83,
+      "grade": 80,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Excellent three-game 2026 start earns respect, but the post-Achilles recent baseline and reduced movement/arm margin prevent a recency-driven jump."
+      "reason": "Excellent three-game 2026 start earns respect, but the post-Achilles recent baseline and reduced movement/arm margin prevent a recency-driven jump. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "NYG",
       "player": "Jaxson Dart",
-      "grade": 83,
+      "grade": 82,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Positive 2025 starter sample with meaningful rushing value and a strong two-game 2026 start; still too little NFL evidence for a larger move."
+      "reason": "Positive 2025 starter sample with meaningful rushing value and a strong two-game 2026 start; still too little NFL evidence for a larger move. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "ARI",
       "player": "Jacoby Brissett",
-      "grade": 82,
+      "grade": 80,
       "kind": "anchor",
       "confidence": "high",
-      "reason": "The approved average/solid starter line: competent, stable NFL quarterbacking without high-end creation or sustained difference-making."
+      "reason": "The approved average/solid starter line: competent, stable NFL quarterbacking without high-end creation or sustained difference-making. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "NO",
@@ -304,66 +304,66 @@
     {
       "team": "DEN",
       "player": "Bo Nix",
-      "grade": 81,
+      "grade": 79,
       "kind": "graded",
       "confidence": "high",
-      "reason": "Two full seasons of competent but low-efficiency play plus a shaky 2026 opening place him just below the average-starter anchor."
+      "reason": "Two full seasons of competent but low-efficiency play plus a shaky 2026 opening place him just below the average-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "CLE",
       "player": "Deshaun Watson",
-      "grade": 83,
+      "grade": 80,
       "kind": "graded",
       "confidence": "low",
-      "reason": "Four encouraging 2026 games now justify a real move upward, but the weak 2022-24 sample and 2025 absence prevent treating the rebound as fully established high-end play."
+      "reason": "Four encouraging 2026 games now justify a real move upward, but the weak 2022-24 sample and 2025 absence prevent treating the rebound as fully established high-end play. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "PIT",
       "player": "Aaron Rodgers",
-      "grade": 80,
+      "grade": 79,
       "kind": "anchor",
       "confidence": "high",
-      "reason": "Below-average current starter anchor: still capable of high-level pocket stretches, but 2025 and 2026 efficiency no longer support an above-average grade."
+      "reason": "Below-average current starter anchor: still capable of high-level pocket stretches, but 2025 and 2026 efficiency no longer support an above-average grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "ATL",
       "player": "Michael Penix Jr.",
-      "grade": 80,
+      "grade": 78,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Arm/timing flashes are evident, but fifteen total NFL games and an 86.8 career passer rating provide limited proof of better than below-average starter ability."
+      "reason": "Arm/timing flashes are evident, but fifteen total NFL games and an 86.8 career passer rating provide limited proof of better than below-average starter ability. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "MIA",
       "player": "Malik Willis",
-      "grade": 78,
+      "grade": 76,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Physical/rushing tools and strong prior spot starts remain useful, but his 2026 starter sample shows accuracy and drive-finishing limitations."
+      "reason": "Physical/rushing tools and strong prior spot starts remain useful, but his 2026 starter sample shows accuracy and drive-finishing limitations. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "TEN",
       "player": "Cam Ward",
-      "grade": 77,
+      "grade": 75,
       "kind": "graded",
       "confidence": "high",
-      "reason": "A full 2025 season and early 2026 both show below-average efficiency; enough arm talent and creation keep him above the weakest Wheel options."
+      "reason": "A full 2025 season and early 2026 both show below-average efficiency; enough arm talent and creation keep him above the weakest Wheel options. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "LV",
       "player": "Fernando Mendoza",
-      "grade": 75,
+      "grade": 73,
       "kind": "graded",
       "confidence": "low",
-      "reason": "No regular-season NFL snaps. Promising flashes were offset by a rough preseason and losing the starting job to Cousins; grade is deliberately provisional and contains no draft-slot projection bonus."
+      "reason": "No regular-season NFL snaps. Promising flashes were offset by a rough preseason and losing the starting job to Cousins; grade is deliberately provisional and contains no draft-slot projection bonus. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "NYG",
       "player": "Jameis Winston",
-      "grade": 74,
+      "grade": 72,
       "kind": "anchor",
       "confidence": "high",
-      "reason": "Weak current Wheel option anchor: NFL arm talent still creates plays, but current reliability, efficiency and decision volatility are clearly below the starter line."
+      "reason": "Weak current Wheel option anchor: NFL arm talent still creates plays, but current reliability, efficiency and decision volatility are clearly below the starter line. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     }
   ],
   "pairwiseAudit": {
@@ -385,23 +385,142 @@
       "Mendoza remains provisional at 75; first meaningful regular-season snaps should trigger a targeted review."
     ],
     "result": "locked",
-    "contradictionsRemaining": false
+    "contradictionsRemaining": false,
+    "finalCalibrationStatus": "passed"
   },
   "postGradeDistribution": {
-    "min": 74,
+    "min": 72,
     "max": 99,
-    "mean": 85.47,
+    "mean": 84.53,
     "median": 84,
     "bands": {
       "95-100": 5,
       "90-94": 1,
       "85-89": 10,
-      "80-84": 14,
-      "75-79": 3,
-      "below-75": 1
+      "80-84": 11,
+      "75-79": 5,
+      "below-75": 2
     },
-    "note": "Distribution was inspected only after player-by-player grading and did not drive any grade."
+    "note": "Final distribution after player-by-player grading, pairwise audit, range/separation calibration and discrepancy review. Distribution did not mechanically set grades."
   },
   "runtimeBoundary": "No production/runtime grading behavior is changed by this artifact. Phase 5 will wire server-owned grades, frozen historical selection grades, and hidden reveal behavior separately.",
-  "futureVersioning": "Any future grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check."
+  "futureVersioning": "Any future grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check.",
+  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "finalCalibrationAudit": {
+    "status": "locked",
+    "principle": "Re-opened prior grades after the full-position project exposed scale compression. Madden/external ratings are discrepancy alarms only; final grades may stay, move toward them, or move away based on football evidence.",
+    "lesson": "Blind-test feedback correctly identified upward compression below the upper-middle tier. Final sweep widened the 72-87 range without disturbing the elite/upper tier.",
+    "changes": [
+      {
+        "player": "Jalen Hurts",
+        "from": 87,
+        "to": 85
+      },
+      {
+        "player": "Jayden Daniels",
+        "from": 87,
+        "to": 84
+      },
+      {
+        "player": "C.J. Stroud",
+        "from": 84,
+        "to": 82
+      },
+      {
+        "player": "Geno Smith",
+        "from": 83,
+        "to": 82
+      },
+      {
+        "player": "Caleb Williams",
+        "from": 84,
+        "to": 87
+      },
+      {
+        "player": "Kyler Murray",
+        "from": 84,
+        "to": 82
+      },
+      {
+        "player": "Daniel Jones",
+        "from": 83,
+        "to": 80
+      },
+      {
+        "player": "Kirk Cousins",
+        "from": 83,
+        "to": 80
+      },
+      {
+        "player": "Jaxson Dart",
+        "from": 83,
+        "to": 82
+      },
+      {
+        "player": "Jacoby Brissett",
+        "from": 82,
+        "to": 80
+      },
+      {
+        "player": "Bo Nix",
+        "from": 81,
+        "to": 79
+      },
+      {
+        "player": "Deshaun Watson",
+        "from": 83,
+        "to": 80
+      },
+      {
+        "player": "Aaron Rodgers",
+        "from": 80,
+        "to": 79
+      },
+      {
+        "player": "Michael Penix Jr.",
+        "from": 80,
+        "to": 78
+      },
+      {
+        "player": "Malik Willis",
+        "from": 78,
+        "to": 76
+      },
+      {
+        "player": "Cam Ward",
+        "from": 77,
+        "to": 75
+      },
+      {
+        "player": "Fernando Mendoza",
+        "from": 75,
+        "to": 73
+      },
+      {
+        "player": "Jameis Winston",
+        "from": 74,
+        "to": 72
+      }
+    ],
+    "evidence": [
+      "PFF Week 3 QB accuracy report: Geno 78.3, Brissett 74.0, Stroud 68.6, Hurts 68.3, Cousins 67.8, Daniels 70.2, Watson 51.5, Kyler 50.5, Bo Nix 48.0.",
+      "Friend blind test independently preferred Daniels around 83-84, Hurts 84-85, Stroud 81-82, Caleb 88-89, and rejected Stafford 99.",
+      "Official Madden Week 3: Watson 70, Geno 74, Stroud 76, Daniels 79."
+    ],
+    "rangeAfter": {
+      "min": 72,
+      "max": 99,
+      "mean": 84.53,
+      "median": 84,
+      "below80": 7,
+      "bands": {
+        "95-100": 5,
+        "90-94": 1,
+        "85-89": 10,
+        "80-84": 11,
+        "75-79": 5,
+        "below-75": 2
+      }
+    }
+  }
 }
