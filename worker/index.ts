@@ -142,22 +142,56 @@ async function loadDynamicPreview(requestUrl: URL): Promise<DynamicPreviewData |
   }
 }
 
-const NFL_ROSTER_TEAM_CODES = new Set([
-  "ari", "atl", "bal", "buf", "car", "chi", "cin", "cle",
-  "dal", "den", "det", "gb", "hou", "ind", "jax", "kc",
-  "lac", "lar", "lv", "mia", "min", "ne", "no", "nyg",
-  "nyj", "phi", "pit", "sea", "sf", "tb", "ten", "wsh",
-]);
+export const NFL_ESPN_TEAM_IDS: Readonly<Record<string, string>> = {
+  ari: "22", atl: "1", bal: "33", buf: "2", car: "29", chi: "3", cin: "4", cle: "5",
+  dal: "6", den: "7", det: "8", gb: "9", hou: "34", ind: "11", jax: "30", kc: "12",
+  lac: "24", lar: "14", lv: "13", mia: "15", min: "16", ne: "17", no: "18", nyg: "19",
+  nyj: "20", phi: "21", pit: "23", sea: "26", sf: "25", tb: "27", ten: "10", wsh: "28",
+};
+
+function normalizedNflTeamCode(teamCode: string) {
+  const normalized = teamCode.trim().toLowerCase();
+  return NFL_ESPN_TEAM_IDS[normalized] ? normalized : null;
+}
 
 export function nflRosterUpstreamUrl(teamCode: string) {
-  const normalized = teamCode.trim().toLowerCase();
-  if (!NFL_ROSTER_TEAM_CODES.has(normalized)) return null;
+  const normalized = normalizedNflTeamCode(teamCode);
+  if (!normalized) return null;
   return `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${normalized}/roster`;
 }
 
+export function nflDepthChartUpstreamUrl(teamCode: string) {
+  const normalized = normalizedNflTeamCode(teamCode);
+  if (!normalized) return null;
+  return `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${NFL_ESPN_TEAM_IDS[normalized]}/depthcharts`;
+}
+
+export function nflInjuriesUpstreamUrl(teamCode: string) {
+  const normalized = normalizedNflTeamCode(teamCode);
+  if (!normalized) return null;
+  return `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${NFL_ESPN_TEAM_IDS[normalized]}/injuries`;
+}
+
+async function fetchOptionalNflJson(url: string | null) {
+  if (!url) return null;
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "OctagonHQ/1.0",
+      },
+    });
+    if (!response.ok) return null;
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
 async function serveNflRoster(requestUrl: URL) {
-  const upstreamUrl = nflRosterUpstreamUrl(requestUrl.searchParams.get("team") ?? "");
-  if (!upstreamUrl) {
+  const teamCode = requestUrl.searchParams.get("team") ?? "";
+  const rosterUrl = nflRosterUpstreamUrl(teamCode);
+  if (!rosterUrl) {
     return new Response(JSON.stringify({ error: "Unknown NFL team." }), {
       status: 400,
       headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -165,13 +199,12 @@ async function serveNflRoster(requestUrl: URL) {
   }
 
   try {
-    const upstream = await fetch(upstreamUrl, {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "OctagonHQ/1.0",
-      },
-    });
-    if (!upstream.ok || !upstream.body) {
+    const [roster, depthChart, injuries] = await Promise.all([
+      fetchOptionalNflJson(rosterUrl),
+      fetchOptionalNflJson(nflDepthChartUpstreamUrl(teamCode)),
+      fetchOptionalNflJson(nflInjuriesUpstreamUrl(teamCode)),
+    ]);
+    if (!roster) {
       return new Response(JSON.stringify({ error: "Current NFL roster is unavailable." }), {
         status: 502,
         headers: {
@@ -181,11 +214,18 @@ async function serveNflRoster(requestUrl: URL) {
       });
     }
 
-    const headers = new Headers(upstream.headers);
-    headers.set("Content-Type", "application/json; charset=utf-8");
-    headers.set("Cache-Control", "public, max-age=300, stale-while-revalidate=900");
-    headers.delete("Set-Cookie");
-    return new Response(upstream.body, { status: 200, headers });
+    return new Response(JSON.stringify({
+      roster,
+      depthChart,
+      injuries,
+      ordering: depthChart ? "espn-depth-chart" : "roster-fallback",
+    }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=900",
+      },
+    });
   } catch {
     return new Response(JSON.stringify({ error: "Current NFL roster is unavailable." }), {
       status: 502,

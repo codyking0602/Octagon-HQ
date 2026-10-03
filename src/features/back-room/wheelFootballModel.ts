@@ -157,6 +157,9 @@ export interface WheelFootballCandidate {
   headshotUrl: string | null;
   eligibleSlots: readonly WheelFootballRosterSlot[];
   experienceYears: number | null;
+  depthRank?: number | null;
+  depthPositionIndex?: number | null;
+  isInjured?: boolean;
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -195,9 +198,138 @@ function candidateExperienceYears(item: Record<string, unknown>) {
   return null;
 }
 
-export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootballCandidate[] {
+function candidateHasRosterInjuryStatus(
+  item: Record<string, unknown>,
+  groupPosition: string | null,
+) {
+  const group = groupPosition?.toLowerCase() ?? "";
+  if (/injured|reserve|\bout\b|pup|physically unable/.test(group)) return true;
+
+  const status = asRecord(item.status);
+  const statusText = [
+    text(status?.name),
+    text(status?.displayName),
+    text(status?.description),
+    text(status?.type),
+    text(item.status),
+  ].filter(Boolean).join(" ").toLowerCase();
+  if (/injured|reserve|\bir\b|\bout\b|pup|physically unable/.test(statusText)) return true;
+
+  const injuries = Array.isArray(item.injuries) ? item.injuries : [];
+  return injuries.some((rawInjury) => {
+    const injury = asRecord(rawInjury);
+    if (!injury) return false;
+    const injuryText = [
+      text(injury.status),
+      text(asRecord(injury.status)?.name),
+      text(asRecord(injury.status)?.displayName),
+      text(injury.type),
+      text(injury.description),
+    ].filter(Boolean).join(" ").toLowerCase();
+    return /injured|reserve|\bir\b|\bout\b|doubtful|questionable|pup/.test(injuryText);
+  });
+}
+
+function normalizedPlayerName(value: string) {
+  return value.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]/g, "");
+}
+
+type WheelDepthPlacement = { rank: number; positionIndex: number };
+
+function depthPlacementIsBetter(next: WheelDepthPlacement, current: WheelDepthPlacement | undefined) {
+  return !current
+    || next.rank < current.rank
+    || (next.rank === current.rank && next.positionIndex < current.positionIndex);
+}
+
+function wheelDepthPlacements(payload: unknown) {
   const root = asRecord(payload);
-  if (!root) return [];
+  const byId = new Map<string, WheelDepthPlacement>();
+  const byName = new Map<string, WheelDepthPlacement>();
+  if (!root) return { byId, byName };
+
+  const positionGroups: Record<string, unknown>[] = [];
+  if (Array.isArray(root.positions)) {
+    for (const entry of root.positions) {
+      const position = asRecord(entry);
+      if (position) positionGroups.push(position);
+    }
+  } else {
+    const rootPositions = asRecord(root.positions);
+    if (rootPositions) {
+      for (const value of Object.values(rootPositions)) {
+        const position = asRecord(value);
+        if (position) positionGroups.push(position);
+      }
+    }
+  }
+  if (Array.isArray(root.depthCharts)) {
+    for (const rawChart of root.depthCharts) {
+      const chart = asRecord(rawChart);
+      const positions = asRecord(chart?.positions);
+      if (!positions) continue;
+      for (const value of Object.values(positions)) {
+        const position = asRecord(value);
+        if (position) positionGroups.push(position);
+      }
+    }
+  }
+
+  positionGroups.forEach((group, positionIndex) => {
+    const athletes = Array.isArray(group.athletes) ? group.athletes : [];
+    for (const rawEntry of athletes) {
+      const entry = asRecord(rawEntry);
+      const athlete = asRecord(entry?.athlete);
+      if (!entry || !athlete) continue;
+      const rawRank = entry.rank;
+      const rank = typeof rawRank === "number"
+        ? rawRank
+        : typeof rawRank === "string" && /^\d+$/.test(rawRank.trim())
+          ? Number(rawRank)
+          : null;
+      if (rank == null || rank < 1) continue;
+      const placement = { rank, positionIndex };
+      const id = text(athlete.id);
+      const name = text(athlete.displayName) ?? text(athlete.fullName);
+      if (id && depthPlacementIsBetter(placement, byId.get(id))) byId.set(id, placement);
+      if (name) {
+        const key = normalizedPlayerName(name);
+        if (depthPlacementIsBetter(placement, byName.get(key))) byName.set(key, placement);
+      }
+    }
+  });
+
+  return { byId, byName };
+}
+
+function wheelInjuryIdentity(payload: unknown) {
+  const root = asRecord(payload);
+  const ids = new Set<string>();
+  const names = new Set<string>();
+  if (!root) return { ids, names };
+  const rows = Array.isArray(root.injuries)
+    ? root.injuries
+    : Array.isArray(root.items)
+      ? root.items
+      : [];
+  for (const rawRow of rows) {
+    const row = asRecord(rawRow);
+    const athlete = asRecord(row?.athlete);
+    if (!athlete) continue;
+    const id = text(athlete.id);
+    const name = text(athlete.displayName) ?? text(athlete.fullName);
+    if (id) ids.add(id);
+    if (name) names.add(normalizedPlayerName(name));
+  }
+  return { ids, names };
+}
+
+export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootballCandidate[] {
+  const envelope = asRecord(payload);
+  if (!envelope) return [];
+  const root = asRecord(envelope.roster) ?? envelope;
+  const depth = wheelDepthPlacements(envelope.depthChart);
+  const injured = wheelInjuryIdentity(envelope.injuries);
 
   const candidates: WheelFootballCandidate[] = [];
   const athleteGroups = Array.isArray(root.athletes) ? root.athletes : [];
@@ -217,6 +349,7 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
       const { abbreviation, label } = candidatePosition(item, groupPosition);
       const eligibleSlots = wheelFootballEligibleSlots(abbreviation);
       if (!eligibleSlots.length) continue;
+      const depthPlacement = depth.byId.get(id) ?? depth.byName.get(normalizedPlayerName(name));
       candidates.push({
         id,
         name,
@@ -225,6 +358,11 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
         headshotUrl: candidateHeadshot(item),
         eligibleSlots,
         experienceYears: candidateExperienceYears(item),
+        depthRank: depthPlacement?.rank ?? null,
+        depthPositionIndex: depthPlacement?.positionIndex ?? null,
+        isInjured: candidateHasRosterInjuryStatus(item, groupPosition)
+          || injured.ids.has(id)
+          || injured.names.has(normalizedPlayerName(name)),
       });
     }
   }
@@ -253,6 +391,9 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
         headshotUrl: null,
         eligibleSlots: ["Head Coach"],
         experienceYears: null,
+        depthRank: null,
+        depthPositionIndex: null,
+        isInjured: false,
       });
     }
   }
@@ -291,6 +432,37 @@ const WHEEL_FOOTBALL_SHORTLIST_MAX: Readonly<Record<WheelFootballRosterSlot, num
   "Head Coach": 1,
 };
 
+function wheelCandidatePriority(
+  candidate: WheelFootballCandidate,
+  slot: WheelFootballRosterSlot,
+) {
+  const rank = candidate.depthRank ?? 99;
+  const positionIndex = candidate.depthPositionIndex ?? 99;
+  const injuryProtection = candidate.isInjured && (candidate.experienceYears ?? 0) >= 3;
+  if (rank === 1) return [0, positionIndex] as const;
+  if (injuryProtection) return [1, positionIndex] as const;
+  if (rank < 99) return [rank + 1, positionIndex] as const;
+  if (slot === "Head Coach") return [0, positionIndex] as const;
+  return [100, positionIndex] as const;
+}
+
+function wheelCandidatesForSlot(
+  candidates: readonly WheelFootballCandidate[],
+  slot: WheelFootballRosterSlot,
+) {
+  return candidates
+    .filter((candidate) => candidate.eligibleSlots.includes(slot))
+    .map((candidate, sourceIndex) => ({ candidate, sourceIndex }))
+    .sort((left, right) => {
+      const [leftPriority, leftPosition] = wheelCandidatePriority(left.candidate, slot);
+      const [rightPriority, rightPosition] = wheelCandidatePriority(right.candidate, slot);
+      return leftPriority - rightPriority
+        || leftPosition - rightPosition
+        || left.sourceIndex - right.sourceIndex;
+    })
+    .map(({ candidate }) => candidate);
+}
+
 function shouldUseExtraWheelOption(
   slot: WheelFootballRosterSlot,
   base: readonly WheelFootballCandidate[],
@@ -311,7 +483,18 @@ export function wheelFootballShortlist(
   candidates: readonly WheelFootballCandidate[],
   slot: WheelFootballRosterSlot,
 ) {
-  const eligible = candidates.filter((candidate) => candidate.eligibleSlots.includes(slot));
+  const eligible = wheelCandidatesForSlot(candidates, slot);
+
+  if (slot === "QB") {
+    const top = eligible[0];
+    if (!top) return [];
+    const injuryProtected = eligible.find((candidate, index) => (
+      index > 0
+      && candidate.isInjured
+      && (candidate.experienceYears ?? 0) >= 3
+    ));
+    if (injuryProtected) return [top, injuryProtected].slice(0, WHEEL_FOOTBALL_SHORTLIST_MAX.QB);
+  }
 
   if (slot === "Flex") {
     const selected: WheelFootballCandidate[] = [];
