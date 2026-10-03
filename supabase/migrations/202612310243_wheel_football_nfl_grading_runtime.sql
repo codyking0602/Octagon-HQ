@@ -12,7 +12,7 @@ create table if not exists private.wheel_football_nfl_grades (
   effective_date date not null,
   grade_version text not null,
   source_artifact text not null,
-  primary key (team_code, grade_family, name_key)
+  primary key (team_code, grade_family, name_key, effective_date)
 );
 
 alter table private.wheel_football_nfl_grades enable row level security;
@@ -654,15 +654,15 @@ insert into private.wheel_football_nfl_grades (
   ('TB', 'Head Coach', 'Todd Bowles', 'toddbowles', 80, '2026-10-03'::date, 'nfl-wheel-head-coach-grades-2026-10-03-v1', 'data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json'),
   ('TEN', 'Head Coach', 'Robert Saleh', 'robertsaleh', 78, '2026-10-03'::date, 'nfl-wheel-head-coach-grades-2026-10-03-v1', 'data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json'),
   ('WSH', 'Head Coach', 'Dan Quinn', 'danquinn', 82, '2026-10-03'::date, 'nfl-wheel-head-coach-grades-2026-10-03-v1', 'data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json')
-on conflict (team_code, grade_family, name_key) do update
+on conflict (team_code, grade_family, name_key, effective_date) do update
 set display_name = excluded.display_name,
     grade = excluded.grade,
-    effective_date = excluded.effective_date,
     grade_version = excluded.grade_version,
     source_artifact = excluded.source_artifact;
 
 alter table private.wheel_football_matches
-  add column if not exists grading_runtime_version text;
+  add column if not exists grading_runtime_version text,
+  add column if not exists grading_cutoff_at timestamptz;
 
 alter table private.wheel_football_picks
   add column if not exists grade_family text,
@@ -736,7 +736,8 @@ create or replace function private.wheel_football_grade_snapshot_json(
   p_team_code text,
   p_display_name text,
   p_position_abbreviation text,
-  p_roster_slot text
+  p_roster_slot text,
+  p_grade_cutoff_at timestamptz
 )
 returns jsonb
 language sql
@@ -754,11 +755,21 @@ as $$
   from private.wheel_football_nfl_grades grade
   where grade.team_code = upper(trim(coalesce(p_team_code, '')))
     and grade.grade_family = private.wheel_football_grade_family(p_position_abbreviation, p_roster_slot)
-    and grade.name_key = private.wheel_football_grade_name_key(p_display_name);
-$$;
+    and grade.name_key = private.wheel_football_grade_name_key(p_display_name)
+    and grade.effective_date <= coalesce(p_grade_cutoff_at::date, current_date)
+  order by grade.effective_date desc, grade.grade_version desc
+  limit 1;
+$;
 
 -- Adopt only matches that are still active at deployment. Existing picks are frozen
 -- against this locked grade version once; already-completed v1 games remain legacy.
+-- The cutoff is frozen before backfill so future grade versions cannot change this match.
+update private.wheel_football_matches match
+set grading_cutoff_at = coalesce(match.grading_cutoff_at, now()),
+    updated_at = now()
+where match.completed_at is null
+  and match.phase <> 'complete';
+
 update private.wheel_football_picks pick
 set grade_family = grade.grade_family,
     selection_grade = grade.grade,
@@ -773,7 +784,8 @@ where match.challenge_id = pick.challenge_id
   and pick.selection_grade is null
   and grade.team_code = pick.team_code
   and grade.grade_family = private.wheel_football_grade_family(pick.position_abbreviation, pick.roster_slot)
-  and grade.name_key = private.wheel_football_grade_name_key(pick.display_name);
+  and grade.name_key = private.wheel_football_grade_name_key(pick.display_name)
+  and grade.effective_date <= match.grading_cutoff_at::date;
 
 do $
 begin
@@ -1106,12 +1118,14 @@ begin
     challenge_id,
     pool_scope,
     division,
-    grading_runtime_version
+    grading_runtime_version,
+    grading_cutoff_at
   ) values (
     v_challenge_id,
     v_scope,
     v_division,
-    'nfl-wheel-grade-runtime-v1'
+    'nfl-wheel-grade-runtime-v1',
+    v_created_at
   );
 
   perform private.publish_notification_to_profile(
@@ -1239,7 +1253,8 @@ begin
       v_match.pending_team_code,
       trim(p_display_name),
       v_abbreviation,
-      v_slot
+      v_slot,
+      v_match.grading_cutoff_at
     );
 
     if v_grade_snapshot is null then
@@ -1423,12 +1438,12 @@ $$;
 
 revoke all on function private.wheel_football_grade_name_key(text) from public, anon, authenticated;
 revoke all on function private.wheel_football_grade_family(text, text) from public, anon, authenticated;
-revoke all on function private.wheel_football_grade_snapshot_json(text, text, text, text) from public, anon, authenticated;
+revoke all on function private.wheel_football_grade_snapshot_json(text, text, text, text, timestamptz) from public, anon, authenticated;
 revoke all on function private.wheel_football_presentation_score(integer, integer) from public, anon, authenticated;
 revoke all on function private.wheel_football_grading_result_json(uuid) from public, anon, authenticated;
 
 comment on table private.wheel_football_nfl_grades is
-  'Server-only current NFL Wheel grade authority, seeded exactly from the locked 2026-10-03 machine-readable artifacts.';
+  'Server-only versioned NFL Wheel grade authority. Effective-dated rows are retained so a match can resolve the grade era frozen at creation.';
 comment on column private.wheel_football_picks.selection_grade is
   'Frozen authoritative grade captured at selection time; never recomputed from the current master grade table.';
 comment on function private.wheel_football_presentation_score(integer, integer) is
