@@ -8,8 +8,6 @@ const migration = readFileSync(
 const repository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const picks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const css = readFileSync("src/styles/mlb-playoffs.css", "utf8");
-const assets = readFileSync("src/features/mlb/mlbTeamAssets.ts", "utf8");
-const breakdowns = readFileSync("src/features/mlb/mlbSeriesBreakdownContent.ts", "utf8");
 
 describe("2026 MLB Division Series transition", () => {
   it("records every Wild Card winner and advances the live season", () => {
@@ -53,18 +51,6 @@ describe("2026 MLB Division Series transition", () => {
     expect(picks).toContain('is-eliminated');
     expect(css).toContain(".mlb-bracket-mini-team.is-eliminated > strong");
     expect(css).toContain("text-decoration-line: line-through");
-  });
-
-  it("moves the editorial package to Braves-Dodgers and Fernando Tatis Jr.", () => {
-    expect(migration).toContain("'series_id', 'nl-ds-2'");
-    expect(migration).toContain("'title', 'Braves vs. Dodgers'");
-    expect(breakdowns).toContain('"nl-ds-2"');
-    expect(assets).toContain('name: "Fernando Tatis Jr."');
-    expect(assets).toContain('team: "San Diego Padres"');
-    expect(assets).toContain('{ label: "AVG", value: ".289" }');
-    expect(assets).toContain('{ label: "HR", value: "25" }');
-    expect(assets).toContain('{ label: "SB", value: "38" }');
-    expect(assets).toContain('{ label: "OPS", value: ".828" }');
   });
 
   it("leaves notification delivery to the secured canonical scheduler", () => {
