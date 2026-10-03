@@ -6,7 +6,6 @@ const migration = readFileSync(
   "utf8",
 );
 const config = readFileSync("src/features/mlb/mlbPlayoffsConfig.ts", "utf8");
-const spotlight = readFileSync("src/features/mlb/mlbTeamAssets.ts", "utf8");
 
 describe("MLB 2026 owner review field", () => {
   it("loads the finalized 12-team bracket through the private owner-review stage", () => {
@@ -36,12 +35,9 @@ describe("MLB 2026 owner review field", () => {
     expect(migration).toContain("9:00 PM CT · Peacock");
   });
 
-  it("features only Yankees-Red Sox and replaces the Judge placeholder with PCA", () => {
+  it("preserves the original Wild Card spotlight in the historical owner-review migration", () => {
     expect(migration).toContain("'series_id', 'al-wc-2'");
     expect(migration).toContain("'title', 'Red Sox vs. Yankees'");
-    expect(spotlight).toContain('name: "Pete Crow-Armstrong"');
-    expect(spotlight).toContain('{ label: "HR", value: "45" }');
-    expect(spotlight).toContain('{ label: "SB", value: "41" }');
-    expect(spotlight).not.toContain('name: "Aaron Judge"');
+    expect(migration).toContain("'player_to_watch', 'Ben Rice'");
   });
 });

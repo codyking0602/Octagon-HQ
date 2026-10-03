@@ -2374,6 +2374,12 @@
   opacity: .42;
 }
 
+.mlb-bracket-mini-team.is-eliminated > strong {
+  text-decoration-line: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(174, 181, 177, .68);
+}
+
 .mlb-bracket-mini-team.is-tbd {
   opacity: .44;
 }

@@ -12,7 +12,7 @@ describe("MLB spotlight series polish", () => {
     expect(home).toContain('asset?.abbreviation === "NYY" ? " is-white-logo" : ""');
   });
 
-  it("keeps Pete Crow-Armstrong's name visually plain while linking his profile", () => {
+  it("keeps the current player spotlight name visually plain while linking his profile", () => {
     expect(spotlight).toContain('className="mlb-player-spotlight__name-link"');
     expect(css).toContain(".football-player-spotlight__copy h3 > a.mlb-player-spotlight__name-link");
     expect(css).toContain("background: transparent");

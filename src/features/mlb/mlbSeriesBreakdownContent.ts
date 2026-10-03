@@ -21,51 +21,41 @@ export type MlbSeriesBreakdownContent = {
 
 /**
  * The postseason hub intentionally features one full Series Breakdown at a time.
- * The 2026 Wild Card feature is Yankees-Red Sox, the rivalry rematch with the
- * strongest mix of current stakes, recognizable players, and postseason history.
+ * The 2026 Division Series feature is White Sox-Guardians: the AL Central race
+ * continuing into October after a 7-6 season series separated by one total run.
  */
 export const MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS: Readonly<Record<string, MlbSeriesBreakdownContent>> = {
-  "al-wc-2": {
+  "al-ds-2": {
     series:
-      "New York won the season series 7-6 and eliminated Boston in last year's Wild Card Series. Both clubs finished among MLB's top five in team ERA, so this best-of-three can turn on only a handful of high-leverage at-bats.",
+      "Chicago won the season series 7-6 and outscored Cleveland 58-57, but the Guardians took the AL Central by one game. Eleven of their 13 meetings were decided by three runs or fewer, so the division race is essentially continuing in October.",
     decisions: [
       {
-        title: "New York's power",
+        title: "The margins",
         body: [
           {
-            text: "Ben Rice",
-            href: "https://www.baseball-reference.com/players/r/ricebe01.shtml",
-            emphasis: true,
-          },
-          {
-            text: " gives the Yankees another bat that can change a game with one swing. Boston needs to keep traffic off the bases and make New York manufacture runs.",
+            text: "Seven of the 13 regular-season meetings were decided by one run, including four walk-offs. Late-game execution has separated these teams more than raw talent.",
           },
         ],
       },
       {
-        title: "Boston at the top of the order",
+        title: "Chicago's pressure",
         body: [
           {
-            text: "Roman Anthony",
-            href: "https://www.baseball-reference.com/players/a/anthoro01.shtml",
-            emphasis: true,
-          },
-          {
-            text: " getting on base changes the shape of Boston's offense and forces New York to pitch under pressure.",
+            text: "The White Sox swept Houston in the Wild Card round and repeatedly created early traffic. Cleveland's starters have to keep Chicago from turning another first inning into a chase game.",
           },
         ],
       },
       {
-        title: "The late innings",
+        title: "Cleveland's run prevention",
         body: [
           {
-            text: "Both teams can shorten games with their bullpens. In a three-game series, one seventh- or eighth-inning mistake can decide the whole thing.",
+            text: "The Guardians won the division with pitching and late-inning control. In a matchup this tight, keeping free runners off base may matter more than trying to match Chicago swing for swing.",
           },
         ],
       },
     ],
     hqRead:
-      "New York has home field and the recent rivalry edge, but Boston has enough pitching to keep every game tight. This feels much more like a series decided by a handful of high-leverage moments than one team simply overpowering the other.",
+      "There was almost nothing between these clubs over 13 games: Chicago won seven, Cleveland won six, and the total run differential was one. Expect the AL Central race to keep looking like the AL Central race — close games, leverage late, and very little room for a bad inning.",
   },
 };
 

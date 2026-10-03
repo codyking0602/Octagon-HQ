@@ -25,7 +25,7 @@ begin
     where season = 2026
       and public_enabled = true
       and field_ready = true
-      and current_round = 'wild_card'
+      and current_round = 'division_series'
       and bracket_lock_at = timestamptz '2026-09-29 12:00:00-05'
       and jsonb_array_length(coalesce(bracket_template -> 'teams', '[]'::jsonb)) = 12
       and jsonb_array_length(coalesce(bracket_template -> 'nodes', '[]'::jsonb)) = 11
@@ -34,7 +34,11 @@ begin
   end if;
 
   if (select count(*) from public.mlb_playoff_series where season = 2026 and round = 'wild_card') <> 4 then
-    raise exception '2026 MLB owner-review field must contain four Wild Card series';
+    raise exception '2026 MLB field must retain four Wild Card series';
+  end if;
+
+  if (select count(*) from public.mlb_playoff_series where season = 2026 and round = 'division_series') <> 4 then
+    raise exception '2026 MLB field must contain four Division Series';
   end if;
 
   if (select featured_challenge ->> 'route' from public.mlb_playoff_seasons where season = 2026) <> '/mlb/challenge' then
