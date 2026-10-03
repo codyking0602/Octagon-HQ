@@ -4116,3 +4116,191 @@
 .mlb-millionaire-recap__detail>p,.mlb-millionaire-recap__legacy p{margin:0;color:var(--text-secondary);font-size:.7rem;line-height:1.35}.mlb-millionaire-recap__detail>small{color:var(--text-muted);font-size:.58rem;font-weight:800}
 .mlb-millionaire-recap__legacy{display:grid;gap:5px;padding:14px;border-top:1px solid var(--border)}.mlb-millionaire-recap__legacy strong{font-size:.86rem}
 @media(max-width:520px){.mlb-millionaire-recap__detail{padding-left:12px}}
+
+
+/* MLB Picks mobile hierarchy cleanup — clearer elimination, lighter standings, cleaner series cards. */
+.mlb-bracket-mini-team {
+  position: relative;
+}
+
+.mlb-bracket-mini-team.is-out.is-eliminated {
+  opacity: 1;
+}
+
+.mlb-bracket-mini-team.is-eliminated {
+  background: rgba(255, 255, 255, .018);
+  color: #777e7a;
+  box-shadow: none;
+}
+
+.mlb-bracket-mini-team.is-picked.is-eliminated {
+  background: rgba(255, 255, 255, .025);
+  color: #858c88;
+  box-shadow: inset 2px 0 rgba(210, 102, 102, .58);
+}
+
+.mlb-bracket-mini-team.is-eliminated > .mlb-bracket-team-mark,
+.mlb-bracket-mini-team.is-eliminated > b,
+.mlb-bracket-mini-team.is-eliminated > strong {
+  opacity: .38;
+}
+
+.mlb-bracket-mini-team.is-eliminated > .mlb-bracket-team-mark {
+  filter: grayscale(1);
+}
+
+.mlb-bracket-mini-team.is-eliminated > b,
+.mlb-bracket-mini-team.is-eliminated > strong {
+  text-decoration-line: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(226, 115, 115, .9);
+}
+
+.mlb-bracket-mini-team.is-eliminated::after {
+  position: absolute;
+  right: 2px;
+  left: 2px;
+  top: 50%;
+  height: 1px;
+  background: rgba(226, 115, 115, .76);
+  content: "";
+  pointer-events: none;
+  transform: rotate(-7deg);
+  transform-origin: center;
+}
+
+.mlb-series-pick-card > header {
+  min-height: 30px;
+}
+
+.mlb-series-pick-card .football-pick-team-copy {
+  justify-content: center;
+}
+
+.mlb-series-pick-card .football-pick-team-copy small {
+  color: var(--mlb-green-strong);
+}
+
+.mlb-series-pick-card .football-pick-team.is-eliminated {
+  opacity: .3;
+  filter: grayscale(.85);
+}
+
+.mlb-series-pick-card .football-pick-team.is-eliminated .football-pick-team-copy small {
+  color: #8b918d;
+}
+
+.mlb-series-pick-card__result {
+  background: rgba(var(--mlb-green-rgb), .055);
+}
+
+.mlb-series-pick-card__result small {
+  color: var(--mlb-green-strong);
+}
+
+.mlb-series-pick-card__result strong {
+  color: #eef4f0;
+}
+
+.mlb-series-pick-card > footer {
+  justify-content: flex-start;
+}
+
+.mlb-championship-summary {
+  border-color: rgba(var(--mlb-green-rgb), .22);
+  background: #111412;
+}
+
+.mlb-championship-summary > header {
+  min-height: 44px;
+  padding: 7px 10px;
+}
+
+.mlb-championship-summary > header > b {
+  font-size: 1rem;
+}
+
+.mlb-championship-summary__lanes > span {
+  gap: 2px;
+  padding: 7px 9px 8px;
+}
+
+.mlb-championship-summary__lanes strong {
+  font-size: .72rem;
+}
+
+.mlb-picks-group-hub .football-group-live {
+  min-width: 68px;
+}
+
+.mlb-picks-group-hub .football-group-live > b {
+  font-size: .62rem;
+}
+
+.mlb-picks-group-hub .football-group-live > small {
+  font-size: .42rem;
+}
+
+.mlb-picks-season-hub__summary {
+  min-height: 58px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.mlb-picks-season-hub__summary .picks-season-hub__identity > strong {
+  font-size: .8rem;
+  letter-spacing: .01em;
+}
+
+.mlb-picks-season-hub__summary .picks-season-hub__identity > small {
+  font-size: .48rem;
+  letter-spacing: .07em;
+}
+
+.mlb-picks-group-hub .picks-season-panel-heading {
+  padding-bottom: 7px;
+}
+
+.mlb-picks-group-hub .picks-season-standing {
+  min-height: 58px;
+}
+
+.mlb-picks-group-hub .picks-season-standing__identity {
+  align-self: center;
+}
+
+.mlb-picks-group-hub .picks-season-standing__score {
+  gap: 3px;
+}
+
+.mlb-picks-group-hub .picks-season-standing__score > b {
+  font-size: .82rem;
+}
+
+.mlb-picks-group-hub .picks-season-standing__score > em {
+  font-size: .45rem;
+}
+
+@media (max-width: 520px) {
+  .mlb-picks-group-hub .football-group-hub__summary {
+    min-height: 58px;
+  }
+
+  .mlb-picks-group-hub .picks-season-hub__body {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .mlb-picks-group-hub .picks-season-tabs {
+    min-height: 42px;
+  }
+
+  .mlb-picks-group-hub .picks-season-standing {
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    padding-inline: 9px;
+  }
+
+  .mlb-series-pick-card .football-pick-team {
+    min-height: 58px;
+  }
+}

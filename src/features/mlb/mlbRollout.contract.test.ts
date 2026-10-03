@@ -136,7 +136,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(group).toBeGreaterThan(-1);
     expect(slate).toBeGreaterThan(group);
     expect(grading).toBeGreaterThan(slate);
-    expect(mlbPicks).toContain("STANDINGS &amp; ROUNDS");
+    expect(mlbPicks).toContain("LEADERBOARD &amp; BRACKET");
     expect(mlbPicks).toContain("SERIES ML");
     expect(mlbPicks).toContain("SERIES PICKS · 43 PTS");
     expect(mlbOwnerFixture).toContain('display_name: "Troy"');
@@ -361,7 +361,7 @@ describe("MLB Playoffs rollout gate", () => {
     expect(championshipModel).toContain("playMax: 25");
     expect(championshipModel).toContain("playPlacement: [25 / 16, 20 / 16, 15 / 16, 10 / 16, 5 / 16, 0]");
     expect(mlbPlay).toContain("16 CHALLENGES · PLACEMENT POINTS FEED THE MLB CHAMPIONSHIP");
-    expect(championshipSummary).toContain("MLB CHAMPIONSHIP");
+    expect(championshipSummary).toContain("YOUR SCORE");
     expect(mlbPicks).toContain("100-POINT CHAMPIONSHIP");
   });
 });
