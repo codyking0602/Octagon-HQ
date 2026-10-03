@@ -90,7 +90,7 @@ EA is shown only for the final discrepancy audit. `REVIEW` means the absolute ga
 | 94 | Dante Moore | Oregon | 94 | +0 |  |
 | 85 | Rocco Becht | Penn State | 87 | -2 |  |
 | 76 | Ryan Browne | Purdue | 76 | +0 |  |
-| 72 | AJ Surace | Rutgers | 76 | -4 |  |
+| 72 | Aj Surace | Rutgers | 76 | -4 |  |
 | 83 | Nico Iamaleava | UCLA | 87 | -4 |  |
 | 92 | Jayden Maiava | USC | 93 | -1 |  |
 | 88 | Demond Williams Jr. | Washington | 87 | +1 |  |
@@ -160,7 +160,7 @@ The middle is deliberately allowed to be dense because many current college star
 
 ### Floor
 
-**Mason McKenzie 74 > Tait Reynolds 73 > AJ Surace 72 > Isaac Wilson 70**
+**Mason McKenzie 74 > Tait Reynolds 73 > Aj Surace 72 > Isaac Wilson 70**
 
 This is the main range/separation lesson from the NFL blind-QB audit. Curated Wheel membership is not an 80-point entitlement. Surace is not Rutgers' primary current starter, Wilson has very little productive current evidence, and neither receives recruiting/upside credit.
 
