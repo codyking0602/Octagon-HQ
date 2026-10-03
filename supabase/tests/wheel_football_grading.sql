@@ -56,6 +56,26 @@ begin
     raise exception 'accent-normalized same-player identity did not resolve';
   end if;
 
+  insert into private.wheel_football_nfl_grades (
+    team_code, grade_family, display_name, name_key, grade, effective_date, grade_version, source_artifact
+  ) values (
+    'BUF', 'QB', 'Josh Allen', 'joshallen', 88, '2026-10-17'::date, 'test-future-grade-version', 'test-only'
+  );
+
+  v_snapshot := private.wheel_football_grade_snapshot_json(
+    'BUF', 'Josh Allen', 'QB', 'QB', '2026-10-10T12:00:00Z'::timestamptz
+  );
+  if (v_snapshot ->> 'grade')::integer <> 99 then
+    raise exception 'historical match cutoff did not retain the older frozen grade era';
+  end if;
+
+  v_snapshot := private.wheel_football_grade_snapshot_json(
+    'BUF', 'Josh Allen', 'QB', 'QB', '2026-10-18T12:00:00Z'::timestamptz
+  );
+  if (v_snapshot ->> 'grade')::integer <> 88 then
+    raise exception 'future match cutoff did not receive the newer effective grade';
+  end if;
+
   if private.wheel_football_presentation_score(75 * 7, 7) <> 50
     or private.wheel_football_presentation_score(80 * 7, 7) <> 60
     or private.wheel_football_presentation_score(85 * 7, 7) <> 70
