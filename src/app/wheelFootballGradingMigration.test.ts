@@ -81,10 +81,12 @@ describe("Wheel of Football grading runtime migration", () => {
 
   it("resolves grades server-side by team, position family, and normalized name", () => {
     expect(migration).toContain("create table if not exists private.wheel_football_nfl_grades");
-    expect(migration).toContain("primary key (team_code, grade_family, name_key)");
+    expect(migration).toContain("primary key (team_code, grade_family, name_key, effective_date)");
     expect(migration).toContain("grade.team_code = upper(trim(coalesce(p_team_code, '')))");
     expect(migration).toContain("grade.grade_family = private.wheel_football_grade_family");
     expect(migration).toContain("grade.name_key = private.wheel_football_grade_name_key(p_display_name)");
+    expect(migration).toContain("grade.effective_date <= coalesce(p_grade_cutoff_at::date, current_date)");
+    expect(migration).toContain("order by grade.effective_date desc, grade.grade_version desc");
     expect(migration).toContain("No authoritative Wheel grade found");
     expect(migration).not.toContain("p_selection_grade");
   });
@@ -116,6 +118,8 @@ describe("Wheel of Football grading runtime migration", () => {
     expect(migration).toContain("'nfl-wheel-grade-runtime-v1'");
     expect(migration).toContain("if v_match.grading_runtime_version is not null then");
     expect(migration).toContain("Existing picks are frozen");
+    expect(migration).toContain("grading_cutoff_at = coalesce(match.grading_cutoff_at, now())");
+    expect(migration).toContain("v_match.grading_cutoff_at");
     expect(migration).toContain("match.completed_at is null");
     expect(migration).toContain("match.phase <> 'complete'");
     expect(migration).toContain("Cannot activate NFL Wheel grading: an active historical pick does not resolve");
