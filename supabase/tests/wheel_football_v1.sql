@@ -49,7 +49,7 @@ end;
 $$;
 
 
-do $
+do $$
 declare
   v_grade_count integer;
   v_dak smallint;
@@ -57,6 +57,7 @@ declare
   v_hunter_secondary smallint;
   v_state_definition text;
   v_nullable_columns integer;
+  v_pick_definition text;
 begin
   select count(*)
     into v_grade_count
@@ -96,8 +97,17 @@ begin
     and column_name in ('selected_grade', 'grade_version', 'grade_effective_date')
     and is_nullable = 'YES';
 
-  if v_nullable_columns <> 0 then
-    raise exception 'Frozen Wheel grade columns must be NOT NULL after migration';
+  if v_nullable_columns <> 3 then
+    raise exception 'Legacy Wheel grade columns must remain nullable for pre-grading history, got % nullable columns',
+      v_nullable_columns;
+  end if;
+
+  v_pick_definition := pg_get_functiondef('private.pick_wheel_football(text,text,text,text,text,text,text)'::regprocedure);
+  if position('v_selected_grade' in v_pick_definition) = 0
+    or position('selected_grade,' in v_pick_definition) = 0
+    or position('v_grade_version' in v_pick_definition) = 0
+    or position('v_grade_effective_date' in v_pick_definition) = 0 then
+    raise exception 'New Wheel picks do not freeze authoritative grade/version/effective date';
   end if;
 
   v_state_definition := pg_get_functiondef('private.wheel_football_state_json(uuid)'::regprocedure);
@@ -114,6 +124,6 @@ begin
     raise exception 'Wheel state JSON is missing final team grade reveal fields';
   end if;
 end;
-$;
+$$;
 
 rollback;
