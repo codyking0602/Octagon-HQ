@@ -172,7 +172,7 @@ describe("Wheel of Football current-NFL model", () => {
       "Breece Hall", "Garrett Wilson", "Adonai Mitchell", "Mason Taylor",
     ]);
     expect(wheelPriorityJson.teams.NYJ.Secondary).toEqual([
-      "Minkah Fitzpatrick", "Brandon Stephens", "Azareye'h Thomas",
+      "Minkah Fitzpatrick", "Azareye'h Thomas", "Brandon Stephens",
       "Dane Belton", "Jarvis Brownlee Jr.",
     ]);
     expect(wheelPriorityJson.teams.BAL.WR).toEqual([
