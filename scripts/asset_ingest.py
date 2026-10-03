@@ -30,6 +30,16 @@ UFC_PROFILE_HOSTS = {
 PREFIX = "public/assets/fighters/"
 MAX_BYTES = 20 * 1024 * 1024
 MAX_PAGE_BYTES = 5 * 1024 * 1024
+PLACEHOLDER_URL_MARKERS = (
+    "silhouette",
+    "placeholder",
+    "default-avatar",
+    "default_avatar",
+    "no-image",
+    "no_image",
+    "no-photo",
+    "no_photo",
+)
 
 
 def fail(msg):
@@ -108,6 +118,30 @@ class UfcProfileImageParser(HTMLParser):
                 return
 
 
+def source_url_looks_like_placeholder(url):
+    value = url.lower()
+    return any(marker in value for marker in PLACEHOLDER_URL_MARKERS)
+
+
+def image_looks_like_silhouette(im):
+    sample = im.copy()
+    sample.thumbnail((128, 128), Image.Resampling.LANCZOS)
+    pixels = [
+        (r, g, b)
+        for r, g, b, a in sample.convert("RGBA").getdata()
+        if a >= 32
+    ]
+    if not pixels:
+        return True
+
+    colorful = sum(
+        1
+        for r, g, b in pixels
+        if max(r, g, b) - min(r, g, b) >= 12 and max(r, g, b) >= 35
+    )
+    return colorful / len(pixels) < 0.01
+
+
 def resolve_ufc_profile_source(page_url, fighter_name):
     host = (urlparse(page_url).hostname or "").lower()
     if host not in UFC_PROFILE_HOSTS:
@@ -124,6 +158,8 @@ def resolve_ufc_profile_source(page_url, fighter_name):
     for candidate in parser.candidates:
         image_url = urljoin(page_url, candidate)
         if not is_public_https(image_url):
+            continue
+        if source_url_looks_like_placeholder(image_url):
             continue
         return image_url
 
@@ -190,6 +226,8 @@ def main():
 
     size = (320, 320) if kind == "thumb" else (626, 800)
     source_url, data = resolve_source(spec)
+    if source_url_looks_like_placeholder(source_url):
+        fail("source URL is a known placeholder or silhouette asset")
 
     try:
         im = Image.open(BytesIO(data)).convert("RGBA")
@@ -204,6 +242,9 @@ def main():
 
         if im.getchannel("A").getextrema() == (255, 255):
             fail("background removal produced no visible transparency")
+
+    if image_looks_like_silhouette(im):
+        fail("source image looks like a placeholder/silhouette rather than a fighter photo")
 
     box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
