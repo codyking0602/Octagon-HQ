@@ -13,7 +13,8 @@ describe("Wheel of Football NFL grading runtime migration", () => {
     expect(migration).toContain("private.resolve_wheel_football_nfl_grade");
     expect(migration).toContain("source.team_code = upper(trim(p_team_code))");
     expect(migration).toContain("source.grade_position = trim(p_grade_position)");
-    expect(migration).toContain("source.normalized_name = lower(regexp_replace");
+    expect(migration).toContain("private.wheel_football_normalized_name");
+    expect(migration).toContain("source.normalized_name = private.wheel_football_normalized_name(p_display_name)");
   });
 
   it("freezes the resolved grade/version/date on every stored pick", () => {
