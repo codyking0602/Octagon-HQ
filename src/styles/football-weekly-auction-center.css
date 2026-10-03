@@ -339,3 +339,18 @@
     white-space: normal;
   }
 }
+
+
+.football-weekly-auction-center__owner-labs {
+  display: grid;
+  gap: 8px;
+}
+
+.football-weekly-auction-center__owner-labs .football-weekly-auction-center__lab {
+  margin: 0;
+}
+
+.football-weekly-auction-center__owner-labs .football-weekly-auction-center__lab:first-child {
+  border-color: rgba(121,200,244,.28);
+  background: linear-gradient(115deg, rgba(29,108,164,.18), rgba(9,20,29,.96) 62%);
+}
