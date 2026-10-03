@@ -31,6 +31,7 @@ const pickSchema = z.object({
   position_label: z.string().min(1),
   position_abbreviation: z.string().min(1),
   headshot_url: z.string().nullable(),
+  grade: z.coerce.number().min(0).max(100).nullable().optional(),
 });
 
 const stateSchema = z.object({
@@ -45,6 +46,11 @@ const stateSchema = z.object({
   recipient: participantSchema,
   creator_roster: z.array(pickSchema),
   recipient_roster: z.array(pickSchema),
+  creator_raw_score: z.coerce.number().min(0).max(100).nullable(),
+  recipient_raw_score: z.coerce.number().min(0).max(100).nullable(),
+  creator_score: z.coerce.number().int().min(0).max(100).nullable(),
+  recipient_score: z.coerce.number().int().min(0).max(100).nullable(),
+  winner_profile_id: z.string().uuid().nullable(),
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
 });
