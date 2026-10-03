@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202612310195_cfb_superteam_elastic_field.sql",
   "utf8",
 );
+const day1FieldFreeze = readFileSync(
+  "supabase/migrations/202612310232_weekly_auction_day1_field_freeze.sql",
+  "utf8",
+);
 const repository = readFileSync(
   "src/features/play/footballWeeklyAuctionRepository.ts",
   "utf8",
@@ -31,12 +35,16 @@ describe("CFB Superteam elastic weekly field", () => {
     expect(migration).toContain("participant.locked_at<v_day_start");
   });
 
-  it("admits late players only while the remaining inventory can complete every roster", () => {
+  it("keeps reserve supply elastic while freezing the competitor field after Day 1", () => {
     expect(migration).toContain("private.football_weekly_superteam_join_capacity");
-    expect(migration).toContain("board.day_index=case when v_subject='cfb-superteam' then 4 else 1 end");
     expect(migration).toContain("coalesce(v_flex_pool,0)/3");
     expect(migration).toContain("award.profile_id is null");
-    expect(migration).toContain("if v_current>=v_capacity then return false");
+    expect(day1FieldFreeze).toContain("board.day_index=1");
+    expect(day1FieldFreeze).toContain("private.football_weekly_superteam_join_capacity");
+    expect(day1FieldFreeze).toContain("if v_current>=v_capacity then return false");
+    expect(day1FieldFreeze).toContain("'day_1_join'");
+    expect(day1FieldFreeze).not.toContain("then 'elastic_join'");
+    expect(day1FieldFreeze).toContain("Elastic CFB supply affects hidden future cards only");
   });
 
   it("widens Superteam slots and claim ranks to twelve end to end", () => {

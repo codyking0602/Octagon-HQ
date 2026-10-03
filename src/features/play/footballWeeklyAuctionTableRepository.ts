@@ -4,8 +4,10 @@ import { getSupabaseClient } from "../../lib/supabase";
 const auctionTableTeamSchema = z.object({
   season_reference: z.string(),
   school: z.string(),
+  team_code: z.string().nullable().optional(),
   season_year: z.coerce.number().int(),
   display_label: z.string(),
+  card_tag: z.string().nullable().optional(),
   price_paid: z.coerce.number().int().nonnegative(),
 });
 
@@ -13,7 +15,7 @@ const auctionTablePlayerSchema = z.object({
   profile_id: z.string().uuid(),
   display_name: z.string(),
   is_current_user: z.boolean(),
-  bankroll: z.coerce.number().int().min(0).max(40),
+  bankroll: z.coerce.number().int().min(0).max(50),
   owned_count: z.coerce.number().int().nonnegative(),
   teams: z.array(auctionTableTeamSchema).default([]),
 });
