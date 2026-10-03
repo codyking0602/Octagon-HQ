@@ -822,13 +822,13 @@ begin
     return;
   end if;
 
-  select count(*), avg(pick.selected_grade::numeric)
+  select count(pick.selected_grade), avg(pick.selected_grade::numeric)
     into v_creator_count, v_creator_raw
   from private.wheel_football_picks pick
   where pick.challenge_id = p_challenge_id
     and pick.profile_id = v_challenge.creator_id;
 
-  select count(*), avg(pick.selected_grade::numeric)
+  select count(pick.selected_grade), avg(pick.selected_grade::numeric)
     into v_recipient_count, v_recipient_raw
   from private.wheel_football_picks pick
   where pick.challenge_id = p_challenge_id
