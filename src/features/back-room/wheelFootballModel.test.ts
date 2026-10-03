@@ -200,6 +200,28 @@ describe("Wheel of Football current-NFL model", () => {
     expect(wheelPriorityJson.teams.SF["Front Seven"]).not.toContain("Matthew Judon");
     expect(wheelPriorityJson.teams.SF.Secondary).toContain("Malik Mustapha");
     expect(wheelPriorityJson.teams.SEA.RB).toEqual(["Jadarian Price", "Zach Charbonnet"]);
+    expect(wheelPriorityJson.teams.ARI.RB).toEqual([
+      "Jeremiyah Love", "Tyler Allgeier", "James Conner",
+    ]);
+    expect(wheelPriorityJson.teams.ARI.RB).not.toContain("Trey Benson");
+    expect(wheelPriorityJson.teams.CIN.Secondary).toEqual([
+      "Dax Hill", "DJ Turner II", "Jordan Battle", "Bryan Cook", "Tacario Davis",
+    ]);
+    expect(wheelPriorityJson.teams.PIT.Secondary).toEqual([
+      "Jalen Ramsey", "Asante Samuel Jr.", "Jamel Dean",
+      "Jaquan Brisker", "DeShon Elliott", "Rayshawn Jenkins",
+    ]);
+    expect(wheelPriorityJson.teams.ATL.Flex).toEqual([
+      "Bijan Robinson", "Drake London", "Kyle Pitts Sr.", "Jahan Dotson",
+    ]);
+    expect(wheelPriorityJson.teams.ATL["Front Seven"]).toEqual([
+      "James Pearce Jr.", "Gervon Dexter Sr.", "Za'Darius Smith",
+      "Jalon Walker", "Divine Deablo", "Maason Smith",
+    ]);
+    expect(wheelPriorityJson.teams.ATL.Secondary).toEqual([
+      "Jessie Bates III", "A.J. Terrell Jr.", "Xavier Watts",
+      "Mike Hughes", "C.J. Henderson", "Billy Bowman Jr.",
+    ]);
   });
 
   it("retains intentionally protected injury/reserve players while ESPN still says they are on the roster", () => {
