@@ -1223,13 +1223,7 @@
 .football-weekly-superteam-table__roster {
   display: grid;
   gap: 5px;
-  max-height: min(43dvh, 360px);
-  overflow-x: hidden;
-  overflow-y: auto;
-  touch-action: pan-y;
   padding: 7px;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
 }
 
 .football-weekly-superteam-table__roster > p {
@@ -1350,9 +1344,6 @@
     padding: 10px 10px calc(96px + env(safe-area-inset-bottom));
   }
 
-  .football-weekly-superteam-table__roster {
-    max-height: min(46dvh, 340px);
-  }
 }
 
 
