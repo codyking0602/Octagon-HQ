@@ -34,6 +34,7 @@ begin
     or to_regprocedure('public.get_my_wheel_football_match(text)') is null
     or to_regprocedure('public.open_wheel_football_challenge(text)') is null
     or to_regprocedure('public.spin_wheel_football(text)') is null
+    or to_regprocedure('public.forfeit_wheel_football(text)') is null
     or to_regprocedure('public.pick_wheel_football(text,text,text,text,text,text,text)') is null then
     raise exception 'Wheel of Football RPC contract is incomplete';
   end if;

@@ -47,6 +47,8 @@ const stateSchema = z.object({
   recipient_roster: z.array(pickSchema),
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
+  forfeited_by_profile_id: z.string().uuid().nullable(),
+  forfeited_at: z.string().nullable(),
 });
 
 export type WheelFootballState = z.infer<typeof stateSchema>;
@@ -75,6 +77,7 @@ export interface WheelFootballRepository {
   load(code: string): Promise<WheelFootballState>;
   open(code: string): Promise<boolean>;
   spin(code: string): Promise<WheelFootballState>;
+  forfeit(code: string): Promise<WheelFootballState>;
   pick(
     code: string,
     input: {
@@ -113,6 +116,9 @@ export function createWheelFootballRepository(
     },
     async spin(code) {
       return stateSchema.parse(await rpc(client, "spin_wheel_football", { p_code: code }));
+    },
+    async forfeit(code) {
+      return stateSchema.parse(await rpc(client, "forfeit_wheel_football", { p_code: code }));
     },
     async pick(code, input) {
       return stateSchema.parse(await rpc(client, "pick_wheel_football", {
