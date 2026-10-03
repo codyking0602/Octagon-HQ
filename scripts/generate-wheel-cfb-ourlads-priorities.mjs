@@ -334,7 +334,11 @@ const linkMap = depthLinks(indexHtml);
 const missingLinks = schools.filter((school) => !findDepthLink(linkMap, school.school));
 if (missingLinks.length) {
   const available = [...linkMap.keys()].sort().join(", ");
-  throw new Error("Missing Ourlads depth links for: " + missingLinks.map((row) => row.school).join(", ") + "\nAvailable slugs: " + available);
+  const hrefSamples = [...indexHtml.matchAll(/href=["']([^"']*depth[^"']*)["']/gi)]
+    .slice(0, 80)
+    .map((match) => match[1])
+    .join("\n");
+  throw new Error("Missing Ourlads depth links for: " + missingLinks.map((row) => row.school).join(", ") + "\nAvailable slugs: " + available + "\nDepth href samples:\n" + hrefSamples);
 }
 
 const teams = {};
