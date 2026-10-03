@@ -21,6 +21,16 @@ const teamSchema = z.object({
   division: z.enum(["East", "North", "South", "West"]),
 });
 
+const gradeFamilySchema = z.enum([
+  "QB",
+  "RB",
+  "WR",
+  "TE",
+  "Front Seven",
+  "Secondary",
+  "Head Coach",
+]);
+
 const pickSchema = z.object({
   turn_number: z.coerce.number().int().min(1).max(14),
   team_code: z.string().min(2).max(3),
@@ -31,6 +41,25 @@ const pickSchema = z.object({
   position_label: z.string().min(1),
   position_abbreviation: z.string().min(1),
   headshot_url: z.string().nullable(),
+  grade_family: gradeFamilySchema.nullable(),
+  grade: z.coerce.number().int().min(0).max(100).nullable(),
+  grade_effective_date: z.string().nullable(),
+  grade_version: z.string().nullable(),
+});
+
+const gradeSummarySchema = z.object({
+  profile_id: z.string().uuid(),
+  grade_total: z.coerce.number().int(),
+  raw_average: z.coerce.number(),
+  score: z.coerce.number().int().min(0).max(100),
+});
+
+const gradingResultSchema = z.object({
+  version: z.string().min(1),
+  creator: gradeSummarySchema,
+  recipient: gradeSummarySchema,
+  winner_profile_id: z.string().uuid().nullable(),
+  tied: z.boolean(),
 });
 
 const stateSchema = z.object({
@@ -45,6 +74,8 @@ const stateSchema = z.object({
   recipient: participantSchema,
   creator_roster: z.array(pickSchema),
   recipient_roster: z.array(pickSchema),
+  grading_runtime_version: z.string().nullable(),
+  grading_result: gradingResultSchema.nullable(),
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
   forfeited_by_profile_id: z.string().uuid().nullable(),
