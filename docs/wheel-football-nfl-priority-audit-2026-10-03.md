@@ -45,6 +45,18 @@ Locked ceilings are QB 2, RB 3, WR 4, Flex 4, Front Seven 6, Secondary 6, Head C
 | TEN | Cam Ward | 2 | 3 | 4 | 6 | 5 | Robert Saleh |
 | WSH | Jayden Daniels | 2 | 3 | 4 | 6 | 6 | Dan Quinn |
 
+## Manual spot-audits
+
+### Dallas Cowboys
+- Official Dallas roster and current Ourlads chart confirm Dak Prescott, CeeDee Lamb, George Pickens, Ryan Flournoy, Javonte Williams, Tyler Goodson, Jake Ferguson, the selected defensive players, and Brian Schottenheimer remain current team property.
+- Priority order was refined away from literal depth-chart row order: CeeDee Lamb precedes George Pickens; the Front Seven uses Quinnen Williams / Rashan Gary / Kenny Clark / DeMarvion Overshown / Donovan Ezeiruaku / Dee Winters to keep a meaningful DL/EDGE/LB mix; the secondary leads with DaRon Bland, Joey Porter Jr., and Caleb Downs.
+- Joe Milton is on the practice squad and cannot displace Dak merely because a provider returns him early.
+
+### Los Angeles Rams
+- Official Rams roster and current Ourlads chart confirm Matthew Stafford, Kyren Williams, Blake Corum, Puka Nacua, Davante Adams, Konata Mumpfield, Colby Parkinson, the selected defensive players, and Sean McVay.
+- Myles Garrett is currently on reserve/injured and Aaron Donald is currently out, but both remain Rams property; Wheel intentionally keeps both eligible under the locked injury policy.
+- Priority order was refined away from literal source-row order: Puka Nacua leads the WR list; Myles Garrett and Aaron Donald lead the Front Seven; Trent McDuffie leads the secondary.
+
 ## Required regression anchors
 
 - Dallas QB: **Dak Prescott**.
