@@ -130,6 +130,8 @@ jobs:
             supabase/tests/pick_monitoring_truthful_decisions.sql \
             supabase/tests/home_football_spotlight_media.sql \
             supabase/tests/who_am_i_authored_two_rounds.sql \
+            supabase/tests/wheel_football_v1.sql \
+            supabase/tests/wheel_football_grading.sql \
             supabase/tests/mlb_playoffs_foundation.sql
           do
             echo "Executing $test_file"
