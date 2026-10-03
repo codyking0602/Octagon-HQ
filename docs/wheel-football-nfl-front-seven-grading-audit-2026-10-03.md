@@ -138,7 +138,7 @@ The remainder was audited in adjacent grade bands and within role. No unresolved
 - **Payton Wilson 84 → 81.**
 - **Osa Odighizuwa 85 → 82.**
 - **Frankie Luvu 86 → 82.**
-- **Aaron Donald 87 → 85.**
+- **Aaron Donald 87 → 85 → 87 after the Madden discrepancy reconciliation.**
 - **Laiatu Latu 89 → 87.**
 - **Tuli Tuipulotu 85 → 83.**
 - **Jermaine Johnson II 84 → 82.**
@@ -181,17 +181,17 @@ Official EA SPORTS Madden NFL 27 **Week 3** ratings were used for the final flag
 
 | Player | HQ | Madden | Δ | Resolution |
 | --- | ---: | ---: | ---: | --- |
-| Jack Gibbens | 80 | 73 | +7 | keep HQ 80 |
+| Jack Gibbens | 78 | 73 | +5 | moved toward Madden |
 | Drue Tranquill | 82 | 89 | -7 | keep HQ 82 |
-| Calijah Kancey | 84 | 77 | +7 | keep HQ 84 |
-| Aaron Donald | 85 | 95 | -10 | RED FLAG reviewed — keep HQ 85 |
+| Calijah Kancey | 82 | 77 | +5 | moved toward Madden |
+| Aaron Donald | 87 | 95 | -8 | moved toward Madden |
 
 ### Madden review conclusions
 
-- **Jack Gibbens — HQ 80 / Madden 73.** Keep HQ 80. His current PFF overall is 66.7 with an 80.9 pass-rush grade, and his multi-year NFL evidence is materially better than a low-70s weak-option grade.
+- **Jack Gibbens — HQ 78 / Madden 73.** Moved toward Madden after the discrepancy audit exposed residual lower-tier compression. His current PFF overall is 66.7 with an 80.9 pass-rush grade, and his multi-year NFL evidence is materially better than a low-70s weak-option grade.
 - **Drue Tranquill — HQ 82 / Madden 89.** Keep HQ 82. His career-best 2025 PFF grade was 76.2 and he is at 69.0 in 2026. Madden's near-elite 89 is not supported by current football evidence.
-- **Calijah Kancey — HQ 84 / Madden 77.** Keep HQ 84. His 2026 PFF grade is 76.4, including an 81.5 run-defense mark and seven pressures. Madden looks low.
-- **Aaron Donald — HQ 85 / Madden 95.** **10-point red flag reviewed and intentionally retained.** Donald returned after two entire seasons retired and currently has a 77.7 PFF grade, three pressures and no sacks. Madden is still grading the historical Aaron Donald far more than the current sample.
+- **Calijah Kancey — HQ 82 / Madden 77.** Moved toward Madden; good current starter, but the prior 84 overstated the present body of work. His 2026 PFF grade is 76.4, including an 81.5 run-defense mark and seven pressures. Madden looks low.
+- **Aaron Donald — HQ 87 / Madden 95.** Moved toward Madden. A 95 remains legacy-heavy, but 85 was too punitive given the established elite baseline and the still-small return sample.
 
 The audit also used a bulk Madden 27 launch-rating export only as a pre-screen for potential discrepancies. Launch ratings never overrode current official Week 3 EA ratings.
 
@@ -232,3 +232,8 @@ Future grade changes must record:
 **Front Seven calibration is complete and locked.**
 
 Next position family begins with **Secondary anchors only**.
+
+
+### Final discrepancy-audit principle
+
+A Madden gap is a trigger to reopen the football grade, not a binary HQ-vs-Madden contest. The final resolution may keep HQ, move toward Madden, or move farther away when the evidence supports it. Final reconciliations: Jack Gibbens 78, Calijah Kancey 82, Aaron Donald 87, Drue Tranquill unchanged at 82.
