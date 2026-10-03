@@ -11,9 +11,12 @@ describe("Wheel of Football v1 migration contract", () => {
     expect(migration).toContain("create table if not exists private.wheel_football_matches");
     expect(migration).toContain("create table if not exists private.wheel_football_picks");
     expect(migration).toContain("turn_count integer not null default 0 check (turn_count between 0 and 14)");
-    expect(migration).toContain("phase text not null default 'spin'");
+    expect(migration).toContain("phase text not null default 'waiting'");
+    expect(migration).toContain("(phase = 'waiting' and current_turn_profile_id is null");
     expect(migration).toContain("current_turn_profile_id");
-    expect(migration).toContain("v_first_turn := case when random() < 0.5");
+    expect(migration).toContain("v_first_turn := case when random() < 0.5 then v_challenge.creator_id else v_challenge.recipient_id end");
+    expect(migration).toContain("set phase = 'spin',");
+    expect(migration).toContain("current_turn_profile_id = v_first_turn");
   });
 
   it("locks the approved v1 rules: current NFL, seven slots, no re-spin or grades", () => {

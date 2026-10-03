@@ -37,7 +37,7 @@ const stateSchema = z.object({
   code: z.string().min(4),
   pool_scope: poolScopeSchema,
   division: z.string().nullable(),
-  phase: z.enum(["spin", "pick", "complete"]),
+  phase: z.enum(["waiting", "spin", "pick", "complete"]),
   turn_count: z.coerce.number().int().min(0).max(14),
   current_turn_profile_id: z.string().uuid().nullable(),
   pending_team: teamSchema.nullable(),

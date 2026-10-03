@@ -49,7 +49,7 @@ create table if not exists private.wheel_football_matches (
   division text,
   current_turn_profile_id uuid references public.profiles(id) on delete restrict,
   turn_count integer not null default 0 check (turn_count between 0 and 14),
-  phase text not null default 'spin' check (phase in ('spin', 'pick', 'complete')),
+  phase text not null default 'waiting' check (phase in ('waiting', 'spin', 'pick', 'complete')),
   pending_team_code text references private.wheel_football_teams(code),
   creator_last_team_code text references private.wheel_football_teams(code),
   recipient_last_team_code text references private.wheel_football_teams(code),
@@ -64,7 +64,8 @@ create table if not exists private.wheel_football_matches (
     or (pool_scope <> 'DIVISION' and division is null)
   ),
   constraint wheel_football_phase_state_valid check (
-    (phase = 'complete' and current_turn_profile_id is null and pending_team_code is null and completed_at is not null)
+    (phase = 'waiting' and current_turn_profile_id is null and pending_team_code is null and completed_at is null)
+    or (phase = 'complete' and current_turn_profile_id is null and pending_team_code is null and completed_at is not null)
     or (phase = 'spin' and current_turn_profile_id is not null and pending_team_code is null and completed_at is null)
     or (phase = 'pick' and current_turn_profile_id is not null and pending_team_code is not null and completed_at is null)
   )
@@ -232,7 +233,6 @@ declare
   v_code text;
   v_attempt integer := 0;
   v_challenge_id uuid;
-  v_first_turn uuid;
   v_created_at timestamptz;
   v_summary text;
 begin
@@ -282,8 +282,6 @@ begin
     else v_scope
   end;
 
-  v_first_turn := case when random() < 0.5 then v_creator_id else p_recipient_id end;
-
   loop
     v_attempt := v_attempt + 1;
     v_code := upper(substr(replace(extensions.gen_random_uuid()::text, '-', ''), 1, 8));
@@ -326,13 +324,11 @@ begin
   insert into private.wheel_football_matches (
     challenge_id,
     pool_scope,
-    division,
-    current_turn_profile_id
+    division
   ) values (
     v_challenge_id,
     v_scope,
-    v_division,
-    v_first_turn
+    v_division
   );
 
   perform private.publish_notification_to_profile(
@@ -360,7 +356,9 @@ as $$
 declare
   v_user_id uuid := auth.uid();
   v_challenge public.play_challenges%rowtype;
+  v_match private.wheel_football_matches%rowtype;
   v_recipient_name text;
+  v_first_turn uuid;
   v_was_open boolean;
 begin
   if v_user_id is null then
@@ -382,30 +380,62 @@ begin
     return false;
   end if;
 
+  select match.*
+    into v_match
+  from private.wheel_football_matches match
+  where match.challenge_id = v_challenge.id
+  for update;
+
+  if not found then
+    raise exception 'Wheel of Football state not found';
+  end if;
+
   v_was_open := v_challenge.opened_at is not null;
 
   if not v_was_open then
+    v_first_turn := case when random() < 0.5 then v_challenge.creator_id else v_challenge.recipient_id end;
+
     update public.play_challenges challenge
     set opened_at = now()
     where challenge.id = v_challenge.id
     returning challenge.* into v_challenge;
+
+    update private.wheel_football_matches match
+    set phase = 'spin',
+        current_turn_profile_id = v_first_turn,
+        updated_at = v_challenge.opened_at
+    where match.challenge_id = v_challenge.id;
 
     select profile.display_name
       into v_recipient_name
     from public.profiles profile
     where profile.id = v_challenge.recipient_id;
 
-    perform private.publish_notification_to_profile(
-      v_challenge.creator_id,
-      'wheel-football:accepted:' || v_challenge.code || ':' || v_challenge.creator_id::text,
-      'play-challenges:accepted',
-      'game_challenge_accepted',
-      'Your challenge was accepted',
-      v_recipient_name || ' accepted your Wheel of Football challenge.',
-      '/football/wheel?match=' || v_challenge.code,
-      'OPEN MATCH',
-      v_challenge.opened_at
-    );
+    if v_first_turn = v_challenge.creator_id then
+      perform private.publish_notification_to_profile(
+        v_challenge.creator_id,
+        'wheel-football:turn:' || v_challenge.code || ':1:' || v_challenge.creator_id::text,
+        'play-challenges:received',
+        'game_challenge_received',
+        'Your turn in Wheel of Football',
+        v_recipient_name || ' accepted. You have the first spin.',
+        '/football/wheel?match=' || v_challenge.code,
+        'TAKE YOUR TURN',
+        v_challenge.opened_at
+      );
+    else
+      perform private.publish_notification_to_profile(
+        v_challenge.creator_id,
+        'wheel-football:accepted:' || v_challenge.code || ':' || v_challenge.creator_id::text,
+        'play-challenges:accepted',
+        'game_challenge_accepted',
+        'Your challenge was accepted',
+        v_recipient_name || ' accepted your Wheel of Football challenge and has the first spin.',
+        '/football/wheel?match=' || v_challenge.code,
+        'OPEN MATCH',
+        v_challenge.opened_at
+      );
+    end if;
   end if;
 
   return true;
@@ -814,7 +844,7 @@ grant execute on function public.spin_wheel_football(text) to authenticated;
 grant execute on function public.pick_wheel_football(text, text, text, text, text, text, text) to authenticated;
 
 comment on function public.create_wheel_football_challenge(uuid, text, text) is
-  'Creates a challenge-only current-NFL Wheel of Football matchup and randomly assigns the first turn.';
+  'Creates a challenge-only current-NFL Wheel of Football matchup. The first turn is assigned only after the recipient accepts.';
 comment on function public.spin_wheel_football(text) is
   'Server-owns the active player team spin and prevents that player from receiving the same team on consecutive personal spins.';
 comment on function public.pick_wheel_football(text, text, text, text, text, text, text) is
