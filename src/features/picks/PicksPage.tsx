@@ -5,6 +5,7 @@ import {
   americanOddsLabel,
   fightCardLabel,
   pickBoutLocked,
+  pickEventDisplayStartsAt,
   pickEventPresentation,
   pickProgress,
   underdogBonusForOdds,
@@ -206,7 +207,7 @@ export default function PicksPage() {
               </div>
 
               <div className="picks-event-hero__facts" aria-label="Event details">
-                <span>{eventDate(activeEvent.startsAt)}</span>
+                <span>{eventDate(pickEventDisplayStartsAt(activeEvent))}</span>
                 <span>{activeEvent.venue} · {activeEvent.location}</span>
                 <span>{numberedUfcEvent ? "MAIN + PRELIMS" : "MAIN CARD ONLY"}</span>
                 <span>{progress.total} FIGHTS</span>
