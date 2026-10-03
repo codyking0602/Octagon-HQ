@@ -5,6 +5,7 @@ import {
   type FootballWeeklyBuildQbTablePlayer,
   type FootballWeeklyBuildQbTableTrait,
 } from "../play/footballWeeklyBuildQbTableRepository";
+import { AuctionTablePlayerScroll } from "./AuctionTablePlayerScroll";
 import { AuctionTableRosterScroll } from "./AuctionTableRosterScroll";
 import { buildQbTeamVisualIdentity } from "./buildQbVisualIdentity";
 
@@ -45,7 +46,10 @@ function PlayerRow({
   onToggle: () => void;
 }) {
   return (
-    <article className={"football-weekly-build-qb-table__player" + (player.is_current_user ? " is-current" : "")}>
+    <AuctionTablePlayerScroll
+      className={"football-weekly-build-qb-table__player" + (player.is_current_user ? " is-current" : "")}
+      expanded={expanded}
+    >
       <button type="button" aria-expanded={expanded} onClick={onToggle}>
         <span>
           <strong>{player.display_name}</strong>
@@ -65,7 +69,7 @@ function PlayerRow({
           )) : <p>No traits won yet.</p>}
         </AuctionTableRosterScroll>
       ) : null}
-    </article>
+    </AuctionTablePlayerScroll>
   );
 }
 

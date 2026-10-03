@@ -6,6 +6,7 @@ import {
   type FootballWeeklySuperteamTablePlayer,
   type FootballWeeklySuperteamTableRosterItem,
 } from "../play/footballWeeklySuperteamTableRepository";
+import { AuctionTablePlayerScroll } from "./AuctionTablePlayerScroll";
 import { AuctionTableRosterScroll } from "./AuctionTableRosterScroll";
 import {
   footballWeeklySuperteamIdentity,
@@ -68,7 +69,10 @@ function PlayerRow({
     (left, right) => ROSTER_ORDER.indexOf(left.roster_slot) - ROSTER_ORDER.indexOf(right.roster_slot),
   );
   return (
-    <article className={"football-weekly-superteam-table__player" + (player.is_current_user ? " is-current" : "")}>
+    <AuctionTablePlayerScroll
+      className={"football-weekly-superteam-table__player" + (player.is_current_user ? " is-current" : "")}
+      expanded={expanded}
+    >
       <button type="button" aria-expanded={expanded} onClick={onToggle}>
         <span>
           <strong>{player.display_name}</strong>
@@ -88,7 +92,7 @@ function PlayerRow({
           )) : <p>No roster spots won yet.</p>}
         </AuctionTableRosterScroll>
       ) : null}
-    </article>
+    </AuctionTablePlayerScroll>
   );
 }
 
