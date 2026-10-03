@@ -1,4 +1,4 @@
--- Correct final Division Series broadcast labels and the featured player-to-watch metadata.
+-- Correct final Division Series broadcast labels.
 -- This follows the transition migration so production reflects the official Oct. 3 MLB schedule.
 
 do $$
@@ -32,20 +32,5 @@ begin
     raise exception 'expected two NLDS schedule rows, updated %', v_updated;
   end if;
 
-  update public.mlb_playoff_seasons
-  set spotlight = jsonb_set(
-      jsonb_set(spotlight, '{player_to_watch}', to_jsonb('Tarik Skubal'::text), true),
-      '{player_context}',
-      to_jsonb('Los Angeles Dodgers · Game 1 starter'::text),
-      true
-    ),
-    updated_at = now()
-  where season = 2026
-    and current_round = 'division_series';
-
-  get diagnostics v_updated = row_count;
-  if v_updated <> 1 then
-    raise exception 'expected one 2026 Division Series season row, updated %', v_updated;
-  end if;
 end;
 $$;
