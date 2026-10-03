@@ -427,10 +427,8 @@ jobs:
             const expectedSha = mainBranch.commit.sha.toLowerCase();
             core.info(`Resolved current ${mainRef} tip: ${expectedSha}`);
             core.setOutput("current_main_sha", expectedSha);
-            const required = [
-              "Deploy Cloudflare Frontend",
-              "Verify Live Frontend Delivery",
-            ];
+            const required = ["Deploy Cloudflare Frontend"];
+            const supplementalProof = "Verify Live Frontend Delivery";
             const runtimePathPatterns = [
               /^\.github\/workflows\/deploy-cloudflare\.yml$/,
               /^\.github\/workflows\/verify-live-frontend-delivery\.yml$/,
@@ -472,6 +470,26 @@ jobs:
                 for (const workflowName of required) {
                   const run = result.selected.get(workflowName);
                   core.info(`${workflowName} passed for verified live frontend ${candidateSha}: ${run.html_url}`);
+                }
+                const { data: proofRuns } = await github.rest.actions.listWorkflowRunsForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  head_sha: candidateSha,
+                  per_page: 100,
+                });
+                const supplemental = proofRuns.workflow_runs.find((run) => (
+                  run.name === supplementalProof
+                  && run.head_sha?.toLowerCase() === candidateSha
+                  && run.status === "completed"
+                  && run.conclusion === "success"
+                ));
+                if (supplemental) {
+                  core.info(`${supplementalProof} also passed for ${candidateSha}: ${supplemental.html_url}`);
+                } else {
+                  core.notice(
+                    `${supplementalProof} has no prior successful run for ${candidateSha}; `
+                    + "this job will prove the exact live shell directly before continuing.",
+                  );
                 }
                 if (candidateSha !== expectedSha) {
                   core.notice(
