@@ -219,4 +219,35 @@ describe("real profile challenges", () => {
       creatorResult: { score: 8 },
     })));
   });
+  it("lets a sender remove an unopened Wheel match from their Challenge Center", async () => {
+    const dismiss = vi.fn(async () => undefined);
+    const wheelChallenge: PlayChallenge = {
+      ...challengeRow(),
+      code: "WHEEL123",
+      gameId: "wheel-football",
+      gameVersion: "football-wheel-v1",
+      gameTitle: "Wheel of Football",
+      summary: "Current NFL Superteam",
+      playUrl: "/football/wheel?match=WHEEL123",
+      openedAt: null,
+      completedAt: null,
+      declinedAt: null,
+    };
+
+    render(
+      <IdentityProvider gateway={identityGateway()}>
+        <ChallengeProvider repository={fakeRepository({
+          load: async () => ({ challenges: [wheelChallenge], profiles: [shane] }),
+          dismiss,
+        })}>
+          <MemoryRouter><ChallengeCenter sport="football" /></MemoryRouter>
+        </ChallengeProvider>
+      </IdentityProvider>,
+    );
+
+    const remove = await screen.findByRole("button", { name: /REMOVE SHANE Wheel of Football/i });
+    fireEvent.click(remove);
+    await waitFor(() => expect(dismiss).toHaveBeenCalledWith("WHEEL123"));
+  });
+
 });
