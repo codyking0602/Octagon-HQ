@@ -156,6 +156,7 @@ export interface WheelFootballCandidate {
   positionAbbreviation: string;
   headshotUrl: string | null;
   eligibleSlots: readonly WheelFootballRosterSlot[];
+  experienceYears: number | null;
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -184,6 +185,14 @@ function candidateHeadshot(item: Record<string, unknown>) {
   return text(asRecord(item.headshot)?.href)
     ?? text(asRecord(item.headshot)?.url)
     ?? null;
+}
+
+function candidateExperienceYears(item: Record<string, unknown>) {
+  const experience = asRecord(item.experience);
+  const rawYears = experience?.years ?? item.experienceYears;
+  if (typeof rawYears === "number" && Number.isFinite(rawYears)) return Math.max(0, Math.floor(rawYears));
+  if (typeof rawYears === "string" && /^\d+$/.test(rawYears.trim())) return Number(rawYears);
+  return null;
 }
 
 export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootballCandidate[] {
@@ -215,6 +224,7 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
         positionAbbreviation: abbreviation,
         headshotUrl: candidateHeadshot(item),
         eligibleSlots,
+        experienceYears: candidateExperienceYears(item),
       });
     }
   }
@@ -242,6 +252,7 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
         positionAbbreviation: "HC",
         headshotUrl: null,
         eligibleSlots: ["Head Coach"],
+        experienceYears: null,
       });
     }
   }
@@ -258,6 +269,79 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
       const rightSlot = WHEEL_FOOTBALL_ROSTER_SLOTS.indexOf(right.eligibleSlots[0]!);
       return leftSlot - rightSlot;
     });
+}
+
+const WHEEL_FOOTBALL_SHORTLIST_BASE: Readonly<Record<WheelFootballRosterSlot, number>> = {
+  QB: 1,
+  RB: 2,
+  WR: 3,
+  Flex: 4,
+  "Front Seven": 5,
+  Secondary: 5,
+  "Head Coach": 1,
+};
+
+const WHEEL_FOOTBALL_SHORTLIST_MAX: Readonly<Record<WheelFootballRosterSlot, number>> = {
+  QB: 2,
+  RB: 3,
+  WR: 4,
+  Flex: 4,
+  "Front Seven": 6,
+  Secondary: 6,
+  "Head Coach": 1,
+};
+
+function shouldUseExtraWheelOption(
+  slot: WheelFootballRosterSlot,
+  base: readonly WheelFootballCandidate[],
+  extra: WheelFootballCandidate | undefined,
+) {
+  if (!extra) return false;
+  if (slot === "QB") {
+    const starter = base[0];
+    return (starter?.experienceYears ?? 99) <= 2 || (extra.experienceYears ?? 99) <= 1;
+  }
+  if (slot === "RB") return (extra.experienceYears ?? 0) >= 3;
+  if (slot === "WR") return (extra.experienceYears ?? 0) >= 2;
+  if (slot === "Front Seven" || slot === "Secondary") return (extra.experienceYears ?? 0) >= 2;
+  return false;
+}
+
+export function wheelFootballShortlist(
+  candidates: readonly WheelFootballCandidate[],
+  slot: WheelFootballRosterSlot,
+) {
+  const eligible = candidates.filter((candidate) => candidate.eligibleSlots.includes(slot));
+
+  if (slot === "Flex") {
+    const selected: WheelFootballCandidate[] = [];
+    const take = (position: string, count: number) => {
+      for (const candidate of eligible) {
+        if (selected.length >= 4 || count <= 0) break;
+        if (candidate.positionAbbreviation !== position || selected.includes(candidate)) continue;
+        selected.push(candidate);
+        count -= 1;
+      }
+    };
+    take("RB", 1);
+    take("WR", 2);
+    take("TE", 1);
+    for (const candidate of eligible) {
+      if (selected.length >= 4) break;
+      if (!selected.includes(candidate)) selected.push(candidate);
+    }
+    return selected;
+  }
+
+  const baseSize = WHEEL_FOOTBALL_SHORTLIST_BASE[slot];
+  const maxSize = WHEEL_FOOTBALL_SHORTLIST_MAX[slot];
+  const base = eligible.slice(0, baseSize);
+  if (maxSize <= baseSize) return base;
+
+  const extra = eligible[baseSize];
+  return shouldUseExtraWheelOption(slot, base, extra)
+    ? eligible.slice(0, maxSize)
+    : base;
 }
 
 export async function loadWheelFootballRoster(
