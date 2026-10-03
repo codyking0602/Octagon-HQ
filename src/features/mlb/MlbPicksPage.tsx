@@ -383,7 +383,7 @@ export default function MlbPicksPage() {
       : locked
         ? "PICK LOCKED"
         : customPickLock
-          ? `PICKS LOCK ${dateTime(series.picks_lock_at).toUpperCase()}`
+          ? `PICKS LOCK ${dateTime(picksLockAt).toUpperCase()}`
           : dateTime(series.starts_at).toUpperCase();
     const statusLabel = completeSeries ? "FINAL" : locked ? "LOCKED" : "OPEN";
 
