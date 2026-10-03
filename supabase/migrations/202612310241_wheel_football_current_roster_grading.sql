@@ -828,13 +828,10 @@ begin
     end if;
   end if;
 
-  -- Rare current-roster additions, or a same-name player who moved after the
-  -- rating snapshot, remain
-  -- playable. The conservative fallback is intentionally server-owned and
-  -- conspicuous in grade_version so it can be audited/replaced.
-  hidden_grade := 70.0;
-  grade_version := 'fallback-unmatched-current-roster';
-  return next;
+  -- The Wheel shortlist is curated and audited. If a selectable name is not
+  -- in the explicit current-roster authority, return no grade and let the
+  -- pick trigger fail closed instead of inventing a fallback.
+  return;
 end;
 $$;
 
@@ -903,29 +900,23 @@ on private.wheel_football_picks
 for each row execute function private.grade_wheel_football_pick();
 
 update private.wheel_football_picks pick
-set hidden_grade = coalesce(
-      (
-        select grade.hidden_grade
-        from private.wheel_football_resolve_grade(
-          pick.team_code,
-          pick.display_name,
-          pick.position_abbreviation
-        ) grade
-        limit 1
-      ),
-      70.0
+set hidden_grade = (
+      select grade.hidden_grade
+      from private.wheel_football_resolve_grade(
+        pick.team_code,
+        pick.display_name,
+        pick.position_abbreviation
+      ) grade
+      limit 1
     ),
-    grade_version = coalesce(
-      (
-        select grade.grade_version
-        from private.wheel_football_resolve_grade(
-          pick.team_code,
-          pick.display_name,
-          pick.position_abbreviation
-        ) grade
-        limit 1
-      ),
-      'fallback-unmatched-current-roster'
+    grade_version = (
+      select grade.grade_version
+      from private.wheel_football_resolve_grade(
+        pick.team_code,
+        pick.display_name,
+        pick.position_abbreviation
+      ) grade
+      limit 1
     )
 where pick.hidden_grade is null
    or pick.grade_version is null;
