@@ -103,14 +103,14 @@ function parseScope(source) {
 
 function depthLinks(indexHtml) {
   const map = new Map();
-  const hrefPattern = /href=["']([^"']*\/ncaa-football-depth-charts\/(?:pf)?depthchart\/([^/"']+)\/(\d+)[^"']*)["']/gi;
+  const hrefPattern = /href=["']depth-chart\.aspx\?s=([^&"']+)(?:&amp;|&)id=(\d+)["']/gi;
   for (const match of indexHtml.matchAll(hrefPattern)) {
-    const href = match[1].replace(/&amp;/g, "&");
-    const slug = match[2].toLowerCase();
-    const id = match[3];
-    const absolute = new URL(href, OURLADS_INDEX_URL);
-    absolute.pathname = absolute.pathname.replace("/depthchart/", "/pfdepthchart/");
-    map.set(slug, { url: absolute.toString(), id });
+    const slug = match[1].toLowerCase();
+    const id = match[2];
+    map.set(slug, {
+      url: "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/" + slug + "/" + id,
+      id,
+    });
   }
   return map;
 }
@@ -334,11 +334,7 @@ const linkMap = depthLinks(indexHtml);
 const missingLinks = schools.filter((school) => !findDepthLink(linkMap, school.school));
 if (missingLinks.length) {
   const available = [...linkMap.keys()].sort().join(", ");
-  const hrefSamples = [...indexHtml.matchAll(/href=["']([^"']*depth[^"']*)["']/gi)]
-    .slice(0, 80)
-    .map((match) => match[1])
-    .join("\n");
-  throw new Error("Missing Ourlads depth links for: " + missingLinks.map((row) => row.school).join(", ") + "\nAvailable slugs: " + available + "\nDepth href samples:\n" + hrefSamples);
+  throw new Error("Missing Ourlads depth links for: " + missingLinks.map((row) => row.school).join(", ") + "\nAvailable slugs: " + available);
 }
 
 const teams = {};
