@@ -2,7 +2,7 @@
 
 **Audit date:** 2026-10-03  
 **Teams manually reviewed:** 32 / 32  
-**Final reconciliation:** 31 teams changed from the pre-split PR state; 113 roster-slot groups changed; Dallas remained unchanged after independent re-audit.  
+**Final reconciliation:** 31 teams changed from the pre-split PR state; 110 roster-slot groups changed; Dallas remained unchanged after independent re-audit.  
 **Primary human depth/structure reference:** Ourlads 2026 NFL depth charts  
 **Runtime membership / ID / headshot authority:** ESPN current NFL roster endpoint  
 **Ambiguity cross-checks:** official team and NFL roster/transaction/coaching sources
@@ -67,14 +67,14 @@ Every team was reviewed for QB, RB, WR, Flex, Front Seven, Secondary, and Head C
 
 - **Dallas:** independent split-audit agreed with the earlier spot-audit. Dak Prescott remains the sole QB priority; CeeDee Lamb precedes George Pickens; the curated defensive groups remain unchanged.
 - **Rams:** independent split-audit agreed with the earlier spot-audit except the secondary. **Kam Curl replaces Josh Wallace**; the rest of the Rams list remains unchanged.
-- **AFC East/North:** Buffalo adds Bradley Chubb, elevates DJ Moore, and keeps Khalil Shakir ahead of Keon Coleman; Miami restores Zach Sieler and reorders its WR/Flex/secondary priorities around Malik Washington and Chris Johnson; New England removes Cory Durden, moves DeMario Douglas ahead of Mack Hollins, and reorders the front seven/secondary around Christian Barmore and Christian Gonzalez; the Jets add Will McDonald IV while keeping Mason Taylor in Flex; Baltimore promotes Zay Flowers/Ja'Kobi Lane and Tavius Robinson; Cincinnati uses Andrei Iosivas and Mike Gesicki; Cleveland adds Dylan Sampson and Mason Graham while retaining Isaiah McGuire; Pittsburgh adds Alex Highsmith and uses the five-player Jalen Ramsey / Jamel Dean / Asante Samuel Jr. / DeShon Elliott / Jaquan Brisker secondary.
+- **AFC East/North:** Buffalo adds Bradley Chubb and elevates DJ Moore; Miami restores Zach Sieler/Jordan Phillips and reorders the skill/secondary priorities; New England adds Christian Elliss and reorders the skill/secondary priorities; the Jets add Will McDonald IV while keeping Mason Taylor in Flex; Baltimore promotes Zay Flowers/Ja'Kobi Lane and Tavius Robinson; Cincinnati uses Andrei Iosivas and Mike Gesicki; Cleveland adds Dylan Sampson and Mason Graham while retaining Isaiah McGuire; Pittsburgh adds Alex Highsmith and uses the five-player Jalen Ramsey / Jamel Dean / Asante Samuel Jr. / DeShon Elliott / Jaquan Brisker secondary.
 - **AFC South/West:** Houston's front seven was rebuilt around established contributors; Indianapolis removes Laquon Treadwell and adds Darius Slayton; Jacksonville adds Travis Hunter to WR/Flex; Tennessee restores Jeffery Simmons/John Franklin-Myers/Keldric Faulk; Denver adds Marvin Mims Jr. and Nik Bonitto; Kansas City elevates Rashee Rice/Chris Jones/L'Jarius Sneed and adds Peter Woods; Las Vegas adds Fernando Mendoza/Jack Bech/Adam Butler; the Chargers restore Khalil Mack/Daiyan Henley and put Ladd McConkey/Derwin James Jr. at the front of their groups.
 - **NFC East/North:** New York restores Kayvon Thibodeaux/Tremaine Edmunds; Philadelphia adds Jalyx Hunt; Washington adds Odafe Oweh/Sonny Styles/Mike Sainristil; Chicago adds Grady Jarrett/Austin Booker/Tyrique Stevenson Sr.; Detroit adds Alim McNeill/Tyleik Williams/Kerby Joseph; Green Bay adds Zaire Franklin and trims the WR pool; Minnesota adds Andrew Van Ginkel.
 - **NFC South/West:** Atlanta elevates James Pearce Jr./Za'Darius Smith and keeps second-year playmaker Billy Bowman Jr. in the secondary priority; Carolina promotes Jalen Coker and uses Darren Waller/Princely Umanmielen; New Orleans restores Alvin Kamara plus Chase Young/Cameron Jordan/Pete Werner; Tampa Bay restores Yaya Diaby and leads the secondary with Antoine Winfield Jr.; Arizona adds Tyler Allgeier/Zaven Collins and leads with Budda Baker; San Francisco replaces Matthew Judon with Osa Odighizuwa and adds Malik Mustapha; Seattle elevates Jadarian Price and Derick Hall.
 
 ## Final integration cross-check
 
-The recovered split-audit outputs were compared line-for-line against the integrated JSON. The final exact-output cross-check found **21 remaining slot mismatches across all 8 AFC East/North teams**; those were corrected to the completed audit blocks. Dallas matched both audits. The Rams independent audit overruled the earlier spot-audit only by replacing Josh Wallace with Kam Curl.
+The recovered split-audit outputs were compared line-for-line against the integrated JSON and reconciled to one canonical 32-team set. Across the full reconciliation, **31 teams / 110 roster-slot groups** changed from the pre-split PR state; Dallas was the only unchanged team. The Rams independent audit overruled the earlier spot-audit only by replacing Josh Wallace with Kam Curl.
 
 ## Required regression anchors
 
