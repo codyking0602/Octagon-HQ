@@ -248,10 +248,10 @@
     {
       "team": "MIN",
       "player": "Kyler Murray",
-      "grade": 82,
+      "grade": 80,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Established dual-threat ability remains above replacement-level starter quality; small recent samples are weak, while injury/availability is kept separate from ability. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      "reason": "Established dual-threat ability remains above replacement-level starter quality; small recent samples are weak, while injury/availability is kept separate from ability. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules. Final discrepancy reconciliation 82→80."
     },
     {
       "team": "IND",
@@ -312,10 +312,10 @@
     {
       "team": "CLE",
       "player": "Deshaun Watson",
-      "grade": 80,
+      "grade": 78,
       "kind": "graded",
       "confidence": "low",
-      "reason": "Four encouraging 2026 games now justify a real move upward, but the weak 2022-24 sample and 2025 absence prevent treating the rebound as fully established high-end play. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      "reason": "Four encouraging 2026 games now justify a real move upward, but the weak 2022-24 sample and 2025 absence prevent treating the rebound as fully established high-end play. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules. Final discrepancy reconciliation 80→78."
     },
     {
       "team": "PIT",
@@ -391,17 +391,18 @@
   "postGradeDistribution": {
     "min": 72,
     "max": 99,
-    "mean": 84.53,
+    "mean": 84.41,
     "median": 84,
     "bands": {
       "95-100": 5,
       "90-94": 1,
       "85-89": 10,
-      "80-84": 11,
-      "75-79": 5,
+      "80-84": 10,
+      "75-79": 6,
       "below-75": 2
     },
-    "note": "Final distribution after player-by-player grading, pairwise audit, range/separation calibration and discrepancy review. Distribution did not mechanically set grades."
+    "note": "Final distribution after all calibration and discrepancy reconciliation; distribution did not mechanically set grades.",
+    "below80": 8
   },
   "runtimeBoundary": "No production/runtime grading behavior is changed by this artifact. Phase 5 will wire server-owned grades, frozen historical selection grades, and hidden reveal behavior separately.",
   "futureVersioning": "Any future grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check.",
@@ -439,7 +440,7 @@
       {
         "player": "Kyler Murray",
         "from": 84,
-        "to": 82
+        "to": 80
       },
       {
         "player": "Daniel Jones",
@@ -469,7 +470,7 @@
       {
         "player": "Deshaun Watson",
         "from": 83,
-        "to": 80
+        "to": 78
       },
       {
         "player": "Aaron Rodgers",
@@ -510,15 +511,15 @@
     "rangeAfter": {
       "min": 72,
       "max": 99,
-      "mean": 84.53,
+      "mean": 84.41,
       "median": 84,
-      "below80": 7,
+      "below80": 8,
       "bands": {
         "95-100": 5,
         "90-94": 1,
         "85-89": 10,
-        "80-84": 11,
-        "75-79": 5,
+        "80-84": 10,
+        "75-79": 6,
         "below-75": 2
       }
     }
