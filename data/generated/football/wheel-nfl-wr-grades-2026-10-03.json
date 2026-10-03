@@ -638,9 +638,9 @@
     {
       "team": "NYJ",
       "player": "Isaiah Williams",
-      "grade": 74,
+      "grade": 72,
       "confidence": "medium",
-      "reason": "Useful slot/return quickness, but limited receiving volume keeps him in a rotational band. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      "reason": "Useful slot/return quickness, but limited receiving volume keeps him in a rotational band. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules. Final discrepancy reconciliation 74→72."
     },
     {
       "team": "PHI",
@@ -833,9 +833,9 @@
     "finalCalibrationStatus": "passed"
   },
   "postGradeDistribution": {
-    "min": 74,
+    "min": 72,
     "max": 99,
-    "mean": 83.44,
+    "mean": 83.42,
     "median": 83,
     "bands": {
       "95-100": 6,
@@ -845,7 +845,8 @@
       "75-79": 27,
       "below-75": 1
     },
-    "note": "Final distribution after player-by-player grading, pairwise audit, range/separation calibration and discrepancy review. Distribution did not mechanically set grades."
+    "note": "Final distribution after all calibration and discrepancy reconciliation; distribution did not mechanically set grades.",
+    "below80": 28
   },
   "runtimeBoundary": "No production/runtime behavior changes. Runtime wiring, historical freezing and hidden reveal remain a later phase.",
   "futureVersioning": "Any future WR grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison.",
@@ -888,7 +889,7 @@
       {
         "player": "Isaiah Williams",
         "from": 77,
-        "to": 74
+        "to": 72
       },
       {
         "player": "Roman Wilson",
@@ -913,9 +914,9 @@
       "Christian Watson stayed 85 despite Madden being lower because PFF ranks him 18th entering Week 4 and he is top-five in receiving yards through three games."
     ],
     "rangeAfter": {
-      "min": 74,
+      "min": 72,
       "max": 99,
-      "mean": 83.44,
+      "mean": 83.42,
       "median": 83,
       "below80": 28,
       "bands": {
