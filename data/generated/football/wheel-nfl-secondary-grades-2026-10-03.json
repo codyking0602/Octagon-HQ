@@ -1252,5 +1252,10 @@
     "note": "Inspected only after player-by-player, pairwise, range and Madden audits. Distribution did not drive individual grades."
   },
   "runtimeBoundary": "No production/runtime grading behavior changes. Runtime wiring, hidden reveals and historical grade freezing remain later work.",
-  "futureVersioning": "Any future Secondary grade change must record previous grade, new grade, effective date, reason, and nearby role-normalized anchor/peer comparison."
+  "futureVersioning": "Any future Secondary grade change must record previous grade, new grade, effective date, reason, and nearby role-normalized anchor/peer comparison.",
+  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "finalCrossPositionValidation": {
+    "status": "passed-no-grade-change",
+    "note": "Revalidated after QB/RB/WR/TE final calibration. Existing range/separation, pairwise and discrepancy audits remained coherent; no additional grade change was warranted."
+  }
 }
