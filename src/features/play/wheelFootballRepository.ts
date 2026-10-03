@@ -52,7 +52,7 @@ const stateSchema = z.object({
   recipient: participantSchema,
   creator_roster: z.array(pickSchema),
   recipient_roster: z.array(pickSchema),
-  result: resultSchema.nullable(),
+  result: resultSchema.nullable().optional().default(null),
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
   forfeited_by_profile_id: z.string().uuid().nullable(),
