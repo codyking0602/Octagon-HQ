@@ -22,23 +22,57 @@ function sql(value: string) {
 }
 
 const specs = [
-  ["QB", qbJson, "player"],
-  ["RB", rbJson, "player"],
-  ["WR", wrJson, "player"],
-  ["TE", teJson, "player"],
-  ["Front Seven", frontSevenJson, "player"],
-  ["Secondary", secondaryJson, "player"],
-  ["Head Coach", headCoachJson, "coach"],
+  {
+    family: "QB",
+    effectiveDate: qbJson.effectiveDate,
+    version: qbJson.version,
+    grades: qbJson.grades.map((row) => ({ team: row.team, name: row.player, grade: row.grade })),
+  },
+  {
+    family: "RB",
+    effectiveDate: rbJson.effectiveDate,
+    version: rbJson.version,
+    grades: rbJson.grades.map((row) => ({ team: row.team, name: row.player, grade: row.grade })),
+  },
+  {
+    family: "WR",
+    effectiveDate: wrJson.effectiveDate,
+    version: wrJson.version,
+    grades: wrJson.grades.map((row) => ({ team: row.team, name: row.player, grade: row.grade })),
+  },
+  {
+    family: "TE",
+    effectiveDate: teJson.effectiveDate,
+    version: teJson.version,
+    grades: teJson.grades.map((row) => ({ team: row.team, name: row.player, grade: row.grade })),
+  },
+  {
+    family: "Front Seven",
+    effectiveDate: frontSevenJson.effectiveDate,
+    version: frontSevenJson.version,
+    grades: frontSevenJson.grades.map((row) => ({ team: row.team, name: row.player, grade: row.grade })),
+  },
+  {
+    family: "Secondary",
+    effectiveDate: secondaryJson.effectiveDate,
+    version: secondaryJson.version,
+    grades: secondaryJson.grades.map((row) => ({ team: row.team, name: row.player, grade: row.grade })),
+  },
+  {
+    family: "Head Coach",
+    effectiveDate: headCoachJson.effectiveDate,
+    version: headCoachJson.version,
+    grades: headCoachJson.grades.map((row) => ({ team: row.team, name: row.coach, grade: row.grade })),
+  },
 ] as const;
 
 describe("Wheel of Football grading runtime migration", () => {
   it("seeds every one of the 626 canonical artifact grades exactly", () => {
     let count = 0;
-    for (const [family, artifact, nameField] of specs) {
-      for (const row of artifact.grades) {
-        const name = row[nameField] as string;
-        const tuple = `(${sql(row.team)}, ${sql(family)}, ${sql(name)}, ${sql(normalize(name))}, ${row.grade}, ${sql(artifact.effectiveDate)}::date, ${sql(artifact.version)},`;
-        expect(migration, `${family} ${row.team} ${name}`).toContain(tuple);
+    for (const spec of specs) {
+      for (const row of spec.grades) {
+        const tuple = `(${sql(row.team)}, ${sql(spec.family)}, ${sql(row.name)}, ${sql(normalize(row.name))}, ${row.grade}, ${sql(spec.effectiveDate)}::date, ${sql(spec.version)},`;
+        expect(migration, `${spec.family} ${row.team} ${row.name}`).toContain(tuple);
         count += 1;
       }
     }
