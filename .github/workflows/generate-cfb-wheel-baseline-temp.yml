@@ -10,7 +10,7 @@ on:
       - "src/features/back-room/footballCfbCurrentSchoolScope.ts"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   generate:
@@ -23,6 +23,14 @@ jobs:
           node-version: 22
       - name: Generate current CFB Wheel baseline
         run: node scripts/generate-wheel-cfb-ourlads-priorities.mjs
+      - name: Commit generated baseline to this branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/generated/football/cfb/wheel-football-current-priorities-2026.json
+          git diff --cached --quiet || git commit -m "Generate 2026 CFB Wheel roster baseline"
+          git push origin HEAD:feat/cfb-wheel-current-roster-baseline
+
       - name: Upload generated baseline
         uses: actions/upload-artifact@v4
         with:
