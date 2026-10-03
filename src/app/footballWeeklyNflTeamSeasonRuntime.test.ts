@@ -209,11 +209,13 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(gate).toContain(">Standings</button>");
     expect(gate).toContain(">Collections</button>");
     expect(gate).toContain(">All Grades</button>");
-    expect(gate).toContain("Select player collection");
+    expect(gate).toContain('aria-label="All final collections"');
+    expect(gate).toContain("collectionGroups.map");
+    expect(gate).not.toContain("Select player collection");
     expect(gate).toContain("Every grade is revealed.");
     expect(gate).toContain("DAY 7 · WILDCARD RESULT");
     expect(styles).toContain("football-weekly-nfl-team-season__final-tabs");
-    expect(styles).toContain("football-weekly-nfl-team-season__player-picker");
+    expect(styles).toContain("football-weekly-nfl-team-season__collection-group");
     expect(styles).toContain("football-weekly-nfl-team-season__all-grades");
     expect(lockedFinal).toContain("final_collections as (");
     expect(lockedFinal).toContain("'final_collections',final_collections.payload");
@@ -221,6 +223,15 @@ describe("Best NFL Team-Seasons Weekly Auction runtime", () => {
     expect(lockedFinal).toContain("football_weekly_nfl_team_season_wildcard_board");
     expect(repository).toContain("final_collections: z.array(nflTeamSeasonFinalProfileCollectionSchema)");
     expect(repository).toContain("day_index: z.coerce.number().int().min(1).max(7)");
+  });
+
+  it("uses Football blue rather than green for NFL Team-Seasons UI chrome", () => {
+    expect(styles).toContain("#7ec7f2");
+    expect(styles).toContain("#8bd0f5");
+    expect(styles).not.toContain("#20b486");
+    expect(styles).not.toContain("#54d2ad");
+    expect(styles).not.toContain("rgba(32, 180, 134,");
+    expect(gate).toContain('const wheelPalette = ["#7ec7f2"');
   });
 
 });
