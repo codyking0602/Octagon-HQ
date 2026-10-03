@@ -84,6 +84,14 @@ describe("Wheel of Football locked grading runtime", () => {
     expect(page).not.toContain("raw_grade");
   });
 
+  it("snapshots already-active picks once without retroactively rewriting completed v1 history", () => {
+    expect(migration).toContain("where match.phase <> 'complete'");
+    expect(migration).toContain("and pick.hidden_grade is null");
+    expect(migration).toContain("hidden_grade_version = v_grade.grade_version");
+    expect(migration).toContain("hidden_grade_effective_date = v_grade.effective_date");
+    expect(migration).not.toContain("where match.phase = 'complete'\n      and pick.hidden_grade is null");
+  });
+
   it("keeps future authority revisions append-only while stored picks stay frozen", () => {
     expect(migration).toContain("primary key (team_code, position_group, name_key, effective_date)");
     expect(migration).toContain("on conflict (team_code, position_group, name_key, effective_date) do update");
