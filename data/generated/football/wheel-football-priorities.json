@@ -2,7 +2,7 @@
   "source": "Manual 32-team NFL Wheel audit using Ourlads 2026 depth/structure + ESPN/official roster verification",
   "sourceUrl": "https://www.ourlads.com/nfldepthcharts/depthcharts.aspx",
   "auditedAt": "2026-10-03",
-  "notes": "Product-owned Wheel priority order, manually reconciled across all 32 NFL teams on 2026-10-03. Ourlads is the primary human-reviewed depth/structure reference; ESPN current roster remains runtime membership/player-ID/headshot authority. Injured/IR/PUP players intentionally stay eligible when still on ESPN's team roster; departed players are omitted at shortlist hydration. Flex is intentionally mixed across meaningful RB/WR/TE options. No runtime Ourlads dependency.",
+  "notes": "Octagon-owned Wheel priority order manually reconciled across all 32 teams on 2026-10-03. Ourlads is a human-reviewed depth/structure reference only; ESPN current roster remains runtime membership/player-ID/headshot authority. Injured/IR/PUP/NFI/suspended players intentionally stay eligible while still current team property; departed players are omitted at shortlist hydration. Raw ESPN roster order never overrides curated order and missing curated names are not backfilled just to hit a quota.",
   "teams": {
     "ARI": {
       "QB": [
@@ -140,8 +140,8 @@
       ],
       "WR": [
         "DJ Moore",
-        "Khalil Shakir",
-        "Keon Coleman"
+        "Keon Coleman",
+        "Khalil Shakir"
       ],
       "TE": [
         "Dalton Kincaid"
@@ -151,21 +151,21 @@
         "Bradley Chubb",
         "Ed Oliver",
         "Terrel Bernard",
-        "Dorian Williams",
-        "T.J. Sanders"
+        "Deone Walker",
+        "Dorian Williams"
       ],
       "Secondary": [
         "Christian Benford",
         "C.J. Gardner-Johnson",
-        "Maxwell Hairston",
         "Cole Bishop",
+        "Maxwell Hairston",
         "Dee Alford"
       ],
       "Flex": [
         "James Cook III",
         "DJ Moore",
-        "Khalil Shakir",
-        "Dalton Kincaid"
+        "Dalton Kincaid",
+        "Keon Coleman"
       ],
       "Head Coach": [
         "Joe Brady"
@@ -811,19 +811,19 @@
         "Greg Dulcich"
       ],
       "Front Seven": [
-        "Jordyn Brooks",
         "Zach Sieler",
         "Chop Robinson",
+        "Jordyn Brooks",
         "Josh Uche",
         "Jacob Rodriguez",
-        "Willie Gay Jr."
+        "Jordan Phillips"
       ],
       "Secondary": [
-        "Chris Johnson",
         "JuJu Brents",
-        "Dante Trader Jr.",
         "Michael Taaffe",
-        "Jason Marshall Jr."
+        "Dante Trader Jr.",
+        "Jason Marshall Jr.",
+        "Chris Johnson"
       ],
       "Flex": [
         "De'Von Achane",
@@ -887,25 +887,26 @@
       "WR": [
         "A.J. Brown",
         "Romeo Doubs",
-        "DeMario Douglas",
-        "Mack Hollins"
+        "Mack Hollins",
+        "DeMario Douglas"
       ],
       "TE": [
         "Hunter Henry"
       ],
       "Front Seven": [
-        "Christian Barmore",
         "Harold Landry III",
+        "Christian Barmore",
         "Milton Williams",
         "Dre'Mont Jones",
-        "Robert Spillane"
+        "Robert Spillane",
+        "Christian Elliss"
       ],
       "Secondary": [
         "Christian Gonzalez",
-        "Carlton Davis III",
         "Kevin Byard III",
-        "Marcus Jones",
-        "Craig Woodson"
+        "Carlton Davis III",
+        "Craig Woodson",
+        "Marcus Jones"
       ],
       "Flex": [
         "Rhamondre Stevenson",
