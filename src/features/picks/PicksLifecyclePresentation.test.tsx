@@ -6,6 +6,7 @@ import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
 import {
+  pickEventDisplayStartsAt,
   pickEventPresentation,
   type PickEvent,
   type PickHistory,
@@ -260,6 +261,31 @@ describe("Picks lifecycle presentation", () => {
       status: "AWAITING RESULTS",
     });
     expect(pickEventPresentation(completeEvent).state).toBe("complete");
+  });
+
+  it("uses the prelim window as the visible start for numbered UFC cards that include prelims", () => {
+    const numberedEvent: PickEvent = {
+      ...upcomingEvent,
+      eventId: "ufc-332-test",
+      name: "UFC 332",
+      startsAt: "2026-10-04T00:00:00.000Z",
+      locksAt: "2026-10-03T22:00:00.000Z",
+      bouts: [{ ...bout, cardSegment: "prelim" }],
+    };
+
+    expect(pickEventDisplayStartsAt(numberedEvent)).toBe(numberedEvent.locksAt);
+    expect(pickEventPresentation(numberedEvent, Date.parse("2026-10-03T22:30:00.000Z"))).toEqual({
+      state: "awaiting_results",
+      eyebrow: "EVENT IN PROGRESS",
+      status: "AWAITING RESULTS",
+    });
+
+    const mainOnlyNumbered = {
+      ...numberedEvent,
+      bouts: [{ ...bout, cardSegment: "main" as const }],
+    };
+    expect(pickEventDisplayStartsAt(mainOnlyNumbered)).toBe(mainOnlyNumbered.startsAt);
+    expect(pickEventDisplayStartsAt(upcomingEvent)).toBe(upcomingEvent.startsAt);
   });
 
   it.each([
