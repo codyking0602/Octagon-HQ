@@ -20,10 +20,16 @@ describe("MLB team visual assets", () => {
   });
 
   it("ships a visual player spotlight with four season stats", () => {
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Pete Crow-Armstrong");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("691718");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.stats).toHaveLength(4);
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toContain("baseball-reference.com/players/c/crowape01.shtml");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toContain("youtu.be/08zDHKWWmrk");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Fernando Tatis Jr.");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.team).toBe("San Diego Padres");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("665487");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.stats).toEqual([
+      { label: "AVG", value: ".289" },
+      { label: "HR", value: "25" },
+      { label: "SB", value: "38" },
+      { label: "OPS", value: ".828" },
+    ]);
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toContain("baseball-reference.com/players/t/tatisfe02.shtml");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toContain("mlb.com/video/");
   });
 });
