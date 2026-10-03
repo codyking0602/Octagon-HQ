@@ -169,9 +169,9 @@
     {
       "team": "CHI",
       "player": "Kyle Monangai",
-      "grade": 85,
+      "grade": 82,
       "confidence": "medium",
-      "reason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier."
+      "reason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "CIN",
@@ -281,9 +281,9 @@
     {
       "team": "IND",
       "player": "Seth McGowan",
-      "grade": 75,
+      "grade": 72,
       "confidence": "low",
-      "reason": "Only six NFL carries with minimal rushing production; special-teams value does not raise the RB ability grade."
+      "reason": "Only six NFL carries with minimal rushing production; special-teams value does not raise the RB ability grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "JAX",
@@ -309,9 +309,9 @@
     {
       "team": "KC",
       "player": "Emmett Johnson",
-      "grade": 79,
+      "grade": 75,
       "confidence": "low",
-      "reason": "Current NFL evidence is still limited; enough all-around ability for a useful rotation grade without projection-based inflation."
+      "reason": "Current NFL evidence is still limited; enough all-around ability for a useful rotation grade without projection-based inflation. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "LAC",
@@ -351,9 +351,9 @@
     {
       "team": "LV",
       "player": "Mike Washington Jr.",
-      "grade": 78,
+      "grade": 76,
       "confidence": "low",
-      "reason": "Explosive 6.8 YPC through 15 NFL carries is encouraging, but the sample is far too small for a starter-level grade."
+      "reason": "Explosive 6.8 YPC through 15 NFL carries is encouraging, but the sample is far too small for a starter-level grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "MIA",
@@ -491,9 +491,9 @@
     {
       "team": "SF",
       "player": "Isaac Guerendo",
-      "grade": 79,
+      "grade": 77,
       "confidence": "medium",
-      "reason": "Excellent 2024 efficiency and athletic ability remain evidence, but almost no 2025/26 offensive workload prevents a starter-level grade."
+      "reason": "Excellent 2024 efficiency and athletic ability remain evidence, but almost no 2025/26 offensive workload prevents a starter-level grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "TB",
@@ -557,23 +557,79 @@
       "Jonathon Brooks remains 76 because the NFL sample is only 18 carries. College evaluation and projection cannot substitute for current NFL evidence."
     ],
     "result": "locked",
-    "contradictionsRemaining": false
+    "contradictionsRemaining": false,
+    "finalCalibrationStatus": "passed"
   },
   "postGradeDistribution": {
-    "min": 74,
+    "min": 72,
     "max": 99,
-    "mean": 82.97,
+    "mean": 82.75,
     "median": 82,
     "bands": {
       "95-100": 4,
       "90-94": 4,
-      "85-89": 9,
-      "80-84": 29,
-      "75-79": 18,
-      "below-75": 1
+      "85-89": 8,
+      "80-84": 30,
+      "75-79": 17,
+      "below-75": 2
     },
-    "note": "Inspected only after grading; no grades were moved to shape the distribution."
+    "note": "Final distribution after player-by-player grading, pairwise audit, range/separation calibration and discrepancy review. Distribution did not mechanically set grades."
   },
   "runtimeBoundary": "No production/runtime behavior changes. Runtime wiring, historical freezing and hidden reveal remain a later phase.",
-  "futureVersioning": "Any future RB grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison."
+  "futureVersioning": "Any future RB grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison.",
+  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "finalCalibrationAudit": {
+    "status": "locked",
+    "principle": "Re-opened prior grades after the full-position project exposed scale compression. Madden/external ratings are discrepancy alarms only; final grades may stay, move toward them, or move away based on football evidence.",
+    "lesson": "RB was already reasonably separated. Final sweep only corrected clear rookie/depth overgrades rather than forcing a wider distribution.",
+    "changes": [
+      {
+        "player": "Kyle Monangai",
+        "from": 85,
+        "to": 82
+      },
+      {
+        "player": "Seth McGowan",
+        "from": 75,
+        "to": 72
+      },
+      {
+        "player": "Emmett Johnson",
+        "from": 79,
+        "to": 75
+      },
+      {
+        "player": "Mike Washington Jr.",
+        "from": 78,
+        "to": 76
+      },
+      {
+        "player": "Isaac Guerendo",
+        "from": 79,
+        "to": 77
+      }
+    ],
+    "evidence": [
+      "Kyle Monangai: 72.3 PFF overall through Week 3 after a 75.2 rushing grade in 2025; 85 was too high.",
+      "Emmett Johnson: 16 carries, 56 rushing yards through Week 3; current NFL sample does not justify 79.",
+      "Seth McGowan: six carries for 14 yards and not enough snaps to qualify; 75 was too generous.",
+      "Mike Washington Jr.: 15 carries for 102 yards in a small sample supports useful traits but not a high-70s lock.",
+      "Bhayshul Tuten stayed 83 because his current 83.8 PFF grade ranks fourth among qualified RBs."
+    ],
+    "rangeAfter": {
+      "min": 72,
+      "max": 99,
+      "mean": 82.75,
+      "median": 82,
+      "below80": 19,
+      "bands": {
+        "95-100": 4,
+        "90-94": 4,
+        "85-89": 8,
+        "80-84": 30,
+        "75-79": 17,
+        "below-75": 2
+      }
+    }
+  }
 }
