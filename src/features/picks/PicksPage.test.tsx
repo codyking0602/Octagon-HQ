@@ -5,7 +5,7 @@ import { IdentityProvider } from "../identity/IdentityProvider";
 import type { IdentityGateway } from "../identity/identityGateway";
 import PicksPage from "./PicksPage";
 import { PicksProvider } from "./PicksProvider";
-import type { PickEvent, PickHistory, ProfileEventPick, UnderdogLock } from "./picksModel";
+import { pickEventPresentation, pickEventStartsAt, type PickEvent, type PickHistory, type ProfileEventPick, type UnderdogLock } from "./picksModel";
 import type { PicksRepository } from "./picksRepository";
 
 vi.mock("../../lib/supabase", () => ({
@@ -162,6 +162,26 @@ function repository(
 }
 
 describe("PicksPage", () => {
+  it("uses the included prelim start for numbered UFC Picks cards", () => {
+    const numberedEvent: PickEvent = {
+      ...event,
+      sport: "mma",
+      name: "UFC 332",
+      startsAt: "2026-10-04T00:00:00.000Z",
+      locksAt: "2026-10-03T22:00:00.000Z",
+      bouts: [{
+        ...event.bouts[0],
+        cardSegment: "prelim",
+      }],
+    };
+
+    expect(pickEventStartsAt(numberedEvent)).toBe("2026-10-03T22:00:00.000Z");
+    expect(pickEventPresentation(
+      numberedEvent,
+      Date.parse("2026-10-03T22:30:00.000Z"),
+    ).state).toBe("awaiting_results");
+  });
+
   it("shows one card-level odds source and saves a selected fighter to the profile", async () => {
     const savePick = vi.fn(async (eventId: string, boutId: string, fighterSlug: string) => ({
       eventId,
