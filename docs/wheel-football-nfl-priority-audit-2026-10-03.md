@@ -74,7 +74,7 @@ Every team was reviewed for QB, RB, WR, Flex, Front Seven, Secondary, and Head C
 
 ## Final integration cross-check
 
-The recovered split-audit outputs were compared line-for-line against the integrated JSON and reconciled to one canonical 32-team set. Across the full reconciliation, **31 teams / 110 roster-slot groups** changed from the pre-split PR state; Dallas was the only unchanged team. The Rams independent audit overruled the earlier spot-audit only by replacing Josh Wallace with Kam Curl.
+The recovered split-audit outputs were compared line-for-line against the integrated JSON and reconciled to one canonical 32-team set. Across the full reconciliation, **31 teams / 113 roster-slot groups** changed from the pre-split PR state; Dallas was the only unchanged team. The Rams independent audit overruled the earlier spot-audit only by replacing Josh Wallace with Kam Curl.
 
 ## Required regression anchors
 
