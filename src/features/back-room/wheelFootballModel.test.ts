@@ -86,6 +86,9 @@ describe("Wheel of Football current-NFL model", () => {
 
   it("audits all 32 teams and locks the Cowboys obvious names", () => {
     expect(Object.keys(wheelPriorityJson.teams)).toHaveLength(32);
+    expect(Object.keys(wheelPriorityJson.teams).sort()).toEqual(
+      wheelFootballTeams.map((team) => team.code).sort(),
+    );
     expect(wheelPriorityJson.teams.DAL.QB).toEqual(["Dak Prescott"]);
     expect(wheelPriorityJson.teams.DAL.WR.slice(0, 2)).toEqual(["CeeDee Lamb", "George Pickens"]);
     for (const [code, team] of Object.entries(wheelPriorityJson.teams)) {
@@ -154,10 +157,49 @@ describe("Wheel of Football current-NFL model", () => {
     expect(wheelPriorityJson.teams.LAR.Secondary).toEqual([
       "Trent McDuffie",
       "Quentin Lake",
+      "Kam Curl",
       "Jaylen Watson",
       "Kamren Kinchens",
-      "Josh Wallace",
     ]);
+  });
+
+  it("locks notable corrections from the final four-chat 32-team audit", () => {
+    expect(wheelPriorityJson.teams.BUF["Front Seven"]).toContain("Bradley Chubb");
+    expect(wheelPriorityJson.teams.MIA["Front Seven"].slice(0, 2)).toEqual([
+      "Zach Sieler", "Chop Robinson",
+    ]);
+    expect(wheelPriorityJson.teams.CLE["Front Seven"]).toEqual([
+      "Jared Verse",
+      "Mason Graham",
+      "Jeremiah Owusu-Koramoah",
+      "Quincy Williams",
+      "Carson Schwesinger",
+      "Maliek Collins",
+    ]);
+    expect(wheelPriorityJson.teams.HOU["Front Seven"]).toEqual([
+      "Will Anderson Jr.",
+      "Danielle Hunter",
+      "Azeez Al-Shaair",
+      "Jadeveon Clowney",
+      "Sheldon Rankins",
+      "Henry To'oTo'o",
+    ]);
+    expect(wheelPriorityJson.teams.IND.WR).toEqual([
+      "Keenan Allen", "Josh Downs", "Alec Pierce", "Darius Slayton",
+    ]);
+    expect(wheelPriorityJson.teams.JAX.WR).toEqual([
+      "Brian Thomas Jr.", "Travis Hunter", "Jakobi Meyers", "Parker Washington",
+    ]);
+    expect(wheelPriorityJson.teams.LAC["Front Seven"].slice(0, 3)).toEqual([
+      "Khalil Mack", "Tuli Tuipulotu", "Daiyan Henley",
+    ]);
+    expect(wheelPriorityJson.teams.DET.Secondary).toEqual([
+      "Brian Branch", "Kerby Joseph", "D.J. Reed", "Roger McCreary", "Ennis Rakestraw Jr.",
+    ]);
+    expect(wheelPriorityJson.teams.SF["Front Seven"]).toContain("Osa Odighizuwa");
+    expect(wheelPriorityJson.teams.SF["Front Seven"]).not.toContain("Matthew Judon");
+    expect(wheelPriorityJson.teams.SF.Secondary).toContain("Malik Mustapha");
+    expect(wheelPriorityJson.teams.SEA.RB).toEqual(["Jadarian Price", "Zach Charbonnet"]);
   });
 
   it("retains intentionally protected injury/reserve players while ESPN still says they are on the roster", () => {
