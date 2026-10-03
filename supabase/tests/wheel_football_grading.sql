@@ -36,22 +36,22 @@ begin
     raise exception 'Wheel NFL grades leaked direct table access';
   end if;
 
-  v_snapshot := private.wheel_football_grade_snapshot_json('BUF', 'Josh Allen', 'QB', 'QB');
+  v_snapshot := private.wheel_football_grade_snapshot_json('BUF', 'Josh Allen', 'QB', 'QB', now());
   if (v_snapshot ->> 'grade')::integer <> 99 or v_snapshot ->> 'family' <> 'QB' then
     raise exception 'Josh Allen authoritative grade did not resolve';
   end if;
 
-  v_snapshot := private.wheel_football_grade_snapshot_json('DAL', 'CeeDee Lamb', 'WR', 'Flex');
+  v_snapshot := private.wheel_football_grade_snapshot_json('DAL', 'CeeDee Lamb', 'WR', 'Flex', now());
   if v_snapshot is null or v_snapshot ->> 'family' <> 'WR' then
     raise exception 'Flex did not inherit the WR grade family';
   end if;
 
-  v_snapshot := private.wheel_football_grade_snapshot_json('DAL', 'Dak Prescott', 'WR', 'WR');
+  v_snapshot := private.wheel_football_grade_snapshot_json('DAL', 'Dak Prescott', 'WR', 'WR', now());
   if v_snapshot is not null then
     raise exception 'wrong-position grade collision resolved unexpectedly';
   end if;
 
-  v_snapshot := private.wheel_football_grade_snapshot_json('NYG', 'Jevon Holland', 'S', 'Secondary');
+  v_snapshot := private.wheel_football_grade_snapshot_json('NYG', 'Jevon Holland', 'S', 'Secondary', now());
   if v_snapshot is null or v_snapshot ->> 'family' <> 'Secondary' then
     raise exception 'accent-normalized same-player identity did not resolve';
   end if;
