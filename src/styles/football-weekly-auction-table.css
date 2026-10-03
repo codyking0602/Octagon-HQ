@@ -3,7 +3,7 @@
   z-index: 5000;
   inset: 0;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
   padding: 18px 14px calc(18px + env(safe-area-inset-bottom));
   background: rgba(0, 5, 9, .78);
@@ -14,6 +14,7 @@
   display: flex;
   flex-direction: column;
   width: min(100%, 620px);
+  height: min(calc(100dvh - 108px - env(safe-area-inset-bottom)), 680px);
   max-height: min(calc(100dvh - 108px - env(safe-area-inset-bottom)), 680px);
   overflow: hidden;
   border: 1px solid rgba(126,199,242,.24);
@@ -68,9 +69,11 @@
 
 .football-weekly-auction-table__body {
   display: grid;
+  flex: 1 1 auto;
   gap: 8px;
   min-height: 0;
   overflow-y: auto;
+  touch-action: pan-y;
   padding: 10px 12px max(16px, env(safe-area-inset-bottom));
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -255,6 +258,7 @@
   }
 
   .football-weekly-auction-table__sheet {
+    height: calc(100dvh - 92px - var(--safe-bottom));
     max-height: calc(100dvh - 92px - var(--safe-bottom));
   }
 

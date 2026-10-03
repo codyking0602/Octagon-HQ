@@ -155,16 +155,16 @@ const BANKS: Record<Exclude<MillionaireLeague, "mlb">, readonly (readonly DailyQ
         "statSheet": "The winner blocked a field goal on the final play."
       },
       {
-        "type": "chronology",
-        "prompt": "Which of these programs won a national championship most recently?",
+        "type": "coaching-history",
+        "prompt": "Which program did Urban Meyer coach immediately before he became Florida's head coach?",
         "choices": [
-          "LSU 2007",
-          "Auburn 2010",
-          "Florida State 2013",
-          "Clemson 2016"
+          "Utah",
+          "Bowling Green",
+          "Notre Dame",
+          "Cincinnati"
         ],
-        "answer": "Clemson 2016",
-        "statSheet": "The answer's title came on a last-second touchdown pass from Deshaun Watson."
+        "answer": "Utah",
+        "statSheet": "Meyer led the Utes to an undefeated 2004 season before taking the Florida job."
       },
       {
         "type": "team-history",
@@ -939,16 +939,16 @@ const BANKS: Record<Exclude<MillionaireLeague, "mlb">, readonly (readonly DailyQ
         "statSheet": "The Volunteers defeated Florida State in the Fiesta Bowl."
       },
       {
-        "type": "chronology",
-        "prompt": "Which of these national championship seasons happened earliest?",
+        "type": "championship-history",
+        "prompt": "Which team did Ohio State beat in the Fiesta Bowl to win the 2002 season's national championship?",
         "choices": [
-          "Miami 2001",
-          "Ohio State 2002",
-          "LSU 2003",
-          "USC 2004"
+          "Miami",
+          "USC",
+          "Oklahoma",
+          "Florida State"
         ],
-        "answer": "Miami 2001",
-        "statSheet": "The answer's roster is remembered as one of the most talented teams in college football history."
+        "answer": "Miami",
+        "statSheet": "The Buckeyes won the title game in double overtime."
       },
       {
         "type": "awards-history",

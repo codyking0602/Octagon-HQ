@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { MillionaireRuntimeQuestion } from "../games/millionaireAuthority";
+import { millionaireDailyRun } from "./millionaireDailyQuestionBank";
 import {
   advanceMillionaireDailyRuntime,
   buildMillionaireDailySetup,
@@ -107,6 +108,34 @@ describe("Millionaire official Daily runtime", () => {
       "2026-10-11",
       "play-rotation-v18-average-fan-oct1",
     )).not.toThrow();
+  });
+
+  it("keeps chronology questions from printing the sortable year into every answer choice", () => {
+    for (let runIndex = 0; runIndex < 10; runIndex += 1) {
+      for (const question of millionaireDailyRun("cfb", runIndex)) {
+        if (!/most recently|earliest|latest/i.test(question.prompt)) continue;
+        const everyChoicePrintsAYear = question.choices.every((choice) => /\b(?:19|20)\d{2}\b/.test(choice.text));
+        expect(everyChoicePrintsAYear, question.prompt).toBe(false);
+      }
+    }
+  });
+
+  it("uses a real football-knowledge question for the October 3 Q4 slot", () => {
+    const publication = buildMillionaireDailySetup(
+      "football",
+      "2026-10-03",
+      "football-daily-v18-average-fan-oct1",
+    );
+    const run = publication.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+    expect(run[3]?.prompt).toBe(
+      "Which program did Urban Meyer coach immediately before he became Florida's head coach?",
+    );
+    expect(run[3]?.choices.map((choice) => choice.text)).toEqual([
+      "Utah",
+      "Bowling Green",
+      "Notre Dame",
+      "Cincinnati",
+    ]);
   });
 
   it("publishes two answers in each A/B/C/D slot", () => {
