@@ -24,6 +24,7 @@ describe("Play landing presentation", () => {
       "hit-the-number",
     ]);
     expect(PLAY_LANDING_FOOTBALL_GAME_ORDER).toEqual([
+      "wheel-football",
       "find-leader",
       "wavelength",
       "who-am-i",
@@ -78,6 +79,12 @@ describe("Play landing presentation", () => {
     expect(screen.queryByRole("button", { name: /keep 4, cut 4/i })).not.toBeInTheDocument();
     expect(screen.queryByText("TEMP CASUAL")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
+
+    const wheel = screen.getByRole("button", { name: /wheel of football/i });
+    expect(wheel).toBeInTheDocument();
+    expect(within(wheel).getByText("CHALLENGE")).toBeInTheDocument();
+    fireEvent.click(wheel);
+    expect(navigate).toHaveBeenCalledWith("/football/wheel");
 
     const draftRoom = screen.getByRole("button", { name: /draft room/i });
     expect(draftRoom).toBeInTheDocument();

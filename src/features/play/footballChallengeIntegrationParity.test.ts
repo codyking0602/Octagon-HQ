@@ -49,6 +49,7 @@ describe("Football standalone challenge integration parity", () => {
     const challengeGames = games.filter((game) => game.lineup.challengeEligible);
     expect(challengeGames.map((game) => game.id)).toEqual([
       "draft-room",
+      "wheel-football",
       ...footballChallengeGames.map((game) => game.id),
     ]);
 
@@ -61,7 +62,16 @@ describe("Football standalone challenge integration parity", () => {
       reminderEligible: false,
     });
 
-    for (const game of challengeGames.filter((candidate) => !["draft-room", "who-am-i"].includes(candidate.id))) {
+    const wheel = playGameDefinition("wheel-football", "football");
+    expect(wheel.lineup).toMatchObject({
+      supportedTypes: ["curated"],
+      historyRecording: "challenge-completion",
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+    });
+
+    for (const game of challengeGames.filter((candidate) => !["draft-room", "wheel-football", "who-am-i"].includes(candidate.id))) {
       expect(game.lineup.supportedTypes).toContain("curated");
       expect(game.lineup.historyRecording).toBe("casual-and-challenge");
       expect(game.lineup.dailyEligible).toBe(false);
@@ -88,6 +98,11 @@ describe("Football standalone challenge integration parity", () => {
       const expectedParam = game.id === "find-leader" ? "challenge=FB1234" : "match=FB1234";
       expect(routed).toBe(`${game.route}?${expectedParam}`);
     }
+  });
+
+  it("routes Wheel of Football into its turn-based match URL", () => {
+    expect(challengePlayRoute(challenge("wheel-football", "/football/wheel")))
+      .toBe("/football/wheel?match=FB1234");
   });
 
   it("preserves the sealed-bid Draft Room auction URL through Challenge Center routing", () => {
