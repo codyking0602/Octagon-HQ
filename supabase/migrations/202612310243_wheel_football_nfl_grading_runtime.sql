@@ -757,6 +757,46 @@ as $$
     and grade.name_key = private.wheel_football_grade_name_key(p_display_name);
 $$;
 
+-- Adopt only matches that are still active at deployment. Existing picks are frozen
+-- against this locked grade version once; already-completed v1 games remain legacy.
+update private.wheel_football_picks pick
+set grade_family = grade.grade_family,
+    selection_grade = grade.grade,
+    grade_effective_date = grade.effective_date,
+    grade_version = grade.grade_version,
+    grade_source_artifact = grade.source_artifact
+from private.wheel_football_matches match,
+     private.wheel_football_nfl_grades grade
+where match.challenge_id = pick.challenge_id
+  and match.completed_at is null
+  and match.phase <> 'complete'
+  and pick.selection_grade is null
+  and grade.team_code = pick.team_code
+  and grade.grade_family = private.wheel_football_grade_family(pick.position_abbreviation, pick.roster_slot)
+  and grade.name_key = private.wheel_football_grade_name_key(pick.display_name);
+
+do $
+begin
+  if exists (
+    select 1
+    from private.wheel_football_picks pick
+    join private.wheel_football_matches match on match.challenge_id = pick.challenge_id
+    where match.completed_at is null
+      and match.phase <> 'complete'
+      and pick.selection_grade is null
+  ) then
+    raise exception 'Cannot activate NFL Wheel grading: an active historical pick does not resolve to the locked grade authority';
+  end if;
+end;
+$;
+
+update private.wheel_football_matches match
+set grading_runtime_version = 'nfl-wheel-grade-runtime-v1',
+    updated_at = now()
+where match.completed_at is null
+  and match.phase <> 'complete'
+  and match.grading_runtime_version is null;
+
 create or replace function private.wheel_football_presentation_score(
   p_grade_total integer,
   p_pick_count integer default 7
