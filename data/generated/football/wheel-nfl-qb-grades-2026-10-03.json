@@ -144,18 +144,18 @@
     {
       "team": "NE",
       "player": "Drake Maye",
-      "grade": 90,
+      "grade": 88,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "2025 was legitimately elite and MVP-caliber; the disastrous three-game 2026 opening is meaningful enough to lower him, but not enough to erase the established level."
+      "reason": "2025 was MVP-caliber, but a 1:6 TD/INT start through three 2026 games is too severe to leave him in the 90 tier. The established ceiling keeps him above the good-starter band."
     },
     {
       "team": "PHI",
       "player": "Jalen Hurts",
-      "grade": 90,
+      "grade": 87,
       "kind": "graded",
       "confidence": "high",
-      "reason": "Efficient 2024-25 passing plus major designed/rushing value; early-2026 indecision and uneven play keep him below the elite anchors."
+      "reason": "Strong 2024-25 efficiency and major rushing value remain real, but his current passing level does not support the prior 90 placement."
     },
     {
       "team": "SF",
@@ -200,10 +200,10 @@
     {
       "team": "GB",
       "player": "Jordan Love",
-      "grade": 87,
+      "grade": 85,
       "kind": "graded",
       "confidence": "high",
-      "reason": "Three strong established starter seasons through 2025 outweigh a rough three-game 2026 opening, but the current inconsistency caps him here."
+      "reason": "Three solid starter seasons through 2025 matter, but a 52.4% completion rate and 83.5 passer rating through three 2026 games pull him back to the solid-starter tier."
     },
     {
       "team": "TB",
@@ -216,26 +216,26 @@
     {
       "team": "HOU",
       "player": "C.J. Stroud",
-      "grade": 86,
+      "grade": 84,
       "kind": "graded",
       "confidence": "high",
-      "reason": "Still a good current starter, but 2024-26 performance has not sustained his rookie-year peak; safe play and middling recent efficiency cap the grade."
+      "reason": "The rookie peak has not been sustained: 2024-25 were ordinary starter seasons and the 2026 opening has been conservative and low-efficiency. Grade the current body, not the 2023 reputation."
     },
     {
       "team": "SEA",
       "player": "Sam Darnold",
-      "grade": 85,
+      "grade": 88,
       "kind": "anchor",
       "confidence": "high",
-      "reason": "Two straight credible starting seasons with strong efficiency; turnover volatility keeps him at the solid/above-average anchor rather than the high-end group."
+      "reason": "Back-to-back strong full seasons in 2024 and 2025 plus another efficient 2026 start establish more than a temporary hot streak. Turnover volatility keeps him below the 89-92 group."
     },
     {
       "team": "NYJ",
       "player": "Geno Smith",
-      "grade": 84,
+      "grade": 83,
       "kind": "graded",
       "confidence": "high",
-      "reason": "2025 was turnover-heavy, while his 2026 opening has been sharp; the combined current body supports a solid starter just below Darnold."
+      "reason": "His sharp three-game 2026 start is real, but 2025 was turnover-heavy and inefficient. Three clean games are not enough to restore him to the above-average tier."
     },
     {
       "team": "CHI",
@@ -312,10 +312,10 @@
     {
       "team": "CLE",
       "player": "Deshaun Watson",
-      "grade": 81,
+      "grade": 83,
       "kind": "graded",
       "confidence": "low",
-      "reason": "Four-game 2026 rebound is enough for a small current upgrade, but the poor 2022-24 NFL sample and 2025 absence block a larger recency-driven move."
+      "reason": "Four encouraging 2026 games now justify a real move upward, but the weak 2022-24 sample and 2025 absence prevent treating the rebound as fully established high-end play."
     },
     {
       "team": "PIT",
@@ -369,19 +369,20 @@
   "pairwiseAudit": {
     "orderedNeighborhoods": [
       "Josh Allen 99 > Patrick Mahomes 97 > Lamar Jackson 96 > Matthew Stafford 95 = Joe Burrow 95",
-      "Dak Prescott 92 > Drake Maye 90 = Jalen Hurts 90 > Brock Purdy 89 = Jared Goff 89 > Justin Herbert 88",
-      "Justin Herbert 88 > Trevor Lawrence 87 = Jayden Daniels 87 = Jordan Love 87 > Baker Mayfield 86 = C.J. Stroud 86 > Sam Darnold 85",
-      "Sam Darnold 85 > Geno Smith 84 = Caleb Williams 84 = Kyler Murray 84 > Daniel Jones 83 = Kirk Cousins 83 = Jaxson Dart 83",
-      "Jacoby Brissett 82 = Tyler Shough 82 = Bryce Young 82 > Bo Nix 81 = Deshaun Watson 81 > Aaron Rodgers 80 = Michael Penix Jr. 80",
+      "Dak Prescott 92 > Brock Purdy 89 = Jared Goff 89 > Drake Maye 88 = Sam Darnold 88 = Justin Herbert 88",
+      "Justin Herbert 88 = Drake Maye 88 = Sam Darnold 88 > Trevor Lawrence 87 = Jayden Daniels 87 = Jalen Hurts 87 > Baker Mayfield 86 > Jordan Love 85",
+      "Jordan Love 85 > C.J. Stroud 84 = Caleb Williams 84 = Kyler Murray 84 > Daniel Jones 83 = Kirk Cousins 83 = Jaxson Dart 83 = Geno Smith 83 = Deshaun Watson 83",
+      "Jacoby Brissett 82 = Tyler Shough 82 = Bryce Young 82 > Bo Nix 81 > Aaron Rodgers 80 = Michael Penix Jr. 80",
       "Aaron Rodgers 80 = Michael Penix Jr. 80 > Malik Willis 78 > Cam Ward 77 > Fernando Mendoza 75 > Jameis Winston 74"
     ],
     "resolvedPressurePoints": [
       "Purdy and Herbert remain at the user-approved corrected anchor values (89 and 88); neither receives a trait/reputation or three-game-hot-streak premium.",
-      "Maye stays above Purdy/Goff because the 2025 MVP-caliber season remains the strongest established evidence, but falls well below the elite anchors because the 2026 collapse is too severe to ignore.",
-      "Hurts is tied with Maye at 90: his rushing value and 2024-25 efficiency remain high-end, while current passing indecision prevents a 92+ placement.",
-      "Trevor Lawrence, Jayden Daniels and Jordan Love tie at 87 for different reasons; the audit found no defensible full-point separation in current overall quarterback ability.",
-      "Darnold remains the approved 85 anchor despite strong efficiency because turnover volatility is persistent and the grade is ability, not team record.",
-      "Mendoza receives a provisional 75 rather than a projection-based rookie premium; first meaningful regular-season snaps should trigger a targeted review."
+      "Maye moves from 90 to 88: his 2025 MVP-caliber season remains powerful evidence, but a 1:6 TD/INT start is too severe for the 90 tier.",
+      "Hurts moves from 90 to 87. His rushing value and 2024-25 efficiency remain good-starter evidence, but current passing performance does not support a high-end grade.",
+      "Darnold moves from 85 to 88 because two consecutive strong full seasons plus another efficient start are now an established current level, not a one-year fluke.",
+      "Love moves from 87 to 85; Stroud from 86 to 84; Geno from 84 to 83. Each correction reduces reputation/short-hot-streak carryover and better matches the established current body.",
+      "Watson moves from 81 to 83. Four improved 2026 games justify recognition, but not enough to erase the weak 2022-24 evidence.",
+      "Mendoza remains provisional at 75; first meaningful regular-season snaps should trigger a targeted review."
     ],
     "result": "locked",
     "contradictionsRemaining": false
@@ -389,13 +390,13 @@
   "postGradeDistribution": {
     "min": 74,
     "max": 99,
-    "mean": 85.62,
-    "median": 84.5,
+    "mean": 85.47,
+    "median": 84,
     "bands": {
       "95-100": 5,
-      "90-94": 3,
-      "85-89": 9,
-      "80-84": 13,
+      "90-94": 1,
+      "85-89": 10,
+      "80-84": 14,
       "75-79": 3,
       "below-75": 1
     },
