@@ -251,9 +251,10 @@ function starterThenDepth(rows, targetCount, maxCount, reconcile) {
   return selected;
 }
 
-function requireCount(school, slot, values, min, max) {
+function requireCount(school, slot, values, min, max, details = null) {
   if (values.length < min || values.length > max) {
-    throw new Error(school + " " + slot + ": expected " + min + "-" + max + ", got " + values.length + ": " + values.join(", "));
+    const detailText = details ? "\n" + JSON.stringify(details, null, 2) : "";
+    throw new Error(school + " " + slot + ": expected " + min + "-" + max + ", got " + values.length + ": " + values.join(", ") + detailText);
   }
 }
 
@@ -284,12 +285,12 @@ function buildPriority(school, rows, roster) {
     if (!flex.includes(name)) flex.push(name);
   }
 
-  requireCount(school, "QB", QB, 1, 1);
-  requireCount(school, "RB", RB, 2, 3);
-  requireCount(school, "WR", WR, 3, 4);
-  requireCount(school, "Flex", flex, 4, 4);
-  requireCount(school, "Front Seven", frontSeven, 5, 6);
-  requireCount(school, "Secondary", secondary, 5, 6);
+  requireCount(school, "QB", QB, 1, 1, { sourceRows: qbRows, espn: roster.players.filter((player) => player.position === "QB") });
+  requireCount(school, "RB", RB, 2, 3, { sourceRows: rbRows, espn: roster.players.filter((player) => ["RB", "HB", "FB"].includes(player.position)) });
+  requireCount(school, "WR", WR, 3, 4, { sourceRows: wrRows, espn: roster.players.filter((player) => player.position === "WR") });
+  requireCount(school, "Flex", flex, 4, 4, { rbRows, wrRows, teRows });
+  requireCount(school, "Front Seven", frontSeven, 5, 6, { sourceRows: frontRows, espn: roster.players.filter((player) => FRONT_POSITIONS.has(player.position)) });
+  requireCount(school, "Secondary", secondary, 5, 6, { sourceRows: secondaryRows, espn: roster.players.filter((player) => SECONDARY_POSITIONS.has(player.position)) });
   if (!roster.coach) throw new Error(school + ": ESPN roster did not return a head coach");
 
   return {
