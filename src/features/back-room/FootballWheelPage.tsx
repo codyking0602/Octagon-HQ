@@ -98,6 +98,7 @@ function RosterCell({
       <div>
         <strong>{pick?.display_name ?? "OPEN"}</strong>
         <span>{pick ? `${pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
+        {pick?.hidden_grade != null ? <em>GRADE {pick.hidden_grade}</em> : null}
       </div>
     </div>
   );
@@ -131,6 +132,36 @@ function HeadToHeadRoster({
             <RosterCell pick={pickForSlot(state.recipient_roster, slot)} align="right" />
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function FinalScoreboard({ state }: { state: WheelFootballState }) {
+  if (!state.result) return null;
+
+  const winner = state.result.winner_profile_id === state.creator.id
+    ? state.creator
+    : state.result.winner_profile_id === state.recipient.id
+      ? state.recipient
+      : null;
+
+  return (
+    <section className="football-wheel-final-score surface-card" aria-label="Wheel of Football final score">
+      <div className="football-wheel-final-score__side">
+        <small>{state.creator.display_name}</small>
+        <strong>{state.result.creator_score}</strong>
+        <span>AVG {state.result.creator_raw_grade.toFixed(1)}</span>
+      </div>
+      <div className="football-wheel-final-score__result">
+        <small>FINAL</small>
+        <strong>{state.result.is_tie ? "TIE" : "VS"}</strong>
+        <span>{state.result.is_tie ? "EVEN SUPERTEAMS" : `${winner?.display_name ?? "WINNER"} WINS`}</span>
+      </div>
+      <div className="football-wheel-final-score__side is-right">
+        <small>{state.recipient.display_name}</small>
+        <strong>{state.result.recipient_score}</strong>
+        <span>AVG {state.result.recipient_raw_grade.toFixed(1)}</span>
       </div>
     </section>
   );
@@ -431,6 +462,7 @@ function SetupScreen() {
           <span><b>2</b> Spin a team, then choose one current player or coach for an open Superteam slot.</span>
           <span><b>3</b> Turns alternate until both QB · RB · WR · Flex · Front Seven · Secondary · Head Coach are filled.</span>
           <span><b>4</b> No re-spins. Teams can return later, but you will not get the same team on back-to-back personal spins.</span>
+          <span><b>5</b> Player grades stay hidden until both Superteams are complete. Every roster slot counts equally.</span>
         </div>
       </section>
 
@@ -641,10 +673,11 @@ function MatchScreen({ code }: { code: string }) {
           <h1>{state.creator.display_name} vs {state.recipient.display_name}</h1>
           <span>{state.pool_scope === "DIVISION" ? state.division : state.pool_scope === "NFL" ? "FULL NFL" : state.pool_scope} · CURRENT NFL</span>
         </section>
+        <FinalScoreboard state={state} />
         <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
         <section className="football-wheel-final surface-card">
           <strong>Both Superteams are locked.</strong>
-          <p>No grades or hidden score in v1 — this is the head-to-head team you each built from your seven spins.</p>
+          <p>Hidden current-ability grades are now revealed. All seven roster slots count equally toward the final result.</p>
           <div>
             <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
             <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
