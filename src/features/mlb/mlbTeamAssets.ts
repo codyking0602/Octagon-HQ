@@ -79,18 +79,18 @@ export function mlbTeamColor(
 }
 
 export const MLB_OWNER_PLAYER_SPOTLIGHT = {
-  name: "Pete Crow-Armstrong",
-  team: "Chicago Cubs",
-  position: "CF",
-  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/691718/headshot/67/current",
-  teamColor: "#0E3386",
+  name: "Fernando Tatis Jr.",
+  team: "San Diego Padres",
+  position: "RF",
+  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/665487/headshot/67/current",
+  teamColor: "#2F241D",
   stats: [
-    { label: "HR", value: "45" },
-    { label: "SB", value: "41" },
-    { label: "RBI", value: "107" },
-    { label: "OPS", value: ".942" },
+    { label: "AVG", value: ".284" },
+    { label: "HR", value: "20" },
+    { label: "SB", value: "32" },
+    { label: "OPS", value: ".800" },
   ],
-  meta: "2026 REGULAR SEASON · 40/40 CLUB",
-  profileUrl: "https://www.baseball-reference.com/players/c/crowape01.shtml",
-  highlightUrl: "https://youtu.be/08zDHKWWmrk",
+  meta: "2026 REGULAR SEASON · WILD CARD GAME 1 LEADOFF HR",
+  profileUrl: "https://www.baseball-reference.com/players/t/tatisfe02.shtml",
+  highlightUrl: "https://www.mlb.com/video/matthew-boyd-in-play-run-s-to-fernando-tatis-jr-x8349",
 } as const;
