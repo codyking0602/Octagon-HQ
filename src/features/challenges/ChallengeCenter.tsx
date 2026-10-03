@@ -36,9 +36,30 @@ function isSealedBidChallenge(challenge: PlayChallenge) {
   return challenge.gameId === "auction" || challenge.gameId === "draft-room";
 }
 
+function isTurnBasedChallenge(challenge: PlayChallenge) {
+  return challenge.gameId === "wheel-football";
+}
+
 function rowCopy(challenge: PlayChallenge, profileId: string) {
   const direction = challengeDirection(challenge, profileId);
   const status = challengeStatus(challenge, profileId);
+
+  if (isTurnBasedChallenge(challenge)) {
+    if (status === "completed") return { eyebrow: "WHEEL COMPLETE WITH", detail: "Open both final Superteams", action: "OPEN" };
+    if (status === "declined") return { eyebrow: "WHEEL DECLINED", detail: "This matchup has ended", action: "DECLINED" };
+    if (direction === "sent") {
+      return {
+        eyebrow: "WHEEL WITH",
+        detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for them to accept",
+        action: "OPEN",
+      };
+    }
+    return {
+      eyebrow: "WHEEL FROM",
+      detail: status === "opened" ? "Match in progress · check whose turn" : "Open to accept and start",
+      action: status === "opened" ? "OPEN" : "PLAY",
+    };
+  }
 
   if (isSealedBidChallenge(challenge)) {
     const label = challenge.gameId === "draft-room" ? "DRAFT ROOM" : "AUCTION";
@@ -130,6 +151,11 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
     if (!direction) return;
     const status = challengeStatus(requested, activeProfile.id);
 
+    if (isTurnBasedChallenge(requested)) {
+      navigate(challengePlayRoute(requested), { replace: true });
+      return;
+    }
+
     if (isSealedBidChallenge(requested)) {
       if (direction === "received" && status === "new") void markOpened(requested.code);
       navigate(challengePlayRoute(requested), { replace: true });
@@ -176,6 +202,10 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
   }
 
   function openChallenge(challenge: PlayChallenge) {
+    if (isTurnBasedChallenge(challenge)) {
+      navigate(challengePlayRoute(challenge));
+      return;
+    }
     if (isSealedBidChallenge(challenge)) {
       const direction = challengeDirection(challenge, activeProfile!.id);
       const status = challengeStatus(challenge, activeProfile!.id);
@@ -237,11 +267,15 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
               const counterpart = challengeCounterpart(challenge, activeProfile.id, profiles);
               const copy = rowCopy(challenge, activeProfile.id);
               const sealedBid = isSealedBidChallenge(challenge);
-              const canPlay = sealedBid ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
-              const canView = !sealedBid && status === "completed";
+              const turnBased = isTurnBasedChallenge(challenge);
+              const serverState = sealedBid || turnBased;
+              const canPlay = serverState ? status !== "declined" : direction === "received" && status !== "completed" && status !== "declined";
+              const canView = !serverState && status === "completed";
               const canCancelAuction = sealedBid && direction === "sent" && status === "waiting";
               const canDeclineAuction = sealedBid && direction === "received" && status === "new";
               const canRemoveAuction = sealedBid && (status === "completed" || status === "declined");
+              const canDeclineTurnBased = turnBased && direction === "received" && status === "new";
+              const canRemoveTurnBased = turnBased && (status === "completed" || status === "declined");
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
@@ -275,7 +309,7 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                     {canView ? (
                       <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
                     ) : canPlay ? (
-                      <button type="button" onClick={() => openChallenge(challenge)}>{sealedBid ? copy.action : "PLAY"}</button>
+                      <button type="button" onClick={() => openChallenge(challenge)}>{serverState ? copy.action : "PLAY"}</button>
                     ) : (
                       <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
                     )}
@@ -290,6 +324,17 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                             : void dismissChallenge(challenge.code)}
                         >
                           {canCancelAuction ? "CANCEL" : canDeclineAuction ? "DECLINE" : "REMOVE"}
+                        </button>
+                      ) : null
+                    ) : turnBased ? (
+                      canDeclineTurnBased || canRemoveTurnBased ? (
+                        <button
+                          type="button"
+                          className="challenge-center__dismiss"
+                          aria-label={`${canDeclineTurnBased ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          onClick={() => void dismissChallenge(challenge.code)}
+                        >
+                          {canDeclineTurnBased ? "DECLINE" : "REMOVE"}
                         </button>
                       ) : null
                     ) : (

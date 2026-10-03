@@ -142,6 +142,61 @@ async function loadDynamicPreview(requestUrl: URL): Promise<DynamicPreviewData |
   }
 }
 
+const NFL_ROSTER_TEAM_CODES = new Set([
+  "ari", "atl", "bal", "buf", "car", "chi", "cin", "cle",
+  "dal", "den", "det", "gb", "hou", "ind", "jax", "kc",
+  "lac", "lar", "lv", "mia", "min", "ne", "no", "nyg",
+  "nyj", "phi", "pit", "sea", "sf", "tb", "ten", "wsh",
+]);
+
+export function nflRosterUpstreamUrl(teamCode: string) {
+  const normalized = teamCode.trim().toLowerCase();
+  if (!NFL_ROSTER_TEAM_CODES.has(normalized)) return null;
+  return `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${normalized}/roster`;
+}
+
+async function serveNflRoster(requestUrl: URL) {
+  const upstreamUrl = nflRosterUpstreamUrl(requestUrl.searchParams.get("team") ?? "");
+  if (!upstreamUrl) {
+    return new Response(JSON.stringify({ error: "Unknown NFL team." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+    });
+  }
+
+  try {
+    const upstream = await fetch(upstreamUrl, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "OctagonHQ/1.0",
+      },
+    });
+    if (!upstream.ok || !upstream.body) {
+      return new Response(JSON.stringify({ error: "Current NFL roster is unavailable." }), {
+        status: 502,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+
+    const headers = new Headers(upstream.headers);
+    headers.set("Content-Type", "application/json; charset=utf-8");
+    headers.set("Cache-Control", "public, max-age=300, stale-while-revalidate=900");
+    headers.delete("Set-Cookie");
+    return new Response(upstream.body, { status: 200, headers });
+  } catch {
+    return new Response(JSON.stringify({ error: "Current NFL roster is unavailable." }), {
+      status: 502,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+}
+
 function isPreviewRoute(url: URL) {
   return url.pathname.startsWith("/fighters/")
     || url.pathname === "/rankings"
@@ -284,6 +339,9 @@ export default {
   async fetch(request: Request, env: Env, context: WorkerExecutionContext): Promise<Response> {
     const requestUrl = new URL(request.url);
     if (request.method !== "GET") return env.ASSETS.fetch(request);
+    if (requestUrl.pathname === "/api/football/nfl-roster") {
+      return serveNflRoster(requestUrl);
+    }
     if (requestUrl.pathname === "/deployment.json") {
       return serveDeploymentMarker();
     }
