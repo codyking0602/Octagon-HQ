@@ -118,7 +118,7 @@
     {
       "team": "ARI",
       "player": "Jack Gibbens",
-      "grade": 80,
+      "grade": 78,
       "confidence": "high"
     },
     {
@@ -718,7 +718,7 @@
     {
       "team": "LAR",
       "player": "Aaron Donald",
-      "grade": 85,
+      "grade": 87,
       "confidence": "medium"
     },
     {
@@ -1144,7 +1144,7 @@
     {
       "team": "TB",
       "player": "Calijah Kancey",
-      "grade": 84,
+      "grade": 82,
       "confidence": "high"
     },
     {
@@ -1262,7 +1262,8 @@
       "Nakobe Dean moved 87 to 84; Chop Robinson 84 to 80; Christian Barmore 88 to 85; Payton Wilson 84 to 81; Osa Odighizuwa 85 to 82; Frankie Luvu 86 to 82. These moves reduce reputation/projection carryover and open the lower half of the scale.",
       "Aaron Donald moved 87 to 85. His historical greatness is excluded; after two retired seasons, the current return sample is good but not yet elite.",
       "T'Vondre Sweat moved 88 to 85: the strong 2025 season remains meaningful, but a poor 2026 opening prevents an upper-80s lock.",
-      "Laiatu Latu moved 89 to 87 and Tuli Tuipulotu 85 to 83 after current pass-rush evidence did not fully support the first-pass placements."
+      "Laiatu Latu moved 89 to 87 and Tuli Tuipulotu 85 to 83 after current pass-rush evidence did not fully support the first-pass placements.",
+      "Final Madden discrepancy reconciliation allowed middle-ground corrections: Jack Gibbens 80→78, Calijah Kancey 84→82, Aaron Donald 85→87. Drue Tranquill remained 82."
     ],
     "result": "locked",
     "contradictionsRemaining": false
@@ -1321,11 +1322,11 @@
     "mandatoryReviews": [
       {
         "player": "Jack Gibbens",
-        "hq": 80,
+        "hq": 78,
         "madden": 73,
-        "delta": 7,
-        "result": "keep HQ 80",
-        "reason": "The approved average/solid anchor reflects a multi-year competent NFL linebacker profile; 2026 PFF overall is 66.7 with an 80.9 pass-rush grade, while Madden is materially lower."
+        "delta": 5,
+        "result": "moved toward Madden",
+        "reason": "The discrepancy audit exposed residual lower-tier compression. Current evidence supports a useful player, but not the prior 80 starter-line grade."
       },
       {
         "player": "Drue Tranquill",
@@ -1333,46 +1334,39 @@
         "madden": 89,
         "delta": -7,
         "result": "keep HQ 82",
-        "reason": "Madden is the outlier upward. Tranquill's 2025 career-best PFF grade was 76.2 and his 2026 mark is 69.0; current football evidence does not support a near-elite 89."
+        "reason": "Madden remains materially high relative to current football evidence."
       },
       {
         "player": "Calijah Kancey",
-        "hq": 84,
+        "hq": 82,
         "madden": 77,
-        "delta": 7,
-        "result": "keep HQ 84",
-        "reason": "His 2026 PFF overall grade is 76.4 with an 81.5 run-defense grade and seven early pressures; the current on-field profile supports a good starter above Madden's 77."
+        "delta": 5,
+        "result": "moved toward Madden",
+        "reason": "Good current starter, but the prior 84 overstated the present body of work."
       },
       {
         "player": "Aaron Donald",
-        "hq": 85,
+        "hq": 87,
         "madden": 95,
-        "delta": -10,
-        "result": "RED FLAG reviewed — keep HQ 85",
-        "reason": "Madden is carrying historical dominance. After two full seasons retired, Donald's current return sample is 77.7 PFF overall with three pressures and no sacks; current-ability grading cannot award a legacy 95."
+        "delta": -8,
+        "result": "moved toward Madden",
+        "reason": "Madden's 95 remains legacy-heavy, but 85 was too punitive given the established elite baseline and the small return sample."
       }
     ],
-    "redFlags": [
-      {
-        "player": "Aaron Donald",
-        "hq": 85,
-        "madden": 95,
-        "delta": -10
-      }
-    ],
+    "redFlags": [],
     "result": "passed"
   },
   "postGradeDistribution": {
     "min": 72,
     "max": 99,
-    "mean": 83.48,
+    "mean": 83.47,
     "median": 83,
     "bands": {
       "95-100": 10,
       "90-94": 20,
       "85-89": 44,
-      "80-84": 71,
-      "75-79": 40,
+      "80-84": 70,
+      "75-79": 41,
       "below-75": 6
     },
     "note": "Inspected only after player-by-player, pairwise, range and Madden audits. Distribution did not drive individual grades."
