@@ -793,7 +793,7 @@ for each row execute function private.assign_wheel_football_grade_snapshot();
 -- Preserve already-finished v1 history exactly as it was, but bring any match that
 -- is still live at rollout onto the locked grading runtime. Existing live picks are
 -- snapshotted once here; later authority revisions never rewrite them.
-do $
+do $wheel_active_backfill$
 declare
   v_pick record;
   v_grade record;
@@ -827,7 +827,7 @@ begin
       and pick.hidden_grade is null;
   end loop;
 end;
-$;
+$wheel_active_backfill$;
 
 create or replace function private.wheel_football_raw_grade(
   p_challenge_id uuid,
