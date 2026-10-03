@@ -220,7 +220,7 @@ describe("Wheel of Football current-NFL model", () => {
       candidate("te", "Jake Ferguson", "TE", ["Flex"], 5, 4),
     ];
     expect(wheelFootballShortlist(roster, "Flex", "DAL").map((item) => item.name)).toEqual([
-      "Javonte Williams", "George Pickens", "CeeDee Lamb", "Jake Ferguson",
+      "Javonte Williams", "CeeDee Lamb", "George Pickens", "Jake Ferguson",
     ]);
   });
   it("does not let injury metadata knock a curated current-roster star out of Wheel", () => {
