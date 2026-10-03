@@ -44,6 +44,25 @@ describe("Wheel NFL grade distribution sanity", () => {
     ) ?? null;
   }
 
+  it("resolves the complete curated population exactly once by team and position family", () => {
+    const families = ["QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach"] as const;
+    const expected = new Set<string>();
+
+    for (const [team, teamPriority] of Object.entries(priority.teams)) {
+      for (const family of families) {
+        for (const name of teamPriority[family] ?? []) {
+          const key = `${team}|${family}|${normalized(name)}`;
+          expect(grades.has(key), key).toBe(true);
+          expect(expected.has(key), `duplicate curated identity ${key}`).toBe(false);
+          expected.add(key);
+        }
+      }
+    }
+
+    expect(expected.size).toBe(626);
+    expect(grades.size).toBe(626);
+  });
+
   it("uses the same 5x separation curve as Weekly Superteam, clamped for Wheel", () => {
     expect(finalGrade(90)).toBe(70);
     expect(finalGrade(92)).toBe(80);
