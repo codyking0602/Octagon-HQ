@@ -215,9 +215,11 @@ function depthChartPriority(payload: Record<string, unknown>) {
 
   for (const rawChart of charts) {
     const chart = asRecord(rawChart);
-    const positions = asRecord(chart?.positions);
-    if (!positions) continue;
-    for (const rawPosition of Object.values(positions)) {
+    const rawPositions = chart?.positions;
+    const positions = Array.isArray(rawPositions)
+      ? rawPositions
+      : Object.values(asRecord(rawPositions) ?? {});
+    for (const rawPosition of positions) {
       const position = asRecord(rawPosition);
       const athletes = Array.isArray(position?.athletes) ? position.athletes : [];
       for (let athleteIndex = 0; athleteIndex < athletes.length; athleteIndex += 1) {

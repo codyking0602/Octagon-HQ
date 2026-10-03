@@ -49,9 +49,11 @@ function starterAthletes(payload) {
   const rows = [];
   for (const chartValue of depthCharts) {
     const chart = asObject(chartValue);
-    const positions = asObject(chart?.positions);
-    if (!positions) continue;
-    for (const [key, positionValue] of Object.entries(positions)) {
+    const rawPositions = chart?.positions;
+    const positionEntries = Array.isArray(rawPositions)
+      ? rawPositions.map((value, index) => [String(index), value])
+      : Object.entries(asObject(rawPositions) ?? {});
+    for (const [key, positionValue] of positionEntries) {
       const position = asObject(positionValue);
       const athletes = Array.isArray(position?.athletes) ? position.athletes : [];
       for (let index = 0; index < athletes.length; index += 1) {

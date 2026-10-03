@@ -84,27 +84,31 @@ describe("Wheel of Football current-NFL model", () => {
       }],
       depthCharts: [{
         name: "Offense",
-        positions: {
-          quarterback: {
+        positions: [
+          {
+            position: { abbreviation: "QB", displayName: "Quarterback" },
             athletes: [
               { rank: 1, athlete: { id: "dak", displayName: "Dak Prescott" } },
               { rank: 2, athlete: { id: "howell", displayName: "Sam Howell" } },
               { rank: 3, athlete: { id: "milton", displayName: "Joe Milton III" } },
             ],
           },
-          leftReceiver: {
+          {
+            position: { abbreviation: "WR", displayName: "Left Wide Receiver" },
             athletes: [
               { rank: 1, athlete: { id: "pickens", displayName: "George Pickens" } },
               { rank: 2, athlete: { id: "wr4", displayName: "Depth Receiver" } },
             ],
           },
-          rightReceiver: {
+          {
+            position: { abbreviation: "WR", displayName: "Right Wide Receiver" },
             athletes: [{ rank: 1, athlete: { id: "lamb", displayName: "CeeDee Lamb" } }],
           },
-          slotReceiver: {
+          {
+            position: { abbreviation: "WR", displayName: "Slot Wide Receiver" },
             athletes: [{ rank: 1, athlete: { id: "flournoy", displayName: "Ryan Flournoy" } }],
           },
-        },
+        ],
       }],
     });
 
