@@ -379,9 +379,13 @@ function curatedWheelShortlist(
   if (!priorityNames.length) return null;
 
   const ordered = orderByWheelPriority(candidates, slot, teamCode);
+  const priorityNameSet = new Set(priorityNames.map(normalizedWheelPriorityName));
+  const matchedPriorityCount = candidates.filter((candidate) => (
+    priorityNameSet.has(normalizedWheelPriorityName(candidate.name))
+  )).length;
   const baseSize = WHEEL_FOOTBALL_SHORTLIST_BASE[slot];
   const maxSize = WHEEL_FOOTBALL_SHORTLIST_MAX[slot];
-  const desiredSize = Math.min(maxSize, Math.max(baseSize, priorityNames.length));
+  const desiredSize = Math.min(maxSize, Math.max(baseSize, matchedPriorityCount));
   return ordered.slice(0, desiredSize);
 }
 
