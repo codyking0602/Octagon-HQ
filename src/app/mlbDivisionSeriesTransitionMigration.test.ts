@@ -61,7 +61,8 @@ describe("2026 MLB Division Series transition", () => {
     expect(assets).toContain('team: "San Diego Padres"');
   });
 
-  it("publishes both the completed-round recap and next-round notification path", () => {
-    expect(migration).toContain("select public.dispatch_due_mlb_notifications(now())");
+  it("leaves notification delivery to the secured canonical scheduler", () => {
+    expect(migration).not.toContain("select public.dispatch_due_mlb_notifications(now())");
+    expect(migration).toContain("canonical notification scheduler");
   });
 });
