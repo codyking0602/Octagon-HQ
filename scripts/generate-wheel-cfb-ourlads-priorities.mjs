@@ -15,7 +15,7 @@ const CAPS = {
 };
 
 const OURLADS_SLUG_ALIASES = {
-  "NC State": ["north-carolina-state"],
+  "NC State": ["nc-state", "north-carolina-state"],
   "Ole Miss": ["mississippi"],
   "UCF": ["central-florida"],
   "BYU": ["brigham-young", "byu"],
