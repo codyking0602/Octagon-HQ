@@ -28,6 +28,27 @@ create index if not exists wheel_football_nfl_grades_current_idx
 alter table private.wheel_football_nfl_grades enable row level security;
 revoke all on private.wheel_football_nfl_grades from public, anon, authenticated;
 
+create or replace function private.wheel_football_normalized_name(p_value text)
+returns text
+language sql
+immutable
+set search_path = ''
+as $
+  select lower(regexp_replace(
+    translate(
+      trim(coalesce(p_value, '')),
+      'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖòóôõöÙÚÛÜùúûüÝŸýÿ',
+      'AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiNnOOOOOoooooUUUUuuuuYYyy'
+    ),
+    '[^A-Za-z0-9]',
+    '',
+    'g'
+  ));
+$;
+
+revoke all on function private.wheel_football_normalized_name(text)
+  from public, anon, authenticated;
+
 insert into private.wheel_football_nfl_grades (
   team_code,
   grade_position,
@@ -729,7 +750,7 @@ as $$
   from private.wheel_football_nfl_grades source
   where source.team_code = upper(trim(p_team_code))
     and source.grade_position = trim(p_grade_position)
-    and source.normalized_name = lower(regexp_replace(trim(p_display_name), '[^A-Za-z0-9]', '', 'g'))
+    and source.normalized_name = private.wheel_football_normalized_name(p_display_name)
     and source.effective_date <= p_as_of
   order by source.effective_date desc
   limit 1;
@@ -755,7 +776,7 @@ where pick.selected_grade is null
     when pick.roster_slot in ('QB', 'RB', 'WR', 'Front Seven', 'Secondary', 'Head Coach') then pick.roster_slot
     else ''
   end
-  and source.normalized_name = lower(regexp_replace(trim(pick.display_name), '[^A-Za-z0-9]', '', 'g'))
+  and source.normalized_name = private.wheel_football_normalized_name(pick.display_name)
   and source.effective_date = (
     select max(candidate.effective_date)
     from private.wheel_football_nfl_grades candidate
