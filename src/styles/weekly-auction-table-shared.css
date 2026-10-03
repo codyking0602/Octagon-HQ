@@ -1,0 +1,14 @@
+.weekly-auction-table__roster-scroll {
+  max-height: min(43dvh, 360px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 560px) {
+  .weekly-auction-table__roster-scroll {
+    max-height: min(46dvh, 340px);
+  }
+}
