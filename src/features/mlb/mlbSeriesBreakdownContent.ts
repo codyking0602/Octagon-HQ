@@ -21,52 +21,10 @@ export type MlbSeriesBreakdownContent = {
 
 /**
  * The postseason hub intentionally features one full Series Breakdown at a time.
- * The current Division Series feature is Braves-Dodgers: a sixth postseason
- * meeting after Atlanta won five of six head-to-head games in the 2026 regular season.
+ * The 2026 Wild Card feature is Yankees-Red Sox, the rivalry rematch with the
+ * strongest mix of current stakes, recognizable players, and postseason history.
  */
 export const MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS: Readonly<Record<string, MlbSeriesBreakdownContent>> = {
-  "nl-ds-2": {
-    series:
-      "Atlanta won the 2026 season series 5-1, but this is a very different five-game setup. It is the sixth postseason meeting between the Braves and Dodgers, with Los Angeles holding a 3-2 edge in the previous five playoff series.",
-    decisions: [
-      {
-        title: "Atlanta's short turnaround",
-        body: [
-          {
-            text: "Chris Sale",
-            href: "https://www.baseball-reference.com/players/s/salech01.shtml",
-            emphasis: true,
-          },
-          {
-            text: " was needed late in the Wild Card clincher, so Atlanta enters this round with less rest and fewer clean pitching choices than Los Angeles.",
-          },
-        ],
-      },
-      {
-        title: "Los Angeles' rotation depth",
-        body: [
-          {
-            text: "Tarik Skubal",
-            href: "https://www.baseball-reference.com/players/s/skubata01.shtml",
-            emphasis: true,
-          },
-          {
-            text: " fronts a Dodgers rotation built to keep elite starters in nearly every game of a short series. Atlanta has to create damage before that depth can control the matchup.",
-          },
-        ],
-      },
-      {
-        title: "Can the regular-season edge carry over?",
-        body: [
-          {
-            text: "Atlanta went 5-1 against Los Angeles this season, a real matchup edge. The question is how much that still matters once rotations reset and every late inning becomes a leverage spot.",
-          },
-        ],
-      },
-    ],
-    hqRead:
-      "This is the Division Series matchup with the strongest mix of star power, recent head-to-head history and postseason history. Atlanta already proved it can beat Los Angeles this year; the Dodgers now get the rested, best-of-five version of the matchup.",
-  },
   "al-wc-2": {
     series:
       "New York won the season series 7-6 and eliminated Boston in last year's Wild Card Series. Both clubs finished among MLB's top five in team ERA, so this best-of-three can turn on only a handful of high-leverage at-bats.",
