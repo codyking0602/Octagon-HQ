@@ -208,8 +208,7 @@ describe("Wheel of Football current-NFL model", () => {
       "Dax Hill", "DJ Turner II", "Jordan Battle", "Bryan Cook", "Tacario Davis",
     ]);
     expect(wheelPriorityJson.teams.PIT.Secondary).toEqual([
-      "Jalen Ramsey", "Asante Samuel Jr.", "Jamel Dean",
-      "Jaquan Brisker", "DeShon Elliott", "Rayshawn Jenkins",
+      "Jalen Ramsey", "Jamel Dean", "Asante Samuel Jr.", "DeShon Elliott", "Jaquan Brisker",
     ]);
     expect(wheelPriorityJson.teams.ATL.Flex).toEqual([
       "Bijan Robinson", "Drake London", "Kyle Pitts Sr.", "Jahan Dotson",
