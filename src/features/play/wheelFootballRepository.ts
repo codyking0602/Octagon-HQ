@@ -33,6 +33,13 @@ const pickSchema = z.object({
   headshot_url: z.string().nullable(),
 });
 
+const resultSchema = z.object({
+  creator_final_grade: z.coerce.number().int().min(0).max(100),
+  recipient_final_grade: z.coerce.number().int().min(0).max(100),
+  winner_profile_id: z.string().uuid().nullable(),
+  is_tie: z.boolean(),
+});
+
 const stateSchema = z.object({
   code: z.string().min(4),
   pool_scope: poolScopeSchema,
@@ -45,6 +52,7 @@ const stateSchema = z.object({
   recipient: participantSchema,
   creator_roster: z.array(pickSchema),
   recipient_roster: z.array(pickSchema),
+  result: resultSchema.nullable(),
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
   forfeited_by_profile_id: z.string().uuid().nullable(),

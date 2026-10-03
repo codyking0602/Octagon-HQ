@@ -20,6 +20,7 @@
 .football-wheel,
 .football-wheel-picker,
 .football-wheel-waiting,
+.football-wheel-final-grade,
 .football-wheel-final {
   margin-bottom: 9px;
   border-radius: 15px;
@@ -939,6 +940,72 @@
   color: #8398a6;
   font-size: .67rem;
   line-height: 1.45;
+}
+
+.football-wheel-final-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+}
+
+.football-wheel-final-grade > div {
+  min-width: 0;
+  padding: 10px 8px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+  text-align: center;
+}
+
+.football-wheel-final-grade > div.is-winner {
+  border-color: rgba(93, 171, 233, .46);
+  background: rgba(31, 104, 164, .18);
+  box-shadow: inset 0 0 0 1px rgba(97, 177, 240, .09);
+}
+
+.football-wheel-final-grade small,
+.football-wheel-final-grade strong,
+.football-wheel-final-grade span {
+  display: block;
+}
+
+.football-wheel-final-grade small {
+  overflow: hidden;
+  color: #9bb1c1;
+  font-size: .55rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-wheel-final-grade strong {
+  margin-top: 3px;
+  color: #fff;
+  font-size: 2rem;
+  line-height: .95;
+  letter-spacing: -.05em;
+}
+
+.football-wheel-final-grade .is-winner strong {
+  color: #8dcbf7;
+}
+
+.football-wheel-final-grade span {
+  margin-top: 4px;
+  color: #667f91;
+  font-size: .46rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-wheel-final-grade > b {
+  color: #59758a;
+  font-size: .54rem;
+  letter-spacing: .08em;
+  text-align: center;
 }
 
 .football-wheel-final > div {
