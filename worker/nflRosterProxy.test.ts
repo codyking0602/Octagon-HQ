@@ -23,7 +23,10 @@ describe("Wheel of Football NFL roster proxy", () => {
     expect(workerSource).toContain('ordering: depthChart ? "espn-depth-chart" : "roster-fallback"');
     expect(workerSource).toContain('"Cache-Control", "public, max-age=300, stale-while-revalidate=900"');
 
-    const reviewedPairs = workerSource.match(/\b[a-z]{2,3}: "\d+"/g) ?? [];
+    const mapSource = workerSource.match(
+      /export const NFL_ESPN_TEAM_IDS:[\\s\\S]*?= \\{([\\s\\S]*?)\\n\\};/,
+    )?.[1] ?? "";
+    const reviewedPairs = mapSource.match(/\\b[a-z]{2,3}: "\\d+"/g) ?? [];
     expect(new Set(reviewedPairs).size).toBe(32);
   });
 });
