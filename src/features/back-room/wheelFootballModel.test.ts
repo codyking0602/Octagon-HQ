@@ -20,6 +20,10 @@ describe("Wheel of Football current-NFL model", () => {
     }
 
     expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(32);
+    expect(wheelFootballTeams.find((team) => team.code === "DAL")).toMatchObject({
+      primaryColor: "#003594",
+      secondaryColor: "#869397",
+    });
     expect(WHEEL_FOOTBALL_ROSTER_SLOTS).toEqual([
       "QB",
       "RB",
@@ -44,6 +48,23 @@ describe("Wheel of Football current-NFL model", () => {
     expect(wheelFootballEligibleSlots("HC")).toEqual(["Head Coach"]);
     expect(wheelFootballEligibleSlots("OT")).toEqual([]);
     expect(wheelFootballEligibleSlots("K")).toEqual([]);
+  });
+
+  it("preserves ESPN roster order inside a slot instead of alphabetizing away depth/relevance", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      athletes: [{
+        position: "Defense",
+        items: [
+          { id: "starter", displayName: "Starter Star", position: { abbreviation: "S", displayName: "Safety" } },
+          { id: "backup", displayName: "Backup Alpha", position: { abbreviation: "S", displayName: "Safety" } },
+        ],
+      }],
+    });
+
+    expect(candidates.map((candidate) => candidate.name)).toEqual([
+      "Starter Star",
+      "Backup Alpha",
+    ]);
   });
 
   it("parses current ESPN roster groups into selectable players and the head coach", () => {

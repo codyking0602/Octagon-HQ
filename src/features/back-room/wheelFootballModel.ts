@@ -37,7 +37,44 @@ export interface WheelFootballTeam {
   conference: "AFC" | "NFC";
   division: "East" | "North" | "South" | "West";
   logoSrc: string | null;
+  primaryColor: string;
+  secondaryColor: string;
 }
+
+const NFL_WHEEL_COLORS: Readonly<Record<string, readonly [string, string]>> = {
+  ARI: ["#97233F", "#000000"],
+  ATL: ["#A71930", "#000000"],
+  BAL: ["#241773", "#9E7C0C"],
+  BUF: ["#00338D", "#C60C30"],
+  CAR: ["#0085CA", "#101820"],
+  CHI: ["#0B162A", "#C83803"],
+  CIN: ["#FB4F14", "#000000"],
+  CLE: ["#311D00", "#FF3C00"],
+  DAL: ["#003594", "#869397"],
+  DEN: ["#FB4F14", "#002244"],
+  DET: ["#0076B6", "#B0B7BC"],
+  GB: ["#203731", "#FFB612"],
+  HOU: ["#03202F", "#A71930"],
+  IND: ["#002C5F", "#A2AAAD"],
+  JAX: ["#006778", "#D7A22A"],
+  KC: ["#E31837", "#FFB81C"],
+  LV: ["#000000", "#A5ACAF"],
+  LAC: ["#0080C6", "#FFC20E"],
+  LAR: ["#003594", "#FFA300"],
+  MIA: ["#008E97", "#FC4C02"],
+  MIN: ["#4F2683", "#FFC62F"],
+  NE: ["#002244", "#C60C30"],
+  NO: ["#D3BC8D", "#101820"],
+  NYG: ["#0B2265", "#A71930"],
+  NYJ: ["#125740", "#FFFFFF"],
+  PHI: ["#004C54", "#A5ACAF"],
+  PIT: ["#FFB612", "#101820"],
+  SF: ["#AA0000", "#B3995D"],
+  SEA: ["#002244", "#69BE28"],
+  TB: ["#D50A0A", "#FF7900"],
+  TEN: ["#0C2340", "#4B92DB"],
+  WSH: ["#5A1414", "#FFB612"],
+};
 
 function nflTeamCode(row: (typeof footballTeamSchoolMetadata)[number]) {
   const alias = row.aliases?.find((value) => /^[A-Z]{2,3}$/.test(value));
@@ -49,12 +86,15 @@ export const wheelFootballTeams: readonly WheelFootballTeam[] = footballTeamScho
   .filter((row) => row.level === "NFL" && row.nflConference && row.nflDivision)
   .map((row) => {
     const code = nflTeamCode(row);
+    const [primaryColor, secondaryColor] = NFL_WHEEL_COLORS[code] ?? ["#174A7E", "#8FC8F4"];
     return {
       code,
       name: row.name,
       conference: row.nflConference!,
       division: row.nflDivision!,
       logoSrc: footballTeamAssets[footballNflTeamMediaId(code)]?.src ?? null,
+      primaryColor,
+      secondaryColor,
     };
   });
 
@@ -216,7 +256,7 @@ export function wheelFootballCandidatesFromEspn(payload: unknown): WheelFootball
     .sort((left, right) => {
       const leftSlot = WHEEL_FOOTBALL_ROSTER_SLOTS.indexOf(left.eligibleSlots[0]!);
       const rightSlot = WHEEL_FOOTBALL_ROSTER_SLOTS.indexOf(right.eligibleSlots[0]!);
-      return leftSlot - rightSlot || left.name.localeCompare(right.name);
+      return leftSlot - rightSlot;
     });
 }
 

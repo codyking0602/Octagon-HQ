@@ -92,8 +92,15 @@ function RosterCell({
   pick: WheelFootballPick | null;
   align: "left" | "right";
 }) {
+  const team = pick ? wheelFootballTeam(pick.team_code) : null;
   return (
-    <div className={`football-wheel-roster__cell is-${align}${pick ? " is-filled" : ""}`}>
+    <div
+      className={`football-wheel-roster__cell is-${align}${pick ? " is-filled" : ""}`}
+      style={team ? {
+        "--team-primary": team.primaryColor,
+        "--team-secondary": team.secondaryColor,
+      } as CSSProperties : undefined}
+    >
       <PickMark pick={pick} />
       <div>
         <strong>{pick?.display_name ?? "OPEN"}</strong>
@@ -144,6 +151,17 @@ function TeamLogo({ team, className = "" }: { team: WheelFootballTeam; className
   );
 }
 
+function wheelTeamBackground(teams: readonly WheelFootballTeam[]) {
+  if (!teams.length) return undefined;
+  const slice = 360 / teams.length;
+  const stops = teams.flatMap((team, index) => {
+    const start = index * slice;
+    const end = (index + 1) * slice;
+    return [`${team.primaryColor} ${start}deg`, `${team.primaryColor} ${end}deg`];
+  });
+  return `conic-gradient(from ${-slice / 2}deg, ${stops.join(", ")})`;
+}
+
 function FootballWheel({
   teams,
   rotation,
@@ -166,9 +184,8 @@ function FootballWheel({
         className={`football-wheel__disc${spinning ? " is-spinning" : ""}`}
         style={{
           transform: `rotate(${rotation}deg)`,
-          "--wheel-slice": `${360 / Math.max(teams.length, 1)}deg`,
-          "--wheel-half-slice": `${180 / Math.max(teams.length, 1)}deg`,
-        } as CSSProperties}
+          background: wheelTeamBackground(teams),
+        }}
       >
         <div className="football-wheel__rings" aria-hidden="true" />
         {teams.map((team, index) => (
@@ -178,12 +195,12 @@ function FootballWheel({
             style={{
               "--wheel-index": index,
               "--wheel-count": teams.length,
+              "--team-primary": team.primaryColor,
+              "--team-secondary": team.secondaryColor,
             } as CSSProperties}
             title={team.name}
           >
-            {teams.length <= 16 && team.logoSrc
-              ? <img src={team.logoSrc} alt="" />
-              : <b>{team.code}</b>}
+            {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.code}</b>}
           </span>
         ))}
       </div>
@@ -273,7 +290,7 @@ function CandidatePicker({
                   key={slot}
                 >
                   <strong>{slot}</strong>
-                  <span>{count} option{count === 1 ? "" : "s"}</span>
+                  {count === 1 ? <span>1 option</span> : null}
                 </button>
               );
             })}
@@ -299,7 +316,7 @@ function CandidatePicker({
                     <strong>{candidate.name}</strong>
                     <small>{candidate.positionLabel}</small>
                   </span>
-                  <em>ADD TO {selectedSlot.toUpperCase()} →</em>
+                  <em>SELECT →</em>
                 </button>
               ))}
               {!visible.length ? (
