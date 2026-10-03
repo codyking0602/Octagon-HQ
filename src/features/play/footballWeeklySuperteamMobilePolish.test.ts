@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const gate = readFileSync("src/features/back-room/FootballWeeklySuperteamGate.tsx", "utf8");
+const tableDialog = readFileSync("src/features/back-room/FootballWeeklySuperteamTableDialog.tsx", "utf8");
 const styles = readFileSync("src/styles/football-weekly-superteam.css", "utf8");
 
 describe("CFB Superteam mobile and tie-priority polish", () => {
@@ -27,6 +28,18 @@ describe("CFB Superteam mobile and tie-priority polish", () => {
     expect(mobile).toContain("touch-action: pan-y;");
     expect(mobile).toContain("height: calc(100dvh - 58px - var(--safe-top));");
     expect(mobile).toContain("min-height: 0;");
+  });
+
+  it("scrolls each expanded player's roster inside that player card", () => {
+    const rosterStart = styles.indexOf(".football-weekly-superteam-table__roster {");
+    const rosterEnd = styles.indexOf("\n}", rosterStart);
+    const roster = styles.slice(rosterStart, rosterEnd + 2);
+    expect(roster).toContain("max-height: min(43dvh, 360px);");
+    expect(roster).toContain("overflow-y: auto;");
+    expect(roster).toContain("touch-action: pan-y;");
+    expect(roster).toContain("-webkit-overflow-scrolling: touch;");
+    expect(tableDialog).toContain('aria-label={player.display_name + " roster"}');
+    expect(tableDialog).toContain("tabIndex={0}");
   });
 
   it("explains the live Day 1 tie order and wraps each participant cleanly", () => {
