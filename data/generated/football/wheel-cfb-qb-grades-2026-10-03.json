@@ -1,0 +1,871 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-wheel-qb-grades-2026-10-03-v1",
+  "status": "audit-locked-not-runtime",
+  "effectiveDate": "2026-10-03",
+  "populationSource": {
+    "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
+    "priorityAuditPath": "data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
+    "mainSha": "f295e359d9e70f5c55d0452f4f94d9487fbc3f06",
+    "qbCount": 68
+  },
+  "gradingSemantic": "CURRENT COLLEGE FOOTBALL ABILITY AT QUARTERBACK RIGHT NOW; position-normalized; current 2026 performance matters heavily but ordinary one/two-game noise does not erase a stronger established college sample; no NFL projection, recruiting ranking, draft stock, career greatness, fame, school prestige, fantasy value, or future-upside bonus.",
+  "approvedAnchors": [
+    [
+      "Trinidad Chambliss",
+      98,
+      "current ceiling"
+    ],
+    [
+      "Darian Mensah",
+      97,
+      "elite / ceiling-adjacent"
+    ],
+    [
+      "Kamario Taylor",
+      96,
+      "elite breakout"
+    ],
+    [
+      "CJ Carr",
+      95,
+      "elite"
+    ],
+    [
+      "Dante Moore",
+      94,
+      "high elite"
+    ],
+    [
+      "Gunner Stockton",
+      93,
+      "high-end"
+    ],
+    [
+      "Julian Sayin",
+      93,
+      "high-end"
+    ],
+    [
+      "Keelon Russell",
+      90,
+      "very good / rising"
+    ],
+    [
+      "Josh Hoover",
+      90,
+      "very good established"
+    ],
+    [
+      "Arch Manning",
+      88,
+      "very good / inconsistent"
+    ],
+    [
+      "Kevin Jennings",
+      87,
+      "good / very good"
+    ],
+    [
+      "Bear Bachmeier",
+      86,
+      "good"
+    ],
+    [
+      "Walker Eget",
+      81,
+      "solid starter"
+    ],
+    [
+      "Davis Warren",
+      76,
+      "below-average starter"
+    ],
+    [
+      "Tait Reynolds",
+      73,
+      "weak Wheel option"
+    ]
+  ],
+  "evidenceSnapshot": {
+    "completedGamesThrough": "2026-09-27",
+    "note": "The grading evidence is frozen after the Week 4 weekend so games in progress on October 3 do not create inconsistent within-position timing. Prior college seasons remain relevant where the player has an established sample.",
+    "primarySources": [
+      "https://www.ea.com/games/ea-sports-college-football/ratings/positions-ratings/quarterback/QB",
+      "https://www.cbssports.com/college-football/news/college-football-qb-power-rankings-keelon-russell-kamario-taylor/",
+      "Sports-Reference current/career quarterback pages",
+      "Official school season-stat and player pages for discrepancy/edge-case checks",
+      "Completed-game recaps and box-score context for opponent/role checks"
+    ]
+  },
+  "grades": [
+    {
+      "school": "Alabama",
+      "player": "Keelon Russell",
+      "grade": 90,
+      "kind": "anchor",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 86,
+      "eaDelta": 4,
+      "reason": "Explosive 2026 breakout with real rushing/creation value; still a short college starter sample, so no recruiting-pedigree premium."
+    },
+    {
+      "school": "Arkansas",
+      "player": "KJ Jackson",
+      "grade": 78,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 74,
+      "eaDelta": 4,
+      "reason": "Functional SEC starter play but modest efficiency and limited high-end passing evidence keep him in the lower starter band."
+    },
+    {
+      "school": "Auburn",
+      "player": "Byrum Brown",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 88,
+      "eaDelta": -4,
+      "reason": "Established elite rushing value and a strong 2025 passing season matter; a turnover-heavy 2026 start pulls the current grade below his EA reputation."
+    },
+    {
+      "school": "Florida",
+      "player": "Aaron Philo",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 78,
+      "eaDelta": 9,
+      "reason": "High-end 2026 efficiency, accuracy and pressure performance are too strong to leave near his preseason/game-rating baseline; limited prior sample caps the move."
+    },
+    {
+      "school": "Georgia",
+      "player": "Gunner Stockton",
+      "grade": 93,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 91,
+      "eaDelta": 2,
+      "reason": "Full 2025 starter body plus excellent 2026 efficiency and dual-threat value establish a top-tier current quarterback."
+    },
+    {
+      "school": "Kentucky",
+      "player": "Kenny Minchey",
+      "grade": 83,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 81,
+      "eaDelta": 2,
+      "reason": "Solid current starter with enough functional passing and movement to clear the average line, but not enough sustained high-end production for the mid-80s."
+    },
+    {
+      "school": "LSU",
+      "player": "Sam Leavitt",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 89,
+      "eaDelta": -5,
+      "reason": "Strong 2024 baseline remains relevant, but current 2026 efficiency and turnover results have fallen enough to keep him out of the very-good tier."
+    },
+    {
+      "school": "Mississippi State",
+      "player": "Kamario Taylor",
+      "grade": 96,
+      "kind": "anchor",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 88,
+      "eaDelta": 8,
+      "reason": "User-approved elite breakout anchor: 2026 production against meaningful competition is already among the best in the country, with passing and rushing creation."
+    },
+    {
+      "school": "Missouri",
+      "player": "Austin Simmons",
+      "grade": 86,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 82,
+      "eaDelta": 4,
+      "reason": "Strong arm/creation flashes and good current production support an above-average grade; the established starting sample is still relatively short."
+    },
+    {
+      "school": "Oklahoma",
+      "player": "John Mateer",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 86,
+      "eaDelta": -2,
+      "reason": "Proven dual-threat production across multiple seasons remains valuable, but 2025-26 passing volatility and turnovers cap him below the very-good tier."
+    },
+    {
+      "school": "Ole Miss",
+      "player": "Trinidad Chambliss",
+      "grade": 98,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 95,
+      "eaDelta": 3,
+      "reason": "User-approved current QB1: elite 2025 dual-threat season plus another high-level 2026 start give him the strongest blend of current play and established evidence."
+    },
+    {
+      "school": "South Carolina",
+      "player": "LaNorris Sellers",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 85,
+      "eaDelta": -3,
+      "reason": "Dynamic rushing/creation ability remains real, but passing efficiency and decision consistency have not matched his reputation enough for the mid-80s."
+    },
+    {
+      "school": "Tennessee",
+      "player": "Faizon Brandon",
+      "grade": 77,
+      "kind": "graded",
+      "confidence": "low",
+      "eaCfb27Week4Rating": 79,
+      "eaDelta": -2,
+      "reason": "Young starter with physical tools but limited demonstrated college evidence and current passing inconsistency; no five-star or projection bonus."
+    },
+    {
+      "school": "Texas",
+      "player": "Arch Manning",
+      "grade": 88,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 91,
+      "eaDelta": -3,
+      "reason": "Very good total quarterback, but actual 2026 passing has been too uneven for an elite/high-end grade; name and draft reputation do not own the score."
+    },
+    {
+      "school": "Texas A&M",
+      "player": "Marcel Reed",
+      "grade": 83,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 86,
+      "eaDelta": -3,
+      "reason": "Established dual-threat starter with meaningful prior success, but current passing inconsistency and recent poor outings keep him near the solid-starter line."
+    },
+    {
+      "school": "Vanderbilt",
+      "player": "Jared Curtis",
+      "grade": 79,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 80,
+      "eaDelta": -1,
+      "reason": "Promising true-freshman production and athleticism, but only four games of demonstrated college evidence; injury does not lower the underlying ability grade."
+    },
+    {
+      "school": "Illinois",
+      "player": "Katin Houser",
+      "grade": 86,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 84,
+      "eaDelta": 2,
+      "reason": "Experienced productive passer with a stable current profile and enough efficiency to sit in the very-good neighborhood without elite creation."
+    },
+    {
+      "school": "Indiana",
+      "player": "Josh Hoover",
+      "grade": 90,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 88,
+      "eaDelta": 2,
+      "reason": "Large multi-year starting sample plus a clean, efficient 2026 opening make him one of the strongest established non-elite QBs in the pool."
+    },
+    {
+      "school": "Iowa",
+      "player": "Hank Brown",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 73,
+      "eaDelta": 9,
+      "reason": "Four-start 2026 sample is efficient, turnover-free and includes a clutch road win at Michigan; prior evidence keeps the breakout from being graded higher."
+    },
+    {
+      "school": "Maryland",
+      "player": "Malik Washington",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 81,
+      "eaDelta": 3,
+      "reason": "Young starter showing credible current passing and creation; enough demonstrated ability for above-average placement without projecting future upside."
+    },
+    {
+      "school": "Michigan",
+      "player": "Bryce Underwood",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 83,
+      "eaDelta": -1,
+      "reason": "Physical ability is obvious, but the actual 2025-26 college passing body remains inconsistent; recruiting and NFL projection are excluded."
+    },
+    {
+      "school": "Michigan State",
+      "player": "Alessio Milivojevic",
+      "grade": 76,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 72,
+      "eaDelta": 4,
+      "reason": "Current starter experience is useful, but sack/pocket-management and turnover issues keep the demonstrated level in the lower band."
+    },
+    {
+      "school": "Minnesota",
+      "player": "Drake Lindsey",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 83,
+      "eaDelta": -1,
+      "reason": "Efficient young starter with a good 2026 opening, but the sample is still too small to call him clearly above the solid-starter tier."
+    },
+    {
+      "school": "Nebraska",
+      "player": "Anthony Colandrea",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 87,
+      "eaDelta": 0,
+      "reason": "Multi-year production plus another credible 2026 start establish a very-good current college level despite some historical turnover volatility."
+    },
+    {
+      "school": "Northwestern",
+      "player": "Aidan Chiles",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 82,
+      "eaDelta": 5,
+      "reason": "Current 2026 play has improved meaningfully over prior inconsistency; still enough volatility that he stays below the high-end group."
+    },
+    {
+      "school": "Ohio State",
+      "player": "Julian Sayin",
+      "grade": 93,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 94,
+      "eaDelta": -1,
+      "reason": "User-directed reduction from the initial elite placement; outstanding 2025 and strong 2026 evidence remain, but he is not graded as a top-three current QB."
+    },
+    {
+      "school": "Oregon",
+      "player": "Dante Moore",
+      "grade": 94,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 94,
+      "eaDelta": 0,
+      "reason": "Established high-end passer with elite accuracy/arm function; current injury is treated as availability, not an ability downgrade."
+    },
+    {
+      "school": "Penn State",
+      "player": "Rocco Becht",
+      "grade": 85,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 87,
+      "eaDelta": -2,
+      "reason": "Three-year productive starter and strong 2026 efficiency provide a stable above-average baseline, without the creation ceiling of the top group."
+    },
+    {
+      "school": "Purdue",
+      "player": "Ryan Browne",
+      "grade": 76,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 76,
+      "eaDelta": 0,
+      "reason": "Current production remains replacement-level/below-average for this curated pool; enough competence to avoid the floor but little high-end evidence."
+    },
+    {
+      "school": "Rutgers",
+      "player": "Aj Surace",
+      "grade": 72,
+      "kind": "graded",
+      "confidence": "low",
+      "eaCfb27Week4Rating": 76,
+      "eaDelta": -4,
+      "reason": "Selected Wheel option but not Rutgers' current primary starter; limited demonstrated college passing evidence keeps him near the bottom without projection credit."
+    },
+    {
+      "school": "UCLA",
+      "player": "Nico Iamaleava",
+      "grade": 83,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 87,
+      "eaDelta": -4,
+      "reason": "Real arm/mobility traits and prior productive stretches remain, but current efficiency and consistency do not support a reputation-based high grade."
+    },
+    {
+      "school": "USC",
+      "player": "Jayden Maiava",
+      "grade": 92,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 93,
+      "eaDelta": -1,
+      "reason": "Excellent current 2026 play layered on meaningful prior starting experience; just below the truly elite anchors after opponent/context review."
+    },
+    {
+      "school": "Washington",
+      "player": "Demond Williams Jr.",
+      "grade": 88,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 87,
+      "eaDelta": 1,
+      "reason": "Strong 2025 dual-threat season plus another efficient 2026 start establish a high-quality current total-QB profile."
+    },
+    {
+      "school": "Wisconsin",
+      "player": "Colton Joseph",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 84,
+      "eaDelta": -2,
+      "reason": "Credible young starter with useful current production, but not enough sustained high-end passing evidence to move beyond the solid tier."
+    },
+    {
+      "school": "Arizona",
+      "player": "Noah Fifita",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 91,
+      "eaDelta": -4,
+      "reason": "Large established passing sample and proven peak remain valuable; recent efficiency is good but no longer supports treating him as an elite national QB."
+    },
+    {
+      "school": "Arizona State",
+      "player": "Cutter Boley",
+      "grade": 80,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 79,
+      "eaDelta": 1,
+      "reason": "Promising current starter with adequate efficiency; demonstrated college sample still points to around-average rather than projection-driven upside."
+    },
+    {
+      "school": "Baylor",
+      "player": "DJ Lagway",
+      "grade": 77,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 83,
+      "eaDelta": -6,
+      "reason": "Arm talent and prior flashes are real, but poor current accuracy and a turnover-heavy established sample require a major reputation correction."
+    },
+    {
+      "school": "BYU",
+      "player": "Bear Bachmeier",
+      "grade": 86,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 84,
+      "eaDelta": 2,
+      "reason": "Full freshman starter season, strong rushing value and improved 2026 passing support a clear good/very-good current grade."
+    },
+    {
+      "school": "Cincinnati",
+      "player": "JC French IV",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 78,
+      "eaDelta": 6,
+      "reason": "Current production and functional dual-threat play are materially better than his EA baseline; still lacks the sustained top-end evidence of the upper tier."
+    },
+    {
+      "school": "Colorado",
+      "player": "Isaac Wilson",
+      "grade": 70,
+      "kind": "graded",
+      "confidence": "low",
+      "eaCfb27Week4Rating": 71,
+      "eaDelta": -1,
+      "reason": "Very limited current role and weak demonstrated efficiency in the available college sample; the grade deliberately ignores recruiting pedigree and theoretical upside."
+    },
+    {
+      "school": "Houston",
+      "player": "Conner Weigman",
+      "grade": 88,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 88,
+      "eaDelta": 0,
+      "reason": "Healthy 2026 start has restored efficient, high-level passing on top of an established college sample; durability is availability, not ability."
+    },
+    {
+      "school": "Iowa State",
+      "player": "Jaylen Raynor",
+      "grade": 78,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 79,
+      "eaDelta": -1,
+      "reason": "Experienced and productive career body, but current completion/efficiency and turnover results place him below the average-starter line right now."
+    },
+    {
+      "school": "Kansas",
+      "player": "Isaiah Marshall",
+      "grade": 76,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 76,
+      "eaDelta": 0,
+      "reason": "Limited current starter evidence and uneven accuracy keep him in the lower starter tier; athletic upside is not graded."
+    },
+    {
+      "school": "Kansas State",
+      "player": "Avery Johnson",
+      "grade": 86,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 89,
+      "eaDelta": -3,
+      "reason": "Established dual-threat value and multi-year starting experience support a very-good grade, but passing consistency caps the ceiling."
+    },
+    {
+      "school": "Oklahoma State",
+      "player": "Drew Mestemaker",
+      "grade": 92,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 91,
+      "eaDelta": 1,
+      "reason": "Huge 2025 passing season followed by another high-output 2026 start make the current ability clearly high-end despite some turnover variance."
+    },
+    {
+      "school": "TCU",
+      "player": "Jaden Craig",
+      "grade": 79,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 80,
+      "eaDelta": -1,
+      "reason": "Current starter with enough functional efficiency to be viable, but limited evidence of above-average difference-making."
+    },
+    {
+      "school": "Texas Tech",
+      "player": "Will Hammond",
+      "grade": 78,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 76,
+      "eaDelta": 2,
+      "reason": "Accurate stretches are offset by current turnover problems and a still-developing starter sample, leaving him below average for the curated pool."
+    },
+    {
+      "school": "UCF",
+      "player": "Alonza Barnett III",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 85,
+      "eaDelta": -3,
+      "reason": "Established dual-threat production provides a useful floor, but passing efficiency/consistency keeps the current level around solid starter."
+    },
+    {
+      "school": "Utah",
+      "player": "Devon Dampier",
+      "grade": 90,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 90,
+      "eaDelta": 0,
+      "reason": "Proven high-end rushing/creation plus improved passing efficiency make him one of the strongest total quarterbacks outside the elite passing tier."
+    },
+    {
+      "school": "West Virginia",
+      "player": "Michael Hawkins Jr.",
+      "grade": 85,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 83,
+      "eaDelta": 2,
+      "reason": "Current role and athletic creation are strong enough for an above-average grade; still not enough sustained passing dominance for the upper-80s."
+    },
+    {
+      "school": "Boston College",
+      "player": "Mason McKenzie",
+      "grade": 74,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 75,
+      "eaDelta": -1,
+      "reason": "Current BC passing offense has lacked productivity despite useful rushing contribution; demonstrated quarterbacking sits near the Wheel floor."
+    },
+    {
+      "school": "California",
+      "player": "Jaron-Keawe Sagapolutele",
+      "grade": 79,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 85,
+      "eaDelta": -6,
+      "reason": "Large 2025 volume establishes real ability, but 2026 efficiency/turnover results have regressed enough to pull him below EA's current rating."
+    },
+    {
+      "school": "Clemson",
+      "player": "Tait Reynolds",
+      "grade": 73,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 74,
+      "eaDelta": -1,
+      "reason": "Weak current Wheel anchor: limited college sample and low-end passing production mean Clemson's brand or his upside cannot lift the grade."
+    },
+    {
+      "school": "Duke",
+      "player": "Walker Eget",
+      "grade": 81,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 78,
+      "eaDelta": 3,
+      "reason": "Experienced, functional starter whose current production is credible but unspectacular; useful average/solid starter reference."
+    },
+    {
+      "school": "Florida State",
+      "player": "Ashton Daniels",
+      "grade": 77,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 75,
+      "eaDelta": 2,
+      "reason": "Large multi-year sample shows real athletic creation but persistent passing volatility; current grade reflects the whole demonstrated body."
+    },
+    {
+      "school": "Georgia Tech",
+      "player": "Alberto Mendoza",
+      "grade": 81,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 78,
+      "eaDelta": 3,
+      "reason": "Efficient 2026 start and accurate current passing earn a solid-starter grade, tempered by a short major-college starting sample."
+    },
+    {
+      "school": "Louisville",
+      "player": "Lincoln Kienholz",
+      "grade": 88,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 84,
+      "eaDelta": 4,
+      "reason": "Strong current production and functional athleticism have translated into a high-quality 2026 starter profile; prior limited sample prevents a 90-tier grade."
+    },
+    {
+      "school": "Miami",
+      "player": "Darian Mensah",
+      "grade": 97,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 94,
+      "eaDelta": 3,
+      "reason": "Elite current efficiency layered on two prior productive starting seasons; just below the user-selected Chambliss ceiling rather than being inflated to 99."
+    },
+    {
+      "school": "NC State",
+      "player": "CJ Bailey",
+      "grade": 81,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 81,
+      "eaDelta": 0,
+      "reason": "Established starter with competent current passing and useful mobility, but efficiency/decision profile remains closer to average than very good."
+    },
+    {
+      "school": "North Carolina",
+      "player": "Billy Edwards Jr.",
+      "grade": 79,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 78,
+      "eaDelta": 1,
+      "reason": "Veteran experience provides a floor, but current passing level and limited explosive value place him below the average starter band."
+    },
+    {
+      "school": "Pittsburgh",
+      "player": "Mason Heintschel",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 87,
+      "eaDelta": -3,
+      "reason": "Current production and recent explosive games show real above-average ability; shorter established sample keeps him below the upper-80s."
+    },
+    {
+      "school": "SMU",
+      "player": "Kevin Jennings",
+      "grade": 87,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 89,
+      "eaDelta": -2,
+      "reason": "Big-play production and large established sample are strong; recurring turnover volatility keeps him below the high-end tier."
+    },
+    {
+      "school": "Stanford",
+      "player": "Davis Warren",
+      "grade": 76,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 75,
+      "eaDelta": 1,
+      "reason": "Below-average current starter anchor: experienced enough to function, but efficiency and playmaking are clearly beneath the middle of this pool."
+    },
+    {
+      "school": "Syracuse",
+      "player": "Steve Angeli",
+      "grade": 77,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 80,
+      "eaDelta": -3,
+      "reason": "Prior strong spot-start evidence matters, but 2026 completion/turnover regression is severe enough to move him into the lower starter band."
+    },
+    {
+      "school": "Virginia",
+      "player": "Beau Pribula",
+      "grade": 85,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 83,
+      "eaDelta": 2,
+      "reason": "Efficient current play plus meaningful rushing/creation support an above-average total-QB grade without treating a hot start as elite."
+    },
+    {
+      "school": "Virginia Tech",
+      "player": "Ethan Grunkemeyer",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "medium",
+      "eaCfb27Week4Rating": 80,
+      "eaDelta": 7,
+      "reason": "Breakout 2026 accuracy and volume are materially ahead of his EA rating; short starting sample keeps him at 87 rather than higher."
+    },
+    {
+      "school": "Wake Forest",
+      "player": "Gio Lopez",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 81,
+      "eaDelta": 6,
+      "reason": "Proven prior production plus a strong current Wake Forest start support a very-good grade; opponent/context and ceiling keep him below the high-end band."
+    },
+    {
+      "school": "Notre Dame",
+      "player": "CJ Carr",
+      "grade": 95,
+      "kind": "anchor",
+      "confidence": "high",
+      "eaCfb27Week4Rating": 93,
+      "eaDelta": 2,
+      "reason": "Elite 2025 efficiency followed by another excellent 2026 start make him a fully demonstrated elite current college quarterback."
+    }
+  ],
+  "pairwiseAudit": {
+    "orderedNeighborhoods": [
+      "Trinidad Chambliss 98 > Darian Mensah 97 > Kamario Taylor 96 > CJ Carr 95 > Dante Moore 94",
+      "Dante Moore 94 > Gunner Stockton 93 = Julian Sayin 93 > Jayden Maiava 92 = Drew Mestemaker 92",
+      "Jayden Maiava 92 = Drew Mestemaker 92 > Keelon Russell 90 = Josh Hoover 90 = Devon Dampier 90",
+      "Arch Manning 88 = Conner Weigman 88 = Demond Williams Jr. 88 = Lincoln Kienholz 88 > Aaron Philo 87 = Anthony Colandrea 87 = Aidan Chiles 87 = Kevin Jennings 87 = Noah Fifita 87 = Ethan Grunkemeyer 87 = Gio Lopez 87",
+      "Katin Houser 86 = Austin Simmons 86 = Bear Bachmeier 86 = Avery Johnson 86 > Rocco Becht 85 = Michael Hawkins Jr. 85 = Beau Pribula 85",
+      "84 cluster > 83 cluster > 82 cluster > Walker Eget 81 = CJ Bailey 81 = Alberto Mendoza 81 > Cutter Boley 80",
+      "79 cluster > 78 cluster > 77 cluster > 76 cluster > Mason McKenzie 74 > Tait Reynolds 73 > Aj Surace 72 > Isaac Wilson 70"
+    ],
+    "resolvedPressurePoints": [
+      "Chambliss is the user-approved QB1 at 98; Mensah remains immediately behind at 97 because his current efficiency plus prior starting history are elite.",
+      "Taylor moves above the original proposal to 96 on the user's direction and the strength of his four-game 2026 production against meaningful competition.",
+      "Sayin drops from the initial 95 proposal to 93 on the user's direction; his elite 2025 evidence prevents a larger overreaction to only four 2026 games.",
+      "Arch remains 88. His name, recruiting profile and NFL projection do not outweigh uneven actual 2026 passing relative to the 90+ neighborhood.",
+      "The bottom is deliberately separated: a curated Wheel spot does not imply an 80 floor. Surace 72 and Isaac Wilson 70 are graded on demonstrated current college quarterbacking, not upside."
+    ],
+    "result": "locked",
+    "contradictionsRemaining": false
+  },
+  "rangeSeparationAudit": {
+    "result": "passed",
+    "min": 70,
+    "max": 98,
+    "below80Count": 19,
+    "note": "No lower-end grade was pulled upward merely because the player is in the curated Wheel population."
+  },
+  "eaDiscrepancyAudit": {
+    "source": "EA Sports College Football 27 current QB ratings, Week 4 snapshot",
+    "rule": "Absolute HQ-vs-EA difference of 7+ requires mandatory review; 10+ requires explicit major-red-flag explanation. EA is an error detector, never a formula or midpoint target.",
+    "mandatoryReviews": [
+      {
+        "player": "Aaron Philo",
+        "school": "Florida",
+        "hq": 87,
+        "ea": 78,
+        "delta": 9,
+        "disposition": "keep HQ",
+        "explanation": "Keep HQ 87. Florida's current official stats show elite early-2026 efficiency, accuracy and pressure performance; the 78 EA rating is materially behind the demonstrated 2026 level. Short prior sample is already reflected by keeping him out of the 90s."
+      },
+      {
+        "player": "Kamario Taylor",
+        "school": "Mississippi State",
+        "hq": 96,
+        "ea": 88,
+        "delta": 8,
+        "disposition": "keep HQ",
+        "explanation": "Keep HQ 96. The user locked Taylor higher after reviewing the anchor board, and the football evidence supports it: through four games he had 1,192 passing yards, 14 TD to 2 INT, plus rushing creation against three Power-conference opponents. EA is functioning as a lag/error detector here, not a ceiling."
+      },
+      {
+        "player": "Hank Brown",
+        "school": "Iowa",
+        "hq": 82,
+        "ea": 73,
+        "delta": 9,
+        "disposition": "keep HQ",
+        "explanation": "Keep HQ 82. Brown opened 4-0 with 68.0% completions, 5 TD, 0 INT and a 91-yard winning drive at Michigan. The prior thin sample prevents an above-average grade, but EA 73 is too low for the demonstrated current level."
+      },
+      {
+        "player": "Ethan Grunkemeyer",
+        "school": "Virginia Tech",
+        "hq": 87,
+        "ea": 80,
+        "delta": 7,
+        "disposition": "keep HQ",
+        "explanation": "Keep HQ 87. His 2026 breakout volume and accuracy are well ahead of EA's 80; the short established sample is why HQ stops at 87 rather than moving into the high-end tier."
+      }
+    ],
+    "majorRedFlags": [],
+    "result": "passed"
+  },
+  "postGradeDistribution": {
+    "min": 70,
+    "max": 98,
+    "mean": 83.81,
+    "median": 84,
+    "bands": {
+      "95-100": 4,
+      "90-94": 8,
+      "85-89": 18,
+      "80-84": 19,
+      "75-79": 15,
+      "below-75": 4
+    },
+    "note": "Distribution was inspected only after player-by-player grading and audits; no grade was moved to manufacture a target shape."
+  },
+  "runtimeBoundary": "No production/runtime grading behavior is changed by this artifact. It is the locked QB calibration authority for later server-owned Wheel grading integration.",
+  "futureVersioning": "Any future QB grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check. Normal maintenance is a targeted exception scan, not a full regrade."
+}
