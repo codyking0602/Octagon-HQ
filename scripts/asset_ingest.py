@@ -30,6 +30,15 @@ UFC_PROFILE_HOSTS = {
 PREFIX = "public/assets/fighters/"
 MAX_BYTES = 20 * 1024 * 1024
 MAX_PAGE_BYTES = 5 * 1024 * 1024
+PLACEHOLDER_URL_HINTS = (
+    "silhouette",
+    "placeholder",
+    "default-avatar",
+    "default_avatar",
+    "no-image",
+    "no_image",
+    "missing-image",
+)
 
 
 def fail(msg):
@@ -148,6 +157,31 @@ def resolve_source(spec):
     return image_url, request_bytes(image_url, MAX_BYTES)
 
 
+def source_url_looks_like_placeholder(url):
+    lowered = url.lower()
+    return any(hint in lowered for hint in PLACEHOLDER_URL_HINTS)
+
+
+def image_looks_like_monochrome_placeholder(im):
+    sample = im.convert("RGBA")
+    sample.thumbnail((96, 96), Image.Resampling.LANCZOS)
+    visible = [
+        (red, green, blue)
+        for red, green, blue, alpha in sample.getdata()
+        if alpha >= 32
+    ]
+    if len(visible) < 64:
+        return False
+
+    chroma = [max(pixel) - min(pixel) for pixel in visible]
+    colorful_ratio = sum(value >= 12 for value in chroma) / len(chroma)
+    average_chroma = sum(chroma) / len(chroma)
+
+    # UFC's generic fighter silhouette is essentially grayscale. Real ESPN/UFC
+    # portraits contain meaningful skin/team color even on dark backgrounds.
+    return colorful_ratio < 0.02 and average_chroma < 4.0
+
+
 def crop_box(im, crop):
     if not crop:
         return (0, 0, im.width, im.height)
@@ -190,11 +224,16 @@ def main():
 
     size = (320, 320) if kind == "thumb" else (626, 800)
     source_url, data = resolve_source(spec)
+    if source_url_looks_like_placeholder(source_url):
+        fail("source URL identifies a placeholder image")
 
     try:
         im = Image.open(BytesIO(data)).convert("RGBA")
     except Exception as exc:
         fail(f"cannot decode source image: {exc}")
+
+    if image_looks_like_monochrome_placeholder(im):
+        fail("source image looks like a generic monochrome silhouette/placeholder")
 
     if im.getchannel("A").getextrema() == (255, 255):
         try:
