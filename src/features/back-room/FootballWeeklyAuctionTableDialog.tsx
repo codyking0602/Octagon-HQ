@@ -5,6 +5,7 @@ import {
   type FootballWeeklyAuctionTablePlayer,
   type FootballWeeklyAuctionTableTeam,
 } from "../play/footballWeeklyAuctionTableRepository";
+import { AuctionTablePlayerScroll } from "./AuctionTablePlayerScroll";
 import { AuctionTableRosterScroll } from "./AuctionTableRosterScroll";
 import { createFootballWeeklyAuctionRepository } from "../play/footballWeeklyAuctionRepository";
 import {
@@ -115,7 +116,10 @@ function PlayerRow({
   onToggle: () => void;
 }) {
   return (
-    <article className={"football-weekly-auction-table__player" + (player.is_current_user ? " is-current" : "")}>
+    <AuctionTablePlayerScroll
+      className={"football-weekly-auction-table__player" + (player.is_current_user ? " is-current" : "")}
+      expanded={expanded}
+    >
       <button type="button" aria-expanded={expanded} onClick={onToggle}>
         <span className="football-weekly-auction-table__player-name">
           <strong>{player.display_name}</strong>
@@ -144,7 +148,7 @@ function PlayerRow({
           )}
         </AuctionTableRosterScroll>
       ) : null}
-    </article>
+    </AuctionTablePlayerScroll>
   );
 }
 
