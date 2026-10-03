@@ -1,0 +1,3853 @@
+{
+  "source": "Ourlads 2026 NCAA depth charts with ESPN current-roster identity reconciliation",
+  "sourceUrl": "https://www.ourlads.com/ncaa-football-depth-charts/default.aspx",
+  "espnSourceTemplate": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/{espnId}/roster",
+  "generatedAt": "2026-10-03",
+  "season": 2026,
+  "status": "generated-baseline-pending-manual-conference-audit",
+  "notes": "Step 2 current-CFB Wheel baseline. Ourlads owns current depth-chart inclusion and structure; ESPN normalizes current roster identity where it matches and supplies head coach metadata. ESPN omissions do not silently delete an Ourlads depth-chart player; unmatched names are retained and explicitly flagged for Step 3 verification. The generator selects a deliberately small starter-first pool under the same ceilings as NFL Wheel. Raw ESPN roster order never determines priority. Step 3 must manually audit football importance and reorder/replace edge cases conference by conference before CFB Wheel runtime launch.",
+  "caps": {
+    "QB": 2,
+    "RB": 3,
+    "WR": 4,
+    "Flex": 4,
+    "Front Seven": 6,
+    "Secondary": 6,
+    "Head Coach": 1
+  },
+  "teamCount": 68,
+  "teams": {
+    "alabama": {
+      "school": "Alabama",
+      "conference": "SEC",
+      "espnId": "333",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/alabama/89923",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
+      "QB": [
+        "Keelon Russell"
+      ],
+      "RB": [
+        "Daniel Hill",
+        "Trae'shawn Brown"
+      ],
+      "WR": [
+        "Ryan Coleman-Williams",
+        "Rico Scott",
+        "Lotzeir Brooks"
+      ],
+      "TE": [
+        "Kaleb Edwards"
+      ],
+      "Flex": [
+        "Daniel Hill",
+        "Ryan Coleman-Williams",
+        "Rico Scott",
+        "Kaleb Edwards"
+      ],
+      "Front Seven": [
+        "Devan Thompkins",
+        "Terrance Green",
+        "London Simmons",
+        "Caleb Woodson",
+        "Fatutoa Henry"
+      ],
+      "Secondary": [
+        "Zabien Brown",
+        "Keon Sabb",
+        "Bray Hubbard",
+        "Dijon Lee Jr.",
+        "Zyan Gibson"
+      ],
+      "Head Coach": [
+        "Kalen DeBoer"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Rico Scott",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Devan Thompkins",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "London Simmons",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Caleb Woodson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "arkansas": {
+      "school": "Arkansas",
+      "conference": "SEC",
+      "espnId": "8",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/arkansas/89992",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/8/roster",
+      "QB": [
+        "KJ Jackson"
+      ],
+      "RB": [
+        "Sutton Smith",
+        "Cam Settles"
+      ],
+      "WR": [
+        "Chris Marshall",
+        "CJ Brown",
+        "Ismael Cisse"
+      ],
+      "TE": [
+        "Ty Lockwood"
+      ],
+      "Flex": [
+        "Sutton Smith",
+        "Chris Marshall",
+        "CJ Brown",
+        "Ty Lockwood"
+      ],
+      "Front Seven": [
+        "Quincy Rhodes Jr.",
+        "David Oke",
+        "Hunter Osborne",
+        "Steven Soles Jr.",
+        "Ja'Quavion Smith",
+        "Ben Bogle"
+      ],
+      "Secondary": [
+        "Shelton Lewis",
+        "Miguel Mitchell",
+        "Christian Harrison",
+        "Joker Johnson",
+        "Khmori House"
+      ],
+      "Head Coach": [
+        "Ryan Silverfield"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Sutton Smith",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Steven Soles Jr.",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "auburn": {
+      "school": "Auburn",
+      "conference": "SEC",
+      "espnId": "2",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/auburn/90061",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2/roster",
+      "QB": [
+        "Byrum Brown"
+      ],
+      "RB": [
+        "Jeremiah Cobb",
+        "Omar Mabson II"
+      ],
+      "WR": [
+        "Keshaun Singleton",
+        "Jeremiah Koger",
+        "Chas Nimrod"
+      ],
+      "TE": [
+        "Jake Johnson"
+      ],
+      "Flex": [
+        "Jeremiah Cobb",
+        "Keshaun Singleton",
+        "Jeremiah Koger",
+        "Jake Johnson"
+      ],
+      "Front Seven": [
+        "Chris Murray",
+        "Dallas Walker IV",
+        "Cody Sigler",
+        "Dashawn Womack",
+        "Xavier Atkins",
+        "Elijah Melendez"
+      ],
+      "Secondary": [
+        "Rayshawn Pleasant",
+        "Kaleb Harris",
+        "Eric Winters",
+        "Andre Jordan Jr.",
+        "Sylvester Smith-Reed"
+      ],
+      "Head Coach": [
+        "Alex Golesh"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Dallas Walker IV",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Dashawn Womack",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Eric Winters",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "florida": {
+      "school": "Florida",
+      "conference": "SEC",
+      "espnId": "57",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/florida/90498",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
+      "QB": [
+        "Aaron Philo"
+      ],
+      "RB": [
+        "Jadan Baugh",
+        "Evan Pryor"
+      ],
+      "WR": [
+        "Dallas Wilson",
+        "Eric Singleton Jr.",
+        "Vernell Brown III"
+      ],
+      "TE": [
+        "Amir Jackson"
+      ],
+      "Flex": [
+        "Jadan Baugh",
+        "Dallas Wilson",
+        "Eric Singleton Jr.",
+        "Amir Jackson"
+      ],
+      "Front Seven": [
+        "Kamran James",
+        "Brendan Bett",
+        "Jeramiah McCloud",
+        "Jayden Woods",
+        "Myles Graham",
+        "Jaden Robinson"
+      ],
+      "Secondary": [
+        "Cormani McClain",
+        "Bryce Thornton",
+        "DJ Coleman",
+        "Ben Hanks III",
+        "Kanye Clark"
+      ],
+      "Head Coach": [
+        "Jon Sumrall"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Dallas Wilson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Eric Singleton Jr.",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jayden Woods",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Bryce Thornton",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "georgia": {
+      "school": "Georgia",
+      "conference": "SEC",
+      "espnId": "61",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/georgia/90590",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
+      "QB": [
+        "Gunner Stockton"
+      ],
+      "RB": [
+        "Nate Frazier",
+        "Chauncey Bowens"
+      ],
+      "WR": [
+        "Isiah Canion",
+        "Talyn Taylor",
+        "Sacovie White Helton"
+      ],
+      "TE": [
+        "Lawson Luckie"
+      ],
+      "Flex": [
+        "Nate Frazier",
+        "Isiah Canion",
+        "Talyn Taylor",
+        "Lawson Luckie"
+      ],
+      "Front Seven": [
+        "Gabe Harris Jr.",
+        "Jordan Hall",
+        "Elijah Griffin",
+        "Quintavius Johnson",
+        "Joseph Jonah-Ajonye"
+      ],
+      "Secondary": [
+        "Demello Jones",
+        "KJ Bolden",
+        "Kyron Jones",
+        "Ellis Robinson IV",
+        "Khalil Barnes"
+      ],
+      "Head Coach": [
+        "Kirby Smart"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Gunner Stockton",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Talyn Taylor",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Sacovie White Helton",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "kentucky": {
+      "school": "Kentucky",
+      "conference": "SEC",
+      "espnId": "96",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/kentucky/90866",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/96/roster",
+      "QB": [
+        "Kenny Minchey"
+      ],
+      "RB": [
+        "CJ Baxter",
+        "Jason Patterson"
+      ],
+      "WR": [
+        "DJ Miller",
+        "Nic Anderson",
+        "Shane Carr"
+      ],
+      "TE": [
+        "Willie Rodriguez"
+      ],
+      "Flex": [
+        "CJ Baxter",
+        "DJ Miller",
+        "Nic Anderson",
+        "Willie Rodriguez"
+      ],
+      "Front Seven": [
+        "Mi'Quise Humphrey-Grace",
+        "Tavion Gadson",
+        "Jaden Williams",
+        "Elijah Barnes",
+        "Grant Godfrey"
+      ],
+      "Secondary": [
+        "Hasaan Sykes",
+        "Ty Bryant",
+        "Jordan Castell",
+        "Terhyon Nichols",
+        "Aaron Gates"
+      ],
+      "Head Coach": [
+        "Will Stein"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Jaden Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "lsu": {
+      "school": "LSU",
+      "conference": "SEC",
+      "espnId": "99",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/lsu/90981",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
+      "QB": [
+        "Sam Leavitt"
+      ],
+      "RB": [
+        "Dilin Jones",
+        "Stacy Gage"
+      ],
+      "WR": [
+        "Jackson Harris",
+        "Eugene Wilson III",
+        "Winston Watkins Jr."
+      ],
+      "TE": [
+        "Trey'Dez Green"
+      ],
+      "Flex": [
+        "Dilin Jones",
+        "Jackson Harris",
+        "Eugene Wilson III",
+        "Trey'Dez Green"
+      ],
+      "Front Seven": [
+        "Jordan Ross",
+        "Princewill Umanmielen",
+        "Whit Weeks",
+        "TJ Dottery",
+        "Dylan Carpenter"
+      ],
+      "Secondary": [
+        "CJ Jimcoily",
+        "DJ Pickett",
+        "Ty Benefield",
+        "Tamarcus Cooley",
+        "Pj Woodland"
+      ],
+      "Head Coach": [
+        "Lane Kiffin"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Eugene Wilson III",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Winston Watkins Jr.",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Princewill Umanmielen",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Whit Weeks",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Pj Woodland",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "mississippi-state": {
+      "school": "Mississippi State",
+      "conference": "SEC",
+      "espnId": "344",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/mississippi-state/91211",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
+      "QB": [
+        "Kamario Taylor"
+      ],
+      "RB": [
+        "Fluff Bothwell",
+        "Kolin Wilson"
+      ],
+      "WR": [
+        "Sanfrisco Magee",
+        "Zion Ragins",
+        "Anthony Evans III"
+      ],
+      "TE": [
+        "Sam West"
+      ],
+      "Flex": [
+        "Fluff Bothwell",
+        "Sanfrisco Magee",
+        "Zion Ragins",
+        "Sam West"
+      ],
+      "Front Seven": [
+        "Will Whitson",
+        "Jaray Bledsoe",
+        "DJ Reed",
+        "Amaree Williams",
+        "Zakari Tillman",
+        "Jalen Smith"
+      ],
+      "Secondary": [
+        "Kelley Jones",
+        "Jardin Gilbert",
+        "Marcus Williams",
+        "Jett Jefferson",
+        "Isaac Smith"
+      ],
+      "Head Coach": [
+        "Jeff Lebby"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Kolin Wilson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Sam West",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Will Whitson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Amaree Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Marcus Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "missouri": {
+      "school": "Missouri",
+      "conference": "SEC",
+      "espnId": "142",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/missouri/91234",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
+      "QB": [
+        "Austin Simmons"
+      ],
+      "RB": [
+        "Jamal Roberts",
+        "Xai'Shaun Edwards"
+      ],
+      "WR": [
+        "Naeshaun Montgomery",
+        "Donovan Olugbode",
+        "Cayden Lee"
+      ],
+      "TE": [
+        "Brett Norfleet"
+      ],
+      "Flex": [
+        "Jamal Roberts",
+        "Naeshaun Montgomery",
+        "Donovan Olugbode",
+        "Brett Norfleet"
+      ],
+      "Front Seven": [
+        "Langden Kitchen",
+        "Marquis Gracial",
+        "Jalen Marshall",
+        "Darris Smith",
+        "Nicholas Rodriguez",
+        "Robert Woodyard Jr."
+      ],
+      "Secondary": [
+        "Sione Laulea",
+        "Santana Banner",
+        "Trajen Greco",
+        "Chris Graves Jr.",
+        "Kensley Louidor-Faustin"
+      ],
+      "Head Coach": [
+        "Eliah Drinkwitz"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Robert Woodyard Jr.",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "oklahoma": {
+      "school": "Oklahoma",
+      "conference": "SEC",
+      "espnId": "201",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/oklahoma/91556",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/201/roster",
+      "QB": [
+        "John Mateer"
+      ],
+      "RB": [
+        "Lloyd Avant",
+        "Xavier Robinson"
+      ],
+      "WR": [
+        "Elijah Thomas",
+        "Parker Livingstone",
+        "Isaiah Sategna III"
+      ],
+      "TE": [
+        "Rocky Beers"
+      ],
+      "Flex": [
+        "Lloyd Avant",
+        "Elijah Thomas",
+        "Parker Livingstone",
+        "Rocky Beers"
+      ],
+      "Front Seven": [
+        "Taylor Wein",
+        "Jayden Jackson",
+        "David Stone",
+        "Adepoju Adebawore",
+        "James Nesta",
+        "Owen Heinecke"
+      ],
+      "Secondary": [
+        "Eli Bowen",
+        "Peyton Bowen",
+        "Omarion Robinson",
+        "Courtland Guillory",
+        "Trystan Haynes"
+      ],
+      "Head Coach": [
+        "Brent Venables"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Elijah Thomas",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Taylor Wein",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "David Stone",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "ole-miss": {
+      "school": "Ole Miss",
+      "conference": "SEC",
+      "espnId": "145",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/ole-miss/91602",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
+      "QB": [
+        "Trinidad Chambliss"
+      ],
+      "RB": [
+        "Kewan Lacy",
+        "Makhi Frazier"
+      ],
+      "WR": [
+        "Deuce Alexander",
+        "Horatio Fields",
+        "Johntay Cook II"
+      ],
+      "TE": [
+        "Luke Hasz"
+      ],
+      "Flex": [
+        "Kewan Lacy",
+        "Deuce Alexander",
+        "Horatio Fields",
+        "Luke Hasz"
+      ],
+      "Front Seven": [
+        "Kam Franklin",
+        "Jamarious Brown",
+        "Will Echoles",
+        "Suntarine Perkins",
+        "Keaton Thomas",
+        "Luke Ferrelli"
+      ],
+      "Secondary": [
+        "Jaylon Braxton",
+        "Sharif Denson",
+        "Joenel Aguero",
+        "Antonio Kite",
+        "Edwin Joseph"
+      ],
+      "Head Coach": [
+        "Pete Golding"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Keaton Thomas",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "south-carolina": {
+      "school": "South Carolina",
+      "conference": "SEC",
+      "espnId": "2579",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/south-carolina/91832",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2579/roster",
+      "QB": [
+        "LaNorris Sellers"
+      ],
+      "RB": [
+        "Matt Fuller",
+        "Christian Clark"
+      ],
+      "WR": [
+        "Nitro Tuggle",
+        "Nyck Harbor",
+        "Mazeo Bennett Jr."
+      ],
+      "TE": [
+        "Brady Hunt"
+      ],
+      "Flex": [
+        "Matt Fuller",
+        "Nitro Tuggle",
+        "Nyck Harbor",
+        "Brady Hunt"
+      ],
+      "Front Seven": [
+        "Caleb Herring",
+        "Anthony Addison",
+        "Justin Okoronkwo",
+        "Fred Johnson",
+        "Julian Walker"
+      ],
+      "Secondary": [
+        "Vicari Swain",
+        "Peyton Williams",
+        "David Bucey",
+        "Judge Collier",
+        "Quay'sheed Scott"
+      ],
+      "Head Coach": [
+        "Shane Beamer"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Nitro Tuggle",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Julian Walker",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Vicari Swain",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Peyton Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "tennessee": {
+      "school": "Tennessee",
+      "conference": "SEC",
+      "espnId": "2633",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/tennessee/91993",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
+      "QB": [
+        "Faizon Brandon"
+      ],
+      "RB": [
+        "DeSean Bishop",
+        "Javin Gordon"
+      ],
+      "WR": [
+        "Mike Matthews",
+        "Radarious Jackson",
+        "Braylon Staley"
+      ],
+      "TE": [
+        "DaSaahn Brame"
+      ],
+      "Flex": [
+        "DeSean Bishop",
+        "Mike Matthews",
+        "Radarious Jackson",
+        "DaSaahn Brame"
+      ],
+      "Front Seven": [
+        "Tyree Weathersby",
+        "Xavier Gilliam",
+        "Daevin Hobbs",
+        "Amare Campbell",
+        "Arion Carter"
+      ],
+      "Secondary": [
+        "Kayin Lee",
+        "TJ Metcalf",
+        "Dejuan Lane",
+        "Ty Redmond",
+        "Qua Moss"
+      ],
+      "Head Coach": [
+        "Josh Heupel"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Tyree Weathersby",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "texas": {
+      "school": "Texas",
+      "conference": "SEC",
+      "espnId": "251",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/texas/92016",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
+      "QB": [
+        "Arch Manning"
+      ],
+      "RB": [
+        "Hollywood Smothers",
+        "Raleek Brown"
+      ],
+      "WR": [
+        "Cam Coleman",
+        "Ryan Wingo",
+        "Emmett Mosley V"
+      ],
+      "TE": [
+        "Spencer Shannon"
+      ],
+      "Flex": [
+        "Hollywood Smothers",
+        "Cam Coleman",
+        "Ryan Wingo",
+        "Spencer Shannon"
+      ],
+      "Front Seven": [
+        "Zina Umeozulu",
+        "Maraad Watson",
+        "Hero Kanu",
+        "Colin Simmons",
+        "Rasheem Biles",
+        "Justin Cryer"
+      ],
+      "Secondary": [
+        "Graceson Littleton",
+        "Kade Phillips",
+        "Kobe Black",
+        "Jelani McDonald",
+        "Bo Mascoe"
+      ],
+      "Head Coach": [
+        "Steve Sarkisian"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Ryan Wingo",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Zina Umeozulu",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Maraad Watson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "texas-am": {
+      "school": "Texas A&M",
+      "conference": "SEC",
+      "espnId": "245",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/texas-am/92039",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/245/roster",
+      "QB": [
+        "Marcel Reed"
+      ],
+      "RB": [
+        "Rueben Owens II",
+        "Jamarion Morrow"
+      ],
+      "WR": [
+        "Isaiah Horton",
+        "Ashton Bethel-Roman",
+        "Mario Craver"
+      ],
+      "TE": [
+        "Micah Riley"
+      ],
+      "Flex": [
+        "Rueben Owens II",
+        "Isaiah Horton",
+        "Ashton Bethel-Roman",
+        "Micah Riley"
+      ],
+      "Front Seven": [
+        "T.J. Searcy",
+        "CJ Mims",
+        "DJ Hicks",
+        "Marco Jones",
+        "Noah Mikhail",
+        "Ray Coney"
+      ],
+      "Secondary": [
+        "Dezz Ricks",
+        "Dalton Brooks",
+        "Marcus Ratcliffe",
+        "Julio Humphrey",
+        "Jordan Shaw"
+      ],
+      "Head Coach": [
+        "Mike Elko"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "T.J. Searcy",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jordan Shaw",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "vanderbilt": {
+      "school": "Vanderbilt",
+      "conference": "SEC",
+      "espnId": "238",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/vanderbilt/92361",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/238/roster",
+      "QB": [
+        "Jared Curtis"
+      ],
+      "RB": [
+        "Sedrick Alexander",
+        "Makhilyn Young"
+      ],
+      "WR": [
+        "Junior Sherrill",
+        "Brycen Coleman",
+        "Tristen Brown"
+      ],
+      "TE": [
+        "Jayvontay Conner"
+      ],
+      "Flex": [
+        "Sedrick Alexander",
+        "Junior Sherrill",
+        "Brycen Coleman",
+        "Jayvontay Conner"
+      ],
+      "Front Seven": [
+        "Brian Allen Jr.",
+        "Glenn Seabrooks III",
+        "Issa Ouattara",
+        "Nick Rinaldi",
+        "Bryan Longwell"
+      ],
+      "Secondary": [
+        "Jordan Matthews",
+        "CJ Heard",
+        "Ricardo Jones",
+        "Martel Hight",
+        "Mason Lewis"
+      ],
+      "Head Coach": [
+        "Clark Lea"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Makhilyn Young",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "illinois": {
+      "school": "Illinois",
+      "conference": "Big Ten",
+      "espnId": "356",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/illinois/90705",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/356/roster",
+      "QB": [
+        "Katin Houser"
+      ],
+      "RB": [
+        "Calil Valentine",
+        "Aidan Laughery"
+      ],
+      "WR": [
+        "Collin Dixon",
+        "Hudson Clement",
+        "Brayden Trimble"
+      ],
+      "TE": [
+        "Christian Abney"
+      ],
+      "Flex": [
+        "Calil Valentine",
+        "Collin Dixon",
+        "Hudson Clement",
+        "Christian Abney"
+      ],
+      "Front Seven": [
+        "Pat Farrell",
+        "Darrell Prater",
+        "Joe Barna",
+        "Mason Muragin",
+        "Ismael Kante",
+        "James Kreutz"
+      ],
+      "Secondary": [
+        "Jakwon Morris",
+        "Matthew Bailey",
+        "Mac Resetich",
+        "Juice Clarke",
+        "Xavier Scott"
+      ],
+      "Head Coach": [
+        "Bret Bielema"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Calil Valentine",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Brayden Trimble",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "indiana": {
+      "school": "Indiana",
+      "conference": "Big Ten",
+      "espnId": "84",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/indiana/90728",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
+      "QB": [
+        "Josh Hoover"
+      ],
+      "RB": [
+        "Turbo Richard",
+        "Lee Beebe Jr."
+      ],
+      "WR": [
+        "Nick Marsh",
+        "Charlie Becker",
+        "Tyler Morris"
+      ],
+      "TE": [
+        "Andrew Barker"
+      ],
+      "Flex": [
+        "Turbo Richard",
+        "Nick Marsh",
+        "Charlie Becker",
+        "Andrew Barker"
+      ],
+      "Front Seven": [
+        "Josh Burnham",
+        "Tyrique Tucker",
+        "Mario Landino",
+        "Rolijah Hardy",
+        "Isaiah Jones"
+      ],
+      "Secondary": [
+        "Jamari Sharpe",
+        "Amare Ferrell",
+        "Preston Zachman",
+        "Ryland Gandy",
+        "Byron Baldwin Jr."
+      ],
+      "Head Coach": [
+        "Curt Cignetti"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Preston Zachman",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "iowa": {
+      "school": "Iowa",
+      "conference": "Big Ten",
+      "espnId": "2294",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/iowa/90751",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
+      "QB": [
+        "Hank Brown"
+      ],
+      "RB": [
+        "Kamari Moulton",
+        "L.J. Phillips Jr."
+      ],
+      "WR": [
+        "Reece Vander Zee",
+        "Tony Diaz",
+        "Evan James"
+      ],
+      "TE": [
+        "Dj Vonnahme"
+      ],
+      "Flex": [
+        "Kamari Moulton",
+        "Reece Vander Zee",
+        "Tony Diaz",
+        "Dj Vonnahme"
+      ],
+      "Front Seven": [
+        "Kenneth Merrieweather",
+        "Iose Epenesa",
+        "Jayden Montgomery",
+        "Cam Buffington",
+        "Kahmari Brown"
+      ],
+      "Secondary": [
+        "Jaylen Watson",
+        "Anthony Hawkins",
+        "Zach Lutmer",
+        "Deshaun Lee",
+        "Rashad Godfrey Jr."
+      ],
+      "Head Coach": [
+        "Kirk Ferentz"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Dj Vonnahme",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jaylen Watson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "maryland": {
+      "school": "Maryland",
+      "conference": "Big Ten",
+      "espnId": "120",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/maryland/91027",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/120/roster",
+      "QB": [
+        "Malik Washington"
+      ],
+      "RB": [
+        "Iverson Howard",
+        "Liam Willson"
+      ],
+      "WR": [
+        "Na'eem Abdul-Rahim Gladding",
+        "Kaleb Webb",
+        "Chris Durr Jr."
+      ],
+      "TE": [
+        "Dorian Fleming"
+      ],
+      "Flex": [
+        "Iverson Howard",
+        "Na'eem Abdul-Rahim Gladding",
+        "Kaleb Webb",
+        "Dorian Fleming"
+      ],
+      "Front Seven": [
+        "Lavon Johnson",
+        "Eyan Thomas",
+        "Derrick LeBlanc",
+        "Carlton Smith",
+        "Daniel Wingate"
+      ],
+      "Secondary": [
+        "Jamare Glasker",
+        "Lavain Scruggs",
+        "Messiah Delhomme",
+        "Amari Jackson",
+        "Jordan Scruggs"
+      ],
+      "Head Coach": [
+        "Mike Locksley"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Liam Willson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Daniel Wingate",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "michigan": {
+      "school": "Michigan",
+      "conference": "Big Ten",
+      "espnId": "130",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/michigan/91119",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/130/roster",
+      "QB": [
+        "Bryce Underwood"
+      ],
+      "RB": [
+        "Jordan Marshall",
+        "Savion Hiter"
+      ],
+      "WR": [
+        "Andrew Marsh",
+        "Salesi Moa",
+        "JJ Buchanan"
+      ],
+      "TE": [
+        "Jalen Hoffman"
+      ],
+      "Flex": [
+        "Jordan Marshall",
+        "Andrew Marsh",
+        "Salesi Moa",
+        "Jalen Hoffman"
+      ],
+      "Front Seven": [
+        "Dom Nichols",
+        "John Henry Daley",
+        "Nathaniel Staehling",
+        "Troy Bowles",
+        "Chase Taylor"
+      ],
+      "Secondary": [
+        "Smith Snowden",
+        "Rod Moore Jr.",
+        "Chris Bracy",
+        "Jyaire Hill",
+        "Zeke Berry"
+      ],
+      "Head Coach": [
+        "Kyle Whittingham"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Bryce Underwood",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Nathaniel Staehling",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Chase Taylor",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Smith Snowden",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "michigan-state": {
+      "school": "Michigan State",
+      "conference": "Big Ten",
+      "espnId": "127",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/michigan-state/91142",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/127/roster",
+      "QB": [
+        "Alessio Milivojevic"
+      ],
+      "RB": [
+        "Cam Edwards",
+        "Jaziun Patterson"
+      ],
+      "WR": [
+        "Rodney Bullard Jr.",
+        "Fredrick Moore",
+        "Chrishon McCray"
+      ],
+      "TE": [
+        "Brennan Parachek"
+      ],
+      "Flex": [
+        "Cam Edwards",
+        "Rodney Bullard Jr.",
+        "Fredrick Moore",
+        "Brennan Parachek"
+      ],
+      "Front Seven": [
+        "Isaac Smith",
+        "Ben Roberts",
+        "Eli Coenen",
+        "Kenny Soares Jr.",
+        "Dion Crawford",
+        "Brady Pretzlaff"
+      ],
+      "Secondary": [
+        "Tre Bell",
+        "Nikai Martinez",
+        "Devin Vaught",
+        "Charles Brantley",
+        "Michael Richard"
+      ],
+      "Head Coach": [
+        "Pat Fitzgerald"
+      ],
+      "reconciliationWarnings": []
+    },
+    "minnesota": {
+      "school": "Minnesota",
+      "conference": "Big Ten",
+      "espnId": "135",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/minnesota/91188",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/135/roster",
+      "QB": [
+        "Drake Lindsey"
+      ],
+      "RB": [
+        "Darius Taylor",
+        "TJ Thomas"
+      ],
+      "WR": [
+        "Jalen Smith",
+        "Noah Jennings",
+        "Javon Tracy"
+      ],
+      "TE": [
+        "Pierce Walsh"
+      ],
+      "Flex": [
+        "Darius Taylor",
+        "Jalen Smith",
+        "Noah Jennings",
+        "Pierce Walsh"
+      ],
+      "Front Seven": [
+        "Anthony Smith",
+        "Naquan Crowder",
+        "Theorin Randle",
+        "TJ Bush Jr.",
+        "Matt Kingsbury",
+        "Maverick Baranowski"
+      ],
+      "Secondary": [
+        "Aydan West",
+        "Zack Harden",
+        "Kerry Brown",
+        "John Nestor",
+        "Aidan Gousby"
+      ],
+      "Head Coach": [
+        "P.J. Fleck"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Pierce Walsh",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Aydan West",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "nebraska": {
+      "school": "Nebraska",
+      "conference": "Big Ten",
+      "espnId": "158",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/nebraska/91303",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/158/roster",
+      "QB": [
+        "Anthony Colandrea"
+      ],
+      "RB": [
+        "Isaiah Mozee",
+        "Mekhi Nelson"
+      ],
+      "WR": [
+        "Nyziah Hunter",
+        "Kwazi Gilmer",
+        "Jacory Barney Jr."
+      ],
+      "TE": [
+        "Luke Lindenmeyer"
+      ],
+      "Flex": [
+        "Isaiah Mozee",
+        "Nyziah Hunter",
+        "Kwazi Gilmer",
+        "Luke Lindenmeyer"
+      ],
+      "Front Seven": [
+        "Cameron Lenhardt",
+        "Owen Stoudmire",
+        "Jahsear Whittington",
+        "Anthony Jones Jr.",
+        "Owen Chambliss",
+        "Vincent Shavers Jr."
+      ],
+      "Secondary": [
+        "Victor Evans III",
+        "Jamir Conn",
+        "Dwayne McDougle III",
+        "Andrew Marshall",
+        "Donovan Jones"
+      ],
+      "Head Coach": [
+        "Matt Rhule"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Owen Stoudmire",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jahsear Whittington",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "northwestern": {
+      "school": "Northwestern",
+      "conference": "Big Ten",
+      "espnId": "77",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/northwestern/91464",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/77/roster",
+      "QB": [
+        "Aidan Chiles"
+      ],
+      "RB": [
+        "Caleb Komolafe",
+        "Gavin Sawchuk"
+      ],
+      "WR": [
+        "Hayden Eligon II",
+        "Griffin Wilde",
+        "Drew Wagner"
+      ],
+      "TE": [
+        "Alex Honig"
+      ],
+      "Flex": [
+        "Caleb Komolafe",
+        "Hayden Eligon II",
+        "Griffin Wilde",
+        "Alex Honig"
+      ],
+      "Front Seven": [
+        "Michael Kilbane",
+        "Jamaal Johnson",
+        "Braydon Brus",
+        "Kobie McKinzie",
+        "Caden O'Rourke"
+      ],
+      "Secondary": [
+        "Ore Adeyi",
+        "Robert Fitzgerald",
+        "Jon Jon Stevens Jr.",
+        "Montae Pate",
+        "Sean Martin"
+      ],
+      "Head Coach": [
+        "David Braun"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Gavin Sawchuk",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Griffin Wilde",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Drew Wagner",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jon Jon Stevens Jr.",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "ohio-state": {
+      "school": "Ohio State",
+      "conference": "Big Ten",
+      "espnId": "194",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/ohio-state/91533",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
+      "QB": [
+        "Julian Sayin"
+      ],
+      "RB": [
+        "Bo Jackson",
+        "Ja'Kobi Jackson"
+      ],
+      "WR": [
+        "Jeremiah Smith",
+        "Devin McCuin",
+        "Brandon Inniss"
+      ],
+      "TE": [
+        "Nate Roberts"
+      ],
+      "Flex": [
+        "Bo Jackson",
+        "Jeremiah Smith",
+        "Devin McCuin",
+        "Nate Roberts"
+      ],
+      "Front Seven": [
+        "Kenyatta Jackson Jr.",
+        "John Walker",
+        "Eddrick Houston",
+        "Zion Grady",
+        "Christian Alliegro",
+        "Payton Pierce"
+      ],
+      "Secondary": [
+        "Jermaine Mathews Jr.",
+        "Earl Little Jr.",
+        "Jaylen McClain",
+        "Devin Sanchez",
+        "Jay Timmons"
+      ],
+      "Head Coach": [
+        "Ryan Day"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "John Walker",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jay Timmons",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "oregon": {
+      "school": "Oregon",
+      "conference": "Big Ten",
+      "espnId": "2483",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/oregon/91625",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
+      "QB": [
+        "Dante Moore"
+      ],
+      "RB": [
+        "Jordon Davison",
+        "Dierre Hill Jr."
+      ],
+      "WR": [
+        "Dakorien Moore",
+        "Messiah Hampton",
+        "Evan Stewart"
+      ],
+      "TE": [
+        "Jamari Johnson"
+      ],
+      "Flex": [
+        "Jordon Davison",
+        "Dakorien Moore",
+        "Messiah Hampton",
+        "Jamari Johnson"
+      ],
+      "Front Seven": [
+        "Matayo Uiagalelei",
+        "Amauri Washington",
+        "Bear Alexander",
+        "Teitum Tuioti",
+        "Elijah Rushing"
+      ],
+      "Secondary": [
+        "Ify Obidegwu",
+        "Koi Perich",
+        "Aaron Flowers",
+        "Brandon Finney Jr.",
+        "Carl Williams IV"
+      ],
+      "Head Coach": [
+        "Dan Lanning"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Matayo Uiagalelei",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Amauri Washington",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Teitum Tuioti",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Carl Williams IV",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "penn-state": {
+      "school": "Penn State",
+      "conference": "Big Ten",
+      "espnId": "213",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/penn-state/91671",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/213/roster",
+      "QB": [
+        "Rocco Becht"
+      ],
+      "RB": [
+        "Carson Hansen",
+        "James Peoples"
+      ],
+      "WR": [
+        "Chase Sowell",
+        "Brett Eskildsen",
+        "Zay Robinson"
+      ],
+      "TE": [
+        "Andrew Rappleyea",
+        "Gabe Burkle"
+      ],
+      "Flex": [
+        "Carson Hansen",
+        "Chase Sowell",
+        "Brett Eskildsen",
+        "Andrew Rappleyea"
+      ],
+      "Front Seven": [
+        "Ikenna Ezeogu",
+        "Yvan Kemajou",
+        "Tony Rojas",
+        "Kooper Ebel",
+        "Alexander McPherson"
+      ],
+      "Secondary": [
+        "Daryus Dixson",
+        "Jeremiah Cooper",
+        "Marcus Neal Jr.",
+        "Audavion Collins",
+        "Zion Tracy"
+      ],
+      "Head Coach": [
+        "Matt Campbell"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Zion Tracy",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "purdue": {
+      "school": "Purdue",
+      "conference": "Big Ten",
+      "espnId": "2509",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/purdue/91717",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2509/roster",
+      "QB": [
+        "Ryan Browne"
+      ],
+      "RB": [
+        "Fame Ijeboi",
+        "Jerrick Gibson"
+      ],
+      "WR": [
+        "De'Nylon Morrissette",
+        "Chauncey Magwood",
+        "Asaad Waseem"
+      ],
+      "TE": [
+        "George Burhenn"
+      ],
+      "Flex": [
+        "Fame Ijeboi",
+        "De'Nylon Morrissette",
+        "Chauncey Magwood",
+        "George Burhenn"
+      ],
+      "Front Seven": [
+        "Trey Smith",
+        "Curt Neal",
+        "Ian Jeffries",
+        "Keyshawn Burgos",
+        "Jojo Hayden",
+        "Charles Correa"
+      ],
+      "Secondary": [
+        "Don Saunders",
+        "John Slaughter",
+        "Jaden Mangham",
+        "Hudauri Hines",
+        "Mister Clark"
+      ],
+      "Head Coach": [
+        "Barry Odom"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Asaad Waseem",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "rutgers": {
+      "school": "Rutgers",
+      "conference": "Big Ten",
+      "espnId": "164",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/rutgers/91763",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/164/roster",
+      "QB": [
+        "Aj Surace"
+      ],
+      "RB": [
+        "Antwan Raymond",
+        "Clay Thevenin"
+      ],
+      "WR": [
+        "Ben Black III",
+        "KJ Duff",
+        "Jourdin Houston"
+      ],
+      "TE": [
+        "Logan Blake"
+      ],
+      "Flex": [
+        "Antwan Raymond",
+        "Ben Black III",
+        "KJ Duff",
+        "Logan Blake"
+      ],
+      "Front Seven": [
+        "Sekou Kromah",
+        "Malachi Davis",
+        "Sean Allison",
+        "Ty Morris",
+        "Farell Gnago"
+      ],
+      "Secondary": [
+        "Bradlee Jones",
+        "Latrell Noel",
+        "Chris Joines",
+        "Kevyn Humes",
+        "Jesse Ofurie"
+      ],
+      "Head Coach": [
+        "Greg Schiano"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Aj Surace",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Antwan Raymond",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Clay Thevenin",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "ucla": {
+      "school": "UCLA",
+      "conference": "Big Ten",
+      "espnId": "26",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/ucla/92223",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
+      "QB": [
+        "Nico Iamaleava"
+      ],
+      "RB": [
+        "Wayne Knight",
+        "Anthony Woods"
+      ],
+      "WR": [
+        "Brian Rowe Jr.",
+        "Landon Ellis",
+        "Semaj Morgan"
+      ],
+      "TE": [
+        "Josh Phifer"
+      ],
+      "Flex": [
+        "Wayne Knight",
+        "Brian Rowe Jr.",
+        "Landon Ellis",
+        "Josh Phifer"
+      ],
+      "Front Seven": [
+        "Sahir West",
+        "Amier Washington",
+        "Tyson Ford",
+        "Scott Taylor",
+        "Jalen Woods",
+        "Sammy Omosigho"
+      ],
+      "Secondary": [
+        "Scooter Jackson",
+        "Malik Hartford",
+        "Ta'Shawn James",
+        "Rodrick Pleasant",
+        "Derrick Barksdale"
+      ],
+      "Head Coach": [
+        "Bob Chesney"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Anthony Woods",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Sahir West",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Amier Washington",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Scott Taylor",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jalen Woods",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "usc": {
+      "school": "USC",
+      "conference": "Big Ten",
+      "espnId": "30",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/usc/92269",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
+      "QB": [
+        "Jayden Maiava"
+      ],
+      "RB": [
+        "King Miller",
+        "Waymond Jordan"
+      ],
+      "WR": [
+        "Tanook Hines",
+        "Kayden Dixon-Wyatt",
+        "Zacharyus Williams"
+      ],
+      "TE": [
+        "Mark Bowman"
+      ],
+      "Flex": [
+        "King Miller",
+        "Tanook Hines",
+        "Kayden Dixon-Wyatt",
+        "Mark Bowman"
+      ],
+      "Front Seven": [
+        "Luke Wafle",
+        "Kameryn Crawford",
+        "Deven Bryant",
+        "Desman Stephens II",
+        "Braylan Shelby"
+      ],
+      "Secondary": [
+        "Jontez Williams",
+        "Christian Pierce",
+        "Prophet Brown",
+        "Chasen Johnson",
+        "Alex Graham"
+      ],
+      "Head Coach": [
+        "Lincoln Riley"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Zacharyus Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Luke Wafle",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jontez Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "washington": {
+      "school": "Washington",
+      "conference": "Big Ten",
+      "espnId": "264",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/washington/92453",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/264/roster",
+      "QB": [
+        "Demond Williams Jr."
+      ],
+      "RB": [
+        "Brian Bonner Jr.",
+        "Trey Cooley"
+      ],
+      "WR": [
+        "Chris Lawson",
+        "Rashid Williams",
+        "Dezmen Roebuck"
+      ],
+      "TE": [
+        "Decker DeGraaf"
+      ],
+      "Flex": [
+        "Brian Bonner Jr.",
+        "Chris Lawson",
+        "Rashid Williams",
+        "Decker DeGraaf"
+      ],
+      "Front Seven": [
+        "Jacob Lane",
+        "Elinneus Davis",
+        "Derek Colman-Brusa",
+        "Ramzak Fruean",
+        "Zaydrius Rainey-Sale",
+        "Jacob Manu"
+      ],
+      "Secondary": [
+        "Dylan Robinson",
+        "Alex McLaughlin",
+        "Rylon Dillard-Allen",
+        "Emmanuel Karnley",
+        "Rahshawn Clark"
+      ],
+      "Head Coach": [
+        "Jedd Fisch"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Demond Williams Jr.",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Rashid Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "wisconsin": {
+      "school": "Wisconsin",
+      "conference": "Big Ten",
+      "espnId": "275",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/wisconsin/92545",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/275/roster",
+      "QB": [
+        "Colton Joseph"
+      ],
+      "RB": [
+        "Abu Sama III",
+        "Darrion Dupree"
+      ],
+      "WR": [
+        "Eugene Hilton Jr.",
+        "Chris Brooks Jr.",
+        "Tyrell Henry"
+      ],
+      "TE": [
+        "Jacob Harris"
+      ],
+      "Flex": [
+        "Abu Sama III",
+        "Eugene Hilton Jr.",
+        "Chris Brooks Jr.",
+        "Jacob Harris"
+      ],
+      "Front Seven": [
+        "Hammond Russell IV",
+        "Charles Perkins",
+        "Mason Posa",
+        "Cooper Catalano",
+        "Junior Poyser"
+      ],
+      "Secondary": [
+        "Javan Robinson",
+        "Matthew Jung",
+        "Marvin Burks Jr.",
+        "Jai'mier Scott",
+        "Bryce West"
+      ],
+      "Head Coach": [
+        "Luke Fickell"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Bryce West",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "arizona": {
+      "school": "Arizona",
+      "conference": "Big 12",
+      "espnId": "12",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/arizona/89946",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/12/roster",
+      "QB": [
+        "Noah Fifita"
+      ],
+      "RB": [
+        "Ismail Mahdi",
+        "Kedrick Reescano"
+      ],
+      "WR": [
+        "Tre Spivey",
+        "Chris Hunter III",
+        "Giovanni Richardson"
+      ],
+      "TE": [
+        "Cole Rusk"
+      ],
+      "Flex": [
+        "Ismail Mahdi",
+        "Tre Spivey",
+        "Chris Hunter III",
+        "Cole Rusk"
+      ],
+      "Front Seven": [
+        "Tre Smith",
+        "Leroy Palu",
+        "Mays Pese",
+        "Dominic Lolesio",
+        "Chase Kennedy",
+        "Taye Brown"
+      ],
+      "Secondary": [
+        "Dwight Bootle II",
+        "Gavin Hunter",
+        "Malcolm Hartzog Jr.",
+        "Jay'Vion Cole",
+        "Quinn Olson"
+      ],
+      "Head Coach": [
+        "Brent Brennan"
+      ],
+      "reconciliationWarnings": []
+    },
+    "arizona-state": {
+      "school": "Arizona State",
+      "conference": "Big 12",
+      "espnId": "9",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/arizona-state/89969",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/9/roster",
+      "QB": [
+        "Cutter Boley"
+      ],
+      "RB": [
+        "Kyson Brown",
+        "Marquis Gillis"
+      ],
+      "WR": [
+        "Reed Harris",
+        "Omarion Miller",
+        "Jalen Moss"
+      ],
+      "TE": [
+        "Khamari Anderson"
+      ],
+      "Flex": [
+        "Kyson Brown",
+        "Reed Harris",
+        "Omarion Miller",
+        "Khamari Anderson"
+      ],
+      "Front Seven": [
+        "Roman Pitre",
+        "Jalen Thompson",
+        "Martell Hughes",
+        "Owen Long",
+        "Emarrion Winston"
+      ],
+      "Secondary": [
+        "Rodney Bimage Jr.",
+        "Lyrik Rawls",
+        "Adrian Wilson",
+        "Ashton Stamps",
+        "Montana Warren"
+      ],
+      "Head Coach": [
+        "Kenny Dillingham"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Emarrion Winston",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Adrian Wilson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "baylor": {
+      "school": "Baylor",
+      "conference": "Big 12",
+      "espnId": "239",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/baylor/90107",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/239/roster",
+      "QB": [
+        "DJ Lagway"
+      ],
+      "RB": [
+        "Dawson Pendergrass",
+        "Caden Knighten"
+      ],
+      "WR": [
+        "Louis Brown IV",
+        "Jadon Porter",
+        "Gavin Freeman"
+      ],
+      "TE": [
+        "Matthew Klopfenstein"
+      ],
+      "Flex": [
+        "Dawson Pendergrass",
+        "Louis Brown IV",
+        "Jadon Porter",
+        "Matthew Klopfenstein"
+      ],
+      "Front Seven": [
+        "Kyler Jordan",
+        "Hosea Wheeler",
+        "Devonte Tezino",
+        "Ryan Davis",
+        "Kyland Reed",
+        "Travion Barnes"
+      ],
+      "Secondary": [
+        "LeVar Thornton Jr.",
+        "Cole Redding",
+        "Colby McCalister",
+        "Devon Jordan",
+        "Daniel Cobbs"
+      ],
+      "Head Coach": [
+        "Dave Aranda"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Hosea Wheeler",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "byu": {
+      "school": "BYU",
+      "conference": "Big 12",
+      "espnId": "252",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/brigham-young/90222",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
+      "QB": [
+        "Bear Bachmeier"
+      ],
+      "RB": [
+        "LJ Martin",
+        "Preston Rex"
+      ],
+      "WR": [
+        "Kyler Kasper",
+        "Jojo Phillips",
+        "Legend Glasker"
+      ],
+      "TE": [
+        "Walker Lyons"
+      ],
+      "Flex": [
+        "LJ Martin",
+        "Kyler Kasper",
+        "Jojo Phillips",
+        "Walker Lyons"
+      ],
+      "Front Seven": [
+        "Tausili Akana",
+        "Keanu Tanuvasa",
+        "Bodie Schoonover",
+        "Nusi Taumoepeau",
+        "Hunter Clegg"
+      ],
+      "Secondary": [
+        "Evan Johnson",
+        "Tommy Prassas",
+        "Faletau Satuala",
+        "Therrian Alexander III",
+        "Cannon DeVries"
+      ],
+      "Head Coach": [
+        "Kalani Sitake"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Keanu Tanuvasa",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Nusi Taumoepeau",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "cincinnati": {
+      "school": "Cincinnati",
+      "conference": "Big 12",
+      "espnId": "2132",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/cincinnati/90291",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2132/roster",
+      "QB": [
+        "JC French IV"
+      ],
+      "RB": [
+        "Cole Tabb",
+        "Gi'Bran Payne"
+      ],
+      "WR": [
+        "JV Gibson",
+        "Malachi Henry",
+        "Isaiah Johnson"
+      ],
+      "TE": [
+        "Gavin Grover"
+      ],
+      "Flex": [
+        "Cole Tabb",
+        "JV Gibson",
+        "Malachi Henry",
+        "Gavin Grover"
+      ],
+      "Front Seven": [
+        "Drew Logan",
+        "Josh Hough",
+        "Marquaze Parker",
+        "Jonathan Thompson",
+        "Damaine Wilson"
+      ],
+      "Secondary": [
+        "Kenny Worthy",
+        "Jasper Beeler",
+        "MJ Cannon",
+        "Jacob Finley",
+        "KK Meier"
+      ],
+      "Head Coach": [
+        "Scott Satterfield"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Damaine Wilson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Kenny Worthy",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "colorado": {
+      "school": "Colorado",
+      "conference": "Big 12",
+      "espnId": "38",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/colorado/90337",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/38/roster",
+      "QB": [
+        "Isaac Wilson"
+      ],
+      "RB": [
+        "Micah Welch",
+        "DeKalon Taylor"
+      ],
+      "WR": [
+        "DeAndre Moore Jr.",
+        "Joseph Williams",
+        "Danny Scudero"
+      ],
+      "TE": [
+        "Fisher Clements"
+      ],
+      "Flex": [
+        "Micah Welch",
+        "DeAndre Moore Jr.",
+        "Joseph Williams",
+        "Fisher Clements"
+      ],
+      "Front Seven": [
+        "Toby Anene",
+        "Dylan Manuel",
+        "Santana Hopper",
+        "Lamont Lester Jr.",
+        "Liona Lefau",
+        "Gideon Lampron"
+      ],
+      "Secondary": [
+        "Cree Thomas",
+        "Randon Fontenette",
+        "Naeten Mitchell",
+        "Boo Carter",
+        "Makari Vickers"
+      ],
+      "Head Coach": [
+        "Deion Sanders"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Isaac Wilson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Joseph Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "houston": {
+      "school": "Houston",
+      "conference": "Big 12",
+      "espnId": "248",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/houston/90659",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
+      "QB": [
+        "Conner Weigman"
+      ],
+      "RB": [
+        "Makhi Hughes",
+        "Re'Shaun Sanford II"
+      ],
+      "WR": [
+        "Koby Young",
+        "Trent Walker",
+        "Amare Thomas"
+      ],
+      "TE": [
+        "Patrick Overmyer"
+      ],
+      "Flex": [
+        "Makhi Hughes",
+        "Koby Young",
+        "Trent Walker",
+        "Patrick Overmyer"
+      ],
+      "Front Seven": [
+        "Ashton Porter",
+        "De'Marion Thomas",
+        "Khalil Laufau",
+        "Brandon Mack II",
+        "Jaden Yates",
+        "Sione Fotu"
+      ],
+      "Secondary": [
+        "Will James",
+        "Jordan Allen",
+        "Kentrell Webb",
+        "Jalen Mayo",
+        "Javion White"
+      ],
+      "Head Coach": [
+        "Willie Fritz"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Conner Weigman",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Koby Young",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Trent Walker",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jaden Yates",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Kentrell Webb",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Javion White",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "iowa-state": {
+      "school": "Iowa State",
+      "conference": "Big 12",
+      "espnId": "66",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/iowa-state/90774",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/66/roster",
+      "QB": [
+        "Jaylen Raynor"
+      ],
+      "RB": [
+        "Aiden Flora",
+        "Cameron Pettaway"
+      ],
+      "WR": [
+        "Evan Boyd",
+        "Cody Jackson",
+        "Omari Hayes"
+      ],
+      "TE": [
+        "Tyler Fortenberry"
+      ],
+      "Flex": [
+        "Aiden Flora",
+        "Evan Boyd",
+        "Cody Jackson",
+        "Tyler Fortenberry"
+      ],
+      "Front Seven": [
+        "Isaac Terrell",
+        "Zaimir Hawk",
+        "Bryson Lamb",
+        "Caden Crawford",
+        "Carson Willich",
+        "Sullivan Schlimgen"
+      ],
+      "Secondary": [
+        "David Coffey",
+        "Drew Surges",
+        "Brody Miller",
+        "Seth Johnson",
+        "Beni Ngoyi"
+      ],
+      "Head Coach": [
+        "Jimmy Rogers"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Isaac Terrell",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Carson Willich",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Sullivan Schlimgen",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Drew Surges",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "kansas": {
+      "school": "Kansas",
+      "conference": "Big 12",
+      "espnId": "2305",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/kansas/90797",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2305/roster",
+      "QB": [
+        "Isaiah Marshall"
+      ],
+      "RB": [
+        "Dylan Edwards",
+        "Yasin Willis"
+      ],
+      "WR": [
+        "Nik McMillan",
+        "Nahzae Cox",
+        "Keaton Kubecka"
+      ],
+      "TE": [
+        "Carson Bruhn"
+      ],
+      "Flex": [
+        "Dylan Edwards",
+        "Nik McMillan",
+        "Nahzae Cox",
+        "Carson Bruhn"
+      ],
+      "Front Seven": [
+        "Leroy Harris III",
+        "David Santiago",
+        "Quincy Davis",
+        "Trey Lathan",
+        "Dakyus Brinkley"
+      ],
+      "Secondary": [
+        "Jalen Todd",
+        "Corey Gordon",
+        "Taylor Davis",
+        "Austin Alexander",
+        "Elijah Cannon"
+      ],
+      "Head Coach": [
+        "Lance Leipold"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Yasin Willis",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jalen Todd",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "kansas-state": {
+      "school": "Kansas State",
+      "conference": "Big 12",
+      "espnId": "2306",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/kansas-state/90820",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2306/roster",
+      "QB": [
+        "Avery Johnson"
+      ],
+      "RB": [
+        "Rodney Fields Jr.",
+        "Joe Jackson"
+      ],
+      "WR": [
+        "Josh Manning",
+        "Jaron Tibbs",
+        "Brandon White"
+      ],
+      "TE": [
+        "Garrett Oakley"
+      ],
+      "Flex": [
+        "Rodney Fields Jr.",
+        "Josh Manning",
+        "Jaron Tibbs",
+        "Garrett Oakley"
+      ],
+      "Front Seven": [
+        "Wendell Gregory",
+        "Kamari Burns",
+        "Travis Bates",
+        "Jordan Allen",
+        "Gabe Powers",
+        "Mekhi Mason"
+      ],
+      "Secondary": [
+        "Zashon Rich",
+        "Logan Bartley",
+        "Koy Beasley",
+        "Kaleb Patterson",
+        "JoJo Scott"
+      ],
+      "Head Coach": [
+        "Collin Klein"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Jaron Tibbs",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Brandon White",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "oklahoma-state": {
+      "school": "Oklahoma State",
+      "conference": "Big 12",
+      "espnId": "197",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/oklahoma-state/91579",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
+      "QB": [
+        "Drew Mestemaker"
+      ],
+      "RB": [
+        "Caleb Hawkins",
+        "Tre Page III"
+      ],
+      "WR": [
+        "Justin Bowick",
+        "Chris Barnes",
+        "Wyatt Young"
+      ],
+      "TE": [
+        "Carson Kolb"
+      ],
+      "Flex": [
+        "Caleb Hawkins",
+        "Justin Bowick",
+        "Chris Barnes",
+        "Carson Kolb"
+      ],
+      "Front Seven": [
+        "Jaleel Johnson",
+        "Saadiq Clements",
+        "Iman Oates",
+        "James Williams",
+        "Isaiah Chisom",
+        "Tate Romney"
+      ],
+      "Secondary": [
+        "LaDainian Fields",
+        "Evan Jackson",
+        "Quinton Hammonds",
+        "Mo Horn",
+        "Christian Bodnar"
+      ],
+      "Head Coach": [
+        "Eric Morris"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Wyatt Young",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "James Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Ethan Wesloski",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "tcu": {
+      "school": "TCU",
+      "conference": "Big 12",
+      "espnId": "2628",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/tcu/91947",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2628/roster",
+      "QB": [
+        "Jaden Craig"
+      ],
+      "RB": [
+        "Jeremy Payne",
+        "Jon Denman"
+      ],
+      "WR": [
+        "Jeremy Scott",
+        "Jacobe Hayes",
+        "Ed Small"
+      ],
+      "TE": [
+        "Ka'Morreun Pimpton"
+      ],
+      "Flex": [
+        "Jeremy Payne",
+        "Jeremy Scott",
+        "Jacobe Hayes",
+        "Ka'Morreun Pimpton"
+      ],
+      "Front Seven": [
+        "Paul Oyewale",
+        "Markis Deal",
+        "Ansel Din-Mbuh",
+        "John Schobel",
+        "Max Carroll",
+        "Michael Short"
+      ],
+      "Secondary": [
+        "Vernon Glover Jr.",
+        "Jamel Johnson",
+        "Jordan Lester",
+        "Gil Jackson Jr.",
+        "Julius Simms"
+      ],
+      "Head Coach": [
+        "Sonny Dykes"
+      ],
+      "reconciliationWarnings": []
+    },
+    "texas-tech": {
+      "school": "Texas Tech",
+      "conference": "Big 12",
+      "espnId": "2641",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/texas-tech/92062",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
+      "QB": [
+        "Will Hammond"
+      ],
+      "RB": [
+        "Cameron Dickey",
+        "Jkoby Williams"
+      ],
+      "WR": [
+        "Kenny Johnson",
+        "Micah Hudson",
+        "Coy Eakin"
+      ],
+      "TE": [
+        "Terrance Carter Jr."
+      ],
+      "Flex": [
+        "Cameron Dickey",
+        "Kenny Johnson",
+        "Micah Hudson",
+        "Terrance Carter Jr."
+      ],
+      "Front Seven": [
+        "Trey White",
+        "Mateen Ibirogba",
+        "A.J. Holmes Jr.",
+        "Adam Trick",
+        "Austin Romaine",
+        "Ben Roberts"
+      ],
+      "Secondary": [
+        "John Curry",
+        "Brice Pollock",
+        "Peyton Morgan",
+        "Brenden Jordan",
+        "Davin Martin"
+      ],
+      "Head Coach": [
+        "Joey McGuire"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Jkoby Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Trey White",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "ucf": {
+      "school": "UCF",
+      "conference": "Big 12",
+      "espnId": "2116",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/central-florida/92200",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2116/roster",
+      "QB": [
+        "Alonza Barnett III"
+      ],
+      "RB": [
+        "Duke Watson",
+        "Landen Chambers"
+      ],
+      "WR": [
+        "Josh Derry",
+        "Waden Charles",
+        "Ric'Darious Farmer"
+      ],
+      "TE": [
+        "Dylan Wade"
+      ],
+      "Flex": [
+        "Duke Watson",
+        "Josh Derry",
+        "Waden Charles",
+        "Dylan Wade"
+      ],
+      "Front Seven": [
+        "Isaiah Nixon",
+        "Ken Talley",
+        "Lewis Carter",
+        "Jayden Jennings",
+        "Aymeric Koumba"
+      ],
+      "Secondary": [
+        "Antione Jackson",
+        "Demari Henderson",
+        "Jayden Williams",
+        "Jayden Bellamy",
+        "Braeden Marshall"
+      ],
+      "Head Coach": [
+        "Scott Frost"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Duke Watson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Dylan Wade",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jayden Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "utah": {
+      "school": "Utah",
+      "conference": "Big 12",
+      "espnId": "254",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/utah/92292",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
+      "QB": [
+        "Devon Dampier"
+      ],
+      "RB": [
+        "Wayshawn Parker",
+        "Daniel Bray"
+      ],
+      "WR": [
+        "Ricky Johnson",
+        "Braden Pegan",
+        "Creed Whittemore"
+      ],
+      "TE": [
+        "Noah Bennee"
+      ],
+      "Flex": [
+        "Wayshawn Parker",
+        "Ricky Johnson",
+        "Braden Pegan",
+        "Noah Bennee"
+      ],
+      "Front Seven": [
+        "Lance Holtzclaw",
+        "Ethan Day",
+        "Kash Dillon",
+        "Paul Fitzgerald",
+        "Alex Cloward"
+      ],
+      "Secondary": [
+        "Elijah Davis",
+        "Rabbit Evans",
+        "Nate Ritchie",
+        "Elijah Reed",
+        "Jackson Bennee"
+      ],
+      "Head Coach": [
+        "Morgan Scalley"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Creed Whittemore",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "west-virginia": {
+      "school": "West Virginia",
+      "conference": "Big 12",
+      "espnId": "277",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/west-virginia/92499",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/277/roster",
+      "QB": [
+        "Michael Hawkins Jr."
+      ],
+      "RB": [
+        "Cam Cook",
+        "Amari Latimer"
+      ],
+      "WR": [
+        "Jaden Bray",
+        "John Neider",
+        "DJ Epps"
+      ],
+      "TE": [
+        "Josh Sapp"
+      ],
+      "Flex": [
+        "Cam Cook",
+        "Jaden Bray",
+        "John Neider",
+        "Josh Sapp"
+      ],
+      "Front Seven": [
+        "Zeke Durham-Campbell",
+        "Nate Gabriel",
+        "Corey McIntyre Jr.",
+        "Cam Torbor",
+        "Ben Cutter"
+      ],
+      "Secondary": [
+        "Chams Diagne",
+        "Kamari Wilson",
+        "Andrew Powdrell",
+        "Nick Taylor",
+        "Geimere Latimer II"
+      ],
+      "Head Coach": [
+        "Rich Rodriguez"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Cam Torbor",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Kamari Wilson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Nick Taylor",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "boston-college": {
+      "school": "Boston College",
+      "conference": "ACC",
+      "espnId": "103",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/boston-college/90153",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/103/roster",
+      "QB": [
+        "Mason McKenzie"
+      ],
+      "RB": [
+        "Evan Dickens",
+        "Bo MacCormack III"
+      ],
+      "WR": [
+        "Reed Swanson",
+        "Jaedn Skeete",
+        "Javarius Green"
+      ],
+      "TE": [
+        "Zeke Moore"
+      ],
+      "Flex": [
+        "Evan Dickens",
+        "Reed Swanson",
+        "Jaedn Skeete",
+        "Zeke Moore"
+      ],
+      "Front Seven": [
+        "Onye Nwosisi",
+        "Chris Marable Jr.",
+        "Kj Sampson",
+        "Kris Jones",
+        "Anthony Palano",
+        "Bodie Kahoun"
+      ],
+      "Secondary": [
+        "Max Tucker",
+        "KP Price",
+        "Carter Davis",
+        "Syair Torrence",
+        "Cameron Martinez"
+      ],
+      "Head Coach": [
+        "Bill O'Brien"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Reed Swanson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jaedn Skeete",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Kj Sampson",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Max Tucker",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Syair Torrence",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "california": {
+      "school": "California",
+      "conference": "ACC",
+      "espnId": "25",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/california/90245",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/25/roster",
+      "QB": [
+        "Jaron-Keawe Sagapolutele"
+      ],
+      "RB": [
+        "Adam Mohammed",
+        "Ashten Emory"
+      ],
+      "WR": [
+        "Ian Strong",
+        "Chase Hendricks",
+        "Cooper Perry"
+      ],
+      "TE": [
+        "Mason Mini"
+      ],
+      "Flex": [
+        "Adam Mohammed",
+        "Ian Strong",
+        "Chase Hendricks",
+        "Mason Mini"
+      ],
+      "Front Seven": [
+        "Jayden Wayne",
+        "Jericho Johnson",
+        "Derek Wilkins",
+        "Solomon Williams",
+        "JD McKinley",
+        "Kamar Mothudi"
+      ],
+      "Secondary": [
+        "Daniel Harris",
+        "Kingston Lopa",
+        "Michael Hurst Jr.",
+        "Ricky Fletcher",
+        "Cam Sidney"
+      ],
+      "Head Coach": [
+        "Tosh Lupoi"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Jayden Wayne",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Derek Wilkins",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Solomon Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "clemson": {
+      "school": "Clemson",
+      "conference": "ACC",
+      "espnId": "228",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/clemson/90314",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/228/roster",
+      "QB": [
+        "Tait Reynolds"
+      ],
+      "RB": [
+        "Gideon Davidson",
+        "Chris Johnson Jr."
+      ],
+      "WR": [
+        "Bryant Wesco Jr.",
+        "T.J. Moore",
+        "Tyler Brown"
+      ],
+      "TE": [
+        "Olsen Patt-Henry"
+      ],
+      "Flex": [
+        "Gideon Davidson",
+        "Bryant Wesco Jr.",
+        "T.J. Moore",
+        "Olsen Patt-Henry"
+      ],
+      "Front Seven": [
+        "Jahiem Lawson",
+        "Will Heldt",
+        "Sammy Brown",
+        "Jeremiah Alexander",
+        "London Merritt"
+      ],
+      "Secondary": [
+        "Ashton Hampton",
+        "Jerome Carter III",
+        "Corey Myrick",
+        "Elliot Washington II",
+        "Ronan Hanafin"
+      ],
+      "Head Coach": [
+        "Dabo Swinney"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Bryant Wesco Jr.",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Elliot Washington II",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "duke": {
+      "school": "Duke",
+      "conference": "ACC",
+      "espnId": "150",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/duke/90406",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/150/roster",
+      "QB": [
+        "Walker Eget"
+      ],
+      "RB": [
+        "Nate Sheppard",
+        "CJ Campbell Jr."
+      ],
+      "WR": [
+        "Jared Richardson",
+        "Jayden Moore",
+        "Jonah Burton"
+      ],
+      "TE": [
+        "Jeremiah Hasley"
+      ],
+      "Flex": [
+        "Nate Sheppard",
+        "Jared Richardson",
+        "Jayden Moore",
+        "Jeremiah Hasley"
+      ],
+      "Front Seven": [
+        "Tyshon Reed",
+        "David Anderson",
+        "Preston Watson",
+        "Kendall Johnson",
+        "Nick Morris Jr."
+      ],
+      "Secondary": [
+        "Luke Mergott",
+        "Landan Callahan",
+        "DaShawn Stone",
+        "Andrew Pellicciotta",
+        "Kyon Loud"
+      ],
+      "Head Coach": [
+        "Manny Diaz"
+      ],
+      "reconciliationWarnings": []
+    },
+    "florida-state": {
+      "school": "Florida State",
+      "conference": "ACC",
+      "espnId": "52",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/florida-state/90544",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/52/roster",
+      "QB": [
+        "Ashton Daniels"
+      ],
+      "RB": [
+        "Ousmane Kromah",
+        "Samuel Singleton Jr."
+      ],
+      "WR": [
+        "Duce Robinson",
+        "Micahi Danzy",
+        "Jayvan Boggs"
+      ],
+      "TE": [
+        "Desirrio Riles"
+      ],
+      "Flex": [
+        "Ousmane Kromah",
+        "Duce Robinson",
+        "Micahi Danzy",
+        "Desirrio Riles"
+      ],
+      "Front Seven": [
+        "Darryll Desir",
+        "Daniel Lyons",
+        "Mandrell Desir",
+        "Rylan Kennedy",
+        "Omar Graham Jr.",
+        "Chris Jones"
+      ],
+      "Secondary": [
+        "Ja'Bril Rawls",
+        "Ashlynd Barker",
+        "CJ Richard Jr.",
+        "Quindarrius Jones",
+        "Ma'Khi Jones"
+      ],
+      "Head Coach": [
+        "Mike Norvell"
+      ],
+      "reconciliationWarnings": []
+    },
+    "georgia-tech": {
+      "school": "Georgia Tech",
+      "conference": "ACC",
+      "espnId": "59",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/georgia-tech/90613",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/59/roster",
+      "QB": [
+        "Alberto Mendoza"
+      ],
+      "RB": [
+        "Justice Haynes",
+        "Malachi Hosley"
+      ],
+      "WR": [
+        "Isaiah Fuhrmann",
+        "Dalen Penson",
+        "Jordan Allen"
+      ],
+      "TE": [
+        "Gavin Harris"
+      ],
+      "Flex": [
+        "Justice Haynes",
+        "Isaiah Fuhrmann",
+        "Dalen Penson",
+        "Gavin Harris"
+      ],
+      "Front Seven": [
+        "Jordan Walker",
+        "Noah Carter",
+        "Kyle Efford",
+        "E.J. Lightsey",
+        "Cayman Spaulding"
+      ],
+      "Secondary": [
+        "Jaylen Mbakwe",
+        "Savion Riley",
+        "Tae Harris",
+        "Daiquan White",
+        "Kelvin Hill"
+      ],
+      "Head Coach": [
+        "Brent Key"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Jordan Walker",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Daiquan White",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "louisville": {
+      "school": "Louisville",
+      "conference": "ACC",
+      "espnId": "97",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/louisville/90958",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/97/roster",
+      "QB": [
+        "Lincoln Kienholz"
+      ],
+      "RB": [
+        "Isaac Brown",
+        "Keyjuan Brown"
+      ],
+      "WR": [
+        "TreyShun Hurry",
+        "Lawayne McCoy",
+        "Tre Richardson"
+      ],
+      "TE": [
+        "Jaleel Skinner"
+      ],
+      "Flex": [
+        "Isaac Brown",
+        "TreyShun Hurry",
+        "Lawayne McCoy",
+        "Jaleel Skinner"
+      ],
+      "Front Seven": [
+        "AJ Green",
+        "Joshua Donald",
+        "Daylen Russell",
+        "Clev Lubin",
+        "T.J. Capers",
+        "Stanquan Clark"
+      ],
+      "Secondary": [
+        "Antonio Watts",
+        "Jabari Mack",
+        "Kaleb Beasley",
+        "Koen Entringer",
+        "DJ Waller Jr."
+      ],
+      "Head Coach": [
+        "Jeff Brohm"
+      ],
+      "reconciliationWarnings": []
+    },
+    "miami": {
+      "school": "Miami",
+      "conference": "ACC",
+      "espnId": "2390",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/miami/91073",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
+      "QB": [
+        "Darian Mensah"
+      ],
+      "RB": [
+        "Mark Fletcher Jr.",
+        "CharMar Brown"
+      ],
+      "WR": [
+        "Joshua Moore",
+        "Cooper Barkate",
+        "Malachi Toney"
+      ],
+      "TE": [
+        "Elija Lofton"
+      ],
+      "Flex": [
+        "Mark Fletcher Jr.",
+        "Joshua Moore",
+        "Cooper Barkate",
+        "Elija Lofton"
+      ],
+      "Front Seven": [
+        "Damon Wilson II",
+        "Marquise Lightfoot",
+        "Chase Smith",
+        "Mohamed Toure",
+        "Armondo Blount"
+      ],
+      "Secondary": [
+        "Damari Brown",
+        "Bryce Fitzgerald",
+        "Zechariah Poyser",
+        "Xavier Lucas",
+        "Omar Thornton"
+      ],
+      "Head Coach": [
+        "Mario Cristobal"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Damon Wilson II",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Mohamed Toure",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "nc-state": {
+      "school": "NC State",
+      "conference": "ACC",
+      "espnId": "152",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/nc-state/91280",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/152/roster",
+      "QB": [
+        "CJ Bailey"
+      ],
+      "RB": [
+        "Jayden Scott",
+        "Davion Gause"
+      ],
+      "WR": [
+        "Keenan Jackson",
+        "Joshisa Trader",
+        "Victor Snow"
+      ],
+      "TE": [
+        "Preston Douglas"
+      ],
+      "Flex": [
+        "Jayden Scott",
+        "Keenan Jackson",
+        "Joshisa Trader",
+        "Preston Douglas"
+      ],
+      "Front Seven": [
+        "Joseph Adedire",
+        "Josiah Victor",
+        "Isaiah Shirley",
+        "Harvey Dyson III",
+        "AJ Richardson",
+        "Popo Aguirre"
+      ],
+      "Secondary": [
+        "Jaren Sensabaugh",
+        "Tristan Teasdell",
+        "Ronnie Royal III",
+        "Brian Nelson II",
+        "Jackson Vick"
+      ],
+      "Head Coach": [
+        "Dave Doeren"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Joshisa Trader",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Victor Snow",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Josiah Victor",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Tristan Teasdell",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jackson Vick",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "north-carolina": {
+      "school": "North Carolina",
+      "conference": "ACC",
+      "espnId": "153",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/north-carolina/91395",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/153/roster",
+      "QB": [
+        "Billy Edwards Jr."
+      ],
+      "RB": [
+        "Benjamin Hall",
+        "Jaylen McGill"
+      ],
+      "WR": [
+        "Mason Humphrey",
+        "Jordan Shipp",
+        "Trech Kekahuna"
+      ],
+      "TE": [
+        "Jelani Thurman"
+      ],
+      "Flex": [
+        "Benjamin Hall",
+        "Mason Humphrey",
+        "Jordan Shipp",
+        "Jelani Thurman"
+      ],
+      "Front Seven": [
+        "Leroy Jackson",
+        "Isaiah Johnson",
+        "Xavier Lewis",
+        "Peyton Seelmann",
+        "Derek McDonald"
+      ],
+      "Secondary": [
+        "Jaiden Patterson",
+        "Greg Smith III",
+        "Peyton Waters",
+        "Tre Miller",
+        "Kaleb Cost"
+      ],
+      "Head Coach": [
+        "Bill Belichick"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Peyton Waters",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "pittsburgh": {
+      "school": "Pittsburgh",
+      "conference": "ACC",
+      "espnId": "221",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/pittsburgh/91694",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
+      "QB": [
+        "Mason Heintschel"
+      ],
+      "RB": [
+        "Jakyrian Turner",
+        "Damon Ferguson Jr."
+      ],
+      "WR": [
+        "Tony Kinsler",
+        "Cataurus Hicks",
+        "Censere Lee"
+      ],
+      "TE": [
+        "Carson Kent"
+      ],
+      "Flex": [
+        "Jakyrian Turner",
+        "Tony Kinsler",
+        "Cataurus Hicks",
+        "Carson Kent"
+      ],
+      "Front Seven": [
+        "Isaiah Neal",
+        "Jimmy Scott",
+        "Jeremiah Marcelin",
+        "Zach Crothers",
+        "Jaeden Moore"
+      ],
+      "Secondary": [
+        "Braylan Lovelace",
+        "Raion Strader",
+        "Josh Guerrier",
+        "Cruce Brookins",
+        "Shawn Lee Jr."
+      ],
+      "Head Coach": [
+        "Pat Narduzzi"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Jakyrian Turner",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "smu": {
+      "school": "SMU",
+      "conference": "ACC",
+      "espnId": "2567",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/smu/91809",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
+      "QB": [
+        "Kevin Jennings"
+      ],
+      "RB": [
+        "Kendrick Raphael",
+        "Dramekco Green"
+      ],
+      "WR": [
+        "Jalen Cooper",
+        "Yannick Smith",
+        "Yamir Knight"
+      ],
+      "TE": [
+        "Randy Pittman Jr."
+      ],
+      "Flex": [
+        "Kendrick Raphael",
+        "Jalen Cooper",
+        "Yannick Smith",
+        "Randy Pittman Jr."
+      ],
+      "Front Seven": [
+        "Aakil Washington",
+        "Ira Singleton IV",
+        "Alexander Kilgore",
+        "Brandon Booker",
+        "Jahkai Lang"
+      ],
+      "Secondary": [
+        "Jayvon Thomas",
+        "Tyren Polley Jr.",
+        "Jimmy Wyrick",
+        "Marcellus Barnes Jr.",
+        "Jarvis Lee"
+      ],
+      "Head Coach": [
+        "Rhett Lashlee"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Jimmy Wyrick",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "stanford": {
+      "school": "Stanford",
+      "conference": "ACC",
+      "espnId": "24",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/stanford/91901",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/24/roster",
+      "QB": [
+        "Davis Warren"
+      ],
+      "RB": [
+        "Micah Ford",
+        "Sedrick Irvin"
+      ],
+      "WR": [
+        "Jordan Onovughe",
+        "JonAnthony Hall",
+        "Liam Thorpe"
+      ],
+      "TE": [
+        "Benji Blackburn"
+      ],
+      "Flex": [
+        "Micah Ford",
+        "Jordan Onovughe",
+        "JonAnthony Hall",
+        "Benji Blackburn"
+      ],
+      "Front Seven": [
+        "Omar Staples",
+        "Braden Marceau-Olayinka",
+        "Zach Rowell",
+        "Jahsiah Galvan",
+        "Matt Rose"
+      ],
+      "Secondary": [
+        "Cam Richardson",
+        "Jay Green",
+        "Darrius Davis",
+        "Brandon Nicholson",
+        "Leroy Bryant"
+      ],
+      "Head Coach": [
+        "Tavita Pritchard"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Davis Warren",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Liam Thorpe",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "syracuse": {
+      "school": "Syracuse",
+      "conference": "ACC",
+      "espnId": "183",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/syracuse/91924",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/183/roster",
+      "QB": [
+        "Steve Angeli"
+      ],
+      "RB": [
+        "Tylik Hill",
+        "Ju'Juan Johnson"
+      ],
+      "WR": [
+        "Umari Hatcher",
+        "Cole Weaver",
+        "Darius Johnson"
+      ],
+      "TE": [
+        "David Clement"
+      ],
+      "Flex": [
+        "Tylik Hill",
+        "Umari Hatcher",
+        "Cole Weaver",
+        "David Clement"
+      ],
+      "Front Seven": [
+        "Tunmise Adeleye",
+        "Rashard Perry",
+        "Nissi Ogbebor",
+        "Keyshawn Johnson",
+        "Chris D'Appolonia",
+        "Antoine Deslauriers"
+      ],
+      "Secondary": [
+        "Demetres Samuel Jr.",
+        "Cornell Perry",
+        "Braheem Long Jr.",
+        "Chris Peal",
+        "Davien Kerr"
+      ],
+      "Head Coach": [
+        "Fran Brown"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Cole Weaver",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "virginia": {
+      "school": "Virginia",
+      "conference": "ACC",
+      "espnId": "258",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/virginia/92384",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/258/roster",
+      "QB": [
+        "Beau Pribula"
+      ],
+      "RB": [
+        "Jekail Middlebrook",
+        "Peyton Lewis"
+      ],
+      "WR": [
+        "Ty'Lyric Coleman",
+        "Jacquon Gibson",
+        "Kameron Courtney"
+      ],
+      "TE": [
+        "Dakota Twitty"
+      ],
+      "Flex": [
+        "Jekail Middlebrook",
+        "Ty'Lyric Coleman",
+        "Jacquon Gibson",
+        "Dakota Twitty"
+      ],
+      "Front Seven": [
+        "Fisher Camac",
+        "Anthony Britton",
+        "Jason Hammond",
+        "Maddox Marcellus",
+        "Kam Robinson"
+      ],
+      "Secondary": [
+        "Omillio Agard",
+        "Brandyn Hillman",
+        "Ethan Minter",
+        "Jacobie Henderson",
+        "Jam Jackson"
+      ],
+      "Head Coach": [
+        "Tony Elliott"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Dakota Twitty",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "virginia-tech": {
+      "school": "Virginia Tech",
+      "conference": "ACC",
+      "espnId": "259",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/virginia-tech/92407",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/259/roster",
+      "QB": [
+        "Ethan Grunkemeyer"
+      ],
+      "RB": [
+        "Marcellous Hawkins Jr.",
+        "Jeffrey Overton Jr."
+      ],
+      "WR": [
+        "Marlion Jackson",
+        "Ayden Greene",
+        "Que'Sean Brown"
+      ],
+      "TE": [
+        "Luke Reynolds"
+      ],
+      "Flex": [
+        "Marcellous Hawkins Jr.",
+        "Marlion Jackson",
+        "Ayden Greene",
+        "Luke Reynolds"
+      ],
+      "Front Seven": [
+        "Aycen Stevens",
+        "Cortez Harris",
+        "Keon Wylie",
+        "Noah Chambers",
+        "Kaleb Spencer"
+      ],
+      "Secondary": [
+        "Jaquez White",
+        "Tyson Flowers",
+        "Quentin Reddish",
+        "Joshua Clarke",
+        "Isaiah Brown-Murray"
+      ],
+      "Head Coach": [
+        "James Franklin"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Aycen Stevens",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Keon Wylie",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Jaquez White",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "wake-forest": {
+      "school": "Wake Forest",
+      "conference": "ACC",
+      "espnId": "154",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/wake-forest/92430",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/154/roster",
+      "QB": [
+        "Gio Lopez"
+      ],
+      "RB": [
+        "Ty Clark III",
+        "Deuce Lawrence"
+      ],
+      "WR": [
+        "Antonio Meeks",
+        "Carlos Hernandez",
+        "Kam Shanks"
+      ],
+      "TE": [
+        "Will Loerzel"
+      ],
+      "Flex": [
+        "Ty Clark III",
+        "Antonio Meeks",
+        "Carlos Hernandez",
+        "Will Loerzel"
+      ],
+      "Front Seven": [
+        "Gabe Kirschke",
+        "Zach Lohavichan",
+        "Dallas Afalava",
+        "Langston Hardy",
+        "Frank Cusano",
+        "Aiden Hall"
+      ],
+      "Secondary": [
+        "Deuce Blades II",
+        "Davaughn Patterson",
+        "Rushaun Tongue",
+        "Ashaad Williams",
+        "Braylon Johnson"
+      ],
+      "Head Coach": [
+        "Jake Dickert"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Rushaun Tongue",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Ashaad Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    },
+    "notre-dame": {
+      "school": "Notre Dame",
+      "conference": "Independent",
+      "espnId": "87",
+      "depthChartUrl": "https://secure.ourlads.com/ncaa-football-depth-charts/pfdepthchart/notre-dame/91487",
+      "rosterUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
+      "QB": [
+        "CJ Carr"
+      ],
+      "RB": [
+        "Aneyas Williams",
+        "Nolan James Jr."
+      ],
+      "WR": [
+        "Jordan Faison",
+        "Micah Gilbert",
+        "Mylan Graham"
+      ],
+      "TE": [
+        "Cooper Flanagan"
+      ],
+      "Flex": [
+        "Aneyas Williams",
+        "Jordan Faison",
+        "Micah Gilbert",
+        "Cooper Flanagan"
+      ],
+      "Front Seven": [
+        "Bryce Young",
+        "Boubacar Traore",
+        "Jaiden Ausberry",
+        "Drayk Bowen",
+        "Keon Keeley"
+      ],
+      "Secondary": [
+        "DJ McKinney",
+        "Brauntae Johnson",
+        "Adon Shuler",
+        "Leonard Moore",
+        "Christian Gray"
+      ],
+      "Head Coach": [
+        "Marcus Freeman"
+      ],
+      "reconciliationWarnings": [
+        {
+          "sourceName": "Aneyas Williams",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        },
+        {
+          "sourceName": "Bryce Young",
+          "reason": "Ourlads current depth-chart name not present uniquely in ESPN current roster payload"
+        }
+      ]
+    }
+  }
+}
