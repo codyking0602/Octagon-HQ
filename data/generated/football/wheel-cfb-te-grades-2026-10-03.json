@@ -1,0 +1,1079 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-wheel-te-grades-2026-10-03-v1",
+  "status": "audit-locked-not-runtime",
+  "effectiveDate": "2026-10-03",
+  "populationSource": {
+    "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
+    "priorityAuditPath": "data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
+    "mainSha": "8285e5a842b020489f5da9ffaeed5fd9f20396f0",
+    "teCount": 80,
+    "schoolCount": 68
+  },
+  "gradingSemantic": "CURRENT COLLEGE FOOTBALL ABILITY AT TIGHT END RIGHT NOW; 2026 leads, 2025 substantially stabilizes, older evidence is secondary. Evaluate receiving/separation, hands, catch-point ability, YAC, route value, run/pass blocking, physicality, alignment versatility, assignment reliability, ball security and complete tight-end usefulness. No NFL projection, recruiting ranking, draft stock, fame/school prestige, fantasy value, or future-upside bonus.",
+  "currentSeasonWeighting": "Approximately 55-60% current 2026 performance/role, 30-35% 2025 demonstrated level, remainder older/context; conceptual guidance, not a literal formula.",
+  "approvedAnchors": [
+    {
+      "player": "Trey'Dez Green",
+      "school": "LSU",
+      "grade": 97
+    },
+    {
+      "player": "Luke Reynolds",
+      "school": "Virginia Tech",
+      "grade": 96
+    },
+    {
+      "player": "Rocky Beers",
+      "school": "Oklahoma",
+      "grade": 95
+    },
+    {
+      "player": "Jamari Johnson",
+      "school": "Oregon",
+      "grade": 94
+    },
+    {
+      "player": "Kari Ashley",
+      "school": "TCU",
+      "grade": 93
+    },
+    {
+      "player": "Terrance Carter Jr.",
+      "school": "Texas Tech",
+      "grade": 92
+    },
+    {
+      "player": "Jaleel Skinner",
+      "school": "Louisville",
+      "grade": 91
+    },
+    {
+      "player": "Benjamin Brahmer",
+      "school": "Penn State",
+      "grade": 90
+    },
+    {
+      "player": "Patrick Overmyer",
+      "school": "Houston",
+      "grade": 89
+    },
+    {
+      "player": "Mark Bowman",
+      "school": "USC",
+      "grade": 87
+    },
+    {
+      "player": "Jeremiah Hasley",
+      "school": "Duke",
+      "grade": 86
+    },
+    {
+      "player": "Walker Lyons",
+      "school": "BYU",
+      "grade": 84
+    },
+    {
+      "player": "Nate Roberts",
+      "school": "Ohio State",
+      "grade": 82
+    },
+    {
+      "player": "Cooper Flanagan",
+      "school": "Notre Dame",
+      "grade": 78
+    },
+    {
+      "player": "Fisher Clements",
+      "school": "Colorado",
+      "grade": 72
+    }
+  ],
+  "evidenceSnapshot": {
+    "completedGamesThrough": "2026-09-27",
+    "note": "Evidence frozen after the September 26-27 weekend so October 3 games do not create inconsistent within-position timing.",
+    "primarySources": [
+      "EA SPORTS College Football 27 current Week 4 TE ratings where exact current entries were available",
+      "2026 national/conference receiving leader tables and player game logs",
+      "Official school statistics and Sports-Reference / CFBStats prior-season context",
+      "EA blocking/awareness attributes used only as secondary complete-role evidence"
+    ]
+  },
+  "grades": [
+    {
+      "school": "Alabama",
+      "player": "Kaleb Edwards",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 78,
+      "eaDelta": 6,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Arkansas",
+      "player": "Ty Lockwood",
+      "curatedPrioritySlot": 1,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "Auburn",
+      "player": "Jake Johnson",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Florida",
+      "player": "Amir Jackson",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 6,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Georgia",
+      "player": "Lawson Luckie",
+      "curatedPrioritySlot": 1,
+      "grade": 87,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Kentucky",
+      "player": "Willie Rodriguez",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Kentucky",
+      "player": "Henry Boyer",
+      "curatedPrioritySlot": 2,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "LSU",
+      "player": "Trey'Dez Green",
+      "curatedPrioritySlot": 1,
+      "grade": 97,
+      "kind": "anchor",
+      "eaCfb27Rating": 93,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Mississippi State",
+      "player": "Sam West",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Missouri",
+      "player": "Brett Norfleet",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Oklahoma",
+      "player": "Rocky Beers",
+      "curatedPrioritySlot": 1,
+      "grade": 95,
+      "kind": "anchor",
+      "eaCfb27Rating": 86,
+      "eaDelta": 9,
+      "eaStatus": "mandatory-review"
+    },
+    {
+      "school": "Ole Miss",
+      "player": "Caleb Odom",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Ole Miss",
+      "player": "Luke Hasz",
+      "curatedPrioritySlot": 2,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "South Carolina",
+      "player": "Brady Hunt",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Tennessee",
+      "player": "Ethan Davis",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Tennessee",
+      "player": "DaSaahn Brame",
+      "curatedPrioritySlot": 2,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Texas",
+      "player": "Spencer Shannon",
+      "curatedPrioritySlot": 1,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 71,
+      "eaDelta": 6,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Texas A&M",
+      "player": "Micah Riley",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Vanderbilt",
+      "player": "Jayvontay Conner",
+      "curatedPrioritySlot": 1,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Illinois",
+      "player": "Christian Abney",
+      "curatedPrioritySlot": 1,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 5,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Indiana",
+      "player": "Andrew Barker",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "Iowa",
+      "player": "Dj Vonnahme",
+      "curatedPrioritySlot": 1,
+      "grade": 88,
+      "kind": "graded",
+      "eaCfb27Rating": 88,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Maryland",
+      "player": "Dorian Fleming",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Michigan",
+      "player": "Jalen Hoffman",
+      "curatedPrioritySlot": 1,
+      "grade": 74,
+      "kind": "graded",
+      "eaCfb27Rating": 69,
+      "eaDelta": 5,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Michigan State",
+      "player": "Jayden Savoury",
+      "curatedPrioritySlot": 1,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 71,
+      "eaDelta": 5,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Michigan State",
+      "player": "Brennan Parachek",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "Minnesota",
+      "player": "Pierce Walsh",
+      "curatedPrioritySlot": 1,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "Nebraska",
+      "player": "Luke Lindenmeyer",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Northwestern",
+      "player": "Alex Honig",
+      "curatedPrioritySlot": 1,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "Northwestern",
+      "player": "Luke Dehnicke",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "Ohio State",
+      "player": "Nate Roberts",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "anchor",
+      "eaCfb27Rating": 79,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Oregon",
+      "player": "Jamari Johnson",
+      "curatedPrioritySlot": 1,
+      "grade": 94,
+      "kind": "anchor",
+      "eaCfb27Rating": 91,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Penn State",
+      "player": "Benjamin Brahmer",
+      "curatedPrioritySlot": 1,
+      "grade": 90,
+      "kind": "anchor",
+      "eaCfb27Rating": 89,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Penn State",
+      "player": "Andrew Rappleyea",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Purdue",
+      "player": "George Burhenn",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Rutgers",
+      "player": "Logan Blake",
+      "curatedPrioritySlot": 1,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "UCLA",
+      "player": "Josh Phifer",
+      "curatedPrioritySlot": 1,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "USC",
+      "player": "Mark Bowman",
+      "curatedPrioritySlot": 1,
+      "grade": 87,
+      "kind": "anchor",
+      "eaCfb27Rating": 83,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Washington",
+      "player": "Baron Naone",
+      "curatedPrioritySlot": 1,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Washington",
+      "player": "Decker DeGraaf",
+      "curatedPrioritySlot": 2,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Wisconsin",
+      "player": "Jacob Harris",
+      "curatedPrioritySlot": 1,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Arizona",
+      "player": "Cole Rusk",
+      "curatedPrioritySlot": 1,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 78,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Arizona State",
+      "player": "Khamari Anderson",
+      "curatedPrioritySlot": 1,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Baylor",
+      "player": "Matthew Klopfenstein",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "BYU",
+      "player": "Walker Lyons",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "anchor",
+      "eaCfb27Rating": 82,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Cincinnati",
+      "player": "Gavin Grover",
+      "curatedPrioritySlot": 1,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Colorado",
+      "player": "Fisher Clements",
+      "curatedPrioritySlot": 1,
+      "grade": 72,
+      "kind": "anchor",
+      "eaCfb27Rating": 71,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Houston",
+      "player": "Patrick Overmyer",
+      "curatedPrioritySlot": 1,
+      "grade": 89,
+      "kind": "anchor",
+      "eaCfb27Rating": 78,
+      "eaDelta": 11,
+      "eaStatus": "major-red-flag"
+    },
+    {
+      "school": "Iowa State",
+      "player": "Tyler Fortenberry",
+      "curatedPrioritySlot": 1,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Iowa State",
+      "player": "Vince Benetti",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Kansas",
+      "player": "Carson Bruhn",
+      "curatedPrioritySlot": 1,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Kansas State",
+      "player": "Garrett Oakley",
+      "curatedPrioritySlot": 1,
+      "grade": 87,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Oklahoma State",
+      "player": "Carson Kolb",
+      "curatedPrioritySlot": 1,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "TCU",
+      "player": "Kari Ashley",
+      "curatedPrioritySlot": 1,
+      "grade": 93,
+      "kind": "anchor",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "TCU",
+      "player": "Ka'Morreun Pimpton",
+      "curatedPrioritySlot": 2,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Texas Tech",
+      "player": "Terrance Carter Jr.",
+      "curatedPrioritySlot": 1,
+      "grade": 92,
+      "kind": "anchor",
+      "eaCfb27Rating": 92,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "UCF",
+      "player": "Dylan Wade",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Utah",
+      "player": "Noah Bennee",
+      "curatedPrioritySlot": 1,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 9,
+      "eaStatus": "mandatory-review"
+    },
+    {
+      "school": "West Virginia",
+      "player": "Josh Sapp",
+      "curatedPrioritySlot": 1,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Boston College",
+      "player": "Zeke Moore",
+      "curatedPrioritySlot": 1,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "California",
+      "player": "Mason Mini",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Clemson",
+      "player": "Olsen Patt-Henry",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 78,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Duke",
+      "player": "Jeremiah Hasley",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "anchor",
+      "eaCfb27Rating": 87,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Florida State",
+      "player": "Desirrio Riles",
+      "curatedPrioritySlot": 1,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Georgia Tech",
+      "player": "Kevin Roche Jr.",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 71,
+      "eaDelta": 15,
+      "eaStatus": "major-red-flag"
+    },
+    {
+      "school": "Georgia Tech",
+      "player": "Gavin Harris",
+      "curatedPrioritySlot": 2,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Louisville",
+      "player": "Jaleel Skinner",
+      "curatedPrioritySlot": 1,
+      "grade": 91,
+      "kind": "anchor",
+      "eaCfb27Rating": 81,
+      "eaDelta": 10,
+      "eaStatus": "major-red-flag"
+    },
+    {
+      "school": "Miami",
+      "player": "Elija Lofton",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "NC State",
+      "player": "Preston Douglas",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 72,
+      "eaDelta": 12,
+      "eaStatus": "major-red-flag"
+    },
+    {
+      "school": "North Carolina",
+      "player": "Jelani Thurman",
+      "curatedPrioritySlot": 1,
+      "grade": 88,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Pittsburgh",
+      "player": "Carson Kent",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 8,
+      "eaStatus": "mandatory-review"
+    },
+    {
+      "school": "SMU",
+      "player": "Randy Pittman Jr.",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "SMU",
+      "player": "Theo Melin Ohrstrom",
+      "curatedPrioritySlot": 2,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Stanford",
+      "player": "Benji Blackburn",
+      "curatedPrioritySlot": 1,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Syracuse",
+      "player": "David Clement",
+      "curatedPrioritySlot": 1,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Syracuse",
+      "player": "Daunte Bacheyie",
+      "curatedPrioritySlot": 2,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Virginia",
+      "player": "Dakota Twitty",
+      "curatedPrioritySlot": 1,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 78,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review"
+    },
+    {
+      "school": "Virginia Tech",
+      "player": "Luke Reynolds",
+      "curatedPrioritySlot": 1,
+      "grade": 96,
+      "kind": "anchor",
+      "eaCfb27Rating": 89,
+      "eaDelta": 7,
+      "eaStatus": "mandatory-review"
+    },
+    {
+      "school": "Wake Forest",
+      "player": "Will Loerzel",
+      "curatedPrioritySlot": 1,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved"
+    },
+    {
+      "school": "Notre Dame",
+      "player": "Cooper Flanagan",
+      "curatedPrioritySlot": 1,
+      "grade": 78,
+      "kind": "anchor",
+      "eaCfb27Rating": 80,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review"
+    }
+  ],
+  "pairwiseAudit": {
+    "orderedNeighborhoods": [
+      "Trey'Dez Green 97 > Luke Reynolds 96 > Rocky Beers 95 > Jamari Johnson 94 > Kari Ashley 93 > Terrance Carter Jr. 92",
+      "Jaleel Skinner 91 > Benjamin Brahmer 90 > Patrick Overmyer 89 > Dj Vonnahme 88 = Jelani Thurman 88",
+      "Garrett Oakley 87 = Lawson Luckie 87 = Mark Bowman 87 > Brett Norfleet / Dorian Fleming / Dylan Wade / Jeremiah Hasley / Kevin Roche Jr. / Luke Hasz 86",
+      "85 cluster > 84 cluster > 83 cluster > 82 cluster > 81 cluster > 80 cluster",
+      "79 cluster > 78 cluster > 77 cluster > 76 cluster > Carson Kolb / Benji Blackburn / Daunte Bacheyie 75 > Jalen Hoffman 74 > Fisher Clements 72"
+    ],
+    "resolvedPressurePoints": [
+      "Reynolds remains below Green because Green has the stronger established scoring/catch-point résumé and more complete anchor case.",
+      "Terrance Carter remains 92 despite limited 2026 game evidence because availability is separated from underlying ability.",
+      "Skinner and Overmyer remain well above EA after mandatory review; their grades are already capped below elite anchors for complete-profile reasons.",
+      "Kevin Roche Jr. and Preston Douglas are real 2026 breakouts, kept in the mid-80s rather than copied from low EA/preseason ratings or overreacted into the 90s.",
+      "Curated TE membership does not imply an 80 floor."
+    ],
+    "contradictionsRemaining": false,
+    "result": "locked"
+  },
+  "rangeSeparationAudit": {
+    "result": "passed",
+    "min": 72,
+    "max": 97,
+    "below80Count": 31,
+    "note": "Secondary TEs, blocking-limited players, thin-sample players and weak Wheel options are allowed into the 70s."
+  },
+  "eaDiscrepancyAudit": {
+    "source": "EA SPORTS College Football 27 current Week 4 TE ratings where exact current entries could be resolved",
+    "rule": "Absolute HQ-vs-EA difference of 7+ requires mandatory review; 10+ requires explicit major-red-flag explanation. EA is an error detector, never a formula or required midpoint.",
+    "currentRatingsResolved": 67,
+    "currentRatingsUnresolved": [
+      "Ty Lockwood",
+      "Andrew Barker",
+      "Brennan Parachek",
+      "Pierce Walsh",
+      "Alex Honig",
+      "Luke Dehnicke",
+      "Logan Blake",
+      "Josh Phifer",
+      "Matthew Klopfenstein",
+      "Carson Kolb",
+      "Kari Ashley",
+      "Zeke Moore",
+      "Will Loerzel"
+    ],
+    "mandatoryReviews": [
+      {
+        "player": "Rocky Beers",
+        "school": "Oklahoma",
+        "hq": 95,
+        "ea": 86,
+        "delta": 9,
+        "disposition": "keep HQ",
+        "explanation": "255 yards and 2 TD through four games after 388 yards and 7 TD in 2025; EA is behind the two-season evidence."
+      },
+      {
+        "player": "Patrick Overmyer",
+        "school": "Houston",
+        "hq": 89,
+        "ea": 78,
+        "delta": 11,
+        "disposition": "keep HQ",
+        "explanation": "241 yards and 2 TD through four games after 344 yards and 5 TD in 2025, with credible blocking utility."
+      },
+      {
+        "player": "Noah Bennee",
+        "school": "Utah",
+        "hq": 85,
+        "ea": 76,
+        "delta": 9,
+        "disposition": "keep HQ",
+        "explanation": "166 yards and 2 TD through four games plus 264 yards in 2025 at Weber State; current role is stronger than EA 76."
+      },
+      {
+        "player": "Kevin Roche Jr.",
+        "school": "Georgia Tech",
+        "hq": 86,
+        "ea": 71,
+        "delta": 15,
+        "disposition": "keep HQ",
+        "explanation": "18 catches for 200 yards through four games, including strong FBS/Power production, plus credible inline size; short prior sample caps him at 86."
+      },
+      {
+        "player": "Jaleel Skinner",
+        "school": "Louisville",
+        "hq": 91,
+        "ea": 81,
+        "delta": 10,
+        "disposition": "keep HQ",
+        "explanation": "248 yards and 3 TD through four games at 20.7 YPR; HQ already discounts lighter blocking/inline value."
+      },
+      {
+        "player": "Preston Douglas",
+        "school": "NC State",
+        "hq": 84,
+        "ea": 72,
+        "delta": 12,
+        "disposition": "keep HQ",
+        "explanation": "14 catches for 167 yards and a TD through four games after almost no 2025 receiving role; real breakout, still capped at 84."
+      },
+      {
+        "player": "Carson Kent",
+        "school": "Pittsburgh",
+        "hq": 83,
+        "ea": 75,
+        "delta": 8,
+        "disposition": "keep HQ",
+        "explanation": "11 catches for 154 yards and a TD through four games plus useful blocking support a solid-starter 83."
+      },
+      {
+        "player": "Luke Reynolds",
+        "school": "Virginia Tech",
+        "hq": 96,
+        "ea": 89,
+        "delta": 7,
+        "disposition": "keep HQ",
+        "explanation": "30 catches, 280 yards and 4 TD through four games; HQ stays below Green because Reynolds is more receiver-heavy as a complete TE."
+      }
+    ],
+    "majorRedFlags": [
+      {
+        "player": "Patrick Overmyer",
+        "school": "Houston",
+        "hq": 89,
+        "ea": 78,
+        "delta": 11,
+        "disposition": "keep HQ",
+        "explanation": "241 yards and 2 TD through four games after 344 yards and 5 TD in 2025, with credible blocking utility."
+      },
+      {
+        "player": "Kevin Roche Jr.",
+        "school": "Georgia Tech",
+        "hq": 86,
+        "ea": 71,
+        "delta": 15,
+        "disposition": "keep HQ",
+        "explanation": "18 catches for 200 yards through four games, including strong FBS/Power production, plus credible inline size; short prior sample caps him at 86."
+      },
+      {
+        "player": "Jaleel Skinner",
+        "school": "Louisville",
+        "hq": 91,
+        "ea": 81,
+        "delta": 10,
+        "disposition": "keep HQ",
+        "explanation": "248 yards and 3 TD through four games at 20.7 YPR; HQ already discounts lighter blocking/inline value."
+      },
+      {
+        "player": "Preston Douglas",
+        "school": "NC State",
+        "hq": 84,
+        "ea": 72,
+        "delta": 12,
+        "disposition": "keep HQ",
+        "explanation": "14 catches for 167 yards and a TD through four games after almost no 2025 receiving role; real breakout, still capped at 84."
+      }
+    ],
+    "result": "passed"
+  },
+  "postGradeDistribution": {
+    "min": 72,
+    "max": 97,
+    "mean": 82,
+    "median": 81,
+    "bands": {
+      "95-100": 3,
+      "90-94": 5,
+      "85-89": 15,
+      "80-84": 26,
+      "75-79": 29,
+      "below-75": 2
+    },
+    "note": "Distribution inspected only after player-by-player grading and audits; no grade moved to manufacture a target shape."
+  },
+  "runtimeBoundary": "No production/runtime behavior is changed by this artifact. It is calibration authority only for later server-owned Wheel grading integration.",
+  "futureVersioning": "Any future TE grade change must record previous grade, new grade, effective date, concise football reason, and nearby anchor/peer sanity check."
+}
