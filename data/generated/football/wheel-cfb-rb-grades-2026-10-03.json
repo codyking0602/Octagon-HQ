@@ -1,0 +1,1937 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-wheel-rb-grades-2026-10-03-v1",
+  "status": "audit-locked-not-runtime",
+  "effectiveDate": "2026-10-03",
+  "populationSource": {
+    "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
+    "priorityAuditPath": "data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
+    "mainSha": "8285e5a842b020489f5da9ffaeed5fd9f20396f0",
+    "rbCount": 155,
+    "schoolCount": 68
+  },
+  "gradingSemantic": "CURRENT COLLEGE FOOTBALL ABILITY AT RUNNING BACK RIGHT NOW; 2026 is the leading evidence, 2025 is a substantial stabilizer, older evidence is secondary. Grade vision/decision-making, burst, elusiveness, contact balance/power, creation beyond blocking, short-yardage, receiving, ball security and pass-game usefulness. No NFL projection, recruiting ranking, draft stock, fame/school prestige, fantasy value, or future-upside bonus. Injury/availability generally does not directly reduce underlying ability.",
+  "currentSeasonWeighting": "Middle-ground CFB standard locked by Cody: approximately 55-60% current 2026 performance/role, 30-35% 2025 demonstrated level, remainder older/context; conceptual guidance, not a literal formula.",
+  "approvedAnchors": [
+    {
+      "player": "Jadan Baugh",
+      "school": "Florida",
+      "grade": 98
+    },
+    {
+      "player": "Nate Sheppard",
+      "school": "Duke",
+      "grade": 97
+    },
+    {
+      "player": "Wayne Knight",
+      "school": "UCLA",
+      "grade": 95
+    },
+    {
+      "player": "Wayshawn Parker",
+      "school": "Utah",
+      "grade": 95
+    },
+    {
+      "player": "Antwan Raymond",
+      "school": "Rutgers",
+      "grade": 93
+    },
+    {
+      "player": "Cam Cook",
+      "school": "West Virginia",
+      "grade": 93
+    },
+    {
+      "player": "LJ Martin",
+      "school": "BYU",
+      "grade": 93
+    },
+    {
+      "player": "Ahmad Hardy",
+      "school": "Missouri",
+      "grade": 92
+    },
+    {
+      "player": "Kewan Lacy",
+      "school": "Ole Miss",
+      "grade": 91
+    },
+    {
+      "player": "Fluff Bothwell",
+      "school": "Mississippi State",
+      "grade": 91
+    },
+    {
+      "player": "DeSean Bishop",
+      "school": "Tennessee",
+      "grade": 89
+    },
+    {
+      "player": "Aiden Flora",
+      "school": "Iowa State",
+      "grade": 87
+    },
+    {
+      "player": "Isaac Brown",
+      "school": "Louisville",
+      "grade": 86
+    },
+    {
+      "player": "Darius Taylor",
+      "school": "Minnesota",
+      "grade": 80
+    },
+    {
+      "player": "DeKalon Taylor",
+      "school": "Colorado",
+      "grade": 74
+    }
+  ],
+  "evidenceSnapshot": {
+    "completedGamesThrough": "2026-09-27",
+    "note": "Evidence is frozen after the September 26-27 weekend so October 3 games in progress do not create inconsistent within-position timing.",
+    "primarySources": [
+      "EA SPORTS College Football 27 current Week 4 HB ratings",
+      "Current 2026 school/player statistics and game logs",
+      "Sports-Reference / CFBStats / school official statistics for current and prior-season context",
+      "Recent game recaps for opponent/role context"
+    ]
+  },
+  "grades": [
+    {
+      "school": "Alabama",
+      "player": "Daniel Hill",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Alabama",
+      "player": "Trae'shawn Brown",
+      "curatedPrioritySlot": 2,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Alabama",
+      "player": "EJ Crowell",
+      "curatedPrioritySlot": 3,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": -3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Discrepancy audit correction: reserve role limits the grade, but 155 yards on 23 carries (6.7 per carry) is too productive for a low-70s ability score."
+    },
+    {
+      "school": "Arkansas",
+      "player": "Sutton Smith",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Arkansas",
+      "player": "Cam Settles",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Auburn",
+      "player": "Jeremiah Cobb",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 88,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Auburn",
+      "player": "Omar Mabson II",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Florida",
+      "player": "Jadan Baugh",
+      "curatedPrioritySlot": 1,
+      "grade": 98,
+      "kind": "anchor",
+      "eaCfb27Rating": 96,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved current-ceiling anchor: dominant 2026 production layered on proven 2025 feature-back ability."
+    },
+    {
+      "school": "Florida",
+      "player": "Evan Pryor",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Florida",
+      "player": "Duke Clark",
+      "curatedPrioritySlot": 3,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Discrepancy audit correction: 259 rushing yards at 8.1 per carry with three touchdowns through four games, including 126 against Ole Miss, made the initial low grade indefensible."
+    },
+    {
+      "school": "Georgia",
+      "player": "Nate Frazier",
+      "curatedPrioritySlot": 1,
+      "grade": 89,
+      "kind": "graded",
+      "eaCfb27Rating": 91,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Georgia",
+      "player": "Chauncey Bowens",
+      "curatedPrioritySlot": 2,
+      "grade": 87,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Kentucky",
+      "player": "CJ Baxter",
+      "curatedPrioritySlot": 1,
+      "grade": 89,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Kentucky",
+      "player": "Jason Patterson",
+      "curatedPrioritySlot": 2,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "LSU",
+      "player": "Dilin Jones",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "LSU",
+      "player": "Stacy Gage",
+      "curatedPrioritySlot": 2,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Mississippi State",
+      "player": "Fluff Bothwell",
+      "curatedPrioritySlot": 1,
+      "grade": 91,
+      "kind": "anchor",
+      "eaCfb27Rating": 90,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved 91 anchor: strong 2026 SEC rushing plus receiving contribution supports the high-end neighborhood."
+    },
+    {
+      "school": "Mississippi State",
+      "player": "Kolin Wilson",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Mississippi State",
+      "player": "J.J. Hill",
+      "curatedPrioritySlot": 3,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Missouri",
+      "player": "Ahmad Hardy",
+      "curatedPrioritySlot": 1,
+      "grade": 92,
+      "kind": "anchor",
+      "eaCfb27Rating": 96,
+      "eaDelta": -4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved 92 anchor: no 2026 game evidence, so he cannot live at the ceiling; elite 2025 ability remains substantial evidence and injury is treated primarily as availability."
+    },
+    {
+      "school": "Missouri",
+      "player": "Jamal Roberts",
+      "curatedPrioritySlot": 2,
+      "grade": 88,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Missouri",
+      "player": "Xai'Shaun Edwards",
+      "curatedPrioritySlot": 3,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Oklahoma",
+      "player": "Lloyd Avant",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Oklahoma",
+      "player": "Xavier Robinson",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Ole Miss",
+      "player": "Kewan Lacy",
+      "curatedPrioritySlot": 1,
+      "grade": 91,
+      "kind": "anchor",
+      "eaCfb27Rating": 96,
+      "eaDelta": -5,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved 91 anchor: monster 2025 establishes the talent, while a quieter 2026 start prevents a mid-90s grade."
+    },
+    {
+      "school": "Ole Miss",
+      "player": "Makhi Frazier",
+      "curatedPrioritySlot": 2,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "South Carolina",
+      "player": "Matt Fuller",
+      "curatedPrioritySlot": 1,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "South Carolina",
+      "player": "Christian Clark",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "South Carolina",
+      "player": "Jabree Coleman",
+      "curatedPrioritySlot": 3,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Tennessee",
+      "player": "DeSean Bishop",
+      "curatedPrioritySlot": 1,
+      "grade": 89,
+      "kind": "anchor",
+      "eaCfb27Rating": 91,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved 89 anchor: very good current rushing backed by strong prior production without pushing him into the elite tier."
+    },
+    {
+      "school": "Tennessee",
+      "player": "Javin Gordon",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Tennessee",
+      "player": "Daune Morris",
+      "curatedPrioritySlot": 3,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": -3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Texas",
+      "player": "Hollywood Smothers",
+      "curatedPrioritySlot": 1,
+      "grade": 89,
+      "kind": "graded",
+      "eaCfb27Rating": 89,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Texas",
+      "player": "Raleek Brown",
+      "curatedPrioritySlot": 2,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 88,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Texas A&M",
+      "player": "Rueben Owens II",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Texas A&M",
+      "player": "Jamarion Morrow",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Vanderbilt",
+      "player": "Sedrick Alexander",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Vanderbilt",
+      "player": "Makhilyn Young",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Illinois",
+      "player": "Calil Valentine",
+      "curatedPrioritySlot": 1,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Illinois",
+      "player": "Aidan Laughery",
+      "curatedPrioritySlot": 2,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Indiana",
+      "player": "Turbo Richard",
+      "curatedPrioritySlot": 1,
+      "grade": 87,
+      "kind": "graded",
+      "eaCfb27Rating": 89,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Indiana",
+      "player": "Lee Beebe Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 88,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Iowa",
+      "player": "Kamari Moulton",
+      "curatedPrioritySlot": 1,
+      "grade": 89,
+      "kind": "graded",
+      "eaCfb27Rating": 89,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Iowa",
+      "player": "L.J. Phillips Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Iowa",
+      "player": "Braeden Jackson",
+      "curatedPrioritySlot": 3,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Maryland",
+      "player": "Iverson Howard",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 78,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Maryland",
+      "player": "Liam Willson",
+      "curatedPrioritySlot": 2,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Maryland",
+      "player": "Harry Dalton III",
+      "curatedPrioritySlot": 3,
+      "grade": 74,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Weak current Wheel RB option: limited demonstrated college ability/role supports true bottom-end separation."
+    },
+    {
+      "school": "Michigan",
+      "player": "Jordan Marshall",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Michigan",
+      "player": "Savion Hiter",
+      "curatedPrioritySlot": 2,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -5,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Michigan State",
+      "player": "Cam Edwards",
+      "curatedPrioritySlot": 1,
+      "grade": 88,
+      "kind": "graded",
+      "eaCfb27Rating": 90,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Michigan State",
+      "player": "Jaziun Patterson",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Minnesota",
+      "player": "Darius Taylor",
+      "curatedPrioritySlot": 1,
+      "grade": 80,
+      "kind": "anchor",
+      "eaCfb27Rating": 87,
+      "eaDelta": -7,
+      "eaStatus": "mandatory-review",
+      "reason": "Approved 80 anchor: prior feature-back ability prevents a collapse, but 107 yards at 2.7 per carry through three 2026 games requires a major current-year correction."
+    },
+    {
+      "school": "Minnesota",
+      "player": "TJ Thomas",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Nebraska",
+      "player": "Jamal Rule",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Nebraska",
+      "player": "Mekhi Nelson",
+      "curatedPrioritySlot": 2,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 78,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Nebraska",
+      "player": "Isaiah Mozee",
+      "curatedPrioritySlot": 3,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 78,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Northwestern",
+      "player": "Caleb Komolafe",
+      "curatedPrioritySlot": 1,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Northwestern",
+      "player": "Gavin Sawchuk",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Northwestern",
+      "player": "Joseph Himon II",
+      "curatedPrioritySlot": 3,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Ohio State",
+      "player": "Bo Jackson",
+      "curatedPrioritySlot": 1,
+      "grade": 91,
+      "kind": "graded",
+      "eaCfb27Rating": 90,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "High-end current RB ability with strong 2026 evidence and/or a proven recent college baseline that still holds under current-year review."
+    },
+    {
+      "school": "Ohio State",
+      "player": "Ja'Kobi Jackson",
+      "curatedPrioritySlot": 2,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Oregon",
+      "player": "Jordon Davison",
+      "curatedPrioritySlot": 1,
+      "grade": 88,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Oregon",
+      "player": "Dierre Hill Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Penn State",
+      "player": "Carson Hansen",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Penn State",
+      "player": "James Peoples",
+      "curatedPrioritySlot": 2,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Penn State",
+      "player": "Quinton Martin Jr.",
+      "curatedPrioritySlot": 3,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Purdue",
+      "player": "Fame Ijeboi",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Purdue",
+      "player": "Jerrick Gibson",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Rutgers",
+      "player": "Antwan Raymond",
+      "curatedPrioritySlot": 1,
+      "grade": 93,
+      "kind": "anchor",
+      "eaCfb27Rating": 92,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved high-end anchor: strong current feature-back workload and multi-season production."
+    },
+    {
+      "school": "Rutgers",
+      "player": "Clay Thevenin",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "UCLA",
+      "player": "Wayne Knight",
+      "curatedPrioritySlot": 1,
+      "grade": 95,
+      "kind": "anchor",
+      "eaCfb27Rating": 91,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved elite anchor: explosive 2026 efficiency and touchdown production, supported by a large 2025 all-purpose sample."
+    },
+    {
+      "school": "UCLA",
+      "player": "Anthony Woods",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "USC",
+      "player": "King Miller",
+      "curatedPrioritySlot": 1,
+      "grade": 91,
+      "kind": "graded",
+      "eaCfb27Rating": 88,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "High-end current RB ability with strong 2026 evidence and/or a proven recent college baseline that still holds under current-year review."
+    },
+    {
+      "school": "USC",
+      "player": "Waymond Jordan",
+      "curatedPrioritySlot": 2,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": -4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Washington",
+      "player": "Brian Bonner Jr.",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Washington",
+      "player": "Trey Cooley",
+      "curatedPrioritySlot": 2,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Wisconsin",
+      "player": "Abu Sama III",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Wisconsin",
+      "player": "Darrion Dupree",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Arizona",
+      "player": "Ismail Mahdi",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Arizona",
+      "player": "Kedrick Reescano",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Arizona State",
+      "player": "Kyson Brown",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Arizona State",
+      "player": "Marquis Gillis",
+      "curatedPrioritySlot": 2,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 72,
+      "eaDelta": 9,
+      "eaStatus": "mandatory-review",
+      "reason": "2025 established a legitimate feature-back baseline; 2026 usage is limited but efficient. HQ lowers him for current role without accepting EA's low-70s evaluation."
+    },
+    {
+      "school": "Arizona State",
+      "player": "Grayson Rigdon",
+      "curatedPrioritySlot": 3,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Baylor",
+      "player": "Dawson Pendergrass",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Baylor",
+      "player": "Caden Knighten",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -5,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "BYU",
+      "player": "LJ Martin",
+      "curatedPrioritySlot": 1,
+      "grade": 93,
+      "kind": "anchor",
+      "eaCfb27Rating": 93,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved high-end anchor: efficient 2026 start plus reigning high-level 2025 conference production."
+    },
+    {
+      "school": "BYU",
+      "player": "Preston Rex",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Cincinnati",
+      "player": "Cole Tabb",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Cincinnati",
+      "player": "Gi'Bran Payne",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Colorado",
+      "player": "Micah Welch",
+      "curatedPrioritySlot": 1,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Colorado",
+      "player": "DeKalon Taylor",
+      "curatedPrioritySlot": 2,
+      "grade": 74,
+      "kind": "anchor",
+      "eaCfb27Rating": 75,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved 74 floor anchor: limited current role and demonstrated college RB production justify genuine lower-end separation."
+    },
+    {
+      "school": "Houston",
+      "player": "Makhi Hughes",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Houston",
+      "player": "Re'Shaun Sanford II",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Iowa State",
+      "player": "Aiden Flora",
+      "curatedPrioritySlot": 1,
+      "grade": 87,
+      "kind": "anchor",
+      "eaCfb27Rating": 78,
+      "eaDelta": 9,
+      "eaStatus": "mandatory-review",
+      "reason": "Approved 87 breakout anchor: 382 yards at 7.5 per carry through four games, including real production against Iowa and Utah."
+    },
+    {
+      "school": "Iowa State",
+      "player": "Cameron Pettaway",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Kansas",
+      "player": "Dylan Edwards",
+      "curatedPrioritySlot": 1,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Kansas",
+      "player": "Yasin Willis",
+      "curatedPrioritySlot": 2,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Kansas State",
+      "player": "Rodney Fields Jr.",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Kansas State",
+      "player": "Joe Jackson",
+      "curatedPrioritySlot": 2,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Kansas State",
+      "player": "Jay Harris",
+      "curatedPrioritySlot": 3,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Oklahoma State",
+      "player": "Caleb Hawkins",
+      "curatedPrioritySlot": 1,
+      "grade": 94,
+      "kind": "graded",
+      "eaCfb27Rating": 92,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "High-end current RB ability with strong 2026 evidence and/or a proven recent college baseline that still holds under current-year review."
+    },
+    {
+      "school": "Oklahoma State",
+      "player": "Tre Page III",
+      "curatedPrioritySlot": 2,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "TCU",
+      "player": "Jeremy Payne",
+      "curatedPrioritySlot": 1,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "TCU",
+      "player": "Jon Denman",
+      "curatedPrioritySlot": 2,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 74,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Texas Tech",
+      "player": "Cameron Dickey",
+      "curatedPrioritySlot": 1,
+      "grade": 87,
+      "kind": "graded",
+      "eaCfb27Rating": 88,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Texas Tech",
+      "player": "Jkoby Williams",
+      "curatedPrioritySlot": 2,
+      "grade": 85,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "UCF",
+      "player": "Duke Watson",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "UCF",
+      "player": "Landen Chambers",
+      "curatedPrioritySlot": 2,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "UCF",
+      "player": "Taevion Swint",
+      "curatedPrioritySlot": 3,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Utah",
+      "player": "Wayshawn Parker",
+      "curatedPrioritySlot": 1,
+      "grade": 95,
+      "kind": "anchor",
+      "eaCfb27Rating": 88,
+      "eaDelta": 7,
+      "eaStatus": "mandatory-review",
+      "reason": "Approved elite anchor: 493 scrimmage yards and nine total touchdowns through four games with real receiving value, supported by prior production."
+    },
+    {
+      "school": "Utah",
+      "player": "Daniel Bray",
+      "curatedPrioritySlot": 2,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "West Virginia",
+      "player": "Cam Cook",
+      "curatedPrioritySlot": 1,
+      "grade": 93,
+      "kind": "anchor",
+      "eaCfb27Rating": 91,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved high-end anchor: current 2026 workload/production plus a major 2025 rushing sample establish high-end ability."
+    },
+    {
+      "school": "West Virginia",
+      "player": "Amari Latimer",
+      "curatedPrioritySlot": 2,
+      "grade": 79,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Boston College",
+      "player": "Evan Dickens",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Boston College",
+      "player": "Bo MacCormack III",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "California",
+      "player": "Adam Mohammed",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "California",
+      "player": "Ashten Emory",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Clemson",
+      "player": "Gideon Davidson",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Clemson",
+      "player": "Chris Johnson Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Duke",
+      "player": "Nate Sheppard",
+      "curatedPrioritySlot": 1,
+      "grade": 97,
+      "kind": "anchor",
+      "eaCfb27Rating": 93,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved elite anchor: national-leading 2026 rushing production plus a strong 2025 freshman baseline."
+    },
+    {
+      "school": "Duke",
+      "player": "CJ Campbell Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Florida State",
+      "player": "Ousmane Kromah",
+      "curatedPrioritySlot": 1,
+      "grade": 87,
+      "kind": "graded",
+      "eaCfb27Rating": 87,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Florida State",
+      "player": "Samuel Singleton Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Georgia Tech",
+      "player": "Justice Haynes",
+      "curatedPrioritySlot": 1,
+      "grade": 91,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved",
+      "reason": "High-end current RB ability with strong 2026 evidence and/or a proven recent college baseline that still holds under current-year review."
+    },
+    {
+      "school": "Georgia Tech",
+      "player": "Malachi Hosley",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 83,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Georgia Tech",
+      "player": "Trelain Maddox",
+      "curatedPrioritySlot": 3,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Louisville",
+      "player": "Isaac Brown",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "anchor",
+      "eaCfb27Rating": 92,
+      "eaDelta": -6,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Approved 86 anchor: outstanding older evidence stabilizes the grade, but a disappointing 2026 start materially lowers him from preseason/EA reputation."
+    },
+    {
+      "school": "Louisville",
+      "player": "Keyjuan Brown",
+      "curatedPrioritySlot": 2,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 88,
+      "eaDelta": -5,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Miami",
+      "player": "Mark Fletcher Jr.",
+      "curatedPrioritySlot": 1,
+      "grade": 92,
+      "kind": "graded",
+      "eaCfb27Rating": 93,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "High-end current RB ability with strong 2026 evidence and/or a proven recent college baseline that still holds under current-year review."
+    },
+    {
+      "school": "Miami",
+      "player": "CharMar Brown",
+      "curatedPrioritySlot": 2,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Miami",
+      "player": "Javian Mallory",
+      "curatedPrioritySlot": 3,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "NC State",
+      "player": "Jayden Scott",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 81,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "NC State",
+      "player": "Davion Gause",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "North Carolina",
+      "player": "Benjamin Hall",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "North Carolina",
+      "player": "Jaylen McGill",
+      "curatedPrioritySlot": 2,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "current-rating-unresolved",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "North Carolina",
+      "player": "Demon June",
+      "curatedPrioritySlot": 3,
+      "grade": 81,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": -3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Discrepancy audit correction: 2026 is modest but functional, and his 2025 all-purpose sample supports a low-80s current grade rather than a high-70s overcorrection."
+    },
+    {
+      "school": "Pittsburgh",
+      "player": "Jakyrian Turner",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Pittsburgh",
+      "player": "Damon Ferguson Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "SMU",
+      "player": "Kendrick Raphael",
+      "curatedPrioritySlot": 1,
+      "grade": 88,
+      "kind": "graded",
+      "eaCfb27Rating": 88,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "SMU",
+      "player": "Dramekco Green",
+      "curatedPrioritySlot": 2,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Stanford",
+      "player": "Micah Ford",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 82,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Stanford",
+      "player": "Sedrick Irvin",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 76,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Syracuse",
+      "player": "Tylik Hill",
+      "curatedPrioritySlot": 1,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 5,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Syracuse",
+      "player": "Ju'Juan Johnson",
+      "curatedPrioritySlot": 2,
+      "grade": 78,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Syracuse",
+      "player": "Shavane Anderson Jr.",
+      "curatedPrioritySlot": 3,
+      "grade": 75,
+      "kind": "graded",
+      "eaCfb27Rating": 73,
+      "eaDelta": 2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Virginia",
+      "player": "Xavier Brown",
+      "curatedPrioritySlot": 1,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": 4,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Discrepancy audit correction: healthy-return flashes are good, but a 24-carry 2026 sample does not support the initial upper-80s placement."
+    },
+    {
+      "school": "Virginia",
+      "player": "Jekail Middlebrook",
+      "curatedPrioritySlot": 2,
+      "grade": 84,
+      "kind": "graded",
+      "eaCfb27Rating": 85,
+      "eaDelta": -1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Virginia",
+      "player": "Xay Davis",
+      "curatedPrioritySlot": 3,
+      "grade": 77,
+      "kind": "graded",
+      "eaCfb27Rating": 77,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Virginia Tech",
+      "player": "Jeffrey Overton Jr.",
+      "curatedPrioritySlot": 1,
+      "grade": 89,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": 5,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Virginia Tech",
+      "player": "Marcellous Hawkins Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 82,
+      "kind": "graded",
+      "eaCfb27Rating": 84,
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Wake Forest",
+      "player": "Ty Clark III",
+      "curatedPrioritySlot": 1,
+      "grade": 83,
+      "kind": "graded",
+      "eaCfb27Rating": 80,
+      "eaDelta": 3,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    },
+    {
+      "school": "Wake Forest",
+      "player": "Deuce Lawrence",
+      "curatedPrioritySlot": 2,
+      "grade": 76,
+      "kind": "graded",
+      "eaCfb27Rating": 75,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Role/secondary-back range: some demonstrated college ability, but current workload, efficiency, completeness, or sample keeps him below starter-quality anchors."
+    },
+    {
+      "school": "Notre Dame",
+      "player": "Aneyas Williams",
+      "curatedPrioritySlot": 1,
+      "grade": 86,
+      "kind": "graded",
+      "eaCfb27Rating": 86,
+      "eaDelta": 0,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Very good current RB ability; 2026 role/production supports this tier while prior evidence prevents short-sample overreaction."
+    },
+    {
+      "school": "Notre Dame",
+      "player": "Nolan James Jr.",
+      "curatedPrioritySlot": 2,
+      "grade": 80,
+      "kind": "graded",
+      "eaCfb27Rating": 79,
+      "eaDelta": 1,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Solid current RB ability in the curated population; useful demonstrated college traits/production without high-end current separation."
+    }
+  ],
+  "pairwiseAudit": {
+    "orderedNeighborhoods": [
+      "Jadan Baugh 98 > Nate Sheppard 97 > Wayne Knight 95 = Wayshawn Parker 95",
+      "Caleb Hawkins 94 > Antwan Raymond 93 = Cam Cook 93 = LJ Martin 93 > Ahmad Hardy 92 = Mark Fletcher Jr. 92",
+      "Bo Jackson 91 = Fluff Bothwell 91 = Justice Haynes 91 = Kewan Lacy 91 = King Miller 91",
+      "CJ Baxter / DeSean Bishop / Hollywood Smothers / Jeffrey Overton Jr. / Kamari Moulton / Nate Frazier at 89 > 88 cluster > 87 cluster",
+      "86 cluster > 85 cluster > 84 cluster > 83 cluster > 82 cluster > 81 cluster > 80 cluster",
+      "79 cluster > 78 cluster > 77 cluster > 76 cluster > 75 cluster > DeKalon Taylor 74 = Harry Dalton III 74"
+    ],
+    "resolvedPressurePoints": [
+      "Hardy remains 92 rather than elite-ceiling range: zero 2026 games matter in college, but injury is not treated as proof his underlying ability disappeared.",
+      "Lacy remains 91: current year is quieter, while his dominant 2025 prevents a four-game overcorrection.",
+      "Isaac Brown remains 86: excellent prior evidence stabilizes him, but 2026 performance materially lowers him from EA 92.",
+      "Duke Clark was corrected from an initial 73 to 86 after the external sanity check exposed elite 2026 efficiency; this is exactly the intended use of the EA/stat audit.",
+      "Xavier Brown was corrected down from an initial 87 to 84 because his 2026 return has flashed but the role/sample is too small for the upper-80s.",
+      "The bottom remains deliberately separated; curated membership does not imply an 80 floor."
+    ],
+    "contradictionsRemaining": false,
+    "result": "locked"
+  },
+  "rangeSeparationAudit": {
+    "result": "passed",
+    "min": 74,
+    "max": 98,
+    "below80Count": 47,
+    "note": "Secondary backs, thin-sample players and weak Wheel options are allowed into the 70s. No grade was raised merely because the player survived curation."
+  },
+  "eaDiscrepancyAudit": {
+    "source": "EA SPORTS College Football 27 current Week 4 HB ratings where an exact current player entry could be resolved",
+    "rule": "Absolute HQ-vs-EA difference of 7+ requires mandatory review; 10+ requires explicit major-red-flag explanation. EA is an error detector, never a formula or required midpoint.",
+    "currentRatingsResolved": 150,
+    "currentRatingsUnresolved": [
+      "Braeden Jackson",
+      "Liam Willson",
+      "Ismail Mahdi",
+      "Justice Haynes",
+      "Jaylen McGill"
+    ],
+    "mandatoryReviews": [
+      {
+        "player": "Darius Taylor",
+        "school": "Minnesota",
+        "hq": 80,
+        "ea": 87,
+        "delta": -7,
+        "disposition": "keep HQ",
+        "explanation": "The user-approved 80 anchor intentionally weights 2026 heavily: 107 rushing yards at 2.7 per carry through three games. Prior production prevents a deeper fall, but EA 87 is too reputation-heavy for the current CFB model."
+      },
+      {
+        "player": "Marquis Gillis",
+        "school": "Arizona State",
+        "hq": 81,
+        "ea": 72,
+        "delta": 9,
+        "disposition": "keep HQ",
+        "explanation": "EA 72 materially undersells a back who produced 1,182 rushing yards in 2025. Limited 2026 usage prevents a high grade, but 81 better balances current role with demonstrated recent ability."
+      },
+      {
+        "player": "Aiden Flora",
+        "school": "Iowa State",
+        "hq": 87,
+        "ea": 78,
+        "delta": 9,
+        "disposition": "keep HQ",
+        "explanation": "Current 2026 production (382 rushing yards at 7.5 per carry through four games) is materially ahead of EA's 78; 87 remains appropriate because the prior RB sample is thin."
+      },
+      {
+        "player": "Wayshawn Parker",
+        "school": "Utah",
+        "hq": 95,
+        "ea": 88,
+        "delta": 7,
+        "disposition": "keep HQ",
+        "explanation": "Current all-purpose impact is elite: 328 rushing yards, 154 receiving yards and nine total touchdowns through four games. EA's 88 has not caught up to his current level."
+      }
+    ],
+    "majorRedFlags": [],
+    "preLockCorrections": [
+      {
+        "player": "Duke Clark",
+        "from": 73,
+        "to": 86,
+        "reason": "Current 2026 production made the original grade indefensible."
+      },
+      {
+        "player": "EJ Crowell",
+        "from": 74,
+        "to": 79,
+        "reason": "Limited role still matters, but 155 yards on 23 carries was too productive for a low-70s grade."
+      },
+      {
+        "player": "Xavier Brown",
+        "from": 87,
+        "to": 84,
+        "reason": "Current sample/role did not support an upper-80s grade."
+      },
+      {
+        "player": "Demon June",
+        "from": 77,
+        "to": 81,
+        "reason": "Current functional production plus 2025 all-purpose evidence supported a low-80s correction."
+      },
+      {
+        "player": "Marquis Gillis",
+        "from": 79,
+        "to": 81,
+        "reason": "2025 feature-back production plus efficient limited 2026 touches justified a modest upward correction."
+      }
+    ],
+    "result": "passed"
+  },
+  "postGradeDistribution": {
+    "min": 74,
+    "max": 98,
+    "mean": 82.57,
+    "median": 82,
+    "bands": {
+      "95-100": 4,
+      "90-94": 11,
+      "85-89": 33,
+      "80-84": 60,
+      "75-79": 45,
+      "below-75": 2
+    },
+    "note": "Distribution was inspected only after player-by-player grading and audits; no grade was moved to manufacture a target shape."
+  },
+  "runtimeBoundary": "No production/runtime behavior is changed by this artifact. It is calibration authority only for later server-owned Wheel grading integration.",
+  "futureVersioning": "Any future RB grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check. Normal maintenance is a targeted exception scan, not a wholesale regrade."
+}
