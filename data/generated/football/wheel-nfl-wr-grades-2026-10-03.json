@@ -113,9 +113,9 @@
     {
       "team": "ATL",
       "player": "Jahan Dotson",
-      "grade": 80,
+      "grade": 78,
       "confidence": "high",
-      "reason": "Route quickness and field-stretching ability remain useful, but inconsistent volume and efficiency keep him around low-end starter territory."
+      "reason": "Route quickness and field-stretching ability remain useful, but inconsistent volume and efficiency keep him around low-end starter territory. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "ATL",
@@ -225,9 +225,9 @@
     {
       "team": "CIN",
       "player": "Andrei Iosivas",
-      "grade": 80,
+      "grade": 79,
       "confidence": "high",
-      "reason": "Useful size/speed role receiver with red-zone value; limited target-command keeps him near low-end starter territory."
+      "reason": "Useful size/speed role receiver with red-zone value; limited target-command keeps him near low-end starter territory. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "CLE",
@@ -295,9 +295,9 @@
     {
       "team": "DEN",
       "player": "Pat Bryant",
-      "grade": 79,
+      "grade": 76,
       "confidence": "low",
-      "reason": "Encouraging early NFL efficiency, but three games are insufficient to establish starter-level ability."
+      "reason": "Encouraging early NFL efficiency, but three games are insufficient to establish starter-level ability. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "DET",
@@ -463,9 +463,9 @@
     {
       "team": "LAC",
       "player": "Tre' Harris",
-      "grade": 80,
+      "grade": 78,
       "confidence": "medium",
-      "reason": "149 yards through three 2026 games is encouraging, but the sample remains too short for a higher established grade."
+      "reason": "149 yards through three 2026 games is encouraging, but the sample remains too short for a higher established grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "LAR",
@@ -498,9 +498,9 @@
     {
       "team": "LV",
       "player": "Jack Bech",
-      "grade": 79,
+      "grade": 76,
       "confidence": "low",
-      "reason": "Physical slot/boundary versatility is useful, but the NFL evidence remains too limited for a starter-grade projection."
+      "reason": "Physical slot/boundary versatility is useful, but the NFL evidence remains too limited for a starter-grade projection. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "LV",
@@ -512,9 +512,9 @@
     {
       "team": "MIA",
       "player": "Malik Washington",
-      "grade": 81,
+      "grade": 78,
       "confidence": "medium",
-      "reason": "Quickness, YAC and current target growth support low-end starter ability; established volume remains limited."
+      "reason": "Quickness, YAC and current target growth support low-end starter ability; established volume remains limited. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "MIA",
@@ -638,9 +638,9 @@
     {
       "team": "NYJ",
       "player": "Isaiah Williams",
-      "grade": 77,
+      "grade": 74,
       "confidence": "medium",
-      "reason": "Useful slot/return quickness, but limited receiving volume keeps him in a rotational band."
+      "reason": "Useful slot/return quickness, but limited receiving volume keeps him in a rotational band. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "PHI",
@@ -680,9 +680,9 @@
     {
       "team": "PIT",
       "player": "Roman Wilson",
-      "grade": 79,
+      "grade": 77,
       "confidence": "low",
-      "reason": "Limited professional production with enough route talent for a rotational grade, not a starter projection."
+      "reason": "Limited professional production with enough route talent for a rotational grade, not a starter projection. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "SEA",
@@ -729,9 +729,9 @@
     {
       "team": "SF",
       "player": "Jacob Cowing",
-      "grade": 78,
+      "grade": 75,
       "confidence": "medium",
-      "reason": "Useful speed/slot traits and depth value, but limited target-command keep him rotational."
+      "reason": "Useful speed/slot traits and depth value, but limited target-command keep him rotational. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "TB",
@@ -750,9 +750,9 @@
     {
       "team": "TB",
       "player": "Jalen McMillan",
-      "grade": 81,
+      "grade": 79,
       "confidence": "medium",
-      "reason": "Useful route/size profile and touchdown production, but consistency and target-command remain low-end starter level."
+      "reason": "Useful route/size profile and touchdown production, but consistency and target-command remain low-end starter level. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
     },
     {
       "team": "TB",
@@ -829,23 +829,103 @@
       "Travis Hunter is 77 as a WR because current NFL receiving evidence is almost nonexistent; college greatness and two-way projection are excluded."
     ],
     "result": "locked",
-    "contradictionsRemaining": false
+    "contradictionsRemaining": false,
+    "finalCalibrationStatus": "passed"
   },
   "postGradeDistribution": {
-    "min": 75,
+    "min": 74,
     "max": 99,
-    "mean": 83.67,
+    "mean": 83.44,
     "median": 83,
     "bands": {
       "95-100": 6,
       "90-94": 9,
       "85-89": 21,
-      "80-84": 44,
-      "75-79": 23,
-      "below-75": 0
+      "80-84": 39,
+      "75-79": 27,
+      "below-75": 1
     },
-    "note": "Inspected only after grading; no grades were moved to shape the distribution."
+    "note": "Final distribution after player-by-player grading, pairwise audit, range/separation calibration and discrepancy review. Distribution did not mechanically set grades."
   },
   "runtimeBoundary": "No production/runtime behavior changes. Runtime wiring, historical freezing and hidden reveal remain a later phase.",
-  "futureVersioning": "Any future WR grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison."
+  "futureVersioning": "Any future WR grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison.",
+  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "finalCalibrationAudit": {
+    "status": "locked",
+    "principle": "Re-opened prior grades after the full-position project exposed scale compression. Madden/external ratings are discrepancy alarms only; final grades may stay, move toward them, or move away based on football evidence.",
+    "lesson": "WR needed modest lower-half separation, not a rewrite. Established top and upper-middle grades remained intact.",
+    "changes": [
+      {
+        "player": "Jahan Dotson",
+        "from": 80,
+        "to": 78
+      },
+      {
+        "player": "Andrei Iosivas",
+        "from": 80,
+        "to": 79
+      },
+      {
+        "player": "Pat Bryant",
+        "from": 79,
+        "to": 76
+      },
+      {
+        "player": "Tre' Harris",
+        "from": 80,
+        "to": 78
+      },
+      {
+        "player": "Jack Bech",
+        "from": 79,
+        "to": 76
+      },
+      {
+        "player": "Malik Washington",
+        "from": 81,
+        "to": 78
+      },
+      {
+        "player": "Isaiah Williams",
+        "from": 77,
+        "to": 74
+      },
+      {
+        "player": "Roman Wilson",
+        "from": 79,
+        "to": 77
+      },
+      {
+        "player": "Jacob Cowing",
+        "from": 78,
+        "to": 75
+      },
+      {
+        "player": "Jalen McMillan",
+        "from": 81,
+        "to": 79
+      }
+    ],
+    "evidence": [
+      "Malik Washington: 64.7 PFF overall, 51st of 85 qualified WRs through Week 4.",
+      "Roman Wilson: 63.1 PFF overall, 55th of 85 qualified WRs.",
+      "Jalen McMillan has only three routes and one target in 2026; prior 81 overstated current evidence.",
+      "Christian Watson stayed 85 despite Madden being lower because PFF ranks him 18th entering Week 4 and he is top-five in receiving yards through three games."
+    ],
+    "rangeAfter": {
+      "min": 74,
+      "max": 99,
+      "mean": 83.44,
+      "median": 83,
+      "below80": 28,
+      "bands": {
+        "95-100": 6,
+        "90-94": 9,
+        "85-89": 21,
+        "80-84": 39,
+        "75-79": 27,
+        "below-75": 1
+      }
+    }
+  }
 }
