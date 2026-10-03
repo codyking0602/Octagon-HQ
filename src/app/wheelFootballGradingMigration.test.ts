@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202612310240_wheel_football_full_grading.sql",
   "utf8",
 );
+const reviewedOverrides = readFileSync(
+  "supabase/migrations/202612310241_wheel_football_reviewed_overrides.sql",
+  "utf8",
+);
 
 describe("Wheel of Football complete hidden grading migration", () => {
   it("owns a private current-NFL authority with full player and coach coverage", () => {
@@ -44,6 +48,16 @@ describe("Wheel of Football complete hidden grading migration", () => {
     expect(migration).toContain("'result', case when match.phase = 'complete' and match.forfeited_at is null");
     expect(migration).toContain("'forfeited_by_profile_id', match.forfeited_by_profile_id");
     expect(migration).toContain("'forfeited_at', match.forfeited_at");
+  });
+
+  it("layers the reviewed AP/NGS/HQ star tier over the complete baseline", () => {
+    expect(reviewedOverrides.split("  ('")).toHaveLength(109);
+    expect(reviewedOverrides).toContain("'Drake Maye','QB',98.0");
+    expect(reviewedOverrides).toContain("'Justin Herbert','QB',94.0");
+    expect(reviewedOverrides).toContain("'Myles Garrett','Front Seven',100.0");
+    expect(reviewedOverrides).toContain("'Derek Stingley Jr.','Secondary',99.0");
+    expect(reviewedOverrides).toContain("override.position_group <> 'Head Coach'");
+    expect(reviewedOverrides).toContain("'wheel-reviewed-anchor-2026-10-03'");
   });
 
   it("keeps an auditable emergency fallback only for post-authority roster additions", () => {
