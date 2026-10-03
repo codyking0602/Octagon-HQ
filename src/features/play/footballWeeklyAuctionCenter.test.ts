@@ -11,6 +11,7 @@ const cfbGate = readFileSync("src/features/back-room/FootballWeeklyAuctionGate.t
 const buildQbGate = readFileSync("src/features/back-room/FootballWeeklyBuildQbGate.tsx", "utf8");
 const buildQbTable = readFileSync("src/features/back-room/FootballWeeklyBuildQbTableDialog.tsx", "utf8");
 const buildQbStyles = readFileSync("src/styles/football-weekly-build-qb.css", "utf8");
+const auctionTableStyles = readFileSync("src/styles/football-weekly-auction-table.css", "utf8");
 
 describe("Football Weekly Auction Center and archive", () => {
   it("keeps every completed signed-in result reopenable newest first", () => {
@@ -54,6 +55,14 @@ describe("Football Weekly Auction Center and archive", () => {
     expect(buildQbGate).toContain("<span>Bids lock at midnight CT</span>");
     expect(buildQbGate).toContain("<span>$0 bid = pass</span>");
     expect(buildQbGate).not.toContain("results reveal at midnight CT");
+  });
+
+  it("pins the Auction Table to the top and gives its roster area a real touch-scroll viewport", () => {
+    expect(auctionTableStyles).toContain("align-items: flex-start;");
+    expect(auctionTableStyles).toContain("flex: 1 1 auto;");
+    expect(auctionTableStyles).toContain("overflow-y: auto;");
+    expect(auctionTableStyles).toContain("touch-action: pan-y;");
+    expect(auctionTableStyles).toContain("height: calc(100dvh - 92px - var(--safe-bottom));");
   });
 
   it("adds explicit Back controls to both full-height Build a QB reference sheets", () => {
