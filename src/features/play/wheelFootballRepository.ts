@@ -49,6 +49,9 @@ const stateSchema = z.object({
   completed_at: z.string().nullable(),
   forfeited_by_profile_id: z.string().uuid().nullable(),
   forfeited_at: z.string().nullable(),
+  creator_final_grade: z.coerce.number().min(0).max(100).nullable().optional().default(null),
+  recipient_final_grade: z.coerce.number().min(0).max(100).nullable().optional().default(null),
+  winner_profile_id: z.string().uuid().nullable().optional().default(null),
 });
 
 export type WheelFootballState = z.infer<typeof stateSchema>;
