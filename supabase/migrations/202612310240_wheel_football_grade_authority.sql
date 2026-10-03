@@ -120,5 +120,19 @@ set display_name = excluded.display_name,
     basis = excluded.basis,
     updated_at = now();
 
+-- If the base Wheel migration was already live before this authority seed,
+-- upgrade only the newly-recognized names once. Future authority edits do not
+-- rewrite historical picks; each later pick is frozen by the insert trigger.
+update private.wheel_football_picks pick
+set hidden_grade = private.resolve_wheel_football_hidden_grade(
+  pick.display_name,
+  pick.position_abbreviation
+)
+where exists (
+  select 1
+  from private.wheel_football_grade_authority authority
+  where authority.name_key = private.wheel_football_name_key(pick.display_name)
+);
+
 comment on table private.wheel_football_grade_authority is
   'Private current-ability authority for Wheel of Football. Recent AP/NGS performance anchors the elite tier; HQ calibration fills current stars and coaches.';
