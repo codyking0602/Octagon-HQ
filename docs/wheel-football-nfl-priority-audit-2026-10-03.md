@@ -2,7 +2,7 @@
 
 **Audit date:** 2026-10-03  
 **Teams manually reviewed:** 32 / 32  
-**Final reconciliation:** 31 teams changed from the pre-split PR state; 105 roster-slot groups changed; Dallas remained unchanged after independent re-audit.  
+**Final reconciliation:** 31 teams changed from the pre-split PR state; 108 roster-slot groups changed; Dallas remained unchanged after independent re-audit.  
 **Primary human depth/structure reference:** Ourlads 2026 NFL depth charts  
 **Runtime membership / ID / headshot authority:** ESPN current NFL roster endpoint  
 **Ambiguity cross-checks:** official team and NFL roster/transaction/coaching sources
@@ -70,7 +70,11 @@ Every team was reviewed for QB, RB, WR, Flex, Front Seven, Secondary, and Head C
 - **AFC East/North:** Bradley Chubb added for Buffalo; Zach Sieler/Jordan Phillips for Miami; Christian Elliss for New England; Will McDonald IV and Kenyon Sadiq for the Jets; Mason Graham/Maliek Collins for Cleveland; Alex Highsmith for Pittsburgh. Baltimore and Cincinnati primarily needed priority/Flex corrections.
 - **AFC South/West:** Houston's front seven was rebuilt around established contributors; Indianapolis removes Laquon Treadwell and adds Darius Slayton; Jacksonville adds Travis Hunter to WR/Flex; Tennessee restores Jeffery Simmons/John Franklin-Myers/Keldric Faulk; Denver adds Marvin Mims Jr. and Nik Bonitto; Kansas City elevates Rashee Rice/Chris Jones/L'Jarius Sneed and adds Peter Woods; Las Vegas adds Fernando Mendoza/Jack Bech/Adam Butler; the Chargers restore Khalil Mack/Daiyan Henley and put Ladd McConkey/Derwin James Jr. at the front of their groups.
 - **NFC East/North:** New York restores Kayvon Thibodeaux/Tremaine Edmunds; Philadelphia adds Jalyx Hunt; Washington adds Odafe Oweh/Sonny Styles/Mike Sainristil; Chicago adds Grady Jarrett/Austin Booker/Tyrique Stevenson Sr.; Detroit adds Alim McNeill/Tyleik Williams/Kerby Joseph; Green Bay adds Zaire Franklin and trims the WR pool; Minnesota adds Andrew Van Ginkel.
-- **NFC South/West:** Atlanta adds James Pearce Jr./Za'Darius Smith/Avieon Terrell; Carolina promotes Jalen Coker and uses Darren Waller/Princely Umanmielen; New Orleans restores Alvin Kamara plus Chase Young/Cameron Jordan/Pete Werner; Tampa Bay restores Yaya Diaby and leads the secondary with Antoine Winfield Jr.; Arizona adds Tyler Allgeier/Zaven Collins and leads with Budda Baker; San Francisco replaces Matthew Judon with Osa Odighizuwa and adds Malik Mustapha; Seattle elevates Jadarian Price and Derick Hall.
+- **NFC South/West:** Atlanta elevates James Pearce Jr./Za'Darius Smith and keeps second-year playmaker Billy Bowman Jr. in the secondary priority; Carolina promotes Jalen Coker and uses Darren Waller/Princely Umanmielen; New Orleans restores Alvin Kamara plus Chase Young/Cameron Jordan/Pete Werner; Tampa Bay restores Yaya Diaby and leads the secondary with Antoine Winfield Jr.; Arizona adds Tyler Allgeier/Zaven Collins and leads with Budda Baker; San Francisco replaces Matthew Judon with Osa Odighizuwa and adds Malik Mustapha; Seattle elevates Jadarian Price and Derick Hall.
+
+## Final integration cross-check
+
+The recovered split-audit outputs were compared against the then-current PR integration. That last reconciliation corrected **3 teams / 5 groups**: Cincinnati Secondary ordering, Pittsburgh Secondary ordering, and Atlanta Flex / Front Seven / Secondary. Dallas matched both audits. The Rams independent audit overruled the earlier spot-audit only by replacing Josh Wallace with Kam Curl.
 
 ## Required regression anchors
 
