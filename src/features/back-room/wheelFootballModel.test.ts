@@ -99,6 +99,8 @@ describe("Wheel of Football current-NFL model", () => {
       expect(team["Front Seven"].length, `${code} front seven`).toBeLessThanOrEqual(6);
       expect(team.Secondary.length, `${code} secondary`).toBeGreaterThanOrEqual(5);
       expect(team.Secondary.length, `${code} secondary`).toBeLessThanOrEqual(6);
+      expect(team.Flex.length, `${code} flex`).toBe(4);
+      expect(team["Head Coach"].length, `${code} head coach`).toBe(1);
     }
   });
 
@@ -144,9 +146,7 @@ describe("Wheel of Football current-NFL model", () => {
       candidate("replacement", "Current Replacement", "QB", ["QB"], 4, 0),
       candidate("backup", "Current Backup", "QB", ["QB"], 3, 1),
     ];
-    expect(wheelFootballShortlist(roster, "QB", "DAL").map((item) => item.name)).toEqual([
-      "Current Replacement",
-    ]);
+    expect(wheelFootballShortlist(roster, "QB", "DAL")).toEqual([]);
   });
 
   it("keeps generic fallback pools small when no audited team identity is supplied", () => {
@@ -184,4 +184,32 @@ describe("Wheel of Football current-NFL model", () => {
       "Javonte Williams", "George Pickens", "CeeDee Lamb", "Jake Ferguson",
     ]);
   });
+  it("does not let injury metadata knock a curated current-roster star out of Wheel", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      athletes: [{
+        position: "Offense",
+        items: [
+          { id: "howell", displayName: "Sam Howell", position: { abbreviation: "QB", displayName: "Quarterback" } },
+          { id: "dak", displayName: "Dak Prescott", position: { abbreviation: "QB", displayName: "Quarterback" } },
+        ],
+      }],
+      injuries: [{ athlete: { id: "dak", displayName: "Dak Prescott" }, status: "Out" }],
+      depthCharts: [{ positions: [{ athletes: [{ athlete: { id: "howell" } }] }] }],
+    });
+
+    expect(wheelFootballShortlist(candidates, "QB", "DAL").map((item) => item.name)).toEqual([
+      "Dak Prescott",
+    ]);
+  });
+
+  it("uses the curated head coach instead of a raw coach ordering fallback", () => {
+    const coaches = [
+      candidate("coach:other", "Assistant Coach", "HC", ["Head Coach"], null, 0),
+      candidate("coach:dallas", "Brian Schottenheimer", "HC", ["Head Coach"], null, 1),
+    ];
+    expect(wheelFootballShortlist(coaches, "Head Coach", "DAL").map((item) => item.name)).toEqual([
+      "Brian Schottenheimer",
+    ]);
+  });
+
 });
