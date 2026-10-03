@@ -78,7 +78,12 @@ function PlayerRow({
         <span aria-hidden="true">{expanded ? "−" : "+"}</span>
       </button>
       {expanded ? (
-        <div className="football-weekly-superteam-table__roster">
+        <div
+          className="football-weekly-superteam-table__roster"
+          role="region"
+          aria-label={player.display_name + " roster"}
+          tabIndex={0}
+        >
           {ordered.length ? ordered.map((item) => (
             <RosterRow key={item.item_reference} item={item} />
           )) : <p>No roster spots won yet.</p>}
