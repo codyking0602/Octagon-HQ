@@ -309,7 +309,7 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                     {canView ? (
                       <button type="button" className="results" onClick={() => viewResults(challenge.code)}>RESULTS</button>
                     ) : canPlay ? (
-                      <button type="button" onClick={() => openChallenge(challenge)}>{sealedBid ? copy.action : "PLAY"}</button>
+                      <button type="button" onClick={() => openChallenge(challenge)}>{serverState ? copy.action : "PLAY"}</button>
                     ) : (
                       <span className={`challenge-center__status is-${status}`}>{copy.action}</span>
                     )}
