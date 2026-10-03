@@ -17,7 +17,8 @@ export type PlayGameId =
   | "who-am-i"
   | "millionaire"
   | "sports-feud"
-  | "draft-room";
+  | "draft-room"
+  | "wheel-football";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
 
@@ -54,7 +55,8 @@ export type PlayCompletionState =
   | "sports-feud-settled"
   | "bar-trivia-settled"
   | "average-fan-settled"
-  | "draft-room-complete";
+  | "draft-room-complete"
+  | "wheel-football-complete";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
@@ -462,6 +464,29 @@ export const playGameCatalog = [
       reminderEligible: false,
       historyRecording: "challenge-completion",
       difficultyModel: "Two-player sealed-bid rooms with mode-owned rounds, bankrolls, roster requirements, and server-owned challenge state.",
+    },
+  },
+  {
+    sport: "football",
+    id: "wheel-football",
+    route: "/football/wheel",
+    icon: "↻",
+    title: "Wheel of Football",
+    description: "Challenge someone, alternate NFL team spins, and build seven-slot current-player Superteams.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: 14,
+      completionState: "wheel-football-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "A server-owned 14-turn head-to-head challenge: each profile spins independently, locks one current NFL player or coach into an open Superteam slot, then passes the turn.",
     },
   },
   {

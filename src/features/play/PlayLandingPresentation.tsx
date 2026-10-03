@@ -10,6 +10,7 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
+  "wheel-football",
   "find-leader",
   "wavelength",
   "who-am-i",
@@ -95,11 +96,11 @@ export function PlayLandingGameLibrary({
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">
-                {game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
+                {game.id === "wheel-football" ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
               </span>
               <strong>{game.title}</strong>
               <small>{game.description}</small>
-              <em>PLAY →</em>
+              <em>{game.id === "wheel-football" ? "CHALLENGE →" : "PLAY →"}</em>
             </button>
           );
         })}
