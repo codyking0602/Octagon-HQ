@@ -11,6 +11,12 @@ function asObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : null;
 }
 
+function athleteIdFromRef(value) {
+  if (typeof value !== "string") return null;
+  const match = value.match(/\/athletes\/(\d+)(?:\?|$)/);
+  return match?.[1] ?? null;
+}
+
 function positionAbbreviation(key, row) {
   const position = asObject(row?.position);
   const explicit = typeof position?.abbreviation === "string" ? position.abbreviation.trim().toUpperCase() : "";
@@ -67,7 +73,9 @@ function starterAthletes(payload) {
         const athleteRankValue = athleteEntry.rank;
         const rank = positionRank
           ?? (Number.isFinite(athleteRankValue) ? Math.max(1, Math.floor(athleteRankValue)) : index + 1);
-        const id = typeof athlete?.id === "string" ? athlete.id : null;
+        const id = typeof athlete?.id === "string"
+          ? athlete.id
+          : athleteIdFromRef(athlete?.$ref) ?? athleteIdFromRef(athleteEntry?.$ref);
         const name = typeof athlete?.displayName === "string"
           ? athlete.displayName
           : typeof athlete?.fullName === "string"
