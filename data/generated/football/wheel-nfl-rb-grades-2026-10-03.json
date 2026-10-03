@@ -1,0 +1,579 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-wheel-rb-grades-2026-10-03-v1",
+  "status": "audit-locked-not-runtime",
+  "effectiveDate": "2026-10-03",
+  "populationSource": {
+    "path": "data/generated/football/wheel-football-priorities.json",
+    "mainSha": "b582b00917da256880fc24cb0ff9df9f105eb30e",
+    "rbCount": 65
+  },
+  "constitution": "PR #1641 — Wheel of Football grading constitution",
+  "gradingSemantic": "CURRENT NFL ABILITY AT RUNNING BACK RIGHT NOW; position-normalized; vision/decision-making, burst, elusiveness, contact balance/power, creation beyond blocking, short-yardage, receiving, ball security and pass-game usefulness. Not career greatness, fantasy value, draft status, projection, or short-streak production.",
+  "phase3ApprovedAnchors": [
+    {
+      "player": "Bijan Robinson",
+      "grade": 99
+    },
+    {
+      "player": "Jahmyr Gibbs",
+      "grade": 98
+    },
+    {
+      "player": "Christian McCaffrey",
+      "grade": 96
+    },
+    {
+      "player": "Jonathan Taylor",
+      "grade": 95
+    },
+    {
+      "player": "James Cook III",
+      "grade": 94
+    },
+    {
+      "player": "Derrick Henry",
+      "grade": 94
+    },
+    {
+      "player": "Saquon Barkley",
+      "grade": 94
+    },
+    {
+      "player": "De'Von Achane",
+      "grade": 91
+    },
+    {
+      "player": "Kenneth Walker",
+      "grade": 89
+    },
+    {
+      "player": "Kyren Williams",
+      "grade": 88
+    },
+    {
+      "player": "Breece Hall",
+      "grade": 86
+    },
+    {
+      "player": "Chase Brown",
+      "grade": 85
+    },
+    {
+      "player": "Tony Pollard",
+      "grade": 82
+    },
+    {
+      "player": "Justice Hill",
+      "grade": 78
+    },
+    {
+      "player": "Tyler Goodson",
+      "grade": 74
+    }
+  ],
+  "evidenceSnapshot": {
+    "asOf": "2026-10-03",
+    "note": "Week 4 incomplete. 2025 full-season evidence is the stronger baseline unless 2026 evidence is sufficiently meaningful; external sources are evidence only.",
+    "primarySources": [
+      "NFL.com player career/stat pages",
+      "2025 and 2026 NFL rushing/receiving statistics",
+      "Current 2026 role/availability context"
+    ]
+  },
+  "grades": [
+    {
+      "team": "ARI",
+      "player": "Jeremiyah Love",
+      "grade": 82,
+      "confidence": "medium",
+      "reason": "Three-game NFL sample shows viable three-down starter traits and receiving use, but 3.9 YPC and limited evidence keep him at the solid-starter line."
+    },
+    {
+      "team": "ARI",
+      "player": "Tyler Allgeier",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Proven efficient rotational runner with power and ball security; limited passing-game value keeps him around the starter baseline."
+    },
+    {
+      "team": "ARI",
+      "player": "James Conner",
+      "grade": 83,
+      "confidence": "medium",
+      "reason": "Established power, vision and receiving competence remain starter-caliber; recent availability and declining explosive margin keep him out of the upper tiers."
+    },
+    {
+      "team": "ATL",
+      "player": "Bijan Robinson",
+      "grade": 99,
+      "confidence": "high",
+      "reason": "Approved current ceiling anchor."
+    },
+    {
+      "team": "ATL",
+      "player": "Brian Robinson",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Physical, reliable early-down starter profile with adequate receiving value; lacks the creation/efficiency of the upper bands."
+    },
+    {
+      "team": "BAL",
+      "player": "Derrick Henry",
+      "grade": 94,
+      "confidence": "high",
+      "reason": "Approved elite/high-end anchor."
+    },
+    {
+      "team": "BAL",
+      "player": "Justice Hill",
+      "grade": 78,
+      "confidence": "high",
+      "reason": "Approved strong-role-player anchor."
+    },
+    {
+      "team": "BUF",
+      "player": "James Cook III",
+      "grade": 94,
+      "confidence": "high",
+      "reason": "Approved elite/high-end anchor."
+    },
+    {
+      "team": "BUF",
+      "player": "Ty Johnson",
+      "grade": 77,
+      "confidence": "high",
+      "reason": "Useful receiving/change-of-pace back with real NFL value but not a quality primary-back profile."
+    },
+    {
+      "team": "CAR",
+      "player": "Chuba Hubbard",
+      "grade": 84,
+      "confidence": "high",
+      "reason": "2024 established real starter quality; 2025 dipped, but a strong 2026 opening and receiving value support a good starter grade."
+    },
+    {
+      "team": "CAR",
+      "player": "Jonathon Brooks",
+      "grade": 76,
+      "confidence": "low",
+      "reason": "Only 18 career NFL carries and 2.9 YPC provide too little demonstrated rushing evidence for a higher grade; receiving flashes keep him above the floor."
+    },
+    {
+      "team": "CHI",
+      "player": "D'Andre Swift",
+      "grade": 83,
+      "confidence": "high",
+      "reason": "Versatile established starter with receiving value and adequate efficiency, but limited tackle-breaking/inside consistency caps him."
+    },
+    {
+      "team": "CHI",
+      "player": "Kyle Monangai",
+      "grade": 85,
+      "confidence": "medium",
+      "reason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier."
+    },
+    {
+      "team": "CIN",
+      "player": "Chase Brown",
+      "grade": 85,
+      "confidence": "high",
+      "reason": "Approved good/solid starter anchor."
+    },
+    {
+      "team": "CIN",
+      "player": "Samaje Perine",
+      "grade": 78,
+      "confidence": "high",
+      "reason": "Reliable passing-down and short-yardage role player, but no longer a primary-back level runner."
+    },
+    {
+      "team": "CLE",
+      "player": "Quinshon Judkins",
+      "grade": 80,
+      "confidence": "high",
+      "reason": "Volume and receiving competence are real, but 3.6 YPC in 2025 and 3.0 through four 2026 games keep him below the average-starter anchor."
+    },
+    {
+      "team": "CLE",
+      "player": "Dylan Sampson",
+      "grade": 77,
+      "confidence": "medium",
+      "reason": "Useful speed/receiving role with limited proof as a complete NFL runner."
+    },
+    {
+      "team": "DAL",
+      "player": "Javonte Williams",
+      "grade": 83,
+      "confidence": "high",
+      "reason": "Complete skill set and receiving usefulness remain starter-caliber; post-injury rushing efficiency has not returned to his early-career ceiling."
+    },
+    {
+      "team": "DAL",
+      "player": "Tyler Goodson",
+      "grade": 74,
+      "confidence": "high",
+      "reason": "Approved weak current Wheel option anchor."
+    },
+    {
+      "team": "DEN",
+      "player": "J.K. Dobbins",
+      "grade": 84,
+      "confidence": "high",
+      "reason": "5.0 YPC in 2025 plus prior efficient seasons establish good current rushing ability; limited receiving and a slow 2026 start prevent higher."
+    },
+    {
+      "team": "DEN",
+      "player": "RJ Harvey",
+      "grade": 78,
+      "confidence": "low",
+      "reason": "Very small NFL sample with useful receiving/space flashes; insufficient current evidence for a starter-level grade."
+    },
+    {
+      "team": "DET",
+      "player": "Jahmyr Gibbs",
+      "grade": 98,
+      "confidence": "high",
+      "reason": "Approved ceiling-adjacent elite anchor."
+    },
+    {
+      "team": "DET",
+      "player": "Isiah Pacheco",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Physical, decisive NFL starter profile remains intact, but recent production and receiving impact do not support a higher tier."
+    },
+    {
+      "team": "GB",
+      "player": "Josh Jacobs",
+      "grade": 86,
+      "confidence": "high",
+      "reason": "Still a strong workhorse with power, vision and goal-line value; 2025 efficiency slipped enough to sit below Kyren/Bucky tier."
+    },
+    {
+      "team": "GB",
+      "player": "MarShawn Lloyd",
+      "grade": 76,
+      "confidence": "low",
+      "reason": "Limited NFL workload and availability leave very little demonstrated current evidence despite athletic flashes."
+    },
+    {
+      "team": "HOU",
+      "player": "David Montgomery",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Power, contact balance and receiving competence remain starter-quality, but reduced workload and 2.8 YPC start to 2026 cap him at the baseline."
+    },
+    {
+      "team": "HOU",
+      "player": "Woody Marks",
+      "grade": 79,
+      "confidence": "high",
+      "reason": "Useful receiving ability and real workload experience, but 3.5 career YPC keeps him below starter baseline."
+    },
+    {
+      "team": "IND",
+      "player": "Jonathan Taylor",
+      "grade": 95,
+      "confidence": "high",
+      "reason": "Approved elite feature-back anchor."
+    },
+    {
+      "team": "IND",
+      "player": "Seth McGowan",
+      "grade": 75,
+      "confidence": "low",
+      "reason": "Only six NFL carries with minimal rushing production; special-teams value does not raise the RB ability grade."
+    },
+    {
+      "team": "JAX",
+      "player": "Bhayshul Tuten",
+      "grade": 83,
+      "confidence": "medium",
+      "reason": "Three strong 2026 starts at 4.7 YPC show real starter capability, but a 3.7 rookie-season rushing average keeps the sample from supporting more."
+    },
+    {
+      "team": "JAX",
+      "player": "Chris Rodriguez Jr.",
+      "grade": 77,
+      "confidence": "high",
+      "reason": "Physical reserve runner with some useful early-down ability but limited receiving/creation evidence."
+    },
+    {
+      "team": "KC",
+      "player": "Kenneth Walker",
+      "grade": 89,
+      "confidence": "high",
+      "reason": "Approved high-end/very-good anchor."
+    },
+    {
+      "team": "KC",
+      "player": "Emmett Johnson",
+      "grade": 79,
+      "confidence": "low",
+      "reason": "Current NFL evidence is still limited; enough all-around ability for a useful rotation grade without projection-based inflation."
+    },
+    {
+      "team": "LAC",
+      "player": "Omarion Hampton",
+      "grade": 83,
+      "confidence": "medium",
+      "reason": "545 yards at 4.4 in nine games as a rookie plus starter-level 2026 volume support real ability; ball security and modest efficiency cap him."
+    },
+    {
+      "team": "LAC",
+      "player": "Keaton Mitchell",
+      "grade": 81,
+      "confidence": "high",
+      "reason": "Elite open-field speed and 6.2 career YPC create real value, but limited workload/inside/receiving completeness keep him below starter baseline."
+    },
+    {
+      "team": "LAR",
+      "player": "Kyren Williams",
+      "grade": 88,
+      "confidence": "high",
+      "reason": "Approved very-good starter anchor."
+    },
+    {
+      "team": "LAR",
+      "player": "Blake Corum",
+      "grade": 81,
+      "confidence": "medium",
+      "reason": "Credible power/vision in a complementary role, but not enough established independent production to reach the starter baseline."
+    },
+    {
+      "team": "LV",
+      "player": "Ashton Jeanty",
+      "grade": 83,
+      "confidence": "high",
+      "reason": "Receiving impact and contact talent are evident, but 3.6 career YPC through 20 games prevents grading the college/draft reputation instead of NFL play."
+    },
+    {
+      "team": "LV",
+      "player": "Mike Washington Jr.",
+      "grade": 78,
+      "confidence": "low",
+      "reason": "Explosive 6.8 YPC through 15 NFL carries is encouraging, but the sample is far too small for a starter-level grade."
+    },
+    {
+      "team": "MIA",
+      "player": "De'Von Achane",
+      "grade": 91,
+      "confidence": "high",
+      "reason": "Approved high-end anchor."
+    },
+    {
+      "team": "MIA",
+      "player": "Jaylen Wright",
+      "grade": 79,
+      "confidence": "medium",
+      "reason": "Speed and space ability remain useful, but limited established workload and consistency keep him in the rotation tier."
+    },
+    {
+      "team": "MIN",
+      "player": "Aaron Jones Sr.",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Vision, receiving and versatility remain starter-quality; recent rushing efficiency and explosive margin have declined from his peak."
+    },
+    {
+      "team": "MIN",
+      "player": "Jordan Mason",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Physical, efficient early-down runner with proven spot-starting ability; passing-game limitations keep him at the baseline."
+    },
+    {
+      "team": "NE",
+      "player": "Rhamondre Stevenson",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Power and receiving utility remain starter-level, but recent rushing efficiency and ball-security volatility prevent a higher grade."
+    },
+    {
+      "team": "NE",
+      "player": "TreVeyon Henderson",
+      "grade": 86,
+      "confidence": "medium",
+      "reason": "911 yards at 5.1 YPC with 10 total TD as a rookie is meaningful established evidence; limited passing-game impact keeps him below the very-good tier."
+    },
+    {
+      "team": "NO",
+      "player": "Travis Etienne Jr.",
+      "grade": 84,
+      "confidence": "high",
+      "reason": "Still a good all-around runner/receiver with proven starter production, but recent efficiency is not strong enough for the upper band."
+    },
+    {
+      "team": "NO",
+      "player": "Alvin Kamara",
+      "grade": 80,
+      "confidence": "high",
+      "reason": "Receiving intelligence still has value, but 3.6 YPC in 2025 and 2.8 through two 2026 games show a real current rushing decline; career reputation does not preserve the old grade."
+    },
+    {
+      "team": "NYG",
+      "player": "Cam Skattebo",
+      "grade": 82,
+      "confidence": "medium",
+      "reason": "Useful power and receiving value through a 10-game NFL sample, but 4.0 career YPC and limited explosive production keep him at baseline."
+    },
+    {
+      "team": "NYG",
+      "player": "Najee Harris",
+      "grade": 80,
+      "confidence": "high",
+      "reason": "Durable, physical and competent, but limited explosiveness and middling efficiency now fit below-average starter territory."
+    },
+    {
+      "team": "NYJ",
+      "player": "Breece Hall",
+      "grade": 86,
+      "confidence": "high",
+      "reason": "Approved good-starter anchor."
+    },
+    {
+      "team": "NYJ",
+      "player": "Braelon Allen",
+      "grade": 78,
+      "confidence": "high",
+      "reason": "Size/power role remains useful, but 3.7 career YPC and limited receiving/creation evidence keep him as a role player."
+    },
+    {
+      "team": "PHI",
+      "player": "Saquon Barkley",
+      "grade": 94,
+      "confidence": "high",
+      "reason": "Approved elite/high-end anchor."
+    },
+    {
+      "team": "PHI",
+      "player": "Tank Bigsby",
+      "grade": 79,
+      "confidence": "high",
+      "reason": "Strong 2024/25 efficiency in spots shows useful rushing ability, but tiny role and poor 2026 opening keep him below starter baseline."
+    },
+    {
+      "team": "PIT",
+      "player": "Jaylen Warren",
+      "grade": 88,
+      "confidence": "high",
+      "reason": "958 rushing plus 333 receiving in 2025 and 5.6 YPC with 143 receiving yards through four 2026 games establish a very-good current all-around back."
+    },
+    {
+      "team": "PIT",
+      "player": "Rico Dowdle",
+      "grade": 80,
+      "confidence": "high",
+      "reason": "Proven volume competence, but current efficiency and limited special traits fit below-average starter territory."
+    },
+    {
+      "team": "SEA",
+      "player": "Jadarian Price",
+      "grade": 78,
+      "confidence": "low",
+      "reason": "Three-game rookie sample shows useful burst but two fumbles and limited all-around evidence prevent a higher grade."
+    },
+    {
+      "team": "SEA",
+      "player": "Zach Charbonnet",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Reliable power/receiving complement with 730 yards and 12 rushing TD in 2025; solid starter baseline without upper-tier creation."
+    },
+    {
+      "team": "SF",
+      "player": "Christian McCaffrey",
+      "grade": 96,
+      "confidence": "high",
+      "reason": "Approved elite complete-back anchor."
+    },
+    {
+      "team": "SF",
+      "player": "Isaac Guerendo",
+      "grade": 79,
+      "confidence": "medium",
+      "reason": "Excellent 2024 efficiency and athletic ability remain evidence, but almost no 2025/26 offensive workload prevents a starter-level grade."
+    },
+    {
+      "team": "TB",
+      "player": "Bucky Irving",
+      "grade": 87,
+      "confidence": "high",
+      "reason": "Elite 2024 efficiency, strong receiving and a 4.5 YPC 2026 opening support a high-end grade; uneven 2025 keeps him below Kyren/Walker."
+    },
+    {
+      "team": "TB",
+      "player": "Kenny Gainwell",
+      "grade": 79,
+      "confidence": "high",
+      "reason": "Versatile receiving/change-of-pace back with useful spot-start value but not enough rushing creation for starter baseline."
+    },
+    {
+      "team": "TEN",
+      "player": "Tony Pollard",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Approved solid/average starter anchor."
+    },
+    {
+      "team": "TEN",
+      "player": "Tyjae Spears",
+      "grade": 81,
+      "confidence": "high",
+      "reason": "Efficient change-of-pace runner and receiving option with enough completeness to sit just below starter baseline."
+    },
+    {
+      "team": "WSH",
+      "player": "Jacory Croskey-Merritt",
+      "grade": 81,
+      "confidence": "high",
+      "reason": "805 yards at 4.6 in 2025 showed real rushing ability; 3.0 YPC through three 2026 games and limited receiving cap him below baseline."
+    },
+    {
+      "team": "WSH",
+      "player": "Rachaad White",
+      "grade": 82,
+      "confidence": "high",
+      "reason": "Useful receiving and improved recent rushing efficiency support a starter-baseline grade, though he lacks consistent high-end rushing creation."
+    }
+  ],
+  "pairwiseAudit": {
+    "orderedNeighborhoods": [
+      "Bijan Robinson 99 > Jahmyr Gibbs 98 > Christian McCaffrey 96 > Jonathan Taylor 95 > James Cook III 94 = Derrick Henry 94 = Saquon Barkley 94",
+      "De'Von Achane 91 > Kenneth Walker 89 > Kyren Williams 88 = Jaylen Warren 88 > Bucky Irving 87 > Josh Jacobs 86 = Breece Hall 86 = TreVeyon Henderson 86 > Chase Brown 85 = Kyle Monangai 85",
+      "Chuba Hubbard 84 = J.K. Dobbins 84 = Travis Etienne Jr. 84 > James Conner 83 = D'Andre Swift 83 = Javonte Williams 83 = Bhayshul Tuten 83 = Omarion Hampton 83 = Ashton Jeanty 83",
+      "Tony Pollard 82 = Jeremiyah Love 82 = Tyler Allgeier 82 = Brian Robinson 82 = Isiah Pacheco 82 = David Montgomery 82 = Aaron Jones Sr. 82 = Jordan Mason 82 = Rhamondre Stevenson 82 = Cam Skattebo 82 = Zach Charbonnet 82 = Rachaad White 82",
+      "Keaton Mitchell 81 = Blake Corum 81 = Tyjae Spears 81 = Jacory Croskey-Merritt 81 > Quinshon Judkins 80 = Alvin Kamara 80 = Najee Harris 80 = Rico Dowdle 80",
+      "Woody Marks 79 = Emmett Johnson 79 = Jaylen Wright 79 = Tank Bigsby 79 = Isaac Guerendo 79 = Kenny Gainwell 79 > Justice Hill 78 = Samaje Perine 78 = RJ Harvey 78 = Mike Washington Jr. 78 = Braelon Allen 78 = Jadarian Price 78",
+      "Ty Johnson 77 = Dylan Sampson 77 = Chris Rodriguez Jr. 77 > Jonathon Brooks 76 = MarShawn Lloyd 76 > Seth McGowan 75 > Tyler Goodson 74"
+    ],
+    "resolvedPressurePoints": [
+      "Jaylen Warren grades 88, not as a September reaction, but because 2025 already established a 1,291-scrimmage-yard all-around baseline and 2026 has reinforced it.",
+      "Bucky Irving stays 87: 2024 was elite efficiency and 2026 has rebounded, but the 2025 decline keeps him below the 88-89 band.",
+      "Kyle Monangai reaches 85 because his 2025 rookie season (783 yards at 4.6) provides a real baseline; the hot two-game 2026 opening only confirms rather than creates the grade.",
+      "Ashton Jeanty is 83. Draft pedigree and college dominance are excluded; his actual NFL rushing efficiency (3.6 career YPC) prevents a reputation-based high grade despite receiving value.",
+      "Alvin Kamara is 80. Career greatness is intentionally ignored; 2025 and early 2026 rushing efficiency show genuine current decline.",
+      "Jonathon Brooks remains 76 because the NFL sample is only 18 carries. College evaluation and projection cannot substitute for current NFL evidence."
+    ],
+    "result": "locked",
+    "contradictionsRemaining": false
+  },
+  "postGradeDistribution": {
+    "min": 74,
+    "max": 99,
+    "mean": 82.97,
+    "median": 82,
+    "bands": {
+      "95-100": 4,
+      "90-94": 4,
+      "85-89": 9,
+      "80-84": 29,
+      "75-79": 18,
+      "below-75": 1
+    },
+    "note": "Inspected only after grading; no grades were moved to shape the distribution."
+  },
+  "runtimeBoundary": "No production/runtime behavior changes. Runtime wiring, historical freezing and hidden reveal remain a later phase.",
+  "futureVersioning": "Any future RB grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison."
+}
