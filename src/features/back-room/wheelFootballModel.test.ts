@@ -160,12 +160,43 @@ describe("Wheel of Football current-NFL model", () => {
           },
         },
       }],
-      injuries: [{ athlete: { id: "star", displayName: "Injured Star" } }],
+      injuries: [{
+        $ref: "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2026/athletes/star/injuries/123",
+        athlete: { id: "star", displayName: "Injured Star" },
+      }],
     });
 
     expect(wheelFootballShortlist(candidates, "QB").map((candidate) => candidate.name)).toEqual([
       "Healthy Backup",
       "Injured Star",
+    ]);
+  });
+
+  it("recognizes ESPN Core injury-list athlete refs without following every injury object", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      athletes: [{
+        position: "Offense",
+        items: [
+          { id: "100", displayName: "Healthy Starter", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 4 } },
+          { id: "200", displayName: "Established Injured QB", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 8 } },
+        ],
+      }],
+      depthCharts: [{
+        positions: [{
+          position: { abbreviation: "QB", displayName: "Quarterback" },
+          slot: 0,
+          rank: 1,
+          athletes: [{ athlete: { $ref: "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2026/athletes/100?lang=en&region=us" } }],
+        }],
+      }],
+      injuries: [{
+        $ref: "http://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2026/athletes/200/injuries/999",
+      }],
+    });
+
+    expect(wheelFootballShortlist(candidates, "QB").map((candidate) => candidate.name)).toEqual([
+      "Healthy Starter",
+      "Established Injured QB",
     ]);
   });
 

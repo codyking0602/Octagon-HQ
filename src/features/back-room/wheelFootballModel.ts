@@ -202,7 +202,7 @@ function candidateExperienceYears(item: Record<string, unknown>) {
 function athleteIdFromReference(value: unknown) {
   const direct = text(value);
   if (!direct) return null;
-  const match = direct.match(/\/athletes\/(\d+)(?:\?|$)/);
+  const match = direct.match(/\/athletes\/(\d+)(?:[/?]|$)/);
   return match?.[1] ?? null;
 }
 
@@ -271,6 +271,8 @@ function injuryAthleteIds(payload: Record<string, unknown>) {
       const athleteId = text(athlete.id) ?? athleteIdFromReference(athlete.$ref);
       if (athleteId) injured.add(athleteId);
     }
+    const referencedAthleteId = athleteIdFromReference(record.$ref);
+    if (referencedAthleteId) injured.add(referencedAthleteId);
     for (const nested of Object.values(record)) visit(nested, depth + 1);
   };
   visit(payload.injuries);
