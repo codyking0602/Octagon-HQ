@@ -744,20 +744,26 @@ alter table private.wheel_football_picks
   add column if not exists grade_effective_date date;
 
 update private.wheel_football_picks pick
-set selected_grade = resolved.grade,
-    grade_version = resolved.grade_version,
-    grade_effective_date = resolved.effective_date
-from lateral private.resolve_wheel_football_nfl_grade(
-  pick.team_code,
-  case
+set selected_grade = source.grade,
+    grade_version = source.grade_version,
+    grade_effective_date = source.effective_date
+from private.wheel_football_nfl_grades source
+where pick.selected_grade is null
+  and source.team_code = pick.team_code
+  and source.grade_position = case
     when pick.roster_slot = 'Flex' then upper(trim(pick.position_abbreviation))
     when pick.roster_slot in ('QB', 'RB', 'WR', 'Front Seven', 'Secondary', 'Head Coach') then pick.roster_slot
     else ''
-  end,
-  pick.display_name,
-  date '2026-10-03'
-) resolved
-where pick.selected_grade is null;
+  end
+  and source.normalized_name = lower(regexp_replace(trim(pick.display_name), '[^A-Za-z0-9]', '', 'g'))
+  and source.effective_date = (
+    select max(candidate.effective_date)
+    from private.wheel_football_nfl_grades candidate
+    where candidate.team_code = pick.team_code
+      and candidate.grade_position = source.grade_position
+      and candidate.normalized_name = source.normalized_name
+      and candidate.effective_date <= date '2026-10-03'
+  );
 
 do $$
 declare
