@@ -38,11 +38,19 @@ begin
     raise exception 'Flex did not inherit the TE grade';
   end if;
 
-  if private.wheel_football_final_grade(90) <> 70
-    or private.wheel_football_final_grade(92) <> 80
-    or private.wheel_football_final_grade(94) <> 90
-    or private.wheel_football_final_grade(96) <> 100 then
-    raise exception 'Wheel final-grade curve drifted from Weekly Superteam separation';
+  if private.wheel_football_final_grade_v2(89) <> 80
+    or private.wheel_football_final_grade_v2(90) <> 82.5
+    or private.wheel_football_final_grade_v2(92) <> 87.5
+    or private.wheel_football_final_grade_v2(94) <> 92.5
+    or private.wheel_football_final_grade_v2(95) <> 95
+    or private.wheel_football_final_grade_v2(96) <> 96
+    or private.wheel_football_final_grade_v2(99) <> 99 then
+    raise exception 'Wheel final-grade v2 curve drifted from approved 2.5x calibration';
+  end if;
+
+  if has_function_privilege('anon', 'private.wheel_football_grade_total(uuid,uuid)', 'execute')
+    or has_function_privilege('authenticated', 'private.wheel_football_grade_total(uuid,uuid)', 'execute') then
+    raise exception 'Wheel exact grade total leaked callable access';
   end if;
 
   begin
