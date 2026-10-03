@@ -381,7 +381,7 @@ export default function MlbPicksPage() {
     const winnerName = series.winner_team_id === series.team_a_id
       ? series.team_a_name
       : series.winner_team_id === series.team_b_id ? series.team_b_name : null;
-    const resultScore = series.series_score?.match(/\\d+\\s*[–-]\\s*\\d+/)?.[0] ?? "";
+    const resultScore = series.series_score?.match(/\d+\s*[–-]\s*\d+/)?.[0] ?? "";
     const footerLabel = completeSeries
       ? "FINAL"
       : locked
