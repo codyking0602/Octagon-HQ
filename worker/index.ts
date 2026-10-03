@@ -142,61 +142,22 @@ async function loadDynamicPreview(requestUrl: URL): Promise<DynamicPreviewData |
   }
 }
 
-const NFL_WHEEL_SEASON = 2026;
-
-const NFL_ESPN_TEAM_IDS: Readonly<Record<string, number>> = {
-  ari: 22, atl: 1, bal: 33, buf: 2, car: 29, chi: 3, cin: 4, cle: 5,
-  dal: 6, den: 7, det: 8, gb: 9, hou: 34, ind: 11, jax: 30, kc: 12,
-  lac: 24, lar: 14, lv: 13, mia: 15, min: 16, ne: 17, no: 18, nyg: 19,
-  nyj: 20, phi: 21, pit: 23, sea: 26, sf: 25, tb: 27, ten: 10, wsh: 28,
-};
-
-const NFL_ROSTER_TEAM_CODES = new Set(Object.keys(NFL_ESPN_TEAM_IDS));
-
-function nflEspnTeamId(teamCode: string) {
-  const normalized = teamCode.trim().toLowerCase();
-  return NFL_ESPN_TEAM_IDS[normalized] ?? null;
-}
+const NFL_ROSTER_TEAM_CODES = new Set([
+  "ari", "atl", "bal", "buf", "car", "chi", "cin", "cle",
+  "dal", "den", "det", "gb", "hou", "ind", "jax", "kc",
+  "lac", "lar", "lv", "mia", "min", "ne", "no", "nyg",
+  "nyj", "phi", "pit", "sea", "sf", "tb", "ten", "wsh",
+]);
 
 export function nflRosterUpstreamUrl(teamCode: string) {
-  const teamId = nflEspnTeamId(teamCode);
-  if (teamId == null) return null;
-  return `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}/roster`;
-}
-
-export function nflDepthChartUpstreamUrl(teamCode: string) {
-  const teamId = nflEspnTeamId(teamCode);
-  if (teamId == null) return null;
-  return `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/${NFL_WHEEL_SEASON}/teams/${teamId}/depthcharts`;
-}
-
-export function nflInjuriesUpstreamUrl(teamCode: string) {
-  const teamId = nflEspnTeamId(teamCode);
-  if (teamId == null) return null;
-  return `https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/teams/${teamId}/injuries`;
-}
-
-async function fetchEspnJson(url: string) {
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "OctagonHQ/1.0",
-    },
-  });
-  if (!response.ok) return null;
-  try {
-    return await response.json() as Record<string, unknown>;
-  } catch {
-    return null;
-  }
+  const normalized = teamCode.trim().toLowerCase();
+  if (!NFL_ROSTER_TEAM_CODES.has(normalized)) return null;
+  return `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${normalized}/roster`;
 }
 
 async function serveNflRoster(requestUrl: URL) {
-  const teamCode = (requestUrl.searchParams.get("team") ?? "").trim().toLowerCase();
-  const rosterUrl = nflRosterUpstreamUrl(teamCode);
-  const depthChartUrl = nflDepthChartUpstreamUrl(teamCode);
-  const injuriesUrl = nflInjuriesUpstreamUrl(teamCode);
-  if (!rosterUrl || !depthChartUrl || !injuriesUrl) {
+  const upstreamUrl = nflRosterUpstreamUrl(requestUrl.searchParams.get("team") ?? "");
+  if (!upstreamUrl) {
     return new Response(JSON.stringify({ error: "Unknown NFL team." }), {
       status: 400,
       headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -204,13 +165,13 @@ async function serveNflRoster(requestUrl: URL) {
   }
 
   try {
-    const [roster, depthChart, injuries] = await Promise.all([
-      fetchEspnJson(rosterUrl),
-      fetchEspnJson(depthChartUrl),
-      fetchEspnJson(injuriesUrl),
-    ]);
-
-    if (!roster) {
+    const upstream = await fetch(upstreamUrl, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "OctagonHQ/1.0",
+      },
+    });
+    if (!upstream.ok || !upstream.body) {
       return new Response(JSON.stringify({ error: "Current NFL roster is unavailable." }), {
         status: 502,
         headers: {
@@ -220,34 +181,11 @@ async function serveNflRoster(requestUrl: URL) {
       });
     }
 
-    const payload = {
-      ...roster,
-      depthCharts: Array.isArray(depthChart?.depthCharts)
-        ? depthChart.depthCharts
-        : Array.isArray(depthChart?.items)
-          ? depthChart.items
-          : [],
-      injuries: Array.isArray(injuries?.injuries)
-        ? injuries.injuries
-        : Array.isArray(injuries?.items)
-          ? injuries.items
-          : [],
-      _octagon: {
-        teamCode: teamCode.toUpperCase(),
-        rosterSource: "ESPN roster",
-        depthChartSource: depthChart ? "ESPN depth chart" : "roster fallback",
-        injurySource: injuries ? "ESPN injuries" : "unavailable",
-      },
-    };
-
-    return new Response(JSON.stringify(payload), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "Cache-Control": "public, max-age=300, stale-while-revalidate=900",
-        "X-Octagon-Data-Source": depthChart ? "ESPN roster + depth chart" : "ESPN roster fallback",
-      },
-    });
+    const headers = new Headers(upstream.headers);
+    headers.set("Content-Type", "application/json; charset=utf-8");
+    headers.set("Cache-Control", "public, max-age=300, stale-while-revalidate=900");
+    headers.delete("Set-Cookie");
+    return new Response(upstream.body, { status: 200, headers });
   } catch {
     return new Response(JSON.stringify({ error: "Current NFL roster is unavailable." }), {
       status: 502,

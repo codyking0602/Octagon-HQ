@@ -255,7 +255,7 @@ function CandidatePicker({
   const slots = openSlots(roster);
   const available = candidates.filter((candidate) => !usedIds.has(candidate.id));
   const visible = selectedSlot
-    ? wheelFootballShortlist(available, selectedSlot)
+    ? wheelFootballShortlist(available, selectedSlot, team.code)
     : [];
 
   return (
@@ -281,7 +281,7 @@ function CandidatePicker({
         <>
           <div className="football-wheel-picker__slots" aria-label="Open roster spots">
             {slots.map((slot) => {
-              const count = wheelFootballShortlist(available, slot).length;
+              const count = wheelFootballShortlist(available, slot, team.code).length;
               return (
                 <button
                   type="button"

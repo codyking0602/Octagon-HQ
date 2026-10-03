@@ -199,16 +199,6 @@ jobs:
       - name: Verify live ESPN Football schedule contract
         run: node scripts/verify-football-espn-schedule-live.mjs
 
-      - name: Generate Ourlads Wheel priority audit across all 32 teams
-        run: node scripts/generate-wheel-ourlads-priorities.mjs tmp/wheel-ourlads-priorities.json
-
-      - name: Upload Ourlads Wheel priority audit
-        uses: actions/upload-artifact@v4
-        with:
-          name: wheel-ourlads-priorities-${{ env.SOURCE_SHA }}
-          path: tmp/wheel-ourlads-priorities.json
-          retention-days: 7
-
   phone-layouts:
     name: Today's Challenge phone layouts
     if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.draft == false }}
