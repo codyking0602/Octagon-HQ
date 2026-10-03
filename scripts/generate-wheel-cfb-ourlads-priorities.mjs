@@ -31,7 +31,7 @@ const FRONT_POSITIONS = new Set([
   "LB", "ILB", "OLB", "MLB", "WLB", "SLB", "MIKE", "WILL", "SAM",
 ]);
 const SECONDARY_POSITIONS = new Set([
-  "CB", "LCB", "RCB", "NB", "NCB", "NICKEL", "DB", "S", "SS", "FS", "STAR",
+  "CB", "LCB", "RCB", "FCB", "BCB", "NB", "NCB", "NICKEL", "DB", "S", "SS", "FS", "BS", "STAR",
 ]);
 
 function decodeHtml(value) {
