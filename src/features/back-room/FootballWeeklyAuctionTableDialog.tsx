@@ -5,6 +5,7 @@ import {
   type FootballWeeklyAuctionTablePlayer,
   type FootballWeeklyAuctionTableTeam,
 } from "../play/footballWeeklyAuctionTableRepository";
+import { AuctionTableRosterScroll } from "./AuctionTableRosterScroll";
 import {
   footballWeeklyAuctionTeamIdentity,
   footballWeeklyAuctionTeamStyle,
@@ -83,13 +84,16 @@ function PlayerRow({
       </button>
 
       {expanded ? (
-        <div className="football-weekly-auction-table__roster">
+        <AuctionTableRosterScroll
+          className="football-weekly-auction-table__roster"
+          label={player.display_name + " teams"}
+        >
           {player.teams.length ? (
             player.teams.map((team) => <TeamRow key={team.season_reference} team={team} />)
           ) : (
             <p>No teams won yet.</p>
           )}
-        </div>
+        </AuctionTableRosterScroll>
       ) : null}
     </article>
   );

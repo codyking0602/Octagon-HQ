@@ -6,6 +6,7 @@ import {
   type FootballWeeklySuperteamTablePlayer,
   type FootballWeeklySuperteamTableRosterItem,
 } from "../play/footballWeeklySuperteamTableRepository";
+import { AuctionTableRosterScroll } from "./AuctionTableRosterScroll";
 import {
   footballWeeklySuperteamIdentity,
   footballWeeklySuperteamSportsReferenceUrl,
@@ -78,11 +79,14 @@ function PlayerRow({
         <span aria-hidden="true">{expanded ? "−" : "+"}</span>
       </button>
       {expanded ? (
-        <div className="football-weekly-superteam-table__roster">
+        <AuctionTableRosterScroll
+          className="football-weekly-superteam-table__roster"
+          label={player.display_name + " roster"}
+        >
           {ordered.length ? ordered.map((item) => (
             <RosterRow key={item.item_reference} item={item} />
           )) : <p>No roster spots won yet.</p>}
-        </div>
+        </AuctionTableRosterScroll>
       ) : null}
     </article>
   );

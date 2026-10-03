@@ -5,6 +5,7 @@ import {
   type FootballWeeklyBuildQbTablePlayer,
   type FootballWeeklyBuildQbTableTrait,
 } from "../play/footballWeeklyBuildQbTableRepository";
+import { AuctionTableRosterScroll } from "./AuctionTableRosterScroll";
 import { buildQbTeamVisualIdentity } from "./buildQbVisualIdentity";
 
 function TraitMark({ teamCode }: { teamCode: string }) {
@@ -55,11 +56,14 @@ function PlayerRow({
         <b aria-hidden="true">{expanded ? "−" : "+"}</b>
       </button>
       {expanded ? (
-        <div className="football-weekly-build-qb-table__roster">
+        <AuctionTableRosterScroll
+          className="football-weekly-build-qb-table__roster"
+          label={player.display_name + " traits"}
+        >
           {player.traits.length ? player.traits.map((item) => (
             <TraitRow key={item.trait} item={item} />
           )) : <p>No traits won yet.</p>}
-        </div>
+        </AuctionTableRosterScroll>
       ) : null}
     </article>
   );
