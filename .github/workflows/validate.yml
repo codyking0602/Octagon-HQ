@@ -199,6 +199,9 @@ jobs:
       - name: Verify live ESPN Football schedule contract
         run: node scripts/verify-football-espn-schedule-live.mjs
 
+      - name: Audit live Wheel NFL depth charts across all 32 teams
+        run: node scripts/verify-wheel-nfl-depthcharts-live.mjs
+
   phone-layouts:
     name: Today's Challenge phone layouts
     if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.pull_request.draft == false }}

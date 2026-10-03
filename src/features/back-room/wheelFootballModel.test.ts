@@ -68,6 +68,81 @@ describe("Wheel of Football current-NFL model", () => {
     ]);
   });
 
+  it("uses ESPN depth-chart rank instead of raw roster order for obvious starters", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      athletes: [{
+        position: "Offense",
+        items: [
+          { id: "howell", displayName: "Sam Howell", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 4 } },
+          { id: "milton", displayName: "Joe Milton III", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 2 } },
+          { id: "dak", displayName: "Dak Prescott", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 10 } },
+          { id: "wr4", displayName: "Depth Receiver", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 2 } },
+          { id: "pickens", displayName: "George Pickens", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 5 } },
+          { id: "lamb", displayName: "CeeDee Lamb", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 7 } },
+          { id: "flournoy", displayName: "Ryan Flournoy", position: { abbreviation: "WR", displayName: "Wide Receiver" }, experience: { years: 3 } },
+        ],
+      }],
+      depthCharts: [{
+        name: "Offense",
+        positions: {
+          quarterback: {
+            athletes: [
+              { rank: 1, athlete: { id: "dak", displayName: "Dak Prescott" } },
+              { rank: 2, athlete: { id: "howell", displayName: "Sam Howell" } },
+              { rank: 3, athlete: { id: "milton", displayName: "Joe Milton III" } },
+            ],
+          },
+          leftReceiver: {
+            athletes: [
+              { rank: 1, athlete: { id: "pickens", displayName: "George Pickens" } },
+              { rank: 2, athlete: { id: "wr4", displayName: "Depth Receiver" } },
+            ],
+          },
+          rightReceiver: {
+            athletes: [{ rank: 1, athlete: { id: "lamb", displayName: "CeeDee Lamb" } }],
+          },
+          slotReceiver: {
+            athletes: [{ rank: 1, athlete: { id: "flournoy", displayName: "Ryan Flournoy" } }],
+          },
+        },
+      }],
+    });
+
+    expect(wheelFootballShortlist(candidates, "QB").map((candidate) => candidate.name)).toEqual([
+      "Dak Prescott",
+    ]);
+    expect(wheelFootballShortlist(candidates, "WR").map((candidate) => candidate.name)).toEqual([
+      "George Pickens",
+      "CeeDee Lamb",
+      "Ryan Flournoy",
+    ]);
+  });
+
+  it("keeps an injured established player in the small pool even if a temporary depth chart omits him", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      athletes: [{
+        position: "Offense",
+        items: [
+          { id: "backup", displayName: "Healthy Backup", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 4 } },
+          { id: "star", displayName: "Injured Star", position: { abbreviation: "QB", displayName: "Quarterback" }, experience: { years: 8 } },
+        ],
+      }],
+      depthCharts: [{
+        positions: {
+          quarterback: {
+            athletes: [{ rank: 1, athlete: { id: "backup", displayName: "Healthy Backup" } }],
+          },
+        },
+      }],
+      injuries: [{ athlete: { id: "star", displayName: "Injured Star" } }],
+    });
+
+    expect(wheelFootballShortlist(candidates, "QB").map((candidate) => candidate.name)).toEqual([
+      "Healthy Backup",
+      "Injured Star",
+    ]);
+  });
+
   it("keeps Wheel choices intentionally small while allowing rare meaningful extra options", () => {
     const candidate = (
       id: string,
@@ -82,6 +157,10 @@ describe("Wheel of Football current-NFL model", () => {
       headshotUrl: null,
       eligibleSlots,
       experienceYears,
+      depthRank: null,
+      depthOrder: null,
+      injuryProtected: false,
+      rosterOrder: Number(id.replace(/\D/g, "")) || 0,
     });
 
     expect(wheelFootballShortlist([
