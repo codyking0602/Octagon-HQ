@@ -1,0 +1,33 @@
+name: TEMP CFB Wheel Audit Evidence
+
+on:
+  push:
+    branches:
+      - feat/cfb-wheel-manual-priority-audit
+    paths:
+      - ".github/workflows/cfb-wheel-audit-evidence-temp.yml"
+      - "scripts/cfb-wheel-audit-evidence.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  audit-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Collect current CFB audit evidence
+        run: node scripts/cfb-wheel-audit-evidence.mjs
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfb-wheel-audit-evidence
+          path: |
+            tmp/cfb-wheel-audit-evidence.json
+            tmp/cfb-wheel-audit-evidence.md
+          if-no-files-found: error
+          retention-days: 1
