@@ -21,7 +21,8 @@ describe("Wheel of Football NFL grading runtime migration", () => {
     expect(migration).toContain("selected_grade smallint");
     expect(migration).toContain("grade_version text");
     expect(migration).toContain("grade_effective_date date");
-    expect(migration).toContain("alter column selected_grade set not null");
+    expect(migration).toContain("Pre-grading v1 picks intentionally remain NULL");
+    expect(migration).not.toContain("alter column selected_grade set not null");
     expect(migration).toContain("v_selected_grade");
     expect(migration).toContain("v_grade_version");
     expect(migration).toContain("v_grade_effective_date");
@@ -35,6 +36,7 @@ describe("Wheel of Football NFL grading runtime migration", () => {
       migration.indexOf("create or replace function private.wheel_football_state_json"),
     );
 
+    expect(finalizer).toContain("count(pick.selected_grade)");
     expect(finalizer).toContain("avg(pick.selected_grade::numeric)");
     expect(finalizer).not.toContain("wheel_football_nfl_grades source");
     expect(finalizer).toContain("v_creator_final := round(v_creator_raw * 2 - 100, 1)");
