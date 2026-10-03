@@ -790,6 +790,45 @@ create trigger wheel_football_assign_grade_snapshot
 before insert on private.wheel_football_picks
 for each row execute function private.assign_wheel_football_grade_snapshot();
 
+-- Preserve already-finished v1 history exactly as it was, but bring any match that
+-- is still live at rollout onto the locked grading runtime. Existing live picks are
+-- snapshotted once here; later authority revisions never rewrite them.
+do $
+declare
+  v_pick record;
+  v_grade record;
+begin
+  for v_pick in
+    select pick.id,
+           pick.team_code,
+           pick.display_name,
+           pick.roster_slot,
+           pick.position_abbreviation
+    from private.wheel_football_picks pick
+    join private.wheel_football_matches match
+      on match.challenge_id = pick.challenge_id
+    where match.phase <> 'complete'
+      and pick.hidden_grade is null
+  loop
+    select *
+      into v_grade
+    from private.resolve_wheel_football_grade_snapshot(
+      v_pick.team_code,
+      v_pick.display_name,
+      v_pick.roster_slot,
+      v_pick.position_abbreviation
+    );
+
+    update private.wheel_football_picks pick
+    set hidden_grade = v_grade.hidden_grade,
+        hidden_grade_version = v_grade.grade_version,
+        hidden_grade_effective_date = v_grade.effective_date
+    where pick.id = v_pick.id
+      and pick.hidden_grade is null;
+  end loop;
+end;
+$;
+
 create or replace function private.wheel_football_raw_grade(
   p_challenge_id uuid,
   p_profile_id uuid
