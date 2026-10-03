@@ -56,12 +56,17 @@ function starterAthletes(payload) {
     for (const [key, positionValue] of positionEntries) {
       const position = asObject(positionValue);
       const athletes = Array.isArray(position?.athletes) ? position.athletes : [];
+      const positionRankValue = position?.rank;
+      const positionRank = Number.isFinite(positionRankValue)
+        ? Math.max(1, Math.floor(positionRankValue))
+        : null;
       for (let index = 0; index < athletes.length; index += 1) {
         const athleteEntry = asObject(athletes[index]);
         if (!athleteEntry) continue;
         const athlete = asObject(athleteEntry.athlete) ?? athleteEntry;
-        const rankValue = athleteEntry.rank;
-        const rank = Number.isFinite(rankValue) ? Math.max(1, Math.floor(rankValue)) : index + 1;
+        const athleteRankValue = athleteEntry.rank;
+        const rank = positionRank
+          ?? (Number.isFinite(athleteRankValue) ? Math.max(1, Math.floor(athleteRankValue)) : index + 1);
         const id = typeof athlete?.id === "string" ? athlete.id : null;
         const name = typeof athlete?.displayName === "string"
           ? athlete.displayName

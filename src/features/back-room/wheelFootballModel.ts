@@ -222,6 +222,14 @@ function depthChartPriority(payload: Record<string, unknown>) {
     for (const rawPosition of positions) {
       const position = asRecord(rawPosition);
       const athletes = Array.isArray(position?.athletes) ? position.athletes : [];
+      const rawPositionRank = position?.rank;
+      const rawPositionSlot = position?.slot;
+      const positionRank = typeof rawPositionRank === "number" && Number.isFinite(rawPositionRank)
+        ? Math.max(1, Math.floor(rawPositionRank))
+        : null;
+      const positionSlot = typeof rawPositionSlot === "number" && Number.isFinite(rawPositionSlot)
+        ? Math.max(0, Math.floor(rawPositionSlot))
+        : positionOrder;
       for (let athleteIndex = 0; athleteIndex < athletes.length; athleteIndex += 1) {
         const rawAthleteEntry = asRecord(athletes[athleteIndex]);
         if (!rawAthleteEntry) continue;
@@ -230,11 +238,12 @@ function depthChartPriority(payload: Record<string, unknown>) {
           ?? athleteIdFromReference(athlete.$ref)
           ?? athleteIdFromReference(rawAthleteEntry.$ref);
         if (!athleteId) continue;
-        const rawRank = rawAthleteEntry.rank;
-        const rank = typeof rawRank === "number" && Number.isFinite(rawRank)
-          ? Math.max(1, Math.floor(rawRank))
-          : athleteIndex + 1;
-        const order = positionOrder * 10 + athleteIndex;
+        const rawAthleteRank = rawAthleteEntry.rank;
+        const rank = positionRank
+          ?? (typeof rawAthleteRank === "number" && Number.isFinite(rawAthleteRank)
+            ? Math.max(1, Math.floor(rawAthleteRank))
+            : athleteIndex + 1);
+        const order = positionSlot * 10 + rank + athleteIndex / 10;
         const current = priorities.get(athleteId);
         if (!current || rank < current.rank || (rank === current.rank && order < current.order)) {
           priorities.set(athleteId, { rank, order });
