@@ -14,7 +14,7 @@ create table if not exists private.wheel_football_grade_authority (
   effective_date date not null,
   grade_version text not null,
   source_artifact text not null,
-  primary key (team_code, position_group, name_key)
+  primary key (team_code, position_group, name_key, effective_date)
 );
 
 alter table private.wheel_football_grade_authority enable row level security;
@@ -674,7 +674,7 @@ insert into private.wheel_football_grade_authority (
   ('TB','Head Coach','toddbowles','Todd Bowles',80.0,'2026-10-03','nfl-wheel-head-coach-grades-2026-10-03-v1','data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json'),
   ('TEN','Head Coach','robertsaleh','Robert Saleh',78.0,'2026-10-03','nfl-wheel-head-coach-grades-2026-10-03-v1','data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json'),
   ('WSH','Head Coach','danquinn','Dan Quinn',82.0,'2026-10-03','nfl-wheel-head-coach-grades-2026-10-03-v1','data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json')
-on conflict (team_code, position_group, name_key) do update
+on conflict (team_code, position_group, name_key, effective_date) do update
 set display_name = excluded.display_name,
     hidden_grade = excluded.hidden_grade,
     effective_date = excluded.effective_date,
@@ -731,7 +731,10 @@ begin
   from private.wheel_football_grade_authority authority
   where authority.team_code = v_team
     and authority.position_group = v_group
-    and authority.name_key = v_key;
+    and authority.name_key = v_key
+    and authority.effective_date <= current_date
+  order by authority.effective_date desc
+  limit 1;
 
   if not found then
     raise exception
