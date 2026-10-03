@@ -34,8 +34,8 @@ const pickSchema = z.object({
 });
 
 const resultSchema = z.object({
-  creator_final_grade: z.coerce.number().int().min(0).max(100),
-  recipient_final_grade: z.coerce.number().int().min(0).max(100),
+  creator_final_grade: z.coerce.number().min(0).max(100),
+  recipient_final_grade: z.coerce.number().min(0).max(100),
   winner_profile_id: z.string().uuid().nullable(),
   is_tie: z.boolean(),
 });
