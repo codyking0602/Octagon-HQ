@@ -77,7 +77,9 @@ describe("Wheel of Football locked grading runtime", () => {
     expect(migration).toContain("new.hidden_grade := v_grade");
     expect(migration).toContain("new.hidden_grade_version := v_version");
     expect(migration).toContain("new.hidden_grade_effective_date := v_effective_date");
-    expect(migration).not.toContain("update private.wheel_football_picks");
+    expect(migration).toContain("where match.phase <> 'complete'");
+    expect(migration).toContain("and pick.hidden_grade is null");
+    expect(migration).not.toContain("after update on private.wheel_football_grade_authority");
     expect(repository).not.toContain("hidden_grade");
     expect(repository).not.toContain("raw_grade");
     expect(page).not.toContain("hidden_grade");
