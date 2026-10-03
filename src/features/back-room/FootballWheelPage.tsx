@@ -105,7 +105,9 @@ function RosterCell({
       <PickMark pick={pick} />
       <div>
         <strong>{pick?.display_name ?? "OPEN"}</strong>
-        <span>{pick ? `${pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
+        <span>{pick
+          ? `${pick.team_code} · ${pick.position_abbreviation}${pick.grade !== null ? ` · GRADE ${pick.grade}` : ""}`
+          : "—"}</span>
       </div>
     </div>
   );
@@ -702,6 +704,12 @@ function MatchScreen({ code }: { code: string }) {
       : forfeitedProfile?.id === state.recipient.id
         ? state.creator
         : null;
+    const grading = state.grading_result;
+    const gradedWinner = grading?.winner_profile_id === state.creator.id
+      ? state.creator
+      : grading?.winner_profile_id === state.recipient.id
+        ? state.recipient
+        : null;
 
     return (
       <div className="page football-wheel-page">
@@ -712,11 +720,33 @@ function MatchScreen({ code }: { code: string }) {
         </section>
         <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
         <section className="football-wheel-final surface-card">
-          <strong>{forfeitedProfile ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.` : "Both Superteams are locked."}</strong>
+          <strong>{forfeitedProfile
+            ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.`
+            : grading?.tied
+              ? "Dead heat. The Superteams finished even."
+              : gradedWinner
+                ? `${gradedWinner.display_name} built the stronger Superteam.`
+                : "Both Superteams are locked."}</strong>
+          {grading ? (
+            <div className="football-wheel-final__scoreboard" aria-label="Final Wheel of Football team scores">
+              <div className={grading.winner_profile_id === state.creator.id ? "is-winner" : ""}>
+                <small>{state.creator.display_name}</small>
+                <b>{grading.creator.score}</b>
+                <span>TEAM SCORE</span>
+              </div>
+              <div className={grading.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
+                <small>{state.recipient.display_name}</small>
+                <b>{grading.recipient.score}</b>
+                <span>TEAM SCORE</span>
+              </div>
+            </div>
+          ) : null}
           <p>{forfeitedProfile
-            ? "The matchup ended early. All picks made before the forfeit remain visible."
-            : "No grades or hidden score in v1 — this is the head-to-head team you each built from your seven spins."}</p>
-          <div>
+            ? "The matchup ended early. All picks made before the forfeit remain visible; hidden grades stay unrevealed."
+            : grading
+              ? "All seven slots count equally. Player grades above are the frozen grades from when each pick was made; the curved team score is presentation-only."
+              : "Legacy v1 matchup — grades were not recorded for this game."}</p>
+          <div className="football-wheel-final__actions">
             <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
             <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
           </div>

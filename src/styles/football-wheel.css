@@ -941,7 +941,58 @@
   line-height: 1.45;
 }
 
-.football-wheel-final > div {
+.football-wheel-final__scoreboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 10px 0 8px;
+}
+
+.football-wheel-final__scoreboard > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 8px;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  background: rgba(255,255,255,.04);
+}
+
+.football-wheel-final__scoreboard > div.is-winner {
+  border-color: rgba(143, 200, 244, .34);
+  background: rgba(23, 74, 126, .22);
+}
+
+.football-wheel-final__scoreboard small,
+.football-wheel-final__scoreboard span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-wheel-final__scoreboard small {
+  color: #dfeaf1;
+  font-size: .59rem;
+  font-weight: 900;
+}
+
+.football-wheel-final__scoreboard b {
+  grid-row: span 2;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.football-wheel-final__scoreboard span {
+  color: #738997;
+  font-size: .48rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-wheel-final__actions {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 7px;
