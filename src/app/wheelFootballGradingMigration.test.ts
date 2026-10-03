@@ -109,7 +109,7 @@ describe("Wheel of Football current-roster grading authority", () => {
   it("fails closed if a curated current player is ever missing a grade", () => {
     expect(migration).toContain("raise exception 'Wheel of Football grade could not be resolved'");
     expect(migration).toContain(
-      "If a current selectable name",
+      "If a selectable name",
     );
     expect(migration).not.toContain("conservative fallback");
   });
