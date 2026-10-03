@@ -33,7 +33,7 @@ returns text
 language sql
 immutable
 set search_path = ''
-as $
+as $$
   select lower(regexp_replace(
     translate(
       trim(coalesce(p_value, '')),
@@ -44,7 +44,7 @@ as $
     '',
     'g'
   ));
-$;
+$$;
 
 revoke all on function private.wheel_football_normalized_name(text)
   from public, anon, authenticated;
