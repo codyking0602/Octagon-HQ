@@ -7,6 +7,7 @@ const migration = readFileSync(
 );
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const thumbnail = readFileSync("src/features/picks/FighterThumbnail.tsx", "utf8");
+const assetIngest = readFileSync("scripts/asset_ingest.py", "utf8");
 
 describe("automatic UFC fighter media", () => {
   it("keeps provenance limited to official UFC and ESPN sources", () => {
@@ -33,6 +34,13 @@ describe("automatic UFC fighter media", () => {
     expect(thumbnail).toContain("staticSource && !failedSources.has(staticSource)");
     expect(thumbnail).toContain("runtimeSource && !failedSources.has(runtimeSource)");
     expect(thumbnail).toContain("if (source) return");
+  });
+
+  it("rejects generic silhouette and placeholder images before generating static fighter assets", () => {
+    expect(assetIngest).toContain("PLACEHOLDER_URL_HINTS");
+    expect(assetIngest).toContain("source_url_looks_like_placeholder");
+    expect(assetIngest).toContain("image_looks_like_monochrome_placeholder");
+    expect(assetIngest).toContain("generic monochrome silhouette/placeholder");
   });
 
   it("does not automate or mutate event header artwork", () => {
