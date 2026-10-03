@@ -115,13 +115,13 @@
   display: grid;
   gap: 3px;
   padding: 11px 12px;
-  border: 1px solid rgba(32, 180, 134, .24);
+  border: 1px solid rgba(126, 199, 242, .24);
   border-radius: 12px;
-  background: rgba(32, 180, 134, .08);
+  background: rgba(126, 199, 242, .08);
 }
 
 .football-weekly-nfl-team-season__safe-pass b {
-  color: #75e0be;
+  color: #a8dcf8;
   font-size: .72rem;
   letter-spacing: .06em;
 }
@@ -144,8 +144,8 @@
   min-height: 48px;
   border: 0;
   border-radius: 12px;
-  background: linear-gradient(135deg, #1b9d79, #29c9a0);
-  color: #06150f;
+  background: linear-gradient(135deg, #5baee0, #8bd0f5);
+  color: #06131b;
   font-weight: 900;
   letter-spacing: .035em;
 }
@@ -227,8 +227,8 @@
   gap: 3px;
   padding: 11px 12px;
   border-radius: 12px;
-  background: rgba(32, 180, 134, .08);
-  border: 1px solid rgba(32, 180, 134, .16);
+  background: rgba(126, 199, 242, .08);
+  border: 1px solid rgba(126, 199, 242, .16);
 }
 
 .football-weekly-nfl-team-season__theme small,
@@ -315,7 +315,7 @@
 .football-weekly-nfl-team-season__year {
   flex: 0 0 auto;
   white-space: nowrap;
-  color: #54d2ad;
+  color: #8bd0f5;
   font-size: .86em;
 }
 
@@ -437,7 +437,7 @@
 }
 
 .football-weekly-nfl-team-season__prior summary span b {
-  color: #54d2ad;
+  color: #8bd0f5;
 }
 
 .football-weekly-nfl-team-season__prior details > div {
@@ -474,9 +474,9 @@
 }
 
 .football-weekly-nfl-team-season__wildcards > button.is-selected {
-  border-color: rgba(32, 180, 134, .75);
-  box-shadow: inset 0 0 0 1px rgba(32, 180, 134, .32);
-  background: rgba(32, 180, 134, .1);
+  border-color: rgba(126, 199, 242, .75);
+  box-shadow: inset 0 0 0 1px rgba(126, 199, 242, .32);
+  background: rgba(126, 199, 242, .1);
 }
 
 .football-weekly-nfl-team-season__wildcards em {
@@ -561,9 +561,9 @@
 }
 
 .football-weekly-nfl-team-season__ticket-buttons button.is-active {
-  background: #20b486;
-  color: #071712;
-  border-color: #20b486;
+  background: #7ec7f2;
+  color: #06131b;
+  border-color: #7ec7f2;
 }
 
 .football-weekly-nfl-team-season__resolution {
@@ -720,7 +720,7 @@
 }
 
 .football-weekly-nfl-team-season__claims > div span {
-  color: #54d2ad;
+  color: #8bd0f5;
 }
 
 .football-weekly-nfl-team-season__reaping-result.is-reaped {
@@ -749,7 +749,7 @@
   align-items: center;
   padding: 13px;
   border-radius: 13px;
-  background: linear-gradient(135deg, rgba(32, 180, 134, .12), rgba(80, 199, 217, .07));
+  background: linear-gradient(135deg, rgba(126, 199, 242, .12), rgba(80, 199, 217, .07));
 }
 
 .football-weekly-nfl-team-season__finish > small {
@@ -764,7 +764,7 @@
 
 .football-weekly-nfl-team-season__finish > b {
   font-size: 1.55rem;
-  color: #54d2ad;
+  color: #8bd0f5;
 }
 
 .football-weekly-nfl-team-season__standings {
@@ -782,8 +782,8 @@
 }
 
 .football-weekly-nfl-team-season__standings > div.is-current {
-  outline: 1px solid rgba(32, 180, 134, .38);
-  background: rgba(32, 180, 134, .07);
+  outline: 1px solid rgba(126, 199, 242, .38);
+  background: rgba(126, 199, 242, .07);
 }
 
 .football-weekly-nfl-team-season__final-collection {
@@ -805,7 +805,7 @@
 
 .football-weekly-nfl-team-season__final-collection > article.is-counting {
   opacity: 1;
-  box-shadow: inset 3px 0 #20b486;
+  box-shadow: inset 3px 0 #7ec7f2;
 }
 
 .football-weekly-nfl-team-season__final-collection .football-weekly-nfl-team-season__mark {
@@ -828,7 +828,7 @@
 
 .football-weekly-nfl-team-season__final-collection > article > span {
   font-weight: 1000;
-  color: #54d2ad;
+  color: #8bd0f5;
 }
 
 @media (max-width: 560px) {
@@ -1185,8 +1185,8 @@
 
 .football-weekly-nfl-team-season__cut-options article.is-selected,
 .football-weekly-nfl-team-season__wildcards article.is-selected {
-  border-color: rgba(32, 180, 134, .62);
-  background: rgba(32, 180, 134, .08);
+  border-color: rgba(126, 199, 242, .62);
+  background: rgba(126, 199, 242, .08);
 }
 
 .football-weekly-nfl-team-season__cut-options a,
@@ -1244,9 +1244,9 @@
 
 .football-weekly-nfl-team-season__cut-options article > button.is-selected,
 .football-weekly-nfl-team-season__wildcards article > button.is-selected {
-  border-color: #20b486;
-  background: #20b486;
-  color: #071712;
+  border-color: #7ec7f2;
+  background: #7ec7f2;
+  color: #06131b;
 }
 
 .football-weekly-nfl-team-season__wildcards > button {
@@ -1335,7 +1335,7 @@
 
 .football-weekly-nfl-team-season__claims > div span {
   display: grid;
-  color: #54d2ad;
+  color: #8bd0f5;
 }
 
 .football-weekly-nfl-team-season__claims > div span small {
@@ -1478,8 +1478,8 @@
 }
 
 .football-weekly-nfl-team-season__player-picker button.is-active {
-  border-color: rgba(32, 180, 134, .48);
-  background: rgba(32, 180, 134, .08);
+  border-color: rgba(126, 199, 242, .48);
+  background: rgba(126, 199, 242, .08);
   color: #fff;
 }
 
@@ -1492,7 +1492,7 @@
 }
 
 .football-weekly-nfl-team-season__player-picker span {
-  color: #54d2ad;
+  color: #8bd0f5;
   font-size: .64rem;
   font-weight: 950;
 }
@@ -1570,7 +1570,7 @@
 }
 
 .football-weekly-nfl-team-season__all-grades > article > b {
-  color: #54d2ad;
+  color: #8bd0f5;
   font-size: .95rem;
 }
 
@@ -1608,4 +1608,62 @@
   .football-weekly-nfl-team-season__collection-summary > span {
     flex: 0 1 auto;
   }
+}
+
+
+/* NFL final Collections: full field at once, no player picker. */
+.football-weekly-nfl-team-season__collections {
+  display: grid;
+  gap: 12px;
+}
+
+.football-weekly-nfl-team-season__collection-group {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.football-weekly-nfl-team-season__collection-group.is-current {
+  border-color: rgba(126, 199, 242, .38);
+  background: rgba(126, 199, 242, .055);
+}
+
+.football-weekly-nfl-team-season__collection-group > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 2px 2px;
+}
+
+.football-weekly-nfl-team-season__collection-group > header > div {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.football-weekly-nfl-team-season__collection-group > header small {
+  flex: 0 0 auto;
+  color: #8bd0f5;
+  font-size: .62rem;
+  font-weight: 950;
+}
+
+.football-weekly-nfl-team-season__collection-group > header strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .84rem;
+}
+
+.football-weekly-nfl-team-season__collection-group > header > span {
+  flex: 0 0 auto;
+  color: #8bd0f5;
+  font-size: .82rem;
+  font-weight: 1000;
 }
