@@ -1,0 +1,504 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-wheel-head-coach-grades-2026-10-03-v1",
+  "status": "audit-locked-not-runtime",
+  "effectiveDate": "2026-10-03",
+  "populationSource": {
+    "path": "data/generated/football/wheel-football-priorities.json",
+    "mainSha": "f295e359d9e70f5c55d0452f4f94d9487fbc3f06",
+    "headCoachCount": 32
+  },
+  "constitution": "PR #1641 — Wheel of Football grading constitution",
+  "gradingSemantic": "CURRENT NFL HEAD-COACHING ABILITY RIGHT NOW. Uses a longer evidence window than player grading because coaching signal is noisier over a few games. Scheme/play-calling where applicable, game management, adaptability, staff construction, player development, culture, talent maximization and sustained results all matter. Team record alone, career fame and historical greatness do not determine the grade.",
+  "approvedAnchors": [
+    {
+      "coach": "Sean McVay",
+      "grade": 99,
+      "level": "current HC ceiling"
+    },
+    {
+      "coach": "Mike Macdonald",
+      "grade": 98,
+      "level": "elite/ceiling-adjacent"
+    },
+    {
+      "coach": "Kyle Shanahan",
+      "grade": 97,
+      "level": "elite"
+    },
+    {
+      "coach": "Andy Reid",
+      "grade": 96,
+      "level": "elite with slight current-era deduction"
+    },
+    {
+      "coach": "Sean Payton",
+      "grade": 94,
+      "level": "high-end elite"
+    },
+    {
+      "coach": "Mike Vrabel",
+      "grade": 93,
+      "level": "high-end"
+    },
+    {
+      "coach": "Ben Johnson",
+      "grade": 92,
+      "level": "high-end rising HC"
+    },
+    {
+      "coach": "Dan Campbell",
+      "grade": 91,
+      "level": "very good/high-end CEO coach"
+    },
+    {
+      "coach": "Jim Harbaugh",
+      "grade": 90,
+      "level": "very good"
+    },
+    {
+      "coach": "Kevin O'Connell",
+      "grade": 89,
+      "level": "very good"
+    },
+    {
+      "coach": "DeMeco Ryans",
+      "grade": 88,
+      "level": "very good"
+    },
+    {
+      "coach": "Matt LaFleur",
+      "grade": 87,
+      "level": "good/high-end offensive HC"
+    },
+    {
+      "coach": "Liam Coen",
+      "grade": 85,
+      "level": "good"
+    },
+    {
+      "coach": "Nick Sirianni",
+      "grade": 83,
+      "level": "solid/good HC"
+    },
+    {
+      "coach": "Brian Schottenheimer",
+      "grade": 81,
+      "level": "solid"
+    },
+    {
+      "coach": "Zac Taylor",
+      "grade": 79,
+      "level": "below-average current HC"
+    },
+    {
+      "coach": "Mike LaFleur",
+      "grade": 76,
+      "level": "unproven/lower Wheel option"
+    },
+    {
+      "coach": "Aaron Glenn",
+      "grade": 74,
+      "level": "current bottom anchor"
+    }
+  ],
+  "evidenceSnapshot": {
+    "asOf": "2026-10-03",
+    "note": "Week 4 is incomplete. 2025 and multi-year coaching evidence stabilize the grade; 2026 can move a coach when the early evidence materially confirms or contradicts the established level.",
+    "primarySources": [
+      "CBS Sports 2026 top head-coach ranking",
+      "Sharp Football Analysis 2026 all-32 head-coach ranking",
+      "NFL.com 2026 new-head-coach outlook",
+      "NFL.com Week 4 power rankings and official standings through Week 3"
+    ]
+  },
+  "grades": [
+    {
+      "team": "ARI",
+      "coach": "Mike LaFleur",
+      "grade": 76,
+      "confidence": "medium",
+      "hqRank": 31,
+      "sharpRank": 31,
+      "rankGap": 0
+    },
+    {
+      "team": "ATL",
+      "coach": "Kevin Stefanski",
+      "grade": 84,
+      "confidence": "high",
+      "hqRank": 15,
+      "sharpRank": 20,
+      "rankGap": 5
+    },
+    {
+      "team": "BAL",
+      "coach": "Jesse Minter",
+      "grade": 83,
+      "confidence": "medium",
+      "hqRank": 19,
+      "sharpRank": 27,
+      "rankGap": 8
+    },
+    {
+      "team": "BUF",
+      "coach": "Joe Brady",
+      "grade": 84,
+      "confidence": "medium",
+      "hqRank": 15,
+      "sharpRank": 28,
+      "rankGap": 13
+    },
+    {
+      "team": "CAR",
+      "coach": "Dave Canales",
+      "grade": 79,
+      "confidence": "high",
+      "hqRank": 27,
+      "sharpRank": 17,
+      "rankGap": -10
+    },
+    {
+      "team": "CHI",
+      "coach": "Ben Johnson",
+      "grade": 92,
+      "confidence": "high",
+      "hqRank": 7,
+      "sharpRank": 7,
+      "rankGap": 0
+    },
+    {
+      "team": "CIN",
+      "coach": "Zac Taylor",
+      "grade": 79,
+      "confidence": "high",
+      "hqRank": 27,
+      "sharpRank": 24,
+      "rankGap": -3
+    },
+    {
+      "team": "CLE",
+      "coach": "Todd Monken",
+      "grade": 80,
+      "confidence": "medium",
+      "hqRank": 25,
+      "sharpRank": 29,
+      "rankGap": 4
+    },
+    {
+      "team": "DAL",
+      "coach": "Brian Schottenheimer",
+      "grade": 81,
+      "confidence": "high",
+      "hqRank": 23,
+      "sharpRank": 23,
+      "rankGap": 0
+    },
+    {
+      "team": "DEN",
+      "coach": "Sean Payton",
+      "grade": 94,
+      "confidence": "high",
+      "hqRank": 5,
+      "sharpRank": 5,
+      "rankGap": 0
+    },
+    {
+      "team": "DET",
+      "coach": "Dan Campbell",
+      "grade": 91,
+      "confidence": "high",
+      "hqRank": 8,
+      "sharpRank": 6,
+      "rankGap": -2
+    },
+    {
+      "team": "GB",
+      "coach": "Matt LaFleur",
+      "grade": 87,
+      "confidence": "high",
+      "hqRank": 13,
+      "sharpRank": 10,
+      "rankGap": -3
+    },
+    {
+      "team": "HOU",
+      "coach": "DeMeco Ryans",
+      "grade": 88,
+      "confidence": "high",
+      "hqRank": 11,
+      "sharpRank": 10,
+      "rankGap": -1
+    },
+    {
+      "team": "IND",
+      "coach": "Shane Steichen",
+      "grade": 81,
+      "confidence": "high",
+      "hqRank": 23,
+      "sharpRank": 16,
+      "rankGap": -7
+    },
+    {
+      "team": "JAX",
+      "coach": "Liam Coen",
+      "grade": 85,
+      "confidence": "high",
+      "hqRank": 14,
+      "sharpRank": 12,
+      "rankGap": -2
+    },
+    {
+      "team": "KC",
+      "coach": "Andy Reid",
+      "grade": 96,
+      "confidence": "high",
+      "hqRank": 4,
+      "sharpRank": 2,
+      "rankGap": -2
+    },
+    {
+      "team": "LAC",
+      "coach": "Jim Harbaugh",
+      "grade": 90,
+      "confidence": "high",
+      "hqRank": 9,
+      "sharpRank": 12,
+      "rankGap": 3
+    },
+    {
+      "team": "LAR",
+      "coach": "Sean McVay",
+      "grade": 99,
+      "confidence": "high",
+      "hqRank": 1,
+      "sharpRank": 1,
+      "rankGap": 0
+    },
+    {
+      "team": "LV",
+      "coach": "Klint Kubiak",
+      "grade": 84,
+      "confidence": "medium",
+      "hqRank": 15,
+      "sharpRank": 26,
+      "rankGap": 11
+    },
+    {
+      "team": "MIA",
+      "coach": "Jeff Hafley",
+      "grade": 77,
+      "confidence": "medium",
+      "hqRank": 30,
+      "sharpRank": 30,
+      "rankGap": 0
+    },
+    {
+      "team": "MIN",
+      "coach": "Kevin O'Connell",
+      "grade": 89,
+      "confidence": "high",
+      "hqRank": 10,
+      "sharpRank": 9,
+      "rankGap": -1
+    },
+    {
+      "team": "NE",
+      "coach": "Mike Vrabel",
+      "grade": 93,
+      "confidence": "high",
+      "hqRank": 6,
+      "sharpRank": 8,
+      "rankGap": 2
+    },
+    {
+      "team": "NO",
+      "coach": "Kellen Moore",
+      "grade": 82,
+      "confidence": "high",
+      "hqRank": 21,
+      "sharpRank": 17,
+      "rankGap": -4
+    },
+    {
+      "team": "NYG",
+      "coach": "John Harbaugh",
+      "grade": 88,
+      "confidence": "high",
+      "hqRank": 11,
+      "sharpRank": 15,
+      "rankGap": 4
+    },
+    {
+      "team": "NYJ",
+      "coach": "Aaron Glenn",
+      "grade": 74,
+      "confidence": "high",
+      "hqRank": 32,
+      "sharpRank": 32,
+      "rankGap": 0
+    },
+    {
+      "team": "PHI",
+      "coach": "Nick Sirianni",
+      "grade": 83,
+      "confidence": "high",
+      "hqRank": 19,
+      "sharpRank": 14,
+      "rankGap": -5
+    },
+    {
+      "team": "PIT",
+      "coach": "Mike McCarthy",
+      "grade": 84,
+      "confidence": "high",
+      "hqRank": 15,
+      "sharpRank": 21,
+      "rankGap": 6
+    },
+    {
+      "team": "SEA",
+      "coach": "Mike Macdonald",
+      "grade": 98,
+      "confidence": "high",
+      "hqRank": 2,
+      "sharpRank": 4,
+      "rankGap": 2
+    },
+    {
+      "team": "SF",
+      "coach": "Kyle Shanahan",
+      "grade": 97,
+      "confidence": "high",
+      "hqRank": 3,
+      "sharpRank": 3,
+      "rankGap": 0
+    },
+    {
+      "team": "TB",
+      "coach": "Todd Bowles",
+      "grade": 80,
+      "confidence": "high",
+      "hqRank": 25,
+      "sharpRank": 19,
+      "rankGap": -6
+    },
+    {
+      "team": "TEN",
+      "coach": "Robert Saleh",
+      "grade": 78,
+      "confidence": "high",
+      "hqRank": 29,
+      "sharpRank": 25,
+      "rankGap": -4
+    },
+    {
+      "team": "WSH",
+      "coach": "Dan Quinn",
+      "grade": 82,
+      "confidence": "high",
+      "hqRank": 21,
+      "sharpRank": 22,
+      "rankGap": 1
+    }
+  ],
+  "pairwiseAudit": {
+    "orderedNeighborhoods": [
+      "Sean McVay 99 > Mike Macdonald 98 > Kyle Shanahan 97 > Andy Reid 96 > Sean Payton 94 > Mike Vrabel 93 > Ben Johnson 92 > Dan Campbell 91 > Jim Harbaugh 90",
+      "Kevin O'Connell 89 > DeMeco Ryans 88 = John Harbaugh 88 > Matt LaFleur 87 > Liam Coen 85",
+      "Joe Brady 84 = Kevin Stefanski 84 = Klint Kubiak 84 = Mike McCarthy 84 > Jesse Minter 83 = Nick Sirianni 83",
+      "Kellen Moore 82 = Dan Quinn 82 > Brian Schottenheimer 81 = Shane Steichen 81 > Todd Monken 80 = Todd Bowles 80",
+      "Dave Canales 79 = Zac Taylor 79 > Robert Saleh 78 > Jeff Hafley 77 > Mike LaFleur 76 > Aaron Glenn 74"
+    ],
+    "keyResolvedContradictions": [
+      "John Harbaugh lands at 88 rather than being graded off career résumé alone. His long-term CEO-coach value remains high, while a new-team reset and recent Baltimore ending keep him below the top current tier.",
+      "Joe Brady lands at 84 rather than being treated like a generic first-time coach. Buffalo is 3-0 and his prior continuity as offensive coordinator reduces the uncertainty penalty, but three games are not enough for an upper-80s grade.",
+      "Klint Kubiak lands at 84 after Las Vegas opened 3-0 and his offense became an early 2026 surprise; the small head-coach sample still caps him below established top coaches.",
+      "Jesse Minter lands at 83. His defensive-coordinator résumé is excellent and Baltimore has shown promising early results, but he remains a first-time head coach with only three regular-season games of direct evidence.",
+      "Dave Canales lands at 79. Winning the NFC South at 8-9 in 2025 earns credit, but the broader body of work and uneven 2026 opening do not support an above-average current grade.",
+      "Mike McCarthy 84 and Kevin Stefanski 84 retain meaningful prior head-coaching evidence without allowing career résumé to override recent performance."
+    ],
+    "result": "locked",
+    "contradictionsRemaining": false
+  },
+  "externalRankingAudit": {
+    "role": "Coach-specific QA substitute for Madden. External rankings are discrepancy alarms, never formulas.",
+    "threshold": "A gap of 8+ ranking positions versus Sharp's preseason all-32 2026 HC ranking requires mandatory review; 12+ is a major discrepancy.",
+    "mandatoryReviews": [
+      {
+        "coach": "Joe Brady",
+        "hq": 84,
+        "hqRank": 15,
+        "sharpRank": 28,
+        "rankGap": 13,
+        "result": "keep HQ 84",
+        "reason": "Sharp's preseason ranking heavily reflected first-time-HC uncertainty. Buffalo's 3-0 start plus Brady's continuity as the existing offensive architect materially reduces that uncertainty, but HQ still stops at 84 rather than overreacting."
+      },
+      {
+        "coach": "Klint Kubiak",
+        "hq": 84,
+        "hqRank": 15,
+        "sharpRank": 26,
+        "rankGap": 11,
+        "result": "keep HQ 84",
+        "reason": "Las Vegas is 3-0 after a three-win 2025 and Kubiak is an early Coach of the Year favorite; current evidence has already moved beyond the conservative preseason ranking, while the small sample prevents a higher grade."
+      },
+      {
+        "coach": "Dave Canales",
+        "hq": 79,
+        "hqRank": 27,
+        "sharpRank": 17,
+        "rankGap": -10,
+        "result": "keep HQ 79",
+        "reason": "Sharp was more optimistic entering 2026 after Carolina's 8-9 division title. The larger current-ability view remains closer to average/below-average because the 2025 record was losing and the 2026 opening has been uneven."
+      },
+      {
+        "coach": "Jesse Minter",
+        "hq": 83,
+        "hqRank": 19,
+        "sharpRank": 27,
+        "rankGap": 8,
+        "result": "keep HQ 83",
+        "reason": "Minter's elite coordinator résumé and early Baltimore results justify ranking him above a pure first-time-HC placeholder, but limited direct head-coaching evidence keeps him in the low 80s."
+      }
+    ],
+    "majorDiscrepancies": [
+      {
+        "coach": "Joe Brady",
+        "rankGap": 13
+      }
+    ],
+    "result": "passed"
+  },
+  "rangeSeparationAudit": {
+    "min": 74,
+    "median": 84,
+    "max": 99,
+    "countBelow80": 6,
+    "count80To84": 12,
+    "result": "passed",
+    "note": "The 32-coach pool intentionally reaches 74. Being an NFL head coach does not create an 80-point floor."
+  },
+  "postGradeDistribution": {
+    "min": 74,
+    "max": 99,
+    "mean": 85.56,
+    "median": 84,
+    "bands": {
+      "95-100": 4,
+      "90-94": 5,
+      "85-89": 5,
+      "80-84": 12,
+      "75-79": 5,
+      "below-75": 1
+    },
+    "note": "Inspected after football grading, pairwise review and external-ranking QA; distribution did not set individual grades."
+  },
+  "runtimeBoundary": "No production/runtime grading behavior changes. Runtime wiring and historical grade freezing remain later work.",
+  "futureVersioning": "Any future HC grade change must record previous grade, new grade, effective date, reason and neighboring-coach comparison.",
+  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "finalCrossPositionValidation": {
+    "status": "passed-no-grade-change",
+    "note": "Revalidated after QB/RB/WR/TE final calibration. Existing range/separation, pairwise and discrepancy audits remained coherent; no additional grade change was warranted."
+  }
+}
