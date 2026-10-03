@@ -79,18 +79,18 @@ export function mlbTeamColor(
 }
 
 export const MLB_OWNER_PLAYER_SPOTLIGHT = {
-  name: "Pete Crow-Armstrong",
-  team: "Chicago Cubs",
-  position: "CF",
-  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/691718/headshot/67/current",
-  teamColor: "#0E3386",
+  name: "Jacob Misiorowski",
+  team: "Milwaukee Brewers",
+  position: "SP",
+  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/694819/headshot/67/current",
+  teamColor: "#12284B",
   stats: [
-    { label: "HR", value: "45" },
-    { label: "SB", value: "41" },
-    { label: "RBI", value: "107" },
-    { label: "OPS", value: ".942" },
+    { label: "W-L", value: "16-5" },
+    { label: "ERA", value: "1.80" },
+    { label: "SO", value: "252" },
+    { label: "WHIP", value: "0.80" },
   ],
-  meta: "2026 REGULAR SEASON · 40/40 CLUB",
-  profileUrl: "https://www.baseball-reference.com/players/c/crowape01.shtml",
-  highlightUrl: "https://youtu.be/08zDHKWWmrk",
+  meta: "2026 REGULAR SEASON · MLB LEADER IN ERA, SO & WHIP",
+  profileUrl: "https://www.baseball-reference.com/players/m/misioja01.shtml",
+  highlightUrl: "https://youtube.com/shorts/dee400BODnI?is=OTGX2PKN7O9mKG9D",
 } as const;
