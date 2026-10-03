@@ -275,7 +275,11 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
               const canDeclineAuction = sealedBid && direction === "received" && status === "new";
               const canRemoveAuction = sealedBid && (status === "completed" || status === "declined");
               const canDeclineTurnBased = turnBased && direction === "received" && status === "new";
-              const canRemoveTurnBased = turnBased && (status === "completed" || status === "declined");
+              const canRemoveTurnBased = turnBased && (
+                (direction === "sent" && status === "waiting")
+                || status === "completed"
+                || status === "declined"
+              );
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>

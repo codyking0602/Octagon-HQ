@@ -469,6 +469,7 @@ function SetupScreen() {
           <span><b>2</b> Spin a team, then choose one current player or coach for an open Superteam slot.</span>
           <span><b>3</b> Turns alternate until both QB · RB · WR · Flex · Front Seven · Secondary · Head Coach are filled.</span>
           <span><b>4</b> No re-spins. Teams can return later, but you will not get the same team on back-to-back personal spins.</span>
+          <span><b>5</b> Individual grades stay private. Only the two completed Superteams’ final grades are revealed.</span>
         </div>
       </section>
 
@@ -702,20 +703,57 @@ function MatchScreen({ code }: { code: string }) {
       : forfeitedProfile?.id === state.recipient.id
         ? state.creator
         : null;
+    const gradedWinner = state.result?.winner_profile_id === state.creator.id
+      ? state.creator
+      : state.result?.winner_profile_id === state.recipient.id
+        ? state.recipient
+        : null;
 
     return (
       <div className="page football-wheel-page">
         <section className="football-wheel-match__status surface-card is-complete">
-          <p className="eyebrow">WHEEL OF FOOTBALL · {forfeitedProfile ? "FORFEIT" : "COMPLETE"}</p>
-          <h1>{forfeitedProfile ? `${forfeitedProfile.display_name} forfeited` : `${state.creator.display_name} vs ${state.recipient.display_name}`}</h1>
+          <p className="eyebrow">WHEEL OF FOOTBALL · {forfeitedProfile ? "FORFEIT" : state.result ? "FINAL" : "COMPLETE"}</p>
+          <h1>{forfeitedProfile
+            ? `${forfeitedProfile.display_name} forfeited`
+            : state.result
+              ? gradedWinner
+                ? `${gradedWinner.display_name} wins`
+                : "Dead even"
+              : `${state.creator.display_name} vs ${state.recipient.display_name}`}</h1>
           <span>{state.pool_scope === "DIVISION" ? state.division : state.pool_scope === "NFL" ? "FULL NFL" : state.pool_scope} · CURRENT NFL</span>
         </section>
+
+        {!forfeitedProfile && state.result ? (
+          <section className="football-wheel-final-grade surface-card" aria-label="Final Wheel of Football grades">
+            <div className={state.result.winner_profile_id === state.creator.id ? "is-winner" : ""}>
+              <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
+              <strong>{state.result.creator_final_grade}</strong>
+              <span>FINAL GRADE</span>
+            </div>
+            <b>VS</b>
+            <div className={state.result.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
+              <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
+              <strong>{state.result.recipient_final_grade}</strong>
+              <span>FINAL GRADE</span>
+            </div>
+          </section>
+        ) : null}
+
         <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
+
         <section className="football-wheel-final surface-card">
-          <strong>{forfeitedProfile ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.` : "Both Superteams are locked."}</strong>
+          <strong>{forfeitedProfile
+            ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.`
+            : state.result
+              ? gradedWinner
+                ? `${gradedWinner.display_name} built the stronger Superteam.`
+                : "The Superteams finished tied."
+              : "Both Superteams are locked."}</strong>
           <p>{forfeitedProfile
             ? "The matchup ended early. All picks made before the forfeit remain visible."
-            : "No grades or hidden score in v1 — this is the head-to-head team you each built from your seven spins."}</p>
+            : state.result
+              ? "Only the final Superteam grade is revealed. Individual player and coach grades stay private."
+              : "This matchup was completed before final-grade scoring was introduced, so its original result is preserved."}</p>
           <div>
             <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
             <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
