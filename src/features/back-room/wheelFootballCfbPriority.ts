@@ -1,4 +1,5 @@
 import currentCfbPriorityJson from "../../../data/generated/football/cfb/wheel-football-current-priorities-2026.json";
+import auditedCfbPriorityJson from "../../../data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json";
 
 export const WHEEL_FOOTBALL_CFB_BASELINE_SLOTS = [
   "QB",
@@ -62,13 +63,48 @@ type WheelFootballCfbBaselineJson = {
   teams: Record<string, WheelFootballCfbBaselineTeam>;
 };
 
+type WheelFootballCfbPriorityOverride = Partial<
+  Pick<
+    WheelFootballCfbBaselineTeam,
+    "QB" | "RB" | "WR" | "TE" | "Flex" | "Front Seven" | "Secondary" | "Head Coach"
+  >
+>;
+
+type WheelFootballCfbPriorityAuditJson = {
+  season: number;
+  auditedAt: string;
+  status: "manually-audited-current-priorities";
+  notes: string;
+  teamCount: number;
+  teamsChanged: number;
+  groupsChanged: number;
+  overrides: Record<string, WheelFootballCfbPriorityOverride>;
+};
+
 const baseline = currentCfbPriorityJson as unknown as WheelFootballCfbBaselineJson;
+const priorityAudit = auditedCfbPriorityJson as unknown as WheelFootballCfbPriorityAuditJson;
+
+function mergeAuditedPriority(
+  team: WheelFootballCfbBaselineTeam,
+  override: WheelFootballCfbPriorityOverride | undefined,
+): WheelFootballCfbBaselineTeam {
+  if (!override) return team;
+  return {
+    ...team,
+    ...override,
+  };
+}
 
 /**
- * Step 2 is intentionally a curation baseline, not runtime launch authority.
- * Step 3 must manually audit each conference for football importance before
- * any CFB Wheel mode consumes these priorities in gameplay.
+ * Step 3 is complete: the 68-school candidate population and football-importance
+ * ordering have been manually audited conference by conference.
+ *
+ * The game itself is still not launch-ready because player grading is the next
+ * locked phase. Keeping this false prevents candidate curation from being
+ * mistaken for a completed/grading-ready runtime.
  */
+export const WHEEL_FOOTBALL_CFB_PRIORITY_AUDIT_COMPLETE = true as const;
+export const WHEEL_FOOTBALL_CFB_GRADING_COMPLETE = false as const;
 export const WHEEL_FOOTBALL_CFB_BASELINE_LAUNCH_READY = false as const;
 
 export const wheelFootballCfbBaselineAudit = {
@@ -83,15 +119,52 @@ export const wheelFootballCfbBaselineAudit = {
   launchReady: WHEEL_FOOTBALL_CFB_BASELINE_LAUNCH_READY,
 } as const;
 
+export const wheelFootballCfbPriorityAudit = {
+  auditedAt: priorityAudit.auditedAt,
+  season: priorityAudit.season,
+  status: priorityAudit.status,
+  notes: priorityAudit.notes,
+  teamCount: priorityAudit.teamCount,
+  teamsChanged: priorityAudit.teamsChanged,
+  groupsChanged: priorityAudit.groupsChanged,
+  auditComplete: WHEEL_FOOTBALL_CFB_PRIORITY_AUDIT_COMPLETE,
+  gradingComplete: WHEEL_FOOTBALL_CFB_GRADING_COMPLETE,
+  launchReady: WHEEL_FOOTBALL_CFB_BASELINE_LAUNCH_READY,
+} as const;
+
+/**
+ * Step 2 provenance. Keep this raw generated baseline available for future audits
+ * so reviewed changes can always be diffed against the source-derived starting point.
+ */
 export const wheelFootballCfbBaseline: Readonly<
   Record<string, WheelFootballCfbBaselineTeam>
 > = baseline.teams;
+
+/**
+ * Step 3 authority. Any later CFB Wheel grading/runtime work should use this
+ * manually audited candidate order, not the generated baseline.
+ */
+export const wheelFootballCfbPriority: Readonly<
+  Record<string, WheelFootballCfbBaselineTeam>
+> = Object.freeze(Object.fromEntries(
+  Object.entries(baseline.teams).map(([schoolId, team]) => [
+    schoolId,
+    mergeAuditedPriority(team, priorityAudit.overrides[schoolId]),
+  ]),
+));
 
 export function wheelFootballCfbBaselineForSchoolId(
   schoolId: string | null | undefined,
 ) {
   if (!schoolId) return null;
   return wheelFootballCfbBaseline[schoolId.trim().toLowerCase()] ?? null;
+}
+
+export function wheelFootballCfbPriorityForSchoolId(
+  schoolId: string | null | undefined,
+) {
+  if (!schoolId) return null;
+  return wheelFootballCfbPriority[schoolId.trim().toLowerCase()] ?? null;
 }
 
 export function normalizedWheelFootballCfbName(value: string) {
