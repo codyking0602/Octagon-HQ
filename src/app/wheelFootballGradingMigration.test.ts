@@ -77,11 +77,15 @@ describe("Wheel of Football grading runtime migration", () => {
     expect(migration).toContain("'grade', case when grading.result is null then null else pick.selection_grade end");
   });
 
-  it("starts future matches on the graded runtime while leaving legacy v1 matches unmutated", () => {
+  it("starts future matches graded, adopts active matches once, and leaves completed v1 games legacy", () => {
     expect(migration).toContain("'football-wheel-v2-grades'");
     expect(migration).toContain("'nfl-wheel-grade-runtime-v1'");
     expect(migration).toContain("if v_match.grading_runtime_version is not null then");
-    expect(migration).not.toMatch(/update private\.wheel_football_matches[\s\S]{0,180}set grading_runtime_version = 'nfl-wheel-grade-runtime-v1'[\s\S]{0,180}where/i);
+    expect(migration).toContain("Existing picks are frozen");
+    expect(migration).toContain("match.completed_at is null");
+    expect(migration).toContain("match.phase <> 'complete'");
+    expect(migration).toContain("Cannot activate NFL Wheel grading: an active historical pick does not resolve");
+    expect(migration).not.toMatch(/where match\.completed_at is not null[\s\S]{0,180}grading_runtime_version/i);
   });
 
   it("uses seven equal raw grades for the winner and curves only the displayed team score", () => {
