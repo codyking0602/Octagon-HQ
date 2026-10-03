@@ -7,6 +7,7 @@ const migration = readFileSync(
 );
 const runner = readFileSync("supabase/functions/run-pick-monitoring/index.ts", "utf8");
 const thumbnail = readFileSync("src/features/picks/FighterThumbnail.tsx", "utf8");
+const assetIngest = readFileSync("scripts/asset_ingest.py", "utf8");
 
 describe("automatic UFC fighter media", () => {
   it("keeps provenance limited to official UFC and ESPN sources", () => {
@@ -19,6 +20,13 @@ describe("automatic UFC fighter media", () => {
     expect(runner).toContain('Range: "bytes=0-0"');
     expect(runner).toContain('^image\\/');
     expect(runner).toContain("ufcAthletePageUrl");
+  });
+
+  it("rejects placeholder and silhouette fighter art before it can become a thumb", () => {
+    expect(assetIngest).toContain("PLACEHOLDER_URL_MARKERS");
+    expect(assetIngest).toContain("source_url_looks_like_placeholder");
+    expect(assetIngest).toContain("image_looks_like_silhouette");
+    expect(assetIngest).toContain("source image looks like a placeholder/silhouette rather than a fighter photo");
   });
 
   it("reuses the existing scheduler/card-check owner instead of adding another scheduler", () => {
