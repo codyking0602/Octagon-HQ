@@ -539,7 +539,7 @@ function CutSelector({
   );
 }
 
-const wheelPalette = ["#20b486", "#f7b84b", "#68a4ff", "#eb6f92", "#9d7bf0", "#f38c5d", "#50c7d9", "#d2d95a"];
+const wheelPalette = ["#7ec7f2", "#f7b84b", "#9d7bf0", "#eb6f92", "#68a4ff", "#f38c5d", "#50c7d9", "#c6a6ff"];
 
 function wheelTickets(draws: FootballWeeklyNflWildcardState["priority_draws"]) {
   const remaining = draws.map((draw) => draw.entry_count);
@@ -862,16 +862,10 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
   const [tab, setTab] = useState<FinalTab>("standings");
   const me = result.my_result;
   const ownerLabel = playerLabel ? playerLabel.toUpperCase() + "’S" : "YOUR";
-  const currentStanding = result.standings.find((entry) => entry.is_current_user) ?? result.standings[0] ?? null;
-  const [selectedProfileId, setSelectedProfileId] = useState(currentStanding?.profile_id ?? "");
-  const selectedStanding = result.standings.find((entry) => entry.profile_id === selectedProfileId) ?? currentStanding;
-  const selectedCollection = selectedStanding
-    ? result.final_collections.filter((team) => team.profile_id === selectedStanding.profile_id)
-    : [];
-
-  useEffect(() => {
-    setSelectedProfileId(currentStanding?.profile_id ?? "");
-  }, [currentStanding?.profile_id, result.week_start]);
+  const collectionGroups = result.standings.map((entry) => ({
+    standing: entry,
+    teams: result.final_collections.filter((team) => team.profile_id === entry.profile_id),
+  }));
 
   return (
     <section className="football-weekly-nfl-team-season__final surface-card">
@@ -906,33 +900,22 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
       ) : null}
 
       {tab === "collections" ? (
-        <div className="football-weekly-nfl-team-season__collections">
-          <div className="football-weekly-nfl-team-season__player-picker" aria-label="Select player collection">
-            {result.standings.map((entry) => (
-              <button
-                className={selectedStanding?.profile_id === entry.profile_id ? "is-active" : ""}
-                type="button"
-                key={entry.profile_id}
-                onClick={() => setSelectedProfileId(entry.profile_id)}
-              >
-                <strong>{entry.display_name}</strong>
-                <span>{entry.final_score == null ? "—" : entry.final_score.toFixed(1)}</span>
-              </button>
-            ))}
-          </div>
-
-          {selectedStanding ? (
-            <>
-              <div className="football-weekly-nfl-team-season__collection-summary">
+        <div className="football-weekly-nfl-team-season__collections" aria-label="All final collections">
+          {collectionGroups.map(({ standing, teams }) => (
+            <section
+              className={"football-weekly-nfl-team-season__collection-group" + (standing.is_current_user ? " is-current" : "")}
+              key={standing.profile_id}
+            >
+              <header>
                 <div>
-                  <small>COLLECTION</small>
-                  <strong>{selectedStanding.display_name}</strong>
+                  <small>#{standing.rank ?? "—"}</small>
+                  <strong>{standing.display_name}</strong>
                 </div>
-                <span>{selectedStanding.owned_count} teams · {selectedStanding.final_score?.toFixed(1) ?? "—"} best-4</span>
-              </div>
+                <span>{standing.final_score?.toFixed(1) ?? "—"}</span>
+              </header>
 
               <div className="football-weekly-nfl-team-season__final-collection">
-                {selectedCollection.map((team) => (
+                {teams.map((team) => (
                   <article className={team.counts ? "is-counting" : ""} key={team.item_reference}>
                     <TeamMark teamCode={team.team_code} label={team.team_name} />
                     <div className="football-weekly-nfl-team-season__final-name">
@@ -943,8 +926,8 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
                   </article>
                 ))}
               </div>
-            </>
-          ) : null}
+            </section>
+          ))}
         </div>
       ) : null}
 
