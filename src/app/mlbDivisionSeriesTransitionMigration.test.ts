@@ -39,6 +39,8 @@ describe("2026 MLB Division Series transition", () => {
     expect(migration).toContain("2026-10-03 20:00:00+00");
     expect(migration).toContain("2026-10-03 22:30:00+00");
     expect(migration).toContain("2026-10-04 00:30:00+00");
+    expect(migration).toContain("G2 · Sun Oct 4 · 3:00 PM CT · FS1");
+    expect(migration).toContain("G2 · Sun Oct 4 · 7:00 PM CT · FS1");
     expect(migration).toContain("coalesce(v_series.picks_lock_at, v_series.starts_at)");
     expect(migration).toContain("coalesce(series_row.picks_lock_at, series_row.starts_at)");
     expect(repository).toContain("picks_lock_at:");
