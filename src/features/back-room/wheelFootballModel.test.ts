@@ -168,13 +168,32 @@ describe("Wheel of Football current-NFL model", () => {
     expect(wheelPriorityJson.teams.MIA["Front Seven"].slice(0, 2)).toEqual([
       "Zach Sieler", "Chop Robinson",
     ]);
+    expect(wheelPriorityJson.teams.NYJ.Flex).toEqual([
+      "Breece Hall", "Garrett Wilson", "Adonai Mitchell", "Mason Taylor",
+    ]);
+    expect(wheelPriorityJson.teams.BAL.WR).toEqual([
+      "Zay Flowers", "Rashod Bateman", "Ja'Kobi Lane",
+    ]);
+    expect(wheelPriorityJson.teams.BAL["Front Seven"]).toEqual([
+      "Trey Hendrickson", "Roquan Smith", "Nnamdi Madubuike",
+      "Tavius Robinson", "Calais Campbell", "Trenton Simpson",
+    ]);
+    expect(wheelPriorityJson.teams.CIN.WR).toEqual([
+      "Ja'Marr Chase", "Tee Higgins", "Andrei Iosivas",
+    ]);
+    expect(wheelPriorityJson.teams.CLE.RB).toEqual([
+      "Quinshon Judkins", "Dylan Sampson",
+    ]);
+    expect(wheelPriorityJson.teams.CLE.WR).toEqual([
+      "Jerry Jeudy", "KC Concepcion Jr.", "Denzel Boston",
+    ]);
     expect(wheelPriorityJson.teams.CLE["Front Seven"]).toEqual([
       "Jared Verse",
       "Mason Graham",
       "Jeremiah Owusu-Koramoah",
       "Quincy Williams",
       "Carson Schwesinger",
-      "Maliek Collins",
+      "Isaiah McGuire",
     ]);
     expect(wheelPriorityJson.teams.HOU["Front Seven"]).toEqual([
       "Will Anderson Jr.",
