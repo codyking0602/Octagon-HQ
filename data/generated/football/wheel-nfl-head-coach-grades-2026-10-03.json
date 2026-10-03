@@ -495,5 +495,10 @@
     "note": "Inspected after football grading, pairwise review and external-ranking QA; distribution did not set individual grades."
   },
   "runtimeBoundary": "No production/runtime grading behavior changes. Runtime wiring and historical grade freezing remain later work.",
-  "futureVersioning": "Any future HC grade change must record previous grade, new grade, effective date, reason and neighboring-coach comparison."
+  "futureVersioning": "Any future HC grade change must record previous grade, new grade, effective date, reason and neighboring-coach comparison.",
+  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "finalCrossPositionValidation": {
+    "status": "passed-no-grade-change",
+    "note": "Revalidated after QB/RB/WR/TE final calibration. Existing range/separation, pairwise and discrepancy audits remained coherent; no additional grade change was warranted."
+  }
 }
