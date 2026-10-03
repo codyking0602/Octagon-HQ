@@ -42,7 +42,7 @@ const seriesSchema = z.object({
   team_b_id: z.string(),
   team_b_name: z.string(),
   starts_at: z.string().nullable(),
-  picks_lock_at: z.string().nullable().optional().default(null),
+  picks_lock_at: z.string().nullable().optional(),
   status: z.string(),
   winner_team_id: z.string().nullable(),
   series_score: z.string().nullable(),
