@@ -365,8 +365,8 @@ function SetupScreen() {
         <h1>WHEEL OF FOOTBALL</h1>
         <strong>Spin. Pick. Pass the turn.</strong>
         <p>
-          Build a seven-slot NFL Superteam against another HQ member. You alternate spins until
-          both teams are complete.
+          Build a seven-slot NFL Superteam head-to-head. Alternate spins and picks until both
+          rosters are full.
         </p>
       </section>
 
@@ -409,13 +409,34 @@ function SetupScreen() {
           <div><small>2</small><span><b>CHOOSE YOUR OPPONENT</b><em>This game is challenge-only</em></span></div>
         </header>
         {challenges.activeProfile ? (
-          <ChallengeMemberPicker
-            members={challenges.members}
-            recentNames={challenges.profiles.map((profile) => profile.displayName)}
-            selectedName={opponent?.displayName ?? ""}
-            busy={busy}
-            onSelect={setOpponent}
-          />
+          opponent ? (
+            <div className="football-wheel-opponent">
+              <i aria-hidden="true">
+                {opponent.avatarPhotoData
+                  ? <img src={opponent.avatarPhotoData} alt="" />
+                  : opponent.initials}
+              </i>
+              <span>
+                <small>OPPONENT SELECTED</small>
+                <strong>{opponent.displayName}</strong>
+              </span>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => setOpponent(null)}
+              >
+                CHANGE
+              </button>
+            </div>
+          ) : (
+            <ChallengeMemberPicker
+              members={challenges.members}
+              recentNames={challenges.profiles.map((profile) => profile.displayName)}
+              selectedName=""
+              busy={busy}
+              onSelect={setOpponent}
+            />
+          )
         ) : (
           <div className="football-wheel-setup__signin">
             <p>Sign in to challenge another HQ member.</p>
