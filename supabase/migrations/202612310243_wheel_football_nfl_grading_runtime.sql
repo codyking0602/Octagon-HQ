@@ -12,7 +12,8 @@ create table if not exists private.wheel_football_nfl_grades (
   effective_date date not null,
   grade_version text not null,
   source_artifact text not null,
-  primary key (team_code, grade_family, name_key, effective_date)
+  published_at timestamptz not null default now(),
+  primary key (team_code, grade_family, name_key, effective_date, grade_version)
 );
 
 alter table private.wheel_football_nfl_grades enable row level security;
@@ -654,7 +655,7 @@ insert into private.wheel_football_nfl_grades (
   ('TB', 'Head Coach', 'Todd Bowles', 'toddbowles', 80, '2026-10-03'::date, 'nfl-wheel-head-coach-grades-2026-10-03-v1', 'data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json'),
   ('TEN', 'Head Coach', 'Robert Saleh', 'robertsaleh', 78, '2026-10-03'::date, 'nfl-wheel-head-coach-grades-2026-10-03-v1', 'data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json'),
   ('WSH', 'Head Coach', 'Dan Quinn', 'danquinn', 82, '2026-10-03'::date, 'nfl-wheel-head-coach-grades-2026-10-03-v1', 'data/generated/football/wheel-nfl-head-coach-grades-2026-10-03.json')
-on conflict (team_code, grade_family, name_key, effective_date) do update
+on conflict (team_code, grade_family, name_key, effective_date, grade_version) do update
 set display_name = excluded.display_name,
     grade = excluded.grade,
     grade_version = excluded.grade_version,
@@ -757,7 +758,8 @@ as $$
     and grade.grade_family = private.wheel_football_grade_family(p_position_abbreviation, p_roster_slot)
     and grade.name_key = private.wheel_football_grade_name_key(p_display_name)
     and grade.effective_date <= coalesce(p_grade_cutoff_at::date, current_date)
-  order by grade.effective_date desc, grade.grade_version desc
+    and grade.published_at <= coalesce(p_grade_cutoff_at, now())
+  order by grade.effective_date desc, grade.published_at desc, grade.grade_version desc
   limit 1;
 $$;
 
@@ -785,7 +787,8 @@ where match.challenge_id = pick.challenge_id
   and grade.team_code = pick.team_code
   and grade.grade_family = private.wheel_football_grade_family(pick.position_abbreviation, pick.roster_slot)
   and grade.name_key = private.wheel_football_grade_name_key(pick.display_name)
-  and grade.effective_date <= match.grading_cutoff_at::date;
+  and grade.effective_date <= match.grading_cutoff_at::date
+  and grade.published_at <= match.grading_cutoff_at;
 
 do $$
 begin
@@ -1443,7 +1446,7 @@ revoke all on function private.wheel_football_presentation_score(integer, intege
 revoke all on function private.wheel_football_grading_result_json(uuid) from public, anon, authenticated;
 
 comment on table private.wheel_football_nfl_grades is
-  'Server-only versioned NFL Wheel grade authority. Effective-dated rows are retained so a match can resolve the grade era frozen at creation.';
+  'Server-only versioned NFL Wheel grade authority. Effective-dated, publish-timestamped rows are retained so a match can resolve the exact grade era frozen at creation.';
 comment on column private.wheel_football_picks.selection_grade is
   'Frozen authoritative grade captured at selection time; never recomputed from the current master grade table.';
 comment on function private.wheel_football_presentation_score(integer, integer) is
