@@ -106,6 +106,38 @@ describe("Wheel of Football current-NFL model", () => {
     ]);
   });
 
+  it("accepts the ESPN core depth-chart object shape as a fallback", () => {
+    const candidates = wheelFootballCandidatesFromEspn({
+      roster: {
+        athletes: [{
+          position: "Offense",
+          items: [
+            { id: "starter", displayName: "Starter One", position: { abbreviation: "RB", displayName: "Running Back" }, experience: { years: 4 } },
+            { id: "backup", displayName: "Backup One", position: { abbreviation: "RB", displayName: "Running Back" }, experience: { years: 2 } },
+          ],
+        }],
+      },
+      depthChart: {
+        depthCharts: [{
+          positions: {
+            rb: {
+              position: { abbreviation: "RB" },
+              athletes: [
+                { rank: 1, athlete: { id: "starter", displayName: "Starter One" } },
+                { rank: 2, athlete: { id: "backup", displayName: "Backup One" } },
+              ],
+            },
+          },
+        }],
+      },
+    });
+
+    expect(wheelFootballShortlist(candidates, "RB").map((candidate) => candidate.name)).toEqual([
+      "Starter One",
+      "Backup One",
+    ]);
+  });
+
   it("keeps an established injured current-roster player available even when a temporary starter leads the live depth chart", () => {
     const candidates = wheelFootballCandidatesFromEspn({
       roster: {

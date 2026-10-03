@@ -219,6 +219,14 @@ function wheelDepthPlacements(payload: unknown) {
   const positionGroups: Record<string, unknown>[] = [];
   if (Array.isArray(root.positions)) {
     positionGroups.push(...root.positions.flatMap((entry) => asRecord(entry) ?? []));
+  } else {
+    const rootPositions = asRecord(root.positions);
+    if (rootPositions) {
+      for (const value of Object.values(rootPositions)) {
+        const position = asRecord(value);
+        if (position) positionGroups.push(position);
+      }
+    }
   }
   if (Array.isArray(root.depthCharts)) {
     for (const rawChart of root.depthCharts) {
