@@ -290,7 +290,6 @@ function CandidatePicker({
                   key={slot}
                 >
                   <strong>{slot}</strong>
-                  {count === 1 ? <span>1 option</span> : null}
                 </button>
               );
             })}
@@ -502,6 +501,7 @@ function MatchScreen({ code }: { code: string }) {
   const [rosterLoading, setRosterLoading] = useState(false);
   const [rosterError, setRosterError] = useState("");
   const [selectedSlot, setSelectedSlot] = useState<WheelFootballRosterSlot | null>(null);
+  const [showForfeitConfirm, setShowForfeitConfirm] = useState(false);
   const [error, setError] = useState("");
   const openedRef = useRef(false);
 
@@ -608,6 +608,25 @@ function MatchScreen({ code }: { code: string }) {
     }
   }
 
+  async function forfeitMatch() {
+    if (!repository || !state?.opened_at || state.phase === "complete" || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const next = await repository.forfeit(code);
+      setState(next);
+      setShowForfeitConfirm(false);
+      await challenges.refresh();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (reason) {
+      setError(reason instanceof Error
+        ? reason.message
+        : "The match could not be forfeited.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function pick(candidate: WheelFootballCandidate) {
     if (!repository || !state || !selectedSlot || !isMyTurn || state.phase !== "pick") return;
     setBusy(true);
@@ -672,17 +691,30 @@ function MatchScreen({ code }: { code: string }) {
           : `${opponent?.display_name.toUpperCase() ?? "OPPONENT"}'S TURN`;
 
   if (state.phase === "complete") {
+    const forfeitedProfile = state.forfeited_by_profile_id === state.creator.id
+      ? state.creator
+      : state.forfeited_by_profile_id === state.recipient.id
+        ? state.recipient
+        : null;
+    const forfeitWinner = forfeitedProfile?.id === state.creator.id
+      ? state.recipient
+      : forfeitedProfile?.id === state.recipient.id
+        ? state.creator
+        : null;
+
     return (
       <div className="page football-wheel-page">
         <section className="football-wheel-match__status surface-card is-complete">
-          <p className="eyebrow">WHEEL OF FOOTBALL · COMPLETE</p>
-          <h1>{state.creator.display_name} vs {state.recipient.display_name}</h1>
+          <p className="eyebrow">WHEEL OF FOOTBALL · {forfeitedProfile ? "FORFEIT" : "COMPLETE"}</p>
+          <h1>{forfeitedProfile ? `${forfeitedProfile.display_name} forfeited` : `${state.creator.display_name} vs ${state.recipient.display_name}`}</h1>
           <span>{state.pool_scope === "DIVISION" ? state.division : state.pool_scope === "NFL" ? "FULL NFL" : state.pool_scope} · CURRENT NFL</span>
         </section>
         <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
         <section className="football-wheel-final surface-card">
-          <strong>Both Superteams are locked.</strong>
-          <p>No grades or hidden score in v1 — this is the head-to-head team you each built from your seven spins.</p>
+          <strong>{forfeitedProfile ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.` : "Both Superteams are locked."}</strong>
+          <p>{forfeitedProfile
+            ? "The matchup ended early. All picks made before the forfeit remain visible."
+            : "No grades or hidden score in v1 — this is the head-to-head team you each built from your seven spins."}</p>
           <div>
             <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
             <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
@@ -700,7 +732,19 @@ function MatchScreen({ code }: { code: string }) {
           <h1>{turnLabel}</h1>
           <span>{state.pool_scope === "DIVISION" ? state.division : state.pool_scope === "NFL" ? "FULL NFL" : state.pool_scope} · CURRENT NFL</span>
         </div>
-        <button type="button" disabled={busy || spinning} onClick={() => void syncMatch(false)}>REFRESH</button>
+        <div className="football-wheel-match__actions">
+          <button type="button" disabled={busy || spinning} onClick={() => void syncMatch(false)}>REFRESH</button>
+          {state.opened_at ? (
+            <button
+              type="button"
+              className="is-danger"
+              disabled={busy || spinning}
+              onClick={() => setShowForfeitConfirm(true)}
+            >
+              FORFEIT
+            </button>
+          ) : null}
+        </div>
       </section>
 
       <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
@@ -736,6 +780,28 @@ function MatchScreen({ code }: { code: string }) {
             : `Waiting on ${opponent?.display_name ?? "your opponent"}.`}</strong>
           <span>You’ll get a notification when your next spin is ready.</span>
         </section>
+      ) : null}
+
+      {showForfeitConfirm ? (
+        <div className="football-wheel-forfeit" role="presentation" onClick={() => !busy && setShowForfeitConfirm(false)}>
+          <section
+            className="football-wheel-forfeit__card surface-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="wheel-forfeit-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="eyebrow">END MATCH</p>
+            <h2 id="wheel-forfeit-title">Forfeit Wheel of Football?</h2>
+            <p>Your opponent will win by forfeit. The picks already made will stay visible.</p>
+            <div>
+              <button type="button" className="secondary-action" disabled={busy} onClick={() => setShowForfeitConfirm(false)}>KEEP PLAYING</button>
+              <button type="button" className="football-wheel-forfeit__confirm" disabled={busy} onClick={() => void forfeitMatch()}>
+                {busy ? "FORFEITING…" : "FORFEIT MATCH"}
+              </button>
+            </div>
+          </section>
+        </div>
       ) : null}
 
       {error ? <p className="football-wheel-page__error" role="status">{error}</p> : null}

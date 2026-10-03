@@ -366,17 +366,27 @@
   letter-spacing: .04em;
 }
 
-.football-wheel-match__status > button {
+.football-wheel-match__actions {
+  display: grid;
   flex: 0 0 auto;
-  min-height: 34px;
-  padding: 0 10px;
+  gap: 5px;
+}
+
+.football-wheel-match__actions > button {
+  min-height: 32px;
+  padding: 0 9px;
   border: 1px solid rgba(255,255,255,.10);
   border-radius: 9px;
   background: rgba(255,255,255,.04);
   color: #9dc7e8;
   font: inherit;
-  font-size: .54rem;
+  font-size: .5rem;
   font-weight: 900;
+}
+
+.football-wheel-match__actions > button.is-danger {
+  border-color: rgba(232, 91, 91, .22);
+  color: #d88484;
 }
 
 .football-wheel-match__status.is-complete {
@@ -935,6 +945,62 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 7px;
+}
+
+.football-wheel-forfeit {
+  position: fixed;
+  z-index: 120;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0,0,0,.74);
+  backdrop-filter: blur(5px);
+}
+
+.football-wheel-forfeit__card {
+  width: min(390px, 100%);
+  padding: 17px;
+  border-color: rgba(226, 88, 88, .22) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.58);
+}
+
+.football-wheel-forfeit__card p,
+.football-wheel-forfeit__card h2 {
+  margin-top: 0;
+}
+
+.football-wheel-forfeit__card h2 {
+  margin-bottom: 7px;
+  color: #fff;
+  font-size: 1.08rem;
+}
+
+.football-wheel-forfeit__card > p:last-of-type {
+  margin-bottom: 14px;
+  color: #8ea1ae;
+  font-size: .68rem;
+  line-height: 1.45;
+}
+
+.football-wheel-forfeit__card > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.football-wheel-forfeit__card button {
+  min-height: 42px;
+}
+
+.football-wheel-forfeit__confirm {
+  border: 1px solid rgba(238, 103, 103, .38);
+  border-radius: 10px;
+  background: rgba(153, 44, 44, .26);
+  color: #ffb7b7;
+  font: inherit;
+  font-size: .6rem;
+  font-weight: 950;
 }
 
 .football-wheel-page__error {
