@@ -302,6 +302,13 @@ export default function MlbPicksPage() {
     setViewedProfileId(bracketViewers[next]!.profile_id);
   };
 
+  const eliminatedTeamIds = useMemo(() => new Set(
+    (hub?.series ?? []).flatMap((series) => {
+      if (series.status !== "complete" || !series.winner_team_id) return [];
+      return [series.team_a_id, series.team_b_id].filter((teamId) => teamId !== series.winner_team_id);
+    }),
+  ), [hub?.series]);
+
   const renderMiniNode = (node: MlbBracketNode) => {
     const [left, right] = nodeParticipants(node, displayedPicks, hub.bracketTemplate);
     const selected = displayedPicks[node.id];
@@ -322,7 +329,7 @@ export default function MlbPicksPage() {
         {[left, right].map((team, index) => team ? (
           <span
             key={team.id}
-            className={`mlb-bracket-mini-team${selected === team.id ? " is-picked" : ""}${officialWinner && officialWinner !== team.id ? " is-out" : ""}`}
+            className={`mlb-bracket-mini-team${selected === team.id ? " is-picked" : ""}${officialWinner && officialWinner !== team.id ? " is-out" : ""}${eliminatedTeamIds.has(team.id) ? " is-eliminated" : ""}`}
           >
             <TeamMark team={team} compact />
             <b>{team.seed ?? "—"}</b>
@@ -357,7 +364,9 @@ export default function MlbPicksPage() {
 
   const renderSeriesCard = (series: MlbPlayoffSeries) => {
     const selected = ownSeriesPicks.get(series.series_id) ?? "";
-    const locked = series.starts_at ? Date.now() >= Date.parse(series.starts_at) : true;
+    const picksLockAt = series.picks_lock_at ?? series.starts_at;
+    const locked = picksLockAt ? Date.now() >= Date.parse(picksLockAt) : true;
+    const customPickLock = Boolean(series.picks_lock_at && series.picks_lock_at !== series.starts_at);
     const completeSeries = series.status === "complete" || Boolean(series.winner_team_id);
     const assetA = mlbTeamAssetByName(series.team_a_name);
     const assetB = mlbTeamAssetByName(series.team_b_name);
@@ -372,8 +381,10 @@ export default function MlbPicksPage() {
     const footerLabel = series.series_score
       ? `FINAL · ${series.series_score}`
       : locked
-        ? "SERIES STARTED · PICK LOCKED"
-        : dateTime(series.starts_at).toUpperCase();
+        ? "PICK LOCKED"
+        : customPickLock
+          ? `PICKS LOCK ${dateTime(series.picks_lock_at ?? null).toUpperCase()}`
+          : dateTime(series.starts_at).toUpperCase();
     const statusLabel = completeSeries ? "FINAL" : locked ? "LOCKED" : "OPEN";
 
     return (
