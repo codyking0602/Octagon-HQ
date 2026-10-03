@@ -36,7 +36,7 @@ const SECONDARY_POSITIONS = new Set([
 
 function decodeHtml(value) {
   return value
-    .replace(/<br\\s*\\/?>/gi, " ")
+    .replace(/<br\s*\/?>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;|&#160;/gi, " ")
     .replace(/&amp;/gi, "&")
@@ -44,16 +44,16 @@ function decodeHtml(value) {
     .replace(/&quot;/gi, '"')
     .replace(/&ndash;/gi, "–")
     .replace(/&mdash;/gi, "—")
-    .replace(/&#(\\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
     .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
 function slugify(value) {
   return value
     .toLowerCase()
-    .replace(/a\\s*&\\s*m/g, "am")
+    .replace(/a\s*&\s*m/g, "am")
     .replace(/&/g, "and")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
@@ -63,8 +63,8 @@ function normalizeName(value) {
   return value
     .toLowerCase()
     .normalize("NFKD")
-    .replace(/[\\u0300-\\u036f]/g, "")
-    .replace(/\\b(jr|sr|ii|iii|iv|v)\\b\\.?/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\b(jr|sr|ii|iii|iv|v)\b\.?/g, "")
     .replace(/[^a-z0-9]/g, "");
 }
 
@@ -73,14 +73,14 @@ function prettifyOurladsName(value) {
   if (!cleaned) return "";
   return cleaned
     .replace(/-/g, " ")
-    .split(/\\s+/)
+    .split(/\s+/)
     .map((token) => {
       const lower = token.toLowerCase();
       if (/^(ii|iii|iv|v)$/.test(lower)) return lower.toUpperCase();
       if (lower === "jr" || lower === "jr.") return "Jr.";
       if (lower === "sr" || lower === "sr.") return "Sr.";
-      if (/^[a-z]\\.$/.test(lower)) return lower.toUpperCase();
-      if (/^[a-z]\\.[a-z]\\.?$/.test(lower)) return lower.toUpperCase();
+      if (/^[a-z]\.$/.test(lower)) return lower.toUpperCase();
+      if (/^[a-z]\.[a-z]\.?$/.test(lower)) return lower.toUpperCase();
       return lower ? lower[0].toUpperCase() + lower.slice(1) : lower;
     })
     .join(" ");
@@ -88,7 +88,7 @@ function prettifyOurladsName(value) {
 
 function parseScope(source) {
   const rows = [];
-  const pattern = /currentSchool\\("([^"]+)",\\s*"([^"]+)",\\s*"([^"]+)"/g;
+  const pattern = /currentSchool\("([^"]+)",\s*"([^"]+)",\s*"([^"]+)"/g;
   for (const match of source.matchAll(pattern)) {
     rows.push({
       espnId: match[1],
@@ -103,7 +103,7 @@ function parseScope(source) {
 
 function depthLinks(indexHtml) {
   const map = new Map();
-  const hrefPattern = /href=["']([^"']*\\/ncaa-football-depth-charts\\/(?:pf)?depthchart\\/([^/"']+)\\/(\\d+)[^"']*)["']/gi;
+  const hrefPattern = /href=["']([^"']*\/ncaa-football-depth-charts\/(?:pf)?depthchart\/([^/"']+)\/(\d+)[^"']*)["']/gi;
   for (const match of indexHtml.matchAll(hrefPattern)) {
     const href = match[1].replace(/&amp;/g, "&");
     const slug = match[2].toLowerCase();
@@ -130,8 +130,8 @@ function findDepthLink(linkMap, school) {
 function parseDepthChart(html) {
   const rows = [];
   let section = null;
-  for (const match of html.matchAll(/<tr\\b[^>]*>([\\s\\S]*?)<\\/tr>/gi)) {
-    const cells = [...match[1].matchAll(/<t[dh]\\b[^>]*>([\\s\\S]*?)<\\/t[dh]>/gi)]
+  for (const match of html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
+    const cells = [...match[1].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi)]
       .map((cell) => decodeHtml(cell[1]));
     if (!cells.length) continue;
     const first = cells[0]?.trim();
@@ -141,7 +141,7 @@ function parseDepthChart(html) {
     if (/^reserves$/i.test(first)) { section = "reserves"; continue; }
     if (!section || !first || /^(pos|position)$/i.test(first)) continue;
 
-    const position = first.toUpperCase().replace(/\\s+/g, "");
+    const position = first.toUpperCase().replace(/\s+/g, "");
     const players = [];
     for (let index = 2; index < cells.length; index += 2) {
       const raw = cells[index]?.trim();
@@ -206,8 +206,8 @@ function espnRoster(payload) {
 }
 
 function lastNameKey(value) {
-  const pieces = value.trim().split(/\\s+/).filter(Boolean);
-  while (pieces.length && /^(jr\\.?|sr\\.?|ii|iii|iv|v)$/i.test(pieces.at(-1))) pieces.pop();
+  const pieces = value.trim().split(/\s+/).filter(Boolean);
+  while (pieces.length && /^(jr\.?|sr\.?|ii|iii|iv|v)$/i.test(pieces.at(-1))) pieces.pop();
   return normalizeName(pieces.at(-1) ?? "");
 }
 
