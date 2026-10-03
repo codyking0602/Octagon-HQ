@@ -87,7 +87,7 @@ describe("Wheel of Football current-NFL model", () => {
   it("audits all 32 teams and locks the Cowboys obvious names", () => {
     expect(Object.keys(wheelPriorityJson.teams)).toHaveLength(32);
     expect(wheelPriorityJson.teams.DAL.QB).toEqual(["Dak Prescott"]);
-    expect(wheelPriorityJson.teams.DAL.WR.slice(0, 2)).toEqual(["George Pickens", "CeeDee Lamb"]);
+    expect(wheelPriorityJson.teams.DAL.WR.slice(0, 2)).toEqual(["CeeDee Lamb", "George Pickens"]);
     for (const [code, team] of Object.entries(wheelPriorityJson.teams)) {
       expect(team.QB.length, `${code} QB`).toBeGreaterThanOrEqual(1);
       expect(team.QB.length, `${code} QB`).toBeLessThanOrEqual(2);
@@ -117,7 +117,46 @@ describe("Wheel of Football current-NFL model", () => {
       "Dak Prescott",
     ]);
     expect(wheelFootballShortlist(roster, "WR", "DAL").map((item) => item.name)).toEqual([
-      "George Pickens", "CeeDee Lamb", "Ryan Flournoy",
+      "CeeDee Lamb", "George Pickens", "Ryan Flournoy",
+    ]);
+  });
+
+  it("locks the manually reviewed Cowboys and Rams football-priority ordering", () => {
+    expect(wheelPriorityJson.teams.DAL["Front Seven"]).toEqual([
+      "Quinnen Williams",
+      "Rashan Gary",
+      "Kenny Clark",
+      "DeMarvion Overshown",
+      "Donovan Ezeiruaku",
+      "Dee Winters",
+    ]);
+    expect(wheelPriorityJson.teams.DAL.Secondary).toEqual([
+      "DaRon Bland",
+      "Joey Porter Jr.",
+      "Caleb Downs",
+      "Malik Hooker",
+      "Markquese Bell",
+    ]);
+
+    expect(wheelPriorityJson.teams.LAR.WR).toEqual([
+      "Puka Nacua",
+      "Davante Adams",
+      "Konata Mumpfield",
+    ]);
+    expect(wheelPriorityJson.teams.LAR["Front Seven"]).toEqual([
+      "Myles Garrett",
+      "Aaron Donald",
+      "Kobie Turner",
+      "Braden Fiske",
+      "Byron Young",
+      "Nate Landman",
+    ]);
+    expect(wheelPriorityJson.teams.LAR.Secondary).toEqual([
+      "Trent McDuffie",
+      "Quentin Lake",
+      "Jaylen Watson",
+      "Kamren Kinchens",
+      "Josh Wallace",
     ]);
   });
 
