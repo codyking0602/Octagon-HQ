@@ -8,6 +8,7 @@ const migration = readFileSync(
 const repository = readFileSync("src/features/mlb/mlbPlayoffsRepository.ts", "utf8");
 const picks = readFileSync("src/features/mlb/MlbPicksPage.tsx", "utf8");
 const css = readFileSync("src/styles/mlb-playoffs.css", "utf8");
+const breakdown = readFileSync("src/features/mlb/mlbSeriesBreakdownContent.ts", "utf8");
 
 describe("2026 MLB Division Series transition", () => {
   it("records every Wild Card winner and advances the live season", () => {
@@ -44,6 +45,14 @@ describe("2026 MLB Division Series transition", () => {
     expect(repository).toContain("picks_lock_at:");
     expect(picks).toContain("series.picks_lock_at ?? series.starts_at");
     expect(picks).toContain("PICKS LOCK");
+  });
+
+  it("publishes the approved White Sox-Guardians spotlight series", () => {
+    expect(migration).toContain("'series_id', 'al-ds-2'");
+    expect(migration).toContain("'title', 'White Sox vs. Guardians'");
+    expect(migration).toContain("White Sox won 2026 season series 7-6");
+    expect(breakdown).toContain('"al-ds-2"');
+    expect(breakdown).toContain("Chicago won the season series 7-6 and outscored Cleveland 58-57");
   });
 
   it("marks eliminated teams throughout the submitted bracket", () => {
