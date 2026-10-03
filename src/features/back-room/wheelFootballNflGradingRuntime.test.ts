@@ -64,30 +64,37 @@ describe("NFL Wheel authoritative grade runtime contract", () => {
     expect(rows.filter((row) => row.family === "Head Coach")).toHaveLength(32);
   });
 
-  it("binds every curated priority entry to the correct team and grade family", () => {
+  it("binds the full 626-entry base population and requires every Flex identity to have an underlying grade", () => {
     const referenced = new Set<string>();
-    const directSlots = ["QB", "RB", "WR", "Front Seven", "Secondary", "Head Coach"] as const;
+    const baseFamilies = ["QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach"] as const;
 
     for (const [team, teamPriority] of Object.entries(priorities.teams)) {
-      for (const slot of directSlots) {
-        for (const name of teamPriority[slot]) {
-          const gradeKey = key({ team, family: slot, name });
-          expect(byKey.has(gradeKey), `${team} ${slot} ${name}`).toBe(true);
+      for (const family of baseFamilies) {
+        for (const name of teamPriority[family]) {
+          const gradeKey = key({ team, family, name });
+          expect(byKey.has(gradeKey), `${team} ${family} ${name}`).toBe(true);
           referenced.add(gradeKey);
         }
-      }
-
-      for (const name of teamPriority.Flex) {
-        const matches = (["RB", "WR", "TE"] as const)
-          .map((family) => key({ team, family, name }))
-          .filter((gradeKey) => byKey.has(gradeKey));
-        expect(matches, `${team} Flex ${name}`).toHaveLength(1);
-        referenced.add(matches[0]!);
       }
     }
 
     expect(referenced.size).toBe(626);
     expect([...byKey.keys()].filter((gradeKey) => !referenced.has(gradeKey))).toEqual([]);
+
+    const unresolvedFlex: string[] = [];
+    for (const [team, teamPriority] of Object.entries(priorities.teams)) {
+      for (const name of teamPriority.Flex) {
+        const matches = (["RB", "WR", "TE"] as const)
+          .map((family) => key({ team, family, name }))
+          .filter((gradeKey) => byKey.has(gradeKey));
+        if (matches.length !== 1) unresolvedFlex.push(`${team} Flex ${name}`);
+      }
+    }
+
+    expect(
+      unresolvedFlex,
+      "Every curated Flex option must inherit exactly one authoritative RB/WR/TE grade",
+    ).toEqual([]);
   });
 
   it("keeps same-name collisions position-safe", () => {
