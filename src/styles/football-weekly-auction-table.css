@@ -240,6 +240,45 @@
   white-space: nowrap;
 }
 
+.football-weekly-auction-table__team.is-nfl {
+  background: linear-gradient(105deg, rgba(32,180,134,.12), rgba(8,19,27,.94) 62%);
+}
+
+.football-weekly-auction-table__team.is-nfl::before {
+  background: #20b486;
+}
+
+.football-weekly-auction-table__team-copy {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1px 7px;
+  align-items: baseline;
+}
+
+.football-weekly-auction-table__team-copy .football-weekly-auction-table__team-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-auction-table__team-meta {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: #c4cfd7;
+  font-size: .66rem;
+  font-weight: 800;
+}
+
+.football-weekly-auction-table__team-meta b {
+  color: #54d2ad;
+}
+
+.football-weekly-auction-table__team-copy > small {
+  grid-column: 1 / -1;
+}
+
 .football-weekly-auction-table__message {
   margin: 0;
   padding: 18px 10px;
@@ -265,5 +304,56 @@
   .football-weekly-auction-table__player > button {
     grid-template-columns: minmax(0, 1fr) auto auto 18px;
     gap: 8px;
+  }
+}
+
+
+/* Auction Table is a top-pinned full-height sheet, matching the established Weekly Auction behavior. */
+.football-weekly-auction-table__backdrop {
+  align-items: flex-start;
+  padding: calc(64px + var(--safe-top)) 14px calc(18px + var(--safe-bottom));
+}
+
+.football-weekly-auction-table__sheet {
+  max-height: calc(100dvh - 76px - var(--safe-top) - var(--safe-bottom));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, .48);
+}
+
+.football-weekly-auction-table__team.is-nfl {
+  background: linear-gradient(105deg, rgba(126, 199, 242, .11), rgba(8, 19, 27, .94) 62%);
+}
+
+.football-weekly-auction-table__team.is-nfl::before {
+  background: #7ec7f2;
+}
+
+.football-weekly-auction-table__team-meta b {
+  color: #b9d8ea;
+}
+
+.football-weekly-auction-table__nfl-link {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-weekly-auction-table__nfl-link:hover,
+.football-weekly-auction-table__nfl-link:focus-visible {
+  text-decoration: underline;
+  text-decoration-color: rgba(126, 199, 242, .7);
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 430px) {
+  .football-weekly-auction-table__backdrop {
+    padding: calc(58px + var(--safe-top)) 10px calc(74px + var(--safe-bottom));
+  }
+
+  .football-weekly-auction-table__sheet {
+    max-height: calc(100dvh - 132px - var(--safe-top) - var(--safe-bottom));
   }
 }

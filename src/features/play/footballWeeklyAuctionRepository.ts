@@ -5,6 +5,7 @@ const bidHistorySchema = z.object({
   profile_id: z.string().uuid(),
   display_name: z.string(),
   amount: z.coerce.number().int().min(0),
+  priority: z.coerce.number().int().min(1).max(12).nullable().optional(),
 });
 
 const finalStandingSchema = z.object({
@@ -217,7 +218,128 @@ const superteamFinalSchema = z.object({
   my_result: myResultSchema.default({}),
 });
 
-const finalSchema = z.union([cfbFinalSchema, buildQbFinalSchema, superteamFinalSchema]);
+const nflTeamSeasonCardSchema = z.object({
+  slot: z.coerce.number().int().min(1).max(7),
+  item_reference: z.string(),
+  team_name: z.string(),
+  team_code: z.string(),
+  season_year: z.coerce.number().int().min(2000).max(2025),
+  display_label: z.string(),
+  card_tag: z.string().nullable().optional(),
+  lock_at: z.string(),
+});
+
+const nflTeamSeasonPriorResultSchema = z.object({
+  slot: z.coerce.number().int().min(1).max(7),
+  item_reference: z.string(),
+  team_name: z.string(),
+  team_code: z.string(),
+  season_year: z.coerce.number().int().min(2000).max(2025),
+  display_label: z.string(),
+  winning_bid: z.coerce.number().int().min(0).max(50),
+  winner_profile_id: z.string().uuid().nullable(),
+  winner_display_name: z.string().nullable(),
+  bids: z.array(bidHistorySchema).default([]),
+});
+
+const nflTeamSeasonCollectionSchema = z.object({
+  item_reference: z.string(),
+  team_name: z.string(),
+  team_code: z.string(),
+  season_year: z.coerce.number().int().min(2000).max(2025),
+  display_label: z.string(),
+  card_tag: z.string().nullable().optional(),
+  winning_bid: z.coerce.number().int().min(0).max(50),
+  source: z.enum(["normal", "wildcard", "autofill"]),
+});
+
+const nflWildcardTeamSchema = z.object({
+  slot: z.coerce.number().int().min(1).max(4),
+  item_reference: z.string(),
+  season_year: z.coerce.number().int().min(2000).max(2025),
+  primary_name: z.string(),
+  team_code: z.string(),
+  display_label: z.string(),
+  source_url: z.string().nullable().optional(),
+});
+
+const nflWildcardStateSchema = z.object({
+  available: z.literal(true),
+  subject_key: z.literal("nfl-best-team-seasons-since-2000"),
+  week_start: z.string(),
+  day_index: z.coerce.number().int().min(1).max(8),
+  teams: z.array(nflWildcardTeamSchema).length(4),
+  submitted: z.boolean(),
+  my_entries: z.coerce.number().int().min(0).max(5),
+  my_rankings: z.array(z.string()).max(4),
+  my_cut_item_reference: z.string().nullable().default(null),
+  resolved: z.boolean(),
+  priority_draws: z.array(z.object({
+    draw_order: z.coerce.number().int().positive(),
+    profile_id: z.string().uuid(),
+    display_name: z.string(),
+    entry_count: z.coerce.number().int().min(1).max(5),
+  })).default([]),
+  claims: z.array(z.object({
+    profile_id: z.string().uuid(),
+    display_name: z.string(),
+    item_reference: z.string(),
+    replaced_item_reference: z.string(),
+    replaced_team_name: z.string().optional(),
+    replaced_team_code: z.string().optional(),
+    replaced_season_year: z.coerce.number().int().min(2000).max(2025).optional(),
+    priority_order: z.coerce.number().int().positive(),
+  })).default([]),
+  reaping: z.object({
+    profile_id: z.string().uuid(),
+    display_name: z.string(),
+    entry_count: z.coerce.number().int().min(1).max(5),
+    next_week_start: z.string(),
+    bankroll_delta: z.coerce.number().int(),
+  }).nullable(),
+  autofill: z.array(z.object({
+    profile_id: z.string().uuid(),
+    item_reference: z.string(),
+    fill_order: z.coerce.number().int().positive(),
+  })).default([]),
+});
+
+const nflTeamSeasonFinalCollectionSchema = nflTeamSeasonCollectionSchema.extend({
+  grade: z.coerce.number(),
+  counts: z.boolean(),
+});
+
+const nflTeamSeasonFinalProfileCollectionSchema = nflTeamSeasonFinalCollectionSchema.extend({
+  profile_id: z.string().uuid(),
+  display_name: z.string(),
+});
+
+const nflTeamSeasonFinalTeamSchema = z.object({
+  day_index: z.coerce.number().int().min(1).max(7),
+  slot: z.coerce.number().int().min(1).max(7),
+  item_reference: z.string(),
+  team_name: z.string(),
+  team_code: z.string(),
+  season_year: z.coerce.number().int().min(2000).max(2025),
+  display_label: z.string(),
+  grade: z.coerce.number(),
+  winning_bid: z.coerce.number().int().min(0).max(50),
+  winner_profile_id: z.string().uuid().nullable(),
+  winner_display_name: z.string().nullable(),
+});
+
+const nflTeamSeasonFinalSchema = z.object({
+  subject_key: z.literal("nfl-best-team-seasons-since-2000"),
+  week_start: z.string(),
+  standings: z.array(finalStandingSchema),
+  collection: z.array(nflTeamSeasonFinalCollectionSchema),
+  final_collections: z.array(nflTeamSeasonFinalProfileCollectionSchema).default([]),
+  all_teams: z.array(nflTeamSeasonFinalTeamSchema),
+  wildcard: nflWildcardStateSchema,
+  my_result: myResultSchema.default({}),
+});
+
+const finalSchema = z.union([cfbFinalSchema, buildQbFinalSchema, superteamFinalSchema, nflTeamSeasonFinalSchema]);
 
 const commonActiveFields = {
   available: z.literal(true),
@@ -267,6 +389,24 @@ const superteamAvailableSchema = z.object({
   bids: z.record(z.string(), superteamBidSchema).default({}),
 });
 
+const nflTeamSeasonBidSchema = z.union([
+  superteamBidSchema,
+  z.coerce.number().int().min(0).max(50),
+]);
+const nflTeamSeasonBidMapSchema = z.record(z.string(), nflTeamSeasonBidSchema);
+
+const nflTeamSeasonAvailableSchema = z.object({
+  ...commonActiveFields,
+  subject_key: z.literal("nfl-best-team-seasons-since-2000"),
+  starting_bankroll: z.coerce.number().int().min(0).max(50),
+  theme: z.string(),
+  teams: z.array(nflTeamSeasonCardSchema).max(7),
+  prior_results: z.array(nflTeamSeasonPriorResultSchema).default([]),
+  collection: z.array(nflTeamSeasonCollectionSchema).default([]),
+  bids: nflTeamSeasonBidMapSchema.default({}),
+  wildcard: nflWildcardStateSchema.nullable(),
+});
+
 const superteamLabSeatSchema = z.object({
   seat_index: z.coerce.number().int().min(1).max(6),
   profile_id: z.string().uuid(),
@@ -289,25 +429,53 @@ const superteamLabSchema = z.object({
   final: superteamFinalSchema.nullable(),
 });
 
+const nflTeamSeasonLabSeatSchema = z.object({
+  seat_index: z.coerce.number().int().min(1).max(5),
+  profile_id: z.string().uuid(),
+  display_name: z.string(),
+  submitted_today: z.boolean(),
+  owned_count: z.coerce.number().int().min(0).max(5),
+  bankroll: z.coerce.number().int().min(0).max(50),
+});
+
+const nflTeamSeasonLabSchema = z.object({
+  available: z.literal(true),
+  run_number: z.coerce.number().int().positive(),
+  lab_week_start: z.string(),
+  day_index: z.coerce.number().int().min(1).max(8),
+  completed: z.boolean(),
+  submitted_count: z.coerce.number().int().min(0).max(5),
+  seat_index: z.coerce.number().int().min(1).max(5),
+  seats: z.array(nflTeamSeasonLabSeatSchema).length(5),
+  state: nflTeamSeasonAvailableSchema.nullable(),
+  final: nflTeamSeasonFinalSchema.nullable(),
+});
+
 const unavailableSchema = z.object({
   available: z.literal(false),
-  subject_key: z.enum(["cfb-best-teams-since-2000", "nfl-build-qb", "cfb-superteam"]).optional(),
+  subject_key: z.enum(["cfb-best-teams-since-2000", "nfl-build-qb", "cfb-superteam", "nfl-best-team-seasons-since-2000"]).optional(),
   starts_on: z.string().optional(),
   locked_this_week: z.boolean().optional(),
   week_start: z.string().optional(),
   eligible_week_start: z.string().optional(),
 });
 
-const stateSchema = z.union([cfbAvailableSchema, buildQbAvailableSchema, superteamAvailableSchema, unavailableSchema]);
+const stateSchema = z.union([cfbAvailableSchema, buildQbAvailableSchema, superteamAvailableSchema, nflTeamSeasonAvailableSchema, unavailableSchema]);
 
 export type FootballWeeklyAuctionState = z.infer<typeof stateSchema>;
 export type FootballWeeklyAuctionCfbState = z.infer<typeof cfbAvailableSchema>;
 export type FootballWeeklyBuildQbState = z.infer<typeof buildQbAvailableSchema>;
 export type FootballWeeklySuperteamState = z.infer<typeof superteamAvailableSchema>;
-export type FootballWeeklyAuctionActiveState = FootballWeeklyAuctionCfbState | FootballWeeklyBuildQbState | FootballWeeklySuperteamState;
+export type FootballWeeklyNflTeamSeasonState = z.infer<typeof nflTeamSeasonAvailableSchema>;
+export type FootballWeeklyAuctionActiveState = FootballWeeklyAuctionCfbState | FootballWeeklyBuildQbState | FootballWeeklySuperteamState | FootballWeeklyNflTeamSeasonState;
 export type FootballWeeklyAuctionFinal = z.infer<typeof cfbFinalSchema>;
 export type FootballWeeklyBuildQbFinal = z.infer<typeof buildQbFinalSchema>;
 export type FootballWeeklySuperteamFinal = z.infer<typeof superteamFinalSchema>;
+export type FootballWeeklyNflTeamSeasonFinal = z.infer<typeof nflTeamSeasonFinalSchema>;
+export type FootballWeeklyNflWildcardState = z.infer<typeof nflWildcardStateSchema>;
+export type FootballWeeklyNflTeamSeasonCard = z.infer<typeof nflTeamSeasonCardSchema>;
+export type FootballWeeklyNflTeamSeasonPriorResult = z.infer<typeof nflTeamSeasonPriorResultSchema>;
+export type FootballWeeklyNflTeamSeasonLabState = z.infer<typeof nflTeamSeasonLabSchema>;
 export type FootballWeeklyFinal = z.infer<typeof finalSchema>;
 export type FootballWeeklyAuctionTeam = z.infer<typeof cfbTeamSchema>;
 export type FootballWeeklyAuctionPriorResult = z.infer<typeof cfbPriorResultSchema>;
@@ -345,6 +513,25 @@ async function rpc(client: Client, name: string, args?: Record<string, unknown>)
   return data;
 }
 
+async function withNflTeamSeasonLabRankedBids(
+  client: Client,
+  lab: FootballWeeklyNflTeamSeasonLabState,
+) {
+  if (!lab.state || lab.day_index < 1 || lab.day_index > 6) return lab;
+  const rankedBids = nflTeamSeasonBidMapSchema.parse(await rpc(
+    client,
+    "get_my_football_weekly_nfl_team_season_lab_ranked_bids",
+    { p_seat_index: lab.seat_index },
+  ));
+  return {
+    ...lab,
+    state: {
+      ...lab.state,
+      bids: rankedBids,
+    },
+  };
+}
+
 export interface FootballWeeklyAuctionRepository {
   load(): Promise<FootballWeeklyAuctionState>;
   loadHistory(): Promise<FootballWeeklyFinal[]>;
@@ -352,6 +539,25 @@ export interface FootballWeeklyAuctionRepository {
   loadSuperteamPreview(): Promise<FootballWeeklyAuctionState>;
   loadSuperteamLab(seatIndex?: number): Promise<FootballWeeklySuperteamLabState>;
   resetSuperteamLab(): Promise<FootballWeeklySuperteamLabState>;
+  loadNflTeamSeasonLab(seatIndex?: number): Promise<FootballWeeklyNflTeamSeasonLabState>;
+  resetNflTeamSeasonLab(): Promise<FootballWeeklyNflTeamSeasonLabState>;
+  submitNflTeamSeasonLab(
+    seatIndex: number,
+    bids: Record<number, FootballWeeklyAuctionBidInput>,
+  ): Promise<FootballWeeklyNflTeamSeasonLabState>;
+  submitNflTeamSeasonLabWildcard(
+    seatIndex: number,
+    entries: number,
+    rankings: string[],
+    cutItemReference: string | null,
+  ): Promise<FootballWeeklyNflTeamSeasonLabState>;
+  advanceNflTeamSeasonLab(seatIndex?: number): Promise<FootballWeeklyNflTeamSeasonLabState>;
+  jumpNflTeamSeasonLabToDay7(seatIndex?: number): Promise<FootballWeeklyNflTeamSeasonLabState>;
+  submitNflTeamSeasonWildcard(
+    entries: number,
+    rankings: string[],
+    cutItemReference: string | null,
+  ): Promise<FootballWeeklyAuctionState>;
   submitSuperteamLab(
     seatIndex: number,
     bids: Record<number, FootballWeeklyAuctionBidInput>,
@@ -385,6 +591,49 @@ export function createFootballWeeklyAuctionRepository(
     async loadSuperteamLab(seatIndex = 1) {
       return superteamLabSchema.parse(await rpc(client, "get_my_football_weekly_superteam_lab", {
         p_seat_index: seatIndex,
+      }));
+    },
+    async loadNflTeamSeasonLab(seatIndex = 1) {
+      const lab = nflTeamSeasonLabSchema.parse(await rpc(client, "get_my_football_weekly_nfl_team_season_lab", {
+        p_seat_index: seatIndex,
+      }));
+      return withNflTeamSeasonLabRankedBids(client, lab);
+    },
+    async resetNflTeamSeasonLab() {
+      return nflTeamSeasonLabSchema.parse(await rpc(client, "reset_my_football_weekly_nfl_team_season_lab"));
+    },
+    async submitNflTeamSeasonLab(seatIndex, bids) {
+      const payload: Record<string, FootballWeeklyAuctionBidInput> = {};
+      for (const [slot, value] of Object.entries(bids)) payload[slot] = value;
+      const lab = nflTeamSeasonLabSchema.parse(await rpc(client, "submit_my_football_weekly_nfl_team_season_lab_bids", {
+        p_seat_index: seatIndex,
+        p_bids: payload,
+      }));
+      return withNflTeamSeasonLabRankedBids(client, lab);
+    },
+    async submitNflTeamSeasonLabWildcard(seatIndex, entries, rankings, cutItemReference) {
+      return nflTeamSeasonLabSchema.parse(await rpc(client, "submit_my_football_weekly_nfl_team_season_lab_wildcard_v2", {
+        p_seat_index: seatIndex,
+        p_entries: entries,
+        p_rankings: rankings,
+        p_cut_item_reference: cutItemReference,
+      }));
+    },
+    async advanceNflTeamSeasonLab(seatIndex = 1) {
+      return nflTeamSeasonLabSchema.parse(await rpc(client, "advance_my_football_weekly_nfl_team_season_lab", {
+        p_seat_index: seatIndex,
+      }));
+    },
+    async jumpNflTeamSeasonLabToDay7(seatIndex = 1) {
+      return nflTeamSeasonLabSchema.parse(await rpc(client, "jump_my_football_weekly_nfl_team_season_lab_to_day7", {
+        p_seat_index: seatIndex,
+      }));
+    },
+    async submitNflTeamSeasonWildcard(entries, rankings, cutItemReference) {
+      return stateSchema.parse(await rpc(client, "submit_my_football_weekly_nfl_team_season_wildcard_v2", {
+        p_entries: entries,
+        p_rankings: rankings,
+        p_cut_item_reference: cutItemReference,
       }));
     },
     async resetSuperteamLab() {
