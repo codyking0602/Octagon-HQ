@@ -1318,14 +1318,14 @@ begin
           'complete', true,
           'roster', v_creator_roster,
           'grading', case when v_grading_result is null then null else v_grading_result -> 'creator' end,
-          'winnerProfileId', case when v_grading_result is null then null else v_grading_result -> 'winnerProfileId' end,
+          'winnerProfileId', case when v_grading_result is null then null else v_grading_result -> 'winner_profile_id' end,
           'tied', case when v_grading_result is null then null else v_grading_result -> 'tied' end
         ),
         responder_result = jsonb_build_object(
           'complete', true,
           'roster', v_recipient_roster,
           'grading', case when v_grading_result is null then null else v_grading_result -> 'recipient' end,
-          'winnerProfileId', case when v_grading_result is null then null else v_grading_result -> 'winnerProfileId' end,
+          'winnerProfileId', case when v_grading_result is null then null else v_grading_result -> 'winner_profile_id' end,
           'tied', case when v_grading_result is null then null else v_grading_result -> 'tied' end
         ),
         completed_at = now(),
