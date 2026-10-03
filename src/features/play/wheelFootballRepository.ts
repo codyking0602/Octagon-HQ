@@ -41,10 +41,10 @@ const pickSchema = z.object({
   position_label: z.string().min(1),
   position_abbreviation: z.string().min(1),
   headshot_url: z.string().nullable(),
-  grade_family: gradeFamilySchema.nullable(),
-  grade: z.coerce.number().int().min(0).max(100).nullable(),
-  grade_effective_date: z.string().nullable(),
-  grade_version: z.string().nullable(),
+  grade_family: gradeFamilySchema.nullable().optional().default(null),
+  grade: z.coerce.number().int().min(0).max(100).nullable().optional().default(null),
+  grade_effective_date: z.string().nullable().optional().default(null),
+  grade_version: z.string().nullable().optional().default(null),
 });
 
 const gradeSummarySchema = z.object({
@@ -74,8 +74,8 @@ const stateSchema = z.object({
   recipient: participantSchema,
   creator_roster: z.array(pickSchema),
   recipient_roster: z.array(pickSchema),
-  grading_runtime_version: z.string().nullable(),
-  grading_result: gradingResultSchema.nullable(),
+  grading_runtime_version: z.string().nullable().optional().default(null),
+  grading_result: gradingResultSchema.nullable().optional().default(null),
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
   forfeited_by_profile_id: z.string().uuid().nullable(),
