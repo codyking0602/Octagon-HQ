@@ -702,6 +702,14 @@ function MatchScreen({ code }: { code: string }) {
       : forfeitedProfile?.id === state.recipient.id
         ? state.creator
         : null;
+    const gradedWinner = state.winner_profile_id === state.creator.id
+      ? state.creator
+      : state.winner_profile_id === state.recipient.id
+        ? state.recipient
+        : null;
+    const finalGradesReady = !forfeitedProfile
+      && state.creator_final_grade != null
+      && state.recipient_final_grade != null;
 
     return (
       <div className="page football-wheel-page">
@@ -712,11 +720,33 @@ function MatchScreen({ code }: { code: string }) {
         </section>
         <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
         <section className="football-wheel-final surface-card">
-          <strong>{forfeitedProfile ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.` : "Both Superteams are locked."}</strong>
+          <strong>{forfeitedProfile
+            ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.`
+            : finalGradesReady
+              ? gradedWinner
+                ? `${gradedWinner.display_name} wins.`
+                : "Final grade tie."
+              : "Both Superteams are locked."}</strong>
+          {finalGradesReady ? (
+            <div className="football-wheel-final__grades" aria-label="Final Superteam grades">
+              <article className={state.winner_profile_id === state.creator.id ? "is-winner" : ""}>
+                <small>{state.creator.display_name}</small>
+                <b>{state.creator_final_grade!.toFixed(1)}</b>
+                <span>FINAL GRADE</span>
+              </article>
+              <article className={state.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
+                <small>{state.recipient.display_name}</small>
+                <b>{state.recipient_final_grade!.toFixed(1)}</b>
+                <span>FINAL GRADE</span>
+              </article>
+            </div>
+          ) : null}
           <p>{forfeitedProfile
-            ? "The matchup ended early. All picks made before the forfeit remain visible."
-            : "No grades or hidden score in v1 — this is the head-to-head team you each built from your seven spins."}</p>
-          <div>
+            ? "The matchup ended early. All picks made before the forfeit remain visible, but no grades are revealed."
+            : finalGradesReady
+              ? "All seven roster spots count equally. Only the final Superteam grade is revealed."
+              : "Final grades are being finalized."}</p>
+          <div className="football-wheel-final__actions">
             <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
             <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
           </div>
