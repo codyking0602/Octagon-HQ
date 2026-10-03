@@ -20,6 +20,7 @@
 .football-wheel,
 .football-wheel-picker,
 .football-wheel-waiting,
+.football-wheel-final-score,
 .football-wheel-final {
   margin-bottom: 9px;
   border-radius: 15px;
@@ -931,10 +932,101 @@
   line-height: 1.45;
 }
 
-.football-wheel-final > div {
+.football-wheel-final__actions {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 7px;
+}
+
+
+.football-wheel-roster__grade {
+  display: grid;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 25px;
+  place-items: center;
+  border: 1px solid rgba(111, 183, 239, .24);
+  border-radius: 8px;
+  background: rgba(34, 109, 171, .16);
+  color: #a8d8fb;
+  font-size: .58rem;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: -.015em;
+}
+
+.football-wheel-roster__cell.is-right .football-wheel-roster__grade {
+  margin-right: auto;
+}
+
+.football-wheel-roster__cell.is-left .football-wheel-roster__grade {
+  margin-left: auto;
+}
+
+.football-wheel-final-score {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+}
+
+.football-wheel-final-score > div {
+  min-width: 0;
+  padding: 10px 8px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px;
+  background: rgba(255,255,255,.025);
+  text-align: center;
+}
+
+.football-wheel-final-score > div.is-winner {
+  border-color: rgba(93, 171, 233, .46);
+  background: rgba(31, 104, 164, .18);
+  box-shadow: inset 0 0 0 1px rgba(97, 177, 240, .09);
+}
+
+.football-wheel-final-score small,
+.football-wheel-final-score strong,
+.football-wheel-final-score span {
+  display: block;
+}
+
+.football-wheel-final-score small {
+  overflow: hidden;
+  color: #9bb1c1;
+  font-size: .55rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-wheel-final-score strong {
+  margin-top: 3px;
+  color: #fff;
+  font-size: 2rem;
+  line-height: .95;
+  letter-spacing: -.05em;
+}
+
+.football-wheel-final-score .is-winner strong {
+  color: #8dcbf7;
+}
+
+.football-wheel-final-score span {
+  margin-top: 4px;
+  color: #667f91;
+  font-size: .46rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.football-wheel-final-score > b {
+  color: #59758a;
+  font-size: .54rem;
+  letter-spacing: .08em;
+  text-align: center;
 }
 
 .football-wheel-page__error {
