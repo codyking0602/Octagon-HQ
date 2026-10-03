@@ -764,48 +764,9 @@ alter table private.wheel_football_picks
   add column if not exists grade_version text,
   add column if not exists grade_effective_date date;
 
-update private.wheel_football_picks pick
-set selected_grade = source.grade,
-    grade_version = source.grade_version,
-    grade_effective_date = source.effective_date
-from private.wheel_football_nfl_grades source
-where pick.selected_grade is null
-  and source.team_code = pick.team_code
-  and source.grade_position = case
-    when pick.roster_slot = 'Flex' then upper(trim(pick.position_abbreviation))
-    when pick.roster_slot in ('QB', 'RB', 'WR', 'Front Seven', 'Secondary', 'Head Coach') then pick.roster_slot
-    else ''
-  end
-  and source.normalized_name = private.wheel_football_normalized_name(pick.display_name)
-  and source.effective_date = (
-    select max(candidate.effective_date)
-    from private.wheel_football_nfl_grades candidate
-    where candidate.team_code = pick.team_code
-      and candidate.grade_position = source.grade_position
-      and candidate.normalized_name = source.normalized_name
-      and candidate.effective_date <= date '2026-10-03'
-  );
-
-do $$
-declare
-  v_missing integer;
-begin
-  select count(*) into v_missing
-  from private.wheel_football_picks
-  where selected_grade is null
-     or grade_version is null
-     or grade_effective_date is null;
-
-  if v_missing <> 0 then
-    raise exception 'Existing Wheel picks missing authoritative frozen grades: %', v_missing;
-  end if;
-end;
-$$;
-
-alter table private.wheel_football_picks
-  alter column selected_grade set not null,
-  alter column grade_version set not null,
-  alter column grade_effective_date set not null;
+-- Pre-grading v1 picks intentionally remain NULL. They were played before a grade
+-- existed, so retroactively assigning today's value would rewrite history.
+-- Every pick made after this migration is resolved and frozen by the pick RPC.
 
 alter table private.wheel_football_matches
   add column if not exists creator_raw_grade numeric(8,4),
@@ -902,41 +863,6 @@ $$;
 
 revoke all on function private.finalize_wheel_football_grades(uuid)
   from public, anon, authenticated;
-
-do $$
-declare
-  v_row record;
-begin
-  for v_row in
-    select match.challenge_id
-    from private.wheel_football_matches match
-    where match.phase = 'complete'
-      and match.turn_count = 14
-      and match.forfeited_by_profile_id is null
-  loop
-    perform private.finalize_wheel_football_grades(v_row.challenge_id);
-  end loop;
-end;
-$$;
-
-update public.play_challenges challenge
-set creator_result = coalesce(challenge.creator_result, '{}'::jsonb)
-      || jsonb_build_object(
-        'finalGrade', match.creator_final_grade,
-        'winnerProfileId', match.winner_profile_id
-      ),
-    responder_result = coalesce(challenge.responder_result, '{}'::jsonb)
-      || jsonb_build_object(
-        'finalGrade', match.recipient_final_grade,
-        'winnerProfileId', match.winner_profile_id
-      )
-from private.wheel_football_matches match
-where match.challenge_id = challenge.id
-  and match.phase = 'complete'
-  and match.turn_count = 14
-  and match.forfeited_by_profile_id is null
-  and match.creator_final_grade is not null
-  and match.recipient_final_grade is not null;
 
 create or replace function private.wheel_football_state_json(p_challenge_id uuid)
 returns jsonb
