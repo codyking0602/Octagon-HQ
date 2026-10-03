@@ -745,7 +745,7 @@ function MatchScreen({ code }: { code: string }) {
             ? "The matchup ended early. All picks made before the forfeit remain visible, but no grades are revealed."
             : finalGradesReady
               ? "All seven roster spots count equally. Only the final Superteam grade is revealed."
-              : "Final grades are being finalized."}</p>
+              : "This matchup was completed before final grading was added, so no grade is retroactively assigned."}</p>
           <div className="football-wheel-final__actions">
             <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
             <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
