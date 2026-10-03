@@ -4,7 +4,11 @@ import {
 } from "./footballMediaIdentity";
 import { footballTeamAssets } from "./footballSubjectAssets";
 import { footballTeamSchoolMetadata } from "./footballTeamSchoolMetadata";
-import wheelPriorityJson from "../../../data/generated/football/wheel-football-priorities.json";
+import {
+  WHEEL_FOOTBALL_NFL_PRIORITY_CAPS,
+  wheelFootballNflNamesMatch,
+  wheelFootballNflPriorityForTeam,
+} from "./wheelFootballNflPriority";
 
 export const WHEEL_FOOTBALL_ROSTER_SLOTS = [
   "QB",
@@ -287,106 +291,28 @@ const WHEEL_FOOTBALL_SHORTLIST_BASE: Readonly<Record<WheelFootballRosterSlot, nu
   "Head Coach": 1,
 };
 
-const WHEEL_FOOTBALL_SHORTLIST_MAX: Readonly<Record<WheelFootballRosterSlot, number>> = {
-  QB: 2,
-  RB: 3,
-  WR: 4,
-  Flex: 4,
-  "Front Seven": 6,
-  Secondary: 6,
-  "Head Coach": 1,
-};
-
-type WheelPriorityBucket = "QB" | "RB" | "WR" | "TE" | "Front Seven" | "Secondary";
-type WheelPriorityTeam = Readonly<Record<WheelPriorityBucket, readonly string[]>>;
-
-const wheelPriorityTeams = wheelPriorityJson.teams as unknown as Readonly<Record<string, WheelPriorityTeam>>;
-
-function normalizedWheelPriorityName(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[^a-z0-9]/g, "");
-}
-
-function wheelPriorityNames(
-  teamCode: string | null | undefined,
-  bucket: WheelPriorityBucket,
-) {
-  if (!teamCode) return [];
-  return wheelPriorityTeams[teamCode.toUpperCase()]?.[bucket] ?? [];
-}
-
-function candidatePriorityBucket(
-  candidate: WheelFootballCandidate,
-  slot: WheelFootballRosterSlot,
-): WheelPriorityBucket | null {
-  if (slot === "Front Seven" || slot === "Secondary") return slot;
-  if (slot === "QB" || slot === "RB" || slot === "WR") return slot;
-  if (slot !== "Flex") return null;
-  if (candidate.positionAbbreviation === "RB") return "RB";
-  if (candidate.positionAbbreviation === "WR") return "WR";
-  if (candidate.positionAbbreviation === "TE") return "TE";
-  return null;
-}
-
-function orderByWheelPriority(
-  candidates: readonly WheelFootballCandidate[],
-  slot: WheelFootballRosterSlot,
-  teamCode: string | null | undefined,
-) {
-  if (!teamCode) return [...candidates];
-
-  return [...candidates].sort((left, right) => {
-    const leftBucket = candidatePriorityBucket(left, slot);
-    const rightBucket = candidatePriorityBucket(right, slot);
-    const leftNames = leftBucket ? wheelPriorityNames(teamCode, leftBucket) : [];
-    const rightNames = rightBucket ? wheelPriorityNames(teamCode, rightBucket) : [];
-    const leftRank = leftNames.findIndex((name) => (
-      normalizedWheelPriorityName(name) === normalizedWheelPriorityName(left.name)
-    ));
-    const rightRank = rightNames.findIndex((name) => (
-      normalizedWheelPriorityName(name) === normalizedWheelPriorityName(right.name)
-    ));
-    const leftScore = leftRank >= 0 ? leftRank : 1000 + left.rosterOrder;
-    const rightScore = rightRank >= 0 ? rightRank : 1000 + right.rosterOrder;
-    return leftScore - rightScore || left.rosterOrder - right.rosterOrder;
-  });
-}
-
-function shouldUseExtraWheelOption(
-  slot: WheelFootballRosterSlot,
-  base: readonly WheelFootballCandidate[],
-  extra: WheelFootballCandidate | undefined,
-) {
-  if (!extra) return false;
-  if (slot === "QB") {
-    const starter = base[0];
-    return (starter?.experienceYears ?? 99) <= 2 || (extra.experienceYears ?? 99) <= 1;
-  }
-  if (slot === "RB") return (extra.experienceYears ?? 0) >= 3;
-  if (slot === "WR") return (extra.experienceYears ?? 0) >= 2;
-  if (slot === "Front Seven" || slot === "Secondary") return (extra.experienceYears ?? 0) >= 2;
-  return false;
-}
+const WHEEL_FOOTBALL_SHORTLIST_MAX: Readonly<Record<WheelFootballRosterSlot, number>> =
+  WHEEL_FOOTBALL_NFL_PRIORITY_CAPS;
 
 function curatedWheelShortlist(
   candidates: readonly WheelFootballCandidate[],
-  slot: Exclude<WheelFootballRosterSlot, "Flex" | "Head Coach">,
+  slot: WheelFootballRosterSlot,
   teamCode: string,
 ) {
-  const priorityNames = wheelPriorityNames(teamCode, slot);
-  if (!priorityNames.length) return null;
+  const teamPriority = wheelFootballNflPriorityForTeam(teamCode);
+  if (!teamPriority) return null;
 
-  const ordered = orderByWheelPriority(candidates, slot, teamCode);
-  const priorityNameSet = new Set(priorityNames.map(normalizedWheelPriorityName));
-  const matchedPriorityCount = candidates.filter((candidate) => (
-    priorityNameSet.has(normalizedWheelPriorityName(candidate.name))
-  )).length;
-  const baseSize = WHEEL_FOOTBALL_SHORTLIST_BASE[slot];
-  const maxSize = WHEEL_FOOTBALL_SHORTLIST_MAX[slot];
-  const desiredSize = Math.min(maxSize, Math.max(baseSize, matchedPriorityCount));
-  return ordered.slice(0, desiredSize);
+  const eligible = candidates.filter((candidate) => candidate.eligibleSlots.includes(slot));
+  const selected: WheelFootballCandidate[] = [];
+  for (const priorityName of teamPriority[slot]) {
+    const match = eligible.find((candidate) => (
+      !selected.includes(candidate)
+      && wheelFootballNflNamesMatch(candidate.name, priorityName)
+    ));
+    if (match) selected.push(match);
+    if (selected.length >= WHEEL_FOOTBALL_SHORTLIST_MAX[slot]) break;
+  }
+  return selected;
 }
 
 export function wheelFootballShortlist(
@@ -394,21 +320,21 @@ export function wheelFootballShortlist(
   slot: WheelFootballRosterSlot,
   teamCode?: string | null,
 ) {
+  if (teamCode) {
+    const curated = curatedWheelShortlist(candidates, slot, teamCode);
+    if (curated) return curated;
+  }
+
   const eligible = candidates.filter((candidate) => candidate.eligibleSlots.includes(slot));
 
   if (slot === "Head Coach") return eligible.slice(0, 1);
 
   if (slot === "Flex") {
     const selected: WheelFootballCandidate[] = [];
-    const take = (position: "RB" | "WR" | "TE", count: number) => {
-      const positionCandidates = orderByWheelPriority(
-        eligible.filter((candidate) => candidate.positionAbbreviation === position),
-        "Flex",
-        teamCode,
-      );
-      for (const candidate of positionCandidates) {
+    const take = (position: string, count: number) => {
+      for (const candidate of eligible) {
         if (selected.length >= 4 || count <= 0) break;
-        if (selected.includes(candidate)) continue;
+        if (candidate.positionAbbreviation !== position || selected.includes(candidate)) continue;
         selected.push(candidate);
         count -= 1;
       }
@@ -416,17 +342,11 @@ export function wheelFootballShortlist(
     take("RB", 1);
     take("WR", 2);
     take("TE", 1);
-
-    for (const candidate of orderByWheelPriority(eligible, "Flex", teamCode)) {
+    for (const candidate of eligible) {
       if (selected.length >= 4) break;
       if (!selected.includes(candidate)) selected.push(candidate);
     }
     return selected;
-  }
-
-  if (teamCode) {
-    const curated = curatedWheelShortlist(eligible, slot, teamCode);
-    if (curated) return curated;
   }
 
   const baseSize = WHEEL_FOOTBALL_SHORTLIST_BASE[slot];
