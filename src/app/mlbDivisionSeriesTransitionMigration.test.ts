@@ -61,6 +61,10 @@ describe("2026 MLB Division Series transition", () => {
     expect(breakdowns).toContain('"nl-ds-2"');
     expect(assets).toContain('name: "Fernando Tatis Jr."');
     expect(assets).toContain('team: "San Diego Padres"');
+    expect(assets).toContain('{ label: "AVG", value: ".289" }');
+    expect(assets).toContain('{ label: "HR", value: "25" }');
+    expect(assets).toContain('{ label: "SB", value: "38" }');
+    expect(assets).toContain('{ label: "OPS", value: ".828" }');
   });
 
   it("leaves notification delivery to the secured canonical scheduler", () => {
