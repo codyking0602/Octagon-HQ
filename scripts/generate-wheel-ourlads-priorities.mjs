@@ -69,7 +69,7 @@ function decodeHtml(value) {
 
 function activePlayerName(raw) {
   let value = raw.trim();
-  value = value.replace(/\s+(?:\d{2}\/\d|(?:U|T|W|CC|P|R)\/[A-Za-z]+|(?:SF|CF)\d{2}\*?)$/i, "");
+  value = value.replace(/\s+(?:\d{2}\/\d\*?|(?:U|T|W|CC|P|R)\/[A-Za-z]+|(?:SF|CF)\d{2}\*?)$/i, "");
   return displayName(value);
 }
 
@@ -156,6 +156,7 @@ const rows = [...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((match) => 
 });
 
 const teams = Object.fromEntries(Object.values(TEAM_CODE).map((code) => [code, emptyTeam()]));
+const activePhase = Object.fromEntries(Object.values(TEAM_CODE).map((code) => [code, true]));
 
 for (const cells of rows) {
   const sourceCode = cells[0]?.trim().toUpperCase();
@@ -174,6 +175,12 @@ for (const cells of rows) {
     continue;
   }
 
+  if (position === "KR") {
+    activePhase[teamCode] = false;
+    continue;
+  }
+  if (!activePhase[teamCode]) continue;
+
   const bucket = bucketForPosition(position);
   if (!bucket) continue;
   const rawPlayers = [];
@@ -189,8 +196,8 @@ for (const cells of rows) {
 
 const failures = [];
 for (const [code, team] of Object.entries(teams)) {
-  if (team.QB.starters.length < 1) failures.push(`${code}: missing QB starter`);
-  if (team.RB.starters.length < 1) failures.push(`${code}: missing RB starter`);
+  if (team.QB.starters.length !== 1) failures.push(`${code}: expected exactly one QB starter row, got ${team.QB.starters.length}`);
+  if (team.RB.starters.length !== 1) failures.push(`${code}: expected exactly one RB starter row, got ${team.RB.starters.length}`);
   if (team.WR.starters.length < 2) failures.push(`${code}: fewer than two WR starters`);
   if (team.TE.starters.length < 1) failures.push(`${code}: missing TE starter`);
   if (team["Front Seven"].starters.length < 5) failures.push(`${code}: fewer than five front-seven starters`);
