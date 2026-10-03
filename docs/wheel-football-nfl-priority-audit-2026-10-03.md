@@ -45,7 +45,7 @@ Locked ceilings: **QB 2, RB 3, WR 4, Flex 4, Front Seven 6, Secondary 6, Head Co
 | NYG | Jaxson Dart / Jameis Winston | 2 | 3 | 4 | 6 | 6 | John Harbaugh |
 | NYJ | Geno Smith | 2 | 3 | 4 | 6 | 5 | Aaron Glenn |
 | PHI | Jalen Hurts | 2 | 3 | 4 | 6 | 5 | Nick Sirianni |
-| PIT | Aaron Rodgers | 2 | 3 | 4 | 6 | 6 | Mike McCarthy |
+| PIT | Aaron Rodgers | 2 | 3 | 4 | 6 | 5 | Mike McCarthy |
 | SEA | Sam Darnold | 2 | 3 | 4 | 6 | 6 | Mike Macdonald |
 | SF | Brock Purdy | 2 | 4 | 4 | 6 | 6 | Kyle Shanahan |
 | TB | Baker Mayfield | 2 | 4 | 4 | 6 | 5 | Todd Bowles |
@@ -74,7 +74,7 @@ Every team was reviewed for QB, RB, WR, Flex, Front Seven, Secondary, and Head C
 
 ## Final integration cross-check
 
-The recovered split-audit outputs were compared against the then-current PR integration. That last reconciliation corrected **3 teams / 5 groups**: Cincinnati Secondary ordering, Pittsburgh Secondary ordering, and Atlanta Flex / Front Seven / Secondary. Dallas matched both audits. The Rams independent audit overruled the earlier spot-audit only by replacing Josh Wallace with Kam Curl.
+The recovered split-audit outputs were compared against the then-current PR integration. That last reconciliation corrected **3 teams / 5 groups**: Cincinnati Secondary ordering, Pittsburgh Secondary ordering, and Atlanta Flex / Front Seven / Secondary. Pittsburgh's final manual set is the five-player group Jalen Ramsey / Jamel Dean / Asante Samuel Jr. / DeShon Elliott / Jaquan Brisker. Dallas matched both audits. The Rams independent audit overruled the earlier spot-audit only by replacing Josh Wallace with Kam Curl.
 
 ## Required regression anchors
 
