@@ -36,12 +36,12 @@ describe("MLB 2026 owner review field", () => {
     expect(migration).toContain("9:00 PM CT · Peacock");
   });
 
-  it("preserves the owner-review Yankees-Red Sox feature while the live player spotlight advances", () => {
+  it("features only Yankees-Red Sox and replaces the Judge placeholder with PCA", () => {
     expect(migration).toContain("'series_id', 'al-wc-2'");
     expect(migration).toContain("'title', 'Red Sox vs. Yankees'");
-    expect(spotlight).toContain('name: "Fernando Tatis Jr."');
-    expect(spotlight).toContain('{ label: "AVG", value: ".289" }');
-    expect(spotlight).toContain('{ label: "SB", value: "38" }');
+    expect(spotlight).toContain('name: "Pete Crow-Armstrong"');
+    expect(spotlight).toContain('{ label: "HR", value: "45" }');
+    expect(spotlight).toContain('{ label: "SB", value: "41" }');
     expect(spotlight).not.toContain('name: "Aaron Judge"');
   });
 });
