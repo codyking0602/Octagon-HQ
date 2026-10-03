@@ -5,6 +5,7 @@ import {
   wheelFootballCandidatesFromEspn,
   wheelFootballEligibleSlots,
   wheelFootballPoolTeams,
+  wheelFootballShortlist,
   wheelFootballTeams,
 } from "./wheelFootballModel";
 
@@ -55,8 +56,8 @@ describe("Wheel of Football current-NFL model", () => {
       athletes: [{
         position: "Defense",
         items: [
-          { id: "starter", displayName: "Starter Star", position: { abbreviation: "S", displayName: "Safety" } },
-          { id: "backup", displayName: "Backup Alpha", position: { abbreviation: "S", displayName: "Safety" } },
+          { id: "starter", displayName: "Starter Star", position: { abbreviation: "S", displayName: "Safety" }, experience: { years: 5 } },
+          { id: "backup", displayName: "Backup Alpha", position: { abbreviation: "S", displayName: "Safety" }, experience: { years: 2 } },
         ],
       }],
     });
@@ -64,6 +65,79 @@ describe("Wheel of Football current-NFL model", () => {
     expect(candidates.map((candidate) => candidate.name)).toEqual([
       "Starter Star",
       "Backup Alpha",
+    ]);
+  });
+
+  it("keeps Wheel choices intentionally small while allowing rare meaningful extra options", () => {
+    const candidate = (
+      id: string,
+      positionAbbreviation: string,
+      eligibleSlots: readonly (typeof WHEEL_FOOTBALL_ROSTER_SLOTS)[number][],
+      experienceYears: number | null,
+    ) => ({
+      id,
+      name: id,
+      positionLabel: positionAbbreviation,
+      positionAbbreviation,
+      headshotUrl: null,
+      eligibleSlots,
+      experienceYears,
+    });
+
+    expect(wheelFootballShortlist([
+      candidate("qb1", "QB", ["QB"], 7),
+      candidate("qb2", "QB", ["QB"], 6),
+    ], "QB").map((item) => item.id)).toEqual(["qb1"]);
+
+    expect(wheelFootballShortlist([
+      candidate("rookie-qb", "QB", ["QB"], 0),
+      candidate("veteran-qb", "QB", ["QB"], 8),
+      candidate("qb3", "QB", ["QB"], 3),
+    ], "QB").map((item) => item.id)).toEqual(["rookie-qb", "veteran-qb"]);
+
+    expect(wheelFootballShortlist([
+      candidate("rb1", "RB", ["RB", "Flex"], 4),
+      candidate("rb2", "RB", ["RB", "Flex"], 2),
+      candidate("rb3", "RB", ["RB", "Flex"], 4),
+      candidate("rb4", "RB", ["RB", "Flex"], 1),
+    ], "RB").map((item) => item.id)).toEqual(["rb1", "rb2", "rb3"]);
+
+    expect(wheelFootballShortlist([
+      candidate("wr1", "WR", ["WR", "Flex"], 5),
+      candidate("wr2", "WR", ["WR", "Flex"], 4),
+      candidate("wr3", "WR", ["WR", "Flex"], 3),
+      candidate("wr4", "WR", ["WR", "Flex"], 2),
+      candidate("wr5", "WR", ["WR", "Flex"], 5),
+    ], "WR")).toHaveLength(4);
+
+    const secondary = Array.from({ length: 8 }, (_, index) => candidate(
+      `db${index + 1}`,
+      index % 2 ? "S" : "CB",
+      ["Secondary"],
+      index === 5 ? 3 : 1,
+    ));
+    expect(wheelFootballShortlist(secondary, "Secondary")).toHaveLength(6);
+
+    const frontSeven = Array.from({ length: 8 }, (_, index) => candidate(
+      `front${index + 1}`,
+      "LB",
+      ["Front Seven"],
+      index === 5 ? 1 : 4,
+    ));
+    expect(wheelFootballShortlist(frontSeven, "Front Seven")).toHaveLength(5);
+
+    const flex = [
+      candidate("flex1", "RB", ["RB", "Flex"], 4),
+      candidate("flex2", "RB", ["RB", "Flex"], 3),
+      candidate("flex3", "WR", ["WR", "Flex"], 5),
+      candidate("flex4", "WR", ["WR", "Flex"], 2),
+      candidate("flex5", "TE", ["Flex"], 5),
+    ];
+    expect(wheelFootballShortlist(flex, "Flex").map((item) => item.id)).toEqual([
+      "flex1",
+      "flex3",
+      "flex4",
+      "flex5",
     ]);
   });
 

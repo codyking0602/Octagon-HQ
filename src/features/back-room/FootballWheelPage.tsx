@@ -21,6 +21,7 @@ import {
   WHEEL_FOOTBALL_ROSTER_SLOTS,
   loadWheelFootballRoster,
   wheelFootballPoolTeams,
+  wheelFootballShortlist,
   wheelFootballTeam,
   type WheelFootballCandidate,
   type WheelFootballDivision,
@@ -254,7 +255,7 @@ function CandidatePicker({
   const slots = openSlots(roster);
   const available = candidates.filter((candidate) => !usedIds.has(candidate.id));
   const visible = selectedSlot
-    ? available.filter((candidate) => candidate.eligibleSlots.includes(selectedSlot))
+    ? wheelFootballShortlist(available, selectedSlot)
     : [];
 
   return (
@@ -280,7 +281,7 @@ function CandidatePicker({
         <>
           <div className="football-wheel-picker__slots" aria-label="Open roster spots">
             {slots.map((slot) => {
-              const count = available.filter((candidate) => candidate.eligibleSlots.includes(slot)).length;
+              const count = wheelFootballShortlist(available, slot).length;
               return (
                 <button
                   type="button"
