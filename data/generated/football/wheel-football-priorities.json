@@ -2,7 +2,7 @@
   "source": "Manual 32-team NFL Wheel audit using Ourlads 2026 depth/structure + ESPN/official roster verification",
   "sourceUrl": "https://www.ourlads.com/nfldepthcharts/depthcharts.aspx",
   "auditedAt": "2026-10-03",
-  "notes": "Product-owned Wheel priority order after a manual 32-team football-quality audit. Ourlads is the primary human-reviewed depth/structure reference; ESPN current roster remains runtime membership/player-ID/headshot authority. Injury/IR/PUP players intentionally stay eligible while still current team property; departed players are omitted at shortlist hydration. Gameplay has no runtime Ourlads dependency and raw ESPN roster order cannot override curated priority.",
+  "notes": "Octagon-owned Wheel priority order manually reconciled across all 32 teams on 2026-10-03. Ourlads is a human-reviewed depth/structure reference only; ESPN current roster remains runtime membership/player-ID/headshot authority. Injured/IR/PUP/NFI/suspended players intentionally stay eligible while still current team property; departed players are omitted at shortlist hydration. Raw ESPN roster order never overrides curated order and missing curated names are not backfilled just to hit a quota.",
   "teams": {
     "ARI": {
       "QB": [
@@ -64,10 +64,10 @@
         "Kyle Pitts Sr."
       ],
       "Front Seven": [
-        "Jalon Walker",
         "James Pearce Jr.",
         "Gervon Dexter Sr.",
         "Za'Darius Smith",
+        "Jalon Walker",
         "Divine Deablo",
         "Maason Smith"
       ],
@@ -77,13 +77,13 @@
         "Xavier Watts",
         "Mike Hughes",
         "C.J. Henderson",
-        "Avieon Terrell"
+        "Billy Bowman Jr."
       ],
       "Flex": [
         "Bijan Robinson",
         "Drake London",
-        "Jahan Dotson",
-        "Kyle Pitts Sr."
+        "Kyle Pitts Sr.",
+        "Jahan Dotson"
       ],
       "Head Coach": [
         "Kevin Stefanski"
@@ -280,11 +280,11 @@
         "Barrett Carter"
       ],
       "Secondary": [
-        "Tacario Davis",
+        "Dax Hill",
+        "DJ Turner II",
         "Jordan Battle",
         "Bryan Cook",
-        "DJ Turner II",
-        "Dax Hill"
+        "Tacario Davis"
       ],
       "Flex": [
         "Chase Brown",
@@ -1109,12 +1109,12 @@
         "Derrick Harmon"
       ],
       "Secondary": [
-        "Asante Samuel Jr.",
-        "Rayshawn Jenkins",
-        "Jaquan Brisker",
-        "Jamel Dean",
         "Jalen Ramsey",
-        "DeShon Elliott"
+        "Asante Samuel Jr.",
+        "Jamel Dean",
+        "Jaquan Brisker",
+        "DeShon Elliott",
+        "Rayshawn Jenkins"
       ],
       "Flex": [
         "Jaylen Warren",
