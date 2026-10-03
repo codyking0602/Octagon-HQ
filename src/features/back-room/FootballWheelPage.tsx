@@ -99,6 +99,7 @@ function RosterCell({
         <strong>{pick?.display_name ?? "OPEN"}</strong>
         <span>{pick ? `${pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
       </div>
+      {pick?.grade != null ? <em className="football-wheel-roster__grade">{Math.round(pick.grade)}</em> : null}
     </div>
   );
 }
@@ -452,6 +453,7 @@ function SetupScreen() {
           <span><b>2</b> Spin a team, then choose one current player or coach for an open Superteam slot.</span>
           <span><b>3</b> Turns alternate until both QB · RB · WR · Flex · Front Seven · Secondary · Head Coach are filled.</span>
           <span><b>4</b> No re-spins. Teams can return later, but you will not get the same team on back-to-back personal spins.</span>
+          <span><b>5</b> Player grades stay hidden until both Superteams are complete. All seven roster spots count equally.</span>
         </div>
       </section>
 
@@ -655,18 +657,40 @@ function MatchScreen({ code }: { code: string }) {
           : `${opponent?.display_name.toUpperCase() ?? "OPPONENT"}'S TURN`;
 
   if (state.phase === "complete") {
+    const winner = state.winner_profile_id === state.creator.id
+      ? state.creator
+      : state.winner_profile_id === state.recipient.id
+        ? state.recipient
+        : null;
+
     return (
       <div className="page football-wheel-page">
         <section className="football-wheel-match__status surface-card is-complete">
-          <p className="eyebrow">WHEEL OF FOOTBALL · COMPLETE</p>
-          <h1>{state.creator.display_name} vs {state.recipient.display_name}</h1>
+          <p className="eyebrow">WHEEL OF FOOTBALL · FINAL</p>
+          <h1>{winner ? `${winner.display_name} wins` : "Dead even"}</h1>
           <span>{state.pool_scope === "DIVISION" ? state.division : state.pool_scope === "NFL" ? "FULL NFL" : state.pool_scope} · CURRENT NFL</span>
         </section>
+
+        <section className="football-wheel-final-score surface-card" aria-label="Final Wheel of Football score">
+          <div className={state.winner_profile_id === state.creator.id ? "is-winner" : ""}>
+            <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
+            <strong>{state.creator_score ?? "—"}</strong>
+            <span>TEAM SCORE</span>
+          </div>
+          <b>VS</b>
+          <div className={state.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
+            <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
+            <strong>{state.recipient_score ?? "—"}</strong>
+            <span>TEAM SCORE</span>
+          </div>
+        </section>
+
         <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
+
         <section className="football-wheel-final surface-card">
-          <strong>Both Superteams are locked.</strong>
-          <p>No grades or hidden score in v1 — this is the head-to-head team you each built from your seven spins.</p>
-          <div>
+          <strong>{winner ? `${winner.display_name} built the stronger Superteam.` : "The Superteams finished tied."}</strong>
+          <p>Grades were hidden until the final pick. The seven roster slots count equally, and the displayed team score stretches the raw average so close Superteams separate cleanly.</p>
+          <div className="football-wheel-final__actions">
             <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
             <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
           </div>
