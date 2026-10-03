@@ -294,6 +294,22 @@ const WHEEL_FOOTBALL_SHORTLIST_BASE: Readonly<Record<WheelFootballRosterSlot, nu
 const WHEEL_FOOTBALL_SHORTLIST_MAX: Readonly<Record<WheelFootballRosterSlot, number>> =
   WHEEL_FOOTBALL_NFL_PRIORITY_CAPS;
 
+function shouldUseExtraWheelOption(
+  slot: WheelFootballRosterSlot,
+  base: readonly WheelFootballCandidate[],
+  extra: WheelFootballCandidate | undefined,
+) {
+  if (!extra) return false;
+  if (slot === "QB") {
+    const starter = base[0];
+    return (starter?.experienceYears ?? 99) <= 2 || (extra.experienceYears ?? 99) <= 1;
+  }
+  if (slot === "RB") return (extra.experienceYears ?? 0) >= 3;
+  if (slot === "WR") return (extra.experienceYears ?? 0) >= 2;
+  if (slot === "Front Seven" || slot === "Secondary") return (extra.experienceYears ?? 0) >= 2;
+  return false;
+}
+
 function curatedWheelShortlist(
   candidates: readonly WheelFootballCandidate[],
   slot: WheelFootballRosterSlot,
