@@ -1,0 +1,406 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-wheel-qb-grades-2026-10-03-v1",
+  "status": "audit-locked-not-runtime",
+  "effectiveDate": "2026-10-03",
+  "populationSource": {
+    "path": "data/generated/football/wheel-football-priorities.json",
+    "mainSha": "b582b00917da256880fc24cb0ff9df9f105eb30e",
+    "qbCount": 34
+  },
+  "constitution": "PR #1641 — Wheel of Football grading constitution",
+  "gradingSemantic": "CURRENT NFL ABILITY AT QUARTERBACK RIGHT NOW; position-normalized; stable against ordinary weekly noise; not career greatness, fame, fantasy value, draft status, projection, or a one/two-game hot streak.",
+  "phase1ApprovedAnchors": [
+    [
+      "Josh Allen",
+      99,
+      "current ceiling"
+    ],
+    [
+      "Patrick Mahomes",
+      97,
+      "elite / ceiling-adjacent"
+    ],
+    [
+      "Lamar Jackson",
+      96,
+      "elite"
+    ],
+    [
+      "Matthew Stafford",
+      95,
+      "elite pocket quarterback"
+    ],
+    [
+      "Joe Burrow",
+      95,
+      "elite pocket quarterback"
+    ],
+    [
+      "Dak Prescott",
+      92,
+      "high-end"
+    ],
+    [
+      "Brock Purdy",
+      89,
+      "very good starter"
+    ],
+    [
+      "Jared Goff",
+      89,
+      "very good starter"
+    ],
+    [
+      "Justin Herbert",
+      88,
+      "high-end/good boundary"
+    ],
+    [
+      "Trevor Lawrence",
+      87,
+      "good starter"
+    ],
+    [
+      "Sam Darnold",
+      85,
+      "solid/above-average starter"
+    ],
+    [
+      "Jacoby Brissett",
+      82,
+      "average/solid starter"
+    ],
+    [
+      "Aaron Rodgers",
+      80,
+      "below-average starter"
+    ],
+    [
+      "Jameis Winston",
+      74,
+      "weak current Wheel option"
+    ]
+  ],
+  "evidenceSnapshot": {
+    "asOf": "2026-10-03",
+    "note": "Week 4 was not complete. Most current-season evidence reflects 2-3 games; Pittsburgh/Cleveland had four. 2025 full-season evidence and prior established level are intentionally weighted more heavily than ordinary September noise.",
+    "primarySources": [
+      "https://www.nfl.com/news/nfl-qb-rankings-index-week-4-2026-nfl-season",
+      "https://www.pro-football-reference.com/years/2025/passing.htm",
+      "NFL.com individual quarterback career/stat pages",
+      "NFL.com Next Gen Stats context embedded in the Week 4 QB Index"
+    ]
+  },
+  "grades": [
+    {
+      "team": "BUF",
+      "player": "Josh Allen",
+      "grade": 99,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Current ceiling: complete passing/creation/rushing profile; one early-2026 turnover game is ordinary noise, not a level change."
+    },
+    {
+      "team": "KC",
+      "player": "Patrick Mahomes",
+      "grade": 97,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Elite processing, arm talent and creation remain established; 2026 start is again high-end, but 2025 prevents a reputation-only 99/100."
+    },
+    {
+      "team": "BAL",
+      "player": "Lamar Jackson",
+      "grade": 96,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Elite passer plus unmatched quarterback rushing stress; current dual-threat level remains just below the absolute ceiling."
+    },
+    {
+      "team": "LAR",
+      "player": "Matthew Stafford",
+      "grade": 95,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "2025 MVP and elite full-season passing baseline; early pressure struggles in 2026 are too small a sample for a major downgrade."
+    },
+    {
+      "team": "CIN",
+      "player": "Joe Burrow",
+      "grade": 95,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Elite placement, processing and pocket passing with a strong 2026 start; no meaningful current gap from Stafford."
+    },
+    {
+      "team": "DAL",
+      "player": "Dak Prescott",
+      "grade": 92,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Established high-end current starter with strong 2025 efficiency/QBR and a clean 2026 opening stretch."
+    },
+    {
+      "team": "NE",
+      "player": "Drake Maye",
+      "grade": 90,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "2025 was legitimately elite and MVP-caliber; the disastrous three-game 2026 opening is meaningful enough to lower him, but not enough to erase the established level."
+    },
+    {
+      "team": "PHI",
+      "player": "Jalen Hurts",
+      "grade": 90,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Efficient 2024-25 passing plus major designed/rushing value; early-2026 indecision and uneven play keep him below the elite anchors."
+    },
+    {
+      "team": "SF",
+      "player": "Brock Purdy",
+      "grade": 89,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Very good current quarterback whose 2026 heater is real evidence but not enough to promote him into the Dak/elite neighborhood after a more mixed prior sample."
+    },
+    {
+      "team": "DET",
+      "player": "Jared Goff",
+      "grade": 89,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Excellent structured operator with sustained efficiency; narrower off-platform and pressure creation keeps him below the high-end ceiling."
+    },
+    {
+      "team": "LAC",
+      "player": "Justin Herbert",
+      "grade": 88,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Top physical toolkit remains, but 2025 and early-2026 mistakes/volatility do not support grading the idea of Herbert above his actual recent quarterback play."
+    },
+    {
+      "team": "JAX",
+      "player": "Trevor Lawrence",
+      "grade": 87,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Meaningful 2025 step forward with a good 2026 start; still too much historical inconsistency for the high-end band."
+    },
+    {
+      "team": "WSH",
+      "player": "Jayden Daniels",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Special rushing/creation ability and a proven high-end rookie season remain real; shortened and less efficient 2025-26 evidence prevents a higher current grade."
+    },
+    {
+      "team": "GB",
+      "player": "Jordan Love",
+      "grade": 87,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Three strong established starter seasons through 2025 outweigh a rough three-game 2026 opening, but the current inconsistency caps him here."
+    },
+    {
+      "team": "TB",
+      "player": "Baker Mayfield",
+      "grade": 86,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "2024 showed a high ceiling, while 2025 and the 2026 opening regressed; current thumb availability is an eligibility issue, not an ability penalty."
+    },
+    {
+      "team": "HOU",
+      "player": "C.J. Stroud",
+      "grade": 86,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Still a good current starter, but 2024-26 performance has not sustained his rookie-year peak; safe play and middling recent efficiency cap the grade."
+    },
+    {
+      "team": "SEA",
+      "player": "Sam Darnold",
+      "grade": 85,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Two straight credible starting seasons with strong efficiency; turnover volatility keeps him at the solid/above-average anchor rather than the high-end group."
+    },
+    {
+      "team": "NYJ",
+      "player": "Geno Smith",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "2025 was turnover-heavy, while his 2026 opening has been sharp; the combined current body supports a solid starter just below Darnold."
+    },
+    {
+      "team": "CHI",
+      "player": "Caleb Williams",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Clear development in 2025, especially reducing sacks, plus real creation ability; accuracy/consistency remain uneven enough to stay below the 85 anchor."
+    },
+    {
+      "team": "MIN",
+      "player": "Kyler Murray",
+      "grade": 84,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Established dual-threat ability remains above replacement-level starter quality; small recent samples are weak, while injury/availability is kept separate from ability."
+    },
+    {
+      "team": "IND",
+      "player": "Daniel Jones",
+      "grade": 83,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Strong 2025 resurgence is real, but early 2026 regression plus a long prior record of volatility prevents treating that season as a fully established new level."
+    },
+    {
+      "team": "LV",
+      "player": "Kirk Cousins",
+      "grade": 83,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Excellent three-game 2026 start earns respect, but the post-Achilles recent baseline and reduced movement/arm margin prevent a recency-driven jump."
+    },
+    {
+      "team": "NYG",
+      "player": "Jaxson Dart",
+      "grade": 83,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Positive 2025 starter sample with meaningful rushing value and a strong two-game 2026 start; still too little NFL evidence for a larger move."
+    },
+    {
+      "team": "ARI",
+      "player": "Jacoby Brissett",
+      "grade": 82,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "The approved average/solid starter line: competent, stable NFL quarterbacking without high-end creation or sustained difference-making."
+    },
+    {
+      "team": "NO",
+      "player": "Tyler Shough",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Thirteen-game body shows credible starter-level efficiency and enough mobility; ball-security volatility keeps him at the Brissett line."
+    },
+    {
+      "team": "CAR",
+      "player": "Bryce Young",
+      "grade": 82,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Early 2026 improvement is encouraging and materially better than his prior baseline, but three games do not yet justify moving above the established starter line."
+    },
+    {
+      "team": "DEN",
+      "player": "Bo Nix",
+      "grade": 81,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "Two full seasons of competent but low-efficiency play plus a shaky 2026 opening place him just below the average-starter anchor."
+    },
+    {
+      "team": "CLE",
+      "player": "Deshaun Watson",
+      "grade": 81,
+      "kind": "graded",
+      "confidence": "low",
+      "reason": "Four-game 2026 rebound is enough for a small current upgrade, but the poor 2022-24 NFL sample and 2025 absence block a larger recency-driven move."
+    },
+    {
+      "team": "PIT",
+      "player": "Aaron Rodgers",
+      "grade": 80,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Below-average current starter anchor: still capable of high-level pocket stretches, but 2025 and 2026 efficiency no longer support an above-average grade."
+    },
+    {
+      "team": "ATL",
+      "player": "Michael Penix Jr.",
+      "grade": 80,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Arm/timing flashes are evident, but fifteen total NFL games and an 86.8 career passer rating provide limited proof of better than below-average starter ability."
+    },
+    {
+      "team": "MIA",
+      "player": "Malik Willis",
+      "grade": 78,
+      "kind": "graded",
+      "confidence": "medium",
+      "reason": "Physical/rushing tools and strong prior spot starts remain useful, but his 2026 starter sample shows accuracy and drive-finishing limitations."
+    },
+    {
+      "team": "TEN",
+      "player": "Cam Ward",
+      "grade": 77,
+      "kind": "graded",
+      "confidence": "high",
+      "reason": "A full 2025 season and early 2026 both show below-average efficiency; enough arm talent and creation keep him above the weakest Wheel options."
+    },
+    {
+      "team": "LV",
+      "player": "Fernando Mendoza",
+      "grade": 75,
+      "kind": "graded",
+      "confidence": "low",
+      "reason": "No regular-season NFL snaps. Promising flashes were offset by a rough preseason and losing the starting job to Cousins; grade is deliberately provisional and contains no draft-slot projection bonus."
+    },
+    {
+      "team": "NYG",
+      "player": "Jameis Winston",
+      "grade": 74,
+      "kind": "anchor",
+      "confidence": "high",
+      "reason": "Weak current Wheel option anchor: NFL arm talent still creates plays, but current reliability, efficiency and decision volatility are clearly below the starter line."
+    }
+  ],
+  "pairwiseAudit": {
+    "orderedNeighborhoods": [
+      "Josh Allen 99 > Patrick Mahomes 97 > Lamar Jackson 96 > Matthew Stafford 95 = Joe Burrow 95",
+      "Dak Prescott 92 > Drake Maye 90 = Jalen Hurts 90 > Brock Purdy 89 = Jared Goff 89 > Justin Herbert 88",
+      "Justin Herbert 88 > Trevor Lawrence 87 = Jayden Daniels 87 = Jordan Love 87 > Baker Mayfield 86 = C.J. Stroud 86 > Sam Darnold 85",
+      "Sam Darnold 85 > Geno Smith 84 = Caleb Williams 84 = Kyler Murray 84 > Daniel Jones 83 = Kirk Cousins 83 = Jaxson Dart 83",
+      "Jacoby Brissett 82 = Tyler Shough 82 = Bryce Young 82 > Bo Nix 81 = Deshaun Watson 81 > Aaron Rodgers 80 = Michael Penix Jr. 80",
+      "Aaron Rodgers 80 = Michael Penix Jr. 80 > Malik Willis 78 > Cam Ward 77 > Fernando Mendoza 75 > Jameis Winston 74"
+    ],
+    "resolvedPressurePoints": [
+      "Purdy and Herbert remain at the user-approved corrected anchor values (89 and 88); neither receives a trait/reputation or three-game-hot-streak premium.",
+      "Maye stays above Purdy/Goff because the 2025 MVP-caliber season remains the strongest established evidence, but falls well below the elite anchors because the 2026 collapse is too severe to ignore.",
+      "Hurts is tied with Maye at 90: his rushing value and 2024-25 efficiency remain high-end, while current passing indecision prevents a 92+ placement.",
+      "Trevor Lawrence, Jayden Daniels and Jordan Love tie at 87 for different reasons; the audit found no defensible full-point separation in current overall quarterback ability.",
+      "Darnold remains the approved 85 anchor despite strong efficiency because turnover volatility is persistent and the grade is ability, not team record.",
+      "Mendoza receives a provisional 75 rather than a projection-based rookie premium; first meaningful regular-season snaps should trigger a targeted review."
+    ],
+    "result": "locked",
+    "contradictionsRemaining": false
+  },
+  "postGradeDistribution": {
+    "min": 74,
+    "max": 99,
+    "mean": 85.62,
+    "median": 84.5,
+    "bands": {
+      "95-100": 5,
+      "90-94": 3,
+      "85-89": 9,
+      "80-84": 13,
+      "75-79": 3,
+      "below-75": 1
+    },
+    "note": "Distribution was inspected only after player-by-player grading and did not drive any grade."
+  },
+  "runtimeBoundary": "No production/runtime grading behavior is changed by this artifact. Phase 5 will wire server-owned grades, frozen historical selection grades, and hidden reveal behavior separately.",
+  "futureVersioning": "Any future grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check."
+}
