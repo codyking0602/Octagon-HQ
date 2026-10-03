@@ -759,7 +759,7 @@ as $$
     and grade.effective_date <= coalesce(p_grade_cutoff_at::date, current_date)
   order by grade.effective_date desc, grade.grade_version desc
   limit 1;
-$;
+$$;
 
 -- Adopt only matches that are still active at deployment. Existing picks are frozen
 -- against this locked grade version once; already-completed v1 games remain legacy.
@@ -787,7 +787,7 @@ where match.challenge_id = pick.challenge_id
   and grade.name_key = private.wheel_football_grade_name_key(pick.display_name)
   and grade.effective_date <= match.grading_cutoff_at::date;
 
-do $
+do $$
 begin
   if exists (
     select 1
@@ -800,7 +800,7 @@ begin
     raise exception 'Cannot activate NFL Wheel grading: an active historical pick does not resolve to the locked grade authority';
   end if;
 end;
-$;
+$$;
 
 update private.wheel_football_matches match
 set grading_runtime_version = 'nfl-wheel-grade-runtime-v1',
