@@ -281,7 +281,7 @@ begin
       'slots', jsonb_build_array(
         jsonb_build_object(
           'found', true,
-          'entity', jsonb_build_object('id', 'cfb-main-10-4:a3', 'display_name', 'Chip Kelly'),
+          'entity', jsonb_build_object('id', 'cfb-main-10-4:a2', 'display_name', 'Chip Kelly'),
           'points', 7,
           'revealed', true,
           'slot_index', 0
@@ -295,7 +295,7 @@ begin
         ),
         jsonb_build_object(
           'found', true,
-          'entity', jsonb_build_object('id', 'cfb-main-10-4:a4', 'display_name', 'Urban Meyer'),
+          'entity', jsonb_build_object('id', 'cfb-main-10-4:a9', 'display_name', 'Urban Meyer'),
           'points', 5,
           'revealed', true,
           'slot_index', 2
@@ -310,13 +310,13 @@ begin
       ),
       'answer_reveal', jsonb_build_array(
         jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a1', 'display_name', 'Mike Leach'), 'points', 10),
-        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a2', 'display_name', 'Steve Spurrier'), 'points', 8),
-        jsonb_build_object('found', true, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a3', 'display_name', 'Chip Kelly'), 'points', 7),
-        jsonb_build_object('found', true, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a4', 'display_name', 'Urban Meyer'), 'points', 5),
-        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a5', 'display_name', 'Art Briles'), 'points', 5),
-        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a6', 'display_name', 'Lincoln Riley'), 'points', 4),
-        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a7', 'display_name', 'Gus Malzahn'), 'points', 4),
-        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a8', 'display_name', 'Lane Kiffin'), 'points', 3)
+        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a3', 'display_name', 'Steve Spurrier'), 'points', 8),
+        jsonb_build_object('found', true, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a2', 'display_name', 'Chip Kelly'), 'points', 7),
+        jsonb_build_object('found', true, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a9', 'display_name', 'Urban Meyer'), 'points', 5),
+        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a10', 'display_name', 'Art Briles'), 'points', 5),
+        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a4', 'display_name', 'Lincoln Riley'), 'points', 4),
+        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a5', 'display_name', 'Gus Malzahn'), 'points', 4),
+        jsonb_build_object('found', false, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a6', 'display_name', 'Lane Kiffin'), 'points', 3)
       )
     );
 
