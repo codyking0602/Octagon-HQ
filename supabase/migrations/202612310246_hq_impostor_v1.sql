@@ -732,9 +732,22 @@ begin
 
   select round_no into v_current_round
   from private.hq_impostor_rounds
-  where event_id=p_event_id and status not in ('resolved','forfeit','no_contest')
+  where event_id=p_event_id and status in ('clue','vote')
   order by round_no limit 1;
-  if v_current_round is null then v_current_round:=4; end if;
+
+  if v_current_round is null then
+    select round_no into v_current_round
+    from private.hq_impostor_rounds
+    where event_id=p_event_id and status in ('resolved','forfeit','no_contest')
+    order by round_no desc limit 1;
+  end if;
+
+  if v_current_round is null then
+    select round_no into v_current_round
+    from private.hq_impostor_rounds
+    where event_id=p_event_id
+    order by round_no limit 1;
+  end if;
 
   select * into v_round
   from private.hq_impostor_rounds
