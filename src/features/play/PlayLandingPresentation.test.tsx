@@ -7,6 +7,7 @@ import {
   PLAY_LANDING_FOOTBALL_GAME_ORDER,
   PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
   PLAY_LANDING_UFC_STRATEGIC_GAME,
+  PLAY_LANDING_UFC_WHEEL_GAME,
   PlayLandingGameLibrary,
   PlayLandingHeader,
   playLandingDestination,
@@ -30,7 +31,11 @@ describe("Play landing presentation", () => {
       "who-am-i",
       "hit-the-number",
     ]);
-    expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
+    expect(playLandingGameIds("ufc")).toEqual([
+      PLAY_LANDING_UFC_WHEEL_GAME,
+      PLAY_LANDING_UFC_STRATEGIC_GAME,
+      ...PLAY_LANDING_COMMON_GAME_ORDER,
+    ]);
     expect(playLandingGameIds("football")).toEqual([
       PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
       ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
@@ -95,7 +100,7 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/draft-room");
   });
 
-  it("keeps UFC Auction first and presents strategic games with the standard Play Now status", () => {
+  it("puts Wheel of UFC first as a challenge while keeping Auction as the strategic Play Now game", () => {
     const navigate = vi.fn();
     render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />);
     const library = screen.getByRole("region", { name: /pick a game/i });
@@ -108,8 +113,10 @@ describe("Play landing presentation", () => {
       expect.stringContaining("Who Am I?"),
       expect.stringContaining("Auction"),
     ]));
-    expect(cards.at(0)).toHaveTextContent("Auction");
-    expect(within(cards.at(0)!).getByText("PLAY NOW")).toBeInTheDocument();
+    expect(cards.at(0)).toHaveTextContent("Wheel of UFC");
+    expect(within(cards.at(0)!).getByText("CHALLENGE")).toBeInTheDocument();
+    expect(cards.at(1)).toHaveTextContent("Auction");
+    expect(within(cards.at(1)!).getByText("PLAY NOW")).toBeInTheDocument();
     expect(screen.queryByText("STRATEGY")).not.toBeInTheDocument();
     expect(cards.findIndex((card) => /Who Am I\?/.test(card.textContent ?? "")))
       .toBeLessThan(cards.findIndex((card) => /Hit the Number/.test(card.textContent ?? "")));
