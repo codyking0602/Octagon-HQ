@@ -1211,7 +1211,28 @@ function MatchScreen({ code }: { code: string }) {
             <span>{resultPoolLabel(state)}</span>
           </div>
 
-          {state.result ? (
+          {state.result ? state.participants.length === 2 ? (
+            <div className="football-wheel-result-score" aria-label="Final Wheel of Football grades">
+              {[state.creator, state.recipient].map((identity, index) => {
+                const participant = participantForProfile(state, identity.id);
+                const standing = standings.find((item) => item.profile_id === identity.id);
+                return (
+                  <div className={standing?.rank === 1 ? "is-winner" : ""} key={identity.id}>
+                    <small>{identity.id === activeProfileId ? "YOU" : identity.display_name}</small>
+                    <strong>{participant?.final_grade == null
+                      ? participant?.forfeited_at ? "DNF" : "—"
+                      : participant.final_grade.toFixed(1)}</strong>
+                    <span>FINAL GRADE</span>
+                    {index === 0 ? null : null}
+                  </div>
+                );
+              }).reduce<React.ReactNode[]>((items, score, index) => {
+                if (index > 0) items.push(<b key="vs">VS</b>);
+                items.push(score);
+                return items;
+              }, [])}
+            </div>
+          ) : (
             <div className="football-wheel-multiplayer-score" aria-label="Final Wheel of Football standings">
               {(orderedParticipants.length ? orderedParticipants : state.participants).map((participant) => {
                 const standing = standings.find((item) => item.profile_id === participant.id);
