@@ -27,6 +27,8 @@ const pickSchema = z.object({
   country_code: z.string().nullable(),
   country_name: z.string().nullable(),
   headshot_url: z.string().nullable(),
+  spin_category: categorySchema.nullable().optional().default(null),
+  spin_country_name: z.string().nullable().optional().default(null),
   revealed_grade: z.coerce.number().min(0).max(100).nullable().optional().default(null),
 });
 
@@ -36,6 +38,7 @@ const pendingSpinSchema = z.object({
   country_code: z.string().nullable(),
   country_name: z.string().nullable(),
   eligible_slots: z.array(rosterSlotSchema),
+  eligible_counts: z.record(z.string(), z.coerce.number().int().min(0)).optional().default({}),
 });
 
 const resultSchema = z.object({
