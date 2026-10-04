@@ -3,6 +3,161 @@
 -- Original submission evidence remains immutable; only the audited result view
 -- and official score are corrected.
 
+-- Safely refresh today's already-materialized CFB coach board without
+-- changing the identity of any existing entity id. This lets in-progress runs
+-- inherit the audited board while preserving every stored guess.
+do $oct4_setup$
+declare
+  v_setup uuid;
+  v_evidence jsonb;
+  v_pack jsonb;
+  v_entities jsonb;
+  v_board jsonb;
+  v_reveal jsonb;
+begin
+  select setup.id
+  into v_setup
+  from private.daily_challenges daily
+  join private.daily_challenge_schedule_versions schedule
+    on schedule.version = daily.schedule_version
+  join private.daily_challenge_setups setup
+    on setup.id = daily.setup_id
+  where daily.central_day = date '2026-10-04'
+    and schedule.sport = 'football'
+    and daily.game_type = 'sports_feud'
+  limit 1;
+
+  if v_setup is null then
+    return;
+  end if;
+
+  select setup.private_setup_evidence, setup.reveal_setup
+  into v_evidence, v_reveal
+  from private.daily_challenge_setups setup
+  where setup.id = v_setup;
+
+  v_pack := v_evidence->'pack';
+  if v_pack->'mainBoards'->0->>'id' is distinct from 'cfb-main-10-4' then
+    raise exception 'Oct. 4 CFB Sports Feud first board identity changed before live repair';
+  end if;
+
+  if exists (
+    select 1
+    from jsonb_array_elements(v_pack->'entities') entity
+    where entity->>'id' = 'cfb-main-10-4:a9'
+  ) then
+    return;
+  end if;
+
+  v_entities := (v_pack->'entities') || jsonb_build_array(
+    jsonb_build_object(
+      'id', 'cfb-main-10-4:a9',
+      'kind', 'person',
+      'aliases', '[]'::jsonb,
+      'displayName', 'Urban Meyer'
+    ),
+    jsonb_build_object(
+      'id', 'cfb-main-10-4:a10',
+      'kind', 'person',
+      'aliases', '[]'::jsonb,
+      'displayName', 'Art Briles'
+    ),
+    jsonb_build_object(
+      'id', 'cfb-main-10-4:v7',
+      'kind', 'person',
+      'aliases', '[]'::jsonb,
+      'displayName', 'Bobby Petrino'
+    ),
+    jsonb_build_object(
+      'id', 'cfb-main-10-4:v8',
+      'kind', 'person',
+      'aliases', '[]'::jsonb,
+      'displayName', 'Steve Sarkisian'
+    ),
+    jsonb_build_object(
+      'id', 'cfb-main-10-4:v9',
+      'kind', 'person',
+      'aliases', '[]'::jsonb,
+      'displayName', 'Tom Osborne'
+    )
+  );
+
+  v_board := jsonb_build_object(
+    'id', 'cfb-main-10-4',
+    'prompt', 'Name a coach who made opposing defensive coordinators lose sleep.',
+    'answers', jsonb_build_array(
+      jsonb_build_object('entityId', 'cfb-main-10-4:a1', 'points', 10),
+      jsonb_build_object('entityId', 'cfb-main-10-4:a3', 'points', 8),
+      jsonb_build_object('entityId', 'cfb-main-10-4:a2', 'points', 7),
+      jsonb_build_object('entityId', 'cfb-main-10-4:a9', 'points', 5),
+      jsonb_build_object('entityId', 'cfb-main-10-4:a10', 'points', 5),
+      jsonb_build_object('entityId', 'cfb-main-10-4:a4', 'points', 4),
+      jsonb_build_object('entityId', 'cfb-main-10-4:a5', 'points', 4),
+      jsonb_build_object('entityId', 'cfb-main-10-4:a6', 'points', 3)
+    ),
+    'candidateIds', jsonb_build_array(
+      'cfb-main-10-4:a1',
+      'cfb-main-10-4:a3',
+      'cfb-main-10-4:a2',
+      'cfb-main-10-4:a9',
+      'cfb-main-10-4:a10',
+      'cfb-main-10-4:a4',
+      'cfb-main-10-4:a5',
+      'cfb-main-10-4:a6',
+      'cfb-main-10-4:a7',
+      'cfb-main-10-4:v1',
+      'cfb-main-10-4:v4',
+      'cfb-main-10-4:a8',
+      'cfb-main-10-4:v7',
+      'cfb-main-10-4:v8',
+      'cfb-main-10-4:v2',
+      'cfb-main-10-4:v6',
+      'cfb-main-10-4:v5',
+      'cfb-main-10-4:v9',
+      'cfb-main-10-4:v3'
+    ),
+    'alsoAcceptedEntityIds', jsonb_build_array(
+      'cfb-main-10-4:a7',
+      'cfb-main-10-4:v1',
+      'cfb-main-10-4:v4',
+      'cfb-main-10-4:a8',
+      'cfb-main-10-4:v7',
+      'cfb-main-10-4:v8',
+      'cfb-main-10-4:v2',
+      'cfb-main-10-4:v6',
+      'cfb-main-10-4:v5',
+      'cfb-main-10-4:v9',
+      'cfb-main-10-4:v3'
+    )
+  );
+
+  v_pack := jsonb_set(v_pack, '{entities}', v_entities, false);
+  v_pack := jsonb_set(v_pack, '{mainBoards,0}', v_board, false);
+  v_evidence := jsonb_set(v_evidence, '{pack}', v_pack, false);
+
+  v_reveal := jsonb_set(
+    v_reveal,
+    '{main_boards,0,accepted_answers}',
+    jsonb_build_array(
+      jsonb_build_object('rank', 1, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a1', 'display_name', 'Mike Leach'), 'points', 10),
+      jsonb_build_object('rank', 2, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a3', 'display_name', 'Steve Spurrier'), 'points', 8),
+      jsonb_build_object('rank', 3, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a2', 'display_name', 'Chip Kelly'), 'points', 7),
+      jsonb_build_object('rank', 4, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a9', 'display_name', 'Urban Meyer'), 'points', 5),
+      jsonb_build_object('rank', 5, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a10', 'display_name', 'Art Briles'), 'points', 5),
+      jsonb_build_object('rank', 6, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a4', 'display_name', 'Lincoln Riley'), 'points', 4),
+      jsonb_build_object('rank', 7, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a5', 'display_name', 'Gus Malzahn'), 'points', 4),
+      jsonb_build_object('rank', 8, 'entity', jsonb_build_object('id', 'cfb-main-10-4:a6', 'display_name', 'Lane Kiffin'), 'points', 3)
+    ),
+    false
+  );
+
+  update private.daily_challenge_setups
+  set private_setup_evidence = v_evidence,
+      reveal_setup = v_reveal
+  where id = v_setup;
+end
+$oct4_setup$;
+
 do $oct4_tyler$
 declare
   v_profile uuid;
