@@ -115,7 +115,7 @@ merab-dvalishvili|Merab Dvalishvili|Bantamweight|1|false|GE|Georgia|false|true|9
 song-yadong|Song Yadong|Bantamweight|2|false|CN|China|false|true|94.4|/assets/fighters/song-yadong-thumb.webp
 sean-omalley|Sean O'Malley|Bantamweight|3|false|US|United States|false|true|94.2|/assets/fighters/sean-omalley-thumb.webp
 mario-bautista|Mario Bautista|Bantamweight|4|false|US|United States|false|true|92.1|/assets/fighters/mario-bautista-thumb.webp
-umar-nurmagomedov|Umar Nurmagomedov|Bantamweight|5|false|RU|Russia|false|false|91.9|/assets/fighters/umar-nurmagomedov-thumb.webp
+umar-nurmagomedov|Umar Nurmagomedov|Bantamweight|5|false|RU|Russia|false|true|91.9|/assets/fighters/umar-nurmagomedov-thumb.webp
 cory-sandhagen|Cory Sandhagen|Bantamweight|6|false|US|United States|false|true|90.2|/assets/fighters/cory-sandhagen-thumb.webp
 david-martinez|David Martinez|Bantamweight|7|false|MX|Mexico|false|false|88.7|
 raul-rosas-jr|Raul Rosas Jr.|Bantamweight|8|false|MX|Mexico|true|false|86.6|/assets/fighters/raul-rosas-jr-thumb.webp
@@ -133,7 +133,7 @@ santiago-luna|Santiago Luna|Bantamweight||false|US|United States|true|false|80|/
 vinicius-oliveira|Vinicius Oliveira|Bantamweight||false|BR|Brazil|false|false|82|
 alexander-volkanovski|Alexander Volkanovski|Featherweight||true|AU|Australia|false|true|99|/assets/fighters/alexander-volkanovski-thumb.webp
 movsar-evloev|Movsar Evloev|Featherweight|1|false|RU|Russia|false|false|96|
-diego-lopes|Diego Lopes|Featherweight|2|false|BR|Brazil|false|false|94.8|
+diego-lopes|Diego Lopes|Featherweight|2|false|BR|Brazil|false|true|94.8|
 lerone-murphy|Lerone Murphy|Featherweight|3|false|GB|England|false|false|93.7|
 aljamain-sterling|Aljamain Sterling|Featherweight|4|false|US|United States|false|true|92.5|/assets/fighters/aljamain-sterling-thumb.webp
 jean-silva|Jean Silva|Featherweight|5|false|BR|Brazil|false|false|91.4|
@@ -152,7 +152,7 @@ david-onama|David Onama|Featherweight||false|UG|Uganda|false|false|80|
 patricio-pitbull|Patricio Pitbull|Featherweight||false|BR|Brazil|false|false|81|
 yair-rodriguez|Yair Rodriguez|Featherweight||false|MX|Mexico|false|true|89|/assets/fighters/yair-rodriguez-thumb.webp
 justin-gaethje|Justin Gaethje|Lightweight||true|US|United States|false|true|98|/assets/fighters/justin-gaethje-thumb.webp
-ilia-topuria|Ilia Topuria|Lightweight|1|false|ES|Spain|false|false|96|/assets/fighters/ilia-topuria-thumb.webp
+ilia-topuria|Ilia Topuria|Lightweight|1|false|ES|Spain|false|true|96|/assets/fighters/ilia-topuria-thumb.webp
 arman-tsarukyan|Arman Tsarukyan|Lightweight|2|false|AM|Armenia|false|true|94.8|
 charles-oliveira|Charles Oliveira|Lightweight|3|false|BR|Brazil|false|true|93.7|/assets/fighters/charles-oliveira-thumb.webp
 max-holloway|Max Holloway|Lightweight|4|false|US|United States|false|true|92.5|/assets/fighters/max-holloway-thumb.webp
@@ -176,9 +176,9 @@ king-green|King Green|Lightweight||false|US|United States|false|true|78|/assets/
 salahdine-parnasse|Salahdine Parnasse|Lightweight||false|FR|France|false|false|86|
 islam-makhachev|Islam Makhachev|Welterweight||true|RU|Russia|false|true|99|/assets/fighters/islam-makhachev-thumb.webp
 carlos-prates|Carlos Prates|Welterweight|1|false|BR|Brazil|false|false|95.5|
-ian-machado-garry|Ian Machado Garry|Welterweight|2|false|IE|Ireland|false|false|95.3|/assets/fighters/ian-machado-garry-thumb.webp
+ian-machado-garry|Ian Machado Garry|Welterweight|2|false|IE|Ireland|false|true|95.3|/assets/fighters/ian-machado-garry-thumb.webp
 michael-morales|Michael Morales|Welterweight|3|false|EC|Ecuador|false|false|93.7|
-jack-della-maddalena|Jack Della Maddalena|Welterweight|4|false|AU|Australia|false|false|92.5|
+jack-della-maddalena|Jack Della Maddalena|Welterweight|4|false|AU|Australia|false|true|92.5|
 sean-brady|Sean Brady|Welterweight|5|false|US|United States|false|false|90.9|
 gabriel-bonfim|Gabriel Bonfim|Welterweight|6|false|BR|Brazil|false|false|90.7|
 belal-muhammad|Belal Muhammad|Welterweight|7|false|US|United States|false|true|88.7|/assets/fighters/belal-muhammad-thumb.webp
@@ -197,7 +197,7 @@ rinat-fakhretdinov|Rinat Fakhretdinov|Welterweight||false|RU|Russia|false|false|
 roberto-soldic|Roberto Soldić|Welterweight||false|HR|Croatia|false|false|86|/assets/fighters/roberto-soldic-thumb.webp
 shavkat-rakhmonov|Shavkat Rakhmonov|Welterweight||false|KZ|Kazakhstan|false|false|94|/assets/fighters/shavkat-rakhmonov-thumb.webp
 sean-strickland|Sean Strickland|Middleweight||true|US|United States|false|true|96.5|/assets/fighters/sean-strickland-thumb.webp
-khamzat-chimaev|Khamzat Chimaev|Middleweight|1|false|AE|United Arab Emirates|false|false|96|/assets/fighters/khamzat-chimaev-thumb.webp
+khamzat-chimaev|Khamzat Chimaev|Middleweight|1|false|AE|United Arab Emirates|false|true|96|/assets/fighters/khamzat-chimaev-thumb.webp
 dricus-du-plessis|Dricus Du Plessis|Middleweight|2|false|ZA|South Africa|false|true|94.8|/assets/fighters/dricus-du-plessis-thumb.webp
 nassourdine-imavov|Nassourdine Imavov|Middleweight|3|false|FR|France|false|true|93.7|
 joe-pyfer|Joe Pyfer|Middleweight|4|false|US|United States|false|false|91.6|
@@ -212,7 +212,7 @@ bo-nickal|Bo Nickal|Middleweight|12|false|US|United States|false|false|83.5|/ass
 abus-magomedov|Abus Magomedov|Middleweight|13|false|DE|Germany|false|false|82.5|
 edmen-shahbazyan|Edmen Shahbazyan|Middleweight|14|false|US|United States|false|true|81.5|/assets/fighters/edmen-shahbazyan-thumb.webp
 shara-magomedov|Shara Magomedov|Middleweight|15|false|RU|Russia|false|false|80|
-ateba-gautier|Ateba Gautier|Middleweight||false|CM|Cameroon|false|false|82|/assets/fighters/ateba-gautier-thumb.webp
+ateba-gautier|Ateba Gautier|Middleweight||false|CM|Cameroon|true|false|82|/assets/fighters/ateba-gautier-thumb.webp
 damian-pinas|Damian Pinas|Middleweight||false|SR|Suriname|true|false|88|/assets/fighters/damian-pinas-thumb.webp
 jared-cannonier|Jared Cannonier|Middleweight||false|US|United States|false|true|84|/assets/fighters/jared-cannonier-thumb.webp
 mansur-abdul-malik|Mansur Abdul-Malik|Middleweight||false|US|United States|false|false|80|/assets/fighters/mansur-abdul-malik-thumb.webp
@@ -223,7 +223,7 @@ alex-pereira|Alex Pereira|Light Heavyweight|1|false|BR|Brazil|false|true|95.1|/a
 magomed-ankalaev|Magomed Ankalaev|Light Heavyweight|2|false|RU|Russia|false|true|95.3|/assets/fighters/magomed-ankalaev-thumb.webp
 jiri-prochazka|Jiří Procházka|Light Heavyweight|3|false|CZ|Czech Republic|false|false|94.2|
 paulo-costa|Paulo Costa|Light Heavyweight|4|false|BR|Brazil|false|true|91.6|/assets/fighters/paulo-costa-thumb.webp
-jamahal-hill|Jamahal Hill|Light Heavyweight|5|false|US|United States|false|false|90.5|
+jamahal-hill|Jamahal Hill|Light Heavyweight|5|false|US|United States|false|true|90.5|
 khalil-rountree-jr|Khalil Rountree Jr.|Light Heavyweight|6|false|US|United States|false|true|91.2|/assets/fighters/khalil-rountree-jr-thumb.webp
 navajo-stirling|Navajo Stirling|Light Heavyweight|7|false|NZ|New Zealand|false|false|90|/assets/fighters/navajo-stirling-thumb.webp
 dominick-reyes|Dominick Reyes|Light Heavyweight|8|false|US|United States|false|true|87.5|/assets/fighters/dominick-reyes-thumb.webp
