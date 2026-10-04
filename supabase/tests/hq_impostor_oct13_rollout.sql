@@ -3,6 +3,8 @@ begin;
 do $$
 declare
   v_source text;
+  v_gate_source text;
+  v_gate jsonb;
 begin
   if to_regprocedure('public.create_hq_impostor_event(text[])') is null then
     raise exception 'HQ Impostor public creation RPC is missing';
@@ -40,6 +42,35 @@ begin
         raise;
       end if;
   end;
+
+  if to_regprocedure('private.hq_impostor_daily_gate(uuid,timestamptz)') is null then
+    raise exception 'HQ Impostor server Daily gate helper is missing';
+  end if;
+
+  select pg_get_functiondef('public.football_weekly_auction_daily_gate(uuid,timestamptz)'::regprocedure)
+  into v_gate_source;
+  if position('private.hq_impostor_daily_gate' in v_gate_source)=0
+     or position('2026-10-13' in v_gate_source)=0
+     or position('2026-10-20' in v_gate_source)=0 then
+    raise exception 'Football server Daily gate does not delegate the Oct 13-19 week to HQ Impostor';
+  end if;
+
+  v_gate := private.hq_impostor_daily_gate(
+    gen_random_uuid(),
+    '2026-10-13 12:00:00-05'::timestamptz
+  );
+  if coalesce((v_gate->>'required')::boolean,false) is not true
+     or v_gate->>'featured_challenge' <> 'hq-impostor' then
+    raise exception 'A player with no Impostor event should be blocked from Football Daily during featured week';
+  end if;
+
+  v_gate := private.hq_impostor_daily_gate(
+    gen_random_uuid(),
+    '2026-10-12 12:00:00-05'::timestamptz
+  );
+  if coalesce((v_gate->>'required')::boolean,true) is not false then
+    raise exception 'HQ Impostor must not own the Football Daily gate before October 13';
+  end if;
 end;
 $$;
 
