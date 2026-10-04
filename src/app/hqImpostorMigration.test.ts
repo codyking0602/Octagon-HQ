@@ -23,6 +23,9 @@ describe("HQ Impostor v1 contract", () => {
     expect(migration).toContain("revoke all on private.hq_impostor_topics from public, anon, authenticated");
     expect(migration).toContain("assignment_opened_at is not null and not v_is_impostor");
     expect(migration).toContain("v_show_board := v_is_terminal or (v_round.status='vote' and v_action.board_opened_at is not null)");
+    expect(migration).toContain("result_seen_at timestamptz");
+    expect(migration).toContain("create or replace function public.acknowledge_hq_impostor_result");
+    expect(migration).toContain("and action.result_seen_at is null");
   });
 
   it("locks the approved scoring and tie-survival rules", () => {
