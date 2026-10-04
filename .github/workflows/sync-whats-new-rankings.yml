@@ -176,3 +176,7 @@ jobs:
             node scripts/sync-engagement-whats-new.mjs
 
           unset service_role_key
+
+      - name: Monitor Wheel AP Top 25
+        if: steps.guard.outputs.should_sync == 'true'
+        run: node scripts/monitor-wheel-football-ap-top25.mjs
