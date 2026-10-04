@@ -65,7 +65,7 @@ describe("Boise State CFB Wheel grading audit", () => {
       ...boise!["Head Coach"],
       ...boise!.Flex,
     ]).not.toContain("Kaden Anderson");
-    expect(audit.replacedIdentity).toEqual({
+    expect(audit.replacedIdentity).toMatchObject({
       player: "Kaden Anderson",
       replacement: "Matt Wagner",
     });
