@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   wheelFootballPoolTeams,
@@ -18,6 +19,12 @@ describe("Wheel of Football AP Top 25", () => {
       Array.from({ length: 25 }, (_, index) => index + 1),
     );
     expect(ranked.find((team) => team.code === "boise-state")?.apRank).toBe(22);
+
+    const authority = JSON.parse(
+      readFileSync("data/curated/football/cfb/ap-top-25-current.json", "utf8"),
+    ) as { teams: Array<{ rank: number; teamCode: string }> };
+    expect(ranked.map((team) => ({ rank: team.apRank, teamCode: team.code })))
+      .toEqual(authority.teams.map(({ rank, teamCode }) => ({ rank, teamCode })));
   });
 
   it("supports the current AP-only Boise State entrant with audited Wheel options", () => {
