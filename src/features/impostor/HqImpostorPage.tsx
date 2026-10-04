@@ -706,7 +706,7 @@ export default function HqImpostorPage() {
 
       {lobby ? (
         <Lobby members={members} loading={membersLoading} busy={busy} onCreate={createEvent} />
-      ) : (
+      ) : event ? (
         <>
           <section className="hq-impostor-round-banner">
             <div>
@@ -745,7 +745,7 @@ export default function HqImpostorPage() {
             <Standings event={event} compact />
           ) : null}
         </>
-      )}
+      ) : null}
     </div>
   );
 }
