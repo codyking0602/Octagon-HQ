@@ -413,7 +413,7 @@ function SetupScreen() {
 
       <section className="football-wheel-setup surface-card">
         <header>
-          <div><small>1</small><span><b>THE WHEEL</b><em>Weighted for more roster decisions, fewer automatic stars</em></span></div>
+          <div><small>1</small><span><b>THE WHEEL</b><em>Rankings set eligibility, not HQ grade</em></span></div>
           <strong>100% TOTAL</strong>
         </header>
         <div className="ufc-wheel-category-grid" aria-label="Wheel category odds">
@@ -465,7 +465,7 @@ function SetupScreen() {
         <div>
           <span><b>1</b> Spin a category, then choose an eligible division and fighter.</span>
           <span><b>2</b> Fill all eight divisions. A fighter can only be used once in the matchup.</span>
-          <span><b>3</b> Individual HQ grades stay hidden until both rosters are complete.</span>
+          <span><b>3</b> Rankings set eligibility; hidden HQ grades decide the final.</span>
         </div>
       </section>
 
