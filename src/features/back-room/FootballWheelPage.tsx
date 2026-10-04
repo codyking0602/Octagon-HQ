@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-wheel.css";
@@ -445,7 +446,7 @@ function TeamReferenceLink({
 }: {
   team: WheelFootballTeam;
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) {
   const href = wheelFootballSportsReferenceUrl(team);
   if (!href) return <>{children ?? team.name}</>;
