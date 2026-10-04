@@ -109,7 +109,10 @@ describe("Play landing presentation", () => {
       expect.stringContaining("Auction"),
     ]));
     expect(cards.at(0)).toHaveTextContent("Auction");
-    expect(within(cards.at(0)!).getByText("PLAY NOW")).toBeInTheDocument();\n    const wheel = cards.find((card) => /Wheel of UFC/.test(card.textContent ?? ""));\n    expect(wheel).toBeDefined();\n    expect(within(wheel!).getByText("CHALLENGE")).toBeInTheDocument();
+    expect(within(cards.at(0)!).getByText("PLAY NOW")).toBeInTheDocument();
+    const wheel = cards.find((card) => /Wheel of UFC/.test(card.textContent ?? ""));
+    expect(wheel).toBeDefined();
+    expect(within(wheel!).getByText("CHALLENGE")).toBeInTheDocument();
     expect(screen.queryByText("STRATEGY")).not.toBeInTheDocument();
     expect(cards.findIndex((card) => /Who Am I\?/.test(card.textContent ?? "")))
       .toBeLessThan(cards.findIndex((card) => /Hit the Number/.test(card.textContent ?? "")));
