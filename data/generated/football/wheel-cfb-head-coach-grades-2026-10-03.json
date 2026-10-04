@@ -5,10 +5,10 @@
   "effectiveDate": "2026-10-03",
   "populationSource": {
     "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json + data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
-    "mainSha": "404050bae522af33f40080c84e9ed47831a49f6e",
+    "mainSha": "8e6e659d6435f9ab0e5f5e1b2fa6141d590af91f",
     "schoolCount": 68,
     "headCoachCount": 68,
-    "note": "Step 3 priority audit contains no Head Coach overrides; the current generated one-coach-per-school identities are therefore the audited authority."
+    "note": "Step 3 priority audit contains no Head Coach overrides; the current generated one-coach-per-school identities are therefore the audited authority. Main advanced during grading only through unrelated Wheel final-screen/share work; the Head Coach population sources were unchanged."
   },
   "gradingSemantic": "CURRENT COLLEGE HEAD-COACHING ABILITY RIGHT NOW. Current 2026 performance/trajectory leads, 2025 is a major stabilizer, and relevant multi-year head-coaching evidence prevents short-sample insanity. Grade coaching quality rather than AP rank, school prestige, recruiting ranking, roster talent, fame, career win total, old championships, future projection, or NFL reputation.",
   "weightingDirection": "Judgment-led: roughly 40-50% 2026 current performance/trajectory, 25-30% 2025, 20-30% relevant multi-year demonstrated HC level; first-year/new-school cases separate attributable coaching from inherited talent.",
