@@ -39,6 +39,14 @@ import {
 import { FootballSubjectVisual } from "./FootballSubjectVisual";
 import { FootballWeeklyAuctionGate } from "./FootballWeeklyAuctionGate";
 import {
+  createHqImpostorRepository,
+  type HqImpostorState,
+} from "../impostor/hqImpostorRepository";
+import {
+  hqImpostorDailyGateRequired,
+  hqImpostorV1Window,
+} from "../impostor/hqImpostorSchedule";
+import {
   FootballHitTheNumberPresentation,
   footballHitNumberTheme,
 } from "./FootballHitTheNumberPresentation";
@@ -598,18 +606,28 @@ export default function FootballTodayChallengePage() {
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const repository = useMemo(() => createTodayChallengeRepository(undefined, "football"), []);
   const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
+  const impostorRepository = useMemo(() => createHqImpostorRepository(), []);
+  const impostorWindow = hqImpostorV1Window();
   const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
   const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
   const [weeklyBusy, setWeeklyBusy] = useState(false);
   const [weeklyError, setWeeklyError] = useState<string | null>(null);
+  const [impostorState, setImpostorState] = useState<HqImpostorState | null>(null);
+  const [impostorLoading, setImpostorLoading] = useState(false);
+  const [impostorError, setImpostorError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
   const weeklyGateActive = Boolean(
-    weeklyState?.available
+    !impostorWindow.active
+    && weeklyState?.available
     && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
   );
+  const impostorGateActive = impostorWindow.active
+    && !impostorLoading
+    && hqImpostorDailyGateRequired(impostorState);
+  const featuredGateLoaded = impostorWindow.active ? !impostorLoading : weeklyState !== null;
   const dailyRuntime = useTodayChallengeRuntime({
     profileId: identity.profile?.id ?? "signed-out",
-    enabled: signedIn && weeklyState !== null && !weeklyGateActive,
+    enabled: signedIn && featuredGateLoaded && !weeklyGateActive && !impostorGateActive,
     repository,
     sport: "football",
   });
@@ -627,6 +645,13 @@ export default function FootballTodayChallengePage() {
 
   useEffect(() => {
     let active = true;
+    if (impostorWindow.active) {
+      setWeeklyState(null);
+      setShowWeeklyAuction(false);
+      setWeeklyBusy(false);
+      setWeeklyError(null);
+      return () => { active = false; };
+    }
     if (!signedIn) {
       setWeeklyState(null);
       setShowWeeklyAuction(false);
@@ -658,7 +683,37 @@ export default function FootballTodayChallengePage() {
       .finally(() => { if (active) setWeeklyBusy(false); });
 
     return () => { active = false; };
-  }, [editWeeklyAuction, signedIn, weeklyRepository]);
+  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active]);
+
+  useEffect(() => {
+    let active = true;
+    if (!signedIn || !impostorWindow.active) {
+      setImpostorState(null);
+      setImpostorLoading(false);
+      setImpostorError(null);
+      return () => { active = false; };
+    }
+    if (!impostorRepository) {
+      setImpostorLoading(false);
+      setImpostorError("HQ Impostor is unavailable on this build.");
+      return () => { active = false; };
+    }
+
+    setImpostorLoading(true);
+    setImpostorError(null);
+    impostorRepository.load()
+      .then((next) => {
+        if (active) setImpostorState(next);
+      })
+      .catch((reason) => {
+        if (active) setImpostorError(reason instanceof Error ? reason.message : "Could not load HQ Impostor.");
+      })
+      .finally(() => {
+        if (active) setImpostorLoading(false);
+      });
+
+    return () => { active = false; };
+  }, [signedIn, impostorRepository, impostorWindow.active]);
 
   async function submitWeeklyBids(bids: Record<number, FootballWeeklyAuctionBidInput>) {
     if (!weeklyRepository || weeklyBusy) return;
@@ -725,6 +780,29 @@ export default function FootballTodayChallengePage() {
         <section className="football-today-shell today-hub-gate">
           <div><p className="eyebrow">TODAY’S CHALLENGE · FOOTBALL</p><h1>One official board. One first attempt.</h1><p>Sign in to save Football Daily progress across devices and join the Football-only standings.</p></div>
           <button type="button" onClick={identity.openDialog}>SIGN IN TO PLAY</button>
+        </section>
+      </div>
+    );
+  }
+
+  if (impostorWindow.active && (impostorLoading || impostorGateActive || impostorError)) {
+    return (
+      <div className="page football-today-page">
+        <section className="football-today-shell today-hub-gate">
+          <div>
+            <p className="eyebrow">FEATURED CHALLENGE · OCT 13–19</p>
+            <h1>HQ Impostor comes first.</h1>
+            <p>
+              {impostorError
+                ? impostorError
+                : impostorLoading
+                  ? "Checking your current Impostor round…"
+                  : "Complete your current HQ Impostor action, then Football Daily unlocks."}
+            </p>
+          </div>
+          <button type="button" onClick={() => navigate("/impostor")}>
+            {impostorLoading ? "CHECKING…" : "OPEN HQ IMPOSTOR →"}
+          </button>
         </section>
       </div>
     );

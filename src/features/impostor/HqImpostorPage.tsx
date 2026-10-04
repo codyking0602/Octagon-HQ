@@ -9,6 +9,7 @@ import {
   type HqImpostorRound,
   type HqImpostorState,
 } from "./hqImpostorRepository";
+import { hqImpostorV1Window } from "./hqImpostorSchedule";
 import "../../styles/hq-impostor.css";
 
 function readableError(error: unknown) {
@@ -551,6 +552,7 @@ function RoundPlay({
 export default function HqImpostorPage() {
   const navigate = useNavigate();
   const identity = useIdentity();
+  const rollout = hqImpostorV1Window();
   const repository = useMemo(() => createHqImpostorRepository(), []);
   const memberRepository = useMemo(() => createMemberProfilesRepository(), []);
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
@@ -591,12 +593,12 @@ export default function HqImpostorPage() {
   }
 
   useEffect(() => {
-    if (!signedIn) {
+    if (rollout.before || !signedIn) {
       setLoading(false);
       return;
     }
     void loadState();
-  }, [signedIn, repository]);
+  }, [signedIn, repository, rollout.before]);
 
   useEffect(() => {
     if (!signedIn || !state?.event || state.event.status !== "active") return undefined;
@@ -605,10 +607,10 @@ export default function HqImpostorPage() {
   }, [signedIn, state?.event?.id, state?.event?.status]);
 
   useEffect(() => {
-    if ((!state?.event || showLobby) && signedIn && !members.length && !membersLoading) {
+    if (rollout.active && (!state?.event || showLobby) && signedIn && !members.length && !membersLoading) {
       void loadMembers();
     }
-  }, [state?.event?.id, showLobby, signedIn]);
+  }, [state?.event?.id, showLobby, signedIn, rollout.active]);
 
   async function perform(action: () => Promise<HqImpostorState>) {
     setBusy(true);
@@ -636,6 +638,21 @@ export default function HqImpostorPage() {
     if (created) setShowLobby(false);
   }
 
+  if (rollout.before) {
+    return (
+      <div className="page hq-impostor-page">
+        <header className="hq-impostor-page__top">
+          <button type="button" aria-label="Back home" onClick={() => navigate("/")}>←</button>
+          <div><span>FEATURED CHALLENGE</span><h1>HQ IMPOSTOR</h1><small>OPENS OCTOBER 13</small></div>
+        </header>
+        <Panel eyebrow="OCT 13–19 · FEATURED CHALLENGE" title="NOT OPEN YET">
+          <p>Weekly Auction remains the featured requirement through October 12. HQ Impostor takes over the next Tuesday–Monday slot.</p>
+          <button type="button" className="hq-impostor-secondary" onClick={() => navigate("/football/today")}>BACK TO FOOTBALL DAILY</button>
+        </Panel>
+      </div>
+    );
+  }
+
   if (!signedIn) {
     return (
       <div className="page hq-impostor-page">
@@ -656,7 +673,22 @@ export default function HqImpostorPage() {
   }
 
   const event = state?.event ?? null;
-  const lobby = !event || showLobby;
+  const lobby = rollout.active && (!event || showLobby);
+
+  if (rollout.after && !event) {
+    return (
+      <div className="page hq-impostor-page">
+        <header className="hq-impostor-page__top">
+          <button type="button" aria-label="Back home" onClick={() => navigate("/")}>←</button>
+          <div><span>FEATURED CHALLENGE</span><h1>HQ IMPOSTOR</h1><small>OCT 13–19 EVENT</small></div>
+        </header>
+        <Panel eyebrow="FEATURED CHALLENGE" title="EVENT CLOSED">
+          <p>The October HQ Impostor window has ended. Completed event results remain available to participants.</p>
+          <button type="button" className="hq-impostor-secondary" onClick={() => navigate("/football")}>FOOTBALL HQ</button>
+        </Panel>
+      </div>
+    );
+  }
 
   return (
     <div className="page hq-impostor-page">
@@ -674,7 +706,7 @@ export default function HqImpostorPage() {
 
       {lobby ? (
         <Lobby members={members} loading={membersLoading} busy={busy} onCreate={createEvent} />
-      ) : (
+      ) : event ? (
         <>
           <section className="hq-impostor-round-banner">
             <div>
@@ -707,13 +739,13 @@ export default function HqImpostorPage() {
               <span>EVENT COMPLETE</span>
               <h2>FOUR ROUNDS. FINAL TABLE.</h2>
               <Standings event={event} />
-              <button type="button" className="hq-impostor-secondary" onClick={() => setShowLobby(true)}>START ANOTHER EVENT</button>
+              {rollout.active ? <button type="button" className="hq-impostor-secondary" onClick={() => setShowLobby(true)}>START ANOTHER EVENT</button> : null}
             </section>
           ) : event.current_round.phase !== "resolved" ? (
             <Standings event={event} compact />
           ) : null}
         </>
-      )}
+      ) : null}
     </div>
   );
 }
