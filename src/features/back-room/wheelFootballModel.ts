@@ -6,6 +6,7 @@ import { footballTeamAssets } from "./footballSubjectAssets";
 import { footballTeamSchoolMetadata } from "./footballTeamSchoolMetadata";
 import {
   WHEEL_FOOTBALL_NFL_PRIORITY_CAPS,
+  normalizedWheelFootballNflName,
   wheelFootballNflNamesMatch,
   wheelFootballNflPriorityForTeam,
 } from "./wheelFootballNflPriority";
@@ -560,10 +561,16 @@ function curatedWheelShortlist(
   const eligible = candidates.filter((candidate) => candidate.eligibleSlots.includes(slot));
   const selected: WheelFootballCandidate[] = [];
   for (const priorityName of teamPriority[slot]) {
-    const match = eligible.find((candidate) => (
+    const matches = eligible.filter((candidate) => (
       !selected.includes(candidate)
       && namesMatch(candidate.name, priorityName)
     ));
+    const match = nflPriority
+      ? matches.find((candidate) => (
+          normalizedWheelFootballNflName(candidate.name)
+          === normalizedWheelFootballNflName(priorityName)
+        )) ?? (matches.length === 1 ? matches[0] : undefined)
+      : matches[0];
     if (match) selected.push(match);
     if (selected.length >= WHEEL_FOOTBALL_SHORTLIST_MAX[slot]) break;
   }

@@ -58,6 +58,15 @@ export function normalizedWheelFootballNflName(value: string) {
     .replace(/[^a-z0-9]/g, "");
 }
 
+const WHEEL_FOOTBALL_NFL_GENERATIONAL_SUFFIX = /(?:iii|ii|iv|jr|sr|v)$/;
+
+export function normalizedWheelFootballNflBaseName(value: string) {
+  return normalizedWheelFootballNflName(value).replace(WHEEL_FOOTBALL_NFL_GENERATIONAL_SUFFIX, "");
+}
+
 export function wheelFootballNflNamesMatch(left: string, right: string) {
-  return normalizedWheelFootballNflName(left) === normalizedWheelFootballNflName(right);
+  const leftName = normalizedWheelFootballNflName(left);
+  const rightName = normalizedWheelFootballNflName(right);
+  if (leftName === rightName) return true;
+  return normalizedWheelFootballNflBaseName(left) === normalizedWheelFootballNflBaseName(right);
 }

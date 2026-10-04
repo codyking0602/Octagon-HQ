@@ -148,6 +148,35 @@ describe("Wheel of Football current NFL + CFB model", () => {
     ]);
   });
 
+  it("keeps a curated NFL player when the live roster includes a generational suffix", () => {
+    const chiefs = [
+      candidate("walker", "Kenneth Walker III", "RB", ["RB", "Flex"], 5, 0),
+      candidate("emmett", "Emmett Johnson", "RB", ["RB", "Flex"], 1, 1),
+      candidate("rice", "Rashee Rice", "WR", ["WR", "Flex"], 5, 2),
+      candidate("worthy", "Xavier Worthy", "WR", ["WR", "Flex"], 2, 3),
+      candidate("kelce", "Travis Kelce", "TE", ["Flex"], 13, 4),
+    ];
+
+    expect(wheelFootballShortlist(chiefs, "RB", "KC").map((item) => item.name)).toEqual([
+      "Kenneth Walker III", "Emmett Johnson",
+    ]);
+    expect(wheelFootballShortlist(chiefs, "Flex", "KC").map((item) => item.name)).toContain(
+      "Kenneth Walker III",
+    );
+  });
+
+  it("fails closed when suffix-tolerant matching would be ambiguous", () => {
+    const chiefs = [
+      candidate("walker2", "Kenneth Walker II", "RB", ["RB", "Flex"], 5, 0),
+      candidate("walker3", "Kenneth Walker III", "RB", ["RB", "Flex"], 5, 1),
+      candidate("emmett", "Emmett Johnson", "RB", ["RB", "Flex"], 1, 2),
+    ];
+
+    expect(wheelFootballShortlist(chiefs, "RB", "KC").map((item) => item.name)).toEqual([
+      "Emmett Johnson",
+    ]);
+  });
+
   it("locks the manually reviewed Cowboys and Rams football-priority ordering", () => {
     expect(wheelPriorityJson.teams.DAL["Front Seven"]).toEqual([
       "Quinnen Williams",

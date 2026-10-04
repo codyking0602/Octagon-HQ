@@ -130,6 +130,20 @@ begin
 
   select hidden_grade
     into v_grade
+  from private.resolve_wheel_football_grade_snapshot('KC', 'Kenneth Walker III', 'RB', 'RB');
+  if v_grade <> 89 then
+    raise exception 'Kenneth Walker III suffix-safe RB grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('KC', 'Kenneth Walker III', 'Flex', 'RB');
+  if v_grade <> 89 then
+    raise exception 'Kenneth Walker III suffix-safe Flex grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
   from private.resolve_wheel_football_grade_snapshot('DAL', 'Jake Ferguson', 'Flex', 'TE');
   if v_grade is null then
     raise exception 'Flex did not inherit the TE grade';

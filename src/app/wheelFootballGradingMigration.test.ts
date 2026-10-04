@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202612310243_wheel_football_locked_grading.sql",
   "utf8",
 );
+const identityMigration = readFileSync(
+  "supabase/migrations/202612310255_wheel_football_generation_suffix_identity.sql",
+  "utf8",
+);
 const repository = readFileSync("src/features/play/wheelFootballRepository.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballWheelPage.tsx", "utf8");
 
@@ -62,6 +66,14 @@ describe("Wheel of Football locked grading runtime", () => {
     expect(migration).toContain("Missing locked Wheel grade");
     expect(migration).not.toContain("fallback");
     expect(migration).not.toMatch(/coalesce\s*\(\s*authority\.hidden_grade/i);
+  });
+
+  it("allows only an unambiguous generational-suffix identity fallback", () => {
+    expect(identityMigration).toContain("authority.name_key = v_key");
+    expect(identityMigration).toContain("count(distinct authority.name_key)");
+    expect(identityMigration).toContain("v_alias_count = 1");
+    expect(identityMigration).toContain("wheel_football_grade_base_name_key(authority.display_name) = v_base_key");
+    expect(identityMigration).toContain("v_team text := trim(coalesce(p_team_code, ''))");
   });
 
   it("keeps Flex on the selected RB/WR/TE grade and collision identities separated", () => {
