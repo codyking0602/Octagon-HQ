@@ -8,8 +8,8 @@ declare
   v_effective date;
 begin
   select count(*) into v_count from private.wheel_football_grade_authority;
-  if v_count <> 1961 then
-    raise exception 'Expected 1961 locked NFL + CFB Wheel grades, got %', v_count;
+  if v_count <> 1962 then
+    raise exception 'Expected 1962 locked NFL + CFB Wheel grades, got %', v_count;
   end if;
 
   if has_table_privilege('anon', 'private.wheel_football_grade_authority', 'select')
@@ -22,6 +22,14 @@ begin
   where source_artifact like 'data/generated/football/wheel-cfb-%';
   if v_count <> 1335 then
     raise exception 'Expected 1335 locked CFB Wheel grades, got %', v_count;
+  end if;
+
+  select count(*) into v_count
+  from private.wheel_football_grade_authority
+  where team_code = 'boise-state'
+    and grade_version = 'cfb-wheel-ap25-boise-2026-10-03-v2';
+  if v_count <> 18 then
+    raise exception 'Expected 18 audited Boise State v2 Wheel grades, got %', v_count;
   end if;
 
   select count(*) into v_count
@@ -59,6 +67,34 @@ begin
   from private.resolve_wheel_football_grade_snapshot('indiana', 'Curt Cignetti', 'Head Coach', 'HC');
   if v_grade <> 99 then
     raise exception 'Curt Cignetti CFB Head Coach grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade, grade_version
+    into v_grade, v_version
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Matt Wagner', 'Flex', 'TE');
+  if v_grade <> 84 or v_version <> 'cfb-wheel-ap25-boise-2026-10-03-v2' then
+    raise exception 'Matt Wagner Boise State Flex grade/version resolved incorrectly: % / %', v_grade, v_version;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Jayden Virgin-Morgan', 'Front Seven', 'LB');
+  if v_grade <> 91 then
+    raise exception 'Jayden Virgin-Morgan Boise State grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Demetrius Freeney Jr.', 'Secondary', 'CB');
+  if v_grade <> 75 then
+    raise exception 'Demetrius Freeney Jr. Boise State grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Spencer Danielson', 'Head Coach', 'HC');
+  if v_grade <> 88 then
+    raise exception 'Spencer Danielson Boise State coach grade resolved incorrectly: %', v_grade;
   end if;
 
   select hidden_grade, grade_version, effective_date
