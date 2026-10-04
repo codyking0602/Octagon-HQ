@@ -26,9 +26,9 @@ describe("Wheel of Football match-wide player uniqueness", () => {
     );
   });
 
-  it("removes every already-drafted identity from the picker on both sides", () => {
+  it("removes every already-drafted identity from the picker across all participants", () => {
     expect(page).toContain(
-      "[...state.creator_roster, ...state.recipient_roster].map((pick) => pick.athlete_id)",
+      "state.participants.flatMap((participant) => participant.roster).map((pick) => pick.athlete_id)",
     );
     expect(page).toContain(
       "candidates.filter((candidate) => !usedAthleteIds.has(candidate.id))",

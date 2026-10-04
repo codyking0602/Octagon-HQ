@@ -99,7 +99,7 @@ describe("sport-aware Play registry", () => {
         reminderEligible: false,
         historyRecording: "challenge-completion",
         completionState: "wheel-football-complete",
-        lineupSize: 14,
+        lineupSize: 28,
       },
     });
 

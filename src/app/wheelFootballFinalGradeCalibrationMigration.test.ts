@@ -34,8 +34,8 @@ describe("Wheel of Football final-grade calibration v2", () => {
     expect(repository).not.toContain("hidden_grade");
     expect(page).not.toContain("wheel_football_grade_total");
     expect(page).not.toContain("hidden_grade");
-    expect(page).toContain("creator_final_grade.toFixed(1)");
-    expect(page).toContain("recipient_final_grade.toFixed(1)");
+    expect(page).toContain("participant.final_grade.toFixed(1)");
+    expect(page).toContain("entry.standing.final_grade.toFixed(1)");
   });
 
   it("allows decimal final grades through the client schema", () => {
