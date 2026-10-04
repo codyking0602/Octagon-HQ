@@ -18,7 +18,8 @@ export type PlayGameId =
   | "millionaire"
   | "sports-feud"
   | "draft-room"
-  | "wheel-football"\n  | "wheel-ufc";
+  | "wheel-football"
+  | "wheel-ufc";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
 
@@ -56,7 +57,8 @@ export type PlayCompletionState =
   | "bar-trivia-settled"
   | "average-fan-settled"
   | "draft-room-complete"
-  | "wheel-football-complete"\n  | "wheel-ufc-complete";
+  | "wheel-football-complete"
+  | "wheel-ufc-complete";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
