@@ -31,6 +31,7 @@ begin
     or to_regprocedure('public.reveal_hq_impostor_assignment(uuid)') is null
     or to_regprocedure('public.submit_hq_impostor_clue(uuid,text)') is null
     or to_regprocedure('public.open_hq_impostor_board(uuid)') is null
+    or to_regprocedure('public.acknowledge_hq_impostor_result(uuid,integer)') is null
     or to_regprocedure('public.submit_hq_impostor_vote(uuid,uuid,text)') is null then
     raise exception 'HQ Impostor public RPC contract is incomplete';
   end if;
