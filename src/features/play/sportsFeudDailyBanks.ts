@@ -240,7 +240,9 @@ function answerAliases(
   return unique([
     ...(answer.aliases ?? []),
     ...(ALIAS_INDEX[domain].get(answer.name) ?? []),
-    ...(SCOPED_ALIAS_INDEX[domain].get(`${group}|${answer.name}`) ?? []),
+    ...(group === "rivalries"
+      ? (SCOPED_ALIAS_INDEX[domain].get(`${group}|${answer.name}`) ?? [])
+      : []),
     ...automaticAliases(answer.name, domain),
   ]).filter((alias) => alias.trim() && alias !== answer.name);
 }
