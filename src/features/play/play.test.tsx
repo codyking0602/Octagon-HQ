@@ -36,6 +36,7 @@ describe("Play registry", () => {
 
   it("preserves the approved game order and explanatory descriptions", () => {
     expect(playGames.map((game) => game.id)).toEqual([
+      "wheel-ufc",
       "auction",
       "hit-the-number",
       "who-am-i",
