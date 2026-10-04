@@ -17,5 +17,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Compare Wheel AP Top 25 snapshot to current poll
+      - name: Compare poll and enforce extra-team audit coverage
         run: node scripts/check-wheel-cfb-ap-top25.mjs
