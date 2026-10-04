@@ -1142,3 +1142,9 @@
     font-size: 13px;
   }
 }
+
+
+.hq-impostor-result-continue {
+  display: grid;
+  gap: 9px;
+}
