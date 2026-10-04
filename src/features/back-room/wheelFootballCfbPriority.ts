@@ -165,8 +165,8 @@ const wheelFootballCfbTop25ExtraPriority: Readonly<
     QB: ["Maddux Madsen"],
     RB: ["Dylan Riley", "Sire Gaines"],
     WR: ["Rasean Jones", "Cam Bates", "Ben Ford"],
-    TE: ["Kaden Anderson"],
-    Flex: ["Dylan Riley", "Rasean Jones", "Cam Bates", "Kaden Anderson"],
+    TE: ["Matt Wagner"],
+    Flex: ["Dylan Riley", "Rasean Jones", "Cam Bates", "Matt Wagner"],
     "Front Seven": [
       "Jayden Virgin-Morgan",
       "Jake Ripp",
