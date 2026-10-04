@@ -60,6 +60,22 @@ describe("Sports Feud authored alias contract", () => {
     });
   }
 
+  it("accepts common CFB rivalry shorthand in either team order", () => {
+    const pack = buildSportsFeudPack("cfb", "2026-10-04");
+    const question = pack.fastMoney.find((row) => row.id === "cfb-fast3-04-3");
+    expect(question).toBeDefined();
+    if (!question) return;
+
+    const byId = new Map(pack.entities.map((entity) => [entity.id, entity.displayName]));
+    for (const input of ["OU-Texas", "Texas-OU", "OU vs Texas", "Texas vs OU"]) {
+      const match = matchFamilyFeudAnswer(pack, question, input);
+      expect(match.status, input).toBe("matched");
+      if (match.status === "matched") {
+        expect(byId.get(match.entityId), input).toBe("Texas-Oklahoma");
+      }
+    }
+  });
+
   it("locks high-risk natural phrase and venue shorthand that users type under Fast Money pressure", () => {
     const pack = buildSportsFeudPack("nfl", "2026-09-25");
     const byId = new Map(pack.entities.map((entity) => [entity.id, entity]));
