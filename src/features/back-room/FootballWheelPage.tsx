@@ -70,6 +70,278 @@ function pickForSlot(roster: readonly WheelFootballPick[], slot: WheelFootballRo
   return roster.find((pick) => pick.roster_slot === slot) ?? null;
 }
 
+function resultPoolLabel(state: WheelFootballState) {
+  return `${state.pool_scope === "DIVISION"
+    ? state.division
+    : state.pool_scope === "NFL"
+      ? "FULL NFL"
+      : state.pool_scope} · CURRENT NFL`;
+}
+
+function roundedCanvasRect(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+) {
+  const r = Math.min(radius, width / 2, height / 2);
+  context.beginPath();
+  context.moveTo(x + r, y);
+  context.lineTo(x + width - r, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + r);
+  context.lineTo(x + width, y + height - r);
+  context.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+  context.lineTo(x + r, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - r);
+  context.lineTo(x, y + r);
+  context.quadraticCurveTo(x, y, x + r, y);
+  context.closePath();
+}
+
+function canvasTextToFit(
+  context: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number,
+) {
+  if (context.measureText(text).width <= maxWidth) return text;
+  let clipped = text;
+  while (clipped.length > 1 && context.measureText(`${clipped}…`).width > maxWidth) {
+    clipped = clipped.slice(0, -1);
+  }
+  return `${clipped}…`;
+}
+
+function drawShareRosterCell(
+  context: CanvasRenderingContext2D,
+  pick: WheelFootballPick | null,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  align: "left" | "right",
+) {
+  if (!pick) return;
+  const team = wheelFootballTeam(pick.team_code);
+  const accent = team?.primaryColor ?? "#357fbd";
+  const badgeSize = 58;
+  const badgeX = align === "left" ? x + 24 : x + width - 24 - badgeSize;
+  const textX = align === "left" ? badgeX + badgeSize + 20 : badgeX - 20;
+  const textWidth = width - badgeSize - 68;
+
+  context.fillStyle = accent;
+  context.fillRect(align === "left" ? x : x + width - 5, y, 5, height);
+
+  context.beginPath();
+  context.arc(badgeX + badgeSize / 2, y + height / 2, badgeSize / 2, 0, Math.PI * 2);
+  context.fillStyle = "#f4f8fb";
+  context.fill();
+  context.fillStyle = "#0b1a26";
+  context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText(pick.team_code, badgeX + badgeSize / 2, y + height / 2 + 1);
+
+  context.textAlign = align;
+  context.textBaseline = "alphabetic";
+  context.fillStyle = "#ffffff";
+  context.font = "900 32px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(
+    canvasTextToFit(context, pick.display_name, textWidth),
+    textX,
+    y + 48,
+  );
+  context.fillStyle = "#7890a3";
+  context.font = "700 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(
+    `${pick.team_code} · ${pick.position_abbreviation}`,
+    textX,
+    y + 80,
+  );
+}
+
+async function buildWheelResultShareImage(state: WheelFootballState) {
+  if (!state.result) throw new Error("Final grades are not available.");
+
+  const width = 1200;
+  const height = 1500;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Result image could not be created.");
+
+  const winner = state.result.winner_profile_id === state.creator.id
+    ? state.creator
+    : state.result.winner_profile_id === state.recipient.id
+      ? state.recipient
+      : null;
+
+  context.fillStyle = "#03070b";
+  context.fillRect(0, 0, width, height);
+
+  const glow = context.createRadialGradient(280, 90, 20, 280, 90, 620);
+  glow.addColorStop(0, "rgba(51, 135, 201, .24)");
+  glow.addColorStop(1, "rgba(3, 7, 11, 0)");
+  context.fillStyle = glow;
+  context.fillRect(0, 0, width, 650);
+
+  context.fillStyle = "#8bbfe7";
+  context.font = "900 24px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.letterSpacing = "3px";
+  context.fillText("THE HQ", 58, 64);
+
+  context.fillStyle = "#8297a8";
+  context.font = "900 25px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("WHEEL OF FOOTBALL · FINAL", 58, 114);
+
+  context.fillStyle = "#ffffff";
+  context.font = "900 56px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(winner ? `${winner.display_name.toUpperCase()} WINS` : "DEAD EVEN", 58, 182);
+
+  context.fillStyle = "#7f96a8";
+  context.font = "800 25px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(resultPoolLabel(state), 58, 226);
+
+  roundedCanvasRect(context, 56, 260, 1088, 190, 28);
+  context.fillStyle = "#0b1117";
+  context.fill();
+  context.strokeStyle = "rgba(122, 169, 205, .22)";
+  context.lineWidth = 2;
+  context.stroke();
+
+  const scoreColumns = [
+    {
+      profile: state.creator,
+      grade: state.result.creator_final_grade,
+      winner: state.result.winner_profile_id === state.creator.id,
+      x: 76,
+    },
+    {
+      profile: state.recipient,
+      grade: state.result.recipient_final_grade,
+      winner: state.result.winner_profile_id === state.recipient.id,
+      x: 642,
+    },
+  ];
+
+  for (const score of scoreColumns) {
+    roundedCanvasRect(context, score.x, 282, 482, 146, 22);
+    context.fillStyle = score.winner ? "rgba(42, 112, 168, .24)" : "rgba(255, 255, 255, .025)";
+    context.fill();
+    context.strokeStyle = score.winner ? "rgba(117, 192, 247, .45)" : "rgba(255, 255, 255, .08)";
+    context.stroke();
+
+    context.textAlign = "center";
+    context.fillStyle = "#8ca1b2";
+    context.font = "900 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText(
+      canvasTextToFit(context, score.profile.display_name.toUpperCase(), 390),
+      score.x + 241,
+      318,
+    );
+    context.fillStyle = score.winner ? "#8fcaf5" : "#ffffff";
+    context.font = "900 72px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText(score.grade.toFixed(1), score.x + 241, 390);
+    context.fillStyle = "#687f91";
+    context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText("FINAL GRADE", score.x + 241, 417);
+  }
+
+  context.fillStyle = "#617f97";
+  context.font = "900 24px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.textAlign = "center";
+  context.fillText("VS", 600, 365);
+
+  const rosterX = 56;
+  const rosterY = 480;
+  const rosterWidth = 1088;
+  const headerHeight = 88;
+  const rowHeight = 108;
+  roundedCanvasRect(context, rosterX, rosterY, rosterWidth, headerHeight + rowHeight * 7, 28);
+  context.fillStyle = "#0b1117";
+  context.fill();
+  context.strokeStyle = "rgba(122, 169, 205, .18)";
+  context.lineWidth = 2;
+  context.stroke();
+
+  context.fillStyle = "#70b8f2";
+  context.textAlign = "left";
+  context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(state.creator.display_name.toUpperCase(), 94, rosterY + 38);
+  context.fillStyle = "#ffffff";
+  context.font = "900 28px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("SUPERTEAM", 94, rosterY + 68);
+
+  context.textAlign = "right";
+  context.fillStyle = "#70b8f2";
+  context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(state.recipient.display_name.toUpperCase(), 1106, rosterY + 38);
+  context.fillStyle = "#ffffff";
+  context.font = "900 28px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("SUPERTEAM", 1106, rosterY + 68);
+
+  context.strokeStyle = "rgba(255, 255, 255, .07)";
+  context.beginPath();
+  context.moveTo(rosterX + 1, rosterY + headerHeight);
+  context.lineTo(rosterX + rosterWidth - 1, rosterY + headerHeight);
+  context.stroke();
+
+  WHEEL_FOOTBALL_ROSTER_SLOTS.forEach((slot, index) => {
+    const rowY = rosterY + headerHeight + index * rowHeight;
+    if (index > 0) {
+      context.strokeStyle = "rgba(255, 255, 255, .055)";
+      context.beginPath();
+      context.moveTo(rosterX + 1, rowY);
+      context.lineTo(rosterX + rosterWidth - 1, rowY);
+      context.stroke();
+    }
+
+    drawShareRosterCell(
+      context,
+      pickForSlot(state.creator_roster, slot),
+      rosterX,
+      rowY,
+      466,
+      rowHeight,
+      "left",
+    );
+    drawShareRosterCell(
+      context,
+      pickForSlot(state.recipient_roster, slot),
+      rosterX + 622,
+      rowY,
+      466,
+      rowHeight,
+      "right",
+    );
+
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillStyle = "#73b4e7";
+    context.font = "900 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText(slot, 600, rowY + rowHeight / 2);
+    context.textBaseline = "alphabetic";
+  });
+
+  context.fillStyle = "#60788b";
+  context.textAlign = "left";
+  context.font = "800 21px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("Individual player grades stay private.", 58, 1452);
+  context.textAlign = "right";
+  context.fillStyle = "#86bce6";
+  context.font = "900 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("THE HQ · WHEEL OF FOOTBALL", 1142, 1452);
+
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("Result image could not be created."));
+    }, "image/png");
+  });
+}
+
 function PickMark({ pick }: { pick: WheelFootballPick | null }) {
   const team = pick ? wheelFootballTeam(pick.team_code) : null;
   if (!pick) return <span className="football-wheel-roster__empty-mark" aria-hidden="true">+</span>;
@@ -505,6 +777,7 @@ function MatchScreen({ code }: { code: string }) {
   const [rosterError, setRosterError] = useState("");
   const [selectedSlot, setSelectedSlot] = useState<WheelFootballRosterSlot | null>(null);
   const [showForfeitConfirm, setShowForfeitConfirm] = useState(false);
+  const [shareState, setShareState] = useState<"idle" | "sharing" | "saved" | "error">("idle");
   const [error, setError] = useState("");
   const openedRef = useRef(false);
 
@@ -660,6 +933,48 @@ function MatchScreen({ code }: { code: string }) {
     }
   }
 
+  async function shareResult() {
+    if (!state?.result || shareState === "sharing") return;
+    setShareState("sharing");
+
+    try {
+      const blob = await buildWheelResultShareImage(state);
+      const file = new File(
+        [blob],
+        `wheel-of-football-${code.toLowerCase()}-final.png`,
+        { type: "image/png" },
+      );
+      const canShareFile = typeof navigator.share === "function"
+        && (typeof navigator.canShare !== "function" || navigator.canShare({ files: [file] }));
+
+      if (canShareFile) {
+        await navigator.share({
+          files: [file],
+          title: "Wheel of Football · Final",
+        });
+        setShareState("idle");
+        return;
+      }
+
+      const href = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = href;
+      link.download = file.name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(href), 1000);
+      setShareState("saved");
+      window.setTimeout(() => setShareState("idle"), 1600);
+    } catch (reason) {
+      if (reason instanceof DOMException && reason.name === "AbortError") {
+        setShareState("idle");
+        return;
+      }
+      setShareState("error");
+    }
+  }
+
   if (loading) {
     return (
       <div className="page football-wheel-page">
@@ -714,57 +1029,82 @@ function MatchScreen({ code }: { code: string }) {
       : state.result?.winner_profile_id === state.recipient.id
         ? state.recipient
         : null;
+    const canShareResult = Boolean(state.result && !forfeitedProfile);
 
     return (
-      <div className="page football-wheel-page">
-        <section className="football-wheel-match__status surface-card is-complete">
-          <p className="eyebrow">WHEEL OF FOOTBALL · {forfeitedProfile ? "FORFEIT" : state.result ? "FINAL" : "COMPLETE"}</p>
-          <h1>{forfeitedProfile
-            ? `${forfeitedProfile.display_name} forfeited`
-            : state.result
-              ? gradedWinner
-                ? `${gradedWinner.display_name} wins`
-                : "Dead even"
-              : `${state.creator.display_name} vs ${state.recipient.display_name}`}</h1>
-          <span>{state.pool_scope === "DIVISION" ? state.division : state.pool_scope === "NFL" ? "FULL NFL" : state.pool_scope} · CURRENT NFL</span>
-        </section>
+      <div className="page football-wheel-page football-wheel-page--result">
+        <section className="football-wheel-result-summary surface-card">
+          <div className="football-wheel-result-summary__meta">
+            <div>
+              <p className="eyebrow">WHEEL OF FOOTBALL · {forfeitedProfile ? "FORFEIT" : state.result ? "FINAL" : "COMPLETE"}</p>
+              <h1>{forfeitedProfile
+                ? `${forfeitedProfile.display_name} forfeited`
+                : state.result
+                  ? gradedWinner
+                    ? `${gradedWinner.display_name} wins`
+                    : "Dead even"
+                  : `${state.creator.display_name} vs ${state.recipient.display_name}`}</h1>
+            </div>
+            <span>{resultPoolLabel(state)}</span>
+          </div>
 
-        {!forfeitedProfile && state.result ? (
-          <section className="football-wheel-final-grade surface-card" aria-label="Final Wheel of Football grades">
-            <div className={state.result.winner_profile_id === state.creator.id ? "is-winner" : ""}>
-              <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
-              <strong>{state.result.creator_final_grade.toFixed(1)}</strong>
-              <span>FINAL GRADE</span>
+          {!forfeitedProfile && state.result ? (
+            <div className="football-wheel-result-score" aria-label="Final Wheel of Football grades">
+              <div className={state.result.winner_profile_id === state.creator.id ? "is-winner" : ""}>
+                <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
+                <strong>{state.result.creator_final_grade.toFixed(1)}</strong>
+                <span>FINAL GRADE</span>
+              </div>
+              <b>VS</b>
+              <div className={state.result.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
+                <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
+                <strong>{state.result.recipient_final_grade.toFixed(1)}</strong>
+                <span>FINAL GRADE</span>
+              </div>
             </div>
-            <b>VS</b>
-            <div className={state.result.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
-              <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
-              <strong>{state.result.recipient_final_grade.toFixed(1)}</strong>
-              <span>FINAL GRADE</span>
-            </div>
-          </section>
-        ) : null}
+          ) : (
+            <p className="football-wheel-result-summary__note">
+              {forfeitedProfile
+                ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.`
+                : "This matchup was completed before final-grade scoring was introduced."}
+            </p>
+          )}
+        </section>
 
         <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
 
-        <section className="football-wheel-final surface-card">
-          <strong>{forfeitedProfile
-            ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.`
-            : state.result
-              ? gradedWinner
-                ? `${gradedWinner.display_name} built the stronger Superteam.`
-                : "The Superteams finished tied."
-              : "Both Superteams are locked."}</strong>
-          <p>{forfeitedProfile
-            ? "The matchup ended early. All picks made before the forfeit remain visible."
-            : state.result
-              ? "Only the final Superteam grade is revealed. Individual player and coach grades stay private."
-              : "This matchup was completed before final-grade scoring was introduced, so its original result is preserved."}</p>
-          <div>
-            <button type="button" className="secondary-action" onClick={() => navigate("/football")}>ALL GAMES</button>
-            <button type="button" className="primary-action" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
-          </div>
-        </section>
+        <div className={`football-wheel-result-actions${canShareResult ? "" : " without-share"}`}>
+          {canShareResult ? (
+            <button
+              type="button"
+              className="football-wheel-result-actions__share"
+              disabled={shareState === "sharing"}
+              onClick={() => void shareResult()}
+            >
+              {shareState === "sharing"
+                ? "PREPARING…"
+                : shareState === "saved"
+                  ? "IMAGE SAVED"
+                  : shareState === "error"
+                    ? "TRY SHARE"
+                    : "SHARE RESULT ↗"}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className="football-wheel-result-actions__new"
+            onClick={() => navigate("/football/wheel")}
+          >
+            NEW CHALLENGE →
+          </button>
+          <button
+            type="button"
+            className="football-wheel-result-actions__all"
+            onClick={() => navigate("/football")}
+          >
+            ALL GAMES
+          </button>
+        </div>
       </div>
     );
   }
