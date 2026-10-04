@@ -150,7 +150,7 @@ const NFL_ROSTER_TEAM_CODES = new Set([
 ]);
 
 const CFB_ROSTER_ESPN_IDS = new Set([
-  "333", "8", "2", "57", "61", "96", "99", "344", "142", "201", "145", "2579", "2633", "251", "245", "238",
+  "68", "333", "8", "2", "57", "61", "96", "99", "344", "142", "201", "145", "2579", "2633", "251", "245", "238",
   "356", "84", "2294", "120", "130", "127", "135", "158", "77", "194", "2483", "213", "2509", "164", "26", "30", "264", "275",
   "12", "9", "239", "252", "2132", "38", "248", "66", "2305", "2306", "197", "2628", "2641", "2116", "254", "277",
   "103", "25", "228", "150", "52", "59", "97", "2390", "152", "153", "221", "2567", "24", "183", "258", "259", "154", "87",
@@ -243,6 +243,99 @@ async function serveCfbRoster(requestUrl: URL) {
     return new Response(upstream.body, { status: 200, headers });
   } catch {
     return new Response(JSON.stringify({ error: "Current college roster is unavailable." }), {
+      status: 502,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+}
+
+
+const CFB_AP_TOP25_UPSTREAM =
+  "https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings";
+
+function objectValue(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+export function normalizeCfbApTop25(payload: unknown) {
+  const root = objectValue(payload);
+  const polls = Array.isArray(root?.rankings) ? root.rankings : [];
+  const poll = polls
+    .map(objectValue)
+    .find((candidate) => {
+      const name = typeof candidate?.name === "string" ? candidate.name : "";
+      return /ap\s+top\s*25/i.test(name);
+    });
+  const ranks = Array.isArray(poll?.ranks) ? poll.ranks : [];
+  const normalized = ranks.flatMap((raw) => {
+    const row = objectValue(raw);
+    const team = objectValue(row?.team);
+    const current = typeof row?.current === "number"
+      ? Math.trunc(row.current)
+      : Number(row?.current);
+    const espnId = typeof team?.id === "string" ? team.id.trim() : "";
+    const name = typeof team?.displayName === "string"
+      ? team.displayName.trim()
+      : typeof team?.location === "string"
+        ? team.location.trim()
+        : "";
+    return current >= 1 && current <= 25 && espnId && name
+      ? [{ rank: current, espnId, name }]
+      : [];
+  }).sort((left, right) => left.rank - right.rank);
+
+  const ranksSeen = new Set(normalized.map((row) => row.rank));
+  const teamsSeen = new Set(normalized.map((row) => row.espnId));
+  if (normalized.length !== 25 || ranksSeen.size !== 25 || teamsSeen.size !== 25) return null;
+
+  return {
+    source: "ESPN · AP Top 25",
+    pollDate: typeof poll?.date === "string" ? poll.date.slice(0, 10) : null,
+    rankings: normalized,
+  };
+}
+
+async function serveCfbApTop25() {
+  try {
+    const upstream = await fetch(CFB_AP_TOP25_UPSTREAM, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "OctagonHQ/1.0",
+      },
+    });
+    if (!upstream.ok) {
+      return new Response(JSON.stringify({ error: "Current AP Top 25 is unavailable." }), {
+        status: 502,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+    const normalized = normalizeCfbApTop25(await upstream.json());
+    if (!normalized) {
+      return new Response(JSON.stringify({ error: "AP Top 25 response was incomplete." }), {
+        status: 502,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+    return new Response(JSON.stringify(normalized), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=900, stale-while-revalidate=3600",
+      },
+    });
+  } catch {
+    return new Response(JSON.stringify({ error: "Current AP Top 25 is unavailable." }), {
       status: 502,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -399,6 +492,9 @@ export default {
     }
     if (requestUrl.pathname === "/api/football/cfb-roster") {
       return serveCfbRoster(requestUrl);
+    }
+    if (requestUrl.pathname === "/api/football/cfb-ap-top25") {
+      return serveCfbApTop25();
     }
     if (requestUrl.pathname === "/deployment.json") {
       return serveDeploymentMarker();
