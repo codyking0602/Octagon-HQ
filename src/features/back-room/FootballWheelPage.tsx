@@ -803,7 +803,7 @@ function SetupScreen() {
           <span><b>1</b> The first player is randomized after the challenge is accepted.</span>
           <span><b>2</b> Spin a team, then choose one current player or coach for an open Superteam slot.</span>
           <span><b>3</b> Turns alternate until both QB · RB · WR · Flex · Front Seven · Secondary · Head Coach are filled.</span>
-          <span><b>4</b> No re-spins. Teams can return later, but you will not get the same team on back-to-back personal spins.</span>
+          <span><b>4</b> The wheel only keeps teams that can still fill one of your open spots. Back-to-back repeats are avoided unless that team is the only valid option; dead spins auto-respin for free.</span>
           <span><b>5</b> Individual grades stay private. Only the two completed Superteams’ final grades are revealed.</span>
         </div>
       </section>
@@ -895,8 +895,18 @@ function MatchScreen({ code }: { code: string }) {
   );
   const opponent = state ? otherParticipant(state, activeProfileId) : null;
   const division = state ? divisionFromState(state.division) : null;
-  const poolTeams = state ? wheelFootballPoolTeams(state.pool_scope, division) : [];
+  const allPoolTeams = state ? wheelFootballPoolTeams(state.pool_scope, division) : [];
+  const eligibleTeamCodes = new Set(state?.eligible_team_codes ?? []);
+  const shouldFilterWheel = Boolean(
+    state?.opened_at
+    && state.phase !== "complete"
+    && state.current_turn_profile_id,
+  );
+  const poolTeams = shouldFilterWheel
+    ? allPoolTeams.filter((team) => eligibleTeamCodes.has(team.code))
+    : allPoolTeams;
   const pendingTeam = state?.pending_team ? wheelFootballTeam(state.pending_team.code) : null;
+  const pendingTeamEligible = !pendingTeam || eligibleTeamCodes.has(pendingTeam.code);
 
   async function loadRoster() {
     if (!pendingTeam) return;
@@ -916,11 +926,25 @@ function MatchScreen({ code }: { code: string }) {
     setSelectedSlot(null);
     setCandidates([]);
     setRosterError("");
-    if (state?.phase === "pick" && isMyTurn && pendingTeam) void loadRoster();
-  }, [isMyTurn, pendingTeam?.code, state?.phase]);
+    if (state?.phase === "pick" && isMyTurn && pendingTeam && pendingTeamEligible) void loadRoster();
+  }, [isMyTurn, pendingTeam?.code, pendingTeamEligible, state?.phase]);
 
   async function spin() {
-    if (!repository || !state || !isMyTurn || state.phase !== "spin" || spinning || !state.opened_at) return;
+    const isFreeReroll = Boolean(
+      state
+      && state.phase === "pick"
+      && pendingTeam
+      && state.eligible_team_codes.length > 0
+      && !pendingTeamEligible,
+    );
+    if (
+      !repository
+      || !state
+      || !isMyTurn
+      || (state.phase !== "spin" && !isFreeReroll)
+      || spinning
+      || !state.opened_at
+    ) return;
     setSpinning(true);
     setError("");
     try {
@@ -950,6 +974,26 @@ function MatchScreen({ code }: { code: string }) {
       setError(reason instanceof Error ? reason.message : "The wheel could not be spun.");
     }
   }
+
+  useEffect(() => {
+    if (
+      !state
+      || !isMyTurn
+      || state.phase !== "pick"
+      || !pendingTeam
+      || pendingTeamEligible
+      || state.eligible_team_codes.length === 0
+      || spinning
+    ) return;
+    void spin();
+  }, [
+    isMyTurn,
+    pendingTeam?.code,
+    pendingTeamEligible,
+    spinning,
+    state?.eligible_team_codes,
+    state?.phase,
+  ]);
 
   async function forfeitMatch() {
     if (!repository || !state?.opened_at || state.phase === "complete" || busy) return;
@@ -1200,12 +1244,17 @@ function MatchScreen({ code }: { code: string }) {
         teams={poolTeams}
         rotation={rotation}
         spinning={spinning}
-        pendingTeam={pendingTeam}
-        canSpin={Boolean(state.opened_at && isMyTurn && state.phase === "spin")}
+        pendingTeam={pendingTeamEligible ? pendingTeam : null}
+        canSpin={Boolean(
+          state.opened_at
+          && isMyTurn
+          && state.phase === "spin"
+          && poolTeams.length > 0
+        )}
         onSpin={() => void spin()}
       />
 
-      {state.phase === "pick" && pendingTeam && isMyTurn ? (
+      {state.phase === "pick" && pendingTeam && pendingTeamEligible && isMyTurn ? (
         <CandidatePicker
           team={pendingTeam}
           candidates={candidates}

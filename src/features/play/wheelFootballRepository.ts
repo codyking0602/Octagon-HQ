@@ -59,6 +59,7 @@ const stateSchema = z.object({
   turn_count: z.coerce.number().int().min(0).max(14),
   current_turn_profile_id: z.string().uuid().nullable(),
   pending_team: teamSchema.nullable(),
+  eligible_team_codes: z.array(z.string().min(1).max(64)),
   creator: participantSchema,
   recipient: participantSchema,
   creator_roster: z.array(pickSchema),
