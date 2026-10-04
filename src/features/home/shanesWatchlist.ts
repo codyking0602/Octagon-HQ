@@ -76,7 +76,7 @@ export const shanesWatchlist = {
     {
       id: "raul-rosas-jr",
       rank: 2,
-      previousRank: 4,
+      previousRank: 2,
       name: "Raul Rosas Jr.",
       nickname: "El Nino Problema",
       status: "Rising",
@@ -98,7 +98,7 @@ export const shanesWatchlist = {
     {
       id: "abdul-rakhman-yakhyaev",
       rank: 3,
-      previousRank: 2,
+      previousRank: 3,
       name: "Abdul Rakhman Yakhyaev",
       nickname: "The Hunter",
       status: "Rising",
@@ -120,7 +120,7 @@ export const shanesWatchlist = {
     {
       id: "bilal-hasan",
       rank: 4,
-      previousRank: 3,
+      previousRank: 4,
       name: "Bilal Hasan",
       nickname: "The IndoNinja",
       status: "Rising",
