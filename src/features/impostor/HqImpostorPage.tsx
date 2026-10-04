@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
@@ -9,7 +9,7 @@ import {
   type HqImpostorRound,
   type HqImpostorState,
 } from "./hqImpostorRepository";
-import { hqImpostorV1Window } from "./hqImpostorSchedule";
+import { hqImpostorDailyGateRequired, hqImpostorV1Window } from "./hqImpostorSchedule";
 import "../../styles/hq-impostor.css";
 
 function readableError(error: unknown) {
@@ -551,7 +551,9 @@ function RoundPlay({
 
 export default function HqImpostorPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const identity = useIdentity();
+  const returnToDaily = searchParams.get("from") === "daily";
   const rollout = hqImpostorV1Window();
   const repository = useMemo(() => createHqImpostorRepository(), []);
   const memberRepository = useMemo(() => createMemberProfilesRepository(), []);
@@ -636,6 +638,12 @@ export default function HqImpostorPage() {
     if (!repository) return;
     const created = await perform(() => repository.createEvent(names));
     if (created) setShowLobby(false);
+  }
+
+  async function submitClueAndReturn(eventId: string, clue: string) {
+    if (!repository) return;
+    const submitted = await perform(() => repository.submitClue(eventId, clue));
+    if (submitted && returnToDaily) navigate("/football/today", { replace: true });
   }
 
   if (rollout.before) {
@@ -728,11 +736,21 @@ export default function HqImpostorPage() {
             event={event}
             busy={busy}
             onReveal={() => repository && void perform(() => repository.revealAssignment(event.id))}
-            onClue={(clue) => repository && void perform(() => repository.submitClue(event.id, clue))}
+            onClue={(clue) => void submitClueAndReturn(event.id, clue)}
             onOpenBoard={() => repository && void perform(() => repository.openBoard(event.id))}
             onVote={(profileId, guess) => repository && void perform(() => repository.submitVote(event.id, profileId, guess))}
             onAcknowledge={(roundNo) => repository && void perform(() => repository.acknowledgeResult(event.id, roundNo))}
           />
+
+          {returnToDaily && !hqImpostorDailyGateRequired(state) ? (
+            <button
+              type="button"
+              className="hq-impostor-primary"
+              onClick={() => navigate("/football/today", { replace: true })}
+            >
+              CONTINUE TO TODAY’S CHALLENGE →
+            </button>
+          ) : null}
 
           {event.status === "completed" && event.current_round.phase === "event_complete" ? (
             <section className="hq-impostor-complete">
