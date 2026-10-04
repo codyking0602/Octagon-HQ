@@ -94,6 +94,7 @@ const roundSchema = z.object({
   active_count: z.coerce.number().int().nonnegative(),
   clues: z.array(clueSchema).nullable(),
   vote_candidates: z.array(candidateSchema).nullable(),
+  result_acknowledged: z.boolean(),
   result: resultSchema.nullable(),
 });
 
@@ -127,6 +128,7 @@ export interface HqImpostorRepository {
   revealAssignment: (eventId: string) => Promise<HqImpostorState>;
   submitClue: (eventId: string, clue: string) => Promise<HqImpostorState>;
   openBoard: (eventId: string) => Promise<HqImpostorState>;
+  acknowledgeResult: (eventId: string, roundNo: number) => Promise<HqImpostorState>;
   submitVote: (eventId: string, profileId: string, secretGuess?: string | null) => Promise<HqImpostorState>;
 }
 
@@ -177,6 +179,12 @@ export function createHqImpostorRepository(): HqImpostorRepository | null {
     openBoard(eventId) {
       return callStateRpc(client, "open_hq_impostor_board", {
         p_event_id: eventId,
+      });
+    },
+    acknowledgeResult(eventId, roundNo) {
+      return callStateRpc(client, "acknowledge_hq_impostor_result", {
+        p_event_id: eventId,
+        p_round_no: roundNo,
       });
     },
     submitVote(eventId, profileId, secretGuess = null) {
