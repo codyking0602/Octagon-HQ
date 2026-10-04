@@ -29,6 +29,7 @@ import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
 import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
+import { HqImpostorHomeCard } from "../impostor/HqImpostorHomeCard";
 import "../../styles/home-football-hq.css";
 import "../../styles/home-ufc-hq.css";
 
@@ -412,6 +413,8 @@ export default function HomePage() {
           )}
         </section>
       </section>
+
+      <HqImpostorHomeCard />
 
       {isFootballSeason() ? (
         <>
