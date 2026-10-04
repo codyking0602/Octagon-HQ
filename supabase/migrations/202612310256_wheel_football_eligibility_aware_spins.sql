@@ -2424,6 +2424,21 @@ as $$
     );
 $$;
 
+-- A match that was already sitting on a dead pre-rollout team gets the same
+-- free retry behavior: keep the turn owner and return it to spin state.
+update private.wheel_football_matches match
+set phase = 'spin',
+    pending_team_code = null,
+    updated_at = now()
+where match.phase = 'pick'
+  and match.current_turn_profile_id is not null
+  and match.pending_team_code is not null
+  and not private.wheel_football_team_has_open_candidate(
+    match.challenge_id,
+    match.current_turn_profile_id,
+    match.pending_team_code
+  );
+
 create or replace function private.wheel_football_state_json(p_challenge_id uuid)
 returns jsonb
 language sql
