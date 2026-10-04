@@ -291,15 +291,15 @@ export interface WheelFootballApTop25Entry {
 
 export function wheelFootballApTop25Teams(
   entries: readonly WheelFootballApTop25Entry[] = WHEEL_FOOTBALL_AP_TOP_25_SEED,
-) {
-  return entries
-    .slice()
-    .sort((left, right) => left.rank - right.rank)
-    .map((entry) => {
-      const team = wheelFootballTeam(entry.teamCode);
-      return team?.league === "CFB" ? { ...team, apRank: entry.rank } : null;
-    })
-    .filter((team): team is WheelFootballTeam => Boolean(team));
+): WheelFootballTeam[] {
+  const teams: WheelFootballTeam[] = [];
+  for (const entry of entries.slice().sort((left, right) => left.rank - right.rank)) {
+    const team = wheelFootballTeam(entry.teamCode);
+    if (team?.league === "CFB") {
+      teams.push({ ...team, apRank: entry.rank });
+    }
+  }
+  return teams;
 }
 
 export function wheelFootballLeagueFromScope(scope: WheelFootballPoolScope): WheelFootballLeague {
