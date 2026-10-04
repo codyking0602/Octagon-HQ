@@ -907,7 +907,9 @@ function MatchScreen({ code }: { code: string }) {
     ? allPoolTeams.filter((team) => eligibleTeamCodes.has(team.code))
     : allPoolTeams;
   const pendingTeam = state?.pending_team ? wheelFootballTeam(state.pending_team.code) : null;
-  const pendingTeamEligible = !pendingTeam || eligibleTeamCodes.has(pendingTeam.code);
+  const pendingTeamEligible = state?.eligible_team_codes === null
+    || !pendingTeam
+    || eligibleTeamCodes.has(pendingTeam.code);
 
   async function loadRoster() {
     if (!pendingTeam) return;

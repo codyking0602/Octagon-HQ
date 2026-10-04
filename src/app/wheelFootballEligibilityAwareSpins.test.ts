@@ -39,7 +39,7 @@ describe("Wheel of Football eligibility-aware spins", () => {
   it("supports a free automatic re-spin only when a pending team is dead", () => {
     expect(migration).toContain("v_dead_pending := not private.wheel_football_team_has_eligible_pick");
     expect(migration).toContain("if v_match.phase <> 'spin' and not v_dead_pending then");
-    expect(page).toContain("const pendingTeamEligible = !pendingTeam || eligibleTeamCodes.has(pendingTeam.code)");
+    expect(page).toContain("state?.eligible_team_codes === null");
     expect(page).toContain("(state.eligible_team_codes?.length ?? 0) === 0");
     expect(page).toContain("void spin();");
   });
