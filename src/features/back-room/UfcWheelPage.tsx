@@ -26,7 +26,7 @@ import {
   wheelUfcCategory,
   wheelUfcSliceBackground,
   wheelUfcSpinDisplay,
-  wheelUfcTargetSlice,
+  wheelUfcTargetAngle,
   type WheelUfcRosterSlot,
 } from "./wheelUfcModel";
 
@@ -87,7 +87,7 @@ function RosterCell({
         <strong>{pick?.display_name ?? "OPEN"}</strong>
         <span>{pick
           ? showGrade && pick.revealed_grade != null
-            ? `HQ ${Number(pick.revealed_grade).toFixed(1)}`
+            ? `HQ ${Number(pick.revealed_grade).toFixed(1)} · ${pick.ranking_label}`
             : [pick.ranking_label, pick.country_code].filter(Boolean).join(" · ")
           : "—"}</span>
       </div>
@@ -99,10 +99,12 @@ function HeadToHeadRoster({
   state,
   activeProfileId,
   revealCount = 0,
+  showDelta = false,
 }: {
   state: WheelUfcState;
   activeProfileId: string | null | undefined;
   revealCount?: number;
+  showDelta?: boolean;
 }) {
   return (
     <section className="football-wheel-roster surface-card ufc-wheel-roster" aria-label="Wheel of UFC rosters">
@@ -120,16 +122,79 @@ function HeadToHeadRoster({
       <div className="football-wheel-roster__rows">
         {WHEEL_UFC_ROSTER_SLOTS.map((slot, index) => {
           const showGrade = state.phase === "complete" && !state.forfeited_at && index < revealCount;
+          const creatorPick = pickForSlot(state.creator_roster, slot);
+          const recipientPick = pickForSlot(state.recipient_roster, slot);
+          const creatorGrade = creatorPick?.revealed_grade == null ? null : Number(creatorPick.revealed_grade);
+          const recipientGrade = recipientPick?.revealed_grade == null ? null : Number(recipientPick.revealed_grade);
+          const delta = creatorGrade != null && recipientGrade != null ? creatorGrade - recipientGrade : null;
           return (
             <div className={`football-wheel-roster__row${showGrade ? " is-grade-revealed" : ""}`} key={slot}>
-              <RosterCell pick={pickForSlot(state.creator_roster, slot)} align="left" showGrade={showGrade} />
-              <b title={slot}>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</b>
-              <RosterCell pick={pickForSlot(state.recipient_roster, slot)} align="right" showGrade={showGrade} />
+              <RosterCell pick={creatorPick} align="left" showGrade={showGrade} />
+              <div className="football-wheel-roster__slot" title={slot}>
+                <b>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</b>
+                {showGrade && showDelta && delta != null ? (
+                  <small className={delta > 0 ? "is-left" : delta < 0 ? "is-right" : ""}>
+                    {delta > 0 ? `← +${delta.toFixed(1)}` : delta < 0 ? `+${Math.abs(delta).toFixed(1)} →` : "EVEN"}
+                  </small>
+                ) : null}
+              </div>
+              <RosterCell pick={recipientPick} align="right" showGrade={showGrade} />
             </div>
           );
         })}
       </div>
     </section>
+  );
+}
+
+
+function CompactRosterSnapshot({
+  state,
+  activeProfileId,
+  expanded,
+  onToggle,
+}: {
+  state: WheelUfcState;
+  activeProfileId: string | null | undefined;
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <>
+      <section className="ufc-wheel-compact-roster surface-card" aria-label="Wheel of UFC roster snapshot">
+        <header>
+          <div>
+            <small>{state.creator.id === activeProfileId ? "YOU" : "CHALLENGER"}</small>
+            <strong>{state.creator.display_name}</strong>
+            <span>{state.creator_roster.length}/8</span>
+          </div>
+          <button type="button" onClick={onToggle}>{expanded ? "HIDE FULL ROSTERS" : "VIEW FULL ROSTERS"}</button>
+          <div>
+            <small>{state.recipient.id === activeProfileId ? "YOU" : "OPPONENT"}</small>
+            <strong>{state.recipient.display_name}</strong>
+            <span>{state.recipient_roster.length}/8</span>
+          </div>
+        </header>
+        <div className="ufc-wheel-compact-roster__grid">
+          {WHEEL_UFC_ROSTER_SLOTS.map((slot) => {
+            const creatorPick = pickForSlot(state.creator_roster, slot);
+            const recipientPick = pickForSlot(state.recipient_roster, slot);
+            return (
+              <article key={slot}>
+                <b>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</b>
+                <span className={creatorPick ? "is-filled" : ""} title={creatorPick?.display_name ?? "Open"}>
+                  {creatorPick?.display_name ?? "OPEN"}
+                </span>
+                <span className={recipientPick ? "is-filled" : ""} title={recipientPick?.display_name ?? "Open"}>
+                  {recipientPick?.display_name ?? "OPEN"}
+                </span>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+      {expanded ? <HeadToHeadRoster state={state} activeProfileId={activeProfileId} /> : null}
+    </>
   );
 }
 
@@ -157,13 +222,12 @@ function UfcWheel({
         }}
       >
         <div className="football-wheel__rings" aria-hidden="true" />
-        {WHEEL_UFC_VISUAL_SLICES.map((categoryId, index) => (
+        {WHEEL_UFC_VISUAL_SLICES.map((categoryId) => (
           <span
             className="football-wheel__label ufc-wheel__label"
-            key={`${categoryId}:${index}`}
+            key={categoryId}
             style={{
-              "--wheel-index": index,
-              "--wheel-count": WHEEL_UFC_VISUAL_SLICES.length,
+              "--wheel-angle": `${wheelUfcTargetAngle(categoryId)}deg`,
             } as CSSProperties}
             title={wheelUfcCategory(categoryId).label}
           >
@@ -239,21 +303,25 @@ function CandidatePicker({
       </header>
 
       <div className="football-wheel-picker__slots ufc-wheel-picker__slots" aria-label="Eligible open weight classes">
-        {spin.eligible_slots.map((slot) => (
-          <button
-            type="button"
-            className={selectedSlot === slot ? "is-active" : ""}
-            disabled={busy}
-            onClick={() => {
-              onSelectSlot(slot);
-              onCandidates(slot);
-            }}
-            key={slot}
-          >
-            <strong>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</strong>
-            <span>{slot}</span>
-          </button>
-        ))}
+        {spin.eligible_slots.map((slot) => {
+          const count = Number(spin.eligible_counts?.[slot] ?? 0);
+          return (
+            <button
+              type="button"
+              className={selectedSlot === slot ? "is-active" : ""}
+              disabled={busy}
+              onClick={() => {
+                onSelectSlot(slot);
+                onCandidates(slot);
+              }}
+              key={slot}
+            >
+              <strong>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</strong>
+              <span>{slot}</span>
+              <small>{count} eligible</small>
+            </button>
+          );
+        })}
       </div>
 
       {!spin.eligible_slots.length ? (
@@ -339,8 +407,7 @@ function SetupScreen() {
         <h1>WHEEL OF UFC</h1>
         <strong>Spin a category. Build all eight divisions.</strong>
         <p>
-          Challenge another HQ member and build a current UFC roster from Flyweight through Heavyweight.
-          Fighter grades stay hidden until both eight-man rosters are complete.
+          Challenge an HQ member. Eight picks each. Fighter grades stay hidden until both rosters are complete.
         </p>
       </section>
 
@@ -394,13 +461,11 @@ function SetupScreen() {
       </section>
 
       <section className="football-wheel-setup__rules surface-card">
-        <header><p className="eyebrow">HOW IT WORKS</p><strong>16 turns · 8 picks each</strong></header>
+        <header><p className="eyebrow">HOW IT WORKS</p><strong>8 picks each</strong></header>
         <div>
-          <span><b>1</b> The first player is randomized after the challenge is accepted.</span>
-          <span><b>2</b> Spin a category, choose any eligible open division, then take one current UFC fighter.</span>
-          <span><b>3</b> Fill FLW · BW · FW · LW · WW · MW · LHW · HW. The same fighter cannot appear twice in a matchup.</span>
-          <span><b>4</b> Young Gun means under 25. Veteran means 10+ UFC fights. Country draws a viable country after the spin.</span>
-          <span><b>5</b> Dead categories are automatically removed from late spins. Individual HQ grades stay private until the final team grades.</span>
+          <span><b>1</b> Spin a category, then choose an eligible division and fighter.</span>
+          <span><b>2</b> Fill all eight divisions. A fighter can only be used once in the matchup.</span>
+          <span><b>3</b> Individual HQ grades stay hidden until both rosters are complete.</span>
         </div>
       </section>
 
@@ -435,6 +500,7 @@ function MatchScreen({ code }: { code: string }) {
   const [candidateLoading, setCandidateLoading] = useState(false);
   const [candidateError, setCandidateError] = useState("");
   const [showForfeitConfirm, setShowForfeitConfirm] = useState(false);
+  const [showFullRoster, setShowFullRoster] = useState(false);
   const [revealCount, setRevealCount] = useState(0);
   const [shareStatus, setShareStatus] = useState("");
   const [error, setError] = useState("");
@@ -510,11 +576,10 @@ function MatchScreen({ code }: { code: string }) {
       const next = await repository.spin(code);
       const spinResult = next.pending_spin;
       if (!spinResult) throw new Error("The UFC wheel did not return a category.");
-      const index = wheelUfcTargetSlice(spinResult.category, next.turn_count);
-      const step = 360 / WHEEL_UFC_VISUAL_SLICES.length;
+      const targetAngle = wheelUfcTargetAngle(spinResult.category);
       setRotation((current) => {
         const currentModulo = ((current % 360) + 360) % 360;
-        const targetModulo = ((-index * step) % 360 + 360) % 360;
+        const targetModulo = ((-targetAngle % 360) + 360) % 360;
         const correction = (targetModulo - currentModulo + 360) % 360;
         return current + 1080 + correction;
       });
@@ -636,6 +701,24 @@ function MatchScreen({ code }: { code: string }) {
         : null;
     const forfeitWinner = forfeitedProfile?.id === state.creator.id ? state.recipient : state.creator;
     const revealDone = Boolean(state.result && revealCount >= 8);
+    const divisionResults = WHEEL_UFC_ROSTER_SLOTS.map((slot) => {
+      const creatorPick = pickForSlot(state.creator_roster, slot);
+      const recipientPick = pickForSlot(state.recipient_roster, slot);
+      const creatorGrade = creatorPick?.revealed_grade == null ? null : Number(creatorPick.revealed_grade);
+      const recipientGrade = recipientPick?.revealed_grade == null ? null : Number(recipientPick.revealed_grade);
+      return creatorGrade != null && recipientGrade != null
+        ? { slot, delta: creatorGrade - recipientGrade }
+        : null;
+    }).filter((row): row is { slot: WheelUfcRosterSlot; delta: number } => Boolean(row));
+    const creatorDivisionWins = divisionResults.filter((row) => row.delta > 0).length;
+    const recipientDivisionWins = divisionResults.filter((row) => row.delta < 0).length;
+    const biggestEdge = divisionResults.reduce<{ slot: WheelUfcRosterSlot; delta: number } | null>(
+      (best, row) => !best || Math.abs(row.delta) > Math.abs(best.delta) ? row : best,
+      null,
+    );
+    const divisionStory = creatorDivisionWins === recipientDivisionWins
+      ? `Divisions split ${creatorDivisionWins}–${recipientDivisionWins}`
+      : `${creatorDivisionWins > recipientDivisionWins ? state.creator.display_name : state.recipient.display_name} won ${Math.max(creatorDivisionWins, recipientDivisionWins)} of 8 divisions`;
 
     return (
       <div className="page football-wheel-page football-wheel-page--result ufc-wheel-page">
@@ -672,7 +755,21 @@ function MatchScreen({ code }: { code: string }) {
           )}
         </section>
 
-        <HeadToHeadRoster state={state} activeProfileId={activeProfileId} revealCount={revealCount} />
+        <HeadToHeadRoster
+          state={state}
+          activeProfileId={activeProfileId}
+          revealCount={revealCount}
+          showDelta={revealDone}
+        />
+
+        {revealDone && biggestEdge ? (
+          <section className="ufc-wheel-result-story surface-card">
+            <strong>{divisionStory}</strong>
+            <span>
+              Biggest edge · {WHEEL_UFC_SLOT_ABBREVIATIONS[biggestEdge.slot]} · {Math.abs(biggestEdge.delta).toFixed(1)} points
+            </span>
+          </section>
+        ) : null}
 
         <div className={`football-wheel-result-actions${state.result && !forfeitedProfile ? "" : " without-share"}`}>
           {state.result && !forfeitedProfile && revealDone ? (
@@ -713,15 +810,22 @@ function MatchScreen({ code }: { code: string }) {
         </div>
       </section>
 
-      <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
-
-      <UfcWheel
-        rotation={rotation}
-        spinning={spinning}
-        pendingSpin={state.pending_spin}
-        canSpin={Boolean(state.opened_at && isMyTurn && state.phase === "spin")}
-        onSpin={() => void spin()}
+      <CompactRosterSnapshot
+        state={state}
+        activeProfileId={activeProfileId}
+        expanded={showFullRoster}
+        onToggle={() => setShowFullRoster((value) => !value)}
       />
+
+      {state.phase === "spin" ? (
+        <UfcWheel
+          rotation={rotation}
+          spinning={spinning}
+          pendingSpin={state.pending_spin}
+          canSpin={Boolean(state.opened_at && isMyTurn)}
+          onSpin={() => void spin()}
+        />
+      ) : null}
 
       {state.phase === "pick" && state.pending_spin && isMyTurn ? (
         <CandidatePicker
