@@ -288,7 +288,7 @@ begin
         ),
         jsonb_build_object(
           'found', true,
-          'entity', jsonb_build_object('id', 'cfb-main-10-4:v6', 'display_name', 'Steve Sarkisian'),
+          'entity', jsonb_build_object('id', 'cfb-main-10-4:v8', 'display_name', 'Steve Sarkisian'),
           'points', 2,
           'revealed', true,
           'slot_index', 1
