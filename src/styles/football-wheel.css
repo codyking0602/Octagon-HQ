@@ -562,6 +562,20 @@
   font-size: .48rem;
 }
 
+.football-wheel-team-link {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+.football-wheel-team-link:hover,
+.football-wheel-team-link:focus-visible {
+  color: #8fc8f4;
+  text-decoration: underline;
+  outline: none;
+}
+
+
 .football-wheel-roster__mark,
 .football-wheel-roster__empty-mark {
   display: grid;
