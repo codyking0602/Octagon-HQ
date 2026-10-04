@@ -149,6 +149,13 @@ const NFL_ROSTER_TEAM_CODES = new Set([
   "nyj", "phi", "pit", "sea", "sf", "tb", "ten", "wsh",
 ]);
 
+const CFB_ROSTER_ESPN_IDS = new Set([
+  "333", "8", "2", "57", "61", "96", "99", "344", "142", "201", "145", "2579", "2633", "251", "245", "238",
+  "356", "84", "2294", "120", "130", "127", "135", "158", "77", "194", "2483", "213", "2509", "164", "26", "30", "264", "275",
+  "12", "9", "239", "252", "2132", "38", "248", "66", "2305", "2306", "197", "2628", "2641", "2116", "254", "277",
+  "103", "25", "228", "150", "52", "59", "97", "2390", "152", "153", "221", "2567", "24", "183", "258", "259", "154", "87",
+]);
+
 export function nflRosterUpstreamUrl(teamCode: string) {
   const normalized = teamCode.trim().toLowerCase();
   if (!NFL_ROSTER_TEAM_CODES.has(normalized)) return null;
@@ -188,6 +195,54 @@ async function serveNflRoster(requestUrl: URL) {
     return new Response(upstream.body, { status: 200, headers });
   } catch {
     return new Response(JSON.stringify({ error: "Current NFL roster is unavailable." }), {
+      status: 502,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+}
+
+export function cfbRosterUpstreamUrl(espnId: string) {
+  const normalized = espnId.trim();
+  if (!CFB_ROSTER_ESPN_IDS.has(normalized)) return null;
+  return `https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/${normalized}/roster`;
+}
+
+async function serveCfbRoster(requestUrl: URL) {
+  const upstreamUrl = cfbRosterUpstreamUrl(requestUrl.searchParams.get("team") ?? "");
+  if (!upstreamUrl) {
+    return new Response(JSON.stringify({ error: "Unknown CFB school." }), {
+      status: 400,
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+    });
+  }
+
+  try {
+    const upstream = await fetch(upstreamUrl, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "OctagonHQ/1.0",
+      },
+    });
+    if (!upstream.ok || !upstream.body) {
+      return new Response(JSON.stringify({ error: "Current college roster is unavailable." }), {
+        status: 502,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": "no-store",
+        },
+      });
+    }
+
+    const headers = new Headers(upstream.headers);
+    headers.set("Content-Type", "application/json; charset=utf-8");
+    headers.set("Cache-Control", "public, max-age=300, stale-while-revalidate=900");
+    headers.delete("Set-Cookie");
+    return new Response(upstream.body, { status: 200, headers });
+  } catch {
+    return new Response(JSON.stringify({ error: "Current college roster is unavailable." }), {
       status: 502,
       headers: {
         "Content-Type": "application/json; charset=utf-8",
@@ -341,6 +396,9 @@ export default {
     if (request.method !== "GET") return env.ASSETS.fetch(request);
     if (requestUrl.pathname === "/api/football/nfl-roster") {
       return serveNflRoster(requestUrl);
+    }
+    if (requestUrl.pathname === "/api/football/cfb-roster") {
+      return serveCfbRoster(requestUrl);
     }
     if (requestUrl.pathname === "/deployment.json") {
       return serveDeploymentMarker();
