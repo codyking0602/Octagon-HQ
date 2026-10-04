@@ -20,7 +20,7 @@ const poolScopeSchema = z.enum([
   "ACC",
 ]);
 
-const participantSchema = z.object({
+const participantIdentitySchema = z.object({
   id: z.string().uuid(),
   display_name: z.string().min(1),
 });
@@ -33,7 +33,7 @@ const teamSchema = z.object({
 });
 
 const pickSchema = z.object({
-  turn_number: z.coerce.number().int().min(1).max(14),
+  turn_number: z.coerce.number().int().min(1).max(28),
   team_code: z.string().min(1).max(64),
   team_name: z.string().min(1),
   roster_slot: rosterSlotSchema,
@@ -44,11 +44,30 @@ const pickSchema = z.object({
   headshot_url: z.string().nullable(),
 });
 
+const participantSchema = participantIdentitySchema.extend({
+  seat_order: z.coerce.number().int().min(0).max(3),
+  accepted: z.boolean(),
+  forfeited_at: z.string().nullable(),
+  roster: z.array(pickSchema),
+  final_grade: z.coerce.number().min(0).max(100).nullable(),
+  rank: z.coerce.number().int().min(1).max(4).nullable(),
+});
+
+const standingSchema = z.object({
+  profile_id: z.string().uuid(),
+  final_grade: z.coerce.number().min(0).max(100).nullable(),
+  rank: z.coerce.number().int().min(1).max(4).nullable(),
+  forfeited: z.boolean(),
+});
+
 const resultSchema = z.object({
-  creator_final_grade: z.coerce.number().min(0).max(100),
-  recipient_final_grade: z.coerce.number().min(0).max(100),
-  winner_profile_id: z.string().uuid().nullable(),
+  standings: z.array(standingSchema).min(2).max(4),
+  winner_profile_ids: z.array(z.string().uuid()).max(4),
   is_tie: z.boolean(),
+  resolved_by_forfeit: z.boolean(),
+  creator_final_grade: z.coerce.number().min(0).max(100).nullable().optional().default(null),
+  recipient_final_grade: z.coerce.number().min(0).max(100).nullable().optional().default(null),
+  winner_profile_id: z.string().uuid().nullable().optional().default(null),
 });
 
 const stateSchema = z.object({
@@ -56,23 +75,26 @@ const stateSchema = z.object({
   pool_scope: poolScopeSchema,
   division: z.string().nullable(),
   phase: z.enum(["waiting", "spin", "pick", "complete"]),
-  turn_count: z.coerce.number().int().min(0).max(14),
+  turn_count: z.coerce.number().int().min(0).max(28),
+  max_turns: z.coerce.number().int().min(0).max(28),
   current_turn_profile_id: z.string().uuid().nullable(),
   pending_team: teamSchema.nullable(),
   eligible_team_codes: z.array(z.string().min(1).max(64)).nullable().optional().default(null),
-  creator: participantSchema,
-  recipient: participantSchema,
+  participants: z.array(participantSchema).min(2).max(4),
+  creator: participantIdentitySchema,
+  recipient: participantIdentitySchema,
   creator_roster: z.array(pickSchema),
   recipient_roster: z.array(pickSchema),
   result: resultSchema.nullable().optional().default(null),
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
-  forfeited_by_profile_id: z.string().uuid().nullable(),
-  forfeited_at: z.string().nullable(),
+  declined_at: z.string().nullable().optional().default(null),
 });
 
 export type WheelFootballState = z.infer<typeof stateSchema>;
 export type WheelFootballPick = z.infer<typeof pickSchema>;
+export type WheelFootballParticipant = z.infer<typeof participantSchema>;
+export type WheelFootballStanding = z.infer<typeof standingSchema>;
 
 type RpcError = { message?: string };
 type Client = {
@@ -90,12 +112,13 @@ async function rpc(client: Client, name: string, args?: Record<string, unknown>)
 
 export interface WheelFootballRepository {
   create(
-    recipientId: string,
+    recipientIds: readonly string[],
     scope: WheelFootballPoolScope,
     division: WheelFootballDivision | null,
   ): Promise<string>;
   load(code: string): Promise<WheelFootballState>;
   open(code: string): Promise<boolean>;
+  decline(code: string): Promise<boolean>;
   spin(code: string): Promise<WheelFootballState>;
   forfeit(code: string): Promise<WheelFootballState>;
   pick(
@@ -120,9 +143,13 @@ export function createWheelFootballRepository(
   if (!client) return null;
 
   return {
-    async create(recipientId, scope, division) {
+    async create(recipientIds, scope, division) {
+      const ids = [...new Set(recipientIds)];
+      if (ids.length < 1 || ids.length > 3) {
+        throw new Error("Choose between one and three opponents.");
+      }
       const data = await rpc(client, "create_wheel_football_challenge", {
-        p_recipient_id: recipientId,
+        p_recipient_ids: ids,
         p_pool_scope: scope,
         p_division: division,
       });
@@ -133,6 +160,9 @@ export function createWheelFootballRepository(
     },
     async open(code) {
       return z.boolean().parse(await rpc(client, "open_wheel_football_challenge", { p_code: code }));
+    },
+    async decline(code) {
+      return z.boolean().parse(await rpc(client, "decline_wheel_football_challenge", { p_code: code }));
     },
     async spin(code) {
       return stateSchema.parse(await rpc(client, "spin_wheel_football", { p_code: code }));
