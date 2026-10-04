@@ -33,15 +33,29 @@ function candidate(
 
 describe("Wheel of Football current NFL + CFB model", () => {
   it("owns the complete NFL conference/division pools alongside the 68-school CFB scope", () => {
-    expect(wheelFootballTeams).toHaveLength(100);
+    expect(wheelFootballTeams).toHaveLength(101);
     expect(wheelFootballPoolTeams("NFL")).toHaveLength(32);
     expect(wheelFootballPoolTeams("AFC")).toHaveLength(16);
     expect(wheelFootballPoolTeams("NFC")).toHaveLength(16);
     for (const division of WHEEL_FOOTBALL_DIVISIONS) {
       expect(wheelFootballPoolTeams("DIVISION", division)).toHaveLength(4);
     }
-    expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(100);
+    expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(101);
     expect(wheelFootballPoolTeams("CFB")).toHaveLength(68);
+    expect(wheelFootballPoolTeams("AP_TOP_25")).toHaveLength(25);
+    expect(wheelFootballPoolTeams("AP_TOP_25").map((team) => team.code)).toEqual([
+      "texas", "georgia", "notre-dame", "miami", "ohio-state",
+      "indiana", "alabama", "florida", "ole-miss", "byu",
+      "lsu", "texas-tech", "utah", "iowa", "oregon",
+      "mississippi-state", "tennessee", "usc", "oklahoma-state", "houston",
+      "smu", "boise-state", "ucla", "kentucky", "missouri",
+    ]);
+    expect(wheelFootballPoolTeams("CFB").some((team) => team.code === "boise-state")).toBe(false);
+    expect(wheelFootballPoolTeams("AP_TOP_25")[21]).toMatchObject({
+      code: "boise-state",
+      apRank: 22,
+      conference: "Pac-12",
+    });
     expect(wheelFootballPoolTeams("SEC")).toHaveLength(16);
     expect(wheelFootballPoolTeams("BIG_TEN")).toHaveLength(18);
     expect(wheelFootballPoolTeams("BIG_12")).toHaveLength(16);
@@ -49,6 +63,11 @@ describe("Wheel of Football current NFL + CFB model", () => {
     expect(wheelFootballTeams.find((team) => team.code === "DAL")).toMatchObject({
       primaryColor: "#003594",
       secondaryColor: "#869397",
+      sportsReferenceUrl: "https://www.pro-football-reference.com/teams/dal/2026.htm",
+    });
+    expect(wheelFootballTeams.find((team) => team.code === "usc")).toMatchObject({
+      sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/southern-california/2026.html",
+      apRank: 18,
     });
   });
 
