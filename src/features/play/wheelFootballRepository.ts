@@ -13,6 +13,7 @@ const poolScopeSchema = z.enum([
   "NFC",
   "DIVISION",
   "CFB",
+  "AP_TOP_25",
   "SEC",
   "BIG_TEN",
   "BIG_12",
@@ -27,7 +28,7 @@ const participantSchema = z.object({
 const teamSchema = z.object({
   code: z.string().min(1).max(64),
   name: z.string().min(1),
-  conference: z.enum(["AFC", "NFC", "SEC", "Big Ten", "Big 12", "ACC", "Independent"]),
+  conference: z.enum(["AFC", "NFC", "SEC", "Big Ten", "Big 12", "ACC", "Independent", "Pac-12"]),
   division: z.enum(["East", "North", "South", "West"]).nullable(),
 });
 
@@ -41,6 +42,13 @@ const pickSchema = z.object({
   position_label: z.string().min(1),
   position_abbreviation: z.string().min(1),
   headshot_url: z.string().nullable(),
+});
+
+const apTop25RowSchema = z.object({
+  rank: z.coerce.number().int().min(1).max(25),
+  team_code: z.string().min(1).max(64),
+  team_name: z.string().min(1),
+  poll_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
 const resultSchema = z.object({
@@ -71,6 +79,7 @@ const stateSchema = z.object({
 
 export type WheelFootballState = z.infer<typeof stateSchema>;
 export type WheelFootballPick = z.infer<typeof pickSchema>;
+export type WheelFootballApTop25Row = z.infer<typeof apTop25RowSchema>;
 
 type RpcError = { message?: string };
 type Client = {
@@ -93,6 +102,7 @@ export interface WheelFootballRepository {
     division: WheelFootballDivision | null,
   ): Promise<string>;
   load(code: string): Promise<WheelFootballState>;
+  loadApTop25(): Promise<WheelFootballApTop25Row[]>;
   open(code: string): Promise<boolean>;
   spin(code: string): Promise<WheelFootballState>;
   forfeit(code: string): Promise<WheelFootballState>;
@@ -128,6 +138,9 @@ export function createWheelFootballRepository(
     },
     async load(code) {
       return stateSchema.parse(await rpc(client, "get_my_wheel_football_match", { p_code: code }));
+    },
+    async loadApTop25() {
+      return z.array(apTop25RowSchema).parse(await rpc(client, "get_wheel_football_ap_top25"));
     },
     async open(code) {
       return z.boolean().parse(await rpc(client, "open_wheel_football_challenge", { p_code: code }));
