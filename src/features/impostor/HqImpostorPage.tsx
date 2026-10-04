@@ -60,6 +60,7 @@ function phaseLabel(round: HqImpostorRound) {
     case "inactive": return "ROUND MISSED";
     case "waiting_round": return "NEXT ROUND";
     case "resolved": return "ROUND RESULT";
+    case "event_complete": return "EVENT COMPLETE";
     default: return "ROUND IN PROGRESS";
   }
 }
