@@ -19,9 +19,5 @@ export function hqImpostorDailyGateRequired(state: HqImpostorState | null) {
   if (!event) return true;
 
   const phase = event.current_round.phase;
-  return phase === "assignment"
-    || phase === "clue"
-    || phase === "board_ready"
-    || phase === "vote"
-    || phase === "resolved";
+  return phase === "assignment" || phase === "clue";
 }
