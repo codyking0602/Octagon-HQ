@@ -31,16 +31,21 @@ function candidate(
   };
 }
 
-describe("Wheel of Football current-NFL model", () => {
-  it("owns the complete NFL conference and division wheel pools", () => {
-    expect(wheelFootballTeams).toHaveLength(32);
+describe("Wheel of Football current NFL + CFB model", () => {
+  it("owns the complete NFL conference/division pools alongside the 68-school CFB scope", () => {
+    expect(wheelFootballTeams).toHaveLength(100);
     expect(wheelFootballPoolTeams("NFL")).toHaveLength(32);
     expect(wheelFootballPoolTeams("AFC")).toHaveLength(16);
     expect(wheelFootballPoolTeams("NFC")).toHaveLength(16);
     for (const division of WHEEL_FOOTBALL_DIVISIONS) {
       expect(wheelFootballPoolTeams("DIVISION", division)).toHaveLength(4);
     }
-    expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(32);
+    expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(100);
+    expect(wheelFootballPoolTeams("CFB")).toHaveLength(68);
+    expect(wheelFootballPoolTeams("SEC")).toHaveLength(16);
+    expect(wheelFootballPoolTeams("BIG_TEN")).toHaveLength(18);
+    expect(wheelFootballPoolTeams("BIG_12")).toHaveLength(16);
+    expect(wheelFootballPoolTeams("ACC")).toHaveLength(17);
     expect(wheelFootballTeams.find((team) => team.code === "DAL")).toMatchObject({
       primaryColor: "#003594",
       secondaryColor: "#869397",
@@ -87,7 +92,7 @@ describe("Wheel of Football current-NFL model", () => {
   it("audits all 32 teams and locks the Cowboys obvious names", () => {
     expect(Object.keys(wheelPriorityJson.teams)).toHaveLength(32);
     expect(Object.keys(wheelPriorityJson.teams).sort()).toEqual(
-      wheelFootballTeams.map((team) => team.code).sort(),
+      wheelFootballPoolTeams("NFL").map((team) => team.code).sort(),
     );
     expect(wheelPriorityJson.teams.DAL.QB).toEqual(["Dak Prescott"]);
     expect(wheelPriorityJson.teams.DAL.WR.slice(0, 2)).toEqual(["CeeDee Lamb", "George Pickens"]);
