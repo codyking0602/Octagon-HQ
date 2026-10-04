@@ -1,5 +1,6 @@
 import currentCfbPriorityJson from "../../../data/generated/football/cfb/wheel-football-current-priorities-2026.json";
 import auditedCfbPriorityJson from "../../../data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json";
+import { WHEEL_FOOTBALL_CFB_AP_EXTRA_PRIORITIES } from "./wheelFootballCfbApExtras";
 
 export const WHEEL_FOOTBALL_CFB_BASELINE_SLOTS = [
   "QB",
@@ -146,12 +147,15 @@ export const wheelFootballCfbBaseline: Readonly<
  */
 export const wheelFootballCfbPriority: Readonly<
   Record<string, WheelFootballCfbBaselineTeam>
-> = Object.freeze(Object.fromEntries(
-  Object.entries(baseline.teams).map(([schoolId, team]) => [
-    schoolId,
-    mergeAuditedPriority(team, priorityAudit.overrides[schoolId]),
-  ]),
-));
+> = Object.freeze({
+  ...Object.fromEntries(
+    Object.entries(baseline.teams).map(([schoolId, team]) => [
+      schoolId,
+      mergeAuditedPriority(team, priorityAudit.overrides[schoolId]),
+    ]),
+  ),
+  ...WHEEL_FOOTBALL_CFB_AP_EXTRA_PRIORITIES,
+});
 
 export function wheelFootballCfbBaselineForSchoolId(
   schoolId: string | null | undefined,
