@@ -33,15 +33,19 @@ function candidate(
 
 describe("Wheel of Football current NFL + CFB model", () => {
   it("owns the complete NFL conference/division pools alongside the 68-school CFB scope", () => {
-    expect(wheelFootballTeams).toHaveLength(100);
+    expect(wheelFootballTeams).toHaveLength(101);
     expect(wheelFootballPoolTeams("NFL")).toHaveLength(32);
     expect(wheelFootballPoolTeams("AFC")).toHaveLength(16);
     expect(wheelFootballPoolTeams("NFC")).toHaveLength(16);
     for (const division of WHEEL_FOOTBALL_DIVISIONS) {
       expect(wheelFootballPoolTeams("DIVISION", division)).toHaveLength(4);
     }
-    expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(100);
+    expect(new Set(wheelFootballTeams.map((team) => team.code)).size).toBe(101);
     expect(wheelFootballPoolTeams("CFB")).toHaveLength(68);
+    expect(wheelFootballPoolTeams("TOP_25")).toHaveLength(25);
+    expect(wheelFootballPoolTeams("TOP_25").map((team) => team.code)).toContain("boise-state");
+    expect(wheelFootballPoolTeams("TOP_25").find((team) => team.code === "usc")?.apRank).toBe(18);
+    expect(wheelFootballPoolTeams("TOP_25").find((team) => team.code === "boise-state")?.apRank).toBe(22);
     expect(wheelFootballPoolTeams("SEC")).toHaveLength(16);
     expect(wheelFootballPoolTeams("BIG_TEN")).toHaveLength(18);
     expect(wheelFootballPoolTeams("BIG_12")).toHaveLength(16);
