@@ -1,0 +1,157 @@
+{
+  "poll": "AP Top 25",
+  "pollDate": "2026-09-27",
+  "source": "AP / ESPN rankings feed",
+  "teams": [
+    {
+      "rank": 1,
+      "teamCode": "texas",
+      "espnId": "251",
+      "name": "Texas"
+    },
+    {
+      "rank": 2,
+      "teamCode": "georgia",
+      "espnId": "61",
+      "name": "Georgia"
+    },
+    {
+      "rank": 3,
+      "teamCode": "notre-dame",
+      "espnId": "87",
+      "name": "Notre Dame"
+    },
+    {
+      "rank": 4,
+      "teamCode": "miami",
+      "espnId": "2390",
+      "name": "Miami"
+    },
+    {
+      "rank": 5,
+      "teamCode": "ohio-state",
+      "espnId": "194",
+      "name": "Ohio State"
+    },
+    {
+      "rank": 6,
+      "teamCode": "indiana",
+      "espnId": "84",
+      "name": "Indiana"
+    },
+    {
+      "rank": 7,
+      "teamCode": "alabama",
+      "espnId": "333",
+      "name": "Alabama"
+    },
+    {
+      "rank": 8,
+      "teamCode": "florida",
+      "espnId": "57",
+      "name": "Florida"
+    },
+    {
+      "rank": 9,
+      "teamCode": "ole-miss",
+      "espnId": "145",
+      "name": "Ole Miss"
+    },
+    {
+      "rank": 10,
+      "teamCode": "byu",
+      "espnId": "252",
+      "name": "BYU"
+    },
+    {
+      "rank": 11,
+      "teamCode": "lsu",
+      "espnId": "99",
+      "name": "LSU"
+    },
+    {
+      "rank": 12,
+      "teamCode": "texas-tech",
+      "espnId": "2641",
+      "name": "Texas Tech"
+    },
+    {
+      "rank": 13,
+      "teamCode": "utah",
+      "espnId": "254",
+      "name": "Utah"
+    },
+    {
+      "rank": 14,
+      "teamCode": "iowa",
+      "espnId": "2294",
+      "name": "Iowa"
+    },
+    {
+      "rank": 15,
+      "teamCode": "oregon",
+      "espnId": "2483",
+      "name": "Oregon"
+    },
+    {
+      "rank": 16,
+      "teamCode": "mississippi-state",
+      "espnId": "344",
+      "name": "Mississippi State"
+    },
+    {
+      "rank": 17,
+      "teamCode": "tennessee",
+      "espnId": "2633",
+      "name": "Tennessee"
+    },
+    {
+      "rank": 18,
+      "teamCode": "usc",
+      "espnId": "30",
+      "name": "USC"
+    },
+    {
+      "rank": 19,
+      "teamCode": "oklahoma-state",
+      "espnId": "197",
+      "name": "Oklahoma State"
+    },
+    {
+      "rank": 20,
+      "teamCode": "houston",
+      "espnId": "248",
+      "name": "Houston"
+    },
+    {
+      "rank": 21,
+      "teamCode": "smu",
+      "espnId": "2567",
+      "name": "SMU"
+    },
+    {
+      "rank": 22,
+      "teamCode": "boise-state",
+      "espnId": "68",
+      "name": "Boise State"
+    },
+    {
+      "rank": 23,
+      "teamCode": "ucla",
+      "espnId": "26",
+      "name": "UCLA"
+    },
+    {
+      "rank": 24,
+      "teamCode": "kentucky",
+      "espnId": "96",
+      "name": "Kentucky"
+    },
+    {
+      "rank": 25,
+      "teamCode": "missouri",
+      "espnId": "142",
+      "name": "Missouri"
+    }
+  ]
+}
