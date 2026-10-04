@@ -37,7 +37,7 @@ function isSealedBidChallenge(challenge: PlayChallenge) {
 }
 
 function isTurnBasedChallenge(challenge: PlayChallenge) {
-  return challenge.gameId === "wheel-football";
+  return challenge.gameId === "wheel-football" || challenge.gameId === "wheel-ufc";
 }
 
 function rowCopy(challenge: PlayChallenge, profileId: string) {
