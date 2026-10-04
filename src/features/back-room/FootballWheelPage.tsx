@@ -49,6 +49,7 @@ const CFB_SCOPE_OPTIONS: readonly {
   label: string;
   detail: string;
 }[] = [
+  { value: "AP_TOP_25", label: "AP TOP 25", detail: "Latest poll · 25 schools" },
   { value: "CFB", label: "NATIONAL", detail: "All 68 schools" },
   { value: "SEC", label: "SEC", detail: "16 schools" },
   { value: "BIG_TEN", label: "BIG TEN", detail: "18 schools" },
@@ -436,6 +437,30 @@ function TeamLogo({ team, className = "" }: { team: WheelFootballTeam; className
   );
 }
 
+function TeamReferenceLink({
+  team,
+  showRank = false,
+  className = "",
+}: {
+  team: WheelFootballTeam;
+  showRank?: boolean;
+  className?: string;
+}) {
+  const provider = team.league === "NFL" ? "Pro Football Reference" : "Sports Reference";
+  return (
+    <a
+      className={`football-wheel-team-reference ${className}`.trim()}
+      href={team.sportsReferenceUrl}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`Open 2026 ${team.name} on ${provider}`}
+      title={`2026 ${team.name} · ${provider}`}
+    >
+      {showRank && team.apRank ? `#${team.apRank} ` : ""}{team.name}
+    </a>
+  );
+}
+
 function wheelTeamBackground(teams: readonly WheelFootballTeam[]) {
   if (!teams.length) return undefined;
   const slice = 360 / teams.length;
@@ -521,6 +546,7 @@ function CandidatePicker({
   loading,
   busy,
   error,
+  showRank,
   onSelectSlot,
   onPick,
   onRetry,
@@ -533,6 +559,7 @@ function CandidatePicker({
   loading: boolean;
   busy: boolean;
   error: string;
+  showRank: boolean;
   onSelectSlot: (slot: WheelFootballRosterSlot) => void;
   onPick: (candidate: WheelFootballCandidate) => void;
   onRetry: () => void;
@@ -549,7 +576,7 @@ function CandidatePicker({
         <TeamLogo team={team} />
         <div>
           <p className="eyebrow">YOUR SPIN</p>
-          <h2>{team.name}</h2>
+          <h2><TeamReferenceLink team={team} showRank={showRank} /></h2>
           <span>Choose an open roster spot, then take a current player or the head coach.</span>
         </div>
       </header>
@@ -1188,6 +1215,7 @@ function MatchScreen({ code }: { code: string }) {
           loading={rosterLoading}
           busy={busy}
           error={rosterError}
+          showRank={state.pool_scope === "AP_TOP_25"}
           onSelectSlot={setSelectedSlot}
           onPick={(candidate) => void pick(candidate)}
           onRetry={() => void loadRoster()}
@@ -1197,7 +1225,12 @@ function MatchScreen({ code }: { code: string }) {
       {!isMyTurn && state.opened_at ? (
         <section className="football-wheel-waiting surface-card">
           <strong>{state.phase === "pick" && pendingTeam
-            ? `${opponent?.display_name ?? "Your opponent"} is choosing from the ${pendingTeam.name}.`
+            ? (
+              <>
+                {opponent?.display_name ?? "Your opponent"} is choosing from the{" "}
+                <TeamReferenceLink team={pendingTeam} showRank={state.pool_scope === "AP_TOP_25"} />.
+              </>
+            )
             : `Waiting on ${opponent?.display_name ?? "your opponent"}.`}</strong>
           <span>You’ll get a notification when your next spin is ready.</span>
         </section>

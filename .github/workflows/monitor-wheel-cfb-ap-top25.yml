@@ -1,0 +1,21 @@
+name: Monitor Wheel CFB AP Top 25
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 23 * 1,8-12 0"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-ap-top-25:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Compare Wheel AP Top 25 snapshot to current poll
+        run: node scripts/check-wheel-cfb-ap-top25.mjs

@@ -6,6 +6,7 @@ declare
   v_afc_count integer;
   v_nfc_count integer;
   v_bad_divisions integer;
+  v_ap_top_25_count integer;
 begin
   select count(*) into v_team_count
   from private.wheel_football_teams
@@ -33,6 +34,18 @@ begin
     raise exception 'Each NFL division must own four Wheel teams';
   end if;
 
+  select count(*) into v_ap_top_25_count
+  from private.wheel_football_ap_top_25 poll
+  where poll.season = 2026
+    and poll.poll_date = (
+      select max(latest.poll_date)
+      from private.wheel_football_ap_top_25 latest
+      where latest.season = 2026
+    );
+  if v_ap_top_25_count <> 25 then
+    raise exception 'Wheel AP Top 25 must own exactly 25 teams, got %', v_ap_top_25_count;
+  end if;
+
   if to_regprocedure('public.create_wheel_football_challenge(uuid,text,text)') is null
     or to_regprocedure('public.get_my_wheel_football_match(text)') is null
     or to_regprocedure('public.open_wheel_football_challenge(text)') is null
@@ -45,7 +58,9 @@ begin
   if has_table_privilege('anon', 'private.wheel_football_matches', 'select')
     or has_table_privilege('authenticated', 'private.wheel_football_matches', 'select')
     or has_table_privilege('anon', 'private.wheel_football_picks', 'select')
-    or has_table_privilege('authenticated', 'private.wheel_football_picks', 'select') then
+    or has_table_privilege('authenticated', 'private.wheel_football_picks', 'select')
+    or has_table_privilege('anon', 'private.wheel_football_ap_top_25', 'select')
+    or has_table_privilege('authenticated', 'private.wheel_football_ap_top_25', 'select') then
     raise exception 'Wheel private state leaked direct table access';
   end if;
 end;

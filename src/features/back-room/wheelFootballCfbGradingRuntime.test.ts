@@ -60,6 +60,7 @@ describe("CFB Wheel runtime authority", () => {
 
   it("locks the approved CFB wheel pool sizes without artificial pairings", () => {
     expect(wheelFootballPoolTeams("CFB")).toHaveLength(68);
+    expect(wheelFootballPoolTeams("AP_TOP_25")).toHaveLength(25);
     expect(wheelFootballPoolTeams("SEC")).toHaveLength(16);
     expect(wheelFootballPoolTeams("BIG_TEN")).toHaveLength(18);
     expect(wheelFootballPoolTeams("BIG_12")).toHaveLength(16);

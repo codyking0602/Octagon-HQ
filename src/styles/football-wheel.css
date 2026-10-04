@@ -799,6 +799,25 @@
   font-size: 1.02rem;
 }
 
+.football-wheel-team-reference {
+  color: inherit;
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.football-wheel-team-reference:hover,
+.football-wheel-team-reference:focus-visible {
+  color: #9bcff7;
+  text-decoration: underline;
+  outline: none;
+}
+
+.football-wheel-waiting .football-wheel-team-reference {
+  color: #a8d5f6;
+  font-weight: 900;
+}
+
 .football-wheel-picker > header span {
   display: block;
   margin-top: 3px;
