@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { createHqImpostorRepository, type HqImpostorState } from "./hqImpostorRepository";
+import { hqImpostorV1Window } from "./hqImpostorSchedule";
 import "../../styles/hq-impostor.css";
 
 function statusCopy(state: HqImpostorState | null) {
@@ -44,6 +45,7 @@ function statusCopy(state: HqImpostorState | null) {
 
 export function HqImpostorHomeCard() {
   const identity = useIdentity();
+  const rollout = hqImpostorV1Window();
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const repository = useMemo(() => createHqImpostorRepository(), []);
   const [state, setState] = useState<HqImpostorState | null>(null);
@@ -66,6 +68,8 @@ export function HqImpostorHomeCard() {
       window.clearInterval(timer);
     };
   }, [signedIn, repository]);
+
+  if (rollout.before || (rollout.after && !state?.event)) return null;
 
   const copy = signedIn
     ? statusCopy(state)
