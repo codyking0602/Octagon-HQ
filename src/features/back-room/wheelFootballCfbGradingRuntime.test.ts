@@ -69,28 +69,45 @@ describe("CFB Wheel runtime authority", () => {
 
   it("keeps simulated CFB Superteam scores healthy across every locked pool", () => {
     const slots = ["QB", "RB", "WR", "Flex", "Front Seven", "Secondary", "Head Coach"] as const;
-    const familyFor = (school: string, slot: string, name: string) => {
-      if (slot !== "Flex") return slot;
-      return (["RB", "WR", "TE"] as const).find((family) =>
-        grades.has(`${normalized(school)}|${family}|${normalized(name)}`),
-      ) ?? null;
-    };
+    type Slot = (typeof slots)[number];
     const finalGrade = (raw: number) => {
       const score = raw <= 95
         ? Math.max(0, 95 + (2.5 * (raw - 95)))
         : Math.min(100, raw);
       return Math.round(score * 10) / 10;
     };
+
+    const options = new Map<string, Readonly<Record<Slot, readonly { nameKey: string; grade: number }[]>>>();
+    for (const [schoolId, team] of Object.entries(wheelFootballCfbPriority)) {
+      const schoolKey = normalized(team.school);
+      const bySlot = Object.fromEntries(slots.map((slot) => {
+        const rows = (team[slot] ?? []).map((name) => {
+          const nameKey = normalized(name);
+          const family = slot === "Flex"
+            ? (["RB", "WR", "TE"] as const).find((candidate) =>
+                grades.has(`${schoolKey}|${candidate}|${nameKey}`),
+              )
+            : slot;
+          if (!family) throw new Error(`Missing Flex family for ${team.school} ${name}`);
+          const grade = grades.get(`${schoolKey}|${family}|${nameKey}`);
+          if (grade == null) throw new Error(`Missing grade for ${team.school} ${slot} ${name}`);
+          return { nameKey, grade };
+        });
+        return [slot, rows];
+      })) as Record<Slot, readonly { nameKey: string; grade: number }[]>;
+      options.set(schoolId, bySlot);
+    }
+
     const simulate = (schoolIds: readonly string[]) => {
       let seed = 123456789;
       const random = () => {
         seed = (1664525 * seed + 1013904223) >>> 0;
         return seed / 4294967296;
       };
-      const results: number[] = [];
+      const results = new Array<number>(10_000);
 
-      for (let run = 0; run < 10_000; run += 1) {
-        const chosen = new Map<string, number>();
+      for (let run = 0; run < results.length; run += 1) {
+        const chosen = new Map<Slot, number>();
         const used = new Set<string>();
         let previousSchool = "";
 
@@ -100,26 +117,25 @@ describe("CFB Wheel runtime authority", () => {
           while (schoolId === previousSchool);
           previousSchool = schoolId;
 
-          const team = wheelFootballCfbPriority[schoolId]!;
-          let best: { slot: string; name: string; grade: number } | null = null;
-          for (const slot of slots.filter((value) => !chosen.has(value))) {
-            for (const name of team[slot] ?? []) {
-              const family = familyFor(team.school, slot, name);
-              const identity = `${schoolId}|${normalized(name)}`;
-              if (!family || used.has(identity)) continue;
-              const grade = grades.get(`${normalized(team.school)}|${family}|${normalized(name)}`);
-              expect(grade, `${team.school} ${slot} ${name}`).toBeDefined();
-              if (grade != null && (!best || grade > best.grade)) best = { slot, name, grade };
+          const teamOptions = options.get(schoolId)!;
+          let best: { slot: Slot; nameKey: string; grade: number } | null = null;
+          for (const slot of slots) {
+            if (chosen.has(slot)) continue;
+            for (const candidate of teamOptions[slot]) {
+              const identity = `${schoolId}|${candidate.nameKey}`;
+              if (used.has(identity)) continue;
+              if (!best || candidate.grade > best.grade) best = { slot, ...candidate };
             }
           }
 
-          expect(best).not.toBeNull();
-          chosen.set(best!.slot, best!.grade);
-          used.add(`${schoolId}|${normalized(best!.name)}`);
+          if (!best) throw new Error(`Simulation found no valid pick for ${schoolId} on turn ${turn + 1}`);
+          chosen.set(best.slot, best.grade);
+          used.add(`${schoolId}|${best.nameKey}`);
         }
 
-        const raw = slots.reduce((sum, slot) => sum + chosen.get(slot)!, 0) / 7;
-        results.push(finalGrade(raw));
+        let total = 0;
+        for (const slot of slots) total += chosen.get(slot)!;
+        results[run] = finalGrade(total / 7);
       }
 
       results.sort((left, right) => left - right);
