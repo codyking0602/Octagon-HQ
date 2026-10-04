@@ -445,12 +445,12 @@ returns numeric
 language sql
 immutable
 set search_path = ''
-as $
+as $$
   select case
     when p_raw_grade is null then null
     else round(greatest(0::numeric, least(100::numeric, p_raw_grade)), 1)
   end;
-$;
+$$;
 
 create or replace function private.wheel_ufc_state_json(p_challenge_id uuid)
 returns jsonb

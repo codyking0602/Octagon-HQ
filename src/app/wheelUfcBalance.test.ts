@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync("supabase/migrations/202612310256_wheel_ufc_v1.sql", "utf8");
-const seed = migration.match(/\\$wheel_ufc_rows\\$\\n([\\s\\S]*?)\\n\\$wheel_ufc_rows\\$\\);/)?.[1] ?? "";
-const rows = seed.split("\\n").filter(Boolean).map((line) => {
+const seed = migration.match(/\$wheel_ufc_rows\$\n([\s\S]*?)\n\$wheel_ufc_rows\$\);/)?.[1] ?? "";
+const rows = seed.split("\n").filter(Boolean).map((line) => {
   const parts = line.split("|");
   return {
     division: parts[2]!,
