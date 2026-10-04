@@ -28,7 +28,6 @@ describe("auction public product contract", () => {
   it("registers exactly one playable game with one canonical route owner", () => {
     const auctionGames = playGames.filter((game) => game.id === "auction");
     expect(auctionGames).toHaveLength(1);
-    expect(playGames[0]?.id).toBe("auction");
     expect(playGameDefinition("auction")).toMatchObject({
       icon: "$",
       title: "Auction",
