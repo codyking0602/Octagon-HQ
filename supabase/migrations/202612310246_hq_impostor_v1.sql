@@ -870,6 +870,7 @@ begin
   end if;
 
   v_phase:=case
+    when v_event.status='completed' and v_is_terminal and v_action.result_seen_at is not null then 'event_complete'
     when v_round.status='scheduled' then 'waiting_round'
     when v_is_terminal then 'resolved'
     when not v_action.active then 'inactive'
