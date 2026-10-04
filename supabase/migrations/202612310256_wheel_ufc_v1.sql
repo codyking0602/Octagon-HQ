@@ -312,7 +312,8 @@ revoke all on private.wheel_ufc_picks from public, anon, authenticated;
 
 create or replace function private.wheel_ufc_category_ok(
   p_category text,
-  p_country_code text,
+  p_required_country_code text,
+  p_fighter_country_code text,
   p_is_champion boolean,
   p_ranking integer,
   p_young_gun boolean,
@@ -328,8 +329,11 @@ as $$
     when 'TOP_5' then p_ranking between 1 and 5
     when 'SIX_TO_FIFTEEN' then p_ranking between 6 and 15
     when 'UNRANKED' then not p_is_champion and p_ranking is null
-    when 'COUNTRY' then p_country_code is not null
-      and p_country_code = nullif(trim(coalesce($2, '')), '')
+    when 'COUNTRY' then p_fighter_country_code is not null
+      and (
+        nullif(trim(coalesce(p_required_country_code, '')), '') is null
+        or p_fighter_country_code = nullif(trim(coalesce(p_required_country_code, '')), '')
+      )
     when 'YOUNG_GUN' then p_young_gun
     when 'VETERAN' then p_veteran
     else false
@@ -373,6 +377,7 @@ as $$
         and private.wheel_ufc_category_ok(
           p_category,
           p_country_code,
+          fighter.country_code,
           fighter.is_champion,
           fighter.ranking,
           fighter.young_gun,
@@ -870,6 +875,7 @@ begin
       and private.wheel_ufc_category_ok(
         v_match.pending_category,
         v_match.pending_country_code,
+        fighter.country_code,
         fighter.is_champion,
         fighter.ranking,
         fighter.young_gun,
@@ -1189,7 +1195,7 @@ as $$ select private.forfeit_wheel_ufc(p_code); $$;
 
 grant usage on schema private to authenticated;
 
-revoke all on function private.wheel_ufc_category_ok(text,text,boolean,integer,boolean,boolean) from public, anon, authenticated;
+revoke all on function private.wheel_ufc_category_ok(text,text,text,boolean,integer,boolean,boolean) from public, anon, authenticated;
 revoke all on function private.wheel_ufc_eligible_slots(uuid,uuid,text,text) from public, anon, authenticated;
 revoke all on function private.wheel_ufc_raw_grade(uuid,uuid) from public, anon, authenticated;
 revoke all on function private.wheel_ufc_grade_total(uuid,uuid) from public, anon, authenticated;
