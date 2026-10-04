@@ -17,6 +17,10 @@ import {
   wheelFootballCfbNamesMatch,
   wheelFootballCfbPriorityForSchoolId,
 } from "./wheelFootballCfbPriority";
+import {
+  WHEEL_FOOTBALL_CFB_AP_TOP25,
+  wheelFootballCfbApRankForTeam,
+} from "./wheelFootballCfbApTop25";
 
 export const WHEEL_FOOTBALL_ROSTER_SLOTS = [
   "QB",
@@ -35,6 +39,7 @@ export type WheelFootballPoolScope =
   | "NFC"
   | "DIVISION"
   | "CFB"
+  | "TOP_25"
   | "SEC"
   | "BIG_TEN"
   | "BIG_12"
@@ -60,12 +65,13 @@ export interface WheelFootballTeam {
   shortCode: string;
   name: string;
   league: WheelFootballLeague;
-  conference: "AFC" | "NFC" | CfbCurrentSchoolConference;
+  conference: "AFC" | "NFC" | CfbCurrentSchoolConference | "Pac-12";
   division: "East" | "North" | "South" | "West" | null;
   logoSrc: string | null;
   primaryColor: string;
   secondaryColor: string;
   espnId?: string;
+  apRank?: number;
 }
 
 const NFL_WHEEL_COLORS: Readonly<Record<string, readonly [string, string]>> = {
@@ -198,7 +204,7 @@ const CFB_WHEEL_SHORT_CODES: Readonly<Record<string, string>> = {
   "notre-dame": "ND",
 };
 
-const wheelFootballCfbTeams: readonly WheelFootballTeam[] = CFB_CURRENT_SCHOOLS_2026.map((school) => ({
+const wheelFootballCfbCoreTeams: readonly WheelFootballTeam[] = CFB_CURRENT_SCHOOLS_2026.map((school) => ({
   code: school.id,
   shortCode: CFB_WHEEL_SHORT_CODES[school.id] ?? school.id.replace(/-/g, "").slice(0, 4).toUpperCase(),
   name: school.school,
@@ -209,7 +215,29 @@ const wheelFootballCfbTeams: readonly WheelFootballTeam[] = CFB_CURRENT_SCHOOLS_
   primaryColor: school.primaryColor,
   secondaryColor: school.secondaryColor,
   espnId: school.espnId,
+  apRank: wheelFootballCfbApRankForTeam(school.id) ?? undefined,
 }));
+
+const wheelFootballCfbSupplementalTeams: readonly WheelFootballTeam[] = [
+  {
+    code: "boise-state",
+    shortCode: "BSU",
+    name: "Boise State",
+    league: "CFB",
+    conference: "Pac-12",
+    division: null,
+    logoSrc: "https://a.espncdn.com/i/teamlogos/ncaa/500/68.png",
+    primaryColor: "#0033A0",
+    secondaryColor: "#D64309",
+    espnId: "68",
+    apRank: wheelFootballCfbApRankForTeam("boise-state") ?? undefined,
+  },
+];
+
+const wheelFootballCfbTeams: readonly WheelFootballTeam[] = [
+  ...wheelFootballCfbCoreTeams,
+  ...wheelFootballCfbSupplementalTeams,
+];
 
 export const wheelFootballTeams: readonly WheelFootballTeam[] = [
   ...wheelFootballNflTeams,
@@ -228,7 +256,7 @@ export function wheelFootballTeam(code: string) {
 }
 
 export function wheelFootballLeagueFromScope(scope: WheelFootballPoolScope): WheelFootballLeague {
-  return ["CFB", "SEC", "BIG_TEN", "BIG_12", "ACC"].includes(scope) ? "CFB" : "NFL";
+  return ["CFB", "TOP_25", "SEC", "BIG_TEN", "BIG_12", "ACC"].includes(scope) ? "CFB" : "NFL";
 }
 
 export function wheelFootballPoolLabel(
@@ -237,6 +265,7 @@ export function wheelFootballPoolLabel(
 ) {
   if (scope === "NFL") return "FULL NFL";
   if (scope === "CFB") return "NATIONAL";
+  if (scope === "TOP_25") return "AP TOP 25";
   if (scope === "BIG_TEN") return "BIG TEN";
   if (scope === "BIG_12") return "BIG 12";
   if (scope === "DIVISION") return division ?? "DIVISION";
@@ -258,7 +287,12 @@ export function wheelFootballPoolTeams(
       team.conference === conference && team.division === divisionName
     ));
   }
-  if (scope === "CFB") return wheelFootballCfbTeams;
+  if (scope === "CFB") return wheelFootballCfbCoreTeams;
+  if (scope === "TOP_25") {
+    return WHEEL_FOOTBALL_CFB_AP_TOP25
+      .map((entry) => wheelTeamByCode.get(entry.teamCode) ?? null)
+      .filter((team): team is WheelFootballTeam => team !== null);
+  }
   const conference = scope === "BIG_TEN"
     ? "Big Ten"
     : scope === "BIG_12"
