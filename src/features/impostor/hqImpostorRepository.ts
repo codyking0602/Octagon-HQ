@@ -74,6 +74,7 @@ const roundSchema = z.object({
     "vote_locked",
     "inactive",
     "resolved",
+    "event_complete",
     "waiting",
   ]),
   round_status: z.enum(["scheduled", "clue", "vote", "resolved", "forfeit", "no_contest"]),
