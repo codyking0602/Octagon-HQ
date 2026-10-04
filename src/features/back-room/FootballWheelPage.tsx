@@ -803,7 +803,7 @@ function SetupScreen() {
           <span><b>1</b> The first player is randomized after the challenge is accepted.</span>
           <span><b>2</b> Spin a team, then choose one current player or coach for an open Superteam slot.</span>
           <span><b>3</b> Turns alternate until both QB · RB · WR · Flex · Front Seven · Secondary · Head Coach are filled.</span>
-          <span><b>4</b> No re-spins. Teams can return later, but you will not get the same team on back-to-back personal spins.</span>
+          <span><b>4</b> No manual re-spins. The wheel only includes teams that can still fill one of your open spots; repeat teams are avoided whenever another eligible team is available.</span>
           <span><b>5</b> Individual grades stay private. Only the two completed Superteams’ final grades are revealed.</span>
         </div>
       </section>
@@ -895,7 +895,12 @@ function MatchScreen({ code }: { code: string }) {
   );
   const opponent = state ? otherParticipant(state, activeProfileId) : null;
   const division = state ? divisionFromState(state.division) : null;
-  const poolTeams = state ? wheelFootballPoolTeams(state.pool_scope, division) : [];
+  const fullPoolTeams = state ? wheelFootballPoolTeams(state.pool_scope, division) : [];
+  const eligibleTeamCodes = state?.eligible_team_codes;
+  const eligibleTeamCodeSet = new Set(eligibleTeamCodes ?? []);
+  const poolTeams = state?.phase === "spin" && eligibleTeamCodes !== null
+    ? fullPoolTeams.filter((team) => eligibleTeamCodeSet.has(team.code))
+    : fullPoolTeams;
   const pendingTeam = state?.pending_team ? wheelFootballTeam(state.pending_team.code) : null;
 
   async function loadRoster() {
@@ -1201,7 +1206,7 @@ function MatchScreen({ code }: { code: string }) {
         rotation={rotation}
         spinning={spinning}
         pendingTeam={pendingTeam}
-        canSpin={Boolean(state.opened_at && isMyTurn && state.phase === "spin")}
+        canSpin={Boolean(state.opened_at && isMyTurn && state.phase === "spin" && poolTeams.length > 0)}
         onSpin={() => void spin()}
       />
 
