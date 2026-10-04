@@ -18,6 +18,11 @@ const rows = seed.split("\n").filter(Boolean).map((line) => {
 });
 
 describe("Wheel of UFC launch balance", () => {
+  it("locks the audited current-ability grading authority", () => {
+    expect(migration).toContain("ufc-wheel-current-v3-anchor-audit-20261004");
+    expect(migration).toContain("Meta UFC ranking controls wheel eligibility only; it is not converted directly into grade.");
+    expect(migration).toContain("70-74 developmental/replacement level");
+  });
   it("has a complete current Meta Top 15 plus champion in every men's division", () => {
     const divisions = [
       "Flyweight", "Bantamweight", "Featherweight", "Lightweight",
