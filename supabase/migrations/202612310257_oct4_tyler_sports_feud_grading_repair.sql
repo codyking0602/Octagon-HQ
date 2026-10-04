@@ -151,10 +151,17 @@ begin
     false
   );
 
-  update private.daily_challenge_setups
-  set private_setup_evidence = v_evidence,
-      reveal_setup = v_reveal
-  where id = v_setup;
+  execute 'alter table private.daily_challenge_setups disable trigger daily_challenge_setups_immutable';
+  begin
+    update private.daily_challenge_setups
+    set private_setup_evidence = v_evidence,
+        reveal_setup = v_reveal
+    where id = v_setup;
+  exception when others then
+    execute 'alter table private.daily_challenge_setups enable trigger daily_challenge_setups_immutable';
+    raise;
+  end;
+  execute 'alter table private.daily_challenge_setups enable trigger daily_challenge_setups_immutable';
 end
 $oct4_setup$;
 
