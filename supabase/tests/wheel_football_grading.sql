@@ -8,13 +8,57 @@ declare
   v_effective date;
 begin
   select count(*) into v_count from private.wheel_football_grade_authority;
-  if v_count <> 626 then
-    raise exception 'Expected 626 locked Wheel grades, got %', v_count;
+  if v_count <> 1961 then
+    raise exception 'Expected 1961 locked NFL + CFB Wheel grades, got %', v_count;
   end if;
 
   if has_table_privilege('anon', 'private.wheel_football_grade_authority', 'select')
     or has_table_privilege('authenticated', 'private.wheel_football_grade_authority', 'select') then
     raise exception 'Wheel grade authority leaked direct read access';
+  end if;
+
+  select count(*) into v_count
+  from private.wheel_football_grade_authority
+  where source_artifact like 'data/generated/football/wheel-cfb-%';
+  if v_count <> 1335 then
+    raise exception 'Expected 1335 locked CFB Wheel grades, got %', v_count;
+  end if;
+
+  select count(*) into v_count
+  from private.wheel_football_teams
+  where conference in ('SEC', 'Big Ten', 'Big 12', 'ACC', 'Independent');
+  if v_count <> 68 then
+    raise exception 'Expected 68 current CFB Wheel schools, got %', v_count;
+  end if;
+
+  select count(*) into v_count from private.wheel_football_teams where conference = 'SEC';
+  if v_count <> 16 then raise exception 'CFB SEC pool drifted: %', v_count; end if;
+  select count(*) into v_count from private.wheel_football_teams where conference = 'Big Ten';
+  if v_count <> 18 then raise exception 'CFB Big Ten pool drifted: %', v_count; end if;
+  select count(*) into v_count from private.wheel_football_teams where conference = 'Big 12';
+  if v_count <> 16 then raise exception 'CFB Big 12 pool drifted: %', v_count; end if;
+  select count(*) into v_count from private.wheel_football_teams where conference = 'ACC';
+  if v_count <> 17 then raise exception 'CFB ACC pool drifted: %', v_count; end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('texas', 'Arch Manning', 'QB', 'QB');
+  if v_grade <> 88 then
+    raise exception 'Arch Manning CFB QB grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('lsu', 'Trey''Dez Green', 'Flex', 'TE');
+  if v_grade <> 97 then
+    raise exception 'CFB Flex did not inherit Trey''Dez Green TE grade: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('indiana', 'Curt Cignetti', 'Head Coach', 'HC');
+  if v_grade <> 99 then
+    raise exception 'Curt Cignetti CFB Head Coach grade resolved incorrectly: %', v_grade;
   end if;
 
   select hidden_grade, grade_version, effective_date

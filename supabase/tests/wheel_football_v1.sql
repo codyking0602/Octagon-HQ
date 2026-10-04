@@ -7,9 +7,11 @@ declare
   v_nfc_count integer;
   v_bad_divisions integer;
 begin
-  select count(*) into v_team_count from private.wheel_football_teams;
+  select count(*) into v_team_count
+  from private.wheel_football_teams
+  where conference in ('AFC', 'NFC');
   if v_team_count <> 32 then
-    raise exception 'Wheel of Football must own exactly 32 NFL teams, got %', v_team_count;
+    raise exception 'Wheel of Football must retain exactly 32 NFL teams, got %', v_team_count;
   end if;
 
   select count(*) into v_afc_count from private.wheel_football_teams where conference = 'AFC';
@@ -23,6 +25,7 @@ begin
   from (
     select conference, division, count(*) as team_count
     from private.wheel_football_teams
+    where conference in ('AFC', 'NFC')
     group by conference, division
     having count(*) <> 4
   ) bad;
