@@ -17,7 +17,7 @@ returns trigger
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $wheel_ufc_spin$
 declare
   v_category text;
   v_country_code text;
@@ -35,7 +35,7 @@ begin
   end if;
   return new;
 end;
-$;
+$wheel_ufc_spin$;
 
 drop trigger if exists wheel_ufc_capture_spin_source on private.wheel_ufc_picks;
 create trigger wheel_ufc_capture_spin_source
