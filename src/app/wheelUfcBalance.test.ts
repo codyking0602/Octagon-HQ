@@ -6,6 +6,8 @@ const seed = migration.match(/\$wheel_ufc_rows\$\n([\s\S]*?)\n\$wheel_ufc_rows\$
 const rows = seed.split("\n").filter(Boolean).map((line) => {
   const parts = line.split("|");
   return {
+    fighterId: parts[0]!,
+    name: parts[1]!,
     division: parts[2]!,
     rank: parts[3] ? Number(parts[3]) : null,
     champion: parts[4] === "true",
@@ -34,6 +36,36 @@ describe("Wheel of UFC launch balance", () => {
     const unranked = rows.filter((row) => row.rank === null && !row.champion).map((row) => row.grade);
     expect(Math.max(...unranked)).toBeGreaterThan(Math.min(...topFive));
     expect(Math.max(...unranked)).toBeGreaterThanOrEqual(94);
+  });
+
+  it("keeps every audited 10-plus UFC-fight veteran in the Veteran pool", () => {
+    const requiredVeterans = [
+      "joshua-van",
+      "manel-kape",
+      "kyoji-horiguchi",
+      "sumudaerji",
+      "aiemann-zahabi",
+      "charles-jourdain",
+      "movsar-evloev",
+      "lerone-murphy",
+      "pat-sabatini",
+      "youssef-zalal",
+      "joanderson-brito",
+      "melquizael-costa",
+      "benoit-saint-denis",
+      "ignacio-bahamondes",
+      "sean-brady",
+      "uros-medic",
+      "khaos-williams",
+      "randy-brown",
+      "christian-leroy-duncan",
+      "sergei-pavlovich",
+      "waldo-cortes-acosta",
+      "vitor-petrino",
+    ];
+    for (const fighterId of requiredVeterans) {
+      expect(rows.find((row) => row.fighterId === fighterId)?.veteran, fighterId).toBe(true);
+    }
   });
 
   it("keeps Young Gun and Veteran as real cross-division paths", () => {
