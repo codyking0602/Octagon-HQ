@@ -20,17 +20,20 @@ import {
   WHEEL_FOOTBALL_DIVISIONS,
   WHEEL_FOOTBALL_ROSTER_SLOTS,
   loadWheelFootballRoster,
+  wheelFootballLeagueFromScope,
+  wheelFootballPoolLabel,
   wheelFootballPoolTeams,
   wheelFootballShortlist,
   wheelFootballTeam,
   type WheelFootballCandidate,
   type WheelFootballDivision,
+  type WheelFootballLeague,
   type WheelFootballPoolScope,
   type WheelFootballRosterSlot,
   type WheelFootballTeam,
 } from "./wheelFootballModel";
 
-const SCOPE_OPTIONS: readonly {
+const NFL_SCOPE_OPTIONS: readonly {
   value: WheelFootballPoolScope;
   label: string;
   detail: string;
@@ -39,6 +42,18 @@ const SCOPE_OPTIONS: readonly {
   { value: "AFC", label: "AFC", detail: "16 teams" },
   { value: "NFC", label: "NFC", detail: "16 teams" },
   { value: "DIVISION", label: "DIVISION", detail: "4 teams · repeats allowed" },
+];
+
+const CFB_SCOPE_OPTIONS: readonly {
+  value: WheelFootballPoolScope;
+  label: string;
+  detail: string;
+}[] = [
+  { value: "CFB", label: "NATIONAL", detail: "All 68 schools" },
+  { value: "SEC", label: "SEC", detail: "16 schools" },
+  { value: "BIG_TEN", label: "BIG TEN", detail: "18 schools" },
+  { value: "BIG_12", label: "BIG 12", detail: "16 schools" },
+  { value: "ACC", label: "ACC", detail: "17 schools" },
 ];
 
 function divisionFromState(value: string | null): WheelFootballDivision | null {
@@ -71,11 +86,8 @@ function pickForSlot(roster: readonly WheelFootballPick[], slot: WheelFootballRo
 }
 
 function resultPoolLabel(state: WheelFootballState) {
-  return `${state.pool_scope === "DIVISION"
-    ? state.division
-    : state.pool_scope === "NFL"
-      ? "FULL NFL"
-      : state.pool_scope} · CURRENT NFL`;
+  const league = wheelFootballLeagueFromScope(state.pool_scope);
+  return `${wheelFootballPoolLabel(state.pool_scope, divisionFromState(state.division))} · CURRENT ${league}`;
 }
 
 function roundedCanvasRect(
@@ -155,7 +167,7 @@ function drawShareRosterCell(
   context.fillStyle = "#7890a3";
   context.font = "700 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
   context.fillText(
-    `${pick.team_code} · ${pick.position_abbreviation}`,
+    `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}`,
     textX,
     y + 80,
   );
@@ -377,7 +389,7 @@ function RosterCell({
       <PickMark pick={pick} />
       <div>
         <strong>{pick?.display_name ?? "OPEN"}</strong>
-        <span>{pick ? `${pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
+        <span>{pick ? `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
       </div>
     </div>
   );
@@ -419,7 +431,7 @@ function HeadToHeadRoster({
 function TeamLogo({ team, className = "" }: { team: WheelFootballTeam; className?: string }) {
   return (
     <span className={`football-wheel-team-logo ${className}`} aria-hidden="true">
-      {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.code}</b>}
+      {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.shortCode}</b>}
     </span>
   );
 }
@@ -451,10 +463,10 @@ function FootballWheel({
   onSpin: () => void;
 }) {
   return (
-    <section className="football-wheel surface-card" aria-label="NFL team wheel">
+    <section className="football-wheel surface-card" aria-label="Football team wheel">
       <div className="football-wheel__pointer" aria-hidden="true" />
       <div
-        className={`football-wheel__disc${spinning ? " is-spinning" : ""}`}
+        className={`football-wheel__disc${spinning ? " is-spinning" : ""}${teams.length > 40 ? " is-dense" : ""}`}
         style={{
           transform: `rotate(${rotation}deg)`,
           background: wheelTeamBackground(teams),
@@ -473,7 +485,7 @@ function FootballWheel({
             } as CSSProperties}
             title={team.name}
           >
-            {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.code}</b>}
+            {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.shortCode}</b>}
           </span>
         ))}
       </div>
@@ -486,7 +498,7 @@ function FootballWheel({
         {pendingTeam ? (
           <>
             <TeamLogo team={pendingTeam} />
-            <strong>{pendingTeam.code}</strong>
+            <strong>{pendingTeam.shortCode}</strong>
           </>
         ) : spinning ? (
           <><strong>SPINNING</strong><span>…</span></>
@@ -610,6 +622,7 @@ function SetupScreen() {
   const identity = useIdentity();
   const challenges = usePlayChallenges();
   const repository = useMemo(() => createWheelFootballRepository(), []);
+  const [league, setLeague] = useState<WheelFootballLeague>("NFL");
   const [scope, setScope] = useState<WheelFootballPoolScope>("NFL");
   const [division, setDivision] = useState<WheelFootballDivision>("NFC East");
   const [opponent, setOpponent] = useState<MemberCardSummary | null>(null);
@@ -624,7 +637,13 @@ function SetupScreen() {
     if (preferred) setOpponent(preferred);
   }, [challenges.members, challenges.preferredRecipientName, opponent]);
 
+  const scopeOptions = league === "NFL" ? NFL_SCOPE_OPTIONS : CFB_SCOPE_OPTIONS;
   const pool = wheelFootballPoolTeams(scope, scope === "DIVISION" ? division : null);
+
+  function chooseLeague(nextLeague: WheelFootballLeague) {
+    setLeague(nextLeague);
+    setScope(nextLeague === "NFL" ? "NFL" : "CFB");
+  }
 
   async function createMatch() {
     if (!repository || !opponent || !challenges.activeProfile) return;
@@ -655,18 +674,34 @@ function SetupScreen() {
         <h1>WHEEL OF FOOTBALL</h1>
         <strong>Spin. Pick. Pass the turn.</strong>
         <p>
-          Build a seven-slot NFL Superteam head-to-head. Alternate spins and picks until both
-          rosters are full.
+          Build a seven-slot {league === "NFL" ? "NFL" : "college football"} Superteam head-to-head.
+          Alternate spins and picks until both rosters are full.
         </p>
       </section>
 
       <section className="football-wheel-setup surface-card">
         <header>
-          <div><small>1</small><span><b>CHOOSE THE WHEEL</b><em>Current NFL only</em></span></div>
-          <strong>{pool.length} TEAMS</strong>
+          <div><small>1</small><span><b>CHOOSE THE WHEEL</b><em>Current {league === "NFL" ? "NFL" : "CFB"} only</em></span></div>
+          <strong>{pool.length} {league === "NFL" ? "TEAMS" : "SCHOOLS"}</strong>
         </header>
+        <div className="football-wheel-setup__league" aria-label="Football level">
+          <button
+            type="button"
+            className={league === "NFL" ? "is-active" : ""}
+            onClick={() => chooseLeague("NFL")}
+          >
+            NFL
+          </button>
+          <button
+            type="button"
+            className={league === "CFB" ? "is-active" : ""}
+            onClick={() => chooseLeague("CFB")}
+          >
+            COLLEGE
+          </button>
+        </div>
         <div className="football-wheel-setup__scope">
-          {SCOPE_OPTIONS.map((option) => (
+          {scopeOptions.map((option) => (
             <button
               type="button"
               className={scope === option.value ? "is-active" : ""}
@@ -1115,7 +1150,7 @@ function MatchScreen({ code }: { code: string }) {
         <div>
           <p className="eyebrow">WHEEL OF FOOTBALL · TURN {Math.min(14, state.turn_count + 1)} OF 14</p>
           <h1>{turnLabel}</h1>
-          <span>{state.pool_scope === "DIVISION" ? state.division : state.pool_scope === "NFL" ? "FULL NFL" : state.pool_scope} · CURRENT NFL</span>
+          <span>{wheelFootballPoolLabel(state.pool_scope, division)} · CURRENT {wheelFootballLeagueFromScope(state.pool_scope)}</span>
         </div>
         <div className="football-wheel-match__actions">
           <button type="button" disabled={busy || spinning} onClick={() => void syncMatch(false)}>REFRESH</button>
