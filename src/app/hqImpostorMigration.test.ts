@@ -9,6 +9,7 @@ const page = readFileSync("src/features/impostor/HqImpostorPage.tsx", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
 const home = readFileSync("src/features/home/HomePage.tsx", "utf8");
 
+// Release gate: this file intentionally changes with the exact ship head so PR backend and V2 validation rerun together.
 describe("HQ Impostor v1 contract", () => {
   it("locks four one-day rounds and private three/five-minute action clocks", () => {
     expect(migration).toContain("round_count integer not null default 4 check (round_count = 4)");
