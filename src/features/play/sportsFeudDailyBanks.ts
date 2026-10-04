@@ -121,6 +121,26 @@ const ALIAS_INDEX = {
   ufc: aliasIndex("ufc"),
 };
 
+function scopedAliasIndex(domain: SportsFeudBankDomain) {
+  const map = new Map<string, string[]>();
+  for (const question of [...BANKS[domain].main, ...BANKS[domain].fast]) {
+    const group = question.collisionGroup ?? question.category;
+    for (const answer of [...question.answers, ...(question.alsoAcceptedAnswers ?? [])]) {
+      const aliases = answer.aliases ?? [];
+      if (!aliases.length) continue;
+      const key = `${group}|${answer.name}`;
+      map.set(key, unique([...(map.get(key) ?? []), ...aliases]));
+    }
+  }
+  return map;
+}
+
+const SCOPED_ALIAS_INDEX = {
+  cfb: scopedAliasIndex("cfb"),
+  nfl: scopedAliasIndex("nfl"),
+  ufc: scopedAliasIndex("ufc"),
+};
+
 const CFB_RIVALRY_SHORTHAND: Readonly<Record<string, readonly string[]>> = {
   "Ohio State": ["OSU", "Ohio St"],
   Alabama: ["Bama"],
@@ -211,10 +231,16 @@ function selectFast(
   return selected;
 }
 
-function answerAliases(domain: SportsFeudBankDomain, answer: SportsFeudAuthoredAnswer) {
+function answerAliases(
+  domain: SportsFeudBankDomain,
+  question: SportsFeudAuthoredQuestion,
+  answer: SportsFeudAuthoredAnswer,
+) {
+  const group = question.collisionGroup ?? question.category;
   return unique([
     ...(answer.aliases ?? []),
     ...(ALIAS_INDEX[domain].get(answer.name) ?? []),
+    ...(SCOPED_ALIAS_INDEX[domain].get(`${group}|${answer.name}`) ?? []),
     ...automaticAliases(answer.name, domain),
   ]).filter((alias) => alias.trim() && alias !== answer.name);
 }
@@ -264,7 +290,7 @@ export function sportsFeudCurrentEntityMetadata(
 
   return {
     kind: current.question.entityKind,
-    aliases: answerAliases(current.domain, answer),
+    aliases: answerAliases(current.domain, current.question, answer),
   };
 }
 
@@ -281,7 +307,7 @@ function materializeQuestion(
       id: entityId,
       displayName: answer.name,
       kind: question.entityKind,
-      aliases: answerAliases(domain, answer),
+      aliases: answerAliases(domain, question, answer),
     });
     return { entityId, points: points[index] ?? 1 };
   });
@@ -294,7 +320,7 @@ function materializeQuestion(
       id: entityId,
       displayName: answer.name,
       kind: question.entityKind,
-      aliases: answerAliases(domain, answer),
+      aliases: answerAliases(domain, question, answer),
     });
     return entityId;
   });
