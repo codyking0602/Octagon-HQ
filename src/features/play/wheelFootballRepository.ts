@@ -7,7 +7,17 @@ import {
 } from "../back-room/wheelFootballModel";
 
 const rosterSlotSchema = z.enum(WHEEL_FOOTBALL_ROSTER_SLOTS);
-const poolScopeSchema = z.enum(["NFL", "AFC", "NFC", "DIVISION"]);
+const poolScopeSchema = z.enum([
+  "NFL",
+  "AFC",
+  "NFC",
+  "DIVISION",
+  "CFB",
+  "SEC",
+  "BIG_TEN",
+  "BIG_12",
+  "ACC",
+]);
 
 const participantSchema = z.object({
   id: z.string().uuid(),
@@ -15,15 +25,15 @@ const participantSchema = z.object({
 });
 
 const teamSchema = z.object({
-  code: z.string().min(2).max(3),
+  code: z.string().min(1).max(64),
   name: z.string().min(1),
-  conference: z.enum(["AFC", "NFC"]),
-  division: z.enum(["East", "North", "South", "West"]),
+  conference: z.enum(["AFC", "NFC", "SEC", "Big Ten", "Big 12", "ACC", "Independent"]),
+  division: z.enum(["East", "North", "South", "West"]).nullable(),
 });
 
 const pickSchema = z.object({
   turn_number: z.coerce.number().int().min(1).max(14),
-  team_code: z.string().min(2).max(3),
+  team_code: z.string().min(1).max(64),
   team_name: z.string().min(1),
   roster_slot: rosterSlotSchema,
   athlete_id: z.string().min(1),

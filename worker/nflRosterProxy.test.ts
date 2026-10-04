@@ -20,4 +20,14 @@ describe("Wheel of Football NFL roster proxy", () => {
     expect(workerSource).toContain("NFL_ROSTER_TEAM_CODES");
     expect(workerSource).toContain('"Cache-Control", "public, max-age=300, stale-while-revalidate=900"');
   });
+  it("routes the reviewed 68-school CFB roster request through the Worker", () => {
+    expect(wrangler.assets?.run_worker_first).toContain("/api/football/cfb-roster");
+    expect(workerSource).toContain('requestUrl.pathname === "/api/football/cfb-roster"');
+    expect(workerSource).toContain("serveCfbRoster(requestUrl)");
+    expect(workerSource).toContain("site.api.espn.com/apis/site/v2/sports/football/college-football/teams/");
+    expect(workerSource).toContain("CFB_ROSTER_ESPN_IDS");
+    expect(workerSource).toContain('"333"');
+    expect(workerSource).toContain('"87"');
+  });
+
 });

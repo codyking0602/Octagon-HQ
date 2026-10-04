@@ -9,6 +9,14 @@ import {
   wheelFootballNflNamesMatch,
   wheelFootballNflPriorityForTeam,
 } from "./wheelFootballNflPriority";
+import {
+  CFB_CURRENT_SCHOOLS_2026,
+  type CfbCurrentSchoolConference,
+} from "./footballCfbCurrentSchoolScope";
+import {
+  wheelFootballCfbNamesMatch,
+  wheelFootballCfbPriorityForSchoolId,
+} from "./wheelFootballCfbPriority";
 
 export const WHEEL_FOOTBALL_ROSTER_SLOTS = [
   "QB",
@@ -21,7 +29,18 @@ export const WHEEL_FOOTBALL_ROSTER_SLOTS = [
 ] as const;
 
 export type WheelFootballRosterSlot = (typeof WHEEL_FOOTBALL_ROSTER_SLOTS)[number];
-export type WheelFootballPoolScope = "NFL" | "AFC" | "NFC" | "DIVISION";
+export type WheelFootballPoolScope =
+  | "NFL"
+  | "AFC"
+  | "NFC"
+  | "DIVISION"
+  | "CFB"
+  | "SEC"
+  | "BIG_TEN"
+  | "BIG_12"
+  | "ACC";
+
+export type WheelFootballLeague = "NFL" | "CFB";
 
 export const WHEEL_FOOTBALL_DIVISIONS = [
   "AFC East",
@@ -38,12 +57,15 @@ export type WheelFootballDivision = (typeof WHEEL_FOOTBALL_DIVISIONS)[number];
 
 export interface WheelFootballTeam {
   code: string;
+  shortCode: string;
   name: string;
-  conference: "AFC" | "NFC";
-  division: "East" | "North" | "South" | "West";
+  league: WheelFootballLeague;
+  conference: "AFC" | "NFC" | CfbCurrentSchoolConference;
+  division: "East" | "North" | "South" | "West" | null;
   logoSrc: string | null;
   primaryColor: string;
   secondaryColor: string;
+  espnId?: string;
 }
 
 const NFL_WHEEL_COLORS: Readonly<Record<string, readonly [string, string]>> = {
@@ -87,14 +109,16 @@ function nflTeamCode(row: (typeof footballTeamSchoolMetadata)[number]) {
   return footballNflTeamMediaCode(alias).toUpperCase();
 }
 
-export const wheelFootballTeams: readonly WheelFootballTeam[] = footballTeamSchoolMetadata
+const wheelFootballNflTeams: readonly WheelFootballTeam[] = footballTeamSchoolMetadata
   .filter((row) => row.level === "NFL" && row.nflConference && row.nflDivision)
   .map((row) => {
     const code = nflTeamCode(row);
     const [primaryColor, secondaryColor] = NFL_WHEEL_COLORS[code] ?? ["#174A7E", "#8FC8F4"];
     return {
       code,
+      shortCode: code,
       name: row.name,
+      league: "NFL" as const,
       conference: row.nflConference!,
       division: row.nflDivision!,
       logoSrc: footballTeamAssets[footballNflTeamMediaId(code)]?.src ?? null,
@@ -103,25 +127,144 @@ export const wheelFootballTeams: readonly WheelFootballTeam[] = footballTeamScho
     };
   });
 
-const wheelTeamByCode = new Map(wheelFootballTeams.map((team) => [team.code, team]));
+const CFB_WHEEL_SHORT_CODES: Readonly<Record<string, string>> = {
+  alabama: "ALA",
+  arkansas: "ARK",
+  auburn: "AUB",
+  florida: "FLA",
+  georgia: "UGA",
+  kentucky: "UK",
+  lsu: "LSU",
+  "mississippi-state": "MSST",
+  missouri: "MIZ",
+  oklahoma: "OU",
+  "ole-miss": "MISS",
+  "south-carolina": "SC",
+  tennessee: "TENN",
+  texas: "TEX",
+  "texas-am": "TAMU",
+  vanderbilt: "VAN",
+  illinois: "ILL",
+  indiana: "IND",
+  iowa: "IOWA",
+  maryland: "MD",
+  michigan: "MICH",
+  "michigan-state": "MSU",
+  minnesota: "MINN",
+  nebraska: "NEB",
+  northwestern: "NU",
+  "ohio-state": "OSU",
+  oregon: "ORE",
+  "penn-state": "PSU",
+  purdue: "PUR",
+  rutgers: "RUT",
+  ucla: "UCLA",
+  usc: "USC",
+  washington: "WASH",
+  wisconsin: "WIS",
+  arizona: "ARIZ",
+  "arizona-state": "ASU",
+  baylor: "BAY",
+  byu: "BYU",
+  cincinnati: "CIN",
+  colorado: "COL",
+  houston: "HOU",
+  "iowa-state": "ISU",
+  kansas: "KU",
+  "kansas-state": "KSU",
+  "oklahoma-state": "OKST",
+  tcu: "TCU",
+  "texas-tech": "TTU",
+  ucf: "UCF",
+  utah: "UTAH",
+  "west-virginia": "WVU",
+  "boston-college": "BC",
+  california: "CAL",
+  clemson: "CLEM",
+  duke: "DUKE",
+  "florida-state": "FSU",
+  "georgia-tech": "GT",
+  louisville: "LOU",
+  miami: "MIA",
+  "nc-state": "NCSU",
+  "north-carolina": "UNC",
+  pittsburgh: "PITT",
+  smu: "SMU",
+  stanford: "STAN",
+  syracuse: "SYR",
+  virginia: "UVA",
+  "virginia-tech": "VT",
+  "wake-forest": "WAKE",
+  "notre-dame": "ND",
+};
+
+const wheelFootballCfbTeams: readonly WheelFootballTeam[] = CFB_CURRENT_SCHOOLS_2026.map((school) => ({
+  code: school.id,
+  shortCode: CFB_WHEEL_SHORT_CODES[school.id] ?? school.id.replace(/-/g, "").slice(0, 4).toUpperCase(),
+  name: school.school,
+  league: "CFB" as const,
+  conference: school.conference,
+  division: null,
+  logoSrc: school.logoUrl,
+  primaryColor: school.primaryColor,
+  secondaryColor: school.secondaryColor,
+  espnId: school.espnId,
+}));
+
+export const wheelFootballTeams: readonly WheelFootballTeam[] = [
+  ...wheelFootballNflTeams,
+  ...wheelFootballCfbTeams,
+];
+
+const wheelTeamByCode = new Map(
+  wheelFootballTeams.flatMap((team) => [
+    [team.code, team] as const,
+    [team.code.toUpperCase(), team] as const,
+  ]),
+);
 
 export function wheelFootballTeam(code: string) {
-  return wheelTeamByCode.get(code.toUpperCase()) ?? null;
+  return wheelTeamByCode.get(code) ?? wheelTeamByCode.get(code.toUpperCase()) ?? null;
+}
+
+export function wheelFootballLeagueFromScope(scope: WheelFootballPoolScope): WheelFootballLeague {
+  return ["CFB", "SEC", "BIG_TEN", "BIG_12", "ACC"].includes(scope) ? "CFB" : "NFL";
+}
+
+export function wheelFootballPoolLabel(
+  scope: WheelFootballPoolScope,
+  division: WheelFootballDivision | null = null,
+) {
+  if (scope === "NFL") return "FULL NFL";
+  if (scope === "CFB") return "NATIONAL";
+  if (scope === "BIG_TEN") return "BIG TEN";
+  if (scope === "BIG_12") return "BIG 12";
+  if (scope === "DIVISION") return division ?? "DIVISION";
+  return scope;
 }
 
 export function wheelFootballPoolTeams(
   scope: WheelFootballPoolScope,
   division: WheelFootballDivision | null = null,
 ) {
-  if (scope === "NFL") return wheelFootballTeams;
+  if (scope === "NFL") return wheelFootballNflTeams;
   if (scope === "AFC" || scope === "NFC") {
-    return wheelFootballTeams.filter((team) => team.conference === scope);
+    return wheelFootballNflTeams.filter((team) => team.conference === scope);
   }
-  if (!division) return [];
-  const [conference, divisionName] = division.split(" ") as ["AFC" | "NFC", WheelFootballTeam["division"]];
-  return wheelFootballTeams.filter((team) => (
-    team.conference === conference && team.division === divisionName
-  ));
+  if (scope === "DIVISION") {
+    if (!division) return [];
+    const [conference, divisionName] = division.split(" ") as ["AFC" | "NFC", "East" | "North" | "South" | "West"];
+    return wheelFootballNflTeams.filter((team) => (
+      team.conference === conference && team.division === divisionName
+    ));
+  }
+  if (scope === "CFB") return wheelFootballCfbTeams;
+  const conference = scope === "BIG_TEN"
+    ? "Big Ten"
+    : scope === "BIG_12"
+      ? "Big 12"
+      : scope;
+  return wheelFootballCfbTeams.filter((team) => team.conference === conference);
 }
 
 const POSITION_NAME_ABBREVIATIONS: Readonly<Record<string, string>> = {
@@ -315,15 +458,18 @@ function curatedWheelShortlist(
   slot: WheelFootballRosterSlot,
   teamCode: string,
 ) {
-  const teamPriority = wheelFootballNflPriorityForTeam(teamCode);
+  const nflPriority = wheelFootballNflPriorityForTeam(teamCode);
+  const cfbPriority = wheelFootballCfbPriorityForSchoolId(teamCode);
+  const teamPriority = nflPriority ?? cfbPriority;
   if (!teamPriority) return null;
+  const namesMatch = nflPriority ? wheelFootballNflNamesMatch : wheelFootballCfbNamesMatch;
 
   const eligible = candidates.filter((candidate) => candidate.eligibleSlots.includes(slot));
   const selected: WheelFootballCandidate[] = [];
   for (const priorityName of teamPriority[slot]) {
     const match = eligible.find((candidate) => (
       !selected.includes(candidate)
-      && wheelFootballNflNamesMatch(candidate.name, priorityName)
+      && namesMatch(candidate.name, priorityName)
     ));
     if (match) selected.push(match);
     if (selected.length >= WHEEL_FOOTBALL_SHORTLIST_MAX[slot]) break;
@@ -376,16 +522,105 @@ export function wheelFootballShortlist(
     : base;
 }
 
+function cfbSyntheticCandidate(
+  schoolId: string,
+  name: string,
+  positionAbbreviation: string,
+  positionLabel: string,
+  rosterOrder: number,
+): WheelFootballCandidate {
+  return {
+    id: `cfb:${schoolId}:${normalizedWheelFootballName(name)}`,
+    name,
+    positionLabel,
+    positionAbbreviation,
+    headshotUrl: null,
+    eligibleSlots: wheelFootballEligibleSlots(positionAbbreviation),
+    experienceYears: null,
+    rosterOrder,
+  };
+}
+
+function normalizedWheelFootballName(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function auditedCfbCandidates(
+  schoolId: string,
+  espnCandidates: readonly WheelFootballCandidate[],
+) {
+  const priority = wheelFootballCfbPriorityForSchoolId(schoolId);
+  if (!priority) return [...espnCandidates];
+
+  const sourceByName = new Map(
+    espnCandidates.map((candidate) => [normalizedWheelFootballName(candidate.name), candidate]),
+  );
+  const selected: WheelFootballCandidate[] = [];
+  const seen = new Set<string>();
+  let rosterOrder = 0;
+
+  const add = (
+    names: readonly string[],
+    positionAbbreviation: string,
+    positionLabel: string,
+  ) => {
+    for (const name of names) {
+      const key = normalizedWheelFootballName(name);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const source = sourceByName.get(key);
+      const audited = cfbSyntheticCandidate(
+        schoolId,
+        name,
+        positionAbbreviation,
+        positionLabel,
+        rosterOrder++,
+      );
+      selected.push({
+        ...audited,
+        headshotUrl: source?.headshotUrl ?? null,
+        experienceYears: source?.experienceYears ?? null,
+      });
+    }
+  };
+
+  add(priority.QB, "QB", "Quarterback");
+  add(priority.RB, "RB", "Running Back");
+  add(priority.WR, "WR", "Wide Receiver");
+  add(priority.TE, "TE", "Tight End");
+  add(priority["Front Seven"], "LB", "Front Seven");
+  add(priority.Secondary, "DB", "Secondary");
+  add(priority["Head Coach"], "HC", "Head Coach");
+
+  return selected;
+}
+
 export async function loadWheelFootballRoster(
   teamCode: string,
   fetcher: typeof fetch = fetch,
 ) {
-  const response = await fetcher(
-    `/api/football/nfl-roster?team=${encodeURIComponent(teamCode.toUpperCase())}`,
-    { headers: { Accept: "application/json" } },
-  );
-  if (!response.ok) throw new Error("Current NFL roster could not be loaded.");
-  const candidates = wheelFootballCandidatesFromEspn(await response.json());
+  const team = wheelFootballTeam(teamCode);
+  if (!team) throw new Error("That Wheel team is unavailable.");
+
+  const isCfb = team.league === "CFB";
+  const endpoint = isCfb
+    ? `/api/football/cfb-roster?team=${encodeURIComponent(team.espnId ?? "")}`
+    : `/api/football/nfl-roster?team=${encodeURIComponent(team.code.toUpperCase())}`;
+  const response = await fetcher(endpoint, { headers: { Accept: "application/json" } });
+  if (!response.ok) {
+    throw new Error(isCfb
+      ? "Current college roster could not be loaded."
+      : "Current NFL roster could not be loaded.");
+  }
+
+  const espnCandidates = wheelFootballCandidatesFromEspn(await response.json());
+  const candidates = isCfb
+    ? auditedCfbCandidates(team.code, espnCandidates)
+    : espnCandidates;
   if (!candidates.length) throw new Error("No eligible current players were returned for that team.");
   return candidates;
 }

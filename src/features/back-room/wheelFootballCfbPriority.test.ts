@@ -73,11 +73,11 @@ describe("2026 current CFB Wheel priority authority", () => {
       "manually-audited-current-priorities",
     );
     expect(WHEEL_FOOTBALL_CFB_PRIORITY_AUDIT_COMPLETE).toBe(true);
-    expect(WHEEL_FOOTBALL_CFB_GRADING_COMPLETE).toBe(false);
-    expect(WHEEL_FOOTBALL_CFB_BASELINE_LAUNCH_READY).toBe(false);
+    expect(WHEEL_FOOTBALL_CFB_GRADING_COMPLETE).toBe(true);
+    expect(WHEEL_FOOTBALL_CFB_BASELINE_LAUNCH_READY).toBe(true);
     expect(wheelFootballCfbPriorityAudit.auditComplete).toBe(true);
-    expect(wheelFootballCfbPriorityAudit.gradingComplete).toBe(false);
-    expect(wheelFootballCfbPriorityAudit.launchReady).toBe(false);
+    expect(wheelFootballCfbPriorityAudit.gradingComplete).toBe(true);
+    expect(wheelFootballCfbPriorityAudit.launchReady).toBe(true);
 
     expect(wheelFootballCfbBaseline.alabama.RB).toEqual([
       "Daniel Hill",

@@ -99,13 +99,13 @@ function mergeAuditedPriority(
  * Step 3 is complete: the 68-school candidate population and football-importance
  * ordering have been manually audited conference by conference.
  *
- * The game itself is still not launch-ready because player grading is the next
- * locked phase. Keeping this false prevents candidate curation from being
- * mistaken for a completed/grading-ready runtime.
+ * The audited population and all seven grade families are now complete and wired
+ * into the shared Wheel runtime. These flags represent the current launch-ready
+ * 2026 CFB authority rather than the earlier population-only checkpoint.
  */
 export const WHEEL_FOOTBALL_CFB_PRIORITY_AUDIT_COMPLETE = true as const;
-export const WHEEL_FOOTBALL_CFB_GRADING_COMPLETE = false as const;
-export const WHEEL_FOOTBALL_CFB_BASELINE_LAUNCH_READY = false as const;
+export const WHEEL_FOOTBALL_CFB_GRADING_COMPLETE = true as const;
+export const WHEEL_FOOTBALL_CFB_BASELINE_LAUNCH_READY = true as const;
 
 export const wheelFootballCfbBaselineAudit = {
   source: baseline.source,
