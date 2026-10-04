@@ -94,7 +94,7 @@ describe("CFB Wheel runtime authority", () => {
           return { nameKey, grade };
         });
         return [slot, rows];
-      })) as Record<Slot, readonly { nameKey: string; grade: number }[]>;
+      })) as unknown as Record<Slot, readonly { nameKey: string; grade: number }[]>;
       options.set(schoolId, bySlot);
     }
 
