@@ -315,6 +315,78 @@ function PickMark({ pick }: { pick: WheelFootballPick | null }) {
   );
 }
 
+function RosterCell({
+  pick,
+  align,
+}: {
+  pick: WheelFootballPick | null;
+  align: "left" | "right";
+}) {
+  const team = pick ? wheelFootballTeam(pick.team_code) : null;
+  return (
+    <div
+      className={`football-wheel-roster__cell is-${align}${pick ? " is-filled" : ""}`}
+      style={team ? {
+        "--team-primary": team.primaryColor,
+        "--team-secondary": team.secondaryColor,
+      } as CSSProperties : undefined}
+    >
+      <PickMark pick={pick} />
+      <div>
+        <strong>{pick?.display_name ?? "OPEN"}</strong>
+        <span>{pick ? `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
+      </div>
+    </div>
+  );
+}
+
+function HeadToHeadRoster({
+  state,
+  activeProfileId,
+}: {
+  state: WheelFootballState;
+  activeProfileId: string | null | undefined;
+}) {
+  return (
+    <section className="football-wheel-roster surface-card" aria-label="Wheel of Football Superteams">
+      <header>
+        <div className={state.creator.id === activeProfileId ? "is-you" : ""}>
+          <small>{state.creator.id === activeProfileId ? "YOU" : "CHALLENGER"}</small>
+          <strong>{state.creator.display_name}</strong>
+        </div>
+        <span>SUPERTEAMS</span>
+        <div className={state.recipient.id === activeProfileId ? "is-you" : ""}>
+          <small>{state.recipient.id === activeProfileId ? "YOU" : "OPPONENT"}</small>
+          <strong>{state.recipient.display_name}</strong>
+        </div>
+      </header>
+      <div className="football-wheel-roster__rows">
+        {WHEEL_FOOTBALL_ROSTER_SLOTS.map((slot) => (
+          <div className="football-wheel-roster__row" key={slot}>
+            <RosterCell pick={pickForSlot(state.creator_roster, slot)} align="left" />
+            <b>{slot}</b>
+            <RosterCell pick={pickForSlot(state.recipient_roster, slot)} align="right" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function WheelRosters({
+  state,
+  activeProfileId,
+}: {
+  state: WheelFootballState;
+  activeProfileId: string | null | undefined;
+}) {
+  return state.participants.length === 2 ? (
+    <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
+  ) : (
+    <MultiplayerRosters state={state} activeProfileId={activeProfileId} />
+  );
+}
+
 function MultiplayerRosters({
   state,
   activeProfileId,
@@ -1158,7 +1230,7 @@ function MatchScreen({ code }: { code: string }) {
           )}
         </section>
 
-        <MultiplayerRosters state={state} activeProfileId={activeProfileId} />
+        <WheelRosters state={state} activeProfileId={activeProfileId} />
 
         <div className="football-wheel-result-actions">
           {state.result ? (
@@ -1203,7 +1275,7 @@ function MatchScreen({ code }: { code: string }) {
         </div>
       </section>
 
-      <MultiplayerRosters state={state} activeProfileId={activeProfileId} />
+      <WheelRosters state={state} activeProfileId={activeProfileId} />
 
       <FootballWheel
         teams={poolTeams}
