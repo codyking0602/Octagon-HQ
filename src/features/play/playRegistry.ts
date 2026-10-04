@@ -18,7 +18,8 @@ export type PlayGameId =
   | "millionaire"
   | "sports-feud"
   | "draft-room"
-  | "wheel-football";
+  | "wheel-football"
+  | "wheel-ufc";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
 
@@ -56,7 +57,8 @@ export type PlayCompletionState =
   | "bar-trivia-settled"
   | "average-fan-settled"
   | "draft-room-complete"
-  | "wheel-football-complete";
+  | "wheel-football-complete"
+  | "wheel-ufc-complete";
 
 export interface PlayGameLineupDefinition {
   defaultType: PlayLineupType;
@@ -161,6 +163,29 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily",
       difficultyModel: "Two editorial four-hit boards plus five hidden-score Fast Money prompts from the isolated UFC Sports Feud bank.",
+    },
+  },
+  {
+    sport: "ufc",
+    id: "wheel-ufc",
+    route: "/play/wheel",
+    icon: "↻",
+    title: "Wheel of UFC",
+    description: "Challenge someone, spin weighted UFC categories, and build an eight-division current-fighter roster.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: 16,
+      completionState: "wheel-ufc-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "A server-owned 16-turn head-to-head challenge: spin Champion, Top 5, 6–15, Unranked, Country, Young Gun, or Veteran, then lock one eligible current fighter into an open men's UFC division while individual HQ grades stay hidden until the final roster grade.",
     },
   },
   {
