@@ -4,6 +4,7 @@ import {
   WHEEL_UFC_CATEGORY_WEIGHTS,
   WHEEL_UFC_ROSTER_SLOTS,
   WHEEL_UFC_VISUAL_SLICES,
+  wheelUfcCategoryMidDegrees,
   wheelUfcSpinDisplay,
 } from "./wheelUfcModel";
 
@@ -32,11 +33,16 @@ describe("Wheel of UFC model", () => {
       VETERAN: 15,
     });
     expect(WHEEL_UFC_CATEGORIES.reduce((sum, row) => sum + row.weight, 0)).toBe(100);
-    expect(WHEEL_UFC_VISUAL_SLICES).toHaveLength(20);
+    expect(WHEEL_UFC_VISUAL_SLICES).toEqual([
+      "CHAMPION", "TOP_5", "SIX_TO_FIFTEEN", "UNRANKED", "COUNTRY", "YOUNG_GUN", "VETERAN",
+    ]);
+    expect(wheelUfcCategoryMidDegrees("CHAMPION")).toBe(9);
+    expect(wheelUfcCategoryMidDegrees("UNRANKED")).toBe(180);
+    expect(wheelUfcCategoryMidDegrees("VETERAN")).toBe(333);
   });
 
   it("keeps the agreed Young Gun and Veteran rules in presentation", () => {
-    expect(WHEEL_UFC_CATEGORIES.find((row) => row.id === "YOUNG_GUN")?.detail).toBe("Under 25 years old");
+    expect(WHEEL_UFC_CATEGORIES.find((row) => row.id === "YOUNG_GUN")?.detail).toBe("Under 25");
     expect(WHEEL_UFC_CATEGORIES.find((row) => row.id === "VETERAN")?.detail).toBe("10+ UFC fights");
     expect(wheelUfcSpinDisplay("COUNTRY", "Brazil")).toBe("COUNTRY · BRAZIL");
   });
