@@ -37,7 +37,7 @@ describe("Wheel of UFC model", () => {
       "CHAMPION", "TOP_5", "SIX_TO_FIFTEEN", "UNRANKED", "COUNTRY", "YOUNG_GUN", "VETERAN",
     ]);
     expect(wheelUfcCategoryMidDegrees("CHAMPION")).toBe(9);
-    expect(wheelUfcCategoryMidDegrees("UNRANKED")).toBe(180);
+    expect(wheelUfcCategoryMidDegrees("UNRANKED")).toBe(144);
     expect(wheelUfcCategoryMidDegrees("VETERAN")).toBe(333);
   });
 
