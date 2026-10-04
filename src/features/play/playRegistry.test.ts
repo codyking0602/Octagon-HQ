@@ -121,6 +121,7 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("hit-the-number").lineup.completionState).toBe("target-selection-locked");
     expect(playGameDefinition("20-questions").lineup.completionState).toBe("identity-guessed-or-question-limit");
     expect(playGameDefinition("who-am-i").lineup.completionState).toBe("identity-guessed-or-clue-limit");
+    expect(playGameDefinition("wheel-ufc").lineup.completionState).toBe("wheel-ufc-complete");
   });
 
   it("keeps Keep Cut blind and locked instead of exposing the full board", () => {
