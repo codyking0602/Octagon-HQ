@@ -284,7 +284,7 @@ describe("Shane's ranked watchlist", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Ateba Gautier" }));
 
     const dialog = screen.getByRole("dialog", { name: "Ateba Gautier" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #10")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #9")).toBeInTheDocument();
     expect(within(dialog).getByText("“The Storm”")).toBeInTheDocument();
     expect(within(dialog).getByText("5–1")).toBeInTheDocument();
     expect(within(dialog).getByText(/unbeaten UFC run ended at UFC 332/i)).toBeInTheDocument();
@@ -332,7 +332,7 @@ describe("Shane's ranked watchlist", () => {
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     const dialog = screen.getByRole("dialog", { name: "Gable Steveson" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #9")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #10")).toBeInTheDocument();
     expect(within(dialog).getByText("SCOUTING SNAPSHOT")).toBeInTheDocument();
     expect(within(dialog).getByText(/knocked him out with a left hand just 12 seconds into Round 1/i)).toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
