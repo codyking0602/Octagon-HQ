@@ -32,6 +32,7 @@ import {
   type WheelFootballRosterSlot,
   type WheelFootballTeam,
 } from "./wheelFootballModel";
+import { wheelFootballTeamSeasonReferenceUrl } from "./wheelFootballReferences";
 
 const NFL_SCOPE_OPTIONS: readonly {
   value: WheelFootballPoolScope;
@@ -50,6 +51,7 @@ const CFB_SCOPE_OPTIONS: readonly {
   detail: string;
 }[] = [
   { value: "CFB", label: "NATIONAL", detail: "All 68 schools" },
+  { value: "TOP_25", label: "AP TOP 25", detail: "Latest poll · 25 schools" },
   { value: "SEC", label: "SEC", detail: "16 schools" },
   { value: "BIG_TEN", label: "BIG TEN", detail: "18 schools" },
   { value: "BIG_12", label: "BIG 12", detail: "16 schools" },
@@ -88,6 +90,35 @@ function pickForSlot(roster: readonly WheelFootballPick[], slot: WheelFootballRo
 function resultPoolLabel(state: WheelFootballState) {
   const league = wheelFootballLeagueFromScope(state.pool_scope);
   return `${wheelFootballPoolLabel(state.pool_scope, divisionFromState(state.division))} · CURRENT ${league}`;
+}
+
+function wheelFootballRankedTeamLabel(team: WheelFootballTeam) {
+  return team.apRank ? `#${team.apRank} ${team.name}` : team.name;
+}
+
+function TeamSeasonLink({
+  team,
+  children,
+  className = "",
+}: {
+  team: WheelFootballTeam;
+  children: string;
+  className?: string;
+}) {
+  const href = wheelFootballTeamSeasonReferenceUrl(team.league, team.code);
+  if (!href) return <span className={className}>{children}</span>;
+  return (
+    <a
+      className={className}
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(event) => event.stopPropagation()}
+      title={`Open ${team.name} 2026 Sports Reference page`}
+    >
+      {children}
+    </a>
+  );
 }
 
 function roundedCanvasRect(
@@ -389,7 +420,18 @@ function RosterCell({
       <PickMark pick={pick} />
       <div>
         <strong>{pick?.display_name ?? "OPEN"}</strong>
-        <span>{pick ? `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
+        <span>
+          {pick ? (
+            <>
+              {team ? (
+                <TeamSeasonLink team={team} className="football-wheel-team-link">
+                  {team.apRank ? `#${team.apRank} ${team.shortCode}` : team.shortCode}
+                </TeamSeasonLink>
+              ) : pick.team_code}
+              {` · ${pick.position_abbreviation}`}
+            </>
+          ) : "—"}
+        </span>
       </div>
     </div>
   );
@@ -483,7 +525,7 @@ function FootballWheel({
               "--team-primary": team.primaryColor,
               "--team-secondary": team.secondaryColor,
             } as CSSProperties}
-            title={team.name}
+            title={wheelFootballRankedTeamLabel(team)}
           >
             {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.shortCode}</b>}
           </span>
@@ -498,7 +540,7 @@ function FootballWheel({
         {pendingTeam ? (
           <>
             <TeamLogo team={pendingTeam} />
-            <strong>{pendingTeam.shortCode}</strong>
+            <strong>{pendingTeam.apRank ? `#${pendingTeam.apRank} ${pendingTeam.shortCode}` : pendingTeam.shortCode}</strong>
           </>
         ) : spinning ? (
           <><strong>SPINNING</strong><span>…</span></>
@@ -549,7 +591,11 @@ function CandidatePicker({
         <TeamLogo team={team} />
         <div>
           <p className="eyebrow">YOUR SPIN</p>
-          <h2>{team.name}</h2>
+          <h2>
+            <TeamSeasonLink team={team} className="football-wheel-team-link">
+              {wheelFootballRankedTeamLabel(team)}
+            </TeamSeasonLink>
+          </h2>
           <span>Choose an open roster spot, then take a current player or the head coach.</span>
         </div>
       </header>
@@ -1196,9 +1242,16 @@ function MatchScreen({ code }: { code: string }) {
 
       {!isMyTurn && state.opened_at ? (
         <section className="football-wheel-waiting surface-card">
-          <strong>{state.phase === "pick" && pendingTeam
-            ? `${opponent?.display_name ?? "Your opponent"} is choosing from the ${pendingTeam.name}.`
-            : `Waiting on ${opponent?.display_name ?? "your opponent"}.`}</strong>
+          <strong>
+            {state.phase === "pick" && pendingTeam ? (
+              <>
+                {opponent?.display_name ?? "Your opponent"} is choosing from the{" "}
+                <TeamSeasonLink team={pendingTeam} className="football-wheel-team-link">
+                  {wheelFootballRankedTeamLabel(pendingTeam)}
+                </TeamSeasonLink>.
+              </>
+            ) : `Waiting on ${opponent?.display_name ?? "your opponent"}.`}
+          </strong>
           <span>You’ll get a notification when your next spin is ready.</span>
         </section>
       ) : null}
