@@ -76,6 +76,7 @@ create table if not exists private.hq_impostor_actions (
   vote_submitted_at timestamptz,
   secret_guess text,
   guess_correct boolean,
+  result_seen_at timestamptz,
   score integer check (score between 0 and 100),
   score_breakdown jsonb,
   primary key (event_id, round_no, profile_id),
@@ -730,23 +731,37 @@ begin
     raise exception 'You are not part of this HQ Impostor event';
   end if;
 
-  select round_no into v_current_round
-  from private.hq_impostor_rounds
-  where event_id=p_event_id and status in ('clue','vote')
-  order by round_no limit 1;
+  select round.round_no into v_current_round
+  from private.hq_impostor_rounds round
+  join private.hq_impostor_actions action
+    on action.event_id=round.event_id
+   and action.round_no=round.round_no
+   and action.profile_id=p_profile_id
+  where round.event_id=p_event_id
+    and round.status in ('resolved','forfeit','no_contest')
+    and action.result_seen_at is null
+  order by round.round_no
+  limit 1;
+
+  if v_current_round is null then
+    select round_no into v_current_round
+    from private.hq_impostor_rounds
+    where event_id=p_event_id and status in ('clue','vote')
+    order by round_no limit 1;
+  end if;
+
+  if v_current_round is null then
+    select round_no into v_current_round
+    from private.hq_impostor_rounds
+    where event_id=p_event_id and status='scheduled'
+    order by round_no limit 1;
+  end if;
 
   if v_current_round is null then
     select round_no into v_current_round
     from private.hq_impostor_rounds
     where event_id=p_event_id and status in ('resolved','forfeit','no_contest')
     order by round_no desc limit 1;
-  end if;
-
-  if v_current_round is null then
-    select round_no into v_current_round
-    from private.hq_impostor_rounds
-    where event_id=p_event_id
-    order by round_no limit 1;
   end if;
 
   select * into v_round
@@ -901,6 +916,7 @@ begin
         'active_count',v_active_count,
         'clues',v_clues,
         'vote_candidates',v_candidates,
+        'result_acknowledged',v_action.result_seen_at is not null,
         'result',v_result
       )
     )
@@ -1204,6 +1220,44 @@ begin
 end;
 $$;
 
+create or replace function private.acknowledge_hq_impostor_result(
+  p_event_id uuid,
+  p_round_no integer,
+  p_at timestamptz default now()
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $
+declare
+  v_profile uuid:=auth.uid();
+begin
+  if v_profile is null then raise exception 'sign in required'; end if;
+  perform private.maintain_hq_impostor_event(p_event_id,p_at);
+
+  if not exists(
+    select 1
+    from private.hq_impostor_rounds round
+    join private.hq_impostor_actions action
+      on action.event_id=round.event_id
+     and action.round_no=round.round_no
+     and action.profile_id=v_profile
+    where round.event_id=p_event_id
+      and round.round_no=p_round_no
+      and round.status in ('resolved','forfeit','no_contest')
+  ) then
+    raise exception 'That HQ Impostor result is not ready';
+  end if;
+
+  update private.hq_impostor_actions
+  set result_seen_at=coalesce(result_seen_at,p_at)
+  where event_id=p_event_id and round_no=p_round_no and profile_id=v_profile;
+
+  return private.hq_impostor_state_json(p_event_id,v_profile,p_at);
+end;
+$;
+
 create or replace function private.submit_hq_impostor_vote(
   p_event_id uuid,
   p_vote_profile_id uuid,
@@ -1311,6 +1365,15 @@ as $$
   select private.open_hq_impostor_board(p_event_id,now());
 $$;
 
+create or replace function public.acknowledge_hq_impostor_result(p_event_id uuid,p_round_no integer)
+returns jsonb
+language sql
+security invoker
+set search_path = ''
+as $
+  select private.acknowledge_hq_impostor_result(p_event_id,p_round_no,now());
+$;
+
 create or replace function public.submit_hq_impostor_vote(p_event_id uuid,p_vote_profile_id uuid,p_secret_guess text default null)
 returns jsonb
 language sql
@@ -1341,6 +1404,7 @@ revoke all on function private.create_hq_impostor_event(text[],timestamptz) from
 revoke all on function private.reveal_hq_impostor_assignment(uuid,timestamptz) from public,anon;
 revoke all on function private.submit_hq_impostor_clue(uuid,text,timestamptz) from public,anon;
 revoke all on function private.open_hq_impostor_board(uuid,timestamptz) from public,anon;
+revoke all on function private.acknowledge_hq_impostor_result(uuid,integer,timestamptz) from public,anon;
 revoke all on function private.submit_hq_impostor_vote(uuid,uuid,text,timestamptz) from public,anon;
 
 grant execute on function private.get_my_hq_impostor(timestamptz) to authenticated;
@@ -1348,6 +1412,7 @@ grant execute on function private.create_hq_impostor_event(text[],timestamptz) t
 grant execute on function private.reveal_hq_impostor_assignment(uuid,timestamptz) to authenticated;
 grant execute on function private.submit_hq_impostor_clue(uuid,text,timestamptz) to authenticated;
 grant execute on function private.open_hq_impostor_board(uuid,timestamptz) to authenticated;
+grant execute on function private.acknowledge_hq_impostor_result(uuid,integer,timestamptz) to authenticated;
 grant execute on function private.submit_hq_impostor_vote(uuid,uuid,text,timestamptz) to authenticated;
 
 revoke all on function public.get_my_hq_impostor() from public,anon;
@@ -1355,6 +1420,7 @@ revoke all on function public.create_hq_impostor_event(text[]) from public,anon;
 revoke all on function public.reveal_hq_impostor_assignment(uuid) from public,anon;
 revoke all on function public.submit_hq_impostor_clue(uuid,text) from public,anon;
 revoke all on function public.open_hq_impostor_board(uuid) from public,anon;
+revoke all on function public.acknowledge_hq_impostor_result(uuid,integer) from public,anon;
 revoke all on function public.submit_hq_impostor_vote(uuid,uuid,text) from public,anon;
 
 grant execute on function public.get_my_hq_impostor() to authenticated;
@@ -1362,6 +1428,7 @@ grant execute on function public.create_hq_impostor_event(text[]) to authenticat
 grant execute on function public.reveal_hq_impostor_assignment(uuid) to authenticated;
 grant execute on function public.submit_hq_impostor_clue(uuid,text) to authenticated;
 grant execute on function public.open_hq_impostor_board(uuid) to authenticated;
+grant execute on function public.acknowledge_hq_impostor_result(uuid,integer) to authenticated;
 grant execute on function public.submit_hq_impostor_vote(uuid,uuid,text) to authenticated;
 
 comment on table private.hq_impostor_topics is
@@ -1372,5 +1439,7 @@ comment on function public.reveal_hq_impostor_assignment(uuid) is
   'Starts that player''s three-minute clue clock and returns only the role/secret information that player may see.';
 comment on function public.open_hq_impostor_board(uuid) is
   'Reveals the complete simultaneous clue board and starts that player''s five-minute voting clock.';
+comment on function public.acknowledge_hq_impostor_result(uuid,integer) is
+  'Marks one terminal round reveal as seen for the signed-in participant so asynchronous advancement can never skip the reveal.';
 comment on function public.submit_hq_impostor_vote(uuid,uuid,text) is
   'Locks one vote; the Impostor must lock the final secret guess in the same request before any vote reveal.';
