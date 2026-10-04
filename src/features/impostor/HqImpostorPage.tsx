@@ -140,7 +140,8 @@ function Lobby({
     <Panel eyebrow="FEATURED CHALLENGE" title="BUILD YOUR GROUP" className="hq-impostor-lobby">
       <p>
         Pick 3–7 other HQ members. Everyone is entered immediately, Round 1 opens now,
-        and the event runs four rounds across four days.
+        and the event runs four rounds across four days. HQ balances Impostor assignments,
+        but repeats remain possible.
       </p>
       <div className="hq-impostor-lobby__meter">
         <span><b>{selected.length + 1}</b> / 8 PLAYERS</span>
