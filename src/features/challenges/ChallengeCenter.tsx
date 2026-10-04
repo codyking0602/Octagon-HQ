@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
 import type { PlaySport } from "../play/playRegistry";
+import { createWheelFootballRepository } from "../play/wheelFootballRepository";
 import {
   challengeCounterpartId,
   challengeDirection,
@@ -45,19 +46,19 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
   const status = challengeStatus(challenge, profileId);
 
   if (isTurnBasedChallenge(challenge)) {
-    if (status === "completed") return { eyebrow: "WHEEL COMPLETE WITH", detail: "Open both final Superteams", action: "OPEN" };
-    if (status === "declined") return { eyebrow: "WHEEL DECLINED", detail: "This matchup has ended", action: "DECLINED" };
+    if (status === "completed") return { eyebrow: "WHEEL COMPLETE", detail: "Open final Superteams and standings", action: "OPEN" };
+    if (status === "declined") return { eyebrow: "WHEEL CANCELED", detail: "This lobby ended before play", action: "CANCELED" };
     if (direction === "sent") {
       return {
-        eyebrow: "WHEEL WITH",
-        detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for them to accept",
+        eyebrow: "WHEEL LOBBY",
+        detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for the lobby to join",
         action: "OPEN",
       };
     }
     return {
-      eyebrow: "WHEEL FROM",
-      detail: status === "opened" ? "Match in progress · check whose turn" : "Open to accept and start",
-      action: status === "opened" ? "OPEN" : "PLAY",
+      eyebrow: "WHEEL INVITE",
+      detail: status === "opened" ? "Match in progress · check whose turn" : "Open to join the lobby",
+      action: status === "opened" ? "OPEN" : "JOIN",
     };
   }
 
@@ -116,6 +117,7 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
     cancelPendingAuction,
     viewResults,
   } = usePlayChallenges();
+  const wheelRepository = useMemo(() => createWheelFootballRepository(), []);
   const [filter, setFilter] = useState<ChallengeCenterFilter>("all");
   const [expanded, setExpanded] = useState(false);
   const centerRef = useRef<HTMLElement | null>(null);
@@ -201,6 +203,16 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
     );
   }
 
+  async function endWaitingWheelLobby(challenge: PlayChallenge) {
+    if (!wheelRepository) return;
+    try {
+      const ended = await wheelRepository.decline(challenge.code);
+      if (ended) await refresh();
+    } catch {
+      await refresh();
+    }
+  }
+
   function openChallenge(challenge: PlayChallenge) {
     if (isTurnBasedChallenge(challenge)) {
       navigate(challengePlayRoute(challenge));
@@ -274,12 +286,9 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
               const canCancelAuction = sealedBid && direction === "sent" && status === "waiting";
               const canDeclineAuction = sealedBid && direction === "received" && status === "new";
               const canRemoveAuction = sealedBid && (status === "completed" || status === "declined");
+              const canCancelTurnBased = turnBased && direction === "sent" && status === "waiting";
               const canDeclineTurnBased = turnBased && direction === "received" && status === "new";
-              const canRemoveTurnBased = turnBased && (
-                (direction === "sent" && status === "waiting")
-                || status === "completed"
-                || status === "declined"
-              );
+              const canRemoveTurnBased = turnBased && (status === "completed" || status === "declined");
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
@@ -331,14 +340,16 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                         </button>
                       ) : null
                     ) : turnBased ? (
-                      canDeclineTurnBased || canRemoveTurnBased ? (
+                      canCancelTurnBased || canDeclineTurnBased || canRemoveTurnBased ? (
                         <button
                           type="button"
                           className="challenge-center__dismiss"
-                          aria-label={`${canDeclineTurnBased ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
-                          onClick={() => void dismissChallenge(challenge.code)}
+                          aria-label={`${canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          onClick={() => canCancelTurnBased || canDeclineTurnBased
+                            ? void endWaitingWheelLobby(challenge)
+                            : void dismissChallenge(challenge.code)}
                         >
-                          {canDeclineTurnBased ? "DECLINE" : "REMOVE"}
+                          {canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"}
                         </button>
                       ) : null
                     ) : (
