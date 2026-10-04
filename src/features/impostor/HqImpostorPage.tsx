@@ -233,7 +233,7 @@ function ClueBoard({
   );
 }
 
-function ResultReveal({ event }: { event: HqImpostorEvent }) {
+function ResultReveal({ event, busy, onContinue }: { event: HqImpostorEvent; busy: boolean; onContinue: () => void }) {
   const round = event.current_round;
   const result = round.result;
   const votes = result?.votes ?? [];
@@ -318,13 +318,18 @@ function ResultReveal({ event }: { event: HqImpostorEvent }) {
             </div>
           </Panel>
           <Standings event={event} />
-          {event.status === "active" ? (
+          <div className="hq-impostor-result-continue">
             <p className="hq-impostor-next-round">
               {round.round_no < 4
                 ? `Round ${round.round_no + 1} opens ${new Intl.DateTimeFormat("en-US", { weekday: "short", hour: "numeric", minute: "2-digit" }).format(new Date(round.vote_lock_at))}.`
-                : "Final standings are locked."}
+                : "Final standings are ready."}
             </p>
-          ) : null}
+            {!round.result_acknowledged ? (
+              <button type="button" className="hq-impostor-primary" disabled={busy} onClick={onContinue}>
+                {busy ? "CONTINUING…" : round.round_no === 4 ? "LOCK FINAL STANDINGS →" : "CONTINUE →"}
+              </button>
+            ) : null}
+          </div>
         </>
       ) : (
         <p className="hq-impostor-reveal-progress">Revealing the room…</p>
@@ -340,6 +345,7 @@ function RoundPlay({
   onClue,
   onOpenBoard,
   onVote,
+  onAcknowledge,
 }: {
   event: HqImpostorEvent;
   busy: boolean;
@@ -347,6 +353,7 @@ function RoundPlay({
   onClue: (clue: string) => void;
   onOpenBoard: () => void;
   onVote: (profileId: string, guess: string | null) => void;
+  onAcknowledge: (roundNo: number) => void;
 }) {
   const round = event.current_round;
   const now = useNow();
@@ -360,7 +367,11 @@ function RoundPlay({
     setGuess("");
   }, [round.round_no]);
 
-  if (round.phase === "resolved") return <ResultReveal event={event} />;
+  if (round.phase === "resolved") {
+    return <ResultReveal event={event} busy={busy} onContinue={() => onAcknowledge(round.round_no)} />;
+  }
+
+  if (round.phase === "event_complete") return null;
 
   if (round.phase === "waiting_round") {
     return (
@@ -686,9 +697,10 @@ export default function HqImpostorPage() {
             onClue={(clue) => repository && void perform(() => repository.submitClue(event.id, clue))}
             onOpenBoard={() => repository && void perform(() => repository.openBoard(event.id))}
             onVote={(profileId, guess) => repository && void perform(() => repository.submitVote(event.id, profileId, guess))}
+            onAcknowledge={(roundNo) => repository && void perform(() => repository.acknowledgeResult(event.id, roundNo))}
           />
 
-          {event.status === "completed" ? (
+          {event.status === "completed" && event.current_round.phase === "event_complete" ? (
             <section className="hq-impostor-complete">
               <span>EVENT COMPLETE</span>
               <h2>FOUR ROUNDS. FINAL TABLE.</h2>
