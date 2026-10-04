@@ -31,12 +31,12 @@ export const WHEEL_UFC_CATEGORIES: readonly {
   weight: number;
   color: string;
 }[] = [
-  { id: "CHAMPION", label: "Champion", shortLabel: "CHAMP", detail: "Current undisputed champion", weight: 5, color: "#c99022" },
-  { id: "TOP_5", label: "Top 5", shortLabel: "TOP 5", detail: "Current #1–#5 contender", weight: 10, color: "#d3353d" },
-  { id: "SIX_TO_FIFTEEN", label: "6–15", shortLabel: "6–15", detail: "Current #6–#15 contender", weight: 15, color: "#9e2630" },
-  { id: "UNRANKED", label: "Unranked", shortLabel: "UR", detail: "Current UFC fighter outside the traditional Top 15", weight: 20, color: "#681a22" },
-  { id: "COUNTRY", label: "Country", shortLabel: "WORLD", detail: "A country is drawn after the spin", weight: 20, color: "#6d398d" },
-  { id: "YOUNG_GUN", label: "Young Gun", shortLabel: "U25", detail: "Under 25 years old", weight: 15, color: "#137f72" },
+  { id: "CHAMPION", label: "Champion", shortLabel: "CHAMP", detail: "Undisputed champion", weight: 5, color: "#c99022" },
+  { id: "TOP_5", label: "Top 5", shortLabel: "TOP 5", detail: "#1–#5 contender", weight: 10, color: "#d3353d" },
+  { id: "SIX_TO_FIFTEEN", label: "6–15", shortLabel: "6–15", detail: "#6–#15 contender", weight: 15, color: "#9e2630" },
+  { id: "UNRANKED", label: "Unranked", shortLabel: "UR", detail: "Outside the Top 15", weight: 20, color: "#681a22" },
+  { id: "COUNTRY", label: "Country", shortLabel: "WORLD", detail: "Country drawn", weight: 20, color: "#6d398d" },
+  { id: "YOUNG_GUN", label: "Young Gun", shortLabel: "U25", detail: "Under 25", weight: 15, color: "#137f72" },
   { id: "VETERAN", label: "Veteran", shortLabel: "VET", detail: "10+ UFC fights", weight: 15, color: "#50545d" },
 ];
 
@@ -51,9 +51,20 @@ export function wheelUfcCategoryLabel(category: WheelUfcCategory) {
 }
 
 export const WHEEL_UFC_VISUAL_SLICES: readonly WheelUfcCategory[] =
-  WHEEL_UFC_CATEGORIES.flatMap((category) =>
-    Array.from({ length: category.weight / 5 }, () => category.id),
-  );
+  WHEEL_UFC_CATEGORIES.map((category) => category.id);
+
+function wheelUfcCategoryStartDegrees(category: WheelUfcCategory) {
+  let weightBefore = 0;
+  for (const row of WHEEL_UFC_CATEGORIES) {
+    if (row.id === category) break;
+    weightBefore += row.weight;
+  }
+  return weightBefore * 3.6;
+}
+
+export function wheelUfcCategoryMidDegrees(category: WheelUfcCategory) {
+  return wheelUfcCategoryStartDegrees(category) + wheelUfcCategory(category).weight * 1.8;
+}
 
 export const WHEEL_UFC_SLOT_ABBREVIATIONS: Readonly<Record<WheelUfcRosterSlot, string>> = {
   Flyweight: "FLW",
@@ -75,17 +86,16 @@ export function wheelUfcSpinDisplay(
 }
 
 export function wheelUfcSliceBackground() {
-  const slice = 360 / WHEEL_UFC_VISUAL_SLICES.length;
-  const stops = WHEEL_UFC_VISUAL_SLICES.flatMap((category, index) => {
-    const color = wheelUfcCategory(category).color;
-    return [`${color} ${index * slice}deg`, `${color} ${(index + 1) * slice}deg`];
+  let weightBefore = 0;
+  const stops = WHEEL_UFC_CATEGORIES.flatMap((category) => {
+    const start = weightBefore * 3.6;
+    weightBefore += category.weight;
+    const end = weightBefore * 3.6;
+    return [`${category.color} ${start}deg`, `${category.color} ${end}deg`];
   });
-  return `conic-gradient(from ${-slice / 2}deg, ${stops.join(", ")})`;
+  return `conic-gradient(from 0deg, ${stops.join(", ")})`;
 }
 
-export function wheelUfcTargetSlice(category: WheelUfcCategory, turnCount: number) {
-  const matches = WHEEL_UFC_VISUAL_SLICES
-    .map((sliceCategory, index) => ({ sliceCategory, index }))
-    .filter((row) => row.sliceCategory === category);
-  return matches[Math.abs(turnCount) % matches.length]?.index ?? 0;
+export function wheelUfcTargetAngle(category: WheelUfcCategory) {
+  return wheelUfcCategoryMidDegrees(category);
 }
