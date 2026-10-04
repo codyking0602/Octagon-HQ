@@ -41,6 +41,7 @@ const BlindResumePage = lazy(() => import("../features/play/BlindResumePage"));
 const BlindRankPage = lazy(() => import("../features/play/BlindRankPage"));
 const KeepCutPage = lazy(() => import("../features/play/KeepCutPage"));
 const AuctionPage = lazy(() => import("../features/play/AuctionPage"));
+const WheelUfcPage = lazy(() => import("../features/back-room/WheelUfcPage"));
 const HitTheNumberPage = lazy(() => import("../features/play/HitTheNumberPage"));
 const UfcWhoAmIPage = lazy(() => import("../features/play/UfcWhoAmIPage"));
 const FootballWhoAmIPage = lazy(() => import("../features/play/FootballWhoAmIPage"));
@@ -77,6 +78,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/blind-rank", element: <TodayChallengeGameRoute gameType="blind_rank_5" casual={<BlindRankPage />} /> },
       { path: "play/keep-cut", element: <TodayChallengeGameRoute gameType="keep_4_cut_4" casual={<KeepCutPage />} /> },
       { path: "play/auction", element: <AuctionPage /> },
+      { path: "play/wheel", element: <WheelUfcPage /> },
       { path: "play/hit-the-number", element: <TodayChallengeGameRoute gameType="hit_the_number" casual={<HitTheNumberPage />} /> },
       { path: "play/20-questions", element: <Navigate to="/play/who-am-i" replace /> },
       { path: "play/who-am-i", element: <TodayChallengeGameRoute gameType="who_am_i" casual={<UfcWhoAmIPage />} /> },
