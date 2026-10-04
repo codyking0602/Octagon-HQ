@@ -562,6 +562,24 @@
   font-size: .48rem;
 }
 
+.football-wheel-roster__cell span a,
+.football-wheel-picker > header h2 a,
+.football-wheel-waiting a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.football-wheel-roster__cell span a:hover,
+.football-wheel-roster__cell span a:focus-visible,
+.football-wheel-picker > header h2 a:hover,
+.football-wheel-picker > header h2 a:focus-visible,
+.football-wheel-waiting a:hover,
+.football-wheel-waiting a:focus-visible {
+  color: #9dcdf1;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .football-wheel-roster__mark,
 .football-wheel-roster__empty-mark {
   display: grid;
@@ -664,6 +682,21 @@
     rotate(calc((360deg / var(--wheel-count)) * var(--wheel-index)))
     translateY(calc(var(--radius) * -1));
   transform-origin: center;
+}
+
+.football-wheel__label small {
+  position: absolute;
+  top: 21px;
+  left: 50%;
+  padding: 1px 3px;
+  border-radius: 5px;
+  background: rgba(2, 10, 17, .84);
+  color: #dcebf6;
+  font-size: .39rem;
+  font-weight: 950;
+  line-height: 1;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .football-wheel__label b {
