@@ -74,16 +74,22 @@ function FighterMark({ pick }: { pick: WheelUfcPick | null }) {
 function RosterCell({
   pick,
   align,
+  showGrade = false,
 }: {
   pick: WheelUfcPick | null;
   align: "left" | "right";
+  showGrade?: boolean;
 }) {
   return (
     <div className={`football-wheel-roster__cell is-${align}${pick ? " is-filled" : ""}`}>
       <FighterMark pick={pick} />
       <div>
         <strong>{pick?.display_name ?? "OPEN"}</strong>
-        <span>{pick ? [pick.ranking_label, pick.country_code].filter(Boolean).join(" · ") : "—"}</span>
+        <span>{pick
+          ? showGrade && pick.revealed_grade != null
+            ? `HQ ${Number(pick.revealed_grade).toFixed(1)}`
+            : [pick.ranking_label, pick.country_code].filter(Boolean).join(" · ")
+          : "—"}</span>
       </div>
     </div>
   );
@@ -92,9 +98,11 @@ function RosterCell({
 function HeadToHeadRoster({
   state,
   activeProfileId,
+  revealCount = 0,
 }: {
   state: WheelUfcState;
   activeProfileId: string | null | undefined;
+  revealCount?: number;
 }) {
   return (
     <section className="football-wheel-roster surface-card ufc-wheel-roster" aria-label="Wheel of UFC rosters">
@@ -110,13 +118,16 @@ function HeadToHeadRoster({
         </div>
       </header>
       <div className="football-wheel-roster__rows">
-        {WHEEL_UFC_ROSTER_SLOTS.map((slot) => (
-          <div className="football-wheel-roster__row" key={slot}>
-            <RosterCell pick={pickForSlot(state.creator_roster, slot)} align="left" />
-            <b title={slot}>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</b>
-            <RosterCell pick={pickForSlot(state.recipient_roster, slot)} align="right" />
-          </div>
-        ))}
+        {WHEEL_UFC_ROSTER_SLOTS.map((slot, index) => {
+          const showGrade = state.phase === "complete" && !state.forfeited_at && index < revealCount;
+          return (
+            <div className={`football-wheel-roster__row${showGrade ? " is-grade-revealed" : ""}`} key={slot}>
+              <RosterCell pick={pickForSlot(state.creator_roster, slot)} align="left" showGrade={showGrade} />
+              <b title={slot}>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</b>
+              <RosterCell pick={pickForSlot(state.recipient_roster, slot)} align="right" showGrade={showGrade} />
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -424,6 +435,7 @@ function MatchScreen({ code }: { code: string }) {
   const [candidateLoading, setCandidateLoading] = useState(false);
   const [candidateError, setCandidateError] = useState("");
   const [showForfeitConfirm, setShowForfeitConfirm] = useState(false);
+  const [revealCount, setRevealCount] = useState(0);
   const [shareStatus, setShareStatus] = useState("");
   const [error, setError] = useState("");
   const openedRef = useRef(false);
@@ -468,6 +480,21 @@ function MatchScreen({ code }: { code: string }) {
 
   const isMyTurn = Boolean(state && activeProfileId && state.current_turn_profile_id === activeProfileId);
   const opponent = state ? otherParticipant(state, activeProfileId) : null;
+
+  useEffect(() => {
+    if (state?.phase !== "complete" || state.forfeited_at || !state.result) {
+      setRevealCount(0);
+      return;
+    }
+    setRevealCount(0);
+    let count = 0;
+    const timer = window.setInterval(() => {
+      count += 1;
+      setRevealCount(Math.min(8, count));
+      if (count >= 8) window.clearInterval(timer);
+    }, 420);
+    return () => window.clearInterval(timer);
+  }, [state?.completed_at, state?.forfeited_at]);
 
   useEffect(() => {
     setSelectedSlot(null);
@@ -608,6 +635,7 @@ function MatchScreen({ code }: { code: string }) {
         ? state.recipient
         : null;
     const forfeitWinner = forfeitedProfile?.id === state.creator.id ? state.recipient : state.creator;
+    const revealDone = Boolean(state.result && revealCount >= 8);
 
     return (
       <div className="page football-wheel-page football-wheel-page--result ufc-wheel-page">
@@ -617,24 +645,26 @@ function MatchScreen({ code }: { code: string }) {
               <p className="eyebrow">WHEEL OF UFC · {forfeitedProfile ? "FORFEIT" : "FINAL"}</p>
               <h1>{forfeitedProfile
                 ? `${forfeitedProfile.display_name} forfeited`
-                : gradedWinner
-                  ? `${gradedWinner.display_name} wins`
-                  : "Dead even"}</h1>
+                : !revealDone
+                  ? "HQ grades incoming…"
+                  : gradedWinner
+                    ? `${gradedWinner.display_name} wins`
+                    : "Dead even"}</h1>
             </div>
             <span>CURRENT UFC · 8 DIVISIONS</span>
           </div>
           {!forfeitedProfile && state.result ? (
-            <div className="football-wheel-result-score">
-              <div className={state.result.winner_profile_id === state.creator.id ? "is-winner" : ""}>
+            <div className={`football-wheel-result-score${revealDone ? "" : " is-concealed"}`}>
+              <div className={state.result.winner_profile_id === state.creator.id && revealDone ? "is-winner" : ""}>
                 <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
-                <strong>{state.result.creator_final_grade.toFixed(1)}</strong>
-                <span>FINAL GRADE</span>
+                <strong>{revealDone ? state.result.creator_final_grade.toFixed(1) : "—"}</strong>
+                <span>TEAM GRADE</span>
               </div>
               <b>VS</b>
-              <div className={state.result.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
+              <div className={state.result.winner_profile_id === state.recipient.id && revealDone ? "is-winner" : ""}>
                 <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
-                <strong>{state.result.recipient_final_grade.toFixed(1)}</strong>
-                <span>FINAL GRADE</span>
+                <strong>{revealDone ? state.result.recipient_final_grade.toFixed(1) : "—"}</strong>
+                <span>TEAM GRADE</span>
               </div>
             </div>
           ) : (
@@ -642,10 +672,10 @@ function MatchScreen({ code }: { code: string }) {
           )}
         </section>
 
-        <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
+        <HeadToHeadRoster state={state} activeProfileId={activeProfileId} revealCount={revealCount} />
 
         <div className={`football-wheel-result-actions${state.result && !forfeitedProfile ? "" : " without-share"}`}>
-          {state.result && !forfeitedProfile ? (
+          {state.result && !forfeitedProfile && revealDone ? (
             <button className="football-wheel-result-actions__share" type="button" onClick={() => void shareResult()}>
               {shareStatus || "SHARE RESULT ↗"}
             </button>
@@ -673,7 +703,7 @@ function MatchScreen({ code }: { code: string }) {
         <div>
           <p className="eyebrow">WHEEL OF UFC · TURN {Math.min(16, state.turn_count + 1)} OF 16</p>
           <h1>{turnLabel}</h1>
-          <span>CURRENT UFC · 8 MEN'S DIVISIONS · GRADES HIDDEN</span>
+          <span>CURRENT UFC · 8 MEN'S DIVISIONS · GRADES HIDDEN UNTIL FINAL</span>
         </div>
         <div className="football-wheel-match__actions">
           <button type="button" disabled={busy || spinning} onClick={() => void syncMatch(false)}>REFRESH</button>

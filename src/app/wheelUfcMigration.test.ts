@@ -50,23 +50,43 @@ describe("Wheel of UFC v1 contract", () => {
     expect(repository).not.toContain("hiddenGrade");
   });
 
-  it("keeps all individual grades private while returning final aggregate grades", () => {
+  it("keeps grades private during drafting and reveals frozen fighter grades only after natural completion", () => {
     expect(migration).toContain("hidden_grade numeric");
     expect(migration).toContain("revoke all on private.wheel_ufc_fighters from public, anon, authenticated");
+    expect(migration).toContain("when match.phase = 'complete' and match.forfeited_at is null then pick.hidden_grade");
     expect(migration).toContain("'creator_final_grade'");
     expect(migration).toContain("'recipient_final_grade'");
-    expect(repository).not.toContain("hidden_grade");
+    expect(repository).toContain("revealed_grade");
     expect(repository).not.toContain("raw_grade");
+    expect(page).toContain("HQ grades incoming");
+    expect(page).toContain("revealCount");
     expect(page).not.toContain("hidden_grade");
-    expect(page).not.toContain("raw_grade");
   });
 
-  it("pins the launch rankings snapshot and exposes only authenticated RPCs", () => {
-    expect(migration).toContain("rankings_as_of date not null default date '2026-09-29'");
-    expect(migration).toContain("'rankingsAsOf', '2026-09-29'");
+  it("pins the current Meta rankings snapshot and exposes only authenticated RPCs", () => {
+    expect(migration).toContain("rankings_as_of date not null default date '2026-10-04'");
+    expect(migration).toContain("'rankingsAsOf', '2026-10-04'");
+    expect(migration).toContain("'rankingsSource', 'Meta UFC Rankings'");
     expect(migration).toContain("create or replace function public.spin_wheel_ufc");
     expect(migration).toContain("create or replace function public.get_wheel_ufc_candidates");
     expect(migration).toContain("grant execute on function public.pick_wheel_ufc");
     expect(migration).toContain("security invoker");
+  });
+
+  it("uses the Meta rank bands and folds UFC 332 outcomes into the current unranked pool", () => {
+    expect(migration).toContain("manel-kape|Manel Kape|Flyweight|1|false");
+    expect(migration).toContain("alexandre-pantoja|Alexandre Pantoja|Flyweight|2|false");
+    expect(migration).toContain("raul-rosas-jr|Raul Rosas Jr.|Bantamweight|8|false");
+    expect(migration).toContain("alex-pereira|Alex Pereira|Heavyweight|3|false");
+    expect(migration).toContain("payton-talbott|Payton Talbott|Bantamweight||false");
+    expect(migration).toContain("esteban-ribovics|Esteban Ribovics|Lightweight||false");
+    expect(migration).toContain("roberto-soldic|Roberto Soldić|Welterweight||false");
+    expect(migration).toContain("damian-pinas|Damian Pinas|Middleweight||false");
+    expect(migration).toContain("johnny-walker|Johnny Walker|Heavyweight||false");
+  });
+
+  it("uses the straight eight-fighter average so one elite spin cannot be amplified into the result", () => {
+    expect(migration).toContain("round(greatest(0::numeric, least(100::numeric, p_raw_grade)), 1)");
+    expect(migration).not.toContain("2.5 * (p_raw_grade - 95)");
   });
 });

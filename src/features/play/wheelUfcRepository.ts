@@ -27,6 +27,7 @@ const pickSchema = z.object({
   country_code: z.string().nullable(),
   country_name: z.string().nullable(),
   headshot_url: z.string().nullable(),
+  revealed_grade: z.coerce.number().min(0).max(100).nullable().optional().default(null),
 });
 
 const pendingSpinSchema = z.object({

@@ -185,7 +185,7 @@ export const playGameCatalog = [
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "challenge-completion",
-      difficultyModel: "A server-owned 16-turn head-to-head challenge: spin Champion, Top 5, 6–15, Unranked, Country, Young Gun, or Veteran, then lock one eligible current fighter into an open men's UFC division while individual HQ grades stay hidden until the final roster grade.",
+      difficultyModel: "A server-owned 16-turn head-to-head challenge: spin Champion, Top 5, 6–15, Unranked, Country, Young Gun, or Veteran, then lock one eligible current fighter into an open men's UFC division while HQ grades stay hidden during drafting, then reveal row-by-row before the final eight-fighter average.",
     },
   },
   {
