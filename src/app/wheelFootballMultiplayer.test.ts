@@ -77,6 +77,15 @@ describe("Wheel of Football 2-4 player contract", () => {
     expect(page).toContain("CANCEL LOBBY");
   });
 
+  it("keeps the original two-column final score for head-to-head matches", () => {
+    expect(page).toContain("function TwoPlayerResultScore");
+    expect(page).toContain('className="football-wheel-result-score"');
+    expect(page).toContain("<b>VS</b>");
+    expect(page).toContain("state.result ? state.participants.length === 2");
+    expect(page).toContain("<TwoPlayerResultScore");
+    expect(page).toContain('className="football-wheel-multiplayer-score"');
+  });
+
   it("keeps the pick row valid until the next phase transition", () => {
     expect(pickPhaseHotfix).toContain("wheel_football_phase_state_valid");
     expect(pickPhaseHotfix).toContain("set turn_count = v_next_turn_count,\n      updated_at = now()");

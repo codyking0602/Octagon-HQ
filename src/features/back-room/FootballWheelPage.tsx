@@ -387,6 +387,39 @@ function WheelRosters({
   );
 }
 
+function TwoPlayerResultScore({
+  state,
+  activeProfileId,
+}: {
+  state: WheelFootballState;
+  activeProfileId: string | null | undefined;
+}) {
+  const creator = participantForProfile(state, state.creator.id);
+  const recipient = participantForProfile(state, state.recipient.id);
+  const creatorStanding = state.result?.standings.find((standing) => standing.profile_id === state.creator.id);
+  const recipientStanding = state.result?.standings.find((standing) => standing.profile_id === state.recipient.id);
+
+  return (
+    <div className="football-wheel-result-score" aria-label="Final Wheel of Football grades">
+      <div className={creatorStanding?.rank === 1 ? "is-winner" : ""}>
+        <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
+        <strong>{creator?.final_grade == null
+          ? creator?.forfeited_at ? "DNF" : "—"
+          : creator.final_grade.toFixed(1)}</strong>
+        <span>FINAL GRADE</span>
+      </div>
+      <b>VS</b>
+      <div className={recipientStanding?.rank === 1 ? "is-winner" : ""}>
+        <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
+        <strong>{recipient?.final_grade == null
+          ? recipient?.forfeited_at ? "DNF" : "—"
+          : recipient.final_grade.toFixed(1)}</strong>
+        <span>FINAL GRADE</span>
+      </div>
+    </div>
+  );
+}
+
 function MultiplayerRosters({
   state,
   activeProfileId,
@@ -1211,7 +1244,9 @@ function MatchScreen({ code }: { code: string }) {
             <span>{resultPoolLabel(state)}</span>
           </div>
 
-          {state.result ? (
+          {state.result ? state.participants.length === 2 ? (
+            <TwoPlayerResultScore state={state} activeProfileId={activeProfileId} />
+          ) : (
             <div className="football-wheel-multiplayer-score" aria-label="Final Wheel of Football standings">
               {(orderedParticipants.length ? orderedParticipants : state.participants).map((participant) => {
                 const standing = standings.find((item) => item.profile_id === participant.id);
