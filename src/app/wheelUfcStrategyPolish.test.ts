@@ -31,18 +31,31 @@ describe("Wheel of UFC strategy + UI polish", () => {
   });
 
   it("uses one visible label per weighted category and collapses the full roster during play", () => {
-    expect(page).toContain("--wheel-angle");
-    expect(styles).toContain("rotate(var(--wheel-angle))");
+    expect(page).toContain('categoryId === "UNRANKED"');
+    expect(page).toContain('"COUNTRY"');
+    expect(page).toContain('"VETERAN"');
+    expect(page).toContain("39 * Math.sin(radians)");
+    expect(styles).toContain("z-index: 3");
     expect(page).toContain("VIEW FULL ROSTERS");
     expect(page).toContain("CompactRosterSnapshot");
     expect(page).toContain('state.phase === "spin" ? (');
   });
 
-  it("keeps individual grades in the UFC final and adds division-by-division context", () => {
+  it("keeps the post-spin decision compact and only shows eligibility counts when they differ", () => {
+    expect(page).toContain("ufc-wheel-spin-pill");
+    expect(page).not.toContain("ufc-wheel-category-badge");
+    expect(page).toContain("new Set(eligibleCounts).size > 1");
+    expect(page).toContain("showEligibleCounts ? (");
+    expect(styles).toContain(".ufc-wheel-picker__spin-header");
+  });
+
+  it("keeps individual grades in the UFC final and adds division-by-division context without red-heavy grade rows", () => {
     expect(page).toContain("HQ ${Number(pick.revealed_grade).toFixed(1)}");
     expect(page).toContain("showDelta={revealDone}");
     expect(page).toContain("Biggest edge");
     expect(page).toContain("won ${Math.max(creatorDivisionWins, recipientDivisionWins)} of 8 divisions");
+    expect(styles).toContain("color: #9fb0ba");
+    expect(styles).toContain("color: #b8c5cd");
   });
 
   it("repairs the four missing headshots seen in the launch matchup", () => {
