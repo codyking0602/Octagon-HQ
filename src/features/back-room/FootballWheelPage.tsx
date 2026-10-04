@@ -19,12 +19,14 @@ import {
 import {
   WHEEL_FOOTBALL_DIVISIONS,
   WHEEL_FOOTBALL_ROSTER_SLOTS,
+  loadWheelFootballApTop25,
   loadWheelFootballRoster,
   wheelFootballLeagueFromScope,
   wheelFootballPoolLabel,
   wheelFootballPoolTeams,
   wheelFootballShortlist,
   wheelFootballTeam,
+  wheelFootballTeamSportsReferenceUrl,
   type WheelFootballCandidate,
   type WheelFootballDivision,
   type WheelFootballLeague,
@@ -50,6 +52,7 @@ const CFB_SCOPE_OPTIONS: readonly {
   detail: string;
 }[] = [
   { value: "CFB", label: "NATIONAL", detail: "All 68 schools" },
+  { value: "AP_TOP_25", label: "AP TOP 25", detail: "Latest AP poll" },
   { value: "SEC", label: "SEC", detail: "16 schools" },
   { value: "BIG_TEN", label: "BIG TEN", detail: "18 schools" },
   { value: "BIG_12", label: "BIG 12", detail: "16 schools" },
@@ -389,7 +392,24 @@ function RosterCell({
       <PickMark pick={pick} />
       <div>
         <strong>{pick?.display_name ?? "OPEN"}</strong>
-        <span>{pick ? `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
+        <span>
+          {pick ? (
+            <>
+              {team && wheelFootballTeamSportsReferenceUrl(team) ? (
+                <a
+                  className="football-wheel-team-reference"
+                  href={wheelFootballTeamSportsReferenceUrl(team) ?? undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${team.name} 2026 Sports Reference page`}
+                >
+                  {team.shortCode}
+                </a>
+              ) : team?.shortCode ?? pick.team_code}
+              {" · "}{pick.position_abbreviation}
+            </>
+          ) : "—"}
+        </span>
       </div>
     </div>
   );
@@ -499,6 +519,7 @@ function FootballWheel({
           <>
             <TeamLogo team={pendingTeam} />
             <strong>{pendingTeam.shortCode}</strong>
+            {pendingTeam.apRank ? <span>#{pendingTeam.apRank} AP</span> : null}
           </>
         ) : spinning ? (
           <><strong>SPINNING</strong><span>…</span></>
@@ -548,8 +569,17 @@ function CandidatePicker({
       <header>
         <TeamLogo team={team} />
         <div>
-          <p className="eyebrow">YOUR SPIN</p>
-          <h2>{team.name}</h2>
+          <p className="eyebrow">YOUR SPIN{team.apRank ? ` · #${team.apRank} AP` : ""}</p>
+          <h2>
+            <a
+              className="football-wheel-team-reference"
+              href={wheelFootballTeamSportsReferenceUrl(team) ?? undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {team.name}
+            </a>
+          </h2>
           <span>Choose an open roster spot, then take a current player or the head coach.</span>
         </div>
       </header>
@@ -626,6 +656,9 @@ function SetupScreen() {
   const [scope, setScope] = useState<WheelFootballPoolScope>("NFL");
   const [division, setDivision] = useState<WheelFootballDivision>("NFC East");
   const [opponent, setOpponent] = useState<MemberCardSummary | null>(null);
+  const [apTop25Teams, setApTop25Teams] = useState<WheelFootballTeam[]>(
+    () => [...wheelFootballPoolTeams("AP_TOP_25")],
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -637,8 +670,19 @@ function SetupScreen() {
     if (preferred) setOpponent(preferred);
   }, [challenges.members, challenges.preferredRecipientName, opponent]);
 
+  useEffect(() => {
+    if (league !== "CFB") return;
+    let active = true;
+    void loadWheelFootballApTop25().then((teams) => {
+      if (active) setApTop25Teams(teams);
+    });
+    return () => { active = false; };
+  }, [league]);
+
   const scopeOptions = league === "NFL" ? NFL_SCOPE_OPTIONS : CFB_SCOPE_OPTIONS;
-  const pool = wheelFootballPoolTeams(scope, scope === "DIVISION" ? division : null);
+  const pool = scope === "AP_TOP_25"
+    ? apTop25Teams
+    : wheelFootballPoolTeams(scope, scope === "DIVISION" ? division : null);
 
   function chooseLeague(nextLeague: WheelFootballLeague) {
     setLeague(nextLeague);
@@ -808,6 +852,9 @@ function MatchScreen({ code }: { code: string }) {
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [candidates, setCandidates] = useState<WheelFootballCandidate[]>([]);
+  const [apTop25Teams, setApTop25Teams] = useState<WheelFootballTeam[]>(
+    () => [...wheelFootballPoolTeams("AP_TOP_25")],
+  );
   const [rosterLoading, setRosterLoading] = useState(false);
   const [rosterError, setRosterError] = useState("");
   const [selectedSlot, setSelectedSlot] = useState<WheelFootballRosterSlot | null>(null);
@@ -868,8 +915,24 @@ function MatchScreen({ code }: { code: string }) {
   );
   const opponent = state ? otherParticipant(state, activeProfileId) : null;
   const division = state ? divisionFromState(state.division) : null;
-  const poolTeams = state ? wheelFootballPoolTeams(state.pool_scope, division) : [];
-  const pendingTeam = state?.pending_team ? wheelFootballTeam(state.pending_team.code) : null;
+  const poolTeams = state
+    ? state.pool_scope === "AP_TOP_25"
+      ? apTop25Teams
+      : wheelFootballPoolTeams(state.pool_scope, division)
+    : [];
+  const pendingTeam = state?.pending_team
+    ? poolTeams.find((team) => team.code === state.pending_team?.code)
+      ?? wheelFootballTeam(state.pending_team.code)
+    : null;
+
+  useEffect(() => {
+    if (state?.pool_scope !== "AP_TOP_25") return;
+    let active = true;
+    void loadWheelFootballApTop25().then((teams) => {
+      if (active) setApTop25Teams(teams);
+    });
+    return () => { active = false; };
+  }, [state?.pool_scope]);
 
   async function loadRoster() {
     if (!pendingTeam) return;
@@ -1196,9 +1259,21 @@ function MatchScreen({ code }: { code: string }) {
 
       {!isMyTurn && state.opened_at ? (
         <section className="football-wheel-waiting surface-card">
-          <strong>{state.phase === "pick" && pendingTeam
-            ? `${opponent?.display_name ?? "Your opponent"} is choosing from the ${pendingTeam.name}.`
-            : `Waiting on ${opponent?.display_name ?? "your opponent"}.`}</strong>
+          <strong>
+            {state.phase === "pick" && pendingTeam ? (
+              <>
+                {opponent?.display_name ?? "Your opponent"} is choosing from the{" "}
+                <a
+                  className="football-wheel-team-reference"
+                  href={wheelFootballTeamSportsReferenceUrl(pendingTeam) ?? undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {pendingTeam.name}
+                </a>.
+              </>
+            ) : `Waiting on ${opponent?.display_name ?? "your opponent"}.`}
+          </strong>
           <span>You’ll get a notification when your next spin is ready.</span>
         </section>
       ) : null}
