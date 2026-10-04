@@ -1,15 +1,17 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
-import {
-  WHEEL_UFC_CATEGORY_WEIGHTS,
-  WHEEL_UFC_ROSTER_SLOTS,
-} from "../back-room/wheelUfcModel";
+import { WHEEL_UFC_ROSTER_SLOTS } from "../back-room/wheelUfcModel";
 
 const rosterSlotSchema = z.enum(WHEEL_UFC_ROSTER_SLOTS);
-const categorySchema = z.enum(Object.keys(WHEEL_UFC_CATEGORY_WEIGHTS) as [
-  keyof typeof WHEEL_UFC_CATEGORY_WEIGHTS,
-  ...(keyof typeof WHEEL_UFC_CATEGORY_WEIGHTS)[],
-]);
+const categorySchema = z.enum([
+  "CHAMPION",
+  "TOP_5",
+  "SIX_TO_FIFTEEN",
+  "UNRANKED",
+  "COUNTRY",
+  "YOUNG_GUN",
+  "VETERAN",
+] as const);
 
 const participantSchema = z.object({
   id: z.string().uuid(),
