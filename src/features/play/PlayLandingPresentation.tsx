@@ -21,7 +21,7 @@ export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies Play
 export const PLAY_LANDING_FOOTBALL_STRATEGIC_GAME = "draft-room" as const satisfies PlayGameId;
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
-  if (sport === "ufc") return [PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER];
+  if (sport === "ufc") return [PLAY_LANDING_UFC_STRATEGIC_GAME, "wheel-ufc", ...PLAY_LANDING_COMMON_GAME_ORDER];
   return [PLAY_LANDING_FOOTBALL_STRATEGIC_GAME, ...PLAY_LANDING_FOOTBALL_GAME_ORDER];
 }
 
@@ -96,11 +96,11 @@ export function PlayLandingGameLibrary({
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">
-                {game.id === "wheel-football" ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
+                {game.id === "wheel-football" || game.id === "wheel-ufc" ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
               </span>
               <strong>{game.title}</strong>
               <small>{game.description}</small>
-              <em>{game.id === "wheel-football" ? "CHALLENGE →" : "PLAY →"}</em>
+              <em>{game.id === "wheel-football" || game.id === "wheel-ufc" ? "CHALLENGE →" : "PLAY →"}</em>
             </button>
           );
         })}
