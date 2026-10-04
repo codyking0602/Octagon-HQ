@@ -35,7 +35,7 @@ export interface WheelFootballCfbReconciliationWarning {
 
 export type WheelFootballCfbBaselineTeam = {
   school: string;
-  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Independent";
+  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Independent" | "Pac-12";
   espnId: string;
   depthChartUrl: string;
   rosterUrl: string;
@@ -153,6 +153,41 @@ export const wheelFootballCfbPriority: Readonly<
   ]),
 ));
 
+const wheelFootballCfbSupplementalPriority: Readonly<
+  Record<string, WheelFootballCfbBaselineTeam>
+> = Object.freeze({
+  "boise-state": {
+    school: "Boise State",
+    conference: "Pac-12",
+    espnId: "68",
+    depthChartUrl: "https://www.ourlads.com/ncaa-football-depth-charts/depth-chart/boise-state/90130",
+    rosterUrl: "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
+    QB: ["Maddux Madsen", "Max Cutforth"],
+    RB: ["Dylan Riley", "Sire Gaines", "Juelz Goff"],
+    WR: ["Cam Bates", "Akeem Wright", "Rasean Jones", "Ben Ford"],
+    TE: ["Matt Wagner", "Keawe Browne"],
+    Flex: ["Dylan Riley", "Cam Bates", "Akeem Wright", "Matt Wagner"],
+    "Front Seven": [
+      "Jayden Virgin-Morgan",
+      "Max Stege",
+      "Boen Phelps",
+      "David Latu",
+      "Logan Brantley",
+      "Mikaio Edward",
+    ],
+    Secondary: [
+      "Jaden Mickey",
+      "JeRico Washington Jr.",
+      "Derek Ganter Jr.",
+      "Travis Anderson",
+      "Sherrod Smith",
+      "Roman Tillmon",
+    ],
+    "Head Coach": ["Spencer Danielson"],
+    reconciliationWarnings: [],
+  },
+});
+
 export function wheelFootballCfbBaselineForSchoolId(
   schoolId: string | null | undefined,
 ) {
@@ -164,7 +199,8 @@ export function wheelFootballCfbPriorityForSchoolId(
   schoolId: string | null | undefined,
 ) {
   if (!schoolId) return null;
-  return wheelFootballCfbPriority[schoolId.trim().toLowerCase()] ?? null;
+  const key = schoolId.trim().toLowerCase();
+  return wheelFootballCfbPriority[key] ?? wheelFootballCfbSupplementalPriority[key] ?? null;
 }
 
 export function normalizedWheelFootballCfbName(value: string) {
