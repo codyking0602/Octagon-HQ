@@ -48,6 +48,12 @@ describe("Wheel of Football eligibility-aware spins", () => {
     expect(page).toContain("repeat teams are avoided whenever another eligible team is available");
   });
 
+  it("returns any already-dead pending rollout spin to the same player's wheel for a free retry", () => {
+    expect(migration).toContain("where match.phase = 'pick'");
+    expect(migration).toContain("set phase = 'spin'");
+    expect(migration).toContain("and not private.wheel_football_team_has_open_candidate");
+  });
+
   it("requires an open slot, an undrafted identity, and a locked grade before a team stays on the wheel", () => {
     expect(migration).toContain("own_pick.roster_slot = candidate.roster_slot");
     expect(migration).toContain("used_pick.challenge_id = p_challenge_id");
