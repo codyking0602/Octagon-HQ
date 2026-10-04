@@ -573,9 +573,18 @@ function auditedCfbCandidates(
       if (seen.has(key)) continue;
       seen.add(key);
       const source = sourceByName.get(key);
-      selected.push(source
-        ? { ...source, rosterOrder: rosterOrder++ }
-        : cfbSyntheticCandidate(schoolId, name, positionAbbreviation, positionLabel, rosterOrder++));
+      const audited = cfbSyntheticCandidate(
+        schoolId,
+        name,
+        positionAbbreviation,
+        positionLabel,
+        rosterOrder++,
+      );
+      selected.push({
+        ...audited,
+        headshotUrl: source?.headshotUrl ?? null,
+        experienceYears: source?.experienceYears ?? null,
+      });
     }
   };
 
