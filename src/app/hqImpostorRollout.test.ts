@@ -36,10 +36,10 @@ describe("HQ Impostor Oct 13 rollout", () => {
 
   it("blocks Football Daily only when the player has an actionable Impostor step", () => {
     expect(hqImpostorDailyGateRequired(null)).toBe(true);
-    for (const phase of ["assignment", "clue", "board_ready", "vote", "resolved"]) {
+    for (const phase of ["assignment", "clue"]) {
       expect(hqImpostorDailyGateRequired(stateWithPhase(phase))).toBe(true);
     }
-    for (const phase of ["clue_locked", "vote_locked", "waiting_round", "inactive", "event_complete"]) {
+    for (const phase of ["clue_locked", "board_ready", "vote", "vote_locked", "resolved", "waiting_round", "inactive", "event_complete"]) {
       expect(hqImpostorDailyGateRequired(stateWithPhase(phase))).toBe(false);
     }
   });
