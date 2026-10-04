@@ -10,16 +10,17 @@ describe("Shane's ranked watchlist", () => {
   it("keeps one ordered Top 15 model and the approved fight-highlight links", () => {
     expect(shanesWatchlist.capacity).toBe(15);
     expect(shanesWatchlist.lastUpdated).toBe("October 2026");
-    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     expect(shanesWatchlist.fighters.map((fighter) => fighter.id)).toEqual([
       "quillan-salkilld",
       "raul-rosas-jr",
       "abdul-rakhman-yakhyaev",
       "bilal-hasan",
-      "ateba-gautier",
       "fatima-kline",
       "daniil-donchenko",
+      "damian-pinas",
       "ty-miller",
+      "ateba-gautier",
       "gable-steveson",
     ]);
 
@@ -40,7 +41,7 @@ describe("Shane's ranked watchlist", () => {
     expect(rosas).toMatchObject({
       id: "raul-rosas-jr",
       rank: 2,
-      previousRank: 4,
+      previousRank: 2,
       nickname: "El Nino Problema",
       division: "Bantamweight",
       age: 21,
@@ -51,60 +52,79 @@ describe("Shane's ranked watchlist", () => {
       videoUrl: "https://youtu.be/Nf6Kb6c3uq8?si=fN5vhUPEhtkHbBto",
     });
     expect(existsSync("public/assets/fighters/raul-rosas-jr-thumb.webp")).toBe(true);
-    expect(watchMovement(rosas)).toEqual({ label: "↑2", direction: "up" });
+    expect(watchMovement(rosas)).toEqual({ label: "—", direction: "same" });
 
     const yakhyaev = shanesWatchlist.fighters[2];
     expect(yakhyaev).toMatchObject({
       id: "abdul-rakhman-yakhyaev",
       rank: 3,
-      previousRank: 2,
+      previousRank: 3,
     });
-    expect(watchMovement(yakhyaev)).toEqual({ label: "↓1", direction: "down" });
+    expect(watchMovement(yakhyaev)).toEqual({ label: "—", direction: "same" });
 
     const bilal = shanesWatchlist.fighters[3];
     expect(bilal).toMatchObject({
       id: "bilal-hasan",
       rank: 4,
-      previousRank: 3,
+      previousRank: 4,
       ufcRecord: "1–0",
     });
-    expect(watchMovement(bilal)).toEqual({ label: "↓1", direction: "down" });
+    expect(watchMovement(bilal)).toEqual({ label: "—", direction: "same" });
 
-    const ateba = shanesWatchlist.fighters[4];
+    const fatima = shanesWatchlist.fighters[4];
+    expect(fatima).toMatchObject({ id: "fatima-kline", rank: 5, previousRank: 6 });
+    expect(watchMovement(fatima)).toEqual({ label: "↑1", direction: "up" });
+
+    const daniil = shanesWatchlist.fighters[5];
+    expect(daniil).toMatchObject({ id: "daniil-donchenko", rank: 6, previousRank: 7 });
+    expect(watchMovement(daniil)).toEqual({ label: "↑1", direction: "up" });
+
+    const pinas = shanesWatchlist.fighters[6];
+    expect(pinas).toMatchObject({
+      id: "damian-pinas",
+      rank: 7,
+      previousRank: null,
+      nickname: "The Baba Yaga",
+      division: "Middleweight",
+      age: 24,
+      country: "Aruba",
+      ufcRecord: "3–0",
+      ufcWinStreak: "3",
+      ufcFinishes: "3",
+      photoUrl: "/assets/fighters/damian-pinas-thumb.webp",
+      videoUrl: "https://youtu.be/R0ezmb8925I?is=YLuGZgdBomuHdQ7l",
+    });
+    expect(existsSync("public/assets/fighters/damian-pinas-thumb.webp")).toBe(true);
+    expect(watchMovement(pinas)).toEqual({ label: "NEW", direction: "new" });
+
+    const ty = shanesWatchlist.fighters[7];
+    expect(ty).toMatchObject({ id: "ty-miller", rank: 8, previousRank: 8 });
+    expect(watchMovement(ty)).toEqual({ label: "—", direction: "same" });
+
+    const ateba = shanesWatchlist.fighters[8];
     expect(ateba).toMatchObject({
       id: "ateba-gautier",
-      rank: 5,
-      previousRank: null,
+      rank: 9,
+      previousRank: 5,
       nickname: "The Storm",
+      status: "Concern",
       division: "Middleweight",
       age: 24,
       country: "Cameroon",
-      ufcRecord: "5–0",
-      ufcWinStreak: "5",
+      ufcRecord: "5–1",
+      ufcWinStreak: "0",
       ufcFinishes: "4",
       photoUrl: "/assets/fighters/ateba-gautier-thumb.webp",
       videoUrl: "https://youtube.com/shorts/NwjKZahYvbw?is=PXQ2DXkjJvRt8bVm",
     });
     expect(existsSync("public/assets/fighters/ateba-gautier-thumb.webp")).toBe(true);
-    expect(watchMovement(ateba)).toEqual({ label: "NEW", direction: "new" });
+    expect(watchMovement(ateba)).toEqual({ label: "↓4", direction: "down" });
 
-    const fatima = shanesWatchlist.fighters[5];
-    expect(fatima).toMatchObject({ id: "fatima-kline", rank: 6, previousRank: 5 });
-    expect(watchMovement(fatima)).toEqual({ label: "↓1", direction: "down" });
-
-    const daniil = shanesWatchlist.fighters[6];
-    expect(daniil).toMatchObject({ id: "daniil-donchenko", rank: 7, previousRank: 6 });
-    expect(watchMovement(daniil)).toEqual({ label: "↓1", direction: "down" });
-
-    const ty = shanesWatchlist.fighters[7];
-    expect(ty).toMatchObject({ id: "ty-miller", rank: 8, previousRank: 7 });
-    expect(watchMovement(ty)).toEqual({ label: "↓1", direction: "down" });
-
-    const gable = shanesWatchlist.fighters[8];
+    const gable = shanesWatchlist.fighters[9];
     expect(gable).toMatchObject({
       id: "gable-steveson",
-      rank: 9,
-      previousRank: 8,
+      rank: 10,
+      previousRank: 9,
       status: "Concern",
       ufcRecord: "1–1",
       ufcWinStreak: "0",
@@ -138,11 +158,11 @@ describe("Shane's ranked watchlist", () => {
 
     expect(screen.getByRole("heading", { name: "Shane King’s Contender Series" })).toBeInTheDocument();
     expect(screen.getByText("A living Top 15 of UFC prospects to watch as their careers develop.")).toBeInTheDocument();
-    expect(screen.getByText("9 OF 15 SPOTS FILLED")).toBeInTheDocument();
+    expect(screen.getByText("10 OF 15 SPOTS FILLED")).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
     expect(screen.getByText("Bilal Hasan")).toBeInTheDocument();
-    expect(screen.getByText("6 SPOTS OPEN")).toBeInTheDocument();
+    expect(screen.getByText("5 SPOTS OPEN")).toBeInTheDocument();
     expect(screen.getByText("Nobody else has earned a place on Shane’s board yet.")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(container.querySelectorAll("details")).toHaveLength(0);
@@ -151,8 +171,9 @@ describe("Shane's ranked watchlist", () => {
     expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
     expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
     expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
-    expect(within(movementSummary).getAllByText("1")).toHaveLength(2);
-    expect(within(movementSummary).getByText("7")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("1")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("4")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("5")).toBeInTheDocument();
   });
 
   it("opens the real scouting snapshot as three readable beats with UFC-only numbers", () => {
@@ -213,13 +234,13 @@ describe("Shane's ranked watchlist", () => {
     );
   });
 
-  it("moves Daniil to #7 and Ty Miller to #8 after Gautier enters at #5", () => {
+  it("moves Daniil to #6 and keeps Ty Miller at #8 after the UFC 332 reshuffle", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Daniil Donchenko" }));
     const daniilDialog = screen.getByRole("dialog", { name: "Daniil Donchenko" });
-    expect(within(daniilDialog).getByText("SHANE’S RANKING · #7")).toBeInTheDocument();
+    expect(within(daniilDialog).getByText("SHANE’S RANKING · #6")).toBeInTheDocument();
     expect(within(daniilDialog).getByText("4–0")).toBeInTheDocument();
     expect(within(daniilDialog).getByText(/controlled Punahele Soriano over three rounds/i)).toBeInTheDocument();
     expect(within(daniilDialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
@@ -256,20 +277,37 @@ describe("Shane's ranked watchlist", () => {
   });
 
 
-  it("adds Ateba Gautier at #5 with the supplied highlight and current UFC résumé", () => {
+  it("updates Ateba Gautier to #9 after the Kopylov loss", () => {
     window.history.replaceState({}, "", "/fighters-to-watch");
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Ateba Gautier" }));
 
     const dialog = screen.getByRole("dialog", { name: "Ateba Gautier" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #5")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #9")).toBeInTheDocument();
     expect(within(dialog).getByText("“The Storm”")).toBeInTheDocument();
-    expect(within(dialog).getByText("5–0")).toBeInTheDocument();
-    expect(within(dialog).getByText(/first five UFC fights and finishing four of them/i)).toBeInTheDocument();
+    expect(within(dialog).getByText("5–1")).toBeInTheDocument();
+    expect(within(dialog).getByText(/unbeaten UFC run ended at UFC 332/i)).toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
       "href",
       "https://youtube.com/shorts/NwjKZahYvbw?is=PXQ2DXkjJvRt8bVm",
+    );
+  });
+
+  it("adds Damian Pinas at #7 with his UFC 332 knockout and supplied highlight", () => {
+    window.history.replaceState({}, "", "/fighters-to-watch");
+    render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
+
+    fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Damian Pinas" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Damian Pinas" });
+    expect(within(dialog).getByText("SHANE’S RANKING · #7")).toBeInTheDocument();
+    expect(within(dialog).getByText("“The Baba Yaga”")).toBeInTheDocument();
+    expect(within(dialog).getByText("3–0")).toBeInTheDocument();
+    expect(within(dialog).getByText(/75 seconds into Round 1/i)).toBeInTheDocument();
+    expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
+      "href",
+      "https://youtu.be/R0ezmb8925I?is=YLuGZgdBomuHdQ7l",
     );
   });
 
@@ -280,7 +318,7 @@ describe("Shane's ranked watchlist", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open scouting report for Fatima Kline" }));
 
     const dialog = screen.getByRole("dialog", { name: "Fatima Kline" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #6")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #5")).toBeInTheDocument();
     expect(within(dialog).getByText("WHY SHE’S ON THE BOARD")).toBeInTheDocument();
     expect(within(dialog).queryByText("WHY HE’S ON THE BOARD")).not.toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(
@@ -294,7 +332,7 @@ describe("Shane's ranked watchlist", () => {
     render(<MemoryRouter><ShanesWatchlistPage /></MemoryRouter>);
 
     const dialog = screen.getByRole("dialog", { name: "Gable Steveson" });
-    expect(within(dialog).getByText("SHANE’S RANKING · #9")).toBeInTheDocument();
+    expect(within(dialog).getByText("SHANE’S RANKING · #10")).toBeInTheDocument();
     expect(within(dialog).getByText("SCOUTING SNAPSHOT")).toBeInTheDocument();
     expect(within(dialog).getByText(/knocked him out with a left hand just 12 seconds into Round 1/i)).toBeInTheDocument();
     expect(within(dialog).getByRole("link", { name: "WATCH FIGHT HIGHLIGHT ↗" })).toHaveAttribute(

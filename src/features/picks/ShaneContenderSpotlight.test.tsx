@@ -212,9 +212,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #1")).toHaveLength(2);
   });
 
-  it("gives Ateba Gautier the full Shane treatment on UFC 332 at #5", () => {
+  it("gives Ateba Gautier the full Shane treatment on UFC 332 at #9 after the loss", () => {
     const gautier = shanesWatchlist.fighters.find((fighter) => fighter.id === "ateba-gautier");
-    expect(gautier?.rank).toBe(5);
+    expect(gautier?.rank).toBe(9);
 
     render(
       <MemoryRouter>
@@ -223,9 +223,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
     );
 
     expect(screen.getByText("FIGHT SPOTLIGHT")).toBeInTheDocument();
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #5")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #9")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #5")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #9")).toHaveLength(2);
     expect(screen.getByText(gautier!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "GAUTIER SPOTLIGHT ↗" })).toHaveAttribute(
       "href",
@@ -259,7 +259,7 @@ describe("Shane Contender Fight Spotlight treatment", () => {
 
   it("gives Daniil Donchenko the Shane treatment on this week’s configured Fight Spotlight", () => {
     const daniil = shanesWatchlist.fighters.find((fighter) => fighter.id === "daniil-donchenko");
-    expect(daniil?.rank).toBe(7);
+    expect(daniil?.rank).toBe(6);
 
     render(
       <MemoryRouter>
@@ -267,9 +267,9 @@ describe("Shane Contender Fight Spotlight treatment", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("SHANE’S CONTENDER SERIES · #7")).toBeInTheDocument();
+    expect(screen.getByText("SHANE’S CONTENDER SERIES · #6")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /View matchup breakdown/i }));
-    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #7")).toHaveLength(2);
+    expect(screen.getAllByText("SHANE’S CONTENDER SERIES · #6")).toHaveLength(2);
     expect(screen.getByText(daniil!.whyOnBoard)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "VIEW SHANE’S SCOUTING PROFILE →" })).toHaveAttribute(
       "href",
