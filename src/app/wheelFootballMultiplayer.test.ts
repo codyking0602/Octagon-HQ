@@ -5,6 +5,10 @@ const migration = readFileSync(
   "supabase/migrations/202612310258_wheel_football_multiplayer.sql",
   "utf8",
 );
+const pickPhaseHotfix = readFileSync(
+  "supabase/migrations/202612310260_wheel_football_multiplayer_pick_phase_fix.sql",
+  "utf8",
+);
 const repository = readFileSync(
   "src/features/play/wheelFootballRepository.ts",
   "utf8",
@@ -66,9 +70,22 @@ describe("Wheel of Football 2-4 player contract", () => {
     expect(repository).toContain("turn_count: z.coerce.number().int().min(0).max(28)");
     expect(page).toContain("CHOOSE 1–3 OPPONENTS");
     expect(page).toContain("START ${playerCount}-PLAYER CHALLENGE");
+    expect(page).toContain("state.participants.length === 2");
+    expect(page).toContain("<HeadToHeadRoster");
     expect(page).toContain("<MultiplayerRosters");
     expect(page).toContain("state.participants.flatMap");
     expect(page).toContain("CANCEL LOBBY");
+  });
+
+  it("keeps the pick row valid until the next phase transition", () => {
+    expect(pickPhaseHotfix).toContain("wheel_football_phase_state_valid");
+    expect(pickPhaseHotfix).toContain("set turn_count = v_next_turn_count,\n      updated_at = now()");
+    expect(pickPhaseHotfix).not.toContain(
+      "set turn_count = v_next_turn_count,\n      pending_team_code = null",
+    );
+    expect(pickPhaseHotfix).toContain(
+      "set phase = 'spin',\n      current_turn_profile_id = v_next_profile,\n      pending_team_code = null",
+    );
   });
 
   it("makes waiting-lobby cancellation server-owned and advertises multiplayer in Play", () => {
