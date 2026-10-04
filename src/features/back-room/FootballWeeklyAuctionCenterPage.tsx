@@ -11,6 +11,7 @@ import { FootballWeeklySuperteamFinalResult } from "./FootballWeeklySuperteamGat
 import { FootballWeeklyNflTeamSeasonFinalResult } from "./FootballWeeklyNflTeamSeasonGate";
 import { useIdentity } from "../identity/IdentityProvider";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
+import { hqImpostorV1Window } from "../impostor/hqImpostorSchedule";
 import "../../styles/football-weekly-auction-center.css";
 
 type CenterTab = "week" | "results";
@@ -48,6 +49,7 @@ export default function FootballWeeklyAuctionCenterPage() {
   const navigate = useNavigate();
   const identity = useIdentity();
   const owner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
+  const impostorWindow = hqImpostorV1Window();
   const repository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const [tab, setTab] = useState<CenterTab>("week");
   const [state, setState] = useState<FootballWeeklyAuctionState | null>(null);
@@ -64,12 +66,19 @@ export default function FootballWeeklyAuctionCenterPage() {
       return () => { active = false; };
     }
 
-    Promise.all([repository.load(), repository.loadHistory()])
-      .then(([nextState, nextHistory]) => {
-        if (!active) return;
-        setState(nextState);
-        setHistory(nextHistory);
-      })
+    const request = impostorWindow.active
+      ? repository.loadHistory().then((nextHistory) => {
+          if (!active) return;
+          setState(null);
+          setHistory(nextHistory);
+        })
+      : Promise.all([repository.load(), repository.loadHistory()]).then(([nextState, nextHistory]) => {
+          if (!active) return;
+          setState(nextState);
+          setHistory(nextHistory);
+        });
+
+    request
       .catch((reason: unknown) => {
         if (active) setError(reason instanceof Error ? reason.message : "Weekly Auction could not be loaded.");
       })
@@ -78,7 +87,7 @@ export default function FootballWeeklyAuctionCenterPage() {
       });
 
     return () => { active = false; };
-  }, [repository]);
+  }, [repository, impostorWindow.active]);
 
   if (selectedResult) {
     return (
@@ -173,7 +182,25 @@ export default function FootballWeeklyAuctionCenterPage() {
       {error ? <section className="football-weekly-auction-center__message surface-card is-error">{error}</section> : null}
 
       {!loading && !error && tab === "week" ? (
-        activeState ? (
+        impostorWindow.active ? (
+          <section className="football-weekly-auction-center__current surface-card">
+            <div className="football-weekly-auction-center__current-title">
+              <div>
+                <small>OCT 13–19 · FEATURED CHALLENGE</small>
+                <strong>HQ IMPOSTOR</strong>
+              </div>
+              <span>THIS WEEK</span>
+            </div>
+            <p>HQ Impostor replaces Weekly Auction for this featured week.</p>
+            <button
+              className="football-weekly-auction-center__primary"
+              type="button"
+              onClick={() => navigate("/impostor")}
+            >
+              OPEN HQ IMPOSTOR →
+            </button>
+          </section>
+        ) : activeState ? (
           <section className="football-weekly-auction-center__current surface-card">
             <div className="football-weekly-auction-center__current-title">
               <div>
