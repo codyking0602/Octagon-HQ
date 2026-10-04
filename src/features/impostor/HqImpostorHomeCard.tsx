@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { createHqImpostorRepository, type HqImpostorState } from "./hqImpostorRepository";
 import { hqImpostorV1Window } from "./hqImpostorSchedule";
+import { hqImpostorV1Window } from "./hqImpostorSchedule";
 import "../../styles/hq-impostor.css";
 
 function statusCopy(state: HqImpostorState | null) {
@@ -49,10 +50,11 @@ export function HqImpostorHomeCard() {
   const signedIn = identity.status === "ready" && Boolean(identity.profile?.id);
   const repository = useMemo(() => createHqImpostorRepository(), []);
   const [state, setState] = useState<HqImpostorState | null>(null);
+  const launchWindow = hqImpostorV1Window();
 
   useEffect(() => {
     let active = true;
-    if (!signedIn || !repository) return () => { active = false; };
+    if (launchWindow.before || !signedIn || !repository) return () => { active = false; };
 
     const load = () => {
       repository.load()
@@ -70,6 +72,8 @@ export function HqImpostorHomeCard() {
   }, [signedIn, repository]);
 
   if (rollout.before || (rollout.after && !state?.event)) return null;
+
+  if (launchWindow.before) return null;
 
   const copy = signedIn
     ? statusCopy(state)
