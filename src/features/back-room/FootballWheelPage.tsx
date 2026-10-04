@@ -153,7 +153,7 @@ function drawShareRosterCell(
   context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.fillText(pick.team_code, badgeX + badgeSize / 2, y + height / 2 + 1);
+  context.fillText(team?.shortCode ?? pick.team_code, badgeX + badgeSize / 2, y + height / 2 + 1);
 
   context.textAlign = align;
   context.textBaseline = "alphabetic";
@@ -364,7 +364,7 @@ function PickMark({ pick }: { pick: WheelFootballPick | null }) {
       ) : team?.logoSrc ? (
         <img src={team.logoSrc} alt="" />
       ) : (
-        <b>{pick.team_code}</b>
+        <b>{team?.shortCode ?? pick.team_code}</b>
       )}
     </span>
   );
@@ -595,7 +595,7 @@ function CandidatePicker({
                       ? <img src={candidate.headshotUrl} alt="" onError={(event) => { event.currentTarget.hidden = true; }} />
                       : team.logoSrc
                         ? <img src={team.logoSrc} alt="" />
-                        : <b>{team.code}</b>}
+                        : <b>{team.shortCode}</b>}
                   </span>
                   <span>
                     <strong>{candidate.name}</strong>
