@@ -13,6 +13,7 @@ const poolScopeSchema = z.enum([
   "NFC",
   "DIVISION",
   "CFB",
+  "TOP_25",
   "SEC",
   "BIG_TEN",
   "BIG_12",
@@ -27,7 +28,7 @@ const participantSchema = z.object({
 const teamSchema = z.object({
   code: z.string().min(1).max(64),
   name: z.string().min(1),
-  conference: z.enum(["AFC", "NFC", "SEC", "Big Ten", "Big 12", "ACC", "Independent"]),
+  conference: z.enum(["AFC", "NFC", "SEC", "Big Ten", "Big 12", "ACC", "Independent", "Pac-12"]),
   division: z.enum(["East", "North", "South", "West"]).nullable(),
 });
 
