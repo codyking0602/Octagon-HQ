@@ -797,10 +797,10 @@ export default function FootballTodayChallengePage() {
                 ? impostorError
                 : impostorLoading
                   ? "Checking your current Impostor round…"
-                  : "Complete your current HQ Impostor action, then Football Daily unlocks."}
+                  : "Submit your current HQ Impostor blind clue, then Football Daily unlocks."}
             </p>
           </div>
-          <button type="button" onClick={() => navigate("/impostor")}>
+          <button type="button" onClick={() => navigate("/impostor?from=daily")}>
             {impostorLoading ? "CHECKING…" : "OPEN HQ IMPOSTOR →"}
           </button>
         </section>
@@ -832,8 +832,10 @@ export default function FootballTodayChallengePage() {
   }
 
   if (!projection) {
-    const loading = busy || weeklyBusy || weeklyState === null;
-    const message = weeklyError ?? error;
+    const loading = busy
+      || (impostorWindow.active ? impostorLoading : weeklyBusy)
+      || !featuredGateLoaded;
+    const message = (impostorWindow.active ? impostorError : weeklyError) ?? error;
     return (
       <div className="page football-today-page">
         <section className="football-today-shell">
