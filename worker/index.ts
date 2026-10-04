@@ -254,6 +254,35 @@ async function serveCfbRoster(requestUrl: URL) {
   }
 }
 
+const CFB_RANKINGS_UPSTREAM_URL =
+  "https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings";
+
+async function serveCfbRankings() {
+  try {
+    const upstream = await fetch(CFB_RANKINGS_UPSTREAM_URL, {
+      headers: { Accept: "application/json", "User-Agent": "OctagonHQ/1.0" },
+    });
+    if (!upstream.ok) throw new Error("rankings upstream unavailable");
+    const snapshot = normalizeCfbApTop25(await upstream.json());
+    if (!snapshot) throw new Error("AP Top 25 payload incomplete");
+    return new Response(JSON.stringify(snapshot), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      },
+    });
+  } catch {
+    return new Response(JSON.stringify({ error: "Current AP Top 25 is unavailable." }), {
+      status: 502,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+}
+
 function isPreviewRoute(url: URL) {
   return url.pathname.startsWith("/fighters/")
     || url.pathname === "/rankings"
