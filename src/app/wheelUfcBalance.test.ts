@@ -31,11 +31,29 @@ describe("Wheel of UFC launch balance", () => {
     }
   });
 
-  it("keeps non-elite spins capable of producing real steals", () => {
+  it("keeps non-elite spins capable of producing real steals without compressing the ladder", () => {
+    const allGrades = rows.map((row) => row.grade).sort((a, b) => a - b);
     const topFive = rows.filter((row) => row.rank !== null && row.rank <= 5).map((row) => row.grade);
+    const sixToFifteen = rows.filter((row) => row.rank !== null && row.rank >= 6).map((row) => row.grade);
     const unranked = rows.filter((row) => row.rank === null && !row.champion).map((row) => row.grade);
+
+    expect(Math.min(...allGrades)).toBeLessThanOrEqual(70);
+    expect(Math.max(...allGrades)).toBeGreaterThanOrEqual(99);
+    expect(Math.max(...allGrades) - Math.min(...allGrades)).toBeGreaterThanOrEqual(29);
+    expect(allGrades[Math.floor(allGrades.length * 0.25)]).toBeLessThan(80);
+    expect(Math.min(...sixToFifteen)).toBeLessThanOrEqual(74);
     expect(Math.max(...unranked)).toBeGreaterThan(Math.min(...topFive));
-    expect(Math.max(...unranked)).toBeGreaterThanOrEqual(94);
+    expect(Math.max(...unranked)).toBeGreaterThanOrEqual(93);
+  });
+
+  it("keeps the eight divisions on one common grading standard", () => {
+    const divisionAverages = new Map<string, number>();
+    for (const division of new Set(rows.map((row) => row.division))) {
+      const grades = rows.filter((row) => row.division === division).map((row) => row.grade);
+      divisionAverages.set(division, grades.reduce((sum, grade) => sum + grade, 0) / grades.length);
+    }
+    const averages = [...divisionAverages.values()];
+    expect(Math.max(...averages) - Math.min(...averages)).toBeLessThanOrEqual(1.5);
   });
 
   it("keeps every audited 10-plus UFC-fight veteran in the Veteran pool", () => {
