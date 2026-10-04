@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-wheel-ap25-boise-2026-10-03-v2",
+  "status": "audit-locked-runtime",
+  "effectiveDate": "2026-10-03",
+  "school": "Boise State",
+  "schoolId": "boise-state",
+  "season": 2026,
+  "evidenceThrough": "2026-09-26",
+  "gradingStandard": "Same locked CFB Wheel standard as the 68-school board: current 2026 play leads, 2025 substantially stabilizes, older evidence is secondary; EA Sports College Football 27 is a discrepancy alarm rather than a formula. Curated membership does not create an 80 floor.",
+  "populationAudit": {
+    "result": "passed",
+    "correction": "Matt Wagner replaces Kaden Anderson as the current TE/Flex option. Wagner started the latest completed game and had 14 catches for 157 yards and 3 TD through Sept. 26; Anderson had no 2026 receiving production.",
+    "currentPriorityCounts": {
+      "QB": 1,
+      "RB": 2,
+      "WR": 3,
+      "TE": 1,
+      "Flex": 4,
+      "Front Seven": 5,
+      "Secondary": 5,
+      "Head Coach": 1
+    }
+  },
+  "sources": [
+    "https://broncosports.com/sports/football/roster?path=football",
+    "https://broncosports.com/sports/football/stats/2026/western-michigan/boxscore/22147",
+    "https://www.sports-reference.com/cfb/schools/boise-state/2026-roster.html",
+    "https://www.ea.com/games/ea-sports-college-football/ratings/conferences-ratings/pac-12/PAC-12"
+  ],
+  "discrepancyRule": "Absolute HQ-vs-EA difference of 7+ requires written review; 10+ requires an explicit major-red-flag explanation. EA never forces a midpoint.",
+  "replacedIdentity": {
+    "family": "TE",
+    "player": "Kaden Anderson",
+    "priorGrade": 80,
+    "replacement": "Matt Wagner",
+    "reason": "Current-role correction. Wagner is the productive veteran starter; Anderson remains rostered but is not the audited Wheel TE option."
+  },
+  "grades": [
+    {
+      "family": "QB",
+      "player": "Maddux Madsen",
+      "priorGrade": 88,
+      "grade": 88,
+      "ea": 87,
+      "review": "Keep 88. Through four completed games he had 814 passing yards, 10 total TD and no interceptions; the stronger 2026 start is balanced by a more ordinary 2025 passing season.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "RB",
+      "player": "Dylan Riley",
+      "priorGrade": 94,
+      "grade": 94,
+      "ea": 90,
+      "review": "Keep 94. 592 rushing yards through four games plus established 2025 production place him in the board's high-end RB tier without forcing him above the 95+ anchors.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "RB",
+      "player": "Sire Gaines",
+      "priorGrade": 86,
+      "grade": 86,
+      "ea": 86,
+      "review": "Keep 86. His 811-yard 2025 season strongly stabilizes the grade while a smaller 2026 role behind Riley prevents an upward move.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "WR",
+      "player": "Rasean Jones",
+      "priorGrade": 87,
+      "grade": 87,
+      "ea": 78,
+      "review": "Mandatory discrepancy review: keep 87. As a freshman he led Boise State with 18 catches for 271 yards through four games; current production is materially ahead of EA, while the thin prior sample caps him below the 90s.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "WR",
+      "player": "Cam Bates",
+      "priorGrade": 84,
+      "grade": 81,
+      "ea": 77,
+      "review": "Lower to 81. His 2025 explosive-play value remains meaningful, but 59 receiving yards through four 2026 games is not enough for the prior mid-80s placement.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "WR",
+      "player": "Ben Ford",
+      "priorGrade": 82,
+      "grade": 80,
+      "ea": 77,
+      "review": "Lower to 80. Five TD and 325 receiving yards in seven 2025 games preserve a solid grade, but 43 yards through four 2026 games move him out of the prior 82 neighborhood.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "TE",
+      "player": "Matt Wagner",
+      "priorGrade": null,
+      "grade": 84,
+      "ea": 80,
+      "review": "Set 84. Wagner had 14 catches for 157 yards and 3 TD through four games after 251 yards in 2025, placing him around the strong complete-TE neighborhood rather than the elite national tier.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Front Seven",
+      "player": "Jayden Virgin-Morgan",
+      "priorGrade": 93,
+      "grade": 91,
+      "ea": 89,
+      "review": "Lower to 91. His 2024-25 pass-rush résumé (16 sacks across those seasons) and 3 TFL/1 sack through four 2026 games remain high-end, but 93 overstated him relative to the board's current elite Power-level anchors.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Front Seven",
+      "player": "Jake Ripp",
+      "priorGrade": 86,
+      "grade": 80,
+      "ea": 74,
+      "review": "Lower to 80. A 43-tackle 2025 season and current starting role support a respectable grade, but the evidence does not support the prior 86 against the national Front Seven board.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Front Seven",
+      "player": "Boen Phelps",
+      "priorGrade": 84,
+      "grade": 84,
+      "ea": 75,
+      "review": "Mandatory discrepancy review: keep 84. He had 66 tackles in 2025 and opened 2026 with high-volume starting snaps, eight tackles against Oregon, eight against Memphis and a team-best PFF defensive grade versus Oregon. EA materially lags the demonstrated role.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Front Seven",
+      "player": "Sterling Lane II",
+      "priorGrade": 82,
+      "grade": 79,
+      "ea": 75,
+      "review": "Lower to 79. Three sacks in eight 2025 games preserve rotational pass-rush value, but his current role does not justify an above-median national Front Seven grade.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Front Seven",
+      "player": "Logan Brantley",
+      "priorGrade": 80,
+      "grade": 75,
+      "ea": 64,
+      "review": "Major discrepancy review: keep HQ above EA but lower to 75. He has 12 tackles and 2 TFL through four 2026 games after a very small Kansas role in 2025; the current production proves EA 64 is stale, while the thin established sample prevents an 80-grade.",
+      "majorRedFlag": true
+    },
+    {
+      "family": "Secondary",
+      "player": "Jaden Mickey",
+      "priorGrade": 88,
+      "grade": 85,
+      "ea": 79,
+      "review": "Lower to 85. Preseason first-team All-Pac-12 recognition, 38 tackles/7 TFL in 2025 and 12 tackles/2.5 TFL through four 2026 games support a strong grade, but 88 was too aggressive without current coverage production.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Secondary",
+      "player": "Demetrius Freeney Jr.",
+      "priorGrade": 85,
+      "grade": 75,
+      "ea": 74,
+      "review": "Lower to 75. Limited 2025 and 2026 volume does not support the prior high-80s neighborhood; his coverage history and current roster role keep him above the bottom tier.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Secondary",
+      "player": "JeRico Washington Jr.",
+      "priorGrade": 83,
+      "grade": 83,
+      "ea": 83,
+      "review": "Keep 83. His established Kennesaw State production and current Boise starting role line up cleanly with the national Secondary board and EA checkpoint.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Secondary",
+      "player": "Travis Anderson",
+      "priorGrade": 82,
+      "grade": 78,
+      "ea": 72,
+      "review": "Lower to 78. Two interceptions against South Dakota and a current starting safety role merit credit, but the prior 82 leaned too hard on a four-game breakout relative to the national board.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Secondary",
+      "player": "Derek Ganter Jr.",
+      "priorGrade": 80,
+      "grade": 76,
+      "ea": 71,
+      "review": "Lower to 76. He is a current starting safety, but the national board and available current production support a lower rotational/starter band than the prior 80.",
+      "majorRedFlag": false
+    },
+    {
+      "family": "Head Coach",
+      "coach": "Spencer Danielson",
+      "priorGrade": 88,
+      "grade": 88,
+      "ea": null,
+      "review": "Keep 88. Danielson is 27-9 at Boise State through the Sept. 26 evidence window, including a 12-2 CFP season in 2024 and a 3-1 start in 2026 with the only loss a one-score game at Oregon.",
+      "majorRedFlag": false
+    }
+  ],
+  "auditResult": {
+    "population": "passed",
+    "pairwiseNeighbors": "passed",
+    "eaDiscrepancies": "passed",
+    "rangeSeparation": "passed",
+    "contradictionsRemaining": false,
+    "locked": true
+  },
+  "runtimeNote": "The server-owned Wheel authority uses these v2 values for new Boise State picks. Existing pick snapshots remain unchanged."
+}
