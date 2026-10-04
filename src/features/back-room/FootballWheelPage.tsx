@@ -900,7 +900,8 @@ function MatchScreen({ code }: { code: string }) {
   const shouldFilterWheel = Boolean(
     state?.opened_at
     && state.phase !== "complete"
-    && state.current_turn_profile_id,
+    && state.current_turn_profile_id
+    && state.eligible_team_codes !== null,
   );
   const poolTeams = shouldFilterWheel
     ? allPoolTeams.filter((team) => eligibleTeamCodes.has(team.code))
@@ -934,7 +935,7 @@ function MatchScreen({ code }: { code: string }) {
       state
       && state.phase === "pick"
       && pendingTeam
-      && state.eligible_team_codes.length > 0
+      && (state.eligible_team_codes?.length ?? 0) > 0
       && !pendingTeamEligible,
     );
     if (
@@ -982,7 +983,7 @@ function MatchScreen({ code }: { code: string }) {
       || state.phase !== "pick"
       || !pendingTeam
       || pendingTeamEligible
-      || state.eligible_team_codes.length === 0
+      || (state.eligible_team_codes?.length ?? 0) === 0
       || spinning
     ) return;
     void spin();
