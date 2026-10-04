@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import { createMemberProfilesRepository, type MemberCardSummary } from "../members/memberProfilesRepository";
+import { createMemberProfilesRepository } from "../members/memberProfilesRepository";
+import type { MemberCardSummary } from "../members/memberProfilesModel";
 import {
   createHqImpostorRepository,
   type HqImpostorEvent,
@@ -238,8 +239,6 @@ function ResultReveal({ event }: { event: HqImpostorEvent }) {
   const votes = result?.votes ?? [];
   const [revealedVotes, setRevealedVotes] = useState(0);
   const [showOutcome, setShowOutcome] = useState(false);
-  const now = useNow();
-
   useEffect(() => {
     setRevealedVotes(0);
     setShowOutcome(false);
@@ -328,7 +327,7 @@ function ResultReveal({ event }: { event: HqImpostorEvent }) {
           ) : null}
         </>
       ) : (
-        <p className="hq-impostor-reveal-progress">Revealing the room… {formatClock(new Date(now + 1000).toISOString(), now)}</p>
+        <p className="hq-impostor-reveal-progress">Revealing the room…</p>
       )}
     </div>
   );
