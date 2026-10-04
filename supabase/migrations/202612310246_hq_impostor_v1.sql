@@ -273,6 +273,8 @@ declare
   v_term text;
   v_word_count integer;
   v_terms text[];
+  v_answer_word text;
+  v_compact_clue text;
 begin
   select * into v_topic
   from private.hq_impostor_topics
@@ -294,10 +296,23 @@ begin
   end if;
 
   v_normal := private.hq_impostor_normalize_text(v_clue);
+  v_compact_clue := private.hq_impostor_compact_text(v_clue);
   v_terms := array_cat(v_topic.banned_terms, array[v_topic.secret_answer]);
   foreach v_term in array v_terms loop
     v_term := private.hq_impostor_normalize_text(v_term);
-    if v_term <> '' and position(' ' || v_term || ' ' in ' ' || v_normal || ' ') > 0 then
+    if v_term <> '' and (
+      position(' ' || v_term || ' ' in ' ' || v_normal || ' ') > 0
+      or v_compact_clue = private.hq_impostor_compact_text(v_term)
+    ) then
+      raise exception 'That clue gives away too much of the secret';
+    end if;
+  end loop;
+
+  foreach v_answer_word in array regexp_split_to_array(v_topic.secret_answer, '[^A-Za-z0-9]+') loop
+    v_answer_word := private.hq_impostor_normalize_text(v_answer_word);
+    if char_length(v_answer_word) >= 3
+      and v_answer_word not in ('the','jr','ii','iii','iv')
+      and position(' ' || v_answer_word || ' ' in ' ' || v_normal || ' ') > 0 then
       raise exception 'That clue gives away too much of the secret';
     end if;
   end loop;
