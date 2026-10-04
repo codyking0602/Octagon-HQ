@@ -30,7 +30,7 @@ describe("Play landing presentation", () => {
       "who-am-i",
       "hit-the-number",
     ]);
-    expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER]);
+    expect(playLandingGameIds("ufc")).toEqual([PLAY_LANDING_UFC_STRATEGIC_GAME, "wheel-ufc", ...PLAY_LANDING_COMMON_GAME_ORDER]);
     expect(playLandingGameIds("football")).toEqual([
       PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
       ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
@@ -109,7 +109,7 @@ describe("Play landing presentation", () => {
       expect.stringContaining("Auction"),
     ]));
     expect(cards.at(0)).toHaveTextContent("Auction");
-    expect(within(cards.at(0)!).getByText("PLAY NOW")).toBeInTheDocument();
+    expect(within(cards.at(0)!).getByText("PLAY NOW")).toBeInTheDocument();\n    const wheel = cards.find((card) => /Wheel of UFC/.test(card.textContent ?? ""));\n    expect(wheel).toBeDefined();\n    expect(within(wheel!).getByText("CHALLENGE")).toBeInTheDocument();
     expect(screen.queryByText("STRATEGY")).not.toBeInTheDocument();
     expect(cards.findIndex((card) => /Who Am I\?/.test(card.textContent ?? "")))
       .toBeLessThan(cards.findIndex((card) => /Hit the Number/.test(card.textContent ?? "")));
