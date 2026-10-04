@@ -38,7 +38,7 @@ function isSealedBidChallenge(challenge: PlayChallenge) {
 }
 
 function isTurnBasedChallenge(challenge: PlayChallenge) {
-  return challenge.gameId === "wheel-football";
+  return challenge.gameId === "wheel-football" || challenge.gameId === "wheel-ufc";
 }
 
 function rowCopy(challenge: PlayChallenge, profileId: string) {
@@ -46,6 +46,22 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
   const status = challengeStatus(challenge, profileId);
 
   if (isTurnBasedChallenge(challenge)) {
+    if (challenge.gameId === "wheel-ufc") {
+      if (status === "completed") return { eyebrow: "WHEEL COMPLETE WITH", detail: "Open both final fight teams", action: "OPEN" };
+      if (status === "declined") return { eyebrow: "WHEEL DECLINED", detail: "This matchup has ended", action: "DECLINED" };
+      if (direction === "sent") {
+        return {
+          eyebrow: "WHEEL WITH",
+          detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for them to accept",
+          action: "OPEN",
+        };
+      }
+      return {
+        eyebrow: "WHEEL FROM",
+        detail: status === "opened" ? "Match in progress · check whose turn" : "Open to accept and start",
+        action: status === "opened" ? "OPEN" : "PLAY",
+      };
+    }
     if (status === "completed") return { eyebrow: "WHEEL COMPLETE", detail: "Open final Superteams and standings", action: "OPEN" };
     if (status === "declined") return { eyebrow: "WHEEL CANCELED", detail: "This lobby ended before play", action: "CANCELED" };
     if (direction === "sent") {
@@ -204,6 +220,10 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
   }
 
   async function endWaitingWheelLobby(challenge: PlayChallenge) {
+    if (challenge.gameId === "wheel-ufc") {
+      await dismissChallenge(challenge.code);
+      return;
+    }
     if (!wheelRepository) return;
     try {
       const ended = await wheelRepository.decline(challenge.code);

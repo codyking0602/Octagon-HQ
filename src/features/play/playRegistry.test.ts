@@ -3,6 +3,7 @@ import { replayBehaviorFor } from "./lineupModel";
 import { playGameDefinition, playGames, type PlayGameId } from "./playRegistry";
 
 const expectedIds: PlayGameId[] = [
+  "wheel-ufc",
   "auction",
   "hit-the-number",
   "who-am-i",
@@ -118,6 +119,7 @@ describe("Play game lineup contracts", () => {
     expect(playGameDefinition("blind-rank").lineup.completionState).toBe("five-slots-locked");
     expect(playGameDefinition("keep-cut").lineup.completionState).toBe("eight-decisions-locked");
     expect(playGameDefinition("auction").lineup.completionState).toBe("auction-complete");
+    expect(playGameDefinition("wheel-ufc").lineup.completionState).toBe("wheel-ufc-complete");
     expect(playGameDefinition("hit-the-number").lineup.completionState).toBe("target-selection-locked");
     expect(playGameDefinition("20-questions").lineup.completionState).toBe("identity-guessed-or-question-limit");
     expect(playGameDefinition("who-am-i").lineup.completionState).toBe("identity-guessed-or-clue-limit");
