@@ -35,7 +35,7 @@ export interface WheelFootballCfbReconciliationWarning {
 
 export type WheelFootballCfbBaselineTeam = {
   school: string;
-  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Independent";
+  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Pac-12" | "Independent";
   espnId: string;
   depthChartUrl: string;
   rosterUrl: string;
@@ -83,6 +83,41 @@ type WheelFootballCfbPriorityAuditJson = {
 
 const baseline = currentCfbPriorityJson as unknown as WheelFootballCfbBaselineJson;
 const priorityAudit = auditedCfbPriorityJson as unknown as WheelFootballCfbPriorityAuditJson;
+
+const WHEEL_FOOTBALL_CFB_AP_SPECIAL_PRIORITIES: Readonly<
+  Record<string, WheelFootballCfbBaselineTeam>
+> = Object.freeze({
+  "boise-state": {
+    school: "Boise State",
+    conference: "Pac-12",
+    espnId: "68",
+    depthChartUrl: "https://www.ourlads.com/ncaa-football-depth-charts/depth-chart/boise-state/90130",
+    rosterUrl: "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
+    QB: ["Maddux Madsen"],
+    RB: ["Dylan Riley", "Sire Gaines", "Juelz Goff"],
+    WR: ["Rasean Jones", "Akeem Wright", "Cam Bates", "Ben Ford"],
+    TE: ["Matt Wagner"],
+    Flex: ["Dylan Riley", "Rasean Jones", "Akeem Wright", "Matt Wagner"],
+    "Front Seven": [
+      "Jayden Virgin-Morgan",
+      "Boen Phelps",
+      "Max Stege",
+      "David Latu",
+      "Jake Ripp",
+      "Mikaio Edward",
+    ],
+    Secondary: [
+      "Jaden Mickey",
+      "Travis Anderson",
+      "Derek Ganter Jr.",
+      "Roman Tillmon",
+      "Sherrod Smith",
+      "Demetrius Freeney Jr.",
+    ],
+    "Head Coach": ["Spencer Danielson"],
+    reconciliationWarnings: [],
+  },
+});
 
 function mergeAuditedPriority(
   team: WheelFootballCfbBaselineTeam,
@@ -146,12 +181,15 @@ export const wheelFootballCfbBaseline: Readonly<
  */
 export const wheelFootballCfbPriority: Readonly<
   Record<string, WheelFootballCfbBaselineTeam>
-> = Object.freeze(Object.fromEntries(
-  Object.entries(baseline.teams).map(([schoolId, team]) => [
-    schoolId,
-    mergeAuditedPriority(team, priorityAudit.overrides[schoolId]),
-  ]),
-));
+> = Object.freeze({
+  ...Object.fromEntries(
+    Object.entries(baseline.teams).map(([schoolId, team]) => [
+      schoolId,
+      mergeAuditedPriority(team, priorityAudit.overrides[schoolId]),
+    ]),
+  ),
+  ...WHEEL_FOOTBALL_CFB_AP_SPECIAL_PRIORITIES,
+});
 
 export function wheelFootballCfbBaselineForSchoolId(
   schoolId: string | null | undefined,
