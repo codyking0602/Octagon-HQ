@@ -8,10 +8,10 @@ const challengeMigration = readFileSync(
 );
 
 describe("Wheel Challenge Center pending removal", () => {
-  it("lets the sender remove an unopened Wheel challenge from their own center", () => {
-    expect(center).toContain('(direction === "sent" && status === "waiting")');
-    expect(center).toContain("canRemoveTurnBased");
-    expect(center).toContain("void dismissChallenge(challenge.code)");
+  it("lets the sender cancel a waiting multiplayer Wheel lobby for everyone", () => {
+    expect(center).toContain('canCancelTurnBased = turnBased && direction === "sent" && status === "waiting"');
+    expect(center).toContain("endWaitingWheelLobby");
+    expect(center).toContain("wheelRepository.decline(challenge.code)");
   });
 
   it("uses the existing creator-hidden persistence instead of cancelling the recipient copy", () => {
