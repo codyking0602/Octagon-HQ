@@ -95,6 +95,26 @@ begin
         raise;
       end if;
   end;
+
+  begin
+    perform private.hq_impostor_validate_clue('nfl-qb-matthew-stafford','M S');
+    raise exception 'HQ Impostor accepted spaced answer initials';
+  exception
+    when others then
+      if sqlerrm = 'HQ Impostor accepted spaced answer initials' then
+        raise;
+      end if;
+  end;
+
+  begin
+    perform private.hq_impostor_validate_clue('cfb-rivalry-iron-bowl','Iron');
+    raise exception 'HQ Impostor accepted a direct answer component';
+  exception
+    when others then
+      if sqlerrm = 'HQ Impostor accepted a direct answer component' then
+        raise;
+      end if;
+  end;
 end;
 $$;
 
