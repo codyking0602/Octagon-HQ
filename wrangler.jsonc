@@ -20,6 +20,7 @@
       "/play/*",
       "/deployment.json",
       "/api/football/nfl-roster",
+      "/api/football/cfb-roster",
       "/share-preview/*"
     ]
   }
