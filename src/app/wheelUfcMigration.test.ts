@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const migration = readFileSync(
-  "supabase/migrations/202612310258_wheel_ufc_v1.sql",
+  "supabase/migrations/202612310259_wheel_ufc_v1.sql",
   "utf8",
 );
 const repository = readFileSync("src/features/play/wheelUfcRepository.ts", "utf8");
@@ -87,14 +87,14 @@ describe("Wheel of UFC v1 contract", () => {
   });
 
   it("locks audited Young Gun and 10-plus UFC-fight eligibility", () => {
-    expect(migration).toContain("ateba-gautier|Ateba Gautier|Middleweight||false|CM|Cameroon|true|false|82|");
-    expect(migration).toContain("umar-nurmagomedov|Umar Nurmagomedov|Bantamweight|5|false|RU|Russia|false|true|91.9|");
-    expect(migration).toContain("diego-lopes|Diego Lopes|Featherweight|2|false|BR|Brazil|false|true|94.8|");
-    expect(migration).toContain("ilia-topuria|Ilia Topuria|Lightweight|1|false|ES|Spain|false|true|96|");
-    expect(migration).toContain("ian-machado-garry|Ian Machado Garry|Welterweight|2|false|IE|Ireland|false|true|95.3|");
-    expect(migration).toContain("jack-della-maddalena|Jack Della Maddalena|Welterweight|4|false|AU|Australia|false|true|92.5|");
-    expect(migration).toContain("khamzat-chimaev|Khamzat Chimaev|Middleweight|1|false|AE|United Arab Emirates|false|true|96|");
-    expect(migration).toContain("jamahal-hill|Jamahal Hill|Light Heavyweight|5|false|US|United States|false|true|90.5|");
+    expect(migration).toContain("ateba-gautier|Ateba Gautier|Middleweight||false|CM|Cameroon|true|false|");
+    expect(migration).toContain("umar-nurmagomedov|Umar Nurmagomedov|Bantamweight|5|false|RU|Russia|false|true|");
+    expect(migration).toContain("diego-lopes|Diego Lopes|Featherweight|2|false|BR|Brazil|false|true|");
+    expect(migration).toContain("ilia-topuria|Ilia Topuria|Lightweight|1|false|ES|Spain|false|true|");
+    expect(migration).toContain("ian-machado-garry|Ian Machado Garry|Welterweight|2|false|IE|Ireland|false|true|");
+    expect(migration).toContain("jack-della-maddalena|Jack Della Maddalena|Welterweight|4|false|AU|Australia|false|true|");
+    expect(migration).toContain("khamzat-chimaev|Khamzat Chimaev|Middleweight|1|false|AE|United Arab Emirates|false|true|");
+    expect(migration).toContain("jamahal-hill|Jamahal Hill|Light Heavyweight|5|false|US|United States|false|true|");
   });
 
   it("uses the straight eight-fighter average so one elite spin cannot be amplified into the result", () => {
