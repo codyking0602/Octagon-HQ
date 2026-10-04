@@ -11,6 +11,10 @@ describe("Wheel of Football AP Top 25 runtime", () => {
     "supabase/migrations/202612310251_wheel_football_ap_top25.sql",
     "utf8",
   );
+  const boiseAuditMigration = readFileSync(
+    "supabase/migrations/202612310252_wheel_football_boise_state_grading_audit.sql",
+    "utf8",
+  );
   const page = readFileSync("src/features/back-room/FootballWheelPage.tsx", "utf8");
 
   it("locks the latest AP poll snapshot to exactly 25 unique schools", () => {
@@ -25,15 +29,19 @@ describe("Wheel of Football AP Top 25 runtime", () => {
     expect(WHEEL_FOOTBALL_AP_TOP_25[21]).toEqual({ rank: 22, schoolId: "boise-state" });
   });
 
-  it("keeps the backend AP pool private, versioned, and Boise-grade complete", () => {
+  it("keeps the backend AP pool private and the Boise grading authority on the audited v2 snapshot", () => {
     expect(migration).toContain("private.wheel_football_ap_top_25");
     expect(migration).toContain("'AP_TOP_25'");
     expect(migration).toContain("'boise-state', 'Boise State', 'Pac-12'");
-    expect(migration).toContain("private.wheel_football_grade_name_key('Maddux Madsen')");
-    expect(migration).toContain("private.wheel_football_grade_name_key('Dylan Riley')");
-    expect(migration).toContain("private.wheel_football_grade_name_key('Jayden Virgin-Morgan')");
-    expect(migration).toContain("private.wheel_football_grade_name_key('Spencer Danielson')");
     expect(migration).toContain("revoke all on private.wheel_football_ap_top_25 from public, anon, authenticated");
+
+    expect(boiseAuditMigration).toContain("cfb-wheel-boise-state-grades-2026-10-03-v2");
+    expect(boiseAuditMigration).toContain("private.wheel_football_grade_name_key('Maddux Madsen')");
+    expect(boiseAuditMigration).toContain("private.wheel_football_grade_name_key('Dylan Riley')");
+    expect(boiseAuditMigration).toContain("private.wheel_football_grade_name_key('Matt Wagner')");
+    expect(boiseAuditMigration).toContain("private.wheel_football_grade_name_key('Max Stege')");
+    expect(boiseAuditMigration).toContain("private.wheel_football_grade_name_key('Roman Tillmon')");
+    expect(boiseAuditMigration).toContain("private.wheel_football_grade_name_key('Spencer Danielson')");
   });
 
   it("exposes the Top 25 mode and opens 2026 reference pages without leaving Wheel", () => {

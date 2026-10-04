@@ -8,8 +8,8 @@ declare
   v_effective date;
 begin
   select count(*) into v_count from private.wheel_football_grade_authority;
-  if v_count <> 1961 then
-    raise exception 'Expected 1961 locked NFL + CFB Wheel grades, got %', v_count;
+  if v_count <> 1967 then
+    raise exception 'Expected 1967 locked NFL + CFB Wheel grades after Boise audit, got %', v_count;
   end if;
 
   if has_table_privilege('anon', 'private.wheel_football_grade_authority', 'select')
@@ -22,6 +22,14 @@ begin
   where source_artifact like 'data/generated/football/wheel-cfb-%';
   if v_count <> 1335 then
     raise exception 'Expected 1335 locked CFB Wheel grades, got %', v_count;
+  end if;
+
+  select count(*) into v_count
+  from private.wheel_football_grade_authority
+  where team_code = 'boise-state'
+    and source_artifact = 'data/curated/football/cfb/wheel-football-boise-state-grading-audit-2026-10-03.json';
+  if v_count <> 19 then
+    raise exception 'Expected 19 current audited Boise State Wheel grades, got %', v_count;
   end if;
 
   select count(*) into v_count
@@ -59,6 +67,51 @@ begin
   from private.resolve_wheel_football_grade_snapshot('indiana', 'Curt Cignetti', 'Head Coach', 'HC');
   if v_grade <> 99 then
     raise exception 'Curt Cignetti CFB Head Coach grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Dylan Riley', 'RB', 'RB');
+  if v_grade <> 95 then
+    raise exception 'Dylan Riley audited Boise State RB grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Matt Wagner', 'Flex', 'TE');
+  if v_grade <> 84 then
+    raise exception 'Matt Wagner audited Boise State Flex/TE grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Boen Phelps', 'Front Seven', 'LB');
+  if v_grade <> 88 then
+    raise exception 'Boen Phelps audited Boise State Front Seven grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Travis Anderson', 'Secondary', 'S');
+  if v_grade <> 86 then
+    raise exception 'Travis Anderson audited Boise State Secondary grade resolved incorrectly: %', v_grade;
+  end if;
+
+  select hidden_grade, grade_version, effective_date
+    into v_grade, v_version, v_effective
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Spencer Danielson', 'Head Coach', 'HC');
+  if v_grade <> 86
+    or v_version <> 'cfb-wheel-boise-state-grades-2026-10-03-v2'
+    or v_effective <> date '2026-10-03' then
+    raise exception 'Spencer Danielson audited Boise State coach snapshot resolved incorrectly: grade %, version %, date %',
+      v_grade, v_version, v_effective;
+  end if;
+
+  select hidden_grade
+    into v_grade
+  from private.resolve_wheel_football_grade_snapshot('boise-state', 'Kaden Anderson', 'Flex', 'TE');
+  if v_grade <> 80 then
+    raise exception 'Legacy Boise State Kaden Anderson grade no longer resolves for compatibility: %', v_grade;
   end if;
 
   select hidden_grade, grade_version, effective_date

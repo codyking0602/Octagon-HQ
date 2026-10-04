@@ -1,5 +1,6 @@
 import currentCfbPriorityJson from "../../../data/generated/football/cfb/wheel-football-current-priorities-2026.json";
 import auditedCfbPriorityJson from "../../../data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json";
+import boiseStateAuditJson from "../../../data/curated/football/cfb/wheel-football-boise-state-grading-audit-2026-10-03.json";
 
 export const WHEEL_FOOTBALL_CFB_BASELINE_SLOTS = [
   "QB",
@@ -153,37 +154,15 @@ export const wheelFootballCfbPriority: Readonly<
   ]),
 ));
 
+const boiseStateAudit = boiseStateAuditJson as unknown as {
+  status: "audit-locked-runtime";
+  priority: WheelFootballCfbBaselineTeam;
+};
+
 const wheelFootballCfbTop25ExtraPriority: Readonly<
   Record<string, WheelFootballCfbBaselineTeam>
 > = Object.freeze({
-  "boise-state": {
-    school: "Boise State",
-    conference: "Pac-12",
-    espnId: "68",
-    depthChartUrl: "https://www.espn.com/college-football/team/depth/_/id/68/boise-state-broncos",
-    rosterUrl: "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-    QB: ["Maddux Madsen"],
-    RB: ["Dylan Riley", "Sire Gaines"],
-    WR: ["Rasean Jones", "Cam Bates", "Ben Ford"],
-    TE: ["Kaden Anderson"],
-    Flex: ["Dylan Riley", "Rasean Jones", "Cam Bates", "Kaden Anderson"],
-    "Front Seven": [
-      "Jayden Virgin-Morgan",
-      "Jake Ripp",
-      "Boen Phelps",
-      "Sterling Lane II",
-      "Logan Brantley",
-    ],
-    Secondary: [
-      "Jaden Mickey",
-      "Demetrius Freeney Jr.",
-      "JeRico Washington Jr.",
-      "Travis Anderson",
-      "Derek Ganter Jr.",
-    ],
-    "Head Coach": ["Spencer Danielson"],
-    reconciliationWarnings: [],
-  },
+  "boise-state": boiseStateAudit.priority,
 });
 
 export function wheelFootballCfbBaselineForSchoolId(
