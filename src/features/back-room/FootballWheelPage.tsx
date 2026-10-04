@@ -13,7 +13,9 @@ import { useIdentity } from "../identity/IdentityProvider";
 import type { MemberCardSummary } from "../members/memberProfilesModel";
 import {
   createWheelFootballRepository,
+  type WheelFootballParticipant,
   type WheelFootballPick,
+  type WheelFootballStanding,
   type WheelFootballState,
 } from "../play/wheelFootballRepository";
 import {
@@ -68,13 +70,16 @@ function normalizeCode(value: string | null) {
   return /^[A-Z0-9]{4,12}$/.test(code) ? code : "";
 }
 
-function rosterForProfile(state: WheelFootballState, profileId: string | null | undefined) {
-  if (!profileId) return [] as WheelFootballPick[];
-  return state.creator.id === profileId ? state.creator_roster : state.recipient_roster;
+function participantForProfile(
+  state: WheelFootballState,
+  profileId: string | null | undefined,
+) {
+  if (!profileId) return null;
+  return state.participants.find((participant) => participant.id === profileId) ?? null;
 }
 
-function otherParticipant(state: WheelFootballState, profileId: string | null | undefined) {
-  return state.creator.id === profileId ? state.recipient : state.creator;
+function rosterForProfile(state: WheelFootballState, profileId: string | null | undefined) {
+  return participantForProfile(state, profileId)?.roster ?? [] as WheelFootballPick[];
 }
 
 function openSlots(roster: readonly WheelFootballPick[]) {
@@ -126,226 +131,165 @@ function canvasTextToFit(
   return `${clipped}…`;
 }
 
-function drawShareRosterCell(
-  context: CanvasRenderingContext2D,
-  pick: WheelFootballPick | null,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  align: "left" | "right",
-) {
-  if (!pick) return;
-  const team = wheelFootballTeam(pick.team_code);
-  const accent = team?.primaryColor ?? "#357fbd";
-  const badgeSize = 58;
-  const badgeX = align === "left" ? x + 24 : x + width - 24 - badgeSize;
-  const textX = align === "left" ? badgeX + badgeSize + 20 : badgeX - 20;
-  const textWidth = width - badgeSize - 68;
-
-  context.fillStyle = accent;
-  context.fillRect(align === "left" ? x : x + width - 5, y, 5, height);
-
-  context.beginPath();
-  context.arc(badgeX + badgeSize / 2, y + height / 2, badgeSize / 2, 0, Math.PI * 2);
-  context.fillStyle = "#f4f8fb";
-  context.fill();
-  context.fillStyle = "#0b1a26";
-  context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillText(team?.shortCode ?? pick.team_code, badgeX + badgeSize / 2, y + height / 2 + 1);
-
-  context.textAlign = align;
-  context.textBaseline = "alphabetic";
-  context.fillStyle = "#ffffff";
-  context.font = "900 32px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText(
-    canvasTextToFit(context, pick.display_name, textWidth),
-    textX,
-    y + 48,
-  );
-  context.fillStyle = "#7890a3";
-  context.font = "700 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText(
-    `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}`,
-    textX,
-    y + 80,
-  );
+function resultWinnerCopy(state: WheelFootballState) {
+  if (!state.result) return "FINAL STANDINGS";
+  const winners = state.result.winner_profile_ids
+    .map((id) => state.participants.find((participant) => participant.id === id)?.display_name)
+    .filter((name): name is string => Boolean(name));
+  if (!winners.length) return "FINAL STANDINGS";
+  if (state.result.resolved_by_forfeit && winners.length === 1) {
+    return `${winners[0]!.toUpperCase()} WINS BY FORFEIT`;
+  }
+  if (winners.length > 1) return `${winners.map((name) => name.toUpperCase()).join(" & ")} TIE`;
+  return `${winners[0]!.toUpperCase()} WINS`;
 }
 
 async function buildWheelResultShareImage(state: WheelFootballState) {
-  if (!state.result) throw new Error("Final grades are not available.");
+  if (!state.result) throw new Error("Final standings are not available.");
 
   const width = 1200;
-  const height = 1500;
+  const rosterRowHeight = 70;
+  const rosterHeaderHeight = 82;
+  const rosterBlockHeight = rosterHeaderHeight + rosterRowHeight * WHEEL_FOOTBALL_ROSTER_SLOTS.length;
+  const standingsRows = Math.ceil(state.participants.length / 2);
+  const standingsHeight = standingsRows * 150;
+  const rosterStart = 300 + standingsHeight;
+  const height = rosterStart + state.participants.length * (rosterBlockHeight + 26) + 92;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Result image could not be created.");
 
-  const winner = state.result.winner_profile_id === state.creator.id
-    ? state.creator
-    : state.result.winner_profile_id === state.recipient.id
-      ? state.recipient
-      : null;
-
   context.fillStyle = "#03070b";
   context.fillRect(0, 0, width, height);
 
-  const glow = context.createRadialGradient(280, 90, 20, 280, 90, 620);
+  const glow = context.createRadialGradient(270, 80, 20, 270, 80, 650);
   glow.addColorStop(0, "rgba(51, 135, 201, .24)");
   glow.addColorStop(1, "rgba(3, 7, 11, 0)");
   context.fillStyle = glow;
-  context.fillRect(0, 0, width, 650);
+  context.fillRect(0, 0, width, 700);
 
+  context.textAlign = "left";
   context.fillStyle = "#8bbfe7";
   context.font = "900 24px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.letterSpacing = "3px";
-  context.fillText("THE HQ", 58, 64);
-
+  context.fillText("THE HQ", 58, 62);
   context.fillStyle = "#8297a8";
-  context.font = "900 25px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText("WHEEL OF FOOTBALL · FINAL", 58, 114);
-
+  context.font = "900 24px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("WHEEL OF FOOTBALL · FINAL", 58, 108);
   context.fillStyle = "#ffffff";
-  context.font = "900 56px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText(winner ? `${winner.display_name.toUpperCase()} WINS` : "DEAD EVEN", 58, 182);
-
+  context.font = "900 50px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(canvasTextToFit(context, resultWinnerCopy(state), 1080), 58, 174);
   context.fillStyle = "#7f96a8";
-  context.font = "800 25px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText(resultPoolLabel(state), 58, 226);
+  context.font = "800 23px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText(resultPoolLabel(state), 58, 216);
 
-  roundedCanvasRect(context, 56, 260, 1088, 190, 28);
-  context.fillStyle = "#0b1117";
-  context.fill();
-  context.strokeStyle = "rgba(122, 169, 205, .22)";
-  context.lineWidth = 2;
-  context.stroke();
+  const standings = state.result.standings
+    .map((standing) => ({
+      standing,
+      participant: state.participants.find((participant) => participant.id === standing.profile_id),
+    }))
+    .filter((entry): entry is { standing: WheelFootballStanding; participant: WheelFootballParticipant } => Boolean(entry.participant));
 
-  const scoreColumns = [
-    {
-      profile: state.creator,
-      grade: state.result.creator_final_grade,
-      winner: state.result.winner_profile_id === state.creator.id,
-      x: 76,
-    },
-    {
-      profile: state.recipient,
-      grade: state.result.recipient_final_grade,
-      winner: state.result.winner_profile_id === state.recipient.id,
-      x: 642,
-    },
-  ];
-
-  for (const score of scoreColumns) {
-    roundedCanvasRect(context, score.x, 282, 482, 146, 22);
-    context.fillStyle = score.winner ? "rgba(42, 112, 168, .24)" : "rgba(255, 255, 255, .025)";
+  standings.forEach((entry, index) => {
+    const column = index % 2;
+    const row = Math.floor(index / 2);
+    const x = 58 + column * 548;
+    const y = 258 + row * 150;
+    roundedCanvasRect(context, x, y, 520, 126, 20);
+    context.fillStyle = entry.standing.rank === 1 ? "rgba(42, 112, 168, .24)" : "rgba(255,255,255,.025)";
     context.fill();
-    context.strokeStyle = score.winner ? "rgba(117, 192, 247, .45)" : "rgba(255, 255, 255, .08)";
+    context.strokeStyle = entry.standing.rank === 1 ? "rgba(117,192,247,.42)" : "rgba(255,255,255,.08)";
     context.stroke();
 
-    context.textAlign = "center";
+    context.textAlign = "left";
     context.fillStyle = "#8ca1b2";
-    context.font = "900 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-    context.fillText(
-      canvasTextToFit(context, score.profile.display_name.toUpperCase(), 390),
-      score.x + 241,
-      318,
-    );
-    context.fillStyle = score.winner ? "#8fcaf5" : "#ffffff";
-    context.font = "900 72px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-    context.fillText(score.grade.toFixed(1), score.x + 241, 390);
-    context.fillStyle = "#687f91";
     context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-    context.fillText("FINAL GRADE", score.x + 241, 417);
-  }
-
-  context.fillStyle = "#617f97";
-  context.font = "900 24px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.textAlign = "center";
-  context.fillText("VS", 600, 365);
-
-  const rosterX = 56;
-  const rosterY = 480;
-  const rosterWidth = 1088;
-  const headerHeight = 88;
-  const rowHeight = 108;
-  roundedCanvasRect(context, rosterX, rosterY, rosterWidth, headerHeight + rowHeight * 7, 28);
-  context.fillStyle = "#0b1117";
-  context.fill();
-  context.strokeStyle = "rgba(122, 169, 205, .18)";
-  context.lineWidth = 2;
-  context.stroke();
-
-  context.fillStyle = "#70b8f2";
-  context.textAlign = "left";
-  context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText(state.creator.display_name.toUpperCase(), 94, rosterY + 38);
-  context.fillStyle = "#ffffff";
-  context.font = "900 28px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText("SUPERTEAM", 94, rosterY + 68);
-
-  context.textAlign = "right";
-  context.fillStyle = "#70b8f2";
-  context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText(state.recipient.display_name.toUpperCase(), 1106, rosterY + 38);
-  context.fillStyle = "#ffffff";
-  context.font = "900 28px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText("SUPERTEAM", 1106, rosterY + 68);
-
-  context.strokeStyle = "rgba(255, 255, 255, .07)";
-  context.beginPath();
-  context.moveTo(rosterX + 1, rosterY + headerHeight);
-  context.lineTo(rosterX + rosterWidth - 1, rosterY + headerHeight);
-  context.stroke();
-
-  WHEEL_FOOTBALL_ROSTER_SLOTS.forEach((slot, index) => {
-    const rowY = rosterY + headerHeight + index * rowHeight;
-    if (index > 0) {
-      context.strokeStyle = "rgba(255, 255, 255, .055)";
-      context.beginPath();
-      context.moveTo(rosterX + 1, rowY);
-      context.lineTo(rosterX + rosterWidth - 1, rowY);
-      context.stroke();
-    }
-
-    drawShareRosterCell(
-      context,
-      pickForSlot(state.creator_roster, slot),
-      rosterX,
-      rowY,
-      466,
-      rowHeight,
-      "left",
+    const prefix = entry.standing.rank ? `#${entry.standing.rank} · ` : entry.standing.forfeited ? "DNF · " : "";
+    context.fillText(
+      canvasTextToFit(context, `${prefix}${entry.participant.display_name.toUpperCase()}`, 325),
+      x + 22,
+      y + 44,
     );
-    drawShareRosterCell(
-      context,
-      pickForSlot(state.recipient_roster, slot),
-      rosterX + 622,
-      rowY,
-      466,
-      rowHeight,
-      "right",
+    context.fillStyle = entry.standing.rank === 1 ? "#8fcaf5" : "#ffffff";
+    context.font = "900 52px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.textAlign = "right";
+    context.fillText(
+      entry.standing.final_grade == null ? (entry.standing.forfeited ? "DNF" : "—") : entry.standing.final_grade.toFixed(1),
+      x + 495,
+      y + 79,
+    );
+    context.textAlign = "left";
+    context.fillStyle = "#687f91";
+    context.font = "800 18px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText("FINAL GRADE", x + 22, y + 92);
+  });
+
+  state.participants.forEach((participant, participantIndex) => {
+    const y = rosterStart + participantIndex * (rosterBlockHeight + 26);
+    roundedCanvasRect(context, 58, y, 1084, rosterBlockHeight, 24);
+    context.fillStyle = "#0b1117";
+    context.fill();
+    context.strokeStyle = "rgba(122,169,205,.18)";
+    context.stroke();
+
+    const standing = state.result!.standings.find((item) => item.profile_id === participant.id);
+    context.textAlign = "left";
+    context.fillStyle = "#70b8f2";
+    context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText(
+      `${standing?.rank ? `#${standing.rank} · ` : participant.forfeited_at ? "DNF · " : ""}${participant.display_name.toUpperCase()}`,
+      86,
+      y + 34,
+    );
+    context.fillStyle = "#ffffff";
+    context.font = "900 27px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText("SUPERTEAM", 86, y + 64);
+    context.textAlign = "right";
+    context.fillStyle = "#8fcaf5";
+    context.font = "900 34px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+    context.fillText(
+      participant.final_grade == null ? (participant.forfeited_at ? "DNF" : "—") : participant.final_grade.toFixed(1),
+      1114,
+      y + 54,
     );
 
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.fillStyle = "#73b4e7";
-    context.font = "900 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-    context.fillText(slot, 600, rowY + rowHeight / 2);
-    context.textBaseline = "alphabetic";
+    WHEEL_FOOTBALL_ROSTER_SLOTS.forEach((slot, slotIndex) => {
+      const rowY = y + rosterHeaderHeight + slotIndex * rosterRowHeight;
+      const pick = pickForSlot(participant.roster, slot);
+      const team = pick ? wheelFootballTeam(pick.team_code) : null;
+      if (slotIndex > 0) {
+        context.strokeStyle = "rgba(255,255,255,.055)";
+        context.beginPath();
+        context.moveTo(78, rowY);
+        context.lineTo(1122, rowY);
+        context.stroke();
+      }
+      context.textAlign = "left";
+      context.fillStyle = "#73b4e7";
+      context.font = "900 19px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+      context.fillText(slot, 86, rowY + 43);
+      context.fillStyle = pick ? "#ffffff" : "#5d6f7d";
+      context.font = "900 25px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+      context.fillText(pick ? canvasTextToFit(context, pick.display_name, 650) : "OPEN", 260, rowY + 36);
+      context.fillStyle = "#7890a3";
+      context.font = "800 18px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+      context.fillText(
+        pick ? `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}` : "—",
+        260,
+        rowY + 59,
+      );
+    });
   });
 
   context.fillStyle = "#60788b";
   context.textAlign = "left";
-  context.font = "800 21px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText("Individual player grades stay private.", 58, 1452);
+  context.font = "800 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("Individual player grades stay private.", 58, height - 36);
   context.textAlign = "right";
   context.fillStyle = "#86bce6";
-  context.font = "900 22px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
-  context.fillText("THE HQ · WHEEL OF FOOTBALL", 1142, 1452);
+  context.font = "900 20px system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
+  context.fillText("THE HQ · WHEEL OF FOOTBALL", 1142, height - 36);
 
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob((blob) => {
@@ -371,32 +315,7 @@ function PickMark({ pick }: { pick: WheelFootballPick | null }) {
   );
 }
 
-function RosterCell({
-  pick,
-  align,
-}: {
-  pick: WheelFootballPick | null;
-  align: "left" | "right";
-}) {
-  const team = pick ? wheelFootballTeam(pick.team_code) : null;
-  return (
-    <div
-      className={`football-wheel-roster__cell is-${align}${pick ? " is-filled" : ""}`}
-      style={team ? {
-        "--team-primary": team.primaryColor,
-        "--team-secondary": team.secondaryColor,
-      } as CSSProperties : undefined}
-    >
-      <PickMark pick={pick} />
-      <div>
-        <strong>{pick?.display_name ?? "OPEN"}</strong>
-        <span>{pick ? `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}` : "—"}</span>
-      </div>
-    </div>
-  );
-}
-
-function HeadToHeadRoster({
+function MultiplayerRosters({
   state,
   activeProfileId,
 }: {
@@ -404,26 +323,57 @@ function HeadToHeadRoster({
   activeProfileId: string | null | undefined;
 }) {
   return (
-    <section className="football-wheel-roster surface-card" aria-label="Wheel of Football Superteams">
+    <section
+      className="football-wheel-multiplayer-rosters surface-card"
+      aria-label="Wheel of Football Superteams"
+      data-player-count={state.participants.length}
+    >
       <header>
-        <div className={state.creator.id === activeProfileId ? "is-you" : ""}>
-          <small>{state.creator.id === activeProfileId ? "YOU" : "CHALLENGER"}</small>
-          <strong>{state.creator.display_name}</strong>
+        <div>
+          <p className="eyebrow">SUPERTEAMS</p>
+          <strong>{state.participants.length} PLAYERS</strong>
         </div>
-        <span>SUPERTEAMS</span>
-        <div className={state.recipient.id === activeProfileId ? "is-you" : ""}>
-          <small>{state.recipient.id === activeProfileId ? "YOU" : "OPPONENT"}</small>
-          <strong>{state.recipient.display_name}</strong>
-        </div>
+        <span>{state.phase === "complete" ? "FINAL ROSTERS" : "LIVE DRAFT"}</span>
       </header>
-      <div className="football-wheel-roster__rows">
-        {WHEEL_FOOTBALL_ROSTER_SLOTS.map((slot) => (
-          <div className="football-wheel-roster__row" key={slot}>
-            <RosterCell pick={pickForSlot(state.creator_roster, slot)} align="left" />
-            <b>{slot}</b>
-            <RosterCell pick={pickForSlot(state.recipient_roster, slot)} align="right" />
-          </div>
-        ))}
+      <div className="football-wheel-multiplayer-rosters__track">
+        {state.participants.map((participant) => {
+          const isYou = participant.id === activeProfileId;
+          const isTurn = participant.id === state.current_turn_profile_id;
+          return (
+            <article
+              className={`football-wheel-player-roster${isTurn ? " is-turn" : ""}${participant.forfeited_at ? " is-forfeited" : ""}`}
+              key={participant.id}
+            >
+              <header>
+                <span>
+                  <small>{participant.forfeited_at ? "DNF" : isYou ? "YOU" : isTurn ? "ON THE CLOCK" : `PLAYER ${participant.seat_order + 1}`}</small>
+                  <strong>{participant.display_name}</strong>
+                </span>
+                {state.phase === "complete" ? (
+                  <b>{participant.final_grade == null ? (participant.forfeited_at ? "DNF" : "—") : participant.final_grade.toFixed(1)}</b>
+                ) : (
+                  <b>{participant.roster.length}/7</b>
+                )}
+              </header>
+              <div>
+                {WHEEL_FOOTBALL_ROSTER_SLOTS.map((slot) => {
+                  const pick = pickForSlot(participant.roster, slot);
+                  const team = pick ? wheelFootballTeam(pick.team_code) : null;
+                  return (
+                    <div className={`football-wheel-player-roster__row${pick ? " is-filled" : ""}`} key={slot}>
+                      <em>{slot}</em>
+                      <PickMark pick={pick} />
+                      <span>
+                        <strong>{pick?.display_name ?? "OPEN"}</strong>
+                        <small>{pick ? `${team?.shortCode ?? pick.team_code} · ${pick.position_abbreviation}` : "—"}</small>
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -652,20 +602,31 @@ function SetupScreen() {
   const [league, setLeague] = useState<WheelFootballLeague>("NFL");
   const [scope, setScope] = useState<WheelFootballPoolScope>("NFL");
   const [division, setDivision] = useState<WheelFootballDivision>("NFC East");
-  const [opponent, setOpponent] = useState<MemberCardSummary | null>(null);
+  const [opponents, setOpponents] = useState<MemberCardSummary[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
+  function addOpponent(member: MemberCardSummary) {
+    setOpponents((current) => {
+      if (current.length >= 3 || current.some((entry) => entry.displayName === member.displayName)) return current;
+      return [...current, member];
+    });
+  }
+
   useEffect(() => {
-    if (!challenges.preferredRecipientName || opponent) return;
+    if (!challenges.preferredRecipientName) return;
     const preferred = challenges.members.find((member) => (
       member.displayName.toUpperCase() === challenges.preferredRecipientName.toUpperCase()
     ));
-    if (preferred) setOpponent(preferred);
-  }, [challenges.members, challenges.preferredRecipientName, opponent]);
+    if (preferred) addOpponent(preferred);
+  }, [challenges.members, challenges.preferredRecipientName]);
 
   const scopeOptions = league === "NFL" ? NFL_SCOPE_OPTIONS : CFB_SCOPE_OPTIONS;
   const pool = wheelFootballPoolTeams(scope, scope === "DIVISION" ? division : null);
+  const playerCount = opponents.length + 1;
+  const availableMembers = challenges.members.filter((member) => (
+    !opponents.some((selected) => selected.displayName === member.displayName)
+  ));
 
   function chooseLeague(nextLeague: WheelFootballLeague) {
     setLeague(nextLeague);
@@ -673,14 +634,18 @@ function SetupScreen() {
   }
 
   async function createMatch() {
-    if (!repository || !opponent || !challenges.activeProfile) return;
+    if (!repository || !opponents.length || !challenges.activeProfile) return;
     setBusy(true);
     setError("");
     try {
-      const profile = await challenges.findProfile(opponent.displayName);
-      if (!profile) throw new Error("That Octagon HQ member could not be resolved.");
+      const profiles = await Promise.all(
+        opponents.map((opponent) => challenges.findProfile(opponent.displayName)),
+      );
+      if (profiles.some((profile) => !profile)) {
+        throw new Error("One of those Octagon HQ members could not be resolved.");
+      }
       const code = await repository.create(
-        profile.id,
+        profiles.map((profile) => profile!.id),
         scope,
         scope === "DIVISION" ? division : null,
       );
@@ -701,8 +666,8 @@ function SetupScreen() {
         <h1>WHEEL OF FOOTBALL</h1>
         <strong>Spin. Pick. Pass the turn.</strong>
         <p>
-          Build a seven-slot {league === "NFL" ? "NFL" : "college football"} Superteam head-to-head.
-          Alternate spins and picks until both rosters are full.
+          Build seven-slot {league === "NFL" ? "NFL" : "college football"} Superteams with 2–4 HQ players.
+          The same Wheel rules and curated player choices apply at every player count.
         </p>
       </section>
 
@@ -712,20 +677,8 @@ function SetupScreen() {
           <strong>{pool.length} {league === "NFL" ? "TEAMS" : "SCHOOLS"}</strong>
         </header>
         <div className="football-wheel-setup__league" aria-label="Football level">
-          <button
-            type="button"
-            className={league === "NFL" ? "is-active" : ""}
-            onClick={() => chooseLeague("NFL")}
-          >
-            NFL
-          </button>
-          <button
-            type="button"
-            className={league === "CFB" ? "is-active" : ""}
-            onClick={() => chooseLeague("CFB")}
-          >
-            COLLEGE
-          </button>
+          <button type="button" className={league === "NFL" ? "is-active" : ""} onClick={() => chooseLeague("NFL")}>NFL</button>
+          <button type="button" className={league === "CFB" ? "is-active" : ""} onClick={() => chooseLeague("CFB")}>COLLEGE</button>
         </div>
         <div className="football-wheel-setup__scope">
           {scopeOptions.map((option) => (
@@ -743,12 +696,7 @@ function SetupScreen() {
         {scope === "DIVISION" ? (
           <div className="football-wheel-setup__divisions" aria-label="NFL division">
             {WHEEL_FOOTBALL_DIVISIONS.map((value) => (
-              <button
-                type="button"
-                className={division === value ? "is-active" : ""}
-                onClick={() => setDivision(value)}
-                key={value}
-              >
+              <button type="button" className={division === value ? "is-active" : ""} onClick={() => setDivision(value)} key={value}>
                 {value}
               </button>
             ))}
@@ -758,53 +706,61 @@ function SetupScreen() {
 
       <section className="football-wheel-setup surface-card">
         <header>
-          <div><small>2</small><span><b>CHOOSE YOUR OPPONENT</b><em>This game is challenge-only</em></span></div>
+          <div><small>2</small><span><b>CHOOSE 1–3 OPPONENTS</b><em>{playerCount} of 4 players</em></span></div>
         </header>
         {challenges.activeProfile ? (
-          opponent ? (
-            <div className="football-wheel-opponent">
-              <i aria-hidden="true">
-                {opponent.avatarPhotoData
-                  ? <img src={opponent.avatarPhotoData} alt="" />
-                  : opponent.initials}
-              </i>
-              <span>
-                <small>OPPONENT SELECTED</small>
-                <strong>{opponent.displayName}</strong>
-              </span>
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => setOpponent(null)}
-              >
-                CHANGE
-              </button>
-            </div>
-          ) : (
-            <ChallengeMemberPicker
-              members={challenges.members}
-              recentNames={challenges.profiles.map((profile) => profile.displayName)}
-              selectedName=""
-              busy={busy}
-              onSelect={setOpponent}
-            />
-          )
+          <>
+            {opponents.length ? (
+              <div className="football-wheel-opponents" aria-label="Selected Wheel players">
+                {opponents.map((opponent, index) => (
+                  <div className="football-wheel-opponent" key={opponent.displayName}>
+                    <i aria-hidden="true">
+                      {opponent.avatarPhotoData ? <img src={opponent.avatarPhotoData} alt="" /> : opponent.initials}
+                    </i>
+                    <span>
+                      <small>PLAYER {index + 2}</small>
+                      <strong>{opponent.displayName}</strong>
+                    </span>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => setOpponents((current) => current.filter((entry) => entry.displayName !== opponent.displayName))}
+                    >
+                      REMOVE
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            {opponents.length < 3 ? (
+              <ChallengeMemberPicker
+                key={opponents.map((opponent) => opponent.displayName).join("|")}
+                members={availableMembers}
+                recentNames={challenges.profiles.map((profile) => profile.displayName)}
+                selectedName=""
+                busy={busy}
+                onSelect={addOpponent}
+              />
+            ) : (
+              <p className="football-wheel-setup__maxed">Four-player lobby full.</p>
+            )}
+          </>
         ) : (
           <div className="football-wheel-setup__signin">
-            <p>Sign in to challenge another HQ member.</p>
+            <p>Sign in to challenge other HQ members.</p>
             <button type="button" onClick={identity.openDialog}>SIGN IN</button>
           </div>
         )}
       </section>
 
       <section className="football-wheel-setup__rules surface-card">
-        <header><p className="eyebrow">HOW IT WORKS</p><strong>14 total turns · 7 picks each</strong></header>
+        <header><p className="eyebrow">HOW IT WORKS</p><strong>{playerCount * 7} total picks · 7 each</strong></header>
         <div>
-          <span><b>1</b> The first player is randomized after the challenge is accepted.</span>
+          <span><b>1</b> Everyone accepts the lobby, then the first player is randomized.</span>
           <span><b>2</b> Spin a team, then choose one current player or coach for an open Superteam slot.</span>
-          <span><b>3</b> Turns alternate until both QB · RB · WR · Flex · Front Seven · Secondary · Head Coach are filled.</span>
-          <span><b>4</b> The wheel only keeps teams that can still fill one of your open spots. Back-to-back repeats are avoided unless that team is the only valid option; dead spins auto-respin for free.</span>
-          <span><b>5</b> Individual grades stay private. Only the two completed Superteams’ final grades are revealed.</span>
+          <span><b>3</b> Turns rotate through all {playerCount} players until every active QB · RB · WR · Flex · Front Seven · Secondary · Head Coach slot is filled.</span>
+          <span><b>4</b> The wheel only keeps teams that can still fill your open spots. Back-to-back repeats are avoided unless that team is the only valid option; dead spins auto-respin for free.</span>
+          <span><b>5</b> No player or coach can be drafted twice in the same match. Individual grades stay private; final Superteam grades determine the standings.</span>
         </div>
       </section>
 
@@ -814,10 +770,10 @@ function SetupScreen() {
         <button
           type="button"
           className="primary-action"
-          disabled={!repository || !opponent || !challenges.activeProfile || busy}
+          disabled={!repository || !opponents.length || !challenges.activeProfile || busy}
           onClick={() => void createMatch()}
         >
-          {busy ? "CREATING MATCH…" : opponent ? `CHALLENGE ${opponent.displayName.toUpperCase()} →` : "CHOOSE AN OPPONENT"}
+          {busy ? "CREATING MATCH…" : opponents.length ? `START ${playerCount}-PLAYER CHALLENGE →` : "CHOOSE AN OPPONENT"}
         </button>
       </div>
     </div>
@@ -868,14 +824,19 @@ function MatchScreen({ code }: { code: string }) {
     };
   }, [code, repository]);
 
+  const me = state ? participantForProfile(state, activeProfileId) : null;
+
   useEffect(() => {
     if (
       !repository
       || !state
+      || !me
+      || me.accepted
+      || me.forfeited_at
       || openedRef.current
-      || state.opened_at
+      || state.phase !== "waiting"
       || state.completed_at
-      || activeProfileId !== state.recipient.id
+      || state.declined_at
     ) return;
     openedRef.current = true;
     repository.open(code)
@@ -884,16 +845,18 @@ function MatchScreen({ code }: { code: string }) {
         openedRef.current = false;
         setError(reason instanceof Error ? reason.message : "Challenge could not be accepted.");
       });
-  }, [activeProfileId, challenges, code, repository, state]);
+  }, [challenges, code, me, repository, state]);
 
-  const isMyTurn = Boolean(state && activeProfileId && state.current_turn_profile_id === activeProfileId);
+  const isMyTurn = Boolean(state && activeProfileId && state.current_turn_profile_id === activeProfileId && !me?.forfeited_at);
   const myRoster = state ? rosterForProfile(state, activeProfileId) : [];
   const usedAthleteIds = new Set(
     state
-      ? [...state.creator_roster, ...state.recipient_roster].map((pick) => pick.athlete_id)
+      ? state.participants.flatMap((participant) => participant.roster).map((pick) => pick.athlete_id)
       : [],
   );
-  const opponent = state ? otherParticipant(state, activeProfileId) : null;
+  const currentParticipant = state
+    ? participantForProfile(state, state.current_turn_profile_id)
+    : null;
   const division = state ? divisionFromState(state.division) : null;
   const allPoolTeams = state ? wheelFootballPoolTeams(state.pool_scope, division) : [];
   const eligibleTeamCodes = new Set(state?.eligible_team_codes ?? []);
@@ -998,8 +961,23 @@ function MatchScreen({ code }: { code: string }) {
     state?.phase,
   ]);
 
+  async function cancelWaitingLobby() {
+    if (!repository || !state || state.phase !== "waiting" || busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const ended = await repository.decline(code);
+      if (!ended) throw new Error("The lobby could not be canceled.");
+      await Promise.all([syncMatch(false), challenges.refresh()]);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "The lobby could not be canceled.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function forfeitMatch() {
-    if (!repository || !state?.opened_at || state.phase === "complete" || busy) return;
+    if (!repository || !state?.opened_at || state.phase === "complete" || busy || me?.forfeited_at) return;
     setBusy(true);
     setError("");
     try {
@@ -1009,9 +987,7 @@ function MatchScreen({ code }: { code: string }) {
       await challenges.refresh();
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (reason) {
-      setError(reason instanceof Error
-        ? reason.message
-        : "The match could not be forfeited.");
+      setError(reason instanceof Error ? reason.message : "The match could not be forfeited.");
     } finally {
       setBusy(false);
     }
@@ -1045,26 +1021,16 @@ function MatchScreen({ code }: { code: string }) {
   async function shareResult() {
     if (!state?.result || shareState === "sharing") return;
     setShareState("sharing");
-
     try {
       const blob = await buildWheelResultShareImage(state);
-      const file = new File(
-        [blob],
-        `wheel-of-football-${code.toLowerCase()}-final.png`,
-        { type: "image/png" },
-      );
+      const file = new File([blob], `wheel-of-football-${code.toLowerCase()}-final.png`, { type: "image/png" });
       const canShareFile = typeof navigator.share === "function"
         && (typeof navigator.canShare !== "function" || navigator.canShare({ files: [file] }));
-
       if (canShareFile) {
-        await navigator.share({
-          files: [file],
-          title: "Wheel of Football · Final",
-        });
+        await navigator.share({ files: [file], title: "Wheel of Football · Final" });
         setShareState("idle");
         return;
       }
-
       const href = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = href;
@@ -1108,152 +1074,143 @@ function MatchScreen({ code }: { code: string }) {
     );
   }
 
+  const pendingAcceptances = state.participants.filter((participant) => !participant.accepted && !participant.forfeited_at);
+  const waitingNames = pendingAcceptances.map((participant) => participant.display_name.toUpperCase());
   const turnLabel = !state.opened_at
-    ? activeProfileId === state.recipient.id
-      ? "ACCEPTING CHALLENGE…"
-      : `WAITING FOR ${state.recipient.display_name.toUpperCase()} TO ACCEPT`
+    ? me && !me.accepted
+      ? "ACCEPTING INVITE…"
+      : waitingNames.length
+        ? `WAITING FOR ${waitingNames.join(waitingNames.length > 1 ? " · " : "")}`
+        : "STARTING MATCH…"
     : state.phase === "complete"
       ? "FINAL SUPERTEAMS"
-      : isMyTurn
-        ? state.phase === "spin"
-          ? "YOUR TURN · SPIN"
-          : "YOUR TURN · MAKE YOUR PICK"
-        : state.phase === "pick" && pendingTeam
-          ? `${opponent?.display_name.toUpperCase() ?? "OPPONENT"} SPUN ${pendingTeam.code}`
-          : `${opponent?.display_name.toUpperCase() ?? "OPPONENT"}'S TURN`;
+      : me?.forfeited_at
+        ? "YOU FORFEITED · MATCH CONTINUES"
+        : isMyTurn
+          ? state.phase === "spin"
+            ? "YOUR TURN · SPIN"
+            : "YOUR TURN · MAKE YOUR PICK"
+          : state.phase === "pick" && pendingTeam
+            ? `${currentParticipant?.display_name.toUpperCase() ?? "PLAYER"} SPUN ${pendingTeam.shortCode}`
+            : `${currentParticipant?.display_name.toUpperCase() ?? "ANOTHER PLAYER"}'S TURN`;
 
   if (state.phase === "complete") {
-    const forfeitedProfile = state.forfeited_by_profile_id === state.creator.id
-      ? state.creator
-      : state.forfeited_by_profile_id === state.recipient.id
-        ? state.recipient
-        : null;
-    const forfeitWinner = forfeitedProfile?.id === state.creator.id
-      ? state.recipient
-      : forfeitedProfile?.id === state.recipient.id
-        ? state.creator
-        : null;
-    const gradedWinner = state.result?.winner_profile_id === state.creator.id
-      ? state.creator
-      : state.result?.winner_profile_id === state.recipient.id
-        ? state.recipient
-        : null;
-    const canShareResult = Boolean(state.result && !forfeitedProfile);
+    if (state.declined_at) {
+      return (
+        <div className="page football-wheel-page football-wheel-page--result">
+          <section className="football-wheel-result-summary surface-card">
+            <div className="football-wheel-result-summary__meta">
+              <div><p className="eyebrow">WHEEL OF FOOTBALL · CANCELED</p><h1>Lobby canceled</h1></div>
+              <span>{resultPoolLabel(state)}</span>
+            </div>
+            <p className="football-wheel-result-summary__note">The match ended before every player accepted.</p>
+          </section>
+          <div className="football-wheel-result-actions without-share">
+            <button type="button" className="football-wheel-result-actions__new" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
+            <button type="button" className="football-wheel-result-actions__all" onClick={() => navigate("/football")}>ALL GAMES</button>
+          </div>
+        </div>
+      );
+    }
+
+    const standings = state.result?.standings ?? [];
+    const orderedParticipants = standings
+      .map((standing) => state.participants.find((participant) => participant.id === standing.profile_id))
+      .filter((participant): participant is WheelFootballParticipant => Boolean(participant));
+    const winnerNames = state.result?.winner_profile_ids
+      .map((id) => state.participants.find((participant) => participant.id === id)?.display_name)
+      .filter((name): name is string => Boolean(name)) ?? [];
+    const headline = state.result?.resolved_by_forfeit && winnerNames.length === 1
+      ? `${winnerNames[0]} wins by forfeit`
+      : winnerNames.length > 1
+        ? `${winnerNames.join(" & ")} tie`
+        : winnerNames.length === 1
+          ? `${winnerNames[0]} wins`
+          : "Final standings";
 
     return (
       <div className="page football-wheel-page football-wheel-page--result">
         <section className="football-wheel-result-summary surface-card">
           <div className="football-wheel-result-summary__meta">
             <div>
-              <p className="eyebrow">WHEEL OF FOOTBALL · {forfeitedProfile ? "FORFEIT" : state.result ? "FINAL" : "COMPLETE"}</p>
-              <h1>{forfeitedProfile
-                ? `${forfeitedProfile.display_name} forfeited`
-                : state.result
-                  ? gradedWinner
-                    ? `${gradedWinner.display_name} wins`
-                    : "Dead even"
-                  : `${state.creator.display_name} vs ${state.recipient.display_name}`}</h1>
+              <p className="eyebrow">WHEEL OF FOOTBALL · FINAL</p>
+              <h1>{headline}</h1>
             </div>
             <span>{resultPoolLabel(state)}</span>
           </div>
 
-          {!forfeitedProfile && state.result ? (
-            <div className="football-wheel-result-score" aria-label="Final Wheel of Football grades">
-              <div className={state.result.winner_profile_id === state.creator.id ? "is-winner" : ""}>
-                <small>{state.creator.id === activeProfileId ? "YOU" : state.creator.display_name}</small>
-                <strong>{state.result.creator_final_grade.toFixed(1)}</strong>
-                <span>FINAL GRADE</span>
-              </div>
-              <b>VS</b>
-              <div className={state.result.winner_profile_id === state.recipient.id ? "is-winner" : ""}>
-                <small>{state.recipient.id === activeProfileId ? "YOU" : state.recipient.display_name}</small>
-                <strong>{state.result.recipient_final_grade.toFixed(1)}</strong>
-                <span>FINAL GRADE</span>
-              </div>
+          {state.result ? (
+            <div className="football-wheel-multiplayer-score" aria-label="Final Wheel of Football standings">
+              {(orderedParticipants.length ? orderedParticipants : state.participants).map((participant) => {
+                const standing = standings.find((item) => item.profile_id === participant.id);
+                return (
+                  <article className={standing?.rank === 1 ? "is-winner" : ""} key={participant.id}>
+                    <small>{standing?.rank ? `#${standing.rank}` : participant.forfeited_at ? "DNF" : "—"}</small>
+                    <strong>{participant.id === activeProfileId ? "YOU" : participant.display_name}</strong>
+                    <b>{participant.final_grade == null ? (participant.forfeited_at ? "DNF" : "—") : participant.final_grade.toFixed(1)}</b>
+                    <span>FINAL GRADE</span>
+                  </article>
+                );
+              })}
             </div>
           ) : (
-            <p className="football-wheel-result-summary__note">
-              {forfeitedProfile
-                ? `${forfeitWinner?.display_name ?? "Opponent"} wins by forfeit.`
-                : "This matchup was completed before final-grade scoring was introduced."}
-            </p>
+            <p className="football-wheel-result-summary__note">Final grading is unavailable for this legacy matchup.</p>
           )}
         </section>
 
-        <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
+        <MultiplayerRosters state={state} activeProfileId={activeProfileId} />
 
-        <div className={`football-wheel-result-actions${canShareResult ? "" : " without-share"}`}>
-          {canShareResult ? (
+        <div className="football-wheel-result-actions">
+          {state.result ? (
             <button
               type="button"
               className="football-wheel-result-actions__share"
               disabled={shareState === "sharing"}
               onClick={() => void shareResult()}
             >
-              {shareState === "sharing"
-                ? "PREPARING…"
-                : shareState === "saved"
-                  ? "IMAGE SAVED"
-                  : shareState === "error"
-                    ? "TRY SHARE"
-                    : "SHARE RESULT ↗"}
+              {shareState === "sharing" ? "PREPARING…" : shareState === "saved" ? "IMAGE SAVED" : shareState === "error" ? "TRY SHARE" : "SHARE RESULT ↗"}
             </button>
           ) : null}
-          <button
-            type="button"
-            className="football-wheel-result-actions__new"
-            onClick={() => navigate("/football/wheel")}
-          >
-            NEW CHALLENGE →
-          </button>
-          <button
-            type="button"
-            className="football-wheel-result-actions__all"
-            onClick={() => navigate("/football")}
-          >
-            ALL GAMES
-          </button>
+          <button type="button" className="football-wheel-result-actions__new" onClick={() => navigate("/football/wheel")}>NEW CHALLENGE →</button>
+          <button type="button" className="football-wheel-result-actions__all" onClick={() => navigate("/football")}>ALL GAMES</button>
         </div>
       </div>
     );
   }
 
+  const currentTurnNumber = Math.min(state.max_turns || state.participants.length * 7, state.turn_count + 1);
+  const displayedMaxTurns = state.max_turns || state.participants.length * 7;
+
   return (
     <div className="page football-wheel-page">
       <section className="football-wheel-match__status surface-card">
         <div>
-          <p className="eyebrow">WHEEL OF FOOTBALL · TURN {Math.min(14, state.turn_count + 1)} OF 14</p>
+          <p className="eyebrow">
+            WHEEL OF FOOTBALL · {state.opened_at ? `TURN ${currentTurnNumber} OF ${displayedMaxTurns}` : `${state.participants.length}-PLAYER LOBBY`}
+          </p>
           <h1>{turnLabel}</h1>
           <span>{wheelFootballPoolLabel(state.pool_scope, division)} · CURRENT {wheelFootballLeagueFromScope(state.pool_scope)}</span>
         </div>
         <div className="football-wheel-match__actions">
           <button type="button" disabled={busy || spinning} onClick={() => void syncMatch(false)}>REFRESH</button>
-          {state.opened_at ? (
-            <button
-              type="button"
-              className="is-danger"
-              disabled={busy || spinning}
-              onClick={() => setShowForfeitConfirm(true)}
-            >
-              FORFEIT
+          {state.phase === "waiting" && activeProfileId === state.creator.id ? (
+            <button type="button" className="is-danger" disabled={busy || spinning} onClick={() => void cancelWaitingLobby()}>
+              {busy ? "CANCELING…" : "CANCEL LOBBY"}
             </button>
+          ) : state.opened_at && me && !me.forfeited_at ? (
+            <button type="button" className="is-danger" disabled={busy || spinning} onClick={() => setShowForfeitConfirm(true)}>FORFEIT</button>
           ) : null}
         </div>
       </section>
 
-      <HeadToHeadRoster state={state} activeProfileId={activeProfileId} />
+      <MultiplayerRosters state={state} activeProfileId={activeProfileId} />
 
       <FootballWheel
         teams={poolTeams}
         rotation={rotation}
         spinning={spinning}
         pendingTeam={pendingTeamEligible ? pendingTeam : null}
-        canSpin={Boolean(
-          state.opened_at
-          && isMyTurn
-          && state.phase === "spin"
-          && poolTeams.length > 0
-        )}
+        canSpin={Boolean(state.opened_at && isMyTurn && state.phase === "spin" && poolTeams.length > 0)}
         onSpin={() => void spin()}
       />
 
@@ -1276,15 +1233,17 @@ function MatchScreen({ code }: { code: string }) {
 
       {!isMyTurn && state.opened_at ? (
         <section className="football-wheel-waiting surface-card">
-          <strong>{state.phase === "pick" && pendingTeam
-            ? (
-              <>
-                {opponent?.display_name ?? "Your opponent"} is choosing from the{" "}
-                <TeamReferenceLink team={pendingTeam} showRank={state.pool_scope === "AP_TOP_25"} />.
-              </>
-            )
-            : `Waiting on ${opponent?.display_name ?? "your opponent"}.`}</strong>
-          <span>You’ll get a notification when your next spin is ready.</span>
+          <strong>{me?.forfeited_at
+            ? "You’re out of this match. The remaining players are finishing their Superteams."
+            : state.phase === "pick" && pendingTeam
+              ? (
+                <>
+                  {currentParticipant?.display_name ?? "Another player"} is choosing from the{" "}
+                  <TeamReferenceLink team={pendingTeam} showRank={state.pool_scope === "AP_TOP_25"} />.
+                </>
+              )
+              : `Waiting on ${currentParticipant?.display_name ?? "another player"}.`}</strong>
+          <span>{me?.forfeited_at ? "You can keep watching the live draft." : "You’ll get a notification when your next spin is ready."}</span>
         </section>
       ) : null}
 
@@ -1297,13 +1256,15 @@ function MatchScreen({ code }: { code: string }) {
             aria-labelledby="wheel-forfeit-title"
             onClick={(event) => event.stopPropagation()}
           >
-            <p className="eyebrow">END MATCH</p>
+            <p className="eyebrow">LEAVE MATCH</p>
             <h2 id="wheel-forfeit-title">Forfeit Wheel of Football?</h2>
-            <p>Your opponent will win by forfeit. The picks already made will stay visible.</p>
+            <p>{state.participants.filter((participant) => !participant.forfeited_at).length > 2
+              ? "You’ll be eliminated and the remaining players will continue. Your completed picks stay visible."
+              : "The remaining player will win by forfeit. Your completed picks stay visible and grades stay private."}</p>
             <div>
               <button type="button" className="secondary-action" disabled={busy} onClick={() => setShowForfeitConfirm(false)}>KEEP PLAYING</button>
               <button type="button" className="football-wheel-forfeit__confirm" disabled={busy} onClick={() => void forfeitMatch()}>
-                {busy ? "FORFEITING…" : "FORFEIT MATCH"}
+                {busy ? "FORFEITING…" : "FORFEIT"}
               </button>
             </div>
           </section>
