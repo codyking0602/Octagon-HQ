@@ -35,7 +35,7 @@ export interface WheelFootballCfbReconciliationWarning {
 
 export type WheelFootballCfbBaselineTeam = {
   school: string;
-  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Independent";
+  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Independent" | "Pac-12";
   espnId: string;
   depthChartUrl: string;
   rosterUrl: string;
@@ -153,6 +153,39 @@ export const wheelFootballCfbPriority: Readonly<
   ]),
 ));
 
+const wheelFootballCfbTop25ExtraPriority: Readonly<
+  Record<string, WheelFootballCfbBaselineTeam>
+> = Object.freeze({
+  "boise-state": {
+    school: "Boise State",
+    conference: "Pac-12",
+    espnId: "68",
+    depthChartUrl: "https://www.espn.com/college-football/team/depth/_/id/68/boise-state-broncos",
+    rosterUrl: "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
+    QB: ["Maddux Madsen"],
+    RB: ["Dylan Riley", "Sire Gaines"],
+    WR: ["Rasean Jones", "Cam Bates", "Ben Ford"],
+    TE: ["Kaden Anderson"],
+    Flex: ["Dylan Riley", "Rasean Jones", "Cam Bates", "Kaden Anderson"],
+    "Front Seven": [
+      "Jayden Virgin-Morgan",
+      "Jake Ripp",
+      "Boen Phelps",
+      "Sterling Lane II",
+      "Logan Brantley",
+    ],
+    Secondary: [
+      "Jaden Mickey",
+      "Demetrius Freeney Jr.",
+      "JeRico Washington Jr.",
+      "Travis Anderson",
+      "Derek Ganter Jr.",
+    ],
+    "Head Coach": ["Spencer Danielson"],
+    reconciliationWarnings: [],
+  },
+});
+
 export function wheelFootballCfbBaselineForSchoolId(
   schoolId: string | null | undefined,
 ) {
@@ -164,7 +197,8 @@ export function wheelFootballCfbPriorityForSchoolId(
   schoolId: string | null | undefined,
 ) {
   if (!schoolId) return null;
-  return wheelFootballCfbPriority[schoolId.trim().toLowerCase()] ?? null;
+  const key = schoolId.trim().toLowerCase();
+  return wheelFootballCfbPriority[key] ?? wheelFootballCfbTop25ExtraPriority[key] ?? null;
 }
 
 export function normalizedWheelFootballCfbName(value: string) {
