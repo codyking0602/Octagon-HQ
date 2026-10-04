@@ -1371,7 +1371,7 @@ returns jsonb
 language sql
 security invoker
 set search_path = ''
-as $
+as $$
   select private.acknowledge_hq_impostor_result(p_event_id,p_round_no,now());
 $$;
 
