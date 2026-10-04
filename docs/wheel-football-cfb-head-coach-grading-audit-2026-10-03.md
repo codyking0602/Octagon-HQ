@@ -2,13 +2,13 @@
 
 **Audit date:** 2026-10-03  
 **Population:** 68 / 68 current Wheel head coaches  
-**Source main:** `404050bae522af33f40080c84e9ed47831a49f6e`  
+**Source main:** `8e6e659d6435f9ab0e5f5e1b2fa6141d590af91f`  
 **Version:** `cfb-wheel-head-coach-grades-2026-10-03-v1`  
 **Status:** grading locked; audit artifact only; **no runtime wiring**
 
 ## Population authority
 
-The existing CFB Wheel candidate sources already contain exactly one current Head Coach for each of the 68 audited programs. The Step 3 priority audit has **no Head Coach overrides**, so no population work was recreated for this phase.
+The existing CFB Wheel candidate sources already contain exactly one current Head Coach for each of the 68 audited programs. The Step 3 priority audit has **no Head Coach overrides**, so no population work was recreated for this phase. Main advanced during grading only through unrelated Wheel final-screen/share work; the Head Coach population sources were unchanged.
 
 Authority:
 - `data/generated/football/cfb/wheel-football-current-priorities-2026.json`
