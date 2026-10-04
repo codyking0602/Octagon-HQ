@@ -222,18 +222,30 @@ function UfcWheel({
         }}
       >
         <div className="football-wheel__rings" aria-hidden="true" />
-        {WHEEL_UFC_VISUAL_SLICES.map((categoryId) => (
-          <span
-            className="football-wheel__label ufc-wheel__label"
-            key={categoryId}
-            style={{
-              "--wheel-angle": `${wheelUfcTargetAngle(categoryId)}deg`,
-            } as CSSProperties}
-            title={wheelUfcCategory(categoryId).label}
-          >
-            <b>{wheelUfcCategory(categoryId).shortLabel}</b>
-          </span>
-        ))}
+        {WHEEL_UFC_VISUAL_SLICES.map((categoryId) => {
+          const angle = wheelUfcTargetAngle(categoryId);
+          const radians = angle * Math.PI / 180;
+          const wheelLabel = categoryId === "UNRANKED"
+            ? "UNRANKED"
+            : categoryId === "COUNTRY"
+              ? "COUNTRY"
+              : categoryId === "VETERAN"
+                ? "VETERAN"
+                : wheelUfcCategory(categoryId).shortLabel;
+          return (
+            <span
+              className="football-wheel__label ufc-wheel__label"
+              key={categoryId}
+              style={{
+                left: `${50 + 39 * Math.sin(radians)}%`,
+                top: `${50 - 39 * Math.cos(radians)}%`,
+              }}
+              title={wheelUfcCategory(categoryId).label}
+            >
+              <b>{wheelLabel}</b>
+            </span>
+          );
+        })}
       </div>
       <button
         className={`football-wheel__center ufc-wheel__center${pendingSpin ? " has-team" : ""}`}
@@ -284,20 +296,23 @@ function CandidatePicker({
   const spin = state.pending_spin;
   if (!spin) return null;
   const category = wheelUfcCategory(spin.category);
+  const eligibleCounts = spin.eligible_slots.map((slot) => Number(spin.eligible_counts?.[slot] ?? 0));
+  const showEligibleCounts = new Set(eligibleCounts).size > 1;
+  const minEligibleCount = eligibleCounts.length ? Math.min(...eligibleCounts) : 0;
 
   return (
     <section className="football-wheel-picker surface-card ufc-wheel-picker">
-      <header>
-        <span
-          className="ufc-wheel-category-badge"
-          style={{ "--category-color": category.color } as CSSProperties}
-          aria-hidden="true"
-        >
-          {spin.category === "COUNTRY" ? spin.country_code ?? "WORLD" : category.shortLabel}
-        </span>
+      <header className="ufc-wheel-picker__spin-header">
         <div>
           <p className="eyebrow">YOUR SPIN</p>
-          <h2>{wheelUfcSpinDisplay(spin.category, spin.country_name)}</h2>
+          <h2>
+            <span
+              className="ufc-wheel-spin-pill"
+              style={{ "--category-color": category.color } as CSSProperties}
+            >
+              {wheelUfcSpinDisplay(spin.category, spin.country_name)}
+            </span>
+          </h2>
           <span>Choose an open weight class, then lock one eligible current fighter.</span>
         </div>
       </header>
@@ -318,7 +333,9 @@ function CandidatePicker({
             >
               <strong>{WHEEL_UFC_SLOT_ABBREVIATIONS[slot]}</strong>
               <span>{slot}</span>
-              <small>{count} eligible</small>
+              {showEligibleCounts ? (
+                <small className={count === minEligibleCount ? "is-scarce" : ""}>{count} eligible</small>
+              ) : null}
             </button>
           );
         })}
