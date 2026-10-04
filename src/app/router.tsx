@@ -12,6 +12,7 @@ const IntelligencePage = lazy(() => import("../features/intelligence/Intelligenc
 const MemberDirectoryPage = lazy(() => import("../features/members/MemberDirectoryPage"));
 const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePage"));
 const NotificationCenterPage = lazy(() => import("../features/notifications/NotificationCenterPage"));
+const HqImpostorPage = lazy(() => import("../features/impostor/HqImpostorPage"));
 const BackRoomPage = lazy(() => import("../features/back-room/BackRoomPage"));
 const FootballBackRoomPage = lazy(() => import("../features/back-room/FootballBackRoomPage"));
 const FootballTodayChallengePage = lazy(() => import("../features/back-room/FootballTodayChallengePage"));
@@ -68,6 +69,7 @@ export const appRoutes: RouteObject[] = [
       { path: "members", element: <MemberDirectoryPage /> },
       { path: "members/:memberName", element: <MemberProfilePage /> },
       { path: "notifications", element: <NotificationCenterPage /> },
+      { path: "impostor", element: <HqImpostorPage /> },
       { path: "play", element: <TodayChallengeHubPage /> },
       { path: "play/find-leader", element: <TodayChallengeGameRoute gameType="find_leader" casual={<FindLeaderChallengeRoute />} /> },
       { path: "play/wavelength", element: <TodayChallengeGameRoute gameType="wavelength" casual={<WavelengthPage />} /> },
