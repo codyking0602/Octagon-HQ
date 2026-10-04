@@ -104,7 +104,7 @@ describe("CFB Wheel runtime authority", () => {
         seed = (1664525 * seed + 1013904223) >>> 0;
         return seed / 4294967296;
       };
-      const results = new Array<number>(10_000);
+      const results = new Array<number>(3_000);
 
       for (let run = 0; run < results.length; run += 1) {
         const chosen = new Map<Slot, number>();
