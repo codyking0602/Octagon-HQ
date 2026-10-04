@@ -35,6 +35,7 @@ export type WheelFootballPoolScope =
   | "NFC"
   | "DIVISION"
   | "CFB"
+  | "AP_TOP_25"
   | "SEC"
   | "BIG_TEN"
   | "BIG_12"
@@ -60,12 +61,13 @@ export interface WheelFootballTeam {
   shortCode: string;
   name: string;
   league: WheelFootballLeague;
-  conference: "AFC" | "NFC" | CfbCurrentSchoolConference;
+  conference: "AFC" | "NFC" | CfbCurrentSchoolConference | "Pac-12";
   division: "East" | "North" | "South" | "West" | null;
   logoSrc: string | null;
   primaryColor: string;
   secondaryColor: string;
   espnId?: string;
+  apRank?: number;
 }
 
 const NFL_WHEEL_COLORS: Readonly<Record<string, readonly [string, string]>> = {
@@ -211,9 +213,56 @@ const wheelFootballCfbTeams: readonly WheelFootballTeam[] = CFB_CURRENT_SCHOOLS_
   espnId: school.espnId,
 }));
 
+const wheelFootballCfbApSpecialTeams: readonly WheelFootballTeam[] = [
+  {
+    code: "boise-state",
+    shortCode: "BOIS",
+    name: "Boise State",
+    league: "CFB",
+    conference: "Pac-12",
+    division: null,
+    logoSrc: "https://a.espncdn.com/i/teamlogos/ncaa/500/68.png",
+    primaryColor: "#0033A0",
+    secondaryColor: "#D64309",
+    espnId: "68",
+  },
+];
+
+const WHEEL_FOOTBALL_AP_TOP25_FALLBACK: readonly {
+  code: string;
+  rank: number;
+}[] = [
+  { code: "texas", rank: 1 },
+  { code: "georgia", rank: 2 },
+  { code: "notre-dame", rank: 3 },
+  { code: "miami", rank: 4 },
+  { code: "ohio-state", rank: 5 },
+  { code: "indiana", rank: 6 },
+  { code: "alabama", rank: 7 },
+  { code: "florida", rank: 8 },
+  { code: "ole-miss", rank: 9 },
+  { code: "byu", rank: 10 },
+  { code: "lsu", rank: 11 },
+  { code: "texas-tech", rank: 12 },
+  { code: "utah", rank: 13 },
+  { code: "iowa", rank: 14 },
+  { code: "oregon", rank: 15 },
+  { code: "mississippi-state", rank: 16 },
+  { code: "tennessee", rank: 17 },
+  { code: "usc", rank: 18 },
+  { code: "oklahoma-state", rank: 19 },
+  { code: "houston", rank: 20 },
+  { code: "smu", rank: 21 },
+  { code: "boise-state", rank: 22 },
+  { code: "ucla", rank: 23 },
+  { code: "kentucky", rank: 24 },
+  { code: "missouri", rank: 25 },
+] as const;
+
 export const wheelFootballTeams: readonly WheelFootballTeam[] = [
   ...wheelFootballNflTeams,
   ...wheelFootballCfbTeams,
+  ...wheelFootballCfbApSpecialTeams,
 ];
 
 const wheelTeamByCode = new Map(
@@ -227,8 +276,107 @@ export function wheelFootballTeam(code: string) {
   return wheelTeamByCode.get(code) ?? wheelTeamByCode.get(code.toUpperCase()) ?? null;
 }
 
+const NFL_SPORTS_REFERENCE_SLUGS: Readonly<Record<string, string>> = {
+  ARI: "crd",
+  ATL: "atl",
+  BAL: "rav",
+  BUF: "buf",
+  CAR: "car",
+  CHI: "chi",
+  CIN: "cin",
+  CLE: "cle",
+  DAL: "dal",
+  DEN: "den",
+  DET: "det",
+  GB: "gnb",
+  HOU: "htx",
+  IND: "clt",
+  JAX: "jax",
+  KC: "kan",
+  LV: "rai",
+  LAC: "sdg",
+  LAR: "ram",
+  MIA: "mia",
+  MIN: "min",
+  NE: "nwe",
+  NO: "nor",
+  NYG: "nyg",
+  NYJ: "nyj",
+  PHI: "phi",
+  PIT: "pit",
+  SF: "sfo",
+  SEA: "sea",
+  TB: "tam",
+  TEN: "oti",
+  WSH: "was",
+};
+
+const CFB_SPORTS_REFERENCE_SLUGS: Readonly<Record<string, string>> = {
+  byu: "brigham-young",
+  lsu: "louisiana-state",
+  miami: "miami-fl",
+  "nc-state": "north-carolina-state",
+  "ole-miss": "mississippi",
+  smu: "southern-methodist",
+  tcu: "texas-christian",
+  ucf: "central-florida",
+  usc: "southern-california",
+};
+
+export function wheelFootballTeamSportsReferenceUrl(
+  team: WheelFootballTeam,
+  season = 2026,
+) {
+  if (team.league === "NFL") {
+    const slug = NFL_SPORTS_REFERENCE_SLUGS[team.code.toUpperCase()];
+    return slug
+      ? `https://www.pro-football-reference.com/teams/${slug}/${season}.htm`
+      : null;
+  }
+  const slug = CFB_SPORTS_REFERENCE_SLUGS[team.code] ?? team.code;
+  return `https://www.sports-reference.com/cfb/schools/${slug}/${season}.html`;
+}
+
+function fallbackApTop25Teams() {
+  return WHEEL_FOOTBALL_AP_TOP25_FALLBACK.flatMap(({ code, rank }) => {
+    const team = wheelFootballTeam(code);
+    return team ? [{ ...team, apRank: rank }] : [];
+  });
+}
+
+export async function loadWheelFootballApTop25(fetcher: typeof fetch = fetch) {
+  try {
+    const response = await fetcher("/api/football/cfb-ap-top25", {
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) return fallbackApTop25Teams();
+
+    const root = asRecord(await response.json());
+    const rows = Array.isArray(root?.rankings) ? root.rankings : [];
+    const byEspnId = new Map(
+      wheelFootballTeams
+        .filter((team) => team.league === "CFB" && team.espnId)
+        .map((team) => [team.espnId!, team] as const),
+    );
+    const ranked = rows.flatMap((raw) => {
+      const row = asRecord(raw);
+      const rank = typeof row?.rank === "number" ? Math.trunc(row.rank) : Number(row?.rank);
+      const espnId = text(row?.espnId);
+      const team = espnId ? byEspnId.get(espnId) : null;
+      return team && rank >= 1 && rank <= 25 ? [{ ...team, apRank: rank }] : [];
+    }).sort((left, right) => (left.apRank ?? 99) - (right.apRank ?? 99));
+
+    const ranks = new Set(ranked.map((team) => team.apRank));
+    return ranked.length === 25 && ranks.size === 25
+      ? ranked
+      : fallbackApTop25Teams();
+  } catch {
+    return fallbackApTop25Teams();
+  }
+}
+
 export function wheelFootballLeagueFromScope(scope: WheelFootballPoolScope): WheelFootballLeague {
-  return ["CFB", "SEC", "BIG_TEN", "BIG_12", "ACC"].includes(scope) ? "CFB" : "NFL";
+  return ["CFB", "AP_TOP_25", "SEC", "BIG_TEN", "BIG_12", "ACC"].includes(scope) ? "CFB" : "NFL";
 }
 
 export function wheelFootballPoolLabel(
@@ -237,6 +385,7 @@ export function wheelFootballPoolLabel(
 ) {
   if (scope === "NFL") return "FULL NFL";
   if (scope === "CFB") return "NATIONAL";
+  if (scope === "AP_TOP_25") return "AP TOP 25";
   if (scope === "BIG_TEN") return "BIG TEN";
   if (scope === "BIG_12") return "BIG 12";
   if (scope === "DIVISION") return division ?? "DIVISION";
@@ -259,6 +408,7 @@ export function wheelFootballPoolTeams(
     ));
   }
   if (scope === "CFB") return wheelFootballCfbTeams;
+  if (scope === "AP_TOP_25") return fallbackApTop25Teams();
   const conference = scope === "BIG_TEN"
     ? "Big Ten"
     : scope === "BIG_12"
