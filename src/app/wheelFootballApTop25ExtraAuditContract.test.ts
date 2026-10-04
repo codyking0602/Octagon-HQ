@@ -80,10 +80,16 @@ describe("CFB Wheel AP Top 25 extra-team audit contract", () => {
     .map((entry) => entry.schoolId)
     .filter((schoolId) => !baseline.teams[schoolId]);
 
-  it("currently has no unaudited Top 25 school outside the 68-school base", () => {
-    expect(extras).toEqual(["boise-state"]);
+  it("keeps every current Top 25 school outside the 68-school base behind a locked extra-team audit", () => {
+    expect(extras).toContain("boise-state");
     expect(WHEEL_FOOTBALL_AP_TOP_25).toContainEqual({ rank: 3, schoolId: "notre-dame" });
     expect(baseline.teams["notre-dame"]).toMatchObject({ espnId: "87" });
+    for (const schoolId of extras) {
+      expect(
+        extraAudits.has(schoolId),
+        `${schoolId} entered the Top 25 without a locked extra-team grading audit`,
+      ).toBe(true);
+    }
   });
 
   it("requires every extra Top 25 team to pass the full Boise-style audit before runtime coverage", () => {
