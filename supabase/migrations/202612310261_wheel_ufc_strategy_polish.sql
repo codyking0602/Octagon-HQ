@@ -17,17 +17,25 @@ returns trigger
 language plpgsql
 security definer
 set search_path = ''
-as $$
+as $
+declare
+  v_category text;
+  v_country_code text;
+  v_country_name text;
 begin
   if new.spin_category is null then
     select match.pending_category, match.pending_country_code, match.pending_country_name
-      into new.spin_category, new.spin_country_code, new.spin_country_name
+      into v_category, v_country_code, v_country_name
     from private.wheel_ufc_matches match
     where match.challenge_id = new.challenge_id;
+
+    new.spin_category := v_category;
+    new.spin_country_code := v_country_code;
+    new.spin_country_name := v_country_name;
   end if;
   return new;
 end;
-$$;
+$;
 
 drop trigger if exists wheel_ufc_capture_spin_source on private.wheel_ufc_picks;
 create trigger wheel_ufc_capture_spin_source
