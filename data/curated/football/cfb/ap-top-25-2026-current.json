@@ -1,0 +1,134 @@
+{
+  "season": 2026,
+  "poll": "AP Top 25",
+  "pollDate": "2026-09-27",
+  "sourceUrl": "https://apnews.com/article/college-football-rankings-ap-top-25-94f9b825315c6a7347a9aeba66c79c43",
+  "monitoringSourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings",
+  "teams": [
+    {
+      "rank": 1,
+      "teamCode": "texas",
+      "teamName": "Texas"
+    },
+    {
+      "rank": 2,
+      "teamCode": "georgia",
+      "teamName": "Georgia"
+    },
+    {
+      "rank": 3,
+      "teamCode": "notre-dame",
+      "teamName": "Notre Dame"
+    },
+    {
+      "rank": 4,
+      "teamCode": "miami",
+      "teamName": "Miami"
+    },
+    {
+      "rank": 5,
+      "teamCode": "ohio-state",
+      "teamName": "Ohio State"
+    },
+    {
+      "rank": 6,
+      "teamCode": "indiana",
+      "teamName": "Indiana"
+    },
+    {
+      "rank": 7,
+      "teamCode": "alabama",
+      "teamName": "Alabama"
+    },
+    {
+      "rank": 8,
+      "teamCode": "florida",
+      "teamName": "Florida"
+    },
+    {
+      "rank": 9,
+      "teamCode": "ole-miss",
+      "teamName": "Ole Miss"
+    },
+    {
+      "rank": 10,
+      "teamCode": "byu",
+      "teamName": "BYU"
+    },
+    {
+      "rank": 11,
+      "teamCode": "lsu",
+      "teamName": "LSU"
+    },
+    {
+      "rank": 12,
+      "teamCode": "texas-tech",
+      "teamName": "Texas Tech"
+    },
+    {
+      "rank": 13,
+      "teamCode": "utah",
+      "teamName": "Utah"
+    },
+    {
+      "rank": 14,
+      "teamCode": "iowa",
+      "teamName": "Iowa"
+    },
+    {
+      "rank": 15,
+      "teamCode": "oregon",
+      "teamName": "Oregon"
+    },
+    {
+      "rank": 16,
+      "teamCode": "mississippi-state",
+      "teamName": "Mississippi State"
+    },
+    {
+      "rank": 17,
+      "teamCode": "tennessee",
+      "teamName": "Tennessee"
+    },
+    {
+      "rank": 18,
+      "teamCode": "usc",
+      "teamName": "USC"
+    },
+    {
+      "rank": 19,
+      "teamCode": "oklahoma-state",
+      "teamName": "Oklahoma State"
+    },
+    {
+      "rank": 20,
+      "teamCode": "houston",
+      "teamName": "Houston"
+    },
+    {
+      "rank": 21,
+      "teamCode": "smu",
+      "teamName": "SMU"
+    },
+    {
+      "rank": 22,
+      "teamCode": "boise-state",
+      "teamName": "Boise State"
+    },
+    {
+      "rank": 23,
+      "teamCode": "ucla",
+      "teamName": "UCLA"
+    },
+    {
+      "rank": 24,
+      "teamCode": "kentucky",
+      "teamName": "Kentucky"
+    },
+    {
+      "rank": 25,
+      "teamCode": "missouri",
+      "teamName": "Missouri"
+    }
+  ]
+}
