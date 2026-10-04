@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-wheel-boise-state-grades-2026-10-03-v2",
+  "status": "audit-locked-runtime",
+  "effectiveDate": "2026-10-03",
+  "evidenceCutoff": "2026-09-26",
+  "school": "Boise State",
+  "schoolId": "boise-state",
+  "methodology": {
+    "gradingStandard": "Same current-ability, position-normalized CFB Wheel standard used by the locked 68-school grading artifacts. 2026 leads, 2025 substantially stabilizes, older evidence is secondary. EA is an error detector, never a formula or midpoint target.",
+    "playerWeighting": "Approximately 55-60% current 2026 performance/role, 30-35% 2025 demonstrated level, remainder older/context; conceptual guidance rather than a literal formula.",
+    "eaDiscrepancyRule": "Absolute HQ-vs-EA difference of 7+ requires written review; 10+ requires an explicit major-red-flag explanation.",
+    "coachWeighting": "Roughly 40-50% 2026 current performance/trajectory, 25-30% 2025, 20-30% relevant multi-year head-coaching evidence.",
+    "cutoffReason": "Stops after the September 26 game to match the evidence freeze used by the existing CFB player grading boards; the October 3 Utah State game is intentionally excluded."
+  },
+  "sources": [
+    "https://cfbstats.com/2026/team/66/index.html",
+    "https://cfbstats.com/2025/team/66/index.html",
+    "https://broncosports.com/sports/football",
+    "https://www.ea.com/games/ea-sports-college-football/ratings/conferences-ratings/pac-12/PAC-12",
+    "https://www.ourlads.com/ncaa-football/depth-charts/depth-chart/boise-state/90130",
+    "https://www.sportingnews.com/us/ncaa-football/news/ranking-college-football-coaches-1-138-2026-season/db343b388033ca51b7bfed23",
+    "https://www.puntandrally.com/staff_ratings.php?board=overall&year=2026"
+  ],
+  "priorityCorrections": [
+    {
+      "group": "WR",
+      "change": "Add Akeem Wright",
+      "reason": "Current first-team receiver with 130 receiving yards through the four-game cutoff and strong 2025 JUCO production; he belongs in the four-name WR cap."
+    },
+    {
+      "group": "TE",
+      "change": "Replace Kaden Anderson with Matt Wagner",
+      "reason": "Wagner is the current first-team tight end and had 14 catches for 157 yards and three touchdowns through the cutoff; Anderson had no 2026 receiving production."
+    },
+    {
+      "group": "Front Seven",
+      "change": "Replace Jake Ripp and Sterling Lane II with Max Stege and Mikaio Edward",
+      "reason": "Stege and Edward were current first-team defensive linemen and had stronger current/prior disruption evidence. Ripp had moved behind Logan Brantley at middle linebacker and Lane was not among the current impact leaders."
+    },
+    {
+      "group": "Secondary",
+      "change": "Replace Demetrius Freeney Jr. and Derek Ganter Jr. with Roman Tillmon and Sherrod Smith",
+      "reason": "Tillmon and Smith were current first-team defensive backs with materially stronger 2026 coverage/playmaking evidence. Mickey, Anderson and Washington remain the other three audited options."
+    }
+  ],
+  "priority": {
+    "school": "Boise State",
+    "conference": "Pac-12",
+    "espnId": "68",
+    "depthChartUrl": "https://www.espn.com/college-football/team/depth/_/id/68/boise-state-broncos",
+    "rosterUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
+    "QB": [
+      "Maddux Madsen"
+    ],
+    "RB": [
+      "Dylan Riley",
+      "Sire Gaines"
+    ],
+    "WR": [
+      "Rasean Jones",
+      "Akeem Wright",
+      "Ben Ford",
+      "Cam Bates"
+    ],
+    "TE": [
+      "Matt Wagner"
+    ],
+    "Flex": [
+      "Dylan Riley",
+      "Rasean Jones",
+      "Akeem Wright",
+      "Matt Wagner"
+    ],
+    "Front Seven": [
+      "Jayden Virgin-Morgan",
+      "Boen Phelps",
+      "Max Stege",
+      "Mikaio Edward",
+      "Logan Brantley"
+    ],
+    "Secondary": [
+      "Jaden Mickey",
+      "Travis Anderson",
+      "JeRico Washington Jr.",
+      "Roman Tillmon",
+      "Sherrod Smith"
+    ],
+    "Head Coach": [
+      "Spencer Danielson"
+    ],
+    "reconciliationWarnings": []
+  },
+  "grades": [
+    {
+      "family": "QB",
+      "name": "Maddux Madsen",
+      "grade": 88,
+      "eaRating": 87,
+      "eaSnapshot": "week-4",
+      "rationale": "Nine touchdowns with zero interceptions through four games materially improves on an uneven 2025, but the stronger established sample keeps him in the Arch Manning 88 neighborhood rather than the 90+ tier."
+    },
+    {
+      "family": "RB",
+      "name": "Dylan Riley",
+      "grade": 95,
+      "eaRating": 90,
+      "eaSnapshot": "week-4",
+      "rationale": "592 rushing yards at 6.6 per carry through four games after 1,125 yards and 10 rushing touchdowns in 2025 supports the same elite 95 neighborhood as the locked top running-back anchors."
+    },
+    {
+      "family": "RB",
+      "name": "Sire Gaines",
+      "grade": 88,
+      "eaRating": 86,
+      "eaSnapshot": "week-3",
+      "rationale": "A strong 811-yard, eight-touchdown 2025 plus 234 rushing yards at 5.2 per carry in three games at the cutoff supports an upper-80s current-ability grade behind Riley."
+    },
+    {
+      "family": "WR",
+      "name": "Rasean Jones",
+      "grade": 87,
+      "eaRating": 78,
+      "eaSnapshot": "week-4",
+      "rationale": "The freshman immediately became a featured target: 18 catches for 271 yards through four games, including 76 yards at Oregon. The thin prior college sample caps the breakout below the 90s."
+    },
+    {
+      "family": "WR",
+      "name": "Akeem Wright",
+      "grade": 84,
+      "eaRating": 77,
+      "eaSnapshot": "week-4",
+      "rationale": "Current first-team role, 130 receiving yards through four games and a 1,173-yard/12-touchdown 2025 JUCO season justify a mid-80s breakout grade without treating JUCO production as equivalent to a full FBS sample."
+    },
+    {
+      "family": "WR",
+      "name": "Ben Ford",
+      "grade": 83,
+      "eaRating": 80,
+      "eaSnapshot": "week-3",
+      "rationale": "His 2025 line of 21 catches for 325 yards and five touchdowns in only seven games stabilizes a quieter 2026 start; current reduced volume keeps him in the low-80s."
+    },
+    {
+      "family": "WR",
+      "name": "Cam Bates",
+      "grade": 82,
+      "eaRating": 77,
+      "eaSnapshot": "launch/current baseline",
+      "rationale": "Bates produced 302 receiving yards plus 78 rushing yards in 2025 and has two receiving touchdowns through four games in 2026, but only 59 current receiving yards keeps the grade near the board median."
+    },
+    {
+      "family": "TE",
+      "name": "Matt Wagner",
+      "grade": 84,
+      "eaRating": 79,
+      "eaSnapshot": "launch/current baseline",
+      "rationale": "Wagner is the actual first-team tight end and had 14 catches for 157 yards and three touchdowns through four games after 251 yards in 2025. That profile fits the Walker Lyons 84 neighborhood."
+    },
+    {
+      "family": "Front Seven",
+      "name": "Jayden Virgin-Morgan",
+      "grade": 93,
+      "eaRating": 89,
+      "eaSnapshot": "week-4",
+      "rationale": "Thirteen tackles for loss in 2025, plus three tackles for loss and a sack through four games in 2026, preserve his place in the John Henry Daley/Will Heldt 93 neighborhood."
+    },
+    {
+      "family": "Front Seven",
+      "name": "Boen Phelps",
+      "grade": 88,
+      "eaRating": 75,
+      "eaSnapshot": "launch baseline",
+      "rationale": "Phelps followed a 66-tackle 2025 with 24 tackles, 3.5 tackles for loss and a sack through four games in 2026. The two-year production supports a high-80s complete-linebacker grade despite a lagging EA baseline."
+    },
+    {
+      "family": "Front Seven",
+      "name": "Max Stege",
+      "grade": 85,
+      "eaRating": 81,
+      "eaSnapshot": "week-4",
+      "rationale": "Seven tackles for loss in 2025 plus 1.5 tackles for loss and a sack through the four-game cutoff support a strong-starter 85 grade."
+    },
+    {
+      "family": "Front Seven",
+      "name": "Mikaio Edward",
+      "grade": 83,
+      "eaRating": 71,
+      "eaSnapshot": "week-3",
+      "rationale": "Edward brought 41 tackles, nine tackles for loss and seven sacks from Central Washington in 2025 and immediately produced 2.5 tackles for loss and 1.5 sacks in four FBS games. The level jump caps him at 83."
+    },
+    {
+      "family": "Front Seven",
+      "name": "Logan Brantley",
+      "grade": 80,
+      "eaRating": 64,
+      "eaSnapshot": "launch baseline",
+      "rationale": "Brantley won the current middle-linebacker job and produced 12 tackles and two tackles for loss through four games after a very small Kansas role. Current FBS evidence justifies 80, while the thin prior sample prevents an upper-80s overreaction."
+    },
+    {
+      "family": "Secondary",
+      "name": "Jaden Mickey",
+      "grade": 88,
+      "eaRating": 79,
+      "eaSnapshot": "launch baseline",
+      "rationale": "A 2025 season with 38 tackles, seven tackles for loss, five breakups and two forced fumbles plus 2.5 tackles for loss through four 2026 games supports a high-80s grade even with a quieter coverage-stat start."
+    },
+    {
+      "family": "Secondary",
+      "name": "Travis Anderson",
+      "grade": 86,
+      "eaRating": 72,
+      "eaSnapshot": "week-4",
+      "rationale": "Anderson jumped from a six-tackle freshman season into a full-time role with 19 tackles and three interceptions through four games. The breakout is real, but the limited prior sample caps him at 86 rather than the 90s."
+    },
+    {
+      "family": "Secondary",
+      "name": "JeRico Washington Jr.",
+      "grade": 86,
+      "eaRating": 83,
+      "eaSnapshot": "week-3",
+      "rationale": "His prior Kennesaw State production and current Boise role, including multiple early pass breakups, support an 86 grade: above the board median but below the established elite corners."
+    },
+    {
+      "family": "Secondary",
+      "name": "Roman Tillmon",
+      "grade": 84,
+      "eaRating": 76,
+      "eaSnapshot": "launch baseline",
+      "rationale": "Tillmon started 15 games at South Dakota in 2025 with 94 tackles and six breakups, then immediately held Boise's first-team nickel role with 14 tackles and an interception through the cutoff. The FCS-to-FBS transition caps him at 84."
+    },
+    {
+      "family": "Secondary",
+      "name": "Sherrod Smith",
+      "grade": 84,
+      "eaRating": 77,
+      "eaSnapshot": "current conference board",
+      "rationale": "Smith had six pass breakups and an interception in 2025 and five more pass breakups through the first four games of 2026 while holding a first-team corner role. That sustained coverage production supports 84."
+    },
+    {
+      "family": "Head Coach",
+      "name": "Spencer Danielson",
+      "grade": 86,
+      "eaRating": null,
+      "eaSnapshot": "sporting-news+p&r",
+      "rationale": "Danielson entered the cutoff 24-8 as Boise State head coach with three straight conference titles and a 2024 CFP berth, then opened 2026 at 3-1 with a close loss at Oregon. The résumé is stronger than preseason No. 39, while the 2025 9-5 step back keeps him below the 88+ tier."
+    }
+  ],
+  "eaDiscrepancyAudit": {
+    "rule": "Absolute HQ-vs-EA difference of 7+ requires written review; 10+ requires an explicit major-red-flag explanation.",
+    "mandatoryReviews": [
+      {
+        "family": "WR",
+        "name": "Rasean Jones",
+        "hq": 87,
+        "ea": 78,
+        "delta": 9,
+        "majorRedFlag": false,
+        "disposition": "keep HQ",
+        "explanation": "Four-game FBS production already shows a real featured-receiver breakout, while the thin prior sample is why HQ stops at 87."
+      },
+      {
+        "family": "WR",
+        "name": "Akeem Wright",
+        "hq": 84,
+        "ea": 77,
+        "delta": 7,
+        "majorRedFlag": false,
+        "disposition": "keep HQ",
+        "explanation": "A first-team Boise role plus strong 2025 JUCO production justifies a modest breakout adjustment, capped in the mid-80s."
+      },
+      {
+        "family": "Front Seven",
+        "name": "Boen Phelps",
+        "hq": 88,
+        "ea": 75,
+        "delta": 13,
+        "majorRedFlag": true,
+        "disposition": "keep HQ",
+        "explanation": "EA materially lags two seasons of evidence: 66 tackles in 2025 and 24 tackles with 3.5 TFL through four 2026 games."
+      },
+      {
+        "family": "Front Seven",
+        "name": "Mikaio Edward",
+        "hq": 83,
+        "ea": 71,
+        "delta": 12,
+        "majorRedFlag": true,
+        "disposition": "keep HQ",
+        "explanation": "Seven sacks and nine TFL at Central Washington in 2025 followed by immediate FBS disruption support 83; the level jump is already reflected by keeping him out of the upper 80s."
+      },
+      {
+        "family": "Front Seven",
+        "name": "Logan Brantley",
+        "hq": 80,
+        "ea": 64,
+        "delta": 16,
+        "majorRedFlag": true,
+        "disposition": "keep HQ",
+        "explanation": "The launch rating predates his Boise starting role. Twelve tackles and two TFL through four games support a respectable 80, while minimal 2025 Kansas production prevents a higher grade."
+      },
+      {
+        "family": "Secondary",
+        "name": "Jaden Mickey",
+        "hq": 88,
+        "ea": 79,
+        "delta": 9,
+        "majorRedFlag": false,
+        "disposition": "keep HQ",
+        "explanation": "His 2025 all-around production and current run-support disruption remain materially stronger than the EA baseline."
+      },
+      {
+        "family": "Secondary",
+        "name": "Travis Anderson",
+        "hq": 86,
+        "ea": 72,
+        "delta": 14,
+        "majorRedFlag": true,
+        "disposition": "keep HQ",
+        "explanation": "Three interceptions and 19 tackles in a new full-time role are a genuine 2026 breakout. The limited prior sample is why HQ caps him at 86."
+      },
+      {
+        "family": "Secondary",
+        "name": "Roman Tillmon",
+        "hq": 84,
+        "ea": 76,
+        "delta": 8,
+        "majorRedFlag": false,
+        "disposition": "keep HQ",
+        "explanation": "A 94-tackle, six-breakup 2025 FCS season plus immediate first-team Boise production supports 84 while the level transition keeps the grade conservative."
+      },
+      {
+        "family": "Secondary",
+        "name": "Sherrod Smith",
+        "hq": 84,
+        "ea": 77,
+        "delta": 7,
+        "majorRedFlag": false,
+        "disposition": "keep HQ",
+        "explanation": "Eleven pass breakups across the 2025 season and first four 2026 games, plus a current first-team role, support a mid-80s coverage grade."
+      }
+    ],
+    "result": "passed"
+  },
+  "coachExternalAudit": {
+    "spencerDanielson": {
+      "hqGrade": 86,
+      "hqNeighborhoodRank": "18-21 on the locked 68-coach board before adding Boise State",
+      "sportingNewsRank": 39,
+      "puntAndRallyLiveRank": 24,
+      "resolution": "Keep HQ 86. Three consecutive conference titles, a CFP berth and a 3-1 start justify a meaningful lift above the preseason ranking; the 9-5 2025 season prevents an elite-tier grade."
+    },
+    "result": "passed"
+  },
+  "auditResult": {
+    "currentCandidateCount": 19,
+    "priorityAndGradeStatus": "locked",
+    "legacyOneOffRows": "Retained in backend authority only for compatibility with any in-flight or historical picks, but they are no longer current Boise State shortlist authority.",
+    "result": "passed"
+  }
+}
