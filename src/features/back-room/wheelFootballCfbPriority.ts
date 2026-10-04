@@ -35,7 +35,7 @@ export interface WheelFootballCfbReconciliationWarning {
 
 export type WheelFootballCfbBaselineTeam = {
   school: string;
-  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Independent";
+  conference: "SEC" | "Big Ten" | "Big 12" | "ACC" | "Independent" | "Pac-12";
   espnId: string;
   depthChartUrl: string;
   rosterUrl: string;
