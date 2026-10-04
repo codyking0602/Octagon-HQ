@@ -21,6 +21,7 @@
       "/deployment.json",
       "/api/football/nfl-roster",
       "/api/football/cfb-roster",
+      "/api/football/cfb-ap-top25",
       "/share-preview/*"
     ]
   }
