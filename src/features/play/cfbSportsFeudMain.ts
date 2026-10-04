@@ -454,7 +454,7 @@ export const CFB_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("cfb-main", [
       {
         prompt: "Name a coach who made opposing defensive coordinators lose sleep.",
         answers: ["Mike Leach","Steve Spurrier","Chip Kelly","Urban Meyer","Art Briles","Lincoln Riley","Gus Malzahn","Lane Kiffin"],
-        alsoAcceptedAnswers: ["Rich Rodriguez","Hal Mumme","Paul Johnson","Josh Heupel","Bobby Petrino","Kliff Kingsbury","Dana Holgorsen","June Jones","Tom Osborne","Jeff Brohm"],
+        alsoAcceptedAnswers: ["Rich Rodriguez","Hal Mumme","Paul Johnson","Josh Heupel","Bobby Petrino","Steve Sarkisian","Kliff Kingsbury","Dana Holgorsen","June Jones","Tom Osborne","Jeff Brohm"],
       },
       {
         prompt: "Name an offensive-minded college coach whose scheme became part of his identity.",

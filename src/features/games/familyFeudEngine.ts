@@ -258,6 +258,37 @@ function typoAllowance(value: string, term: string) {
   return 3;
 }
 
+function likelySamePersonGivenName(left: string, right: string) {
+  if (left === right) return true;
+  if (!left || !right || left[0] !== right[0]) return false;
+
+  const distance = editDistance(left, right);
+  if (distance <= 1) return true;
+  if (Math.max(left.length, right.length) >= 6 && distance <= 2) return true;
+
+  if (distance !== 2 || left.length !== right.length) return false;
+  const mismatches: number[] = [];
+  for (let index = 0; index < left.length; index += 1) {
+    if (left[index] !== right[index]) mismatches.push(index);
+  }
+  return mismatches.length === 2
+    && mismatches[1] === mismatches[0]! + 1
+    && left[mismatches[0]!] === right[mismatches[1]!]
+    && left[mismatches[1]!] === right[mismatches[0]!];
+}
+
+function fuzzyPersonFullNameCompatible(input: string, term: string) {
+  const inputTokens = input.split(" ").filter(Boolean);
+  const termTokens = term.split(" ").filter(Boolean);
+  if (inputTokens.length < 2 || termTokens.length < 2) return true;
+
+  const inputSurname = inputTokens.at(-1);
+  const termSurname = termTokens.at(-1);
+  if (!inputSurname || !termSurname || inputSurname !== termSurname) return true;
+
+  return likelySamePersonGivenName(inputTokens[0]!, termTokens[0]!);
+}
+
 interface MatchTerm {
   entityId: string;
   term: string;
@@ -319,9 +350,12 @@ export function matchFamilyFeudAnswer(
     return { status: "matched", entityId: ids[0]!, kind };
   }
 
+  const entitiesById = new Map(questionEntities(pack, question).map((entity) => [entity.id, entity]));
   const byEntity = new Map<string, number>();
   for (const row of terms) {
     if (row.term.length < 3) continue;
+    const entity = entitiesById.get(row.entityId);
+    if (entity?.kind === "person" && !fuzzyPersonFullNameCompatible(normalized, row.term)) continue;
     const allowance = typoAllowance(normalized, row.term);
     if (allowance === 0) continue;
     const distance = editDistance(normalized, row.term);

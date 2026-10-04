@@ -67,11 +67,21 @@ describe("Sports Feud authored alias contract", () => {
     if (!question) return;
 
     const byId = new Map(pack.entities.map((entity) => [entity.id, entity.displayName]));
-    for (const input of ["OU-Texas", "Texas-OU", "OU vs Texas", "Texas vs OU"]) {
+    const expectations = [
+      ["OU-Texas", "Texas-Oklahoma"],
+      ["Texas-OU", "Texas-Oklahoma"],
+      ["OU vs Texas", "Texas-Oklahoma"],
+      ["Texas vs OU", "Texas-Oklahoma"],
+      ["The Game", "Ohio State-Michigan"],
+      ["Iron Bowl", "Alabama-Auburn"],
+      ["Red River Rivalry", "Texas-Oklahoma"],
+    ] as const;
+
+    for (const [input, expectedName] of expectations) {
       const match = matchFamilyFeudAnswer(pack, question, input);
       expect(match.status, input).toBe("matched");
       if (match.status === "matched") {
-        expect(byId.get(match.entityId), input).toBe("Texas-Oklahoma");
+        expect(byId.get(match.entityId), input).toBe(expectedName);
       }
     }
   });

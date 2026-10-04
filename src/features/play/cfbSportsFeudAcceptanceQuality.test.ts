@@ -277,6 +277,7 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
         "Paul Johnson",
         "Josh Heupel",
         "Bobby Petrino",
+        "Steve Sarkisian",
         "Kliff Kingsbury",
         "Dana Holgorsen",
         "June Jones",
@@ -285,6 +286,7 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     );
     expect(matchName(question, "Briles")?.name).toBe("Art Briles");
     expect(matchName(question, "Urban")?.name).toBe("Urban Meyer");
+    expect(matchName(question, "Sarkisian")?.name).toBe("Steve Sarkisian");
   });
 
   it("resolves Saban and natural school shorthand", () => {

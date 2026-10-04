@@ -136,6 +136,31 @@ describe("Family Feud V2 engine contract", () => {
     });
   });
 
+  it("does not fuzzy-match a different given name onto the same surname", () => {
+    const personQuestion = {
+      id: "person-name-guard",
+      prompt: "Name a coach.",
+      candidateIds: ["paul-johnson"],
+      answers: [{ entityId: "paul-johnson", points: 10 }],
+    };
+    const personPack: FamilyFeudPack = {
+      id: "person-name-guard-pack",
+      sport: "football",
+      entities: [{ id: "paul-johnson", displayName: "Paul Johnson", kind: "person" }],
+      mainBoards: [personQuestion, personQuestion],
+      fastMoney: [personQuestion, personQuestion, personQuestion, personQuestion, personQuestion],
+    };
+
+    expect(matchFamilyFeudAnswer(personPack, personQuestion, "Ben Johnson")).toEqual({
+      status: "unrecognized",
+    });
+    expect(matchFamilyFeudAnswer(personPack, personQuestion, "Pual Johnson")).toMatchObject({
+      status: "matched",
+      entityId: "paul-johnson",
+      kind: "typo",
+    });
+  });
+
   it("uses explicit person typing even when prompt wording contains fight, submission, team, or award terms", () => {
     const noisyPrompt = {
       ...mainOne,
