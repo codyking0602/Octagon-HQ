@@ -46,6 +46,7 @@ describe("Wheel of UFC v1 contract", () => {
     expect(migration).toContain("create or replace function private.get_wheel_ufc_candidates");
     expect(migration).toContain("create or replace function private.pick_wheel_ufc");
     expect(migration).toContain("That fighter is not eligible for this spin");
+    expect(migration).toContain("v_match.pending_country_code,\n      fighter.country_code,\n      fighter.is_champion");
     expect(repository).toContain("p_fighter_id: fighterId");
     expect(repository).not.toContain("hiddenGrade");
   });

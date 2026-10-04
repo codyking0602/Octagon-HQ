@@ -967,6 +967,7 @@ begin
     and private.wheel_ufc_category_ok(
       v_match.pending_category,
       v_match.pending_country_code,
+      fighter.country_code,
       fighter.is_champion,
       fighter.ranking,
       fighter.young_gun,
