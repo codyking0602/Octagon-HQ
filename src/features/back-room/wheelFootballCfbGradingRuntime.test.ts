@@ -67,6 +67,97 @@ describe("CFB Wheel runtime authority", () => {
     expect(wheelFootballPoolTeams("NFL")).toHaveLength(32);
   });
 
+  it("keeps simulated CFB Superteam scores healthy across every locked pool", () => {
+    const slots = ["QB", "RB", "WR", "Flex", "Front Seven", "Secondary", "Head Coach"] as const;
+    const familyFor = (school: string, slot: string, name: string) => {
+      if (slot !== "Flex") return slot;
+      return (["RB", "WR", "TE"] as const).find((family) =>
+        grades.has(`${normalized(school)}|${family}|${normalized(name)}`),
+      ) ?? null;
+    };
+    const finalGrade = (raw: number) => {
+      const score = raw <= 95
+        ? Math.max(0, 95 + (2.5 * (raw - 95)))
+        : Math.min(100, raw);
+      return Math.round(score * 10) / 10;
+    };
+    const simulate = (schoolIds: readonly string[]) => {
+      let seed = 123456789;
+      const random = () => {
+        seed = (1664525 * seed + 1013904223) >>> 0;
+        return seed / 4294967296;
+      };
+      const results: number[] = [];
+
+      for (let run = 0; run < 10_000; run += 1) {
+        const chosen = new Map<string, number>();
+        const used = new Set<string>();
+        let previousSchool = "";
+
+        for (let turn = 0; turn < 7; turn += 1) {
+          let schoolId = "";
+          do schoolId = schoolIds[Math.floor(random() * schoolIds.length)]!;
+          while (schoolId === previousSchool);
+          previousSchool = schoolId;
+
+          const team = wheelFootballCfbPriority[schoolId]!;
+          let best: { slot: string; name: string; grade: number } | null = null;
+          for (const slot of slots.filter((value) => !chosen.has(value))) {
+            for (const name of team[slot] ?? []) {
+              const family = familyFor(team.school, slot, name);
+              const identity = `${schoolId}|${normalized(name)}`;
+              if (!family || used.has(identity)) continue;
+              const grade = grades.get(`${normalized(team.school)}|${family}|${normalized(name)}`);
+              expect(grade, `${team.school} ${slot} ${name}`).toBeDefined();
+              if (grade != null && (!best || grade > best.grade)) best = { slot, name, grade };
+            }
+          }
+
+          expect(best).not.toBeNull();
+          chosen.set(best!.slot, best!.grade);
+          used.add(`${schoolId}|${normalized(best!.name)}`);
+        }
+
+        const raw = slots.reduce((sum, slot) => sum + chosen.get(slot)!, 0) / 7;
+        results.push(finalGrade(raw));
+      }
+
+      results.sort((left, right) => left - right);
+      const percentile = (p: number) => results[Math.floor((results.length - 1) * p)]!;
+      return { p05: percentile(0.05), p50: percentile(0.5), p95: percentile(0.95) };
+    };
+
+    const allIds = Object.keys(wheelFootballCfbPriority);
+    const byConference = (conference: string) => allIds.filter((id) =>
+      wheelFootballCfbPriority[id]!.conference === conference
+    );
+
+    const national = simulate(allIds);
+    const sec = simulate(byConference("SEC"));
+    const bigTen = simulate(byConference("Big Ten"));
+    const big12 = simulate(byConference("Big 12"));
+    const acc = simulate(byConference("ACC"));
+
+    expect(national.p05).toBeGreaterThanOrEqual(72);
+    expect(national.p50).toBeGreaterThanOrEqual(80);
+    expect(national.p50).toBeLessThanOrEqual(84);
+    expect(national.p95).toBeGreaterThanOrEqual(88);
+
+    expect(sec.p50).toBeGreaterThanOrEqual(84);
+    expect(sec.p50).toBeLessThanOrEqual(89);
+    expect(bigTen.p50).toBeGreaterThanOrEqual(81);
+    expect(bigTen.p50).toBeLessThanOrEqual(85);
+    expect(big12.p50).toBeGreaterThanOrEqual(75);
+    expect(big12.p50).toBeLessThanOrEqual(79);
+    expect(acc.p50).toBeGreaterThanOrEqual(77);
+    expect(acc.p50).toBeLessThanOrEqual(81);
+
+    for (const result of [national, sec, bigTen, big12, acc]) {
+      expect(result.p05).toBeGreaterThanOrEqual(65);
+      expect(result.p95).toBeLessThanOrEqual(100);
+    }
+  });
+
   it("builds every audited school option even when ESPN omits a roster identity", async () => {
     const fetcher = vi.fn(async () => new Response(JSON.stringify({ athletes: [] }), {
       status: 200,
