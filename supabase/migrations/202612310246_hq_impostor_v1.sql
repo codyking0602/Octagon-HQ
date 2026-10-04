@@ -1230,7 +1230,7 @@ returns jsonb
 language plpgsql
 security definer
 set search_path = ''
-as $
+as $$
 declare
   v_profile uuid:=auth.uid();
 begin
@@ -1257,7 +1257,7 @@ begin
 
   return private.hq_impostor_state_json(p_event_id,v_profile,p_at);
 end;
-$;
+$$;
 
 create or replace function private.submit_hq_impostor_vote(
   p_event_id uuid,
@@ -1373,7 +1373,7 @@ security invoker
 set search_path = ''
 as $
   select private.acknowledge_hq_impostor_result(p_event_id,p_round_no,now());
-$;
+$$;
 
 create or replace function public.submit_hq_impostor_vote(p_event_id uuid,p_vote_profile_id uuid,p_secret_guess text default null)
 returns jsonb
