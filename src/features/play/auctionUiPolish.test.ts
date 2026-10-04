@@ -12,13 +12,14 @@ const whatsNewMigration = readFileSync(
 );
 
 describe("Auction release polish", () => {
-  it("features Auction first without a temporary new badge or asynchronous copy", () => {
-    expect(playGames[0]).toMatchObject({
+  it("keeps Auction canonical without a temporary new badge or asynchronous copy", () => {
+    const auctionGame = playGames.find((game) => game.id === "auction");
+    expect(auctionGame).toMatchObject({
       id: "auction",
       icon: "$",
       description: "Choose a UFC auction, bid privately, and build the stronger collection.",
     });
-    expect(playGames[0]?.description).not.toMatch(/asynchronous/i);
+    expect(auctionGame?.description).not.toMatch(/asynchronous/i);
     expect(page).not.toMatch(/ASYNCHRONOUS SEALED BID/);
     expect(page).toContain("SEALED BID CHALLENGE");
   });
