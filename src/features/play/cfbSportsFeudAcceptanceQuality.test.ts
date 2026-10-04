@@ -258,6 +258,35 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     }
   });
 
+  it("locks the rebuilt defensive-coordinator nightmare board", () => {
+    const question = authoredQuestion("cfb-main-10-4");
+    expect(question.answers.map((answer) => answer.name)).toEqual([
+      "Mike Leach",
+      "Steve Spurrier",
+      "Chip Kelly",
+      "Urban Meyer",
+      "Art Briles",
+      "Lincoln Riley",
+      "Gus Malzahn",
+      "Lane Kiffin",
+    ]);
+    expect(question.alsoAcceptedAnswers?.map((answer) => answer.name)).toEqual(
+      expect.arrayContaining([
+        "Rich Rodriguez",
+        "Hal Mumme",
+        "Paul Johnson",
+        "Josh Heupel",
+        "Bobby Petrino",
+        "Kliff Kingsbury",
+        "Dana Holgorsen",
+        "June Jones",
+        "Tom Osborne",
+      ]),
+    );
+    expect(matchName(question, "Briles")?.name).toBe("Art Briles");
+    expect(matchName(question, "Urban")?.name).toBe("Urban Meyer");
+  });
+
   it("resolves Saban and natural school shorthand", () => {
     expect(matchName(authoredQuestion("cfb-main-09-1"), "Saban")).toEqual({
       name: "Nick Saban",

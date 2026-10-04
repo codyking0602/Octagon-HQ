@@ -121,7 +121,25 @@ const ALIAS_INDEX = {
   ufc: aliasIndex("ufc"),
 };
 
-function automaticAliases(name: string) {
+const CFB_RIVALRY_SHORTHAND: Readonly<Record<string, readonly string[]>> = {
+  "Ohio State": ["OSU", "Ohio St"],
+  Alabama: ["Bama"],
+  Texas: ["UT"],
+  Oklahoma: ["OU"],
+  USC: ["Southern Cal"],
+  "Notre Dame": ["ND"],
+  Florida: ["UF"],
+  Georgia: ["UGA"],
+  "Florida State": ["FSU"],
+  Miami: ["The U"],
+  Oregon: ["UO"],
+  Washington: ["UW"],
+  "Michigan State": ["MSU"],
+  BYU: ["BYU"],
+  "Washington State": ["WSU"],
+};
+
+function automaticAliases(name: string, domain?: SportsFeudBankDomain) {
   const aliases: string[] = [];
   if (name.includes(" over ")) {
     const [winner, loser] = name.split(" over ", 2);
@@ -130,6 +148,20 @@ function automaticAliases(name: string) {
     const [left, right] = name.split("-", 2);
     if (left && right && /[A-Z]/.test(left) && /[A-Z]/.test(right)) {
       aliases.push(`${right}-${left}`, `${left} vs ${right}`, `${right} vs ${left}`);
+      if (domain === "cfb") {
+        const leftNames = [left, ...(CFB_RIVALRY_SHORTHAND[left] ?? [])];
+        const rightNames = [right, ...(CFB_RIVALRY_SHORTHAND[right] ?? [])];
+        for (const leftName of leftNames) {
+          for (const rightName of rightNames) {
+            aliases.push(
+              `${leftName}-${rightName}`,
+              `${rightName}-${leftName}`,
+              `${leftName} vs ${rightName}`,
+              `${rightName} vs ${leftName}`,
+            );
+          }
+        }
+      }
     }
   }
   return aliases;
@@ -183,7 +215,7 @@ function answerAliases(domain: SportsFeudBankDomain, answer: SportsFeudAuthoredA
   return unique([
     ...(answer.aliases ?? []),
     ...(ALIAS_INDEX[domain].get(answer.name) ?? []),
-    ...automaticAliases(answer.name),
+    ...automaticAliases(answer.name, domain),
   ]).filter((alias) => alias.trim() && alias !== answer.name);
 }
 
