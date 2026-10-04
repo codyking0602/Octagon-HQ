@@ -1,0 +1,63 @@
+name: Sync Wheel CFB AP Top 25
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "37 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: octagon-hq-wheel-cfb-ap-top25
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Resolve production service role
+        shell: bash
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_ID; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error title=Missing AP Top 25 sync secret::$name is missing or empty."
+              exit 1
+            fi
+          done
+
+          api_keys_file="$RUNNER_TEMP/supabase-api-keys.json"
+          curl --fail --silent --show-error \
+            --header "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_ID}/api-keys?reveal=true" \
+            --output "$api_keys_file"
+
+          service_role_key=$(node - "$api_keys_file" <<'NODE'
+          const fs = require("fs");
+          const keys = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          const serviceKey = keys.find((key) => key.type === "secret" && key.api_key && key.disabled !== true)
+            ?? keys.find((key) => key.type === "legacy" && /service[_-]?role/i.test(key.name ?? "") && key.api_key);
+          if (!serviceKey?.api_key) throw new Error("No production service-role-capable Supabase key was returned.");
+          process.stdout.write(serviceKey.api_key);
+          NODE
+          )
+          echo "::add-mask::$service_role_key"
+          echo "SUPABASE_URL=https://${SUPABASE_PROJECT_ID}.supabase.co" >> "$GITHUB_ENV"
+          echo "SUPABASE_SERVICE_ROLE_KEY=$service_role_key" >> "$GITHUB_ENV"
+
+      - name: Sync AP Top 25 Wheel pool
+        run: node scripts/sync-wheel-football-ap-top25.mjs
