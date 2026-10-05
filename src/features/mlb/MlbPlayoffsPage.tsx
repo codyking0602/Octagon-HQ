@@ -20,6 +20,10 @@ import { useMlbChampionship } from "./useMlbChampionship";
 import { useMlbPlayoffs } from "./useMlbPlayoffs";
 import { millionaireMoneyLabel, millionaireTimeLabel } from "../play/MillionaireCasualModel";
 import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
+import { mlbSportsFeudProductionConfig } from "./mlbSportsFeudProduction";
+import { buildFamilyFeudDailySetup } from "../play/familyFeudDailyRuntime";
+import DailyLeaderboardGameResult from "../play/DailyLeaderboardGameResult";
+import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import "../../styles/play-landing-shared.css";
 import "../../styles/today-challenge-hub.css";
 import "../../styles/daily-leaderboard-result-page.css";
@@ -243,6 +247,188 @@ function sportsFeudSummary(entry: MlbPlayChallengeLeaderboardEntry) {
   };
 }
 
+function mlbSportsFeudSharedResult(
+  entry: MlbPlayChallengeLeaderboardEntry,
+  challengeKey: string,
+  challengeDate: string,
+): { projection: TodayChallengeProjection; resultDetail: Record<string, unknown> } | null {
+  const config = mlbSportsFeudProductionConfig(challengeKey, challengeDate);
+  if (!config) return null;
+
+  const publication = buildFamilyFeudDailySetup(
+    config.pack,
+    config.challengeDate,
+    config.scheduleVersion,
+  );
+  const detail = entry.resultDetail;
+  const storedPublicState = detail.public_state
+    && typeof detail.public_state === "object"
+    && !Array.isArray(detail.public_state)
+    ? detail.public_state as Record<string, unknown>
+    : null;
+
+  const entities = new Map(config.pack.entities.map((entity) => [entity.id, entity]));
+  const nameToId = new Map(
+    config.pack.entities.map((entity) => [entity.displayName.toLocaleLowerCase(), entity.id]),
+  );
+
+  const legacyBoards = Array.isArray(detail.main_boards) ? detail.main_boards : [];
+  const mainBoards = config.pack.mainBoards.map((question, boardIndex) => {
+    const stored = legacyBoards[boardIndex]
+      && typeof legacyBoards[boardIndex] === "object"
+      && !Array.isArray(legacyBoards[boardIndex])
+      ? legacyBoards[boardIndex] as Record<string, unknown>
+      : {};
+    const boardAnswers = Array.isArray(stored.board_answers)
+      ? stored.board_answers.filter((row): row is Record<string, unknown> => (
+          Boolean(row) && typeof row === "object" && !Array.isArray(row)
+        ))
+      : [];
+    const foundNames = new Set(
+      boardAnswers
+        .filter((row) => row.found === true)
+        .map((row) => String(row.name ?? "").toLocaleLowerCase()),
+    );
+    const foundIds = question.answers
+      .filter((answer) => {
+        const entity = entities.get(answer.entityId);
+        return Boolean(entity && foundNames.has(entity.displayName.toLocaleLowerCase()));
+      })
+      .map((answer) => answer.entityId);
+
+    return {
+      id: question.id,
+      prompt: String(stored.prompt ?? question.prompt),
+      strikes: Number(stored.strikes ?? 0),
+      strike_limit: 3,
+      required_answers: 4,
+      max_points: 30,
+      settled: true,
+      answer_reveal: question.answers.map((answer) => {
+        const entity = entities.get(answer.entityId);
+        return {
+          entity: {
+            id: answer.entityId,
+            display_name: entity?.displayName ?? answer.entityId,
+          },
+          points: answer.points,
+          found: foundIds.includes(answer.entityId),
+        };
+      }),
+      slots: foundIds.slice(0, 4).map((entityId, slotIndex) => {
+        const answer = question.answers.find((row) => row.entityId === entityId);
+        const entity = entities.get(entityId);
+        return {
+          slot_index: slotIndex,
+          points: answer?.points ?? null,
+          revealed: true,
+          found: true,
+          entity: {
+            id: entityId,
+            display_name: entity?.displayName ?? entityId,
+          },
+        };
+      }),
+    };
+  });
+
+  const fast = detail.fast_money
+    && typeof detail.fast_money === "object"
+    && !Array.isArray(detail.fast_money)
+    ? detail.fast_money as Record<string, unknown>
+    : {};
+  const legacyFastRows = Array.isArray(fast.results)
+    ? fast.results.filter((row): row is Record<string, unknown> => (
+        Boolean(row) && typeof row === "object" && !Array.isArray(row)
+      ))
+    : [];
+  const fastResults = config.pack.fastMoney.map((question, index) => {
+    const stored = legacyFastRows[index] ?? {};
+    const submitted = String(stored.submitted_answer ?? stored.submitted_text ?? "NO ANSWER");
+    const submittedEntityId = nameToId.get(submitted.toLocaleLowerCase()) ?? null;
+    const rank = submittedEntityId
+      ? question.answers.findIndex((answer) => answer.entityId === submittedEntityId)
+      : -1;
+    return {
+      question_id: question.id,
+      prompt: String(stored.prompt ?? question.prompt),
+      submitted_answer: submitted,
+      counted: stored.counted === true || Number(stored.points ?? 0) > 0,
+      points: Number(stored.points ?? 0),
+      board_rank: stored.board_rank == null ? (rank >= 0 ? rank + 1 : null) : Number(stored.board_rank),
+      accepted_answers: question.answers.map((answer) => ({
+        entity: {
+          id: answer.entityId,
+          display_name: entities.get(answer.entityId)?.displayName ?? answer.entityId,
+        },
+        points: answer.points,
+      })),
+    };
+  });
+
+  const publicState = storedPublicState ?? {
+    complete: true,
+    phase: "complete",
+    main_board_index: 1,
+    main_boards: mainBoards,
+    main_points: Number(entry.publicResult.main_points ?? 0),
+    fast_money: {
+      question_count: 5,
+      answered_count: fastResults.length,
+      question_index: null,
+      current_question: null,
+      time_remaining_ms: Number(
+        fast.time_remaining_ms
+          ?? entry.publicResult.fast_money_time_remaining_ms
+          ?? 0,
+      ),
+      submitted_answers: fastResults.map((row) => ({ submitted_answer: row.submitted_answer })),
+      results: fastResults,
+      points: Number(entry.publicResult.fast_money_points ?? fast.points ?? 0),
+    },
+    raw_points: entry.rawScore,
+    hq_score: entry.rawScore,
+    last_feedback: null,
+  };
+
+  const normalizedFastResults = Array.isArray(detail.fast_money_results)
+    ? detail.fast_money_results
+    : legacyFastRows.map((row, index) => ({
+        question_id: String(row.question_id ?? config.pack.fastMoney[index]?.id ?? ""),
+        submitted_text: String(row.submitted_text ?? row.submitted_answer ?? ""),
+      }));
+
+  const resultDetail = {
+    ...detail,
+    fast_money_results: normalizedFastResults,
+  };
+
+  const projection: TodayChallengeProjection = {
+    available: true,
+    id: challengeKey,
+    centralDay: challengeDate,
+    scheduleVersion: config.scheduleVersion,
+    gameType: "sports_feud",
+    setupKey: publication.setupKey,
+    contentVersion: publication.contentVersion,
+    scoringVersion: publication.scoringVersion,
+    fallbackReason: null,
+    publicSetup: publication.publicSetup,
+    progressRevision: 0,
+    publicState,
+    revealSetup: publication.revealSetup,
+    officialAttempt: {
+      nativeScore: entry.rawScore,
+      normalizedScore: entry.rawScore,
+      completedAt: entry.completedAt,
+      publicResult: entry.publicResult,
+    },
+    deploymentSha: "mlb-sports-feud-production",
+  };
+
+  return { projection, resultDetail };
+}
+
 function millionaireResultSummary(entry: MlbPlayChallengeLeaderboardEntry) {
   const detail = entry.resultDetail;
   const publicResult = entry.publicResult;
@@ -454,8 +640,40 @@ function MlbPlayResultDetail({
     : 0;
   const hitTheNumberGames = hitTheNumberRows(entry);
   const sportsFeud = sportsFeudSummary(entry);
+  const sharedSportsFeud = isSportsFeud
+    ? mlbSportsFeudSharedResult(entry, challengeKey, challengeDate)
+    : null;
   const barTrivia = barTriviaResultSummary(entry);
   const averageFan = averageFanResultSummary(entry);
+
+  if (isSportsFeud && sharedSportsFeud) {
+    return (
+      <div
+        className="today-hub-official-result mlb-play-result-detail"
+        role="dialog"
+        aria-label={`${entry.displayName} MLB Play result`}
+      >
+        <header className="today-hub-official-result__header">
+          <button type="button" onClick={onClose}>← LEADERBOARD</button>
+          <span className="today-hub-official-result__identity">
+            <span className="today-hub-official-result__avatar" aria-hidden="true">
+              {entry.avatarPhotoData ? <img src={entry.avatarPhotoData} alt="" /> : <b>{entry.initials}</b>}
+            </span>
+            <span className="today-hub-official-result__identity-copy">
+              <strong>{entry.displayName}</strong>
+              <small>#{entry.rank} · {entry.rawScore}/100</small>
+            </span>
+          </span>
+        </header>
+        <div className="today-hub-official-result__body">
+          <DailyLeaderboardGameResult
+            projection={sharedSportsFeud.projection}
+            resultDetail={sharedSportsFeud.resultDetail}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
