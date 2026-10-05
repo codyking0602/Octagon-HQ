@@ -443,6 +443,12 @@ export function footballGmTradeOffers(
       .filter((incoming) => footballGmSalaryForYear(incoming, 2) < footballGmSalaryForYear(outgoing, 2))
       .filter((incoming) => footballGmProjectedGradeForPlayer(incoming, 2) >= footballGmProjectedGradeForPlayer(outgoing, 2) - 7)
       .filter((incoming) => !distinctPlayerNameUsed(stripped, incoming))
+      .filter((incoming) => canAddPlayerToSlot({
+        roster: stripped,
+        player: incoming,
+        slot: entry.slot,
+        year: 2,
+      }))
       .sort((left, right) => {
         const leftScore = footballGmProjectedGradeForPlayer(left, 2) * 2
           - (footballGmSalaryForYear(left, 2) / 1_000_000);
