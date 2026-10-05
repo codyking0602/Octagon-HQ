@@ -5,6 +5,7 @@ import {
   FOOTBALL_HIGHER_LOWER_QUESTION_COUNT,
   FOOTBALL_HIGHER_LOWER_VERSION,
   createFootballHigherLowerBoard,
+  footballHigherLowerCandidateSummary,
   footballHigherLowerAnswerIsCorrect,
   parseFootballHigherLowerBoard,
   type FootballHigherLowerScope,
@@ -21,6 +22,10 @@ function boardShape(scope: FootballHigherLowerScope) {
 }
 
 describe("Football Higher or Lower", () => {
+  it("audits the candidate pool", () => {
+    console.log("HIGHER_LOWER_CANDIDATES", JSON.stringify(footballHigherLowerCandidateSummary()));
+  });
+
   it.each(["NFL", "CFB", "MIXED"] as const)("builds a deterministic ten-question %s board", (scope) => {
     const first = createFootballHigherLowerBoard("same-seed", scope);
     const second = createFootballHigherLowerBoard("same-seed", scope);
