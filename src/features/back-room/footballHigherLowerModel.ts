@@ -465,7 +465,7 @@ const metricSpecs: readonly MetricSpec[] = [
     metricId: "cfb-all-america-selections",
     kinds: ["player-career"],
     minValue: 1,
-    recognition: "iconic",
+    recognition: "recognizable",
   },
   {
     key: "cfb-national-titles",
@@ -475,7 +475,7 @@ const metricSpecs: readonly MetricSpec[] = [
     metricId: "cfb-national-championships-won",
     kinds: ["player-career"],
     minValue: 1,
-    recognition: "iconic",
+    recognition: "recognizable",
   },
   {
     key: "cfb-career-pass-yards",
