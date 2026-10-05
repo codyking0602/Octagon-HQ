@@ -352,8 +352,71 @@ export function footballGmReplacePlayer(
   incomingPlayerId: string,
   acquired: "trade" | "replacement",
 ) {
+  const outgoing = roster.find((entry) => entry.slot === slot);
+  const incoming = footballGmPlayerById(incomingPlayerId);
+  if (!outgoing || !incoming || !incoming.eligibleSlots.includes(slot)) {
+    throw new Error("That replacement is unavailable.");
+  }
   const stripped = roster.filter((entry) => entry.slot !== slot);
-  return footballGmAddPick(stripped, incomingPlayerId, slot, acquired);
+  if (stripped.some((entry) => entry.playerId === incoming.id) || distinctPlayerNameUsed(stripped, incoming)) {
+    throw new Error("That player is already on this roster.");
+  }
+  const next = [...stripped, { slot, playerId: incoming.id, acquired }];
+  const currentYearTwo = footballGmRosterCap(roster, 2);
+  const nextYearTwo = footballGmRosterCap(next, 2);
+  const currentYearThree = footballGmRosterCap(roster, 3);
+  const nextYearThree = footballGmRosterCap(next, 3);
+  const improvesCrisis = (
+    nextYearTwo < currentYearTwo
+    && nextYearThree < currentYearThree
+  );
+  const remainsCompliant = (
+    currentYearTwo <= FOOTBALL_GM_CAP
+    && currentYearThree <= FOOTBALL_GM_CAP
+    && nextYearTwo <= FOOTBALL_GM_CAP
+    && nextYearThree <= FOOTBALL_GM_CAP
+  );
+  if (!improvesCrisis && !remainsCompliant) {
+    throw new Error("That move does not improve the cap situation.");
+  }
+  return next;
+}
+
+export function footballGmReplacementCandidatesForTeam(input: {
+  team: string;
+  roster: readonly FootballGmRosterEntry[];
+  slot: FootballGmRosterSlot;
+}) {
+  const players = playersByTeam.get(input.team) ?? [];
+  return players.flatMap<FootballGmTeamCandidate>((player) => {
+    try {
+      footballGmReplacePlayer(input.roster, input.slot, player.id, "replacement");
+      return [{
+        player,
+        legalSlots: [input.slot],
+        salary: footballGmSalaryForYear(player, 2),
+      }];
+    } catch {
+      return [];
+    }
+  }).sort((left, right) => left.salary - right.salary || left.player.name.localeCompare(right.player.name));
+}
+
+export function footballGmEligibleReplacementTeams(input: {
+  roster: readonly FootballGmRosterEntry[];
+  slot: FootballGmRosterSlot;
+  previousTeam?: string | null;
+}) {
+  const teams = FOOTBALL_GM_TEAMS.filter((team) => footballGmReplacementCandidatesForTeam({
+    team,
+    roster: input.roster,
+    slot: input.slot,
+  }).length > 0);
+  if (input.previousTeam && teams.length > 1) {
+    const withoutRepeat = teams.filter((team) => team !== input.previousTeam);
+    if (withoutRepeat.length) return withoutRepeat;
+  }
+  return teams;
 }
 
 export function footballGmProjectedGradeForPlayer(player: FootballGmPlayer, year: 1 | 2 | 3) {
@@ -443,12 +506,14 @@ export function footballGmTradeOffers(
       .filter((incoming) => footballGmSalaryForYear(incoming, 2) < footballGmSalaryForYear(outgoing, 2))
       .filter((incoming) => footballGmProjectedGradeForPlayer(incoming, 2) >= footballGmProjectedGradeForPlayer(outgoing, 2) - 7)
       .filter((incoming) => !distinctPlayerNameUsed(stripped, incoming))
-      .filter((incoming) => canAddPlayerToSlot({
-        roster: stripped,
-        player: incoming,
-        slot: entry.slot,
-        year: 2,
-      }))
+      .filter((incoming) => {
+        try {
+          footballGmReplacePlayer(roster, entry.slot, incoming.id, "trade");
+          return true;
+        } catch {
+          return false;
+        }
+      })
       .sort((left, right) => {
         const leftScore = footballGmProjectedGradeForPlayer(left, 2) * 2
           - (footballGmSalaryForYear(left, 2) / 1_000_000);
