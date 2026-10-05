@@ -14,7 +14,7 @@
   "salaryRule": "Use current contract average annual value (APY), not NFL cap hit.",
   "sourceNotes": [
     "Population is the current manually audited NFL Wheel player universe; coaches are excluded.",
-    "Contract history is used as the bulk baseline and reconciled with current public contract references for 2026 signings, extensions, aliases, and material market resets.",
+    "Contract history and the 2027 free-agent snapshot provide the bulk baseline. High-impact and post-baseline contracts are reconciled to current OverTheCap contract terms as of 2026-10-05.",
     "No fallback salary is permitted. Every curated player identity must have an explicit resolved contract row before this artifact passes coverage."
   ],
   "players": [
@@ -73,10 +73,11 @@
       "currentApy": 8843686,
       "gameContract": "1YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2028,
+      "age": 24,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "ARI",
@@ -88,7 +89,7 @@
       "age": 26,
       "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Cardinals extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "ARI",
@@ -109,10 +110,11 @@
       "currentApy": 19000000,
       "gameContract": "3YR",
       "marketPosition": "TE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "TE",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "ARI",
@@ -193,10 +195,11 @@
       "currentApy": 18000000,
       "gameContract": "1YR",
       "marketPosition": "DB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "S",
-      "signedYear": 2024,
-      "contractYears": 3
+      "freeAgencyYear": 2028,
+      "age": 30,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "ARI",
@@ -274,13 +277,14 @@
       "teamCode": "ATL",
       "family": "RB",
       "player": "Bijan Robinson",
-      "currentApy": 5489636,
-      "gameContract": "1YR",
+      "currentApy": 22250000,
+      "gameContract": "3YR",
       "marketPosition": "RB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "RB",
-      "signedYear": 2023,
-      "contractYears": 4
+      "freeAgencyYear": 2031,
+      "age": 24,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "ATL",
@@ -298,13 +302,14 @@
       "teamCode": "ATL",
       "family": "WR",
       "player": "Drake London",
-      "currentApy": 5383618,
-      "gameContract": "1YR",
+      "currentApy": 35263500,
+      "gameContract": "3YR",
       "marketPosition": "WR",
-      "age": 26,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "WR"
+      "age": 25,
+      "freeAgencyYear": 2031,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "WR",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "ATL",
@@ -334,13 +339,14 @@
       "teamCode": "ATL",
       "family": "TE",
       "player": "Kyle Pitts Sr.",
-      "currentApy": 15045000,
-      "gameContract": "1YR",
+      "currentApy": 17666667,
+      "gameContract": "3YR",
       "marketPosition": "TE",
-      "age": 27,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "TE"
+      "age": 26,
+      "freeAgencyYear": 2029,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "TE",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "ATL",
@@ -505,10 +511,11 @@
       "currentApy": 15000000,
       "gameContract": "1YR",
       "marketPosition": "RB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "RB",
-      "signedYear": 2025,
-      "contractYears": 2
+      "freeAgencyYear": 2028,
+      "age": 32,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
@@ -526,13 +533,14 @@
       "teamCode": "BAL",
       "family": "WR",
       "player": "Zay Flowers",
-      "currentApy": 3509110,
-      "gameContract": "1YR",
+      "currentApy": 35000000,
+      "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2023,
-      "contractYears": 4
+      "freeAgencyYear": 2032,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
@@ -541,10 +549,11 @@
       "currentApy": 12250000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 3
+      "freeAgencyYear": 2030,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
@@ -565,10 +574,11 @@
       "currentApy": 13089000,
       "gameContract": "3YR",
       "marketPosition": "TE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "TE",
-      "signedYear": 2025,
-      "contractYears": 3
+      "freeAgencyYear": 2029,
+      "age": 31,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
@@ -577,10 +587,11 @@
       "currentApy": 28000000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2026,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 32,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
@@ -589,22 +600,24 @@
       "currentApy": 20000000,
       "gameContract": "1YR",
       "marketPosition": "LB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "LB",
-      "signedYear": 2023,
-      "contractYears": 5
+      "freeAgencyYear": 2028,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
       "family": "Front Seven",
       "player": "Nnamdi Madubuike",
       "currentApy": 24500000,
-      "gameContract": "3YR",
+      "gameContract": "1YR",
       "marketPosition": "IDL",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DT",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2028,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
@@ -649,10 +662,11 @@
       "currentApy": 25100000,
       "gameContract": "3YR",
       "marketPosition": "DB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "S",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2031,
+      "age": 25,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BAL",
@@ -745,10 +759,11 @@
       "currentApy": 27500000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BUF",
@@ -757,10 +772,11 @@
       "currentApy": 13250000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BUF",
@@ -796,7 +812,7 @@
       "age": 26,
       "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Bills extension; OTC lists Gregory Rousseau"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "BUF",
@@ -961,22 +977,24 @@
       "currentApy": 6982598,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 23,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CAR",
       "family": "WR",
       "player": "Jalen Coker",
-      "currentApy": 1075000,
-      "gameContract": "1YR",
+      "currentApy": 11333333,
+      "gameContract": "3YR",
       "marketPosition": "WR",
-      "age": 26,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "WR"
+      "age": 25,
+      "freeAgencyYear": 2030,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "WR",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CAR",
@@ -1009,10 +1027,11 @@
       "currentApy": 24000000,
       "gameContract": "3YR",
       "marketPosition": "IDL",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DT",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 28,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CAR",
@@ -1033,10 +1052,11 @@
       "currentApy": 30000000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2026,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CAR",
@@ -1080,10 +1100,11 @@
       "currentApy": 25000000,
       "gameContract": "3YR",
       "marketPosition": "DB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "CB",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CAR",
@@ -1187,10 +1208,11 @@
       "currentApy": 5681125,
       "gameContract": "1YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2028,
+      "age": 24,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CHI",
@@ -1414,10 +1436,11 @@
       "currentApy": 40250000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CIN",
@@ -1426,10 +1449,11 @@
       "currentApy": 28750000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CIN",
@@ -1751,7 +1775,7 @@
       "age": 29,
       "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Browns extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CLE",
@@ -1769,13 +1793,14 @@
       "teamCode": "CLE",
       "family": "Secondary",
       "player": "Grant Delpit",
-      "currentApy": 12000000,
-      "gameContract": "1YR",
+      "currentApy": 15000000,
+      "gameContract": "3YR",
       "marketPosition": "DB",
-      "age": 29,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "S"
+      "age": 28,
+      "freeAgencyYear": 2030,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "S",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "CLE",
@@ -1846,7 +1871,8 @@
       "marketPosition": "WR",
       "freeAgencyYear": 2029,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Cowboys contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05",
+      "age": 27
     },
     {
       "teamCode": "DAL",
@@ -1855,10 +1881,11 @@
       "currentApy": 27298000,
       "gameContract": "1YR",
       "marketPosition": "WR",
-      "age": 26,
+      "age": 25,
       "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "WR"
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "WR",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DAL",
@@ -1870,7 +1897,7 @@
       "age": 27,
       "freeAgencyYear": 2028,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Cowboys contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DAL",
@@ -1894,7 +1921,7 @@
       "age": 29,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DAL",
@@ -2059,22 +2086,24 @@
       "currentApy": 23000000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 31,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DEN",
       "family": "WR",
       "player": "Jaylen Waddle",
       "currentApy": 28250000,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 3
+      "freeAgencyYear": 2029,
+      "age": 28,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DEN",
@@ -2119,10 +2148,11 @@
       "currentApy": 26500000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DEN",
@@ -2131,10 +2161,11 @@
       "currentApy": 25500000,
       "gameContract": "3YR",
       "marketPosition": "IDL",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DT",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2031,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DEN",
@@ -2260,13 +2291,14 @@
       "teamCode": "DET",
       "family": "RB",
       "player": "Jahmyr Gibbs",
-      "currentApy": 4461285,
-      "gameContract": "1YR",
+      "currentApy": 22500000,
+      "gameContract": "3YR",
       "marketPosition": "RB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "RB",
-      "signedYear": 2023,
-      "contractYears": 4
+      "freeAgencyYear": 2031,
+      "age": 24,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DET",
@@ -2290,7 +2322,7 @@
       "age": 27,
       "freeAgencyYear": 2029,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Lions contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DET",
@@ -2299,10 +2331,11 @@
       "currentApy": 26666667,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 3
+      "freeAgencyYear": 2030,
+      "age": 25,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DET",
@@ -2338,7 +2371,7 @@
       "age": 26,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Lions extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DET",
@@ -2347,22 +2380,24 @@
       "currentApy": 24250000,
       "gameContract": "3YR",
       "marketPosition": "IDL",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DT",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DET",
       "family": "Front Seven",
       "player": "Jack Campbell",
-      "currentApy": 3680505,
-      "gameContract": "1YR",
+      "currentApy": 20250000,
+      "gameContract": "3YR",
       "marketPosition": "LB",
-      "age": 27,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "LB"
+      "age": 26,
+      "freeAgencyYear": 2031,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "LB",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DET",
@@ -2419,10 +2454,11 @@
       "currentApy": 21250000,
       "gameContract": "3YR",
       "marketPosition": "DB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "S",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "DET",
@@ -2506,7 +2542,7 @@
       "age": 27,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Packers extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "GB",
@@ -2518,7 +2554,7 @@
       "age": 26,
       "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Packers extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "GB",
@@ -2542,7 +2578,7 @@
       "age": 26,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Packers extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "GB",
@@ -2551,10 +2587,11 @@
       "currentApy": 46500000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "GB",
@@ -2596,13 +2633,14 @@
       "teamCode": "GB",
       "family": "Front Seven",
       "player": "Devonte Wyatt",
-      "currentApy": 3215296,
-      "gameContract": "1YR",
+      "currentApy": 18300000,
+      "gameContract": "3YR",
       "marketPosition": "IDL",
-      "age": 29,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "IDL"
+      "age": 28,
+      "freeAgencyYear": 2030,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "IDL",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "GB",
@@ -2623,10 +2661,11 @@
       "currentApy": 16750000,
       "gameContract": "1YR",
       "marketPosition": "DB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "S",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2028,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "GB",
@@ -2715,13 +2754,14 @@
       "teamCode": "HOU",
       "family": "WR",
       "player": "Nico Collins",
-      "currentApy": 24250000,
+      "currentApy": 30000000,
       "gameContract": "1YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 3
+      "freeAgencyYear": 2028,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "HOU",
@@ -2781,7 +2821,7 @@
       "age": 25,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Texans extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "HOU",
@@ -2790,10 +2830,11 @@
       "currentApy": 40100000,
       "gameContract": "1YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2026,
-      "contractYears": 1
+      "freeAgencyYear": 2028,
+      "age": 32,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "HOU",
@@ -2853,7 +2894,7 @@
       "age": 25,
       "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Texans extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "HOU",
@@ -2919,13 +2960,14 @@
       "teamCode": "IND",
       "family": "RB",
       "player": "Jonathan Taylor",
-      "currentApy": 14000000,
-      "gameContract": "1YR",
+      "currentApy": 22000000,
+      "gameContract": "3YR",
       "marketPosition": "RB",
-      "age": 28,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "RB"
+      "age": 27,
+      "freeAgencyYear": 2029,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "RB",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "IND",
@@ -2969,10 +3011,11 @@
       "currentApy": 28500000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2026,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "IND",
@@ -3005,10 +3048,11 @@
       "currentApy": 23000000,
       "gameContract": "1YR",
       "marketPosition": "IDL",
-      "age": 33,
+      "age": 32,
       "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "IDL"
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "IDL",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "IND",
@@ -3080,7 +3124,7 @@
       "age": 25,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current contract; OTC lists Ahmad Gardner"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "IND",
@@ -3184,22 +3228,24 @@
       "currentApy": 11662278,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 23,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "JAX",
       "family": "WR",
       "player": "Jakobi Meyers",
       "currentApy": 20000000,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 3
+      "freeAgencyYear": 2029,
+      "age": 30,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "JAX",
@@ -3244,10 +3290,11 @@
       "currentApy": 27500000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2026,
-      "contractYears": 4
+      "freeAgencyYear": 2031,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "JAX",
@@ -3376,10 +3423,11 @@
       "currentApy": 14350000,
       "gameContract": "3YR",
       "marketPosition": "RB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "RB",
-      "signedYear": 2026,
-      "contractYears": 3
+      "freeAgencyYear": 2029,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "KC",
@@ -3448,10 +3496,11 @@
       "currentApy": 31750000,
       "gameContract": "3YR",
       "marketPosition": "IDL",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DT",
-      "signedYear": 2024,
-      "contractYears": 5
+      "freeAgencyYear": 2029,
+      "age": 32,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "KC",
@@ -3745,13 +3794,14 @@
       "teamCode": "LAC",
       "family": "Secondary",
       "player": "Derwin James Jr.",
-      "currentApy": 19000000,
-      "gameContract": "1YR",
+      "currentApy": 25200000,
+      "gameContract": "3YR",
       "marketPosition": "DB",
-      "age": 31,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "S"
+      "age": 30,
+      "freeAgencyYear": 2030,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "S",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "LAC",
@@ -3856,10 +3906,11 @@
       "currentApy": 22000000,
       "gameContract": "1YR",
       "marketPosition": "WR",
-      "age": 35,
+      "age": 34,
       "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "WR"
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "WR",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "LAR",
@@ -3892,10 +3943,11 @@
       "currentApy": 40000000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2031,
+      "age": 31,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "LAR",
@@ -3966,7 +4018,7 @@
       "age": 26,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "LAR",
@@ -4119,9 +4171,10 @@
       "currentApy": 35500000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "freeAgencyYear": 2029,
+      "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Raiders extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05",
+      "age": 29
     },
     {
       "teamCode": "LV",
@@ -4259,13 +4312,14 @@
       "teamCode": "MIA",
       "family": "RB",
       "player": "De'Von Achane",
-      "currentApy": 1359363,
-      "gameContract": "1YR",
+      "currentApy": 16000000,
+      "gameContract": "3YR",
       "marketPosition": "RB",
-      "age": 26,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "RB"
+      "age": 25,
+      "freeAgencyYear": 2031,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "RB",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "MIA",
@@ -4335,7 +4389,7 @@
       "age": 29,
       "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Dolphins contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "MIA",
@@ -4498,10 +4552,11 @@
       "currentApy": 35000000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "MIN",
@@ -4712,12 +4767,13 @@
       "family": "WR",
       "player": "A.J. Brown",
       "currentApy": 32000000,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 3
+      "freeAgencyYear": 2030,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "NE",
@@ -4798,10 +4854,11 @@
       "currentApy": 26000000,
       "gameContract": "3YR",
       "marketPosition": "IDL",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DT",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 27,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "NE",
@@ -4837,7 +4894,7 @@
       "age": 24,
       "freeAgencyYear": 2032,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Patriots extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "NE",
@@ -4933,7 +4990,7 @@
       "age": 26,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Saints extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "NO",
@@ -5204,10 +5261,11 @@
       "currentApy": 28200000,
       "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2024,
-      "contractYears": 5
+      "freeAgencyYear": 2029,
+      "age": 28,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "NYG",
@@ -5357,13 +5415,14 @@
       "teamCode": "NYJ",
       "family": "RB",
       "player": "Breece Hall",
-      "currentApy": 14293000,
-      "gameContract": "1YR",
+      "currentApy": 14500000,
+      "gameContract": "3YR",
       "marketPosition": "RB",
-      "age": 26,
-      "freeAgencyYear": 2027,
-      "sourceKind": "2027-fa-snapshot",
-      "sourcePosition": "RB"
+      "age": 25,
+      "freeAgencyYear": 2029,
+      "sourceKind": "current-reconciliation",
+      "sourcePosition": "RB",
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "NYJ",
@@ -5384,10 +5443,11 @@
       "currentApy": 32500000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2031,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "NYJ",
@@ -5574,12 +5634,13 @@
       "family": "RB",
       "player": "Saquon Barkley",
       "currentApy": 20600000,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "marketPosition": "RB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "RB",
-      "signedYear": 2025,
-      "contractYears": 2
+      "freeAgencyYear": 2029,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "PHI",
@@ -5598,12 +5659,13 @@
       "family": "WR",
       "player": "DeVonta Smith",
       "currentApy": 25000000,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2024,
-      "contractYears": 3
+      "freeAgencyYear": 2029,
+      "age": 28,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "PHI",
@@ -5651,7 +5713,7 @@
       "age": 25,
       "freeAgencyYear": 2032,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Eagles extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "PHI",
@@ -5670,12 +5732,13 @@
       "family": "Front Seven",
       "player": "Jonathan Greenard",
       "currentApy": 30000000,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "marketPosition": "EDGE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DE",
-      "signedYear": 2026,
-      "contractYears": 2
+      "freeAgencyYear": 2030,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "PHI",
@@ -5708,10 +5771,11 @@
       "currentApy": 26000000,
       "gameContract": "3YR",
       "marketPosition": "IDL",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "DT",
-      "signedYear": 2026,
-      "contractYears": 3
+      "freeAgencyYear": 2030,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "PHI",
@@ -5816,10 +5880,11 @@
       "currentApy": 32999882,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 29,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "PIT",
@@ -5831,7 +5896,7 @@
       "age": 29,
       "freeAgencyYear": 2029,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Steelers contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "PIT",
@@ -5866,7 +5931,8 @@
       "marketPosition": "EDGE",
       "freeAgencyYear": 2029,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Steelers extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05",
+      "age": 32
     },
     {
       "teamCode": "PIT",
@@ -6031,10 +6097,11 @@
       "currentApy": 42150000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2026,
-      "contractYears": 4
+      "freeAgencyYear": 2032,
+      "age": 24,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "SEA",
@@ -6148,13 +6215,14 @@
       "teamCode": "SEA",
       "family": "Secondary",
       "player": "Devon Witherspoon",
-      "currentApy": 7965288,
-      "gameContract": "1YR",
+      "currentApy": 33000000,
+      "gameContract": "3YR",
       "marketPosition": "DB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "CB",
-      "signedYear": 2023,
-      "contractYears": 4
+      "freeAgencyYear": 2032,
+      "age": 26,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "SEA",
@@ -6238,7 +6306,7 @@
       "age": 30,
       "freeAgencyYear": 2028,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current 49ers contract"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "SF",
@@ -6274,7 +6342,7 @@
       "age": 30,
       "freeAgencyYear": 2027,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current 49ers contract; OTC lists Deebo Samuel"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "SF",
@@ -6307,10 +6375,11 @@
       "currentApy": 19100000,
       "gameContract": "3YR",
       "marketPosition": "TE",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "TE",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2030,
+      "age": 33,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "SF",
@@ -6331,9 +6400,10 @@
       "currentApy": 21000000,
       "gameContract": "3YR",
       "marketPosition": "LB",
-      "freeAgencyYear": 2029,
+      "freeAgencyYear": 2030,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current 49ers extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05",
+      "age": 30
     },
     {
       "teamCode": "SF",
@@ -6498,22 +6568,24 @@
       "currentApy": 4543183,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 4
+      "freeAgencyYear": 2029,
+      "age": 24,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "TB",
       "family": "WR",
       "player": "Chris Godwin Jr.",
       "currentApy": 22000000,
-      "gameContract": "3YR",
+      "gameContract": "1YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 3
+      "freeAgencyYear": 2028,
+      "age": 30,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "TB",
@@ -6626,12 +6698,13 @@
       "family": "Secondary",
       "player": "Antoine Winfield Jr.",
       "currentApy": 21025000,
-      "gameContract": "3YR",
+      "gameContract": "1YR",
       "marketPosition": "DB",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "S",
-      "signedYear": 2024,
-      "contractYears": 4
+      "freeAgencyYear": 2028,
+      "age": 28,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "TB",
@@ -6774,7 +6847,7 @@
       "age": 29,
       "freeAgencyYear": 2031,
       "sourceKind": "current-reconciliation",
-      "sourceNote": "Current Titans extension"
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "TEN",
@@ -6938,10 +7011,11 @@
       "currentApy": 29000000,
       "gameContract": "3YR",
       "marketPosition": "WR",
-      "sourceKind": "contract-history",
+      "sourceKind": "current-reconciliation",
       "sourcePosition": "WR",
-      "signedYear": 2025,
-      "contractYears": 3
+      "freeAgencyYear": 2029,
+      "age": 31,
+      "sourceNote": "Current OverTheCap contract audit · 2026-10-05"
     },
     {
       "teamCode": "WSH",
