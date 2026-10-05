@@ -31,7 +31,7 @@ jobs:
       - name: Commit calibrated snapshot
         if: github.event_name == 'pull_request'
         run: |
-          if git diff --quiet -- data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json; then
+          if [ -z "$(git status --porcelain -- data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json)" ]; then
             exit 0
           fi
           git config user.name "github-actions[bot]"
