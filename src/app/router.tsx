@@ -26,6 +26,7 @@ const FootballFindLeaderPage = lazy(() => import("../features/back-room/Football
 const FootballDraftRoomPage = lazy(() => import("../features/back-room/FootballDraftRoomPage"));
 const FootballWheelPage = lazy(() => import("../features/back-room/FootballWheelPage"));
 const FootballHigherLowerPage = lazy(() => import("../features/back-room/FootballHigherLowerPage"));
+const FootballGmModePage = lazy(() => import("../features/back-room/FootballGmModePage"));
 const UfcWheelPage = lazy(() => import("../features/back-room/UfcWheelPage"));
 const FootballWeeklyBuildQbPreviewPage = lazy(() => import("../features/back-room/FootballWeeklyBuildQbPreviewPage"));
 const FootballWeeklySuperteamPreviewPage = lazy(() => import("../features/back-room/FootballWeeklySuperteamPreviewPage"));
@@ -109,6 +110,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/draft-room", element: <FootballDraftRoomPage /> },
       { path: "football/wheel", element: <FootballWheelPage /> },
       { path: "football/higher-lower", element: <FootballHigherLowerPage /> },
+      { path: "football/gm-mode", element: <FootballGmModePage /> },
       { path: "football/weekly-build-qb-preview", element: <FootballWeeklyBuildQbPreviewPage /> },
       { path: "football/weekly-superteam-preview", element: <FootballWeeklySuperteamPreviewPage /> },
       { path: "football/weekly-auction-lab", element: <FootballWeeklySuperteamLabPage /> },
