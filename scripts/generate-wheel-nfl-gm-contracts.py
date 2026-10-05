@@ -61,7 +61,7 @@ SOURCE_FAMILY_OVERRIDES = {
 # These overrides are only for cases independently verified against current
 # contract reporting where the remaining playing term differs from those rows.
 CONTRACT_END_OVERRIDES = {
-    "mattstafford": 2027,
+    "matthewstafford": 2027,
 }
 
 BIRTH_DATE_OVERRIDES = {
@@ -274,7 +274,7 @@ def main():
             "draftOverall": row.get("draft_overall"),
             "salaryApy": apy,
             "realContractEndSeason": int(end),
-            "gameContract": "3YR" if int(end) >= WINDOW_END_SEASON else "1YR",
+            "gameContract": "3YR" if int(end) > WINDOW_END_SEASON else "1YR",
             "source": {
                 "provider": "OverTheCap via nflverse",
                 "playerPage": row.get("player_page"),
