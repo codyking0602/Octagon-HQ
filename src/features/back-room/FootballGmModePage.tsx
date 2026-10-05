@@ -11,12 +11,14 @@ import {
   FOOTBALL_GM_ROSTER_SLOTS,
   FOOTBALL_GM_VERSION,
   footballGmCandidatesForTeam,
+  footballGmEligibleReplacementTeams,
   footballGmEligibleTeams,
   footballGmFinalResult,
   footballGmIsOffseasonCompliant,
   footballGmMoney,
   footballGmOpenSlots,
   footballGmPlayerById,
+  footballGmReplacementCandidatesForTeam,
   footballGmReplacePlayer,
   footballGmRosterCap,
   footballGmRosterPlayers,
@@ -26,6 +28,7 @@ import {
   type FootballGmFinalResult,
   type FootballGmRosterEntry,
   type FootballGmRosterSlot,
+  type FootballGmTeamCandidate,
 } from "./footballGmEngine";
 import {
   footballGmPlaytestOpponentName,
@@ -180,14 +183,16 @@ function CandidateBoard({
   roster,
   year,
   onPick,
+  candidates: suppliedCandidates,
 }: {
   teamCode: string;
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2;
   onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
+  candidates?: readonly FootballGmTeamCandidate[];
 }) {
   const team = wheelFootballTeam(teamCode);
-  const candidates = footballGmCandidatesForTeam({ team: teamCode, roster, year });
+  const candidates = suppliedCandidates ?? footballGmCandidatesForTeam({ team: teamCode, roster, year });
   return (
     <section className="football-gm__candidates surface-card" style={playerStyle(teamCode)}>
       <header>
@@ -373,11 +378,9 @@ export default function FootballGmModePage() {
 
   function spinReplacement() {
     if (!run.replaceSlot) return;
-    const stripped = run.finalRoster.filter((entry) => entry.slot !== run.replaceSlot);
-    const teams = footballGmEligibleTeams({
-      roster: stripped,
-      previousTeam: null,
-      year: 2,
+    const teams = footballGmEligibleReplacementTeams({
+      roster: run.finalRoster,
+      slot: run.replaceSlot,
     });
     const team = footballGmSpinTeam(run.seed, 100 + run.offseasonSpinIndex, teams);
     if (!team) return;
@@ -545,8 +548,13 @@ export default function FootballGmModePage() {
             run.offseasonPendingTeam ? (
               <CandidateBoard
                 teamCode={run.offseasonPendingTeam}
-                roster={run.finalRoster.filter((entry) => entry.slot !== run.replaceSlot)}
+                roster={run.finalRoster}
                 year={2}
+                candidates={footballGmReplacementCandidatesForTeam({
+                  team: run.offseasonPendingTeam,
+                  roster: run.finalRoster,
+                  slot: run.replaceSlot,
+                })}
                 onPick={makeReplacement}
               />
             ) : (
