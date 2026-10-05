@@ -56,7 +56,7 @@ export interface FamilyFeudMainBoardState {
   revealedEntityIds: string[];
   submittedEntityIds: string[];
   submittedUnrecognized: string[];
-  attempts: FamilyFeudMainBoardAttempt[];
+  attempts?: FamilyFeudMainBoardAttempt[];
   strikes: number;
 }
 
@@ -512,6 +512,7 @@ export function submitFamilyFeudMainAnswer(
   const boardIndex = state.mainBoardIndex;
   const question = pack.mainBoards[boardIndex]!;
   const board = state.mainBoards[boardIndex]!;
+  board.attempts ??= [];
   const submittedText = input.trim();
   const normalized = normalizeFamilyFeudInput(input);
   const match = matchFamilyFeudAnswer(pack, question, input);
