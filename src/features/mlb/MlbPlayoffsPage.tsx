@@ -22,7 +22,7 @@ import { millionaireMoneyLabel, millionaireTimeLabel } from "../play/Millionaire
 import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
 import { mlbSportsFeudProductionConfig } from "./mlbSportsFeudProduction";
 import { buildFamilyFeudDailySetup } from "../play/familyFeudDailyRuntime";
-import DailyLeaderboardGameResult from "../play/DailyLeaderboardGameResult";
+import { DailyLeaderboardGameResult } from "../play/DailyLeaderboardGameResult";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import "../../styles/play-landing-shared.css";
 import "../../styles/today-challenge-hub.css";
