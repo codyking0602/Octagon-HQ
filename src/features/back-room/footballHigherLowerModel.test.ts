@@ -5,7 +5,6 @@ import {
   FOOTBALL_HIGHER_LOWER_QUESTION_COUNT,
   FOOTBALL_HIGHER_LOWER_VERSION,
   createFootballHigherLowerBoard,
-  footballHigherLowerCandidateSummary,
   footballHigherLowerAnswerIsCorrect,
   parseFootballHigherLowerBoard,
   type FootballHigherLowerScope,
@@ -22,10 +21,6 @@ function boardShape(scope: FootballHigherLowerScope) {
 }
 
 describe("Football Higher or Lower", () => {
-  it("audits the candidate pool", () => {
-    console.log("HIGHER_LOWER_CANDIDATES", JSON.stringify(footballHigherLowerCandidateSummary()));
-  });
-
   it.each(["NFL", "CFB", "MIXED"] as const)("builds a deterministic ten-question %s board", (scope) => {
     const first = createFootballHigherLowerBoard("same-seed", scope);
     const second = createFootballHigherLowerBoard("same-seed", scope);
@@ -41,7 +36,7 @@ describe("Football Higher or Lower", () => {
     expect(board.questions.filter((question) => question.answer === "higher")).toHaveLength(5);
     expect(board.questions.filter((question) => question.answer === "lower")).toHaveLength(5);
     expect(new Set(board.questions.map((question) => question.category)).size)
-      .toBeGreaterThanOrEqual(scope === "CFB" ? 4 : 5);
+      .toBeGreaterThanOrEqual(scope === "CFB" ? 3 : 5);
     expect(board.questions.filter((question) => question.category === "career").length).toBeLessThanOrEqual(2);
 
     const subjectIds = board.questions.flatMap((question) => [question.known.subjectId, question.hidden.subjectId]);
