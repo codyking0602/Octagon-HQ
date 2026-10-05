@@ -44,10 +44,19 @@ export const FAMILY_FEUD_RAW_MAX = 100;
 
 export type FamilyFeudPhase = "main" | "fast-money" | "complete";
 
+export interface FamilyFeudMainBoardAttempt {
+  submittedText: string;
+  normalizedText: string;
+  status: "matched" | "unrecognized" | "ambiguous" | "already-guessed";
+  entityId: string | null;
+  matchKind: FamilyFeudMatchKind | null;
+}
+
 export interface FamilyFeudMainBoardState {
   revealedEntityIds: string[];
   submittedEntityIds: string[];
   submittedUnrecognized: string[];
+  attempts: FamilyFeudMainBoardAttempt[];
   strikes: number;
 }
 
@@ -356,7 +365,14 @@ export function matchFamilyFeudAnswer(
     if (row.term.length < 3) continue;
     const entity = entitiesById.get(row.entityId);
     if (entity?.kind === "person" && !fuzzyPersonFullNameCompatible(normalized, row.term)) continue;
-    const allowance = typoAllowance(normalized, row.term);
+    let allowance = typoAllowance(normalized, row.term);
+    if (
+      entity?.kind === "person"
+      && (row.kind === "first-name" || row.kind === "surname")
+      && row.term.length >= 5
+    ) {
+      allowance = Math.max(allowance, 2);
+    }
     if (allowance === 0) continue;
     const distance = editDistance(normalized, row.term);
     if (distance > allowance) continue;
@@ -391,6 +407,7 @@ export function createFamilyFeudState(): FamilyFeudState {
       revealedEntityIds: [],
       submittedEntityIds: [],
       submittedUnrecognized: [],
+      attempts: [],
       strikes: 0,
     })),
     fastMoneyIndex: 0,
@@ -406,6 +423,7 @@ function cloneState(state: FamilyFeudState): FamilyFeudState {
       revealedEntityIds: [...board.revealedEntityIds],
       submittedEntityIds: [...board.submittedEntityIds],
       submittedUnrecognized: [...board.submittedUnrecognized],
+      attempts: (board.attempts ?? []).map((attempt) => ({ ...attempt })),
       strikes: board.strikes,
     })),
     fastMoneyResults: state.fastMoneyResults.map((result) => ({ ...result })),
@@ -494,29 +512,69 @@ export function submitFamilyFeudMainAnswer(
   const boardIndex = state.mainBoardIndex;
   const question = pack.mainBoards[boardIndex]!;
   const board = state.mainBoards[boardIndex]!;
+  const submittedText = input.trim();
+  const normalized = normalizeFamilyFeudInput(input);
   const match = matchFamilyFeudAnswer(pack, question, input);
 
   if (match.status === "ambiguous" || match.status === "empty") {
+    if (submittedText) {
+      board.attempts.push({
+        submittedText,
+        normalizedText: normalized,
+        status: "ambiguous",
+        entityId: null,
+        matchKind: null,
+      });
+    }
     return { state, outcome: { type: "ambiguous", boardIndex } };
   }
 
   if (match.status === "matched" && board.submittedEntityIds.includes(match.entityId)) {
+    board.attempts.push({
+      submittedText,
+      normalizedText: normalized,
+      status: "already-guessed",
+      entityId: match.entityId,
+      matchKind: match.kind,
+    });
     return {
       state,
       outcome: { type: "already-guessed", boardIndex, entityId: match.entityId },
     };
   }
   if (match.status === "unrecognized") {
-    const normalized = normalizeFamilyFeudInput(input);
     if (board.submittedUnrecognized.includes(normalized)) {
+      board.attempts.push({
+        submittedText,
+        normalizedText: normalized,
+        status: "already-guessed",
+        entityId: null,
+        matchKind: null,
+      });
       return {
         state,
         outcome: { type: "already-guessed", boardIndex, entityId: null },
       };
     }
     board.submittedUnrecognized.push(normalized);
+    board.attempts.push({
+      submittedText,
+      normalizedText: normalized,
+      status: "unrecognized",
+      entityId: null,
+      matchKind: null,
+    });
   }
-  if (match.status === "matched") board.submittedEntityIds.push(match.entityId);
+  if (match.status === "matched") {
+    board.submittedEntityIds.push(match.entityId);
+    board.attempts.push({
+      submittedText,
+      normalizedText: normalized,
+      status: "matched",
+      entityId: match.entityId,
+      matchKind: match.kind,
+    });
+  }
 
   const answerIndex = match.status === "matched"
     ? question.answers.findIndex((answer) => answer.entityId === match.entityId)
