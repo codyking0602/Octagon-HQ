@@ -40,10 +40,24 @@ function foundBoardPoints(board: JsonRecord) {
   ), 0);
 }
 
-function resultDetailFromPublicState(publicState: JsonRecord) {
+function resultDetailFromRuntime(publicState: JsonRecord, submissionState: JsonRecord) {
   const mainBoards = records(publicState.main_boards);
   const fastMoney = record(publicState.fast_money);
+  const engineState = record(submissionState.engine_state);
+  const engineBoards = records(engineState.mainBoards);
+  const fastMoneyResults = records(engineState.fastMoneyResults);
   return {
+    public_state: publicState,
+    main_board_attempts: engineBoards.map((board, index) => ({
+      round: index + 1,
+      attempts: records(board.attempts).map((attempt) => ({
+        submitted_text: String(attempt.submittedText ?? ""),
+        normalized_text: String(attempt.normalizedText ?? ""),
+        status: String(attempt.status ?? ""),
+        entity_id: attempt.entityId == null ? null : String(attempt.entityId),
+        match_kind: attempt.matchKind == null ? null : String(attempt.matchKind),
+      })),
+    })),
     main_boards: mainBoards.map((board, index) => ({
       round: index + 1,
       prompt: String(board.prompt ?? ""),
@@ -62,12 +76,19 @@ function resultDetailFromPublicState(publicState: JsonRecord) {
     fast_money: {
       points: Number(fastMoney.points ?? 0),
       time_remaining_ms: Number(fastMoney.time_remaining_ms ?? 0),
-      results: records(fastMoney.results).map((row) => ({
-        prompt: String(row.prompt ?? ""),
-        submitted_answer: String(row.submitted_answer ?? "NO ANSWER"),
-        points: Number(row.points ?? 0),
-        counted: row.counted === true,
-      })),
+      results: records(fastMoney.results).map((row, index) => {
+        const raw = fastMoneyResults[index] ?? {};
+        return {
+          question_id: String(row.question_id ?? raw.questionId ?? ""),
+          prompt: String(row.prompt ?? ""),
+          submitted_answer: String(row.submitted_answer ?? "NO ANSWER"),
+          submitted_text: String(raw.submittedText ?? row.submitted_answer ?? "NO ANSWER"),
+          match_kind: String(raw.matchKind ?? ""),
+          points: Number(row.points ?? 0),
+          board_rank: row.board_rank == null ? null : Number(row.board_rank),
+          counted: row.counted === true,
+        };
+      }),
     },
   };
 }
@@ -204,7 +225,7 @@ export default function MlbSportsFeudChallenge({
           fast_money_time_remaining_ms: Number(final.fast_money_time_remaining_ms ?? 0),
           score,
         },
-        resultDetail: resultDetailFromPublicState(next.publicState),
+        resultDetail: resultDetailFromRuntime(next.publicState, next.submissionState),
         completedAt: new Date().toISOString(),
       };
       setPendingResult(completed);
