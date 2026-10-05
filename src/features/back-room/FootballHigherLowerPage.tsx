@@ -49,7 +49,11 @@ function parseScope(value: string | null): FootballHigherLowerScope | null {
 }
 
 function formatTime(timeMs: number) {
-  return `${(timeMs / 1000).toFixed(1)} sec`;
+  const seconds = timeMs / 1000;
+  if (seconds < 60) return `${seconds.toFixed(1)} sec`;
+  const minutes = Math.floor(seconds / 60);
+  const remainder = (seconds % 60).toFixed(1).padStart(4, "0");
+  return `${minutes}:${remainder}`;
 }
 
 function categoryLabel(category: string) {
@@ -134,7 +138,8 @@ export default function FootballHigherLowerPage() {
   const [revealedChoice, setRevealedChoice] = useState<FootballHigherLowerChoice | null>(null);
   const [result, setResult] = useState<HigherLowerResult | null>(null);
   const [challengeStatus, setChallengeStatus] = useState("");
-  const startedAt = useRef<number | null>(null);
+  const activeTimerStartedAt = useRef<number | null>(null);
+  const activeElapsedMs = useRef(0);
   const sharedSeed = searchParams.get("seed");
 
   const challengeBoard = useMemo(() => {
@@ -160,9 +165,43 @@ export default function FootballHigherLowerPage() {
   }, [board, profileMatch.code, searchParams, sharedSeed]);
 
   useEffect(() => {
-    if (!board || result) return;
-    startedAt.current = performance.now();
-  }, [board?.seed, result]);
+    if (!board || result) return undefined;
+
+    activeElapsedMs.current = 0;
+    activeTimerStartedAt.current = document.visibilityState === "visible" ? performance.now() : null;
+
+    const pause = () => {
+      if (activeTimerStartedAt.current == null) return;
+      activeElapsedMs.current += performance.now() - activeTimerStartedAt.current;
+      activeTimerStartedAt.current = null;
+    };
+    const resume = () => {
+      if (activeTimerStartedAt.current != null || document.visibilityState !== "visible") return;
+      activeTimerStartedAt.current = performance.now();
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") resume();
+      else pause();
+    };
+
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pagehide", pause);
+    window.addEventListener("pageshow", resume);
+
+    return () => {
+      pause();
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pagehide", pause);
+      window.removeEventListener("pageshow", resume);
+    };
+  }, [board?.seed, Boolean(result)]);
+
+  function activePlayTimeMs() {
+    const currentSlice = activeTimerStartedAt.current == null
+      ? 0
+      : performance.now() - activeTimerStartedAt.current;
+    return Math.max(1, Math.round(activeElapsedMs.current + currentSlice));
+  }
 
   function startNew(nextScope = scope) {
     const seed = createReplaySeed(FOOTBALL_HIGHER_LOWER_GAME_ID);
@@ -179,7 +218,7 @@ export default function FootballHigherLowerPage() {
   function finish(nextAnswers: HigherLowerAnswer[]) {
     if (!board) return;
     const correct = nextAnswers.filter((answer) => answer.correct).length;
-    const timeMs = Math.max(1, Math.round(performance.now() - (startedAt.current ?? performance.now())));
+    const timeMs = activePlayTimeMs();
     const nextResult: HigherLowerResult = {
       score: correct,
       correct,
@@ -282,7 +321,7 @@ export default function FootballHigherLowerPage() {
 
         <section className="higher-lower-review">
           <header>
-            <span>QUESTION</span>
+            <span>QUESTION + FINAL NUMBERS</span>
             <strong>YOUR CALL</strong>
             <em>ANSWER</em>
           </header>
@@ -290,10 +329,22 @@ export default function FootballHigherLowerPage() {
             const answerRow = result.answers[index];
             return (
               <div className={answerRow?.correct ? "is-correct" : "is-wrong"} key={question.id}>
-                <span>
-                  <small>Q{index + 1} · {categoryLabel(question.category)}</small>
-                  <b>{question.hidden.name}</b>
-                  <em>{question.metricLabel}</em>
+                <span className="higher-lower-review__question">
+                  <small>Q{index + 1} · {categoryLabel(question.category)} · {question.metricLabel}</small>
+                  <span className="higher-lower-review__matchup">
+                    <span>
+                      <b>{question.known.name}</b>
+                      <em>{question.known.formattedValue}</em>
+                    </span>
+                    <i aria-hidden="true">→</i>
+                    <span>
+                      <b>{question.hidden.name}</b>
+                      <em>{question.hidden.formattedValue}</em>
+                    </span>
+                  </span>
+                  <span className="higher-lower-review__context">
+                    {question.known.context} vs {question.hidden.context}
+                  </span>
                 </span>
                 <strong>{answerRow?.choice?.toUpperCase() ?? "—"}</strong>
                 <em>{question.answer.toUpperCase()}</em>
