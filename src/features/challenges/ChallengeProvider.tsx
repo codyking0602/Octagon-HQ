@@ -43,6 +43,7 @@ export interface ChallengeComposerDraft {
   shareTitle: string;
   shareText: string;
   shareUrl: string;
+  allowedRecipientNames?: readonly string[];
 }
 
 interface PlayChallengesContextValue {
@@ -122,9 +123,26 @@ function ComposerDialog({
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
 
+  const allowedRecipientSet = useMemo(
+    () => draft.allowedRecipientNames?.length
+      ? new Set(draft.allowedRecipientNames.map(normalizeProfileName))
+      : null,
+    [draft.allowedRecipientNames],
+  );
+  const selectableMembers = useMemo(
+    () => allowedRecipientSet
+      ? members.filter((member) => allowedRecipientSet.has(normalizeProfileName(member.displayName)))
+      : members,
+    [allowedRecipientSet, members],
+  );
+
   async function lookupProfile(name: string, avatarPhotoData?: string | null) {
     const normalizedName = normalizeProfileName(name);
     if (normalizedName.length < 2) return;
+    if (allowedRecipientSet && !allowedRecipientSet.has(normalizedName)) {
+      setStatus("THAT PROFILE IS NOT AVAILABLE FOR THIS PLAYTEST");
+      return;
+    }
     setSelectedName(normalizedName);
     setBusy(true);
     setStatus("");
@@ -191,7 +209,7 @@ function ComposerDialog({
         </div>
 
         <ChallengeMemberPicker
-          members={members}
+          members={selectableMembers}
           recentNames={recentProfileNames}
           selectedName={selectedName}
           busy={busy}
