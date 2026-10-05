@@ -7,7 +7,7 @@ import unicodedata
 from datetime import date, datetime
 from pathlib import Path
 
-from nflreadpy import load_contracts
+from nflreadpy import load_contracts, load_players
 
 FAMILIES = ("QB", "RB", "WR", "TE", "Front Seven", "Secondary")
 POSITION_FAMILY = {
@@ -81,20 +81,25 @@ def age_on(value):
 
 
 def season_end(row):
+    # OverTheCap season_history can include void/dead-cap years. For GM Mode we
+    # care about seasons in which the player is actually under a playing
+    # contract, so only count rows with positive base salary.
     history = row.get("season_history")
     years = []
     if isinstance(history, list):
         for item in history:
             if not isinstance(item, dict):
                 continue
-            for key in ("year", "season", "league_year"):
-                raw = item.get(key)
-                if raw is not None:
-                    try:
-                        years.append(int(raw))
-                    except (TypeError, ValueError):
-                        pass
-                    break
+            raw_year = item.get("year")
+            if raw_year in (None, "Total"):
+                continue
+            try:
+                base_salary = float(item.get("base_salary") or 0)
+                year = int(raw_year)
+            except (TypeError, ValueError):
+                continue
+            if base_salary > 0:
+                years.append(year)
     if years:
         return max(years)
     signed = row.get("year_signed")
@@ -118,6 +123,27 @@ def to_money(value):
     return int(round(number * 1_000_000))
 
 
+def gm_slots(family, source_position, normalized_name):
+    position = str(source_position or "").upper()
+    if family == "QB":
+        return ["QB"]
+    if family == "RB":
+        return ["RB", "FLEX"]
+    if family == "WR":
+        return ["WR", "FLEX"]
+    if family == "TE":
+        return ["FLEX"]
+    if family == "Secondary":
+        return ["DB"]
+    if family == "Front Seven":
+        if normalized_name == "jayloncarlies":
+            return ["LB"]
+        if position in {"LB", "ILB", "OLB"}:
+            return ["LB"]
+        return ["DL"]
+    raise ValueError(f"Unsupported GM family: {family}")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--priority", default="data/generated/football/wheel-football-priorities.json")
@@ -139,6 +165,12 @@ def main():
 
     frame = load_contracts()
     rows = frame.to_dicts()
+    player_rows = load_players().to_dicts()
+    players_by_otc = {
+        str(row.get("otc_id")): row
+        for row in player_rows
+        if row.get("otc_id") not in (None, "")
+    }
     active = []
     for row in rows:
         if row.get("is_active") is not True:
@@ -195,7 +227,9 @@ def main():
         row = candidates[0]
         end = row["_end"]
         apy = to_money(row.get("apy"))
-        age = age_on(row.get("date_of_birth"))
+        player_meta = players_by_otc.get(str(row.get("otc_id"))) or {}
+        birth_date = row.get("date_of_birth") or player_meta.get("birth_date")
+        age = age_on(birth_date)
         if end is None or apy is None or apy <= 0:
             unmatched.append({
                 "team": item["team"], "family": item["family"], "player": item["player"],
@@ -208,8 +242,9 @@ def main():
             "player": item["player"],
             "normalizedName": item["key"],
             "position": row.get("position"),
+            "gmEligibleSlots": gm_slots(item["family"], row.get("position"), item["key"]),
             "age": age,
-            "dateOfBirth": row.get("date_of_birth"),
+            "dateOfBirth": str(birth_date) if birth_date else None,
             "draftYear": row.get("draft_year"),
             "draftRound": row.get("draft_round"),
             "draftOverall": row.get("draft_overall"),
