@@ -261,6 +261,23 @@ def main():
         })
 
     output.sort(key=lambda row: (row["team"], row["family"], row["player"]))
+    diagnostic_names = {
+        "mattstafford", "samdarnold", "derrickhenry", "drakelondon",
+        "jonathantaylor", "cjgardnerjohnson", "danieljones", "traviskelce",
+        "christiangonzalez", "jaxonsmithnjigba", "ajterrell", "jerryjeudy",
+    }
+    diagnostics = []
+    for row in active:
+        if row["_key"] in diagnostic_names:
+            diagnostics.append({
+                "player": row.get("player"),
+                "position": row.get("position"),
+                "team": row.get("team"),
+                "yearSigned": row.get("year_signed"),
+                "years": row.get("years"),
+                "seasonHistory": row.get("season_history"),
+                "contractHistory": row.get("contract_history"),
+            })
     report = {
         "snapshotDate": SNAPSHOT_DATE.isoformat(),
         "populationCount": len(population),
@@ -269,6 +286,7 @@ def main():
         "ambiguousCount": len(ambiguous),
         "unmatched": unmatched,
         "ambiguous": ambiguous,
+        "diagnostics": diagnostics,
     }
     artifact = {
         "schemaVersion": 1,
