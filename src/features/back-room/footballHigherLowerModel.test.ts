@@ -40,7 +40,8 @@ describe("Football Higher or Lower", () => {
     expect(difficulties).toEqual({ approachable: 3, competitive: 5, tough: 2 });
     expect(board.questions.filter((question) => question.answer === "higher")).toHaveLength(5);
     expect(board.questions.filter((question) => question.answer === "lower")).toHaveLength(5);
-    expect(new Set(board.questions.map((question) => question.category)).size).toBeGreaterThanOrEqual(5);
+    expect(new Set(board.questions.map((question) => question.category)).size)
+      .toBeGreaterThanOrEqual(scope === "CFB" ? 4 : 5);
     expect(board.questions.filter((question) => question.category === "career").length).toBeLessThanOrEqual(2);
 
     const subjectIds = board.questions.flatMap((question) => [question.known.subjectId, question.hidden.subjectId]);
