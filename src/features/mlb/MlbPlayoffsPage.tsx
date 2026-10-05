@@ -216,11 +216,26 @@ function sportsFeudSummary(entry: MlbPlayChallengeLeaderboardEntry) {
     const found = Array.isArray(board.found_answers)
       ? board.found_answers.filter((name): name is string => typeof name === "string")
       : [];
+    const answers = Array.isArray(board.board_answers)
+      ? board.board_answers.map((answer, answerIndex) => {
+          const row = answer && typeof answer === "object" && !Array.isArray(answer)
+            ? answer as Record<string, unknown>
+            : {};
+          return {
+            rank: answerIndex + 1,
+            name: String(row.name ?? ""),
+            points: Number(row.points ?? 0),
+            found: row.found === true,
+          };
+        })
+      : [];
     return {
       round: Number(board.round ?? index + 1),
+      prompt: String(board.prompt ?? ""),
       points: Number(board.points ?? 0),
       strikes: Number(board.strikes ?? 0),
       found,
+      answers,
     };
   });
   const results = Array.isArray(fastMoney.results)
@@ -230,6 +245,7 @@ function sportsFeudSummary(entry: MlbPlayChallengeLeaderboardEntry) {
           : {};
         return {
           index: index + 1,
+          prompt: String(row.prompt ?? ""),
           answer: String(row.submitted_answer ?? "NO ANSWER"),
           points: Number(row.points ?? 0),
         };
@@ -478,12 +494,14 @@ function MlbPlayResultDetail({
 
       <div className="today-hub-official-result__body">
         <section className="mlb-play-result-card">
-          <div>
-            <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
-            <h2>{challengeTitle}</h2>
-            <span>FINAL SCORE</span>
-            <strong>{entry.rawScore}<small>/100</small></strong>
-          </div>
+          {!isSportsFeud ? (
+            <div>
+              <p className="eyebrow">MLB PLAYOFF CHALLENGE</p>
+              <h2>{challengeTitle}</h2>
+              <span>FINAL SCORE</span>
+              <strong>{entry.rawScore}<small>/100</small></strong>
+            </div>
+          ) : null}
 
           {isMillionaire ? (
             <>
@@ -642,24 +660,70 @@ function MlbPlayResultDetail({
               ))}
             </div>
           ) : isSportsFeud ? (
-            <div className="mlb-play-result-card__games">
-              <article>
-                <span>MAIN BOARDS</span>
-                <strong>{sportsFeud.mainPoints}<small>/60</small></strong>
+            <div className="leaderboard-game-result leaderboard-game-result--feud">
+              <section className="leaderboard-game-result__hero">
+                <div>
+                  <span>SPORTS FEUD</span>
+                  <strong>{entry.rawScore}</strong>
+                  <small>HQ SCORE</small>
+                </div>
+                <dl>
+                  <div><dt>Main boards</dt><dd>{sportsFeud.mainPoints} / 60</dd></div>
+                  <div><dt>Fast Money</dt><dd>{sportsFeud.fastPoints} / 40</dd></div>
+                  <div>
+                    <dt>Time left</dt>
+                    <dd>{Math.max(0, Math.ceil(Number(entry.publicResult.fast_money_time_remaining_ms ?? 0) / 1000))}s</dd>
+                  </div>
+                </dl>
+              </section>
+
+              <div className="leaderboard-game-result__boards">
                 {sportsFeud.boards.map((board) => (
-                  <small key={board.round}>
-                    ROUND {board.round} · {board.found.length} ANSWERS FOUND · {board.strikes} STRIKES
-                    {board.found.length ? ` · ${board.found.join(" · ").toUpperCase()}` : ""}
-                  </small>
+                  <section className="leaderboard-feud-board" key={board.round}>
+                    <header>
+                      <div>
+                        <span>MAIN BOARD {board.round}</span>
+                        <h3>{board.prompt}</h3>
+                      </div>
+                      <div>
+                        <strong>{board.points}/30</strong>
+                        <small>{board.strikes} STRIKES</small>
+                      </div>
+                    </header>
+                    <div className="leaderboard-feud-board__answers">
+                      {board.answers.map((answer) => (
+                        <div
+                          className={answer.found ? "is-found" : "is-missed"}
+                          key={answer.rank}
+                        >
+                          <b>{answer.rank}</b>
+                          <span><strong>{answer.name}</strong></span>
+                          <em>{answer.points}</em>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 ))}
-              </article>
-              <article>
-                <span>FAST MONEY</span>
-                <strong>{sportsFeud.fastPoints}<small>/40</small></strong>
-                {sportsFeud.results.length
-                  ? <small>{sportsFeud.results.map((row) => `${row.answer.toUpperCase()} +${row.points}`).join(" · ")}</small>
-                  : null}
-              </article>
+              </div>
+
+              <section className="leaderboard-fast-money">
+                <header>
+                  <div><span>FAST MONEY</span><h3>Five answers. One clock.</h3></div>
+                  <strong>{sportsFeud.fastPoints}/40</strong>
+                </header>
+                <div>
+                  {sportsFeud.results.map((row) => (
+                    <article key={row.index}>
+                      <b>{row.index}</b>
+                      <div>
+                        <small>{row.prompt}</small>
+                        <strong>{row.answer}</strong>
+                      </div>
+                      <span><strong>{row.points} PTS</strong></span>
+                    </article>
+                  ))}
+                </div>
+              </section>
             </div>
           ) : isBarTrivia ? (
             <div className="mlb-play-result-card__games">

@@ -136,6 +136,43 @@ describe("Family Feud V2 engine contract", () => {
     });
   });
 
+  it("forgives common two-edit misspellings on unique five-letter person surnames", () => {
+    const question = {
+      id: "short-name-typos",
+      prompt: "Name a baseball star.",
+      candidateIds: ["jeter", "ortiz", "judge", "ohtani"],
+      answers: [
+        { entityId: "jeter", points: 10 },
+        { entityId: "ortiz", points: 8 },
+        { entityId: "judge", points: 7 },
+        { entityId: "ohtani", points: 5 },
+      ],
+    };
+    const mlbPack: FamilyFeudPack = {
+      id: "short-name-typos-pack",
+      sport: "mlb",
+      entities: [
+        { id: "jeter", displayName: "Derek Jeter", kind: "person" },
+        { id: "ortiz", displayName: "David Ortiz", kind: "person" },
+        { id: "judge", displayName: "Aaron Judge", kind: "person" },
+        { id: "ohtani", displayName: "Shohei Ohtani", kind: "person" },
+      ],
+      mainBoards: [question, question],
+      fastMoney: [question, question, question, question, question],
+    };
+
+    expect(matchFamilyFeudAnswer(mlbPack, question, "Jeetr")).toMatchObject({
+      status: "matched",
+      entityId: "jeter",
+      kind: "typo",
+    });
+    expect(matchFamilyFeudAnswer(mlbPack, question, "Oritz")).toMatchObject({
+      status: "matched",
+      entityId: "ortiz",
+      kind: "typo",
+    });
+  });
+
   it("does not fuzzy-match a different given name onto the same surname", () => {
     const personQuestion = {
       id: "person-name-guard",
