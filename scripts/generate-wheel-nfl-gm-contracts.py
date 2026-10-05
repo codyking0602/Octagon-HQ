@@ -57,6 +57,26 @@ SOURCE_FAMILY_OVERRIDES = {
     ("travishunter", "Secondary"): "WR",
 }
 
+# OTC can retain void/proration mechanics after the actual playing contract.
+# These overrides are only for cases independently verified against current
+# contract reporting where the remaining playing term differs from those rows.
+CONTRACT_END_OVERRIDES = {
+    "mattstafford": 2027,
+}
+
+BIRTH_DATE_OVERRIDES = {
+    "tacariodavis": "2004-08-17",
+    "zachallen": "1997-08-20",
+    "brandonjones": "1998-04-02",
+    "kennethwalker": "2000-10-20",
+    "mansoordelane": "2003-12-15",
+    "chrisbell": "2004-06-07",
+    "brycelance": "2002-08-20",
+    "makailemon": "2004-06-02",
+    "jadarianprice": "2003-10-09",
+    "ruebenbain": "2004-09-08",
+}
+
 
 def normalize_name(value: str) -> str:
     value = unicodedata.normalize("NFKD", value or "")
@@ -81,9 +101,9 @@ def age_on(value):
 
 
 def season_end(row):
-    # OverTheCap season_history can include void/dead-cap years. For GM Mode we
-    # care about seasons in which the player is actually under a playing
-    # contract, so only count rows with positive base salary.
+    # OTC season_history can include void/proration years. Positive cash paid is
+    # a better proxy for an actual playing season than a non-zero placeholder
+    # base salary in a void year.
     history = row.get("season_history")
     years = []
     if isinstance(history, list):
@@ -94,11 +114,11 @@ def season_end(row):
             if raw_year in (None, "Total"):
                 continue
             try:
-                base_salary = float(item.get("base_salary") or 0)
+                cash_paid = float(item.get("cash_paid") or 0)
                 year = int(raw_year)
             except (TypeError, ValueError):
                 continue
-            if base_salary > 0:
+            if cash_paid > 0:
                 years.append(year)
     if years:
         return max(years)
@@ -225,10 +245,14 @@ def main():
             continue
 
         row = candidates[0]
-        end = row["_end"]
+        end = CONTRACT_END_OVERRIDES.get(item["key"], row["_end"])
         apy = to_money(row.get("apy"))
         player_meta = players_by_otc.get(str(row.get("otc_id"))) or {}
-        birth_date = row.get("date_of_birth") or player_meta.get("birth_date")
+        birth_date = (
+            row.get("date_of_birth")
+            or player_meta.get("birth_date")
+            or BIRTH_DATE_OVERRIDES.get(item["key"])
+        )
         age = age_on(birth_date)
         if end is None or apy is None or apy <= 0:
             unmatched.append({
@@ -261,32 +285,39 @@ def main():
         })
 
     output.sort(key=lambda row: (row["team"], row["family"], row["player"]))
-    diagnostic_names = {
-        "mattstafford", "samdarnold", "derrickhenry", "drakelondon",
-        "jonathantaylor", "cjgardnerjohnson", "danieljones", "traviskelce",
-        "christiangonzalez", "jaxonsmithnjigba", "ajterrell", "jerryjeudy",
-    }
-    diagnostics = []
-    for row in active:
-        if row["_key"] in diagnostic_names:
-            diagnostics.append({
-                "player": row.get("player"),
-                "position": row.get("position"),
-                "team": row.get("team"),
-                "yearSigned": row.get("year_signed"),
-                "years": row.get("years"),
-                "seasonHistory": row.get("season_history"),
-                "contractHistory": row.get("contract_history"),
-            })
+    missing_ages = [
+        {
+            "team": row["team"],
+            "family": row["family"],
+            "player": row["player"],
+        }
+        for row in output
+        if row["age"] is None
+    ]
+    invalid_slots = [
+        {
+            "team": row["team"],
+            "family": row["family"],
+            "player": row["player"],
+            "gmEligibleSlots": row["gmEligibleSlots"],
+        }
+        for row in output
+        if not row["gmEligibleSlots"]
+    ]
     report = {
         "snapshotDate": SNAPSHOT_DATE.isoformat(),
         "populationCount": len(population),
         "matchedCount": len(output),
         "unmatchedCount": len(unmatched),
         "ambiguousCount": len(ambiguous),
+        "missingAgeCount": len(missing_ages),
+        "invalidSlotCount": len(invalid_slots),
+        "oneYearCount": sum(1 for row in output if row["gameContract"] == "1YR"),
+        "threeYearCount": sum(1 for row in output if row["gameContract"] == "3YR"),
         "unmatched": unmatched,
         "ambiguous": ambiguous,
-        "diagnostics": diagnostics,
+        "missingAges": missing_ages,
+        "invalidSlots": invalid_slots,
     }
     artifact = {
         "schemaVersion": 1,
@@ -302,7 +333,13 @@ def main():
     Path(args.output).write_text(json.dumps(artifact, indent=2) + "\n")
     Path(args.report).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
-    if unmatched or ambiguous or len(output) != len(population):
+    if (
+        unmatched
+        or ambiguous
+        or missing_ages
+        or invalid_slots
+        or len(output) != len(population)
+    ):
         raise SystemExit(2)
 
 
