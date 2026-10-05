@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import "../../styles/football-gm-mode.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -11,6 +12,7 @@ import {
 } from "../play/footballWeeklyAuctionRepository";
 import { FootballEntryTransition } from "./FootballEntryTransition";
 import type { FootballEntryState } from "./footballEntrySession";
+import { isFootballGmPlaytestProfile } from "./footballGmAccess";
 
 type WeeklyAuctionQuickState = Pick<
   FootballWeeklyAuctionActiveState,
@@ -87,6 +89,18 @@ export default function FootballBackRoomPage() {
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/weekly-auction")} />
       <ChallengeCenter sport="football" />
+      {isFootballGmPlaytestProfile(identity.profile) ? (
+        <section className="football-gm-playtest-card" aria-label="The GM owner playtest">
+          <button type="button" onClick={() => navigate("/football/gm-mode")}>
+            <span>
+              <small>OWNER PLAYTEST · NFL</small>
+              <strong>The GM</strong>
+              <em>Spin teams, build under the cap, survive the offseason, then compare three-year results.</em>
+            </span>
+            <b>PLAY →</b>
+          </button>
+        </section>
+      ) : null}
       <PlayLandingGameLibrary sport="football" onNavigate={navigate} />
     </div>
   );

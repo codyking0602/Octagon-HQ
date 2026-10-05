@@ -19,6 +19,7 @@ export type PlayGameId =
   | "sports-feud"
   | "draft-room"
   | "wheel-football"
+  | "gm-football"
   | "higher-lower"
   | "wheel-ufc";
 
@@ -59,6 +60,7 @@ export type PlayCompletionState =
   | "average-fan-settled"
   | "draft-room-complete"
   | "wheel-football-complete"
+  | "gm-football-complete"
   | "higher-lower-settled"
   | "wheel-ufc-complete";
 
@@ -396,6 +398,30 @@ export const playGameCatalog = [
       reminderEligible: true,
       historyRecording: "official-daily-and-casual",
       difficultyModel: "A cutoff-centered eight-fighter board revealed one fighter at a time with every Keep/Cut decision locked.",
+    },
+  },
+  {
+    sport: "football",
+    id: "gm-football",
+    route: "/football/gm-mode",
+    icon: "GM",
+    title: "The GM",
+    description: "Build a seven-player NFL core under the cap, survive one offseason, and score a three-year front-office run.",
+    availability: "preview",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "none",
+      repetitionPolicy: "fixed-curated",
+      lineupSize: 7,
+      completionState: "gm-football-complete",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "challenge-completion",
+      difficultyModel: "NFL-only owner playtest using the Wheel team mechanic, real APY salaries, 1YR/3YR contracts, a $155M cap, one offseason, deterministic three-year projection, and hidden player grades.",
     },
   },
   {
