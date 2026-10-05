@@ -106,11 +106,11 @@ describe("GM Mode NFL contract universe", () => {
     });
     expect(find("LV", "TE", "Brock Bowers")).toMatchObject({
       currentApyMillions: 4.534696,
-      gmTerm: "3YR",
+      gmTerm: "1YR",
     });
     expect(find("NE", "QB", "Drake Maye")).toMatchObject({
       currentApyMillions: 9.159941,
-      gmTerm: "3YR",
+      gmTerm: "1YR",
     });
   });
 
