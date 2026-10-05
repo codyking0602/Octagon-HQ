@@ -1,0 +1,12 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/otari-tanzilovi",
+  "fighter_name": "Otari Tanzilovi",
+  "destination": "public/assets/fighters/otari-tanzilovi-thumb.webp",
+  "kind": "thumb",
+  "crop": [
+    0.15,
+    0,
+    0.7,
+    0.52
+  ]
+}
