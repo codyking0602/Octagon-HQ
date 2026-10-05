@@ -236,7 +236,7 @@ for (const identity of identities) {
     sourceFamily: identity.sourceFamily,
     gmPosition,
     age: match.age,
-    currentApy: match.currentApy,
+    currentApyMillions: match.currentApy / 1_000_000,
     freeAgencyYear: match.freeAgencyYear,
     freeAgencyType: match.freeAgencyType,
     gmTerm: match.freeAgencyYear >= 2029 ? "3YR" : "1YR",
