@@ -109,6 +109,18 @@ describe("MLB Sports Feud production cards", () => {
     ]);
   });
 
+  it("forgives normal misspellings of Jeter and Ortiz on today's second board", () => {
+    const board = MLB_SPORTS_FEUD_OCT12_PACK.mainBoards[1]!;
+    expect(matchFamilyFeudAnswer(MLB_SPORTS_FEUD_OCT12_PACK, board, "Jeetr")).toMatchObject({
+      status: "matched",
+      kind: "typo",
+    });
+    expect(matchFamilyFeudAnswer(MLB_SPORTS_FEUD_OCT12_PACK, board, "Oritz")).toMatchObject({
+      status: "matched",
+      kind: "typo",
+    });
+  });
+
   it("keeps both production cards on the canonical two-board plus five-Fast-Money engine", () => {
     for (const pack of [MLB_SPORTS_FEUD_OCT12_PACK, MLB_SPORTS_FEUD_OCT27_PACK]) {
       expect(() => assertFamilyFeudPack(pack)).not.toThrow();
