@@ -9,6 +9,8 @@ describe("MLB Sports Feud result parity", () => {
     expect(playoffsPage).toContain('import { DailyLeaderboardGameResult } from "../play/DailyLeaderboardGameResult"');
     expect(playoffsPage).toContain("mlbSportsFeudSharedResult");
     expect(playoffsPage).toContain("<DailyLeaderboardGameResult");
+    expect(playoffsPage).toContain("projection={sharedSportsFeud.projection}");
+    expect(playoffsPage).toContain("resultDetail={sharedSportsFeud.resultDetail}");
   });
 
   it("persists raw main-board and Fast Money submissions for future grading audits", () => {
