@@ -750,6 +750,15 @@ function pairCandidates(spec: MetricSpec): PairCandidate[] {
 
 const allPairCandidates = metricSpecs.flatMap(pairCandidates);
 
+export function footballHigherLowerCandidateSummary() {
+  const summary: Record<string, number> = {};
+  for (const pair of allPairCandidates) {
+    const key = `${pair.league}|${pair.category}|${pair.difficulty}|${pair.modern ? "modern" : "historic"}|${pair.metricKey}`;
+    summary[key] = (summary[key] ?? 0) + 1;
+  }
+  return summary;
+}
+
 function entityKey(subject: FootballSubjectProfile) {
   if (subject.playerId) {
     return `player:${subject.playerId.replace(/^(?:nfl|cfb)-/, "").replace(/-\\d{4}$/, "")}`;
