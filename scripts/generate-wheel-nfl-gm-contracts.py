@@ -36,6 +36,27 @@ TEAM_ALIASES = {
 SNAPSHOT_DATE = date(2026, 10, 5)
 WINDOW_END_SEASON = 2028
 
+NAME_ALIASES = {
+    "gregrousseau": "gregoryrousseau",
+    "cjgardnerjohnson": "chaunceygardnerjohnson",
+    "daxhill": "daxtonhill",
+    "patsurtain": "patricksurtain",
+    "saucegardner": "ahmadgardner",
+    "matthewstafford": "mattstafford",
+    "kamcurl": "kamrencurl",
+    "joshuche": "joshuauche",
+    "jujubrents": "juliusbrents",
+    "joshuametellus": "joshmetellus",
+    "druphillips": "andru phillips".replace(" ", ""),
+    "riqwoolen": "tariqwoolen",
+    "kennygainwell": "kennethgainwell",
+    "chigokonkwo": "chigoziemokonkwo",
+}
+SOURCE_FAMILY_OVERRIDES = {
+    ("jayloncarlies", "Front Seven"): "Secondary",
+    ("travishunter", "Secondary"): "WR",
+}
+
 
 def normalize_name(value: str) -> str:
     value = unicodedata.normalize("NFKD", value or "")
@@ -140,9 +161,11 @@ def main():
     unmatched = []
     ambiguous = []
     for item in population:
+        source_key = NAME_ALIASES.get(item["key"], item["key"])
+        expected_source_family = SOURCE_FAMILY_OVERRIDES.get((item["key"], item["family"]), item["family"])
         candidates = [
-            row for row in by_name.get(item["key"], [])
-            if row["_family"] == item["family"]
+            row for row in by_name.get(source_key, [])
+            if row["_family"] == expected_source_family
         ]
         if len(candidates) > 1:
             team_candidates = [row for row in candidates if team_matches(item["team"], row.get("team"))]
