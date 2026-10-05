@@ -304,6 +304,7 @@ def main():
         for row in output
         if not row["gmEligibleSlots"]
     ]
+    debug_names = {"Puka Nacua", "Drake Maye", "Brock Bowers", "Christian Gonzalez", "Jaxon Smith-Njigba", "Aidan Hutchinson", "Will Anderson Jr.", "Daniel Jones"}
     report = {
         "snapshotDate": SNAPSHOT_DATE.isoformat(),
         "populationCount": len(population),
