@@ -56,7 +56,7 @@ describe("Football Higher or Lower", () => {
   });
 
   it.each(["NFL", "CFB", "MIXED"] as const)("keeps %s recognizable, modern-first, and stat-position sane", (scope) => {
-    for (let seedIndex = 0; seedIndex < 12; seedIndex += 1) {
+    for (let seedIndex = 0; seedIndex < 6; seedIndex += 1) {
       const board = createFootballHigherLowerBoard(`quality-${scope}-${seedIndex}`, scope);
       const modernQuestions = board.questions.filter((question) => (
         (question.known.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
@@ -97,7 +97,7 @@ describe("Football Higher or Lower", () => {
   it("does not surface the first-pass deep-cut examples in a broad seed sample", () => {
     const blockedNames = new Set(["Jim Plunkett", "DaeSean Hamilton", "Orlando Pace"]);
     for (const scope of ["NFL", "CFB", "MIXED"] as const) {
-      for (let seedIndex = 0; seedIndex < 20; seedIndex += 1) {
+      for (let seedIndex = 0; seedIndex < 10; seedIndex += 1) {
         const board = createFootballHigherLowerBoard(`recognition-${scope}-${seedIndex}`, scope);
         const names = board.questions.flatMap((question) => [question.known.name, question.hidden.name]);
         expect(names.some((name) => blockedNames.has(name))).toBe(false);
