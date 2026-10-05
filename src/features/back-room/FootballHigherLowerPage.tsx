@@ -416,15 +416,14 @@ export default function FootballHigherLowerPage() {
           className="higher-lower-card is-known"
           style={cardBrandStyle(knownBrand)}
         >
-          {knownBrand?.logoSrc ? (
-            <img
-              className="higher-lower-card__logo"
-              src={knownBrand.logoSrc}
-              alt=""
-              aria-hidden="true"
-            />
-          ) : null}
-          <span>{question.known.context}</span>
+          <div className="higher-lower-card__identity">
+            {knownBrand?.logoSrc ? (
+              <span className="higher-lower-card__logo">
+                <img src={knownBrand.logoSrc} alt="" aria-hidden="true" />
+              </span>
+            ) : null}
+            <span>{question.known.context}</span>
+          </div>
           <h3>{question.known.name}</h3>
           <strong>{question.known.formattedValue}</strong>
         </article>
@@ -435,15 +434,14 @@ export default function FootballHigherLowerPage() {
           className={`higher-lower-card is-hidden${answered ? " is-revealed" : ""}`}
           style={cardBrandStyle(hiddenBrand)}
         >
-          {hiddenBrand?.logoSrc ? (
-            <img
-              className="higher-lower-card__logo"
-              src={hiddenBrand.logoSrc}
-              alt=""
-              aria-hidden="true"
-            />
-          ) : null}
-          <span>{question.hidden.context}</span>
+          <div className="higher-lower-card__identity">
+            {hiddenBrand?.logoSrc ? (
+              <span className="higher-lower-card__logo">
+                <img src={hiddenBrand.logoSrc} alt="" aria-hidden="true" />
+              </span>
+            ) : null}
+            <span>{question.hidden.context}</span>
+          </div>
           <h3>{question.hidden.name}</h3>
           <strong>{answered ? question.hidden.formattedValue : "?"}</strong>
         </article>
