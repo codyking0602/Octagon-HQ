@@ -118,8 +118,12 @@ function higherLowerVerdict(challenge: PlayChallenge, creatorName: string, respo
 function higherLowerScoreLabel(result: ChallengeJson) {
   const outcome = higherLowerOutcome(result);
   if (!outcome) return "DONE";
-  const time = outcome.timeMs === null ? "" : ` · ${(outcome.timeMs / 1000).toFixed(1)}s`;
-  return `${outcome.correct}/10${time}`;
+  if (outcome.timeMs === null) return `${outcome.correct}/10`;
+  const seconds = outcome.timeMs / 1000;
+  const formattedTime = seconds < 60
+    ? `${seconds.toFixed(1)}s`
+    : `${Math.floor(seconds / 60)}:${(seconds % 60).toFixed(1).padStart(4, "0")}`;
+  return `${outcome.correct}/10 · ${formattedTime}`;
 }
 
 function overlapCount(left: readonly string[], right: readonly string[]) {

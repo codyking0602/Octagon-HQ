@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN,
+  FOOTBALL_HIGHER_LOWER_MODERN_YEAR,
   FOOTBALL_HIGHER_LOWER_QUESTION_COUNT,
   FOOTBALL_HIGHER_LOWER_VERSION,
   createFootballHigherLowerBoard,
@@ -7,6 +9,7 @@ import {
   parseFootballHigherLowerBoard,
   type FootballHigherLowerScope,
 } from "./footballHigherLowerModel";
+import { getFootballSubject } from "./footballSubjectRegistry";
 
 function boardShape(scope: FootballHigherLowerScope) {
   const board = createFootballHigherLowerBoard(`higher-lower-test-${scope}`, scope);
@@ -32,7 +35,8 @@ describe("Football Higher or Lower", () => {
     expect(difficulties).toEqual({ approachable: 3, competitive: 5, tough: 2 });
     expect(board.questions.filter((question) => question.answer === "higher")).toHaveLength(5);
     expect(board.questions.filter((question) => question.answer === "lower")).toHaveLength(5);
-    expect(new Set(board.questions.map((question) => question.category)).size).toBeGreaterThanOrEqual(5);
+    expect(new Set(board.questions.map((question) => question.category)).size)
+      .toBeGreaterThanOrEqual(scope === "CFB" ? 3 : 5);
     expect(board.questions.filter((question) => question.category === "career").length).toBeLessThanOrEqual(2);
 
     const subjectIds = board.questions.flatMap((question) => [question.known.subjectId, question.hidden.subjectId]);
@@ -48,6 +52,56 @@ describe("Football Higher or Lower", () => {
     expect(board.questions.filter((question) => question.league === "CFB")).toHaveLength(5);
     for (let index = 2; index < board.questions.length; index += 1) {
       expect(new Set(board.questions.slice(index - 2, index + 1).map((question) => question.league)).size).toBe(2);
+    }
+  });
+
+  it.each(["NFL", "CFB", "MIXED"] as const)("keeps %s recognizable, modern-first, and stat-position sane", (scope) => {
+    for (let seedIndex = 0; seedIndex < 12; seedIndex += 1) {
+      const board = createFootballHigherLowerBoard(`quality-${scope}-${seedIndex}`, scope);
+      const modernQuestions = board.questions.filter((question) => (
+        (question.known.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
+        && (question.hidden.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
+      ));
+      expect(modernQuestions.length).toBeGreaterThanOrEqual(FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN);
+
+      for (const question of board.questions) {
+        for (const row of [question.known, question.hidden]) {
+          const subject = getFootballSubject(row.subjectId);
+          expect(subject).not.toBeNull();
+          if (subject!.kind !== "team-season") {
+            expect(["A", "B"]).toContain(subject!.recognizabilityTier);
+          }
+
+          if (/passing/i.test(question.metricLabel) && subject!.kind !== "team-season") {
+            expect(subject!.position).toBe("QB");
+          }
+          if (/receiving/i.test(question.metricLabel) && subject!.kind !== "team-season") {
+            expect(["WR", "TE"]).toContain(subject!.position);
+          }
+          if (/rushing/i.test(question.metricLabel) && subject!.kind !== "team-season") {
+            expect(["QB", "RB"]).toContain(subject!.position);
+            if (/yards/i.test(question.metricLabel)) {
+              expect(row.value).toBeGreaterThanOrEqual(subject!.position === "QB" ? 500 : 800);
+            } else if (/TDs/i.test(question.metricLabel)) {
+              expect(row.value).toBeGreaterThanOrEqual(subject!.position === "QB" ? 6 : 8);
+            }
+          }
+          if (/sacks/i.test(question.metricLabel) && subject!.kind !== "team-season") {
+            expect(["DL", "LB"]).toContain(subject!.position);
+          }
+        }
+      }
+    }
+  });
+
+  it("does not surface the first-pass deep-cut examples in a broad seed sample", () => {
+    const blockedNames = new Set(["Jim Plunkett", "DaeSean Hamilton", "Orlando Pace"]);
+    for (const scope of ["NFL", "CFB", "MIXED"] as const) {
+      for (let seedIndex = 0; seedIndex < 20; seedIndex += 1) {
+        const board = createFootballHigherLowerBoard(`recognition-${scope}-${seedIndex}`, scope);
+        const names = board.questions.flatMap((question) => [question.known.name, question.hidden.name]);
+        expect(names.some((name) => blockedNames.has(name))).toBe(false);
+      }
     }
   });
 
