@@ -278,6 +278,8 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
         "Josh Heupel",
         "Bobby Petrino",
         "Steve Sarkisian",
+        "Kalen DeBoer",
+        "Dan Mullen",
         "Kliff Kingsbury",
         "Dana Holgorsen",
         "June Jones",
@@ -287,6 +289,12 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     expect(matchName(question, "Briles")?.name).toBe("Art Briles");
     expect(matchName(question, "Urban")?.name).toBe("Urban Meyer");
     expect(matchName(question, "Sarkisian")?.name).toBe("Steve Sarkisian");
+    expect(matchName(question, "DeBoer")?.name).toBe("Kalen DeBoer");
+    expect(matchName(question, "Mullen")?.name).toBe("Dan Mullen");
+
+    const fourthQuarterBack = authoredQuestion("cfb-fast5-03-2");
+    expect(fourthQuarterBack.alsoAcceptedAnswers?.map((answer) => answer.name)).toContain("Jadan Baugh");
+    expect(matchName(fourthQuarterBack, "Baugh")?.name).toBe("Jadan Baugh");
   });
 
   it("resolves Saban and natural school shorthand", () => {
