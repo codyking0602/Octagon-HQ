@@ -290,6 +290,7 @@ describe("CFB Sports Feud answer-acceptance quality", () => {
     expect(matchName(question, "Urban")?.name).toBe("Urban Meyer");
     expect(matchName(question, "Sarkisian")?.name).toBe("Steve Sarkisian");
     expect(matchName(question, "DeBoer")?.name).toBe("Kalen DeBoer");
+    expect(matchName(question, "Kalen Daebor")?.name).toBe("Kalen DeBoer");
     expect(matchName(question, "Mullen")?.name).toBe("Dan Mullen");
 
     const fourthQuarterBack = authoredQuestion("cfb-fast5-03-2");
