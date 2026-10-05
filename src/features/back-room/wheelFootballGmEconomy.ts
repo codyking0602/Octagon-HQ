@@ -25,6 +25,9 @@ export type WheelFootballGmContractRow = {
   salaryApy: number;
   realContractEndSeason: number;
   gameContract: WheelFootballGmContractTerm;
+  draftYear: number | null;
+  draftRound: number | null;
+  draftOverall: number | null;
 };
 
 type MarketPoint = readonly [grade: number, apy: number];
@@ -99,56 +102,106 @@ function clamp(value: number, low: number, high: number) {
   return Math.max(low, Math.min(high, value));
 }
 
-function annualGradeDelta(position: WheelFootballGmMarketPosition, age: number) {
+function recentDraftPedigreeBoost(input: {
+  draftYear: number | null;
+  draftOverall: number | null;
+  currentGrade: number;
+  projectionStep: 0 | 1;
+}) {
+  if (input.draftYear == null || input.draftOverall == null) return 0;
+  const recency = input.draftYear >= 2026
+    ? 1
+    : input.draftYear === 2025
+      ? 0.75
+      : input.draftYear === 2024
+        ? 0.5
+        : 0;
+  if (!recency) return 0;
+
+  const first = input.projectionStep === 0;
+  let base = input.draftOverall <= 10
+    ? (first ? 2.2 : 1.4)
+    : input.draftOverall <= 32
+      ? (first ? 1.5 : 1)
+      : input.draftOverall <= 64
+        ? (first ? 0.9 : 0.6)
+        : input.draftOverall <= 100
+          ? (first ? 0.5 : 0.3)
+          : 0;
+
+  // A very recent blue-chip player with a low current grade can still have
+  // meaningful projection headroom without treating that upside as present ability.
+  if (input.draftOverall <= 10 && input.currentGrade < 82) {
+    base += first ? 0.75 : 0.5;
+  }
+  return base * recency;
+}
+
+function annualGradeDelta(input: {
+  position: WheelFootballGmMarketPosition;
+  age: number;
+  currentGrade: number;
+  draftYear: number | null;
+  draftOverall: number | null;
+  projectionStep: 0 | 1;
+}) {
+  const { position, age, currentGrade } = input;
+
+  // Youth alone is not a progression trigger. A young player's upside must be
+  // supported by demonstrated current quality and/or recent draft pedigree.
+  if (age <= 25) {
+    const demonstrated = currentGrade >= 94
+      ? 0.25
+      : currentGrade >= 88
+        ? 0.5
+        : currentGrade >= 82
+          ? 0.25
+          : 0;
+    return Math.min(2.75, demonstrated + recentDraftPedigreeBoost(input));
+  }
+
+  let delta: number;
   if (position === "QB") {
-    if (age <= 25) return 1.5;
-    if (age <= 31) return 0.25;
-    if (age <= 34) return -1;
-    if (age <= 36) return -2;
-    return -3.5;
+    if (age <= 31) delta = 0.2;
+    else if (age <= 34) delta = -0.75;
+    else if (age <= 36) delta = -1.5;
+    else delta = -2.5;
+  } else if (position === "RB") {
+    if (age === 26) delta = -0.4;
+    else if (age === 27) delta = -1;
+    else if (age <= 29) delta = -1.8;
+    else delta = -3;
+  } else if (position === "WR") {
+    if (age <= 28) delta = 0.1;
+    else if (age <= 30) delta = -0.6;
+    else if (age <= 32) delta = -1.25;
+    else delta = -2.25;
+  } else if (position === "FLEX") {
+    if (age <= 27) delta = 0.15;
+    else if (age <= 30) delta = -0.4;
+    else if (age <= 32) delta = -1;
+    else delta = -2;
+  } else if (position === "DL") {
+    if (age <= 27) delta = 0.15;
+    else if (age <= 30) delta = -0.4;
+    else if (age <= 32) delta = -1;
+    else delta = -2;
+  } else if (position === "LB") {
+    if (age <= 27) delta = 0.1;
+    else if (age <= 29) delta = -0.4;
+    else if (age <= 31) delta = -1;
+    else delta = -2;
+  } else {
+    if (age <= 27) delta = 0.1;
+    else if (age <= 29) delta = -0.4;
+    else if (age <= 31) delta = -1;
+    else delta = -2;
   }
-  if (position === "RB") {
-    if (age <= 23) return 1.5;
-    if (age <= 25) return 0.5;
-    if (age === 26) return -0.5;
-    if (age === 27) return -1.5;
-    if (age <= 29) return -2.5;
-    return -4;
-  }
-  if (position === "WR") {
-    if (age <= 23) return 1.5;
-    if (age <= 25) return 0.75;
-    if (age <= 28) return 0.2;
-    if (age <= 30) return -0.75;
-    if (age <= 32) return -1.75;
-    return -3;
-  }
-  if (position === "FLEX") {
-    if (age <= 24) return 1.25;
-    if (age <= 27) return 0.5;
-    if (age <= 30) return -0.4;
-    if (age <= 32) return -1.25;
-    return -2.5;
-  }
-  if (position === "DL") {
-    if (age <= 24) return 1.25;
-    if (age <= 27) return 0.5;
-    if (age <= 30) return -0.5;
-    if (age <= 32) return -1.25;
-    return -2.5;
-  }
-  if (position === "LB") {
-    if (age <= 24) return 1;
-    if (age <= 27) return 0.3;
-    if (age <= 29) return -0.5;
-    if (age <= 31) return -1.25;
-    return -2.5;
-  }
-  if (age <= 24) return 1.25;
-  if (age <= 27) return 0.4;
-  if (age <= 29) return -0.5;
-  if (age <= 31) return -1.3;
-  return -2.5;
+
+  // Elite veterans can age without automatically falling off a cliff.
+  if (delta < 0 && currentGrade >= 94) return delta * 0.7;
+  if (delta < 0 && currentGrade >= 88) return delta * 0.85;
+  return delta;
 }
 
 export function projectWheelFootballGmGrade(input: {
@@ -156,10 +209,19 @@ export function projectWheelFootballGmGrade(input: {
   age: number;
   position: WheelFootballGmMarketPosition;
   yearsAhead: 0 | 1 | 2;
+  draftYear?: number | null;
+  draftOverall?: number | null;
 }) {
   let grade = input.currentGrade;
   for (let year = 0; year < input.yearsAhead; year += 1) {
-    grade += annualGradeDelta(input.position, input.age + year);
+    grade += annualGradeDelta({
+      position: input.position,
+      age: input.age + year,
+      currentGrade: grade,
+      draftYear: input.draftYear ?? null,
+      draftOverall: input.draftOverall ?? null,
+      projectionStep: year as 0 | 1,
+    });
   }
   return Math.round(clamp(grade, 70, 99) * 10) / 10;
 }
@@ -215,6 +277,8 @@ export function projectWheelFootballGmExtensionApy(input: {
   currentGrade: number;
   age: number;
   position: WheelFootballGmMarketPosition;
+  draftYear?: number | null;
+  draftOverall?: number | null;
 }) {
   const yearTwoGrade = projectWheelFootballGmGrade({
     ...input,
@@ -238,6 +302,8 @@ export function wheelFootballGmOutlook(input: {
   currentGrade: number;
   age: number;
   position: WheelFootballGmMarketPosition;
+  draftYear?: number | null;
+  draftOverall?: number | null;
 }) {
   const yearThree = projectWheelFootballGmGrade({ ...input, yearsAhead: 2 });
   const change = yearThree - input.currentGrade;
