@@ -31,12 +31,12 @@ jobs:
       - name: Commit calibrated snapshot
         if: github.event_name == 'pull_request'
         run: |
-          if [ -z "$(git status --porcelain -- data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json)" ]; then
+          git add -f data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json
+          if git diff --cached --quiet; then
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json
           git commit -m "Add calibrated GM contract authority"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
       - uses: actions/upload-artifact@v4
