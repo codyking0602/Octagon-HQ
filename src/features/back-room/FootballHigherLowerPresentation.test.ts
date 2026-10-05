@@ -26,4 +26,13 @@ describe("Football Higher or Lower presentation contracts", () => {
     expect(pageSource).toContain("question.known.context");
     expect(pageSource).toContain("question.hidden.context");
   });
+
+  it("adds team and school identity without player headshots", () => {
+    expect(pageSource).toContain("footballHigherLowerBrandForSubject");
+    expect(pageSource).toContain("higher-lower-card__logo");
+    expect(styleSource).toContain("--hl-team-primary");
+    expect(styleSource).toContain("--hl-team-secondary");
+    expect(styleSource).toContain(".higher-lower-card__logo");
+    expect(pageSource).not.toContain("headshot");
+  });
 });
