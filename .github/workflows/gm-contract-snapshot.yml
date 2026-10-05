@@ -8,11 +8,16 @@ on:
       - ".github/workflows/gm-contract-snapshot.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -21,12 +26,23 @@ jobs:
       - name: Generate strict Wheel GM contract snapshot
         run: |
           python scripts/generate-wheel-nfl-gm-contracts.py \
-            --output /tmp/wheel-nfl-gm-contracts.json \
+            --output data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json \
             --report /tmp/wheel-nfl-gm-contract-report.json
+      - name: Commit calibrated snapshot
+        if: github.event_name == 'pull_request'
+        run: |
+          if git diff --quiet -- data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json
+          git commit -m "Add calibrated GM contract authority"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: gm-contract-snapshot
           path: |
-            /tmp/wheel-nfl-gm-contracts.json
+            data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json
             /tmp/wheel-nfl-gm-contract-report.json
