@@ -91,6 +91,36 @@ describe("Football GM economics authority", () => {
       gameContract: "1YR",
       marketPosition: "IDL",
     });
+    expect(footballGmContractForPlayer("HOU", "WR", "Nico Collins")).toMatchObject({
+      currentApy: 30_000_000,
+      gameContract: "1YR",
+      freeAgencyYear: 2028,
+    });
+    expect(footballGmContractForPlayer("BAL", "WR", "Zay Flowers")).toMatchObject({
+      currentApy: 35_000_000,
+      gameContract: "3YR",
+      freeAgencyYear: 2032,
+    });
+    expect(footballGmContractForPlayer("DET", "RB", "Jahmyr Gibbs")).toMatchObject({
+      currentApy: 22_500_000,
+      gameContract: "3YR",
+      freeAgencyYear: 2031,
+    });
+    expect(footballGmContractForPlayer("ATL", "RB", "Bijan Robinson")).toMatchObject({
+      currentApy: 22_250_000,
+      gameContract: "3YR",
+      freeAgencyYear: 2031,
+    });
+    expect(footballGmContractForPlayer("IND", "RB", "Jonathan Taylor")).toMatchObject({
+      currentApy: 22_000_000,
+      gameContract: "3YR",
+      freeAgencyYear: 2029,
+    });
+    expect(footballGmContractForPlayer("LAC", "Secondary", "Derwin James Jr.")).toMatchObject({
+      currentApy: 25_200_000,
+      gameContract: "3YR",
+      freeAgencyYear: 2030,
+    });
     expect(footballGmContractForPlayer("NE", "Secondary", "Christian Gonzalez")).toMatchObject({
       currentApy: 33_750_000,
       gameContract: "3YR",
