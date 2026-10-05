@@ -118,7 +118,7 @@ export const CFB_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("cfb-fast5", [
       {
         prompt: "Name a back you would least want to tackle in the fourth quarter.",
         answers: ["Derrick Henry","Earl Campbell","Bo Jackson","Jerome Bettis","Herschel Walker","Nick Chubb","Leonard Fournette","Eddie George"],
-        alsoAcceptedAnswers: ["Ron Dayne","Jonathan Taylor","Adrian Peterson","Marshawn Lynch","Najee Harris","Trent Richardson","Beanie Wells"],
+        alsoAcceptedAnswers: ["Ron Dayne","Jonathan Taylor","Adrian Peterson","Marshawn Lynch","Najee Harris","Trent Richardson","Beanie Wells","Jadan Baugh"],
       },
       {
         prompt: "Name a college running back who could run through contact.",
