@@ -356,7 +356,14 @@ export function matchFamilyFeudAnswer(
     if (row.term.length < 3) continue;
     const entity = entitiesById.get(row.entityId);
     if (entity?.kind === "person" && !fuzzyPersonFullNameCompatible(normalized, row.term)) continue;
-    const allowance = typoAllowance(normalized, row.term);
+    let allowance = typoAllowance(normalized, row.term);
+    if (
+      entity?.kind === "person"
+      && (row.kind === "first-name" || row.kind === "surname")
+      && row.term.length >= 5
+    ) {
+      allowance = Math.max(allowance, 2);
+    }
     if (allowance === 0) continue;
     const distance = editDistance(normalized, row.term);
     if (distance > allowance) continue;
