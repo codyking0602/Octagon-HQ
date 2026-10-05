@@ -22,6 +22,12 @@ type FeudAnswerRow = {
   acceptedVariant: boolean;
 };
 
+type FeudAttemptRow = {
+  submittedText: string;
+  status: string;
+  matchKind: string;
+};
+
 export type WhoAmILeaderboardRound = {
   index: number;
   league: string;
@@ -345,6 +351,16 @@ function feudAnswerRows(board: JsonRecord): FeudAnswerRow[] {
   }
 
   return rows;
+}
+
+function feudAttemptRows(resultDetail: JsonRecord, boardIndex: number): FeudAttemptRow[] {
+  const rounds = records(resultDetail.main_board_attempts);
+  const round = rounds.find((row) => Number(row.round ?? 0) === boardIndex + 1) ?? rounds[boardIndex] ?? {};
+  return records(round.attempts).map((attempt) => ({
+    submittedText: String(attempt.submitted_text ?? attempt.submittedText ?? ""),
+    status: String(attempt.status ?? ""),
+    matchKind: String(attempt.match_kind ?? attempt.matchKind ?? ""),
+  })).filter((attempt) => Boolean(attempt.submittedText));
 }
 
 export function buildSportsFeudFastMoneyRows(
@@ -708,6 +724,7 @@ function SportsFeudLeaderboardResult({
       <div className="leaderboard-game-result__boards">
         {boards.map((board, boardIndex) => {
           const answers = feudAnswerRows(board);
+          const attempts = feudAttemptRows(resultDetail, boardIndex);
           const foundPoints = answers.filter((answer) => answer.found).reduce((sum, answer) => sum + answer.points, 0);
           return (
             <section className="leaderboard-feud-board" key={String(board.id ?? boardIndex)}>
@@ -736,6 +753,22 @@ function SportsFeudLeaderboardResult({
                   </div>
                 ))}
               </div>
+              {attempts.length ? (
+                <div className="leaderboard-feud-attempts">
+                  <span>PLAYER GUESSES</span>
+                  <div>
+                    {attempts.map((attempt, attemptIndex) => (
+                      <small
+                        className={attempt.status === "matched" ? "is-correct" : attempt.status === "unrecognized" ? "is-wrong" : ""}
+                        key={attempt.submittedText + "-" + attemptIndex}
+                      >
+                        {attempt.submittedText}
+                        {attempt.matchKind === "typo" ? " · TYPO MATCH" : attempt.status === "unrecognized" ? " · STRIKE" : ""}
+                      </small>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </section>
           );
         })}

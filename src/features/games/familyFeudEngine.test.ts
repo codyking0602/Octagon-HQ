@@ -136,6 +136,64 @@ describe("Family Feud V2 engine contract", () => {
     });
   });
 
+  it("forgives two-edit misspellings on unique five-letter person names", () => {
+    const personQuestion = {
+      id: "short-person-typo",
+      prompt: "Name a baseball star.",
+      candidateIds: ["jeter", "ortiz"],
+      answers: [
+        { entityId: "jeter", points: 10 },
+        { entityId: "ortiz", points: 8 },
+        { entityId: "jeter", points: 7 },
+        { entityId: "ortiz", points: 5 },
+      ],
+    };
+    const personPack: FamilyFeudPack = {
+      id: "short-person-typo-pack",
+      sport: "mlb",
+      entities: [
+        { id: "jeter", displayName: "Derek Jeter", kind: "person" },
+        { id: "ortiz", displayName: "David Ortiz", kind: "person" },
+      ],
+      mainBoards: [personQuestion, personQuestion],
+      fastMoney: [personQuestion, personQuestion, personQuestion, personQuestion, personQuestion],
+    };
+
+    expect(matchFamilyFeudAnswer(personPack, personQuestion, "Jeetr")).toMatchObject({
+      status: "matched",
+      entityId: "jeter",
+      kind: "typo",
+    });
+    expect(matchFamilyFeudAnswer(personPack, personQuestion, "Oritz")).toMatchObject({
+      status: "matched",
+      entityId: "ortiz",
+      kind: "typo",
+    });
+  });
+
+  it("keeps raw main-board attempts for postgame grading audits", () => {
+    let state = createFamilyFeudState();
+    state = submitFamilyFeudMainAnswer(pack, state, "Staford").state;
+    state = submitFamilyFeudMainAnswer(pack, state, "not a real player").state;
+
+    expect(state.mainBoards[0]!.attempts).toEqual([
+      {
+        submittedText: "Staford",
+        normalizedText: "staford",
+        status: "matched",
+        entityId: "stafford",
+        matchKind: "typo",
+      },
+      {
+        submittedText: "not a real player",
+        normalizedText: "not a real player",
+        status: "unrecognized",
+        entityId: null,
+        matchKind: null,
+      },
+    ]);
+  });
+
   it("does not fuzzy-match a different given name onto the same surname", () => {
     const personQuestion = {
       id: "person-name-guard",

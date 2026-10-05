@@ -185,6 +185,42 @@
   font-weight: 900;
 }
 
+.leaderboard-feud-attempts {
+  padding: 12px 14px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.leaderboard-feud-attempts > span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  opacity: 0.62;
+}
+
+.leaderboard-feud-attempts > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.leaderboard-feud-attempts small {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.leaderboard-feud-attempts small.is-correct {
+  background: rgba(62, 197, 116, 0.13);
+}
+
+.leaderboard-feud-attempts small.is-wrong {
+  background: rgba(224, 76, 76, 0.13);
+}
+
 .leaderboard-fast-money > div {
   display: grid;
 }
