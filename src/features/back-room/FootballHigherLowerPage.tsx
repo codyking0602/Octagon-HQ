@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-higher-lower.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
@@ -20,6 +20,10 @@ import {
   type FootballHigherLowerChoice,
   type FootballHigherLowerScope,
 } from "./footballHigherLowerModel";
+import {
+  footballHigherLowerBrandForSubject,
+  type FootballHigherLowerBrand,
+} from "./footballHigherLowerBranding";
 
 interface HigherLowerAnswer {
   questionId: string;
@@ -58,6 +62,14 @@ function formatTime(timeMs: number) {
 
 function categoryLabel(category: string) {
   return category.replace("-", " ").toUpperCase();
+}
+
+function cardBrandStyle(brand: FootballHigherLowerBrand | null): CSSProperties | undefined {
+  if (!brand) return undefined;
+  return {
+    "--hl-team-primary": brand.primaryColor,
+    "--hl-team-secondary": brand.secondaryColor,
+  } as CSSProperties;
 }
 
 function SetupScreen({
@@ -365,6 +377,8 @@ export default function FootballHigherLowerPage() {
   }
 
   const question = board.questions[questionIndex]!;
+  const knownBrand = footballHigherLowerBrandForSubject(question.known.subjectId);
+  const hiddenBrand = footballHigherLowerBrandForSubject(question.hidden.subjectId);
   const answered = Boolean(revealedChoice);
   const wasCorrect = answered && footballHigherLowerAnswerIsCorrect(question, revealedChoice!);
 
@@ -398,7 +412,18 @@ export default function FootballHigherLowerPage() {
       </section>
 
       <section className="higher-lower-matchup">
-        <article className="higher-lower-card is-known">
+        <article
+          className="higher-lower-card is-known"
+          style={cardBrandStyle(knownBrand)}
+        >
+          {knownBrand?.logoSrc ? (
+            <img
+              className="higher-lower-card__logo"
+              src={knownBrand.logoSrc}
+              alt=""
+              aria-hidden="true"
+            />
+          ) : null}
           <span>{question.known.context}</span>
           <h3>{question.known.name}</h3>
           <strong>{question.known.formattedValue}</strong>
@@ -406,7 +431,18 @@ export default function FootballHigherLowerPage() {
 
         <div className="higher-lower-vs">VS</div>
 
-        <article className={`higher-lower-card is-hidden${answered ? " is-revealed" : ""}`}>
+        <article
+          className={`higher-lower-card is-hidden${answered ? " is-revealed" : ""}`}
+          style={cardBrandStyle(hiddenBrand)}
+        >
+          {hiddenBrand?.logoSrc ? (
+            <img
+              className="higher-lower-card__logo"
+              src={hiddenBrand.logoSrc}
+              alt=""
+              aria-hidden="true"
+            />
+          ) : null}
           <span>{question.hidden.context}</span>
           <h3>{question.hidden.name}</h3>
           <strong>{answered ? question.hidden.formattedValue : "?"}</strong>
