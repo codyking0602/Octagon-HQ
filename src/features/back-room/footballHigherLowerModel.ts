@@ -705,13 +705,13 @@ function recognizabilityScore(subject: FootballSubjectProfile) {
 
 function pairCandidates(spec: MetricSpec): PairCandidate[] {
   const rows = metricRows(spec).sort((left, right) => left.value - right.value);
-  const offsets = [1, 2, 4, 8, 12, 16] as const;
   const pairs: PairCandidate[] = [];
 
+  // The recognition filters make these pools intentionally small. Compare every
+  // eligible pair instead of sampling fixed offsets so a great marquee matchup
+  // cannot disappear merely because several nearby database rows were filtered out.
   for (let index = 0; index < rows.length; index += 1) {
-    for (const offset of offsets) {
-      const rightIndex = index + offset;
-      if (rightIndex >= rows.length) continue;
+    for (let rightIndex = index + 1; rightIndex < rows.length; rightIndex += 1) {
       const left = rows[index]!;
       const right = rows[rightIndex]!;
       if (left.value === right.value) continue;
@@ -891,7 +891,8 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
     if (pair.category === "career") careerCount += 1;
   }
 
-  if (categoryCounts.size < 5) return null;
+  const minimumCategoryCount = scope === "CFB" ? 4 : 5;
+  if (categoryCounts.size < minimumCategoryCount) return null;
   const modernCount = questions.filter((question) => (
     (question.known.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
     && (question.hidden.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
