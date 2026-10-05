@@ -20,6 +20,7 @@ describe("Football HQ game library presentation", () => {
     expect(games.map((game) => game.id)).toEqual([
       "draft-room",
       "wheel-football",
+      "higher-lower",
       "find-leader",
       "wavelength",
       "who-am-i",
@@ -29,6 +30,7 @@ describe("Football HQ game library presentation", () => {
     expect(playGameDefinition("who-am-i", "football").availability).toBeUndefined();
     expect(playGameDefinition("draft-room", "football").availability).toBeUndefined();
     expect(playGameDefinition("wheel-football", "football").availability).toBeUndefined();
+    expect(playGameDefinition("higher-lower", "football").availability).toBeUndefined();
     expect(new Set(games.map((game) => game.icon)).size).toBe(games.length);
     expect(games.every((game) => game.route.startsWith("/football/"))).toBe(true);
   });
