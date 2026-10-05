@@ -32,6 +32,28 @@ const TEAM_CODE_BY_NAME = {
 const FAMILY_KEYS = ["QB", "RB", "WR", "TE", "Front Seven", "Secondary"];
 const SUFFIX = /(?:iii|ii|iv|jr|sr|v)$/;
 
+const NAME_ALIASES = {
+  gregrousseau: "gregoryrousseau",
+  cjgardnerjohnson: "chaunceygardnerjohnsonjr",
+  daxhill: "daxtonhill",
+  patsurtainii: "patricksurtainii",
+  saucegardner: "ahmadgardner",
+  matthewstafford: "mattstafford",
+  kamcurl: "kamrencurl",
+  joshuche: "joshuauche",
+  jujubrents: "juliusbrents",
+  joshuametellus: "joshmetellus",
+  druphillips: "andruphillips",
+  riqwoolen: "tariqwoolen",
+  kennygainwell: "kennethgainwell",
+  chigokonkwo: "chigoziemokonkwo",
+};
+
+const GM_POSITION_OVERRIDES = {
+  "IND|Front Seven|jayloncarlies": "LB",
+  "JAX|Secondary|travishunter": "DB",
+};
+
 function normalize(value) {
   return String(value ?? "")
     .toLowerCase()
@@ -40,8 +62,13 @@ function normalize(value) {
     .replace(/[^a-z0-9]/g, "");
 }
 
+function identityName(value) {
+  const normalized = normalize(value);
+  return NAME_ALIASES[normalized] ?? normalized;
+}
+
 function baseName(value) {
-  return normalize(value).replace(SUFFIX, "");
+  return identityName(value).replace(SUFFIX, "");
 }
 
 function decodeHtml(value) {
@@ -125,26 +152,56 @@ function curatedIdentities(priority) {
 }
 
 function chooseMatch(identity, candidates) {
+  const wanted = identityName(identity.player);
+  const wantedBase = baseName(identity.player);
+
   const exact = candidates.filter((row) =>
     row.teamCode === identity.teamCode
     && row.sourceFamily === identity.sourceFamily
-    && row.normalizedPlayer === normalize(identity.player)
+    && row.normalizedPlayer === wanted
   );
   if (exact.length === 1) return exact[0];
 
   const suffixSafe = candidates.filter((row) =>
     row.teamCode === identity.teamCode
     && row.sourceFamily === identity.sourceFamily
-    && row.basePlayer === baseName(identity.player)
+    && row.basePlayer === wantedBase
   );
   if (suffixSafe.length === 1) return suffixSafe[0];
 
+  const sameTeamAnyContractPosition = candidates.filter((row) =>
+    row.teamCode === identity.teamCode
+    && (row.normalizedPlayer === wanted || row.basePlayer === wantedBase)
+  );
+  if (sameTeamAnyContractPosition.length === 1) return sameTeamAnyContractPosition[0];
+
   const familyOnly = candidates.filter((row) =>
     row.sourceFamily === identity.sourceFamily
-    && row.basePlayer === baseName(identity.player)
+    && row.basePlayer === wantedBase
   );
   if (familyOnly.length === 1) return familyOnly[0];
 
+  const uniqueAnyTeam = candidates.filter((row) =>
+    row.normalizedPlayer === wanted || row.basePlayer === wantedBase
+  );
+  if (uniqueAnyTeam.length === 1) return uniqueAnyTeam[0];
+
+  return null;
+}
+
+function gmPositionFor(identity, match) {
+  if (identity.sourceFamily === "QB") return "QB";
+  if (identity.sourceFamily === "RB") return "RB";
+  if (identity.sourceFamily === "WR") return "WR";
+  if (identity.sourceFamily === "TE") return "TE";
+  if (identity.sourceFamily === "Secondary") return "DB";
+
+  const overrideKey = `${identity.teamCode}|${identity.sourceFamily}|${normalize(identity.player)}`;
+  const override = GM_POSITION_OVERRIDES[overrideKey];
+  if (override) return override;
+  if (identity.sourceFamily === "Front Seven" && (match.gmPosition === "DL" || match.gmPosition === "LB")) {
+    return match.gmPosition;
+  }
   return null;
 }
 
@@ -168,11 +225,16 @@ for (const identity of identities) {
     missing.push(identity);
     continue;
   }
+  const gmPosition = gmPositionFor(identity, match);
+  if (!gmPosition) {
+    missing.push({ ...identity, reason: `contract position ${match.gmPosition} needs explicit GM mapping` });
+    continue;
+  }
   records.push({
     team: identity.teamCode,
     player: identity.player,
     sourceFamily: identity.sourceFamily,
-    gmPosition: match.gmPosition,
+    gmPosition,
     age: match.age,
     currentApy: match.currentApy,
     freeAgencyYear: match.freeAgencyYear,
@@ -188,7 +250,7 @@ const duplicateKeys = records
 if (missing.length || duplicateKeys.length || records.length !== identities.length) {
   const details = [
     `Expected ${identities.length}; resolved ${records.length}; missing ${missing.length}; duplicates ${duplicateKeys.length}.`,
-    missing.length ? `Missing:\n${missing.map((row) => `- ${row.team} ${row.sourceFamily}: ${row.player}`).join("\n")}` : "",
+    missing.length ? `Missing:\n${missing.map((row) => `- ${row.teamCode} ${row.sourceFamily}: ${row.player}${row.reason ? ` (${row.reason})` : ""}`).join("\n")}` : "",
     duplicateKeys.length ? `Duplicates:\n${duplicateKeys.join("\n")}` : "",
   ].filter(Boolean).join("\n\n");
   throw new Error(details);
