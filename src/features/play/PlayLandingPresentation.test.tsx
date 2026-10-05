@@ -26,6 +26,7 @@ describe("Play landing presentation", () => {
     ]);
     expect(PLAY_LANDING_FOOTBALL_GAME_ORDER).toEqual([
       "wheel-football",
+      "higher-lower",
       "find-leader",
       "wavelength",
       "who-am-i",
@@ -90,6 +91,12 @@ describe("Play landing presentation", () => {
     expect(within(wheel).getByText("CHALLENGE")).toBeInTheDocument();
     fireEvent.click(wheel);
     expect(navigate).toHaveBeenCalledWith("/football/wheel");
+
+    const higherLower = screen.getByRole("button", { name: /higher or lower/i });
+    expect(higherLower).toBeInTheDocument();
+    expect(within(higherLower).getByText("CHALLENGE")).toBeInTheDocument();
+    fireEvent.click(higherLower);
+    expect(navigate).toHaveBeenCalledWith("/football/higher-lower");
 
     const draftRoom = screen.getByRole("button", { name: /draft room/i });
     expect(draftRoom).toBeInTheDocument();

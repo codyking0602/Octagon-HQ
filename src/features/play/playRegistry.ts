@@ -19,6 +19,7 @@ export type PlayGameId =
   | "sports-feud"
   | "draft-room"
   | "wheel-football"
+  | "higher-lower"
   | "wheel-ufc";
 
 export type PlayGameKey = `${PlaySport}:${PlayGameId}`;
@@ -58,6 +59,7 @@ export type PlayCompletionState =
   | "average-fan-settled"
   | "draft-room-complete"
   | "wheel-football-complete"
+  | "higher-lower-settled"
   | "wheel-ufc-complete";
 
 export interface PlayGameLineupDefinition {
@@ -512,6 +514,29 @@ export const playGameCatalog = [
       reminderEligible: false,
       historyRecording: "challenge-completion",
       difficultyModel: "A server-owned 2–4 player challenge with 14, 21, or 28 picks: each profile spins independently, locks one current NFL or CFB player or coach into an open Superteam slot, then passes the turn.",
+    },
+  },
+  {
+    sport: "football",
+    id: "higher-lower",
+    route: "/football/higher-lower",
+    icon: "↕",
+    title: "Higher or Lower",
+    description: "Challenge someone to the exact same 10 football comparisons. Accuracy wins; time breaks a tie.",
+    lineup: {
+      defaultType: "curated",
+      supportedTypes: ["curated"],
+      replayBehavior: "same-curated-challenge",
+      newLineupControl: "result-replay",
+      repetitionPolicy: "recent-items-deprioritized",
+      lineupSize: 10,
+      completionState: "higher-lower-settled",
+      challengeEligible: true,
+      dailyEligible: false,
+      streakEligible: false,
+      reminderEligible: false,
+      historyRecording: "casual-and-challenge",
+      difficultyModel: "Ten frozen NFL, CFB, or Mixed numeric comparisons with a 3 approachable / 5 competitive / 2 tough mix, five Higher and five Lower answers, accuracy-first scoring, and completion time only as a tiebreaker.",
     },
   },
   {

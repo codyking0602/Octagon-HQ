@@ -92,6 +92,36 @@ function hitTheNumberVerdict(challenge: PlayChallenge, creatorName: string, resp
   return creator.distance < responder.distance ? `${creatorName} wins` : `${responderName} wins`;
 }
 
+function higherLowerOutcome(result: ChallengeJson) {
+  const row = record(result);
+  const correct = typeof row?.correct === "number" && Number.isFinite(row.correct)
+    ? row.correct
+    : resultScore(result);
+  const timeMs = typeof row?.timeMs === "number" && Number.isFinite(row.timeMs) && row.timeMs >= 0
+    ? row.timeMs
+    : null;
+  if (correct === null) return null;
+  return { correct, timeMs };
+}
+
+function higherLowerVerdict(challenge: PlayChallenge, creatorName: string, responderName: string) {
+  const creator = higherLowerOutcome(challenge.creatorResult);
+  const responder = higherLowerOutcome(challenge.responderResult);
+  if (!creator || !responder) return "Matchup complete";
+  if (creator.correct !== responder.correct) {
+    return creator.correct > responder.correct ? `${creatorName} wins` : `${responderName} wins`;
+  }
+  if (creator.timeMs === null || responder.timeMs === null || creator.timeMs === responder.timeMs) return "Tie game";
+  return creator.timeMs < responder.timeMs ? `${creatorName} wins on time` : `${responderName} wins on time`;
+}
+
+function higherLowerScoreLabel(result: ChallengeJson) {
+  const outcome = higherLowerOutcome(result);
+  if (!outcome) return "DONE";
+  const time = outcome.timeMs === null ? "" : ` · ${(outcome.timeMs / 1000).toFixed(1)}s`;
+  return `${outcome.correct}/10${time}`;
+}
+
 function overlapCount(left: readonly string[], right: readonly string[]) {
   const rightSet = new Set(right);
   return left.filter((value) => rightSet.has(value)).length;
@@ -151,6 +181,10 @@ export function challengeResultVerdict(
     return hitTheNumberVerdict(challenge, creatorName, responderName);
   }
 
+  if (challenge.gameId === "higher-lower") {
+    return higherLowerVerdict(challenge, creatorName, responderName);
+  }
+
   return scoreVerdict(challenge, creatorName, responderName);
 }
 
@@ -178,6 +212,7 @@ export function challengeResultScoreLabel(challenge: PlayChallenge, result: Chal
     const total = typeof row?.total === "number" && Number.isFinite(row.total) ? row.total : null;
     return total === null ? (score === null ? "DONE" : `${score}/100`) : String(total);
   }
+  if (challenge.gameId === "higher-lower") return higherLowerScoreLabel(result);
   if (challenge.gameId === "who-am-i") return score === null ? "DONE" : `${score}/100`;
   return "DONE";
 }
@@ -452,6 +487,48 @@ function WhoAmIDetails({ challenge, creatorName, responderName }: DetailProps) {
   ) : null;
 }
 
+function HigherLowerDetails({ challenge, creatorName, responderName }: DetailProps) {
+  const setup = record(challenge.setup);
+  const board = record(setup?.board ?? null);
+  const questions = Array.isArray(board?.questions) ? board.questions : [];
+  const creator = record(challenge.creatorResult);
+  const responder = record(challenge.responderResult);
+  const creatorAnswers = Array.isArray(creator?.answers) ? creator.answers : [];
+  const responderAnswers = Array.isArray(responder?.answers) ? responder.answers : [];
+
+  const answerChoice = (answers: ChallengeJson[], index: number) => {
+    const row = record(answers[index] ?? null);
+    return typeof row?.choice === "string" ? row.choice.toUpperCase() : "—";
+  };
+
+  return challenge.responderResult ? (
+    <div className="challenge-better-than-comparison">
+      <section className="challenge-game-banner" aria-label="Higher or Lower challenge rules">
+        <span>FINAL</span>
+        <strong>{challengeResultVerdict(challenge, creatorName, responderName)}</strong>
+        <small>Accuracy first. Completion time only breaks an accuracy tie.</small>
+      </section>
+      <div className="challenge-round-comparison">
+        <header><span>Q</span><strong>{creatorName}</strong><strong>{responderName}</strong><em>ANSWER</em></header>
+        {questions.map((item, index) => {
+          const question = record(item);
+          const hidden = record(question?.hidden ?? null);
+          const name = typeof hidden?.name === "string" ? hidden.name : `Question ${index + 1}`;
+          const answer = typeof question?.answer === "string" ? question.answer.toUpperCase() : "—";
+          return (
+            <div key={typeof question?.id === "string" ? question.id : `higher-lower-${index}`}>
+              <span title={name}>Q{index + 1}</span>
+              <strong>{answerChoice(creatorAnswers, index)}</strong>
+              <strong>{answerChoice(responderAnswers, index)}</strong>
+              <em>{answer}</em>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  ) : null;
+}
+
 interface DetailProps {
   challenge: PlayChallenge;
   creatorName: string;
@@ -467,6 +544,7 @@ export function ChallengeResultDetails(props: DetailProps) {
   if (props.challenge.gameId === "keep-cut") return <KeepCutDetails {...props} />;
   if (props.challenge.gameId === "better-than") return <BetterThanDetails {...props} />;
   if (props.challenge.gameId === "hit-the-number") return <HitTheNumberDetails {...props} />;
+  if (props.challenge.gameId === "higher-lower") return <HigherLowerDetails {...props} />;
   if (props.challenge.gameId === "who-am-i") return <WhoAmIDetails {...props} />;
   return null;
 }

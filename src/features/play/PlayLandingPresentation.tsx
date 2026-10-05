@@ -11,6 +11,7 @@ export const PLAY_LANDING_COMMON_GAME_ORDER = [
 
 export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
   "wheel-football",
+  "higher-lower",
   "find-leader",
   "wavelength",
   "who-am-i",
@@ -88,7 +89,7 @@ export function PlayLandingGameLibrary({
         {games.map((game) => {
           const strategic = (sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME)
             || (sport === "football" && game.id === PLAY_LANDING_FOOTBALL_STRATEGIC_GAME);
-          const wheelChallenge = game.id === "wheel-football" || game.id === "wheel-ufc";
+          const challengeGame = game.id === "wheel-football" || game.id === "wheel-ufc" || game.id === "higher-lower";
           return (
             <button
               className={`play-landing-game-card${strategic ? " is-strategic" : ""}`}
@@ -98,11 +99,11 @@ export function PlayLandingGameLibrary({
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">
-                {wheelChallenge ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
+                {challengeGame ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
               </span>
               <strong>{game.title}</strong>
               <small>{game.description}</small>
-              <em>{wheelChallenge ? "CHALLENGE →" : "PLAY →"}</em>
+              <em>{challengeGame ? "CHALLENGE →" : "PLAY →"}</em>
             </button>
           );
         })}

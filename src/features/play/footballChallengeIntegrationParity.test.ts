@@ -9,6 +9,7 @@ import type { ChallengeJson, PlayChallenge } from "../challenges/challengeModel"
 import { playGameDefinition, playGamesForSport, type PlayGameId } from "./playRegistry";
 
 const footballChallengeGames: readonly { id: PlayGameId; route: string }[] = [
+  { id: "higher-lower", route: "/football/higher-lower" },
   { id: "blind-rank", route: "/football/rank-five" },
   { id: "keep-cut", route: "/football/keep-cut" },
   { id: "wavelength", route: "/football/wavelength" },

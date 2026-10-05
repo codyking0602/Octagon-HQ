@@ -10,6 +10,7 @@ import {
 const footballGamesExpected = [
   { id: "draft-room", route: "/football/draft-room" },
   { id: "wheel-football", route: "/football/wheel" },
+  { id: "higher-lower", route: "/football/higher-lower" },
   { id: "blind-rank", route: "/football/rank-five" },
   { id: "keep-cut", route: "/football/keep-cut" },
   { id: "wavelength", route: "/football/wavelength" },
@@ -30,7 +31,7 @@ describe("sport-aware Play registry", () => {
   it("registers Football games on their canonical Football HQ routes", () => {
     const footballGames = playGamesForSport("football");
     expect(footballGames.map(({ id, route }) => ({ id, route }))).toEqual(footballGamesExpected);
-    expect(footballGames).toHaveLength(9);
+    expect(footballGames).toHaveLength(10);
 
     for (const game of footballGames) {
       expect(playGameDefinition(game.id, "football")).toBe(game);
@@ -57,7 +58,7 @@ describe("sport-aware Play registry", () => {
 
   it("preserves shared challenge support while Football Who Am I joins Daily and direct challenges", () => {
     const footballGames = playGamesForSport("football");
-    for (const game of footballGames.filter((candidate) => !["who-am-i", "draft-room", "wheel-football"].includes(candidate.id))) {
+    for (const game of footballGames.filter((candidate) => !["who-am-i", "draft-room", "wheel-football", "higher-lower"].includes(candidate.id))) {
       expect(game.lineup).toMatchObject({
         defaultType: "replayable",
         supportedTypes: ["replayable", "curated"],
@@ -100,6 +101,22 @@ describe("sport-aware Play registry", () => {
         historyRecording: "challenge-completion",
         completionState: "wheel-football-complete",
         lineupSize: 28,
+      },
+    });
+
+    expect(playGameDefinition("higher-lower", "football")).toMatchObject({
+      route: "/football/higher-lower",
+      lineup: {
+        defaultType: "curated",
+        supportedTypes: ["curated"],
+        replayBehavior: "same-curated-challenge",
+        challengeEligible: true,
+        dailyEligible: false,
+        streakEligible: false,
+        reminderEligible: false,
+        historyRecording: "casual-and-challenge",
+        completionState: "higher-lower-settled",
+        lineupSize: 10,
       },
     });
 
