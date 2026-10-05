@@ -200,7 +200,7 @@ export function projectFootballGmExtensionApy(input: {
   const raw = ceiling
     * gradeMarketMultiplier(input.projectedGrade)
     * ageMarketMultiplier(input.marketPosition, input.ageAtExtension);
-  return roundToQuarterMillion(Math.max(floor, Math.min(ceiling, raw)));
+  return Math.max(floor, Math.min(ceiling, roundToQuarterMillion(raw)));
 }
 
 export function footballGmSalarySchedule(
