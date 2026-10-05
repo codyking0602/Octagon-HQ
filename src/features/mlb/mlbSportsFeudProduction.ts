@@ -10,7 +10,7 @@ const FAST_POINTS = [8, 7, 6, 5, 4, 3, 2, 1, 1, 1] as const;
 
 export const MLB_SPORTS_FEUD_OCT12_DATE = "2026-10-05" as const;
 export const MLB_SPORTS_FEUD_OCT12_KEY = "mlb-2026-play-06" as const;
-export const MLB_SPORTS_FEUD_OCT12_VERSION = "mlb-sports-feud-oct12-v2" as const;
+export const MLB_SPORTS_FEUD_OCT12_VERSION = "mlb-sports-feud-oct12-v3" as const;
 export const MLB_SPORTS_FEUD_OCT27_DATE = "2026-10-25" as const;
 export const MLB_SPORTS_FEUD_OCT27_KEY = "mlb-2026-play-10" as const;
 export const MLB_SPORTS_FEUD_OCT27_VERSION = "mlb-sports-feud-oct27-v2" as const;
@@ -82,11 +82,11 @@ const EASY_TEAM_ROWS: readonly EntityRow[] = [
 const EASY_PLAYER_ROWS: readonly EntityRow[] = [
   ["ohtani", "Shohei Ohtani", ["Ohtani"]],
   ["judge", "Aaron Judge", ["Judge"]],
-  ["jeter", "Derek Jeter", ["Jeter"]],
+  ["jeter", "Derek Jeter", ["Jeter", "Jeetr", "Jetter", "Jeeter"]],
   ["arod", "Alex Rodriguez", ["A-Rod", "A Rod", "ARod"]],
   ["trout", "Mike Trout", ["Trout"]],
   ["pujols", "Albert Pujols", ["Pujols"]],
-  ["ortiz", "David Ortiz", ["Big Papi", "Papi", "Ortiz"]],
+  ["ortiz", "David Ortiz", ["Big Papi", "Papi", "Ortiz", "Oritz", "Ortis"]],
   ["griffey", "Ken Griffey Jr.", ["Ken Griffey", "Griffey", "The Kid"]],
   ["harper", "Bryce Harper", ["Harper"]],
   ["betts", "Mookie Betts", ["Mookie", "Betts"]],
