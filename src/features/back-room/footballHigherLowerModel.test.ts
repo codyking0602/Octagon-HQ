@@ -79,7 +79,11 @@ describe("Football Higher or Lower", () => {
           }
           if (/rushing/i.test(question.metricLabel) && subject!.kind !== "team-season") {
             expect(["QB", "RB"]).toContain(subject!.position);
-            expect(row.value).toBeGreaterThanOrEqual(subject!.position === "QB" ? 500 : 800);
+            if (/yards/i.test(question.metricLabel)) {
+              expect(row.value).toBeGreaterThanOrEqual(subject!.position === "QB" ? 500 : 800);
+            } else if (/TDs/i.test(question.metricLabel)) {
+              expect(row.value).toBeGreaterThanOrEqual(subject!.position === "QB" ? 6 : 8);
+            }
           }
           if (/sacks/i.test(question.metricLabel) && subject!.kind !== "team-season") {
             expect(["DL", "LB"]).toContain(subject!.position);
