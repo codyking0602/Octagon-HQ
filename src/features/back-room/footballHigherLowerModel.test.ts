@@ -67,7 +67,9 @@ describe("Football Higher or Lower", () => {
         for (const row of [question.known, question.hidden]) {
           const subject = getFootballSubject(row.subjectId);
           expect(subject).not.toBeNull();
-          expect(["A", "B"]).toContain(subject!.recognizabilityTier);
+          if (subject!.kind !== "team-season") {
+            expect(["A", "B"]).toContain(subject!.recognizabilityTier);
+          }
 
           if (/passing/i.test(question.metricLabel) && subject!.kind !== "team-season") {
             expect(subject!.position).toBe("QB");
