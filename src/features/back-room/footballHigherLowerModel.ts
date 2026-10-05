@@ -14,6 +14,7 @@ export const FOOTBALL_HIGHER_LOWER_GAME_ID = "football-higher-lower";
 export const FOOTBALL_HIGHER_LOWER_VERSION = "football-higher-lower-v1" as const;
 export const FOOTBALL_HIGHER_LOWER_QUESTION_COUNT = 10;
 export const FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN = 7;
+export const FOOTBALL_HIGHER_LOWER_MODERN_YEAR = 2010;
 
 export type FootballHigherLowerScope = "NFL" | "CFB" | "MIXED";
 export type FootballHigherLowerLeague = "NFL" | "CFB";
@@ -90,6 +91,27 @@ interface PairCandidate {
   left: MetricRow;
   right: MetricRow;
 }
+
+const HIGHER_LOWER_HISTORICAL_ICON_NAMES = new Set([
+  "Joe Montana",
+  "Jerry Rice",
+  "Dan Marino",
+  "John Elway",
+  "Walter Payton",
+  "Barry Sanders",
+  "Emmitt Smith",
+  "Deion Sanders",
+  "Lawrence Taylor",
+  "Reggie White",
+  "Bruce Smith",
+  "Steve Young",
+  "Brett Favre",
+  "Bo Jackson",
+  "Herschel Walker",
+  "Charles Woodson",
+  "Peyton Manning",
+  "Ricky Williams",
+]);
 
 const ICONIC_CFB_TEAM_SEASONS = new Set([
   "1995-nebraska",
@@ -557,6 +579,10 @@ function iconicTeamSeason(subject: FootballSubjectProfile) {
     && ICONIC_CFB_TEAM_SEASONS.has(subject.id);
 }
 
+function historicalIcon(subject: FootballSubjectProfile) {
+  return iconicTeamSeason(subject) || HIGHER_LOWER_HISTORICAL_ICON_NAMES.has(subject.name);
+}
+
 function subjectEligible(subject: FootballSubjectProfile, spec: MetricSpec) {
   if (
     subject.league !== spec.league
@@ -693,19 +719,15 @@ function pairCandidates(spec: MetricSpec): PairCandidate[] {
       const gap = relativeGap(left.value, right.value);
       if (gap > 0.58) continue;
 
-      const modern = (left.referenceYear ?? 0) >= 2000 && (right.referenceYear ?? 0) >= 2000;
+      const modern = (left.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
+        && (right.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR;
       const leftRecognition = recognizabilityScore(left.subject);
       const rightRecognition = recognizabilityScore(right.subject);
 
-      // Older questions have to be truly iconic. Modern questions may use Tier B,
-      // but 2000s B-vs-B deep cuts are still too obscure for this game.
-      if (!modern && (leftRecognition < 3 || rightRecognition < 3)) continue;
-      if (
-        modern
-        && Math.min(left.referenceYear ?? 0, right.referenceYear ?? 0) < 2010
-        && leftRecognition < 3
-        && rightRecognition < 3
-      ) continue;
+      // Older questions have to be household-name history, not merely valid database rows.
+      // Modern Tier B subjects can appear, but only beside a Tier A anchor.
+      if (!modern && (!historicalIcon(left.subject) || !historicalIcon(right.subject))) continue;
+      if (leftRecognition < 3 && rightRecognition < 3) continue;
 
       pairs.push({
         id: `${spec.key}:${left.subject.id}:${right.subject.id}`,
@@ -862,8 +884,8 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
 
   if (categoryCounts.size < 5) return null;
   const modernCount = questions.filter((question) => (
-    (question.known.referenceYear ?? 0) >= 2000
-    && (question.hidden.referenceYear ?? 0) >= 2000
+    (question.known.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
+    && (question.hidden.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
   )).length;
   if (modernCount < FOOTBALL_HIGHER_LOWER_MODERN_QUESTION_MIN) return null;
   return questions;
