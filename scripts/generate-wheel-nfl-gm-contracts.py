@@ -16,7 +16,7 @@ POSITION_FAMILY = {
     "WR": "WR",
     "TE": "TE",
     "DE": "Front Seven", "DT": "Front Seven", "NT": "Front Seven",
-    "EDGE": "Front Seven", "IDL": "Front Seven", "LB": "Front Seven",
+    "EDGE": "Front Seven", "ED": "Front Seven", "IDL": "Front Seven", "LB": "Front Seven",
     "OLB": "Front Seven", "ILB": "Front Seven",
     "CB": "Secondary", "S": "Secondary", "FS": "Secondary", "SS": "Secondary", "DB": "Secondary",
 }
