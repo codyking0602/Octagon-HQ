@@ -750,15 +750,6 @@ function pairCandidates(spec: MetricSpec): PairCandidate[] {
 
 const allPairCandidates = metricSpecs.flatMap(pairCandidates);
 
-export function footballHigherLowerCandidateSummary() {
-  const summary: Record<string, number> = {};
-  for (const pair of allPairCandidates) {
-    const key = `${pair.league}|${pair.category}|${pair.difficulty}|${pair.modern ? "modern" : "historic"}|${pair.metricKey}`;
-    summary[key] = (summary[key] ?? 0) + 1;
-  }
-  return summary;
-}
-
 function entityKey(subject: FootballSubjectProfile) {
   if (subject.playerId) {
     return `player:${subject.playerId.replace(/^(?:nfl|cfb)-/, "").replace(/-\\d{4}$/, "")}`;
@@ -862,7 +853,8 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
       if (pair.league !== league || pair.difficulty !== difficulty) return false;
       if (requireModern && !pair.modern) return false;
       if ((metricCounts.get(pair.metricKey) ?? 0) >= 2) return false;
-      if ((categoryCounts.get(pair.category) ?? 0) >= 3) return false;
+      const categoryCap = scope === "CFB" ? 4 : 3;
+      if ((categoryCounts.get(pair.category) ?? 0) >= categoryCap) return false;
       if (pair.category === "career" && careerCount >= 2) return false;
       if (lastCategory === pair.category) return false;
       const leftKey = entityKey(pair.left.subject);
@@ -891,7 +883,7 @@ function tryBuildBoard(seed: string, scope: FootballHigherLowerScope, attempt: n
     if (pair.category === "career") careerCount += 1;
   }
 
-  const minimumCategoryCount = scope === "CFB" ? 4 : 5;
+  const minimumCategoryCount = scope === "CFB" ? 3 : 5;
   if (categoryCounts.size < minimumCategoryCount) return null;
   const modernCount = questions.filter((question) => (
     (question.known.referenceYear ?? 0) >= FOOTBALL_HIGHER_LOWER_MODERN_YEAR
