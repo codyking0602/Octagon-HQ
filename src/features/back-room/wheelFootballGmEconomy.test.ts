@@ -296,17 +296,17 @@ describe("Wheel NFL GM cap calibration", () => {
     };
   }
 
-  it("makes aggressive Year 1 roster-building usually create an offseason crisis while balanced builds can survive", () => {
+  it("keeps aggressive Year 1 builds meaningfully constrained without making the offseason automatic", () => {
     const greedy = simulate("greedy");
     const random = simulate("random");
 
     expect(greedy.completed).toBeGreaterThan(1_900);
     expect(random.completed).toBeGreaterThan(1_900);
     expect(greedy.averageYearOne).toBeGreaterThan(random.averageYearOne + 5);
-    expect(greedy.crisisRate).toBeGreaterThan(0.9);
-    expect(greedy.crisisRate).toBeLessThan(1);
-    expect(greedy.topQuartileCrisisRate).toBeGreaterThan(0.95);
-    expect(random.crisisRate).toBeLessThan(0.2);
-    expect(greedy.crisisRate - random.crisisRate).toBeGreaterThan(0.7);
+    expect(greedy.crisisRate).toBeGreaterThan(0.7);
+    expect(greedy.crisisRate).toBeLessThan(0.9);
+    expect(greedy.topQuartileCrisisRate).toBeGreaterThanOrEqual(0.9);
+    expect(random.crisisRate).toBeLessThan(0.1);
+    expect(greedy.crisisRate - random.crisisRate).toBeGreaterThan(0.65);
   });
 });
