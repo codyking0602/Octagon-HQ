@@ -1,0 +1,1031 @@
+{
+  "generatedAt": "2026-10-05",
+  "source": {
+    "metric": "Pro Football Reference Approximate Value (AV)",
+    "dataMirror": "arnavk377/DraftSight data/raw_av 2021-2025",
+    "sourceCommit": "0ea0ce6cd23e6d1a2a94975a919e1ab1d13673dc"
+  },
+  "method": {
+    "sample": "All 20 conference finalists from the 2021-2025 NFL seasons",
+    "roster": "Highest season-AV eligible player at QB, RB, WR, FLEX (remaining RB/WR/TE), DL, LB and DB; a player can fill only one slot.",
+    "grade": "Within each positional group, AV is converted to the 72-99 GM scale by empirical percentile among 2021-2025 player-seasons with AV >= 4.",
+    "weights": {
+      "QB": 0.26,
+      "RB": 0.1,
+      "WR": 0.15,
+      "FLEX": 0.09,
+      "DL": 0.15,
+      "LB": 0.1,
+      "DB": 0.15
+    }
+  },
+  "anchors": {
+    "finalFourMin": 92.4,
+    "finalFourMedian": 95.1,
+    "finalFourAverage": 95.11,
+    "championMedian": 95.1,
+    "championAverage": 95.42
+  },
+  "teams": [
+    {
+      "season": 2021,
+      "team": "LAR",
+      "finish": "Champion",
+      "coreGrade": 95.3,
+      "slots": {
+        "QB": {
+          "name": "Matthew Stafford",
+          "position": "QB",
+          "av": 15,
+          "modelGrade": 94.6
+        },
+        "RB": {
+          "name": "Darrell Henderson",
+          "position": "RB",
+          "av": 6,
+          "modelGrade": 85.2
+        },
+        "WR": {
+          "name": "Cooper Kupp",
+          "position": "WR",
+          "av": 18,
+          "modelGrade": 98.9
+        },
+        "FLEX": {
+          "name": "Van Jefferson",
+          "position": "WR",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "DL": {
+          "name": "Aaron Donald",
+          "position": "LDT",
+          "av": 17,
+          "modelGrade": 98.7
+        },
+        "LB": {
+          "name": "Leonard Floyd",
+          "position": "RLB",
+          "av": 8,
+          "modelGrade": 93.9
+        },
+        "DB": {
+          "name": "Jalen Ramsey",
+          "position": "RCB",
+          "av": 14,
+          "modelGrade": 98.7
+        }
+      }
+    },
+    {
+      "season": 2021,
+      "team": "CIN",
+      "finish": "Super Bowl Loss",
+      "coreGrade": 95.4,
+      "slots": {
+        "QB": {
+          "name": "Joe Burrow",
+          "position": "QB",
+          "av": 15,
+          "modelGrade": 94.6
+        },
+        "RB": {
+          "name": "Joe Mixon",
+          "position": "RB",
+          "av": 10,
+          "modelGrade": 95.7
+        },
+        "WR": {
+          "name": "Ja'Marr Chase",
+          "position": "WR",
+          "av": 13,
+          "modelGrade": 97.9
+        },
+        "FLEX": {
+          "name": "Tee Higgins",
+          "position": "WR",
+          "av": 10,
+          "modelGrade": 96.1
+        },
+        "DL": {
+          "name": "Trey Hendrickson",
+          "position": "RDE",
+          "av": 11,
+          "modelGrade": 96.9
+        },
+        "LB": {
+          "name": "Germaine Pratt",
+          "position": "MLB",
+          "av": 8,
+          "modelGrade": 93.9
+        },
+        "DB": {
+          "name": "Eli Apple",
+          "position": "LCB",
+          "av": 6,
+          "modelGrade": 92.9
+        }
+      }
+    },
+    {
+      "season": 2021,
+      "team": "KC",
+      "finish": "Conference Championship",
+      "coreGrade": 95.1,
+      "slots": {
+        "QB": {
+          "name": "Patrick Mahomes",
+          "position": "QB",
+          "av": 18,
+          "modelGrade": 97.6
+        },
+        "RB": {
+          "name": "Darrel Williams",
+          "position": "RB",
+          "av": 8,
+          "modelGrade": 91.2
+        },
+        "WR": {
+          "name": "Tyreek Hill",
+          "position": "WR",
+          "av": 12,
+          "modelGrade": 97.5
+        },
+        "FLEX": {
+          "name": "Travis Kelce",
+          "position": "TE",
+          "av": 11,
+          "modelGrade": 97.1
+        },
+        "DL": {
+          "name": "Frank Clark",
+          "position": "RDE",
+          "av": 9,
+          "modelGrade": 95.6
+        },
+        "LB": {
+          "name": "Nick Bolton",
+          "position": "RLB",
+          "av": 6,
+          "modelGrade": 85.5
+        },
+        "DB": {
+          "name": "Tyrann Mathieu",
+          "position": "SS",
+          "av": 8,
+          "modelGrade": 95.9
+        }
+      }
+    },
+    {
+      "season": 2021,
+      "team": "SF",
+      "finish": "Conference Championship",
+      "coreGrade": 92.4,
+      "slots": {
+        "QB": {
+          "name": "Jimmy Garoppolo",
+          "position": "QB",
+          "av": 12,
+          "modelGrade": 88.6
+        },
+        "RB": {
+          "name": "Elijah Mitchell",
+          "position": "RB",
+          "av": 7,
+          "modelGrade": 88.5
+        },
+        "WR": {
+          "name": "Deebo Samuel",
+          "position": "WR",
+          "av": 14,
+          "modelGrade": 98.3
+        },
+        "FLEX": {
+          "name": "George Kittle",
+          "position": "TE",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "DL": {
+          "name": "D.J. Jones",
+          "position": "RDT",
+          "av": 8,
+          "modelGrade": 93.7
+        },
+        "LB": {
+          "name": "Fred Warner",
+          "position": "MLB",
+          "av": 8,
+          "modelGrade": 93.9
+        },
+        "DB": {
+          "name": "Jimmie Ward",
+          "position": "FS",
+          "av": 6,
+          "modelGrade": 92.9
+        }
+      }
+    },
+    {
+      "season": 2022,
+      "team": "KC",
+      "finish": "Champion",
+      "coreGrade": 95.1,
+      "slots": {
+        "QB": {
+          "name": "Patrick Mahomes",
+          "position": "QB",
+          "av": 19,
+          "modelGrade": 98.2
+        },
+        "RB": {
+          "name": "Jerick McKinnon",
+          "position": "RB",
+          "av": 7,
+          "modelGrade": 88.5
+        },
+        "WR": {
+          "name": "JuJu Smith-Schuster",
+          "position": "WR",
+          "av": 9,
+          "modelGrade": 94.7
+        },
+        "FLEX": {
+          "name": "Travis Kelce",
+          "position": "TE",
+          "av": 12,
+          "modelGrade": 97.5
+        },
+        "DL": {
+          "name": "Chris Jones",
+          "position": "RDT",
+          "av": 16,
+          "modelGrade": 98.5
+        },
+        "LB": {
+          "name": "Nick Bolton",
+          "position": "LLB",
+          "av": 7,
+          "modelGrade": 89.8
+        },
+        "DB": {
+          "name": "L'Jarius Sneed",
+          "position": "LCB",
+          "av": 6,
+          "modelGrade": 92.9
+        }
+      }
+    },
+    {
+      "season": 2022,
+      "team": "PHI",
+      "finish": "Super Bowl Loss",
+      "coreGrade": 97.7,
+      "slots": {
+        "QB": {
+          "name": "Jalen Hurts",
+          "position": "QB",
+          "av": 20,
+          "modelGrade": 98.8
+        },
+        "RB": {
+          "name": "Miles Sanders",
+          "position": "RB",
+          "av": 10,
+          "modelGrade": 95.7
+        },
+        "WR": {
+          "name": "A.J. Brown",
+          "position": "WR",
+          "av": 16,
+          "modelGrade": 98.8
+        },
+        "FLEX": {
+          "name": "DeVonta Smith",
+          "position": "WR",
+          "av": 13,
+          "modelGrade": 97.9
+        },
+        "DL": {
+          "name": "Javon Hargrave",
+          "position": "LDT",
+          "av": 9,
+          "modelGrade": 95.6
+        },
+        "LB": {
+          "name": "Haason Reddick",
+          "position": "LLB",
+          "av": 15,
+          "modelGrade": 98.3
+        },
+        "DB": {
+          "name": "James Bradberry",
+          "position": "LCB",
+          "av": 11,
+          "modelGrade": 97.8
+        }
+      }
+    },
+    {
+      "season": 2022,
+      "team": "CIN",
+      "finish": "Conference Championship",
+      "coreGrade": 96.2,
+      "slots": {
+        "QB": {
+          "name": "Joe Burrow",
+          "position": "QB",
+          "av": 17,
+          "modelGrade": 96.4
+        },
+        "RB": {
+          "name": "Joe Mixon",
+          "position": "RB",
+          "av": 9,
+          "modelGrade": 93.8
+        },
+        "WR": {
+          "name": "Ja'Marr Chase",
+          "position": "WR",
+          "av": 11,
+          "modelGrade": 97.1
+        },
+        "FLEX": {
+          "name": "Tee Higgins",
+          "position": "WR",
+          "av": 10,
+          "modelGrade": 96.1
+        },
+        "DL": {
+          "name": "Trey Hendrickson",
+          "position": "RDE",
+          "av": 12,
+          "modelGrade": 97.3
+        },
+        "LB": {
+          "name": "Germaine Pratt",
+          "position": "MLB",
+          "av": 9,
+          "modelGrade": 95.6
+        },
+        "DB": {
+          "name": "Jessie Bates III",
+          "position": "FS",
+          "av": 8,
+          "modelGrade": 95.9
+        }
+      }
+    },
+    {
+      "season": 2022,
+      "team": "SF",
+      "finish": "Conference Championship",
+      "coreGrade": 94.1,
+      "slots": {
+        "QB": {
+          "name": "Jimmy Garoppolo",
+          "position": "QB",
+          "av": 10,
+          "modelGrade": 85.2
+        },
+        "RB": {
+          "name": "Christian McCaffrey",
+          "position": "RB",
+          "av": 10,
+          "modelGrade": 95.7
+        },
+        "WR": {
+          "name": "Brandon Aiyuk",
+          "position": "WR",
+          "av": 11,
+          "modelGrade": 97.1
+        },
+        "FLEX": {
+          "name": "George Kittle",
+          "position": "TE",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "DL": {
+          "name": "Nick Bosa",
+          "position": "RDE",
+          "av": 18,
+          "modelGrade": 98.8
+        },
+        "LB": {
+          "name": "Fred Warner",
+          "position": "MLB",
+          "av": 17,
+          "modelGrade": 98.7
+        },
+        "DB": {
+          "name": "Talanoa Hufanga",
+          "position": "SS",
+          "av": 13,
+          "modelGrade": 98.5
+        }
+      }
+    },
+    {
+      "season": 2023,
+      "team": "KC",
+      "finish": "Champion",
+      "coreGrade": 95,
+      "slots": {
+        "QB": {
+          "name": "Patrick Mahomes",
+          "position": "QB",
+          "av": 15,
+          "modelGrade": 94.6
+        },
+        "RB": {
+          "name": "Isiah Pacheco",
+          "position": "RB",
+          "av": 8,
+          "modelGrade": 91.2
+        },
+        "WR": {
+          "name": "Rashee Rice",
+          "position": "WR",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "FLEX": {
+          "name": "Travis Kelce",
+          "position": "TE",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "DL": {
+          "name": "Chris Jones",
+          "position": "DT",
+          "av": 18,
+          "modelGrade": 98.8
+        },
+        "LB": {
+          "name": "Willie Gay Jr.",
+          "position": "LB",
+          "av": 8,
+          "modelGrade": 93.9
+        },
+        "DB": {
+          "name": "Trent McDuffie",
+          "position": "CB",
+          "av": 15,
+          "modelGrade": 98.9
+        }
+      }
+    },
+    {
+      "season": 2023,
+      "team": "SF",
+      "finish": "Super Bowl Loss",
+      "coreGrade": 97.9,
+      "slots": {
+        "QB": {
+          "name": "Brock Purdy",
+          "position": "QB",
+          "av": 18,
+          "modelGrade": 97.6
+        },
+        "RB": {
+          "name": "Christian McCaffrey",
+          "position": "RB",
+          "av": 18,
+          "modelGrade": 98.9
+        },
+        "WR": {
+          "name": "Brandon Aiyuk",
+          "position": "WR",
+          "av": 15,
+          "modelGrade": 98.6
+        },
+        "FLEX": {
+          "name": "George Kittle",
+          "position": "TE",
+          "av": 11,
+          "modelGrade": 97.1
+        },
+        "DL": {
+          "name": "Nick Bosa",
+          "position": "DL",
+          "av": 11,
+          "modelGrade": 96.9
+        },
+        "LB": {
+          "name": "Fred Warner",
+          "position": "LB",
+          "av": 17,
+          "modelGrade": 98.7
+        },
+        "DB": {
+          "name": "Charvarius Ward",
+          "position": "CB",
+          "av": 11,
+          "modelGrade": 97.8
+        }
+      }
+    },
+    {
+      "season": 2023,
+      "team": "BAL",
+      "finish": "Conference Championship",
+      "coreGrade": 95.8,
+      "slots": {
+        "QB": {
+          "name": "Lamar Jackson",
+          "position": "QB",
+          "av": 19,
+          "modelGrade": 98.2
+        },
+        "RB": {
+          "name": "Gus Edwards",
+          "position": "RB",
+          "av": 7,
+          "modelGrade": 88.5
+        },
+        "WR": {
+          "name": "Zay Flowers",
+          "position": "WR",
+          "av": 9,
+          "modelGrade": 94.7
+        },
+        "FLEX": {
+          "name": "Mark Andrews",
+          "position": "TE",
+          "av": 6,
+          "modelGrade": 87.2
+        },
+        "DL": {
+          "name": "Nnamdi Madubuike",
+          "position": "DT",
+          "av": 15,
+          "modelGrade": 98.2
+        },
+        "LB": {
+          "name": "Roquan Smith",
+          "position": "LB",
+          "av": 17,
+          "modelGrade": 98.7
+        },
+        "DB": {
+          "name": "Kyle Hamilton",
+          "position": "S",
+          "av": 13,
+          "modelGrade": 98.5
+        }
+      }
+    },
+    {
+      "season": 2023,
+      "team": "DET",
+      "finish": "Conference Championship",
+      "coreGrade": 94,
+      "slots": {
+        "QB": {
+          "name": "Jared Goff",
+          "position": "QB",
+          "av": 16,
+          "modelGrade": 95.9
+        },
+        "RB": {
+          "name": "Jahmyr Gibbs",
+          "position": "RB",
+          "av": 10,
+          "modelGrade": 95.7
+        },
+        "WR": {
+          "name": "Amon-Ra St. Brown",
+          "position": "WR",
+          "av": 15,
+          "modelGrade": 98.6
+        },
+        "FLEX": {
+          "name": "Sam LaPorta",
+          "position": "TE",
+          "av": 9,
+          "modelGrade": 94.7
+        },
+        "DL": {
+          "name": "Aidan Hutchinson",
+          "position": "DL",
+          "av": 10,
+          "modelGrade": 96.5
+        },
+        "LB": {
+          "name": "Alex Anzalone",
+          "position": "LB",
+          "av": 6,
+          "modelGrade": 85.5
+        },
+        "DB": {
+          "name": "Kerby Joseph",
+          "position": "S",
+          "av": 5,
+          "modelGrade": 87.4
+        }
+      }
+    },
+    {
+      "season": 2024,
+      "team": "PHI",
+      "finish": "Champion",
+      "coreGrade": 96.9,
+      "slots": {
+        "QB": {
+          "name": "Jalen Hurts",
+          "position": "QB",
+          "av": 16,
+          "modelGrade": 95.9
+        },
+        "RB": {
+          "name": "Saquon Barkley",
+          "position": "RB",
+          "av": 18,
+          "modelGrade": 98.9
+        },
+        "WR": {
+          "name": "A.J. Brown",
+          "position": "WR",
+          "av": 12,
+          "modelGrade": 97.5
+        },
+        "FLEX": {
+          "name": "DeVonta Smith",
+          "position": "WR",
+          "av": 9,
+          "modelGrade": 94.7
+        },
+        "DL": {
+          "name": "Jalen Carter",
+          "position": "LDT",
+          "av": 14,
+          "modelGrade": 98
+        },
+        "LB": {
+          "name": "Zack Baun",
+          "position": "LLB",
+          "av": 18,
+          "modelGrade": 98.9
+        },
+        "DB": {
+          "name": "C.J. Gardner-Johnson",
+          "position": "SS",
+          "av": 8,
+          "modelGrade": 95.9
+        }
+      }
+    },
+    {
+      "season": 2024,
+      "team": "KC",
+      "finish": "Super Bowl Loss",
+      "coreGrade": 93,
+      "slots": {
+        "QB": {
+          "name": "Patrick Mahomes",
+          "position": "QB",
+          "av": 14,
+          "modelGrade": 92.8
+        },
+        "RB": {
+          "name": "Kareem Hunt",
+          "position": "RB",
+          "av": 5,
+          "modelGrade": 81.5
+        },
+        "WR": {
+          "name": "Xavier Worthy",
+          "position": "WR",
+          "av": 7,
+          "modelGrade": 90.1
+        },
+        "FLEX": {
+          "name": "Travis Kelce",
+          "position": "TE",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "DL": {
+          "name": "Chris Jones",
+          "position": "LDT",
+          "av": 16,
+          "modelGrade": 98.5
+        },
+        "LB": {
+          "name": "Nick Bolton",
+          "position": "LLB",
+          "av": 8,
+          "modelGrade": 93.9
+        },
+        "DB": {
+          "name": "Trent McDuffie",
+          "position": "LCB",
+          "av": 11,
+          "modelGrade": 97.8
+        }
+      }
+    },
+    {
+      "season": 2024,
+      "team": "BUF",
+      "finish": "Conference Championship",
+      "coreGrade": 94.9,
+      "slots": {
+        "QB": {
+          "name": "Josh Allen",
+          "position": "QB",
+          "av": 20,
+          "modelGrade": 98.8
+        },
+        "RB": {
+          "name": "James Cook",
+          "position": "RB",
+          "av": 11,
+          "modelGrade": 96.7
+        },
+        "WR": {
+          "name": "Khalil Shakir",
+          "position": "WR",
+          "av": 10,
+          "modelGrade": 96.1
+        },
+        "FLEX": {
+          "name": "Keon Coleman",
+          "position": "WR",
+          "av": 7,
+          "modelGrade": 90.1
+        },
+        "DL": {
+          "name": "DaQuan Jones",
+          "position": "RDT",
+          "av": 8,
+          "modelGrade": 93.7
+        },
+        "LB": {
+          "name": "Terrel Bernard",
+          "position": "MLB",
+          "av": 7,
+          "modelGrade": 89.8
+        },
+        "DB": {
+          "name": "Christian Benford",
+          "position": "RCB",
+          "av": 6,
+          "modelGrade": 92.9
+        }
+      }
+    },
+    {
+      "season": 2024,
+      "team": "WAS",
+      "finish": "Conference Championship",
+      "coreGrade": 94.4,
+      "slots": {
+        "QB": {
+          "name": "Jayden Daniels",
+          "position": "QB",
+          "av": 20,
+          "modelGrade": 98.8
+        },
+        "RB": {
+          "name": "Austin Ekeler",
+          "position": "RB",
+          "av": 7,
+          "modelGrade": 88.5
+        },
+        "WR": {
+          "name": "Terry McLaurin",
+          "position": "WR",
+          "av": 12,
+          "modelGrade": 97.5
+        },
+        "FLEX": {
+          "name": "Zach Ertz",
+          "position": "TE",
+          "av": 7,
+          "modelGrade": 90.1
+        },
+        "DL": {
+          "name": "Daron Payne",
+          "position": "RDT",
+          "av": 7,
+          "modelGrade": 89.8
+        },
+        "LB": {
+          "name": "Frankie Luvu",
+          "position": "RLB",
+          "av": 13,
+          "modelGrade": 97.6
+        },
+        "DB": {
+          "name": "Jeremy Chinn",
+          "position": "FS",
+          "av": 6,
+          "modelGrade": 92.9
+        }
+      }
+    },
+    {
+      "season": 2025,
+      "team": "SEA",
+      "finish": "Champion",
+      "coreGrade": 94.8,
+      "slots": {
+        "QB": {
+          "name": "Sam Darnold",
+          "position": "QB",
+          "av": 13,
+          "modelGrade": 90.9
+        },
+        "RB": {
+          "name": "Kenneth Walker III",
+          "position": "RB",
+          "av": 9,
+          "modelGrade": 93.8
+        },
+        "WR": {
+          "name": "Jaxon Smith-Njigba",
+          "position": "WR",
+          "av": 16,
+          "modelGrade": 98.8
+        },
+        "FLEX": {
+          "name": "Zach Charbonnet",
+          "position": "RB",
+          "av": 6,
+          "modelGrade": 85.2
+        },
+        "DL": {
+          "name": "Leonard Williams",
+          "position": "DT",
+          "av": 17,
+          "modelGrade": 98.7
+        },
+        "LB": {
+          "name": "Ernest Jones",
+          "position": "LB",
+          "av": 17,
+          "modelGrade": 98.7
+        },
+        "DB": {
+          "name": "Devon Witherspoon",
+          "position": "CB",
+          "av": 11,
+          "modelGrade": 97.8
+        }
+      }
+    },
+    {
+      "season": 2025,
+      "team": "NE",
+      "finish": "Super Bowl Loss",
+      "coreGrade": 94.8,
+      "slots": {
+        "QB": {
+          "name": "Drake Maye",
+          "position": "QB",
+          "av": 18,
+          "modelGrade": 97.6
+        },
+        "RB": {
+          "name": "TreVeyon Henderson",
+          "position": "RB",
+          "av": 8,
+          "modelGrade": 91.2
+        },
+        "WR": {
+          "name": "Stefon Diggs",
+          "position": "WR",
+          "av": 10,
+          "modelGrade": 96.1
+        },
+        "FLEX": {
+          "name": "Hunter Henry",
+          "position": "TE",
+          "av": 7,
+          "modelGrade": 90.1
+        },
+        "DL": {
+          "name": "Christian Barmore",
+          "position": "DT",
+          "av": 8,
+          "modelGrade": 93.7
+        },
+        "LB": {
+          "name": "K'Lavon Chaisson",
+          "position": "LB",
+          "av": 7,
+          "modelGrade": 89.8
+        },
+        "DB": {
+          "name": "Marcus Jones",
+          "position": "CB",
+          "av": 13,
+          "modelGrade": 98.5
+        }
+      }
+    },
+    {
+      "season": 2025,
+      "team": "DEN",
+      "finish": "Conference Championship",
+      "coreGrade": 93.1,
+      "slots": {
+        "QB": {
+          "name": "Bo Nix",
+          "position": "QB",
+          "av": 13,
+          "modelGrade": 90.9
+        },
+        "RB": {
+          "name": "RJ Harvey",
+          "position": "RB",
+          "av": 6,
+          "modelGrade": 85.2
+        },
+        "WR": {
+          "name": "Courtland Sutton",
+          "position": "WR",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "FLEX": {
+          "name": "Troy Franklin",
+          "position": "WR",
+          "av": 6,
+          "modelGrade": 87.2
+        },
+        "DL": {
+          "name": "Zach Allen",
+          "position": "DL",
+          "av": 19,
+          "modelGrade": 98.9
+        },
+        "LB": {
+          "name": "Nik Bonitto",
+          "position": "OLB",
+          "av": 12,
+          "modelGrade": 97.2
+        },
+        "DB": {
+          "name": "Patrick Surtain II",
+          "position": "CB",
+          "av": 11,
+          "modelGrade": 97.8
+        }
+      }
+    },
+    {
+      "season": 2025,
+      "team": "LAR",
+      "finish": "Conference Championship",
+      "coreGrade": 96.3,
+      "slots": {
+        "QB": {
+          "name": "Matthew Stafford",
+          "position": "QB",
+          "av": 16,
+          "modelGrade": 95.9
+        },
+        "RB": {
+          "name": "Kyren Williams",
+          "position": "RB",
+          "av": 12,
+          "modelGrade": 97.5
+        },
+        "WR": {
+          "name": "Puka Nacua",
+          "position": "WR",
+          "av": 18,
+          "modelGrade": 98.9
+        },
+        "FLEX": {
+          "name": "Davante Adams",
+          "position": "WR",
+          "av": 8,
+          "modelGrade": 92.8
+        },
+        "DL": {
+          "name": "Kobie Turner",
+          "position": "DE",
+          "av": 10,
+          "modelGrade": 96.5
+        },
+        "LB": {
+          "name": "Jared Verse",
+          "position": "OLB",
+          "av": 12,
+          "modelGrade": 97.2
+        },
+        "DB": {
+          "name": "Kamren Curl",
+          "position": "S",
+          "av": 7,
+          "modelGrade": 95
+        }
+      }
+    }
+  ]
+}
