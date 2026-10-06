@@ -21,6 +21,20 @@ describe("Football GM gameplay presentation", () => {
     expect(css).toContain(".football-gm__trade-package-player .football-gm__outlook-pill");
   });
 
+  it("keeps the intro to one compact three-stage game flow", () => {
+    expect(page).toContain("BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.");
+    expect(page).toContain('className="football-gm__intro-stages"');
+    expect(page).toContain("<strong>DRAFT</strong>");
+    expect(page).toContain("<strong>OFFSEASON</strong>");
+    expect(page).toContain("<strong>3-YEAR RESULT</strong>");
+    expect(page).toContain('className="football-gm__intro-facts"');
+    expect(page).toContain("HIDDEN GRADES");
+    expect(page).not.toContain("BUILD IT. PAY FOR IT. LIVE WITH IT.");
+    expect(page).not.toContain("football-gm__intro-note");
+    expect(css).toContain(".football-gm__intro-stages > article");
+    expect(css).toContain(".football-gm__intro-facts");
+  });
+
   it("keeps the one-time restriction on voluntary release, not on legitimate vacancy free agency", () => {
     expect(page).toContain("if (run.voluntaryFreeAgencyUsed || run.tradeChipPlayerIds.length || run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;");
     expect(page).toContain("footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)");
