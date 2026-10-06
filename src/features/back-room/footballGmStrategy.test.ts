@@ -3,24 +3,34 @@ import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_PLAYER_POOL,
   FOOTBALL_GM_ROSTER_SLOTS,
+  FOOTBALL_GM_TEAMS,
+  footballGmOpenSlots,
   footballGmPlayerById,
   type FootballGmRosterEntry,
   type FootballGmRosterSlot,
 } from "./footballGmEngine";
 import {
-  FOOTBALL_GM_HISTORICAL_ANCHORS,
   FOOTBALL_GM_HISTORICAL_FINAL_FOUR,
   FOOTBALL_GM_MAX_TRADE_PLAYERS,
   FOOTBALL_GM_POSITION_WEIGHTS,
   footballGmAcceptedTargetTradeOffers,
+  footballGmAdjustedAssetCap,
   footballGmAdjustedSalaryForPlayer,
+  footballGmApplyFreeAgencySigning,
   footballGmContinuity,
+  footballGmCurateAcceptedTargetTradeOffers,
   footballGmEffectiveTeamGrade,
   footballGmEligibleFreeAgencyTeams,
   footballGmEvaluateTradeProposal,
   footballGmFreeAgencyCandidatesForTeam,
+  footballGmIsOffseasonCompliantV2,
   footballGmSeasonResultV2,
   footballGmSeasonRoll,
+  footballGmTitleOdds,
+  footballGmTradeAcceptanceMargin,
+  footballGmTradeOfferDominates,
+  footballGmWeakLinkPenalty,
+  type FootballGmTargetTradeOffer,
 } from "./footballGmStrategy";
 
 function playerId(name: string) {
@@ -39,6 +49,75 @@ function codyRunRoster(): FootballGmRosterEntry[] {
     { slot: "DL", playerId: playerId("Abdul Carter"), acquired: "draft" },
     { slot: "RB", playerId: playerId("Travis Etienne Jr."), acquired: "draft" },
   ];
+}
+
+function cheapestRoster(openSlot?: FootballGmRosterSlot): FootballGmRosterEntry[] {
+  const usedIds = new Set<string>();
+  const usedNames = new Set<string>();
+  return FOOTBALL_GM_ROSTER_SLOTS
+    .filter((slot) => slot !== openSlot)
+    .map((slot) => {
+      const player = [...FOOTBALL_GM_PLAYER_POOL]
+        .filter((candidate) => (
+          candidate.eligibleSlots.includes(slot)
+          && !usedIds.has(candidate.id)
+          && !usedNames.has(candidate.name)
+        ))
+        .sort((left, right) => (
+          Math.max(left.salaryWindow[1], left.salaryWindow[2]) - Math.max(right.salaryWindow[1], right.salaryWindow[2])
+          || left.currentGrade - right.currentGrade
+        ))[0];
+      if (!player) throw new Error(`No cheap player for ${slot}`);
+      usedIds.add(player.id);
+      usedNames.add(player.name);
+      return { slot, playerId: player.id, acquired: "draft" as const };
+    });
+}
+
+function weakestRoster(): FootballGmRosterEntry[] {
+  const usedIds = new Set<string>();
+  const usedNames = new Set<string>();
+  return FOOTBALL_GM_ROSTER_SLOTS.map((slot) => {
+    const player = [...FOOTBALL_GM_PLAYER_POOL]
+      .filter((candidate) => (
+        candidate.eligibleSlots.includes(slot)
+        && !usedIds.has(candidate.id)
+        && !usedNames.has(candidate.name)
+      ))
+      .sort((left, right) => left.currentGrade - right.currentGrade)[0];
+    if (!player) throw new Error(`No weak player for ${slot}`);
+    usedIds.add(player.id);
+    usedNames.add(player.name);
+    return { slot, playerId: player.id, acquired: "draft" as const };
+  });
+}
+
+function acceptedOffer(input: {
+  shape: FootballGmTargetTradeOffer["shape"];
+  outgoing: string[];
+  incoming: string[];
+  receives: number;
+  sends: number;
+  threshold?: number;
+  cuts?: number;
+}): FootballGmTargetTradeOffer {
+  return {
+    shape: input.shape,
+    proposal: {
+      outgoingPlayerIds: input.outgoing,
+      incomingPlayerIds: input.incoming,
+    },
+    evaluation: {
+      accepted: true,
+      reason: "accepted",
+      partnerReceivesValue: input.receives,
+      partnerSendsValue: input.sends,
+      threshold: input.threshold ?? 1,
+      postTradePlayerIds: [],
+      requiresCuts: input.cuts ?? 0,
+      nextRoster: null,
+    },
+  };
 }
 
 function fullTurnoverRoster(original: readonly FootballGmRosterEntry[]) {
@@ -63,16 +142,17 @@ describe("Football GM strategy v2", () => {
     expect(Object.values(FOOTBALL_GM_POSITION_WEIGHTS).reduce((sum, value) => sum + value, 0)).toBeCloseTo(1, 8);
   });
 
-  it("anchors outcomes to derived 2021-2025 finalist cores instead of hand-entered grades", () => {
+  it("calibrates postseason odds to the live Wheel/GM grade scale rather than the AV percentile scale", () => {
     expect(FOOTBALL_GM_HISTORICAL_FINAL_FOUR).toHaveLength(20);
     expect(new Set(FOOTBALL_GM_HISTORICAL_FINAL_FOUR.map((row) => row.season))).toEqual(
       new Set([2021, 2022, 2023, 2024, 2025]),
     );
-    const champions = FOOTBALL_GM_HISTORICAL_FINAL_FOUR.filter((row) => row.finish === "Champion");
-    expect(champions).toHaveLength(5);
-    expect(FOOTBALL_GM_HISTORICAL_ANCHORS.finalFourMin).toBe(92.4);
-    expect(FOOTBALL_GM_HISTORICAL_ANCHORS.finalFourMedian).toBe(95.1);
-    expect(FOOTBALL_GM_HISTORICAL_ANCHORS.championAverage).toBeCloseTo(95.42, 2);
+
+    expect(footballGmTitleOdds(90)).toBeCloseTo(0.09, 6);
+    expect(footballGmTitleOdds(92)).toBeCloseTo(0.16, 6);
+    expect(footballGmTitleOdds(94)).toBeCloseTo(0.27, 6);
+    expect(footballGmTitleOdds(94)).toBeGreaterThan(footballGmTitleOdds(92));
+    expect(footballGmTitleOdds(92)).toBeGreaterThan(footballGmTitleOdds(88));
 
     const roster = codyRunRoster();
     const outcomes = new Set<string>();
@@ -109,12 +189,12 @@ describe("Football GM strategy v2", () => {
     expect(footballGmSeasonRoll("stable-seed", 1)).toBe(footballGmSeasonRoll("stable-seed", 1));
   });
 
-  it("applies a modest weak-link effect without erasing positional value", () => {
-    const roster = codyRunRoster();
+  it("keeps a softer weak-link penalty without double-punishing already-low player grades", () => {
+    const roster = weakestRoster();
     const grade = footballGmEffectiveTeamGrade(roster, roster, 1);
-    expect(grade.rawTeamGrade).toBeGreaterThan(grade.teamGrade);
-    expect(grade.weakLinkPenalty).toBeGreaterThan(0);
-    expect(grade.weakLinkPenalty).toBeLessThanOrEqual(1.5);
+    expect(footballGmWeakLinkPenalty(roster, 1)).toBeGreaterThan(0);
+    expect(grade.weakLinkPenalty).toBeLessThanOrEqual(0.8);
+    expect(grade.rawTeamGrade - grade.teamGrade).toBeCloseTo(grade.weakLinkPenalty, 1);
   });
 
   it("rewards continuity and lets a full rebuild partially recover in Year 3", () => {
@@ -266,6 +346,189 @@ describe("Football GM strategy v2", () => {
     }
   });
 
+  it("builds the free-agent class only from actual 1YR players who are not already owned", () => {
+    const mixedTeam = FOOTBALL_GM_TEAMS.find((team) => {
+      const rows = FOOTBALL_GM_PLAYER_POOL.filter((player) => player.team === team);
+      return rows.some((player) => player.gameContract === "1YR")
+        && rows.some((player) => player.gameContract === "3YR");
+    });
+    expect(mixedTeam).toBeTruthy();
+
+    const candidates = footballGmFreeAgencyCandidatesForTeam({
+      team: mixedTeam!,
+      roster: [],
+      seed: "real-fa-class",
+      consequences: {},
+    });
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(candidates.every((candidate) => candidate.player.gameContract === "1YR")).toBe(true);
+
+    const controlled = FOOTBALL_GM_PLAYER_POOL.find(
+      (player) => player.team === mixedTeam && player.gameContract === "3YR",
+    );
+    expect(controlled).toBeTruthy();
+    expect(candidates.some((candidate) => candidate.player.id === controlled!.id)).toBe(false);
+
+    const owned = candidates[0]!;
+    const ownedRoster: FootballGmRosterEntry[] = [{
+      slot: owned.signingOptions[0]!.slot,
+      playerId: owned.player.id,
+      acquired: "draft",
+    }];
+    const afterOwnership = footballGmFreeAgencyCandidatesForTeam({
+      team: mixedTeam!,
+      roster: ownedRoster,
+      seed: "real-fa-class",
+      consequences: {},
+    });
+    expect(afterOwnership.some((candidate) => candidate.player.id === owned.player.id)).toBe(false);
+  });
+
+  it("lets real cap space expose market-priced free agents and enforces both future caps", () => {
+    const roster = cheapestRoster();
+    const yearTwoBase = footballGmAdjustedAssetCap(roster, [], 2, "fa-cap", {});
+    const yearThreeBase = footballGmAdjustedAssetCap(roster, [], 3, "fa-cap", {});
+    expect(yearTwoBase).toBeLessThan(FOOTBALL_GM_CAP);
+    expect(yearThreeBase).toBeLessThan(FOOTBALL_GM_CAP);
+
+    const teams = footballGmEligibleFreeAgencyTeams({
+      roster,
+      seed: "fa-cap",
+      consequences: {},
+    });
+    expect(teams.length).toBeGreaterThan(0);
+    const candidates = teams.flatMap((team) => footballGmFreeAgencyCandidatesForTeam({
+      team,
+      roster,
+      seed: "fa-cap",
+      consequences: {},
+    }));
+    expect(candidates.length).toBeGreaterThan(0);
+    for (const candidate of candidates) {
+      expect(candidate.player.gameContract).toBe("1YR");
+      expect(yearTwoBase + candidate.player.salaryWindow[1]).toBeLessThanOrEqual(FOOTBALL_GM_CAP);
+      expect(yearThreeBase + candidate.player.salaryWindow[2]).toBeLessThanOrEqual(FOOTBALL_GM_CAP);
+    }
+  });
+
+  it("allows an off-position free-agent signing to displace an incumbent while preserving the original vacancy", () => {
+    const roster = cheapestRoster("LB");
+    const incumbent = roster.find((entry) => entry.slot === "WR");
+    expect(incumbent).toBeTruthy();
+
+    const candidate = FOOTBALL_GM_TEAMS
+      .flatMap((team) => footballGmFreeAgencyCandidatesForTeam({
+        team,
+        roster,
+        seed: "off-position-fa",
+        consequences: {},
+      }))
+      .find((row) => row.signingOptions.some(
+        (option) => option.slot === "WR" && option.displacedPlayerId === incumbent!.playerId,
+      ));
+    expect(candidate).toBeTruthy();
+
+    const signing = footballGmApplyFreeAgencySigning({
+      roster,
+      playerId: candidate!.player.id,
+      slot: "WR",
+      seed: "off-position-fa",
+      consequences: {},
+    });
+    expect(signing).not.toBeNull();
+    expect(signing!.roster).toHaveLength(roster.length);
+    expect(footballGmOpenSlots(signing!.roster)).toContain("LB");
+    expect(signing!.tradeChipPlayerIds).toContain(incumbent!.playerId);
+    expect(signing!.roster.find((entry) => entry.slot === "WR")?.playerId).toBe(candidate!.player.id);
+    expect(new Set(signing!.roster.map((entry) => entry.slot)).size).toBe(signing!.roster.length);
+  });
+
+  it("lets a displaced incumbent enter the normal trade flow without forcing a one-for-one position match", () => {
+    const roster = cheapestRoster("LB");
+    const incumbent = roster.find((entry) => entry.slot === "WR")!;
+    const candidate = FOOTBALL_GM_TEAMS
+      .flatMap((team) => footballGmFreeAgencyCandidatesForTeam({
+        team,
+        roster,
+        seed: "chip-trade",
+        consequences: {},
+      }))
+      .find((row) => row.signingOptions.some(
+        (option) => option.slot === "WR" && option.displacedPlayerId === incumbent.playerId,
+      ))!;
+    const signing = footballGmApplyFreeAgencySigning({
+      roster,
+      playerId: candidate.player.id,
+      slot: "WR",
+      seed: "chip-trade",
+      consequences: {},
+    })!;
+    const owned = new Set([
+      ...signing.roster.map((entry) => entry.playerId),
+      ...signing.tradeChipPlayerIds,
+    ]);
+    const target = FOOTBALL_GM_PLAYER_POOL.find((player) => (
+      player.eligibleSlots.includes("LB") && !owned.has(player.id)
+    ));
+    expect(target).toBeTruthy();
+
+    const evaluation = footballGmEvaluateTradeProposal({
+      seed: "chip-trade",
+      partnerTeam: target!.team,
+      roster: signing.roster,
+      tradeChipPlayerIds: signing.tradeChipPlayerIds,
+      proposal: {
+        outgoingPlayerIds: [incumbent.playerId],
+        incomingPlayerIds: [target!.id],
+      },
+      priority: 1,
+    });
+    expect(evaluation.reason).not.toBe("invalid");
+    expect(evaluation.reason).not.toBe("roster");
+    expect(evaluation.nextRoster).toHaveLength(7);
+    expect(evaluation.nextRoster?.some((entry) => entry.playerId === target!.id)).toBe(true);
+  });
+
+  it("does not introduce a special post-FA move limit and blocks finishing with unresolved trade chips", () => {
+    const roster = cheapestRoster();
+    const firstTeams = footballGmEligibleFreeAgencyTeams({
+      roster,
+      seed: "fa-breathes",
+      consequences: {},
+    });
+    expect(firstTeams.length).toBeGreaterThan(0);
+    const first = footballGmFreeAgencyCandidatesForTeam({
+      team: firstTeams[0]!,
+      roster,
+      seed: "fa-breathes",
+      consequences: {},
+    })[0]!;
+    const firstOption = first.signingOptions[0]!;
+    const signing = footballGmApplyFreeAgencySigning({
+      roster,
+      playerId: first.player.id,
+      slot: firstOption.slot,
+      seed: "fa-breathes",
+      consequences: {},
+    });
+    expect(signing).not.toBeNull();
+    expect(signing!.tradeChipPlayerIds.length).toBeGreaterThan(0);
+    expect(footballGmIsOffseasonCompliantV2(
+      signing!.roster,
+      "fa-breathes",
+      {},
+      signing!.tradeChipPlayerIds,
+    )).toBe(false);
+
+    const nextTeams = footballGmEligibleFreeAgencyTeams({
+      roster: signing!.roster,
+      tradeChipPlayerIds: signing!.tradeChipPlayerIds,
+      seed: "fa-breathes",
+      consequences: {},
+    });
+    expect(nextTeams.length).toBeGreaterThan(0);
+  });
+
   it("uses only a zero to 2.5 percent CPU trade premium", () => {
     const roster = codyRunRoster();
     const thresholds = new Set<number>();
@@ -286,6 +549,64 @@ describe("Football GM strategy v2", () => {
     }
     expect(thresholds.has(1)).toBe(true);
     expect(thresholds.has(1.025)).toBe(true);
+  });
+
+  it("removes dominated asking prices instead of charging extra assets for the same return", () => {
+    const straightUp = acceptedOffer({
+      shape: "1-for-1",
+      outgoing: ["anchor"],
+      incoming: ["target"],
+      receives: 101,
+      sends: 100,
+    });
+    const dominated = acceptedOffer({
+      shape: "2-for-1",
+      outgoing: ["anchor", "star"],
+      incoming: ["target"],
+      receives: 170,
+      sends: 100,
+    });
+    expect(footballGmTradeOfferDominates(straightUp, dominated)).toBe(true);
+
+    const curated = footballGmCurateAcceptedTargetTradeOffers({
+      seed: "dominated",
+      partnerTeam: "NYJ",
+      targetPlayerId: "target",
+      accepted: [dominated, straightUp],
+      maxOffers: 5,
+    });
+    expect(curated).toHaveLength(1);
+    expect(curated[0]!.proposal).toEqual(straightUp.proposal);
+  });
+
+  it("prefers accepted asking prices closest to the CPU threshold within the same package shape", () => {
+    const near = acceptedOffer({
+      shape: "2-for-2",
+      outgoing: ["anchor", "a"],
+      incoming: ["target", "x"],
+      receives: 102,
+      sends: 100,
+      threshold: 1.01,
+    });
+    const generous = acceptedOffer({
+      shape: "2-for-2",
+      outgoing: ["anchor", "b"],
+      incoming: ["target", "y"],
+      receives: 130,
+      sends: 100,
+      threshold: 1,
+    });
+    expect(footballGmTradeAcceptanceMargin(near)).toBeLessThan(footballGmTradeAcceptanceMargin(generous));
+
+    const curated = footballGmCurateAcceptedTargetTradeOffers({
+      seed: "near-threshold",
+      partnerTeam: "NYJ",
+      targetPlayerId: "target",
+      accepted: [generous, near],
+      maxOffers: 1,
+    });
+    expect(curated).toHaveLength(1);
+    expect(curated[0]!.proposal).toEqual(near.proposal);
   });
 
   it("turns a chosen trade target into no more than five already-accepted asking prices", () => {
