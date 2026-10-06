@@ -44,7 +44,6 @@ import {
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
   footballGmSignFreeAgent,
-  footballGmSpinTradePartner,
   footballGmTradePartnerPlayers,
   type FootballGmFinalResultV2,
   type FootballGmNegotiationConsequences,
