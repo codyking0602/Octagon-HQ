@@ -508,6 +508,40 @@ export function footballGmResolveTradeRoster(input: {
   return assignRoster(players);
 }
 
+function cutCombinations(ids: readonly string[], count: number): string[][] {
+  if (count === 0) return [[]];
+  if (count > ids.length) return [];
+  const result: string[][] = [];
+  function visit(start: number, picked: string[]) {
+    if (picked.length === count) {
+      result.push([...picked]);
+      return;
+    }
+    for (let index = start; index < ids.length; index += 1) {
+      picked.push(ids[index]!);
+      visit(index + 1, picked);
+      picked.pop();
+    }
+  }
+  visit(0, []);
+  return result;
+}
+
+export function footballGmTradeHasLegalResolution(input: {
+  roster: readonly FootballGmRosterEntry[];
+  proposal: FootballGmTradeProposal;
+  requiredCuts: number;
+  postTradePlayerIds: readonly string[];
+}) {
+  return cutCombinations(input.postTradePlayerIds, input.requiredCuts).some((cutPlayerIds) => (
+    footballGmResolveTradeRoster({
+      roster: input.roster,
+      proposal: input.proposal,
+      cutPlayerIds,
+    }) !== null
+  ));
+}
+
 export function footballGmEvaluateTradeProposal(input: {
   seed: string;
   partnerTeam: string;
@@ -551,7 +585,15 @@ export function footballGmEvaluateTradeProposal(input: {
   const nextRoster = requiresCuts === 0
     ? footballGmResolveTradeRoster({ roster: input.roster, proposal })
     : null;
-  if (requiresCuts === 0 && !nextRoster) {
+  const hasLegalResolution = requiresCuts === 0
+    ? nextRoster !== null
+    : footballGmTradeHasLegalResolution({
+        roster: input.roster,
+        proposal,
+        requiredCuts: requiresCuts,
+        postTradePlayerIds,
+      });
+  if (!hasLegalResolution) {
     return {
       accepted: false,
       reason: "roster",
