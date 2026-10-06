@@ -53,6 +53,7 @@ import {
   footballGmPlaytestOpponentName,
   isFootballGmPlaytestProfile,
 } from "./footballGmAccess";
+import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 
 type Phase = "intro" | "draft" | "year1" | "offseason" | "years23" | "final";
 
@@ -493,6 +494,7 @@ export function RosterGrid({
   seed,
   consequences,
   showFutureSalary = false,
+  compact = false,
   onShop,
   shoppedPlayerIds = [],
 }: {
@@ -501,12 +503,13 @@ export function RosterGrid({
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   showFutureSalary?: boolean;
+  compact?: boolean;
   onShop?: (playerId: string) => void;
   shoppedPlayerIds?: readonly string[];
 }) {
   const bySlot = new Map(roster.map((entry) => [entry.slot, entry]));
   return (
-    <section className="football-gm__roster surface-card">
+    <section className={"football-gm__roster surface-card" + (compact ? " is-compact" : "")}>
       <header><span><small>YOUR TEAM</small><strong>7-MAN CORE</strong></span><b>{roster.length}/7</b></header>
       <div className="football-gm__roster-grid">
         {FOOTBALL_GM_ROSTER_SLOTS.map((slot) => {
@@ -1239,14 +1242,16 @@ export function TradeCutResolution({
 }
 
 function FinalScreen({
-  result,
+  run,
+  gmName,
   challengeStatus,
   opponentName,
   isRecipient,
   onChallenge,
   onReplay,
 }: {
-  result: FootballGmFinalResultV2;
+  run: PersistedRun;
+  gmName: string;
   challengeStatus: string;
   opponentName: string | null;
   isRecipient: boolean;
@@ -1254,33 +1259,18 @@ function FinalScreen({
   onReplay: () => void;
 }) {
   return (
-    <section className="football-gm__final surface-card">
-      <p className="eyebrow">THE GM · 3-YEAR RESULT</p>
-      <h1>{result.score.toFixed(1)}</h1>
-      <strong>3-YEAR GM SCORE</strong>
-      <div className="football-gm__season-grid">
-        {result.seasons.map((season) => (
-          <article key={season.year}>
-            <small>YEAR {season.year}</small>
-            <b>{season.teamGrade.toFixed(1)}</b>
-            <span>{season.finish}</span>
-          </article>
-        ))}
-      </div>
-      <div className="football-gm__final-math">
-        <span><small>3-YEAR CORE</small><b>{result.coreScore.toFixed(1)}</b></span>
-        <span><small>AVG PLAYOFF BONUS</small><b>+{result.postseasonBonus.toFixed(1)}</b></span>
-      </div>
-      <div className="football-gm__final-actions">
+    <>
+      <FootballGmFranchiseReport name={gmName} run={run} />
+      <section className="football-gm-report__actions surface-card">
         {!isRecipient && opponentName ? (
           <button className="primary-action" type="button" onClick={onChallenge}>CHALLENGE {opponentName}</button>
         ) : null}
         <button type="button" onClick={onReplay}>NEW GM RUN</button>
-      </div>
-      <p className="football-gm__status" role="status">
-        {isRecipient ? "RESULT SUBMITTED. BOTH GM SCORES REVEAL IN THE CHALLENGE RESULT." : challengeStatus}
-      </p>
-    </section>
+        <p className="football-gm__status" role="status">
+          {isRecipient ? "RESULT SUBMITTED. BOTH GM SCORES REVEAL IN THE CHALLENGE RESULT." : challengeStatus}
+        </p>
+      </section>
+    </>
   );
 }
 
@@ -1849,6 +1839,7 @@ export default function FootballGmModePage({
             seed={run.seed}
             consequences={run.negotiationConsequences}
             showFutureSalary
+            compact
             onShop={!run.tradeAnchorPlayerId && !run.pendingTradeResolution && !run.pendingFreeAgentTeam ? beginTrade : undefined}
             shoppedPlayerIds={run.shoppedPlayerIds}
           />
@@ -1958,7 +1949,8 @@ export default function FootballGmModePage({
 
       {run.phase === "final" && finalResult ? (
         <FinalScreen
-          result={finalResult}
+          run={run}
+          gmName={identity.profile?.displayName ?? "YOU"}
           challengeStatus={challengeStatus}
           opponentName={standalone ? null : opponentName}
           isRecipient={profileMatch.isRecipient}
