@@ -761,7 +761,9 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
         { text: "Georgia wants Stockton protected well enough to make Alabama defend the full field and keep the game out of obvious passing downs. Alabama wants Russell’s explosiveness plus its pressure package to create separation before Georgia can settle in. With both teams 5–0, possession quality — pressure, turnovers and field position — is the cleanest path to deciding which offense actually gets to play its preferred game." },
       ],
     },
-];\n\nfunction normalizeTeamToken(value: string) {
+];
+
+function normalizeTeamToken(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
