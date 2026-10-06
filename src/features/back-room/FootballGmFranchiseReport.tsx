@@ -107,6 +107,15 @@ function outlookPill(player: FootballGmPlayer) {
   return <span className={"football-gm__outlook-pill outlook-" + tone}>{value}</span>;
 }
 
+function contractPill(player: FootballGmPlayer) {
+  const value = player.gameContract === "3YR"
+    ? "SALARY LOCKED"
+    : player.extensionRisk === "LOCKED"
+      ? "1YR"
+      : player.extensionRisk + " RISK";
+  return <span className={"football-gm-report__contract-pill risk-" + player.extensionRisk.toLowerCase()}>{value}</span>;
+}
+
 function EvolutionRow({ slot, run }: { slot: FootballGmRosterSlot; run: FootballGmReportRun }) {
   const end = finalRoster(run);
   const startEntry = slotEntry(run.roster, slot);
@@ -125,14 +134,14 @@ function EvolutionRow({ slot, run }: { slot: FootballGmRosterSlot; run: Football
         <small>YEAR 1</small>
         <strong>{startPlayer.name}</strong>
         <em>{startPlayer.team} · {footballGmMoney(startPlayer.salaryWindow[0])}</em>
-        <span className="football-gm-report__pills">{tierPill(startPlayer, 1)}{outlookPill(startPlayer)}</span>
+        <span className="football-gm-report__pills">{tierPill(startPlayer, 1)}{outlookPill(startPlayer)}{contractPill(startPlayer)}</span>
       </div>
       <span className={"football-gm-report__move" + (changed ? " is-change" : "")}>{move}<i>→</i></span>
       <div className="is-final">
         <small>YEAR 3</small>
         <strong>{endPlayer.name}</strong>
         <em>{endPlayer.team} · {footballGmMoney(endSalary)}</em>
-        <span className="football-gm-report__pills">{tierPill(endPlayer, 3)}{outlookPill(endPlayer)}</span>
+        <span className="football-gm-report__pills">{tierPill(endPlayer, 3)}{outlookPill(endPlayer)}{contractPill(endPlayer)}</span>
       </div>
     </article>
   );
@@ -204,6 +213,25 @@ function CoreReport({ name, run, compact = false }: { name: string; run: Footbal
           <section className="football-gm-report__evolution surface-card">
             <header><span><small>ROSTER EVOLUTION</small><strong>WHAT YOU BUILT</strong></span><b>Y1 → Y3</b></header>
             <div>{FOOTBALL_GM_ROSTER_SLOTS.map((slot) => <EvolutionRow key={slot} slot={slot} run={run} />)}</div>
+          </section>
+
+          <section className="football-gm-report__ledger surface-card">
+            <header><small>OFFSEASON TRANSACTIONS</small><strong>HOW THE CORE CHANGED</strong></header>
+            <div>
+              {rows.filter((row) => row.changed).length ? rows.filter((row) => row.changed).map((row) => {
+                const finishEntry = slotEntry(snap.end, row.slot);
+                const action = finishEntry?.acquired === "trade" ? "TRADE" : "FREE AGENCY";
+                return (
+                  <article key={row.slot}>
+                    <b>{action}</b>
+                    <span><small>{row.slot}</small><strong>{row.startPlayer.name} → {row.endPlayer.name}</strong></span>
+                    <em>{row.delta >= 0 ? "+" : ""}{row.delta.toFixed(1)}</em>
+                  </article>
+                );
+              }) : (
+                <article><b>RETAINED</b><span><small>ALL 7</small><strong>No offseason starter changes</strong></span><em>CORE</em></article>
+              )}
+            </div>
           </section>
 
           <section className="football-gm-report__decisions surface-card">
