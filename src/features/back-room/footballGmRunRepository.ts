@@ -10,6 +10,7 @@ export interface FootballGmRunSave {
 
 export interface FootballGmRunRepository {
   save: (input: FootballGmRunSave) => Promise<void>;
+  loadLatestActive: () => Promise<ChallengeJson | null>;
 }
 
 export function createFootballGmRunRepository(): FootballGmRunRepository | null {
@@ -19,6 +20,11 @@ export function createFootballGmRunRepository(): FootballGmRunRepository | null 
   let queue: Promise<void> = Promise.resolve();
 
   return {
+    async loadLatestActive() {
+      const { data, error } = await client.rpc("load_my_latest_football_gm_run");
+      if (error) throw new Error(error.message || "GM run could not be restored.");
+      return (data ?? null) as ChallengeJson | null;
+    },
     save(input) {
       const request = queue.then(async () => {
         const { error } = await client.rpc("save_my_football_gm_run", {
