@@ -377,6 +377,31 @@ function WaitingCard({ title, copy }: { title: string; copy: string }) {
   );
 }
 
+function YearOneMiniRecap({
+  leftName,
+  rightName,
+  leftRun,
+  rightRun,
+}: {
+  leftName: string;
+  rightName: string;
+  leftRun: PersistedRun;
+  rightRun: PersistedRun;
+}) {
+  const left = footballGmSeasonResultV2({ seed: leftRun.seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
+  const right = footballGmSeasonResultV2({ seed: rightRun.seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
+  return (
+    <section className="football-gm__year1-mini surface-card">
+      <small>YEAR 1 RECAP</small>
+      <div>
+        <span><b>{leftName}</b><strong>{left.teamGrade.toFixed(1)}</strong><em>{left.finish}</em></span>
+        <i>VS</i>
+        <span><b>{rightName}</b><strong>{right.teamGrade.toFixed(1)}</strong><em>{right.finish}</em></span>
+      </div>
+    </section>
+  );
+}
+
 function FinalMatch({
   leftName,
   rightName,
@@ -1360,12 +1385,11 @@ export default function FootballGmHeadToHeadPage() {
                     : "The CPU is completing its entire offseason. You get the remaining shared market when it finishes."}
                 />
                 {mode === "human" ? (
-                  <YearOneMatchup
+                  <YearOneMiniRecap
                     leftName={myDisplayName}
                     rightName={opponentDisplayName}
                     leftRun={run}
                     rightRun={opponentRun}
-                    firstName={humanFirstName}
                   />
                 ) : null}
               </div>
