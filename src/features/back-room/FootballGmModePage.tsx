@@ -23,6 +23,7 @@ import {
   type FootballGmTeamCandidate,
 } from "./footballGmEngine";
 import {
+  FOOTBALL_GM_MAX_TRADE_PLAYERS,
   FOOTBALL_GM_VERSION,
   footballGmAdjustedRosterCap,
   footballGmAdjustedSalaryForPlayer,
@@ -30,6 +31,7 @@ import {
   footballGmEvaluateTradeProposal,
   footballGmFinalResultV2,
   footballGmIsOffseasonCompliantV2,
+  footballGmResolveTradeRoster,
   footballGmSeasonResultV2,
   footballGmSpinTradePartner,
   footballGmTradePartnerPlayers,
@@ -43,6 +45,16 @@ import {
 } from "./footballGmAccess";
 
 type Phase = "intro" | "draft" | "year1" | "offseason" | "years23" | "final";
+
+interface PendingTradeResolution {
+  partnerTeam: string;
+  priority: 1 | 2;
+  anchorPlayerId: string;
+  proposal: FootballGmTradeProposal;
+  postTradePlayerIds: string[];
+  requiredCuts: number;
+  cutPlayerIds: string[];
+}
 
 interface PersistedRun {
   version: string;
@@ -59,6 +71,9 @@ interface PersistedRun {
   tradePartnerTeam: string | null;
   tradeOfferOne: FootballGmTradeProposal;
   tradeOfferTwo: FootballGmTradeProposal;
+  tradeOfferTwoEnabled: boolean;
+  shoppedPlayerIds: string[];
+  pendingTradeResolution: PendingTradeResolution | null;
   negotiationConsequences: Record<string, number>;
   tradeMessage: string;
 }
@@ -106,6 +121,9 @@ function initialRun(seed: string): PersistedRun {
     tradePartnerTeam: null,
     tradeOfferOne: emptyProposal(),
     tradeOfferTwo: emptyProposal(),
+    tradeOfferTwoEnabled: false,
+    shoppedPlayerIds: [],
+    pendingTradeResolution: null,
     negotiationConsequences: {},
     tradeMessage: "",
   };
