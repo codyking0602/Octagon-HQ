@@ -1125,7 +1125,7 @@ export default function FootballGmModePage() {
           <div className="football-gm__rules">
             <span><b>7</b><small>QB · RB · WR · FLEX · DL · LB · DB</small></span>
             <span><b>1YR / 3YR</b><small>One-year deals reprice after Year 1. Three-year deals stay locked.</small></span>
-            <span><b>2</b><small>Two ranked offers every time you open trade talks.</small></span>
+            <span><b>1 + 1</b><small>One required trade offer. One optional backup if you actually want it.</small></span>
           </div>
           <p className="football-gm__intro-note">Exact player grades and future salaries stay hidden during the draft. Talent, cap, trade value and roster continuity all matter across the full window.</p>
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
@@ -1178,12 +1178,19 @@ export default function FootballGmModePage() {
             seed={run.seed}
             consequences={run.negotiationConsequences}
             showFutureSalary
-            onShop={run.tradeAnchorPlayerId ? undefined : beginTrade}
+            onShop={run.tradeAnchorPlayerId || run.pendingTradeResolution ? undefined : beginTrade}
+            shoppedPlayerIds={run.shoppedPlayerIds}
           />
 
           {run.tradeMessage ? <section className="football-gm__trade-message surface-card">{run.tradeMessage}</section> : null}
 
-          {run.tradeAnchorPlayerId ? (
+          {run.pendingTradeResolution ? (
+            <TradeCutResolution
+              run={run}
+              onToggleCut={togglePendingCut}
+              onFinalize={finalizeTradeCuts}
+            />
+          ) : run.tradeAnchorPlayerId ? (
             <TradeRoom
               run={run}
               patch={patch}
@@ -1197,7 +1204,7 @@ export default function FootballGmModePage() {
               <p>
                 {run.finalRoster.length !== 7
                   ? `Your uneven trades left ${run.finalRoster.length}/7 core spots filled. Use another trade to get back to seven.`
-                  : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Shop any player to spin one trade partner and submit two ranked packages.`}
+                  : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Shop an eligible player, spin one final trade partner, and submit one package with an optional backup.`}
               </p>
               <button
                 className="primary-action"
