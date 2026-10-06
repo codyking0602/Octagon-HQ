@@ -288,6 +288,10 @@ function TeamLogo({ teamCode }: { teamCode: string }) {
     : <span className="football-gm__team-fallback">{teamCode}</span>;
 }
 
+function OutlookPill({ outlook }: { outlook: string }) {
+  return <span className="football-gm__outlook-pill">{outlook}</span>;
+}
+
 function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
   return <span className="football-gm__outlook-pill">{outlook}</span>;
 }
@@ -583,7 +587,7 @@ function FreeAgencyReleasePanel({
         >RELEASE {selected.player.name.toUpperCase()} · {footballGmMoney(selected.budget)} BUDGET</button>
       ) : null}
       <small className="football-gm__trade-warning">
-        The release is final. The player you cut cannot be re-signed on this free-agency spin.
+        The release is final. Your one voluntary cut cannot be undone, and that player cannot be re-signed this offseason.
       </small>
     </section>
   );
@@ -623,6 +627,7 @@ function TradeChipPanel({
               <span>{player.team} · {player.position} · {player.gameContract}</span>
               <strong>{player.name}</strong>
               <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, seed, consequences))}</em>
+              <OutlookPill outlook={player.outlook} />
               <PlayerOutlookPill outlook={player.outlook} />
               <div className="football-gm__inline-actions">
                 <button type="button" disabled={shopped} onClick={() => onShop(playerId)}>
@@ -712,6 +717,7 @@ function TradePackagePlayer({
       <span>{player.team} · {player.position} · {player.gameContract}</span>
       <strong>{player.name}</strong>
       <em>{footballGmMoney(salary)}</em>
+      <OutlookPill outlook={player.outlook} />
       <PlayerOutlookPill outlook={player.outlook} />
     </div>
   );
@@ -801,6 +807,7 @@ function TradeRoom({
                 <span>{player.position} · AGE {player.age} · {player.gameContract}</span>
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, run.seed, run.negotiationConsequences))}</em>
+                <OutlookPill outlook={player.outlook} />
                 <PlayerOutlookPill outlook={player.outlook} />
               </button>
             ))}
@@ -1128,7 +1135,6 @@ export default function FootballGmModePage() {
       tradeChipPlayerIds: [...next.tradeChipPlayerIds],
       previousFreeAgentTeam: run.pendingFreeAgentTeam,
       pendingFreeAgentTeam: null,
-      releasedFreeAgentPlayerId: null,
       freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
       tradeMessage: displaced
         ? `${player.name} signed at ${slot}. ${displaced.name} is now a normal trade chip; shop him through the regular Trade Room or release him.`
