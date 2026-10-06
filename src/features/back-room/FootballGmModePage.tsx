@@ -475,12 +475,19 @@ function selectableIds(list: readonly string[], id: string, max: number, lockedI
   return [...list, id];
 }
 
+function sameTradeProposal(left: FootballGmTradeProposal, right: FootballGmTradeProposal) {
+  const normalize = (values: readonly string[]) => [...values].sort().join("|");
+  return normalize(left.outgoingPlayerIds) === normalize(right.outgoingPlayerIds)
+    && normalize(left.incomingPlayerIds) === normalize(right.incomingPlayerIds);
+}
+
 function TradeOfferBuilder({
   label,
   proposal,
   anchorPlayerId,
   roster,
   partnerTeam,
+  shoppedPlayerIds,
   onChange,
 }: {
   label: string;
@@ -488,6 +495,7 @@ function TradeOfferBuilder({
   anchorPlayerId: string;
   roster: readonly FootballGmRosterEntry[];
   partnerTeam: string;
+  shoppedPlayerIds: readonly string[];
   onChange: (proposal: FootballGmTradeProposal) => void;
 }) {
   const incoming = footballGmTradePartnerPlayers(partnerTeam, roster);
@@ -496,22 +504,28 @@ function TradeOfferBuilder({
       <header><span><small>{label}</small><strong>BUILD THE PACKAGE</strong></span></header>
       <div className="football-gm__trade-columns">
         <div>
-          <small>YOU SEND · 1–3</small>
+          <small>YOU SEND · 1–{FOOTBALL_GM_MAX_TRADE_PLAYERS}</small>
           {footballGmRosterPlayers(roster).map(({ entry, player }) => {
             const selected = proposal.outgoingPlayerIds.includes(player.id);
             const locked = player.id === anchorPlayerId;
+            const alreadyShopped = shoppedPlayerIds.includes(player.id) && !locked;
             return (
               <button
                 className={selected ? "is-selected" : ""}
                 type="button"
                 key={player.id}
-                disabled={locked}
+                disabled={locked || alreadyShopped}
                 onClick={() => onChange({
                   ...proposal,
-                  outgoingPlayerIds: selectableIds(proposal.outgoingPlayerIds, player.id, 3, anchorPlayerId),
+                  outgoingPlayerIds: selectableIds(
+                    proposal.outgoingPlayerIds,
+                    player.id,
+                    FOOTBALL_GM_MAX_TRADE_PLAYERS,
+                    anchorPlayerId,
+                  ),
                 })}
               >
-                <span>{locked ? "SHOPPING" : entry.slot}</span>
+                <span>{locked ? "SHOPPING" : alreadyShopped ? "ALREADY SHOPPED" : entry.slot}</span>
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(player.salaryWindow[1])}</em>
               </button>
@@ -519,7 +533,7 @@ function TradeOfferBuilder({
           })}
         </div>
         <div>
-          <small>YOU GET · 1–3</small>
+          <small>YOU GET · 1–{FOOTBALL_GM_MAX_TRADE_PLAYERS}</small>
           {incoming.map((player) => {
             const selected = proposal.incomingPlayerIds.includes(player.id);
             return (
@@ -529,7 +543,11 @@ function TradeOfferBuilder({
                 key={player.id}
                 onClick={() => onChange({
                   ...proposal,
-                  incomingPlayerIds: selectableIds(proposal.incomingPlayerIds, player.id, 3),
+                  incomingPlayerIds: selectableIds(
+                    proposal.incomingPlayerIds,
+                    player.id,
+                    FOOTBALL_GM_MAX_TRADE_PLAYERS,
+                  ),
                 })}
               >
                 <span>{player.position} · {player.gameContract}</span>
@@ -563,16 +581,21 @@ function TradeRoom({
       <section className="football-gm__wheel surface-card">
         <p className="eyebrow">SHOPPING {anchor.name.toUpperCase()}</p>
         <h2>FIND A TRADE PARTNER</h2>
-        <p>One wheel spin locks your negotiating partner. You get two ranked offers. No rerolls after the team lands.</p>
+        <p>One wheel spin locks this player's only trade partner for the offseason. Build one offer, with an optional backup.</p>
         <div className="football-gm__inline-actions">
           <button className="primary-action" type="button" onClick={() => {
             const team = footballGmSpinTradePartner(run.seed, run.tradeSpinIndex, anchor.id, run.previousTradePartner);
-            if (team) patch({ tradePartnerTeam: team, tradeMessage: "" });
+            if (team) patch({
+              tradePartnerTeam: team,
+              shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, anchor.id])],
+              tradeMessage: "",
+            });
           }}>SPIN TRADE PARTNER</button>
           <button type="button" onClick={() => patch({
             tradeAnchorPlayerId: null,
             tradeOfferOne: emptyProposal(),
             tradeOfferTwo: emptyProposal(),
+            tradeOfferTwoEnabled: false,
           })}>NEVER MIND</button>
         </div>
       </section>
@@ -585,33 +608,109 @@ function TradeRoom({
         <TeamLogo teamCode={run.tradePartnerTeam} />
         <span><small>TRADE TALKS</small><strong>{partner?.name ?? run.tradePartnerTeam}</strong></span>
       </header>
-      <p>Priority 1 is evaluated first. Priority 2 is only considered if the first is rejected. Packages can be uneven and positions do not have to match.</p>
+      <p>Priority 1 is your offer. Add a backup only if you actually want a second package. Each side can include up to {FOOTBALL_GM_MAX_TRADE_PLAYERS} players.</p>
       <TradeOfferBuilder
         label="PRIORITY 1"
         proposal={run.tradeOfferOne}
         anchorPlayerId={anchor.id}
         roster={run.finalRoster}
         partnerTeam={run.tradePartnerTeam}
-        onChange={(tradeOfferOne) => patch({ tradeOfferOne })}
+        shoppedPlayerIds={run.shoppedPlayerIds}
+        onChange={(tradeOfferOne) => patch({ tradeOfferOne, tradeMessage: "" })}
       />
-      <TradeOfferBuilder
-        label="PRIORITY 2"
-        proposal={run.tradeOfferTwo}
-        anchorPlayerId={anchor.id}
-        roster={run.finalRoster}
-        partnerTeam={run.tradePartnerTeam}
-        onChange={(tradeOfferTwo) => patch({ tradeOfferTwo })}
-      />
+      {run.tradeOfferTwoEnabled ? (
+        <>
+          <TradeOfferBuilder
+            label="BACKUP OFFER"
+            proposal={run.tradeOfferTwo}
+            anchorPlayerId={anchor.id}
+            roster={run.finalRoster}
+            partnerTeam={run.tradePartnerTeam}
+            shoppedPlayerIds={run.shoppedPlayerIds}
+            onChange={(tradeOfferTwo) => patch({ tradeOfferTwo, tradeMessage: "" })}
+          />
+          <button
+            className="football-gm__backup-toggle"
+            type="button"
+            onClick={() => patch({
+              tradeOfferTwoEnabled: false,
+              tradeOfferTwo: emptyProposal(anchor.id),
+              tradeMessage: "",
+            })}
+          >REMOVE BACKUP OFFER</button>
+        </>
+      ) : (
+        <button
+          className="football-gm__backup-toggle"
+          type="button"
+          onClick={() => patch({
+            tradeOfferTwoEnabled: true,
+            tradeOfferTwo: emptyProposal(anchor.id),
+            tradeMessage: "",
+          })}
+        >+ ADD BACKUP OFFER (OPTIONAL)</button>
+      )}
       <div className="football-gm__inline-actions">
         <button
           className="primary-action"
           type="button"
-          disabled={!run.tradeOfferOne.incomingPlayerIds.length || !run.tradeOfferTwo.incomingPlayerIds.length}
+          disabled={!run.tradeOfferOne.incomingPlayerIds.length}
           onClick={onSubmit}
-        >SUBMIT BOTH OFFERS</button>
+        >{run.tradeOfferTwoEnabled ? "SUBMIT RANKED OFFERS" : "SUBMIT OFFER"}</button>
         <button type="button" onClick={onEndTalks}>KEEP {anchor.name.toUpperCase()} · END TALKS</button>
       </div>
-      <small className="football-gm__trade-warning">Once a partner lands, walking away still counts as shopping the player. A 1YR player's camp can raise its extension demand.</small>
+      <small className="football-gm__trade-warning">
+        This partner is final for {anchor.name}. Walking away still counts as shopping him; a 1YR player's camp can raise its extension demand.
+      </small>
+    </section>
+  );
+}
+
+function TradeCutResolution({
+  run,
+  onToggleCut,
+  onFinalize,
+}: {
+  run: PersistedRun;
+  onToggleCut: (playerId: string) => void;
+  onFinalize: () => void;
+}) {
+  const pending = run.pendingTradeResolution;
+  if (!pending) return null;
+  const selected = new Set(pending.cutPlayerIds);
+  return (
+    <section className="football-gm__trade-cuts surface-card">
+      <p className="eyebrow">TRADE ACCEPTED · ROSTER MOVE REQUIRED</p>
+      <h2>CUT {pending.requiredCuts} PLAYER{pending.requiredCuts === 1 ? "" : "S"}</h2>
+      <p>
+        The {pending.partnerTeam} accepted Priority {pending.priority}, but the uneven package would leave you with {pending.postTradePlayerIds.length} players.
+        Choose exactly {pending.requiredCuts} cut{pending.requiredCuts === 1 ? "" : "s"} to finalize the deal.
+      </p>
+      <div className="football-gm__cut-list">
+        {pending.postTradePlayerIds.map((playerId) => {
+          const player = footballGmPlayerById(playerId);
+          if (!player) return null;
+          const isSelected = selected.has(playerId);
+          return (
+            <button
+              key={playerId}
+              type="button"
+              className={isSelected ? "is-selected" : ""}
+              onClick={() => onToggleCut(playerId)}
+            >
+              <span>{player.team} · {player.position}</span>
+              <strong>{player.name}</strong>
+              <em>{footballGmMoney(player.salaryWindow[1])}</em>
+            </button>
+          );
+        })}
+      </div>
+      <button
+        className="primary-action"
+        type="button"
+        disabled={pending.cutPlayerIds.length !== pending.requiredCuts}
+        onClick={onFinalize}
+      >FINALIZE TRADE & CUT{pending.requiredCuts === 1 ? "" : "S"}</button>
     </section>
   );
 }
