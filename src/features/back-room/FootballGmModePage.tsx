@@ -603,13 +603,13 @@ function TradeChipPanel({
         A non-matching signing displaced {playerIds.length === 1 ? "an incumbent" : "incumbents"} from the active core.
         These players are still your trade assets. Shop them through the normal Trade Room — there is no special one-for-one or position-match restriction.
       </p>
-      <div className="football-gm__cut-list">
+      <div className="football-gm__trade-chip-list">
         {playerIds.map((playerId) => {
           const player = footballGmPlayerById(playerId);
           if (!player) return null;
           const shopped = shoppedPlayerIds.includes(playerId);
           return (
-            <div key={playerId}>
+            <article className="football-gm__trade-chip" key={playerId}>
               <span>{player.team} · {player.position} · {player.gameContract}</span>
               <strong>{player.name}</strong>
               <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, seed, consequences))}</em>
@@ -619,7 +619,7 @@ function TradeChipPanel({
                 </button>
                 <button type="button" onClick={() => onRelease(playerId)}>RELEASE</button>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>
@@ -1120,7 +1120,7 @@ export default function FootballGmModePage() {
   }
 
   function releaseToFreeAgency(playerId: string) {
-    if (run.voluntaryFreeAgencyUsed || run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;
+    if (run.voluntaryFreeAgencyUsed || run.tradeChipPlayerIds.length || run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;
     const player = footballGmPlayerById(playerId);
     if (!player || !run.finalRoster.some((entry) => entry.playerId === playerId)) return;
     const stripped = run.finalRoster.filter((entry) => entry.playerId !== playerId);
