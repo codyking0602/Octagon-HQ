@@ -23,6 +23,7 @@ import {
   type FootballGmTeamCandidate,
 } from "./footballGmEngine";
 import {
+  FOOTBALL_GM_MAX_TRADE_PLAYERS,
   FOOTBALL_GM_VERSION,
   footballGmAdjustedRosterCap,
   footballGmAdjustedSalaryForPlayer,
@@ -30,6 +31,7 @@ import {
   footballGmEvaluateTradeProposal,
   footballGmFinalResultV2,
   footballGmIsOffseasonCompliantV2,
+  footballGmResolveTradeRoster,
   footballGmSeasonResultV2,
   footballGmSpinTradePartner,
   footballGmTradePartnerPlayers,
@@ -43,6 +45,16 @@ import {
 } from "./footballGmAccess";
 
 type Phase = "intro" | "draft" | "year1" | "offseason" | "years23" | "final";
+
+interface PendingTradeResolution {
+  partnerTeam: string;
+  priority: 1 | 2;
+  anchorPlayerId: string;
+  proposal: FootballGmTradeProposal;
+  postTradePlayerIds: string[];
+  requiredCuts: number;
+  cutPlayerIds: string[];
+}
 
 interface PersistedRun {
   version: string;
@@ -59,6 +71,9 @@ interface PersistedRun {
   tradePartnerTeam: string | null;
   tradeOfferOne: FootballGmTradeProposal;
   tradeOfferTwo: FootballGmTradeProposal;
+  tradeOfferTwoEnabled: boolean;
+  shoppedPlayerIds: string[];
+  pendingTradeResolution: PendingTradeResolution | null;
   negotiationConsequences: Record<string, number>;
   tradeMessage: string;
 }
@@ -106,6 +121,9 @@ function initialRun(seed: string): PersistedRun {
     tradePartnerTeam: null,
     tradeOfferOne: emptyProposal(),
     tradeOfferTwo: emptyProposal(),
+    tradeOfferTwoEnabled: false,
+    shoppedPlayerIds: [],
+    pendingTradeResolution: null,
     negotiationConsequences: {},
     tradeMessage: "",
   };
@@ -184,7 +202,7 @@ function gmAuditSnapshot(
         priority: 1,
       })
     : null;
-  const tradeTwo = run.tradePartnerTeam
+  const tradeTwo = run.tradePartnerTeam && run.tradeOfferTwoEnabled
     ? footballGmEvaluateTradeProposal({
         seed: run.seed,
         partnerTeam: run.tradePartnerTeam,
@@ -223,6 +241,8 @@ function gmAuditSnapshot(
         }
       : null,
     negotiationConsequences: run.negotiationConsequences,
+    pendingTradeResolution: run.pendingTradeResolution,
+    shoppedPlayerIds: run.shoppedPlayerIds,
     continuity: run.finalRoster.length
       ? {
           year2: footballGmContinuity(run.roster, run.finalRoster, 2),
@@ -296,6 +316,7 @@ function RosterGrid({
   consequences,
   showFutureSalary = false,
   onShop,
+  shoppedPlayerIds = [],
 }: {
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2 | 3;
@@ -303,6 +324,7 @@ function RosterGrid({
   consequences: FootballGmNegotiationConsequences;
   showFutureSalary?: boolean;
   onShop?: (playerId: string) => void;
+  shoppedPlayerIds?: readonly string[];
 }) {
   const bySlot = new Map(roster.map((entry) => [entry.slot, entry]));
   return (
@@ -331,7 +353,13 @@ function RosterGrid({
                       ? `CAMP MARKUP · ${failedTalks} FAILED TALK${failedTalks === 1 ? "" : "S"}`
                       : showFutureSalary ? "Y2/Y3" : player.gameContract}</span>
                   </div>
-                  {onShop ? <button type="button" onClick={() => onShop(player.id)}>SHOP</button> : null}
+                  {onShop ? (
+                    <button
+                      type="button"
+                      disabled={shoppedPlayerIds.includes(player.id)}
+                      onClick={() => onShop(player.id)}
+                    >{shoppedPlayerIds.includes(player.id) ? "SHOPPED" : "SHOP"}</button>
+                  ) : null}
                 </>
               ) : <strong className="football-gm__open">OPEN</strong>}
             </article>
@@ -447,12 +475,19 @@ function selectableIds(list: readonly string[], id: string, max: number, lockedI
   return [...list, id];
 }
 
+function sameTradeProposal(left: FootballGmTradeProposal, right: FootballGmTradeProposal) {
+  const normalize = (values: readonly string[]) => [...values].sort().join("|");
+  return normalize(left.outgoingPlayerIds) === normalize(right.outgoingPlayerIds)
+    && normalize(left.incomingPlayerIds) === normalize(right.incomingPlayerIds);
+}
+
 function TradeOfferBuilder({
   label,
   proposal,
   anchorPlayerId,
   roster,
   partnerTeam,
+  shoppedPlayerIds,
   onChange,
 }: {
   label: string;
@@ -460,6 +495,7 @@ function TradeOfferBuilder({
   anchorPlayerId: string;
   roster: readonly FootballGmRosterEntry[];
   partnerTeam: string;
+  shoppedPlayerIds: readonly string[];
   onChange: (proposal: FootballGmTradeProposal) => void;
 }) {
   const incoming = footballGmTradePartnerPlayers(partnerTeam, roster);
@@ -468,22 +504,28 @@ function TradeOfferBuilder({
       <header><span><small>{label}</small><strong>BUILD THE PACKAGE</strong></span></header>
       <div className="football-gm__trade-columns">
         <div>
-          <small>YOU SEND · 1–3</small>
+          <small>YOU SEND · 1–{FOOTBALL_GM_MAX_TRADE_PLAYERS}</small>
           {footballGmRosterPlayers(roster).map(({ entry, player }) => {
             const selected = proposal.outgoingPlayerIds.includes(player.id);
             const locked = player.id === anchorPlayerId;
+            const alreadyShopped = shoppedPlayerIds.includes(player.id) && !locked;
             return (
               <button
                 className={selected ? "is-selected" : ""}
                 type="button"
                 key={player.id}
-                disabled={locked}
+                disabled={locked || alreadyShopped}
                 onClick={() => onChange({
                   ...proposal,
-                  outgoingPlayerIds: selectableIds(proposal.outgoingPlayerIds, player.id, 3, anchorPlayerId),
+                  outgoingPlayerIds: selectableIds(
+                    proposal.outgoingPlayerIds,
+                    player.id,
+                    FOOTBALL_GM_MAX_TRADE_PLAYERS,
+                    anchorPlayerId,
+                  ),
                 })}
               >
-                <span>{locked ? "SHOPPING" : entry.slot}</span>
+                <span>{locked ? "SHOPPING" : alreadyShopped ? "ALREADY SHOPPED" : entry.slot}</span>
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(player.salaryWindow[1])}</em>
               </button>
@@ -491,7 +533,7 @@ function TradeOfferBuilder({
           })}
         </div>
         <div>
-          <small>YOU GET · 1–3</small>
+          <small>YOU GET · 1–{FOOTBALL_GM_MAX_TRADE_PLAYERS}</small>
           {incoming.map((player) => {
             const selected = proposal.incomingPlayerIds.includes(player.id);
             return (
@@ -501,7 +543,11 @@ function TradeOfferBuilder({
                 key={player.id}
                 onClick={() => onChange({
                   ...proposal,
-                  incomingPlayerIds: selectableIds(proposal.incomingPlayerIds, player.id, 3),
+                  incomingPlayerIds: selectableIds(
+                    proposal.incomingPlayerIds,
+                    player.id,
+                    FOOTBALL_GM_MAX_TRADE_PLAYERS,
+                  ),
                 })}
               >
                 <span>{player.position} · {player.gameContract}</span>
@@ -535,16 +581,21 @@ function TradeRoom({
       <section className="football-gm__wheel surface-card">
         <p className="eyebrow">SHOPPING {anchor.name.toUpperCase()}</p>
         <h2>FIND A TRADE PARTNER</h2>
-        <p>One wheel spin locks your negotiating partner. You get two ranked offers. No rerolls after the team lands.</p>
+        <p>One wheel spin locks this player's only trade partner for the offseason. Build one offer, with an optional backup.</p>
         <div className="football-gm__inline-actions">
           <button className="primary-action" type="button" onClick={() => {
-            const team = footballGmSpinTradePartner(run.seed, run.tradeSpinIndex, anchor.id, run.previousTradePartner);
-            if (team) patch({ tradePartnerTeam: team, tradeMessage: "" });
+            const team = footballGmSpinTradePartner(run.seed, run.tradeSpinIndex, anchor.id);
+            if (team) patch({
+              tradePartnerTeam: team,
+              shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, anchor.id])],
+              tradeMessage: "",
+            });
           }}>SPIN TRADE PARTNER</button>
           <button type="button" onClick={() => patch({
             tradeAnchorPlayerId: null,
             tradeOfferOne: emptyProposal(),
             tradeOfferTwo: emptyProposal(),
+            tradeOfferTwoEnabled: false,
           })}>NEVER MIND</button>
         </div>
       </section>
@@ -557,33 +608,109 @@ function TradeRoom({
         <TeamLogo teamCode={run.tradePartnerTeam} />
         <span><small>TRADE TALKS</small><strong>{partner?.name ?? run.tradePartnerTeam}</strong></span>
       </header>
-      <p>Priority 1 is evaluated first. Priority 2 is only considered if the first is rejected. Packages can be uneven and positions do not have to match.</p>
+      <p>Priority 1 is your offer. Add a backup only if you actually want a second package. Each side can include up to {FOOTBALL_GM_MAX_TRADE_PLAYERS} players.</p>
       <TradeOfferBuilder
         label="PRIORITY 1"
         proposal={run.tradeOfferOne}
         anchorPlayerId={anchor.id}
         roster={run.finalRoster}
         partnerTeam={run.tradePartnerTeam}
-        onChange={(tradeOfferOne) => patch({ tradeOfferOne })}
+        shoppedPlayerIds={run.shoppedPlayerIds}
+        onChange={(tradeOfferOne) => patch({ tradeOfferOne, tradeMessage: "" })}
       />
-      <TradeOfferBuilder
-        label="PRIORITY 2"
-        proposal={run.tradeOfferTwo}
-        anchorPlayerId={anchor.id}
-        roster={run.finalRoster}
-        partnerTeam={run.tradePartnerTeam}
-        onChange={(tradeOfferTwo) => patch({ tradeOfferTwo })}
-      />
+      {run.tradeOfferTwoEnabled ? (
+        <>
+          <TradeOfferBuilder
+            label="BACKUP OFFER"
+            proposal={run.tradeOfferTwo}
+            anchorPlayerId={anchor.id}
+            roster={run.finalRoster}
+            partnerTeam={run.tradePartnerTeam}
+            shoppedPlayerIds={run.shoppedPlayerIds}
+            onChange={(tradeOfferTwo) => patch({ tradeOfferTwo, tradeMessage: "" })}
+          />
+          <button
+            className="football-gm__backup-toggle"
+            type="button"
+            onClick={() => patch({
+              tradeOfferTwoEnabled: false,
+              tradeOfferTwo: emptyProposal(anchor.id),
+              tradeMessage: "",
+            })}
+          >REMOVE BACKUP OFFER</button>
+        </>
+      ) : (
+        <button
+          className="football-gm__backup-toggle"
+          type="button"
+          onClick={() => patch({
+            tradeOfferTwoEnabled: true,
+            tradeOfferTwo: emptyProposal(anchor.id),
+            tradeMessage: "",
+          })}
+        >+ ADD BACKUP OFFER (OPTIONAL)</button>
+      )}
       <div className="football-gm__inline-actions">
         <button
           className="primary-action"
           type="button"
-          disabled={!run.tradeOfferOne.incomingPlayerIds.length || !run.tradeOfferTwo.incomingPlayerIds.length}
+          disabled={!run.tradeOfferOne.incomingPlayerIds.length}
           onClick={onSubmit}
-        >SUBMIT BOTH OFFERS</button>
+        >{run.tradeOfferTwoEnabled ? "SUBMIT RANKED OFFERS" : "SUBMIT OFFER"}</button>
         <button type="button" onClick={onEndTalks}>KEEP {anchor.name.toUpperCase()} · END TALKS</button>
       </div>
-      <small className="football-gm__trade-warning">Once a partner lands, walking away still counts as shopping the player. A 1YR player's camp can raise its extension demand.</small>
+      <small className="football-gm__trade-warning">
+        This partner is final for {anchor.name}. Walking away still counts as shopping him; a 1YR player's camp can raise its extension demand.
+      </small>
+    </section>
+  );
+}
+
+function TradeCutResolution({
+  run,
+  onToggleCut,
+  onFinalize,
+}: {
+  run: PersistedRun;
+  onToggleCut: (playerId: string) => void;
+  onFinalize: () => void;
+}) {
+  const pending = run.pendingTradeResolution;
+  if (!pending) return null;
+  const selected = new Set(pending.cutPlayerIds);
+  return (
+    <section className="football-gm__trade-cuts surface-card">
+      <p className="eyebrow">TRADE ACCEPTED · ROSTER MOVE REQUIRED</p>
+      <h2>CUT {pending.requiredCuts} PLAYER{pending.requiredCuts === 1 ? "" : "S"}</h2>
+      <p>
+        The {pending.partnerTeam} accepted Priority {pending.priority}, but the uneven package would leave you with {pending.postTradePlayerIds.length} players.
+        Choose exactly {pending.requiredCuts} cut{pending.requiredCuts === 1 ? "" : "s"} to finalize the deal.
+      </p>
+      <div className="football-gm__cut-list">
+        {pending.postTradePlayerIds.map((playerId) => {
+          const player = footballGmPlayerById(playerId);
+          if (!player) return null;
+          const isSelected = selected.has(playerId);
+          return (
+            <button
+              key={playerId}
+              type="button"
+              className={isSelected ? "is-selected" : ""}
+              onClick={() => onToggleCut(playerId)}
+            >
+              <span>{player.team} · {player.position}</span>
+              <strong>{player.name}</strong>
+              <em>{footballGmMoney(player.salaryWindow[1])}</em>
+            </button>
+          );
+        })}
+      </div>
+      <button
+        className="primary-action"
+        type="button"
+        disabled={pending.cutPlayerIds.length !== pending.requiredCuts}
+        onClick={onFinalize}
+      >FINALIZE TRADE & CUT{pending.requiredCuts === 1 ? "" : "S"}</button>
     </section>
   );
 }
@@ -744,16 +871,18 @@ export default function FootballGmModePage() {
   }
 
   function beginTrade(playerId: string) {
+    if (run.shoppedPlayerIds.includes(playerId) || run.pendingTradeResolution) return;
     patch({
       tradeAnchorPlayerId: playerId,
       tradePartnerTeam: null,
       tradeOfferOne: emptyProposal(playerId),
       tradeOfferTwo: emptyProposal(playerId),
+      tradeOfferTwoEnabled: false,
       tradeMessage: "",
     });
   }
 
-  function applyShoppingConsequence(messagePrefix: string) {
+  function applyShoppingConsequence(messagePrefix: string, additionalShoppedIds: readonly string[] = []) {
     const anchor = run.tradeAnchorPlayerId ? footballGmPlayerById(run.tradeAnchorPlayerId) : null;
     if (!anchor) return;
     const nextConsequences = { ...run.negotiationConsequences };
@@ -763,12 +892,15 @@ export default function FootballGmModePage() {
     const newSalary = footballGmAdjustedSalaryForPlayer(anchor, 2, run.seed, nextConsequences);
     patch({
       negotiationConsequences: nextConsequences,
+      shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, ...additionalShoppedIds])],
       previousTradePartner: run.tradePartnerTeam,
       tradeSpinIndex: run.tradeSpinIndex + 1,
       tradeAnchorPlayerId: null,
       tradePartnerTeam: null,
       tradeOfferOne: emptyProposal(),
       tradeOfferTwo: emptyProposal(),
+      tradeOfferTwoEnabled: false,
+      pendingTradeResolution: null,
       tradeMessage: anchor.gameContract === "1YR"
         ? `${messagePrefix} ${anchor.name}'s camp raised the extension demand to ${footballGmMoney(newSalary)}.`
         : `${messagePrefix} ${anchor.name} remains under a locked 3YR deal.`,
@@ -777,47 +909,143 @@ export default function FootballGmModePage() {
 
   function submitTradeOffers() {
     if (!run.tradeAnchorPlayerId || !run.tradePartnerTeam) return;
+    const partnerTeam = run.tradePartnerTeam;
     const first = footballGmEvaluateTradeProposal({
       seed: run.seed,
-      partnerTeam: run.tradePartnerTeam,
+      partnerTeam,
       roster: run.finalRoster,
       proposal: run.tradeOfferOne,
       priority: 1,
     });
-    const second = footballGmEvaluateTradeProposal({
-      seed: run.seed,
-      partnerTeam: run.tradePartnerTeam,
-      roster: run.finalRoster,
-      proposal: run.tradeOfferTwo,
-      priority: 2,
-    });
 
-    const invalid = [first, second].find((evaluation) => evaluation.reason === "invalid" || evaluation.reason === "roster");
-    if (invalid) {
+    if (first.reason === "invalid" || first.reason === "roster") {
       patch({
-        tradeMessage: invalid.reason === "roster"
-          ? "One package cannot produce a legal seven-slot core. Change the player mix."
-          : "Both offers need valid players on each side.",
+        tradeMessage: first.reason === "roster"
+          ? "Priority 1 cannot leave you with a usable core, even after the required cuts. Change that package."
+          : "Priority 1 needs 1–3 valid players on each side.",
       });
       return;
     }
 
-    const accepted = first.accepted ? { evaluation: first, priority: 1 } : second.accepted ? { evaluation: second, priority: 2 } : null;
-    if (accepted?.evaluation.nextRoster) {
-      patch({
-        finalRoster: [...accepted.evaluation.nextRoster],
-        previousTradePartner: run.tradePartnerTeam,
+    let submittedOutgoingIds = [...run.tradeOfferOne.outgoingPlayerIds];
+    let accepted: { evaluation: typeof first; priority: 1 | 2; proposal: FootballGmTradeProposal } | null = first.accepted
+      ? { evaluation: first, priority: 1, proposal: run.tradeOfferOne }
+      : null;
+
+    if (!accepted && run.tradeOfferTwoEnabled) {
+      if (!run.tradeOfferTwo.incomingPlayerIds.length) {
+        patch({ tradeMessage: "Your backup offer is empty. Add a package or remove the backup offer." });
+        return;
+      }
+      if (sameTradeProposal(run.tradeOfferOne, run.tradeOfferTwo)) {
+        patch({ tradeMessage: "Your backup offer is the same as Priority 1. Change it or remove the backup offer." });
+        return;
+      }
+      submittedOutgoingIds = [...new Set([...submittedOutgoingIds, ...run.tradeOfferTwo.outgoingPlayerIds])];
+      const second = footballGmEvaluateTradeProposal({
+        seed: run.seed,
+        partnerTeam,
+        roster: run.finalRoster,
+        proposal: run.tradeOfferTwo,
+        priority: 2,
+      });
+      if (second.reason === "invalid" || second.reason === "roster") {
+        patch({
+          tradeMessage: second.reason === "roster"
+            ? "The backup offer cannot leave you with a usable core, even after the required cuts. Change that package."
+            : "The backup offer needs 1–3 valid players on each side.",
+        });
+        return;
+      }
+      if (second.accepted) accepted = { evaluation: second, priority: 2, proposal: run.tradeOfferTwo };
+    }
+
+    if (accepted) {
+      const common = {
+        previousTradePartner: partnerTeam,
         tradeSpinIndex: run.tradeSpinIndex + 1,
         tradeAnchorPlayerId: null,
         tradePartnerTeam: null,
         tradeOfferOne: emptyProposal(),
         tradeOfferTwo: emptyProposal(),
-        tradeMessage: `${run.tradePartnerTeam} accepted Priority ${accepted.priority}. Trade completed and locked.`,
-      });
-      return;
+        tradeOfferTwoEnabled: false,
+        shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, ...submittedOutgoingIds])],
+      };
+      if (accepted.evaluation.requiresCuts > 0) {
+        patch({
+          ...common,
+          pendingTradeResolution: {
+            partnerTeam,
+            priority: accepted.priority,
+            anchorPlayerId: run.tradeAnchorPlayerId,
+            proposal: {
+              outgoingPlayerIds: [...accepted.proposal.outgoingPlayerIds],
+              incomingPlayerIds: [...accepted.proposal.incomingPlayerIds],
+            },
+            postTradePlayerIds: [...accepted.evaluation.postTradePlayerIds],
+            requiredCuts: accepted.evaluation.requiresCuts,
+            cutPlayerIds: [],
+          },
+          tradeMessage: `${partnerTeam} accepted Priority ${accepted.priority}. Choose ${accepted.evaluation.requiresCuts} cut${accepted.evaluation.requiresCuts === 1 ? "" : "s"} to finalize the uneven trade.`,
+        });
+        return;
+      }
+      if (accepted.evaluation.nextRoster) {
+        patch({
+          ...common,
+          finalRoster: [...accepted.evaluation.nextRoster],
+          pendingTradeResolution: null,
+          tradeMessage: `${partnerTeam} accepted Priority ${accepted.priority}. Trade completed and locked.`,
+        });
+        return;
+      }
     }
 
-    applyShoppingConsequence(`${run.tradePartnerTeam} rejected both offers.`);
+    applyShoppingConsequence(
+      `${partnerTeam} rejected ${run.tradeOfferTwoEnabled ? "both offers" : "the offer"}.`,
+      submittedOutgoingIds,
+    );
+  }
+
+  function togglePendingCut(playerId: string) {
+    const pending = run.pendingTradeResolution;
+    if (!pending || !pending.postTradePlayerIds.includes(playerId)) return;
+    const current = pending.cutPlayerIds;
+    const cutPlayerIds = current.includes(playerId)
+      ? current.filter((value) => value !== playerId)
+      : current.length < pending.requiredCuts
+        ? [...current, playerId]
+        : current;
+    patch({
+      pendingTradeResolution: {
+        ...pending,
+        cutPlayerIds,
+      },
+      tradeMessage: "",
+    });
+  }
+
+  function finalizeTradeCuts() {
+    const pending = run.pendingTradeResolution;
+    if (!pending || pending.cutPlayerIds.length !== pending.requiredCuts) return;
+    const nextRoster = footballGmResolveTradeRoster({
+      roster: run.finalRoster,
+      proposal: pending.proposal,
+      cutPlayerIds: pending.cutPlayerIds,
+    });
+    if (!nextRoster) {
+      patch({ tradeMessage: "Those cuts do not leave a legal core. Choose a different cut combination." });
+      return;
+    }
+    const cutNames = pending.cutPlayerIds
+      .map((playerId) => footballGmPlayerById(playerId)?.name)
+      .filter(Boolean)
+      .join(", ");
+    patch({
+      finalRoster: [...nextRoster],
+      pendingTradeResolution: null,
+      tradeMessage: `${pending.partnerTeam} accepted Priority ${pending.priority}. Trade completed${cutNames ? `; cut ${cutNames}` : ""}.`,
+    });
   }
 
   async function challengeOpponent() {
@@ -902,7 +1130,7 @@ export default function FootballGmModePage() {
           <div className="football-gm__rules">
             <span><b>7</b><small>QB · RB · WR · FLEX · DL · LB · DB</small></span>
             <span><b>1YR / 3YR</b><small>One-year deals reprice after Year 1. Three-year deals stay locked.</small></span>
-            <span><b>2</b><small>Two ranked offers every time you open trade talks.</small></span>
+            <span><b>1 + 1</b><small>One required trade offer. One optional backup if you actually want it.</small></span>
           </div>
           <p className="football-gm__intro-note">Exact player grades and future salaries stay hidden during the draft. Talent, cap, trade value and roster continuity all matter across the full window.</p>
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
@@ -955,12 +1183,19 @@ export default function FootballGmModePage() {
             seed={run.seed}
             consequences={run.negotiationConsequences}
             showFutureSalary
-            onShop={run.tradeAnchorPlayerId ? undefined : beginTrade}
+            onShop={run.tradeAnchorPlayerId || run.pendingTradeResolution ? undefined : beginTrade}
+            shoppedPlayerIds={run.shoppedPlayerIds}
           />
 
           {run.tradeMessage ? <section className="football-gm__trade-message surface-card">{run.tradeMessage}</section> : null}
 
-          {run.tradeAnchorPlayerId ? (
+          {run.pendingTradeResolution ? (
+            <TradeCutResolution
+              run={run}
+              onToggleCut={togglePendingCut}
+              onFinalize={finalizeTradeCuts}
+            />
+          ) : run.tradeAnchorPlayerId ? (
             <TradeRoom
               run={run}
               patch={patch}
@@ -974,7 +1209,7 @@ export default function FootballGmModePage() {
               <p>
                 {run.finalRoster.length !== 7
                   ? `Your uneven trades left ${run.finalRoster.length}/7 core spots filled. Use another trade to get back to seven.`
-                  : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Shop any player to spin one trade partner and submit two ranked packages.`}
+                  : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Shop an eligible player, spin one final trade partner, and submit one package with an optional backup.`}
               </p>
               <button
                 className="primary-action"
