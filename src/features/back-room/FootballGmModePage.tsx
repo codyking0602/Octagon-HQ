@@ -871,11 +871,13 @@ export default function FootballGmModePage() {
   }
 
   function beginTrade(playerId: string) {
+    if (run.shoppedPlayerIds.includes(playerId) || run.pendingTradeResolution) return;
     patch({
       tradeAnchorPlayerId: playerId,
       tradePartnerTeam: null,
       tradeOfferOne: emptyProposal(playerId),
       tradeOfferTwo: emptyProposal(playerId),
+      tradeOfferTwoEnabled: false,
       tradeMessage: "",
     });
   }
@@ -896,6 +898,8 @@ export default function FootballGmModePage() {
       tradePartnerTeam: null,
       tradeOfferOne: emptyProposal(),
       tradeOfferTwo: emptyProposal(),
+      tradeOfferTwoEnabled: false,
+      pendingTradeResolution: null,
       tradeMessage: anchor.gameContract === "1YR"
         ? `${messagePrefix} ${anchor.name}'s camp raised the extension demand to ${footballGmMoney(newSalary)}.`
         : `${messagePrefix} ${anchor.name} remains under a locked 3YR deal.`,
@@ -904,47 +908,139 @@ export default function FootballGmModePage() {
 
   function submitTradeOffers() {
     if (!run.tradeAnchorPlayerId || !run.tradePartnerTeam) return;
+    const partnerTeam = run.tradePartnerTeam;
     const first = footballGmEvaluateTradeProposal({
       seed: run.seed,
-      partnerTeam: run.tradePartnerTeam,
+      partnerTeam,
       roster: run.finalRoster,
       proposal: run.tradeOfferOne,
       priority: 1,
     });
-    const second = footballGmEvaluateTradeProposal({
-      seed: run.seed,
-      partnerTeam: run.tradePartnerTeam,
-      roster: run.finalRoster,
-      proposal: run.tradeOfferTwo,
-      priority: 2,
-    });
 
-    const invalid = [first, second].find((evaluation) => evaluation.reason === "invalid" || evaluation.reason === "roster");
-    if (invalid) {
+    if (first.reason === "invalid" || first.reason === "roster") {
       patch({
-        tradeMessage: invalid.reason === "roster"
-          ? "One package cannot produce a legal seven-slot core. Change the player mix."
-          : "Both offers need valid players on each side.",
+        tradeMessage: first.reason === "roster"
+          ? "Priority 1 cannot leave you with a usable core, even after the required cuts. Change that package."
+          : "Priority 1 needs 1–3 valid players on each side.",
       });
       return;
     }
 
-    const accepted = first.accepted ? { evaluation: first, priority: 1 } : second.accepted ? { evaluation: second, priority: 2 } : null;
-    if (accepted?.evaluation.nextRoster) {
-      patch({
-        finalRoster: [...accepted.evaluation.nextRoster],
-        previousTradePartner: run.tradePartnerTeam,
+    let accepted: { evaluation: typeof first; priority: 1 | 2; proposal: FootballGmTradeProposal } | null = first.accepted
+      ? { evaluation: first, priority: 1, proposal: run.tradeOfferOne }
+      : null;
+
+    if (!accepted && run.tradeOfferTwoEnabled) {
+      if (!run.tradeOfferTwo.incomingPlayerIds.length) {
+        patch({ tradeMessage: "Your backup offer is empty. Add a package or remove the backup offer." });
+        return;
+      }
+      if (sameTradeProposal(run.tradeOfferOne, run.tradeOfferTwo)) {
+        patch({ tradeMessage: "Your backup offer is the same as Priority 1. Change it or remove the backup offer." });
+        return;
+      }
+      const second = footballGmEvaluateTradeProposal({
+        seed: run.seed,
+        partnerTeam,
+        roster: run.finalRoster,
+        proposal: run.tradeOfferTwo,
+        priority: 2,
+      });
+      if (second.reason === "invalid" || second.reason === "roster") {
+        patch({
+          tradeMessage: second.reason === "roster"
+            ? "The backup offer cannot leave you with a usable core, even after the required cuts. Change that package."
+            : "The backup offer needs 1–3 valid players on each side.",
+        });
+        return;
+      }
+      if (second.accepted) accepted = { evaluation: second, priority: 2, proposal: run.tradeOfferTwo };
+    }
+
+    if (accepted) {
+      const common = {
+        previousTradePartner: partnerTeam,
         tradeSpinIndex: run.tradeSpinIndex + 1,
         tradeAnchorPlayerId: null,
         tradePartnerTeam: null,
         tradeOfferOne: emptyProposal(),
         tradeOfferTwo: emptyProposal(),
-        tradeMessage: `${run.tradePartnerTeam} accepted Priority ${accepted.priority}. Trade completed and locked.`,
-      });
-      return;
+        tradeOfferTwoEnabled: false,
+      };
+      if (accepted.evaluation.requiresCuts > 0) {
+        patch({
+          ...common,
+          pendingTradeResolution: {
+            partnerTeam,
+            priority: accepted.priority,
+            anchorPlayerId: run.tradeAnchorPlayerId,
+            proposal: {
+              outgoingPlayerIds: [...accepted.proposal.outgoingPlayerIds],
+              incomingPlayerIds: [...accepted.proposal.incomingPlayerIds],
+            },
+            postTradePlayerIds: [...accepted.evaluation.postTradePlayerIds],
+            requiredCuts: accepted.evaluation.requiresCuts,
+            cutPlayerIds: [],
+          },
+          tradeMessage: `${partnerTeam} accepted Priority ${accepted.priority}. Choose ${accepted.evaluation.requiresCuts} cut${accepted.evaluation.requiresCuts === 1 ? "" : "s"} to finalize the uneven trade.`,
+        });
+        return;
+      }
+      if (accepted.evaluation.nextRoster) {
+        patch({
+          ...common,
+          finalRoster: [...accepted.evaluation.nextRoster],
+          pendingTradeResolution: null,
+          tradeMessage: `${partnerTeam} accepted Priority ${accepted.priority}. Trade completed and locked.`,
+        });
+        return;
+      }
     }
 
-    applyShoppingConsequence(`${run.tradePartnerTeam} rejected both offers.`);
+    applyShoppingConsequence(
+      `${partnerTeam} rejected ${run.tradeOfferTwoEnabled ? "both offers" : "the offer"}.`,
+    );
+  }
+
+  function togglePendingCut(playerId: string) {
+    const pending = run.pendingTradeResolution;
+    if (!pending || !pending.postTradePlayerIds.includes(playerId)) return;
+    const current = pending.cutPlayerIds;
+    const cutPlayerIds = current.includes(playerId)
+      ? current.filter((value) => value !== playerId)
+      : current.length < pending.requiredCuts
+        ? [...current, playerId]
+        : current;
+    patch({
+      pendingTradeResolution: {
+        ...pending,
+        cutPlayerIds,
+      },
+      tradeMessage: "",
+    });
+  }
+
+  function finalizeTradeCuts() {
+    const pending = run.pendingTradeResolution;
+    if (!pending || pending.cutPlayerIds.length !== pending.requiredCuts) return;
+    const nextRoster = footballGmResolveTradeRoster({
+      roster: run.finalRoster,
+      proposal: pending.proposal,
+      cutPlayerIds: pending.cutPlayerIds,
+    });
+    if (!nextRoster) {
+      patch({ tradeMessage: "Those cuts do not leave a legal core. Choose a different cut combination." });
+      return;
+    }
+    const cutNames = pending.cutPlayerIds
+      .map((playerId) => footballGmPlayerById(playerId)?.name)
+      .filter(Boolean)
+      .join(", ");
+    patch({
+      finalRoster: [...nextRoster],
+      pendingTradeResolution: null,
+      tradeMessage: `${pending.partnerTeam} accepted Priority ${pending.priority}. Trade completed${cutNames ? `; cut ${cutNames}` : ""}.`,
+    });
   }
 
   async function challengeOpponent() {
