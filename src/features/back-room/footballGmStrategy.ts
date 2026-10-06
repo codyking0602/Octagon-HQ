@@ -106,6 +106,13 @@ export function footballGmThreeYearResumeScore(finishes: readonly FootballGmPlay
   return Math.round((finishes.reduce((sum, finish) => sum + footballGmSeasonResumeScore(finish), 0) / finishes.length) * 10) / 10;
 }
 
+export function footballGmScoreFromComponents(rosterManagementScore: number, resumeScore: number) {
+  return Math.round((
+    (rosterManagementScore * FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement)
+    + (resumeScore * FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume)
+  ) * 10) / 10;
+}
+
 
 export interface FootballGmContinuity {
   retained: number;
@@ -1174,10 +1181,7 @@ export function footballGmFinalResultV2(input: {
   const teamOveralls = seasons.map((season) => footballGmTeamOverall(season.teamGrade));
   const rosterManagementScore = Math.round((teamOveralls.reduce((sum, overall) => sum + overall, 0) / teamOveralls.length) * 10) / 10;
   const resumeScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
-  const score = Math.round((
-    (rosterManagementScore * FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement)
-    + (resumeScore * FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume)
-  ) * 10) / 10;
+  const score = footballGmScoreFromComponents(rosterManagementScore, resumeScore);
   return {
     score,
     rosterManagementScore,
