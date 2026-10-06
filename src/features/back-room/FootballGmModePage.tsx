@@ -202,7 +202,7 @@ function gmAuditSnapshot(
         priority: 1,
       })
     : null;
-  const tradeTwo = run.tradePartnerTeam
+  const tradeTwo = run.tradePartnerTeam && run.tradeOfferTwoEnabled
     ? footballGmEvaluateTradeProposal({
         seed: run.seed,
         partnerTeam: run.tradePartnerTeam,
@@ -241,6 +241,8 @@ function gmAuditSnapshot(
         }
       : null,
     negotiationConsequences: run.negotiationConsequences,
+    pendingTradeResolution: run.pendingTradeResolution,
+    shoppedPlayerIds: run.shoppedPlayerIds,
     continuity: run.finalRoster.length
       ? {
           year2: footballGmContinuity(run.roster, run.finalRoster, 2),
