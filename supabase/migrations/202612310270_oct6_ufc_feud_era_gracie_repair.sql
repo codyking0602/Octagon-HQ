@@ -397,18 +397,5 @@ begin
   where daily_challenge_id = v_daily
     and profile_id = v_profile;
 
-  update private.daily_challenge_history
-  set native_score = 86,
-      normalized_score = 86,
-      public_result = public_result
-        || jsonb_build_object(
-          'score',86,
-          'main_points',56,
-          'fast_money_points',30,
-          'score_correction','2026-10-06-ufc-era-gracie-repair'
-        )
-  where daily_challenge_id = v_daily
-    and profile_id = v_profile
-    and normalized_score = 81;
 end
 $oct6_cody_ufc_feud$;
