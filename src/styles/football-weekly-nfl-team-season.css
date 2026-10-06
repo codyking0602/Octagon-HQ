@@ -1667,3 +1667,16 @@
   font-size: .82rem;
   font-weight: 1000;
 }
+
+
+/* Keep the pinned auction rail from visually crowding the first board heading on phones. */
+@media (max-width: 560px) {
+  .football-weekly-nfl-team-season__board {
+    min-width: 0;
+    margin-top: 6px;
+  }
+
+  .football-weekly-nfl-team-season__board-head {
+    padding-top: 2px;
+  }
+}
