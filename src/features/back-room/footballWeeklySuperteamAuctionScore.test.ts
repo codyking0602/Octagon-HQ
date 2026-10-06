@@ -17,7 +17,7 @@ describe("CFB Superteam visual Auction Score", () => {
     expect(footballWeeklySuperteamAuctionScore(undefined)).toBeNull();
   });
 
-  it("does not expose raw averages or hidden grades in the final UI", () => {
+  it("keeps Auction Score as the headline while revealing final roster grades", () => {
     const gate = readFileSync(
       "src/features/back-room/FootballWeeklySuperteamGate.tsx",
       "utf8",
@@ -25,8 +25,8 @@ describe("CFB Superteam visual Auction Score", () => {
 
     expect(gate).toContain("AUCTION SCORE");
     expect(gate).not.toContain("7-player Superteam average");
-    expect(gate).not.toContain(">All Grades<");
-    expect(gate).not.toContain("item.grade.toFixed");
+    expect(gate).toContain(">All Grades<");
+    expect(gate).toContain("item.grade.toFixed(1)");
     expect(gate).not.toContain("entry.grade.toFixed");
   });
 });
