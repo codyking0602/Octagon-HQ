@@ -12,32 +12,6 @@ import FootballHomeSpotlightPhotoControl from "./FootballHomeSpotlightPhotoContr
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
-
-  it("shows Jamal/Tet as CURRENT immediately after early activation and no stale NEXT pair", async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-10-06T03:45:00Z"));
-
-    const repository: HomeFeatureMediaRepository = {
-      loadFootballSpotlight: vi.fn().mockResolvedValue(null),
-      saveFootballSpotlightPhoto: vi.fn(),
-    };
-
-    render(<FootballHomeSpotlightPhotoControl repository={repository} />);
-    await act(async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    });
-
-    expect(screen.getByText("JAMAL ROBERTS")).toBeInTheDocument();
-    expect(screen.getByText("TETAIROA MCMILLAN")).toBeInTheDocument();
-    expect(screen.getByAltText("CURRENT CFB Football Home Player Spotlight"))
-      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-06-jamal-tet"]?.cfb);
-    expect(screen.getByAltText("CURRENT NFL Football Home Player Spotlight"))
-      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-06-jamal-tet"]?.nfl);
-    expect(screen.queryByLabelText("Upload NEXT CFB Player Spotlight photo")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Upload NEXT NFL Player Spotlight photo")).not.toBeInTheDocument();
-  });
-
 });
 
 describe("FootballHomeSpotlightPhotoControl", () => {
@@ -123,4 +97,29 @@ describe("FootballHomeSpotlightPhotoControl", () => {
     expect(screen.getByAltText("CURRENT NFL Football Home Player Spotlight"))
       .toHaveAttribute("src", currentSources.nfl);
   });
+  it("shows Jamal/Tet as CURRENT immediately after early activation and no stale NEXT pair", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-06T03:45:00Z"));
+
+    const repository: HomeFeatureMediaRepository = {
+      loadFootballSpotlight: vi.fn().mockResolvedValue(null),
+      saveFootballSpotlightPhoto: vi.fn(),
+    };
+
+    render(<FootballHomeSpotlightPhotoControl repository={repository} />);
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText("JAMAL ROBERTS")).toBeInTheDocument();
+    expect(screen.getByText("TETAIROA MCMILLAN")).toBeInTheDocument();
+    expect(screen.getByAltText("CURRENT CFB Football Home Player Spotlight"))
+      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-06-jamal-tet"]?.cfb);
+    expect(screen.getByAltText("CURRENT NFL Football Home Player Spotlight"))
+      .toHaveAttribute("src", FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-06-jamal-tet"]?.nfl);
+    expect(screen.queryByLabelText("Upload NEXT CFB Player Spotlight photo")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Upload NEXT NFL Player Spotlight photo")).not.toBeInTheDocument();
+  });
+
 });
