@@ -21,6 +21,7 @@ import {
   footballGmEligibleFreeAgencyTeams,
   footballGmEvaluateTradeProposal,
   footballGmFreeAgencyCandidatesForTeam,
+  footballGmOutcomeProbabilities,
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
   footballGmSeasonRoll,
@@ -173,10 +174,10 @@ describe("Football GM strategy v7", () => {
     expect(FOOTBALL_GM_LIVE_OUTCOME_ANCHORS.detroit).toBe(93.7);
     expect(FOOTBALL_GM_LIVE_OUTCOME_ANCHORS.losAngelesRams).toBe(94);
 
-    expect(footballGmTitleOdds(88)).toBeCloseTo(0.055, 6);
+    expect(footballGmTitleOdds(88)).toBeCloseTo(0.05, 6);
     expect(footballGmTitleOdds(90)).toBeCloseTo(0.10, 6);
-    expect(footballGmTitleOdds(92)).toBeCloseTo(0.17, 6);
-    expect(footballGmTitleOdds(94)).toBeCloseTo(0.27, 6);
+    expect(footballGmTitleOdds(92)).toBeCloseTo(0.18, 6);
+    expect(footballGmTitleOdds(94)).toBeCloseTo(0.32, 6);
     expect(footballGmTitleOdds(94)).toBeGreaterThan(footballGmTitleOdds(92));
 
     const roster = codyRunRoster();
@@ -190,6 +191,51 @@ describe("Football GM strategy v7", () => {
       }).finish);
     }
     expect(outcomes.size).toBeGreaterThan(2);
+  });
+
+  it("calibrates every integer team grade with a smooth higher-floor postseason curve", () => {
+    const expected = [
+      [78, 0.80, 0.001],
+      [79, 0.77, 0.002],
+      [80, 0.73, 0.003],
+      [81, 0.69, 0.004],
+      [82, 0.64, 0.006],
+      [83, 0.58, 0.008],
+      [84, 0.50, 0.012],
+      [85, 0.40, 0.015],
+      [86, 0.31, 0.025],
+      [87, 0.23, 0.035],
+      [88, 0.15, 0.05],
+      [89, 0.08, 0.075],
+      [90, 0.04, 0.10],
+      [91, 0.02, 0.14],
+      [92, 0.01, 0.18],
+      [93, 0.005, 0.245],
+      [94, 0, 0.32],
+      [95, 0, 0.35],
+      [96, 0, 0.40],
+      [97, 0, 0.45],
+      [98, 0, 0.50],
+    ] as const;
+
+    let previousMiss = Number.POSITIVE_INFINITY;
+    let previousChampion = -1;
+    for (const [grade, expectedMiss, expectedChampion] of expected) {
+      const probabilities = footballGmOutcomeProbabilities(grade);
+      const total = Object.values(probabilities).reduce((sum, value) => sum + value, 0);
+      expect(total).toBeCloseTo(1, 10);
+      expect(probabilities["Missed Playoffs"]).toBeCloseTo(expectedMiss, 10);
+      expect(probabilities.Champion).toBeCloseTo(expectedChampion, 10);
+      expect(probabilities["Missed Playoffs"]).toBeLessThanOrEqual(previousMiss);
+      expect(probabilities.Champion).toBeGreaterThanOrEqual(previousChampion);
+      previousMiss = probabilities["Missed Playoffs"];
+      previousChampion = probabilities.Champion;
+    }
+
+    expect(footballGmOutcomeProbabilities(90)["Missed Playoffs"]).toBe(0.04);
+    expect(footballGmOutcomeProbabilities(90).Divisional).toBe(0.30);
+    expect(footballGmOutcomeProbabilities(90)["Conference Championship"]).toBe(0.23);
+    expect(footballGmOutcomeProbabilities(90)["Super Bowl Loss"]).toBe(0.13);
   });
 
   it("uses independent deterministic season rolls instead of carrying the same luck year to year", () => {
@@ -212,6 +258,18 @@ describe("Football GM strategy v7", () => {
 
     expect(Math.abs(correlation)).toBeLessThan(0.15);
     expect(footballGmSeasonRoll("stable-seed", 1)).toBe(footballGmSeasonRoll("stable-seed", 1));
+  });
+
+  it("makes every failed 1YR negotiation consequence a real salary increase", () => {
+    const cheapOneYear = FOOTBALL_GM_PLAYER_POOL
+      .filter((player) => player.gameContract === "1YR")
+      .sort((left, right) => left.salaryWindow[1] - right.salaryWindow[1])[0]!;
+    const base = footballGmAdjustedSalaryForPlayer(cheapOneYear, 2, "markup-floor", {});
+    const once = footballGmAdjustedSalaryForPlayer(cheapOneYear, 2, "markup-floor", { [cheapOneYear.id]: 1 });
+    const twice = footballGmAdjustedSalaryForPlayer(cheapOneYear, 2, "markup-floor", { [cheapOneYear.id]: 2 });
+
+    expect(once).toBeGreaterThanOrEqual(base + 500_000);
+    expect(twice).toBeGreaterThanOrEqual(base + 1_000_000);
   });
 
   it("keeps a weak-link effect but caps the extra double-punishment at 0.8", () => {
