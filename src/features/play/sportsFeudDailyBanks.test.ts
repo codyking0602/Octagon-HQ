@@ -99,6 +99,21 @@ describe("Sports Feud authored Daily banks", () => {
     }
   });
 
+  it("accepts Royce Gracie and Gracie on the Oct. 6 UFC era board", () => {
+    const pack = buildSportsFeudPack("ufc", "2026-10-06");
+    const era = pack.mainBoards.find((row) => row.id === "ufc-main-01-2");
+    expect(era).toBeDefined();
+
+    for (const input of ["Royce Gracie", "Gracie"]) {
+      const match = matchFamilyFeudAnswer(pack, era!, input);
+      expect(match.status, input).toBe("matched");
+      if (match.status === "matched") {
+        const ranked = era!.answers.find((answer) => answer.entityId === match.entityId);
+        expect(ranked?.points, input).toBe(10);
+      }
+    }
+  });
+
   it("alternates actual Football Sports Feud appearances between CFB and NFL", () => {
     expect(footballSportsFeudDomainForDay("2026-09-23")).toBe("cfb");
     expect(footballSportsFeudDomainForDay("2026-09-25")).toBe("nfl");
