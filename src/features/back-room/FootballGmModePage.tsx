@@ -316,6 +316,7 @@ function RosterGrid({
   consequences,
   showFutureSalary = false,
   onShop,
+  shoppedPlayerIds = [],
 }: {
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2 | 3;
@@ -323,6 +324,7 @@ function RosterGrid({
   consequences: FootballGmNegotiationConsequences;
   showFutureSalary?: boolean;
   onShop?: (playerId: string) => void;
+  shoppedPlayerIds?: readonly string[];
 }) {
   const bySlot = new Map(roster.map((entry) => [entry.slot, entry]));
   return (
@@ -351,7 +353,13 @@ function RosterGrid({
                       ? `CAMP MARKUP · ${failedTalks} FAILED TALK${failedTalks === 1 ? "" : "S"}`
                       : showFutureSalary ? "Y2/Y3" : player.gameContract}</span>
                   </div>
-                  {onShop ? <button type="button" onClick={() => onShop(player.id)}>SHOP</button> : null}
+                  {onShop ? (
+                    <button
+                      type="button"
+                      disabled={shoppedPlayerIds.includes(player.id)}
+                      onClick={() => onShop(player.id)}
+                    >{shoppedPlayerIds.includes(player.id) ? "SHOPPED" : "SHOP"}</button>
+                  ) : null}
                 </>
               ) : <strong className="football-gm__open">OPEN</strong>}
             </article>
