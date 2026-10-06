@@ -2535,3 +2535,17 @@
     grid-template-columns: 42px minmax(0,1fr) auto;
   }
 }
+
+
+.football-gm__market-wheel {
+  display: grid;
+  gap: 10px;
+}
+
+.football-gm__market-wheel .football-wheel {
+  margin: 0;
+}
+
+.football-gm__market-wheel .football-gm__trade-stage-heading {
+  padding-inline: 4px;
+}
