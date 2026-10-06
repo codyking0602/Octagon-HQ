@@ -132,6 +132,31 @@ describe("Football GM strategy v2", () => {
     expect(evaluation.nextRoster?.some((entry) => entry.playerId === playerId("Lamar Jackson"))).toBe(false);
   });
 
+  it("does not make an identical second offer easier just because it is Priority 2", () => {
+    const roster = codyRunRoster();
+    const proposal = {
+      outgoingPlayerIds: [playerId("Lamar Jackson")],
+      incomingPlayerIds: [playerId("Geno Smith")],
+    };
+    const first = footballGmEvaluateTradeProposal({
+      seed: "same-package",
+      partnerTeam: "NYJ",
+      roster,
+      proposal,
+      priority: 1,
+    });
+    const second = footballGmEvaluateTradeProposal({
+      seed: "same-package",
+      partnerTeam: "NYJ",
+      roster,
+      proposal,
+      priority: 2,
+    });
+
+    expect(second.threshold).toBe(first.threshold);
+    expect(second.accepted).toBe(first.accepted);
+  });
+
   it("keeps all roster slots unique after a legal trade reassignment", () => {
     const roster = codyRunRoster();
     const evaluation = footballGmEvaluateTradeProposal({
