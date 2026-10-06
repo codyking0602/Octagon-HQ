@@ -926,3 +926,91 @@
     border-top: 1px solid rgba(255,255,255,.08);
   }
 }
+
+
+.football-gm__backup-toggle {
+  background: rgba(255,255,255,.025);
+  border: 1px dashed rgba(137,202,246,.22);
+  border-radius: 10px;
+  color: #8fcff8;
+  font-size: 9px;
+  font-weight: 950;
+  margin: 0 16px;
+  padding: 10px 12px;
+}
+
+.football-gm__trade-cuts {
+  display: grid;
+  gap: 12px;
+}
+
+.football-gm__trade-cuts h2 {
+  color: #fff;
+  font-size: clamp(20px, 6vw, 28px);
+  margin: 0;
+}
+
+.football-gm__trade-cuts > p {
+  color: #8da2b2;
+  font-size: 11px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.football-gm__cut-list {
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.football-gm__cut-list button {
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 10px;
+  color: inherit;
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr auto;
+  padding: 10px 11px;
+  text-align: left;
+}
+
+.football-gm__cut-list button span {
+  color: #758b9e;
+  font-size: 8px;
+  font-weight: 900;
+  grid-column: 1 / -1;
+}
+
+.football-gm__cut-list button strong {
+  color: #e7eff5;
+  font-size: 11px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-gm__cut-list button em {
+  color: #7faed0;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.football-gm__cut-list button.is-selected {
+  background: rgba(185,72,72,.12);
+  border-color: rgba(235,111,111,.34);
+  box-shadow: inset 3px 0 0 #df6767;
+}
+
+.football-gm__roster-grid > article > button:disabled {
+  cursor: default;
+  opacity: .4;
+}
+
+@media (max-width: 640px) {
+  .football-gm__cut-list {
+    grid-template-columns: 1fr;
+  }
+}
