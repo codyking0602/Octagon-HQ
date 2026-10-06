@@ -21,7 +21,7 @@ const ROSTER_SLOTS: readonly FootballWeeklySuperteamRosterSlot[] = [
 ];
 
 type SuperteamBidMap = Record<number, FootballWeeklySuperteamBid>;
-type FinalTab = "standings" | "rosters";
+type FinalTab = "standings" | "rosters" | "grades";
 
 export function FootballWeeklySuperteamRulesCover({
   onStart,
@@ -325,6 +325,7 @@ export function FootballWeeklySuperteamFinalResult({
       <nav className="football-weekly-superteam__tabs">
         <button className={tab === "standings" ? "is-active" : ""} type="button" onClick={() => setTab("standings")}>Standings</button>
         <button className={tab === "rosters" ? "is-active" : ""} type="button" onClick={() => setTab("rosters")}>Superteams</button>
+        <button className={tab === "grades" ? "is-active" : ""} type="button" onClick={() => setTab("grades")}>All Grades</button>
       </nav>
       {tab === "standings" ? (
         <div className="football-weekly-superteam__standings">
@@ -358,10 +359,26 @@ export function FootballWeeklySuperteamFinalResult({
                 <article key={slot}>
                   <small>{slot}</small><strong>{item ? <SportsReferenceName displayName={item.display_name} /> : "—"}</strong>
                   <span>{item ? item.school + " · " + item.season_year + " · $" + item.winning_bid : "—"}</span>
+                  <b>{item ? item.grade.toFixed(1) : "—"}</b>
                 </article>
               );
             })}
           </div>
+        </div>
+      ) : null}
+      {tab === "grades" ? (
+        <div className="football-weekly-superteam__grades" aria-label="All CFB Superteam grades">
+          {result.all_teams.map((item) => (
+            <article key={item.day_index + "-" + item.slot}>
+              <span>DAY {item.day_index}</span>
+              <strong>
+                <SportsReferenceName displayName={item.display_name} />
+                <small>{item.school} · {item.season_year} · {item.group_key}</small>
+              </strong>
+              <em>{item.winner_display_name ? item.winner_display_name + (item.winning_bid ? " · $" + item.winning_bid : "") : "UNCLAIMED"}</em>
+              <b>{item.grade.toFixed(1)}</b>
+            </article>
+          ))}
         </div>
       ) : null}
       {showNewWeekAction ? (
