@@ -112,8 +112,8 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
       const visualBottom = viewport.height + viewport.offsetTop;
       const occludedHeight = Math.max(0, window.innerHeight - visualBottom);
       const materiallyOccluded = occludedHeight > 120;
-      const nextShift = Math.round(window.innerHeight - visualBottom);
-      setVisualViewportShift(Math.abs(nextShift) <= 1 ? 0 : nextShift);
+      const nextShift = Math.max(0, Math.round(window.innerHeight - visualBottom));
+      setVisualViewportShift(nextShift <= 1 ? 0 : nextShift);
 
       if (editing && materiallyOccluded) keyboardSessionRef.current = true;
       const nextKeyboardOpen = keyboardSessionRef.current && materiallyOccluded;
@@ -169,7 +169,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
       style={{
         gridTemplateColumns: `repeat(${standardDestinations.length}, minmax(0, 1fr))`,
         display: keyboardOpen ? "none" : "grid",
-        transform: `translate3d(0, ${visualViewportShift}px, 0)`,
+        transform: visualViewportShift ? `translate3d(0, ${visualViewportShift}px, 0)` : undefined,
       }}
     >
       {standardDestinations.map((destination) => (
