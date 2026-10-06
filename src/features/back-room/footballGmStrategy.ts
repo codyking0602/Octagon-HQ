@@ -534,7 +534,12 @@ export function footballGmEvaluateTradeProposal(input: {
     (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam),
     0,
   );
-  const threshold = 1.02 + ((hashString(`${input.seed}:trade-threshold:${input.partnerTeam}:${input.priority}`) % 7) / 100);
+  const packageKey = [
+    ...proposal.outgoingPlayerIds.slice().sort(),
+    "for",
+    ...proposal.incomingPlayerIds.slice().sort(),
+  ].join(":");
+  const threshold = 1.02 + ((hashString(`${input.seed}:trade-threshold:${input.partnerTeam}:${packageKey}`) % 7) / 100);
   const accepted = partnerReceivesValue >= partnerSendsValue * threshold;
   return {
     accepted,
