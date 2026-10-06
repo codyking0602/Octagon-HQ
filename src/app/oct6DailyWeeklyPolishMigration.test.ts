@@ -8,6 +8,7 @@ const migration = readFileSync(
 
 describe("Oct. 6 Daily + Weekly production polish", () => {
   it("retires the generic weekly themes while preserving the exposed board", () => {
+    expect(migration).toContain("'super_bowl_champions'");
     expect(migration).toContain("v_theme:='Super Bowl Champions'");
     expect(migration).toContain("candidate.super_bowl_champion");
     expect(migration).not.toContain("('open_field',1.50,2)");
