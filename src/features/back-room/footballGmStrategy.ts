@@ -714,13 +714,13 @@ export function footballGmAcceptedTargetTradeOffers(input: {
   const anchorId = anchor.id;
   const targetId = target.id;
   const blockedOutgoing = new Set(input.shoppedPlayerIds ?? []);
-  blockedOutgoing.delete(anchor.id);
+  blockedOutgoing.delete(anchorId);
   const secondaryOutgoing = input.roster
     .map((entry) => entry.playerId)
-    .filter((playerId) => playerId !== anchor.id && !blockedOutgoing.has(playerId));
+    .filter((playerId) => playerId !== anchorId && !blockedOutgoing.has(playerId));
   const secondaryIncoming = footballGmTradePartnerPlayers(input.partnerTeam, input.roster)
     .map((player) => player.id)
-    .filter((playerId) => playerId !== target.id);
+    .filter((playerId) => playerId !== targetId);
 
   const proposals: FootballGmTradeProposal[] = [
     { outgoingPlayerIds: [anchorId], incomingPlayerIds: [targetId] },
