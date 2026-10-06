@@ -882,7 +882,7 @@ export default function FootballGmModePage() {
     });
   }
 
-  function applyShoppingConsequence(messagePrefix: string) {
+  function applyShoppingConsequence(messagePrefix: string, additionalShoppedIds: readonly string[] = []) {
     const anchor = run.tradeAnchorPlayerId ? footballGmPlayerById(run.tradeAnchorPlayerId) : null;
     if (!anchor) return;
     const nextConsequences = { ...run.negotiationConsequences };
@@ -892,6 +892,7 @@ export default function FootballGmModePage() {
     const newSalary = footballGmAdjustedSalaryForPlayer(anchor, 2, run.seed, nextConsequences);
     patch({
       negotiationConsequences: nextConsequences,
+      shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, ...additionalShoppedIds])],
       previousTradePartner: run.tradePartnerTeam,
       tradeSpinIndex: run.tradeSpinIndex + 1,
       tradeAnchorPlayerId: null,
@@ -926,6 +927,7 @@ export default function FootballGmModePage() {
       return;
     }
 
+    let submittedOutgoingIds = [...run.tradeOfferOne.outgoingPlayerIds];
     let accepted: { evaluation: typeof first; priority: 1 | 2; proposal: FootballGmTradeProposal } | null = first.accepted
       ? { evaluation: first, priority: 1, proposal: run.tradeOfferOne }
       : null;
@@ -939,6 +941,7 @@ export default function FootballGmModePage() {
         patch({ tradeMessage: "Your backup offer is the same as Priority 1. Change it or remove the backup offer." });
         return;
       }
+      submittedOutgoingIds = [...new Set([...submittedOutgoingIds, ...run.tradeOfferTwo.outgoingPlayerIds])];
       const second = footballGmEvaluateTradeProposal({
         seed: run.seed,
         partnerTeam,
@@ -966,6 +969,7 @@ export default function FootballGmModePage() {
         tradeOfferOne: emptyProposal(),
         tradeOfferTwo: emptyProposal(),
         tradeOfferTwoEnabled: false,
+        shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, ...submittedOutgoingIds])],
       };
       if (accepted.evaluation.requiresCuts > 0) {
         patch({
@@ -999,6 +1003,7 @@ export default function FootballGmModePage() {
 
     applyShoppingConsequence(
       `${partnerTeam} rejected ${run.tradeOfferTwoEnabled ? "both offers" : "the offer"}.`,
+      submittedOutgoingIds,
     );
   }
 
