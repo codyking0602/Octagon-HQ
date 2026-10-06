@@ -1200,6 +1200,47 @@
   box-shadow: inset 3px 0 0 #df6767;
 }
 
+.football-gm__trade-chip-list {
+  display: grid;
+  gap: 7px;
+}
+
+.football-gm__trade-chip {
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 11px;
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+}
+
+.football-gm__trade-chip > span {
+  color: #758b9e;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.football-gm__trade-chip > strong {
+  color: #e7eff5;
+  font-size: 12px;
+}
+
+.football-gm__trade-chip > em {
+  color: #7faed0;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.football-gm__trade-chip .football-gm__inline-actions {
+  margin-top: 3px;
+}
+
+.football-gm__trade-chip .football-gm__inline-actions button {
+  font-size: 9px;
+  padding: 8px 10px;
+}
+
 .football-gm__roster-grid > article > button:disabled {
   cursor: default;
   opacity: .4;
