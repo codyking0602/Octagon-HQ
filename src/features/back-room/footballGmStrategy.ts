@@ -440,8 +440,8 @@ function assignRoster(
 
 function normalizeProposal(proposal: FootballGmTradeProposal) {
   return {
-    outgoingPlayerIds: [...new Set(proposal.outgoingPlayerIds)].slice(0, FOOTBALL_GM_MAX_TRADE_PLAYERS),
-    incomingPlayerIds: [...new Set(proposal.incomingPlayerIds)].slice(0, FOOTBALL_GM_MAX_TRADE_PLAYERS),
+    outgoingPlayerIds: [...new Set(proposal.outgoingPlayerIds)],
+    incomingPlayerIds: [...new Set(proposal.incomingPlayerIds)],
   };
 }
 
