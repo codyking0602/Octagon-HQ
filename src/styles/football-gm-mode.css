@@ -1200,13 +1200,77 @@
   box-shadow: inset 3px 0 0 #df6767;
 }
 
+.football-gm__trade-chip-list {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.football-gm__trade-chip-row {
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 10px;
+  display: grid;
+  gap: 3px;
+  grid-template-columns: 1fr auto;
+  padding: 10px 11px;
+}
+
+.football-gm__trade-chip-row > span {
+  color: #758b9e;
+  font-size: 8px;
+  font-weight: 900;
+  grid-column: 1 / -1;
+}
+
+.football-gm__trade-chip-row > strong {
+  color: #e7eff5;
+  font-size: 11px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-gm__trade-chip-row > em {
+  color: #7faed0;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.football-gm__trade-chip-row .football-gm__inline-actions {
+  grid-column: 1 / -1;
+  justify-content: flex-start;
+  margin-top: 5px;
+}
+
+.football-gm__trade-chip-row .football-gm__inline-actions button {
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 8px;
+  color: #dce9f2;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 9px;
+  font-weight: 900;
+  justify-content: center;
+  padding: 7px 10px;
+}
+
+.football-gm__trade-chip-row .football-gm__inline-actions button:disabled {
+  cursor: default;
+  opacity: .4;
+}
+
 .football-gm__roster-grid > article > button:disabled {
   cursor: default;
   opacity: .4;
 }
 
 @media (max-width: 640px) {
-  .football-gm__cut-list {
+  .football-gm__cut-list,
+  .football-gm__trade-chip-list {
     grid-template-columns: 1fr;
   }
 }
