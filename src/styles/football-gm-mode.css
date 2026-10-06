@@ -3035,6 +3035,16 @@
   font-size: 11px;
 }
 
+.football-gm-report__comparison-row.is-score {
+  margin-top: 2px;
+  border-top-color: rgba(129,197,239,.22);
+}
+
+.football-gm-report__comparison-row.is-score b {
+  color: #8dcef5;
+  font-size: 13px;
+}
+
 .football-gm-report__comparison-row small {
   color: #7890a1;
   font-size: 7px;
@@ -3160,10 +3170,10 @@
 
 .football-gm-report__ledger article {
   display: grid;
-  grid-template-columns: 68px minmax(0,1fr) auto;
+  grid-template-columns: 68px minmax(0,1fr);
   gap: 8px;
   align-items: center;
-  min-height: 42px;
+  min-height: 40px;
   border-top: 1px solid rgba(255,255,255,.055);
 }
 
