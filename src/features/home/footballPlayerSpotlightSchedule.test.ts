@@ -22,6 +22,10 @@ const completePhotos: FootballSpotlightPhotoSources = {
     cfb: "https://example.com/jeremiah.webp",
     nfl: "https://example.com/bijan.webp",
   },
+  [FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[3].id]: {
+    cfb: "https://example.com/jamal.webp",
+    nfl: "https://example.com/tet.webp",
+  },
 };
 
 describe("Football Player Spotlight weekly schedule", () => {
@@ -178,6 +182,94 @@ describe("Football Player Spotlight weekly schedule", () => {
         { value: "213", label: "SCRIM YDS" },
         { value: "2", label: "RUSH TD" },
         { value: "6.7", label: "YPC" },
+      ],
+    });
+  });
+
+  it("activates Jamal/Tet immediately from the deployment-era timestamp instead of waiting for Tuesday midnight CT", () => {
+    expect(footballSpotlightPairAt(
+      new Date("2026-10-06T03:30:59.999Z"),
+      completePhotos,
+    ).id).toBe("2026-09-29-jeremiah-bijan");
+
+    expect(footballSpotlightPairAt(
+      new Date("2026-10-06T03:31:00.000Z"),
+      completePhotos,
+    ).id).toBe("2026-10-06-jamal-tet");
+  });
+
+  it("requires both Jamal/Tet photos before the early activation can roll atomically", () => {
+    const incompletePhotos: FootballSpotlightPhotoSources = {
+      ...completePhotos,
+      "2026-10-06-jamal-tet": {
+        cfb: "https://example.com/jamal.webp",
+        nfl: null,
+      },
+    };
+
+    expect(footballSpotlightPairHasPhotos(
+      FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[3],
+      incompletePhotos,
+    )).toBe(false);
+    expect(footballSpotlightPairAt(
+      new Date("2026-10-06T03:31:00.000Z"),
+      incompletePhotos,
+    ).id).toBe("2026-09-29-jeremiah-bijan");
+  });
+
+  it("ships both canonical Jamal/Tet photos as the atomic repo fallback", () => {
+    expect(FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES["2026-10-06-jamal-tet"]).toEqual({
+      cfb: "/assets/football/player-spotlight/2026-10-06-jamal-tet/cfb.webp",
+      nfl: "/assets/football/player-spotlight/2026-10-06-jamal-tet/nfl.webp",
+    });
+    expect(footballSpotlightPairAt(
+      new Date("2026-10-06T03:31:00.000Z"),
+      FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
+    ).id).toBe("2026-10-06-jamal-tet");
+  });
+
+  it("preserves the established Central Time CFB/NFL daily rotation after Jamal/Tet activates", () => {
+    expect(footballSpotlightKindAt(new Date("2026-10-06T03:31:00Z"))).toBe("nfl");
+    expect(footballSpotlightKindAt(new Date("2026-10-06T05:00:00Z"))).toBe("cfb");
+    expect(footballSpotlightKindAt(new Date("2026-10-06T19:59:59Z"))).toBe("cfb");
+    expect(footballSpotlightKindAt(new Date("2026-10-06T20:00:00Z"))).toBe("nfl");
+    expect(footballSpotlightKindAt(new Date("2026-10-10T18:00:00Z"))).toBe("cfb");
+    expect(footballSpotlightKindAt(new Date("2026-10-11T18:00:00Z"))).toBe("nfl");
+    expect(footballSpotlightKindAt(new Date("2026-10-12T18:00:00Z"))).toBe("nfl");
+  });
+
+  it("locks the approved Jamal and Tet copy, stats, measurements, branding, and exact highlight URLs", () => {
+    const pair = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[3];
+
+    expect(pair.activatesAt).toBe("2026-10-06T03:31:00.000Z");
+    expect(pair.spotlights.cfb).toMatchObject({
+      name: "Jamal Roberts",
+      team: "Missouri",
+      position: "RB",
+      teamColor: "#C69214",
+      highlightUrl: "https://youtu.be/k341BuX48kQ?is=_CrwryCS8Hs6iWqs",
+      result: "VS FLORIDA · W 45–17",
+      measurements: "6'0\" · 216 LB",
+      stats: [
+        { value: "211", label: "RUSH YDS" },
+        { value: "3", label: "RUSH TD" },
+        { value: "8.8", label: "YPC" },
+        { value: "80", label: "LONG" },
+      ],
+    });
+    expect(pair.spotlights.nfl).toMatchObject({
+      name: "Tetairoa McMillan",
+      team: "Carolina Panthers",
+      position: "WR",
+      teamColor: "#0085CA",
+      highlightUrl: "https://youtu.be/DIFNn8n7Skc?is=kArg-AWazCQ0f9iE",
+      result: "VS DETROIT · W 32–26",
+      measurements: "6'4\" · 220 LB",
+      stats: [
+        { value: "14", label: "REC" },
+        { value: "192", label: "REC YDS" },
+        { value: "2", label: "REC TD" },
+        { value: "13.7", label: "YDS/REC" },
       ],
     });
   });
