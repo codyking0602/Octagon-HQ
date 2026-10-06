@@ -637,7 +637,7 @@ export function CandidateBoard({
                     <PlayerOutlookPill outlook={player.outlook} />
                     <span>{player.gameContract}</span>
                     <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
-                      {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} REPRICE RISK`}
+                      {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} RISK`}
                     </span>
                   </span>
                 </span>
@@ -726,8 +726,9 @@ export function FreeAgencyBoard({
               <b>{footballGmMoney(salary)}</b>
             </div>
             <div className="football-gm__candidate-tags">
-              <span>1YR FREE AGENT</span>
+              <PlayerQualityPill player={player} />
               <PlayerOutlookPill outlook={player.outlook} />
+              <span>1YR</span>
               <span>Y2/Y3 MARKET</span>
             </div>
             <div className="football-gm__candidate-actions">
@@ -873,7 +874,10 @@ export function TradeChipPanel({
               <span>{player.team} · {player.position} · {player.gameContract}</span>
               <strong>{player.name}</strong>
               <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, seed, consequences))}</em>
-              <PlayerOutlookPill outlook={player.outlook} />
+              <span className="football-gm__trade-scouting">
+                <PlayerQualityPill player={player} />
+                <PlayerOutlookPill outlook={player.outlook} />
+              </span>
               <div className="football-gm__inline-actions">
                 <button type="button" disabled={shopped} onClick={() => onShop(playerId)}>
                   {shopped ? "SHOPPED" : "SHOP NORMALLY"}
@@ -962,7 +966,10 @@ function TradePackagePlayer({
       <span>{player.team} · {player.position} · {player.gameContract}</span>
       <strong>{player.name}</strong>
       <em>{footballGmMoney(salary)}</em>
-      <PlayerOutlookPill outlook={player.outlook} />
+      <span className="football-gm__trade-scouting">
+        <PlayerQualityPill player={player} />
+        <PlayerOutlookPill outlook={player.outlook} />
+      </span>
     </div>
   );
 }
@@ -1059,7 +1066,10 @@ export function TradeRoom({
                 <span>{player.position} · AGE {player.age} · {player.gameContract}</span>
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, run.seed, run.negotiationConsequences))}</em>
+                <span className="football-gm__trade-scouting">
+                  <PlayerQualityPill player={player} />
                   <PlayerOutlookPill outlook={player.outlook} />
+                </span>
               </button>
             ))}
           </div>
