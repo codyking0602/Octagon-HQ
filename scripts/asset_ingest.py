@@ -249,18 +249,40 @@ def main():
     box = crop_box(im, spec.get("crop"))
     im = im.crop(box)
 
-    target_ratio = size[0] / size[1]
-    ratio = im.width / im.height
-    if ratio > target_ratio:
-        new_width = round(im.height * target_ratio)
-        left = (im.width - new_width) // 2
-        im = im.crop((left, 0, left + new_width, im.height))
-    elif ratio < target_ratio:
-        new_height = round(im.width / target_ratio)
-        top = (im.height - new_height) // 2
-        im = im.crop((0, top, im.width, top + new_height))
+    if kind == "spotlight":
+        alpha = im.getchannel("A")
+        visible_box = alpha.getbbox()
+        if not visible_box:
+            fail("spotlight source has no visible pixels")
+        subject = im.crop(visible_box)
+        side_pad = round(size[0] * 0.025)
+        top_pad = round(size[1] * 0.035)
+        available_width = size[0] - (side_pad * 2)
+        available_height = size[1] - top_pad
+        scale = min(available_width / subject.width, available_height / subject.height)
+        fitted = subject.resize(
+            (max(1, round(subject.width * scale)), max(1, round(subject.height * scale))),
+            Image.Resampling.LANCZOS,
+        )
+        canvas = Image.new("RGBA", size, (0, 0, 0, 0))
+        left = (size[0] - fitted.width) // 2
+        top = max(top_pad, size[1] - fitted.height)
+        canvas.alpha_composite(fitted, (left, top))
+        im = canvas
+    else:
+        target_ratio = size[0] / size[1]
+        ratio = im.width / im.height
+        if ratio > target_ratio:
+            new_width = round(im.height * target_ratio)
+            left = (im.width - new_width) // 2
+            im = im.crop((left, 0, left + new_width, im.height))
+        elif ratio < target_ratio:
+            new_height = round(im.width / target_ratio)
+            top = (im.height - new_height) // 2
+            im = im.crop((0, top, im.width, top + new_height))
 
-    im = im.resize(size, Image.Resampling.LANCZOS)
+        im = im.resize(size, Image.Resampling.LANCZOS)
+
     im = im.filter(
         ImageFilter.UnsharpMask(radius=0.6, percent=110, threshold=2)
     )
