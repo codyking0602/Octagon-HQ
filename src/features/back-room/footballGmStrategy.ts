@@ -14,7 +14,7 @@ import {
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v6-playtest";
+export const FOOTBALL_GM_VERSION = "football-gm-v7-playtest";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
@@ -99,16 +99,26 @@ export type FootballGmNegotiationConsequences = Readonly<Record<string, number>>
 
 type OutcomeRow = Readonly<Record<FootballGmPlayoffFinish, number>> & { grade: number };
 
+/**
+ * Live-grade outcome calibration.
+ *
+ * These anchors intentionally use the manually audited Wheel/GM scale rather
+ * than the historical AV-percentile artifact. On the live scale, a low-90s
+ * roster is already a real contender and a 92-94 roster is elite, while
+ * seeded variance still leaves room for misses and surprise runs.
+ */
 const OUTCOME_CURVE: readonly OutcomeRow[] = [
-  { grade: 80, "Missed Playoffs": 0.65, "Wild Card": 0.22, Divisional: 0.08, "Conference Championship": 0.035, "Super Bowl Loss": 0.012, Champion: 0.003 },
-  { grade: 84, "Missed Playoffs": 0.46, "Wild Card": 0.27, Divisional: 0.15, "Conference Championship": 0.075, "Super Bowl Loss": 0.03, Champion: 0.015 },
-  { grade: 88, "Missed Playoffs": 0.28, "Wild Card": 0.25, Divisional: 0.21, "Conference Championship": 0.13, "Super Bowl Loss": 0.07, Champion: 0.06 },
-  { grade: 90, "Missed Playoffs": 0.20, "Wild Card": 0.22, Divisional: 0.21, "Conference Championship": 0.17, "Super Bowl Loss": 0.11, Champion: 0.09 },
-  { grade: 92, "Missed Playoffs": 0.13, "Wild Card": 0.18, Divisional: 0.20, "Conference Championship": 0.20, "Super Bowl Loss": 0.15, Champion: 0.14 },
-  { grade: 94, "Missed Playoffs": 0.08, "Wild Card": 0.13, Divisional: 0.18, "Conference Championship": 0.20, "Super Bowl Loss": 0.19, Champion: 0.22 },
-  { grade: 95.1, "Missed Playoffs": 0.06, "Wild Card": 0.10, Divisional: 0.16, "Conference Championship": 0.19, "Super Bowl Loss": 0.23, Champion: 0.26 },
-  { grade: 96, "Missed Playoffs": 0.05, "Wild Card": 0.09, Divisional: 0.15, "Conference Championship": 0.18, "Super Bowl Loss": 0.23, Champion: 0.30 },
-  { grade: 98, "Missed Playoffs": 0.03, "Wild Card": 0.05, Divisional: 0.11, "Conference Championship": 0.15, "Super Bowl Loss": 0.24, Champion: 0.42 },
+  { grade: 80, "Missed Playoffs": 0.68, "Wild Card": 0.20, Divisional: 0.08, "Conference Championship": 0.03, "Super Bowl Loss": 0.008, Champion: 0.002 },
+  { grade: 84, "Missed Playoffs": 0.48, "Wild Card": 0.27, Divisional: 0.14, "Conference Championship": 0.07, "Super Bowl Loss": 0.025, Champion: 0.015 },
+  { grade: 87, "Missed Playoffs": 0.34, "Wild Card": 0.27, Divisional: 0.18, "Conference Championship": 0.11, "Super Bowl Loss": 0.06, Champion: 0.04 },
+  { grade: 88, "Missed Playoffs": 0.29, "Wild Card": 0.26, Divisional: 0.19, "Conference Championship": 0.12, "Super Bowl Loss": 0.085, Champion: 0.055 },
+  { grade: 90, "Missed Playoffs": 0.20, "Wild Card": 0.23, Divisional: 0.20, "Conference Championship": 0.16, "Super Bowl Loss": 0.12, Champion: 0.09 },
+  { grade: 91, "Missed Playoffs": 0.16, "Wild Card": 0.21, Divisional: 0.20, "Conference Championship": 0.18, "Super Bowl Loss": 0.13, Champion: 0.12 },
+  { grade: 92, "Missed Playoffs": 0.12, "Wild Card": 0.18, Divisional: 0.19, "Conference Championship": 0.19, "Super Bowl Loss": 0.16, Champion: 0.16 },
+  { grade: 93, "Missed Playoffs": 0.09, "Wild Card": 0.15, Divisional: 0.18, "Conference Championship": 0.20, "Super Bowl Loss": 0.17, Champion: 0.21 },
+  { grade: 94, "Missed Playoffs": 0.065, "Wild Card": 0.12, Divisional: 0.165, "Conference Championship": 0.19, "Super Bowl Loss": 0.19, Champion: 0.27 },
+  { grade: 96, "Missed Playoffs": 0.04, "Wild Card": 0.08, Divisional: 0.13, "Conference Championship": 0.17, "Super Bowl Loss": 0.22, Champion: 0.36 },
+  { grade: 98, "Missed Playoffs": 0.02, "Wild Card": 0.05, Divisional: 0.09, "Conference Championship": 0.14, "Super Bowl Loss": 0.23, Champion: 0.47 },
 ];
 
 const FINISH_ORDER: readonly FootballGmPlayoffFinish[] = [
@@ -173,10 +183,10 @@ export function footballGmWeakLinkPenalty(
       return player ? footballGmProjectedGradeForPlayer(player, year) : 70;
     })
     .sort((a, b) => a - b);
-  const lowest = grades[0] ?? 82;
-  const second = grades[1] ?? 80;
-  const penalty = Math.max(0, 82 - lowest) * 0.16 + Math.max(0, 80 - second) * 0.08;
-  return Math.round(Math.min(1.5, penalty) * 10) / 10;
+  const lowest = grades[0] ?? 80;
+  const second = grades[1] ?? 78;
+  const penalty = Math.max(0, 80 - lowest) * 0.10 + Math.max(0, 78 - second) * 0.04;
+  return Math.round(Math.min(0.8, penalty) * 10) / 10;
 }
 
 export function footballGmContinuity(
@@ -323,14 +333,43 @@ export function footballGmAdjustedRosterCap(
   }, 0);
 }
 
+export function footballGmAdjustedAssetCap(
+  roster: readonly FootballGmRosterEntry[],
+  tradeChipPlayerIds: readonly string[],
+  year: 1 | 2 | 3,
+  seed: string,
+  consequences: FootballGmNegotiationConsequences,
+) {
+  const activeIds = rosterPlayerIds(roster);
+  return tradeChipPlayerIds.reduce((sum, playerId) => {
+    if (activeIds.has(playerId)) return sum;
+    const player = footballGmPlayerById(playerId);
+    return player ? sum + footballGmAdjustedSalaryForPlayer(player, year, seed, consequences) : sum;
+  }, footballGmAdjustedRosterCap(roster, year, seed, consequences));
+}
+
 export function footballGmIsOffseasonCompliantV2(
   roster: readonly FootballGmRosterEntry[],
   seed: string,
   consequences: FootballGmNegotiationConsequences,
+  tradeChipPlayerIds: readonly string[] = [],
 ) {
   return roster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-    && footballGmAdjustedRosterCap(roster, 2, seed, consequences) <= FOOTBALL_GM_CAP
-    && footballGmAdjustedRosterCap(roster, 3, seed, consequences) <= FOOTBALL_GM_CAP;
+    && tradeChipPlayerIds.length === 0
+    && footballGmAdjustedAssetCap(roster, tradeChipPlayerIds, 2, seed, consequences) <= FOOTBALL_GM_CAP
+    && footballGmAdjustedAssetCap(roster, tradeChipPlayerIds, 3, seed, consequences) <= FOOTBALL_GM_CAP;
+}
+
+export interface FootballGmFreeAgencySigningOption {
+  slot: FootballGmRosterSlot;
+  displacedPlayerId: string | null;
+}
+
+export interface FootballGmFreeAgencyCandidate {
+  player: FootballGmPlayer;
+  salary: number;
+  legalSlots: readonly FootballGmRosterSlot[];
+  signingOptions: readonly FootballGmFreeAgencySigningOption[];
 }
 
 export function footballGmFreeAgencyCandidatesForTeam(input: {
@@ -338,32 +377,108 @@ export function footballGmFreeAgencyCandidatesForTeam(input: {
   roster: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
+  tradeChipPlayerIds?: readonly string[];
+  excludedPlayerIds?: readonly string[];
+}): FootballGmFreeAgencyCandidate[] {
+  if (input.roster.length > FOOTBALL_GM_ROSTER_SLOTS.length) return [];
+  const tradeChipPlayerIds = input.tradeChipPlayerIds ?? [];
+  const excluded = new Set(input.excludedPlayerIds ?? []);
+  const owned = new Set([...input.roster.map((entry) => entry.playerId), ...tradeChipPlayerIds]);
+  const ownedNames = new Set(
+    [...owned].flatMap((playerId) => {
+      const player = footballGmPlayerById(playerId);
+      return player ? [player.name] : [];
+    }),
+  );
+  const yearTwoBase = footballGmAdjustedAssetCap(
+    input.roster,
+    tradeChipPlayerIds,
+    2,
+    input.seed,
+    input.consequences,
+  );
+  const yearThreeBase = footballGmAdjustedAssetCap(
+    input.roster,
+    tradeChipPlayerIds,
+    3,
+    input.seed,
+    input.consequences,
+  );
+
+  return FOOTBALL_GM_PLAYER_POOL
+    .filter((player) => player.team === input.team)
+    .filter((player) => player.gameContract === "1YR")
+    .filter((player) => !owned.has(player.id) && !ownedNames.has(player.name) && !excluded.has(player.id))
+    .flatMap<FootballGmFreeAgencyCandidate>((player) => {
+      const yearTwoSalary = player.salaryWindow[1];
+      const yearThreeSalary = player.salaryWindow[2];
+      if (
+        yearTwoBase + yearTwoSalary > FOOTBALL_GM_CAP
+        || yearThreeBase + yearThreeSalary > FOOTBALL_GM_CAP
+      ) return [];
+
+      const signingOptions = player.eligibleSlots.flatMap<FootballGmFreeAgencySigningOption>((slot) => {
+        const incumbent = input.roster.find((entry) => entry.slot === slot) ?? null;
+        if (!incumbent && input.roster.length >= FOOTBALL_GM_ROSTER_SLOTS.length) return [];
+        return [{ slot, displacedPlayerId: incumbent?.playerId ?? null }];
+      });
+      if (!signingOptions.length) return [];
+      return [{
+        player,
+        salary: yearTwoSalary,
+        legalSlots: signingOptions.map((option) => option.slot),
+        signingOptions,
+      }];
+    })
+    .sort((left, right) => (
+      right.player.currentGrade - left.player.currentGrade
+      || left.salary - right.salary
+      || left.player.name.localeCompare(right.player.name)
+    ));
+}
+
+export function footballGmApplyFreeAgencySigning(input: {
+  roster: readonly FootballGmRosterEntry[];
+  tradeChipPlayerIds?: readonly string[];
+  playerId: string;
+  slot: FootballGmRosterSlot;
+  seed: string;
+  consequences: FootballGmNegotiationConsequences;
   excludedPlayerIds?: readonly string[];
 }) {
-  if (input.roster.length !== FOOTBALL_GM_ROSTER_SLOTS.length - 1) return [];
-  const excluded = new Set(input.excludedPlayerIds ?? []);
-  return footballGmCandidatesForTeam({
-    team: input.team,
+  const player = footballGmPlayerById(input.playerId);
+  if (!player || player.gameContract !== "1YR") return null;
+  const candidate = footballGmFreeAgencyCandidatesForTeam({
+    team: player.team,
     roster: input.roster,
-    year: 2,
-  }).flatMap((candidate) => {
-    if (excluded.has(candidate.player.id)) return [];
-    const legalSlots = candidate.legalSlots.filter((slot) => {
-      const nextRoster: FootballGmRosterEntry[] = [
-        ...input.roster,
-        { slot, playerId: candidate.player.id, acquired: "replacement" },
-      ];
-      return footballGmAdjustedRosterCap(nextRoster, 2, input.seed, input.consequences) <= FOOTBALL_GM_CAP
-        && footballGmAdjustedRosterCap(nextRoster, 3, input.seed, input.consequences) <= FOOTBALL_GM_CAP;
-    });
-    return legalSlots.length ? [{ ...candidate, legalSlots }] : [];
-  });
+    seed: input.seed,
+    consequences: input.consequences,
+    tradeChipPlayerIds: input.tradeChipPlayerIds,
+    excludedPlayerIds: input.excludedPlayerIds,
+  }).find((row) => row.player.id === player.id);
+  const option = candidate?.signingOptions.find((row) => row.slot === input.slot) ?? null;
+  if (!candidate || !option) return null;
+
+  const nextRoster = input.roster.filter((entry) => entry.slot !== option.slot);
+  nextRoster.push({ slot: option.slot, playerId: player.id, acquired: "replacement" });
+  const nextTradeChips = [...new Set([
+    ...(input.tradeChipPlayerIds ?? []),
+    ...(option.displacedPlayerId ? [option.displacedPlayerId] : []),
+  ])];
+  if (new Set(nextRoster.map((entry) => entry.slot)).size !== nextRoster.length) return null;
+  if (new Set(nextRoster.map((entry) => entry.playerId)).size !== nextRoster.length) return null;
+  return {
+    roster: nextRoster,
+    tradeChipPlayerIds: nextTradeChips,
+    displacedPlayerId: option.displacedPlayerId,
+  };
 }
 
 export function footballGmEligibleFreeAgencyTeams(input: {
   roster: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
+  tradeChipPlayerIds?: readonly string[];
   previousTeam?: string | null;
   excludedPlayerIds?: readonly string[];
 }) {
@@ -372,6 +487,7 @@ export function footballGmEligibleFreeAgencyTeams(input: {
     roster: input.roster,
     seed: input.seed,
     consequences: input.consequences,
+    tradeChipPlayerIds: input.tradeChipPlayerIds,
     excludedPlayerIds: input.excludedPlayerIds,
   }).length > 0);
   if (input.previousTeam && teams.length > 1) {
@@ -503,8 +619,9 @@ function normalizeProposal(proposal: FootballGmTradeProposal) {
 export function footballGmTradePartnerPlayers(
   partnerTeam: string,
   roster: readonly FootballGmRosterEntry[],
+  tradeChipPlayerIds: readonly string[] = [],
 ) {
-  const used = rosterPlayerIds(roster);
+  const used = new Set([...rosterPlayerIds(roster), ...tradeChipPlayerIds]);
   return FOOTBALL_GM_PLAYER_POOL
     .filter((player) => player.team === partnerTeam && !used.has(player.id))
     .sort((left, right) => (
@@ -592,6 +709,7 @@ export function footballGmEvaluateTradeProposal(input: {
   seed: string;
   partnerTeam: string;
   roster: readonly FootballGmRosterEntry[];
+  tradeChipPlayerIds?: readonly string[];
   proposal: FootballGmTradeProposal;
   priority: 1 | 2;
 }) : FootballGmTradeEvaluation {
@@ -614,11 +732,13 @@ export function footballGmEvaluateTradeProposal(input: {
   ) return invalidResult();
 
   const rosterById = new Map(input.roster.map((entry) => [entry.playerId, entry]));
+  const tradeChipIds = new Set(input.tradeChipPlayerIds ?? []);
+  const ownedIds = new Set([...rosterById.keys(), ...tradeChipIds]);
   const outgoing = proposal.outgoingPlayerIds.map((id) => footballGmPlayerById(id));
   const incoming = proposal.incomingPlayerIds.map((id) => footballGmPlayerById(id));
   if (
-    outgoing.some((player) => !player || !rosterById.has(player.id))
-    || incoming.some((player) => !player || player.team !== input.partnerTeam || rosterById.has(player.id))
+    outgoing.some((player) => !player || !ownedIds.has(player.id))
+    || incoming.some((player) => !player || player.team !== input.partnerTeam || ownedIds.has(player.id))
   ) return invalidResult();
 
   const outgoingPlayers = outgoing as FootballGmPlayer[];
@@ -695,6 +815,7 @@ export function footballGmAcceptedTargetTradeOffers(input: {
   seed: string;
   partnerTeam: string;
   roster: readonly FootballGmRosterEntry[];
+  tradeChipPlayerIds?: readonly string[];
   anchorPlayerId: string;
   targetPlayerId: string;
   shoppedPlayerIds?: readonly string[];
@@ -702,23 +823,30 @@ export function footballGmAcceptedTargetTradeOffers(input: {
 }): FootballGmTargetTradeOffer[] {
   const anchor = footballGmPlayerById(input.anchorPlayerId);
   const target = footballGmPlayerById(input.targetPlayerId);
+  const tradeChipIds = new Set(input.tradeChipPlayerIds ?? []);
   const rosterIds = rosterPlayerIds(input.roster);
+  const ownedIds = new Set([...rosterIds, ...tradeChipIds]);
   if (
     !anchor
     || !target
-    || !rosterIds.has(anchor.id)
+    || !ownedIds.has(anchor.id)
     || target.team !== input.partnerTeam
-    || rosterIds.has(target.id)
+    || ownedIds.has(target.id)
   ) return [];
 
   const anchorId = anchor.id;
   const targetId = target.id;
   const blockedOutgoing = new Set(input.shoppedPlayerIds ?? []);
   blockedOutgoing.delete(anchorId);
-  const secondaryOutgoing = input.roster
-    .map((entry) => entry.playerId)
-    .filter((playerId) => playerId !== anchorId && !blockedOutgoing.has(playerId));
-  const secondaryIncoming = footballGmTradePartnerPlayers(input.partnerTeam, input.roster)
+  const secondaryOutgoing = [...new Set([
+    ...input.roster.map((entry) => entry.playerId),
+    ...tradeChipIds,
+  ])].filter((playerId) => playerId !== anchorId && !blockedOutgoing.has(playerId));
+  const secondaryIncoming = footballGmTradePartnerPlayers(
+    input.partnerTeam,
+    input.roster,
+    input.tradeChipPlayerIds,
+  )
     .map((player) => player.id)
     .filter((playerId) => playerId !== targetId);
 
@@ -745,6 +873,7 @@ export function footballGmAcceptedTargetTradeOffers(input: {
       seed: input.seed,
       partnerTeam: input.partnerTeam,
       roster: input.roster,
+      tradeChipPlayerIds: input.tradeChipPlayerIds,
       proposal,
       priority: 1,
     });
@@ -771,62 +900,64 @@ export function footballGmAcceptedTargetTradeOffers(input: {
 
   if (!accepted.length) return [];
 
+  function setContainsAll(superset: ReadonlySet<string>, values: readonly string[]) {
+    return values.every((value) => superset.has(value));
+  }
+
+  function dominates(left: FootballGmTargetTradeOffer, right: FootballGmTargetTradeOffer) {
+    const leftOutgoing = new Set(left.proposal.outgoingPlayerIds);
+    const leftIncoming = new Set(left.proposal.incomingPlayerIds);
+    const sendsNoMore = setContainsAll(new Set(right.proposal.outgoingPlayerIds), [...leftOutgoing]);
+    const getsNoLess = setContainsAll(leftIncoming, right.proposal.incomingPlayerIds);
+    const noMoreCuts = left.evaluation.requiresCuts <= right.evaluation.requiresCuts;
+    const strictlyBetter = leftOutgoing.size < right.proposal.outgoingPlayerIds.length
+      || leftIncoming.size > right.proposal.incomingPlayerIds.length
+      || left.evaluation.requiresCuts < right.evaluation.requiresCuts;
+    return sendsNoMore && getsNoLess && noMoreCuts && strictlyBetter;
+  }
+
+  function acceptanceMargin(offer: FootballGmTargetTradeOffer) {
+    const required = Math.max(0.0001, offer.evaluation.partnerSendsValue * offer.evaluation.threshold);
+    return (offer.evaluation.partnerReceivesValue / required) - 1;
+  }
+
+  const undominated = accepted.filter((candidate, index) => (
+    !accepted.some((other, otherIndex) => otherIndex !== index && dominates(other, candidate))
+  ));
+  const deterministicTieBreak = (offer: FootballGmTargetTradeOffer) => (
+    hashString(`${input.seed}:target-offer:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(offer.proposal)}`) % 1_000_000
+  );
+  const compareOffers = (left: FootballGmTargetTradeOffer, right: FootballGmTargetTradeOffer) => (
+    acceptanceMargin(left) - acceptanceMargin(right)
+    || left.evaluation.requiresCuts - right.evaluation.requiresCuts
+    || deterministicTieBreak(left) - deterministicTieBreak(right)
+  );
+
   const shapeOrder: FootballGmTargetTradeOffer["shape"][] = ["1-for-1", "2-for-1", "1-for-2", "2-for-2"];
   const buckets = new Map(shapeOrder.map((shape) => [
     shape,
-    accepted
-      .filter((offer) => offer.shape === shape)
-      .sort((left, right) => (
-        (hashString(`${input.seed}:target-offer:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(left.proposal)}`) % 1_000_000)
-        - (hashString(`${input.seed}:target-offer:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(right.proposal)}`) % 1_000_000)
-      )),
+    undominated.filter((offer) => offer.shape === shape).sort(compareOffers),
   ] as const));
 
   const selected: FootballGmTargetTradeOffer[] = [];
-  const usedSecondaryOutgoing = new Set<string>();
-  const usedSecondaryIncoming = new Set<string>();
   const maxOffers = Math.max(1, Math.min(5, input.maxOffers ?? 5));
 
-  function secondaryIds(offer: FootballGmTargetTradeOffer) {
-    return {
-      outgoing: offer.proposal.outgoingPlayerIds.filter((id) => id !== anchorId),
-      incoming: offer.proposal.incomingPlayerIds.filter((id) => id !== targetId),
-    };
-  }
-
-  function addOffer(offer: FootballGmTargetTradeOffer) {
-    if (selected.length >= maxOffers) return false;
-    const ids = secondaryIds(offer);
-    selected.push(offer);
-    ids.outgoing.forEach((id) => usedSecondaryOutgoing.add(id));
-    ids.incoming.forEach((id) => usedSecondaryIncoming.add(id));
-    return true;
-  }
-
   for (const shape of shapeOrder) {
-    const bucket = buckets.get(shape) ?? [];
-    const diverse = bucket.find((offer) => {
-      const ids = secondaryIds(offer);
-      return ids.outgoing.every((id) => !usedSecondaryOutgoing.has(id))
-        && ids.incoming.every((id) => !usedSecondaryIncoming.has(id));
-    }) ?? bucket[0];
-    if (diverse) addOffer(diverse);
+    const best = buckets.get(shape)?.[0];
+    if (best && selected.length < maxOffers) selected.push(best);
   }
 
   if (selected.length < maxOffers) {
     const chosen = new Set(selected.map((offer) => footballGmTradeOfferKey(offer.proposal)));
-    const remaining = accepted
-      .filter((offer) => !chosen.has(footballGmTradeOfferKey(offer.proposal)))
-      .sort((left, right) => (
-        (hashString(`${input.seed}:target-offer-fill:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(left.proposal)}`) % 1_000_000)
-        - (hashString(`${input.seed}:target-offer-fill:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(right.proposal)}`) % 1_000_000)
-      ));
-    for (const offer of remaining) {
-      if (!addOffer(offer)) break;
+    for (const offer of [...undominated].sort(compareOffers)) {
+      if (chosen.has(footballGmTradeOfferKey(offer.proposal))) continue;
+      selected.push(offer);
+      chosen.add(footballGmTradeOfferKey(offer.proposal));
+      if (selected.length >= maxOffers) break;
     }
   }
 
-  return selected;
+  return selected.sort(compareOffers);
 }
 
 export function footballGmFinalResultV2(input: {
