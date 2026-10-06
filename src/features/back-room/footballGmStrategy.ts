@@ -14,7 +14,7 @@ import {
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v6-playtest";
+export const FOOTBALL_GM_VERSION = "football-gm-v7-playtest";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
@@ -142,7 +142,7 @@ const OUTCOME_CURVE: readonly OutcomeRow[] = [
   { grade: 94, "Missed Playoffs": 0.07, "Wild Card": 0.12, Divisional: 0.16, "Conference Championship": 0.19, "Super Bowl Loss": 0.19, Champion: 0.27 },
   { grade: 96, "Missed Playoffs": 0.04, "Wild Card": 0.08, Divisional: 0.13, "Conference Championship": 0.17, "Super Bowl Loss": 0.21, Champion: 0.37 },
   { grade: 98, "Missed Playoffs": 0.02, "Wild Card": 0.05, Divisional: 0.10, "Conference Championship": 0.14, "Super Bowl Loss": 0.23, Champion: 0.46 },
-]
+];
 
 const FINISH_ORDER: readonly FootballGmPlayoffFinish[] = [
   "Missed Playoffs",
