@@ -19,7 +19,7 @@ import {
 } from "../../../src/features/picks-monitoring/scheduledMonitoring.ts";
 import { DEPLOYED_SOURCE_SHA } from "./deployment.ts";
 
-const schedulerHeader = "x-octagon-scheduler-token";
+// Odds fighter aliases are shared from oddsModel so provider display-name variants remain canonical.\nconst schedulerHeader = "x-octagon-scheduler-token";
 const HOUR_MS = 60 * 60 * 1000;
 const corsHeaders = {
   "Access-Control-Allow-Origin": Deno.env.get("OCTAGON_APP_ORIGIN") ?? "*",
