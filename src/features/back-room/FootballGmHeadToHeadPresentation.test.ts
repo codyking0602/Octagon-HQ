@@ -11,7 +11,7 @@ const css = readFileSync(
   "utf8",
 );
 const migration = readFileSync(
-  resolve(process.cwd(), "supabase/migrations/202612310261_football_gm_head_to_head.sql"),
+  resolve(process.cwd(), "supabase/migrations/202612310271_football_gm_head_to_head.sql"),
   "utf8",
 );
 
