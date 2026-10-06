@@ -51,6 +51,7 @@ interface PendingTradeResolution {
   partnerTeam: string;
   offerNumber: number;
   anchorPlayerId: string;
+  targetPlayerId: string;
   proposal: FootballGmTradeProposal;
   postTradePlayerIds: string[];
   requiredCuts: number;
@@ -818,9 +819,10 @@ function TradeCutResolution({
               key={playerId}
               type="button"
               className={isSelected ? "is-selected" : ""}
+              disabled={playerId === pending.targetPlayerId}
               onClick={() => onToggleCut(playerId)}
             >
-              <span>{player.team} · {player.position}</span>
+              <span>{playerId === pending.targetPlayerId ? "TRADE TARGET · LOCKED" : `${player.team} · ${player.position}`}</span>
               <strong>{player.name}</strong>
               <em>{footballGmMoney(player.salaryWindow[1])}</em>
             </button>
@@ -1128,6 +1130,7 @@ export default function FootballGmModePage() {
           partnerTeam,
           offerNumber,
           anchorPlayerId: run.tradeAnchorPlayerId,
+          targetPlayerId: run.tradeTargetPlayerId,
           proposal: {
             outgoingPlayerIds: [...offer.proposal.outgoingPlayerIds],
             incomingPlayerIds: [...offer.proposal.incomingPlayerIds],
@@ -1156,7 +1159,7 @@ export default function FootballGmModePage() {
 
   function togglePendingCut(playerId: string) {
     const pending = run.pendingTradeResolution;
-    if (!pending || !pending.postTradePlayerIds.includes(playerId)) return;
+    if (!pending || playerId === pending.targetPlayerId || !pending.postTradePlayerIds.includes(playerId)) return;
     const current = pending.cutPlayerIds;
     const cutPlayerIds = current.includes(playerId)
       ? current.filter((value) => value !== playerId)
@@ -1174,7 +1177,11 @@ export default function FootballGmModePage() {
 
   function finalizeTradeCuts() {
     const pending = run.pendingTradeResolution;
-    if (!pending || pending.cutPlayerIds.length !== pending.requiredCuts) return;
+    if (
+      !pending
+      || pending.cutPlayerIds.length !== pending.requiredCuts
+      || pending.cutPlayerIds.includes(pending.targetPlayerId)
+    ) return;
     const nextRoster = footballGmResolveTradeRoster({
       roster: run.finalRoster,
       proposal: pending.proposal,
