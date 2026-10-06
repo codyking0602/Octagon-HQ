@@ -28,8 +28,10 @@ import {
   footballGmAdjustedRosterCap,
   footballGmAdjustedSalaryForPlayer,
   footballGmContinuity,
+  footballGmEligibleFreeAgencyTeams,
   footballGmEvaluateTradeProposal,
   footballGmFinalResultV2,
+  footballGmFreeAgencyCandidatesForTeam,
   footballGmIsOffseasonCompliantV2,
   footballGmResolveTradeRoster,
   footballGmSeasonResultV2,
@@ -65,6 +67,9 @@ interface PersistedRun {
   spinIndex: number;
   previousTeam: string | null;
   pendingTeam: string | null;
+  freeAgentSpinIndex: number;
+  previousFreeAgentTeam: string | null;
+  pendingFreeAgentTeam: string | null;
   tradeSpinIndex: number;
   previousTradePartner: string | null;
   tradeAnchorPlayerId: string | null;
@@ -115,6 +120,9 @@ function initialRun(seed: string): PersistedRun {
     spinIndex: 0,
     previousTeam: null,
     pendingTeam: null,
+    freeAgentSpinIndex: 0,
+    previousFreeAgentTeam: null,
+    pendingFreeAgentTeam: null,
     tradeSpinIndex: 0,
     previousTradePartner: null,
     tradeAnchorPlayerId: null,
@@ -378,7 +386,7 @@ function CandidateBoard({
 }: {
   teamCode: string;
   roster: readonly FootballGmRosterEntry[];
-  year: 1;
+  year: 1 | 2;
   onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
 }) {
   const team = wheelFootballTeam(teamCode);
@@ -389,6 +397,61 @@ function CandidateBoard({
         <TeamLogo teamCode={teamCode} />
         <span><small>THE WHEEL LANDED ON</small><strong>{team?.name ?? teamCode}</strong></span>
       </header>
+      <div className="football-gm__candidate-list">
+        {candidates.map(({ player, legalSlots, salary }) => (
+          <article key={player.id} style={playerStyle(player.team)}>
+            <div className="football-gm__candidate-main">
+              <span><small>{player.position} · AGE {player.age}</small><strong>{player.name}</strong></span>
+              <b>{footballGmMoney(salary)}</b>
+            </div>
+            <div className="football-gm__candidate-tags">
+              <span>{player.gameContract}</span>
+              <span>{player.outlook}</span>
+              <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
+                {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} EXTENSION RISK`}
+              </span>
+            </div>
+            <div className="football-gm__candidate-actions">
+              {legalSlots.map((slot) => (
+                <button type="button" key={slot} onClick={() => onPick(player.id, slot)}>
+                  SIGN AS {slot}
+                </button>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FreeAgencyBoard({
+  teamCode,
+  roster,
+  seed,
+  consequences,
+  onPick,
+}: {
+  teamCode: string;
+  roster: readonly FootballGmRosterEntry[];
+  seed: string;
+  consequences: FootballGmNegotiationConsequences;
+  onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
+}) {
+  const team = wheelFootballTeam(teamCode);
+  const candidates = footballGmFreeAgencyCandidatesForTeam({
+    team: teamCode,
+    roster,
+    seed,
+    consequences,
+  });
+  return (
+    <section className="football-gm__candidates surface-card" style={playerStyle(teamCode)}>
+      <header>
+        <TeamLogo teamCode={teamCode} />
+        <span><small>FREE AGENCY WHEEL</small><strong>{team?.name ?? teamCode}</strong></span>
+      </header>
+      <p>Fill the open core spot. The signing must fit the Year 2 and Year 3 cap.</p>
       <div className="football-gm__candidate-list">
         {candidates.map(({ player, legalSlots, salary }) => (
           <article key={player.id} style={playerStyle(player.team)}>
@@ -608,7 +671,7 @@ function TradeRoom({
         <TeamLogo teamCode={run.tradePartnerTeam} />
         <span><small>TRADE TALKS</small><strong>{partner?.name ?? run.tradePartnerTeam}</strong></span>
       </header>
-      <p>Priority 1 is your offer. Add a backup only if you actually want a second package. Each side can include up to {FOOTBALL_GM_MAX_TRADE_PLAYERS} players.</p>
+      <p>Priority 1 is your offer. Add a backup only if you actually want a second package. Each side can include up to {FOOTBALL_GM_MAX_TRADE_PLAYERS} players. Uneven trades stay legal: if you send two and get one, the open spot is filled afterward through the free-agency wheel.</p>
       <TradeOfferBuilder
         label="PRIORITY 1"
         proposal={run.tradeOfferOne}
@@ -870,7 +933,45 @@ export default function FootballGmModePage() {
     });
   }
 
+  function spinFreeAgency() {
+    const teams = footballGmEligibleFreeAgencyTeams({
+      roster: run.finalRoster,
+      seed: run.seed,
+      consequences: run.negotiationConsequences,
+      previousTeam: run.previousFreeAgentTeam,
+    });
+    const team = footballGmSpinTeam(`${run.seed}:free-agency`, run.freeAgentSpinIndex, teams);
+    if (!team) {
+      patch({ tradeMessage: "No legal free-agent signing fits the open slot and cap." });
+      return;
+    }
+    patch({ pendingFreeAgentTeam: team, tradeMessage: "" });
+  }
+
+  function makeFreeAgentPick(playerId: string, slot: FootballGmRosterSlot) {
+    if (!run.pendingFreeAgentTeam) return;
+    const candidate = footballGmFreeAgencyCandidatesForTeam({
+      team: run.pendingFreeAgentTeam,
+      roster: run.finalRoster,
+      seed: run.seed,
+      consequences: run.negotiationConsequences,
+    }).find((row) => row.player.id === playerId && row.legalSlots.includes(slot));
+    if (!candidate) return;
+    const nextRoster: FootballGmRosterEntry[] = [
+      ...run.finalRoster,
+      { slot, playerId, acquired: "replacement" },
+    ];
+    patch({
+      finalRoster: nextRoster,
+      previousFreeAgentTeam: run.pendingFreeAgentTeam,
+      pendingFreeAgentTeam: null,
+      freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
+      tradeMessage: `${candidate.player.name} signed through free agency to fill ${slot}.`,
+    });
+  }
+
   function beginTrade(playerId: string) {
+    if (run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;
     if (run.shoppedPlayerIds.includes(playerId) || run.pendingTradeResolution) return;
     patch({
       tradeAnchorPlayerId: playerId,
@@ -922,7 +1023,7 @@ export default function FootballGmModePage() {
       patch({
         tradeMessage: first.reason === "roster"
           ? "Priority 1 cannot leave you with a usable core, even after the required cuts. Change that package."
-          : "Priority 1 needs 1–3 valid players on each side.",
+          : "Priority 1 needs 1–2 valid players on each side.",
       });
       return;
     }
@@ -953,7 +1054,7 @@ export default function FootballGmModePage() {
         patch({
           tradeMessage: second.reason === "roster"
             ? "The backup offer cannot leave you with a usable core, even after the required cuts. Change that package."
-            : "The backup offer needs 1–3 valid players on each side.",
+            : "The backup offer needs 1–2 valid players on each side.",
         });
         return;
       }
@@ -969,6 +1070,7 @@ export default function FootballGmModePage() {
         tradeOfferOne: emptyProposal(),
         tradeOfferTwo: emptyProposal(),
         tradeOfferTwoEnabled: false,
+        pendingFreeAgentTeam: null,
         shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, ...submittedOutgoingIds])],
       };
       if (accepted.evaluation.requiresCuts > 0) {
@@ -991,11 +1093,14 @@ export default function FootballGmModePage() {
         return;
       }
       if (accepted.evaluation.nextRoster) {
+        const vacancies = FOOTBALL_GM_ROSTER_SLOTS.length - accepted.evaluation.nextRoster.length;
         patch({
           ...common,
           finalRoster: [...accepted.evaluation.nextRoster],
           pendingTradeResolution: null,
-          tradeMessage: `${partnerTeam} accepted Priority ${accepted.priority}. Trade completed and locked.`,
+          tradeMessage: vacancies > 0
+            ? `${partnerTeam} accepted Priority ${accepted.priority}. Trade completed. Fill the open spot through free agency.`
+            : `${partnerTeam} accepted Priority ${accepted.priority}. Trade completed and locked.`,
         });
         return;
       }
@@ -1132,7 +1237,7 @@ export default function FootballGmModePage() {
             <span><b>1YR / 3YR</b><small>One-year deals reprice after Year 1. Three-year deals stay locked.</small></span>
             <span><b>1 + 1</b><small>One required trade offer. One optional backup if you actually want it.</small></span>
           </div>
-          <p className="football-gm__intro-note">Exact player grades and future salaries stay hidden during the draft. Talent, cap, trade value and roster continuity all matter across the full window.</p>
+          <p className="football-gm__intro-note">Exact player grades and future salaries stay hidden during the draft. Talent, cap, trade value and roster continuity all matter across the full window. Uneven offseason trades can open one free-agency wheel spot.</p>
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
         </section>
       ) : null}
@@ -1183,7 +1288,7 @@ export default function FootballGmModePage() {
             seed={run.seed}
             consequences={run.negotiationConsequences}
             showFutureSalary
-            onShop={run.tradeAnchorPlayerId || run.pendingTradeResolution ? undefined : beginTrade}
+            onShop={run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length && !run.tradeAnchorPlayerId && !run.pendingTradeResolution && !run.pendingFreeAgentTeam ? beginTrade : undefined}
             shoppedPlayerIds={run.shoppedPlayerIds}
           />
 
@@ -1202,13 +1307,30 @@ export default function FootballGmModePage() {
               onSubmit={submitTradeOffers}
               onEndTalks={() => applyShoppingConsequence("You ended the talks without a deal.")}
             />
+          ) : run.finalRoster.length < FOOTBALL_GM_ROSTER_SLOTS.length ? (
+            run.pendingFreeAgentTeam ? (
+              <FreeAgencyBoard
+                teamCode={run.pendingFreeAgentTeam}
+                roster={run.finalRoster}
+                seed={run.seed}
+                consequences={run.negotiationConsequences}
+                onPick={makeFreeAgentPick}
+              />
+            ) : (
+              <section className="football-gm__wheel surface-card">
+                <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
+                <h2>FILL THE OPEN SPOT</h2>
+                <p>Your uneven trade created a vacancy. Spin the NFL wheel and sign one legal player from the team it lands on. Only cap-safe teams are included.</p>
+                <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>
+              </section>
+            )
           ) : (
             <section className={`football-gm__offseason-status surface-card${offseasonReady ? " is-ready" : " is-crisis"}`}>
-              <p className="eyebrow">{offseasonReady ? "WINDOW SET" : run.finalRoster.length === 7 ? "CAP CRISIS" : "CORE INCOMPLETE"}</p>
+              <p className="eyebrow">{offseasonReady ? "WINDOW SET" : "CAP CRISIS"}</p>
               <h2>{offseasonReady ? "YOU CAN MOVE FORWARD" : "YOU HAVE MOVES TO MAKE"}</h2>
               <p>
-                {run.finalRoster.length !== 7
-                  ? `Your uneven trades left ${run.finalRoster.length}/7 core spots filled. Use another trade to get back to seven.`
+                {offseasonReady
+                  ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now or keep shopping if you want to improve it.`
                   : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Shop an eligible player, spin one final trade partner, and submit one package with an optional backup.`}
               </p>
               <button
