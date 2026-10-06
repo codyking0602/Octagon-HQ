@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { useIdentity } from "../identity/IdentityProvider";
 import { createFootballGmRunRepository } from "./footballGmRunRepository";
-import { wheelFootballTeam } from "./wheelFootballModel";
+import {
+  loadWheelFootballRoster,
+  wheelFootballTeam,
+  type WheelFootballTeam,
+} from "./wheelFootballModel";
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
@@ -288,8 +293,169 @@ function TeamLogo({ teamCode }: { teamCode: string }) {
     : <span className="football-gm__team-fallback">{teamCode}</span>;
 }
 
+function WheelTeamLogo({ team }: { team: WheelFootballTeam }) {
+  return (
+    <span className="football-wheel-team-logo" aria-hidden="true">
+      {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.shortCode}</b>}
+    </span>
+  );
+}
+
+function normalizedGmPlayerName(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+const footballGmHeadshotCache = new Map<string, string | null>();
+const footballGmTeamHeadshotLoads = new Map<string, Promise<Map<string, string | null>>>();
+
+function footballGmHeadshotsForTeam(teamCode: string) {
+  const cached = footballGmTeamHeadshotLoads.get(teamCode);
+  if (cached) return cached;
+  const load = loadWheelFootballRoster(teamCode)
+    .then((candidates) => new Map(
+      candidates.map((candidate) => [
+        normalizedGmPlayerName(candidate.name),
+        candidate.headshotUrl,
+      ]),
+    ))
+    .catch(() => new Map<string, string | null>());
+  footballGmTeamHeadshotLoads.set(teamCode, load);
+  return load;
+}
+
+function PlayerHeadshot({
+  player,
+  className = "football-gm__player-headshot",
+}: {
+  player: FootballGmPlayer;
+  className?: string;
+}) {
+  const cacheKey = `${player.team}:${normalizedGmPlayerName(player.name)}`;
+  const [headshot, setHeadshot] = useState<string | null | undefined>(() => footballGmHeadshotCache.get(cacheKey));
+  const team = wheelFootballTeam(player.team);
+
+  useEffect(() => {
+    if (headshot !== undefined) return;
+    let active = true;
+    void footballGmHeadshotsForTeam(player.team).then((headshots) => {
+      const resolved = headshots.get(normalizedGmPlayerName(player.name)) ?? null;
+      footballGmHeadshotCache.set(cacheKey, resolved);
+      if (active) setHeadshot(resolved);
+    });
+    return () => {
+      active = false;
+    };
+  }, [cacheKey, headshot, player.name, player.team]);
+
+  return (
+    <span className={className} aria-hidden="true">
+      {headshot ? (
+        <img src={headshot} alt="" onError={() => setHeadshot(null)} />
+      ) : team?.logoSrc ? (
+        <img src={team.logoSrc} alt="" />
+      ) : (
+        <b>{team?.shortCode ?? player.team}</b>
+      )}
+    </span>
+  );
+}
+
+type FootballGmScoutingTier = "ELITE" | "IMPACT" | "STARTER" | "DEPTH";
+
+function footballGmScoutingTier(grade: number): FootballGmScoutingTier {
+  if (grade >= 94) return "ELITE";
+  if (grade >= 89) return "IMPACT";
+  if (grade >= 83) return "STARTER";
+  return "DEPTH";
+}
+
+function PlayerQualityPill({ player }: { player: FootballGmPlayer }) {
+  const tier = footballGmScoutingTier(player.currentGrade);
+  return <span className={`football-gm__quality-pill quality-${tier.toLowerCase()}`}>{tier}</span>;
+}
+
 function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
-  return <span className="football-gm__outlook-pill">{outlook}</span>;
+  const label = outlook === "ELITE UPSIDE" ? "RISING" : outlook;
+  const tone = label === "RISING" ? "rising" : label === "DECLINE RISK" ? "decline" : "stable";
+  return <span className={`football-gm__outlook-pill outlook-${tone}`}>{label}</span>;
+}
+
+function wheelTeamBackground(teams: readonly WheelFootballTeam[]) {
+  if (!teams.length) return undefined;
+  const slice = 360 / teams.length;
+  const stops = teams.flatMap((team, index) => {
+    const start = index * slice;
+    const end = (index + 1) * slice;
+    return [`${team.primaryColor} ${start}deg`, `${team.primaryColor} ${end}deg`];
+  });
+  return `conic-gradient(from ${-slice / 2}deg, ${stops.join(", ")})`;
+}
+
+function GmFootballWheel({
+  teams,
+  rotation,
+  spinning,
+  pendingTeam,
+  canSpin,
+  onSpin,
+}: {
+  teams: readonly WheelFootballTeam[];
+  rotation: number;
+  spinning: boolean;
+  pendingTeam: WheelFootballTeam | null;
+  canSpin: boolean;
+  onSpin: () => void;
+}) {
+  return (
+    <section className="football-wheel surface-card" aria-label="Football team wheel">
+      <div className="football-wheel__pointer" aria-hidden="true" />
+      <div
+        className={`football-wheel__disc${spinning ? " is-spinning" : ""}${teams.length > 40 ? " is-dense" : ""}`}
+        style={{
+          transform: `rotate(${rotation}deg)`,
+          background: wheelTeamBackground(teams),
+        }}
+      >
+        <div className="football-wheel__rings" aria-hidden="true" />
+        {teams.map((team, index) => (
+          <span
+            className="football-wheel__label"
+            key={team.code}
+            style={{
+              "--wheel-index": index,
+              "--wheel-count": teams.length,
+              "--team-primary": team.primaryColor,
+              "--team-secondary": team.secondaryColor,
+            } as CSSProperties}
+            title={team.name}
+          >
+            {team.logoSrc ? <img src={team.logoSrc} alt="" /> : <b>{team.shortCode}</b>}
+          </span>
+        ))}
+      </div>
+      <button
+        className={`football-wheel__center${pendingTeam ? " has-team" : ""}`}
+        type="button"
+        disabled={!canSpin || spinning}
+        onClick={onSpin}
+      >
+        {pendingTeam ? (
+          <>
+            <WheelTeamLogo team={pendingTeam} />
+            <strong>{pendingTeam.shortCode}</strong>
+          </>
+        ) : spinning ? (
+          <><strong>SPINNING</strong><span>…</span></>
+        ) : (
+          <><strong>SPIN</strong><span>THE WHEEL</span></>
+        )}
+      </button>
+    </section>
+  );
 }
 
 function CapMeter({
@@ -356,11 +522,14 @@ function RosterGrid({
               {player ? (
                 <>
                   <div className="football-gm__roster-player">
-                    <TeamLogo teamCode={player.team} />
+                    <PlayerHeadshot player={player} />
                     <span>
                       <strong>{player.name}</strong>
                       <em>{player.team} · {player.position}</em>
-                      <PlayerOutlookPill outlook={player.outlook} />
+                      <span className="football-gm__roster-scouting">
+                        <PlayerQualityPill player={player} />
+                        <PlayerOutlookPill outlook={player.outlook} />
+                      </span>
                     </span>
                   </div>
                   <div className="football-gm__roster-contract">
@@ -399,37 +568,111 @@ function CandidateBoard({
 }) {
   const team = wheelFootballTeam(teamCode);
   const candidates = footballGmCandidatesForTeam({ team: teamCode, roster, year });
+  const openSlots = footballGmOpenSlots(roster);
+  const [selectedSlot, setSelectedSlot] = useState<FootballGmRosterSlot | null>(null);
+  const [showScoutKey, setShowScoutKey] = useState(false);
+  const visible = selectedSlot
+    ? candidates.filter(({ legalSlots }) => legalSlots.includes(selectedSlot))
+    : [];
+
+  useEffect(() => {
+    setSelectedSlot(null);
+    setShowScoutKey(false);
+  }, [teamCode]);
+
+  if (!team) return null;
+
   return (
-    <section className="football-gm__candidates surface-card" style={playerStyle(teamCode)}>
-      <header>
-        <TeamLogo teamCode={teamCode} />
-        <span><small>THE WHEEL LANDED ON</small><strong>{team?.name ?? teamCode}</strong></span>
-      </header>
-      <div className="football-gm__candidate-list">
-        {candidates.map(({ player, legalSlots, salary }) => (
-          <article key={player.id} style={playerStyle(player.team)}>
-            <div className="football-gm__candidate-main">
-              <span><small>{player.position} · AGE {player.age}</small><strong>{player.name}</strong></span>
-              <b>{footballGmMoney(salary)}</b>
+    <>
+      <section className="football-wheel-picker football-gm__picker surface-card" style={playerStyle(teamCode)}>
+        <header>
+          <WheelTeamLogo team={team} />
+          <div>
+            <p className="eyebrow">YOUR SPIN</p>
+            <h2>{team.name}</h2>
+            <span>Choose an open roster spot, then choose one player.</span>
+          </div>
+          <button
+            className="football-gm__scout-key-button"
+            type="button"
+            aria-label="Open player scouting key"
+            onClick={() => setShowScoutKey(true)}
+          >?</button>
+        </header>
+
+        <div className="football-wheel-picker__slots" aria-label="Open roster spots">
+          {openSlots.map((slot) => (
+            <button
+              type="button"
+              className={selectedSlot === slot ? "is-active" : ""}
+              onClick={() => setSelectedSlot(slot)}
+              key={slot}
+            >
+              <strong>{slot}</strong>
+            </button>
+          ))}
+        </div>
+
+        {selectedSlot ? (
+          <div className="football-wheel-picker__candidates football-gm__picker-candidates" aria-label={`${selectedSlot} candidates`}>
+            {visible.map(({ player, salary }) => (
+              <button
+                type="button"
+                onClick={() => onPick(player.id, selectedSlot)}
+                key={player.id}
+              >
+                <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
+                <span className="football-gm__picker-player-copy">
+                  <strong>{player.name}</strong>
+                  <small>{player.position} · AGE {player.age}</small>
+                  <span className="football-gm__candidate-tags">
+                    <PlayerQualityPill player={player} />
+                    <PlayerOutlookPill outlook={player.outlook} />
+                    <span>{player.gameContract}</span>
+                    <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
+                      {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} REPRICE RISK`}
+                    </span>
+                  </span>
+                </span>
+                <span className="football-gm__picker-action">
+                  <b>{footballGmMoney(salary)}</b>
+                  <em>SELECT →</em>
+                </span>
+              </button>
+            ))}
+            {!visible.length ? (
+              <p className="football-wheel-picker__message">No legal player is available for that roster spot.</p>
+            ) : null}
+          </div>
+        ) : (
+          <p className="football-wheel-picker__message">Pick the roster spot you want to use for this spin.</p>
+        )}
+      </section>
+
+      {showScoutKey ? (
+        <div className="football-gm__scout-sheet-backdrop" role="presentation" onClick={() => setShowScoutKey(false)}>
+          <section
+            className="football-gm__scout-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Player scouting key"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header>
+              <span><small>PLAYER OUTLOOK</small><strong>SCOUT KEY</strong></span>
+              <button type="button" aria-label="Close player scouting key" onClick={() => setShowScoutKey(false)}>×</button>
+            </header>
+            <div>
+              <p><b>ELITE / IMPACT / STARTER / DEPTH</b><span>Broad current-ability scouting bands. Exact grades stay hidden.</span></p>
+              <p><b>RISING / STABLE / DECLINE RISK</b><span>Expected career direction across the three-year window.</span></p>
+              <p><b>1YR</b><span>Salary reprices after Year 1.</span></p>
+              <p><b>3YR · SALARY LOCKED</b><span>Salary stays fixed for the full game.</span></p>
+              <p><b>REPRICE RISK</b><span>How likely a 1YR player is to demand a meaningful Year 2 raise.</span></p>
             </div>
-            <div className="football-gm__candidate-tags">
-              <span>{player.gameContract}</span>
-              <PlayerOutlookPill outlook={player.outlook} />
-              <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
-                {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} EXTENSION RISK`}
-              </span>
-            </div>
-            <div className="football-gm__candidate-actions">
-              {legalSlots.map((slot) => (
-                <button type="button" key={slot} onClick={() => onPick(player.id, slot)}>
-                  SIGN AS {slot}
-                </button>
-              ))}
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
+          </section>
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -988,8 +1231,21 @@ export default function FootballGmModePage() {
   ));
   const [challengeStatus, setChallengeStatus] = useState("");
   const [runRepository] = useState(() => createFootballGmRunRepository());
+  const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
+  const [draftWheelRotation, setDraftWheelRotation] = useState(0);
   const opponentName = footballGmPlaytestOpponentName(identity.profile);
   const allowed = isFootballGmPlaytestProfile(identity.profile);
+  const draftEligibleTeamCodes = run.phase === "draft"
+    ? footballGmEligibleTeams({
+        roster: run.roster,
+        previousTeam: run.previousTeam,
+        year: 1,
+      })
+    : [];
+  const draftWheelTeams = draftEligibleTeamCodes
+    .map((teamCode) => wheelFootballTeam(teamCode))
+    .filter((team): team is WheelFootballTeam => Boolean(team));
+  const pendingDraftWheelTeam = run.pendingTeam ? wheelFootballTeam(run.pendingTeam) ?? null : null;
 
   useEffect(() => {
     if (!storedSeed || storedSeed === seed) return;
@@ -1060,14 +1316,27 @@ export default function FootballGmModePage() {
   }
 
   function spinDraft() {
-    const teams = footballGmEligibleTeams({
-      roster: run.roster,
-      previousTeam: run.previousTeam,
-      year: 1,
+    if (draftWheelSpinning || run.pendingTeam) return;
+    const teamCode = footballGmSpinTeam(run.seed, run.spinIndex, draftEligibleTeamCodes);
+    if (!teamCode) return;
+    const index = draftWheelTeams.findIndex((team) => team.code === teamCode);
+    if (index < 0 || !draftWheelTeams.length) {
+      patch({ pendingTeam: teamCode });
+      return;
+    }
+
+    setDraftWheelSpinning(true);
+    const step = 360 / draftWheelTeams.length;
+    setDraftWheelRotation((current) => {
+      const currentModulo = ((current % 360) + 360) % 360;
+      const targetModulo = ((-index * step) % 360 + 360) % 360;
+      const correction = (targetModulo - currentModulo + 360) % 360;
+      return current + 1080 + correction;
     });
-    const team = footballGmSpinTeam(run.seed, run.spinIndex, teams);
-    if (!team) return;
-    patch({ pendingTeam: team });
+    window.setTimeout(() => {
+      patch({ pendingTeam: teamCode });
+      setDraftWheelSpinning(false);
+    }, 1550);
   }
 
   function makeDraftPick(playerId: string, slot: FootballGmRosterSlot) {
@@ -1445,16 +1714,21 @@ export default function FootballGmModePage() {
         <>
           <CapMeter roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
           <RosterGrid roster={run.roster} year={1} seed={run.seed} consequences={run.negotiationConsequences} />
+          <div className="football-gm__draft-context" aria-label="Draft round and open roster spots">
+            <span>ROUND {run.roster.length + 1} OF 7</span>
+            <strong>{footballGmOpenSlots(run.roster).join(" · ")}</strong>
+          </div>
+          <GmFootballWheel
+            teams={draftWheelTeams}
+            rotation={draftWheelRotation}
+            spinning={draftWheelSpinning}
+            pendingTeam={pendingDraftWheelTeam}
+            canSpin={!run.pendingTeam && draftWheelTeams.length > 0}
+            onSpin={spinDraft}
+          />
           {run.pendingTeam ? (
             <CandidateBoard teamCode={run.pendingTeam} roster={run.roster} year={1} onPick={makeDraftPick} />
-          ) : (
-            <section className="football-gm__wheel surface-card">
-              <p className="eyebrow">ROUND {run.roster.length + 1} OF 7</p>
-              <h2>{footballGmOpenSlots(run.roster).join(" · ")}</h2>
-              <p>Only teams with at least one legal player who still leaves enough cap room to finish the seven-man core are on the wheel.</p>
-              <button className="primary-action" type="button" onClick={spinDraft}>SPIN THE NFL WHEEL</button>
-            </section>
-          )}
+          ) : null}
         </>
       ) : null}
 

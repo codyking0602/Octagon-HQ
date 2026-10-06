@@ -21,6 +21,24 @@ describe("Football GM gameplay presentation", () => {
     expect(css).toContain(".football-gm__trade-package-player .football-gm__outlook-pill");
   });
 
+  it("reuses the live Wheel of Football interaction and adds GM scouting context", () => {
+    expect(page).toContain('import "../../styles/football-wheel.css";');
+    expect(page).toContain('className="football-wheel surface-card"');
+    expect(page).toContain('className="football-wheel__pointer"');
+    expect(page).toContain("current + 1080 + correction");
+    expect(page).toContain("}, 1550);");
+    expect(page).toContain('className="football-wheel-picker football-gm__picker surface-card"');
+    expect(page).toContain('className="football-wheel-picker__slots"');
+    expect(page).toContain('className="football-wheel-picker__headshot"');
+    expect(page).toContain("ELITE / IMPACT / STARTER / DEPTH");
+    expect(page).toContain("REPRICE RISK");
+    expect(page).toContain("SCOUT KEY");
+    expect(page).toContain("Exact grades stay hidden.");
+    expect(page).not.toContain("EXTENSION RISK");
+    expect(css).toContain(".football-gm__scout-sheet");
+    expect(css).toContain(".football-gm__quality-pill.quality-elite");
+  });
+
   it("keeps the intro to one compact three-stage game flow", () => {
     expect(page).toContain("BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.");
     expect(page).toContain('className="football-gm__intro-stages"');
