@@ -60,4 +60,13 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain("any genuine vacancy can use free agency");
     expect(page).toContain("that player cannot be re-signed this offseason");
   });
+  it("restores an unfinished standalone GM run after an app restart", () => {
+    expect(page).toContain("activeStorageKey");
+    expect(page).toContain("loadActivePersistedRun");
+    expect(page).toContain("runRepository?.loadLatestActive()");
+    expect(page).toContain("RESTORING YOUR FRONT OFFICE");
+    expect(page).toContain("window.localStorage.setItem(activeStorageKey(identity.profile.id), run.seed)");
+    expect(page).toContain("window.localStorage.removeItem(activeStorageKey(identity.profile.id))");
+  });
+
 });
