@@ -708,3 +708,221 @@
     justify-self: start;
   }
 }
+
+.football-gm__season-card em {
+  color: #7f96a7;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .05em;
+  margin-top: 6px;
+}
+
+.football-gm__continuity {
+  display: grid;
+  gap: 9px;
+  padding: 14px 16px;
+}
+
+.football-gm__continuity > header {
+  align-items: end;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.football-gm__continuity > header span {
+  display: grid;
+  gap: 2px;
+}
+
+.football-gm__continuity small,
+.football-gm__trade-offer small,
+.football-gm__trade-room small {
+  color: #758b9e;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .09em;
+}
+
+.football-gm__continuity strong {
+  color: #fff;
+  font-size: 15px;
+}
+
+.football-gm__continuity b {
+  color: #8fcff8;
+  font-size: 13px;
+}
+
+.football-gm__continuity > i {
+  background: rgba(255,255,255,.08);
+  border-radius: 999px;
+  display: block;
+  height: 6px;
+  overflow: hidden;
+}
+
+.football-gm__continuity > i > em {
+  background: linear-gradient(90deg, #2f77ad, #86ccfb);
+  display: block;
+  height: 100%;
+}
+
+.football-gm__continuity p {
+  color: #8ca0b0;
+  font-size: 11px;
+  margin: 0;
+}
+
+.football-gm__trade-message {
+  border-left: 3px solid rgba(117,191,244,.55);
+  color: #9db1c0;
+  font-size: 11px;
+  line-height: 1.45;
+  padding: 13px 15px;
+}
+
+.football-gm__trade-room {
+  border-top: 2px solid var(--gm-team-primary);
+  display: grid;
+  gap: 14px;
+  overflow: hidden;
+  padding: 0 0 18px;
+}
+
+.football-gm__trade-room > header {
+  align-items: center;
+  background: linear-gradient(110deg, color-mix(in srgb, var(--gm-team-primary) 22%, transparent), transparent 55%);
+  display: flex;
+  gap: 12px;
+  padding: 15px 16px;
+}
+
+.football-gm__trade-room > header .football-gm__team-logo {
+  height: 46px;
+  width: 46px;
+}
+
+.football-gm__trade-room > header span {
+  display: grid;
+  gap: 2px;
+}
+
+.football-gm__trade-room > header strong {
+  color: #fff;
+  font-size: 18px;
+}
+
+.football-gm__trade-room > p,
+.football-gm__trade-room > .football-gm__inline-actions,
+.football-gm__trade-warning {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+.football-gm__trade-room > p {
+  color: #8da2b2;
+  font-size: 11px;
+  line-height: 1.45;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.football-gm__trade-offer {
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.football-gm__trade-offer > header {
+  padding: 11px 16px;
+}
+
+.football-gm__trade-offer > header span {
+  display: grid;
+  gap: 2px;
+}
+
+.football-gm__trade-offer > header strong {
+  color: #fff;
+  font-size: 13px;
+}
+
+.football-gm__trade-columns {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.football-gm__trade-columns > div {
+  background: rgba(255,255,255,.012);
+  display: grid;
+  gap: 1px;
+  align-content: start;
+}
+
+.football-gm__trade-columns > div > small {
+  background: rgba(255,255,255,.025);
+  padding: 8px 12px;
+}
+
+.football-gm__trade-columns button {
+  align-items: center;
+  background: rgba(255,255,255,.02);
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,.045);
+  color: inherit;
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr auto;
+  padding: 9px 12px;
+  text-align: left;
+}
+
+.football-gm__trade-columns button span {
+  color: #758b9e;
+  font-size: 8px;
+  font-weight: 900;
+  grid-column: 1 / -1;
+  letter-spacing: .06em;
+}
+
+.football-gm__trade-columns button strong {
+  color: #dce8f0;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.football-gm__trade-columns button em {
+  color: #7faed0;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.football-gm__trade-columns button.is-selected {
+  background: color-mix(in srgb, var(--gm-team-primary, #2f77ad) 17%, rgba(255,255,255,.03));
+  box-shadow: inset 3px 0 0 var(--gm-team-primary, #6eb8eb);
+}
+
+.football-gm__trade-columns button:disabled {
+  cursor: default;
+  opacity: .92;
+}
+
+.football-gm__trade-warning {
+  display: block;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .football-gm__trade-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .football-gm__trade-columns > div + div {
+    border-top: 1px solid rgba(255,255,255,.08);
+  }
+}
