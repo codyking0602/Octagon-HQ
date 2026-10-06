@@ -406,7 +406,7 @@ export const playGameCatalog = [
     route: "/football/gm-mode",
     icon: "GM",
     title: "The GM",
-    description: "Build a seven-player NFL core under the cap, survive one offseason, and score a three-year front-office run.",
+    description: "Battle another GM or the CPU: alternate seven draft picks, survive a shared-market offseason, and compare three-year results.",
     availability: "preview",
     lineup: {
       defaultType: "curated",
@@ -421,7 +421,7 @@ export const playGameCatalog = [
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "challenge-completion",
-      difficultyModel: "NFL-only owner playtest using the Wheel team mechanic, real APY salaries, 1YR/3YR contracts, a $120M cap, one offseason, one required user-built offer plus an optional backup, continuity, weak-link effects, and seeded historically calibrated season variance.",
+      difficultyModel: "NFL-only 1v1 GM battle using the Wheel team mechanic, a $150M cap, match-wide player uniqueness, alternating draft picks, worse-Year-1 offseason priority, a shared player market, one full offseason per GM, continuity, weak-link effects, and the locked seeded outcome curve.",
     },
   },
   {
