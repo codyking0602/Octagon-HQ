@@ -43,6 +43,7 @@ import {
   footballGmIsOffseasonCompliantV2,
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
+  footballGmTeamOverall,
   footballGmSignFreeAgent,
   footballGmTradePartnerPlayers,
   type FootballGmNegotiationConsequences,
@@ -916,16 +917,10 @@ export function SeasonCard({
   return (
     <article className="football-gm__season-card">
       <small>YEAR {year}</small>
-      <strong>{result.teamGrade.toFixed(1)}</strong>
-      <span>TEAM GRADE · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
+      <strong>{footballGmTeamOverall(result.teamGrade)} OVR</strong>
+      <span>TEAM OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
       <b>{result.finish}</b>
-      {result.weakLinkPenalty > 0 || result.continuityAdjustment !== 0 ? (
-        <em>
-          {result.weakLinkPenalty > 0 ? `WEAK LINK −${result.weakLinkPenalty.toFixed(1)}` : ""}
-          {result.weakLinkPenalty > 0 && result.continuityAdjustment !== 0 ? " · " : ""}
-          {result.continuityAdjustment !== 0 ? `CONTINUITY ${result.continuityAdjustment > 0 ? "+" : ""}${result.continuityAdjustment.toFixed(1)}` : ""}
-        </em>
-      ) : null}
+
     </article>
   );
 }
