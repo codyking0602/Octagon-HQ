@@ -711,6 +711,8 @@ export function footballGmAcceptedTargetTradeOffers(input: {
     || rosterIds.has(target.id)
   ) return [];
 
+  const anchorId = anchor.id;
+  const targetId = target.id;
   const blockedOutgoing = new Set(input.shoppedPlayerIds ?? []);
   blockedOutgoing.delete(anchor.id);
   const secondaryOutgoing = input.roster
@@ -721,19 +723,19 @@ export function footballGmAcceptedTargetTradeOffers(input: {
     .filter((playerId) => playerId !== target.id);
 
   const proposals: FootballGmTradeProposal[] = [
-    { outgoingPlayerIds: [anchor.id], incomingPlayerIds: [target.id] },
+    { outgoingPlayerIds: [anchorId], incomingPlayerIds: [targetId] },
     ...secondaryOutgoing.map((playerId) => ({
-      outgoingPlayerIds: [anchor.id, playerId],
-      incomingPlayerIds: [target.id],
+      outgoingPlayerIds: [anchorId, playerId],
+      incomingPlayerIds: [targetId],
     })),
     ...secondaryIncoming.map((playerId) => ({
-      outgoingPlayerIds: [anchor.id],
-      incomingPlayerIds: [target.id, playerId],
+      outgoingPlayerIds: [anchorId],
+      incomingPlayerIds: [targetId, playerId],
     })),
     ...secondaryOutgoing.flatMap((outgoingPlayerId) => (
       secondaryIncoming.map((incomingPlayerId) => ({
-        outgoingPlayerIds: [anchor.id, outgoingPlayerId],
-        incomingPlayerIds: [target.id, incomingPlayerId],
+        outgoingPlayerIds: [anchorId, outgoingPlayerId],
+        incomingPlayerIds: [targetId, incomingPlayerId],
       }))
     )),
   ];
@@ -787,8 +789,8 @@ export function footballGmAcceptedTargetTradeOffers(input: {
 
   function secondaryIds(offer: FootballGmTargetTradeOffer) {
     return {
-      outgoing: offer.proposal.outgoingPlayerIds.filter((id) => id !== anchor.id),
-      incoming: offer.proposal.incomingPlayerIds.filter((id) => id !== target.id),
+      outgoing: offer.proposal.outgoingPlayerIds.filter((id) => id !== anchorId),
+      incoming: offer.proposal.incomingPlayerIds.filter((id) => id !== targetId),
     };
   }
 
