@@ -288,10 +288,6 @@ function TeamLogo({ teamCode }: { teamCode: string }) {
     : <span className="football-gm__team-fallback">{teamCode}</span>;
 }
 
-function OutlookPill({ outlook }: { outlook: string }) {
-  return <span className="football-gm__outlook-pill">{outlook}</span>;
-}
-
 function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
   return <span className="football-gm__outlook-pill">{outlook}</span>;
 }
@@ -627,7 +623,6 @@ function TradeChipPanel({
               <span>{player.team} · {player.position} · {player.gameContract}</span>
               <strong>{player.name}</strong>
               <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, seed, consequences))}</em>
-              <OutlookPill outlook={player.outlook} />
               <PlayerOutlookPill outlook={player.outlook} />
               <div className="football-gm__inline-actions">
                 <button type="button" disabled={shopped} onClick={() => onShop(playerId)}>
@@ -717,7 +712,6 @@ function TradePackagePlayer({
       <span>{player.team} · {player.position} · {player.gameContract}</span>
       <strong>{player.name}</strong>
       <em>{footballGmMoney(salary)}</em>
-      <OutlookPill outlook={player.outlook} />
       <PlayerOutlookPill outlook={player.outlook} />
     </div>
   );
@@ -807,8 +801,7 @@ function TradeRoom({
                 <span>{player.position} · AGE {player.age} · {player.gameContract}</span>
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, run.seed, run.negotiationConsequences))}</em>
-                <OutlookPill outlook={player.outlook} />
-                <PlayerOutlookPill outlook={player.outlook} />
+                  <PlayerOutlookPill outlook={player.outlook} />
               </button>
             ))}
           </div>
