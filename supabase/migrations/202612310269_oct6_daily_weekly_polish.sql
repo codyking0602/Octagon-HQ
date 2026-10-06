@@ -680,17 +680,5 @@ begin
   where daily_challenge_id = v_daily
     and profile_id = v_profile;
 
-  update private.daily_challenge_history
-  set native_score = 90,
-      normalized_score = 90,
-      public_result = public_result
-        || jsonb_build_object(
-          'score',90,
-          'board_score',90,
-          'score_correction','2026-10-06-average-fan-hot-route-repair'
-        )
-  where daily_challenge_id = v_daily
-    and profile_id = v_profile
-    and normalized_score = 84;
 end
 $oct6_cody_average_fan$;
