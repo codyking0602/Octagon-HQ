@@ -3,7 +3,6 @@ import {
   FOOTBALL_GM_PLAYER_POOL,
   FOOTBALL_GM_ROSTER_SLOTS,
   FOOTBALL_GM_TEAMS,
-  footballGmCandidatesForTeam,
   footballGmPlayerById,
   footballGmProjectedGradeForPlayer,
   footballGmSpinTeam,
@@ -28,9 +27,9 @@ export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot,
 };
 
 /**
- * Real recent contender calibration derived from Pro Football Reference AV.
- * The generated data file documents the source, percentile mapping and the
- * seven-slot core selected for every conference finalist from 2021-2025.
+ * Historical reference artifact derived from Pro Football Reference AV.
+ * It remains available for audit context only; gameplay outcomes are calibrated
+ * separately on the live manually audited Wheel/GM grade scale below.
  */
 export const FOOTBALL_GM_HISTORICAL_FINAL_FOUR = historicalFinalFour.teams;
 export const FOOTBALL_GM_HISTORICAL_ANCHORS = historicalFinalFour.anchors;
@@ -603,40 +602,6 @@ export function footballGmTradeAssetValue(player: FootballGmPlayer, acquiringTea
     * tradeAgeFactor(player)
     * tradeControlFactor(player)
     * teamNeedFactor(acquiringTeam, player);
-}
-
-function assignRoster(
-  players: readonly { player: FootballGmPlayer; acquired: FootballGmRosterEntry["acquired"]; preferredSlot?: FootballGmRosterSlot }[],
-) {
-  if (players.length > FOOTBALL_GM_ROSTER_SLOTS.length) return null;
-  const ordered = [...players].sort((left, right) => {
-    const leftSlots = left.player.eligibleSlots.length;
-    const rightSlots = right.player.eligibleSlots.length;
-    return leftSlots - rightSlots || left.player.name.localeCompare(right.player.name);
-  });
-  const used = new Set<FootballGmRosterSlot>();
-  const result: FootballGmRosterEntry[] = [];
-
-  function place(index: number): boolean {
-    if (index >= ordered.length) return true;
-    const row = ordered[index]!;
-    const slots = [...row.player.eligibleSlots].sort((a, b) => {
-      if (a === row.preferredSlot) return -1;
-      if (b === row.preferredSlot) return 1;
-      return FOOTBALL_GM_ROSTER_SLOTS.indexOf(a) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(b);
-    });
-    for (const slot of slots) {
-      if (used.has(slot)) continue;
-      used.add(slot);
-      result.push({ slot, playerId: row.player.id, acquired: row.acquired });
-      if (place(index + 1)) return true;
-      result.pop();
-      used.delete(slot);
-    }
-    return false;
-  }
-
-  return place(0) ? result : null;
 }
 
 function assignBestRoster(
