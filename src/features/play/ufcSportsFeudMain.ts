@@ -35,16 +35,18 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       {
         "prompt": "Name a UFC fighter whose career defines an era.",
         "answers": [
-          "Anderson Silva",
+          "Royce Gracie",
+          "Conor McGregor",
           "Georges St-Pierre",
+          "Anderson Silva",
           "Jon Jones",
-          "Jose Aldo",
-          "Demetrious Johnson",
+          "Chuck Liddell",
           "Ronda Rousey",
-          "Khabib Nurmagomedov",
-          "Conor McGregor"
+          "Khabib Nurmagomedov"
         ],
         "alsoAcceptedAnswers": [
+          "Jose Aldo",
+          "Demetrious Johnson",
           "Amanda Nunes",
           "Stipe Miocic",
           "Daniel Cormier",
@@ -52,7 +54,6 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Matt Hughes",
           "Alexander Volkanovski",
           "Israel Adesanya",
-          "Chuck Liddell",
           "BJ Penn",
           "Brock Lesnar",
           "Islam Makhachev"
