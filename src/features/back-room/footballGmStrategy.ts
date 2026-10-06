@@ -811,6 +811,77 @@ function footballGmTradeOfferKey(proposal: FootballGmTradeProposal) {
   ].join(":");
 }
 
+export function footballGmTradeAcceptanceMargin(offer: FootballGmTargetTradeOffer) {
+  const required = Math.max(0.0001, offer.evaluation.partnerSendsValue * offer.evaluation.threshold);
+  return (offer.evaluation.partnerReceivesValue / required) - 1;
+}
+
+export function footballGmTradeOfferDominates(
+  left: FootballGmTargetTradeOffer,
+  right: FootballGmTargetTradeOffer,
+) {
+  const leftOutgoing = new Set(left.proposal.outgoingPlayerIds);
+  const leftIncoming = new Set(left.proposal.incomingPlayerIds);
+  const rightOutgoing = new Set(right.proposal.outgoingPlayerIds);
+  const sendsNoMore = [...leftOutgoing].every((playerId) => rightOutgoing.has(playerId));
+  const getsNoLess = right.proposal.incomingPlayerIds.every((playerId) => leftIncoming.has(playerId));
+  const noMoreCuts = left.evaluation.requiresCuts <= right.evaluation.requiresCuts;
+  const strictlyBetter = leftOutgoing.size < right.proposal.outgoingPlayerIds.length
+    || leftIncoming.size > right.proposal.incomingPlayerIds.length
+    || left.evaluation.requiresCuts < right.evaluation.requiresCuts;
+  return sendsNoMore && getsNoLess && noMoreCuts && strictlyBetter;
+}
+
+export function footballGmCurateAcceptedTargetTradeOffers(input: {
+  seed: string;
+  partnerTeam: string;
+  targetPlayerId: string;
+  accepted: readonly FootballGmTargetTradeOffer[];
+  maxOffers?: number;
+}) {
+  const accepted = input.accepted.filter((offer) => offer.evaluation.accepted);
+  if (!accepted.length) return [];
+
+  const undominated = accepted.filter((candidate, index) => (
+    !accepted.some((other, otherIndex) => (
+      otherIndex !== index && footballGmTradeOfferDominates(other, candidate)
+    ))
+  ));
+  const deterministicTieBreak = (offer: FootballGmTargetTradeOffer) => (
+    hashString(`${input.seed}:target-offer:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(offer.proposal)}`) % 1_000_000
+  );
+  const compareOffers = (left: FootballGmTargetTradeOffer, right: FootballGmTargetTradeOffer) => (
+    footballGmTradeAcceptanceMargin(left) - footballGmTradeAcceptanceMargin(right)
+    || left.evaluation.requiresCuts - right.evaluation.requiresCuts
+    || deterministicTieBreak(left) - deterministicTieBreak(right)
+  );
+
+  const shapeOrder: FootballGmTargetTradeOffer["shape"][] = ["1-for-1", "2-for-1", "1-for-2", "2-for-2"];
+  const buckets = new Map(shapeOrder.map((shape) => [
+    shape,
+    undominated.filter((offer) => offer.shape === shape).sort(compareOffers),
+  ] as const));
+  const selected: FootballGmTargetTradeOffer[] = [];
+  const maxOffers = Math.max(1, Math.min(5, input.maxOffers ?? 5));
+
+  for (const shape of shapeOrder) {
+    const best = buckets.get(shape)?.[0];
+    if (best && selected.length < maxOffers) selected.push(best);
+  }
+
+  if (selected.length < maxOffers) {
+    const chosen = new Set(selected.map((offer) => footballGmTradeOfferKey(offer.proposal)));
+    for (const offer of [...undominated].sort(compareOffers)) {
+      if (chosen.has(footballGmTradeOfferKey(offer.proposal))) continue;
+      selected.push(offer);
+      chosen.add(footballGmTradeOfferKey(offer.proposal));
+      if (selected.length >= maxOffers) break;
+    }
+  }
+
+  return selected.sort(compareOffers);
+}
+
 export function footballGmAcceptedTargetTradeOffers(input: {
   seed: string;
   partnerTeam: string;
@@ -900,64 +971,13 @@ export function footballGmAcceptedTargetTradeOffers(input: {
 
   if (!accepted.length) return [];
 
-  function setContainsAll(superset: ReadonlySet<string>, values: readonly string[]) {
-    return values.every((value) => superset.has(value));
-  }
-
-  function dominates(left: FootballGmTargetTradeOffer, right: FootballGmTargetTradeOffer) {
-    const leftOutgoing = new Set(left.proposal.outgoingPlayerIds);
-    const leftIncoming = new Set(left.proposal.incomingPlayerIds);
-    const sendsNoMore = setContainsAll(new Set(right.proposal.outgoingPlayerIds), [...leftOutgoing]);
-    const getsNoLess = setContainsAll(leftIncoming, right.proposal.incomingPlayerIds);
-    const noMoreCuts = left.evaluation.requiresCuts <= right.evaluation.requiresCuts;
-    const strictlyBetter = leftOutgoing.size < right.proposal.outgoingPlayerIds.length
-      || leftIncoming.size > right.proposal.incomingPlayerIds.length
-      || left.evaluation.requiresCuts < right.evaluation.requiresCuts;
-    return sendsNoMore && getsNoLess && noMoreCuts && strictlyBetter;
-  }
-
-  function acceptanceMargin(offer: FootballGmTargetTradeOffer) {
-    const required = Math.max(0.0001, offer.evaluation.partnerSendsValue * offer.evaluation.threshold);
-    return (offer.evaluation.partnerReceivesValue / required) - 1;
-  }
-
-  const undominated = accepted.filter((candidate, index) => (
-    !accepted.some((other, otherIndex) => otherIndex !== index && dominates(other, candidate))
-  ));
-  const deterministicTieBreak = (offer: FootballGmTargetTradeOffer) => (
-    hashString(`${input.seed}:target-offer:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(offer.proposal)}`) % 1_000_000
-  );
-  const compareOffers = (left: FootballGmTargetTradeOffer, right: FootballGmTargetTradeOffer) => (
-    acceptanceMargin(left) - acceptanceMargin(right)
-    || left.evaluation.requiresCuts - right.evaluation.requiresCuts
-    || deterministicTieBreak(left) - deterministicTieBreak(right)
-  );
-
-  const shapeOrder: FootballGmTargetTradeOffer["shape"][] = ["1-for-1", "2-for-1", "1-for-2", "2-for-2"];
-  const buckets = new Map(shapeOrder.map((shape) => [
-    shape,
-    undominated.filter((offer) => offer.shape === shape).sort(compareOffers),
-  ] as const));
-
-  const selected: FootballGmTargetTradeOffer[] = [];
-  const maxOffers = Math.max(1, Math.min(5, input.maxOffers ?? 5));
-
-  for (const shape of shapeOrder) {
-    const best = buckets.get(shape)?.[0];
-    if (best && selected.length < maxOffers) selected.push(best);
-  }
-
-  if (selected.length < maxOffers) {
-    const chosen = new Set(selected.map((offer) => footballGmTradeOfferKey(offer.proposal)));
-    for (const offer of [...undominated].sort(compareOffers)) {
-      if (chosen.has(footballGmTradeOfferKey(offer.proposal))) continue;
-      selected.push(offer);
-      chosen.add(footballGmTradeOfferKey(offer.proposal));
-      if (selected.length >= maxOffers) break;
-    }
-  }
-
-  return selected.sort(compareOffers);
+  return footballGmCurateAcceptedTargetTradeOffers({
+    seed: input.seed,
+    partnerTeam: input.partnerTeam,
+    targetPlayerId: input.targetPlayerId,
+    accepted,
+    maxOffers: input.maxOffers,
+  });
 }
 
 export function footballGmFinalResultV2(input: {
