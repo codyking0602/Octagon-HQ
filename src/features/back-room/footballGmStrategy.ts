@@ -185,6 +185,16 @@ function rosterPlayerIds(roster: readonly FootballGmRosterEntry[]) {
   return new Set(roster.map((entry) => entry.playerId));
 }
 
+export function footballGmCanUseFreeAgency(
+  roster: readonly FootballGmRosterEntry[],
+  tradeChipPlayerIds: readonly string[] = [],
+) {
+  return new Set([
+    ...roster.map((entry) => entry.playerId),
+    ...tradeChipPlayerIds,
+  ]).size < FOOTBALL_GM_ROSTER_SLOTS.length;
+}
+
 function preferredSlotForPlayer(player: FootballGmPlayer) {
   if (player.eligibleSlots.includes("QB")) return "QB";
   if (player.eligibleSlots.includes("RB")) return "RB";
