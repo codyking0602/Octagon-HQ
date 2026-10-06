@@ -480,14 +480,28 @@ export function footballGmEligibleFreeAgencyTeams(input: {
   previousTeam?: string | null;
   excludedPlayerIds?: readonly string[];
 }) {
-  let teams = FOOTBALL_GM_TEAMS.filter((team) => footballGmFreeAgencyCandidatesForTeam({
+  const candidateTeams = FOOTBALL_GM_TEAMS.map((team) => ({
     team,
-    roster: input.roster,
-    tradeChipPlayerIds: input.tradeChipPlayerIds,
-    seed: input.seed,
-    consequences: input.consequences,
-    excludedPlayerIds: input.excludedPlayerIds,
-  }).length > 0);
+    candidates: footballGmFreeAgencyCandidatesForTeam({
+      team,
+      roster: input.roster,
+      tradeChipPlayerIds: input.tradeChipPlayerIds,
+      seed: input.seed,
+      consequences: input.consequences,
+      excludedPlayerIds: input.excludedPlayerIds,
+    }),
+  })).filter((row) => row.candidates.length > 0);
+
+  // When the roster has a real vacancy, make the wheel useful: prefer teams
+  // that can directly fill at least one open slot. The landed team still shows
+  // every legal non-position-locked signing/displacement option.
+  const directFitTeams = candidateTeams
+    .filter((row) => row.candidates.some((candidate) => candidate.legalSlots.length > 0))
+    .map((row) => row.team);
+  let teams = directFitTeams.length
+    ? directFitTeams
+    : candidateTeams.map((row) => row.team);
+
   if (input.previousTeam && teams.length > 1) {
     const withoutRepeat = teams.filter((team) => team !== input.previousTeam);
     if (withoutRepeat.length) teams = withoutRepeat;
