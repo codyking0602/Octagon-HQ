@@ -234,8 +234,16 @@ describe("Football GM strategy v2", () => {
   });
 
   it("keeps a voluntarily released player off that free-agency spin", () => {
-    const roster = codyRunRoster();
-    const releasedId = playerId("Anthony Hill Jr.");
+    const roster: FootballGmRosterEntry[] = [
+      { slot: "WR", playerId: playerId("Jaxon Smith-Njigba"), acquired: "draft" },
+      { slot: "DL", playerId: playerId("Rueben Bain Jr."), acquired: "draft" },
+      { slot: "DB", playerId: playerId("Pat Surtain II"), acquired: "draft" },
+      { slot: "FLEX", playerId: playerId("Trey McBride"), acquired: "draft" },
+      { slot: "RB", playerId: playerId("Kenneth Walker"), acquired: "draft" },
+      { slot: "LB", playerId: playerId("Edgerrin Cooper"), acquired: "draft" },
+      { slot: "QB", playerId: playerId("Jayden Daniels"), acquired: "draft" },
+    ];
+    const releasedId = playerId("Edgerrin Cooper");
     const stripped = roster.filter((entry) => entry.playerId !== releasedId);
     const teams = footballGmEligibleFreeAgencyTeams({
       roster: stripped,
