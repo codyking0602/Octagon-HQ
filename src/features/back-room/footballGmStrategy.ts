@@ -746,13 +746,25 @@ export function footballGmAcceptedTargetTradeOffers(input: {
       proposal,
       priority: 1,
     });
-    return evaluation.accepted
-      ? [{
+    if (!evaluation.accepted) return [];
+    if (evaluation.requiresCuts > 0) {
+      const legalTargetPreservingCut = cutCombinations(
+        evaluation.postTradePlayerIds.filter((playerId) => playerId !== target.id),
+        evaluation.requiresCuts,
+      ).some((cutPlayerIds) => (
+        footballGmResolveTradeRoster({
+          roster: input.roster,
           proposal,
-          evaluation,
-          shape: footballGmTradeOfferShape(proposal),
-        }]
-      : [];
+          cutPlayerIds,
+        }) !== null
+      ));
+      if (!legalTargetPreservingCut) return [];
+    }
+    return [{
+      proposal,
+      evaluation,
+      shape: footballGmTradeOfferShape(proposal),
+    }];
   });
 
   if (!accepted.length) return [];
