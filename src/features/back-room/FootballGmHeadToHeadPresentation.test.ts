@@ -16,9 +16,12 @@ const migration = readFileSync(
 );
 
 describe("The GM head-to-head presentation", () => {
-  it("keeps the approved intro and offers CPU or one-GM play", () => {
+  it("keeps the approved intro and offers the original solo run or one-GM play", () => {
     expect(page).toContain("BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.");
-    expect(page).toContain("<strong>VS CPU</strong>");
+    expect(page).toContain("<strong>SOLO RUN</strong>");
+    expect(page).toContain('navigate("/football/gm-mode?solo=1")');
+    expect(page).toContain("<FootballGmSoloPage startImmediately standalone />");
+    expect(page).not.toContain("<strong>VS CPU</strong>");
     expect(page).toContain("HEAD TO HEAD");
     expect(page).toContain("Alternate every draft pick");
     expect(page).toContain("the worse Year 1 team gets the first full offseason");

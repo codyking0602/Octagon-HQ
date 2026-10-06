@@ -691,6 +691,7 @@ export function FreeAgencyBoard({
   consequences,
   onPick,
   excludedPlayerIds = [],
+  sharedMarket = false,
 }: {
   teamCode: string;
   roster: readonly FootballGmRosterEntry[];
@@ -699,6 +700,7 @@ export function FreeAgencyBoard({
   consequences: FootballGmNegotiationConsequences;
   onPick: (playerId: string, slot: FootballGmRosterSlot, displacedPlayerId?: string) => void;
   excludedPlayerIds?: readonly string[];
+  sharedMarket?: boolean;
 }) {
   const team = wheelFootballTeam(teamCode);
   const candidates = footballGmFreeAgencyCandidatesForTeam({
@@ -714,9 +716,11 @@ export function FreeAgencyBoard({
       <header>
         <TeamLogo teamCode={teamCode} />
         <div>
-          <p className="eyebrow">FREE AGENCY · SHARED 1YR MARKET</p>
+          <p className="eyebrow">FREE AGENCY · {sharedMarket ? "SHARED 1YR MARKET" : "1YR MARKET"}</p>
           <h2>{team?.name ?? teamCode}</h2>
-          <span>Choose any legal fit. A player already held by the other GM never appears.</span>
+          <span>{sharedMarket
+            ? "Choose any legal fit. A player already held by the other GM never appears."
+            : "Choose any legal fit for your roster and cap."}</span>
         </div>
       </header>
       <div className="football-gm__market-list">
@@ -1280,18 +1284,31 @@ function FinalScreen({
   );
 }
 
-export default function FootballGmModePage() {
+export default function FootballGmModePage({
+  startImmediately = false,
+  standalone = false,
+}: {
+  startImmediately?: boolean;
+  standalone?: boolean;
+} = {}) {
   const navigate = useNavigate();
   const identity = useIdentity();
   const challenges = usePlayChallenges();
   const profileMatch = useProfileChallengeMatch("gm-football");
   const storedSeed = challengeSeed(profileMatch.challenge?.setup);
   const [seed, setSeed] = useState(() => storedSeed ?? freshSeed());
-  const [run, setRun] = useState<PersistedRun>(() => (
-    typeof window === "undefined"
-      ? initialRun(seed)
-      : loadPersistedRun(identity.profile?.id, seed) ?? initialRun(seed)
-  ));
+  const [run, setRun] = useState<PersistedRun>(() => {
+    const persisted = typeof window === "undefined"
+      ? null
+      : loadPersistedRun(identity.profile?.id, seed);
+    if (persisted) {
+      return startImmediately && persisted.phase === "intro"
+        ? { ...persisted, phase: "draft" }
+        : persisted;
+    }
+    const fresh = initialRun(seed);
+    return startImmediately ? { ...fresh, phase: "draft" } : fresh;
+  });
   const [challengeStatus, setChallengeStatus] = useState("");
   const [runRepository] = useState(() => createFootballGmRunRepository());
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
@@ -1313,8 +1330,16 @@ export default function FootballGmModePage() {
   useEffect(() => {
     if (!storedSeed || storedSeed === seed) return;
     setSeed(storedSeed);
-    setRun(loadPersistedRun(identity.profile?.id, storedSeed) ?? initialRun(storedSeed));
-  }, [identity.profile?.id, seed, storedSeed]);
+    const persisted = loadPersistedRun(identity.profile?.id, storedSeed);
+    if (persisted) {
+      setRun(startImmediately && persisted.phase === "intro"
+        ? { ...persisted, phase: "draft" }
+        : persisted);
+      return;
+    }
+    const fresh = initialRun(storedSeed);
+    setRun(startImmediately ? { ...fresh, phase: "draft" } : fresh);
+  }, [identity.profile?.id, seed, startImmediately, storedSeed]);
 
   useEffect(() => {
     if (typeof window === "undefined" || !identity.profile?.id) return;
@@ -1935,7 +1960,7 @@ export default function FootballGmModePage() {
         <FinalScreen
           result={finalResult}
           challengeStatus={challengeStatus}
-          opponentName={opponentName}
+          opponentName={standalone ? null : opponentName}
           isRecipient={profileMatch.isRecipient}
           onChallenge={() => void challengeOpponent()}
           onReplay={replay}
