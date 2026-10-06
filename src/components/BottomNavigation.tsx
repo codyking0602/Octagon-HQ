@@ -112,7 +112,7 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
       const visualBottom = viewport.height + viewport.offsetTop;
       const occludedHeight = Math.max(0, window.innerHeight - visualBottom);
       const materiallyOccluded = occludedHeight > 120;
-      const nextShift = Math.round(visualBottom - window.innerHeight);
+      const nextShift = Math.round(window.innerHeight - visualBottom);
       setVisualViewportShift(Math.abs(nextShift) <= 1 ? 0 : nextShift);
 
       if (editing && materiallyOccluded) keyboardSessionRef.current = true;
