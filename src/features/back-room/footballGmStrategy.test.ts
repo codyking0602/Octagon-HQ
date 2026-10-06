@@ -233,6 +233,30 @@ describe("Football GM strategy v2", () => {
     expect(candidates.every((candidate) => candidate.legalSlots.length > 0)).toBe(true);
   });
 
+  it("keeps a voluntarily released player off that free-agency spin", () => {
+    const roster = codyRunRoster();
+    const releasedId = playerId("Anthony Hill Jr.");
+    const stripped = roster.filter((entry) => entry.playerId !== releasedId);
+    const teams = footballGmEligibleFreeAgencyTeams({
+      roster: stripped,
+      seed: "voluntary-free-agency",
+      consequences: {},
+      excludedPlayerIds: [releasedId],
+    });
+
+    expect(teams.length).toBeGreaterThan(0);
+    for (const team of teams) {
+      const candidates = footballGmFreeAgencyCandidatesForTeam({
+        team,
+        roster: stripped,
+        seed: "voluntary-free-agency",
+        consequences: {},
+        excludedPlayerIds: [releasedId],
+      });
+      expect(candidates.some((candidate) => candidate.player.id === releasedId)).toBe(false);
+    }
+  });
+
   it("does not make an identical second offer easier just because it is Priority 2", () => {
     const roster = codyRunRoster();
     const proposal = {
