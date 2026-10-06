@@ -12,6 +12,7 @@ import {
   FOOTBALL_GM_HISTORICAL_FINAL_FOUR,
   FOOTBALL_GM_MAX_TRADE_PLAYERS,
   FOOTBALL_GM_POSITION_WEIGHTS,
+  footballGmAcceptedTargetTradeOffers,
   footballGmAdjustedSalaryForPlayer,
   footballGmContinuity,
   footballGmEffectiveTeamGrade,
@@ -262,6 +263,62 @@ describe("Football GM strategy v2", () => {
         excludedPlayerIds: [releasedId],
       });
       expect(candidates.some((candidate) => candidate.player.id === releasedId)).toBe(false);
+    }
+  });
+
+  it("uses only a zero to 2.5 percent CPU trade premium", () => {
+    const roster = codyRunRoster();
+    const thresholds = new Set<number>();
+    for (let index = 0; index < 200; index += 1) {
+      const evaluation = footballGmEvaluateTradeProposal({
+        seed: `threshold-${index}`,
+        partnerTeam: "NYJ",
+        roster,
+        proposal: {
+          outgoingPlayerIds: [playerId("Lamar Jackson")],
+          incomingPlayerIds: [playerId("Geno Smith")],
+        },
+        priority: 1,
+      });
+      thresholds.add(evaluation.threshold);
+      expect(evaluation.threshold).toBeGreaterThanOrEqual(1);
+      expect(evaluation.threshold).toBeLessThanOrEqual(1.025);
+    }
+    expect(thresholds.has(1)).toBe(true);
+    expect(thresholds.has(1.025)).toBe(true);
+  });
+
+  it("turns a chosen trade target into no more than five already-accepted asking prices", () => {
+    const roster: FootballGmRosterEntry[] = [
+      { slot: "WR", playerId: playerId("Jaxon Smith-Njigba"), acquired: "draft" },
+      { slot: "DL", playerId: playerId("Rueben Bain Jr."), acquired: "draft" },
+      { slot: "DB", playerId: playerId("Pat Surtain II"), acquired: "draft" },
+      { slot: "FLEX", playerId: playerId("Trey McBride"), acquired: "draft" },
+      { slot: "RB", playerId: playerId("Kenneth Walker"), acquired: "draft" },
+      { slot: "LB", playerId: playerId("Edgerrin Cooper"), acquired: "draft" },
+      { slot: "QB", playerId: playerId("Jayden Daniels"), acquired: "draft" },
+    ];
+    const anchorPlayerId = playerId("Edgerrin Cooper");
+    const targetPlayerId = playerId("Devin Lloyd");
+    const offers = footballGmAcceptedTargetTradeOffers({
+      seed: "4f21ffe3-2802-45a6-8941-a6ae81b49ca3",
+      partnerTeam: "CAR",
+      roster,
+      anchorPlayerId,
+      targetPlayerId,
+      shoppedPlayerIds: [anchorPlayerId],
+      maxOffers: 5,
+    });
+
+    expect(offers.length).toBeGreaterThan(0);
+    expect(offers.length).toBeLessThanOrEqual(5);
+    expect(new Set(offers.map((offer) => JSON.stringify(offer.proposal))).size).toBe(offers.length);
+    for (const offer of offers) {
+      expect(offer.evaluation.accepted).toBe(true);
+      expect(offer.proposal.outgoingPlayerIds).toContain(anchorPlayerId);
+      expect(offer.proposal.incomingPlayerIds).toContain(targetPlayerId);
+      expect(offer.evaluation.threshold).toBeGreaterThanOrEqual(1);
+      expect(offer.evaluation.threshold).toBeLessThanOrEqual(1.025);
     }
   });
 
