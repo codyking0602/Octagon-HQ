@@ -29,7 +29,6 @@ import {
   footballGmCanUseFreeAgency,
   footballGmContinuity,
   footballGmEligibleFreeAgencyTeams,
-  footballGmFinalResultV2,
   footballGmIsOffseasonCompliantV2,
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
@@ -52,6 +51,7 @@ import FootballGmSoloPage, {
 } from "./FootballGmModePage";
 import { footballGmCpuDraftChoice, footballGmCpuOffseason } from "./footballGmCpu";
 import { footballGmPlaytestOpponentName, isFootballGmPlaytestProfile } from "./footballGmAccess";
+import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 
 type VersusMode = "cpu" | "human";
@@ -240,12 +240,14 @@ function YearOneMatchup({
       <div className="football-gm__head-to-head-seasons">
         <article>
           <small>{leftName}</small>
+          <em>TEAM OVERALL</em>
           <strong>{left.teamGrade.toFixed(1)}</strong>
           <b>{left.finish}</b>
         </article>
         <span>VS</span>
         <article>
           <small>{rightName}</small>
+          <em>TEAM OVERALL</em>
           <strong>{right.teamGrade.toFixed(1)}</strong>
           <b>{right.finish}</b>
         </article>
@@ -258,7 +260,7 @@ function YearOneMatchup({
         </div>
       ) : null}
       {waiting ? <p>Waiting for both Year 1 results to lock.</p> : null}
-      {onContinue ? <button className="primary-action" type="button" onClick={onContinue}>ENTER THE OFFSEASON</button> : null}
+      {onContinue ? <button className="primary-action" type="button" onClick={onContinue}>CONTINUE →</button> : null}
     </section>
   );
 }
@@ -377,6 +379,31 @@ function WaitingCard({ title, copy }: { title: string; copy: string }) {
   );
 }
 
+function YearOneMiniRecap({
+  leftName,
+  rightName,
+  leftRun,
+  rightRun,
+}: {
+  leftName: string;
+  rightName: string;
+  leftRun: PersistedRun;
+  rightRun: PersistedRun;
+}) {
+  const left = footballGmSeasonResultV2({ seed: leftRun.seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
+  const right = footballGmSeasonResultV2({ seed: rightRun.seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
+  return (
+    <section className="football-gm__year1-mini surface-card">
+      <small>YEAR 1 RECAP</small>
+      <div>
+        <span><b>{leftName}</b><strong>{left.teamGrade.toFixed(1)}</strong><em>{left.finish}</em></span>
+        <i>VS</i>
+        <span><b>{rightName}</b><strong>{right.teamGrade.toFixed(1)}</strong><em>{right.finish}</em></span>
+      </div>
+    </section>
+  );
+}
+
 function FinalMatch({
   leftName,
   rightName,
@@ -390,37 +417,18 @@ function FinalMatch({
   rightRun: PersistedRun;
   onReplay: () => void;
 }) {
-  const left = footballGmFinalResultV2({
-    seed: leftRun.seed,
-    yearOneRoster: leftRun.roster,
-    finalRoster: leftRun.finalRoster.length ? leftRun.finalRoster : leftRun.roster,
-  });
-  const right = footballGmFinalResultV2({
-    seed: rightRun.seed,
-    yearOneRoster: rightRun.roster,
-    finalRoster: rightRun.finalRoster.length ? rightRun.finalRoster : rightRun.roster,
-  });
-  const winner = left.score === right.score ? "TIE" : left.score > right.score ? leftName : rightName;
   return (
-    <section className="football-gm__final football-gm__versus-final surface-card">
-      <p className="eyebrow">THE GM · 3-YEAR RESULT</p>
-      <h1>{winner === "TIE" ? "DEAD EVEN" : `${winner.toUpperCase()} WINS`}</h1>
-      <div className="football-gm__final-versus-score">
-        <article><small>{leftName}</small><strong>{left.score.toFixed(1)}</strong></article>
-        <span>VS</span>
-        <article><small>{rightName}</small><strong>{right.score.toFixed(1)}</strong></article>
-      </div>
-      <div className="football-gm__final-season-table">
-        {[1,2,3].map((year, index) => (
-          <div key={year}>
-            <span>{left.seasons[index]!.finish}</span>
-            <b>Y{year}</b>
-            <span>{right.seasons[index]!.finish}</span>
-          </div>
-        ))}
-      </div>
-      <button type="button" onClick={onReplay}>NEW GM MATCH</button>
-    </section>
+    <>
+      <FootballGmFranchiseReport
+        name={leftName}
+        run={leftRun}
+        opponentName={rightName}
+        opponentRun={rightRun}
+      />
+      <section className="football-gm-report__actions surface-card">
+        <button type="button" onClick={onReplay}>NEW GM MATCH</button>
+      </section>
+    </>
   );
 }
 
@@ -1060,6 +1068,16 @@ export default function FootballGmHeadToHeadPage() {
     });
   }
 
+  async function acknowledgeYearOne() {
+    if (mode !== "human" || !repository || !remote) return;
+    try {
+      const next = await repository.acknowledgeYear1(remote.code);
+      setRemote(next);
+    } catch (reason) {
+      setRemoteError(reason instanceof Error ? reason.message : "Year 1 could not be acknowledged.");
+    }
+  }
+
   async function finishOffseason() {
     const ready = footballGmIsOffseasonCompliantV2(
       run.finalRoster,
@@ -1119,6 +1137,12 @@ export default function FootballGmHeadToHeadPage() {
     run.negotiationConsequences,
     run.tradeChipPlayerIds,
   );
+  const showPersistentYearOne = mode === "human"
+    && Boolean(remote)
+    && Boolean(remoteMe?.year1_result)
+    && Boolean(remoteOpponent?.year1_result)
+    && !remoteMe?.year1_acknowledged
+    && (remote?.phase === "year1" || remote?.phase === "offseason");
 
   let humanFirstName: string | null = null;
   if (remote?.offseason_first_profile_id) {
@@ -1235,7 +1259,7 @@ export default function FootballGmHeadToHeadPage() {
             </>
           ) : null}
 
-          {displayedPhase === "year1" ? (
+          {displayedPhase === "year1" && !showPersistentYearOne ? (
             <YearOneMatchup
               leftName={myDisplayName}
               rightName={opponentDisplayName}
@@ -1247,7 +1271,18 @@ export default function FootballGmHeadToHeadPage() {
             />
           ) : null}
 
-          {displayedPhase === "offseason" ? (
+          {showPersistentYearOne ? (
+            <YearOneMatchup
+              leftName={myDisplayName}
+              rightName={opponentDisplayName}
+              leftRun={run}
+              rightRun={opponentRun}
+              firstName={humanFirstName}
+              onContinue={() => void acknowledgeYearOne()}
+            />
+          ) : null}
+
+          {displayedPhase === "offseason" && !showPersistentYearOne ? (
             isMyTurn ? (
               <div className="football-gm__front-office">
                 <FrontOfficeSummary run={run} isReady={offseasonReady} />
@@ -1257,6 +1292,7 @@ export default function FootballGmHeadToHeadPage() {
                   seed={run.seed}
                   consequences={run.negotiationConsequences}
                   showFutureSalary
+                  compact
                   onShop={!run.tradeAnchorPlayerId && !run.pendingTradeResolution && !run.pendingFreeAgentTeam ? beginTrade : undefined}
                   shoppedPlayerIds={run.shoppedPlayerIds}
                 />
@@ -1343,12 +1379,22 @@ export default function FootballGmHeadToHeadPage() {
                 )}
               </div>
             ) : (
-              <WaitingCard
-                title={mode === "human" ? `${opponentDisplayName.toUpperCase()} HAS THE FRONT OFFICE` : "CPU IS IN THE FRONT OFFICE"}
-                copy={mode === "human"
-                  ? "They get their entire offseason first. Their completed moves remove players from the market you will inherit."
-                  : "The CPU is completing its entire offseason. You get the remaining shared market when it finishes."}
-              />
+              <div className="football-gm__offseason-wait">
+                <WaitingCard
+                  title={mode === "human" ? `${opponentDisplayName.toUpperCase()} HAS THE FRONT OFFICE` : "CPU IS IN THE FRONT OFFICE"}
+                  copy={mode === "human"
+                    ? "They get their entire offseason first. Their completed moves remove players from the market you will inherit."
+                    : "The CPU is completing its entire offseason. You get the remaining shared market when it finishes."}
+                />
+                {mode === "human" ? (
+                  <YearOneMiniRecap
+                    leftName={myDisplayName}
+                    rightName={opponentDisplayName}
+                    leftRun={run}
+                    rightRun={opponentRun}
+                  />
+                ) : null}
+              </div>
             )
           ) : null}
 

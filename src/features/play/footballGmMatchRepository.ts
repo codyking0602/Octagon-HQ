@@ -12,6 +12,7 @@ const participantSchema = z.object({
   accepted: z.boolean(),
   run_state: z.record(z.string(), z.unknown()).default({}),
   year1_result: z.record(z.string(), z.unknown()).nullable().default(null),
+  year1_acknowledged: z.boolean().default(false),
   offseason_complete: z.boolean(),
 });
 
@@ -64,6 +65,7 @@ export interface FootballGmMatchRepository {
     },
   ): Promise<FootballGmMatchState>;
   submitYear1(code: string, result: unknown): Promise<FootballGmMatchState>;
+  acknowledgeYear1(code: string): Promise<FootballGmMatchState>;
   saveOffseason(code: string, runState: unknown): Promise<FootballGmMatchState>;
   finishOffseason(code: string, runState: unknown): Promise<FootballGmMatchState>;
 }
@@ -109,6 +111,11 @@ export function createFootballGmMatchRepository(
       return stateSchema.parse(await rpc(client, "submit_football_gm_year1", {
         p_code: code,
         p_result: asJson(result),
+      }));
+    },
+    async acknowledgeYear1(code) {
+      return stateSchema.parse(await rpc(client, "acknowledge_football_gm_year1", {
+        p_code: code,
       }));
     },
     async saveOffseason(code, runState) {
