@@ -83,8 +83,8 @@ const FOOTBALL_GM_RESUME_SCORE: Readonly<Record<FootballGmPlayoffFinish, number>
 
 export function footballGmTeamOverall(teamGrade: number) {
   const bounded = clamp(teamGrade, FOOTBALL_GM_TEAM_OVR_ANCHORS[0][0], FOOTBALL_GM_TEAM_OVR_ANCHORS.at(-1)![0]);
-  let low = FOOTBALL_GM_TEAM_OVR_ANCHORS[0];
-  let high = FOOTBALL_GM_TEAM_OVR_ANCHORS.at(-1)!;
+  let low: readonly [number, number] = FOOTBALL_GM_TEAM_OVR_ANCHORS[0];
+  let high: readonly [number, number] = FOOTBALL_GM_TEAM_OVR_ANCHORS.at(-1)!;
   for (let index = 1; index < FOOTBALL_GM_TEAM_OVR_ANCHORS.length; index += 1) {
     if (bounded <= FOOTBALL_GM_TEAM_OVR_ANCHORS[index]![0]) {
       low = FOOTBALL_GM_TEAM_OVR_ANCHORS[index - 1]!;
