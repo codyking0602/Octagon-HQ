@@ -454,6 +454,8 @@ export default function FootballGmHeadToHeadPage() {
 
   const [wheelRotation, setWheelRotation] = useState(0);
   const [wheelSpinning, setWheelSpinning] = useState(false);
+  const [faWheelRotation, setFaWheelRotation] = useState(0);
+  const [faWheelSpinning, setFaWheelSpinning] = useState(false);
   const [cpuPendingTeam, setCpuPendingTeam] = useState<string | null>(null);
   const cpuBusyRef = useRef(false);
 
@@ -511,6 +513,25 @@ export default function FootballGmHeadToHeadPage() {
       ? cpuPendingTeam
       : run.pendingTeam;
   const pendingTeam = pendingTeamCode ? wheelFootballTeam(pendingTeamCode) ?? null : null;
+  const canUseFreeAgency = displayedPhase === "offseason"
+    && isMyTurn
+    && footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds);
+  const freeAgencyTeamCodes = canUseFreeAgency
+    ? footballGmEligibleFreeAgencyTeams({
+        roster: run.finalRoster,
+        tradeChipPlayerIds: run.tradeChipPlayerIds,
+        seed: run.seed,
+        consequences: run.negotiationConsequences,
+        previousTeam: run.previousFreeAgentTeam,
+        excludedPlayerIds: exclusionIds,
+      })
+    : [];
+  const freeAgencyWheelTeams = freeAgencyTeamCodes
+    .map((teamCode) => wheelFootballTeam(teamCode))
+    .filter((team): team is WheelFootballTeam => Boolean(team));
+  const pendingFreeAgencyTeam = run.pendingFreeAgentTeam
+    ? wheelFootballTeam(run.pendingFreeAgentTeam) ?? null
+    : null;
 
   useEffect(() => {
     if (!matchCode || !repository || !activeProfileId) return;
@@ -832,21 +853,33 @@ export default function FootballGmHeadToHeadPage() {
   }
 
   function spinFreeAgency() {
-    if (!footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)) return;
-    const teams = footballGmEligibleFreeAgencyTeams({
-      roster: run.finalRoster,
-      tradeChipPlayerIds: run.tradeChipPlayerIds,
-      seed: run.seed,
-      consequences: run.negotiationConsequences,
-      previousTeam: run.previousFreeAgentTeam,
-      excludedPlayerIds: exclusionIds,
-    });
-    const team = footballGmSpinTeam(`${run.seed}:free-agency`, run.freeAgentSpinIndex, teams);
-    if (!team) {
+    if (!canUseFreeAgency || faWheelSpinning || run.pendingFreeAgentTeam) return;
+    const teamCode = footballGmSpinTeam(
+      `${run.seed}:free-agency`,
+      run.freeAgentSpinIndex,
+      freeAgencyTeamCodes,
+    );
+    if (!teamCode) {
       patch({ tradeMessage: "No legal 1YR free agent fits the remaining shared market and both future caps." });
       return;
     }
-    patch({ pendingFreeAgentTeam: team, tradeMessage: "" });
+    const index = freeAgencyWheelTeams.findIndex((team) => team.code === teamCode);
+    if (index < 0 || !freeAgencyWheelTeams.length) {
+      patch({ pendingFreeAgentTeam: teamCode, tradeMessage: "" });
+      return;
+    }
+
+    const step = 360 / freeAgencyWheelTeams.length;
+    setFaWheelSpinning(true);
+    setFaWheelRotation((current) => {
+      const modulo = ((current % 360) + 360) % 360;
+      const target = ((-index * step) % 360 + 360) % 360;
+      return current + 1080 + ((target - modulo + 360) % 360);
+    });
+    window.setTimeout(() => {
+      setFaWheelSpinning(false);
+      patch({ pendingFreeAgentTeam: teamCode, tradeMessage: "" });
+    }, 1550);
   }
 
   function makeFreeAgentPick(playerId: string, slot: FootballGmRosterSlot, displacedPlayerId?: string) {
@@ -1277,11 +1310,21 @@ export default function FootballGmHeadToHeadPage() {
                         excludedPlayerIds={exclusionIds}
                         onPick={makeFreeAgentPick}
                       />
-                    ) : footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds) ? (
-                      <section className="football-gm__offseason-action surface-card">
-                        <span><small>FREE AGENCY</small><strong>{footballGmOpenSlots(run.finalRoster).join(" · ")} OPEN</strong></span>
-                        <p>Spin the shared 1YR market. Players already held by {opponentDisplayName} are unavailable.</p>
-                        <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY</button>
+                    ) : canUseFreeAgency ? (
+                      <section className="football-gm__market-wheel">
+                        <div className="football-gm__trade-stage-heading">
+                          <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")} OPEN</p>
+                          <h2>SPIN THE 1YR MARKET</h2>
+                          <span>Same NFL wheel. Players already held by {opponentDisplayName} are off the board.</span>
+                        </div>
+                        <GmFootballWheel
+                          teams={freeAgencyWheelTeams}
+                          rotation={faWheelRotation}
+                          spinning={faWheelSpinning}
+                          pendingTeam={pendingFreeAgencyTeam}
+                          canSpin={!faWheelSpinning && !run.pendingFreeAgentTeam && freeAgencyWheelTeams.length > 0}
+                          onSpin={spinFreeAgency}
+                        />
                       </section>
                     ) : (
                       <section className="football-gm__front-office-actions surface-card">
