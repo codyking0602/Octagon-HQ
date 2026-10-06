@@ -67,7 +67,7 @@ interface PendingTradeResolution {
   cutPlayerIds: string[];
 }
 
-interface PersistedRun {
+export interface PersistedRun {
   version: string;
   seed: string;
   phase: Phase;
@@ -113,7 +113,7 @@ function freshSeed() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function initialRun(seed: string): PersistedRun {
+export function initialRun(seed: string): PersistedRun {
   return {
     version: FOOTBALL_GM_VERSION,
     seed,
@@ -327,7 +327,7 @@ function footballGmHeadshotsForTeam(teamCode: string) {
   return load;
 }
 
-function PlayerHeadshot({
+export function PlayerHeadshot({
   player,
   className = "football-gm__player-headshot",
 }: {
@@ -373,12 +373,12 @@ function footballGmScoutingTier(grade: number): FootballGmScoutingTier {
   return "DEPTH";
 }
 
-function PlayerQualityPill({ player }: { player: FootballGmPlayer }) {
+export function PlayerQualityPill({ player }: { player: FootballGmPlayer }) {
   const tier = footballGmScoutingTier(player.currentGrade);
   return <span className={`football-gm__quality-pill quality-${tier.toLowerCase()}`}>{tier}</span>;
 }
 
-function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
+export function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
   const label = outlook === "ELITE UPSIDE" ? "RISING" : outlook;
   const tone = label === "RISING" ? "rising" : label === "DECLINE RISK" ? "decline" : "stable";
   return <span className={`football-gm__outlook-pill outlook-${tone}`}>{label}</span>;
@@ -395,7 +395,7 @@ function wheelTeamBackground(teams: readonly WheelFootballTeam[]) {
   return `conic-gradient(from ${-slice / 2}deg, ${stops.join(", ")})`;
 }
 
-function GmFootballWheel({
+export function GmFootballWheel({
   teams,
   rotation,
   spinning,
@@ -458,7 +458,7 @@ function GmFootballWheel({
   );
 }
 
-function CapMeter({
+export function CapMeter({
   roster,
   year,
   seed,
@@ -487,7 +487,7 @@ function CapMeter({
   );
 }
 
-function RosterGrid({
+export function RosterGrid({
   roster,
   year,
   seed,
@@ -555,19 +555,26 @@ function RosterGrid({
   );
 }
 
-function CandidateBoard({
+export function CandidateBoard({
   teamCode,
   roster,
   year,
   onPick,
+  excludedPlayerIds = [],
 }: {
   teamCode: string;
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2;
   onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
+  excludedPlayerIds?: readonly string[];
 }) {
   const team = wheelFootballTeam(teamCode);
-  const candidates = footballGmCandidatesForTeam({ team: teamCode, roster, year });
+  const candidates = footballGmCandidatesForTeam({
+    team: teamCode,
+    roster,
+    year,
+    excludedPlayerIds,
+  });
   const openSlots = footballGmOpenSlots(roster);
   const [selectedSlot, setSelectedSlot] = useState<FootballGmRosterSlot | null>(null);
   const [showScoutKey, setShowScoutKey] = useState(false);
@@ -676,7 +683,7 @@ function CandidateBoard({
   );
 }
 
-function FreeAgencyBoard({
+export function FreeAgencyBoard({
   teamCode,
   roster,
   tradeChipPlayerIds,
@@ -762,7 +769,7 @@ function freeAgencyReleaseBudget(
   return Math.max(0, Math.min(year2Room, year3Room));
 }
 
-function FreeAgencyReleasePanel({
+export function FreeAgencyReleasePanel({
   roster,
   seed,
   consequences,
@@ -832,7 +839,7 @@ function FreeAgencyReleasePanel({
   );
 }
 
-function TradeChipPanel({
+export function TradeChipPanel({
   playerIds,
   seed,
   consequences,
@@ -881,7 +888,7 @@ function TradeChipPanel({
   );
 }
 
-function SeasonCard({
+export function SeasonCard({
   seed,
   year,
   yearOneRoster,
@@ -910,7 +917,7 @@ function SeasonCard({
   );
 }
 
-function ContinuityMeter({
+export function ContinuityMeter({
   yearOneRoster,
   roster,
 }: {
@@ -960,16 +967,18 @@ function TradePackagePlayer({
   );
 }
 
-function TradeRoom({
+export function TradeRoom({
   run,
   patch,
   onAccept,
   onEndTalks,
+  excludedPlayerIds = [],
 }: {
   run: PersistedRun;
   patch: (next: Partial<PersistedRun>) => void;
   onAccept: (proposal: FootballGmTradeProposal, offerNumber: number) => void;
   onEndTalks: () => void;
+  excludedPlayerIds?: readonly string[];
 }) {
   const anchor = run.tradeAnchorPlayerId ? footballGmPlayerById(run.tradeAnchorPlayerId) : null;
   if (!anchor) return null;
@@ -1000,7 +1009,12 @@ function TradeRoom({
   }
 
   const anchorSlot = run.finalRoster.find((entry) => entry.playerId === anchor.id)?.slot ?? null;
-  const partnerPlayers = [...footballGmTradePartnerPlayers(run.tradePartnerTeam, run.finalRoster, run.tradeChipPlayerIds)]
+  const partnerPlayers = [...footballGmTradePartnerPlayers(
+    run.tradePartnerTeam,
+    run.finalRoster,
+    run.tradeChipPlayerIds,
+    excludedPlayerIds,
+  )]
     .sort((left, right) => (
       Number(Boolean(anchorSlot && right.eligibleSlots.includes(anchorSlot)))
       - Number(Boolean(anchorSlot && left.eligibleSlots.includes(anchorSlot)))
@@ -1017,6 +1031,7 @@ function TradeRoom({
         anchorPlayerId: anchor.id,
         targetPlayerId: target.id,
         shoppedPlayerIds: run.shoppedPlayerIds,
+        excludedPlayerIds,
         maxOffers: 5,
       })
     : [];
@@ -1121,7 +1136,7 @@ function TradeRoom({
   );
 }
 
-function TradeCutResolution({
+export function TradeCutResolution({
   run,
   onToggleCut,
   onFinalize,
