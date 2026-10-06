@@ -35,14 +35,14 @@ function footballEvent(teamPairs: Array<[string, string, string, string]>): Pick
 describe("football matchup breakdowns", () => {
   it("discovers this week's authored featured matchups from the canonical slate games without an event-id map", () => {
     const event = footballEvent([
-      ["usc-trojans", "USC Trojans", "oregon-ducks", "Oregon Ducks"],
-      ["new-orleans-saints", "New Orleans Saints", "las-vegas-raiders", "Las Vegas Raiders"],
+      ["seattle-seahawks", "Seattle Seahawks", "san-francisco-49ers", "San Francisco 49ers"],
+      ["alabama-crimson-tide", "Alabama Crimson Tide", "georgia-bulldogs", "Georgia Bulldogs"],
       ["texas", "Texas Longhorns", "texas-state", "Texas State Bobcats"],
     ]);
 
     expect(footballMatchupBreakdownsForEvent(event).map((breakdown) => breakdown.id)).toEqual([
-      "2026-alabama-mississippi-state",
-      "2026-chiefs-raiders",
+      "2026-49ers-seahawks",
+      "2026-georgia-alabama",
     ]);
   });
 
@@ -98,6 +98,33 @@ describe("football matchup breakdowns", () => {
       "https://www.pro-football-reference.com/teams/rai/2026.htm",
     ]);
     expect(breakdown?.compact?.things).toHaveLength(3);
+  });
+
+  it("uses the locked compact NFL treatment for 49ers-Seahawks with team logos and player links", () => {
+    const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-49ers-seahawks");
+
+    expect(breakdown?.title).toBe("49ers at Seahawks");
+    expect(breakdown?.kickoffAt).toBe("2026-10-11T20:25:00Z");
+    expect(breakdown?.compact?.leagueLabel).toBe("NFL");
+    expect(breakdown?.teams.map((team) => team.record)).toEqual(["4–0", "3–1"]);
+    expect(breakdown?.teams.every((team) => Boolean(team.logoUrl))).toBe(true);
+    expect(breakdown?.compact?.things).toHaveLength(3);
+    expect(breakdown?.compact?.things.flatMap((thing) => thing.body).some((part) => part.href?.includes("PurdBr00"))).toBe(true);
+    expect(breakdown?.compact?.things.flatMap((thing) => thing.body).some((part) => part.href?.includes("SmitJa06"))).toBe(true);
+  });
+
+  it("uses the current AP ranks and locked compact CFB treatment for Georgia-Alabama", () => {
+    const breakdown = FOOTBALL_MATCHUP_BREAKDOWNS.find((item) => item.id === "2026-georgia-alabama");
+
+    expect(breakdown?.title).toBe("Georgia at Alabama");
+    expect(breakdown?.kickoffAt).toBe("2026-10-10T23:30:00Z");
+    expect(breakdown?.compact?.rankingSource).toBe("AP");
+    expect(breakdown?.teams.map((team) => team.rank)).toEqual([2, 6]);
+    expect(breakdown?.teams.map((team) => team.record)).toEqual(["5–0", "5–0"]);
+    expect(breakdown?.teams.every((team) => Boolean(team.logoUrl))).toBe(true);
+    expect(breakdown?.compact?.things).toHaveLength(3);
+    expect(breakdown?.compact?.things.flatMap((thing) => thing.body).some((part) => part.href?.includes("gunner-stockton-1"))).toBe(true);
+    expect(breakdown?.compact?.things.flatMap((thing) => thing.body).some((part) => part.href?.includes("keelon-russell-1"))).toBe(true);
   });
 
   it("keeps legacy editorial contracts while allowing the approved compact matchup format", () => {

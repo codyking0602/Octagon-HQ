@@ -94,6 +94,35 @@ describe("FootballMatchupBreakdowns", () => {
     );
   });
 
+  it("opens the current 49ers-Seahawks compact sheet with linked teams, players and logo pills", async () => {
+    window.history.replaceState({}, "", "/football/picks?matchup=2026-49ers-seahawks");
+    render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
+
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveAccessibleName("49ers at Seahawks");
+    expect(dialog).toHaveTextContent("THE HQ’S NFL GAME OF THE WEEK");
+    expect(dialog).toHaveTextContent("3 THINGS THAT MATTER");
+    expect(screen.getByRole("link", { name: "San Francisco 49ers" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Seattle Seahawks" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Brock Purdy" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Jaxon Smith-Njigba" })).toBeInTheDocument();
+    expect(dialog.querySelectorAll(".football-matchup-breakdown-feature-team__logo img")).toHaveLength(2);
+  });
+
+  it("opens the current Georgia-Alabama compact sheet with AP ranks, linked players and logo pills", async () => {
+    window.history.replaceState({}, "", "/football/picks?matchup=2026-georgia-alabama");
+    render(<FootballMatchupBreakdowns breakdowns={FOOTBALL_MATCHUP_BREAKDOWNS} />);
+
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toHaveAccessibleName("Georgia at Alabama");
+    expect(dialog).toHaveTextContent("THE HQ’S CFB GAME OF THE WEEK");
+    expect(dialog).toHaveTextContent("AP #2");
+    expect(dialog).toHaveTextContent("AP #6");
+    expect(screen.getByRole("link", { name: "Gunner Stockton" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Keelon Russell" })).toBeInTheDocument();
+    expect(dialog.querySelectorAll(".football-matchup-breakdown-feature-team__logo img")).toHaveLength(2);
+  });
+
   it("portals the open breakdown above the Picks stacking context and locks background scrolling", () => {
     render(
       <div data-testid="picks-tools">
