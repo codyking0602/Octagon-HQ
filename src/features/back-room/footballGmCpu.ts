@@ -91,7 +91,9 @@ function replacementScore(input: {
   const nextYear3 = footballGmAdjustedSalaryForPlayer(incoming, 3, input.seed, {});
   const savings2 = currentYear2 - nextYear2;
   const savings3 = currentYear3 - nextYear3;
-  if (savings2 <= 0 && savings3 <= 0) return null;
+  // The CPU cannot "fix" one future cap by making the other future cap worse.
+  // Every cleanup move is monotonic across both years.
+  if (savings2 < 0 || savings3 < 0 || (savings2 === 0 && savings3 === 0)) return null;
 
   const gradeDelta = footballGmProjectedGradeForPlayer(incoming, 2)
     - footballGmProjectedGradeForPlayer(outgoingPlayer, 2);
