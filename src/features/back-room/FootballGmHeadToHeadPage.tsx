@@ -220,7 +220,6 @@ function YearOneMatchup({
   rightName,
   leftRun,
   rightRun,
-  seed,
   firstName,
   waiting,
   onContinue,
@@ -229,13 +228,12 @@ function YearOneMatchup({
   rightName: string;
   leftRun: PersistedRun;
   rightRun: PersistedRun;
-  seed: string;
   firstName: string | null;
   waiting?: boolean;
   onContinue?: () => void;
 }) {
-  const left = footballGmSeasonResultV2({ seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
-  const right = footballGmSeasonResultV2({ seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
+  const left = footballGmSeasonResultV2({ seed: leftRun.seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
+  const right = footballGmSeasonResultV2({ seed: rightRun.seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
   return (
     <section className="football-gm__year-reveal football-gm__year1-matchup surface-card">
       <p className="eyebrow">YEAR 1 COMPLETE</p>
@@ -384,23 +382,21 @@ function FinalMatch({
   rightName,
   leftRun,
   rightRun,
-  seed,
   onReplay,
 }: {
   leftName: string;
   rightName: string;
   leftRun: PersistedRun;
   rightRun: PersistedRun;
-  seed: string;
   onReplay: () => void;
 }) {
   const left = footballGmFinalResultV2({
-    seed,
+    seed: leftRun.seed,
     yearOneRoster: leftRun.roster,
     finalRoster: leftRun.finalRoster.length ? leftRun.finalRoster : leftRun.roster,
   });
   const right = footballGmFinalResultV2({
-    seed,
+    seed: rightRun.seed,
     yearOneRoster: rightRun.roster,
     finalRoster: rightRun.finalRoster.length ? rightRun.finalRoster : rightRun.roster,
   });
@@ -467,7 +463,9 @@ export default function FootballGmHeadToHeadPage() {
   const activeProfileId = identity.profile?.id ?? null;
   const remoteMe = remote?.participants.find((participant) => participant.id === activeProfileId) ?? null;
   const remoteOpponent = remote?.participants.find((participant) => participant.id !== activeProfileId) ?? null;
-  const remoteOpponentRun = remoteOpponent ? normalizedRun(remote?.seed ?? run.seed, remoteOpponent.run_state) : null;
+  const remoteOpponentRun = remoteOpponent
+    ? normalizedRun(`${remote?.seed ?? run.seed}:${remoteOpponent.id}`, remoteOpponent.run_state)
+    : null;
 
   const opponentRun = mode === "human" ? remoteOpponentRun ?? initialRun(remote?.seed ?? run.seed) : cpuRun;
   const displayedPhase = mode === "human" ? remote?.phase ?? "waiting" : localPhase;
@@ -525,7 +523,7 @@ export default function FootballGmHeadToHeadPage() {
       setRemoteError("");
       const participant = next.participants.find((row) => row.id === activeProfileId);
       if (!participant) return;
-      const nextRun = normalizedRun(next.seed, participant.run_state);
+      const nextRun = normalizedRun(`${next.seed}:${participant.id}`, participant.run_state);
       const myOffseason = next.phase === "offseason" && next.current_turn_profile_id === activeProfileId;
       if (!myOffseason) {
         humanHydratedRef.current = false;
@@ -592,7 +590,7 @@ export default function FootballGmHeadToHeadPage() {
     ) return;
     yearOneSubmittedRef.current = true;
     const result = footballGmSeasonResultV2({
-      seed: remote.seed,
+      seed: run.seed,
       yearOneRoster: run.roster,
       roster: run.roster,
       year: 1,
@@ -700,8 +698,8 @@ export default function FootballGmHeadToHeadPage() {
 
   function resetLocal() {
     const seed = freshSeed();
-    const userRun = { ...initialRun(seed), phase: "draft" as const };
-    const opponent = { ...initialRun(seed), phase: "draft" as const };
+    const userRun = { ...initialRun(`${seed}:you`), phase: "draft" as const };
+    const opponent = { ...initialRun(`${seed}:cpu`), phase: "draft" as const };
     setRun(userRun);
     setCpuRun(opponent);
     setMode("cpu");
@@ -815,7 +813,7 @@ export default function FootballGmHeadToHeadPage() {
 
   function beginCpuOffseason() {
     const left = footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.roster, year: 1 });
-    const right = footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: cpuRun.roster, roster: cpuRun.roster, year: 1 });
+    const right = footballGmSeasonResultV2({ seed: cpuRun.seed, yearOneRoster: cpuRun.roster, roster: cpuRun.roster, year: 1 });
     let first: LocalTurn;
     if (FINISH_RANK[left.finish] !== FINISH_RANK[right.finish]) {
       first = FINISH_RANK[left.finish] < FINISH_RANK[right.finish] ? "user" : "cpu";
@@ -1112,7 +1110,7 @@ export default function FootballGmHeadToHeadPage() {
     ? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.roster, year: 1 })
     : null;
   const cpuYear1Right = mode === "cpu" && cpuRun.roster.length === 7
-    ? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: cpuRun.roster, roster: cpuRun.roster, year: 1 })
+    ? footballGmSeasonResultV2({ seed: cpuRun.seed, yearOneRoster: cpuRun.roster, roster: cpuRun.roster, year: 1 })
     : null;
   const cpuPriorityName = localOffseasonFirst === "user"
     ? myDisplayName
@@ -1224,7 +1222,6 @@ export default function FootballGmHeadToHeadPage() {
               rightName={opponentDisplayName}
               leftRun={run}
               rightRun={opponentRun}
-              seed={mode === "human" ? remote!.seed : run.seed}
               firstName={mode === "human" ? humanFirstName : cpuPriorityName}
               waiting={mode === "human"}
               onContinue={mode === "cpu" ? beginCpuOffseason : undefined}
@@ -1331,7 +1328,6 @@ export default function FootballGmHeadToHeadPage() {
               rightName={opponentDisplayName}
               leftRun={run}
               rightRun={opponentRun}
-              seed={mode === "human" ? remote!.seed : run.seed}
               onReplay={replay}
             />
           ) : null}
