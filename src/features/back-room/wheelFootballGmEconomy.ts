@@ -1,4 +1,4 @@
-export const WHEEL_FOOTBALL_GM_CAP = 120_000_000;
+export const WHEEL_FOOTBALL_GM_CAP = 150_000_000;
 
 export const WHEEL_FOOTBALL_GM_ROSTER_SLOTS = [
   "QB",
