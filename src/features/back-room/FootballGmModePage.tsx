@@ -1056,6 +1056,7 @@ export default function FootballGmModePage() {
       finalRoster: nextRoster,
       previousFreeAgentTeam: run.pendingFreeAgentTeam,
       pendingFreeAgentTeam: null,
+      releasedFreeAgentPlayerId: null,
       freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
       tradeMessage: `${candidate.player.name} signed through free agency to fill ${slot}.`,
     });
