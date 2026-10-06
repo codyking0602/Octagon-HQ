@@ -14,6 +14,14 @@ const migration = readFileSync(
   resolve(process.cwd(), "supabase/migrations/202612310271_football_gm_head_to_head.sql"),
   "utf8",
 );
+const polishMigration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/202612310273_football_gm_year1_ack_and_completion.sql"),
+  "utf8",
+);
+const report = readFileSync(
+  resolve(process.cwd(), "src/features/back-room/FootballGmFranchiseReport.tsx"),
+  "utf8",
+);
 
 describe("The GM head-to-head presentation", () => {
   it("keeps the approved intro and offers the original solo run or one-GM play", () => {
@@ -66,4 +74,42 @@ describe("The GM head-to-head presentation", () => {
     expect(css).toContain(".football-gm__front-office-summary");
     expect(css).toContain(".football-gm__front-office-actions");
   });
+  it("makes the Year 1 matchup a persistent, acknowledged handoff", () => {
+    expect(page).toContain("showPersistentYearOne");
+    expect(page).toContain("acknowledgeYearOne");
+    expect(page).toContain("OFFSEASON PRIORITY");
+    expect(page).toContain("Lower Year 1 finisher gets first access to the shared player market.");
+    expect(page).toContain("function YearOneMiniRecap");
+    expect(polishMigration).toContain("year1_acknowledged_at");
+    expect(polishMigration).toContain("acknowledge_football_gm_year1");
+  });
+
+  it("cannot let notification delivery roll back a completed offseason", () => {
+    expect(polishMigration).toContain("'game_challenge_result_ready'");
+    expect(polishMigration).not.toContain("'game_challenge_completed'");
+    expect(polishMigration).toContain("exception when others then");
+    expect(polishMigration).toContain("Completion is authoritative. Notification delivery must never roll it back.");
+  });
+
+  it("ends with a descriptive franchise postmortem instead of only a score", () => {
+    expect(page).toContain("FootballGmFranchiseReport");
+    expect(report).toContain("FRANCHISE ARC");
+    expect(report).toContain("ROSTER EVOLUTION");
+    expect(report).toContain("OFFSEASON TRANSACTIONS");
+    expect(report).toContain("BEST ROSTER DECISION");
+    expect(report).toContain("WHAT COST YOU");
+    expect(report).toContain("THE OWNER'S VERDICT");
+    expect(report).toContain("WHERE THE MATCH WAS WON");
+    expect(report).toContain("VIEW ");
+    expect(css).toContain(".football-gm-report__evolution-row");
+    expect(css).toContain(".football-gm-report__ledger");
+  });
+
+  it("compresses the seven-player offseason core without stripping scouting context", () => {
+    expect(page).toContain("compact");
+    expect(css).toContain(".football-gm__roster.is-compact .football-gm__roster-grid > article");
+    expect(css).toContain("min-height: 46px");
+    expect(css).toContain(".football-gm__roster.is-compact .football-gm__roster-scouting");
+  });
+
 });
