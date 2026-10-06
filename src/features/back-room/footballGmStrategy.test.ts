@@ -180,11 +180,13 @@ describe("Football GM strategy v7", () => {
     expect(FOOTBALL_GM_LIVE_OUTCOME_ANCHORS.detroit).toBe(93.7);
     expect(FOOTBALL_GM_LIVE_OUTCOME_ANCHORS.losAngelesRams).toBe(94);
 
-    expect(footballGmTitleOdds(88)).toBeCloseTo(0.05, 6);
-    expect(footballGmTitleOdds(90)).toBeCloseTo(0.10, 6);
-    expect(footballGmTitleOdds(92)).toBeCloseTo(0.18, 6);
-    expect(footballGmTitleOdds(94)).toBeCloseTo(0.32, 6);
-    expect(footballGmTitleOdds(94)).toBeGreaterThan(footballGmTitleOdds(92));
+    expect(footballGmTitleOdds(88)).toBeCloseTo(0.08, 6);
+    expect(footballGmTitleOdds(90)).toBeCloseTo(0.18, 6);
+    expect(footballGmTitleOdds(91)).toBeCloseTo(0.27, 6);
+    expect(footballGmTitleOdds(92)).toBeCloseTo(0.37, 6);
+    expect(footballGmTitleOdds(93)).toBeCloseTo(0.46, 6);
+    expect(footballGmTitleOdds(94)).toBeCloseTo(0.50, 6);
+    expect(footballGmTitleOdds(98)).toBeCloseTo(0.50, 6);
 
     const roster = codyRunRoster();
     const outcomes = new Set<string>();
@@ -208,19 +210,19 @@ describe("Football GM strategy v7", () => {
       [82, 0.64, 0.006],
       [83, 0.58, 0.008],
       [84, 0.50, 0.012],
-      [85, 0.40, 0.015],
-      [86, 0.31, 0.025],
-      [87, 0.23, 0.035],
-      [88, 0.15, 0.05],
-      [89, 0.08, 0.075],
-      [90, 0.04, 0.10],
-      [91, 0.02, 0.14],
-      [92, 0.01, 0.18],
-      [93, 0.005, 0.245],
-      [94, 0, 0.32],
-      [95, 0, 0.35],
-      [96, 0, 0.40],
-      [97, 0, 0.45],
+      [85, 0.34, 0.02],
+      [86, 0.25, 0.035],
+      [87, 0.17, 0.055],
+      [88, 0.10, 0.08],
+      [89, 0.05, 0.12],
+      [90, 0.025, 0.18],
+      [91, 0.01, 0.27],
+      [92, 0.005, 0.37],
+      [93, 0.002, 0.46],
+      [94, 0, 0.50],
+      [95, 0, 0.50],
+      [96, 0, 0.50],
+      [97, 0, 0.50],
       [98, 0, 0.50],
     ] as const;
 
@@ -238,10 +240,15 @@ describe("Football GM strategy v7", () => {
       previousChampion = probabilities.Champion;
     }
 
-    expect(footballGmOutcomeProbabilities(90)["Missed Playoffs"]).toBe(0.04);
-    expect(footballGmOutcomeProbabilities(90).Divisional).toBe(0.30);
-    expect(footballGmOutcomeProbabilities(90)["Conference Championship"]).toBe(0.23);
-    expect(footballGmOutcomeProbabilities(90)["Super Bowl Loss"]).toBe(0.13);
+    expect(footballGmOutcomeProbabilities(90)["Missed Playoffs"]).toBe(0.025);
+    expect(footballGmOutcomeProbabilities(90).Divisional).toBe(0.235);
+    expect(footballGmOutcomeProbabilities(90)["Conference Championship"]).toBe(0.235);
+    expect(footballGmOutcomeProbabilities(90)["Super Bowl Loss"]).toBe(0.21);
+
+    const repeatAt94 = (2 * (0.50 ** 2)) - (0.50 ** 3);
+    const threePeatAt94 = 0.50 ** 3;
+    expect(repeatAt94).toBeCloseTo(0.375, 6);
+    expect(threePeatAt94).toBeCloseTo(0.125, 6);
   });
 
   it("translates hidden team grades into a wider fan-facing Team OVR scale", () => {
@@ -259,16 +266,16 @@ describe("Football GM strategy v7", () => {
 
     const titleAndTwoMisses = footballGmThreeYearResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"]);
     const threeDivisionals = footballGmThreeYearResumeScore(["Divisional", "Divisional", "Divisional"]);
-    expect(titleAndTwoMisses).toBe(66.7);
-    expect(threeDivisionals).toBe(65);
+    expect(titleAndTwoMisses).toBe(78.7);
+    expect(threeDivisionals).toBe(78);
     expect(titleAndTwoMisses).toBeGreaterThan(threeDivisionals);
 
     const sameRosterQuality = 90;
     expect(footballGmScoreFromComponents(sameRosterQuality, titleAndTwoMisses))
       .toBeGreaterThan(footballGmScoreFromComponents(sameRosterQuality, threeDivisionals));
     expect(footballGmSeasonResumeScore("Champion")).toBe(100);
-    expect(footballGmSeasonResumeScore("Super Bowl Loss")).toBe(92);
-    expect(footballGmSeasonResumeScore("Missed Playoffs")).toBe(50);
+    expect(footballGmSeasonResumeScore("Super Bowl Loss")).toBe(95);
+    expect(footballGmSeasonResumeScore("Missed Playoffs")).toBe(68);
   });
 
   it("lands expected GM scores in intuitive bands across the locked outcome curve", () => {
@@ -281,9 +288,9 @@ describe("Football GM strategy v7", () => {
       return footballGmScoreFromComponents(footballGmTeamOverall(grade), expectedResume);
     };
 
-    expect(expectedScore(88)).toBeCloseTo(80.8, 1);
-    expect(expectedScore(90)).toBeCloseTo(85.9, 1);
-    expect(expectedScore(94)).toBeCloseTo(93.1, 1);
+    expect(expectedScore(88)).toBeCloseTo(87.4, 1);
+    expect(expectedScore(90)).toBeCloseTo(92.0, 1);
+    expect(expectedScore(94)).toBeCloseTo(97.5, 1);
   });
 
   it("uses independent deterministic season rolls instead of carrying the same luck year to year", () => {

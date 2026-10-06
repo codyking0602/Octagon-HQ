@@ -146,15 +146,54 @@ function storageKey(profileId: string | undefined, seed: string) {
   return `octagon:football-gm:${profileId ?? "anon"}:${seed}`;
 }
 
+function activeStorageKey(profileId: string) {
+  return `octagon:football-gm:${profileId}:active`;
+}
+
+function parsePersistedRun(value: unknown) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return null;
+  const parsed = value as Partial<PersistedRun>;
+  if (
+    parsed.version !== FOOTBALL_GM_VERSION
+    || typeof parsed.seed !== "string"
+    || typeof parsed.phase !== "string"
+    || !Array.isArray(parsed.roster)
+    || !Array.isArray(parsed.finalRoster)
+  ) return null;
+  return parsed as PersistedRun;
+}
+
 function loadPersistedRun(profileId: string | undefined, seed: string) {
   try {
     const raw = window.localStorage.getItem(storageKey(profileId, seed));
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as PersistedRun;
-    return parsed.version === FOOTBALL_GM_VERSION && parsed.seed === seed ? parsed : null;
+    const parsed = parsePersistedRun(JSON.parse(raw));
+    return parsed?.seed === seed ? parsed : null;
   } catch {
     return null;
   }
+}
+
+function loadActivePersistedRun(profileId: string) {
+  try {
+    const seed = window.localStorage.getItem(activeStorageKey(profileId));
+    if (!seed) return null;
+    const run = loadPersistedRun(profileId, seed);
+    if (!run || run.phase === "final") {
+      window.localStorage.removeItem(activeStorageKey(profileId));
+      return null;
+    }
+    return run;
+  } catch {
+    return null;
+  }
+}
+
+function runFromAuditSnapshot(value: ChallengeJson | null) {
+  const snapshot = value && !Array.isArray(value) && typeof value === "object"
+    ? value as { [key: string]: ChallengeJson }
+    : null;
+  return parsePersistedRun(snapshot?.run ?? null);
 }
 
 function auditPlayer(playerId: string) {
@@ -1295,6 +1334,7 @@ export default function FootballGmModePage({
   });
   const [challengeStatus, setChallengeStatus] = useState("");
   const [runRepository] = useState(() => createFootballGmRunRepository());
+  const [soloHydrated, setSoloHydrated] = useState(() => !standalone);
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
   const [draftWheelRotation, setDraftWheelRotation] = useState(0);
   const opponentName = footballGmPlaytestOpponentName(identity.profile);
@@ -1326,12 +1366,74 @@ export default function FootballGmModePage({
   }, [identity.profile?.id, seed, startImmediately, storedSeed]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !identity.profile?.id) return;
-    window.localStorage.setItem(storageKey(identity.profile.id, run.seed), JSON.stringify(run));
-  }, [identity.profile?.id, run]);
+    if (!standalone || soloHydrated || !identity.ready || !identity.profile?.id) return;
+    let cancelled = false;
+    const profileId = identity.profile.id;
+
+    async function restoreSoloRun() {
+      const local = loadActivePersistedRun(profileId);
+      if (local) {
+        if (cancelled) return;
+        setSeed(local.seed);
+        setRun(startImmediately && local.phase === "intro" ? { ...local, phase: "draft" } : local);
+        setSoloHydrated(true);
+        return;
+      }
+
+      try {
+        const snapshot = await runRepository?.loadLatestActive();
+        const remote = runFromAuditSnapshot(snapshot ?? null);
+        if (cancelled) return;
+        if (remote && remote.phase !== "final") {
+          window.localStorage.setItem(storageKey(profileId, remote.seed), JSON.stringify(remote));
+          window.localStorage.setItem(activeStorageKey(profileId), remote.seed);
+          setSeed(remote.seed);
+          setRun(startImmediately && remote.phase === "intro" ? { ...remote, phase: "draft" } : remote);
+        }
+      } catch (error) {
+        console.error("GM run restore failed", error);
+      } finally {
+        if (!cancelled) setSoloHydrated(true);
+      }
+    }
+
+    void restoreSoloRun();
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    identity.profile?.id,
+    identity.ready,
+    runRepository,
+    soloHydrated,
+    standalone,
+    startImmediately,
+  ]);
 
   useEffect(() => {
-    if (!allowed || !identity.profile?.id || !identity.profile.displayName || !runRepository) return;
+    if (
+      typeof window === "undefined"
+      || !identity.profile?.id
+      || (standalone && !soloHydrated)
+    ) return;
+    window.localStorage.setItem(storageKey(identity.profile.id, run.seed), JSON.stringify(run));
+    if (standalone) {
+      if (run.phase === "final") {
+        window.localStorage.removeItem(activeStorageKey(identity.profile.id));
+      } else {
+        window.localStorage.setItem(activeStorageKey(identity.profile.id), run.seed);
+      }
+    }
+  }, [identity.profile?.id, run, soloHydrated, standalone]);
+
+  useEffect(() => {
+    if (
+      !allowed
+      || !identity.profile?.id
+      || !identity.profile.displayName
+      || !runRepository
+      || (standalone && !soloHydrated)
+    ) return;
     const snapshot = gmAuditSnapshot(run, {
       profileId: identity.profile.id,
       profileName: identity.profile.displayName,
@@ -1354,6 +1456,8 @@ export default function FootballGmModePage({
     profileMatch.isRecipient,
     run,
     runRepository,
+    soloHydrated,
+    standalone,
   ]);
 
   const yearOneRoster = run.roster;
@@ -1382,6 +1486,16 @@ export default function FootballGmModePage({
 
   if (!identity.ready) return null;
   if (!allowed) return <Navigate to="/football" replace />;
+  if (standalone && !soloHydrated) {
+    return (
+      <div className="page football-gm-page">
+        <section className="surface-card">
+          <p className="eyebrow">THE GM</p>
+          <h1>RESTORING YOUR FRONT OFFICE…</h1>
+        </section>
+      </div>
+    );
+  }
 
   function patch(next: Partial<PersistedRun>) {
     setRun((current) => ({ ...current, ...next }));

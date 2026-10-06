@@ -10,6 +10,7 @@ declare
   v_state_two jsonb := '{"version":"gm-test","seed":"run-seed","phase":"year1","run":{"roster":[{"slot":"QB","playerId":"demo"}]}}'::jsonb;
   v_count integer;
   v_revision_count integer;
+  v_restored jsonb;
   v_rejected boolean := false;
 begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
@@ -28,7 +29,17 @@ begin
 
   v_run_id := public.save_my_football_gm_run('run-seed','gm-test',v_state_one,false);
   perform public.save_my_football_gm_run('run-seed','gm-test',v_state_one,false);
+
+  v_restored := public.load_my_latest_football_gm_run();
+  if v_restored is distinct from v_state_one then
+    raise exception 'latest unfinished GM run was not restorable';
+  end if;
+
   perform public.save_my_football_gm_run('run-seed','gm-test',v_state_two,true);
+
+  if public.load_my_latest_football_gm_run() is not null then
+    raise exception 'completed GM run should not remain the active resume target';
+  end if;
 
   select count(*) into v_count
   from private.football_gm_runs
@@ -72,6 +83,14 @@ begin
 
   if not has_function_privilege('authenticated','public.save_my_football_gm_run(text,text,jsonb,boolean)','EXECUTE') then
     raise exception 'authenticated playtest browser cannot call GM run persistence RPC';
+  end if;
+
+  if has_function_privilege('anon','public.load_my_latest_football_gm_run()','EXECUTE') then
+    raise exception 'anonymous role can restore private GM runs';
+  end if;
+
+  if not has_function_privilege('authenticated','public.load_my_latest_football_gm_run()','EXECUTE') then
+    raise exception 'authenticated playtest browser cannot restore its unfinished GM run';
   end if;
 end $$;
 
