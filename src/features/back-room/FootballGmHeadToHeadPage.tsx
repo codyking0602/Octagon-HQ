@@ -30,12 +30,10 @@ import {
   footballGmContinuity,
   footballGmEligibleFreeAgencyTeams,
   footballGmFinalResultV2,
-  footballGmFreeAgencyCandidatesForTeam,
   footballGmIsOffseasonCompliantV2,
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
   footballGmSignFreeAgent,
-  type FootballGmNegotiationConsequences,
   type FootballGmTradeProposal,
 } from "./footballGmStrategy";
 import {
@@ -470,7 +468,6 @@ export default function FootballGmHeadToHeadPage() {
   const remoteMe = remote?.participants.find((participant) => participant.id === activeProfileId) ?? null;
   const remoteOpponent = remote?.participants.find((participant) => participant.id !== activeProfileId) ?? null;
   const remoteOpponentRun = remoteOpponent ? normalizedRun(remote?.seed ?? run.seed, remoteOpponent.run_state) : null;
-  const remoteMeRun = remoteMe ? normalizedRun(remote?.seed ?? run.seed, remoteMe.run_state) : null;
 
   const opponentRun = mode === "human" ? remoteOpponentRun ?? initialRun(remote?.seed ?? run.seed) : cpuRun;
   const displayedPhase = mode === "human" ? remote?.phase ?? "waiting" : localPhase;
