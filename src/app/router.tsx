@@ -26,7 +26,7 @@ const FootballFindLeaderPage = lazy(() => import("../features/back-room/Football
 const FootballDraftRoomPage = lazy(() => import("../features/back-room/FootballDraftRoomPage"));
 const FootballWheelPage = lazy(() => import("../features/back-room/FootballWheelPage"));
 const FootballHigherLowerPage = lazy(() => import("../features/back-room/FootballHigherLowerPage"));
-const FootballGmModePage = lazy(() => import("../features/back-room/FootballGmModePage"));
+const FootballGmModePage = lazy(() => import("../features/back-room/FootballGmHeadToHeadPage"));
 const UfcWheelPage = lazy(() => import("../features/back-room/UfcWheelPage"));
 const FootballWeeklyBuildQbPreviewPage = lazy(() => import("../features/back-room/FootballWeeklyBuildQbPreviewPage"));
 const FootballWeeklySuperteamPreviewPage = lazy(() => import("../features/back-room/FootballWeeklySuperteamPreviewPage"));

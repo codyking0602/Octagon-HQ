@@ -13,7 +13,7 @@ import {
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v7-playtest";
+export const FOOTBALL_GM_VERSION = "football-gm-v8-head-to-head";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
@@ -710,8 +710,13 @@ export function footballGmTradePartnerPlayers(
   partnerTeam: string,
   roster: readonly FootballGmRosterEntry[],
   tradeChipPlayerIds: readonly string[] = [],
+  excludedPlayerIds: readonly string[] = [],
 ) {
-  const used = new Set([...rosterPlayerIds(roster), ...tradeChipPlayerIds]);
+  const used = new Set([
+    ...rosterPlayerIds(roster),
+    ...tradeChipPlayerIds,
+    ...excludedPlayerIds,
+  ]);
   return FOOTBALL_GM_PLAYER_POOL
     .filter((player) => player.team === partnerTeam && !used.has(player.id))
     .sort((left, right) => (
@@ -973,6 +978,7 @@ export function footballGmAcceptedTargetTradeOffers(input: {
   anchorPlayerId: string;
   targetPlayerId: string;
   shoppedPlayerIds?: readonly string[];
+  excludedPlayerIds?: readonly string[];
   maxOffers?: number;
 }): FootballGmTargetTradeOffer[] {
   const anchor = footballGmPlayerById(input.anchorPlayerId);
@@ -985,6 +991,7 @@ export function footballGmAcceptedTargetTradeOffers(input: {
     || !rosterIds.has(anchor.id)
     || target.team !== input.partnerTeam
     || rosterIds.has(target.id)
+    || (input.excludedPlayerIds ?? []).includes(target.id)
   ) return [];
 
   const anchorId = anchor.id;
@@ -993,7 +1000,12 @@ export function footballGmAcceptedTargetTradeOffers(input: {
   blockedOutgoing.delete(anchorId);
   const secondaryOutgoing = [...rosterIds]
     .filter((playerId) => playerId !== anchorId && !blockedOutgoing.has(playerId));
-  const secondaryIncoming = footballGmTradePartnerPlayers(input.partnerTeam, input.roster, tradeChipPlayerIds)
+  const secondaryIncoming = footballGmTradePartnerPlayers(
+    input.partnerTeam,
+    input.roster,
+    tradeChipPlayerIds,
+    input.excludedPlayerIds,
+  )
     .map((player) => player.id)
     .filter((playerId) => playerId !== targetId);
 

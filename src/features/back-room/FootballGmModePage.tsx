@@ -37,13 +37,13 @@ import {
   footballGmCanUseFreeAgency,
   footballGmContinuity,
   footballGmEligibleFreeAgencyTeams,
+  footballGmEligibleTradeTeams,
   footballGmFinalResultV2,
   footballGmFreeAgencyCandidatesForTeam,
   footballGmIsOffseasonCompliantV2,
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
   footballGmSignFreeAgent,
-  footballGmSpinTradePartner,
   footballGmTradePartnerPlayers,
   type FootballGmFinalResultV2,
   type FootballGmNegotiationConsequences,
@@ -67,7 +67,7 @@ interface PendingTradeResolution {
   cutPlayerIds: string[];
 }
 
-interface PersistedRun {
+export interface PersistedRun {
   version: string;
   seed: string;
   phase: Phase;
@@ -113,7 +113,7 @@ function freshSeed() {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
-function initialRun(seed: string): PersistedRun {
+export function initialRun(seed: string): PersistedRun {
   return {
     version: FOOTBALL_GM_VERSION,
     seed,
@@ -327,7 +327,7 @@ function footballGmHeadshotsForTeam(teamCode: string) {
   return load;
 }
 
-function PlayerHeadshot({
+export function PlayerHeadshot({
   player,
   className = "football-gm__player-headshot",
 }: {
@@ -373,12 +373,12 @@ function footballGmScoutingTier(grade: number): FootballGmScoutingTier {
   return "DEPTH";
 }
 
-function PlayerQualityPill({ player }: { player: FootballGmPlayer }) {
+export function PlayerQualityPill({ player }: { player: FootballGmPlayer }) {
   const tier = footballGmScoutingTier(player.currentGrade);
   return <span className={`football-gm__quality-pill quality-${tier.toLowerCase()}`}>{tier}</span>;
 }
 
-function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
+export function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
   const label = outlook === "ELITE UPSIDE" ? "RISING" : outlook;
   const tone = label === "RISING" ? "rising" : label === "DECLINE RISK" ? "decline" : "stable";
   return <span className={`football-gm__outlook-pill outlook-${tone}`}>{label}</span>;
@@ -395,7 +395,7 @@ function wheelTeamBackground(teams: readonly WheelFootballTeam[]) {
   return `conic-gradient(from ${-slice / 2}deg, ${stops.join(", ")})`;
 }
 
-function GmFootballWheel({
+export function GmFootballWheel({
   teams,
   rotation,
   spinning,
@@ -458,7 +458,7 @@ function GmFootballWheel({
   );
 }
 
-function CapMeter({
+export function CapMeter({
   roster,
   year,
   seed,
@@ -487,7 +487,7 @@ function CapMeter({
   );
 }
 
-function RosterGrid({
+export function RosterGrid({
   roster,
   year,
   seed,
@@ -555,19 +555,26 @@ function RosterGrid({
   );
 }
 
-function CandidateBoard({
+export function CandidateBoard({
   teamCode,
   roster,
   year,
   onPick,
+  excludedPlayerIds = [],
 }: {
   teamCode: string;
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2;
   onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
+  excludedPlayerIds?: readonly string[];
 }) {
   const team = wheelFootballTeam(teamCode);
-  const candidates = footballGmCandidatesForTeam({ team: teamCode, roster, year });
+  const candidates = footballGmCandidatesForTeam({
+    team: teamCode,
+    roster,
+    year,
+    excludedPlayerIds,
+  });
   const openSlots = footballGmOpenSlots(roster);
   const [selectedSlot, setSelectedSlot] = useState<FootballGmRosterSlot | null>(null);
   const [showScoutKey, setShowScoutKey] = useState(false);
@@ -630,7 +637,7 @@ function CandidateBoard({
                     <PlayerOutlookPill outlook={player.outlook} />
                     <span>{player.gameContract}</span>
                     <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
-                      {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} REPRICE RISK`}
+                      {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} RISK`}
                     </span>
                   </span>
                 </span>
@@ -676,7 +683,7 @@ function CandidateBoard({
   );
 }
 
-function FreeAgencyBoard({
+export function FreeAgencyBoard({
   teamCode,
   roster,
   tradeChipPlayerIds,
@@ -703,27 +710,31 @@ function FreeAgencyBoard({
     excludedPlayerIds,
   });
   return (
-    <section className="football-gm__candidates surface-card" style={playerStyle(teamCode)}>
+    <section className="football-wheel-picker football-gm__picker football-gm__market-picker surface-card" style={playerStyle(teamCode)}>
       <header>
         <TeamLogo teamCode={teamCode} />
-        <span><small>FREE AGENCY WHEEL</small><strong>{team?.name ?? teamCode}</strong></span>
+        <div>
+          <p className="eyebrow">FREE AGENCY · SHARED 1YR MARKET</p>
+          <h2>{team?.name ?? teamCode}</h2>
+          <span>Choose any legal fit. A player already held by the other GM never appears.</span>
+        </div>
       </header>
-      <p>
-        This is the real 1YR free-agent class at Year 2 market prices. You can sign any listed player who fits both future caps — even if his position is already occupied.
-      </p>
-      <div className="football-gm__candidate-list">
+      <div className="football-gm__market-list">
         {candidates.map(({ player, legalSlots, displacementOptions, salary }) => (
-          <article key={player.id} style={playerStyle(player.team)}>
-            <div className="football-gm__candidate-main">
-              <span><small>{player.position} · AGE {player.age}</small><strong>{player.name}</strong></span>
-              <b>{footballGmMoney(salary)}</b>
+          <article className="football-gm__market-player" key={player.id} style={playerStyle(player.team)}>
+            <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
+            <div className="football-gm__market-copy">
+              <strong>{player.name}</strong>
+              <small>{player.position} · AGE {player.age}</small>
+              <div className="football-gm__candidate-tags">
+                <PlayerQualityPill player={player} />
+                <PlayerOutlookPill outlook={player.outlook} />
+                <span>1YR</span>
+                <span>Y2/Y3 MARKET</span>
+              </div>
             </div>
-            <div className="football-gm__candidate-tags">
-              <span>1YR FREE AGENT</span>
-              <PlayerOutlookPill outlook={player.outlook} />
-              <span>Y2/Y3 MARKET</span>
-            </div>
-            <div className="football-gm__candidate-actions">
+            <b>{footballGmMoney(salary)}</b>
+            <div className="football-gm__market-actions">
               {legalSlots.map((slot) => (
                 <button type="button" key={`open:${slot}`} onClick={() => onPick(player.id, slot)}>
                   SIGN AS {slot}
@@ -737,7 +748,7 @@ function FreeAgencyBoard({
                     key={`displace:${option.slot}:${option.displacedPlayerId}`}
                     onClick={() => onPick(player.id, option.slot, option.displacedPlayerId)}
                   >
-                    SIGN AT {option.slot} · DISPLACE {displaced?.name.toUpperCase() ?? "INCUMBENT"}
+                    {option.slot} · REPLACE {displaced?.name.toUpperCase() ?? "INCUMBENT"}
                   </button>
                 );
               })}
@@ -762,7 +773,7 @@ function freeAgencyReleaseBudget(
   return Math.max(0, Math.min(year2Room, year3Room));
 }
 
-function FreeAgencyReleasePanel({
+export function FreeAgencyReleasePanel({
   roster,
   seed,
   consequences,
@@ -832,7 +843,7 @@ function FreeAgencyReleasePanel({
   );
 }
 
-function TradeChipPanel({
+export function TradeChipPanel({
   playerIds,
   seed,
   consequences,
@@ -866,7 +877,10 @@ function TradeChipPanel({
               <span>{player.team} · {player.position} · {player.gameContract}</span>
               <strong>{player.name}</strong>
               <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, seed, consequences))}</em>
-              <PlayerOutlookPill outlook={player.outlook} />
+              <span className="football-gm__trade-scouting">
+                <PlayerQualityPill player={player} />
+                <PlayerOutlookPill outlook={player.outlook} />
+              </span>
               <div className="football-gm__inline-actions">
                 <button type="button" disabled={shopped} onClick={() => onShop(playerId)}>
                   {shopped ? "SHOPPED" : "SHOP NORMALLY"}
@@ -881,7 +895,7 @@ function TradeChipPanel({
   );
 }
 
-function SeasonCard({
+export function SeasonCard({
   seed,
   year,
   yearOneRoster,
@@ -910,7 +924,7 @@ function SeasonCard({
   );
 }
 
-function ContinuityMeter({
+export function ContinuityMeter({
   yearOneRoster,
   roster,
 }: {
@@ -955,52 +969,97 @@ function TradePackagePlayer({
       <span>{player.team} · {player.position} · {player.gameContract}</span>
       <strong>{player.name}</strong>
       <em>{footballGmMoney(salary)}</em>
-      <PlayerOutlookPill outlook={player.outlook} />
+      <span className="football-gm__trade-scouting">
+        <PlayerQualityPill player={player} />
+        <PlayerOutlookPill outlook={player.outlook} />
+      </span>
     </div>
   );
 }
 
-function TradeRoom({
+export function TradeRoom({
   run,
   patch,
   onAccept,
   onEndTalks,
+  excludedPlayerIds = [],
 }: {
   run: PersistedRun;
   patch: (next: Partial<PersistedRun>) => void;
   onAccept: (proposal: FootballGmTradeProposal, offerNumber: number) => void;
   onEndTalks: () => void;
+  excludedPlayerIds?: readonly string[];
 }) {
   const anchor = run.tradeAnchorPlayerId ? footballGmPlayerById(run.tradeAnchorPlayerId) : null;
   if (!anchor) return null;
   const partner = run.tradePartnerTeam ? wheelFootballTeam(run.tradePartnerTeam) : null;
+  const [tradeWheelRotation, setTradeWheelRotation] = useState(0);
+  const [tradeWheelSpinning, setTradeWheelSpinning] = useState(false);
+  const tradeTeamCodes = footballGmEligibleTradeTeams(anchor.id).filter((teamCode) => (
+    footballGmTradePartnerPlayers(
+      teamCode,
+      run.finalRoster,
+      run.tradeChipPlayerIds,
+      excludedPlayerIds,
+    ).length > 0
+  ));
+  const tradeWheelTeams = tradeTeamCodes
+    .map((teamCode) => wheelFootballTeam(teamCode))
+    .filter((team): team is WheelFootballTeam => Boolean(team));
+
   if (!run.tradePartnerTeam) {
     return (
-      <section className="football-gm__wheel surface-card">
-        <p className="eyebrow">SHOPPING {anchor.name.toUpperCase()}</p>
-        <h2>FIND A TRADE PARTNER</h2>
-        <p>One wheel spin locks this player's only trade partner for the offseason. After the spin, you choose one player to target and that target is final.</p>
-        <div className="football-gm__inline-actions">
-          <button className="primary-action" type="button" onClick={() => {
-            const team = footballGmSpinTradePartner(run.seed, run.tradeSpinIndex, anchor.id);
-            if (team) patch({
-              tradePartnerTeam: team,
-              tradeTargetPlayerId: null,
-              shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, anchor.id])],
-              tradeMessage: "",
-            });
-          }}>SPIN TRADE PARTNER</button>
-          <button type="button" onClick={() => patch({
-            tradeAnchorPlayerId: null,
-            tradeTargetPlayerId: null,
-          })}>NEVER MIND</button>
+      <section className="football-gm__trade-wheel-stage">
+        <div className="football-gm__trade-stage-heading">
+          <p className="eyebrow">SHOPPING {anchor.name.toUpperCase()}</p>
+          <h2>FIND A TRADE PARTNER</h2>
+          <span>Spin one team. Choose one target. Then decide between the accepted asking prices.</span>
         </div>
+        <GmFootballWheel
+          teams={tradeWheelTeams}
+          rotation={tradeWheelRotation}
+          spinning={tradeWheelSpinning}
+          pendingTeam={null}
+          canSpin={!tradeWheelSpinning && tradeWheelTeams.length > 0}
+          onSpin={() => {
+            if (tradeWheelSpinning || !tradeTeamCodes.length) return;
+            const teamCode = footballGmSpinTeam(run.seed, 500 + run.tradeSpinIndex, tradeTeamCodes);
+            if (!teamCode) return;
+            const index = tradeWheelTeams.findIndex((team) => team.code === teamCode);
+            if (index < 0) return;
+            const step = 360 / tradeWheelTeams.length;
+            setTradeWheelSpinning(true);
+            setTradeWheelRotation((current) => {
+              const modulo = ((current % 360) + 360) % 360;
+              const target = ((-index * step) % 360 + 360) % 360;
+              return current + 1080 + ((target - modulo + 360) % 360);
+            });
+            window.setTimeout(() => {
+              setTradeWheelSpinning(false);
+              patch({
+                tradePartnerTeam: teamCode,
+                tradeTargetPlayerId: null,
+                shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, anchor.id])],
+                tradeMessage: "",
+              });
+            }, 1550);
+          }}
+        />
+        <button className="football-gm__quiet-action" type="button" onClick={() => patch({
+          tradeAnchorPlayerId: null,
+          tradeTargetPlayerId: null,
+        })}>NEVER MIND</button>
       </section>
     );
   }
 
   const anchorSlot = run.finalRoster.find((entry) => entry.playerId === anchor.id)?.slot ?? null;
-  const partnerPlayers = [...footballGmTradePartnerPlayers(run.tradePartnerTeam, run.finalRoster, run.tradeChipPlayerIds)]
+  const partnerPlayers = [...footballGmTradePartnerPlayers(
+    run.tradePartnerTeam,
+    run.finalRoster,
+    run.tradeChipPlayerIds,
+    excludedPlayerIds,
+  )]
     .sort((left, right) => (
       Number(Boolean(anchorSlot && right.eligibleSlots.includes(anchorSlot)))
       - Number(Boolean(anchorSlot && left.eligibleSlots.includes(anchorSlot)))
@@ -1017,6 +1076,7 @@ function TradeRoom({
         anchorPlayerId: anchor.id,
         targetPlayerId: target.id,
         shoppedPlayerIds: run.shoppedPlayerIds,
+        excludedPlayerIds,
         maxOffers: 5,
       })
     : [];
@@ -1044,7 +1104,10 @@ function TradeRoom({
                 <span>{player.position} · AGE {player.age} · {player.gameContract}</span>
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, run.seed, run.negotiationConsequences))}</em>
+                <span className="football-gm__trade-scouting">
+                  <PlayerQualityPill player={player} />
                   <PlayerOutlookPill outlook={player.outlook} />
+                </span>
               </button>
             ))}
           </div>
@@ -1121,7 +1184,7 @@ function TradeRoom({
   );
 }
 
-function TradeCutResolution({
+export function TradeCutResolution({
   run,
   onToggleCut,
   onFinalize,
