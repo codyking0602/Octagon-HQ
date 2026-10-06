@@ -26,5 +26,6 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain("footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)");
     expect(page).toContain("ONE VOLUNTARY RELEASE");
     expect(page).toContain("any genuine vacancy can use free agency");
+    expect(page).toContain("that player cannot be re-signed this offseason");
   });
 });
