@@ -118,7 +118,7 @@ describe("BottomNavigation", () => {
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
   });
 
-  it("does not move the nav when a resumed page reports a stale shrunken visual viewport", () => {
+  it("pushes the nav back to the layout bottom when iOS resumes with a stale shrunken visual viewport", () => {
     const viewport = installVisualViewport();
     renderNavigation();
 
@@ -133,7 +133,7 @@ describe("BottomNavigation", () => {
 
     expect(navigation).not.toHaveClass("is-keyboard-open");
     expect(navigation).toHaveStyle({ display: "grid" });
-    expect((navigation as HTMLElement).style.transform).toBe("");
+    expect((navigation as HTMLElement).style.transform).toBe("translate3d(0, 344px, 0)");
   });
 
   it("still hides the navigation when an editor owns a materially occluded viewport", () => {
