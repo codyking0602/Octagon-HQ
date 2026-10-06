@@ -637,9 +637,131 @@ export const FOOTBALL_MATCHUP_BREAKDOWNS: FootballMatchupBreakdown[] = [
         { text: "Kansas City wants Mahomes and Walker to keep the game on schedule. Las Vegas needs Cousins and Bowers to keep matching scores, then create the kind of extra possessions that fueled its fourth-quarter comeback in New Orleans." },
       ],
     },
-  }];
-
-function normalizeTeamToken(value: string) {
+  },
+  {
+    id: "2026-49ers-seahawks",
+    title: "49ers at Seahawks",
+    venue: "Lumen Field · Seattle",
+    kickoffAt: "2026-10-11T20:25:00Z",
+    teams: [
+      {
+        name: "San Francisco 49ers",
+        aliases: ["san-francisco-49ers", "san-francisco", "49ers", "sf-49ers", "sf", "sfo"],
+        record: "4–0",
+        sportsReferenceUrl: "https://www.pro-football-reference.com/teams/sfo/2026.htm",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/sf.png",
+        themeColor: "#AA0000",
+      },
+      {
+        name: "Seattle Seahawks",
+        aliases: ["seattle-seahawks", "seattle", "seahawks", "sea"],
+        record: "3–1",
+        sportsReferenceUrl: "https://www.pro-football-reference.com/teams/sea/2026.htm",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png",
+        themeColor: "#002244",
+      },
+    ],
+    compact: {
+      leagueLabel: "NFL",
+      setup: [
+        { text: "San Francisco brings a 4–0 start into Seattle for the first meeting since the Seahawks ended the 49ers’ 2025 season with a 41–6 divisional-round win at Lumen Field. Seattle is 3–1, but San Francisco has won four straight regular-season games in this building — the playoff memory and the recent road history point in opposite directions." },
+      ],
+      things: [
+        {
+          title: "Seattle’s pressure vs. Purdy’s timing",
+          body: [
+            { text: "Seattle pressured Justin Herbert on 55% of his dropbacks", emphasis: true },
+            { text: " in Week 4 and finished with four sacks. " },
+            { text: "Brock Purdy", href: "https://www.pro-football-reference.com/players/P/PurdBr00.htm", emphasis: true },
+            { text: " just answered a slow first half against Denver with two touchdown passes after the break. If Seattle can speed up his clock without selling out, it can take San Francisco out of the rhythm that has carried the 49ers to 4–0." },
+          ],
+        },
+        {
+          title: "JSN is Seattle’s matchup problem",
+          body: [
+            { text: "Jaxon Smith-Njigba", href: "https://www.pro-football-reference.com/players/S/SmitJa06.htm", emphasis: true },
+            { text: " has " },
+            { text: "32 catches, 481 yards and six touchdowns", emphasis: true },
+            { text: " through four games. Even on a quieter afternoon against the Chargers he still produced 76 yards. San Francisco has to keep him from turning routine completions into the explosives that can tilt the game at Lumen." },
+          ],
+        },
+        {
+          title: "McCaffrey keeps the whole menu open",
+          body: [
+            { text: "Christian McCaffrey", href: "https://www.pro-football-reference.com/players/M/McCaCh01.htm", emphasis: true },
+            { text: " has " },
+            { text: "218 rushing yards and four rushing touchdowns", emphasis: true },
+            { text: " through four games, plus another 122 yards as a receiver. Seattle cannot treat him as only a run-game problem; his ability to move the chains underneath is what lets Kyle Shanahan keep Purdy out of obvious passing downs." },
+          ],
+        },
+      ],
+      bottomLine: [
+        { text: "San Francisco wants Purdy playing on schedule with McCaffrey forcing Seattle to defend every part of the formation. Seattle wants its pressure package to create long-yardage situations, then let Smith-Njigba become the game’s biggest coverage problem. The team that controls early downs should control the shape of the rematch." },
+      ],
+    },
+  },
+  {
+    id: "2026-georgia-alabama",
+    title: "Georgia at Alabama",
+    venue: "Bryant-Denny Stadium · Tuscaloosa",
+    kickoffAt: "2026-10-10T23:30:00Z",
+    teams: [
+      {
+        name: "Georgia",
+        aliases: ["georgia", "georgia-bulldogs", "bulldogs", "uga"],
+        rank: 2,
+        record: "5–0",
+        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/georgia/2026.html",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/ncaa/500/61.png",
+        themeColor: "#BA0C2F",
+      },
+      {
+        name: "Alabama",
+        aliases: ["alabama", "alabama-crimson-tide", "crimson-tide", "bama"],
+        rank: 6,
+        record: "5–0",
+        sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/alabama/2026.html",
+        logoUrl: "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+        themeColor: "#9E1B32",
+      },
+    ],
+    compact: {
+      rankingSource: "AP",
+      setup: [
+        { text: "No. 2 Georgia and No. 6 Alabama arrive in Tuscaloosa at 5–0 after splitting two meetings last season: Alabama won the regular-season game 24–21, then Georgia answered 28–7 in the SEC Championship Game. Both teams have been efficient enough to avoid much late-game stress so far, so the first real heavyweight test for each is about which quarterback stays comfortable when the easy answers disappear." },
+      ],
+      things: [
+        {
+          title: "Stockton vs. Alabama’s pressure",
+          body: [
+            { text: "Gunner Stockton", href: "https://www.sports-reference.com/cfb/players/gunner-stockton-1.html", emphasis: true },
+            { text: " is completing " },
+            { text: "75.5% of his passes with 13 touchdowns and one interception", emphasis: true },
+            { text: " through five games. Alabama just posted a season-high five sacks at Mississippi State. If the Tide can force Stockton off his first read without giving up scramble lanes, Georgia loses the clean rhythm that has made the offense so efficient." },
+          ],
+        },
+        {
+          title: "Russell’s explosives vs. Georgia’s structure",
+          body: [
+            { text: "Keelon Russell", href: "https://www.sports-reference.com/cfb/players/keelon-russell-1.html", emphasis: true },
+            { text: " has thrown for " },
+            { text: "1,414 yards and 11 touchdowns", emphasis: true },
+            { text: " while Alabama has scored at least 45 points in every game. Georgia has not allowed more than 20. The Bulldogs’ secondary has to make Alabama drive the field instead of letting Russell turn one clean pocket into six points." },
+          ],
+        },
+        {
+          title: "Turnovers can change the entire game",
+          body: [
+            { text: "Georgia forced four turnovers", emphasis: true },
+            { text: " in its win over Oklahoma. Alabama turned Mississippi State’s first possession into a fumble recovery and later added a pick-six, but the Tide offense also put the ball on the ground multiple times. In a matchup this evenly talented, one short field may matter more than another 50 yards of offense." },
+          ],
+        },
+      ],
+      bottomLine: [
+        { text: "Georgia wants Stockton protected well enough to make Alabama defend the full field and keep the game out of obvious passing downs. Alabama wants Russell’s explosiveness plus its pressure package to create separation before Georgia can settle in. With both teams 5–0, possession quality — pressure, turnovers and field position — is the cleanest path to deciding which offense actually gets to play its preferred game." },
+      ],
+    },
+];\n\nfunction normalizeTeamToken(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
