@@ -14,7 +14,7 @@ import {
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v4-playtest";
+export const FOOTBALL_GM_VERSION = "football-gm-v5-playtest";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
@@ -332,13 +332,16 @@ export function footballGmFreeAgencyCandidatesForTeam(input: {
   roster: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
+  excludedPlayerIds?: readonly string[];
 }) {
   if (input.roster.length !== FOOTBALL_GM_ROSTER_SLOTS.length - 1) return [];
+  const excluded = new Set(input.excludedPlayerIds ?? []);
   return footballGmCandidatesForTeam({
     team: input.team,
     roster: input.roster,
     year: 2,
   }).flatMap((candidate) => {
+    if (excluded.has(candidate.player.id)) return [];
     const legalSlots = candidate.legalSlots.filter((slot) => {
       const nextRoster: FootballGmRosterEntry[] = [
         ...input.roster,
@@ -356,12 +359,14 @@ export function footballGmEligibleFreeAgencyTeams(input: {
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   previousTeam?: string | null;
+  excludedPlayerIds?: readonly string[];
 }) {
   let teams = FOOTBALL_GM_TEAMS.filter((team) => footballGmFreeAgencyCandidatesForTeam({
     team,
     roster: input.roster,
     seed: input.seed,
     consequences: input.consequences,
+    excludedPlayerIds: input.excludedPlayerIds,
   }).length > 0);
   if (input.previousTeam && teams.length > 1) {
     const withoutRepeat = teams.filter((team) => team !== input.previousTeam);
