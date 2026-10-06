@@ -5,6 +5,7 @@ import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { useIdentity } from "../identity/IdentityProvider";
+import { createFootballGmRunRepository } from "./footballGmRunRepository";
 import { wheelFootballTeam } from "./wheelFootballModel";
 import {
   FOOTBALL_GM_CAP,
@@ -102,6 +103,113 @@ function loadPersistedRun(profileId: string | undefined, seed: string) {
   } catch {
     return null;
   }
+}
+
+function auditPlayer(playerId: string) {
+  const player = footballGmPlayerById(playerId);
+  if (!player) return null;
+  return {
+    id: player.id,
+    name: player.name,
+    team: player.team,
+    family: player.family,
+    position: player.position,
+    eligibleSlots: [...player.eligibleSlots],
+    age: player.age,
+    salaryApy: player.salaryApy,
+    gameContract: player.gameContract,
+    currentGrade: player.currentGrade,
+    projectedExtensionApy: player.projectedExtensionApy,
+    salaryWindow: [...player.salaryWindow],
+    outlook: player.outlook,
+    extensionRisk: player.extensionRisk,
+  };
+}
+
+function auditRoster(roster: readonly FootballGmRosterEntry[]) {
+  return roster.map((entry) => ({
+    ...entry,
+    player: auditPlayer(entry.playerId),
+  }));
+}
+
+function auditCandidate(candidate: FootballGmTeamCandidate) {
+  return {
+    player: auditPlayer(candidate.player.id),
+    legalSlots: [...candidate.legalSlots],
+    salary: candidate.salary,
+  };
+}
+
+function gmAuditSnapshot(
+  run: PersistedRun,
+  context: {
+    profileId: string;
+    profileName: string;
+    challengeCode: string | null;
+    challengeRole: "solo" | "recipient";
+  },
+) {
+  const effectiveFinalRoster = run.finalRoster.length ? run.finalRoster : run.roster;
+  const draftCandidates = run.pendingTeam
+    ? footballGmCandidatesForTeam({ team: run.pendingTeam, roster: run.roster, year: 1 }).map(auditCandidate)
+    : [];
+  const replacementCandidates = run.replaceSlot && run.offseasonPendingTeam
+    ? footballGmReplacementCandidatesForTeam({
+        team: run.offseasonPendingTeam,
+        roster: run.finalRoster,
+        slot: run.replaceSlot,
+      }).map(auditCandidate)
+    : [];
+  const offers = run.roster.length === FOOTBALL_GM_ROSTER_SLOTS.length
+    ? footballGmTradeOffers(run.seed, run.roster)
+    : [];
+
+  return asJson({
+    version: run.version,
+    seed: run.seed,
+    phase: run.phase,
+    context,
+    run,
+    cap: {
+      limit: FOOTBALL_GM_CAP,
+      year1: footballGmRosterCap(run.roster, 1),
+      year2: footballGmRosterCap(effectiveFinalRoster, 2),
+      year3: footballGmRosterCap(effectiveFinalRoster, 3),
+    },
+    roster: auditRoster(run.roster),
+    finalRoster: auditRoster(run.finalRoster),
+    pendingDraft: run.pendingTeam
+      ? { team: run.pendingTeam, candidates: draftCandidates }
+      : null,
+    pendingReplacement: run.replaceSlot
+      ? {
+          slot: run.replaceSlot,
+          team: run.offseasonPendingTeam,
+          candidates: replacementCandidates,
+        }
+      : null,
+    tradeOffers: offers.map((offer) => ({
+      ...offer,
+      outgoing: auditPlayer(offer.outgoingPlayerId),
+      incoming: auditPlayer(offer.incomingPlayerId),
+      accepted: run.acceptedTradeIds.includes(offer.id),
+    })),
+    seasons: {
+      year1: run.roster.length === FOOTBALL_GM_ROSTER_SLOTS.length
+        ? footballGmSeasonResult(run.roster, 1)
+        : null,
+      year2: run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
+        ? footballGmSeasonResult(run.finalRoster, 2)
+        : null,
+      year3: run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
+        ? footballGmSeasonResult(run.finalRoster, 3)
+        : null,
+    },
+    finalResult: run.phase === "final" && run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
+      ? footballGmFinalResult(run.roster, run.finalRoster)
+      : null,
+  });
 }
 
 function playerStyle(teamCode: string) {
@@ -298,6 +406,7 @@ export default function FootballGmModePage() {
       : loadPersistedRun(identity.profile?.id, seed) ?? initialRun(seed)
   ));
   const [challengeStatus, setChallengeStatus] = useState("");
+  const [runRepository] = useState(() => createFootballGmRunRepository());
   const opponentName = footballGmPlaytestOpponentName(identity.profile);
   const allowed = isFootballGmPlaytestProfile(identity.profile);
 
@@ -311,6 +420,32 @@ export default function FootballGmModePage() {
     if (typeof window === "undefined" || !identity.profile?.id) return;
     window.localStorage.setItem(storageKey(identity.profile.id, run.seed), JSON.stringify(run));
   }, [identity.profile?.id, run]);
+
+  useEffect(() => {
+    if (!allowed || !identity.profile?.id || !identity.profile.displayName || !runRepository) return;
+    const snapshot = gmAuditSnapshot(run, {
+      profileId: identity.profile.id,
+      profileName: identity.profile.displayName,
+      challengeCode: profileMatch.challenge?.code ?? null,
+      challengeRole: profileMatch.isRecipient ? "recipient" : "solo",
+    });
+    void runRepository.save({
+      seed: run.seed,
+      gameVersion: run.version,
+      snapshot,
+      completed: run.phase === "final",
+    }).catch((error) => {
+      console.error("GM run persistence failed", error);
+    });
+  }, [
+    allowed,
+    identity.profile?.displayName,
+    identity.profile?.id,
+    profileMatch.challenge?.code,
+    profileMatch.isRecipient,
+    run,
+    runRepository,
+  ]);
 
   const yearOneRoster = run.roster;
   const finalRoster = run.finalRoster.length ? run.finalRoster : run.roster;
