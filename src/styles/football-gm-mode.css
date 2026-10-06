@@ -426,6 +426,32 @@
   padding: 5px 7px;
 }
 
+.football-gm__outlook-pill {
+  align-items: center;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 999px;
+  color: #8fa4b5;
+  display: inline-flex;
+  font-size: 8px;
+  font-weight: 900;
+  justify-self: start;
+  letter-spacing: .05em;
+  line-height: 1;
+  padding: 5px 7px;
+  width: max-content;
+}
+
+.football-gm__roster-player .football-gm__outlook-pill {
+  margin-top: 3px;
+}
+
+.football-gm__trade-targets button .football-gm__outlook-pill,
+.football-gm__trade-package-player .football-gm__outlook-pill {
+  grid-column: 1 / -1;
+  margin-top: 3px;
+}
+
 .football-gm__candidate-tags .risk-high {
   border-color: rgba(255,140,105,.28);
   color: #ffb18f;
@@ -437,6 +463,10 @@
 
 .football-gm__candidate-tags .risk-locked {
   color: #91d6ab;
+}
+
+.football-gm__trade-chip .football-gm__outlook-pill {
+  margin-top: 1px;
 }
 
 .football-gm__candidate-actions {

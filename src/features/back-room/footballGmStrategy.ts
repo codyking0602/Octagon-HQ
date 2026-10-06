@@ -132,15 +132,27 @@ export interface FootballGmResolvedOffseasonAssets {
 type OutcomeRow = Readonly<Record<FootballGmPlayoffFinish, number>> & { grade: number };
 
 const OUTCOME_CURVE: readonly OutcomeRow[] = [
-  { grade: 78, "Missed Playoffs": 0.74, "Wild Card": 0.17, Divisional: 0.06, "Conference Championship": 0.02, "Super Bowl Loss": 0.007, Champion: 0.003 },
-  { grade: 82, "Missed Playoffs": 0.61, "Wild Card": 0.22, Divisional: 0.10, "Conference Championship": 0.045, "Super Bowl Loss": 0.018, Champion: 0.007 },
-  { grade: 85, "Missed Playoffs": 0.47, "Wild Card": 0.26, Divisional: 0.14, "Conference Championship": 0.075, "Super Bowl Loss": 0.035, Champion: 0.02 },
-  { grade: 88, "Missed Playoffs": 0.31, "Wild Card": 0.25, Divisional: 0.19, "Conference Championship": 0.12, "Super Bowl Loss": 0.075, Champion: 0.055 },
-  { grade: 90, "Missed Playoffs": 0.22, "Wild Card": 0.22, Divisional: 0.20, "Conference Championship": 0.15, "Super Bowl Loss": 0.11, Champion: 0.10 },
-  { grade: 92, "Missed Playoffs": 0.13, "Wild Card": 0.17, Divisional: 0.19, "Conference Championship": 0.19, "Super Bowl Loss": 0.15, Champion: 0.17 },
-  { grade: 94, "Missed Playoffs": 0.07, "Wild Card": 0.12, Divisional: 0.16, "Conference Championship": 0.19, "Super Bowl Loss": 0.19, Champion: 0.27 },
-  { grade: 96, "Missed Playoffs": 0.04, "Wild Card": 0.08, Divisional: 0.13, "Conference Championship": 0.17, "Super Bowl Loss": 0.21, Champion: 0.37 },
-  { grade: 98, "Missed Playoffs": 0.02, "Wild Card": 0.05, Divisional: 0.10, "Conference Championship": 0.14, "Super Bowl Loss": 0.23, Champion: 0.46 },
+  { grade: 78, "Missed Playoffs": 0.80, "Wild Card": 0.13, Divisional: 0.05, "Conference Championship": 0.015, "Super Bowl Loss": 0.004, Champion: 0.001 },
+  { grade: 79, "Missed Playoffs": 0.77, "Wild Card": 0.15, Divisional: 0.055, "Conference Championship": 0.017, "Super Bowl Loss": 0.006, Champion: 0.002 },
+  { grade: 80, "Missed Playoffs": 0.73, "Wild Card": 0.17, Divisional: 0.066, "Conference Championship": 0.022, "Super Bowl Loss": 0.009, Champion: 0.003 },
+  { grade: 81, "Missed Playoffs": 0.69, "Wild Card": 0.19, Divisional: 0.077, "Conference Championship": 0.027, "Super Bowl Loss": 0.012, Champion: 0.004 },
+  { grade: 82, "Missed Playoffs": 0.64, "Wild Card": 0.21, Divisional: 0.092, "Conference Championship": 0.035, "Super Bowl Loss": 0.017, Champion: 0.006 },
+  { grade: 83, "Missed Playoffs": 0.58, "Wild Card": 0.23, Divisional: 0.112, "Conference Championship": 0.05, "Super Bowl Loss": 0.02, Champion: 0.008 },
+  { grade: 84, "Missed Playoffs": 0.50, "Wild Card": 0.27, Divisional: 0.13, "Conference Championship": 0.06, "Super Bowl Loss": 0.028, Champion: 0.012 },
+  { grade: 85, "Missed Playoffs": 0.40, "Wild Card": 0.29, Divisional: 0.18, "Conference Championship": 0.08, "Super Bowl Loss": 0.035, Champion: 0.015 },
+  { grade: 86, "Missed Playoffs": 0.31, "Wild Card": 0.29, Divisional: 0.21, "Conference Championship": 0.11, "Super Bowl Loss": 0.055, Champion: 0.025 },
+  { grade: 87, "Missed Playoffs": 0.23, "Wild Card": 0.30, Divisional: 0.24, "Conference Championship": 0.13, "Super Bowl Loss": 0.065, Champion: 0.035 },
+  { grade: 88, "Missed Playoffs": 0.15, "Wild Card": 0.29, Divisional: 0.26, "Conference Championship": 0.17, "Super Bowl Loss": 0.08, Champion: 0.05 },
+  { grade: 89, "Missed Playoffs": 0.08, "Wild Card": 0.25, Divisional: 0.29, "Conference Championship": 0.20, "Super Bowl Loss": 0.105, Champion: 0.075 },
+  { grade: 90, "Missed Playoffs": 0.04, "Wild Card": 0.20, Divisional: 0.30, "Conference Championship": 0.23, "Super Bowl Loss": 0.13, Champion: 0.10 },
+  { grade: 91, "Missed Playoffs": 0.02, "Wild Card": 0.15, Divisional: 0.28, "Conference Championship": 0.25, "Super Bowl Loss": 0.16, Champion: 0.14 },
+  { grade: 92, "Missed Playoffs": 0.01, "Wild Card": 0.10, Divisional: 0.25, "Conference Championship": 0.26, "Super Bowl Loss": 0.20, Champion: 0.18 },
+  { grade: 93, "Missed Playoffs": 0.005, "Wild Card": 0.07, Divisional: 0.20, "Conference Championship": 0.26, "Super Bowl Loss": 0.22, Champion: 0.245 },
+  { grade: 94, "Missed Playoffs": 0, "Wild Card": 0.05, Divisional: 0.15, "Conference Championship": 0.25, "Super Bowl Loss": 0.23, Champion: 0.32 },
+  { grade: 95, "Missed Playoffs": 0, "Wild Card": 0.04, Divisional: 0.14, "Conference Championship": 0.25, "Super Bowl Loss": 0.22, Champion: 0.35 },
+  { grade: 96, "Missed Playoffs": 0, "Wild Card": 0.03, Divisional: 0.12, "Conference Championship": 0.23, "Super Bowl Loss": 0.22, Champion: 0.40 },
+  { grade: 97, "Missed Playoffs": 0, "Wild Card": 0.02, Divisional: 0.10, "Conference Championship": 0.21, "Super Bowl Loss": 0.22, Champion: 0.45 },
+  { grade: 98, "Missed Playoffs": 0, "Wild Card": 0.01, Divisional: 0.08, "Conference Championship": 0.19, "Super Bowl Loss": 0.22, Champion: 0.50 },
 ];
 
 const FINISH_ORDER: readonly FootballGmPlayoffFinish[] = [
@@ -171,6 +183,16 @@ function roundHalfMillion(value: number) {
 
 function rosterPlayerIds(roster: readonly FootballGmRosterEntry[]) {
   return new Set(roster.map((entry) => entry.playerId));
+}
+
+export function footballGmCanUseFreeAgency(
+  roster: readonly FootballGmRosterEntry[],
+  tradeChipPlayerIds: readonly string[] = [],
+) {
+  return new Set([
+    ...roster.map((entry) => entry.playerId),
+    ...tradeChipPlayerIds,
+  ]).size < FOOTBALL_GM_ROSTER_SLOTS.length;
 }
 
 function preferredSlotForPlayer(player: FootballGmPlayer) {
@@ -262,7 +284,7 @@ export function footballGmEffectiveTeamGrade(
   return { rawTeamGrade, weakLinkPenalty, continuityAdjustment, teamGrade, continuity };
 }
 
-function outcomeProbabilities(teamGrade: number) {
+export function footballGmOutcomeProbabilities(teamGrade: number) {
   const bounded = clamp(teamGrade, OUTCOME_CURVE[0]!.grade, OUTCOME_CURVE[OUTCOME_CURVE.length - 1]!.grade);
   let low = OUTCOME_CURVE[0]!;
   let high = OUTCOME_CURVE[OUTCOME_CURVE.length - 1]!;
@@ -282,7 +304,7 @@ function outcomeProbabilities(teamGrade: number) {
 }
 
 export function footballGmTitleOdds(teamGrade: number) {
-  return outcomeProbabilities(teamGrade).Champion;
+  return footballGmOutcomeProbabilities(teamGrade).Champion;
 }
 
 export function footballGmPostseasonBonus(finish: FootballGmPlayoffFinish) {
@@ -310,7 +332,7 @@ export function footballGmSeasonRoll(seed: string, year: 1 | 2 | 3) {
 }
 
 function deterministicFinish(seed: string, year: 1 | 2 | 3, teamGrade: number) {
-  const probabilities = outcomeProbabilities(teamGrade);
+  const probabilities = footballGmOutcomeProbabilities(teamGrade);
   const roll = footballGmSeasonRoll(seed, year);
   let running = 0;
   for (const finish of FINISH_ORDER) {
@@ -340,7 +362,7 @@ export function footballGmAdjustedSalaryForPlayer(
   if (year === 1 || player.gameContract === "3YR") return base;
   const failedCount = consequences[player.id] ?? 0;
   const premium = footballGmNegotiationPremiumPct(seed, player.id, failedCount);
-  return premium ? roundHalfMillion(base * (1 + premium)) : base;
+  return premium ? Math.max(base + (failedCount * 500_000), roundHalfMillion(base * (1 + premium))) : base;
 }
 
 export function footballGmAdjustedRosterCap(
@@ -458,14 +480,28 @@ export function footballGmEligibleFreeAgencyTeams(input: {
   previousTeam?: string | null;
   excludedPlayerIds?: readonly string[];
 }) {
-  let teams = FOOTBALL_GM_TEAMS.filter((team) => footballGmFreeAgencyCandidatesForTeam({
+  const candidateTeams = FOOTBALL_GM_TEAMS.map((team) => ({
     team,
-    roster: input.roster,
-    tradeChipPlayerIds: input.tradeChipPlayerIds,
-    seed: input.seed,
-    consequences: input.consequences,
-    excludedPlayerIds: input.excludedPlayerIds,
-  }).length > 0);
+    candidates: footballGmFreeAgencyCandidatesForTeam({
+      team,
+      roster: input.roster,
+      tradeChipPlayerIds: input.tradeChipPlayerIds,
+      seed: input.seed,
+      consequences: input.consequences,
+      excludedPlayerIds: input.excludedPlayerIds,
+    }),
+  })).filter((row) => row.candidates.length > 0);
+
+  // When the roster has a real vacancy, make the wheel useful: prefer teams
+  // that can directly fill at least one open slot. The landed team still shows
+  // every legal non-position-locked signing/displacement option.
+  const directFitTeams = candidateTeams
+    .filter((row) => row.candidates.some((candidate) => candidate.legalSlots.length > 0))
+    .map((row) => row.team);
+  let teams = directFitTeams.length
+    ? directFitTeams
+    : candidateTeams.map((row) => row.team);
+
   if (input.previousTeam && teams.length > 1) {
     const withoutRepeat = teams.filter((team) => team !== input.previousTeam);
     if (withoutRepeat.length) teams = withoutRepeat;

@@ -18,6 +18,7 @@ import {
   footballGmRosterCap,
   footballGmRosterPlayers,
   footballGmSpinTeam,
+  type FootballGmPlayer,
   type FootballGmRosterEntry,
   type FootballGmRosterSlot,
   type FootballGmTeamCandidate,
@@ -28,6 +29,7 @@ import {
   footballGmAdjustedHoldingsCap,
   footballGmAdjustedRosterCap,
   footballGmAdjustedSalaryForPlayer,
+  footballGmCanUseFreeAgency,
   footballGmContinuity,
   footballGmEligibleFreeAgencyTeams,
   footballGmFinalResultV2,
@@ -286,6 +288,10 @@ function TeamLogo({ teamCode }: { teamCode: string }) {
     : <span className="football-gm__team-fallback">{teamCode}</span>;
 }
 
+function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
+  return <span className="football-gm__outlook-pill">{outlook}</span>;
+}
+
 function CapMeter({
   roster,
   year,
@@ -351,7 +357,11 @@ function RosterGrid({
                 <>
                   <div className="football-gm__roster-player">
                     <TeamLogo teamCode={player.team} />
-                    <span><strong>{player.name}</strong><em>{player.team} · {player.position}</em></span>
+                    <span>
+                      <strong>{player.name}</strong>
+                      <em>{player.team} · {player.position}</em>
+                      <PlayerOutlookPill outlook={player.outlook} />
+                    </span>
                   </div>
                   <div className="football-gm__roster-contract">
                     <b>{footballGmMoney(salary)}</b>
@@ -404,7 +414,7 @@ function CandidateBoard({
             </div>
             <div className="football-gm__candidate-tags">
               <span>{player.gameContract}</span>
-              <span>{player.outlook}</span>
+              <PlayerOutlookPill outlook={player.outlook} />
               <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
                 {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} EXTENSION RISK`}
               </span>
@@ -467,7 +477,7 @@ function FreeAgencyBoard({
             </div>
             <div className="football-gm__candidate-tags">
               <span>1YR FREE AGENT</span>
-              <span>{player.outlook}</span>
+              <PlayerOutlookPill outlook={player.outlook} />
               <span>Y2/Y3 MARKET</span>
             </div>
             <div className="football-gm__candidate-actions">
@@ -541,11 +551,11 @@ function FreeAgencyReleasePanel({
 
   return (
     <section className="football-gm__trade-cuts surface-card">
-      <p className="eyebrow">OPTIONAL FREE AGENCY</p>
-      <h2>RELEASE ONE PLAYER & SPIN</h2>
+      <p className="eyebrow">ONE VOLUNTARY RELEASE</p>
+      <h2>CREATE ONE EXTRA FA OPENING</h2>
       <p>
-        Cut one player from the seven-man core. His salary plus any existing cap room becomes your free-agent budget.
-        The spin is not position-locked: any real 1YR free agent from that team who fits both future caps can be signed.
+        You may deliberately cut one settled starter during the offseason. His salary plus any existing cap room becomes your free-agent budget.
+        That is the only manufactured-vacancy limit: normal trades and released displaced assets can reopen free agency whenever they leave fewer than seven held assets.
       </p>
       <div className="football-gm__cut-list">
         {rows.map(({ entry, player, budget, eligibleTeams }) => {
@@ -573,7 +583,7 @@ function FreeAgencyReleasePanel({
         >RELEASE {selected.player.name.toUpperCase()} · {footballGmMoney(selected.budget)} BUDGET</button>
       ) : null}
       <small className="football-gm__trade-warning">
-        The release is final. The player you cut cannot be re-signed on this free-agency spin.
+        The release is final. Your one voluntary cut cannot be undone, and that player cannot be re-signed this offseason.
       </small>
     </section>
   );
@@ -613,6 +623,7 @@ function TradeChipPanel({
               <span>{player.team} · {player.position} · {player.gameContract}</span>
               <strong>{player.name}</strong>
               <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, seed, consequences))}</em>
+              <PlayerOutlookPill outlook={player.outlook} />
               <div className="football-gm__inline-actions">
                 <button type="button" disabled={shopped} onClick={() => onShop(playerId)}>
                   {shopped ? "SHOPPED" : "SHOP NORMALLY"}
@@ -701,6 +712,7 @@ function TradePackagePlayer({
       <span>{player.team} · {player.position} · {player.gameContract}</span>
       <strong>{player.name}</strong>
       <em>{footballGmMoney(salary)}</em>
+      <PlayerOutlookPill outlook={player.outlook} />
     </div>
   );
 }
@@ -789,6 +801,7 @@ function TradeRoom({
                 <span>{player.position} · AGE {player.age} · {player.gameContract}</span>
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, run.seed, run.negotiationConsequences))}</em>
+                  <PlayerOutlookPill outlook={player.outlook} />
               </button>
             ))}
           </div>
@@ -1071,6 +1084,10 @@ export default function FootballGmModePage() {
   }
 
   function spinFreeAgency() {
+    if (!footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)) {
+      patch({ tradeMessage: "Free agency opens whenever normal roster work leaves fewer than seven held assets. The one-time limit applies only to deliberately releasing a settled starter." });
+      return;
+    }
     const teams = footballGmEligibleFreeAgencyTeams({
       roster: run.finalRoster,
       tradeChipPlayerIds: run.tradeChipPlayerIds,
@@ -1111,7 +1128,6 @@ export default function FootballGmModePage() {
       tradeChipPlayerIds: [...next.tradeChipPlayerIds],
       previousFreeAgentTeam: run.pendingFreeAgentTeam,
       pendingFreeAgentTeam: null,
-      releasedFreeAgentPlayerId: null,
       freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
       tradeMessage: displaced
         ? `${player.name} signed at ${slot}. ${displaced.name} is now a normal trade chip; shop him through the regular Trade Room or release him.`
@@ -1368,7 +1384,6 @@ export default function FootballGmModePage() {
     run.negotiationConsequences,
     run.tradeChipPlayerIds,
   );
-  const offseasonHoldingsCount = run.finalRoster.length + run.tradeChipPlayerIds.length;
 
   return (
     <div className="page football-gm-page">
@@ -1489,7 +1504,7 @@ export default function FootballGmModePage() {
                   excludedPlayerIds={run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : []}
                   onPick={makeFreeAgentPick}
                 />
-              ) : offseasonHoldingsCount < FOOTBALL_GM_ROSTER_SLOTS.length ? (
+              ) : footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds) ? (
                 <section className="football-gm__wheel surface-card">
                   <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
                   <h2>SPIN THE REAL 1YR MARKET</h2>
@@ -1515,8 +1530,8 @@ export default function FootballGmModePage() {
                     <h2>{offseasonReady ? "YOU CAN MOVE FORWARD" : "YOU HAVE MOVES TO MAKE"}</h2>
                     <p>
                       {offseasonReady
-                        ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now, keep shopping trades, or use your optional release-and-spin free-agency move.`
-                        : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Keep shopping players or release one into the real 1YR free-agent market.`}
+                        ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now, keep shopping trades, or use your one voluntary release if it is still available.`
+                        : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Keep shopping players; any genuine vacancy can use free agency, and you may manufacture one vacancy with a voluntary release.`}
                     </p>
                     <button
                       className="primary-action"
