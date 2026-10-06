@@ -255,8 +255,11 @@ function canAddPlayerToSlot(input: {
   player: FootballGmPlayer;
   slot: FootballGmRosterSlot;
   year: 1 | 2;
+  excludedPlayerIds?: readonly string[];
 }) {
   const { roster, player, slot, year } = input;
+  const globallyExcluded = new Set(input.excludedPlayerIds ?? []);
+  if (globallyExcluded.has(player.id)) return false;
   if (!player.eligibleSlots.includes(slot)) return false;
   if (roster.some((entry) => entry.slot === slot)) return false;
   if (roster.some((entry) => entry.playerId === player.id) || distinctPlayerNameUsed(roster, player)) return false;
@@ -264,6 +267,7 @@ function canAddPlayerToSlot(input: {
   const currentSpend = footballGmRosterCap(roster, year);
   const playerSalary = footballGmSalaryForYear(player, year);
   const used = rosterUsedIds(roster);
+  for (const playerId of globallyExcluded) used.add(playerId);
   used.add(player.id);
   const remainingSlots = footballGmOpenSlots([...roster, { slot, playerId: player.id, acquired: "draft" }]);
   const reserve = reserveForRemainingSlots(remainingSlots, year, used);
@@ -280,6 +284,7 @@ export function footballGmCandidatesForTeam(input: {
   team: string;
   roster: readonly FootballGmRosterEntry[];
   year?: 1 | 2;
+  excludedPlayerIds?: readonly string[];
 }) {
   const year = input.year ?? 1;
   const players = playersByTeam.get(input.team) ?? [];
@@ -290,6 +295,7 @@ export function footballGmCandidatesForTeam(input: {
       player,
       slot,
       year,
+      excludedPlayerIds: input.excludedPlayerIds,
     }));
     return legalSlots.length
       ? [{ player, legalSlots, salary: footballGmSalaryForYear(player, year) }]
@@ -304,11 +310,13 @@ export function footballGmEligibleTeams(input: {
   roster: readonly FootballGmRosterEntry[];
   previousTeam?: string | null;
   year?: 1 | 2;
+  excludedPlayerIds?: readonly string[];
 }) {
   const teams = FOOTBALL_GM_TEAMS.filter((team) => footballGmCandidatesForTeam({
     team,
     roster: input.roster,
     year: input.year ?? 1,
+    excludedPlayerIds: input.excludedPlayerIds,
   }).length > 0);
   if (input.previousTeam && teams.length > 1) {
     const withoutRepeat = teams.filter((team) => team !== input.previousTeam);
