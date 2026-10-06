@@ -246,7 +246,7 @@ describe("Football Player Spotlight weekly schedule", () => {
       name: "Jamal Roberts",
       team: "Missouri",
       position: "RB",
-      teamColor: "#C69214",
+      teamColor: "#FDB719",
       highlightUrl: "https://youtu.be/k341BuX48kQ?is=_CrwryCS8Hs6iWqs",
       result: "VS FLORIDA · W 45–17",
       measurements: "6'0\" · 216 LB",
