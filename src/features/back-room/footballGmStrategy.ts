@@ -3,6 +3,7 @@ import {
   FOOTBALL_GM_PLAYER_POOL,
   FOOTBALL_GM_ROSTER_SLOTS,
   FOOTBALL_GM_TEAMS,
+  footballGmCandidatesForTeam,
   footballGmPlayerById,
   footballGmProjectedGradeForPlayer,
   footballGmSpinTeam,
@@ -13,8 +14,8 @@ import {
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v3-playtest";
-export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 3;
+export const FOOTBALL_GM_VERSION = "football-gm-v4-playtest";
+export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
   QB: 0.26,
@@ -324,6 +325,49 @@ export function footballGmIsOffseasonCompliantV2(
   return roster.length === FOOTBALL_GM_ROSTER_SLOTS.length
     && footballGmAdjustedRosterCap(roster, 2, seed, consequences) <= FOOTBALL_GM_CAP
     && footballGmAdjustedRosterCap(roster, 3, seed, consequences) <= FOOTBALL_GM_CAP;
+}
+
+export function footballGmFreeAgencyCandidatesForTeam(input: {
+  team: string;
+  roster: readonly FootballGmRosterEntry[];
+  seed: string;
+  consequences: FootballGmNegotiationConsequences;
+}) {
+  if (input.roster.length !== FOOTBALL_GM_ROSTER_SLOTS.length - 1) return [];
+  return footballGmCandidatesForTeam({
+    team: input.team,
+    roster: input.roster,
+    year: 2,
+  }).flatMap((candidate) => {
+    const legalSlots = candidate.legalSlots.filter((slot) => {
+      const nextRoster: FootballGmRosterEntry[] = [
+        ...input.roster,
+        { slot, playerId: candidate.player.id, acquired: "replacement" },
+      ];
+      return footballGmAdjustedRosterCap(nextRoster, 2, input.seed, input.consequences) <= FOOTBALL_GM_CAP
+        && footballGmAdjustedRosterCap(nextRoster, 3, input.seed, input.consequences) <= FOOTBALL_GM_CAP;
+    });
+    return legalSlots.length ? [{ ...candidate, legalSlots }] : [];
+  });
+}
+
+export function footballGmEligibleFreeAgencyTeams(input: {
+  roster: readonly FootballGmRosterEntry[];
+  seed: string;
+  consequences: FootballGmNegotiationConsequences;
+  previousTeam?: string | null;
+}) {
+  let teams = FOOTBALL_GM_TEAMS.filter((team) => footballGmFreeAgencyCandidatesForTeam({
+    team,
+    roster: input.roster,
+    seed: input.seed,
+    consequences: input.consequences,
+  }).length > 0);
+  if (input.previousTeam && teams.length > 1) {
+    const withoutRepeat = teams.filter((team) => team !== input.previousTeam);
+    if (withoutRepeat.length) teams = withoutRepeat;
+  }
+  return teams;
 }
 
 export function footballGmSeasonResultV2(input: {
