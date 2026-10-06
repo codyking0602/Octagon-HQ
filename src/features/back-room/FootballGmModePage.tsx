@@ -45,7 +45,6 @@ import {
   footballGmSeasonResultV2,
   footballGmSignFreeAgent,
   footballGmTradePartnerPlayers,
-  type FootballGmFinalResultV2,
   type FootballGmNegotiationConsequences,
   type FootballGmTradeProposal,
 } from "./footballGmStrategy";
