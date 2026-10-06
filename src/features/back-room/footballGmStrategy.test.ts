@@ -16,6 +16,7 @@ import {
   footballGmAcceptedTargetTradeOffers,
   footballGmAdjustedHoldingsCap,
   footballGmAdjustedSalaryForPlayer,
+  footballGmCanUseFreeAgency,
   footballGmContinuity,
   footballGmEffectiveTeamGrade,
   footballGmEligibleFreeAgencyTeams,
@@ -361,6 +362,19 @@ describe("Football GM strategy v7", () => {
     expect(evaluation.nextRoster).toHaveLength(6);
     expect(evaluation.nextRoster?.some((entry) => entry.playerId === playerId("Geno Smith"))).toBe(true);
     expect(evaluation.nextRoster?.some((entry) => entry.playerId === playerId("Lamar Jackson"))).toBe(false);
+  });
+
+  it("allows free agency for every genuine vacancy while treating displaced assets as holdings", () => {
+    const sixPlayerRoster = cheapRosterMissing("LB");
+    expect(footballGmCanUseFreeAgency(sixPlayerRoster)).toBe(true);
+
+    const heldChip = FOOTBALL_GM_PLAYER_POOL.find((player) => (
+      !sixPlayerRoster.some((entry) => entry.playerId === player.id)
+    ))!;
+    expect(footballGmCanUseFreeAgency(sixPlayerRoster, [heldChip.id])).toBe(false);
+
+    const fivePlayerRoster = sixPlayerRoster.slice(0, 5);
+    expect(footballGmCanUseFreeAgency(fivePlayerRoster, [heldChip.id])).toBe(true);
   });
 
   it("builds free agency only from real 1YR players outside the user's holdings", () => {
