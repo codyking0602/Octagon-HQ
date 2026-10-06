@@ -406,7 +406,7 @@ export const playGameCatalog = [
     route: "/football/gm-mode",
     icon: "GM",
     title: "The GM",
-    description: "Battle another GM or the CPU: alternate seven draft picks, survive a shared-market offseason, and compare three-year results.",
+    description: "Run a standalone three-year GM build or challenge another GM to an alternating shared-player draft.",
     availability: "preview",
     lineup: {
       defaultType: "curated",
@@ -421,7 +421,7 @@ export const playGameCatalog = [
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "challenge-completion",
-      difficultyModel: "NFL-only 1v1 GM battle using the Wheel team mechanic, a $150M cap, match-wide player uniqueness, alternating draft picks, worse-Year-1 offseason priority, a shared player market, one full offseason per GM, continuity, weak-link effects, and the locked seeded outcome curve.",
+      difficultyModel: "NFL-only GM mode with the original standalone Wheel-based solo run plus a 1v1 format using a $150M cap, match-wide player uniqueness, alternating draft picks, worse-Year-1 offseason priority, a shared player market, one full offseason per GM, continuity, weak-link effects, and the locked seeded outcome curve.",
     },
   },
   {
