@@ -240,12 +240,14 @@ function YearOneMatchup({
       <div className="football-gm__head-to-head-seasons">
         <article>
           <small>{leftName}</small>
+          <em>TEAM OVERALL</em>
           <strong>{left.teamGrade.toFixed(1)}</strong>
           <b>{left.finish}</b>
         </article>
         <span>VS</span>
         <article>
           <small>{rightName}</small>
+          <em>TEAM OVERALL</em>
           <strong>{right.teamGrade.toFixed(1)}</strong>
           <b>{right.finish}</b>
         </article>
@@ -258,7 +260,7 @@ function YearOneMatchup({
         </div>
       ) : null}
       {waiting ? <p>Waiting for both Year 1 results to lock.</p> : null}
-      {onContinue ? <button className="primary-action" type="button" onClick={onContinue}>ENTER THE OFFSEASON</button> : null}
+      {onContinue ? <button className="primary-action" type="button" onClick={onContinue}>CONTINUE →</button> : null}
     </section>
   );
 }
