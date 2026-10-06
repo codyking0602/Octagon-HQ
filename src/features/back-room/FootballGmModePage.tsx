@@ -70,6 +70,8 @@ interface PersistedRun {
   freeAgentSpinIndex: number;
   previousFreeAgentTeam: string | null;
   pendingFreeAgentTeam: string | null;
+  voluntaryFreeAgencyUsed: boolean;
+  releasedFreeAgentPlayerId: string | null;
   tradeSpinIndex: number;
   previousTradePartner: string | null;
   tradeAnchorPlayerId: string | null;
@@ -123,6 +125,8 @@ function initialRun(seed: string): PersistedRun {
     freeAgentSpinIndex: 0,
     previousFreeAgentTeam: null,
     pendingFreeAgentTeam: null,
+    voluntaryFreeAgencyUsed: false,
+    releasedFreeAgentPlayerId: null,
     tradeSpinIndex: 0,
     previousTradePartner: null,
     tradeAnchorPlayerId: null,
@@ -431,12 +435,14 @@ function FreeAgencyBoard({
   seed,
   consequences,
   onPick,
+  excludedPlayerIds = [],
 }: {
   teamCode: string;
   roster: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
+  excludedPlayerIds?: readonly string[];
 }) {
   const team = wheelFootballTeam(teamCode);
   const candidates = footballGmFreeAgencyCandidatesForTeam({
@@ -444,6 +450,7 @@ function FreeAgencyBoard({
     roster,
     seed,
     consequences,
+    excludedPlayerIds,
   });
   return (
     <section className="football-gm__candidates surface-card" style={playerStyle(teamCode)}>
@@ -476,6 +483,88 @@ function FreeAgencyBoard({
           </article>
         ))}
       </div>
+    </section>
+  );
+}
+
+function freeAgencyReleaseBudget(
+  roster: readonly FootballGmRosterEntry[],
+  playerId: string,
+  seed: string,
+  consequences: FootballGmNegotiationConsequences,
+) {
+  const stripped = roster.filter((entry) => entry.playerId !== playerId);
+  if (stripped.length !== FOOTBALL_GM_ROSTER_SLOTS.length - 1) return 0;
+  const year2Room = FOOTBALL_GM_CAP - footballGmAdjustedRosterCap(stripped, 2, seed, consequences);
+  const year3Room = FOOTBALL_GM_CAP - footballGmAdjustedRosterCap(stripped, 3, seed, consequences);
+  return Math.max(0, Math.min(year2Room, year3Room));
+}
+
+function FreeAgencyReleasePanel({
+  roster,
+  seed,
+  consequences,
+  onRelease,
+}: {
+  roster: readonly FootballGmRosterEntry[];
+  seed: string;
+  consequences: FootballGmNegotiationConsequences;
+  onRelease: (playerId: string) => void;
+}) {
+  const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+  const rows = footballGmRosterPlayers(roster).map(({ entry, player }) => {
+    const stripped = roster.filter((candidate) => candidate.playerId !== player.id);
+    const eligibleTeams = footballGmEligibleFreeAgencyTeams({
+      roster: stripped,
+      seed,
+      consequences,
+      excludedPlayerIds: [player.id],
+    });
+    return {
+      entry,
+      player,
+      budget: freeAgencyReleaseBudget(roster, player.id, seed, consequences),
+      eligibleTeams: eligibleTeams.length,
+    };
+  });
+  const selected = rows.find((row) => row.player.id === selectedPlayerId) ?? null;
+
+  return (
+    <section className="football-gm__trade-cuts surface-card">
+      <p className="eyebrow">FREE AGENCY · ONE OPTIONAL MOVE</p>
+      <h2>RELEASE ONE PLAYER & SPIN</h2>
+      <p>
+        Cut one player from the seven-man core. His salary plus any existing cap room becomes your replacement budget.
+        Then spin once for a cap-safe replacement at the open position.
+      </p>
+      <div className="football-gm__cut-list">
+        {rows.map(({ entry, player, budget, eligibleTeams }) => {
+          const selectedRow = player.id === selectedPlayerId;
+          return (
+            <button
+              key={player.id}
+              type="button"
+              className={selectedRow ? "is-selected" : ""}
+              disabled={!eligibleTeams}
+              onClick={() => setSelectedPlayerId(selectedRow ? null : player.id)}
+            >
+              <span>{entry.slot} · {eligibleTeams ? `${eligibleTeams} WHEEL TEAMS` : "NO LEGAL REPLACEMENT"}</span>
+              <strong>{player.name}</strong>
+              <em>FA BUDGET {footballGmMoney(budget)}</em>
+            </button>
+          );
+        })}
+      </div>
+      {selected ? (
+        <button
+          className="primary-action"
+          type="button"
+          onClick={() => onRelease(selected.player.id)}
+        >RELEASE {selected.player.name.toUpperCase()} · {footballGmMoney(selected.budget)} BUDGET</button>
+      ) : null}
+      <small className="football-gm__trade-warning">
+        The release is final. The player you cut cannot be re-signed on this free-agency spin.
+      </small>
     </section>
   );
 }
@@ -939,6 +1028,7 @@ export default function FootballGmModePage() {
       seed: run.seed,
       consequences: run.negotiationConsequences,
       previousTeam: run.previousFreeAgentTeam,
+      excludedPlayerIds: run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : [],
     });
     const team = footballGmSpinTeam(`${run.seed}:free-agency`, run.freeAgentSpinIndex, teams);
     if (!team) {
@@ -955,6 +1045,7 @@ export default function FootballGmModePage() {
       roster: run.finalRoster,
       seed: run.seed,
       consequences: run.negotiationConsequences,
+      excludedPlayerIds: run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : [],
     }).find((row) => row.player.id === playerId && row.legalSlots.includes(slot));
     if (!candidate) return;
     const nextRoster: FootballGmRosterEntry[] = [
@@ -967,6 +1058,32 @@ export default function FootballGmModePage() {
       pendingFreeAgentTeam: null,
       freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
       tradeMessage: `${candidate.player.name} signed through free agency to fill ${slot}.`,
+    });
+  }
+
+  function releaseToFreeAgency(playerId: string) {
+    if (run.voluntaryFreeAgencyUsed || run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;
+    const player = footballGmPlayerById(playerId);
+    if (!player || !run.finalRoster.some((entry) => entry.playerId === playerId)) return;
+    const stripped = run.finalRoster.filter((entry) => entry.playerId !== playerId);
+    const eligibleTeams = footballGmEligibleFreeAgencyTeams({
+      roster: stripped,
+      seed: run.seed,
+      consequences: run.negotiationConsequences,
+      excludedPlayerIds: [playerId],
+    });
+    if (!eligibleTeams.length) {
+      patch({ tradeMessage: `Releasing ${player.name} does not leave a legal free-agency path under the cap.` });
+      return;
+    }
+    const budget = freeAgencyReleaseBudget(run.finalRoster, playerId, run.seed, run.negotiationConsequences);
+    patch({
+      finalRoster: stripped,
+      voluntaryFreeAgencyUsed: true,
+      releasedFreeAgentPlayerId: playerId,
+      pendingFreeAgentTeam: null,
+      previousFreeAgentTeam: null,
+      tradeMessage: `${player.name} released. Free-agency replacement budget: ${footballGmMoney(budget)}.`,
     });
   }
 
@@ -1237,7 +1354,7 @@ export default function FootballGmModePage() {
             <span><b>1YR / 3YR</b><small>One-year deals reprice after Year 1. Three-year deals stay locked.</small></span>
             <span><b>1 + 1</b><small>One required trade offer. One optional backup if you actually want it.</small></span>
           </div>
-          <p className="football-gm__intro-note">Exact player grades and future salaries stay hidden during the draft. Talent, cap, trade value and roster continuity all matter across the full window. Uneven offseason trades can open one free-agency wheel spot.</p>
+          <p className="football-gm__intro-note">Exact player grades and future salaries stay hidden during the draft. Talent, cap, trade value and roster continuity all matter across the full window. In the offseason, an uneven trade can open free agency, or you can make one voluntary release-and-spin move.</p>
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
         </section>
       ) : null}
@@ -1314,32 +1431,45 @@ export default function FootballGmModePage() {
                 roster={run.finalRoster}
                 seed={run.seed}
                 consequences={run.negotiationConsequences}
+                excludedPlayerIds={run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : []}
                 onPick={makeFreeAgentPick}
               />
             ) : (
               <section className="football-gm__wheel surface-card">
                 <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
                 <h2>FILL THE OPEN SPOT</h2>
-                <p>Your uneven trade created a vacancy. Spin the NFL wheel and sign one legal player from the team it lands on. Only cap-safe teams are included.</p>
+                <p>{run.releasedFreeAgentPlayerId
+                  ? "You released a player. Spin the NFL wheel and sign one legal replacement at the open position. Only cap-safe teams are included."
+                  : "Your uneven trade created a vacancy. Spin the NFL wheel and sign one legal player from the team it lands on. Only cap-safe teams are included."}</p>
                 <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>
               </section>
             )
           ) : (
-            <section className={`football-gm__offseason-status surface-card${offseasonReady ? " is-ready" : " is-crisis"}`}>
-              <p className="eyebrow">{offseasonReady ? "WINDOW SET" : "CAP CRISIS"}</p>
-              <h2>{offseasonReady ? "YOU CAN MOVE FORWARD" : "YOU HAVE MOVES TO MAKE"}</h2>
-              <p>
-                {offseasonReady
-                  ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now or keep shopping if you want to improve it.`
-                  : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Shop an eligible player, spin one final trade partner, and submit one package with an optional backup.`}
-              </p>
-              <button
-                className="primary-action"
-                type="button"
-                disabled={!offseasonReady}
-                onClick={() => patch({ phase: "years23" })}
-              >SIMULATE YEARS 2 & 3</button>
-            </section>
+            <>
+              <section className={`football-gm__offseason-status surface-card${offseasonReady ? " is-ready" : " is-crisis"}`}>
+                <p className="eyebrow">{offseasonReady ? "WINDOW SET" : "CAP CRISIS"}</p>
+                <h2>{offseasonReady ? "YOU CAN MOVE FORWARD" : "YOU HAVE MOVES TO MAKE"}</h2>
+                <p>
+                  {offseasonReady
+                    ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now, shop a trade, or use your one optional free-agency move.`
+                    : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Trade or release a player into free agency to build a legal seven-man core.`}
+                </p>
+                <button
+                  className="primary-action"
+                  type="button"
+                  disabled={!offseasonReady}
+                  onClick={() => patch({ phase: "years23" })}
+                >SIMULATE YEARS 2 & 3</button>
+              </section>
+              {!run.voluntaryFreeAgencyUsed ? (
+                <FreeAgencyReleasePanel
+                  roster={run.finalRoster}
+                  seed={run.seed}
+                  consequences={run.negotiationConsequences}
+                  onRelease={releaseToFreeAgency}
+                />
+              ) : null}
+            </>
           )}
         </>
       ) : null}
