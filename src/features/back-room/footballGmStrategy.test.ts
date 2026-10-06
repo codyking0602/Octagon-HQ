@@ -399,6 +399,26 @@ describe("Football GM strategy v7", () => {
     expect(candidates.some(({ player }) => player.gameContract === "3YR")).toBe(false);
   });
 
+  it("spins free agency toward teams that can directly fill a real vacancy", () => {
+    const roster = cheapRosterMissing("LB");
+    const teams = footballGmEligibleFreeAgencyTeams({
+      roster,
+      seed: "direct-vacancy-fit",
+      consequences: {},
+    });
+    expect(teams.length).toBeGreaterThan(0);
+
+    for (const team of teams) {
+      const candidates = footballGmFreeAgencyCandidatesForTeam({
+        team,
+        roster,
+        seed: "direct-vacancy-fit",
+        consequences: {},
+      });
+      expect(candidates.some((candidate) => candidate.legalSlots.includes("LB"))).toBe(true);
+    }
+  });
+
   it("makes high-end 1YR talent reachable when the user preserved enough future cap room", () => {
     const { roster, candidate } = findAccessibleEliteFreeAgent();
     expect(candidate.player.currentGrade).toBeGreaterThanOrEqual(90);
