@@ -14,7 +14,7 @@ import {
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v5-playtest";
+export const FOOTBALL_GM_VERSION = "football-gm-v6-playtest";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
@@ -87,6 +87,12 @@ export interface FootballGmTradeEvaluation {
   postTradePlayerIds: readonly string[];
   requiresCuts: number;
   nextRoster: readonly FootballGmRosterEntry[] | null;
+}
+
+export interface FootballGmTargetTradeOffer {
+  proposal: FootballGmTradeProposal;
+  evaluation: FootballGmTradeEvaluation;
+  shape: "1-for-1" | "2-for-1" | "1-for-2" | "2-for-2";
 }
 
 export type FootballGmNegotiationConsequences = Readonly<Record<string, number>>;
@@ -659,7 +665,7 @@ export function footballGmEvaluateTradeProposal(input: {
     "for",
     ...proposal.incomingPlayerIds.slice().sort(),
   ].join(":");
-  const threshold = 1.02 + ((hashString(`${input.seed}:trade-threshold:${input.partnerTeam}:${packageKey}`) % 7) / 100);
+  const threshold = 1 + ((hashString(`${input.seed}:trade-threshold:${input.partnerTeam}:${packageKey}`) % 6) * 0.005);
   const accepted = partnerReceivesValue >= partnerSendsValue * threshold;
   return {
     accepted,
@@ -671,6 +677,142 @@ export function footballGmEvaluateTradeProposal(input: {
     requiresCuts,
     nextRoster,
   };
+}
+
+function footballGmTradeOfferShape(proposal: FootballGmTradeProposal): FootballGmTargetTradeOffer["shape"] {
+  return `${proposal.outgoingPlayerIds.length}-for-${proposal.incomingPlayerIds.length}` as FootballGmTargetTradeOffer["shape"];
+}
+
+function footballGmTradeOfferKey(proposal: FootballGmTradeProposal) {
+  return [
+    ...proposal.outgoingPlayerIds.slice().sort(),
+    "for",
+    ...proposal.incomingPlayerIds.slice().sort(),
+  ].join(":");
+}
+
+export function footballGmAcceptedTargetTradeOffers(input: {
+  seed: string;
+  partnerTeam: string;
+  roster: readonly FootballGmRosterEntry[];
+  anchorPlayerId: string;
+  targetPlayerId: string;
+  shoppedPlayerIds?: readonly string[];
+  maxOffers?: number;
+}): FootballGmTargetTradeOffer[] {
+  const anchor = footballGmPlayerById(input.anchorPlayerId);
+  const target = footballGmPlayerById(input.targetPlayerId);
+  const rosterIds = rosterPlayerIds(input.roster);
+  if (
+    !anchor
+    || !target
+    || !rosterIds.has(anchor.id)
+    || target.team !== input.partnerTeam
+    || rosterIds.has(target.id)
+  ) return [];
+
+  const blockedOutgoing = new Set(input.shoppedPlayerIds ?? []);
+  blockedOutgoing.delete(anchor.id);
+  const secondaryOutgoing = input.roster
+    .map((entry) => entry.playerId)
+    .filter((playerId) => playerId !== anchor.id && !blockedOutgoing.has(playerId));
+  const secondaryIncoming = footballGmTradePartnerPlayers(input.partnerTeam, input.roster)
+    .map((player) => player.id)
+    .filter((playerId) => playerId !== target.id);
+
+  const proposals: FootballGmTradeProposal[] = [
+    { outgoingPlayerIds: [anchor.id], incomingPlayerIds: [target.id] },
+    ...secondaryOutgoing.map((playerId) => ({
+      outgoingPlayerIds: [anchor.id, playerId],
+      incomingPlayerIds: [target.id],
+    })),
+    ...secondaryIncoming.map((playerId) => ({
+      outgoingPlayerIds: [anchor.id],
+      incomingPlayerIds: [target.id, playerId],
+    })),
+    ...secondaryOutgoing.flatMap((outgoingPlayerId) => (
+      secondaryIncoming.map((incomingPlayerId) => ({
+        outgoingPlayerIds: [anchor.id, outgoingPlayerId],
+        incomingPlayerIds: [target.id, incomingPlayerId],
+      }))
+    )),
+  ];
+
+  const accepted = proposals.flatMap((proposal) => {
+    const evaluation = footballGmEvaluateTradeProposal({
+      seed: input.seed,
+      partnerTeam: input.partnerTeam,
+      roster: input.roster,
+      proposal,
+      priority: 1,
+    });
+    return evaluation.accepted
+      ? [{
+          proposal,
+          evaluation,
+          shape: footballGmTradeOfferShape(proposal),
+        }]
+      : [];
+  });
+
+  if (!accepted.length) return [];
+
+  const shapeOrder: FootballGmTargetTradeOffer["shape"][] = ["1-for-1", "2-for-1", "1-for-2", "2-for-2"];
+  const buckets = new Map(shapeOrder.map((shape) => [
+    shape,
+    accepted
+      .filter((offer) => offer.shape === shape)
+      .sort((left, right) => (
+        (hashString(`${input.seed}:target-offer:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(left.proposal)}`) % 1_000_000)
+        - (hashString(`${input.seed}:target-offer:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(right.proposal)}`) % 1_000_000)
+      )),
+  ] as const));
+
+  const selected: FootballGmTargetTradeOffer[] = [];
+  const usedSecondaryOutgoing = new Set<string>();
+  const usedSecondaryIncoming = new Set<string>();
+  const maxOffers = Math.max(1, Math.min(5, input.maxOffers ?? 5));
+
+  function secondaryIds(offer: FootballGmTargetTradeOffer) {
+    return {
+      outgoing: offer.proposal.outgoingPlayerIds.filter((id) => id !== anchor.id),
+      incoming: offer.proposal.incomingPlayerIds.filter((id) => id !== target.id),
+    };
+  }
+
+  function addOffer(offer: FootballGmTargetTradeOffer) {
+    if (selected.length >= maxOffers) return false;
+    const ids = secondaryIds(offer);
+    selected.push(offer);
+    ids.outgoing.forEach((id) => usedSecondaryOutgoing.add(id));
+    ids.incoming.forEach((id) => usedSecondaryIncoming.add(id));
+    return true;
+  }
+
+  for (const shape of shapeOrder) {
+    const bucket = buckets.get(shape) ?? [];
+    const diverse = bucket.find((offer) => {
+      const ids = secondaryIds(offer);
+      return ids.outgoing.every((id) => !usedSecondaryOutgoing.has(id))
+        && ids.incoming.every((id) => !usedSecondaryIncoming.has(id));
+    }) ?? bucket[0];
+    if (diverse) addOffer(diverse);
+  }
+
+  if (selected.length < maxOffers) {
+    const chosen = new Set(selected.map((offer) => footballGmTradeOfferKey(offer.proposal)));
+    const remaining = accepted
+      .filter((offer) => !chosen.has(footballGmTradeOfferKey(offer.proposal)))
+      .sort((left, right) => (
+        (hashString(`${input.seed}:target-offer-fill:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(left.proposal)}`) % 1_000_000)
+        - (hashString(`${input.seed}:target-offer-fill:${input.partnerTeam}:${input.targetPlayerId}:${footballGmTradeOfferKey(right.proposal)}`) % 1_000_000)
+      ));
+    for (const offer of remaining) {
+      if (!addOffer(offer)) break;
+    }
+  }
+
+  return selected;
 }
 
 export function footballGmFinalResultV2(input: {
