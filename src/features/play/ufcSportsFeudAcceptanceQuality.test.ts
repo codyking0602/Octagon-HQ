@@ -83,6 +83,22 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
     }
   });
 
+  it("ranks the era-defining board by era impact rather than championship résumé", () => {
+    const era = question("ufc-main-01-2");
+    expect(era.answers.map((answer) => answer.name)).toEqual([
+      "Royce Gracie",
+      "Conor McGregor",
+      "Georges St-Pierre",
+      "Anderson Silva",
+      "Jon Jones",
+      "Chuck Liddell",
+      "Ronda Rousey",
+      "Khabib Nurmagomedov",
+    ]);
+    expect(names(era)).toContain("Jose Aldo");
+    expect(names(era)).toContain("Demetrious Johnson");
+  });
+
   it("keeps current closed-set UFC champion history complete through September 2026", () => {
     const lightweight = names(question("ufc-fast1-02-1"));
     expect(lightweight).toHaveLength(14);
