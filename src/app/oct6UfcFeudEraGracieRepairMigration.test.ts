@@ -21,5 +21,6 @@ describe("Oct. 6 UFC Sports Feud era-board repair", () => {
     expect(migration).toContain("'corrected_first_board_strikes',0");
     expect(migration).toContain("normalized_score = 86");
     expect(migration).toContain("'main_points',56");
+    expect(migration).not.toContain("update private.daily_challenge_history");
   });
 });
