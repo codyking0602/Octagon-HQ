@@ -584,7 +584,7 @@ function TradeRoom({
         <p>One wheel spin locks this player's only trade partner for the offseason. Build one offer, with an optional backup.</p>
         <div className="football-gm__inline-actions">
           <button className="primary-action" type="button" onClick={() => {
-            const team = footballGmSpinTradePartner(run.seed, run.tradeSpinIndex, anchor.id, run.previousTradePartner);
+            const team = footballGmSpinTradePartner(run.seed, run.tradeSpinIndex, anchor.id);
             if (team) patch({
               tradePartnerTeam: team,
               shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, anchor.id])],
