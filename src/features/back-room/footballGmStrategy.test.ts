@@ -8,13 +8,16 @@ import {
   type FootballGmRosterSlot,
 } from "./footballGmEngine";
 import {
+  FOOTBALL_GM_HISTORICAL_ANCHORS,
   FOOTBALL_GM_HISTORICAL_FINAL_FOUR,
+  FOOTBALL_GM_MAX_TRADE_PLAYERS,
   FOOTBALL_GM_POSITION_WEIGHTS,
   footballGmAdjustedSalaryForPlayer,
   footballGmContinuity,
   footballGmEffectiveTeamGrade,
   footballGmEvaluateTradeProposal,
   footballGmSeasonResultV2,
+  footballGmSeasonRoll,
 } from "./footballGmStrategy";
 
 function playerId(name: string) {
@@ -57,17 +60,20 @@ describe("Football GM strategy v2", () => {
     expect(Object.values(FOOTBALL_GM_POSITION_WEIGHTS).reduce((sum, value) => sum + value, 0)).toBeCloseTo(1, 8);
   });
 
-  it("anchors the model to five real recent NFL final fours without making any grade an automatic finish", () => {
+  it("anchors outcomes to derived 2021-2025 finalist cores instead of hand-entered grades", () => {
     expect(FOOTBALL_GM_HISTORICAL_FINAL_FOUR).toHaveLength(20);
     expect(new Set(FOOTBALL_GM_HISTORICAL_FINAL_FOUR.map((row) => row.season))).toEqual(
       new Set([2021, 2022, 2023, 2024, 2025]),
     );
     const champions = FOOTBALL_GM_HISTORICAL_FINAL_FOUR.filter((row) => row.finish === "Champion");
     expect(champions).toHaveLength(5);
+    expect(FOOTBALL_GM_HISTORICAL_ANCHORS.finalFourMin).toBe(92.4);
+    expect(FOOTBALL_GM_HISTORICAL_ANCHORS.finalFourMedian).toBe(95.1);
+    expect(FOOTBALL_GM_HISTORICAL_ANCHORS.championAverage).toBeCloseTo(95.42, 2);
 
     const roster = codyRunRoster();
     const outcomes = new Set<string>();
-    for (let index = 0; index < 40; index += 1) {
+    for (let index = 0; index < 80; index += 1) {
       outcomes.add(footballGmSeasonResultV2({
         seed: `variance-${index}`,
         yearOneRoster: roster,
@@ -75,7 +81,29 @@ describe("Football GM strategy v2", () => {
         year: 1,
       }).finish);
     }
-    expect(outcomes.size).toBeGreaterThan(1);
+    expect(outcomes.size).toBeGreaterThan(2);
+  });
+
+  it("uses independent deterministic season rolls instead of carrying the same luck year to year", () => {
+    const pairs: Array<[number, number]> = [];
+    for (let index = 0; index < 512; index += 1) {
+      pairs.push([
+        footballGmSeasonRoll(`independent-${index}`, 1),
+        footballGmSeasonRoll(`independent-${index}`, 2),
+      ]);
+    }
+    const mean = (values: number[]) => values.reduce((sum, value) => sum + value, 0) / values.length;
+    const xs = pairs.map(([x]) => x);
+    const ys = pairs.map(([, y]) => y);
+    const mx = mean(xs);
+    const my = mean(ys);
+    const covariance = pairs.reduce((sum, [x, y]) => sum + ((x - mx) * (y - my)), 0);
+    const xVariance = xs.reduce((sum, x) => sum + ((x - mx) ** 2), 0);
+    const yVariance = ys.reduce((sum, y) => sum + ((y - my) ** 2), 0);
+    const correlation = covariance / Math.sqrt(xVariance * yVariance);
+
+    expect(Math.abs(correlation)).toBeLessThan(0.15);
+    expect(footballGmSeasonRoll("stable-seed", 1)).toBe(footballGmSeasonRoll("stable-seed", 1));
   });
 
   it("applies a modest weak-link effect without erasing positional value", () => {
@@ -109,6 +137,42 @@ describe("Football GM strategy v2", () => {
     expect(annoyed).toBeGreaterThan(base);
     expect(annoyed).toBeLessThanOrEqual(68_500_000);
     expect(lamar!.currentGrade).toBe(96);
+  });
+
+  it("allows accepted 1-for-2 packages to wait for one user-selected cut", () => {
+    const roster = codyRunRoster();
+    const evaluation = footballGmEvaluateTradeProposal({
+      seed: "one-for-two",
+      partnerTeam: "NYJ",
+      roster,
+      proposal: {
+        outgoingPlayerIds: [playerId("Lamar Jackson")],
+        incomingPlayerIds: [playerId("Geno Smith"), playerId("Garrett Wilson")],
+      },
+      priority: 1,
+    });
+
+    expect(evaluation.reason).not.toBe("invalid");
+    expect(evaluation.reason).not.toBe("roster");
+    expect(evaluation.postTradePlayerIds).toHaveLength(8);
+    expect(evaluation.requiresCuts).toBe(1);
+    expect(evaluation.nextRoster).toBeNull();
+  });
+
+  it("rejects packages larger than the three-player limit on either side", () => {
+    const roster = codyRunRoster();
+    expect(FOOTBALL_GM_MAX_TRADE_PLAYERS).toBe(3);
+    const evaluation = footballGmEvaluateTradeProposal({
+      seed: "too-large",
+      partnerTeam: "NYJ",
+      roster,
+      proposal: {
+        outgoingPlayerIds: roster.slice(0, 4).map((entry) => entry.playerId),
+        incomingPlayerIds: [playerId("Geno Smith")],
+      },
+      priority: 1,
+    });
+    expect(evaluation.reason).toBe("invalid");
   });
 
   it("supports uneven cross-position trade packages instead of replacement swaps", () => {
