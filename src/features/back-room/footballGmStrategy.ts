@@ -73,11 +73,11 @@ const FOOTBALL_GM_TEAM_OVR_ANCHORS = [
 ] as const;
 
 const FOOTBALL_GM_RESUME_SCORE: Readonly<Record<FootballGmPlayoffFinish, number>> = {
-  "Missed Playoffs": 50,
-  "Wild Card": 58,
-  Divisional: 65,
-  "Conference Championship": 80,
-  "Super Bowl Loss": 92,
+  "Missed Playoffs": 68,
+  "Wild Card": 73,
+  Divisional: 78,
+  "Conference Championship": 88,
+  "Super Bowl Loss": 95,
   Champion: 100,
 };
 
@@ -204,20 +204,20 @@ const OUTCOME_CURVE: readonly OutcomeRow[] = [
   { grade: 82, "Missed Playoffs": 0.64, "Wild Card": 0.21, Divisional: 0.092, "Conference Championship": 0.035, "Super Bowl Loss": 0.017, Champion: 0.006 },
   { grade: 83, "Missed Playoffs": 0.58, "Wild Card": 0.23, Divisional: 0.112, "Conference Championship": 0.05, "Super Bowl Loss": 0.02, Champion: 0.008 },
   { grade: 84, "Missed Playoffs": 0.50, "Wild Card": 0.27, Divisional: 0.13, "Conference Championship": 0.06, "Super Bowl Loss": 0.028, Champion: 0.012 },
-  { grade: 85, "Missed Playoffs": 0.40, "Wild Card": 0.29, Divisional: 0.18, "Conference Championship": 0.08, "Super Bowl Loss": 0.035, Champion: 0.015 },
-  { grade: 86, "Missed Playoffs": 0.31, "Wild Card": 0.29, Divisional: 0.21, "Conference Championship": 0.11, "Super Bowl Loss": 0.055, Champion: 0.025 },
-  { grade: 87, "Missed Playoffs": 0.23, "Wild Card": 0.30, Divisional: 0.24, "Conference Championship": 0.13, "Super Bowl Loss": 0.065, Champion: 0.035 },
-  { grade: 88, "Missed Playoffs": 0.15, "Wild Card": 0.29, Divisional: 0.26, "Conference Championship": 0.17, "Super Bowl Loss": 0.08, Champion: 0.05 },
-  { grade: 89, "Missed Playoffs": 0.08, "Wild Card": 0.25, Divisional: 0.29, "Conference Championship": 0.20, "Super Bowl Loss": 0.105, Champion: 0.075 },
-  { grade: 90, "Missed Playoffs": 0.04, "Wild Card": 0.20, Divisional: 0.30, "Conference Championship": 0.23, "Super Bowl Loss": 0.13, Champion: 0.10 },
-  { grade: 91, "Missed Playoffs": 0.02, "Wild Card": 0.15, Divisional: 0.28, "Conference Championship": 0.25, "Super Bowl Loss": 0.16, Champion: 0.14 },
-  { grade: 92, "Missed Playoffs": 0.01, "Wild Card": 0.10, Divisional: 0.25, "Conference Championship": 0.26, "Super Bowl Loss": 0.20, Champion: 0.18 },
-  { grade: 93, "Missed Playoffs": 0.005, "Wild Card": 0.07, Divisional: 0.20, "Conference Championship": 0.26, "Super Bowl Loss": 0.22, Champion: 0.245 },
-  { grade: 94, "Missed Playoffs": 0, "Wild Card": 0.05, Divisional: 0.15, "Conference Championship": 0.25, "Super Bowl Loss": 0.23, Champion: 0.32 },
-  { grade: 95, "Missed Playoffs": 0, "Wild Card": 0.04, Divisional: 0.14, "Conference Championship": 0.25, "Super Bowl Loss": 0.22, Champion: 0.35 },
-  { grade: 96, "Missed Playoffs": 0, "Wild Card": 0.03, Divisional: 0.12, "Conference Championship": 0.23, "Super Bowl Loss": 0.22, Champion: 0.40 },
-  { grade: 97, "Missed Playoffs": 0, "Wild Card": 0.02, Divisional: 0.10, "Conference Championship": 0.21, "Super Bowl Loss": 0.22, Champion: 0.45 },
-  { grade: 98, "Missed Playoffs": 0, "Wild Card": 0.01, Divisional: 0.08, "Conference Championship": 0.19, "Super Bowl Loss": 0.22, Champion: 0.50 },
+  { grade: 85, "Missed Playoffs": 0.34, "Wild Card": 0.28, Divisional: 0.20, "Conference Championship": 0.10, "Super Bowl Loss": 0.06, Champion: 0.02 },
+  { grade: 86, "Missed Playoffs": 0.25, "Wild Card": 0.27, Divisional: 0.23, "Conference Championship": 0.13, "Super Bowl Loss": 0.085, Champion: 0.035 },
+  { grade: 87, "Missed Playoffs": 0.17, "Wild Card": 0.26, Divisional: 0.25, "Conference Championship": 0.16, "Super Bowl Loss": 0.105, Champion: 0.055 },
+  { grade: 88, "Missed Playoffs": 0.10, "Wild Card": 0.23, Divisional: 0.27, "Conference Championship": 0.19, "Super Bowl Loss": 0.13, Champion: 0.08 },
+  { grade: 89, "Missed Playoffs": 0.05, "Wild Card": 0.18, Divisional: 0.26, "Conference Championship": 0.22, "Super Bowl Loss": 0.17, Champion: 0.12 },
+  { grade: 90, "Missed Playoffs": 0.025, "Wild Card": 0.115, Divisional: 0.235, "Conference Championship": 0.235, "Super Bowl Loss": 0.21, Champion: 0.18 },
+  { grade: 91, "Missed Playoffs": 0.01, "Wild Card": 0.06, Divisional: 0.18, "Conference Championship": 0.23, "Super Bowl Loss": 0.25, Champion: 0.27 },
+  { grade: 92, "Missed Playoffs": 0.005, "Wild Card": 0.02, Divisional: 0.12, "Conference Championship": 0.215, "Super Bowl Loss": 0.27, Champion: 0.37 },
+  { grade: 93, "Missed Playoffs": 0.002, "Wild Card": 0.01, Divisional: 0.07, "Conference Championship": 0.178, "Super Bowl Loss": 0.28, Champion: 0.46 },
+  { grade: 94, "Missed Playoffs": 0, "Wild Card": 0.005, Divisional: 0.04, "Conference Championship": 0.14, "Super Bowl Loss": 0.315, Champion: 0.50 },
+  { grade: 95, "Missed Playoffs": 0, "Wild Card": 0.004, Divisional: 0.03, "Conference Championship": 0.12, "Super Bowl Loss": 0.346, Champion: 0.50 },
+  { grade: 96, "Missed Playoffs": 0, "Wild Card": 0.003, Divisional: 0.02, "Conference Championship": 0.10, "Super Bowl Loss": 0.377, Champion: 0.50 },
+  { grade: 97, "Missed Playoffs": 0, "Wild Card": 0.002, Divisional: 0.015, "Conference Championship": 0.085, "Super Bowl Loss": 0.398, Champion: 0.50 },
+  { grade: 98, "Missed Playoffs": 0, "Wild Card": 0.001, Divisional: 0.01, "Conference Championship": 0.07, "Super Bowl Loss": 0.419, Champion: 0.50 },
 ];
 
 const FINISH_ORDER: readonly FootballGmPlayoffFinish[] = [
