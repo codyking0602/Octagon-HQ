@@ -13,7 +13,7 @@ import {
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v7-playtest";
+export const FOOTBALL_GM_VERSION = "football-gm-v8-head-to-head";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
