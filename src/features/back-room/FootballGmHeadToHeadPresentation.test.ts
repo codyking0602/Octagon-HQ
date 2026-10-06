@@ -91,18 +91,29 @@ describe("The GM head-to-head presentation", () => {
     expect(polishMigration).toContain("Completion is authoritative. Notification delivery must never roll it back.");
   });
 
-  it("ends with a descriptive franchise postmortem instead of only a score", () => {
+  it("ends with a focused franchise postmortem instead of an internal-data report", () => {
     expect(page).toContain("FootballGmFranchiseReport");
     expect(report).toContain("FRANCHISE ARC");
     expect(report).toContain("ROSTER EVOLUTION");
     expect(report).toContain("OFFSEASON TRANSACTIONS");
-    expect(report).toContain("BEST ROSTER DECISION");
-    expect(report).toContain("WHAT COST YOU");
-    expect(report).toContain("THE OWNER'S VERDICT");
     expect(report).toContain("WHERE THE MATCH WAS WON");
-    expect(report).toContain("VIEW ");
+    expect(report).toContain("Original core");
+    expect(report).toContain("GM Score");
+    expect(report).not.toContain("BEST ROSTER DECISION");
+    expect(report).not.toContain("WHAT COST YOU");
+    expect(report).not.toContain("THE OWNER'S VERDICT");
+    expect(report).not.toContain("WHEELER-DEALER");
+    expect(report).not.toContain("continuity.year3.meter");
     expect(css).toContain(".football-gm-report__evolution-row");
     expect(css).toContain(".football-gm-report__ledger");
+  });
+
+  it("shows Team OVR rather than exposing the hidden internal team grade", () => {
+    expect(page).toContain("footballGmTeamOverall(left.teamGrade)");
+    expect(page).toContain("footballGmTeamOverall(right.teamGrade)");
+    expect(report).toContain("teamOveralls[index]");
+    expect(report).toContain(" OVR");
+    expect(report).not.toContain("teamGrade.toFixed");
   });
 
   it("compresses the seven-player offseason core without stripping scouting context", () => {

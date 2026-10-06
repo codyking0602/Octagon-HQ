@@ -49,6 +49,70 @@ export const FOOTBALL_GM_LIVE_OUTCOME_ANCHORS = {
   losAngelesRams: 94.0,
 } as const;
 
+export const FOOTBALL_GM_SCORE_WEIGHTS = {
+  rosterManagement: 0.55,
+  threeYearResume: 0.45,
+} as const;
+
+const FOOTBALL_GM_TEAM_OVR_ANCHORS = [
+  [78, 70],
+  [80, 74],
+  [82, 78],
+  [84, 82],
+  [85, 84],
+  [86, 87],
+  [87, 89],
+  [88, 92],
+  [89, 94],
+  [90, 96],
+  [91, 97],
+  [92, 98],
+  [93, 98],
+  [94, 99],
+  [98, 99],
+] as const;
+
+const FOOTBALL_GM_RESUME_SCORE: Readonly<Record<FootballGmPlayoffFinish, number>> = {
+  "Missed Playoffs": 50,
+  "Wild Card": 58,
+  Divisional: 65,
+  "Conference Championship": 80,
+  "Super Bowl Loss": 92,
+  Champion: 100,
+};
+
+export function footballGmTeamOverall(teamGrade: number) {
+  const bounded = clamp(teamGrade, FOOTBALL_GM_TEAM_OVR_ANCHORS[0][0], FOOTBALL_GM_TEAM_OVR_ANCHORS.at(-1)![0]);
+  let low: readonly [number, number] = FOOTBALL_GM_TEAM_OVR_ANCHORS[0];
+  let high: readonly [number, number] = FOOTBALL_GM_TEAM_OVR_ANCHORS.at(-1)!;
+  for (let index = 1; index < FOOTBALL_GM_TEAM_OVR_ANCHORS.length; index += 1) {
+    if (bounded <= FOOTBALL_GM_TEAM_OVR_ANCHORS[index]![0]) {
+      low = FOOTBALL_GM_TEAM_OVR_ANCHORS[index - 1]!;
+      high = FOOTBALL_GM_TEAM_OVR_ANCHORS[index]!;
+      break;
+    }
+  }
+  const span = Math.max(1, high[0] - low[0]);
+  const pct = (bounded - low[0]) / span;
+  return Math.round(low[1] + ((high[1] - low[1]) * pct));
+}
+
+export function footballGmSeasonResumeScore(finish: FootballGmPlayoffFinish) {
+  return FOOTBALL_GM_RESUME_SCORE[finish];
+}
+
+export function footballGmThreeYearResumeScore(finishes: readonly FootballGmPlayoffFinish[]) {
+  if (!finishes.length) return 0;
+  return Math.round((finishes.reduce((sum, finish) => sum + footballGmSeasonResumeScore(finish), 0) / finishes.length) * 10) / 10;
+}
+
+export function footballGmScoreFromComponents(rosterManagementScore: number, resumeScore: number) {
+  return Math.round((
+    (rosterManagementScore * FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement)
+    + (resumeScore * FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume)
+  ) * 10) / 10;
+}
+
 
 export interface FootballGmContinuity {
   retained: number;
@@ -72,8 +136,9 @@ export interface FootballGmSeasonResultV2 {
 
 export interface FootballGmFinalResultV2 {
   score: number;
-  coreScore: number;
-  postseasonBonus: number;
+  rosterManagementScore: number;
+  resumeScore: number;
+  teamOveralls: readonly number[];
   seasons: readonly FootballGmSeasonResultV2[];
   continuity: {
     year2: FootballGmContinuity;
@@ -1113,13 +1178,15 @@ export function footballGmFinalResultV2(input: {
     footballGmSeasonResultV2({ seed: input.seed, yearOneRoster: input.yearOneRoster, roster: input.finalRoster, year: 2 }),
     footballGmSeasonResultV2({ seed: input.seed, yearOneRoster: input.yearOneRoster, roster: input.finalRoster, year: 3 }),
   ] as const;
-  const coreScore = seasons.reduce((sum, season) => sum + season.teamGrade, 0) / seasons.length;
-  const postseasonBonus = seasons.reduce((sum, season) => sum + season.postseasonBonus, 0) / seasons.length;
-  const score = Math.round((coreScore + postseasonBonus) * 10) / 10;
+  const teamOveralls = seasons.map((season) => footballGmTeamOverall(season.teamGrade));
+  const rosterManagementScore = Math.round((teamOveralls.reduce((sum, overall) => sum + overall, 0) / teamOveralls.length) * 10) / 10;
+  const resumeScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
+  const score = footballGmScoreFromComponents(rosterManagementScore, resumeScore);
   return {
     score,
-    coreScore: Math.round(coreScore * 10) / 10,
-    postseasonBonus: Math.round(postseasonBonus * 10) / 10,
+    rosterManagementScore,
+    resumeScore,
+    teamOveralls,
     seasons,
     continuity: {
       year2: footballGmContinuity(input.yearOneRoster, input.finalRoster, 2),

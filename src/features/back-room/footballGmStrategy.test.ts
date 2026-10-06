@@ -13,6 +13,7 @@ import {
   FOOTBALL_GM_LIVE_OUTCOME_ANCHORS,
   FOOTBALL_GM_MAX_TRADE_PLAYERS,
   FOOTBALL_GM_POSITION_WEIGHTS,
+  FOOTBALL_GM_SCORE_WEIGHTS,
   footballGmAcceptedTargetTradeOffers,
   footballGmAdjustedHoldingsCap,
   footballGmAdjustedSalaryForPlayer,
@@ -24,8 +25,12 @@ import {
   footballGmFreeAgencyCandidatesForTeam,
   footballGmOutcomeProbabilities,
   footballGmResolveTradeAssets,
+  footballGmScoreFromComponents,
+  footballGmSeasonResumeScore,
   footballGmSeasonResultV2,
   footballGmSeasonRoll,
+  footballGmTeamOverall,
+  footballGmThreeYearResumeScore,
   footballGmSignFreeAgent,
   footballGmTargetOfferDominates,
   footballGmTitleOdds,
@@ -237,6 +242,48 @@ describe("Football GM strategy v7", () => {
     expect(footballGmOutcomeProbabilities(90).Divisional).toBe(0.30);
     expect(footballGmOutcomeProbabilities(90)["Conference Championship"]).toBe(0.23);
     expect(footballGmOutcomeProbabilities(90)["Super Bowl Loss"]).toBe(0.13);
+  });
+
+  it("translates hidden team grades into a wider fan-facing Team OVR scale", () => {
+    expect(footballGmTeamOverall(85)).toBe(84);
+    expect(footballGmTeamOverall(89)).toBe(94);
+    expect(footballGmTeamOverall(90)).toBe(96);
+    expect(footballGmTeamOverall(94)).toBe(99);
+    expect(footballGmTeamOverall(98)).toBe(99);
+  });
+
+  it("makes championships matter in the three-year GM résumé without replacing roster quality", () => {
+    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement).toBe(0.55);
+    expect(FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(0.45);
+    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement + FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(1);
+
+    const titleAndTwoMisses = footballGmThreeYearResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"]);
+    const threeDivisionals = footballGmThreeYearResumeScore(["Divisional", "Divisional", "Divisional"]);
+    expect(titleAndTwoMisses).toBe(66.7);
+    expect(threeDivisionals).toBe(65);
+    expect(titleAndTwoMisses).toBeGreaterThan(threeDivisionals);
+
+    const sameRosterQuality = 90;
+    expect(footballGmScoreFromComponents(sameRosterQuality, titleAndTwoMisses))
+      .toBeGreaterThan(footballGmScoreFromComponents(sameRosterQuality, threeDivisionals));
+    expect(footballGmSeasonResumeScore("Champion")).toBe(100);
+    expect(footballGmSeasonResumeScore("Super Bowl Loss")).toBe(92);
+    expect(footballGmSeasonResumeScore("Missed Playoffs")).toBe(50);
+  });
+
+  it("lands expected GM scores in intuitive bands across the locked outcome curve", () => {
+    const expectedScore = (grade: number) => {
+      const probabilities = footballGmOutcomeProbabilities(grade);
+      const expectedResume = Object.entries(probabilities).reduce(
+        (sum, [finish, probability]) => sum + (footballGmSeasonResumeScore(finish as keyof typeof probabilities) * probability),
+        0,
+      );
+      return footballGmScoreFromComponents(footballGmTeamOverall(grade), expectedResume);
+    };
+
+    expect(expectedScore(88)).toBeCloseTo(80.8, 1);
+    expect(expectedScore(90)).toBeCloseTo(85.9, 1);
+    expect(expectedScore(94)).toBeCloseTo(93.1, 1);
   });
 
   it("uses independent deterministic season rolls instead of carrying the same luck year to year", () => {
