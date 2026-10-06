@@ -29,6 +29,14 @@ describe("CFB Superteam mobile and tie-priority polish", () => {
     expect(mobile).toContain("min-height: 0;");
   });
 
+  it("keeps every final player, roster grade, and all-grades view visible without horizontal scrolling", () => {
+    expect(gate).toContain('type FinalTab = "standings" | "rosters" | "grades";');
+    expect(gate).toContain(">All Grades</button>");
+    expect(gate).toContain("item.grade.toFixed(1)");
+    expect(styles).toContain("grid-template-columns: repeat(auto-fit, minmax(58px, 1fr));");
+    expect(styles).toContain("grid-template-columns: 74px minmax(0,1fr) auto;");
+  });
+
   it("explains the live Day 1 tie order and wraps each participant cleanly", () => {
     expect(gate).toContain("LIVE · LOCKS MIDNIGHT CT");
     expect(gate).toContain("New Day 1 entrants can change this order until the field locks.");
