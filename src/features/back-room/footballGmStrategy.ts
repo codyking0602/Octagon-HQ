@@ -459,27 +459,18 @@ export function footballGmTradePartnerPlayers(
     ));
 }
 
-export function footballGmEligibleTradeTeams(
-  anchorPlayerId: string,
-  previousPartnerTeam?: string | null,
-) {
+export function footballGmEligibleTradeTeams(anchorPlayerId: string) {
   const anchor = footballGmPlayerById(anchorPlayerId);
   if (!anchor) return [];
-  const teams = FOOTBALL_GM_TEAMS.filter((team) => team !== anchor.team);
-  if (previousPartnerTeam && teams.length > 1) {
-    const withoutRepeat = teams.filter((team) => team !== previousPartnerTeam);
-    if (withoutRepeat.length) return withoutRepeat;
-  }
-  return teams;
+  return FOOTBALL_GM_TEAMS.filter((team) => team !== anchor.team);
 }
 
 export function footballGmSpinTradePartner(
   seed: string,
   spinIndex: number,
   anchorPlayerId: string,
-  previousPartnerTeam?: string | null,
 ) {
-  const teams = footballGmEligibleTradeTeams(anchorPlayerId, previousPartnerTeam);
+  const teams = footballGmEligibleTradeTeams(anchorPlayerId);
   return footballGmSpinTeam(seed, 500 + spinIndex, teams);
 }
 
