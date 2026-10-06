@@ -157,6 +157,15 @@ describe("Average Fan durable content banks", () => {
     expect(surnameTypoCount).toBeGreaterThan(35);
   });
 
+  it("keeps the hot-route definition out of free-text grading", () => {
+    const question = AVERAGE_FAN_CONTENT_BANKS.nfl.find(
+      (row) => row.id === "average-fan:nfl:00-xo:hot-route:choice",
+    );
+    expect(question).toBeTruthy();
+    expect(question?.format).toBe("four-choice");
+    expect(question?.choices).toContain("A quick answer built into a pass play against pressure");
+  });
+
   it("regresses the exact Weidman false-negative from owner preview", () => {
     const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
       (row) => row.id === "average-fan:ufc:authored-history:silva-weidman:short",
