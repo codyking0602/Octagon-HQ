@@ -597,7 +597,7 @@ function TradeChipsPanel({
         These players are still under your control and still count against the cap. Shop them through the normal trade flow or release them.
         You cannot finish the offseason with unresolved trade chips.
       </p>
-      <div className="football-gm__cut-list">
+      <div className="football-gm__trade-chip-list">
         {run.displacedPlayerIds.map((playerId) => {
           const player = footballGmPlayerById(playerId);
           if (!player) return null;
