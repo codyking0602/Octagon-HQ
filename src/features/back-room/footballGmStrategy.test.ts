@@ -15,7 +15,9 @@ import {
   footballGmAdjustedSalaryForPlayer,
   footballGmContinuity,
   footballGmEffectiveTeamGrade,
+  footballGmEligibleFreeAgencyTeams,
   footballGmEvaluateTradeProposal,
+  footballGmFreeAgencyCandidatesForTeam,
   footballGmSeasonResultV2,
   footballGmSeasonRoll,
 } from "./footballGmStrategy";
@@ -54,8 +56,8 @@ function fullTurnoverRoster(original: readonly FootballGmRosterEntry[]) {
 }
 
 describe("Football GM strategy v2", () => {
-  it("uses the tighter $120M game cap and raises RB to ten percent", () => {
-    expect(FOOTBALL_GM_CAP).toBe(120_000_000);
+  it("uses the calibrated $150M game cap and raises RB to ten percent", () => {
+    expect(FOOTBALL_GM_CAP).toBe(150_000_000);
     expect(FOOTBALL_GM_POSITION_WEIGHTS.RB).toBe(0.10);
     expect(Object.values(FOOTBALL_GM_POSITION_WEIGHTS).reduce((sum, value) => sum + value, 0)).toBeCloseTo(1, 8);
   });
@@ -159,15 +161,15 @@ describe("Football GM strategy v2", () => {
     expect(evaluation.nextRoster).toBeNull();
   });
 
-  it("rejects packages larger than the three-player limit on either side", () => {
+  it("rejects packages larger than the two-player limit on either side", () => {
     const roster = codyRunRoster();
-    expect(FOOTBALL_GM_MAX_TRADE_PLAYERS).toBe(3);
+    expect(FOOTBALL_GM_MAX_TRADE_PLAYERS).toBe(2);
     const evaluation = footballGmEvaluateTradeProposal({
       seed: "too-large",
       partnerTeam: "NYJ",
       roster,
       proposal: {
-        outgoingPlayerIds: roster.slice(0, 4).map((entry) => entry.playerId),
+        outgoingPlayerIds: roster.slice(0, 3).map((entry) => entry.playerId),
         incomingPlayerIds: [playerId("Geno Smith")],
       },
       priority: 1,
@@ -194,6 +196,41 @@ describe("Football GM strategy v2", () => {
     expect(evaluation.nextRoster).toHaveLength(6);
     expect(evaluation.nextRoster?.some((entry) => entry.playerId === playerId("Geno Smith"))).toBe(true);
     expect(evaluation.nextRoster?.some((entry) => entry.playerId === playerId("Lamar Jackson"))).toBe(false);
+  });
+
+  it("routes a legal 2-for-1 vacancy into cap-safe free agency", () => {
+    const roster = codyRunRoster();
+    const evaluation = footballGmEvaluateTradeProposal({
+      seed: "free-agency-vacancy",
+      partnerTeam: "NYJ",
+      roster,
+      proposal: {
+        outgoingPlayerIds: [playerId("Lamar Jackson"), playerId("Anthony Hill Jr.")],
+        incomingPlayerIds: [playerId("Geno Smith")],
+      },
+      priority: 1,
+    });
+
+    expect(evaluation.reason).not.toBe("invalid");
+    expect(evaluation.reason).not.toBe("roster");
+    expect(evaluation.nextRoster).not.toBeNull();
+    expect(evaluation.nextRoster).toHaveLength(6);
+
+    const teams = footballGmEligibleFreeAgencyTeams({
+      roster: evaluation.nextRoster!,
+      seed: "free-agency-vacancy",
+      consequences: {},
+    });
+    expect(teams.length).toBeGreaterThan(0);
+
+    const candidates = footballGmFreeAgencyCandidatesForTeam({
+      team: teams[0]!,
+      roster: evaluation.nextRoster!,
+      seed: "free-agency-vacancy",
+      consequences: {},
+    });
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(candidates.every((candidate) => candidate.legalSlots.length > 0)).toBe(true);
   });
 
   it("does not make an identical second offer easier just because it is Priority 2", () => {
