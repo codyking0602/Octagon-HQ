@@ -1,5 +1,4 @@
 import {
-  FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
   footballGmMoney,
   footballGmPlayerById,
@@ -41,16 +40,7 @@ function slotEntry(roster: readonly FootballGmRosterEntry[], slot: FootballGmRos
   return roster.find((entry) => entry.slot === slot) ?? null;
 }
 
-function finishRank(finish: string) {
-  if (finish === "Champion") return 5;
-  if (finish === "Super Bowl Loss") return 4;
-  if (finish === "Conference Championship") return 3;
-  if (finish === "Divisional") return 2;
-  if (finish === "Wild Card") return 1;
-  return 0;
-}
-
-function Snapshot(run: FootballGmReportRun) {
+function snapshot(run: FootballGmReportRun) {
   const end = finalRoster(run);
   const result = footballGmFinalResultV2({
     seed: run.seed,
@@ -67,33 +57,15 @@ function Snapshot(run: FootballGmReportRun) {
     else if (finish?.acquired === "trade") tradeAdds += 1;
     else if (finish) freeAgentAdds += 1;
   }
-  const changed = FOOTBALL_GM_ROSTER_SLOTS.length - retained;
-  const year3Cap = footballGmAdjustedRosterCap(end, 3, run.seed, run.negotiationConsequences);
-  const eliteCount = end.reduce((count, entry) => {
-    const player = footballGmPlayerById(entry.playerId);
-    return count + (player && tier(footballGmProjectedGradeForPlayer(player, 3)) === "ELITE" ? 1 : 0);
-  }, 0);
-
-  let identity = "BALANCED BUILDER";
-  let identityCopy = "You mixed continuity with selective roster changes.";
-  if (tradeAdds >= 2 || changed >= 5) {
-    identity = "WHEELER-DEALER";
-    identityCopy = "You reshaped the roster aggressively instead of standing pat.";
-  } else if (retained >= 6) {
-    identity = "BUILDER";
-    identityCopy = "You trusted the core and let continuity do most of the work.";
-  } else if (eliteCount >= 3 && year3Cap >= FOOTBALL_GM_CAP * .95) {
-    identity = "STAR CHASER";
-    identityCopy = "You spent near the ceiling to keep elite talent on the field.";
-  } else if (year3Cap <= FOOTBALL_GM_CAP * .9 && result.seasons[2].teamGrade >= 89) {
-    identity = "VALUE HUNTER";
-    identityCopy = "You created a strong Year 3 roster without living at the cap ceiling.";
-  } else if (changed >= 3) {
-    identity = "RETOOLER";
-    identityCopy = "You changed the weak spots while preserving a meaningful part of the original core.";
-  }
-
-  return { result, end, retained, changed, tradeAdds, freeAgentAdds, year3Cap, eliteCount, identity, identityCopy };
+  return {
+    result,
+    end,
+    retained,
+    changed: FOOTBALL_GM_ROSTER_SLOTS.length - retained,
+    tradeAdds,
+    freeAgentAdds,
+    year3Cap: footballGmAdjustedRosterCap(end, 3, run.seed, run.negotiationConsequences),
+  };
 }
 
 function tierPill(player: FootballGmPlayer, year: 1 | 3) {
@@ -147,106 +119,58 @@ function EvolutionRow({ slot, run }: { slot: FootballGmRosterSlot; run: Football
   );
 }
 
-function CoreReport({ name, run, compact = false }: { name: string; run: FootballGmReportRun; compact?: boolean }) {
-  const snap = Snapshot(run);
-  const y1 = snap.result.seasons[0];
-  const y3 = snap.result.seasons[2];
-  const rows = FOOTBALL_GM_ROSTER_SLOTS.flatMap((slot) => {
+function CoreReport({ name, run }: { name: string; run: FootballGmReportRun }) {
+  const snap = snapshot(run);
+  const changedRows = FOOTBALL_GM_ROSTER_SLOTS.flatMap((slot) => {
     const startEntry = slotEntry(run.roster, slot);
     const endEntry = slotEntry(snap.end, slot);
     const startPlayer = startEntry ? footballGmPlayerById(startEntry.playerId) : null;
     const endPlayer = endEntry ? footballGmPlayerById(endEntry.playerId) : null;
-    if (!startPlayer || !endPlayer) return [];
-    return [{
-      slot,
-      startPlayer,
-      endPlayer,
-      changed: startPlayer.id !== endPlayer.id,
-      delta: Math.round((footballGmProjectedGradeForPlayer(endPlayer, 3) - footballGmProjectedGradeForPlayer(startPlayer, 1)) * 10) / 10,
-    }];
+    if (!startPlayer || !endPlayer || startPlayer.id === endPlayer.id) return [];
+    return [{ slot, startPlayer, endPlayer, endEntry }];
   });
-  const changedRows = rows.filter((row) => row.changed);
-  const best = [...(changedRows.length ? changedRows : rows)].sort((a, b) => b.delta - a.delta)[0] ?? null;
-  const worst = [...rows].sort((a, b) => a.delta - b.delta)[0] ?? null;
-  const gradeDelta = Math.round((y3.teamGrade - y1.teamGrade) * 10) / 10;
-  const finishDelta = finishRank(y3.finish) - finishRank(y1.finish);
-  const movement = gradeDelta > 0
-    ? "improved " + gradeDelta.toFixed(1) + " points"
-    : gradeDelta < 0
-      ? "fell " + Math.abs(gradeDelta).toFixed(1) + " points"
-      : "finished at the same grade";
-  const finishCopy = finishDelta > 0
-    ? "and advanced farther in the postseason"
-    : finishDelta < 0
-      ? "but finished with a worse postseason result"
-      : "with the same postseason level";
-  const bestCopy = best
-    ? best.changed
-      ? best.slot + ": " + best.startPlayer.name + " → " + best.endPlayer.name + " moved the slot " + (best.delta >= 0 ? "+" : "") + best.delta.toFixed(1) + " projected points by Year 3."
-      : best.slot + ": keeping " + best.endPlayer.name + " produced your strongest three-year position arc (" + (best.delta >= 0 ? "+" : "") + best.delta.toFixed(1) + ")."
-    : "Your roster finished without a measurable standout move.";
-  const costCopy = worst
-    ? worst.delta < 0
-      ? worst.slot + " was the biggest drag: " + worst.startPlayer.name + " → " + worst.endPlayer.name + " finished " + Math.abs(worst.delta).toFixed(1) + " projected points lower by Year 3."
-      : "No position finished below its Year 1 projected level."
-    : "No material roster regression was detected.";
 
   return (
-    <div className={"football-gm-report__core" + (compact ? " is-compact" : "")}>
+    <div className="football-gm-report__core">
       <section className="football-gm-report__timeline surface-card">
-        <header><span><small>FRANCHISE ARC</small><strong>{name.toUpperCase()}</strong></span><b>{snap.identity}</b></header>
+        <header><span><small>FRANCHISE ARC</small><strong>{name.toUpperCase()}</strong></span></header>
         <div className="football-gm-report__years">
-          {snap.result.seasons.map((season) => (
-            <article key={season.year}><small>YEAR {season.year}</small><strong>{season.teamGrade.toFixed(1)}</strong><span>{season.finish}</span></article>
+          {snap.result.seasons.map((season, index) => (
+            <article key={season.year}>
+              <small>YEAR {season.year}</small>
+              <strong>{snap.result.teamOveralls[index]} OVR</strong>
+              <span>{season.finish}</span>
+            </article>
           ))}
         </div>
-        <p>{snap.identityCopy}</p>
         <div className="football-gm-report__offseason-marker">
           <small>THE OFFSEASON</small>
           <strong>{snap.changed} POSITION{snap.changed === 1 ? "" : "S"} CHANGED</strong>
-          <span>{snap.tradeAdds} trade addition{snap.tradeAdds === 1 ? "" : "s"} · {snap.freeAgentAdds} free-agent addition{snap.freeAgentAdds === 1 ? "" : "s"} · {snap.retained}/7 retained</span>
+          <span>{snap.tradeAdds} trade addition{snap.tradeAdds === 1 ? "" : "s"} · {snap.freeAgentAdds} free-agent addition{snap.freeAgentAdds === 1 ? "" : "s"} · {snap.retained}/7 original core retained</span>
         </div>
       </section>
 
-      {!compact ? (
-        <>
-          <section className="football-gm-report__evolution surface-card">
-            <header><span><small>ROSTER EVOLUTION</small><strong>WHAT YOU BUILT</strong></span><b>Y1 → Y3</b></header>
-            <div>{FOOTBALL_GM_ROSTER_SLOTS.map((slot) => <EvolutionRow key={slot} slot={slot} run={run} />)}</div>
-          </section>
+      <section className="football-gm-report__evolution surface-card">
+        <header><span><small>ROSTER EVOLUTION</small><strong>WHAT YOU BUILT</strong></span><b>Y1 → Y3</b></header>
+        <div>{FOOTBALL_GM_ROSTER_SLOTS.map((slot) => <EvolutionRow key={slot} slot={slot} run={run} />)}</div>
+      </section>
 
-          <section className="football-gm-report__ledger surface-card">
-            <header><small>OFFSEASON TRANSACTIONS</small><strong>HOW THE CORE CHANGED</strong></header>
-            <div>
-              {rows.filter((row) => row.changed).length ? rows.filter((row) => row.changed).map((row) => {
-                const finishEntry = slotEntry(snap.end, row.slot);
-                const action = finishEntry?.acquired === "trade" ? "TRADE" : "FREE AGENCY";
-                return (
-                  <article key={row.slot}>
-                    <b>{action}</b>
-                    <span><small>{row.slot}</small><strong>{row.startPlayer.name} → {row.endPlayer.name}</strong></span>
-                    <em>{row.delta >= 0 ? "+" : ""}{row.delta.toFixed(1)}</em>
-                  </article>
-                );
-              }) : (
-                <article><b>RETAINED</b><span><small>ALL 7</small><strong>No offseason starter changes</strong></span><em>CORE</em></article>
-              )}
-            </div>
-          </section>
-
-          <section className="football-gm-report__decisions surface-card">
-            <article><small>BEST ROSTER DECISION</small><strong>{bestCopy}</strong></article>
-            <article className={worst && worst.delta < 0 ? "is-warning" : ""}><small>WHAT COST YOU</small><strong>{costCopy}</strong></article>
-            <article><small>CAP + CONTINUITY</small><strong>{footballGmMoney(snap.year3Cap)} Year 3 cap · {snap.result.continuity.year3.meter}/100 continuity · {snap.eliteCount} elite Year 3 player{snap.eliteCount === 1 ? "" : "s"}</strong></article>
-          </section>
-
-          <section className="football-gm-report__verdict surface-card">
-            <small>THE OWNER'S VERDICT</small>
-            <strong>{snap.identity}</strong>
-            <p>You opened at {y1.teamGrade.toFixed(1)} and {y1.finish}, changed {snap.changed} of seven positions, then finished Year 3 at {y3.teamGrade.toFixed(1)} and {y3.finish}. The roster {movement} {finishCopy}. You ended with {footballGmMoney(Math.max(0, FOOTBALL_GM_CAP - snap.year3Cap))} of Year 3 cap room.</p>
-          </section>
-        </>
-      ) : null}
+      <section className="football-gm-report__ledger surface-card">
+        <header><small>OFFSEASON TRANSACTIONS</small><strong>HOW THE CORE CHANGED</strong></header>
+        <div>
+          {changedRows.length ? changedRows.map((row) => {
+            const action = row.endEntry?.acquired === "trade" ? "TRADE" : "FREE AGENCY";
+            return (
+              <article key={row.slot}>
+                <b>{action}</b>
+                <span><small>{row.slot}</small><strong>{row.startPlayer.name} → {row.endPlayer.name}</strong></span>
+              </article>
+            );
+          }) : (
+            <article><b>RETAINED</b><span><small>ALL 7</small><strong>No offseason starter changes</strong></span></article>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
@@ -262,8 +186,8 @@ export function FootballGmFranchiseReport({
   opponentName?: string | null;
   opponentRun?: FootballGmReportRun | null;
 }) {
-  const own = Snapshot(run);
-  const opp = opponentRun ? Snapshot(opponentRun) : null;
+  const own = snapshot(run);
+  const opp = opponentRun ? snapshot(opponentRun) : null;
   const winner = opp
     ? own.result.score === opp.result.score
       ? "DEAD EVEN"
@@ -279,11 +203,11 @@ export function FootballGmFranchiseReport({
         <h1>{winner ?? own.result.score.toFixed(1)}</h1>
         {opp ? (
           <div className="football-gm-report__scoreboard">
-            <article><small>{name}</small><strong>{own.result.score.toFixed(1)}</strong></article>
+            <article><small>{name} · GM SCORE</small><strong>{own.result.score.toFixed(1)}</strong></article>
             <span>VS</span>
-            <article><small>{opponentName ?? "Opponent"}</small><strong>{opp.result.score.toFixed(1)}</strong></article>
+            <article><small>{opponentName ?? "Opponent"} · GM SCORE</small><strong>{opp.result.score.toFixed(1)}</strong></article>
           </div>
-        ) : <strong className="football-gm-report__score-label">3-YEAR GM SCORE</strong>}
+        ) : <strong className="football-gm-report__score-label">GM SCORE · TEAM BUILD + 3-YEAR RÉSUMÉ</strong>}
       </section>
 
       <CoreReport name={name} run={run} />
@@ -295,16 +219,19 @@ export function FootballGmFranchiseReport({
             <div className="football-gm-report__comparison-head"><span>{name}</span><b>VS</b><span>{opponentName ?? "Opponent"}</span></div>
             {own.result.seasons.map((season, index) => (
               <div key={season.year} className="football-gm-report__comparison-row">
-                <span><b>{season.teamGrade.toFixed(1)}</b><small>{season.finish}</small></span>
+                <span><b>{own.result.teamOveralls[index]} OVR</b><small>{season.finish}</small></span>
                 <strong>Y{season.year}</strong>
-                <span><b>{opp.result.seasons[index]!.teamGrade.toFixed(1)}</b><small>{opp.result.seasons[index]!.finish}</small></span>
+                <span><b>{opp.result.teamOveralls[index]} OVR</b><small>{opp.result.seasons[index]!.finish}</small></span>
               </div>
             ))}
             <div className="football-gm-report__comparison-row">
-              <span><b>{own.result.continuity.year3.meter}</b><small>Continuity</small></span><strong>CORE</strong><span><b>{opp.result.continuity.year3.meter}</b><small>Continuity</small></span>
+              <span><b>{own.retained}/7</b><small>Original core</small></span><strong>CORE</strong><span><b>{opp.retained}/7</b><small>Original core</small></span>
             </div>
             <div className="football-gm-report__comparison-row">
               <span><b>{footballGmMoney(own.year3Cap)}</b><small>Year 3 cap</small></span><strong>CAP</strong><span><b>{footballGmMoney(opp.year3Cap)}</b><small>Year 3 cap</small></span>
+            </div>
+            <div className="football-gm-report__comparison-row is-score">
+              <span><b>{own.result.score.toFixed(1)}</b><small>GM Score</small></span><strong>FINAL</strong><span><b>{opp.result.score.toFixed(1)}</b><small>GM Score</small></span>
             </div>
           </section>
 
