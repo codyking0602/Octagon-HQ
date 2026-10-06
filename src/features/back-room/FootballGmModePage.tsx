@@ -25,8 +25,10 @@ import {
 import {
   FOOTBALL_GM_VERSION,
   footballGmAcceptedTargetTradeOffers,
+  footballGmAdjustedAssetCap,
   footballGmAdjustedRosterCap,
   footballGmAdjustedSalaryForPlayer,
+  footballGmApplyFreeAgencySigning,
   footballGmContinuity,
   footballGmEligibleFreeAgencyTeams,
   footballGmFinalResultV2,
@@ -70,8 +72,8 @@ interface PersistedRun {
   freeAgentSpinIndex: number;
   previousFreeAgentTeam: string | null;
   pendingFreeAgentTeam: string | null;
-  voluntaryFreeAgencyUsed: boolean;
-  releasedFreeAgentPlayerId: string | null;
+  releasedFreeAgentPlayerIds: string[];
+  displacedPlayerIds: string[];
   tradeSpinIndex: number;
   previousTradePartner: string | null;
   tradeAnchorPlayerId: string | null;
@@ -116,8 +118,8 @@ function initialRun(seed: string): PersistedRun {
     freeAgentSpinIndex: 0,
     previousFreeAgentTeam: null,
     pendingFreeAgentTeam: null,
-    voluntaryFreeAgencyUsed: false,
-    releasedFreeAgentPlayerId: null,
+    releasedFreeAgentPlayerIds: [],
+    displacedPlayerIds: [],
     tradeSpinIndex: 0,
     previousTradePartner: null,
     tradeAnchorPlayerId: null,
@@ -199,6 +201,7 @@ function gmAuditSnapshot(
         seed: run.seed,
         partnerTeam: run.tradePartnerTeam,
         roster: run.finalRoster,
+        tradeChipPlayerIds: run.displacedPlayerIds,
         anchorPlayerId: run.tradeAnchorPlayerId,
         targetPlayerId: run.tradeTargetPlayerId,
         shoppedPlayerIds: run.shoppedPlayerIds,
@@ -214,8 +217,8 @@ function gmAuditSnapshot(
     cap: {
       limit: FOOTBALL_GM_CAP,
       year1: footballGmRosterCap(run.roster, 1),
-      year2: footballGmAdjustedRosterCap(effectiveFinalRoster, 2, run.seed, run.negotiationConsequences),
-      year3: footballGmAdjustedRosterCap(effectiveFinalRoster, 3, run.seed, run.negotiationConsequences),
+      year2: footballGmAdjustedAssetCap(effectiveFinalRoster, run.displacedPlayerIds, 2, run.seed, run.negotiationConsequences),
+      year3: footballGmAdjustedAssetCap(effectiveFinalRoster, run.displacedPlayerIds, 3, run.seed, run.negotiationConsequences),
     },
     roster: auditRoster(run.roster),
     finalRoster: auditRoster(run.finalRoster),
@@ -227,7 +230,7 @@ function gmAuditSnapshot(
           anchor: auditPlayer(run.tradeAnchorPlayerId),
           partnerTeam: run.tradePartnerTeam,
           partnerPlayers: run.tradePartnerTeam
-            ? footballGmTradePartnerPlayers(run.tradePartnerTeam, run.finalRoster).map((player) => auditPlayer(player.id))
+            ? footballGmTradePartnerPlayers(run.tradePartnerTeam, run.finalRoster, run.displacedPlayerIds).map((player) => auditPlayer(player.id))
             : [],
           target: run.tradeTargetPlayerId ? auditPlayer(run.tradeTargetPlayerId) : null,
           askingPrices: targetOffers.map((offer, index) => ({
@@ -241,6 +244,8 @@ function gmAuditSnapshot(
     negotiationConsequences: run.negotiationConsequences,
     pendingTradeResolution: run.pendingTradeResolution,
     shoppedPlayerIds: run.shoppedPlayerIds,
+    displacedPlayerIds: run.displacedPlayerIds,
+    releasedFreeAgentPlayerIds: run.releasedFreeAgentPlayerIds,
     continuity: run.finalRoster.length
       ? {
           year2: footballGmContinuity(run.roster, run.finalRoster, 2),
@@ -285,15 +290,17 @@ function CapMeter({
   year,
   seed,
   consequences,
+  tradeChipPlayerIds = [],
 }: {
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2 | 3;
   seed: string;
   consequences: FootballGmNegotiationConsequences;
+  tradeChipPlayerIds?: readonly string[];
 }) {
   const spent = year === 1
     ? footballGmRosterCap(roster, 1)
-    : footballGmAdjustedRosterCap(roster, year, seed, consequences);
+    : footballGmAdjustedAssetCap(roster, tradeChipPlayerIds, year, seed, consequences);
   const remaining = FOOTBALL_GM_CAP - spent;
   const pct = Math.min(100, Math.max(0, (spent / FOOTBALL_GM_CAP) * 100));
   return (
@@ -420,6 +427,7 @@ function FreeAgencyBoard({
   roster,
   seed,
   consequences,
+  tradeChipPlayerIds = [],
   onPick,
   excludedPlayerIds = [],
 }: {
@@ -427,6 +435,7 @@ function FreeAgencyBoard({
   roster: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
+  tradeChipPlayerIds?: readonly string[];
   onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
   excludedPlayerIds?: readonly string[];
 }) {
@@ -436,6 +445,7 @@ function FreeAgencyBoard({
     roster,
     seed,
     consequences,
+    tradeChipPlayerIds,
     excludedPlayerIds,
   });
   return (
@@ -444,27 +454,34 @@ function FreeAgencyBoard({
         <TeamLogo teamCode={teamCode} />
         <span><small>FREE AGENCY WHEEL</small><strong>{team?.name ?? teamCode}</strong></span>
       </header>
-      <p>Fill the open core spot. The signing must fit the Year 2 and Year 3 cap.</p>
+      <p>
+        These are actual 1YR players from this team at their Year 2 market price. You can sign any one who fits both future caps.
+        If his slot is occupied, that incumbent becomes a trade chip instead of blocking the signing.
+      </p>
       <div className="football-gm__candidate-list">
-        {candidates.map(({ player, legalSlots, salary }) => (
+        {candidates.map(({ player, signingOptions, salary }) => (
           <article key={player.id} style={playerStyle(player.team)}>
             <div className="football-gm__candidate-main">
               <span><small>{player.position} · AGE {player.age}</small><strong>{player.name}</strong></span>
               <b>{footballGmMoney(salary)}</b>
             </div>
             <div className="football-gm__candidate-tags">
-              <span>{player.gameContract}</span>
+              <span>1YR → MARKET FA</span>
               <span>{player.outlook}</span>
-              <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
-                {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} EXTENSION RISK`}
-              </span>
             </div>
             <div className="football-gm__candidate-actions">
-              {legalSlots.map((slot) => (
-                <button type="button" key={slot} onClick={() => onPick(player.id, slot)}>
-                  SIGN AS {slot}
-                </button>
-              ))}
+              {signingOptions.map((option) => {
+                const displaced = option.displacedPlayerId ? footballGmPlayerById(option.displacedPlayerId) : null;
+                return (
+                  <button
+                    type="button"
+                    key={`${option.slot}:${option.displacedPlayerId ?? "open"}`}
+                    onClick={() => onPick(player.id, option.slot)}
+                  >
+                    {displaced ? `SIGN AS ${option.slot} · DISPLACE ${displaced.name.toUpperCase()}` : `SIGN AS ${option.slot}`}
+                  </button>
+                );
+              })}
             </div>
           </article>
         ))}
@@ -475,14 +492,14 @@ function FreeAgencyBoard({
 
 function freeAgencyReleaseBudget(
   roster: readonly FootballGmRosterEntry[],
+  tradeChipPlayerIds: readonly string[],
   playerId: string,
   seed: string,
   consequences: FootballGmNegotiationConsequences,
 ) {
   const stripped = roster.filter((entry) => entry.playerId !== playerId);
-  if (stripped.length !== FOOTBALL_GM_ROSTER_SLOTS.length - 1) return 0;
-  const year2Room = FOOTBALL_GM_CAP - footballGmAdjustedRosterCap(stripped, 2, seed, consequences);
-  const year3Room = FOOTBALL_GM_CAP - footballGmAdjustedRosterCap(stripped, 3, seed, consequences);
+  const year2Room = FOOTBALL_GM_CAP - footballGmAdjustedAssetCap(stripped, tradeChipPlayerIds, 2, seed, consequences);
+  const year3Room = FOOTBALL_GM_CAP - footballGmAdjustedAssetCap(stripped, tradeChipPlayerIds, 3, seed, consequences);
   return Math.max(0, Math.min(year2Room, year3Room));
 }
 
@@ -490,11 +507,15 @@ function FreeAgencyReleasePanel({
   roster,
   seed,
   consequences,
+  tradeChipPlayerIds,
+  releasedPlayerIds,
   onRelease,
 }: {
   roster: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
+  tradeChipPlayerIds: readonly string[];
+  releasedPlayerIds: readonly string[];
   onRelease: (playerId: string) => void;
 }) {
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
@@ -504,12 +525,13 @@ function FreeAgencyReleasePanel({
       roster: stripped,
       seed,
       consequences,
-      excludedPlayerIds: [player.id],
+      tradeChipPlayerIds,
+      excludedPlayerIds: [...releasedPlayerIds, player.id],
     });
     return {
       entry,
       player,
-      budget: freeAgencyReleaseBudget(roster, player.id, seed, consequences),
+      budget: freeAgencyReleaseBudget(roster, tradeChipPlayerIds, player.id, seed, consequences),
       eligibleTeams: eligibleTeams.length,
     };
   });
@@ -517,11 +539,11 @@ function FreeAgencyReleasePanel({
 
   return (
     <section className="football-gm__trade-cuts surface-card">
-      <p className="eyebrow">FREE AGENCY · ONE OPTIONAL MOVE</p>
-      <h2>RELEASE ONE PLAYER & SPIN</h2>
+      <p className="eyebrow">FREE AGENCY · CREATE ROOM</p>
+      <h2>RELEASE A PLAYER</h2>
       <p>
-        Cut one player from the seven-man core. His salary plus any existing cap room becomes your replacement budget.
-        Then spin once for a cap-safe replacement at the open position.
+        Releasing a core player is optional and permanent. It opens his roster spot and cap room, then the normal free-agent wheel stays available.
+        There is no artificial one-move offseason limit.
       </p>
       <div className="football-gm__cut-list">
         {rows.map(({ entry, player, budget, eligibleTeams }) => {
@@ -549,8 +571,52 @@ function FreeAgencyReleasePanel({
         >RELEASE {selected.player.name.toUpperCase()} · {footballGmMoney(selected.budget)} BUDGET</button>
       ) : null}
       <small className="football-gm__trade-warning">
-        The release is final. The player you cut cannot be re-signed on this free-agency spin.
+        The release is final. A player you release will not reappear in your free-agent market this offseason.
       </small>
+    </section>
+  );
+}
+
+function TradeChipsPanel({
+  run,
+  canAct,
+  onShop,
+  onRelease,
+}: {
+  run: PersistedRun;
+  canAct: boolean;
+  onShop: (playerId: string) => void;
+  onRelease: (playerId: string) => void;
+}) {
+  if (!run.displacedPlayerIds.length) return null;
+  return (
+    <section className="football-gm__trade-cuts surface-card">
+      <p className="eyebrow">DISPLACED PLAYERS · TRADE CHIPS</p>
+      <h2>MOVE THEM OR RELEASE THEM</h2>
+      <p>
+        These players are still under your control and still count against the cap. Shop them through the normal trade flow or release them.
+        You cannot finish the offseason with unresolved trade chips.
+      </p>
+      <div className="football-gm__cut-list">
+        {run.displacedPlayerIds.map((playerId) => {
+          const player = footballGmPlayerById(playerId);
+          if (!player) return null;
+          const shopped = run.shoppedPlayerIds.includes(playerId);
+          return (
+            <div key={playerId} className="football-gm__trade-chip-row">
+              <span>{player.team} · {player.position} · {player.gameContract}</span>
+              <strong>{player.name}</strong>
+              <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, run.seed, run.negotiationConsequences))}</em>
+              <div className="football-gm__inline-actions">
+                <button type="button" disabled={!canAct || shopped} onClick={() => onShop(playerId)}>
+                  {shopped ? "SHOPPED" : "SHOP"}
+                </button>
+                <button type="button" disabled={!canAct} onClick={() => onRelease(playerId)}>RELEASE</button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
@@ -652,7 +718,7 @@ function TradeRoom({
       <section className="football-gm__wheel surface-card">
         <p className="eyebrow">SHOPPING {anchor.name.toUpperCase()}</p>
         <h2>FIND A TRADE PARTNER</h2>
-        <p>One wheel spin locks this player's only trade partner for the offseason. After the spin, you choose one player to target and that target is final.</p>
+        <p>One wheel spin locks this player's trade partner for these talks. After the spin, you choose one player to target and that target is final.</p>
         <div className="football-gm__inline-actions">
           <button className="primary-action" type="button" onClick={() => {
             const team = footballGmSpinTradePartner(run.seed, run.tradeSpinIndex, anchor.id);
@@ -673,7 +739,7 @@ function TradeRoom({
   }
 
   const anchorSlot = run.finalRoster.find((entry) => entry.playerId === anchor.id)?.slot ?? null;
-  const partnerPlayers = [...footballGmTradePartnerPlayers(run.tradePartnerTeam, run.finalRoster)]
+  const partnerPlayers = [...footballGmTradePartnerPlayers(run.tradePartnerTeam, run.finalRoster, run.displacedPlayerIds)]
     .sort((left, right) => (
       Number(Boolean(anchorSlot && right.eligibleSlots.includes(anchorSlot)))
       - Number(Boolean(anchorSlot && left.eligibleSlots.includes(anchorSlot)))
@@ -686,6 +752,7 @@ function TradeRoom({
         seed: run.seed,
         partnerTeam: run.tradePartnerTeam,
         roster: run.finalRoster,
+        tradeChipPlayerIds: run.displacedPlayerIds,
         anchorPlayerId: anchor.id,
         targetPlayerId: target.id,
         shoppedPlayerIds: run.shoppedPlayerIds,
@@ -1000,11 +1067,12 @@ export default function FootballGmModePage() {
       seed: run.seed,
       consequences: run.negotiationConsequences,
       previousTeam: run.previousFreeAgentTeam,
-      excludedPlayerIds: run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : [],
+      tradeChipPlayerIds: run.displacedPlayerIds,
+      excludedPlayerIds: run.releasedFreeAgentPlayerIds,
     });
     const team = footballGmSpinTeam(`${run.seed}:free-agency`, run.freeAgentSpinIndex, teams);
     if (!team) {
-      patch({ tradeMessage: "No legal free-agent signing fits the open slot and cap." });
+      patch({ tradeMessage: "No eligible 1YR free agent fits both future caps on the current wheel." });
       return;
     }
     patch({ pendingFreeAgentTeam: team, tradeMessage: "" });
@@ -1012,56 +1080,77 @@ export default function FootballGmModePage() {
 
   function makeFreeAgentPick(playerId: string, slot: FootballGmRosterSlot) {
     if (!run.pendingFreeAgentTeam) return;
-    const candidate = footballGmFreeAgencyCandidatesForTeam({
-      team: run.pendingFreeAgentTeam,
+    const player = footballGmPlayerById(playerId);
+    if (!player || player.team !== run.pendingFreeAgentTeam) return;
+    const signing = footballGmApplyFreeAgencySigning({
       roster: run.finalRoster,
+      tradeChipPlayerIds: run.displacedPlayerIds,
+      playerId,
+      slot,
       seed: run.seed,
       consequences: run.negotiationConsequences,
-      excludedPlayerIds: run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : [],
-    }).find((row) => row.player.id === playerId && row.legalSlots.includes(slot));
-    if (!candidate) return;
-    const nextRoster: FootballGmRosterEntry[] = [
-      ...run.finalRoster,
-      { slot, playerId, acquired: "replacement" },
-    ];
+      excludedPlayerIds: run.releasedFreeAgentPlayerIds,
+    });
+    if (!signing) return;
+    const displaced = signing.displacedPlayerId ? footballGmPlayerById(signing.displacedPlayerId) : null;
     patch({
-      finalRoster: nextRoster,
+      finalRoster: [...signing.roster],
+      displacedPlayerIds: [...signing.tradeChipPlayerIds],
       previousFreeAgentTeam: run.pendingFreeAgentTeam,
       pendingFreeAgentTeam: null,
-      releasedFreeAgentPlayerId: null,
       freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
-      tradeMessage: `${candidate.player.name} signed through free agency to fill ${slot}.`,
+      tradeMessage: displaced
+        ? `${player.name} signed at market price as ${slot}. ${displaced.name} is now a trade chip.`
+        : `${player.name} signed at market price to fill ${slot}.`,
     });
   }
 
   function releaseToFreeAgency(playerId: string) {
-    if (run.voluntaryFreeAgencyUsed || run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;
     const player = footballGmPlayerById(playerId);
     if (!player || !run.finalRoster.some((entry) => entry.playerId === playerId)) return;
     const stripped = run.finalRoster.filter((entry) => entry.playerId !== playerId);
+    const excludedPlayerIds = [...new Set([...run.releasedFreeAgentPlayerIds, playerId])];
     const eligibleTeams = footballGmEligibleFreeAgencyTeams({
       roster: stripped,
       seed: run.seed,
       consequences: run.negotiationConsequences,
-      excludedPlayerIds: [playerId],
+      tradeChipPlayerIds: run.displacedPlayerIds,
+      excludedPlayerIds,
     });
     if (!eligibleTeams.length) {
-      patch({ tradeMessage: `Releasing ${player.name} does not leave a legal free-agency path under the cap.` });
+      patch({ tradeMessage: `Releasing ${player.name} would leave no legal free-agent path under both future caps.` });
       return;
     }
-    const budget = freeAgencyReleaseBudget(run.finalRoster, playerId, run.seed, run.negotiationConsequences);
+    const budget = freeAgencyReleaseBudget(
+      run.finalRoster,
+      run.displacedPlayerIds,
+      playerId,
+      run.seed,
+      run.negotiationConsequences,
+    );
     patch({
       finalRoster: stripped,
-      voluntaryFreeAgencyUsed: true,
-      releasedFreeAgentPlayerId: playerId,
+      releasedFreeAgentPlayerIds: excludedPlayerIds,
       pendingFreeAgentTeam: null,
       previousFreeAgentTeam: null,
-      tradeMessage: `${player.name} released. Free-agency replacement budget: ${footballGmMoney(budget)}.`,
+      tradeMessage: `${player.name} released. Usable free-agency room is now ${footballGmMoney(budget)}.`,
+    });
+  }
+
+  function releaseTradeChip(playerId: string) {
+    if (!run.displacedPlayerIds.includes(playerId)) return;
+    const player = footballGmPlayerById(playerId);
+    patch({
+      displacedPlayerIds: run.displacedPlayerIds.filter((id) => id !== playerId),
+      releasedFreeAgentPlayerIds: [...new Set([...run.releasedFreeAgentPlayerIds, playerId])],
+      tradeMessage: player ? `${player.name} released from the displaced-player pool.` : "Trade chip released.",
     });
   }
 
   function beginTrade(playerId: string) {
-    if (run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;
+    const owned = run.finalRoster.some((entry) => entry.playerId === playerId)
+      || run.displacedPlayerIds.includes(playerId);
+    if (!owned) return;
     if (run.shoppedPlayerIds.includes(playerId) || run.pendingTradeResolution) return;
     patch({
       tradeAnchorPlayerId: playerId,
@@ -1101,6 +1190,7 @@ export default function FootballGmModePage() {
       seed: run.seed,
       partnerTeam,
       roster: run.finalRoster,
+      tradeChipPlayerIds: run.displacedPlayerIds,
       anchorPlayerId: run.tradeAnchorPlayerId,
       targetPlayerId: run.tradeTargetPlayerId,
       shoppedPlayerIds: run.shoppedPlayerIds,
@@ -1114,6 +1204,7 @@ export default function FootballGmModePage() {
 
     const submittedOutgoingIds = [...offer.proposal.outgoingPlayerIds];
     const common = {
+      displacedPlayerIds: run.displacedPlayerIds.filter((playerId) => !submittedOutgoingIds.includes(playerId)),
       previousTradePartner: partnerTeam,
       tradeSpinIndex: run.tradeSpinIndex + 1,
       tradeAnchorPlayerId: null,
@@ -1258,6 +1349,7 @@ export default function FootballGmModePage() {
     run.finalRoster,
     run.seed,
     run.negotiationConsequences,
+    run.displacedPlayerIds,
   );
 
   return (
@@ -1286,7 +1378,7 @@ export default function FootballGmModePage() {
             <span><b>1YR / 3YR</b><small>One-year deals reprice after Year 1. Three-year deals stay locked.</small></span>
             <span><b>SHOP → TARGET</b><small>Spin one partner, choose one target, then decide whether their asking price is worth it.</small></span>
           </div>
-          <p className="football-gm__intro-note">Exact player grades stay hidden. In the offseason, you choose who to shop, the wheel chooses the partner, you choose one target, and that team gives you up to five accepted asking prices. An uneven trade can open free agency, or you can make one voluntary release-and-spin move.</p>
+          <p className="football-gm__intro-note">Exact player grades stay hidden. In the offseason, you choose who to shop, the wheel chooses the partner, you choose one target, and that team gives you up to five accepted asking prices. Free agency is made from actual 1YR players at their Year 2 market price, and cap room lets you pursue them without position-locking the signing.</p>
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
         </section>
       ) : null}
@@ -1327,8 +1419,8 @@ export default function FootballGmModePage() {
       {run.phase === "offseason" ? (
         <>
           <div className="football-gm__dual-cap">
-            <CapMeter roster={run.finalRoster} year={2} seed={run.seed} consequences={run.negotiationConsequences} />
-            <CapMeter roster={run.finalRoster} year={3} seed={run.seed} consequences={run.negotiationConsequences} />
+            <CapMeter roster={run.finalRoster} year={2} seed={run.seed} consequences={run.negotiationConsequences} tradeChipPlayerIds={run.displacedPlayerIds} />
+            <CapMeter roster={run.finalRoster} year={3} seed={run.seed} consequences={run.negotiationConsequences} tradeChipPlayerIds={run.displacedPlayerIds} />
           </div>
           <ContinuityMeter yearOneRoster={run.roster} roster={run.finalRoster} />
           <RosterGrid
@@ -1337,11 +1429,18 @@ export default function FootballGmModePage() {
             seed={run.seed}
             consequences={run.negotiationConsequences}
             showFutureSalary
-            onShop={run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length && !run.tradeAnchorPlayerId && !run.pendingTradeResolution && !run.pendingFreeAgentTeam ? beginTrade : undefined}
+            onShop={!run.tradeAnchorPlayerId && !run.pendingTradeResolution && !run.pendingFreeAgentTeam ? beginTrade : undefined}
             shoppedPlayerIds={run.shoppedPlayerIds}
           />
 
           {run.tradeMessage ? <section className="football-gm__trade-message surface-card">{run.tradeMessage}</section> : null}
+
+          <TradeChipsPanel
+            run={run}
+            canAct={!run.tradeAnchorPlayerId && !run.pendingTradeResolution && !run.pendingFreeAgentTeam}
+            onShop={beginTrade}
+            onRelease={releaseTradeChip}
+          />
 
           {run.pendingTradeResolution ? (
             <TradeCutResolution
@@ -1356,35 +1455,25 @@ export default function FootballGmModePage() {
               onAccept={acceptTradeAskingPrice}
               onEndTalks={() => applyShoppingConsequence("You ended the talks without a deal.")}
             />
-          ) : run.finalRoster.length < FOOTBALL_GM_ROSTER_SLOTS.length ? (
-            run.pendingFreeAgentTeam ? (
-              <FreeAgencyBoard
-                teamCode={run.pendingFreeAgentTeam}
-                roster={run.finalRoster}
-                seed={run.seed}
-                consequences={run.negotiationConsequences}
-                excludedPlayerIds={run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : []}
-                onPick={makeFreeAgentPick}
-              />
-            ) : (
-              <section className="football-gm__wheel surface-card">
-                <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
-                <h2>FILL THE OPEN SPOT</h2>
-                <p>{run.releasedFreeAgentPlayerId
-                  ? "You released a player. Spin the NFL wheel and sign one legal replacement at the open position. Only cap-safe teams are included."
-                  : "Your uneven trade created a vacancy. Spin the NFL wheel and sign one legal player from the team it lands on. Only cap-safe teams are included."}</p>
-                <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>
-              </section>
-            )
+          ) : run.pendingFreeAgentTeam ? (
+            <FreeAgencyBoard
+              teamCode={run.pendingFreeAgentTeam}
+              roster={run.finalRoster}
+              seed={run.seed}
+              consequences={run.negotiationConsequences}
+              tradeChipPlayerIds={run.displacedPlayerIds}
+              excludedPlayerIds={run.releasedFreeAgentPlayerIds}
+              onPick={makeFreeAgentPick}
+            />
           ) : (
             <>
               <section className={`football-gm__offseason-status surface-card${offseasonReady ? " is-ready" : " is-crisis"}`}>
-                <p className="eyebrow">{offseasonReady ? "WINDOW SET" : "CAP CRISIS"}</p>
+                <p className="eyebrow">{offseasonReady ? "WINDOW SET" : "OFFSEASON ACTIVE"}</p>
                 <h2>{offseasonReady ? "YOU CAN MOVE FORWARD" : "YOU HAVE MOVES TO MAKE"}</h2>
                 <p>
                   {offseasonReady
-                    ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now, shop a trade, or use your one optional free-agency move.`
-                    : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Shop a player, spin one partner, choose one target, or release a player into free agency to build a legal seven-man core.`}
+                    ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap with no unresolved trade chips. You can advance now or keep working the market.`
+                    : `Finish with seven legal starters, no unresolved trade chips, and both future years under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can keep trading, releasing, and using the free-agent market until you get there.`}
                 </p>
                 <button
                   className="primary-action"
@@ -1393,11 +1482,26 @@ export default function FootballGmModePage() {
                   onClick={() => patch({ phase: "years23" })}
                 >SIMULATE YEARS 2 & 3</button>
               </section>
-              {!run.voluntaryFreeAgencyUsed ? (
+
+              <section className="football-gm__wheel surface-card">
+                <p className="eyebrow">FREE AGENCY · REAL 1YR MARKET</p>
+                <h2>{footballGmOpenSlots(run.finalRoster).length
+                  ? `OPEN: ${footballGmOpenSlots(run.finalRoster).join(" · ")}`
+                  : "USE YOUR CAP SPACE"}</h2>
+                <p>
+                  Spin an NFL team and see every eligible 1YR player from that team who fits both future caps.
+                  The signing is not position-locked: if his slot is occupied, you can sign him and turn that incumbent into a normal trade chip.
+                </p>
+                <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>
+              </section>
+
+              {run.finalRoster.length > 0 ? (
                 <FreeAgencyReleasePanel
                   roster={run.finalRoster}
                   seed={run.seed}
                   consequences={run.negotiationConsequences}
+                  tradeChipPlayerIds={run.displacedPlayerIds}
+                  releasedPlayerIds={run.releasedFreeAgentPlayerIds}
                   onRelease={releaseToFreeAgency}
                 />
               ) : null}
