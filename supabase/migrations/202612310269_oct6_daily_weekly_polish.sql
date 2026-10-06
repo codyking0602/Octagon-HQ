@@ -4,6 +4,15 @@
 -- 3) accept the owner's semantically correct hot-route answer on today's
 --    Average Fan setup and restore the score he would have banked.
 
+alter table private.football_weekly_nfl_team_season_themes
+  drop constraint if exists football_weekly_nfl_team_season_themes_family_check,
+  add constraint football_weekly_nfl_team_season_themes_family_check check (
+    family in (
+      'division','season','era','rivalry','franchise_history',
+      'fell_short','conference_clash','super_bowl_champions','open_field'
+    )
+  );
+
 create or replace function private.materialize_football_weekly_nfl_team_season_week(p_week_start date)
 returns void
 language plpgsql
@@ -41,7 +50,7 @@ declare
   v_final_days integer[];
   v_priority_order text[]:=array[
     'franchise_history','rivalry','division','season',
-    'fell_short','era','conference_clash'
+    'fell_short','era','super_bowl_champions'
   ];
 begin
   if extract(isodow from p_week_start)<>2 then
@@ -101,7 +110,7 @@ begin
             ('rivalry',1.15,1),
             ('franchise_history',0.90,1),
             ('fell_short',1.00,1),
-            ('conference_clash',1.15,1)
+            ('super_bowl_champions',1.15,1)
           ) family_weights(family,weight,cap)
           where coalesce((v_family_counts->>family)::integer,0)<cap
           order by -ln(greatest(random(),0.000000000001))/weight
@@ -143,7 +152,7 @@ begin
         elsif v_family='fell_short' then
           v_variant:=null;
           v_theme:='Great Teams That Fell Short';
-        elsif v_family='conference_clash' then
+        elsif v_family='super_bowl_champions' then
           v_variant:=null;
           v_theme:='Super Bowl Champions';
         else
@@ -249,7 +258,7 @@ begin
             continue attempt_loop;
           end if;
 
-        elsif v_family='conference_clash' then
+        elsif v_family='super_bowl_champions' then
           for v_pick_index in 1..4 loop
             v_ref:=null;
             v_franchise:=null;
@@ -394,7 +403,7 @@ begin
             ))
             or (v_family='franchise_history' and candidate.franchise_id=v_variant)
             or (v_family='fell_short' and candidate.fell_short)
-            or (v_family='conference_clash' and candidate.super_bowl_champion)
+            or (v_family='super_bowl_champions' and candidate.super_bowl_champion)
             or v_family='open_field'
           )
         order by
