@@ -1404,14 +1404,39 @@ export default function FootballGmModePage() {
       {run.phase === "intro" ? (
         <section className="football-gm__intro surface-card">
           <p className="eyebrow">NFL FRONT OFFICE CHALLENGE</p>
-          <h1>BUILD IT. PAY FOR IT. LIVE WITH IT.</h1>
-          <p>Spin an NFL team, sign one legal player from that team, and build a seven-man core under a {footballGmMoney(FOOTBALL_GM_CAP)} cap.</p>
-          <div className="football-gm__rules">
-            <span><b>7</b><small>QB · RB · WR · FLEX · DL · LB · DB</small></span>
-            <span><b>1YR / 3YR</b><small>One-year deals reprice after Year 1. Three-year deals stay locked.</small></span>
-            <span><b>SHOP → TARGET</b><small>Spin one partner, choose one target, then decide whether their asking price is worth it.</small></span>
+          <h1>BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.</h1>
+          <p className="football-gm__intro-lede">Build a 7-man NFL core under a {footballGmMoney(FOOTBALL_GM_CAP)} cap.</p>
+
+          <div className="football-gm__intro-stages">
+            <article>
+              <b>1</b>
+              <span>
+                <strong>DRAFT</strong>
+                <small>Spin a team. Pick one player. Fill all 7 spots.</small>
+              </span>
+            </article>
+            <article>
+              <b>2</b>
+              <span>
+                <strong>OFFSEASON</strong>
+                <small>1YR deals reprice. Trade and use free agency to get under the cap.</small>
+              </span>
+            </article>
+            <article>
+              <b>3</b>
+              <span>
+                <strong>3-YEAR RESULT</strong>
+                <small>Roster quality + continuity + playoff results determine your GM score.</small>
+              </span>
+            </article>
           </div>
-          <p className="football-gm__intro-note">Exact player grades stay hidden. In the offseason, you choose who to shop, the wheel chooses the partner, you choose one target, and that team gives you up to five curated accepted asking prices. Free agency comes from real 1YR players at Year 2 market prices and is not position-locked; a non-matching signing can create a displaced trade asset that stays in the normal trade flow.</p>
+
+          <div className="football-gm__intro-facts" aria-label="Key game rules">
+            <span>{footballGmMoney(FOOTBALL_GM_CAP)} CAP</span>
+            <span>1YR / 3YR CONTRACTS</span>
+            <span>HIDDEN GRADES</span>
+          </div>
+
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
         </section>
       ) : null}
