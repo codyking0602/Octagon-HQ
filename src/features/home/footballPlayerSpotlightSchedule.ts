@@ -130,6 +130,42 @@ export const FOOTBALL_PLAYER_SPOTLIGHT_PAIRS: readonly FootballPlayerSpotlightPa
       },
     },
   },
+  {
+    id: "2026-10-06-jamal-tet",
+    activatesAt: "2026-10-06T03:31:00.000Z",
+    spotlights: {
+      cfb: {
+        name: "Jamal Roberts",
+        team: "Missouri",
+        position: "RB",
+        stats: [
+          { value: "211", label: "RUSH YDS" },
+          { value: "3", label: "RUSH TD" },
+          { value: "8.8", label: "YPC" },
+          { value: "80", label: "LONG" },
+        ],
+        result: "VS FLORIDA · W 45–17",
+        measurements: "6'0\" · 216 LB",
+        teamColor: "#C69214",
+        highlightUrl: "https://youtu.be/k341BuX48kQ?is=_CrwryCS8Hs6iWqs",
+      },
+      nfl: {
+        name: "Tetairoa McMillan",
+        team: "Carolina Panthers",
+        position: "WR",
+        stats: [
+          { value: "14", label: "REC" },
+          { value: "192", label: "REC YDS" },
+          { value: "2", label: "REC TD" },
+          { value: "13.7", label: "YDS/REC" },
+        ],
+        result: "VS DETROIT · W 32–26",
+        measurements: "6'4\" · 220 LB",
+        teamColor: "#0085CA",
+        highlightUrl: "https://youtu.be/DIFNn8n7Skc?is=kArg-AWazCQ0f9iE",
+      },
+    },
+  },
 ] as const;
 
 export const FOOTBALL_BASE_SPOTLIGHT_PAIR_ID = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[0].id;
@@ -143,6 +179,10 @@ export const FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES: FootballSpotlightPhotoSou
   "2026-09-29-jeremiah-bijan": {
     cfb: "/assets/football/player-spotlight/2026-09-29-jeremiah-bijan/cfb.webp",
     nfl: "/assets/football/player-spotlight/2026-09-29-jeremiah-bijan/nfl.webp",
+  },
+  "2026-10-06-jamal-tet": {
+    cfb: "/assets/football/player-spotlight/2026-10-06-jamal-tet/cfb.webp",
+    nfl: "/assets/football/player-spotlight/2026-10-06-jamal-tet/nfl.webp",
   },
 };
 
