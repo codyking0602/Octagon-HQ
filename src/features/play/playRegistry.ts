@@ -421,7 +421,7 @@ export const playGameCatalog = [
       streakEligible: false,
       reminderEligible: false,
       historyRecording: "challenge-completion",
-      difficultyModel: "NFL-only owner playtest using the Wheel team mechanic, real APY salaries, 1YR/3YR contracts, a $120M cap, one offseason, two-offer user-built trades, continuity, weak-link effects, and seeded historically calibrated season variance.",
+      difficultyModel: "NFL-only owner playtest using the Wheel team mechanic, real APY salaries, 1YR/3YR contracts, a $120M cap, one offseason, one required user-built offer plus an optional backup, continuity, weak-link effects, and seeded historically calibrated season variance.",
     },
   },
   {
