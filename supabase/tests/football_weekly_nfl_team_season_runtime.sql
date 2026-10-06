@@ -150,7 +150,14 @@ begin
         )
       )
       or (
-        theme.family in ('season','era','fell_short','open_field')
+        theme.family='super_bowl_champions'
+        and (
+          count(*) filter(where item.super_bowl_champion)<>4
+          or count(distinct item.franchise_id)<>4
+        )
+      )
+      or (
+        theme.family in ('season','era','fell_short','super_bowl_champions','open_field')
         and count(distinct item.franchise_id)<>4
       )
   ) then

@@ -224,6 +224,7 @@ type KnowledgeFact = {
   aliases?: readonly string[];
   wrong: readonly [string, string] | readonly [string, string, string];
   explanation: string;
+  preferredFormat?: "short-answer" | "four-choice";
 };
 
 type NflTrueFalseFact = {
@@ -283,7 +284,7 @@ const NFL_XO_FACTS: readonly KnowledgeFact[] = [
   { id: "contain", grade: 4, prompt: "What is the main goal of edge contain?", answer: "Keep the ball carrier or quarterback from escaping outside", wrong: ["Force every play up the middle before the snap", "Double-team the slot receiver"], explanation: "Contain protects the outside edge and turns the play back toward pursuit." },
   { id: "inside-zone", grade: 4, prompt: "What run concept asks blockers to work zone combinations while the back reads interior gaps?", answer: "Inside zone", wrong: ["Jet sweep", "Quarterback draw", "Power"], explanation: "Inside zone uses zone blocking with the runner reading the interior flow." },
   { id: "outside-zone", grade: 4, prompt: "What run concept stretches the defense laterally while the back reads for a cut?", answer: "Outside zone", wrong: ["Power", "Trap"], explanation: "Outside zone creates horizontal stretch before the runner chooses a crease." },
-  { id: "hot-route", grade: 4, prompt: "What is a hot route?", answer: "A quick answer built into a pass play against pressure", wrong: ["A deep route run only from the slot", "A route used only in the red zone"], explanation: "A hot route gives the quarterback and receiver a fast response to an unblocked or extra rusher." },
+  { id: "hot-route", grade: 4, prompt: "What is a hot route?", answer: "A quick answer built into a pass play against pressure", aliases: ["An audible to change a route against pressure", "Audible to change route", "A route adjustment against pressure", "A quick route adjustment against a blitz"], wrong: ["A deep route run only from the slot", "A route used only in the red zone", "A route that automatically becomes a go route against man coverage"], explanation: "A hot route gives the quarterback and receiver a fast response to an unblocked or extra rusher.", preferredFormat: "four-choice" },
   { id: "leverage", grade: 4, prompt: "In coverage, what does inside or outside leverage describe?", answer: "A defender's alignment relative to the receiver", wrong: ["The offensive line's snap count", "The punt returner's depth", "The defender's depth from the line of scrimmage"], explanation: "Leverage describes where a defender positions himself relative to a receiver and the space he wants to deny." },
 
   { id: "wham", grade: 5, prompt: "What blocking concept uses a tight end or back to trap an interior defensive lineman from the side?", answer: "Wham", wrong: ["Outside zone", "Reach block"], explanation: "A wham block lets an interior defender penetrate before a tight end or back blocks him from an unexpected angle." },
@@ -780,8 +781,11 @@ function nflKnowledgeQuestions(
   facts: readonly KnowledgeFact[],
 ) {
   return facts.map((fact, index) => (
-    (index % 3 === 0
-      || ((/\btroph(?:y|ies)\b/i.test(fact.prompt) || /^\d{4}$/.test(fact.answer.trim())) && fact.wrong.length === 3))
+    (fact.preferredFormat === "four-choice"
+      || (fact.preferredFormat !== "short-answer" && (
+        index % 3 === 0
+        || ((/\btroph(?:y|ies)\b/i.test(fact.prompt) || /^\d{4}$/.test(fact.answer.trim())) && fact.wrong.length === 3)
+      )))
       ? choiceQuestion({
           id: `${prefix}:${fact.id}:choice`,
           sport: "nfl",
