@@ -328,7 +328,7 @@ function RosterGrid({
                   <div className="football-gm__roster-contract">
                     <b>{footballGmMoney(salary)}</b>
                     <span>{failedTalks && player.gameContract === "1YR"
-                      ? `CAMP + · ${failedTalks} FAILED TALK${failedTalks === 1 ? "" : "S"}`
+                      ? `CAMP MARKUP · ${failedTalks} FAILED TALK${failedTalks === 1 ? "" : "S"}`
                       : showFutureSalary ? "Y2/Y3" : player.gameContract}</span>
                   </div>
                   {onShop ? <button type="button" onClick={() => onShop(player.id)}>SHOP</button> : null}
