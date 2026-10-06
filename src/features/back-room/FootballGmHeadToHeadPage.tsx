@@ -36,7 +36,7 @@ import {
   footballGmSignFreeAgent,
   type FootballGmTradeProposal,
 } from "./footballGmStrategy";
-import {
+import FootballGmSoloPage, {
   CandidateBoard,
   FreeAgencyBoard,
   GmFootballWheel,
@@ -431,6 +431,7 @@ export default function FootballGmHeadToHeadPage() {
   const challenges = usePlayChallenges();
   const repository = useMemo(() => createFootballGmMatchRepository(), []);
   const matchCode = (searchParams.get("match") ?? "").trim().toUpperCase();
+  const soloRequested = searchParams.get("solo") === "1";
   const allowed = isFootballGmPlaytestProfile(identity.profile);
   const opponentName = footballGmPlaytestOpponentName(identity.profile);
 
@@ -716,25 +717,10 @@ export default function FootballGmHeadToHeadPage() {
 
   if (!identity.ready) return null;
   if (!allowed) return <Navigate to="/football" replace />;
+  if (soloRequested) return <FootballGmSoloPage startImmediately standalone />;
 
   function resetLocal() {
-    const seed = freshSeed();
-    const userRun = { ...initialRun(`${seed}:you`), phase: "draft" as const };
-    const opponent = { ...initialRun(`${seed}:cpu`), phase: "draft" as const };
-    setRun(userRun);
-    setCpuRun(opponent);
-    setMode("cpu");
-    setLocalPhase("draft");
-    setLocalTurn(parseInt(seed.slice(0, 2), 16) % 2 === 0 ? "user" : "cpu");
-    setLocalOffseasonFirst(null);
-    setUserOffseasonDone(false);
-    setCpuOffseasonDone(false);
-    setShowModePicker(false);
-    setStatus("");
-    setWheelRotation(0);
-    setCpuPendingTeam(null);
-    setShowReleasePicker(false);
-    setReleasePlayerId(null);
+    navigate("/football/gm-mode?solo=1");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -1186,10 +1172,10 @@ export default function FootballGmHeadToHeadPage() {
 
       {modePicker ? (
         <section className="football-gm__mode-picker surface-card">
-          <p className="eyebrow">CHOOSE YOUR FRONT OFFICE BATTLE</p>
-          <h1>WHO ARE YOU BUILDING AGAINST?</h1>
+          <p className="eyebrow">CHOOSE YOUR FRONT OFFICE MODE</p>
+          <h1>HOW DO YOU WANT TO PLAY?</h1>
           <button className="football-gm__mode-option" type="button" onClick={resetLocal}>
-            <span><small>PLAY NOW</small><strong>VS CPU</strong><em>Full alternating draft. The CPU runs its own offseason and shares your player market.</em></span>
+            <span><small>PLAY NOW</small><strong>SOLO RUN</strong><em>The original standalone GM game. Build your roster, manage your offseason, and chase the best three-year score.</em></span>
             <b>PLAY →</b>
           </button>
           {opponentName ? (
@@ -1308,6 +1294,7 @@ export default function FootballGmHeadToHeadPage() {
                         seed={run.seed}
                         consequences={run.negotiationConsequences}
                         excludedPlayerIds={exclusionIds}
+                        sharedMarket
                         onPick={makeFreeAgentPick}
                       />
                     ) : canUseFreeAgency ? (
