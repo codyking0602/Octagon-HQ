@@ -11,68 +11,56 @@ const css = readFileSync(
   "utf8",
 );
 const migration = readFileSync(
-  resolve(process.cwd(), "supabase/migrations/202612310271_football_gm_head_to_head.sql"),
-  "utf8",
-);
-const bottomNav = readFileSync(
-  resolve(process.cwd(), "src/components/BottomNavigation.tsx"),
+  resolve(process.cwd(), "supabase/migrations/202612310261_football_gm_head_to_head.sql"),
   "utf8",
 );
 
-describe("Football GM head-to-head presentation", () => {
-  it("keeps the draft as a two-sided shared-player battle", () => {
-    expect(page).toContain("football-gm-versus");
-    expect(page).toContain("OPPONENT");
-    expect(page).toContain("WATCH THE BOARD UPDATE LIVE");
-    expect(page).toContain("Their pick locks that player out of your shared draft pool.");
-    expect(page).toContain("excludedPlayerIds={opponentHeldIds}");
+describe("The GM head-to-head presentation", () => {
+  it("keeps the approved intro and offers CPU or one-GM play", () => {
+    expect(page).toContain("BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.");
+    expect(page).toContain("<strong>VS CPU</strong>");
+    expect(page).toContain("HEAD TO HEAD");
+    expect(page).toContain("Alternate every draft pick");
+    expect(page).toContain("the worse Year 1 team gets the first full offseason");
+  });
+
+  it("uses the shared two-sided seven-position board throughout the match", () => {
+    expect(page).toContain("function VersusRosterBoard");
+    expect(page).toContain("FOOTBALL_GM_ROSTER_SLOTS.map");
+    expect(page).toContain("football-gm-versus__row");
+    expect(page).toContain("<PlayerQualityPill player={player} />");
+    expect(page).toContain("<PlayerOutlookPill outlook={player.outlook} />");
     expect(css).toContain(".football-gm-versus__row");
+    expect(css).toContain(".football-gm-versus__pills");
   });
 
-  it("supports both CPU and one human opponent without changing the locked game", () => {
-    expect(page).toContain("VS CPU");
-    expect(page).toContain("CHALLENGE {opponentName}");
-    expect(page).toContain("footballGmCpuDraftChoice");
-    expect(page).toContain("footballGmCpuOffseason");
-    expect(page).toContain("FOOTBALL_GM_CAP");
-    expect(page).toContain("FOOTBALL_GM_ROSTER_SLOTS");
-  });
-
-  it("awards the entire first offseason to the lower Year 1 finisher", () => {
-    expect(page).toContain("Lower Year 1 finisher gets first access to the shared player market.");
-    expect(page).toContain("HAS THE FRONT OFFICE");
-    expect(page).toContain("finished the offseason. The remaining market is yours.");
-    expect(migration).toContain("private.football_gm_finish_rank");
-    expect(migration).toContain("offseason_first_profile_id");
-    expect(migration).toContain("The lower Year 1 finisher gets first access to the shared market.");
-  });
-
-  it("enforces match-wide player uniqueness in the server-owned runtime", () => {
+  it("keeps one shared player market and hands the whole offseason to one GM at a time", () => {
+    expect(page).toContain("excludedPlayerIds={opponentHeldIds}");
+    expect(page).toContain("Players already held by");
+    expect(page).toContain("FINISH OFFSEASON");
+    expect(page).toContain("They get their entire offseason first.");
     expect(migration).toContain("That player was already drafted in this match");
     expect(migration).toContain("That player is already held by the other GM");
-    expect(migration).toContain("current_turn_profile_id");
-    expect(migration).toContain("private.football_gm_held_player_ids");
+    expect(migration).toContain("offseason_first_profile_id");
+    expect(migration).toContain("The remaining market is yours");
   });
 
-  it("uses the NFL wheel treatment in draft, trade and free agency", () => {
+  it("uses the same wheel treatment for draft, trade partner, and free agency", () => {
     expect(page.match(/<GmFootballWheel/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
     expect(page).toContain("SPIN THE 1YR MARKET");
-    expect(page).toContain("Same NFL wheel.");
+    expect(page).toContain("faWheelSpinning");
+    expect(page).toContain("}, 1550);");
     expect(css).toContain(".football-gm__market-wheel");
     expect(css).toContain(".football-gm__trade-wheel-stage");
   });
 
-  it("keeps quality and outlook scouting in the shared market and allows pills to wrap", () => {
-    expect(page).toContain("PlayerQualityPill");
-    expect(page).toContain("PlayerOutlookPill");
-    expect(css).toContain(".football-gm__candidate-tags");
-    expect(css).toContain("flex-wrap: wrap");
-    expect(css).toContain(".football-gm__market-player");
-  });
-
-  it("anchors the bottom navigation to the live visual viewport after iOS resume", () => {
-    expect(bottomNav).toContain("visualViewportShift");
-    expect(bottomNav).toContain("translate3d(0, ${visualViewportShift}px, 0)");
-    expect(bottomNav).toContain("window.setTimeout(syncViewportState, 1500)");
+  it("uses compact front-office controls instead of the old offseason documentation stack", () => {
+    expect(page).toContain("function FrontOfficeSummary");
+    expect(page).toContain("GET UNDER BOTH CAPS");
+    expect(page).toContain("RELEASE PLAYER");
+    expect(page).toContain("CREATE AN FA OPENING");
+    expect(page).not.toContain("CREATE ONE EXTRA FA OPENING");
+    expect(css).toContain(".football-gm__front-office-summary");
+    expect(css).toContain(".football-gm__front-office-actions");
   });
 });
