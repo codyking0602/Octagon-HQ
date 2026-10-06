@@ -1967,6 +1967,14 @@
   letter-spacing: .08em;
 }
 
+.football-gm__head-to-head-seasons em {
+  color: #657d8e;
+  font-size: 6px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
 .football-gm__head-to-head-seasons strong {
   color: #fff;
   font-size: 25px;
