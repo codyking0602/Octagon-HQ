@@ -11,8 +11,10 @@ import {
   type FootballGmRosterEntry,
   type FootballGmRosterSlot,
 } from "./footballGmEngine";
+import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v2-playtest";
+export const FOOTBALL_GM_VERSION = "football-gm-v3-playtest";
+export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 3;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
   QB: 0.26,
@@ -25,32 +27,13 @@ export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot,
 };
 
 /**
- * Retrospective seven-player-core calibration for the last five NFL final fours.
- * These are internal GM-model grades, not third-party published ratings. They anchor
- * the probability curve to the quality range recent real title contenders occupied.
+ * Real recent contender calibration derived from Pro Football Reference AV.
+ * The generated data file documents the source, percentile mapping and the
+ * seven-slot core selected for every conference finalist from 2021-2025.
  */
-export const FOOTBALL_GM_HISTORICAL_FINAL_FOUR = [
-  { season: 2021, team: "LAR", finish: "Champion", coreGrade: 95.4 },
-  { season: 2021, team: "CIN", finish: "Super Bowl Loss", coreGrade: 90.8 },
-  { season: 2021, team: "KC", finish: "Conference Championship", coreGrade: 94.2 },
-  { season: 2021, team: "SF", finish: "Conference Championship", coreGrade: 92.4 },
-  { season: 2022, team: "KC", finish: "Champion", coreGrade: 94.0 },
-  { season: 2022, team: "PHI", finish: "Super Bowl Loss", coreGrade: 95.0 },
-  { season: 2022, team: "CIN", finish: "Conference Championship", coreGrade: 92.1 },
-  { season: 2022, team: "SF", finish: "Conference Championship", coreGrade: 93.0 },
-  { season: 2023, team: "KC", finish: "Champion", coreGrade: 94.1 },
-  { season: 2023, team: "SF", finish: "Super Bowl Loss", coreGrade: 94.4 },
-  { season: 2023, team: "BAL", finish: "Conference Championship", coreGrade: 93.6 },
-  { season: 2023, team: "DET", finish: "Conference Championship", coreGrade: 91.2 },
-  { season: 2024, team: "PHI", finish: "Champion", coreGrade: 95.3 },
-  { season: 2024, team: "KC", finish: "Super Bowl Loss", coreGrade: 93.1 },
-  { season: 2024, team: "BUF", finish: "Conference Championship", coreGrade: 92.9 },
-  { season: 2024, team: "WAS", finish: "Conference Championship", coreGrade: 89.4 },
-  { season: 2025, team: "SEA", finish: "Champion", coreGrade: 93.4 },
-  { season: 2025, team: "NE", finish: "Super Bowl Loss", coreGrade: 90.7 },
-  { season: 2025, team: "DEN", finish: "Conference Championship", coreGrade: 90.9 },
-  { season: 2025, team: "LAR", finish: "Conference Championship", coreGrade: 92.0 },
-] as const;
+export const FOOTBALL_GM_HISTORICAL_FINAL_FOUR = historicalFinalFour.teams;
+export const FOOTBALL_GM_HISTORICAL_ANCHORS = historicalFinalFour.anchors;
+
 
 export interface FootballGmContinuity {
   retained: number;
@@ -100,6 +83,8 @@ export interface FootballGmTradeEvaluation {
   partnerReceivesValue: number;
   partnerSendsValue: number;
   threshold: number;
+  postTradePlayerIds: readonly string[];
+  requiresCuts: number;
   nextRoster: readonly FootballGmRosterEntry[] | null;
 }
 
@@ -108,14 +93,15 @@ export type FootballGmNegotiationConsequences = Readonly<Record<string, number>>
 type OutcomeRow = Readonly<Record<FootballGmPlayoffFinish, number>> & { grade: number };
 
 const OUTCOME_CURVE: readonly OutcomeRow[] = [
-  { grade: 80, "Missed Playoffs": 0.62, "Wild Card": 0.22, Divisional: 0.10, "Conference Championship": 0.04, "Super Bowl Loss": 0.015, Champion: 0.005 },
-  { grade: 84, "Missed Playoffs": 0.40, "Wild Card": 0.27, Divisional: 0.18, "Conference Championship": 0.09, "Super Bowl Loss": 0.04, Champion: 0.02 },
-  { grade: 88, "Missed Playoffs": 0.20, "Wild Card": 0.23, Divisional: 0.23, "Conference Championship": 0.17, "Super Bowl Loss": 0.10, Champion: 0.07 },
-  { grade: 90, "Missed Playoffs": 0.13, "Wild Card": 0.19, Divisional: 0.22, "Conference Championship": 0.20, "Super Bowl Loss": 0.14, Champion: 0.12 },
-  { grade: 92, "Missed Playoffs": 0.08, "Wild Card": 0.14, Divisional: 0.20, "Conference Championship": 0.21, "Super Bowl Loss": 0.18, Champion: 0.19 },
-  { grade: 94, "Missed Playoffs": 0.05, "Wild Card": 0.10, Divisional: 0.17, "Conference Championship": 0.20, "Super Bowl Loss": 0.21, Champion: 0.27 },
-  { grade: 96, "Missed Playoffs": 0.03, "Wild Card": 0.07, Divisional: 0.13, "Conference Championship": 0.18, "Super Bowl Loss": 0.23, Champion: 0.36 },
-  { grade: 98, "Missed Playoffs": 0.02, "Wild Card": 0.04, Divisional: 0.10, "Conference Championship": 0.16, "Super Bowl Loss": 0.24, Champion: 0.44 },
+  { grade: 80, "Missed Playoffs": 0.65, "Wild Card": 0.22, Divisional: 0.08, "Conference Championship": 0.035, "Super Bowl Loss": 0.012, Champion: 0.003 },
+  { grade: 84, "Missed Playoffs": 0.46, "Wild Card": 0.27, Divisional: 0.15, "Conference Championship": 0.075, "Super Bowl Loss": 0.03, Champion: 0.015 },
+  { grade: 88, "Missed Playoffs": 0.28, "Wild Card": 0.25, Divisional: 0.21, "Conference Championship": 0.13, "Super Bowl Loss": 0.07, Champion: 0.06 },
+  { grade: 90, "Missed Playoffs": 0.20, "Wild Card": 0.22, Divisional: 0.21, "Conference Championship": 0.17, "Super Bowl Loss": 0.11, Champion: 0.09 },
+  { grade: 92, "Missed Playoffs": 0.13, "Wild Card": 0.18, Divisional: 0.20, "Conference Championship": 0.20, "Super Bowl Loss": 0.15, Champion: 0.14 },
+  { grade: 94, "Missed Playoffs": 0.08, "Wild Card": 0.13, Divisional: 0.18, "Conference Championship": 0.20, "Super Bowl Loss": 0.19, Champion: 0.22 },
+  { grade: 95.1, "Missed Playoffs": 0.06, "Wild Card": 0.10, Divisional: 0.16, "Conference Championship": 0.19, "Super Bowl Loss": 0.23, Champion: 0.26 },
+  { grade: 96, "Missed Playoffs": 0.05, "Wild Card": 0.09, Divisional: 0.15, "Conference Championship": 0.18, "Super Bowl Loss": 0.23, Champion: 0.30 },
+  { grade: 98, "Missed Playoffs": 0.03, "Wild Card": 0.05, Divisional: 0.11, "Conference Championship": 0.15, "Super Bowl Loss": 0.24, Champion: 0.42 },
 ];
 
 const FINISH_ORDER: readonly FootballGmPlayoffFinish[] = [
@@ -269,9 +255,24 @@ export function footballGmPostseasonBonus(finish: FootballGmPlayoffFinish) {
   return 0;
 }
 
+function avalancheHash(value: string) {
+  let hash = hashString(value);
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x7feb352d);
+  hash ^= hash >>> 15;
+  hash = Math.imul(hash, 0x846ca68b);
+  hash ^= hash >>> 16;
+  return hash >>> 0;
+}
+
+export function footballGmSeasonRoll(seed: string, year: 1 | 2 | 3) {
+  const salts = ["blue-17", "silver-43", "gold-89"] as const;
+  return avalancheHash(`gm-season-v3:${salts[year - 1]}:${seed}`) / 0x1_0000_0000;
+}
+
 function deterministicFinish(seed: string, year: 1 | 2 | 3, teamGrade: number) {
   const probabilities = outcomeProbabilities(teamGrade);
-  const roll = hashString(`${seed}:season:${year}`) / 0x1_0000_0000;
+  const roll = footballGmSeasonRoll(seed, year);
   let running = 0;
   for (const finish of FINISH_ORDER) {
     running += probabilities[finish];
@@ -439,8 +440,8 @@ function assignRoster(
 
 function normalizeProposal(proposal: FootballGmTradeProposal) {
   return {
-    outgoingPlayerIds: [...new Set(proposal.outgoingPlayerIds)].slice(0, 3),
-    incomingPlayerIds: [...new Set(proposal.incomingPlayerIds)].slice(0, 3),
+    outgoingPlayerIds: [...new Set(proposal.outgoingPlayerIds)].slice(0, FOOTBALL_GM_MAX_TRADE_PLAYERS),
+    incomingPlayerIds: [...new Set(proposal.incomingPlayerIds)].slice(0, FOOTBALL_GM_MAX_TRADE_PLAYERS),
   };
 }
 
@@ -482,6 +483,31 @@ export function footballGmSpinTradePartner(
   return footballGmSpinTeam(seed, 500 + spinIndex, teams);
 }
 
+export function footballGmResolveTradeRoster(input: {
+  roster: readonly FootballGmRosterEntry[];
+  proposal: FootballGmTradeProposal;
+  cutPlayerIds?: readonly string[];
+}) {
+  const proposal = normalizeProposal(input.proposal);
+  const outgoing = new Set(proposal.outgoingPlayerIds);
+  const cuts = new Set(input.cutPlayerIds ?? []);
+  const retained = input.roster
+    .filter((entry) => !outgoing.has(entry.playerId) && !cuts.has(entry.playerId))
+    .flatMap((entry) => {
+      const player = footballGmPlayerById(entry.playerId);
+      return player ? [{ player, acquired: entry.acquired, preferredSlot: entry.slot }] : [];
+    });
+  const incoming = proposal.incomingPlayerIds
+    .filter((playerId) => !cuts.has(playerId))
+    .flatMap((playerId) => {
+      const player = footballGmPlayerById(playerId);
+      return player ? [{ player, acquired: "trade" as const }] : [];
+    });
+  const players = [...retained, ...incoming];
+  if (players.length > FOOTBALL_GM_ROSTER_SLOTS.length) return null;
+  return assignRoster(players);
+}
+
 export function footballGmEvaluateTradeProposal(input: {
   seed: string;
   partnerTeam: string;
@@ -490,14 +516,22 @@ export function footballGmEvaluateTradeProposal(input: {
   priority: 1 | 2;
 }) : FootballGmTradeEvaluation {
   const proposal = normalizeProposal(input.proposal);
+  const invalidResult = (): FootballGmTradeEvaluation => ({
+    accepted: false,
+    reason: "invalid",
+    partnerReceivesValue: 0,
+    partnerSendsValue: 0,
+    threshold: 1,
+    postTradePlayerIds: [],
+    requiresCuts: 0,
+    nextRoster: null,
+  });
   if (
     proposal.outgoingPlayerIds.length < 1
     || proposal.incomingPlayerIds.length < 1
-    || proposal.outgoingPlayerIds.length > 3
-    || proposal.incomingPlayerIds.length > 3
-  ) {
-    return { accepted: false, reason: "invalid", partnerReceivesValue: 0, partnerSendsValue: 0, threshold: 1, nextRoster: null };
-  }
+    || proposal.outgoingPlayerIds.length > FOOTBALL_GM_MAX_TRADE_PLAYERS
+    || proposal.incomingPlayerIds.length > FOOTBALL_GM_MAX_TRADE_PLAYERS
+  ) return invalidResult();
 
   const rosterById = new Map(input.roster.map((entry) => [entry.playerId, entry]));
   const outgoing = proposal.outgoingPlayerIds.map((id) => footballGmPlayerById(id));
@@ -505,25 +539,29 @@ export function footballGmEvaluateTradeProposal(input: {
   if (
     outgoing.some((player) => !player || !rosterById.has(player.id))
     || incoming.some((player) => !player || player.team !== input.partnerTeam || rosterById.has(player.id))
-  ) {
-    return { accepted: false, reason: "invalid", partnerReceivesValue: 0, partnerSendsValue: 0, threshold: 1, nextRoster: null };
-  }
+  ) return invalidResult();
 
   const outgoingPlayers = outgoing as FootballGmPlayer[];
   const incomingPlayers = incoming as FootballGmPlayer[];
-  const retained = input.roster
-    .filter((entry) => !proposal.outgoingPlayerIds.includes(entry.playerId))
-    .flatMap((entry) => {
-      const player = footballGmPlayerById(entry.playerId);
-      return player ? [{ player, acquired: entry.acquired, preferredSlot: entry.slot }] : [];
-    });
-  const rosterPlayers = [
-    ...retained,
-    ...incomingPlayers.map((player) => ({ player, acquired: "trade" as const })),
+  const postTradePlayerIds = [
+    ...input.roster.filter((entry) => !proposal.outgoingPlayerIds.includes(entry.playerId)).map((entry) => entry.playerId),
+    ...proposal.incomingPlayerIds,
   ];
-  const nextRoster = assignRoster(rosterPlayers);
-  if (!nextRoster) {
-    return { accepted: false, reason: "roster", partnerReceivesValue: 0, partnerSendsValue: 0, threshold: 1, nextRoster: null };
+  const requiresCuts = Math.max(0, postTradePlayerIds.length - FOOTBALL_GM_ROSTER_SLOTS.length);
+  const nextRoster = requiresCuts === 0
+    ? footballGmResolveTradeRoster({ roster: input.roster, proposal })
+    : null;
+  if (requiresCuts === 0 && !nextRoster) {
+    return {
+      accepted: false,
+      reason: "roster",
+      partnerReceivesValue: 0,
+      partnerSendsValue: 0,
+      threshold: 1,
+      postTradePlayerIds,
+      requiresCuts,
+      nextRoster: null,
+    };
   }
 
   const partnerReceivesValue = outgoingPlayers.reduce(
@@ -547,6 +585,8 @@ export function footballGmEvaluateTradeProposal(input: {
     partnerReceivesValue,
     partnerSendsValue,
     threshold,
+    postTradePlayerIds,
+    requiresCuts,
     nextRoster,
   };
 }
