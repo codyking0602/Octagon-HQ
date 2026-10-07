@@ -1,10 +1,12 @@
-import contractsArtifact from "../../../data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json";
-import qbGradesArtifact from "../../../data/generated/football/wheel-nfl-qb-grades-2026-10-03.json";
-import rbGradesArtifact from "../../../data/generated/football/wheel-nfl-rb-grades-2026-10-03.json";
-import wrGradesArtifact from "../../../data/generated/football/wheel-nfl-wr-grades-2026-10-03.json";
-import teGradesArtifact from "../../../data/generated/football/wheel-nfl-te-grades-2026-10-03.json";
-import frontSevenGradesArtifact from "../../../data/generated/football/wheel-nfl-front-seven-grades-2026-10-03.json";
-import secondaryGradesArtifact from "../../../data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json";
+import {
+  contractsArtifact,
+  frontSevenGradesArtifact,
+  qbGradesArtifact,
+  rbGradesArtifact,
+  secondaryGradesArtifact,
+  teGradesArtifact,
+  wrGradesArtifact,
+} from "./wheelFootballNflCurrentAuthority";
 import {
   WHEEL_FOOTBALL_GM_CAP,
   WHEEL_FOOTBALL_GM_ROSTER_SLOTS,
@@ -45,6 +47,7 @@ export interface FootballGmPlayer {
   gameContract: "1YR" | "3YR";
   draftYear: number | null;
   draftOverall: number | null;
+  projectionAdjustment: number;
   currentGrade: number;
   projectedExtensionApy: number;
   salaryWindow: readonly [number, number, number];
@@ -150,12 +153,14 @@ export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.ma
     throw new Error(`Missing GM grade for ${contract.team} ${contract.player}`);
   }
   const marketPosition = wheelFootballGmMarketPositionForContract(contract);
+  const projectionAdjustment = contract.projectionAdjustment ?? 0;
   const projectedExtensionApy = projectWheelFootballGmExtensionApy({
     currentGrade,
     age: contract.age,
     position: marketPosition,
     draftYear: contract.draftYear,
     draftOverall: contract.draftOverall,
+    projectionAdjustment,
   });
   return {
     id: playerId(contract),
@@ -169,6 +174,7 @@ export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.ma
     gameContract: contract.gameContract,
     draftYear: contract.draftYear,
     draftOverall: contract.draftOverall,
+    projectionAdjustment,
     currentGrade,
     projectedExtensionApy,
     salaryWindow: wheelFootballGmSalaryWindow({
@@ -182,6 +188,7 @@ export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.ma
       position: marketPosition,
       draftYear: contract.draftYear,
       draftOverall: contract.draftOverall,
+      projectionAdjustment,
     }),
     extensionRisk: extensionRisk(contract, projectedExtensionApy),
   };
@@ -529,6 +536,7 @@ export function footballGmProjectedGradeForPlayer(player: FootballGmPlayer, year
     yearsAhead: (year - 1) as 0 | 1 | 2,
     draftYear: player.draftYear,
     draftOverall: player.draftOverall,
+    projectionAdjustment: player.projectionAdjustment,
   });
 }
 
