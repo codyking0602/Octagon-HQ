@@ -22,6 +22,10 @@ const publicLaunchMigration = readFileSync(
   resolve(process.cwd(), "supabase/migrations/202612310275_football_gm_public_launch.sql"),
   "utf8",
 );
+const forfeitMigration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/202612310276_football_gm_forfeit.sql"),
+  "utf8",
+);
 const report = readFileSync(
   resolve(process.cwd(), "src/features/back-room/FootballGmFranchiseReport.tsx"),
   "utf8",
@@ -44,8 +48,10 @@ describe("The GM head-to-head presentation", () => {
     expect(page).not.toContain("isFootballGmPlaytestProfile");
     expect(page).not.toContain("footballGmPlaytestOpponentName");
     expect(page).toContain("CHALLENGE ANOTHER GM");
-    expect(page).toContain("Choose opponent…");
-    expect(page).toContain("availableOpponents.map");
+    expect(page).toContain("<ChallengeMemberPicker");
+    expect(page).toContain("football-wheel-opponent");
+    expect(page).not.toContain("<select");
+    expect(page).not.toContain("Choose opponent…");
     expect(css).toContain(".football-gm__challenge-picker");
   });
 
@@ -54,6 +60,18 @@ describe("The GM head-to-head presentation", () => {
     expect(publicLaunchMigration).toContain("challenge.declined_at is not null");
     expect(page).toContain("MATCH ENDED");
     expect(page).toContain("remote?.declined_at");
+  });
+
+  it("supports an explicit active-match forfeit without treating a waiting invite as a forfeit", () => {
+    expect(page).toContain("FORFEIT");
+    expect(page).toContain("Forfeit The GM?");
+    expect(page).toContain("repository.forfeit(remote.code)");
+    expect(page).toContain("remote?.forfeited_at");
+    expect(forfeitMigration).toContain("create or replace function public.forfeit_football_gm");
+    expect(forfeitMigration).toContain("if v_match.phase = 'waiting' or v_match.started_at is null then");
+    expect(forfeitMigration).toContain("set phase = 'complete'");
+    expect(forfeitMigration).toContain("forfeited_by_profile_id = v_user_id");
+    expect(forfeitMigration).toContain("forfeited. You win the matchup.");
   });
 
   it("uses the shared two-sided seven-position board throughout the match", () => {

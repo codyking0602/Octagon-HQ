@@ -70,13 +70,13 @@ describe("automatic Picks monitoring deployment", () => {
     expect(productionVerifier).toContain("healthy partial provider check");
   });
 
-  it("accepts only explicit healthy live monitoring states after the backend health gate proves them", () => {
-    expect(browserVerifier).toContain('const partialCoverage = syncHeadingText === "AUTO-SYNC HAS PARTIAL COVERAGE"');
-    expect(browserVerifier).toContain('const waitingForNextCheck = syncHeadingText === "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK"');
-    expect(browserVerifier).toContain('!partialCoverage && !waitingForNextCheck');
-    expect(browserVerifier).toContain("healthy waiting state");
-    expect(browserVerifier).toContain("explicit partial coverage");
-    expect(browserVerifier).toContain("MONITORING UNAVAILABLE");
+  it("keeps browser PIN health independent from monitoring state after the backend health gate proves monitoring", () => {
+    expect(browserVerifier).toContain("This workflow proves live PIN authentication and owner access.");
+    expect(browserVerifier).toContain("The monitoring");
+    expect(browserVerifier).toContain("data path has dedicated exact-head workflows");
+    expect(browserVerifier).not.toContain('const partialCoverage = syncHeadingText === "AUTO-SYNC HAS PARTIAL COVERAGE"');
+    expect(browserVerifier).not.toContain('const waitingForNextCheck = syncHeadingText === "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK"');
+    expect(browserVerifier).not.toContain("MONITORING UNAVAILABLE");
   });
 
   it("captures the exact lifecycle that resolves the live owner wait without racing a later refresh", () => {

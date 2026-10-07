@@ -48,7 +48,17 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
 
   if (isTurnBasedChallenge(challenge)) {
     if (challenge.gameId === "gm-football") {
-      if (status === "completed") return { eyebrow: "THE GM COMPLETE WITH", detail: "Open the final three-year franchise comparison", action: "OPEN" };
+      const forfeited = [challenge.creatorResult, challenge.responderResult].some((result) => (
+        result !== null
+        && typeof result === "object"
+        && !Array.isArray(result)
+        && result.forfeited === true
+      ));
+      if (status === "completed") return {
+        eyebrow: "THE GM COMPLETE WITH",
+        detail: forfeited ? "Match ended by forfeit" : "Open the final three-year franchise comparison",
+        action: "OPEN",
+      };
       if (status === "declined") return { eyebrow: "THE GM ENDED", detail: "This front-office matchup has ended", action: "ENDED" };
       if (direction === "sent") {
         return {
@@ -337,6 +347,9 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
               const canCancelTurnBased = turnBased && direction === "sent" && status === "waiting";
               const canDeclineTurnBased = turnBased && direction === "received" && status === "new";
               const canRemoveTurnBased = turnBased && (status === "completed" || status === "declined");
+              const turnBasedEndLabel = canCancelTurnBased
+                ? challenge.gameId === "gm-football" ? "REMOVE" : "CANCEL"
+                : canDeclineTurnBased ? "DECLINE" : "REMOVE";
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
@@ -392,12 +405,12 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                         <button
                           type="button"
                           className="challenge-center__dismiss"
-                          aria-label={`${canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          aria-label={`${turnBasedEndLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
                           onClick={() => canCancelTurnBased || canDeclineTurnBased
                             ? void endWaitingTurnBasedChallenge(challenge)
                             : void dismissChallenge(challenge.code)}
                         >
-                          {canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"}
+                          {turnBasedEndLabel}
                         </button>
                       ) : null
                     ) : (

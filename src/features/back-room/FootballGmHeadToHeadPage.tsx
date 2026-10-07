@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-wheel.css";
+import { ChallengeMemberPicker } from "../challenges/ChallengeMemberPicker";
 import "../../styles/football-gm-mode.css";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
@@ -444,8 +445,10 @@ export default function FootballGmHeadToHeadPage() {
   const [showModePicker, setShowModePicker] = useState(false);
   const [mode, setMode] = useState<VersusMode | null>(matchCode ? "human" : null);
   const [setupBusy, setSetupBusy] = useState(false);
+  const [matchBusy, setMatchBusy] = useState(false);
+  const [showForfeitConfirm, setShowForfeitConfirm] = useState(false);
   const [status, setStatus] = useState("");
-  const [selectedOpponentId, setSelectedOpponentId] = useState("");
+  const [selectedOpponentName, setSelectedOpponentName] = useState("");
 
   const [run, setRun] = useState<PersistedRun>(() => initialRun(freshSeed()));
   const [cpuRun, setCpuRun] = useState<PersistedRun>(() => initialRun(run.seed));
@@ -471,10 +474,12 @@ export default function FootballGmHeadToHeadPage() {
   const [releasePlayerId, setReleasePlayerId] = useState<string | null>(null);
 
   const activeProfileId = identity.profile?.id ?? null;
-  const availableOpponents = challenges.profiles.filter((profile) => profile.id !== activeProfileId);
-  const selectedOpponent = availableOpponents.find((profile) => profile.id === selectedOpponentId) ?? null;
+  const selectedOpponent = challenges.members.find((member) => member.displayName === selectedOpponentName) ?? null;
   const remoteMe = remote?.participants.find((participant) => participant.id === activeProfileId) ?? null;
   const remoteOpponent = remote?.participants.find((participant) => participant.id !== activeProfileId) ?? null;
+  const forfeitedProfile = remote?.forfeited_by_profile_id
+    ? remote.participants.find((participant) => participant.id === remote.forfeited_by_profile_id) ?? null
+    : null;
   const remoteOpponentRun = remoteOpponent
     ? normalizedRun(`${remote?.seed ?? run.seed}:${remoteOpponent.id}`, remoteOpponent.run_state)
     : null;
@@ -737,14 +742,18 @@ export default function FootballGmHeadToHeadPage() {
       identity.openDialog();
       return;
     }
-    if (!repository || !selectedOpponentId) {
+    if (!repository || !selectedOpponent) {
       setStatus("Choose an opponent first.");
       return;
     }
     setSetupBusy(true);
     setStatus("");
     try {
-      const code = await repository.create(selectedOpponentId);
+      const profile = await challenges.findProfile(selectedOpponent.displayName);
+      if (!profile) throw new Error("That Octagon HQ member could not be resolved.");
+      const code = await repository.create(profile.id);
+      challenges.clearPreparedRecipient();
+      await challenges.refresh();
       navigate(`/football/gm-mode?match=${code}`, { replace: true });
     } catch (reason) {
       setStatus(reason instanceof Error ? reason.message : "The GM challenge could not be created.");
@@ -1080,6 +1089,23 @@ export default function FootballGmHeadToHeadPage() {
     }
   }
 
+  async function forfeitMatch() {
+    if (mode !== "human" || !repository || !remote || remote.phase === "waiting" || remote.phase === "complete" || matchBusy) return;
+    setMatchBusy(true);
+    setRemoteError("");
+    try {
+      const next = await repository.forfeit(remote.code);
+      setRemote(next);
+      setShowForfeitConfirm(false);
+      await challenges.refresh();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (reason) {
+      setRemoteError(reason instanceof Error ? reason.message : "The GM match could not be forfeited.");
+    } finally {
+      setMatchBusy(false);
+    }
+  }
+
   async function finishOffseason() {
     const ready = footballGmIsOffseasonCompliantV2(
       run.finalRoster,
@@ -1179,6 +1205,13 @@ export default function FootballGmHeadToHeadPage() {
         <b>3 YEARS</b>
       </header>
 
+      {mode === "human" && remote && remote.phase !== "waiting" && remote.phase !== "complete" && !remote.declined_at ? (
+        <section className="football-gm__match-controls surface-card">
+          <span><small>HEAD TO HEAD</small><strong>{opponentDisplayName}</strong></span>
+          <button type="button" className="is-danger" disabled={matchBusy} onClick={() => setShowForfeitConfirm(true)}>FORFEIT</button>
+        </section>
+      ) : null}
+
       {intro ? (
         <section className="football-gm__intro surface-card">
           <p className="eyebrow">NFL FRONT OFFICE CHALLENGE</p>
@@ -1208,20 +1241,32 @@ export default function FootballGmHeadToHeadPage() {
             <span><small>HEAD TO HEAD</small><strong>CHALLENGE ANOTHER GM</strong><em>Alternate every draft pick, then the worse Year 1 team gets the first full offseason.</em></span>
             {identity.profile?.id ? (
               <>
-                <select
-                  aria-label="Choose GM opponent"
-                  value={selectedOpponentId}
-                  onChange={(event) => setSelectedOpponentId(event.target.value)}
-                >
-                  <option value="">Choose opponent…</option>
-                  {availableOpponents.map((profile) => (
-                    <option key={profile.id} value={profile.id}>{profile.displayName}</option>
-                  ))}
-                </select>
+                {selectedOpponent ? (
+                  <div className="football-wheel-opponent">
+                    <i aria-hidden="true">
+                      {selectedOpponent.avatarPhotoData
+                        ? <img src={selectedOpponent.avatarPhotoData} alt="" />
+                        : selectedOpponent.initials}
+                    </i>
+                    <span>
+                      <small>OPPONENT SELECTED</small>
+                      <strong>{selectedOpponent.displayName}</strong>
+                    </span>
+                    <button type="button" disabled={setupBusy} onClick={() => setSelectedOpponentName("")}>CHANGE</button>
+                  </div>
+                ) : (
+                  <ChallengeMemberPicker
+                    members={challenges.members}
+                    recentNames={challenges.profiles.map((profile) => profile.displayName)}
+                    selectedName=""
+                    busy={setupBusy}
+                    onSelect={(member) => setSelectedOpponentName(member.displayName)}
+                  />
+                )}
                 <button
                   className="primary-action"
                   type="button"
-                  disabled={setupBusy || !selectedOpponentId}
+                  disabled={setupBusy || !selectedOpponent}
                   onClick={() => void createHumanMatch()}
                 >
                   {setupBusy ? "SENDING…" : selectedOpponent ? `CHALLENGE ${selectedOpponent.displayName.toUpperCase()}` : "CHOOSE OPPONENT"}
@@ -1431,15 +1476,47 @@ export default function FootballGmHeadToHeadPage() {
           ) : null}
 
           {displayedPhase === "complete" ? (
-            <FinalMatch
-              leftName={myDisplayName}
-              rightName={opponentDisplayName}
-              leftRun={run}
-              rightRun={opponentRun}
-              onReplay={replay}
-            />
+            remote?.forfeited_at ? (
+              <section className="football-gm__forfeit-result surface-card">
+                <p className="eyebrow">HEAD TO HEAD FINAL</p>
+                <h1>{remote.forfeited_by_profile_id === activeProfileId ? `${opponentDisplayName.toUpperCase()} WINS` : "YOU WIN"}</h1>
+                <strong>BY FORFEIT</strong>
+                <p>{forfeitedProfile?.display_name ?? "A GM"} ended the matchup. Picks and roster progress remain visible above.</p>
+                <button type="button" onClick={replay}>NEW GM MATCH</button>
+              </section>
+            ) : (
+              <FinalMatch
+                leftName={myDisplayName}
+                rightName={opponentDisplayName}
+                leftRun={run}
+                rightRun={opponentRun}
+                onReplay={replay}
+              />
+            )
           ) : null}
         </>
+      ) : null}
+
+      {showForfeitConfirm ? (
+        <div className="football-wheel-forfeit" role="presentation" onClick={() => !matchBusy && setShowForfeitConfirm(false)}>
+          <section
+            className="football-wheel-forfeit__card surface-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="gm-forfeit-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="eyebrow">END MATCH</p>
+            <h2 id="gm-forfeit-title">Forfeit The GM?</h2>
+            <p>Your opponent wins immediately. Picks and roster progress already made will stay visible.</p>
+            <div>
+              <button type="button" className="secondary-action" disabled={matchBusy} onClick={() => setShowForfeitConfirm(false)}>KEEP PLAYING</button>
+              <button type="button" className="football-wheel-forfeit__confirm" disabled={matchBusy} onClick={() => void forfeitMatch()}>
+                {matchBusy ? "FORFEITING…" : "FORFEIT MATCH"}
+              </button>
+            </div>
+          </section>
+        </div>
       ) : null}
 
       {remoteError ? <p className="football-gm__status" role="status">{remoteError}</p> : null}
