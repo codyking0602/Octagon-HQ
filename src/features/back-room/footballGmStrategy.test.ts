@@ -266,16 +266,25 @@ describe("Football GM strategy v7", () => {
 
     const titleAndTwoMisses = footballGmThreeYearResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"]);
     const threeDivisionals = footballGmThreeYearResumeScore(["Divisional", "Divisional", "Divisional"]);
-    expect(titleAndTwoMisses).toBe(78.7);
-    expect(threeDivisionals).toBe(78);
+    expect(titleAndTwoMisses).toBe(88.7);
+    expect(threeDivisionals).toBe(88);
     expect(titleAndTwoMisses).toBeGreaterThan(threeDivisionals);
 
     const sameRosterQuality = 90;
     expect(footballGmScoreFromComponents(sameRosterQuality, titleAndTwoMisses))
       .toBeGreaterThan(footballGmScoreFromComponents(sameRosterQuality, threeDivisionals));
     expect(footballGmSeasonResumeScore("Champion")).toBe(100);
-    expect(footballGmSeasonResumeScore("Super Bowl Loss")).toBe(95);
-    expect(footballGmSeasonResumeScore("Missed Playoffs")).toBe(68);
+    expect(footballGmSeasonResumeScore("Super Bowl Loss")).toBe(97);
+    expect(footballGmSeasonResumeScore("Conference Championship")).toBe(94);
+    expect(footballGmSeasonResumeScore("Divisional")).toBe(88);
+    expect(footballGmSeasonResumeScore("Wild Card")).toBe(85);
+    expect(footballGmSeasonResumeScore("Missed Playoffs")).toBe(83);
+  });
+
+  it("puts playoff résumé on the same high-end scale as normalized Team OVR", () => {
+    const resume = footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"]);
+    expect(resume).toBe(91);
+    expect(footballGmScoreFromComponents(93.3, resume)).toBe(92.3);
   });
 
   it("lands expected GM scores in intuitive bands across the locked outcome curve", () => {
@@ -288,9 +297,9 @@ describe("Football GM strategy v7", () => {
       return footballGmScoreFromComponents(footballGmTeamOverall(grade), expectedResume);
     };
 
-    expect(expectedScore(88)).toBeCloseTo(87.4, 1);
-    expect(expectedScore(90)).toBeCloseTo(92.0, 1);
-    expect(expectedScore(94)).toBeCloseTo(97.5, 1);
+    expect(expectedScore(88)).toBeCloseTo(91.1, 1);
+    expect(expectedScore(90)).toBeCloseTo(94.6, 1);
+    expect(expectedScore(94)).toBeCloseTo(98.4, 1);
   });
 
   it("uses independent deterministic season rolls instead of carrying the same luck year to year", () => {
