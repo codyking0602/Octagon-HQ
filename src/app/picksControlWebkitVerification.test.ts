@@ -38,8 +38,8 @@ describe("production Picks Control Center WebKit verification", () => {
   });
 
   it("requires truthful monitoring and a settled single-detail fight dashboard only for an open card", () => {
-    expect(verifier).toContain('const monitoringRegion = page.getByRole("region", {');
-    expect(verifier).toContain('name: "Automatic monitoring and card review"');
+    expect(verifier).toContain("const monitoringRegion = page.locator(");
+    expect(verifier).toContain('[aria-label="Automatic monitoring and card review"], .monitoring-status');
     expect(verifier).toContain('if (controlStatus === "PICKS OPEN")');
     expect(verifier).toContain('name: /^AUTO-SYNC (CHECKED THE EVENT|IS WAITING FOR ITS NEXT CHECK|HAS PARTIAL COVERAGE|NEEDS ATTENTION)$/');
     expect(verifier).toContain('getByRole("button", { name: "CHECK NOW" })');
