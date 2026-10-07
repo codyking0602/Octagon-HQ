@@ -337,6 +337,9 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
               const canCancelTurnBased = turnBased && direction === "sent" && status === "waiting";
               const canDeclineTurnBased = turnBased && direction === "received" && status === "new";
               const canRemoveTurnBased = turnBased && (status === "completed" || status === "declined");
+              const turnBasedEndLabel = canCancelTurnBased
+                ? challenge.gameId === "gm-football" ? "REMOVE" : "CANCEL"
+                : canDeclineTurnBased ? "DECLINE" : "REMOVE";
               const dismissLabel = direction === "received" && !canView ? "IGNORE" : "REMOVE";
               const memberContent = (
                 <>
@@ -392,12 +395,12 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                         <button
                           type="button"
                           className="challenge-center__dismiss"
-                          aria-label={`${canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
+                          aria-label={`${turnBasedEndLabel} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
                           onClick={() => canCancelTurnBased || canDeclineTurnBased
                             ? void endWaitingTurnBasedChallenge(challenge)
                             : void dismissChallenge(challenge.code)}
                         >
-                          {canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"}
+                          {turnBasedEndLabel}
                         </button>
                       ) : null
                     ) : (
