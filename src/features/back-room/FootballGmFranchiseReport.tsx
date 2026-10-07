@@ -12,6 +12,7 @@ import {
   footballGmAdjustedSalaryForPlayer,
   footballGmFinalResultV2,
   type FootballGmNegotiationConsequences,
+  type FootballGmSeasonResultV2,
 } from "./footballGmStrategy";
 
 export interface FootballGmReportRun {
@@ -19,6 +20,7 @@ export interface FootballGmReportRun {
   roster: readonly FootballGmRosterEntry[];
   finalRoster: readonly FootballGmRosterEntry[];
   negotiationConsequences: FootballGmNegotiationConsequences;
+  resolvedSeasons?: readonly FootballGmSeasonResultV2[];
 }
 
 function tier(grade: number) {
@@ -46,6 +48,7 @@ function snapshot(run: FootballGmReportRun) {
     seed: run.seed,
     yearOneRoster: run.roster,
     finalRoster: end,
+    resolvedSeasons: run.resolvedSeasons,
   });
   let retained = 0;
   let tradeAdds = 0;

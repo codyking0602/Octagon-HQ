@@ -23,6 +23,7 @@ import {
   footballGmEligibleFreeAgencyTeams,
   footballGmEvaluateTradeProposal,
   footballGmFreeAgencyCandidatesForTeam,
+  footballGmFinalResultV2,
   footballGmOutcomeProbabilities,
   footballGmResolveTradeAssets,
   footballGmScoreFromComponents,
@@ -181,12 +182,12 @@ describe("Football GM strategy v7", () => {
     expect(FOOTBALL_GM_LIVE_OUTCOME_ANCHORS.losAngelesRams).toBe(94);
 
     expect(footballGmTitleOdds(88)).toBeCloseTo(0.08, 6);
-    expect(footballGmTitleOdds(90)).toBeCloseTo(0.18, 6);
-    expect(footballGmTitleOdds(91)).toBeCloseTo(0.27, 6);
-    expect(footballGmTitleOdds(92)).toBeCloseTo(0.37, 6);
-    expect(footballGmTitleOdds(93)).toBeCloseTo(0.46, 6);
-    expect(footballGmTitleOdds(94)).toBeCloseTo(0.50, 6);
-    expect(footballGmTitleOdds(98)).toBeCloseTo(0.50, 6);
+    expect(footballGmTitleOdds(90)).toBeCloseTo(0.32, 6);
+    expect(footballGmTitleOdds(91)).toBeCloseTo(0.46, 6);
+    expect(footballGmTitleOdds(92)).toBeCloseTo(0.60, 6);
+    expect(footballGmTitleOdds(93)).toBeCloseTo(0.67, 6);
+    expect(footballGmTitleOdds(94)).toBeCloseTo(0.72, 6);
+    expect(footballGmTitleOdds(98)).toBeCloseTo(0.85, 6);
 
     const roster = codyRunRoster();
     const outcomes = new Set<string>();
@@ -214,16 +215,16 @@ describe("Football GM strategy v7", () => {
       [86, 0.25, 0.035],
       [87, 0.17, 0.055],
       [88, 0.10, 0.08],
-      [89, 0.05, 0.12],
-      [90, 0.025, 0.18],
-      [91, 0.01, 0.27],
-      [92, 0.005, 0.37],
-      [93, 0.002, 0.46],
-      [94, 0, 0.50],
-      [95, 0, 0.50],
-      [96, 0, 0.50],
-      [97, 0, 0.50],
-      [98, 0, 0.50],
+      [89, 0.02, 0.19],
+      [90, 0.005, 0.32],
+      [91, 0.001, 0.46],
+      [92, 0, 0.60],
+      [93, 0, 0.67],
+      [94, 0, 0.72],
+      [95, 0, 0.76],
+      [96, 0, 0.79],
+      [97, 0, 0.82],
+      [98, 0, 0.85],
     ] as const;
 
     let previousMiss = Number.POSITIVE_INFINITY;
@@ -240,15 +241,15 @@ describe("Football GM strategy v7", () => {
       previousChampion = probabilities.Champion;
     }
 
-    expect(footballGmOutcomeProbabilities(90)["Missed Playoffs"]).toBe(0.025);
-    expect(footballGmOutcomeProbabilities(90).Divisional).toBe(0.235);
-    expect(footballGmOutcomeProbabilities(90)["Conference Championship"]).toBe(0.235);
-    expect(footballGmOutcomeProbabilities(90)["Super Bowl Loss"]).toBe(0.21);
+    expect(footballGmOutcomeProbabilities(90)["Missed Playoffs"]).toBeCloseTo(0.005, 10);
+    expect(footballGmOutcomeProbabilities(90).Divisional).toBe(0.14);
+    expect(footballGmOutcomeProbabilities(90)["Conference Championship"]).toBe(0.26);
+    expect(footballGmOutcomeProbabilities(90)["Super Bowl Loss"]).toBe(0.24);
 
-    const repeatAt94 = (2 * (0.50 ** 2)) - (0.50 ** 3);
-    const threePeatAt94 = 0.50 ** 3;
-    expect(repeatAt94).toBeCloseTo(0.375, 6);
-    expect(threePeatAt94).toBeCloseTo(0.125, 6);
+    const repeatAt94 = (2 * (0.72 ** 2)) - (0.72 ** 3);
+    const threePeatAt94 = 0.72 ** 3;
+    expect(repeatAt94).toBeCloseTo(0.663552, 6);
+    expect(threePeatAt94).toBeCloseTo(0.373248, 6);
   });
 
   it("translates hidden team grades into a wider fan-facing Team OVR scale", () => {
@@ -287,6 +288,37 @@ describe("Football GM strategy v7", () => {
     expect(footballGmScoreFromComponents(93.3, resume)).toBe(92.3);
   });
 
+  it("keeps shared-roll postseason floors monotonic from 89 through 98", () => {
+    const finishes = ["Missed Playoffs", "Wild Card", "Divisional", "Conference Championship", "Super Bowl Loss"] as const;
+    let previous = Object.fromEntries(finishes.map((finish) => [finish, 1])) as Record<(typeof finishes)[number], number>;
+    for (let grade = 89; grade <= 98; grade += 1) {
+      const probabilities = footballGmOutcomeProbabilities(grade);
+      let cumulative = 0;
+      for (const finish of finishes) {
+        cumulative += probabilities[finish];
+        expect(cumulative).toBeLessThanOrEqual(previous[finish] + 1e-12);
+        previous[finish] = cumulative;
+      }
+    }
+  });
+
+  it("honors persisted season results instead of rerolling a completed franchise", () => {
+    const roster = codyRunRoster();
+    const baseline = footballGmFinalResultV2({ seed: "locked-results", yearOneRoster: roster, finalRoster: roster });
+    const locked = baseline.seasons.map((season, index) => ({
+      ...season,
+      finish: index === 0 ? "Champion" as const : season.finish,
+    }));
+    const result = footballGmFinalResultV2({
+      seed: "a-different-seed-that-must-not-reroll",
+      yearOneRoster: roster,
+      finalRoster: roster,
+      resolvedSeasons: locked,
+    });
+    expect(result.seasons).toEqual(locked);
+    expect(result.seasons[0]!.finish).toBe("Champion");
+  });
+
   it("lands expected GM scores in intuitive bands across the locked outcome curve", () => {
     const expectedScore = (grade: number) => {
       const probabilities = footballGmOutcomeProbabilities(grade);
@@ -298,8 +330,8 @@ describe("Football GM strategy v7", () => {
     };
 
     expect(expectedScore(88)).toBeCloseTo(91.1, 1);
-    expect(expectedScore(90)).toBeCloseTo(94.6, 1);
-    expect(expectedScore(94)).toBeCloseTo(98.4, 1);
+    expect(expectedScore(90)).toBeCloseTo(95.7, 1);
+    expect(expectedScore(94)).toBeCloseTo(99.0, 1);
   });
 
   it("uses independent deterministic season rolls instead of carrying the same luck year to year", () => {
@@ -322,6 +354,13 @@ describe("Football GM strategy v7", () => {
 
     expect(Math.abs(correlation)).toBeLessThan(0.15);
     expect(footballGmSeasonRoll("stable-seed", 1)).toBe(footballGmSeasonRoll("stable-seed", 1));
+
+    const matchSeed = "0123456789abcdef0123456789abcdef";
+    const left = `${matchSeed}:11111111-1111-4111-8111-111111111111`;
+    const right = `${matchSeed}:22222222-2222-4222-8222-222222222222`;
+    for (const year of [1, 2, 3] as const) {
+      expect(footballGmSeasonRoll(left, year)).toBe(footballGmSeasonRoll(right, year));
+    }
   });
 
   it("makes every failed 1YR negotiation consequence a real salary increase", () => {

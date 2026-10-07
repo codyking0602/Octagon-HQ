@@ -149,14 +149,16 @@ function activeStorageKey(profileId: string) {
 function parsePersistedRun(value: unknown) {
   if (!value || Array.isArray(value) || typeof value !== "object") return null;
   const parsed = value as Partial<PersistedRun>;
+  const compatibleVersion = parsed.version === FOOTBALL_GM_VERSION
+    || parsed.version === "football-gm-v8-head-to-head";
   if (
-    parsed.version !== FOOTBALL_GM_VERSION
+    !compatibleVersion
     || typeof parsed.seed !== "string"
     || typeof parsed.phase !== "string"
     || !Array.isArray(parsed.roster)
     || !Array.isArray(parsed.finalRoster)
   ) return null;
-  return parsed as PersistedRun;
+  return { ...parsed, version: FOOTBALL_GM_VERSION } as PersistedRun;
 }
 
 function loadPersistedRun(profileId: string | undefined, seed: string) {
