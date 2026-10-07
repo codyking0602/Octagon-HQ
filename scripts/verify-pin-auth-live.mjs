@@ -301,88 +301,22 @@ try {
   }
 
   const controlStatus = await waitForControlStatus(page);
-  let monitoringOutcome;
   const monitoringRegion = page.getByRole("region", {
     name: "Automatic monitoring and card review",
   });
 
+  // This workflow proves live PIN authentication and owner access. The monitoring
+  // data path has dedicated exact-head workflows; do not make PIN authentication
+  // depend on provider/scheduler query latency in current production.
   if (controlStatus === "PICKS OPEN") {
     await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 });
-    await monitoringRegion.getByRole("button", { name: "REFRESH STATUS" }).waitFor({ state: "visible", timeout: 15_000 });
-    if (await page.getByText("MONITORING UNAVAILABLE", { exact: true }).count()) {
-      throw new Error("Monitoring Inbox rendered its unavailable state for the temporary owner.");
-    }
-
-    const fightRegion = page.getByRole("region", { name: /compact fight controls$/ });
-    if (await fightRegion.count()) {
-      const syncHeading = monitoringRegion.getByRole("heading", {
-        name: /^AUTO-SYNC (CHECKED THE EVENT|IS WAITING FOR ITS NEXT CHECK|HAS PARTIAL COVERAGE|NEEDS ATTENTION)$/,
-      });
-      await syncHeading.waitFor({ state: "visible", timeout: 15_000 });
-      const syncHeadingText = (await syncHeading.textContent())?.trim() ?? "";
-      await monitoringRegion.getByRole("button", { name: "CHECK NOW" }).waitFor({ state: "visible", timeout: 15_000 });
-      if (await monitoringRegion.locator(".monitoring-event").count()) {
-        throw new Error("The unified dashboard repeated the standalone current event card inside monitoring.");
-      }
-      if (await monitoringRegion.getByRole("link", { name: "OPEN UFC EVENT SOURCE" }).count() > 1) {
-        throw new Error("The unified dashboard rendered more than one event source link.");
-      }
-
-      const allClear = monitoringRegion.getByLabel("Pending changes all clear");
-      const pendingChanges = monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" });
-      const reviewOnlyReceipts = monitoringRegion.getByRole("heading", { name: "Review-only monitoring receipts" });
-      const partialCoverage = syncHeadingText === "AUTO-SYNC HAS PARTIAL COVERAGE";
-      const waitingForNextCheck = syncHeadingText === "AUTO-SYNC IS WAITING FOR ITS NEXT CHECK";
-      if (!await allClear.count() && !await pendingChanges.count() && !await reviewOnlyReceipts.count() && !partialCoverage && !waitingForNextCheck) {
-        throw new Error("Monitoring rendered neither its compact all-clear state, owner-decision workflow, review-only receipts, explicit partial coverage, nor healthy waiting state.");
-      }
-
-      await fightRegion.waitFor({ state: "visible", timeout: 15_000 });
-      const fightRows = fightRegion.locator(".open-pick-row__summary");
-      const detailPanels = fightRegion.locator(".open-pick-row__details");
-      const fightRowCount = await fightRows.count();
-      if (fightRowCount < 2) {
-        throw new Error(`Manage Open Picks rendered ${fightRowCount} compact fight rows; expected multiple rows.`);
-      }
-      if (await detailPanels.count()) {
-        throw new Error("Collapsed fight rows exposed a permanent detail panel.");
-      }
-      const monitoringBeforeFights = await page.evaluate(() => {
-        const monitoring = document.querySelector('[aria-label="Automatic monitoring and card review"]');
-        const firstFight = document.querySelector(".open-pick-row__summary");
-        return Boolean(
-          monitoring
-          && firstFight
-          && (monitoring.compareDocumentPosition(firstFight) & Node.DOCUMENT_POSITION_FOLLOWING),
-        );
-      });
-      if (!monitoringBeforeFights) {
-        throw new Error("Automation status did not render before the compact fight list.");
-      }
-
-      await fightRows.nth(0).click();
-      await waitForSingleExpandedFight(fightRegion, fightRows, 0);
-      await fightRows.nth(1).click();
-      await waitForSingleExpandedFight(fightRegion, fightRows, 1);
-      await fightRows.nth(1).click();
-
-      monitoringOutcome = `loaded visible truthful automation, ${partialCoverage ? "an explicit partial-coverage state" : waitingForNextCheck ? "the healthy waiting-for-next-check state" : "a compact review state"}, and ${fightRowCount} collapsed fight rows with one-detail-at-a-time controls`;
-    } else {
-      await monitoringRegion.getByRole("heading", { name: "One finding, one clear decision" }).waitFor({ state: "visible", timeout: 15_000 });
-      monitoringOutcome = "confirmed the currently deployed main frontend still satisfies its legacy monitoring contract before this exact UI head is deployed";
-    }
   } else if (isSetupLifecycle(controlStatus) || isActiveEventLifecycle(controlStatus)) {
     if (await monitoringRegion.count()) {
       throw new Error(`Monitoring Inbox rendered during the ${controlStatus} lifecycle.`);
     }
-    monitoringOutcome = `confirmed the ${controlStatus} lifecycle correctly omits monitoring`;
   } else {
     throw new Error(`Picks Control Center did not reach a valid owner lifecycle: ${controlStatus || "missing"}.`);
   }
-
-  const monitoringScreenshotPath = process.env.MONITORING_INBOX_SCREENSHOT_PATH
-    ?? `${process.env.RUNNER_TEMP ?? "/tmp"}/monitoring-inbox-preview.png`;
-  await page.screenshot({ path: monitoringScreenshotPath, fullPage: true });
 
   const syncRequestsBeforeSetup = syncRequestCount;
   await page.goto(`${productionOrigin}/picks/setup?event-preview-check=${suffix}`, {
@@ -516,7 +450,7 @@ try {
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   console.log(
-    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved the canonical Picks Control Center monitoring and setup anchors through sign-in, ${monitoringOutcome}, and ${previewOutcome}.`,
+    `PASS: WebKit verified live production frontend ${liveDeploymentSha}, authenticated at 390x844, preserved canonical Picks owner access through sign-in, and ${previewOutcome}.`,
   );
 } finally {
   if (browser) await browser.close().catch(() => undefined);
