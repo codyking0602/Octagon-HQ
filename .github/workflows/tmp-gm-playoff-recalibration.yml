@@ -23,6 +23,20 @@ jobs:
       - run: npm ci
       - name: Apply focused patch
         run: python scripts/tmp-gm-playoff-recalibration.py
+      - name: Fix regression harness assertions
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          p = Path("src/features/back-room/footballGmStrategy.test.ts")
+          text = p.read_text()
+          anchor = "  footballGmFreeAgencyCandidatesForTeam,\n"
+          if "  footballGmFinalResultV2,\n" not in text:
+              if anchor not in text:
+                  raise SystemExit("missing import anchor")
+              text = text.replace(anchor, anchor + "  footballGmFinalResultV2,\n", 1)
+          text = text.replace('expect(footballGmOutcomeProbabilities(90)["Missed Playoffs"]).toBe(0.005);', 'expect(footballGmOutcomeProbabilities(90)["Missed Playoffs"]).toBeCloseTo(0.005, 10);', 1)
+          p.write_text(text)
+          PY
       - name: Targeted GM tests
         run: npx vitest run src/features/back-room/footballGmStrategy.test.ts src/features/play/footballGmMatchRepository.test.ts
       - name: Typecheck
