@@ -752,6 +752,8 @@ export default function FootballGmHeadToHeadPage() {
       const profile = await challenges.findProfile(selectedOpponent.displayName);
       if (!profile) throw new Error("That Octagon HQ member could not be resolved.");
       const code = await repository.create(profile.id);
+      challenges.clearPreparedRecipient();
+      await challenges.refresh();
       navigate(`/football/gm-mode?match=${code}`, { replace: true });
     } catch (reason) {
       setStatus(reason instanceof Error ? reason.message : "The GM challenge could not be created.");
