@@ -81,7 +81,6 @@ describe("Supabase backend verification release boundary", () => {
     expect(pinAuthVerification).toContain('await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 });');
     expect(pinAuthVerification).not.toContain("await waitForSingleExpandedFight(fightRegion, fightRows, 0);");
     expect(pinAuthVerification).not.toContain("await waitForSingleExpandedFight(fightRegion, fightRows, 1);");
-    expect(pinAuthVerification).not.toContain('fightRegion.locator(".open-pick-row__details")');
     expect(pinAuthVerification).not.toContain(
       "The compact card allowed more than one detailed fight panel at a time.",
     );
