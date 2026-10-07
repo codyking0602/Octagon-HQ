@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
 import { readdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = resolve(import.meta.dirname, "..");
+const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const generatedDir = resolve(root, "data/generated/football");
 const authorityPath = resolve(root, "src/features/back-room/wheelFootballNflCurrentAuthority.ts");
 const todayArg = process.argv.find((value) => value.startsWith("--date="));
@@ -33,7 +35,7 @@ function latestGrade(slug) {
 }
 
 const contractFile = `wheel-nfl-gm-contracts-${snapshotDate}.json`;
-const contractReport = resolve(root, `tmp-wheel-nfl-gm-contracts-${snapshotDate}-report.json`);
+const contractReport = resolve(tmpdir(), `wheel-nfl-gm-contracts-${snapshotDate}-report.json`);
 execFileSync("python3", [
   resolve(root, "scripts/generate-wheel-nfl-gm-contracts.py"),
   "--snapshot-date", snapshotDate,
