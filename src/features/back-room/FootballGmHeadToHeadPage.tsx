@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
@@ -51,7 +51,6 @@ import FootballGmSoloPage, {
   type PersistedRun,
 } from "./FootballGmModePage";
 import { footballGmCpuDraftChoice, footballGmCpuOffseason } from "./footballGmCpu";
-import { footballGmPlaytestOpponentName, isFootballGmPlaytestProfile } from "./footballGmAccess";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 
@@ -441,13 +440,12 @@ export default function FootballGmHeadToHeadPage() {
   const repository = useMemo(() => createFootballGmMatchRepository(), []);
   const matchCode = (searchParams.get("match") ?? "").trim().toUpperCase();
   const soloRequested = searchParams.get("solo") === "1";
-  const allowed = isFootballGmPlaytestProfile(identity.profile);
-  const opponentName = footballGmPlaytestOpponentName(identity.profile);
 
   const [showModePicker, setShowModePicker] = useState(false);
   const [mode, setMode] = useState<VersusMode | null>(matchCode ? "human" : null);
   const [setupBusy, setSetupBusy] = useState(false);
   const [status, setStatus] = useState("");
+  const [selectedOpponentId, setSelectedOpponentId] = useState("");
 
   const [run, setRun] = useState<PersistedRun>(() => initialRun(freshSeed()));
   const [cpuRun, setCpuRun] = useState<PersistedRun>(() => initialRun(run.seed));
@@ -473,6 +471,8 @@ export default function FootballGmHeadToHeadPage() {
   const [releasePlayerId, setReleasePlayerId] = useState<string | null>(null);
 
   const activeProfileId = identity.profile?.id ?? null;
+  const availableOpponents = challenges.profiles.filter((profile) => profile.id !== activeProfileId);
+  const selectedOpponent = availableOpponents.find((profile) => profile.id === selectedOpponentId) ?? null;
   const remoteMe = remote?.participants.find((participant) => participant.id === activeProfileId) ?? null;
   const remoteOpponent = remote?.participants.find((participant) => participant.id !== activeProfileId) ?? null;
   const remoteOpponentRun = remoteOpponent
@@ -482,7 +482,7 @@ export default function FootballGmHeadToHeadPage() {
   const opponentRun = mode === "human" ? remoteOpponentRun ?? initialRun(remote?.seed ?? run.seed) : cpuRun;
   const displayedPhase = mode === "human" ? remote?.phase ?? "waiting" : localPhase;
   const opponentDisplayName = mode === "human"
-    ? remoteOpponent?.display_name ?? opponentName ?? "OPPONENT"
+    ? remoteOpponent?.display_name ?? selectedOpponent?.displayName ?? "OPPONENT"
     : "CPU";
   const myDisplayName = identity.profile?.displayName ?? "YOU";
   const isMyTurn = mode === "human"
@@ -725,7 +725,6 @@ export default function FootballGmHeadToHeadPage() {
   }, [cpuOffseasonDone, cpuRun, localPhase, localTurn, mode, run, userOffseasonDone]);
 
   if (!identity.ready) return null;
-  if (!allowed) return <Navigate to="/football" replace />;
   if (soloRequested) return <FootballGmSoloPage startImmediately standalone />;
 
   function resetLocal() {
@@ -734,16 +733,18 @@ export default function FootballGmHeadToHeadPage() {
   }
 
   async function createHumanMatch() {
-    if (!repository || !opponentName) return;
+    if (!identity.profile?.id) {
+      identity.openDialog();
+      return;
+    }
+    if (!repository || !selectedOpponentId) {
+      setStatus("Choose an opponent first.");
+      return;
+    }
     setSetupBusy(true);
     setStatus("");
     try {
-      const profile = await challenges.findProfile(opponentName);
-      if (!profile) {
-        setStatus(`${opponentName} is not available to challenge right now.`);
-        return;
-      }
-      const code = await repository.create(profile.id);
+      const code = await repository.create(selectedOpponentId);
       navigate(`/football/gm-mode?match=${code}`, { replace: true });
     } catch (reason) {
       setStatus(reason instanceof Error ? reason.message : "The GM challenge could not be created.");
@@ -1174,7 +1175,7 @@ export default function FootballGmHeadToHeadPage() {
     <div className="page football-gm-page football-gm-h2h">
       <header className="football-gm__header">
         <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
-        <span><small>OWNER PLAYTEST</small><strong>THE GM</strong></span>
+        <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
         <b>3 YEARS</b>
       </header>
 
@@ -1203,25 +1204,55 @@ export default function FootballGmHeadToHeadPage() {
             <span><small>PLAY NOW</small><strong>SOLO RUN</strong><em>The original standalone GM game. Build your roster, manage your offseason, and chase the best three-year score.</em></span>
             <b>PLAY →</b>
           </button>
-          {opponentName ? (
-            <button className="football-gm__mode-option" type="button" disabled={setupBusy} onClick={() => void createHumanMatch()}>
-              <span><small>HEAD TO HEAD</small><strong>CHALLENGE {opponentName}</strong><em>Alternate every draft pick, then the worse Year 1 team gets the first full offseason.</em></span>
-              <b>{setupBusy ? "SENDING…" : "SEND →"}</b>
-            </button>
-          ) : null}
+          <div className="football-gm__challenge-picker">
+            <span><small>HEAD TO HEAD</small><strong>CHALLENGE ANOTHER GM</strong><em>Alternate every draft pick, then the worse Year 1 team gets the first full offseason.</em></span>
+            {identity.profile?.id ? (
+              <>
+                <select
+                  aria-label="Choose GM opponent"
+                  value={selectedOpponentId}
+                  onChange={(event) => setSelectedOpponentId(event.target.value)}
+                >
+                  <option value="">Choose opponent…</option>
+                  {availableOpponents.map((profile) => (
+                    <option key={profile.id} value={profile.id}>{profile.displayName}</option>
+                  ))}
+                </select>
+                <button
+                  className="primary-action"
+                  type="button"
+                  disabled={setupBusy || !selectedOpponentId}
+                  onClick={() => void createHumanMatch()}
+                >
+                  {setupBusy ? "SENDING…" : selectedOpponent ? `CHALLENGE ${selectedOpponent.displayName.toUpperCase()}` : "CHOOSE OPPONENT"}
+                </button>
+              </>
+            ) : (
+              <button className="primary-action" type="button" onClick={identity.openDialog}>SIGN IN TO CHALLENGE</button>
+            )}
+          </div>
           {status ? <p className="football-gm__status">{status}</p> : null}
           <button type="button" onClick={() => setShowModePicker(false)}>← BACK</button>
         </section>
       ) : null}
 
-      {mode === "human" && remote?.phase === "waiting" ? (
+      {mode === "human" && remote?.declined_at ? (
+        <section className="football-gm__waiting surface-card">
+          <p className="eyebrow">THE GM</p>
+          <h2>MATCH ENDED</h2>
+          <p>This front-office matchup was canceled or declined.</p>
+          <button type="button" onClick={replay}>START A NEW MATCH</button>
+        </section>
+      ) : null}
+
+      {mode === "human" && remote?.phase === "waiting" && !remote.declined_at ? (
         <WaitingCard
           title={remoteMe?.accepted && remoteOpponent?.accepted ? "SETTING THE DRAFT ORDER" : `WAITING FOR ${opponentDisplayName.toUpperCase()}`}
           copy="The draft starts as soon as both GMs open the match. The first pick is randomized."
         />
       ) : null}
 
-      {(mode === "cpu" || (mode === "human" && remote && remote.phase !== "waiting")) ? (
+      {(mode === "cpu" || (mode === "human" && remote && !remote.declined_at && remote.phase !== "waiting")) ? (
         <>
           <VersusRosterBoard
             leftName={myDisplayName}

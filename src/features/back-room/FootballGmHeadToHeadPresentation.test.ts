@@ -18,6 +18,10 @@ const polishMigration = readFileSync(
   resolve(process.cwd(), "supabase/migrations/202612310273_football_gm_year1_ack_and_completion.sql"),
   "utf8",
 );
+const publicLaunchMigration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/202612310275_football_gm_public_launch.sql"),
+  "utf8",
+);
 const report = readFileSync(
   resolve(process.cwd(), "src/features/back-room/FootballGmFranchiseReport.tsx"),
   "utf8",
@@ -33,6 +37,23 @@ describe("The GM head-to-head presentation", () => {
     expect(page).toContain("HEAD TO HEAD");
     expect(page).toContain("Alternate every draft pick");
     expect(page).toContain("the worse Year 1 team gets the first full offseason");
+  });
+
+  it("is a public Casual game instead of an owner-only playtest", () => {
+    expect(page).not.toContain("OWNER PLAYTEST");
+    expect(page).not.toContain("isFootballGmPlaytestProfile");
+    expect(page).not.toContain("footballGmPlaytestOpponentName");
+    expect(page).toContain("CHALLENGE ANOTHER GM");
+    expect(page).toContain("Choose opponent…");
+    expect(page).toContain("availableOpponents.map");
+    expect(css).toContain(".football-gm__challenge-picker");
+  });
+
+  it("guards canceled public GM matches from being reopened", () => {
+    expect(publicLaunchMigration).toContain("cancel_football_gm_challenge");
+    expect(publicLaunchMigration).toContain("challenge.declined_at is not null");
+    expect(page).toContain("MATCH ENDED");
+    expect(page).toContain("remote?.declined_at");
   });
 
   it("uses the shared two-sided seven-position board throughout the match", () => {

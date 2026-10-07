@@ -1,21 +1,20 @@
 import type { ReactNode } from "react";
 import { playGameDefinition, type PlayGameId, type PlaySport } from "./playRegistry";
 
-export const PLAY_LANDING_COMMON_GAME_ORDER = [
+export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
+  "gm-football",
+  "wheel-football",
+  "draft-room",
   "find-leader",
-  "wavelength",
-  "blind-resume",
   "who-am-i",
-  "hit-the-number",
+  "higher-lower",
 ] as const satisfies readonly PlayGameId[];
 
-export const PLAY_LANDING_FOOTBALL_GAME_ORDER = [
-  "wheel-football",
-  "higher-lower",
+export const PLAY_LANDING_UFC_GAME_ORDER = [
+  "wheel-ufc",
+  "auction",
   "find-leader",
-  "wavelength",
   "who-am-i",
-  "hit-the-number",
 ] as const satisfies readonly PlayGameId[];
 
 export const PLAY_LANDING_UFC_WHEEL_GAME = "wheel-ufc" as const satisfies PlayGameId;
@@ -23,8 +22,7 @@ export const PLAY_LANDING_UFC_STRATEGIC_GAME = "auction" as const satisfies Play
 export const PLAY_LANDING_FOOTBALL_STRATEGIC_GAME = "draft-room" as const satisfies PlayGameId;
 
 export function playLandingGameIds(sport: PlaySport): readonly PlayGameId[] {
-  if (sport === "ufc") return [PLAY_LANDING_UFC_WHEEL_GAME, PLAY_LANDING_UFC_STRATEGIC_GAME, ...PLAY_LANDING_COMMON_GAME_ORDER];
-  return [PLAY_LANDING_FOOTBALL_STRATEGIC_GAME, ...PLAY_LANDING_FOOTBALL_GAME_ORDER];
+  return sport === "ufc" ? PLAY_LANDING_UFC_GAME_ORDER : PLAY_LANDING_FOOTBALL_GAME_ORDER;
 }
 
 export function playLandingDestination(sport: PlaySport, gameId: PlayGameId) {
@@ -88,8 +86,9 @@ export function PlayLandingGameLibrary({
 
         {games.map((game) => {
           const strategic = (sport === "ufc" && game.id === PLAY_LANDING_UFC_STRATEGIC_GAME)
-            || (sport === "football" && game.id === PLAY_LANDING_FOOTBALL_STRATEGIC_GAME);
+            || (sport === "football" && (game.id === PLAY_LANDING_FOOTBALL_STRATEGIC_GAME || game.id === "gm-football"));
           const challengeGame = game.id === "wheel-football" || game.id === "wheel-ufc" || game.id === "higher-lower";
+          const gmGame = game.id === "gm-football";
           return (
             <button
               className={`play-landing-game-card${strategic ? " is-strategic" : ""}`}
@@ -99,7 +98,7 @@ export function PlayLandingGameLibrary({
             >
               <span className="play-landing-game-card__icon" aria-hidden="true">{game.icon}</span>
               <span className="play-landing-game-card__status">
-                {challengeGame ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
+                {gmGame ? "SOLO / CHALLENGE" : challengeGame ? "CHALLENGE" : game.availability === "preview" ? "OWNER PREVIEW" : "PLAY NOW"}
               </span>
               <strong>{game.title}</strong>
               <small>{game.description}</small>

@@ -53,6 +53,7 @@ function asJson(value: unknown): ChallengeJson {
 
 export interface FootballGmMatchRepository {
   create(recipientId: string): Promise<string>;
+  cancel(code: string): Promise<boolean>;
   load(code: string): Promise<FootballGmMatchState>;
   open(code: string): Promise<FootballGmMatchState>;
   spin(code: string, eligibleTeamCodes: readonly string[]): Promise<FootballGmMatchState>;
@@ -83,6 +84,9 @@ export function createFootballGmMatchRepository(
       return z.string().min(4).parse(await rpc(client, "create_football_gm_challenge", {
         p_recipient_id: recipientId,
       }));
+    },
+    async cancel(code) {
+      return z.boolean().parse(await rpc(client, "cancel_football_gm_challenge", { p_code: code }));
     },
     async load(code) {
       return stateSchema.parse(await rpc(client, "get_my_football_gm_match", { p_code: code }));

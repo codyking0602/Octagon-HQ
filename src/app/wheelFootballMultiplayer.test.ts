@@ -99,7 +99,7 @@ describe("Wheel of Football 2-4 player contract", () => {
 
   it("makes waiting-lobby cancellation server-owned and advertises multiplayer in Play", () => {
     expect(center).toContain("createWheelFootballRepository");
-    expect(center).toContain("endWaitingWheelLobby");
+    expect(center).toContain("endWaitingTurnBasedChallenge");
     expect(center).toContain("canCancelTurnBased");
     expect(registry).toContain("Invite 1–3 friends");
     expect(registry).toContain("lineupSize: 28");

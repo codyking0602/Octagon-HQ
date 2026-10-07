@@ -3,11 +3,8 @@ import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
-  PLAY_LANDING_COMMON_GAME_ORDER,
   PLAY_LANDING_FOOTBALL_GAME_ORDER,
-  PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
-  PLAY_LANDING_UFC_STRATEGIC_GAME,
-  PLAY_LANDING_UFC_WHEEL_GAME,
+  PLAY_LANDING_UFC_GAME_ORDER,
   PlayLandingGameLibrary,
   PlayLandingHeader,
   playLandingDestination,
@@ -16,31 +13,23 @@ import {
 import { playGameDefinition } from "./playRegistry";
 
 describe("Play landing presentation", () => {
-  it("keeps the shared order while Football comparison games remain Daily-only", () => {
-    expect(PLAY_LANDING_COMMON_GAME_ORDER).toEqual([
-      "find-leader",
-      "wavelength",
-      "blind-resume",
-      "who-am-i",
-      "hit-the-number",
-    ]);
+  it("locks the public Casual libraries to the approved game order", () => {
     expect(PLAY_LANDING_FOOTBALL_GAME_ORDER).toEqual([
+      "gm-football",
       "wheel-football",
-      "higher-lower",
+      "draft-room",
       "find-leader",
-      "wavelength",
       "who-am-i",
-      "hit-the-number",
+      "higher-lower",
     ]);
-    expect(playLandingGameIds("ufc")).toEqual([
-      PLAY_LANDING_UFC_WHEEL_GAME,
-      PLAY_LANDING_UFC_STRATEGIC_GAME,
-      ...PLAY_LANDING_COMMON_GAME_ORDER,
+    expect(PLAY_LANDING_UFC_GAME_ORDER).toEqual([
+      "wheel-ufc",
+      "auction",
+      "find-leader",
+      "who-am-i",
     ]);
-    expect(playLandingGameIds("football")).toEqual([
-      PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
-      ...PLAY_LANDING_FOOTBALL_GAME_ORDER,
-    ]);
+    expect(playLandingGameIds("football")).toEqual(PLAY_LANDING_FOOTBALL_GAME_ORDER);
+    expect(playLandingGameIds("ufc")).toEqual(PLAY_LANDING_UFC_GAME_ORDER);
   });
 
   it("shows public Who Am I in both sports without reviving retired 20 Questions or preview treatment", () => {
@@ -78,6 +67,23 @@ describe("Play landing presentation", () => {
     expect(screen.queryByRole("button", { name: /next week.*nfl build a qb/i })).not.toBeInTheDocument();
   });
 
+  it("shows only the approved Football Casual games in the approved order", () => {
+    const navigate = vi.fn();
+    render(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
+    const library = screen.getByRole("region", { name: /pick a game/i });
+    const cards = within(library).getAllByRole("button");
+    expect(cards).toHaveLength(6);
+    expect(cards.at(0)).toHaveTextContent("The GM");
+    expect(cards.at(1)).toHaveTextContent("Wheel of Football");
+    expect(cards.at(2)).toHaveTextContent("Draft Room");
+    expect(cards.at(3)).toHaveTextContent("Find the Leader");
+    expect(cards.at(4)).toHaveTextContent("Who Am I?");
+    expect(cards.at(5)).toHaveTextContent("Higher or Lower");
+    expect(screen.queryByRole("button", { name: /wavelength/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /hit the number/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
+  });
+
   it("keeps Daily-only games out of normal Football Play while Draft Room is public", () => {
     const navigate = vi.fn();
     render(<PlayLandingGameLibrary sport="football" onNavigate={navigate} />);
@@ -107,26 +113,19 @@ describe("Play landing presentation", () => {
     expect(navigate).toHaveBeenCalledWith("/football/draft-room");
   });
 
-  it("puts Wheel of UFC first as a challenge while keeping Auction as the strategic Play Now game", () => {
+  it("shows only the approved UFC Casual games in the approved order", () => {
     const navigate = vi.fn();
     render(<PlayLandingGameLibrary sport="ufc" onNavigate={navigate} />);
     const library = screen.getByRole("region", { name: /pick a game/i });
     const cards = within(library).getAllByRole("button");
-    expect(cards.map((card) => card.textContent)).toEqual(expect.arrayContaining([
-      expect.stringContaining("Find the Leader"),
-      expect.stringContaining("Wavelength"),
-      expect.stringContaining("Blind Resume"),
-      expect.stringContaining("Hit the Number"),
-      expect.stringContaining("Who Am I?"),
-      expect.stringContaining("Auction"),
-    ]));
+    expect(cards).toHaveLength(4);
     expect(cards.at(0)).toHaveTextContent("Wheel of UFC");
-    expect(within(cards.at(0)!).getByText("CHALLENGE")).toBeInTheDocument();
     expect(cards.at(1)).toHaveTextContent("Auction");
-    expect(within(cards.at(1)!).getByText("PLAY NOW")).toBeInTheDocument();
-    expect(screen.queryByText("STRATEGY")).not.toBeInTheDocument();
-    expect(cards.findIndex((card) => /Who Am I\?/.test(card.textContent ?? "")))
-      .toBeLessThan(cards.findIndex((card) => /Hit the Number/.test(card.textContent ?? "")));
+    expect(cards.at(2)).toHaveTextContent("Find the Leader");
+    expect(cards.at(3)).toHaveTextContent("Who Am I?");
+    expect(screen.queryByRole("button", { name: /wavelength/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /blind resume/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /hit the number/i })).not.toBeInTheDocument();
   });
 
   it("opens UFC Find the Leader replayable while preserving its canonical route owner", () => {

@@ -10,7 +10,7 @@ const challengeMigration = readFileSync(
 describe("Wheel Challenge Center pending removal", () => {
   it("lets the sender cancel a waiting multiplayer Wheel lobby for everyone", () => {
     expect(center).toContain('canCancelTurnBased = turnBased && direction === "sent" && status === "waiting"');
-    expect(center).toContain("endWaitingWheelLobby");
+    expect(center).toContain("endWaitingTurnBasedChallenge");
     expect(center).toContain("wheelRepository.decline(challenge.code)");
   });
 
