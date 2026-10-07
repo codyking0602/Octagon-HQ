@@ -74,6 +74,18 @@ describe("The GM head-to-head presentation", () => {
     expect(forfeitMigration).toContain("forfeited. You win the matchup.");
   });
 
+  it("shows the same no-math cap meters in head-to-head as solo", () => {
+    expect(page).toContain("CapMeter,");
+    expect(page).toContain('displayedPhase === "draft" || displayedPhase === "year1"');
+    expect(page).toContain("<CapMeter");
+    expect(page).toContain("roster={run.roster}");
+    expect(page).toContain("year={1}");
+    expect(page).toContain('className="football-gm__dual-cap"');
+    expect(page).toContain("roster={run.finalRoster}");
+    expect(page).toContain("year={2}");
+    expect(page).toContain("year={3}");
+  });
+
   it("uses the shared two-sided seven-position board throughout the match", () => {
     expect(page).toContain("function VersusRosterBoard");
     expect(page).toContain("FOOTBALL_GM_ROSTER_SLOTS.map");
