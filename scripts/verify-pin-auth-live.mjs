@@ -302,9 +302,11 @@ try {
 
   const controlStatus = await waitForControlStatus(page);
   let monitoringOutcome;
-  const monitoringRegion = page.getByRole("region", {
-    name: "Automatic monitoring and card review",
-  });
+  // Prefer the semantic region restored by the current source, while retaining
+  // the class fallback long enough to verify the production build that predates it.
+  const monitoringRegion = page.locator(
+    '[aria-label="Automatic monitoring and card review"], .monitoring-status',
+  ).first();
 
   if (controlStatus === "PICKS OPEN") {
     await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 });

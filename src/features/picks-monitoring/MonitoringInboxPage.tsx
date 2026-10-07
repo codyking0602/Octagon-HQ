@@ -483,7 +483,7 @@ export default function MonitoringInboxPage({
 
       {inbox ? (
         <>
-          <section className={`surface-card monitoring-status monitoring-status--compact${automationNeedsAttention ? " is-paused" : " is-active"}`}>
+          <section className={`surface-card monitoring-status monitoring-status--compact${automationNeedsAttention ? " is-paused" : " is-active"}`} aria-label="Automatic monitoring and card review">
             <div className="monitoring-status__topline">
               <div>
                 <p className="eyebrow">AUTOMATION · {eventLabel}</p>
