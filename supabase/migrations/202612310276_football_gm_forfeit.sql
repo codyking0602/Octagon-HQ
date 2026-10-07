@@ -114,7 +114,17 @@ begin
   where match.challenge_id = v_challenge_id;
 
   update public.play_challenges challenge
-  set declined_at = coalesce(challenge.declined_at, v_now)
+  set completed_at = coalesce(challenge.completed_at, v_now),
+      creator_result = jsonb_build_object(
+        'status', 'forfeit',
+        'forfeited', v_user_id = challenge.creator_id,
+        'forfeitedByProfileId', v_user_id
+      ),
+      responder_result = jsonb_build_object(
+        'status', 'forfeit',
+        'forfeited', v_user_id = challenge.recipient_id,
+        'forfeitedByProfileId', v_user_id
+      )
   where challenge.id = v_challenge_id;
 
   if v_other_id is not null then
