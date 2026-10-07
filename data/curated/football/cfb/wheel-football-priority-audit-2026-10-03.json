@@ -1,1 +1,1293 @@
-{"season":2026,"auditedAt":"2026-10-03","status":"manually-audited-current-priorities","notes":"Conference-by-conference football-quality audit of the generated current-CFB Wheel baseline. Ourlads current depth structure remained the starting point; official conference/team sources and 2026 completed-game production were used to correct ordering, restore established/current impact players, expand only meaningful groups, and fix position-group mistakes. No player grades or hidden scores are included.","teamCount":68,"teamsChanged":65,"groupsChanged":180,"overrides":{"alabama":{"RB":["Daniel Hill","Trae'shawn Brown","EJ Crowell"],"Flex":["Ryan Coleman-Williams","Daniel Hill","Rico Scott","Kaleb Edwards"],"Front Seven":["Yhonzae Pierre","Devan Thompkins","Terrance Green","London Simmons","Caleb Woodson","Fatutoa Henry"],"Secondary":["Bray Hubbard","Zabien Brown","Keon Sabb","Dijon Lee Jr.","Zyan Gibson","Red Morgan"]},"arkansas":{"Secondary":["Khmori House","Christian Harrison","Joker Johnson","Shelton Lewis","Miguel Mitchell"]},"auburn":{"Front Seven":["Xavier Atkins","Chris Murray","Dallas Walker IV","Cody Sigler","Dashawn Womack","Elijah Melendez"],"Secondary":["Champ Anthony","Rayshawn Pleasant","Kaleb Harris","Eric Winters","Andre Jordan Jr.","Sylvester Smith-Reed"]},"florida":{"RB":["Jadan Baugh","Evan Pryor","Duke Clark"],"WR":["Vernell Brown III","Dallas Wilson","Eric Singleton Jr."],"Flex":["Jadan Baugh","Vernell Brown III","Dallas Wilson","Duke Clark"],"Front Seven":["Jayden Woods","Kamran James","Brendan Bett","Jeramiah McCloud","Myles Graham","Jaden Robinson"]},"georgia":{"WR":["Isiah Canion","Talyn Taylor","Sacovie White Helton","Craig Dandridge"],"Flex":["Nate Frazier","Lawson Luckie","Isiah Canion","Talyn Taylor"],"Front Seven":["Raylen Wilson","Elijah Griffin","Chris Cole","Gabe Harris Jr.","Jordan Hall","Quintavius Johnson"],"Secondary":["KJ Bolden","Ellis Robinson IV","Khalil Barnes","Demello Jones","Kyron Jones"]},"kentucky":{"WR":["Kenny Darby","DJ Miller","Shane Carr","Nic Anderson"],"TE":["Willie Rodriguez","Henry Boyer"],"Flex":["CJ Baxter","Kenny Darby","Willie Rodriguez","Jason Patterson"],"Secondary":["Jordan Castell","Ty Bryant","Hasaan Sykes","Aaron Gates","Terhyon Nichols"]},"lsu":{"Flex":["Trey'Dez Green","Dilin Jones","Jackson Harris","Eugene Wilson III"],"Front Seven":["Princewill Umanmielen","Whit Weeks","TJ Dottery","Jordan Ross","Dylan Carpenter","Deuce Geralds"],"Secondary":["Ty Benefield","DJ Pickett","Tamarcus Cooley","Pj Woodland","Dashawn Spears"]},"mississippi-state":{"RB":["Fluff Bothwell","Kolin Wilson","J.J. Hill"],"WR":["Sanfrisco Magee","Zion Ragins","Anthony Evans III","Marquis Johnson"]},"missouri":{"RB":["Ahmad Hardy","Jamal Roberts","Xai'Shaun Edwards"],"WR":["Cayden Lee","Donovan Olugbode","Naeshaun Montgomery"],"Flex":["Ahmad Hardy","Cayden Lee","Donovan Olugbode","Jamal Roberts"],"Front Seven":["Daeden Hopkins","Robert Woodyard Jr.","Nicholas Rodriguez","Langden Kitchen","Marquis Gracial","Jalen Marshall"]},"oklahoma":{"WR":["Isaiah Sategna III","Elijah Thomas","Parker Livingstone"],"Flex":["Isaiah Sategna III","Lloyd Avant","Elijah Thomas","Parker Livingstone"],"Front Seven":["David Stone","Taylor Wein","Kip Lewis","Jayden Jackson","Adepoju Adebawore","James Nesta"],"Secondary":["Eli Bowen","Peyton Bowen","Omarion Robinson","Courtland Guillory","Trystan Haynes","Reggie Powers III"]},"ole-miss":{"WR":["Deuce Alexander","Horatio Fields","Johntay Cook II","Traylon Ray"],"TE":["Caleb Odom","Luke Hasz"],"Flex":["Kewan Lacy","Deuce Alexander","Caleb Odom","Traylon Ray"],"Front Seven":["Will Echoles","Suntarine Perkins","Kam Franklin","Jamarious Brown","Keaton Thomas","Luke Ferrelli"]},"south-carolina":{"RB":["Matt Fuller","Christian Clark","Jabree Coleman"],"WR":["Nyck Harbor","Nitro Tuggle","Mazeo Bennett Jr.","Donovan Murph"],"Flex":["Nyck Harbor","Matt Fuller","Nitro Tuggle","Brady Hunt"],"Front Seven":["Dylan Stewart","Caleb Herring","Anthony Addison","Justin Okoronkwo","Fred Johnson","Julian Walker"]},"tennessee":{"RB":["DeSean Bishop","Javin Gordon","Daune Morris"],"TE":["Ethan Davis","DaSaahn Brame"],"Flex":["DeSean Bishop","Mike Matthews","Ethan Davis","Daune Morris"],"Front Seven":["Arion Carter","Tyree Weathersby","Xavier Gilliam","Daevin Hobbs","Amare Campbell","Mariyon Dye"]},"texas":{"Flex":["Cam Coleman","Hollywood Smothers","Ryan Wingo","Spencer Shannon"],"Front Seven":["Colin Simmons","Rasheem Biles","Zina Umeozulu","Maraad Watson","Hero Kanu","Justin Cryer"],"Secondary":["Jelani McDonald","Graceson Littleton","Kade Phillips","Kobe Black","Bo Mascoe"]},"texas-am":{"WR":["Mario Craver","Isaiah Horton","Terry Bussey","Ashton Bethel-Roman"],"Flex":["Rueben Owens II","Mario Craver","Isaiah Horton","Terry Bussey"],"Front Seven":["DJ Hicks","T.J. Searcy","CJ Mims","Marco Jones","Noah Mikhail","Ray Coney"]},"vanderbilt":{"Front Seven":["Nick Rinaldi","Miles Capers","Bryan Longwell","Issa Ouattara","Glenn Seabrooks III","Brian Allen Jr."],"Secondary":["CJ Heard","Ricardo Jones","Martel Hight","Mason Lewis","Jordan Matthews"]},"illinois":{"WR":["Collin Dixon","Hudson Clement","Brayden Trimble","Ty Robinson"],"Secondary":["Matthew Bailey","Juice Clarke","Mac Resetich","Xavier Scott","Jakwon Morris"]},"indiana":{"WR":["Charlie Becker","Nick Marsh","Tyler Morris","Davion Chandler"],"Flex":["Charlie Becker","Turbo Richard","Nick Marsh","Andrew Barker"],"Front Seven":["Rolijah Hardy","Tyrique Tucker","Josh Burnham","Mario Landino","Isaiah Jones","Tobi Osunsanmi"]},"iowa":{"RB":["Kamari Moulton","L.J. Phillips Jr.","Braeden Jackson"]},"maryland":{"RB":["Iverson Howard","Liam Willson","Harry Dalton III"]},"michigan":{"WR":["JJ Buchanan","Andrew Marsh","Salesi Moa"],"Flex":["Jordan Marshall","JJ Buchanan","Andrew Marsh","Savion Hiter"],"Front Seven":["John Henry Daley","Dom Nichols","Nathaniel Staehling","Troy Bowles","Chase Taylor"]},"michigan-state":{"TE":["Jayden Savoury","Brennan Parachek"],"Flex":["Cam Edwards","Rodney Bullard Jr.","Jayden Savoury","Jaziun Patterson"],"Front Seven":["Eli Coenen","Kenny Soares Jr.","Isaac Smith","Brady Pretzlaff","Ben Roberts","Dion Crawford"]},"nebraska":{"RB":["Jamal Rule","Mekhi Nelson","Isaiah Mozee"],"WR":["Kwazi Gilmer","Jacory Barney Jr.","Nyziah Hunter"],"Flex":["Jamal Rule","Kwazi Gilmer","Mekhi Nelson","Jacory Barney Jr."],"Secondary":["Donovan Jones","Jamir Conn","Andrew Marshall","Dwayne McDougle III","Victor Evans III"]},"northwestern":{"RB":["Caleb Komolafe","Gavin Sawchuk","Joseph Himon II"],"TE":["Alex Honig","Luke Dehnicke"],"Front Seven":["Braydon Brus","Kobie McKinzie","Jamaal Johnson","Michael Kilbane","Caden O'Rourke"]},"ohio-state":{"WR":["Jeremiah Smith","Devin McCuin","Brandon Inniss","Chris Henry Jr."],"Flex":["Jeremiah Smith","Bo Jackson","Devin McCuin","Nate Roberts"],"Front Seven":["Riley Pettijohn","Kenyatta Jackson Jr.","Payton Pierce","Christian Alliegro","Eddrick Houston","John Walker"]},"oregon":{"WR":["Dakorien Moore","Messiah Hampton","Evan Stewart","Jeremiah McClellan"],"Front Seven":["Amauri Washington","Matayo Uiagalelei","Bear Alexander","Teitum Tuioti","Elijah Rushing"],"Secondary":["Koi Perich","Brandon Finney Jr.","Ify Obidegwu","Aaron Flowers","Carl Williams IV"]},"penn-state":{"RB":["Carson Hansen","James Peoples","Quinton Martin Jr."],"WR":["Koby Howard","Chase Sowell","Brett Eskildsen","Zay Robinson"],"TE":["Benjamin Brahmer","Andrew Rappleyea"],"Flex":["James Peoples","Koby Howard","Chase Sowell","Benjamin Brahmer"],"Front Seven":["Tony Rojas","Kooper Ebel","Yvan Kemajou","Ikenna Ezeogu","Alexander McPherson"]},"purdue":{"Front Seven":["Charles Correa","Jojo Hayden","Ian Jeffries","Curt Neal","Trey Smith","Keyshawn Burgos"]},"rutgers":{"WR":["KJ Duff","Ben Black III","Jourdin Houston"],"Flex":["KJ Duff","Antwan Raymond","Ben Black III","Logan Blake"]},"ucla":{"Secondary":["Ta'Shawn James","Malik Hartford","Derrick Barksdale","Rodrick Pleasant","Scooter Jackson"]},"usc":{"WR":["Kayden Dixon-Wyatt","Trent Mosley","Tanook Hines","Zacharyus Williams"],"Flex":["King Miller","Kayden Dixon-Wyatt","Mark Bowman","Trent Mosley"],"Secondary":["Christian Pierce","Prophet Brown","Alex Graham","Jontez Williams","Chasen Johnson"]},"washington":{"TE":["Baron Naone","Decker DeGraaf"],"Flex":["Brian Bonner Jr.","Dezmen Roebuck","Baron Naone","Chris Lawson"],"Secondary":["Alex McLaughlin","Dylan Robinson","Rylon Dillard-Allen","Rahshawn Clark","Emmanuel Karnley"]},"wisconsin":{"WR":["Tyrell Henry","Chris Brooks Jr.","Eugene Hilton Jr."],"Flex":["Darrion Dupree","Tyrell Henry","Jacob Harris","Chris Brooks Jr."],"Front Seven":["Hammond Russell IV","Charles Perkins","Mason Posa","Cooper Catalano","Junior Poyser","Sebastian Cheeks"]},"arizona":{"WR":["Tre Spivey","Chris Hunter III","Giovanni Richardson","Isaiah Mizell"],"Front Seven":["Chase Kennedy","Cooper Blomstrom","Taye Brown","Mays Pese","Leroy Palu","Tre Smith"]},"arizona-state":{"RB":["Kyson Brown","Marquis Gillis","Grayson Rigdon"],"WR":["Omarion Miller","Reed Harris","Jalen Moss"],"Flex":["Omarion Miller","Kyson Brown","Reed Harris","Khamari Anderson"],"Front Seven":["C.J. Fite","Roman Pitre","Jalen Thompson","Martell Hughes","Owen Long","Emarrion Winston"]},"baylor":{"WR":["Louis Brown IV","Jadon Porter","Gavin Freeman","Jayden McGowan"],"Secondary":["Bo Onu","Daniel Cobbs","Devon Jordan","LeVar Thornton Jr.","Cole Redding","Colby McCalister"]},"byu":{"WR":["Legend Glasker","Kyler Kasper","Jojo Phillips"],"Flex":["LJ Martin","Legend Glasker","Kyler Kasper","Preston Rex"],"Front Seven":["Keanu Tanuvasa","Cade Uluave","Tausili Akana","Bodie Schoonover","Nusi Taumoepeau","Hunter Clegg"],"Secondary":["Evan Johnson","Faletau Satuala","Tommy Prassas","Therrian Alexander III","Cannon DeVries"]},"cincinnati":{"Front Seven":["Jonathan Thompson","Josh Hough","Damaine Wilson","Marquaze Parker","Drew Logan"]},"colorado":{"WR":["Danny Scudero","DeAndre Moore Jr.","Joseph Williams"],"Flex":["Danny Scudero","Micah Welch","DeAndre Moore Jr.","Joseph Williams"]},"houston":{"WR":["Amare Thomas","Koby Young","Trent Walker"],"Flex":["Amare Thomas","Makhi Hughes","Koby Young","Trent Walker"]},"iowa-state":{"WR":["Omari Hayes","Dominic Overby","Evan Boyd","Cody Jackson"],"TE":["Tyler Fortenberry","Vince Benetti"],"Flex":["Aiden Flora","Omari Hayes","Dominic Overby","Tyler Fortenberry"]},"kansas":{"WR":["Nik McMillan","Nahzae Cox","Keaton Kubecka","Tate Nagy"]},"kansas-state":{"RB":["Rodney Fields Jr.","Joe Jackson","Jay Harris"],"WR":["Josh Manning","Jaron Tibbs","Brandon White","Derrick Salley Jr."]},"oklahoma-state":{"WR":["Wyatt Young","Justin Bowick","Chris Barnes","Terrence Lewis"],"Flex":["Wyatt Young","Caleb Hawkins","Justin Bowick","Chris Barnes"]},"tcu":{"TE":["Kari Ashley","Ka'Morreun Pimpton"],"Flex":["Jeremy Payne","Ed Small","Kari Ashley","Jeremy Scott"],"Secondary":["Jamel Johnson","Vernon Glover Jr.","Jordan Lester","Gil Jackson Jr.","Julius Simms"]},"texas-tech":{"WR":["Kenny Johnson","Coy Eakin","Malcolm Simmons","Micah Hudson"],"Flex":["Terrance Carter Jr.","Cameron Dickey","Kenny Johnson","Micah Hudson"],"Front Seven":["A.J. Holmes Jr.","Adam Trick","Austin Romaine","Ben Roberts","Trey White","Mateen Ibirogba"],"Secondary":["Brice Pollock","Peyton Morgan","Brenden Jordan","Davin Martin","Malik Esquerra"]},"ucf":{"RB":["Duke Watson","Landen Chambers","Taevion Swint"],"Front Seven":["Isaiah Nixon","Ken Talley","Lewis Carter","Jayden Jennings","Aymeric Koumba","Tackett Curtis"]},"utah":{"WR":["Braden Pegan","Ricky Johnson","Creed Whittemore"],"Flex":["Wayshawn Parker","Braden Pegan","Noah Bennee","Daniel Bray"],"Front Seven":["Trey Reynolds","Elijah Elliss","Lance Holtzclaw","Ethan Day","Paul Fitzgerald","Alex Cloward"]},"west-virginia":{"WR":["DJ Epps","Jaden Bray","John Neider"],"Flex":["Cam Cook","DJ Epps","Amari Latimer","Jaden Bray"]},"boston-college":{"WR":["Reed Swanson","Jaedn Skeete","Javarius Green","Johnathan Montague Jr."],"Front Seven":["Anthony Palano","E'Lla Boykin","Onye Nwosisi","Chris Marable Jr.","Kj Sampson","Kris Jones"],"Secondary":["KP Price","Carter Davis","Max Tucker","Syair Torrence","Cameron Martinez"]},"clemson":{"Flex":["Bryant Wesco Jr.","Gideon Davidson","T.J. Moore","Olsen Patt-Henry"],"Front Seven":["Sammy Brown","Jahiem Lawson","Will Heldt","Jeremiah Alexander","London Merritt"]},"duke":{"Flex":["Jeremiah Hasley","Nate Sheppard","Jared Richardson","Jayden Moore"],"Front Seven":["Tyshon Reed","David Anderson","Preston Watson","Kendall Johnson","Nick Morris Jr.","Bradley Gompers"],"Secondary":["Andrew Pellicciotta","Kyon Loud","DaShawn Stone","Landan Callahan","Dylan Flowers"]},"florida-state":{"Flex":["Duce Robinson","Ousmane Kromah","Micahi Danzy","Desirrio Riles"]},"georgia-tech":{"RB":["Justice Haynes","Malachi Hosley","Trelain Maddox"],"TE":["Kevin Roche Jr.","Gavin Harris"],"Flex":["Justice Haynes","Dalen Penson","Kevin Roche Jr.","Trelain Maddox"],"Front Seven":["Jordan Walker","Noah Carter","Kyle Efford","E.J. Lightsey","Cayman Spaulding","Tawfiq Thomas"]},"louisville":{"WR":["Tre Richardson","Lawayne McCoy","TreyShun Hurry"],"Flex":["Isaac Brown","Tre Richardson","Jaleel Skinner","Lawayne McCoy"],"Front Seven":["Stanquan Clark","Clev Lubin","T.J. Capers","AJ Green","Joshua Donald","Daylen Russell"]},"miami":{"RB":["Mark Fletcher Jr.","CharMar Brown","Javian Mallory"],"WR":["Malachi Toney","Cooper Barkate","Joshua Moore"],"Flex":["Malachi Toney","Mark Fletcher Jr.","Cooper Barkate","Joshua Moore"],"Front Seven":["Ahmad Moten","Damon Wilson II","Marquise Lightfoot","Chase Smith","Mohamed Toure","Armondo Blount"],"Secondary":["Bryce Fitzgerald","Damari Brown","Zechariah Poyser","Xavier Lucas","Omar Thornton"]},"north-carolina":{"RB":["Benjamin Hall","Jaylen McGill","Demon June"],"Front Seven":["Xavier Lewis","Jaylen Harvey","Derek McDonald","Leroy Jackson","Peyton Seelmann","Isaiah Johnson"],"Secondary":["Greg Smith III","Jaiden Patterson","Kaleb Cost","Peyton Waters","Tre Miller"]},"pittsburgh":{"WR":["Demetrice McCray","Cataurus Hicks","Censere Lee","Tony Kinsler"],"Front Seven":["Isaiah Neal","Jeremiah Marcelin","Jimmy Scott","Jaeden Moore","Zach Crothers","Alex Sanford Jr."],"Secondary":["Raion Strader","Shawn Lee Jr.","Cruce Brookins","Josh Guerrier","Rashan Murray"]},"smu":{"TE":["Randy Pittman Jr.","Theo Melin Ohrstrom"]},"stanford":{"WR":["Caden High","JonAnthony Hall","Jordan Onovughe","Liam Thorpe"],"Flex":["Micah Ford","Caden High","Benji Blackburn","Sedrick Irvin"],"Secondary":["Jay Green","Cam Richardson","Darrius Davis","Brandon Nicholson","Leroy Bryant"]},"syracuse":{"RB":["Tylik Hill","Ju'Juan Johnson","Shavane Anderson Jr."],"TE":["David Clement","Daunte Bacheyie"],"Secondary":["Chris Peal","Demetres Samuel Jr.","Cornell Perry","Braheem Long Jr.","Davien Kerr"]},"virginia":{"RB":["Xavier Brown","Jekail Middlebrook","Xay Davis"],"WR":["Kameron Courtney","Da'Shawn Martin","Jacquon Gibson","Ty'Lyric Coleman"],"Flex":["Xavier Brown","Kameron Courtney","Jekail Middlebrook","Da'Shawn Martin"],"Front Seven":["Kam Robinson","Fisher Camac","Anthony Britton","Jason Hammond","Maddox Marcellus"]},"virginia-tech":{"RB":["Jeffrey Overton Jr.","Marcellous Hawkins Jr."],"WR":["Que'Sean Brown","Ayden Greene","Davion Brown","Marlion Jackson"],"Flex":["Jeffrey Overton Jr.","Que'Sean Brown","Luke Reynolds","Marcellous Hawkins Jr."]},"wake-forest":{"WR":["Carlos Hernandez","Antonio Meeks","Kam Shanks"],"Flex":["Ty Clark III","Carlos Hernandez","Deuce Lawrence","Antonio Meeks"]},"notre-dame":{"Front Seven":["Kyngstonn Viliamu-Asa","Bryce Young","Boubacar Traore","Jaiden Ausberry","Drayk Bowen","Keon Keeley"],"Secondary":["Leonard Moore","Brauntae Johnson","Luke Talich","Adon Shuler","DJ McKinney","Christian Gray"]}}}
+{
+  "season": 2026,
+  "auditedAt": "2026-10-03",
+  "status": "manually-audited-current-priorities",
+  "notes": "Conference-by-conference football-quality audit of the generated current-CFB Wheel baseline. Ourlads current depth structure remained the starting point; official conference/team sources and 2026 completed-game production were used to correct ordering, restore established/current impact players, expand only meaningful groups, and fix position-group mistakes. No player grades or hidden scores are included.",
+  "teamCount": 68,
+  "teamsChanged": 65,
+  "groupsChanged": 180,
+  "overrides": {
+    "alabama": {
+      "RB": [
+        "Daniel Hill",
+        "Trae'shawn Brown",
+        "EJ Crowell"
+      ],
+      "Flex": [
+        "Ryan Coleman-Williams",
+        "Daniel Hill",
+        "Rico Scott",
+        "Kaleb Edwards"
+      ],
+      "Front Seven": [
+        "Yhonzae Pierre",
+        "Luke Metz",
+        "Devan Thompkins",
+        "Terrance Green",
+        "London Simmons",
+        "Caleb Woodson"
+      ],
+      "Secondary": [
+        "Bray Hubbard",
+        "Zabien Brown",
+        "Keon Sabb",
+        "Dijon Lee Jr.",
+        "Zyan Gibson",
+        "Red Morgan"
+      ]
+    },
+    "arkansas": {
+      "Secondary": [
+        "Khmori House",
+        "Christian Harrison",
+        "Joker Johnson",
+        "Shelton Lewis",
+        "Miguel Mitchell"
+      ]
+    },
+    "auburn": {
+      "Front Seven": [
+        "Xavier Atkins",
+        "Chris Murray",
+        "Dallas Walker IV",
+        "Cody Sigler",
+        "Dashawn Womack",
+        "Elijah Melendez"
+      ],
+      "Secondary": [
+        "Champ Anthony",
+        "Rayshawn Pleasant",
+        "Kaleb Harris",
+        "Eric Winters",
+        "Andre Jordan Jr.",
+        "Sylvester Smith-Reed"
+      ]
+    },
+    "florida": {
+      "RB": [
+        "Jadan Baugh",
+        "Evan Pryor",
+        "Duke Clark"
+      ],
+      "WR": [
+        "Vernell Brown III",
+        "Dallas Wilson",
+        "Eric Singleton Jr."
+      ],
+      "Flex": [
+        "Jadan Baugh",
+        "Vernell Brown III",
+        "Dallas Wilson",
+        "Duke Clark"
+      ],
+      "Front Seven": [
+        "Jayden Woods",
+        "Kamran James",
+        "Brendan Bett",
+        "Jeramiah McCloud",
+        "Myles Graham",
+        "Jaden Robinson"
+      ]
+    },
+    "georgia": {
+      "WR": [
+        "Isiah Canion",
+        "Talyn Taylor",
+        "Sacovie White Helton",
+        "Craig Dandridge"
+      ],
+      "Flex": [
+        "Nate Frazier",
+        "Lawson Luckie",
+        "Isiah Canion",
+        "Talyn Taylor"
+      ],
+      "Front Seven": [
+        "Raylen Wilson",
+        "Elijah Griffin",
+        "Chris Cole",
+        "Gabe Harris Jr.",
+        "Jordan Hall",
+        "Quintavius Johnson"
+      ],
+      "Secondary": [
+        "KJ Bolden",
+        "Ellis Robinson IV",
+        "Khalil Barnes",
+        "Demello Jones",
+        "Kyron Jones"
+      ]
+    },
+    "kentucky": {
+      "WR": [
+        "Kenny Darby",
+        "DJ Miller",
+        "Shane Carr",
+        "Nic Anderson"
+      ],
+      "TE": [
+        "Willie Rodriguez",
+        "Henry Boyer"
+      ],
+      "Flex": [
+        "CJ Baxter",
+        "Kenny Darby",
+        "Willie Rodriguez",
+        "Jason Patterson"
+      ],
+      "Secondary": [
+        "Jordan Castell",
+        "Ty Bryant",
+        "Hasaan Sykes",
+        "Aaron Gates",
+        "Terhyon Nichols"
+      ]
+    },
+    "lsu": {
+      "Flex": [
+        "Trey'Dez Green",
+        "Dilin Jones",
+        "Jackson Harris",
+        "Eugene Wilson III"
+      ],
+      "Front Seven": [
+        "Princewill Umanmielen",
+        "Whit Weeks",
+        "TJ Dottery",
+        "Jordan Ross",
+        "Dylan Carpenter",
+        "Deuce Geralds"
+      ],
+      "Secondary": [
+        "Ty Benefield",
+        "DJ Pickett",
+        "Tamarcus Cooley",
+        "Pj Woodland",
+        "Dashawn Spears"
+      ]
+    },
+    "mississippi-state": {
+      "RB": [
+        "Fluff Bothwell",
+        "Kolin Wilson",
+        "J.J. Hill"
+      ],
+      "WR": [
+        "Sanfrisco Magee",
+        "Zion Ragins",
+        "Anthony Evans III",
+        "Marquis Johnson"
+      ]
+    },
+    "missouri": {
+      "RB": [
+        "Ahmad Hardy",
+        "Jamal Roberts",
+        "Xai'Shaun Edwards"
+      ],
+      "WR": [
+        "Cayden Lee",
+        "Donovan Olugbode",
+        "Naeshaun Montgomery"
+      ],
+      "Flex": [
+        "Ahmad Hardy",
+        "Cayden Lee",
+        "Donovan Olugbode",
+        "Jamal Roberts"
+      ],
+      "Front Seven": [
+        "Daeden Hopkins",
+        "Robert Woodyard Jr.",
+        "Nicholas Rodriguez",
+        "Langden Kitchen",
+        "Marquis Gracial",
+        "Jalen Marshall"
+      ]
+    },
+    "oklahoma": {
+      "WR": [
+        "Isaiah Sategna III",
+        "Elijah Thomas",
+        "Parker Livingstone"
+      ],
+      "Flex": [
+        "Isaiah Sategna III",
+        "Lloyd Avant",
+        "Elijah Thomas",
+        "Parker Livingstone"
+      ],
+      "Front Seven": [
+        "David Stone",
+        "Taylor Wein",
+        "Kip Lewis",
+        "Jayden Jackson",
+        "Adepoju Adebawore",
+        "James Nesta"
+      ],
+      "Secondary": [
+        "Eli Bowen",
+        "Peyton Bowen",
+        "Omarion Robinson",
+        "Courtland Guillory",
+        "Trystan Haynes",
+        "Reggie Powers III"
+      ]
+    },
+    "ole-miss": {
+      "WR": [
+        "Deuce Alexander",
+        "Horatio Fields",
+        "Johntay Cook II",
+        "Traylon Ray"
+      ],
+      "TE": [
+        "Caleb Odom",
+        "Luke Hasz"
+      ],
+      "Flex": [
+        "Kewan Lacy",
+        "Deuce Alexander",
+        "Caleb Odom",
+        "Traylon Ray"
+      ],
+      "Front Seven": [
+        "Will Echoles",
+        "Suntarine Perkins",
+        "Kam Franklin",
+        "Jamarious Brown",
+        "Keaton Thomas",
+        "Luke Ferrelli"
+      ]
+    },
+    "south-carolina": {
+      "RB": [
+        "Matt Fuller",
+        "Christian Clark",
+        "Jabree Coleman"
+      ],
+      "WR": [
+        "Nyck Harbor",
+        "Nitro Tuggle",
+        "Mazeo Bennett Jr.",
+        "Donovan Murph"
+      ],
+      "Flex": [
+        "Nyck Harbor",
+        "Matt Fuller",
+        "Nitro Tuggle",
+        "Brady Hunt"
+      ],
+      "Front Seven": [
+        "Dylan Stewart",
+        "Caleb Herring",
+        "Anthony Addison",
+        "Justin Okoronkwo",
+        "Fred Johnson",
+        "Julian Walker"
+      ]
+    },
+    "tennessee": {
+      "RB": [
+        "DeSean Bishop",
+        "Javin Gordon",
+        "Daune Morris"
+      ],
+      "TE": [
+        "Ethan Davis",
+        "DaSaahn Brame"
+      ],
+      "Flex": [
+        "DeSean Bishop",
+        "Mike Matthews",
+        "Ethan Davis",
+        "Daune Morris"
+      ],
+      "Front Seven": [
+        "Arion Carter",
+        "Tyree Weathersby",
+        "Xavier Gilliam",
+        "Daevin Hobbs",
+        "Amare Campbell",
+        "Mariyon Dye"
+      ],
+      "QB": [
+        "George MacIntyre"
+      ]
+    },
+    "texas": {
+      "Flex": [
+        "Cam Coleman",
+        "Hollywood Smothers",
+        "Ryan Wingo",
+        "Spencer Shannon"
+      ],
+      "Front Seven": [
+        "Colin Simmons",
+        "Rasheem Biles",
+        "Zina Umeozulu",
+        "Maraad Watson",
+        "Hero Kanu",
+        "Justin Cryer"
+      ],
+      "Secondary": [
+        "Jelani McDonald",
+        "Graceson Littleton",
+        "Kade Phillips",
+        "Kobe Black",
+        "Bo Mascoe"
+      ]
+    },
+    "texas-am": {
+      "WR": [
+        "Mario Craver",
+        "Isaiah Horton",
+        "Terry Bussey",
+        "Ashton Bethel-Roman"
+      ],
+      "Flex": [
+        "Rueben Owens II",
+        "Mario Craver",
+        "Isaiah Horton",
+        "Terry Bussey"
+      ],
+      "Front Seven": [
+        "DJ Hicks",
+        "T.J. Searcy",
+        "CJ Mims",
+        "Marco Jones",
+        "Noah Mikhail",
+        "Ray Coney"
+      ]
+    },
+    "vanderbilt": {
+      "Front Seven": [
+        "Nick Rinaldi",
+        "Miles Capers",
+        "Bryan Longwell",
+        "Issa Ouattara",
+        "Glenn Seabrooks III",
+        "Brian Allen Jr."
+      ],
+      "Secondary": [
+        "CJ Heard",
+        "Ricardo Jones",
+        "Martel Hight",
+        "Mason Lewis",
+        "Jordan Matthews"
+      ]
+    },
+    "illinois": {
+      "WR": [
+        "Collin Dixon",
+        "Hudson Clement",
+        "Brayden Trimble",
+        "Ty Robinson"
+      ],
+      "Secondary": [
+        "Matthew Bailey",
+        "Juice Clarke",
+        "Mac Resetich",
+        "Xavier Scott",
+        "Jakwon Morris"
+      ]
+    },
+    "indiana": {
+      "WR": [
+        "Charlie Becker",
+        "Nick Marsh",
+        "Tyler Morris",
+        "Davion Chandler"
+      ],
+      "Flex": [
+        "Charlie Becker",
+        "Turbo Richard",
+        "Nick Marsh",
+        "Andrew Barker"
+      ],
+      "Front Seven": [
+        "Rolijah Hardy",
+        "Tyrique Tucker",
+        "Josh Burnham",
+        "Mario Landino",
+        "Isaiah Jones",
+        "Tobi Osunsanmi"
+      ]
+    },
+    "iowa": {
+      "RB": [
+        "Kamari Moulton",
+        "L.J. Phillips Jr.",
+        "Braeden Jackson"
+      ]
+    },
+    "maryland": {
+      "RB": [
+        "Iverson Howard",
+        "Liam Willson",
+        "Harry Dalton III"
+      ]
+    },
+    "michigan": {
+      "WR": [
+        "JJ Buchanan",
+        "Andrew Marsh",
+        "Salesi Moa"
+      ],
+      "Flex": [
+        "Jordan Marshall",
+        "JJ Buchanan",
+        "Andrew Marsh",
+        "Savion Hiter"
+      ],
+      "Front Seven": [
+        "John Henry Daley",
+        "Dom Nichols",
+        "Nathaniel Staehling",
+        "Troy Bowles",
+        "Chase Taylor"
+      ]
+    },
+    "michigan-state": {
+      "TE": [
+        "Jayden Savoury",
+        "Brennan Parachek"
+      ],
+      "Flex": [
+        "Cam Edwards",
+        "Rodney Bullard Jr.",
+        "Jayden Savoury",
+        "Jaziun Patterson"
+      ],
+      "Front Seven": [
+        "Eli Coenen",
+        "Kenny Soares Jr.",
+        "Isaac Smith",
+        "Brady Pretzlaff",
+        "Ben Roberts",
+        "Dion Crawford"
+      ]
+    },
+    "nebraska": {
+      "RB": [
+        "Jamal Rule",
+        "Mekhi Nelson",
+        "Isaiah Mozee"
+      ],
+      "WR": [
+        "Kwazi Gilmer",
+        "Jacory Barney Jr.",
+        "Nyziah Hunter"
+      ],
+      "Flex": [
+        "Jamal Rule",
+        "Kwazi Gilmer",
+        "Mekhi Nelson",
+        "Jacory Barney Jr."
+      ],
+      "Secondary": [
+        "Donovan Jones",
+        "Jamir Conn",
+        "Andrew Marshall",
+        "Dwayne McDougle III",
+        "Victor Evans III"
+      ]
+    },
+    "northwestern": {
+      "RB": [
+        "Caleb Komolafe",
+        "Gavin Sawchuk",
+        "Joseph Himon II"
+      ],
+      "TE": [
+        "Alex Honig",
+        "Luke Dehnicke"
+      ],
+      "Front Seven": [
+        "Braydon Brus",
+        "Kobie McKinzie",
+        "Jamaal Johnson",
+        "Michael Kilbane",
+        "Caden O'Rourke"
+      ]
+    },
+    "ohio-state": {
+      "WR": [
+        "Jeremiah Smith",
+        "Devin McCuin",
+        "Brandon Inniss",
+        "Chris Henry Jr."
+      ],
+      "Flex": [
+        "Jeremiah Smith",
+        "Bo Jackson",
+        "Devin McCuin",
+        "Nate Roberts"
+      ],
+      "Front Seven": [
+        "Riley Pettijohn",
+        "Kenyatta Jackson Jr.",
+        "Payton Pierce",
+        "Christian Alliegro",
+        "Eddrick Houston",
+        "John Walker"
+      ]
+    },
+    "oregon": {
+      "WR": [
+        "Dakorien Moore",
+        "Messiah Hampton",
+        "Evan Stewart",
+        "Jeremiah McClellan"
+      ],
+      "Front Seven": [
+        "Amauri Washington",
+        "Matayo Uiagalelei",
+        "Bear Alexander",
+        "Teitum Tuioti",
+        "Elijah Rushing"
+      ],
+      "Secondary": [
+        "Koi Perich",
+        "Brandon Finney Jr.",
+        "Ify Obidegwu",
+        "Aaron Flowers",
+        "Carl Williams IV"
+      ]
+    },
+    "penn-state": {
+      "RB": [
+        "Carson Hansen",
+        "James Peoples",
+        "Quinton Martin Jr."
+      ],
+      "WR": [
+        "Koby Howard",
+        "Chase Sowell",
+        "Brett Eskildsen",
+        "Zay Robinson"
+      ],
+      "TE": [
+        "Benjamin Brahmer",
+        "Andrew Rappleyea"
+      ],
+      "Flex": [
+        "James Peoples",
+        "Koby Howard",
+        "Chase Sowell",
+        "Benjamin Brahmer"
+      ],
+      "Front Seven": [
+        "Tony Rojas",
+        "Kooper Ebel",
+        "Yvan Kemajou",
+        "Ikenna Ezeogu",
+        "Alexander McPherson"
+      ]
+    },
+    "purdue": {
+      "Front Seven": [
+        "Charles Correa",
+        "Jojo Hayden",
+        "Ian Jeffries",
+        "Curt Neal",
+        "Trey Smith",
+        "Keyshawn Burgos"
+      ]
+    },
+    "rutgers": {
+      "WR": [
+        "KJ Duff",
+        "Ben Black III",
+        "Jourdin Houston"
+      ],
+      "Flex": [
+        "KJ Duff",
+        "Antwan Raymond",
+        "Ben Black III",
+        "Logan Blake"
+      ]
+    },
+    "ucla": {
+      "Secondary": [
+        "Ta'Shawn James",
+        "Malik Hartford",
+        "Derrick Barksdale",
+        "Rodrick Pleasant",
+        "Scooter Jackson"
+      ]
+    },
+    "usc": {
+      "WR": [
+        "Kayden Dixon-Wyatt",
+        "Trent Mosley",
+        "Tanook Hines",
+        "Zacharyus Williams"
+      ],
+      "Flex": [
+        "King Miller",
+        "Kayden Dixon-Wyatt",
+        "Mark Bowman",
+        "Trent Mosley"
+      ],
+      "Secondary": [
+        "Christian Pierce",
+        "Prophet Brown",
+        "Alex Graham",
+        "Jontez Williams",
+        "Chasen Johnson"
+      ]
+    },
+    "washington": {
+      "TE": [
+        "Baron Naone",
+        "Decker DeGraaf"
+      ],
+      "Flex": [
+        "Brian Bonner Jr.",
+        "Dezmen Roebuck",
+        "Baron Naone",
+        "Chris Lawson"
+      ],
+      "Secondary": [
+        "Alex McLaughlin",
+        "Dylan Robinson",
+        "Rylon Dillard-Allen",
+        "Rahshawn Clark",
+        "Emmanuel Karnley"
+      ]
+    },
+    "wisconsin": {
+      "WR": [
+        "Tyrell Henry",
+        "Chris Brooks Jr.",
+        "Eugene Hilton Jr."
+      ],
+      "Flex": [
+        "Darrion Dupree",
+        "Tyrell Henry",
+        "Jacob Harris",
+        "Chris Brooks Jr."
+      ],
+      "Front Seven": [
+        "Hammond Russell IV",
+        "Charles Perkins",
+        "Mason Posa",
+        "Cooper Catalano",
+        "Junior Poyser",
+        "Sebastian Cheeks"
+      ]
+    },
+    "arizona": {
+      "WR": [
+        "Tre Spivey",
+        "Chris Hunter III",
+        "Giovanni Richardson",
+        "Isaiah Mizell"
+      ],
+      "Front Seven": [
+        "Chase Kennedy",
+        "Cooper Blomstrom",
+        "Taye Brown",
+        "Mays Pese",
+        "Leroy Palu",
+        "Tre Smith"
+      ]
+    },
+    "arizona-state": {
+      "RB": [
+        "Kyson Brown",
+        "Marquis Gillis",
+        "Grayson Rigdon"
+      ],
+      "WR": [
+        "Omarion Miller",
+        "Reed Harris",
+        "Jalen Moss"
+      ],
+      "Flex": [
+        "Omarion Miller",
+        "Kyson Brown",
+        "Reed Harris",
+        "Khamari Anderson"
+      ],
+      "Front Seven": [
+        "C.J. Fite",
+        "Roman Pitre",
+        "Jalen Thompson",
+        "Martell Hughes",
+        "Owen Long",
+        "Emarrion Winston"
+      ]
+    },
+    "baylor": {
+      "WR": [
+        "Louis Brown IV",
+        "Jadon Porter",
+        "Gavin Freeman",
+        "Jayden McGowan"
+      ],
+      "Secondary": [
+        "Bo Onu",
+        "Daniel Cobbs",
+        "Devon Jordan",
+        "LeVar Thornton Jr.",
+        "Cole Redding",
+        "Colby McCalister"
+      ]
+    },
+    "byu": {
+      "WR": [
+        "Legend Glasker",
+        "Kyler Kasper",
+        "Jojo Phillips"
+      ],
+      "Flex": [
+        "LJ Martin",
+        "Legend Glasker",
+        "Kyler Kasper",
+        "Preston Rex"
+      ],
+      "Front Seven": [
+        "Keanu Tanuvasa",
+        "Cade Uluave",
+        "Tausili Akana",
+        "Bodie Schoonover",
+        "Nusi Taumoepeau",
+        "Hunter Clegg"
+      ],
+      "Secondary": [
+        "Evan Johnson",
+        "Faletau Satuala",
+        "Tommy Prassas",
+        "Therrian Alexander III",
+        "Cannon DeVries"
+      ]
+    },
+    "cincinnati": {
+      "Front Seven": [
+        "Jonathan Thompson",
+        "Josh Hough",
+        "Damaine Wilson",
+        "Marquaze Parker",
+        "Drew Logan"
+      ]
+    },
+    "colorado": {
+      "WR": [
+        "Danny Scudero",
+        "DeAndre Moore Jr.",
+        "Joseph Williams"
+      ],
+      "Flex": [
+        "Danny Scudero",
+        "Micah Welch",
+        "DeAndre Moore Jr.",
+        "Joseph Williams"
+      ]
+    },
+    "houston": {
+      "WR": [
+        "Amare Thomas",
+        "Koby Young",
+        "Trent Walker"
+      ],
+      "Flex": [
+        "Amare Thomas",
+        "Makhi Hughes",
+        "Koby Young",
+        "Trent Walker"
+      ]
+    },
+    "iowa-state": {
+      "WR": [
+        "Omari Hayes",
+        "Dominic Overby",
+        "Evan Boyd",
+        "Cody Jackson"
+      ],
+      "TE": [
+        "Tyler Fortenberry",
+        "Vince Benetti"
+      ],
+      "Flex": [
+        "Aiden Flora",
+        "Omari Hayes",
+        "Dominic Overby",
+        "Tyler Fortenberry"
+      ]
+    },
+    "kansas": {
+      "WR": [
+        "Nik McMillan",
+        "Nahzae Cox",
+        "Keaton Kubecka",
+        "Tate Nagy"
+      ]
+    },
+    "kansas-state": {
+      "RB": [
+        "Rodney Fields Jr.",
+        "Joe Jackson",
+        "Jay Harris"
+      ],
+      "WR": [
+        "Josh Manning",
+        "Jaron Tibbs",
+        "Brandon White",
+        "Derrick Salley Jr."
+      ]
+    },
+    "oklahoma-state": {
+      "WR": [
+        "Wyatt Young",
+        "Justin Bowick",
+        "Chris Barnes",
+        "Terrence Lewis"
+      ],
+      "Flex": [
+        "Wyatt Young",
+        "Caleb Hawkins",
+        "Justin Bowick",
+        "Chris Barnes"
+      ]
+    },
+    "tcu": {
+      "TE": [
+        "Kari Ashley",
+        "Ka'Morreun Pimpton"
+      ],
+      "Flex": [
+        "Jeremy Payne",
+        "Ed Small",
+        "Kari Ashley",
+        "Jeremy Scott"
+      ],
+      "Secondary": [
+        "Jamel Johnson",
+        "Vernon Glover Jr.",
+        "Jordan Lester",
+        "Gil Jackson Jr.",
+        "Julius Simms"
+      ]
+    },
+    "texas-tech": {
+      "WR": [
+        "Kenny Johnson",
+        "Coy Eakin",
+        "Malcolm Simmons",
+        "Micah Hudson"
+      ],
+      "Flex": [
+        "Terrance Carter Jr.",
+        "Cameron Dickey",
+        "Kenny Johnson",
+        "Micah Hudson"
+      ],
+      "Front Seven": [
+        "A.J. Holmes Jr.",
+        "Adam Trick",
+        "Austin Romaine",
+        "Ben Roberts",
+        "Trey White",
+        "Mateen Ibirogba"
+      ],
+      "Secondary": [
+        "Brice Pollock",
+        "Peyton Morgan",
+        "Brenden Jordan",
+        "Davin Martin",
+        "Malik Esquerra"
+      ]
+    },
+    "ucf": {
+      "RB": [
+        "Duke Watson",
+        "Landen Chambers",
+        "Taevion Swint"
+      ],
+      "Front Seven": [
+        "Isaiah Nixon",
+        "Ken Talley",
+        "Lewis Carter",
+        "Jayden Jennings",
+        "Aymeric Koumba",
+        "Tackett Curtis"
+      ]
+    },
+    "utah": {
+      "WR": [
+        "Braden Pegan",
+        "Ricky Johnson",
+        "Creed Whittemore"
+      ],
+      "Flex": [
+        "Wayshawn Parker",
+        "Braden Pegan",
+        "Noah Bennee",
+        "Daniel Bray"
+      ],
+      "Front Seven": [
+        "Trey Reynolds",
+        "Elijah Elliss",
+        "Lance Holtzclaw",
+        "Ethan Day",
+        "Paul Fitzgerald",
+        "Alex Cloward"
+      ]
+    },
+    "west-virginia": {
+      "WR": [
+        "DJ Epps",
+        "Jaden Bray",
+        "John Neider"
+      ],
+      "Flex": [
+        "Cam Cook",
+        "DJ Epps",
+        "Amari Latimer",
+        "Jaden Bray"
+      ]
+    },
+    "boston-college": {
+      "WR": [
+        "Reed Swanson",
+        "Jaedn Skeete",
+        "Javarius Green",
+        "Johnathan Montague Jr."
+      ],
+      "Front Seven": [
+        "Anthony Palano",
+        "E'Lla Boykin",
+        "Onye Nwosisi",
+        "Chris Marable Jr.",
+        "Kj Sampson",
+        "Kris Jones"
+      ],
+      "Secondary": [
+        "KP Price",
+        "Carter Davis",
+        "Max Tucker",
+        "Syair Torrence",
+        "Cameron Martinez"
+      ]
+    },
+    "clemson": {
+      "Flex": [
+        "Bryant Wesco Jr.",
+        "Gideon Davidson",
+        "T.J. Moore",
+        "Olsen Patt-Henry"
+      ],
+      "Front Seven": [
+        "Sammy Brown",
+        "Jahiem Lawson",
+        "Will Heldt",
+        "Jeremiah Alexander",
+        "London Merritt"
+      ]
+    },
+    "duke": {
+      "Flex": [
+        "Jeremiah Hasley",
+        "Nate Sheppard",
+        "Jared Richardson",
+        "Jayden Moore"
+      ],
+      "Front Seven": [
+        "Tyshon Reed",
+        "David Anderson",
+        "Preston Watson",
+        "Kendall Johnson",
+        "Nick Morris Jr.",
+        "Bradley Gompers"
+      ],
+      "Secondary": [
+        "Andrew Pellicciotta",
+        "Kyon Loud",
+        "DaShawn Stone",
+        "Landan Callahan",
+        "Dylan Flowers"
+      ]
+    },
+    "florida-state": {
+      "Flex": [
+        "Duce Robinson",
+        "Ousmane Kromah",
+        "Micahi Danzy",
+        "Desirrio Riles"
+      ]
+    },
+    "georgia-tech": {
+      "RB": [
+        "Justice Haynes",
+        "Malachi Hosley",
+        "Trelain Maddox"
+      ],
+      "TE": [
+        "Kevin Roche Jr.",
+        "Gavin Harris"
+      ],
+      "Flex": [
+        "Justice Haynes",
+        "Dalen Penson",
+        "Kevin Roche Jr.",
+        "Trelain Maddox"
+      ],
+      "Front Seven": [
+        "Jordan Walker",
+        "Noah Carter",
+        "Kyle Efford",
+        "E.J. Lightsey",
+        "Cayman Spaulding",
+        "Tawfiq Thomas"
+      ]
+    },
+    "louisville": {
+      "WR": [
+        "Tre Richardson",
+        "Lawayne McCoy",
+        "TreyShun Hurry"
+      ],
+      "Flex": [
+        "Isaac Brown",
+        "Tre Richardson",
+        "Jaleel Skinner",
+        "Lawayne McCoy"
+      ],
+      "Front Seven": [
+        "Stanquan Clark",
+        "Clev Lubin",
+        "T.J. Capers",
+        "AJ Green",
+        "Joshua Donald",
+        "Daylen Russell"
+      ]
+    },
+    "miami": {
+      "RB": [
+        "Mark Fletcher Jr.",
+        "CharMar Brown",
+        "Javian Mallory"
+      ],
+      "WR": [
+        "Malachi Toney",
+        "Cooper Barkate",
+        "Joshua Moore"
+      ],
+      "Flex": [
+        "Malachi Toney",
+        "Mark Fletcher Jr.",
+        "Cooper Barkate",
+        "Joshua Moore"
+      ],
+      "Front Seven": [
+        "Ahmad Moten",
+        "Damon Wilson II",
+        "Marquise Lightfoot",
+        "Chase Smith",
+        "Mohamed Toure",
+        "Armondo Blount"
+      ],
+      "Secondary": [
+        "Bryce Fitzgerald",
+        "Damari Brown",
+        "Zechariah Poyser",
+        "Xavier Lucas",
+        "Omar Thornton"
+      ]
+    },
+    "north-carolina": {
+      "RB": [
+        "Benjamin Hall",
+        "Jaylen McGill",
+        "Demon June"
+      ],
+      "Front Seven": [
+        "Xavier Lewis",
+        "Jaylen Harvey",
+        "Derek McDonald",
+        "Leroy Jackson",
+        "Peyton Seelmann",
+        "Isaiah Johnson"
+      ],
+      "Secondary": [
+        "Greg Smith III",
+        "Jaiden Patterson",
+        "Kaleb Cost",
+        "Peyton Waters",
+        "Tre Miller"
+      ]
+    },
+    "pittsburgh": {
+      "WR": [
+        "Demetrice McCray",
+        "Cataurus Hicks",
+        "Censere Lee",
+        "Tony Kinsler"
+      ],
+      "Front Seven": [
+        "Isaiah Neal",
+        "Jeremiah Marcelin",
+        "Jimmy Scott",
+        "Jaeden Moore",
+        "Zach Crothers",
+        "Alex Sanford Jr."
+      ],
+      "Secondary": [
+        "Raion Strader",
+        "Shawn Lee Jr.",
+        "Cruce Brookins",
+        "Josh Guerrier",
+        "Rashan Murray"
+      ],
+      "QB": [
+        "Holden Geriner"
+      ]
+    },
+    "smu": {
+      "TE": [
+        "Randy Pittman Jr.",
+        "Theo Melin Ohrstrom"
+      ]
+    },
+    "stanford": {
+      "WR": [
+        "Caden High",
+        "JonAnthony Hall",
+        "Jordan Onovughe",
+        "Liam Thorpe"
+      ],
+      "Flex": [
+        "Micah Ford",
+        "Caden High",
+        "Benji Blackburn",
+        "Sedrick Irvin"
+      ],
+      "Secondary": [
+        "Jay Green",
+        "Cam Richardson",
+        "Darrius Davis",
+        "Brandon Nicholson",
+        "Leroy Bryant"
+      ]
+    },
+    "syracuse": {
+      "RB": [
+        "Tylik Hill",
+        "Ju'Juan Johnson",
+        "Shavane Anderson Jr."
+      ],
+      "TE": [
+        "David Clement",
+        "Daunte Bacheyie"
+      ],
+      "Secondary": [
+        "Chris Peal",
+        "Demetres Samuel Jr.",
+        "Cornell Perry",
+        "Braheem Long Jr.",
+        "Davien Kerr"
+      ]
+    },
+    "virginia": {
+      "RB": [
+        "Xavier Brown",
+        "Jekail Middlebrook",
+        "Xay Davis"
+      ],
+      "WR": [
+        "Kameron Courtney",
+        "Da'Shawn Martin",
+        "Jacquon Gibson",
+        "Ty'Lyric Coleman"
+      ],
+      "Flex": [
+        "Xavier Brown",
+        "Kameron Courtney",
+        "Jekail Middlebrook",
+        "Da'Shawn Martin"
+      ],
+      "Front Seven": [
+        "Kam Robinson",
+        "Fisher Camac",
+        "Anthony Britton",
+        "Jason Hammond",
+        "Maddox Marcellus"
+      ]
+    },
+    "virginia-tech": {
+      "RB": [
+        "Jeffrey Overton Jr.",
+        "Marcellous Hawkins Jr."
+      ],
+      "WR": [
+        "Que'Sean Brown",
+        "Ayden Greene",
+        "Davion Brown",
+        "Marlion Jackson"
+      ],
+      "Flex": [
+        "Jeffrey Overton Jr.",
+        "Que'Sean Brown",
+        "Luke Reynolds",
+        "Marcellous Hawkins Jr."
+      ]
+    },
+    "wake-forest": {
+      "WR": [
+        "Carlos Hernandez",
+        "Antonio Meeks",
+        "Kam Shanks"
+      ],
+      "Flex": [
+        "Ty Clark III",
+        "Carlos Hernandez",
+        "Deuce Lawrence",
+        "Antonio Meeks"
+      ]
+    },
+    "notre-dame": {
+      "Front Seven": [
+        "Kyngstonn Viliamu-Asa",
+        "Bryce Young",
+        "Boubacar Traore",
+        "Jaiden Ausberry",
+        "Drayk Bowen",
+        "Keon Keeley"
+      ],
+      "Secondary": [
+        "Leonard Moore",
+        "Brauntae Johnson",
+        "Luke Talich",
+        "Adon Shuler",
+        "DJ McKinney",
+        "Christian Gray"
+      ]
+    }
+  },
+  "updatedAt": "2026-10-07",
+  "currentRoleUpdates": [
+    {
+      "schoolId": "alabama",
+      "group": "Front Seven",
+      "from": "Fatutoa Henry",
+      "to": "Luke Metz",
+      "reason": "Verified 2026 starting LB role"
+    },
+    {
+      "schoolId": "pittsburgh",
+      "group": "QB",
+      "from": "Mason Heintschel",
+      "to": "Holden Geriner",
+      "reason": "Heintschel season-ending ACL"
+    },
+    {
+      "schoolId": "tennessee",
+      "group": "QB",
+      "from": "Faizon Brandon",
+      "to": "George MacIntyre",
+      "reason": "Announced upcoming starter; availability separate from ability"
+    }
+  ]
+}

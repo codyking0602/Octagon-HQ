@@ -37,8 +37,8 @@ describe("CFB Wheel runtime authority", () => {
     }
   }
 
-  it("covers all 1,335 audited CFB grade identities exactly once", () => {
-    expect(grades.size).toBe(1335);
+  it("covers all 1,338 versioned CFB grade identities exactly once", () => {
+    expect(grades.size).toBe(1338);
 
     const families = ["QB", "RB", "WR", "TE", "Front Seven", "Secondary", "Head Coach"] as const;
     for (const team of Object.values(wheelFootballCfbPriority)) {
