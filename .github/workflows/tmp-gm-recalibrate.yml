@@ -1,0 +1,33 @@
+name: GM recalibration patch
+
+on:
+  push:
+    branches:
+      - fix/gm-playoffs-final-20261006
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/gm-playoffs-final-20261006
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: python scripts/tmp_gm_recalibrate.py
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npx vitest run src/features/back-room/footballGmStrategy.test.ts
+      - run: |
+          git config user.name "codyking0602"
+          git config user.email "bcking06@gmail.com"
+          git add -A
+          git commit -m "Recalibrate GM playoff determinism"
+          git push origin HEAD:fix/gm-playoffs-final-20261006
