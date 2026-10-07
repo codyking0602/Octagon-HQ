@@ -4,10 +4,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import {
   PLAY_LANDING_FOOTBALL_GAME_ORDER,
-  PLAY_LANDING_FOOTBALL_STRATEGIC_GAME,
   PLAY_LANDING_UFC_GAME_ORDER,
-  PLAY_LANDING_UFC_STRATEGIC_GAME,
-  PLAY_LANDING_UFC_WHEEL_GAME,
   PlayLandingGameLibrary,
   PlayLandingHeader,
   playLandingDestination,
