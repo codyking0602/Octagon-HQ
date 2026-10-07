@@ -15,11 +15,13 @@ import {
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
+  footballGmAutoAddPick,
   footballGmCandidatesForTeam,
   footballGmEligibleTeams,
   footballGmMoney,
   footballGmOpenSlots,
   footballGmPlayerById,
+  footballGmReflowRoster,
   footballGmRosterCap,
   footballGmRosterPlayers,
   footballGmSpinTeam,
@@ -158,7 +160,15 @@ function parsePersistedRun(value: unknown) {
     || !Array.isArray(parsed.roster)
     || !Array.isArray(parsed.finalRoster)
   ) return null;
-  return { ...parsed, version: FOOTBALL_GM_VERSION } as PersistedRun;
+  const roster = footballGmReflowRoster(parsed.roster as FootballGmRosterEntry[]);
+  const finalRoster = footballGmReflowRoster(parsed.finalRoster as FootballGmRosterEntry[]);
+  if (!roster || !finalRoster) return null;
+  return {
+    ...parsed,
+    version: FOOTBALL_GM_VERSION,
+    roster,
+    finalRoster,
+  } as PersistedRun;
 }
 
 function loadPersistedRun(profileId: string | undefined, seed: string) {
@@ -605,7 +615,7 @@ export function CandidateBoard({
   teamCode: string;
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2;
-  onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
+  onPick: (playerId: string) => void;
   excludedPlayerIds?: readonly string[];
 }) {
   const team = wheelFootballTeam(teamCode);
@@ -615,15 +625,9 @@ export function CandidateBoard({
     year,
     excludedPlayerIds,
   });
-  const openSlots = footballGmOpenSlots(roster);
-  const [selectedSlot, setSelectedSlot] = useState<FootballGmRosterSlot | null>(null);
   const [showScoutKey, setShowScoutKey] = useState(false);
-  const visible = selectedSlot
-    ? candidates.filter(({ legalSlots }) => legalSlots.includes(selectedSlot))
-    : [];
 
   useEffect(() => {
-    setSelectedSlot(null);
     setShowScoutKey(false);
   }, [teamCode]);
 
@@ -637,7 +641,7 @@ export function CandidateBoard({
           <div>
             <p className="eyebrow">YOUR SPIN</p>
             <h2>{team.name}</h2>
-            <span>Choose an open roster spot, then choose one player.</span>
+            <span>Choose one player. GM automatically fits the legal roster spots.</span>
           </div>
           <button
             className="football-gm__scout-key-button"
@@ -647,53 +651,36 @@ export function CandidateBoard({
           >?</button>
         </header>
 
-        <div className="football-wheel-picker__slots" aria-label="Open roster spots">
-          {openSlots.map((slot) => (
+        <div className="football-wheel-picker__candidates football-gm__picker-candidates" aria-label="Available players">
+          {candidates.map(({ player, salary }) => (
             <button
               type="button"
-              className={selectedSlot === slot ? "is-active" : ""}
-              onClick={() => setSelectedSlot(slot)}
-              key={slot}
+              onClick={() => onPick(player.id)}
+              key={player.id}
             >
-              <strong>{slot}</strong>
-            </button>
-          ))}
-        </div>
-
-        {selectedSlot ? (
-          <div className="football-wheel-picker__candidates football-gm__picker-candidates" aria-label={`${selectedSlot} candidates`}>
-            {visible.map(({ player, salary }) => (
-              <button
-                type="button"
-                onClick={() => onPick(player.id, selectedSlot)}
-                key={player.id}
-              >
-                <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
-                <span className="football-gm__picker-player-copy">
-                  <strong>{player.name}</strong>
-                  <small>{player.position} · AGE {player.age}</small>
-                  <span className="football-gm__candidate-tags">
-                    <PlayerQualityPill player={player} />
-                    <PlayerOutlookPill outlook={player.outlook} />
-                    <span>{player.gameContract}</span>
-                    <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
-                      {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} RISK`}
-                    </span>
+              <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
+              <span className="football-gm__picker-player-copy">
+                <strong>{player.name}</strong>
+                <small>{player.position} · AGE {player.age}</small>
+                <span className="football-gm__candidate-tags">
+                  <PlayerQualityPill player={player} />
+                  <PlayerOutlookPill outlook={player.outlook} />
+                  <span>{player.gameContract}</span>
+                  <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
+                    {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} RISK`}
                   </span>
                 </span>
-                <span className="football-gm__picker-action">
-                  <b>{footballGmMoney(salary)}</b>
-                  <em>SELECT →</em>
-                </span>
-              </button>
-            ))}
-            {!visible.length ? (
-              <p className="football-wheel-picker__message">No legal player is available for that roster spot.</p>
-            ) : null}
-          </div>
-        ) : (
-          <p className="football-wheel-picker__message">Pick the roster spot you want to use for this spin.</p>
-        )}
+              </span>
+              <span className="football-gm__picker-action">
+                <b>{footballGmMoney(salary)}</b>
+                <em>SELECT →</em>
+              </span>
+            </button>
+          ))}
+          {!candidates.length ? (
+            <p className="football-wheel-picker__message">No legal player from this team fits the remaining roster and cap.</p>
+          ) : null}
+        </div>
       </section>
 
       {showScoutKey ? (
@@ -1523,16 +1510,21 @@ export default function FootballGmModePage({
     }, 1550);
   }
 
-  function makeDraftPick(playerId: string, slot: FootballGmRosterSlot) {
+  function makeDraftPick(playerId: string) {
     const player = footballGmPlayerById(playerId);
     if (!player) return;
-    const nextRoster = [...run.roster, { slot, playerId, acquired: "draft" as const }];
+    let nextRoster: FootballGmRosterEntry[];
+    try {
+      nextRoster = footballGmAutoAddPick(run.roster, playerId);
+    } catch {
+      return;
+    }
     patch({
       roster: nextRoster,
       pendingTeam: null,
       previousTeam: player.team,
       spinIndex: run.spinIndex + 1,
-      phase: nextRoster.length === 7 ? "year1" : "draft",
+      phase: nextRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length ? "year1" : "draft",
     });
   }
 
