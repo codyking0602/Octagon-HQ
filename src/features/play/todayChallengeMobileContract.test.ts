@@ -41,15 +41,17 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
     expect(hubCss).toContain("flex-direction: column");
   });
 
-  it("replaces the legacy Find-the-Leader-only hub without removing casual games or challenges", () => {
+  it("keeps the approved UFC Casual shelf compact without removing Daily game owners", () => {
     expect(hubPage).toContain("<TodayChallengeHub />");
     expect(hubPage).toContain("<ChallengeCenter />");
     expect(hubPage).toContain('<PlayLandingGameLibrary sport="ufc"');
+    expect(landingPresentation).toContain('"wheel-ufc"');
+    expect(landingPresentation).toContain('"auction"');
     expect(landingPresentation).toContain('"find-leader"');
-    expect(landingPresentation).toContain('"wavelength"');
-    expect(landingPresentation).toContain('"blind-resume"');
-    expect(landingPresentation).toContain('"hit-the-number"');
-    expect(landingPresentation).toContain('PLAY_LANDING_UFC_STRATEGIC_GAME = "auction"');
+    expect(landingPresentation).toContain('"who-am-i"');
+    expect(landingPresentation).not.toContain('"wavelength"');
+    expect(landingPresentation).not.toContain('"blind-resume"');
+    expect(landingPresentation).not.toContain('"hit-the-number"');
     expect(playRegistry).toContain('route: "/play/find-leader"');
     expect(playRegistry).toContain('route: "/play/wavelength"');
     expect(playRegistry).toContain('route: "/play/blind-resume"');
