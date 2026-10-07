@@ -41,6 +41,7 @@ import {
 } from "./footballGmStrategy";
 import FootballGmSoloPage, {
   CandidateBoard,
+  CapMeter,
   FreeAgencyBoard,
   GmFootballWheel,
   PlayerHeadshot,
@@ -1322,6 +1323,32 @@ export default function FootballGmHeadToHeadPage() {
 
       {(mode === "cpu" || (mode === "human" && remote && !remote.declined_at && remote.phase !== "waiting")) ? (
         <>
+          {displayedPhase === "draft" || displayedPhase === "year1" ? (
+            <CapMeter
+              roster={run.roster}
+              year={1}
+              seed={run.seed}
+              consequences={run.negotiationConsequences}
+            />
+          ) : displayedPhase === "offseason" ? (
+            <div className="football-gm__dual-cap">
+              <CapMeter
+                roster={run.finalRoster}
+                tradeChipPlayerIds={run.tradeChipPlayerIds}
+                year={2}
+                seed={run.seed}
+                consequences={run.negotiationConsequences}
+              />
+              <CapMeter
+                roster={run.finalRoster}
+                tradeChipPlayerIds={run.tradeChipPlayerIds}
+                year={3}
+                seed={run.seed}
+                consequences={run.negotiationConsequences}
+              />
+            </div>
+          ) : null}
+
           <VersusRosterBoard
             leftName={myDisplayName}
             rightName={opponentDisplayName}
