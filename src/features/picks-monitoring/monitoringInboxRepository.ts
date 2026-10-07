@@ -40,7 +40,7 @@ const scheduleStateSchema = z.object({
 const runSchema = z.object({
   run_id: z.string(),
   trigger_kind: z.enum(["scheduled", "manual"]),
-  status: z.enum(["completed", "partial", "failed"]),
+  status: z.enum(["completed", "partial", "failed", "skipped"]),
   source_event_identity: z.string(),
   event_id: z.string().nullable(),
   started_at: z.string(),

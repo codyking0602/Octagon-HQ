@@ -1,7 +1,7 @@
 import type { CardChangeApprovalProposal } from "./cardChangeApproval";
 
 export type MonitoringTriggerKind = "scheduled" | "manual";
-export type MonitoringRunStatus = "completed" | "partial" | "failed";
+export type MonitoringRunStatus = "completed" | "partial" | "failed" | "skipped";
 export type MonitoringFindingSeverity = "info" | "warning" | "error";
 export type MonitoringFindingReviewStatus = "new" | "reviewed" | "dismissed";
 export type MonitoringFindingType = "card_change" | "odds_available" | "odds_change" | "unmatched_fight" | "provider_error" | "quota_warning";
@@ -108,5 +108,6 @@ export function monitoringFindingTypeLabel(type: MonitoringFindingType) {
 export function monitoringRunStatusLabel(status: MonitoringRunStatus) {
   if (status === "completed") return "COMPLETE";
   if (status === "partial") return "PARTIAL";
+  if (status === "skipped") return "SKIPPED";
   return "FAILED";
 }
