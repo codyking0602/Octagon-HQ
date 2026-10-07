@@ -33,8 +33,8 @@ TEAM_ALIASES = {
     "SF": {"49ers", "SF"}, "SEA": {"Seahawks", "SEA"}, "TB": {"Buccaneers", "TB"},
     "TEN": {"Titans", "TEN"}, "WSH": {"Commanders", "Washington", "WSH"},
 }
-SNAPSHOT_DATE = date(2026, 10, 5)
-WINDOW_END_SEASON = 2028
+SNAPSHOT_DATE = date.today()
+WINDOW_END_SEASON = SNAPSHOT_DATE.year + 2
 
 NAME_ALIASES = {
     "gregrousseau": "gregoryrousseau",
@@ -167,11 +167,25 @@ def gm_slots(family, source_position, normalized_name):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--priority", default="data/generated/football/wheel-football-priorities.json")
+    parser.add_argument("--projection-adjustments", default="data/curated/football/nfl/wheel-nfl-gm-projection-adjustments.json")
+    parser.add_argument("--snapshot-date", default=date.today().isoformat())
+    parser.add_argument("--window-end-season", type=int)
     parser.add_argument("--output", default="/tmp/gm-contracts.json")
     parser.add_argument("--report", default="/tmp/gm-contract-report.json")
     args = parser.parse_args()
 
+    global SNAPSHOT_DATE, WINDOW_END_SEASON
+    SNAPSHOT_DATE = datetime.strptime(args.snapshot_date, "%Y-%m-%d").date()
+    WINDOW_END_SEASON = args.window_end_season or (SNAPSHOT_DATE.year + 2)
+
     priority = json.loads(Path(args.priority).read_text())
+    adjustment_payload = json.loads(Path(args.projection_adjustments).read_text())
+    projection_adjustments = adjustment_payload.get("players", {})
+    if not isinstance(projection_adjustments, dict):
+        raise ValueError("GM projection adjustments must be an object keyed by team|family|normalizedName.")
+    for key, value in projection_adjustments.items():
+        if not isinstance(value, (int, float)) or isinstance(value, bool) or value < -2 or value > 2:
+            raise ValueError(f"Invalid GM projection adjustment {key}={value}; expected -2.0 through +2.0.")
     population = []
     seen = set()
     for team, team_data in priority["teams"].items():
@@ -182,6 +196,14 @@ def main():
                     continue
                 seen.add(key)
                 population.append({"team": team, "family": family, "player": player, "key": key[2]})
+
+    population_adjustment_keys = {
+        f"{item['team']}|{item['family']}|{item['key']}"
+        for item in population
+    }
+    unknown_adjustments = sorted(set(projection_adjustments) - population_adjustment_keys)
+    if unknown_adjustments:
+        raise ValueError(f"GM projection adjustments reference identities outside the current Wheel population: {unknown_adjustments}")
 
     frame = load_contracts()
     rows = frame.to_dicts()
@@ -272,6 +294,10 @@ def main():
             "draftYear": row.get("draft_year"),
             "draftRound": row.get("draft_round"),
             "draftOverall": row.get("draft_overall"),
+            "projectionAdjustment": float(projection_adjustments.get(
+                f"{item['team']}|{item['family']}|{item['key']}",
+                0,
+            )),
             "salaryApy": apy,
             "realContractEndSeason": int(end),
             "gameContract": "3YR" if int(end) > WINDOW_END_SEASON else "1YR",
@@ -315,19 +341,24 @@ def main():
         "invalidSlotCount": len(invalid_slots),
         "oneYearCount": sum(1 for row in output if row["gameContract"] == "1YR"),
         "threeYearCount": sum(1 for row in output if row["gameContract"] == "3YR"),
+        "projectionAdjustmentCount": sum(1 for row in output if row["projectionAdjustment"] != 0),
         "unmatched": unmatched,
         "ambiguous": ambiguous,
         "missingAges": missing_ages,
         "invalidSlots": invalid_slots,
     }
     artifact = {
-        "schemaVersion": 1,
-        "version": "nfl-gm-contracts-2026-10-05-v1",
+        "schemaVersion": 2,
+        "version": f"nfl-gm-contracts-{SNAPSHOT_DATE.isoformat()}-v2",
         "snapshotDate": SNAPSHOT_DATE.isoformat(),
         "salaryBasis": "Current active contract APY from OverTheCap via nflverse",
-        "gameContractRule": "Real contract ending in 2026, 2027, or 2028 => 1YR; real contract controlled beyond 2028 => 3YR.",
-        "threeYearWindow": [2026, 2027, 2028],
+        "gameContractRule": (
+            f"Real contract ending in {SNAPSHOT_DATE.year}, {SNAPSHOT_DATE.year + 1}, or {WINDOW_END_SEASON} "
+            f"=> 1YR; real contract controlled beyond {WINDOW_END_SEASON} => 3YR."
+        ),
+        "threeYearWindow": [SNAPSHOT_DATE.year, SNAPSHOT_DATE.year + 1, WINDOW_END_SEASON],
         "populationSource": args.priority,
+        "projectionAdjustmentSource": args.projection_adjustments,
         "source": "https://nflreadr.nflverse.com/reference/load_contracts.html",
         "players": output,
     }
