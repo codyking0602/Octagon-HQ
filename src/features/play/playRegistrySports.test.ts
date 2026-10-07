@@ -8,6 +8,7 @@ import {
 } from "./playRegistry";
 
 const footballGamesExpected = [
+  { id: "gm-football", route: "/football/gm-mode" },
   { id: "draft-room", route: "/football/draft-room" },
   { id: "wheel-football", route: "/football/wheel" },
   { id: "higher-lower", route: "/football/higher-lower" },
@@ -31,7 +32,7 @@ describe("sport-aware Play registry", () => {
   it("registers Football games on their canonical Football HQ routes", () => {
     const footballGames = playGamesForSport("football");
     expect(footballGames.map(({ id, route }) => ({ id, route }))).toEqual(footballGamesExpected);
-    expect(footballGames).toHaveLength(10);
+    expect(footballGames).toHaveLength(11);
 
     for (const game of footballGames) {
       expect(playGameDefinition(game.id, "football")).toBe(game);
