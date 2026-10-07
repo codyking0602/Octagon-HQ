@@ -70,7 +70,8 @@ begin
   if position('The GM match has not started' in v_forfeit_definition) = 0
     or position('forfeited_by_profile_id = v_user_id' in v_forfeit_definition) = 0
     or position('phase = ''complete''' in v_forfeit_definition) = 0
-    or position('challenge.declined_at' in v_forfeit_definition) = 0 then
+    or position('completed_at = coalesce(challenge.completed_at, v_now)' in v_forfeit_definition) = 0
+    or position('responder_result = jsonb_build_object' in v_forfeit_definition) = 0 then
     raise exception 'The GM forfeit contract drifted';
   end if;
 
