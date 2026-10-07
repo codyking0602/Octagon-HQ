@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   WHEEL_FOOTBALL_GM_CAP,
@@ -10,6 +9,15 @@ import {
   type WheelFootballGmContractRow,
   type WheelFootballGmRosterSlot,
 } from "./wheelFootballGmEconomy";
+import {
+  contractsArtifact,
+  frontSevenGradesArtifact,
+  qbGradesArtifact,
+  rbGradesArtifact,
+  secondaryGradesArtifact,
+  teGradesArtifact,
+  wrGradesArtifact,
+} from "./wheelFootballNflCurrentAuthority";
 
 type ContractArtifact = {
   players: WheelFootballGmContractRow[];
@@ -21,17 +29,15 @@ type GradeRow = {
   grade: number;
 };
 
-const contracts = (JSON.parse(
-  readFileSync("data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json", "utf8"),
-) as ContractArtifact).players;
+const contracts = (contractsArtifact as ContractArtifact).players;
 
 const gradeFiles = [
-  ["QB", "data/generated/football/wheel-nfl-qb-grades-2026-10-03.json"],
-  ["RB", "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json"],
-  ["WR", "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json"],
-  ["TE", "data/generated/football/wheel-nfl-te-grades-2026-10-03.json"],
-  ["Front Seven", "data/generated/football/wheel-nfl-front-seven-grades-2026-10-03.json"],
-  ["Secondary", "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json"],
+  ["QB", qbGradesArtifact],
+  ["RB", rbGradesArtifact],
+  ["WR", wrGradesArtifact],
+  ["TE", teGradesArtifact],
+  ["Front Seven", frontSevenGradesArtifact],
+  ["Secondary", secondaryGradesArtifact],
 ] as const;
 
 function normalized(value: string) {
@@ -44,8 +50,8 @@ function normalized(value: string) {
 }
 
 const grades = new Map<string, number>();
-for (const [family, path] of gradeFiles) {
-  const artifact = JSON.parse(readFileSync(path, "utf8")) as { grades: GradeRow[] };
+for (const [family, source] of gradeFiles) {
+  const artifact = source as { grades: GradeRow[] };
   for (const row of artifact.grades) {
     grades.set(`${row.team}|${family}|${normalized(row.player)}`, row.grade);
   }
@@ -70,6 +76,7 @@ function extensionFor(contract: WheelFootballGmContractRow) {
     position: wheelFootballGmMarketPositionForContract(contract),
     draftYear: contract.draftYear,
     draftOverall: contract.draftOverall,
+    projectionAdjustment: contract.projectionAdjustment ?? 0,
   });
 }
 
@@ -163,6 +170,38 @@ describe("Wheel NFL GM three-year economics", () => {
     expect(yearTwo).toBeGreaterThan(currentGrade);
     expect(yearThree).toBeGreaterThan(yearTwo);
     expect(yearThree).toBeLessThanOrEqual(93);
+  });
+
+  it("lets evidence-backed outlook changes move a young player's future both directions", () => {
+    const baseline = projectWheelFootballGmGrade({
+      currentGrade: 82,
+      age: 23,
+      position: "WR",
+      yearsAhead: 2,
+      draftYear: 2024,
+      draftOverall: 40,
+    });
+    const rising = projectWheelFootballGmGrade({
+      currentGrade: 82,
+      age: 23,
+      position: "WR",
+      yearsAhead: 2,
+      draftYear: 2024,
+      draftOverall: 40,
+      projectionAdjustment: 1,
+    });
+    const falling = projectWheelFootballGmGrade({
+      currentGrade: 82,
+      age: 23,
+      position: "WR",
+      yearsAhead: 2,
+      draftYear: 2024,
+      draftOverall: 40,
+      projectionAdjustment: -1,
+    });
+
+    expect(rising).toBeGreaterThan(baseline);
+    expect(falling).toBeLessThan(baseline);
   });
 
   it("lets elite veterans decline gradually rather than automatically collapsing", () => {
