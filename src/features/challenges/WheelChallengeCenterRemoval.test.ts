@@ -7,10 +7,12 @@ const challengeMigration = readFileSync(
   "utf8",
 );
 
-describe("Wheel Challenge Center pending removal", () => {
-  it("lets the sender cancel a waiting multiplayer Wheel lobby for everyone", () => {
+describe("Turn-based Challenge Center pending removal", () => {
+  it("lets the sender cancel a waiting multiplayer lobby before the opponent opens it", () => {
     expect(center).toContain('canCancelTurnBased = turnBased && direction === "sent" && status === "waiting"');
     expect(center).toContain("endWaitingTurnBasedChallenge");
+    expect(center).toContain('challenge.gameId === "gm-football"');
+    expect(center).toContain("gmRepository.cancel(challenge.code)");
     expect(center).toContain("wheelRepository.decline(challenge.code)");
   });
 
