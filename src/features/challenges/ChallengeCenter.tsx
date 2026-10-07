@@ -48,7 +48,17 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
 
   if (isTurnBasedChallenge(challenge)) {
     if (challenge.gameId === "gm-football") {
-      if (status === "completed") return { eyebrow: "THE GM COMPLETE WITH", detail: "Open the final three-year franchise comparison", action: "OPEN" };
+      const forfeited = [challenge.creatorResult, challenge.responderResult].some((result) => (
+        result !== null
+        && typeof result === "object"
+        && !Array.isArray(result)
+        && result.forfeited === true
+      ));
+      if (status === "completed") return {
+        eyebrow: "THE GM COMPLETE WITH",
+        detail: forfeited ? "Match ended by forfeit" : "Open the final three-year franchise comparison",
+        action: "OPEN",
+      };
       if (status === "declined") return { eyebrow: "THE GM ENDED", detail: "This front-office matchup has ended", action: "ENDED" };
       if (direction === "sent") {
         return {
