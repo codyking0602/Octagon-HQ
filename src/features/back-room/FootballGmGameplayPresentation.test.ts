@@ -28,7 +28,8 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain("current + 1080 + correction");
     expect(page).toContain("}, 1550);");
     expect(page).toContain('className="football-wheel-picker football-gm__picker surface-card"');
-    expect(page).toContain('className="football-wheel-picker__slots"');
+    expect(page).not.toContain('className="football-wheel-picker__slots"');
+    expect(page).toContain("Choose one player. GM automatically fits the legal roster spots.");
     expect(page).toContain('className="football-wheel-picker__headshot"');
     expect(page).toContain("ELITE / IMPACT / STARTER / DEPTH");
     expect(page).toContain("REPRICE RISK");
