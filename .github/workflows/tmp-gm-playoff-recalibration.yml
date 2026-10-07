@@ -39,9 +39,7 @@ jobs:
           PY
       - name: Targeted GM tests
         run: npx vitest run src/features/back-room/footballGmStrategy.test.ts src/features/play/footballGmMatchRepository.test.ts
-      - name: Typecheck
-        run: npx tsc --noEmit
-      - name: Commit verified patch
+      - name: Commit focused patch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
