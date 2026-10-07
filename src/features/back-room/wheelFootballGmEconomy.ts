@@ -108,7 +108,6 @@ function recentDraftPedigreeBoost(input: {
   draftOverall: number | null;
   currentGrade: number;
   projectionStep: 0 | 1;
-  projectionAdjustment: number;
 }) {
   if (input.draftYear == null || input.draftOverall == null) return 0;
   const recency = input.draftYear >= 2026
@@ -146,6 +145,7 @@ function annualGradeDelta(input: {
   draftYear: number | null;
   draftOverall: number | null;
   projectionStep: 0 | 1;
+  projectionAdjustment: number;
 }) {
   const { position, age, currentGrade } = input;
 
