@@ -28,8 +28,8 @@ describe("production WebKit Event Setup lifecycle proof", () => {
   });
 
   it("still proves the live owner-only surfaces and exact deployment markers", () => {
-    expect(verifier).toContain('const monitoringRegion = page.getByRole("region", {');
-    expect(verifier).toContain('name: "Automatic monitoring and card review"');
+    expect(verifier).toContain("const monitoringRegion = page.locator(");
+    expect(verifier).toContain('[aria-label="Automatic monitoring and card review"], .monitoring-status');
     expect(verifier).toContain("expectedDeploymentSha");
     expect(verifier).toContain("expectedSyncSourceSha");
     expect(verifier).toContain("Temporary Event Setup owner grant");
