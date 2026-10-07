@@ -18,13 +18,12 @@ describe("Football HQ game library presentation", () => {
 
     const games = playLandingGameIds("football").map((id) => playGameDefinition(id, "football"));
     expect(games.map((game) => game.id)).toEqual([
-      "draft-room",
+      "gm-football",
       "wheel-football",
-      "higher-lower",
+      "draft-room",
       "find-leader",
-      "wavelength",
       "who-am-i",
-      "hit-the-number",
+      "higher-lower",
     ]);
     expect(playGameDefinition("20-questions", "football").availability).toBe("retired");
     expect(playGameDefinition("who-am-i", "football").availability).toBeUndefined();
