@@ -14,6 +14,12 @@ describe("Wheel Challenge Center pending removal", () => {
     expect(center).toContain("wheelRepository.decline(challenge.code)");
   });
 
+
+  it("lets a sent unopened GM challenge be removed from Challenge Center without treating it as a forfeit", () => {
+    expect(center).toContain('challenge.gameId === "gm-football" ? "REMOVE" : "CANCEL"');
+    expect(center).toContain("gmRepository.cancel(challenge.code)");
+  });
+
   it("uses the existing creator-hidden persistence instead of cancelling the recipient copy", () => {
     expect(challengeMigration).toContain("creator_hidden_at = case");
     expect(challengeMigration).toContain("when creator_id = auth.uid() then coalesce(creator_hidden_at, now())");
