@@ -6,9 +6,10 @@ const migration = readFileSync(
   "utf8",
 );
 
-describe("Pick monitoring cron history lookup index", () => {
-  it("covers the scheduler history predicate and newest-wake ordering used by Monitoring Inbox", () => {
-    expect(migration).toContain("on cron.job_run_details (jobid, start_time desc)");
-    expect(migration).toContain("create index if not exists");
+describe("Pick monitoring cron history lookup", () => {
+  it("uses pg_cron's indexed monotonic runid instead of sorting extension history by start_time", () => {
+    expect(migration).toContain("order by detail.runid desc");
+    expect(migration).not.toContain("order by detail.start_time desc");
+    expect(migration).not.toContain("create index");
   });
 });
