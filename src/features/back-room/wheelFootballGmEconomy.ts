@@ -28,6 +28,7 @@ export type WheelFootballGmContractRow = {
   draftYear: number | null;
   draftRound: number | null;
   draftOverall: number | null;
+  projectionAdjustment?: number;
 };
 
 type MarketPoint = readonly [grade: number, apy: number];
@@ -107,6 +108,7 @@ function recentDraftPedigreeBoost(input: {
   draftOverall: number | null;
   currentGrade: number;
   projectionStep: 0 | 1;
+  projectionAdjustment: number;
 }) {
   if (input.draftYear == null || input.draftOverall == null) return 0;
   const recency = input.draftYear >= 2026
@@ -157,7 +159,11 @@ function annualGradeDelta(input: {
         : currentGrade >= 82
           ? 0.25
           : 0;
-    return Math.min(2.75, demonstrated + recentDraftPedigreeBoost(input));
+    return clamp(
+      demonstrated + recentDraftPedigreeBoost(input) + input.projectionAdjustment,
+      -2.75,
+      2.75,
+    );
   }
 
   let delta: number;
@@ -199,9 +205,9 @@ function annualGradeDelta(input: {
   }
 
   // Elite veterans can age without automatically falling off a cliff.
-  if (delta < 0 && currentGrade >= 94) return delta * 0.7;
-  if (delta < 0 && currentGrade >= 88) return delta * 0.85;
-  return delta;
+  if (delta < 0 && currentGrade >= 94) delta *= 0.7;
+  else if (delta < 0 && currentGrade >= 88) delta *= 0.85;
+  return clamp(delta + input.projectionAdjustment, -3, 3);
 }
 
 export function projectWheelFootballGmGrade(input: {
@@ -211,6 +217,7 @@ export function projectWheelFootballGmGrade(input: {
   yearsAhead: 0 | 1 | 2;
   draftYear?: number | null;
   draftOverall?: number | null;
+  projectionAdjustment?: number;
 }) {
   let grade = input.currentGrade;
   for (let year = 0; year < input.yearsAhead; year += 1) {
@@ -221,6 +228,7 @@ export function projectWheelFootballGmGrade(input: {
       draftYear: input.draftYear ?? null,
       draftOverall: input.draftOverall ?? null,
       projectionStep: year as 0 | 1,
+      projectionAdjustment: input.projectionAdjustment ?? 0,
     });
   }
   return Math.round(clamp(grade, 70, 99) * 10) / 10;
@@ -279,6 +287,7 @@ export function projectWheelFootballGmExtensionApy(input: {
   position: WheelFootballGmMarketPosition;
   draftYear?: number | null;
   draftOverall?: number | null;
+  projectionAdjustment?: number;
 }) {
   const yearTwoGrade = projectWheelFootballGmGrade({
     ...input,
@@ -304,6 +313,7 @@ export function wheelFootballGmOutlook(input: {
   position: WheelFootballGmMarketPosition;
   draftYear?: number | null;
   draftOverall?: number | null;
+  projectionAdjustment?: number;
 }) {
   const yearThree = projectWheelFootballGmGrade({ ...input, yearsAhead: 2 });
   const change = yearThree - input.currentGrade;
