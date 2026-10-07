@@ -172,6 +172,7 @@ describe("Monitoring Inbox", () => {
     renderPage(repository(inbox));
 
     expect(await screen.findByRole("heading", { name: "AUTO-SYNC CHECKED THE EVENT" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Automatic monitoring and card review" })).toBeInTheDocument();
     expect(screen.getByText(/last scheduled provider check/i)).toBeInTheDocument();
     expect(screen.getAllByText(/UFC Fight Night · Red Fighter vs. Blue Fighter/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: "OPEN UFC EVENT SOURCE" })).toHaveAttribute("href", "https://www.mmamania.com/test");
