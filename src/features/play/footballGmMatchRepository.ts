@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
 import type { ChallengeJson } from "../challenges/challengeModel";
-import { FOOTBALL_GM_ROSTER_SLOTS, type FootballGmRosterSlot } from "../back-room/footballGmEngine";
+import { FOOTBALL_GM_ROSTER_SLOTS, type FootballGmRosterEntry, type FootballGmRosterSlot } from "../back-room/footballGmEngine";
+import { FOOTBALL_GM_VERSION, footballGmSeasonResultV2, type FootballGmSeasonResultV2 } from "../back-room/footballGmStrategy";
 
 const phaseSchema = z.enum(["waiting", "draft", "year1", "offseason", "complete"]);
 
@@ -51,6 +52,33 @@ async function rpc(client: Client, name: string, args?: Record<string, unknown>)
 
 function asJson(value: unknown): ChallengeJson {
   return JSON.parse(JSON.stringify(value)) as ChallengeJson;
+}
+
+function resolvableRunState(value: unknown) {
+  if (!value || Array.isArray(value) || typeof value !== "object") return null;
+  const row = value as Record<string, unknown>;
+  if (typeof row.seed !== "string" || !Array.isArray(row.roster) || !Array.isArray(row.finalRoster)) return null;
+  return row as Record<string, unknown> & {
+    seed: string;
+    roster: FootballGmRosterEntry[];
+    finalRoster: FootballGmRosterEntry[];
+  };
+}
+
+function storedYearOneResult(value: unknown): FootballGmSeasonResultV2 | null {
+  if (!value || Array.isArray(value) || typeof value !== "object") return null;
+  const row = value as Record<string, unknown>;
+  if (
+    row.year !== 1
+    || typeof row.rawTeamGrade !== "number"
+    || typeof row.weakLinkPenalty !== "number"
+    || typeof row.continuityAdjustment !== "number"
+    || typeof row.teamGrade !== "number"
+    || typeof row.finish !== "string"
+    || typeof row.postseasonBonus !== "number"
+    || typeof row.titleOdds !== "number"
+  ) return null;
+  return row as unknown as FootballGmSeasonResultV2;
 }
 
 export interface FootballGmMatchRepository {
@@ -135,9 +163,44 @@ export function createFootballGmMatchRepository(
       }));
     },
     async finishOffseason(code, runState) {
+      const resolved = resolvableRunState(runState);
+      let lockedRunState = runState;
+      if (resolved && resolved.roster.length === 7 && resolved.finalRoster.length === 7) {
+        const beforeFinish = stateSchema.parse(await rpc(client, "get_my_football_gm_match", { p_code: code }));
+        const activeParticipant = beforeFinish.participants.find(
+          (participant) => participant.id === beforeFinish.current_turn_profile_id,
+        );
+        const yearOne = storedYearOneResult(activeParticipant?.year1_result)
+          ?? footballGmSeasonResultV2({
+            seed: resolved.seed,
+            yearOneRoster: resolved.roster,
+            roster: resolved.roster,
+            year: 1,
+          });
+        const resolvedSeasons = [
+          yearOne,
+          footballGmSeasonResultV2({
+            seed: resolved.seed,
+            yearOneRoster: resolved.roster,
+            roster: resolved.finalRoster,
+            year: 2,
+          }),
+          footballGmSeasonResultV2({
+            seed: resolved.seed,
+            yearOneRoster: resolved.roster,
+            roster: resolved.finalRoster,
+            year: 3,
+          }),
+        ];
+        lockedRunState = {
+          ...resolved,
+          version: FOOTBALL_GM_VERSION,
+          resolvedSeasons,
+        };
+      }
       return stateSchema.parse(await rpc(client, "finish_football_gm_offseason", {
         p_code: code,
-        p_run_state: asJson(runState),
+        p_run_state: asJson(lockedRunState),
       }));
     },
   };
