@@ -208,8 +208,67 @@ export function footballGmRosterPlayers(roster: readonly FootballGmRosterEntry[]
   });
 }
 
+export function footballGmReflowRoster(
+  roster: readonly FootballGmRosterEntry[],
+): FootballGmRosterEntry[] | null {
+  if (roster.length > FOOTBALL_GM_ROSTER_SLOTS.length) return null;
+  const seen = new Set<string>();
+  const rows = roster.flatMap((entry, index) => {
+    if (seen.has(entry.playerId)) return [];
+    const player = footballGmPlayerById(entry.playerId);
+    if (!player) return [];
+    seen.add(entry.playerId);
+    return [{ entry, player, index }];
+  });
+  if (rows.length !== roster.length) return null;
+
+  const ordered = [...rows].sort((left, right) => (
+    left.player.eligibleSlots.length - right.player.eligibleSlots.length
+    || left.index - right.index
+  ));
+  const used = new Set<FootballGmRosterSlot>();
+  const current: FootballGmRosterEntry[] = [];
+  let resolved: FootballGmRosterEntry[] | null = null;
+
+  function place(index: number): boolean {
+    if (index >= ordered.length) {
+      resolved = current
+        .map((entry) => ({ ...entry }))
+        .sort((left, right) => (
+          FOOTBALL_GM_ROSTER_SLOTS.indexOf(left.slot) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(right.slot)
+        ));
+      return true;
+    }
+
+    const row = ordered[index]!;
+    const slots = [...row.player.eligibleSlots].sort((left, right) => {
+      const rank = (slot: FootballGmRosterSlot) => {
+        if (slot !== "FLEX" && slot === row.entry.slot) return 0;
+        if (slot !== "FLEX") return 1;
+        if (slot === row.entry.slot) return 2;
+        return 3;
+      };
+      return rank(left) - rank(right)
+        || FOOTBALL_GM_ROSTER_SLOTS.indexOf(left) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(right);
+    });
+
+    for (const slot of slots) {
+      if (used.has(slot)) continue;
+      used.add(slot);
+      current.push({ slot, playerId: row.player.id, acquired: row.entry.acquired });
+      if (place(index + 1)) return true;
+      current.pop();
+      used.delete(slot);
+    }
+    return false;
+  }
+
+  return place(0) ? resolved : null;
+}
+
 export function footballGmOpenSlots(roster: readonly FootballGmRosterEntry[]) {
-  const filled = new Set(roster.map((entry) => entry.slot));
+  const normalized = footballGmReflowRoster(roster) ?? roster;
+  const filled = new Set(normalized.map((entry) => entry.slot));
   return FOOTBALL_GM_ROSTER_SLOTS.filter((slot) => !filled.has(slot));
 }
 
@@ -257,7 +316,9 @@ function canAddPlayerToSlot(input: {
   year: 1 | 2;
   excludedPlayerIds?: readonly string[];
 }) {
-  const { roster, player, slot, year } = input;
+  const { player, slot, year } = input;
+  const roster = footballGmReflowRoster(input.roster);
+  if (!roster) return false;
   const globallyExcluded = new Set(input.excludedPlayerIds ?? []);
   if (globallyExcluded.has(player.id)) return false;
   if (!player.eligibleSlots.includes(slot)) return false;
@@ -288,10 +349,11 @@ export function footballGmCandidatesForTeam(input: {
 }) {
   const year = input.year ?? 1;
   const players = playersByTeam.get(input.team) ?? [];
-  const open = footballGmOpenSlots(input.roster);
+  const roster = footballGmReflowRoster(input.roster) ?? input.roster;
+  const open = footballGmOpenSlots(roster);
   return players.flatMap<FootballGmTeamCandidate>((player) => {
     const legalSlots = open.filter((slot) => canAddPlayerToSlot({
-      roster: input.roster,
+      roster,
       player,
       slot,
       year,
@@ -348,10 +410,37 @@ export function footballGmAddPick(
 ) {
   const player = footballGmPlayerById(playerIdValue);
   if (!player) throw new Error("That GM player is unavailable.");
-  if (!canAddPlayerToSlot({ roster, player, slot, year: acquired === "draft" ? 1 : 2 })) {
+  const normalized = footballGmReflowRoster(roster);
+  if (!normalized || !canAddPlayerToSlot({ roster: normalized, player, slot, year: acquired === "draft" ? 1 : 2 })) {
     throw new Error("That player no longer fits this roster and cap.");
   }
-  return [...roster, { slot, playerId: player.id, acquired }];
+  const next = footballGmReflowRoster([
+    ...normalized,
+    { slot, playerId: player.id, acquired },
+  ]);
+  if (!next) throw new Error("That player no longer fits this roster and cap.");
+  return next;
+}
+
+export function footballGmAutoAddPick(
+  roster: readonly FootballGmRosterEntry[],
+  playerIdValue: string,
+  acquired: FootballGmRosterEntry["acquired"] = "draft",
+) {
+  const player = footballGmPlayerById(playerIdValue);
+  if (!player) throw new Error("That GM player is unavailable.");
+  const slots = [...player.eligibleSlots].sort((left, right) => (
+    Number(left === "FLEX") - Number(right === "FLEX")
+    || FOOTBALL_GM_ROSTER_SLOTS.indexOf(left) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(right)
+  ));
+  for (const slot of slots) {
+    try {
+      return footballGmAddPick(roster, player.id, slot, acquired);
+    } catch {
+      // Try the next legal assignment. FLEX is a fallback, not a user trap.
+    }
+  }
+  throw new Error("That player no longer fits this roster and cap.");
 }
 
 export function footballGmReplacePlayer(

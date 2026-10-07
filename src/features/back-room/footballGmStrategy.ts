@@ -5,6 +5,7 @@ import {
   FOOTBALL_GM_TEAMS,
   footballGmPlayerById,
   footballGmProjectedGradeForPlayer,
+  footballGmReflowRoster,
   footballGmSpinTeam,
   type FootballGmPlayer,
   type FootballGmPlayoffFinish,
@@ -487,15 +488,16 @@ export function footballGmFreeAgencyCandidatesForTeam(input: {
   excludedPlayerIds?: readonly string[];
 }): FootballGmFreeAgentCandidate[] {
   const tradeChipPlayerIds = input.tradeChipPlayerIds ?? [];
-  if (input.roster.length + tradeChipPlayerIds.length >= FOOTBALL_GM_ROSTER_SLOTS.length) return [];
+  const roster = footballGmReflowRoster(input.roster);
+  if (!roster || roster.length + tradeChipPlayerIds.length >= FOOTBALL_GM_ROSTER_SLOTS.length) return [];
 
   const held = new Set([
-    ...input.roster.map((entry) => entry.playerId),
+    ...roster.map((entry) => entry.playerId),
     ...tradeChipPlayerIds,
   ]);
   const excluded = new Set(input.excludedPlayerIds ?? []);
   const openSlots = FOOTBALL_GM_ROSTER_SLOTS.filter(
-    (slot) => !input.roster.some((entry) => entry.slot === slot),
+    (slot) => !roster.some((entry) => entry.slot === slot),
   );
 
   return FOOTBALL_GM_PLAYER_POOL
@@ -504,14 +506,14 @@ export function footballGmFreeAgencyCandidatesForTeam(input: {
     .filter((player) => !held.has(player.id) && !excluded.has(player.id))
     .flatMap<FootballGmFreeAgentCandidate>((player) => {
       const yearTwoCap = footballGmAdjustedHoldingsCap(
-        input.roster,
+        roster,
         tradeChipPlayerIds,
         2,
         input.seed,
         input.consequences,
       ) + footballGmAdjustedSalaryForPlayer(player, 2, input.seed, input.consequences);
       const yearThreeCap = footballGmAdjustedHoldingsCap(
-        input.roster,
+        roster,
         tradeChipPlayerIds,
         3,
         input.seed,
@@ -520,7 +522,7 @@ export function footballGmFreeAgencyCandidatesForTeam(input: {
       if (yearTwoCap > FOOTBALL_GM_CAP || yearThreeCap > FOOTBALL_GM_CAP) return [];
 
       const legalSlots = openSlots.filter((slot) => player.eligibleSlots.includes(slot));
-      const displacementOptions = input.roster
+      const displacementOptions = roster
         .filter((entry) => player.eligibleSlots.includes(entry.slot))
         .map((entry) => ({
           slot: entry.slot,
@@ -591,10 +593,12 @@ export function footballGmSignFreeAgent(input: {
 }): FootballGmResolvedOffseasonAssets | null {
   const player = footballGmPlayerById(input.playerId);
   if (!player || player.gameContract !== "1YR") return null;
+  const roster = footballGmReflowRoster(input.roster);
+  if (!roster) return null;
   const tradeChipPlayerIds = input.tradeChipPlayerIds ?? [];
   const candidate = footballGmFreeAgencyCandidatesForTeam({
     team: player.team,
-    roster: input.roster,
+    roster,
     tradeChipPlayerIds,
     seed: input.seed,
     consequences: input.consequences,
@@ -604,11 +608,13 @@ export function footballGmSignFreeAgent(input: {
 
   if (!input.displacedPlayerId) {
     if (!candidate.legalSlots.includes(input.slot)) return null;
+    const nextRoster = footballGmReflowRoster([
+      ...roster,
+      { slot: input.slot, playerId: player.id, acquired: "replacement" as const },
+    ]);
+    if (!nextRoster) return null;
     return {
-      roster: [
-        ...input.roster,
-        { slot: input.slot, playerId: player.id, acquired: "replacement" as const },
-      ],
+      roster: nextRoster,
       tradeChipPlayerIds: [...tradeChipPlayerIds],
     };
   }
@@ -617,17 +623,19 @@ export function footballGmSignFreeAgent(input: {
     (option) => option.slot === input.slot && option.displacedPlayerId === input.displacedPlayerId,
   );
   if (!displacement) return null;
-  const displacedEntry = input.roster.find(
+  const displacedEntry = roster.find(
     (entry) => entry.slot === input.slot && entry.playerId === input.displacedPlayerId,
   );
   if (!displacedEntry) return null;
 
+  const nextRoster = footballGmReflowRoster(roster.map((entry) => (
+    entry.playerId === displacedEntry.playerId
+      ? { slot: entry.slot, playerId: player.id, acquired: "replacement" as const }
+      : entry
+  )));
+  if (!nextRoster) return null;
   return {
-    roster: input.roster.map((entry) => (
-      entry.playerId === displacedEntry.playerId
-        ? { slot: entry.slot, playerId: player.id, acquired: "replacement" as const }
-        : entry
-    )),
+    roster: nextRoster,
     tradeChipPlayerIds: [...new Set([...tradeChipPlayerIds, displacedEntry.playerId])],
   };
 }
