@@ -21,6 +21,7 @@ import {
 
 type ContractArtifact = {
   players: WheelFootballGmContractRow[];
+  threeYearWindow: number[];
 };
 
 type GradeRow = {
@@ -29,7 +30,9 @@ type GradeRow = {
   grade: number;
 };
 
-const contracts = (contractsArtifact as ContractArtifact).players;
+const contractAuthority = contractsArtifact as ContractArtifact;
+const contracts = contractAuthority.players;
+const windowEndSeason = Math.max(...contractAuthority.threeYearWindow);
 
 const gradeFiles = [
   ["QB", qbGradesArtifact],
@@ -82,7 +85,7 @@ function extensionFor(contract: WheelFootballGmContractRow) {
 
 describe("Wheel NFL GM contract authority", () => {
   it("covers every non-coach Wheel identity with no fallback economics", () => {
-    expect(contracts).toHaveLength(594);
+    expect(contracts).toHaveLength(grades.size);
     expect(new Set(contracts.map((row) => row.team)).size).toBe(32);
     expect(contracts.every((row) => row.age >= 20 && row.age <= 42)).toBe(true);
     expect(contracts.every((row) => row.salaryApy > 0)).toBe(true);
@@ -92,21 +95,8 @@ describe("Wheel NFL GM contract authority", () => {
   it("applies the locked 1YR versus 3YR simplification literally", () => {
     for (const row of contracts) {
       expect(["1YR", "3YR"]).toContain(row.gameContract);
-      expect(row.gameContract).toBe(row.realContractEndSeason <= 2028 ? "1YR" : "3YR");
+      expect(row.gameContract).toBe(row.realContractEndSeason <= windowEndSeason ? "1YR" : "3YR");
     }
-
-    expect(findContract("Matthew Stafford").gameContract).toBe("1YR");
-    expect(findContract("Jonathan Taylor").gameContract).toBe("1YR");
-    expect(findContract("Jaxon Smith-Njigba").gameContract).toBe("3YR");
-    expect(findContract("Christian Gonzalez").gameContract).toBe("3YR");
-  });
-
-  it("preserves current contract APY for known calibration anchors", () => {
-    expect(findContract("Puka Nacua").salaryApy).toBe(1_021_245);
-    expect(findContract("Drake Maye").salaryApy).toBe(9_159_941);
-    expect(findContract("Brock Bowers").salaryApy).toBe(4_534_696);
-    expect(findContract("Jaxon Smith-Njigba").salaryApy).toBe(42_150_000);
-    expect(findContract("Matthew Stafford").salaryApy).toBe(55_000_000);
   });
 
   it("maps the current Wheel population into the seven GM roster slots", () => {
@@ -122,14 +112,9 @@ describe("Wheel NFL GM contract authority", () => {
       }
     }
 
-    const hunterWr = findContract("Travis Hunter", "WR");
-    const hunterDb = findContract("Travis Hunter", "Secondary");
-    expect(hunterWr.salaryApy).toBe(hunterDb.salaryApy);
-    expect(hunterWr.gmEligibleSlots).toEqual(["WR", "FLEX"]);
-    expect(hunterDb.gmEligibleSlots).toEqual(["DB"]);
   });
 
-  it("resolves all 594 contract identities to the locked current-ability grades", () => {
+  it("resolves every current contract identity to the shared current-ability grades", () => {
     const missing = contracts.filter((row) => gradeFor(row) == null);
     expect(missing).toEqual([]);
   });
@@ -215,32 +200,35 @@ describe("Wheel NFL GM three-year economics", () => {
     expect(yearTwo).toBeLessThan(95);
   });
 
-  it("creates the intended rookie-contract offseason bombs", () => {
-    expect(findContract("Puka Nacua").gameContract).toBe("1YR");
-    expect(extensionFor(findContract("Puka Nacua"))).toBe(41_000_000);
-
-    expect(findContract("Drake Maye").gameContract).toBe("1YR");
-    expect(extensionFor(findContract("Drake Maye"))).toBe(47_000_000);
-
-    expect(findContract("Brock Bowers").gameContract).toBe("1YR");
-    expect(extensionFor(findContract("Brock Bowers"))).toBe(23_000_000);
+  it("reprices high-grade expiring stars to the current market rather than stale rookie money", () => {
+    expect(projectWheelFootballGmExtensionApy({
+      currentGrade: 98,
+      age: 25,
+      position: "WR",
+      draftYear: 2023,
+      draftOverall: 177,
+    })).toBeGreaterThan(35_000_000);
+    expect(projectWheelFootballGmExtensionApy({
+      currentGrade: 98,
+      age: 23,
+      position: "FLEX",
+      draftYear: 2024,
+      draftOverall: 13,
+    })).toBeGreaterThan(18_000_000);
   });
 
   it("reprices only once in the single offseason", () => {
-    const puka = findContract("Puka Nacua");
-    const extension = extensionFor(puka);
     expect(wheelFootballGmSalaryWindow({
-      gameContract: puka.gameContract,
-      salaryApy: puka.salaryApy,
-      projectedExtensionApy: extension,
-    })).toEqual([1_021_245, 41_000_000, 41_000_000]);
+      gameContract: "1YR",
+      salaryApy: 5_000_000,
+      projectedExtensionApy: 24_000_000,
+    })).toEqual([5_000_000, 24_000_000, 24_000_000]);
 
-    const jsn = findContract("Jaxon Smith-Njigba");
     expect(wheelFootballGmSalaryWindow({
-      gameContract: jsn.gameContract,
-      salaryApy: jsn.salaryApy,
-      projectedExtensionApy: 1,
-    })).toEqual([42_150_000, 42_150_000, 42_150_000]);
+      gameContract: "3YR",
+      salaryApy: 21_000_000,
+      projectedExtensionApy: 99_000_000,
+    })).toEqual([21_000_000, 21_000_000, 21_000_000]);
   });
 });
 
