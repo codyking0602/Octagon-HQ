@@ -1,0 +1,37 @@
+name: Temporary GM playoff recalibration
+
+on:
+  push:
+    branches:
+      - fix/gm-deterministic-playoffs-20261006
+
+permissions:
+  contents: write
+
+jobs:
+  patch-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/gm-deterministic-playoffs-20261006
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply focused patch
+        run: python scripts/tmp-gm-playoff-recalibration.py
+      - name: Targeted GM tests
+        run: npx vitest run src/features/back-room/footballGmStrategy.test.ts src/features/play/footballGmMatchRepository.test.ts
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Commit verified patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/tmp-gm-playoff-recalibration.yml scripts/tmp-gm-playoff-recalibration.py
+          git add src/features/back-room/footballGmStrategy.ts src/features/back-room/footballGmStrategy.test.ts src/features/back-room/FootballGmFranchiseReport.tsx src/features/back-room/FootballGmModePage.tsx src/features/play/footballGmMatchRepository.ts src/features/play/footballGmMatchRepository.test.ts
+          git commit -m "Make GM playoffs grade-driven and lock results"
+          git push origin HEAD:fix/gm-deterministic-playoffs-20261006
