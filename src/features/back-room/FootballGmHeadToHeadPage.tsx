@@ -12,10 +12,12 @@ import {
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
+  footballGmAutoAddPick,
   footballGmEligibleTeams,
   footballGmMoney,
   footballGmOpenSlots,
   footballGmPlayerById,
+  footballGmReflowRoster,
   footballGmRosterCap,
   footballGmSpinTeam,
   type FootballGmRosterEntry,
@@ -81,14 +83,16 @@ function normalizedRun(seed: string, value: unknown): PersistedRun {
     return { ...base, phase: "draft" };
   }
   const raw = value as Partial<PersistedRun>;
+  const roster = footballGmReflowRoster(Array.isArray(raw.roster) ? raw.roster : []) ?? [];
+  const finalRoster = footballGmReflowRoster(Array.isArray(raw.finalRoster) ? raw.finalRoster : []) ?? [];
   return {
     ...base,
     ...raw,
     version: FOOTBALL_GM_VERSION,
     seed,
     phase: raw.phase ?? "draft",
-    roster: Array.isArray(raw.roster) ? raw.roster : [],
-    finalRoster: Array.isArray(raw.finalRoster) ? raw.finalRoster : [],
+    roster,
+    finalRoster,
     tradeChipPlayerIds: Array.isArray(raw.tradeChipPlayerIds) ? raw.tradeChipPlayerIds : [],
     shoppedPlayerIds: Array.isArray(raw.shoppedPlayerIds) ? raw.shoppedPlayerIds : [],
     negotiationConsequences: raw.negotiationConsequences ?? {},
@@ -673,10 +677,13 @@ export default function FootballGmHeadToHeadPage() {
             cpuBusyRef.current = false;
             return;
           }
-          const nextRoster: FootballGmRosterEntry[] = [
-            ...cpuRun.roster,
-            { slot: choice.slot, playerId: choice.playerId, acquired: "draft" },
-          ];
+          let nextRoster: FootballGmRosterEntry[];
+          try {
+            nextRoster = footballGmAutoAddPick(cpuRun.roster, choice.playerId);
+          } catch {
+            cpuBusyRef.current = false;
+            return;
+          }
           setCpuRun((current) => ({
             ...current,
             roster: nextRoster,
@@ -802,24 +809,37 @@ export default function FootballGmHeadToHeadPage() {
     });
   }
 
-  async function makeDraftPick(playerId: string, slot: FootballGmRosterSlot) {
+  async function makeDraftPick(playerId: string) {
     if (!isMyTurn || displayedPhase !== "draft") return;
     const player = footballGmPlayerById(playerId);
     if (!player || opponentHeldIds.includes(player.id)) return;
-    const nextRoster: FootballGmRosterEntry[] = [...run.roster, { slot, playerId, acquired: "draft" }];
+
+    let nextRoster: FootballGmRosterEntry[];
+    try {
+      nextRoster = footballGmAutoAddPick(run.roster, playerId);
+    } catch {
+      return;
+    }
+    const assignedSlot = nextRoster.find((entry) => entry.playerId === playerId)?.slot;
+    if (!assignedSlot) return;
+
     const nextRun: PersistedRun = {
       ...run,
       roster: nextRoster,
       pendingTeam: null,
       previousTeam: player.team,
       spinIndex: run.spinIndex + 1,
-      phase: nextRoster.length === 7 ? "year1" : "draft",
+      phase: nextRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length ? "year1" : "draft",
     };
 
     if (mode === "human") {
       if (!repository || !remote) return;
       try {
-        const next = await repository.pick(remote.code, { playerId, slot, runState: nextRun });
+        const next = await repository.pick(remote.code, {
+          playerId,
+          slot: assignedSlot,
+          runState: nextRun,
+        });
         setRun(nextRun);
         setRemote(next);
       } catch (reason) {
@@ -829,7 +849,10 @@ export default function FootballGmHeadToHeadPage() {
     }
 
     setRun(nextRun);
-    if (nextRoster.length === 7 && cpuRun.roster.length === 7) {
+    if (
+      nextRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
+      && cpuRun.roster.length === FOOTBALL_GM_ROSTER_SLOTS.length
+    ) {
       setLocalPhase("year1");
       setLocalTurn(null);
     } else {
@@ -1328,7 +1351,7 @@ export default function FootballGmHeadToHeadPage() {
                   roster={run.roster}
                   year={1}
                   excludedPlayerIds={opponentHeldIds}
-                  onPick={(playerId, slot) => void makeDraftPick(playerId, slot)}
+                  onPick={(playerId) => void makeDraftPick(playerId)}
                 />
               ) : !isMyTurn ? (
                 <WaitingCard title={`${opponentDisplayName.toUpperCase()} IS ON THE CLOCK`} copy="Their pick locks that player out of your shared draft pool." />
