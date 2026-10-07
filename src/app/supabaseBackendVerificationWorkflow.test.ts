@@ -75,20 +75,13 @@ describe("Supabase backend verification release boundary", () => {
     );
   });
 
-  it("waits for WebKit to settle on the canonical single detail panel", () => {
-    expect(pinAuthVerification).toContain("async function waitForSingleExpandedFight");
-    expect(pinAuthVerification).toContain(
-      'fightRegion.locator(".open-pick-row__details")',
-    );
-    expect(pinAuthVerification).toContain(
-      'fightRegion.locator(\'.open-pick-row__summary[aria-expanded="true"]\')',
-    );
-    expect(pinAuthVerification).toContain(
-      "await waitForSingleExpandedFight(fightRegion, fightRows, 0);",
-    );
-    expect(pinAuthVerification).toContain(
-      "await waitForSingleExpandedFight(fightRegion, fightRows, 1);",
-    );
+  it("keeps PIN verification independent from monitoring dashboard interaction", () => {
+    expect(pinAuthVerification).toContain("This workflow proves live PIN authentication and owner access.");
+    expect(pinAuthVerification).toContain("data path has dedicated exact-head workflows");
+    expect(pinAuthVerification).toContain('await monitoringRegion.waitFor({ state: "visible", timeout: 15_000 });');
+    expect(pinAuthVerification).not.toContain("await waitForSingleExpandedFight(fightRegion, fightRows, 0);");
+    expect(pinAuthVerification).not.toContain("await waitForSingleExpandedFight(fightRegion, fightRows, 1);");
+    expect(pinAuthVerification).not.toContain('fightRegion.locator(".open-pick-row__details")');
     expect(pinAuthVerification).not.toContain(
       "The compact card allowed more than one detailed fight panel at a time.",
     );
