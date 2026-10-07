@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "version": "cfb-wheel-current-ability-recalibration-2026-10-07-v2",
+  "effectiveDate": "2026-10-07",
+  "evidenceThrough": "2026-10-04",
+  "status": "approved-current-ability-recalibration",
+  "philosophy": "Position-specific present college ability, 2026 lead and 2025 stabilizer; never salary, recruiting, NFL projection or reputation.",
+  "sharedConsumers": [
+    "CFB Wheel of Football",
+    "CFB The GM (planned)"
+  ],
+  "changeLog": [
+    {
+      "school": "Alabama",
+      "positionGroup": "QB",
+      "player": "Keelon Russell",
+      "previousGrade": 90,
+      "newGrade": 93,
+      "effectiveDate": "2026-10-07",
+      "reason": "Five-game breakout with real current passing and creation; 93 aligns with Stockton/Sayin rather than overpaying for recruiting.",
+      "schoolId": "alabama"
+    },
+    {
+      "school": "Missouri",
+      "positionGroup": "QB",
+      "player": "Austin Simmons",
+      "previousGrade": 86,
+      "newGrade": 91,
+      "effectiveDate": "2026-10-07",
+      "reason": "New 2026 starts and the Florida performance justify 91; nearby Maiava/Mestemaker remain 92.",
+      "schoolId": "missouri"
+    },
+    {
+      "school": "Pittsburgh",
+      "positionGroup": "QB",
+      "player": "Holden Geriner",
+      "previousGrade": null,
+      "newGrade": 79,
+      "effectiveDate": "2026-10-07",
+      "reason": "Current Pitt QB after Heintschel ACL; 19-of-26 for 219 yards and two touchdowns in 2026 relief but thin established starting evidence.",
+      "schoolId": "pittsburgh"
+    },
+    {
+      "school": "Tennessee",
+      "positionGroup": "QB",
+      "player": "George MacIntyre",
+      "previousGrade": null,
+      "newGrade": 79,
+      "effectiveDate": "2026-10-07",
+      "reason": "Named current Tennessee starter for Arkansas; 14-of-20 for 148 yards and one touchdown before first start, so low starter grade.",
+      "schoolId": "tennessee"
+    },
+    {
+      "school": "Tennessee",
+      "positionGroup": "RB",
+      "player": "DeSean Bishop",
+      "previousGrade": 89,
+      "newGrade": 92,
+      "effectiveDate": "2026-10-07",
+      "reason": "Proven 2025 value and 220 rushing yards/three TDs against Auburn move Bishop into the Fletcher/Frazier 92 neighborhood.",
+      "schoolId": "tennessee"
+    },
+    {
+      "school": "Indiana",
+      "positionGroup": "RB",
+      "player": "Turbo Richard",
+      "previousGrade": 91,
+      "newGrade": 93,
+      "effectiveDate": "2026-10-07",
+      "reason": "Sustained explosive current running value, in the LJ Martin 93 tier.",
+      "schoolId": "indiana"
+    },
+    {
+      "school": "Texas",
+      "positionGroup": "Front Seven",
+      "player": "Justin Cryer",
+      "previousGrade": 77,
+      "newGrade": 85,
+      "effectiveDate": "2026-10-07",
+      "reason": "Four Texas starts and nine-tackle games against ranked teams invalidate the previous limited-role 77 description.",
+      "schoolId": "texas"
+    },
+    {
+      "school": "Texas",
+      "positionGroup": "Front Seven",
+      "player": "Hero Kanu",
+      "previousGrade": 83,
+      "newGrade": 86,
+      "effectiveDate": "2026-10-07",
+      "reason": "Current Texas starting interior responsibility and disruption support a solid 86, independently of NIL.",
+      "schoolId": "texas"
+    },
+    {
+      "school": "Alabama",
+      "positionGroup": "Front Seven",
+      "player": "Devan Thompkins",
+      "previousGrade": 83,
+      "newGrade": 87,
+      "effectiveDate": "2026-10-07",
+      "reason": "Current starting impact has outgrown the previous rotation-grade wording.",
+      "schoolId": "alabama"
+    },
+    {
+      "school": "Missouri",
+      "positionGroup": "Front Seven",
+      "player": "Nicholas Rodriguez",
+      "previousGrade": 88,
+      "newGrade": 90,
+      "effectiveDate": "2026-10-07",
+      "reason": "Sustained current SEC tackling leadership supports an impact-starter 90.",
+      "schoolId": "missouri"
+    },
+    {
+      "school": "Alabama",
+      "positionGroup": "Front Seven",
+      "player": "Luke Metz",
+      "previousGrade": null,
+      "newGrade": 87,
+      "effectiveDate": "2026-10-07",
+      "reason": "Current Alabama starting linebacker, with a 13-tackle game versus South Carolina and seven against Mississippi State; no projection credit.",
+      "schoolId": "alabama"
+    },
+    {
+      "school": "Texas Tech",
+      "positionGroup": "Secondary",
+      "player": "Brice Pollock",
+      "previousGrade": 85,
+      "newGrade": 91,
+      "effectiveDate": "2026-10-07",
+      "reason": "Two interceptions against Colorado, Thorpe weekly recognition and a strong 2025 body justify low-90 coverage ability.",
+      "schoolId": "texas-tech"
+    },
+    {
+      "school": "SMU",
+      "positionGroup": "Secondary",
+      "player": "Jarvis Lee",
+      "previousGrade": 76,
+      "newGrade": 86,
+      "effectiveDate": "2026-10-07",
+      "reason": "Current SMU responsibility and existing production are significantly beyond 76 depth level.",
+      "schoolId": "smu"
+    },
+    {
+      "school": "Notre Dame",
+      "positionGroup": "Secondary",
+      "player": "Luke Talich",
+      "previousGrade": 80,
+      "newGrade": 86,
+      "effectiveDate": "2026-10-07",
+      "reason": "Current starting assignment responsibility and documented ball production support 86.",
+      "schoolId": "notre-dame"
+    },
+    {
+      "school": "Texas",
+      "positionGroup": "Secondary",
+      "player": "Jelani McDonald",
+      "previousGrade": 87,
+      "newGrade": 90,
+      "effectiveDate": "2026-10-07",
+      "reason": "2026 coverage/safety work and 2025 stabilizer justify the low-90 neighborhood.",
+      "schoolId": "texas"
+    },
+    {
+      "school": "Texas",
+      "positionGroup": "Secondary",
+      "player": "Graceson Littleton",
+      "previousGrade": 86,
+      "newGrade": 89,
+      "effectiveDate": "2026-10-07",
+      "reason": "Current secondary role and demonstrated college work support a high-80s grade.",
+      "schoolId": "texas"
+    },
+    {
+      "school": "Texas Tech",
+      "positionGroup": "Secondary",
+      "player": "Malik Esquerra",
+      "previousGrade": 76,
+      "newGrade": 83,
+      "effectiveDate": "2026-10-07",
+      "reason": "Increased 2026 workload supports a low-80s starter/depth grade, with the newer sample still a cap.",
+      "schoolId": "texas-tech"
+    }
+  ],
+  "roleUpdates": [
+    {
+      "schoolId": "alabama",
+      "group": "Front Seven",
+      "from": "Fatutoa Henry",
+      "to": "Luke Metz",
+      "note": "Current first-team linebacker"
+    },
+    {
+      "schoolId": "pittsburgh",
+      "group": "QB",
+      "from": "Mason Heintschel",
+      "to": "Holden Geriner",
+      "note": "Heintschel season-ending ACL"
+    },
+    {
+      "schoolId": "tennessee",
+      "group": "QB",
+      "from": "Faizon Brandon",
+      "to": "George MacIntyre",
+      "note": "MacIntyre named current starter"
+    }
+  ],
+  "apTop25": {
+    "pollDate": "2026-10-04",
+    "schoolIds": [
+      "texas",
+      "georgia",
+      "notre-dame",
+      "miami",
+      "ohio-state",
+      "alabama",
+      "indiana",
+      "byu",
+      "ole-miss",
+      "lsu",
+      "texas-tech",
+      "utah",
+      "oregon",
+      "missouri",
+      "tennessee",
+      "florida",
+      "mississippi-state",
+      "oklahoma-state",
+      "usc",
+      "iowa",
+      "ucla",
+      "houston",
+      "boise-state",
+      "smu",
+      "pittsburgh"
+    ],
+    "sourceUrl": "https://apnews.com/article/7db03c4123afa589863a8b53f4db520c"
+  },
+  "unchangedSpotChecks": [
+    [
+      "Texas",
+      "QB",
+      "Arch Manning",
+      88
+    ],
+    [
+      "Texas",
+      "RB",
+      "Hollywood Smothers",
+      88
+    ],
+    [
+      "Texas",
+      "WR",
+      "Cam Coleman",
+      89
+    ],
+    [
+      "Texas",
+      "WR",
+      "Ryan Wingo",
+      86
+    ],
+    [
+      "Texas",
+      "Front Seven",
+      "Colin Simmons",
+      99
+    ],
+    [
+      "Texas",
+      "Front Seven",
+      "Rasheem Biles",
+      96
+    ],
+    [
+      "Texas",
+      "Secondary",
+      "Kade Phillips",
+      89
+    ],
+    [
+      "Texas",
+      "Secondary",
+      "Bo Mascoe",
+      86
+    ],
+    [
+      "Oregon",
+      "Secondary",
+      "Koi Perich",
+      81
+    ],
+    [
+      "Alabama",
+      "Secondary",
+      "Bray Hubbard",
+      84
+    ],
+    [
+      "Notre Dame",
+      "Secondary",
+      "Christian Gray",
+      77
+    ]
+  ]
+}

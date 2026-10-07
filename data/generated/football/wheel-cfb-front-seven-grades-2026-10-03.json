@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "cfb-wheel-front-seven-grades-2026-10-03-v1",
-  "status": "audit-locked-not-runtime",
-  "effectiveDate": "2026-10-03",
+  "version": "cfb-wheel-current-ability-recalibration-2026-10-07-v2-front-seven",
+  "status": "audit-locked-runtime",
+  "effectiveDate": "2026-10-07",
   "populationSource": {
     "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
     "priorityAuditPath": "data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
     "mainSha": "2773bb1224c9cdd6db934f6c14a2e4d50553e994",
-    "frontSevenCount": 391,
+    "frontSevenCount": 392,
     "schoolCount": 68,
     "note": "Current main re-resolved to the same audited 391-player Front Seven population across 68 schools."
   },
@@ -144,12 +144,12 @@
       "conference": "SEC",
       "player": "Devan Thompkins",
       "curatedPrioritySlot": 2,
-      "grade": 83,
+      "grade": 87,
       "kind": "graded",
       "eaCfb27Rating": 84,
-      "eaDelta": -1,
+      "eaDelta": 3,
       "eaStatus": "no-mandatory-review",
-      "reason": "Solid current FBS starter/rotation value; current role and recent evidence support this tier without a reputation or projection bonus.",
+      "reason": "Current starting impact has outgrown the previous rotation-grade wording.",
       "eaSnapshotKind": "aug-27-baseline"
     },
     {
@@ -768,12 +768,12 @@
       "conference": "SEC",
       "player": "Nicholas Rodriguez",
       "curatedPrioritySlot": 3,
-      "grade": 88,
+      "grade": 90,
       "kind": "graded",
       "eaCfb27Rating": 80,
-      "eaDelta": 8,
-      "eaStatus": "mandatory-review",
-      "reason": "Team-leading 39 tackles with three straight double-digit tackle games in 2026 support a high-80s current linebacker grade.",
+      "eaDelta": 10,
+      "eaStatus": "major-red-flag-reviewed",
+      "reason": "Sustained current SEC tackling leadership supports an impact-starter 90.",
       "eaSnapshotKind": "aug-27-baseline"
     },
     {
@@ -1184,12 +1184,12 @@
       "conference": "SEC",
       "player": "Hero Kanu",
       "curatedPrioritySlot": 5,
-      "grade": 83,
+      "grade": 86,
       "kind": "graded",
       "eaCfb27Rating": 85,
-      "eaDelta": -2,
+      "eaDelta": 1,
       "eaStatus": "no-mandatory-review",
-      "reason": "Solid current FBS starter/rotation value; current role and recent evidence support this tier without a reputation or projection bonus.",
+      "reason": "Current Texas starting interior responsibility and disruption support a solid 86, independently of NIL.",
       "eaSnapshotKind": "aug-27-baseline"
     },
     {
@@ -1197,12 +1197,12 @@
       "conference": "SEC",
       "player": "Justin Cryer",
       "curatedPrioritySlot": 6,
-      "grade": 77,
+      "grade": 85,
       "kind": "graded",
       "eaCfb27Rating": 79,
-      "eaDelta": -2,
+      "eaDelta": 6,
       "eaStatus": "no-mandatory-review",
-      "reason": "Lower-end current Wheel option; limited present role/impact keeps the grade below the solid-starter tier.",
+      "reason": "Four Texas starts and nine-tackle games against ranked teams invalidate the previous limited-role 77 description.",
       "eaSnapshotKind": "aug-27-baseline"
     },
     {
@@ -5208,6 +5208,19 @@
       "eaStatus": "no-mandatory-review",
       "reason": "Solid current FBS starter/rotation value; current role and recent evidence support this tier without a reputation or projection bonus.",
       "eaSnapshotKind": "aug-27-baseline"
+    },
+    {
+      "school": "Alabama",
+      "player": "Luke Metz",
+      "grade": 87,
+      "kind": "recalibrated-role-addition",
+      "reason": "Current Alabama starting linebacker, with a 13-tackle game versus South Carolina and seven against Mississippi State; no projection credit.",
+      "conference": "SEC",
+      "curatedPrioritySlot": 2,
+      "eaCfb27Rating": null,
+      "eaDelta": null,
+      "eaStatus": "rating-unresolved",
+      "eaSnapshotKind": "oct-7-new-starter"
     }
   ],
   "pairwiseAudit": {
@@ -5444,5 +5457,58 @@
     "note": "Distribution inspected after grading and targeted re-review; no grade moved solely to manufacture a target shape."
   },
   "runtimeBoundary": "No production/runtime behavior is changed by this artifact. It is calibration authority only for later server-owned CFB Wheel grading integration.",
-  "futureVersioning": "Any future Front Seven grade change must record previous grade, new grade, effective date, concise football reason, and nearby anchor/peer sanity check."
+  "futureVersioning": "Any future Front Seven grade change must record previous grade, new grade, effective date, concise football reason, and nearby anchor/peer sanity check.",
+  "recalibration": {
+    "previousArtifactVersion": "cfb-wheel-front-seven-grades-2026-10-03-v1",
+    "effectiveDate": "2026-10-07",
+    "evidenceThrough": "2026-10-04",
+    "gradeChanges": [
+      {
+        "school": "Texas",
+        "positionGroup": "Front Seven",
+        "player": "Justin Cryer",
+        "previousGrade": 77,
+        "newGrade": 85,
+        "effectiveDate": "2026-10-07",
+        "reason": "Four Texas starts and nine-tackle games against ranked teams invalidate the previous limited-role 77 description."
+      },
+      {
+        "school": "Texas",
+        "positionGroup": "Front Seven",
+        "player": "Hero Kanu",
+        "previousGrade": 83,
+        "newGrade": 86,
+        "effectiveDate": "2026-10-07",
+        "reason": "Current Texas starting interior responsibility and disruption support a solid 86, independently of NIL."
+      },
+      {
+        "school": "Alabama",
+        "positionGroup": "Front Seven",
+        "player": "Devan Thompkins",
+        "previousGrade": 83,
+        "newGrade": 87,
+        "effectiveDate": "2026-10-07",
+        "reason": "Current starting impact has outgrown the previous rotation-grade wording."
+      },
+      {
+        "school": "Missouri",
+        "positionGroup": "Front Seven",
+        "player": "Nicholas Rodriguez",
+        "previousGrade": 88,
+        "newGrade": 90,
+        "effectiveDate": "2026-10-07",
+        "reason": "Sustained current SEC tackling leadership supports an impact-starter 90."
+      },
+      {
+        "school": "Alabama",
+        "positionGroup": "Front Seven",
+        "player": "Luke Metz",
+        "previousGrade": null,
+        "newGrade": 87,
+        "effectiveDate": "2026-10-07",
+        "reason": "Current Alabama starting linebacker, with a 13-tackle game versus South Carolina and seven against Mississippi State; no projection credit."
+      }
+    ],
+    "priorEvidenceSnapshotPreserved": true
+  }
 }

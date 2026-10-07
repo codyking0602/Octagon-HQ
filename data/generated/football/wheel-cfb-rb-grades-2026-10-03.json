@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "version": "cfb-wheel-rb-grades-2026-10-03-v1",
-  "status": "audit-locked-not-runtime",
-  "effectiveDate": "2026-10-03",
+  "version": "cfb-wheel-current-ability-recalibration-2026-10-07-v2-rb",
+  "status": "audit-locked-runtime",
+  "effectiveDate": "2026-10-07",
   "populationSource": {
     "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
     "priorityAuditPath": "data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
@@ -67,7 +67,7 @@
     {
       "player": "DeSean Bishop",
       "school": "Tennessee",
-      "grade": 89
+      "grade": 92
     },
     {
       "player": "Aiden Flora",
@@ -424,12 +424,12 @@
       "school": "Tennessee",
       "player": "DeSean Bishop",
       "curatedPrioritySlot": 1,
-      "grade": 89,
+      "grade": 92,
       "kind": "anchor",
       "eaCfb27Rating": 91,
-      "eaDelta": -2,
+      "eaDelta": 1,
       "eaStatus": "no-mandatory-review",
-      "reason": "Approved 89 anchor: very good current rushing backed by strong prior production without pushing him into the elite tier."
+      "reason": "Proven 2025 value and 220 rushing yards/three TDs against Auburn move Bishop into the Fletcher/Frazier 92 neighborhood."
     },
     {
       "school": "Tennessee",
@@ -545,12 +545,12 @@
       "school": "Indiana",
       "player": "Turbo Richard",
       "curatedPrioritySlot": 1,
-      "grade": 91,
+      "grade": 93,
       "kind": "graded",
       "eaCfb27Rating": 89,
-      "eaDelta": 2,
+      "eaDelta": 4,
       "eaStatus": "no-mandatory-review",
-      "reason": "383 yards on 50 carries at 7.66 per carry with four TD make him one of the strongest 2026 Big Ten backs; current year earns 91."
+      "reason": "Sustained explosive current running value, in the LJ Martin 93 tier."
     },
     {
       "school": "Indiana",
@@ -1997,5 +1997,31 @@
         "below-75": 3
       }
     }
+  },
+  "recalibration": {
+    "previousArtifactVersion": "cfb-wheel-rb-grades-2026-10-03-v1",
+    "effectiveDate": "2026-10-07",
+    "evidenceThrough": "2026-10-04",
+    "gradeChanges": [
+      {
+        "school": "Tennessee",
+        "positionGroup": "RB",
+        "player": "DeSean Bishop",
+        "previousGrade": 89,
+        "newGrade": 92,
+        "effectiveDate": "2026-10-07",
+        "reason": "Proven 2025 value and 220 rushing yards/three TDs against Auburn move Bishop into the Fletcher/Frazier 92 neighborhood."
+      },
+      {
+        "school": "Indiana",
+        "positionGroup": "RB",
+        "player": "Turbo Richard",
+        "previousGrade": 91,
+        "newGrade": 93,
+        "effectiveDate": "2026-10-07",
+        "reason": "Sustained explosive current running value, in the LJ Martin 93 tier."
+      }
+    ],
+    "priorEvidenceSnapshotPreserved": true
   }
 }

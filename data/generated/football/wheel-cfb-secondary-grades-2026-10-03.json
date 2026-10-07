@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "version": "cfb-wheel-secondary-grades-2026-10-03-v1",
-  "status": "locked-calibration-only",
-  "effectiveDate": "2026-10-03",
+  "version": "cfb-wheel-current-ability-recalibration-2026-10-07-v2-secondary",
+  "status": "audit-locked-runtime",
+  "effectiveDate": "2026-10-07",
   "populationSource": {
     "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
     "priorityAuditPath": "data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
@@ -1011,12 +1011,12 @@
       "conference": "SEC",
       "player": "Jelani McDonald",
       "curatedPrioritySlot": 1,
-      "grade": 87,
+      "grade": 90,
       "kind": "graded",
       "eaCfb27Rating": 91,
-      "eaDelta": -4,
+      "eaDelta": -1,
       "eaStatus": "no-mandatory-review",
-      "reason": "Strong current FBS starter/impact value; 2026 role leads and prior-season evidence stabilizes the placement.",
+      "reason": "2026 coverage/safety work and 2025 stabilizer justify the low-90 neighborhood.",
       "eaSnapshotKind": "official-current-position-table"
     },
     {
@@ -1024,12 +1024,12 @@
       "conference": "SEC",
       "player": "Graceson Littleton",
       "curatedPrioritySlot": 2,
-      "grade": 86,
+      "grade": 89,
       "kind": "graded",
       "eaCfb27Rating": 86,
-      "eaDelta": 0,
+      "eaDelta": 3,
       "eaStatus": "no-mandatory-review",
-      "reason": "Strong current FBS starter/impact value; 2026 role leads and prior-season evidence stabilizes the placement.",
+      "reason": "Current secondary role and demonstrated college work support a high-80s grade.",
       "eaSnapshotKind": "official-current-position-table"
     },
     {
@@ -3169,12 +3169,12 @@
       "conference": "Big 12",
       "player": "Brice Pollock",
       "curatedPrioritySlot": 1,
-      "grade": 85,
+      "grade": 91,
       "kind": "anchor",
       "eaCfb27Rating": 93,
-      "eaDelta": -8,
-      "eaStatus": "mandatory-review-complete",
-      "reason": "Locked anchor. Excellent five-interception 2025 remains important, but 2026 through the freeze was 11 tackles, five breakups and no interceptions; current PFF context is also materially below his EA 93.",
+      "eaDelta": -2,
+      "eaStatus": "no-mandatory-review",
+      "reason": "Two interceptions against Colorado, Thorpe weekly recognition and a strong 2025 body justify low-90 coverage ability.",
       "eaSnapshotKind": "latest-resolved-week3"
     },
     {
@@ -3221,12 +3221,12 @@
       "conference": "Big 12",
       "player": "Malik Esquerra",
       "curatedPrioritySlot": 5,
-      "grade": 76,
+      "grade": 83,
       "kind": "graded",
       "eaCfb27Rating": null,
       "eaDelta": null,
       "eaStatus": "rating-unresolved",
-      "reason": "Lower-end current Wheel option; useful current role or depth value is present, but the evidence does not support an 80s grade.",
+      "reason": "Increased 2026 workload supports a low-80s starter/depth grade, with the newer sample still a cap.",
       "eaSnapshotKind": "unresolved"
     },
     {
@@ -4196,12 +4196,12 @@
       "conference": "ACC",
       "player": "Jarvis Lee",
       "curatedPrioritySlot": 5,
-      "grade": 76,
+      "grade": 86,
       "kind": "graded",
       "eaCfb27Rating": null,
       "eaDelta": null,
       "eaStatus": "rating-unresolved",
-      "reason": "Lower-end current Wheel option; useful current role or depth value is present, but the evidence does not support an 80s grade.",
+      "reason": "Current SMU responsibility and existing production are significantly beyond 76 depth level.",
       "eaSnapshotKind": "unresolved"
     },
     {
@@ -4560,12 +4560,12 @@
       "conference": "Independent",
       "player": "Luke Talich",
       "curatedPrioritySlot": 3,
-      "grade": 80,
+      "grade": 86,
       "kind": "graded",
       "eaCfb27Rating": null,
       "eaDelta": null,
       "eaStatus": "rating-unresolved",
-      "reason": "Solid current FBS starter/rotation value; the grade reflects role-adjusted coverage, tackling and assignment value rather than roster priority alone.",
+      "reason": "Current starting assignment responsibility and documented ball production support 86.",
       "eaSnapshotKind": "unresolved"
     },
     {
@@ -4773,5 +4773,67 @@
     "note": "Distribution inspected only after player-by-player grading and contradiction/discrepancy QA; it did not drive individual grades."
   },
   "runtimeBoundary": "Calibration/grading artifact only. No CFB Secondary grade is wired into Wheel runtime in this task.",
-  "futureVersioning": "Any future grade change should preserve previous grade, new grade, effective date, concise football reason, and nearby-anchor/peer sanity check."
+  "futureVersioning": "Any future grade change should preserve previous grade, new grade, effective date, concise football reason, and nearby-anchor/peer sanity check.",
+  "recalibration": {
+    "previousArtifactVersion": "cfb-wheel-secondary-grades-2026-10-03-v1",
+    "effectiveDate": "2026-10-07",
+    "evidenceThrough": "2026-10-04",
+    "gradeChanges": [
+      {
+        "school": "Texas Tech",
+        "positionGroup": "Secondary",
+        "player": "Brice Pollock",
+        "previousGrade": 85,
+        "newGrade": 91,
+        "effectiveDate": "2026-10-07",
+        "reason": "Two interceptions against Colorado, Thorpe weekly recognition and a strong 2025 body justify low-90 coverage ability."
+      },
+      {
+        "school": "SMU",
+        "positionGroup": "Secondary",
+        "player": "Jarvis Lee",
+        "previousGrade": 76,
+        "newGrade": 86,
+        "effectiveDate": "2026-10-07",
+        "reason": "Current SMU responsibility and existing production are significantly beyond 76 depth level."
+      },
+      {
+        "school": "Notre Dame",
+        "positionGroup": "Secondary",
+        "player": "Luke Talich",
+        "previousGrade": 80,
+        "newGrade": 86,
+        "effectiveDate": "2026-10-07",
+        "reason": "Current starting assignment responsibility and documented ball production support 86."
+      },
+      {
+        "school": "Texas",
+        "positionGroup": "Secondary",
+        "player": "Jelani McDonald",
+        "previousGrade": 87,
+        "newGrade": 90,
+        "effectiveDate": "2026-10-07",
+        "reason": "2026 coverage/safety work and 2025 stabilizer justify the low-90 neighborhood."
+      },
+      {
+        "school": "Texas",
+        "positionGroup": "Secondary",
+        "player": "Graceson Littleton",
+        "previousGrade": 86,
+        "newGrade": 89,
+        "effectiveDate": "2026-10-07",
+        "reason": "Current secondary role and demonstrated college work support a high-80s grade."
+      },
+      {
+        "school": "Texas Tech",
+        "positionGroup": "Secondary",
+        "player": "Malik Esquerra",
+        "previousGrade": 76,
+        "newGrade": 83,
+        "effectiveDate": "2026-10-07",
+        "reason": "Increased 2026 workload supports a low-80s starter/depth grade, with the newer sample still a cap."
+      }
+    ],
+    "priorEvidenceSnapshotPreserved": true
+  }
 }
