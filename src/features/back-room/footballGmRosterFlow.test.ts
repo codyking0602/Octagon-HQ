@@ -36,20 +36,44 @@ describe("The GM automatic roster reflow", () => {
     expect(next.find((entry) => entry.playerId === tightEnd.id)?.slot).toBe("FLEX");
   });
 
-  it("still allows an intentional two-running-back build", () => {
-    const first = player("Chase Brown");
-    const second = player("Jacory Croskey-Merritt");
+  it("allows two-RB and two-WR builds while preserving the required native slot", () => {
+    const firstRb = player("Chase Brown");
+    const secondRb = player("Jacory Croskey-Merritt");
+    const firstWr = FOOTBALL_GM_PLAYER_POOL.find((candidate) => candidate.family === "WR" && candidate.eligibleSlots.includes("WR") && candidate.eligibleSlots.includes("FLEX"));
+    const secondWr = FOOTBALL_GM_PLAYER_POOL.find((candidate) => candidate.family === "WR" && candidate.id !== firstWr?.id && candidate.eligibleSlots.includes("WR") && candidate.eligibleSlots.includes("FLEX"));
+    if (!firstWr || !secondWr) throw new Error("Missing GM WR test players.");
 
-    const roster = footballGmAutoAddPick(
-      footballGmAutoAddPick([], first.id),
-      second.id,
+    const twoRb = footballGmAutoAddPick(
+      footballGmAutoAddPick([], firstRb.id),
+      secondRb.id,
     );
-    const rbSlots = roster
-      .filter((entry) => entry.playerId === first.id || entry.playerId === second.id)
-      .map((entry) => entry.slot)
-      .sort();
+    expect(twoRb.filter((entry) => entry.playerId === firstRb.id || entry.playerId === secondRb.id).map((entry) => entry.slot).sort())
+      .toEqual(["FLEX", "RB"]);
 
-    expect(rbSlots).toEqual(["FLEX", "RB"]);
+    const twoWr = footballGmAutoAddPick(
+      footballGmAutoAddPick([], firstWr.id),
+      secondWr.id,
+    );
+    expect(twoWr.filter((entry) => entry.playerId === firstWr.id || entry.playerId === secondWr.id).map((entry) => entry.slot).sort())
+      .toEqual(["FLEX", "WR"]);
+  });
+
+  it("does not allow two tight ends or a roster that skips the required RB/WR slots", () => {
+    const firstTe = player("Brock Bowers");
+    const secondTe = FOOTBALL_GM_PLAYER_POOL.find((candidate) => (
+      candidate.family === "TE"
+      && candidate.id !== firstTe.id
+      && candidate.eligibleSlots.length === 1
+      && candidate.eligibleSlots[0] === "FLEX"
+    ));
+    if (!secondTe) throw new Error("Missing second GM TE test player.");
+
+    const oneTe = footballGmAutoAddPick([], firstTe.id);
+    expect(oneTe[0]?.slot).toBe("FLEX");
+    expect(() => footballGmAutoAddPick(oneTe, secondTe.id)).toThrow();
+
+    expect(footballGmOpenSlots(oneTe)).toContain("RB");
+    expect(footballGmOpenSlots(oneTe)).toContain("WR");
   });
 
   it("repairs legacy active runs that saved a movable skill player in FLEX", () => {
