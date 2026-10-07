@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
 import { useProfileChallengeMatch } from "../challenges/challengeRuntime";
@@ -49,10 +49,6 @@ import {
   type FootballGmNegotiationConsequences,
   type FootballGmTradeProposal,
 } from "./footballGmStrategy";
-import {
-  footballGmPlaytestOpponentName,
-  isFootballGmPlaytestProfile,
-} from "./footballGmAccess";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 
 type Phase = "intro" | "draft" | "year1" | "offseason" | "years23" | "final";
@@ -1337,8 +1333,7 @@ export default function FootballGmModePage({
   const [soloHydrated, setSoloHydrated] = useState(() => !standalone);
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
   const [draftWheelRotation, setDraftWheelRotation] = useState(0);
-  const opponentName = footballGmPlaytestOpponentName(identity.profile);
-  const allowed = isFootballGmPlaytestProfile(identity.profile);
+  const opponentName: string | null = null;
   const draftEligibleTeamCodes = run.phase === "draft"
     ? footballGmEligibleTeams({
         roster: run.roster,
@@ -1366,7 +1361,11 @@ export default function FootballGmModePage({
   }, [identity.profile?.id, seed, startImmediately, storedSeed]);
 
   useEffect(() => {
-    if (!standalone || soloHydrated || !identity.ready || !identity.profile?.id) return;
+    if (!standalone || soloHydrated || !identity.ready) return;
+    if (!identity.profile?.id) {
+      setSoloHydrated(true);
+      return;
+    }
     let cancelled = false;
     const profileId = identity.profile.id;
 
@@ -1428,8 +1427,7 @@ export default function FootballGmModePage({
 
   useEffect(() => {
     if (
-      !allowed
-      || !identity.profile?.id
+      !identity.profile?.id
       || !identity.profile.displayName
       || !runRepository
       || (standalone && !soloHydrated)
@@ -1449,7 +1447,6 @@ export default function FootballGmModePage({
       console.error("GM run persistence failed", error);
     });
   }, [
-    allowed,
     identity.profile?.displayName,
     identity.profile?.id,
     profileMatch.challenge?.code,
@@ -1485,7 +1482,6 @@ export default function FootballGmModePage({
   ]);
 
   if (!identity.ready) return null;
-  if (!allowed) return <Navigate to="/football" replace />;
   if (standalone && !soloHydrated) {
     return (
       <div className="page football-gm-page">
@@ -1844,7 +1840,7 @@ export default function FootballGmModePage({
     <div className="page football-gm-page">
       <header className="football-gm__header">
         <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
-        <span><small>OWNER PLAYTEST</small><strong>THE GM</strong></span>
+        <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
         <b>3 YEARS</b>
       </header>
 
