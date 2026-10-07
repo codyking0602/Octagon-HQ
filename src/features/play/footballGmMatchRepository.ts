@@ -28,6 +28,8 @@ const stateSchema = z.object({
   opened_at: z.string().nullable(),
   completed_at: z.string().nullable(),
   declined_at: z.string().nullable(),
+  forfeited_by_profile_id: z.string().uuid().nullable().optional().default(null),
+  forfeited_at: z.string().nullable().optional().default(null),
 });
 
 export type FootballGmMatchState = z.infer<typeof stateSchema>;
@@ -54,6 +56,7 @@ function asJson(value: unknown): ChallengeJson {
 export interface FootballGmMatchRepository {
   create(recipientId: string): Promise<string>;
   cancel(code: string): Promise<boolean>;
+  forfeit(code: string): Promise<FootballGmMatchState>;
   load(code: string): Promise<FootballGmMatchState>;
   open(code: string): Promise<FootballGmMatchState>;
   spin(code: string, eligibleTeamCodes: readonly string[]): Promise<FootballGmMatchState>;
@@ -87,6 +90,9 @@ export function createFootballGmMatchRepository(
     },
     async cancel(code) {
       return z.boolean().parse(await rpc(client, "cancel_football_gm_challenge", { p_code: code }));
+    },
+    async forfeit(code) {
+      return stateSchema.parse(await rpc(client, "forfeit_football_gm", { p_code: code }));
     },
     async load(code) {
       return stateSchema.parse(await rpc(client, "get_my_football_gm_match", { p_code: code }));
