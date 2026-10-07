@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { memberProfilePath } from "../members/memberProfilesModel";
 import type { PlaySport } from "../play/playRegistry";
+import { createFootballGmMatchRepository } from "../play/footballGmMatchRepository";
 import { createWheelFootballRepository } from "../play/wheelFootballRepository";
 import {
   challengeCounterpartId,
@@ -38,7 +39,7 @@ function isSealedBidChallenge(challenge: PlayChallenge) {
 }
 
 function isTurnBasedChallenge(challenge: PlayChallenge) {
-  return challenge.gameId === "wheel-football" || challenge.gameId === "wheel-ufc";
+  return challenge.gameId === "wheel-football" || challenge.gameId === "wheel-ufc" || challenge.gameId === "gm-football";
 }
 
 function rowCopy(challenge: PlayChallenge, profileId: string) {
@@ -46,6 +47,22 @@ function rowCopy(challenge: PlayChallenge, profileId: string) {
   const status = challengeStatus(challenge, profileId);
 
   if (isTurnBasedChallenge(challenge)) {
+    if (challenge.gameId === "gm-football") {
+      if (status === "completed") return { eyebrow: "THE GM COMPLETE WITH", detail: "Open the final three-year franchise comparison", action: "OPEN" };
+      if (status === "declined") return { eyebrow: "THE GM ENDED", detail: "This front-office matchup has ended", action: "ENDED" };
+      if (direction === "sent") {
+        return {
+          eyebrow: "THE GM WITH",
+          detail: status === "opened" ? "Match in progress · check whose turn" : "Waiting for them to accept",
+          action: "OPEN",
+        };
+      }
+      return {
+        eyebrow: "THE GM FROM",
+        detail: status === "opened" ? "Match in progress · check whose turn" : "Open to accept and start",
+        action: status === "opened" ? "OPEN" : "PLAY",
+      };
+    }
     if (challenge.gameId === "wheel-ufc") {
       if (status === "completed") return { eyebrow: "WHEEL COMPLETE WITH", detail: "Open both final fight teams", action: "OPEN" };
       if (status === "declined") return { eyebrow: "WHEEL DECLINED", detail: "This matchup has ended", action: "DECLINED" };
@@ -134,6 +151,7 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
     viewResults,
   } = usePlayChallenges();
   const wheelRepository = useMemo(() => createWheelFootballRepository(), []);
+  const gmRepository = useMemo(() => createFootballGmMatchRepository(), []);
   const [filter, setFilter] = useState<ChallengeCenterFilter>("all");
   const [expanded, setExpanded] = useState(false);
   const centerRef = useRef<HTMLElement | null>(null);
@@ -219,7 +237,17 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
     );
   }
 
-  async function endWaitingWheelLobby(challenge: PlayChallenge) {
+  async function endWaitingTurnBasedChallenge(challenge: PlayChallenge) {
+    if (challenge.gameId === "gm-football") {
+      if (!gmRepository) return;
+      try {
+        const ended = await gmRepository.cancel(challenge.code);
+        if (ended) await refresh();
+      } catch {
+        await refresh();
+      }
+      return;
+    }
     if (challenge.gameId === "wheel-ufc") {
       await dismissChallenge(challenge.code);
       return;
@@ -366,7 +394,7 @@ export function ChallengeCenter({ sport = "ufc" }: { sport?: PlaySport }) {
                           className="challenge-center__dismiss"
                           aria-label={`${canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"} ${counterpart?.displayName ?? "challenge"} ${challenge.gameTitle}`}
                           onClick={() => canCancelTurnBased || canDeclineTurnBased
-                            ? void endWaitingWheelLobby(challenge)
+                            ? void endWaitingTurnBasedChallenge(challenge)
                             : void dismissChallenge(challenge.code)}
                         >
                           {canCancelTurnBased ? "CANCEL" : canDeclineTurnBased ? "DECLINE" : "REMOVE"}
