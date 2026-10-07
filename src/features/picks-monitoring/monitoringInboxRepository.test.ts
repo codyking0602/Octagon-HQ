@@ -122,6 +122,37 @@ describe("Monitoring Inbox projection mapping", () => {
     expect(inbox.reviewedFindings[0]?.reviewStatus).toBe("dismissed");
   });
 
+  it("accepts persisted skipped scheduler runs instead of taking the owner inbox down", () => {
+    const skippedRun = {
+      ...run,
+      status: "skipped",
+      event_id: null,
+      completed_at: "2026-08-01T12:05:00.000Z",
+      card_source: null,
+      card_source_url: null,
+      odds_provider: null,
+      provider_requests_remaining: null,
+      provider_requests_used: null,
+      provider_last_request_cost: null,
+      provider_event_count: 0,
+      complete_snapshot_count: 0,
+      missing_snapshot_count: 0,
+      diagnostics: [{ next_eligible_at: "2026-08-01T18:00:00.000Z" }],
+      finding_count: 0,
+      new_finding_count: 0,
+    };
+
+    const inbox = mapMonitoringInbox({
+      ...payload,
+      latest_run: skippedRun,
+      recent_runs: [skippedRun, run],
+    });
+
+    expect(inbox.latestRun?.status).toBe("skipped");
+    expect(inbox.recentRuns[0]?.status).toBe("skipped");
+    expect(inbox.latestRun?.providerRequestsUsed).toBeNull();
+  });
+
   it("accepts the valid no-event and no-run state with a truthful skipped wake", () => {
     const inbox = mapMonitoringInbox({
       ...payload,
