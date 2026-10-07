@@ -1236,14 +1236,23 @@ export default function FootballGmHeadToHeadPage() {
         </section>
       ) : null}
 
-      {mode === "human" && remote?.phase === "waiting" ? (
+      {mode === "human" && remote?.declined_at ? (
+        <section className="football-gm__waiting surface-card">
+          <p className="eyebrow">THE GM</p>
+          <h2>MATCH ENDED</h2>
+          <p>This front-office matchup was canceled or declined.</p>
+          <button type="button" onClick={replay}>START A NEW MATCH</button>
+        </section>
+      ) : null}
+
+      {mode === "human" && remote?.phase === "waiting" && !remote.declined_at ? (
         <WaitingCard
           title={remoteMe?.accepted && remoteOpponent?.accepted ? "SETTING THE DRAFT ORDER" : `WAITING FOR ${opponentDisplayName.toUpperCase()}`}
           copy="The draft starts as soon as both GMs open the match. The first pick is randomized."
         />
       ) : null}
 
-      {(mode === "cpu" || (mode === "human" && remote && remote.phase !== "waiting")) ? (
+      {(mode === "cpu" || (mode === "human" && remote && !remote.declined_at && remote.phase !== "waiting")) ? (
         <>
           <VersusRosterBoard
             leftName={myDisplayName}
