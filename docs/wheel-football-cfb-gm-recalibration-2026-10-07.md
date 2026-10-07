@@ -35,7 +35,7 @@ Current demonstrated college ability at the player's real position. Approximatel
 ## AP Top 25
 
 - October 4, 2026 poll, 1–25; Pittsburgh is No. 25, Kentucky is unranked. The 68-school National pool is untouched.
-- The client snapshot and private database poll are updated together. October 27? No: the old **September 27** snapshot remains in historical database rows.
+- The client snapshot and private database poll are updated together. The old **September 27** snapshot remains in historical database rows.
 
 ## Runtime contract
 

@@ -14,7 +14,7 @@ const files:Record<string,string> = {
  "Front Seven":"data/generated/football/wheel-cfb-front-seven-grades-2026-10-03.json",
  Secondary:"data/generated/football/wheel-cfb-secondary-grades-2026-10-03.json"
 };
-const normalize=(v:string)=>v.normalize("NFKD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
+const normalize=(v:string)=>v.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
 
 describe("2026-10-07 CFB Wheel / GM recalibration",()=>{
  it("keeps previous/new grade audit entries for exactly 14 reprices plus 3 new current-role candidates",()=>{
@@ -42,7 +42,7 @@ describe("2026-10-07 CFB Wheel / GM recalibration",()=>{
   expect(recalibration.apTop25.schoolIds).not.toContain("kentucky");
  });
  it("leaves historic authority and poll rows in place",()=>{
-  const sql=readFileSync("supabase/migrations/202612310261_wheel_football_cfb_gm_grade_recalibration.sql","utf8");
+  const sql=readFileSync("supabase/migrations/202612310279_wheel_football_cfb_gm_grade_recalibration.sql","utf8");
   expect(sql).toContain("'2026-10-07'");expect(sql).toContain("'2026-10-04'");
   expect(sql).toContain("on conflict (team_code, position_group, name_key, effective_date)");
   for(const c of recalibration.changeLog)expect(sql).toContain("grade_name_key('"+c.player.replace(/'/g,"''")+"')");
