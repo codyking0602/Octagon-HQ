@@ -6,6 +6,7 @@ declare
   v_year1_definition text;
   v_offseason_definition text;
   v_finish_definition text;
+  v_forfeit_definition text;
 begin
   if to_regclass('private.football_gm_matches') is null
     or to_regclass('private.football_gm_participants') is null then
@@ -27,7 +28,9 @@ begin
     or to_regprocedure('private.save_football_gm_offseason(text,jsonb)') is null
     or to_regprocedure('public.save_football_gm_offseason(text,jsonb)') is null
     or to_regprocedure('private.finish_football_gm_offseason(text,jsonb)') is null
-    or to_regprocedure('public.finish_football_gm_offseason(text,jsonb)') is null then
+    or to_regprocedure('public.finish_football_gm_offseason(text,jsonb)') is null
+    or to_regprocedure('private.forfeit_football_gm(text)') is null
+    or to_regprocedure('public.forfeit_football_gm(text)') is null then
     raise exception 'The GM head-to-head RPC contract is incomplete';
   end if;
 
@@ -60,6 +63,16 @@ begin
     or position('current_turn_profile_id = v_other_id' in v_finish_definition) = 0
     or position('The remaining market is yours' in v_finish_definition) = 0 then
     raise exception 'The GM full-offseason handoff contract drifted';
+  end if;
+
+  select pg_get_functiondef('private.forfeit_football_gm(text)'::regprocedure)
+    into v_forfeit_definition;
+  if position('The GM match has not started' in v_forfeit_definition) = 0
+    or position('forfeited_by_profile_id = v_user_id' in v_forfeit_definition) = 0
+    or position('phase = ''complete''' in v_forfeit_definition) = 0
+    or position('completed_at = coalesce(challenge.completed_at, v_now)' in v_forfeit_definition) = 0
+    or position('responder_result = jsonb_build_object' in v_forfeit_definition) = 0 then
+    raise exception 'The GM forfeit contract drifted';
   end if;
 
   if has_table_privilege('anon', 'private.football_gm_matches', 'select')

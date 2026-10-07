@@ -22,6 +22,10 @@ const publicLaunchMigration = readFileSync(
   resolve(process.cwd(), "supabase/migrations/202612310275_football_gm_public_launch.sql"),
   "utf8",
 );
+const forfeitMigration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/202612310276_football_gm_forfeit.sql"),
+  "utf8",
+);
 const report = readFileSync(
   resolve(process.cwd(), "src/features/back-room/FootballGmFranchiseReport.tsx"),
   "utf8",
@@ -44,9 +48,11 @@ describe("The GM head-to-head presentation", () => {
     expect(page).not.toContain("isFootballGmPlaytestProfile");
     expect(page).not.toContain("footballGmPlaytestOpponentName");
     expect(page).toContain("CHALLENGE ANOTHER GM");
-    expect(page).toContain("Choose opponent…");
-    expect(page).toContain("availableOpponents.map");
+    expect(page).toContain("<ChallengeMemberPicker");
+    expect(page).toContain("members={challenges.members}");
+    expect(page).not.toContain("<select");
     expect(css).toContain(".football-gm__challenge-picker");
+    expect(css).toContain(".challenge-member-picker__search input:focus");
   });
 
   it("guards canceled public GM matches from being reopened", () => {
@@ -54,6 +60,17 @@ describe("The GM head-to-head presentation", () => {
     expect(publicLaunchMigration).toContain("challenge.declined_at is not null");
     expect(page).toContain("MATCH ENDED");
     expect(page).toContain("remote?.declined_at");
+  });
+
+  it("uses the established cancel-before-start and forfeit-after-start challenge lifecycle", () => {
+    expect(page).toContain("CANCEL CHALLENGE");
+    expect(page).toContain("FORFEIT");
+    expect(page).toContain("Forfeit The GM?");
+    expect(page).toContain("repository.forfeit(remote.code)");
+    expect(forfeitMigration).toContain("forfeit_football_gm");
+    expect(forfeitMigration).toContain("forfeited_by_profile_id");
+    expect(forfeitMigration).toContain("The GM match has not started");
+    expect(forfeitMigration).toContain("phase = 'complete'");
   });
 
   it("uses the shared two-sided seven-position board throughout the match", () => {
