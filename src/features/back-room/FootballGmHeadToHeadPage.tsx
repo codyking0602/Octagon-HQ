@@ -1310,7 +1310,7 @@ export default function FootballGmHeadToHeadPage() {
         </section>
       ) : null}
 
-      {mode === "human" && remote?.declined_at ? (
+      {mode === "human" && remote && (remote.declined_at || remote.forfeited_at) ? (
         <section className="football-gm__waiting surface-card">
           <p className="eyebrow">{remote.forfeited_at ? "THE GM · FORFEIT" : "THE GM"}</p>
           <h2>{remote.forfeited_at
@@ -1334,7 +1334,7 @@ export default function FootballGmHeadToHeadPage() {
         />
       ) : null}
 
-      {(mode === "cpu" || (mode === "human" && remote && !remote.declined_at && remote.phase !== "waiting")) ? (
+      {(mode === "cpu" || (mode === "human" && remote && !remote.declined_at && !remote.forfeited_at && remote.phase !== "waiting")) ? (
         <>
           <VersusRosterBoard
             leftName={myDisplayName}
