@@ -49,6 +49,7 @@ describe("Football standalone challenge integration parity", () => {
     const games = playGamesForSport("football");
     const challengeGames = games.filter((game) => game.lineup.challengeEligible);
     expect(challengeGames.map((game) => game.id)).toEqual([
+      "gm-football",
       "draft-room",
       "wheel-football",
       ...footballChallengeGames.map((game) => game.id),
@@ -99,6 +100,11 @@ describe("Football standalone challenge integration parity", () => {
       const expectedParam = game.id === "find-leader" ? "challenge=FB1234" : "match=FB1234";
       expect(routed).toBe(`${game.route}?${expectedParam}`);
     }
+  });
+
+  it("routes The GM into its public server-owned match URL", () => {
+    expect(challengePlayRoute(challenge("gm-football", "/football/gm-mode")))
+      .toBe("/football/gm-mode?match=FB1234");
   });
 
   it("routes Wheel of Football into its turn-based match URL", () => {
