@@ -520,10 +520,37 @@ export default function FootballGmHeadToHeadPage() {
   const yearOnePair: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null = legacyYearOne ?? legalStoredYearOne ?? (
     sharedResults ? [sharedResults[myMatchKey]![0]!, sharedResults[opponentMatchKey]![0]!] : null
   );
-  const resolvedThreeYears: readonly [readonly FootballGmSeasonResultV2[], readonly FootballGmSeasonResultV2[]] | null = sharedResults ? [
-    [yearOnePair?.[0] ?? sharedResults[myMatchKey]![0]!, ...sharedResults[myMatchKey]!.slice(1)],
-    [yearOnePair?.[1] ?? sharedResults[opponentMatchKey]![0]!, ...sharedResults[opponentMatchKey]!.slice(1)],
-  ] : null;
+  // A completed multiplayer match owns an immutable three-year postseason
+  // record in Supabase. Never silently re-simulate it on page reload.
+  const savedSeasons = (value: unknown): readonly FootballGmSeasonResultV2[] | null => {
+    if (!Array.isArray(value) || value.length !== 3) return null;
+    if (!value.every((entry, index) =>
+      entry && typeof entry === "object"
+      && entry.year === index + 1
+      && typeof entry.teamGrade === "number"
+      && typeof entry.postseasonBonus === "number"
+      && typeof entry.finish === "string"
+      && Object.hasOwn(FINISH_RANK, entry.finish)
+    )) return null;
+    return value as FootballGmSeasonResultV2[];
+  };
+  const savedMySeasons = mode === "human" && remote?.phase === "complete" && !remote.forfeited_at
+    ? savedSeasons(remoteMe?.run_state.resolvedSeasons)
+    : null;
+  const savedOpponentSeasons = mode === "human" && remote?.phase === "complete" && !remote.forfeited_at
+    ? savedSeasons(remoteOpponent?.run_state.resolvedSeasons)
+    : null;
+  const savedHasDuplicateFinalist = savedMySeasons && savedOpponentSeasons
+    ? savedMySeasons.some((year, index) => ["Champion", "Super Bowl Loss"].includes(year.finish)
+      && year.finish === savedOpponentSeasons[index]?.finish)
+    : false;
+  const resolvedThreeYears: readonly [readonly FootballGmSeasonResultV2[], readonly FootballGmSeasonResultV2[]] | null =
+    savedMySeasons && savedOpponentSeasons && !savedHasDuplicateFinalist
+      ? [savedMySeasons, savedOpponentSeasons]
+      : sharedResults ? [
+        [yearOnePair?.[0] ?? sharedResults[myMatchKey]![0]!, ...sharedResults[myMatchKey]!.slice(1)],
+        [yearOnePair?.[1] ?? sharedResults[opponentMatchKey]![0]!, ...sharedResults[opponentMatchKey]!.slice(1)],
+      ] : null;
   const displayedPhase = mode === "human" ? remote?.phase ?? "waiting" : localPhase;
   const opponentDisplayName = mode === "human"
     ? remoteOpponent?.display_name ?? selectedOpponent?.displayName ?? "OPPONENT"
