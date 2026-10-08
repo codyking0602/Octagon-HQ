@@ -12,6 +12,8 @@
 
 - New `:gmdev1` seeds opt in. Previously created runs without this suffix retain their exact deterministic model.
 - All outcomes are generated per player per game seed. No hidden rerolls or changes after reload; Year 2 and Year 3 draw separate development steps.
+- **Year 2** applies the player's authored breakout / improve / steady / decline probabilities directly against the existing HQ grade. **Year 3** recalculates the outcome probabilities (not the HQ base grade) using the player's realized Year 2 grade, their gain or loss relative to Year 1, and their age. High-graded players and players who just made a large jump become progressively less likely to break out again; players who struggled keep comeback upside. Aging increases regression pressure at role-specific thresholds.
+- The Year 3 adjustment does not give every player the same odds: it scales the 594 player-specific profiles, and the reduction in breakout/improvement odds flows primarily into *steady*, not an arbitrary increased bust chance. There is still only one offseason; Year 3 rating changes don't trigger another contract renegotiation.
 - Established prime stars have constrained year-to-year downside while late-career stars are exposed to age risk; first-round developing quarterbacks have meaningful upside **and** nonzero bust probabilities.
 - Contract repricing happens **once** between Year 1 and Year 2. 1YR offers depend on the simulated Year 2 grade plus a separate player-specific market variance factor. Their agreed demand is stable for both later seasons. 3YR contracts never reprice; their on-field grade can still change.
 - Travis Hunter's two roster positions use a shared development direction roll to avoid simultaneously becoming a breakout WR and collapse DB due purely to separate identity namespaces. Offense and defense retain their distinct HQ grade/role baselines.
@@ -41,6 +43,7 @@ The categories are *outcome likelihoods*, not separate percentage allocations fo
 - Complete profile census; current HQ grade and player identity matching; odds and cap limits.
 - Year 1 salary never changes; 1YR offers fixed across Years 2–3, 3YR salaries locked.
 - New seeds vary outcomes; repeated seeds replay exactly; previous untagged seeds retain old behavior.
+- Year 3 conditional probability tests cover a breakout followed by lower repeat-breakout odds, a setback with comeback potential, age-related regression, and valid probability distributions for all 594 profiles at different Year 2 grades.
 - Three-year simulations for value, balanced, and upside roster approaches, including CPU cap repairs, year-by-year results, and records. Refer to `footballGmFullDevelopmentCalibration.test.ts` for simulated metrics.
 - After each biweekly roster/grade update, **review any new, removed, traded, or materially regraded NFL player** and update this explicit profile table. Do not silently substitute a generic progression rate for any new member. The profile-coverage test is intended to fail closed on new identities until curated.
 - This calibration does not modify the established Wheel ratings or the upstream grade-refresh schedule.
