@@ -14306,16 +14306,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4702828",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texastech.com/sports/football/roster/aj-holmes-jr/14301",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 62,
+          "decline": 14,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.9,
+        "portalExitProbability": 0.01,
+        "summary": "Texas Tech 2025 AP second-team All-American interior DL appeared in all 14 games, made final eight starts, logged 38 tackles, nine TFL, 4.5 sacks and 37 PFF pressures; ranked among the top run defenders. Official 2026 fifth-year roster and final collegiate season, so high NFL exit and little further grade-room rather than invented dominant growth.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/aj-holmes-jr/14301"
+        ]
+      }
     },
     {
       "id": "texas-tech|adamtrick",
@@ -14325,16 +14344,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4819260",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texastech.com/sports/football/roster/adam-trick/14374",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 51,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.01,
+        "summary": "Miami Ohio 2025 first-team All-MAC edge after multi-year development; career 41 games/16 starts, 102 tackles, 18 TFL, 13 sacks, three forced fumbles. Texas Tech 2026 official fifth year and last college eligibility, Big12 transition presents both modest improvement and risk; do not equate MAC sack totals to tested Power4 elite consistency.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/adam-trick/14374"
+        ]
+      }
     },
     {
       "id": "texas-tech|austinromaine",
@@ -14352,8 +14390,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 57,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.8,
+        "portalExitProbability": 0.02,
+        "summary": "Kansas State 2025 second-team All-Big12 linebacker, three-time all-conference player with 34 appearances/26 starts across 2023-25, moving to Texas Tech as 2026 senior. Demonstrated veteran P4 level, high likelihood of steady play and NFL interest, while school bio cites two eligibility seasons on transfer under 5-for-5 rule, so do not hard-code exhausted eligibility.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/austin-romaine/14371"
+        ]
+      }
     },
     {
       "id": "texas-tech|benroberts",
@@ -14363,16 +14420,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4833626",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texastech.com/sports/football/roster/ben-roberts/14322",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 20,
+          "steady": 63,
+          "decline": 14,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.8,
+        "portalExitProbability": 0.01,
+        "summary": "Texas Tech 2025 fourteen-start linebacker with 90 tackles, four TFL and major Big12 Championship Game outstanding player award; 2023 Big12 Defensive Freshman of Year, at least 80 tackles for three seasons. Official 2026 fifth-year and final collegiate season. Mature upper-end talent has very little breakout runway, and game eligibility should force exit.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/ben-roberts/14322"
+        ]
+      }
     },
     {
       "id": "texas-tech|brendenjordan",
@@ -14390,8 +14466,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 51,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.03,
+        "summary": "Texas Tech 2025 senior predecessor started all 14 games at boundary safety, 59 tackles, two TFL, one interception and forced fumble; 2026 official senior returning after increase from prior 56 combined career tackles. Veteran secondary starter likely stable; slight new-role improvement possible but no giant leap.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/brenden-jordan/14305"
+        ]
+      }
     },
     {
       "id": "texas-tech|bricepollock",
@@ -14462,8 +14557,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 58,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.85,
+        "portalExitProbability": 0.02,
+        "summary": "Texas Tech 2025 second-team All-Big12 and Doak Walker semifinalist RB rushed 209 times for 1,124 yards and 14 TD in 14 games/nine starts, forming a top duo with J'Koby Williams. Already proven near high college production ceiling as 2026 junior, with 2027 NFL Draft eligible and significant declaration risk.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/cameron-dickey/14282"
+        ]
+      }
     },
     {
       "id": "texas-tech|coyeakin",
@@ -14473,16 +14587,35 @@
       "groups": [
         "WR"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4916941",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texastech.com/sports/football/roster/eakin-coy/14284",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 26,
+          "steady": 55,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.63,
+        "portalExitProbability": 0.01,
+        "summary": "Texas Tech 2025 slot receiver started 12 of 14 contests, 48 catches/637 yards/six TD and 2025 Big12 title game offensive MVP, after 2024 600-yard performance. 2026 official fifth-year veteran, expected ordinary terminal college season and mature steady profile rather than automatic high breakout.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/eakin-coy/14284"
+        ]
+      }
     },
     {
       "id": "texas-tech|davinmartin",
@@ -14500,8 +14633,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 41,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.05,
+        "summary": "UTSA 2025 CB played 11 games/eight starts for 26 tackles, one INT and two pass breakups, with zero coverage TDs on 33 targets per school bio. Texas Tech 2026 senior after three UTSA years, incoming P4 competition creates credible growth opportunity and coverage volatility; official bio cites two years eligibility, not a certain forced exit.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/davin-martin/14367"
+        ]
+      }
     },
     {
       "id": "texas-tech|jkobywilliams",
@@ -14519,8 +14671,27 @@
       "sourceUrl": "https://texastech.com/sports/football/roster/jkoby-williams/14332",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 28,
+          "steady": 53,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.02,
+        "summary": "Texas Tech 2025 junior predecessor all-around RB/returner had 868 rushing yards/six TD on 155 carries plus 388 receiving yards, 242 kick returns and 1,525 all-purpose yards across 14 games/six starts; AllBig12 returner and Paul Hornung finalist. With proven production in multiple phases by 2026 junior season, steady likely and 2027 NFL interest high.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/jkoby-williams/14332"
+        ]
+      }
     },
     {
       "id": "texas-tech|kennyjohnson",
@@ -14539,8 +14710,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 33,
+          "steady": 45,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.04,
+        "summary": "Pitt 2025 all-ACC honorable mention receiver and 2023-25 return threat: 109 receptions/1,354 yards/nine TD and 2,664 all-purpose yards in 38 games/28 starts, with punt and kick return touchdowns. Texas Tech 2026 senior transfer has clear feature utility with Big12 transition; school notes two eligibility years remaining, so normal senior label alone must not force departure.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/kenny-johnson/14362"
+        ]
+      }
     },
     {
       "id": "texas-tech|malcolmsimmons",
@@ -14558,8 +14748,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 37,
+          "steady": 40,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.05,
+        "summary": "Auburn 2025 sophomore WR played all 12 games/three starts, caught 25 passes for 457 yards/two receiving TD and 42 rush yards/one rush TD, with consecutive final 140-plus receiving yard games; combined career 65 catches/908 yards. Texas Tech 2026 junior transfer with legit explosive flashes but inconsistent week-to-week volume; school projects additional years under 5-for-5.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/malcolm-simmons/14372"
+        ]
+      }
     },
     {
       "id": "texas-tech|malikesquerra",
@@ -14577,8 +14786,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 39,
+          "steady": 32,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.16,
+        "portalExitProbability": 0.07,
+        "summary": "Texas Tech 2025 safety appeared all 14 games mostly reserve and special teams, just eight tackles in four games and no verified interceptions. 2024 redshirt appearance in two games. 2026 junior has growth opportunity but has not demonstrated consistent starter-level Big12 defensive production; moderate portal/playing-time risk.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/malik-esquerra/14286"
+        ]
+      }
     },
     {
       "id": "texas-tech|mateenibirogba",
@@ -14588,16 +14816,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "5086180",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texastech.com/sports/football/roster/mateen-ibirogba/14360",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 31,
+          "steady": 44,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.01,
+        "summary": "Wake Forest 2025 starting DT played 12 games/21 tackles/3.5 TFL/two sacks; previously Georgetown first-team All-Patriot 2023. Career 37 games, 17.5 TFL/nine sacks, 79 PFF pressures. Official Texas Tech 2026 fifth-year and last eligibility, veteran interior rusher with competition-adjustment uncertainty and terminal-season exit.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/mateen-ibirogba/14360"
+        ]
+      }
     },
     {
       "id": "texas-tech|micahhudson",
@@ -14616,8 +14863,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 38,
+          "steady": 31,
+          "decline": 16,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.3,
+        "portalExitProbability": 0.07,
+        "summary": "Texas Tech 2025 sophomore reserve WR played 14 games mainly as kickoff returner, without verified full-time receiving star production; 2024 rookie in eight games/one start caught eight balls for 123 yards while battling injury. Highly recruited status is not a substitute for college tape. 2026 junior can rise with larger role but also has real underperformance/injury risk.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/micah-hudson/14302"
+        ]
+      }
     },
     {
       "id": "texas-tech|peytonmorgan",
@@ -14635,8 +14901,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 38,
+          "steady": 32,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.06,
+        "summary": "Texas Tech 2025 sophomore defensive backup safety played 12 of 14 games, 11 tackles/half TFL and three pass breakups after only spot action as true freshman. 2026 junior with legitimate opportunity for a larger Big12 role, but 2025 season didn't demonstrate full-time defensive impact.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/peyton-morgan/14315"
+        ]
+      }
     },
     {
       "id": "texas-tech|terrancecarterjr",
@@ -14647,16 +14932,35 @@
         "TE",
         "Flex"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4867887",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texastech.com/sports/football/roster/terrance-carter-jr-/14275",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 56,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.86,
+        "portalExitProbability": 0.01,
+        "summary": "Texas Tech 2025 second-team All-Big12 TE started 12 of 13 appearances, 55 catches for 624 yards and five TD, among best Red Raider tight-end yardage since Jace Amaro. 2026 official fifth-year receiving TE, already high demonstrated offensive value and likely draft declaration/eligibility completion, so steady more likely than big improvement.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/terrance-carter-jr-/14275"
+        ]
+      }
     },
     {
       "id": "texas-tech|treywhite",
@@ -14673,9 +14977,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://texastech.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 25,
+          "steady": 55,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.85,
+        "portalExitProbability": 0.01,
+        "summary": "San Diego State 2025 first-team All-Mountain West edge started all 13 games with 53 tackles, 10.5 TFL and seven sacks, after 2024 first-team All-MW, 31 career TFL and 19.5 sacks. Texas Tech 2026 official fifth-year final season; high proven rush skill, meaningful Power4 transfer translation, and normal forced departure.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/trey-white/14375"
+        ]
+      }
     },
     {
       "id": "texas-tech|willhammond",
@@ -16860,7 +17183,7 @@
       }
     }
   ],
-  "officialOverrides": 128,
+  "officialOverrides": 134,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
