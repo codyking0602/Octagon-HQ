@@ -46,6 +46,7 @@ import {
   footballGmIsOffseasonCompliantV2,
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
+  footballGmSeasonRecordLabel,
   footballGmTeamOverall,
   footballGmSignFreeAgent,
   footballGmTradePartnerPlayers,
@@ -958,6 +959,7 @@ export function SeasonCard({
       <small>YEAR {year}</small>
       <strong>{footballGmTeamOverall(result.teamGrade)} OVR</strong>
       <span>TEAM OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
+      {footballGmSeasonRecordLabel(result) ? <span>{footballGmSeasonRecordLabel(result)} REGULAR SEASON</span> : null}
       <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
 
     </article>
