@@ -45,15 +45,15 @@ describe("Wheel of Football current NFL + CFB model", () => {
     expect(wheelFootballPoolTeams("AP_TOP_25")).toHaveLength(25);
     expect(wheelFootballPoolTeams("AP_TOP_25").map((team) => team.code)).toEqual([
       "texas", "georgia", "notre-dame", "miami", "ohio-state",
-      "indiana", "alabama", "florida", "ole-miss", "byu",
-      "lsu", "texas-tech", "utah", "iowa", "oregon",
-      "mississippi-state", "tennessee", "usc", "oklahoma-state", "houston",
-      "smu", "boise-state", "ucla", "kentucky", "missouri",
+      "alabama", "indiana", "byu", "ole-miss", "lsu",
+      "texas-tech", "utah", "oregon", "missouri", "tennessee",
+      "florida", "mississippi-state", "oklahoma-state", "usc", "iowa",
+      "ucla", "houston", "boise-state", "smu", "pittsburgh",
     ]);
     expect(wheelFootballPoolTeams("CFB").some((team) => team.code === "boise-state")).toBe(false);
-    expect(wheelFootballPoolTeams("AP_TOP_25")[21]).toMatchObject({
+    expect(wheelFootballPoolTeams("AP_TOP_25")[22]).toMatchObject({
       code: "boise-state",
-      apRank: 22,
+      apRank: 23,
       conference: "Pac-12",
     });
     expect(wheelFootballPoolTeams("SEC")).toHaveLength(16);
@@ -67,7 +67,7 @@ describe("Wheel of Football current NFL + CFB model", () => {
     });
     expect(wheelFootballTeams.find((team) => team.code === "usc")).toMatchObject({
       sportsReferenceUrl: "https://www.sports-reference.com/cfb/schools/southern-california/2026.html",
-      apRank: 18,
+      apRank: 19,
     });
   });
 
