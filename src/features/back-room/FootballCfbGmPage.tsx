@@ -105,8 +105,8 @@ function Roster({roster, year, compact = false, onPortalOut, limited = false}: {
   </section>;
 }
 function ScoutKey({close}: {close: () => void}) {
-  return <div className="football-gm__scout-overlay" role="presentation" onClick={close}>
-    <section className="football-gm__scout-sheet surface-card" role="dialog" aria-modal="true" aria-label="Player scouting key"
+  return <div className="football-gm__scout-sheet-backdrop" role="presentation" onClick={close}>
+    <section className="football-gm__scout-sheet" role="dialog" aria-modal="true" aria-label="Player scouting key"
       onClick={(event) => event.stopPropagation()}>
       <header><span><small>PLAYER OUTLOOK</small><strong>SCOUT KEY</strong></span>
         <button type="button" aria-label="Close player scouting key" onClick={close}>×</button></header>
@@ -142,10 +142,10 @@ function Board({schoolId, roster, budget, year, excluded, onPick}: {
           <PlayerHeadshot player={{team: player.schoolId, name: player.name}} className="football-wheel-picker__headshot" />
           <span className="football-gm__picker-player-copy">
             <strong>{player.name}</strong><small>{player.family} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
-            <span className="football-gm__picker-scouting"><Quality grade={player.currentGrade} /><Outlook value={player.outlook} /></span>
+            <span className="football-gm__candidate-tags"><Quality grade={player.currentGrade} /><Outlook value={player.outlook} /></span>
           </span>
-          <span className="football-gm__picker-contract"><strong>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</strong>
-            <small>{year === 1 ? "2026 NIL" : "2027 NIL"}</small></span>
+          <span className="football-gm__picker-action"><b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
+            <em>SELECT →</em></span>
         </button>)}
       </div>
       {!candidates.length ? <p>No affordable legal player from this school. Continue the portal search.</p> : null}
@@ -154,12 +154,11 @@ function Board({schoolId, roster, budget, year, excluded, onPick}: {
   </>;
 }
 function Season({season}: {season: CfbGmSeason}) {
-  return <article className="football-gm__season-card surface-card">
-    <p className="eyebrow">YEAR {season.year} · {season.year === 1 ? "2026" : "2027"} SEASON</p>
-    <h2>{season.overall} <small>OVR</small></h2>
-    <div className="football-gm__season-finish"><strong>{season.finish.toUpperCase()}</strong></div>
-    <p>{season.year === 2 ? "Roster continuity changes the outcome odds, not the displayed team grade." :
-      "Your player grades set the odds; the season simulation decides the result."}</p>
+  return <article className="football-gm__season-card">
+    <small>YEAR {season.year} · {season.year === 1 ? "2026" : "2027"}</small>
+    <strong>{season.overall} OVR</strong>
+    <span>TEAM OVR · {season.winOdds.toFixed(1)}% TITLE ODDS</span>
+    <b>{season.finish}</b>
   </article>;
 }
 function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
@@ -181,7 +180,7 @@ function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
       <div className="football-gm-report__offseason-marker">
         <small>THE OFFSEASON</small>
         <strong>{result.retained}/7 ORIGINAL CORE RETAINED</strong>
-        <span>{result.forcedDepartures} projected eligibility/NFL departure(s) · {result.voluntaryDepartures} portal-out(s) · {changed.length} portal addition(s)</span>
+        <span>{result.forcedDepartures} projected eligibility/NFL/portal departure(s) · {result.voluntaryDepartures} portal-out(s) · {changed.length} portal addition(s)</span>
       </div>
     </section>
     <section className="football-gm-report__evolution surface-card">
@@ -354,7 +353,7 @@ export default function FootballCfbGmPage() {
       <section className="football-gm__offseason-status surface-card">
         <p className="eyebrow">THE OFFSEASON · TRANSFER PORTAL</p>
         <h2>RETAIN. REPRICE. REBUILD.</h2>
-        <p>{run.departures.length} modeled NFL/eligibility departure(s). Up to two voluntary portal-outs ({run.voluntaryPortalOuts.length}/2 used). Retained players use their Year 2 NIL figures.</p>
+        <p>{run.departures.length} modeled NFL/eligibility/portal departure(s). Up to two voluntary portal-outs ({run.voluntaryPortalOuts.length}/2 used). Retained players use their Year 2 NIL figures.</p>
         {run.departures.length ? <div className="football-gm__intro-facts">
           {run.departures.map((d) => <span key={d.playerId}>{cfbGmPlayer(d.playerId)?.name}: {d.reason.toUpperCase()} (PROJECTED)</span>)}
         </div> : null}
