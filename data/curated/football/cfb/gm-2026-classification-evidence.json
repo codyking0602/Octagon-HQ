@@ -4,7 +4,7 @@
   "snapshotAt": "2026-10-08T16:34:59.519Z",
   "schoolCount": 25,
   "population": 468,
-  "classified": 384,
+  "classified": 405,
   "exactMatches": 384,
   "failures": [
     {
@@ -406,13 +406,13 @@
         "WR",
         "Flex"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -425,13 +425,13 @@
       "groups": [
         "WR"
       ],
-      "classification": null,
+      "classification": "6TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "6TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -444,13 +444,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -463,13 +463,13 @@
       "groups": [
         "WR"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -483,13 +483,13 @@
         "RB",
         "Flex"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -502,13 +502,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -521,13 +521,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -540,13 +540,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -559,13 +559,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -578,13 +578,13 @@
       "groups": [
         "QB"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -598,13 +598,13 @@
         "TE",
         "Flex"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -617,13 +617,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -636,13 +636,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -656,13 +656,13 @@
         "WR",
         "Flex"
       ],
-      "classification": null,
+      "classification": "FR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "FR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -675,13 +675,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -694,13 +694,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -713,13 +713,13 @@
       "groups": [
         "RB"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -732,13 +732,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://www.espn.com/college-football/team/roster/_/id/68/boise-state-broncos",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -7494,13 +7494,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "Jr.",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -7552,13 +7552,13 @@
         "WR",
         "Flex"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "Jr.",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -7591,13 +7591,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "Jr.",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -9005,5 +9005,19 @@
       "earliestDraftYear": null,
       "draftEligible2027": null
     }
-  ]
+  ],
+  "officialOverrides": 21,
+  "officialSources": [
+    {
+      "schoolId": "boise-state",
+      "url": "https://broncosports.com/sports/football/roster/print",
+      "verifiedPlayers": 18
+    },
+    {
+      "schoolId": "texas",
+      "url": "https://texaslonghorns.com/sports/football/roster/print",
+      "verifiedPlayers": 3
+    }
+  ],
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation."
 }
