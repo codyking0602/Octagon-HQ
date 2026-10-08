@@ -10,10 +10,11 @@ import {
   cfbGmCandidates, cfbGmContinuity, cfbGmEligibleSchools, cfbGmEnterOffseason,
   cfbGmFinalResult, cfbGmInitial, cfbGmMoney, cfbGmOpenSlots, cfbGmPick,
   cfbGmPlayer, cfbGmPortalOut, cfbGmSeason, cfbGmSpent, cfbGmSpin,
-  cfbGmValidateRun,
+  cfbGmValidateRun, cfbGmEffectiveGrade,
   type CfbGmBudget, type CfbGmPlayer, type CfbGmRosterEntry, type CfbGmRun,
   type CfbGmSeason,
 } from "./footballCfbGmEngine";
+import { cfbGmDevelop } from "./footballCfbGmDevelopment";
 
 function freshSeed() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -68,9 +69,10 @@ function Cap({roster, year, budget}: {roster: readonly CfbGmRosterEntry[]; year:
     </section>
   );
 }
-function Roster({roster, year, compact = false, onPortalOut, limited = false}: {
+function Roster({roster, year, seed, compact = false, onPortalOut, limited = false}: {
   roster: readonly CfbGmRosterEntry[];
   year: 1 | 2;
+  seed: string;
   compact?: boolean;
   onPortalOut?: (playerId: string) => void;
   limited?: boolean;
@@ -87,8 +89,8 @@ function Roster({roster, year, compact = false, onPortalOut, limited = false}: {
           {player ? <>
             <div className="football-gm__roster-player">
               <PlayerHeadshot player={{team: player.schoolId, name: player.name}} />
-              <span><strong>{player.name}</strong><em>{player.school} · {player.family}</em>
-                <span className="football-gm__roster-scouting"><Quality grade={player.currentGrade} /><Outlook value={player.outlook} /></span>
+              <span><strong>{player.name}</strong><em>{player.school} · {player.family} · {player.classification ?? "CLASS UNVERIFIED"}</em>
+                <span className="football-gm__roster-scouting"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} /><Outlook value={player.outlook} /></span>
               </span>
             </div>
             <div className="football-gm__roster-contract">
@@ -114,15 +116,17 @@ function ScoutKey({close}: {close: () => void}) {
         <p><b>ELITE / IMPACT / STARTER / DEPTH</b><span>Current college ability. Exact audited grades are hidden.</span></p>
         <p><b>RISING / STABLE / DECLINE RISK</b><span>Modeled outlook for next season.</span></p>
         <p><b>2026 NIL</b><span>Modeled player market prices, not verified NIL contracts; independent of HQ grades.</span></p>
+        <p><b>2026 CLASS</b><span>Roster-listed FR/SO/JR/SR or extended-year class; unverified when the source has no reliable match. A class is not a confirmed draft decision.</span></p>
+        <p><b>2027 DEVELOPMENT</b><span>Returning players can improve, break out, remain steady, or decline. Current HQ ratings stay unchanged; only modeled 2027 performance moves.</span></p>
         <p><b>2027 REPRICE</b><span>Estimated NIL retention cost in the single offseason.</span></p>
         <p><b>PORTAL OUT</b><span>Up to two voluntary departures, plus modeled forced eligibility/NFL departures.</span></p>
       </div>
     </section>
   </div>;
 }
-function Board({schoolId, roster, budget, year, excluded, onPick}: {
+function Board({schoolId, roster, budget, year, seed, excluded, onPick}: {
   schoolId: string; roster: readonly CfbGmRosterEntry[]; budget: number; year: 1 | 2;
-  excluded: ReadonlySet<string>; onPick: (id: string) => void;
+  seed: string; excluded: ReadonlySet<string>; onPick: (id: string) => void;
 }) {
   const team = wheelFootballTeam(schoolId);
   const candidates = cfbGmCandidates(schoolId, roster, budget, year, true, excluded);
@@ -155,8 +159,8 @@ function Board({schoolId, roster, budget, year, excluded, onPick}: {
         {visibleCandidates.map((player) => <button key={player.id} type="button" onClick={() => onPick(player.id)}>
           <PlayerHeadshot player={{team: player.schoolId, name: player.name}} className="football-wheel-picker__headshot" />
           <span className="football-gm__picker-player-copy">
-            <strong>{player.name}</strong><small>{player.family} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
-            <span className="football-gm__candidate-tags"><Quality grade={player.currentGrade} /><Outlook value={player.outlook} /></span>
+            <strong>{player.name}</strong><small>{player.family} · {player.classification ?? "CLASS UNVERIFIED"} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
+            <span className="football-gm__candidate-tags"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} /><Outlook value={player.outlook} /></span>
           </span>
           <span className="football-gm__picker-action"><b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
             <em>SELECT →</em></span>
@@ -211,7 +215,7 @@ function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
           <b>{CFB_GM_SLOT_LABELS[slot]}</b>
           <div><small>YEAR 1</small><strong>{a.name}</strong><em>{a.school} · {cfbGmMoney(a.nilYear1)}</em></div>
           <span className={"football-gm-report__move" + (a.id !== b.id ? " is-change" : "")}>{a.id === b.id ? "RETAINED" : "PORTAL"}<i>→</i></span>
-          <div className="is-final"><small>YEAR 2</small><strong>{b.name}</strong><em>{b.school} · {cfbGmMoney(b.nilYear2)}</em></div>
+          <div className="is-final"><small>YEAR 2</small><strong>{b.name}</strong><em>{b.school} · {cfbGmMoney(b.nilYear2)} · {cfbGmDevelop(b.id, b.currentGrade, b.classification, run.seed).outcome}</em></div>
         </article>;
       })}</div>
     </section>
@@ -341,25 +345,25 @@ export default function FootballCfbGmPage() {
 
     {run.phase === "draft" ? <>
       <Cap roster={run.roster} year={1} budget={budget} />
-      <Roster roster={run.roster} year={1} />
+      <Roster roster={run.roster} year={1} seed={run.seed} />
       <div className="football-gm__draft-context">
         <span>ROUND {run.roster.length + 1} OF 7 · {run.budget}</span>
         <strong>{cfbGmOpenSlots(roster).map((slot) => CFB_GM_SLOT_LABELS[slot]).join(" · ")}</strong>
       </div>
       <GmFootballWheel teams={wheelTeams} rotation={rotation} spinning={spinning}
         pendingTeam={pending} canSpin={Boolean(wheelTeams.length) && !run.pendingSchool} onSpin={spin} />
-      {run.pendingSchool ? <Board schoolId={run.pendingSchool} roster={roster} budget={budget} year={1}
+      {run.pendingSchool ? <Board schoolId={run.pendingSchool} roster={roster} budget={budget} year={1} seed={run.seed}
         excluded={new Set()} onPick={pick} /> : null}
       {!wheelTeams.length ? <section className="surface-card">No affordable legal combinations remain in this pool.</section> : null}
     </> : null}
 
     {run.phase === "year1" ? <>
       <Cap roster={run.roster} year={1} budget={budget} />
-      <Roster roster={run.roster} year={1} />
+      <Roster roster={run.roster} year={1} seed={run.seed} />
       <section className="football-gm__year-reveal surface-card">
         <p className="eyebrow">YEAR 1 COMPLETE</p>
         <Season season={firstSeason} />
-        <p>Now the college offseason: players may leave for the NFL or eligibility, and returning players have updated NIL prices.</p>
+        <p>Now the college offseason: class-informed draft/eligibility decisions, modeled NIL repricing and individual 2027 development change your team.</p>
         <button className="primary-action" type="button" onClick={() => setRun(cfbGmEnterOffseason(run))}>ENTER THE OFFSEASON</button>
       </section>
     </> : null}
@@ -379,11 +383,11 @@ export default function FootballCfbGmPage() {
         <strong>{cfbGmContinuity(run).retained}/7 ORIGINAL PLAYERS RETAINED</strong>
         <p>Turnover affects your playoff odds, not the displayed team OVR. Forced departures don't penalize the management score.</p>
       </section>
-      <Roster roster={run.finalRoster} year={2} compact
+      <Roster roster={run.finalRoster} year={2} seed={run.seed} compact
         limited={run.voluntaryPortalOuts.length >= 2 || Boolean(run.pendingSchool)} onPortalOut={portalOut} />
       {message ? <section className="football-gm__trade-message surface-card" role="status">{message}</section> : null}
       {run.pendingSchool ? <Board schoolId={run.pendingSchool} roster={run.finalRoster} budget={budget}
-        year={2} excluded={excluded} onPick={pick} /> :
+        year={2} seed={run.seed} excluded={excluded} onPick={pick} /> :
       run.finalRoster.length < 7 ? <>
         <section className="football-gm__wheel surface-card">
           <p className="eyebrow">TRANSFER PORTAL · {cfbGmOpenSlots(run.finalRoster).map((slot) => CFB_GM_SLOT_LABELS[slot]).join(" · ")}</p>
@@ -412,7 +416,7 @@ export default function FootballCfbGmPage() {
     {run.phase === "year2" ? <section className="football-gm__years23 surface-card">
       <p className="eyebrow">THE WINDOW</p><h1>YEAR 2</h1>
       <div className="football-gm__season-grid"><Season season={cfbGmSeason(run, 2)} /></div>
-      <p>There is no second offseason. Every change to the core influences playoff probability, while your displayed OVR reflects current ability.</p>
+      <p>There is no second offseason. Every change to the core and each player's modeled development influences playoff probability. The 2026 HQ grades remain untouched.</p>
       <button className="primary-action" type="button" onClick={() => patch({phase: "final"})}>SEE 2-YEAR GM SCORE</button>
     </section> : null}
 
