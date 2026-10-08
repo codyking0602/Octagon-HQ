@@ -2897,6 +2897,12 @@
   font-size: 21px;
 }
 
+.football-gm-report__years .football-gm-report__record {
+  color: #e2efff;
+  font-size: 8px;
+  letter-spacing: .025em;
+}
+
 .football-gm-report__years span {
   color: #83bfe7;
   font-size: 7.5px;

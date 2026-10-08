@@ -13,8 +13,9 @@ import {
   type FootballGmRosterSlot,
 } from "./footballGmEngine";
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
+import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v9-grade-driven-playoffs";
+export const FOOTBALL_GM_VERSION = "football-gm-v10-shared-real-seasons";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
@@ -133,6 +134,16 @@ export interface FootballGmSeasonResultV2 {
   finish: FootballGmPlayoffFinish;
   postseasonBonus: number;
   titleOdds: number;
+  /** Actual regular-season result; optional for immutable pre-v10 history. */
+  wins?: number;
+  losses?: number;
+  playoffSeed?: number | null;
+}
+
+export function footballGmSeasonRecordLabel(result: FootballGmSeasonResultV2): string | null {
+  return Number.isInteger(result.wins) && Number.isInteger(result.losses)
+    && result.wins! >= 0 && result.losses! >= 0 && result.wins! + result.losses! === 17
+    ? `${result.wins}–${result.losses}` : null;
 }
 
 export interface FootballGmFinalResultV2 {
@@ -197,28 +208,22 @@ export interface FootballGmResolvedOffseasonAssets {
 
 type OutcomeRow = Readonly<Record<FootballGmPlayoffFinish, number>> & { grade: number };
 
+/** Probabilities are descriptive estimates from the v10 full-season simulator.
+ * A finish is NEVER sampled from this table. New seasons play actual games.
+ * Values interpolate on raw team grade, not the fan-facing displayed OVR.
+ */
 const OUTCOME_CURVE: readonly OutcomeRow[] = [
-  { grade: 78, "Missed Playoffs": 0.80, "Wild Card": 0.13, Divisional: 0.05, "Conference Championship": 0.015, "Super Bowl Loss": 0.004, Champion: 0.001 },
-  { grade: 79, "Missed Playoffs": 0.77, "Wild Card": 0.15, Divisional: 0.055, "Conference Championship": 0.017, "Super Bowl Loss": 0.006, Champion: 0.002 },
-  { grade: 80, "Missed Playoffs": 0.73, "Wild Card": 0.17, Divisional: 0.066, "Conference Championship": 0.022, "Super Bowl Loss": 0.009, Champion: 0.003 },
-  { grade: 81, "Missed Playoffs": 0.69, "Wild Card": 0.19, Divisional: 0.077, "Conference Championship": 0.027, "Super Bowl Loss": 0.012, Champion: 0.004 },
-  { grade: 82, "Missed Playoffs": 0.64, "Wild Card": 0.21, Divisional: 0.092, "Conference Championship": 0.035, "Super Bowl Loss": 0.017, Champion: 0.006 },
-  { grade: 83, "Missed Playoffs": 0.58, "Wild Card": 0.23, Divisional: 0.112, "Conference Championship": 0.05, "Super Bowl Loss": 0.02, Champion: 0.008 },
-  { grade: 84, "Missed Playoffs": 0.50, "Wild Card": 0.27, Divisional: 0.13, "Conference Championship": 0.06, "Super Bowl Loss": 0.028, Champion: 0.012 },
-  { grade: 85, "Missed Playoffs": 0.34, "Wild Card": 0.28, Divisional: 0.20, "Conference Championship": 0.10, "Super Bowl Loss": 0.06, Champion: 0.02 },
-  { grade: 86, "Missed Playoffs": 0.25, "Wild Card": 0.27, Divisional: 0.23, "Conference Championship": 0.13, "Super Bowl Loss": 0.085, Champion: 0.035 },
-  { grade: 87, "Missed Playoffs": 0.17, "Wild Card": 0.26, Divisional: 0.25, "Conference Championship": 0.16, "Super Bowl Loss": 0.105, Champion: 0.055 },
-  { grade: 88, "Missed Playoffs": 0.10, "Wild Card": 0.23, Divisional: 0.27, "Conference Championship": 0.19, "Super Bowl Loss": 0.13, Champion: 0.08 },
-  { grade: 89, "Missed Playoffs": 0.02, "Wild Card": 0.08, Divisional: 0.21, "Conference Championship": 0.27, "Super Bowl Loss": 0.23, Champion: 0.19 },
-  { grade: 90, "Missed Playoffs": 0.005, "Wild Card": 0.035, Divisional: 0.14, "Conference Championship": 0.26, "Super Bowl Loss": 0.24, Champion: 0.32 },
-  { grade: 91, "Missed Playoffs": 0.001, "Wild Card": 0.009, Divisional: 0.07, "Conference Championship": 0.20, "Super Bowl Loss": 0.26, Champion: 0.46 },
-  { grade: 92, "Missed Playoffs": 0, "Wild Card": 0.003, Divisional: 0.027, "Conference Championship": 0.12, "Super Bowl Loss": 0.25, Champion: 0.60 },
-  { grade: 93, "Missed Playoffs": 0, "Wild Card": 0.001, Divisional: 0.014, "Conference Championship": 0.07, "Super Bowl Loss": 0.245, Champion: 0.67 },
-  { grade: 94, "Missed Playoffs": 0, "Wild Card": 0.001, Divisional: 0.009, "Conference Championship": 0.04, "Super Bowl Loss": 0.23, Champion: 0.72 },
-  { grade: 95, "Missed Playoffs": 0, "Wild Card": 0, Divisional: 0.005, "Conference Championship": 0.03, "Super Bowl Loss": 0.205, Champion: 0.76 },
-  { grade: 96, "Missed Playoffs": 0, "Wild Card": 0, Divisional: 0.003, "Conference Championship": 0.022, "Super Bowl Loss": 0.185, Champion: 0.79 },
-  { grade: 97, "Missed Playoffs": 0, "Wild Card": 0, Divisional: 0.002, "Conference Championship": 0.013, "Super Bowl Loss": 0.165, Champion: 0.82 },
-  { grade: 98, "Missed Playoffs": 0, "Wild Card": 0, Divisional: 0.001, "Conference Championship": 0.009, "Super Bowl Loss": 0.14, Champion: 0.85 },
+  { grade: 78, "Missed Playoffs": 0.995, "Wild Card": 0.004, Divisional: 0.001, "Conference Championship": 0, "Super Bowl Loss": 0, Champion: 0 },
+  { grade: 82, "Missed Playoffs": 0.978, "Wild Card": 0.018, Divisional: 0.004, "Conference Championship": 0, "Super Bowl Loss": 0, Champion: 0 },
+  { grade: 84, "Missed Playoffs": 0.917, "Wild Card": 0.062, Divisional: 0.017, "Conference Championship": 0.002, "Super Bowl Loss": 0.001, Champion: 0.001 },
+  { grade: 86.67, "Missed Playoffs": 0.475, "Wild Card": 0.282, Divisional: 0.147, "Conference Championship": 0.060, "Super Bowl Loss": 0.024, Champion: 0.012 },
+  { grade: 87.33, "Missed Playoffs": 0.314, "Wild Card": 0.322, Divisional: 0.204, "Conference Championship": 0.092, "Super Bowl Loss": 0.041, Champion: 0.027 },
+  { grade: 88, "Missed Playoffs": 0.185, "Wild Card": 0.336, Divisional: 0.239, "Conference Championship": 0.125, "Super Bowl Loss": 0.058, Champion: 0.057 },
+  { grade: 89, "Missed Playoffs": 0.062, "Wild Card": 0.260, Divisional: 0.275, "Conference Championship": 0.171, "Super Bowl Loss": 0.107, Champion: 0.125 },
+  { grade: 90, "Missed Playoffs": 0.016, "Wild Card": 0.144, Divisional: 0.262, "Conference Championship": 0.209, "Super Bowl Loss": 0.137, Champion: 0.232 },
+  { grade: 92, "Missed Playoffs": 0.001, "Wild Card": 0.046, Divisional: 0.170, "Conference Championship": 0.180, "Super Bowl Loss": 0.169, Champion: 0.434 },
+  { grade: 92.5, "Missed Playoffs": 0, "Wild Card": 0.038, Divisional: 0.146, "Conference Championship": 0.160, "Super Bowl Loss": 0.160, Champion: 0.496 },
+  { grade: 98, "Missed Playoffs": 0, "Wild Card": 0.038, Divisional: 0.146, "Conference Championship": 0.160, "Super Bowl Loss": 0.160, Champion: 0.496 },
 ];
 
 const FINISH_ORDER: readonly FootballGmPlayoffFinish[] = [
@@ -361,7 +366,7 @@ export function footballGmOutcomeProbabilities(teamGrade: number) {
       break;
     }
   }
-  const span = Math.max(1, high.grade - low.grade);
+  const span = Math.max(Number.EPSILON, high.grade - low.grade);
   const pct = clamp((bounded - low.grade) / span, 0, 1);
   return Object.fromEntries(FINISH_ORDER.map((finish) => [
     finish,
@@ -402,16 +407,6 @@ export function footballGmSeasonRoll(seed: string, year: 1 | 2 | 3) {
   return avalancheHash(`gm-season-v4:${salts[year - 1]}:${footballGmOutcomeSeed(seed)}`) / 0x1_0000_0000;
 }
 
-function deterministicFinish(seed: string, year: 1 | 2 | 3, teamGrade: number) {
-  const probabilities = footballGmOutcomeProbabilities(teamGrade);
-  const roll = footballGmSeasonRoll(seed, year);
-  let running = 0;
-  for (const finish of FINISH_ORDER) {
-    running += probabilities[finish];
-    if (roll <= running) return finish;
-  }
-  return "Champion" as const;
-}
 
 export function footballGmNegotiationPremiumPct(
   seed: string,
@@ -647,7 +642,12 @@ export function footballGmSeasonResultV2(input: {
   year: 1 | 2 | 3;
 }) {
   const grade = footballGmEffectiveTeamGrade(input.yearOneRoster, input.roster, input.year);
-  const finish = deterministicFinish(input.seed, input.year, grade.teamGrade);
+  const season = footballGmSimulateLeagueSeason({
+    seed: input.seed,
+    year: input.year,
+    franchises: [{ key: "solo", grade: grade.teamGrade }],
+  }).franchises.solo!;
+  const finish = season.finish;
   return {
     year: input.year,
     rawTeamGrade: grade.rawTeamGrade,
@@ -655,6 +655,9 @@ export function footballGmSeasonResultV2(input: {
     continuityAdjustment: grade.continuityAdjustment,
     teamGrade: grade.teamGrade,
     finish,
+    wins: season.wins,
+    losses: season.losses,
+    playoffSeed: season.playoffSeed,
     postseasonBonus: footballGmPostseasonBonus(finish),
     titleOdds: Math.round(footballGmTitleOdds(grade.teamGrade) * 1000) / 10,
   } satisfies FootballGmSeasonResultV2;

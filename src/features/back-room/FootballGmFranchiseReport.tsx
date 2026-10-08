@@ -13,6 +13,7 @@ import {
   footballGmAdjustedRosterCap,
   footballGmAdjustedSalaryForPlayer,
   footballGmFinalResultV2,
+  footballGmSeasonRecordLabel,
   type FootballGmNegotiationConsequences,
   type FootballGmSeasonResultV2,
 } from "./footballGmStrategy";
@@ -144,6 +145,7 @@ function CoreReport({ name, run }: { name: string; run: FootballGmReportRun }) {
             <article key={season.year}>
               <small>YEAR {season.year}</small>
               <strong>{snap.result.teamOveralls[index]} OVR</strong>
+              {footballGmSeasonRecordLabel(season) ? <small className="football-gm-report__record">{footballGmSeasonRecordLabel(season)} REG SEASON</small> : null}
               <span>{footballGmPlayoffFinishLabel(season.finish)}</span>
             </article>
           ))}
@@ -222,14 +224,14 @@ export function FootballGmFranchiseReport({
           <section className="football-gm-report__comparison surface-card">
             <header><small>THREE SEASONS · TWO FRONT OFFICES</small><strong>FRANCHISE COMPARISON</strong></header>
             <p className="football-gm-report__comparison-help">
-              OVR measures team strength. Playoff finishes are simulated, so stronger teams can still lose early.
+              OVR measures team strength. Records come from a 17-game season, then playoff matchups decide how far each team advances.
             </p>
             <div className="football-gm-report__comparison-head"><span>{name}</span><b>VS</b><span>{opponentName ?? "Opponent"}</span></div>
             {own.result.seasons.map((season, index) => (
               <div key={season.year} className="football-gm-report__comparison-row">
-                <span><b>{own.result.teamOveralls[index]} OVR</b><small>{footballGmPlayoffFinishLabel(season.finish)}</small></span>
+                <span><b>{own.result.teamOveralls[index]} OVR</b>{footballGmSeasonRecordLabel(season) ? <small>{footballGmSeasonRecordLabel(season)} REG SEASON</small> : null}<small>{footballGmPlayoffFinishLabel(season.finish)}</small></span>
                 <strong>Y{season.year}</strong>
-                <span><b>{opp.result.teamOveralls[index]} OVR</b><small>{footballGmPlayoffFinishLabel(opp.result.seasons[index]!.finish)}</small></span>
+                <span><b>{opp.result.teamOveralls[index]} OVR</b>{footballGmSeasonRecordLabel(opp.result.seasons[index]!) ? <small>{footballGmSeasonRecordLabel(opp.result.seasons[index]!)} REG SEASON</small> : null}<small>{footballGmPlayoffFinishLabel(opp.result.seasons[index]!.finish)}</small></span>
               </div>
             ))}
             <div className="football-gm-report__comparison-row">

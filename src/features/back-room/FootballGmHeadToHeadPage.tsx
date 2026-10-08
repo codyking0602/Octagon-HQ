@@ -36,6 +36,7 @@ import {
   footballGmIsOffseasonCompliantV2,
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
+  footballGmSeasonRecordLabel,
   footballGmTeamOverall,
   footballGmSignFreeAgent,
   type FootballGmTradeProposal,
@@ -253,6 +254,7 @@ function YearOneMatchup({
           <small>{leftName}</small>
           <em>TEAM OVERALL</em>
           <strong>{footballGmTeamOverall(left.teamGrade)} OVR</strong>
+          {footballGmSeasonRecordLabel(left) ? <em>{footballGmSeasonRecordLabel(left)} REG SEASON</em> : null}
           <b>{footballGmPlayoffFinishLabel(left.finish)}</b>
         </article>
         <span>VS</span>
@@ -260,6 +262,7 @@ function YearOneMatchup({
           <small>{rightName}</small>
           <em>TEAM OVERALL</em>
           <strong>{footballGmTeamOverall(right.teamGrade)} OVR</strong>
+          {footballGmSeasonRecordLabel(right) ? <em>{footballGmSeasonRecordLabel(right)} REG SEASON</em> : null}
           <b>{footballGmPlayoffFinishLabel(right.finish)}</b>
         </article>
       </div>
@@ -409,9 +412,9 @@ function YearOneMiniRecap({
     <section className="football-gm__year1-mini surface-card">
       <small>YEAR 1 RECAP</small>
       <div>
-        <span><b>{leftName}</b><strong>{footballGmTeamOverall(left.teamGrade)} OVR</strong><em>{footballGmPlayoffFinishLabel(left.finish)}</em></span>
+        <span><b>{leftName}</b><strong>{footballGmTeamOverall(left.teamGrade)} OVR</strong>{footballGmSeasonRecordLabel(left) ? <small>{footballGmSeasonRecordLabel(left)} REG SEASON</small> : null}<em>{footballGmPlayoffFinishLabel(left.finish)}</em></span>
         <i>VS</i>
-        <span><b>{rightName}</b><strong>{footballGmTeamOverall(right.teamGrade)} OVR</strong><em>{footballGmPlayoffFinishLabel(right.finish)}</em></span>
+        <span><b>{rightName}</b><strong>{footballGmTeamOverall(right.teamGrade)} OVR</strong>{footballGmSeasonRecordLabel(right) ? <small>{footballGmSeasonRecordLabel(right)} REG SEASON</small> : null}<em>{footballGmPlayoffFinishLabel(right.finish)}</em></span>
       </div>
     </section>
   );

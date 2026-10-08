@@ -6,10 +6,10 @@ describe("The GM grade-driven postseason calibration", () => {
     const grade90 = footballGmOutcomeProbabilities(90);
     const grade92 = footballGmOutcomeProbabilities(92);
 
-    expect(grade90.Champion).toBeCloseTo(0.32, 10);
-    expect(grade90["Missed Playoffs"] + grade90["Wild Card"] + grade90.Divisional).toBeCloseTo(0.18, 10);
-    expect(grade92.Champion).toBeCloseTo(0.60, 10);
-    expect(grade92["Missed Playoffs"] + grade92["Wild Card"] + grade92.Divisional).toBeCloseTo(0.03, 10);
+    expect(grade90.Champion).toBeCloseTo(0.232, 10);
+    expect(grade90["Missed Playoffs"] + grade90["Wild Card"] + grade90.Divisional).toBeCloseTo(0.422, 10);
+    expect(grade92.Champion).toBeCloseTo(0.434, 10);
+    expect(grade92["Missed Playoffs"] + grade92["Wild Card"] + grade92.Divisional).toBeCloseTo(0.217, 10);
   });
 
   it("uses one postseason environment for both GMs in the same head-to-head season", () => {
