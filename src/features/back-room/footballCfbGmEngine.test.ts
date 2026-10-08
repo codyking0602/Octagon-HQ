@@ -134,24 +134,25 @@ describe("CFB GM UI parity and owner gating", () => {
   it("reuses NFL wheel, headshot, roster, intro, and report components rather than inventing a second visual pattern", () => {
     expect(page).toContain('import { GmFootballWheel, PlayerHeadshot }');
     for (const token of ['football-gm__header','football-gm__intro-stages',
-      'football-gm__roster-grid','football-wheel-picker football-gm__picker',
-      'football-gm-report__evolution-row']) {
+      'football-gm__roster-grid','football-wheel-picker football-gm__picker']) {
       expect(page).toContain(token);
       expect(nfl + read("src/features/back-room/FootballGmFranchiseReport.tsx")).toContain(token);
     }
-    // The CFB final screen follows the locked compact NFL result hierarchy,
-    // but keeps its own two-year CFP seasons and college NIL figures.
+    // CFB keeps its own two-year CFP/NIL final while NFL now has the approved
+    // graphic-first results screen. Shared draft and roster treatments remain.
     expect(page).toContain('football-gm__position-tabs');
     expect(page).toContain('setSelectedPosition');
     expect(page).toContain('football-gm__cfb-budget-modes');
     expect(page).toContain('data-cfb-gm="true"');
     expect(read("src/features/back-room/footballCfbGmEngine.ts")).toContain('FRONT_7_A: "F7-1"')
     const nflReport = read("src/features/back-room/FootballGmFranchiseReport.tsx");
+    expect(nflReport).toContain("FootballGmFinalExperience");
+    expect(read("src/features/back-room/FootballGmFinalExperience.tsx")).toContain("YOUR FINAL ROSTER");
     for (const token of ["gm-result__summary","gm-result__scores","gm-result__season-comparison",
       "gm-result__roster-card","gm-result__front-office","gm-result__final-roster",
-      "gm-result__scoring-card","gm-result__scoring","football-gm-report__evolution-rows"]) {
+      "gm-result__scoring-card","gm-result__scoring","football-gm-report__evolution-rows",
+      "football-gm-report__evolution-row"]) {
       expect(page).toContain(token);
-      expect(nflReport).toContain(token);
     }
     expect(page).toContain("YOUR TWO-YEAR GM RESULT");
     expect(page).toContain("CFP RÉSUMÉ");

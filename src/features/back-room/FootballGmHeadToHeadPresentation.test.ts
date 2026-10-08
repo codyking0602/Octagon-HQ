@@ -30,6 +30,8 @@ const report = readFileSync(
   resolve(process.cwd(), "src/features/back-room/FootballGmFranchiseReport.tsx"),
   "utf8",
 );
+const visualReport = readFileSync(resolve(process.cwd(), "src/features/back-room/FootballGmFinalExperience.tsx"), "utf8");
+const visualCss = readFileSync(resolve(process.cwd(), "src/styles/football-gm-final.css"), "utf8");
 
 describe("The GM head-to-head presentation", () => {
   it("keeps the approved intro and offers the original solo run or one-GM play", () => {
@@ -142,57 +144,46 @@ describe("The GM head-to-head presentation", () => {
     expect(polishMigration).toContain("Completion is authoritative. Notification delivery must never roll it back.");
   });
 
-  it("ends with a focused franchise postmortem instead of an internal-data report", () => {
+  it("uses the approved graphic-first result screen for BOTH solo and head-to-head", () => {
     expect(page).toContain("FootballGmFranchiseReport");
-    expect(report).toContain("FRANCHISE ARC");
-    expect(report).toContain("ROSTER EVOLUTION");
-    expect(report).toContain("OFFSEASON TRANSACTIONS");
-    expect(report).toContain("HOW YOUR GM SCORE IS CALCULATED");
-    expect(report).toContain("OVR measures team strength");
-    expect(report).toContain("Year 3 payroll");
-    expect(report).toContain("FOOTBALL_GM_CAP - own.year3Payroll");
-    expect(report).toContain("rosterManagementScore.toFixed(1)");
-    expect(report).toContain("resumeScore.toFixed(1)");
-    expect(report).not.toContain("<small>Year 3 cap</small>");
+    expect(report).toContain("<FootballGmFinalExperience");
+    expect(report).toContain("opponentName={opponentName}");
+    expect(report).toContain("opponentRun={opponentRun}");
+    expect(visualReport).toContain("HEAD-TO-HEAD FINAL");
+    expect(visualReport).toContain("gm-final__match-scoreboard");
+    expect(visualReport).toContain("gm-final__match-verdict");
+    expect(visualReport).toContain("gm-final__seasons is-match");
+    expect(visualReport).toContain("Choose GM franchise results");
+    expect(visualReport).toContain('aria-pressed={selected === "opponent"}');
+    expect(visualReport).toContain("gm-final__band");
+    expect(visualReport).toContain("RUN HIGHLIGHTS");
+    expect(visualReport).toContain("OFFSEASON MOVES");
+    expect(visualReport).toContain("GM SCORE BREAKDOWN");
+    expect(visualReport).toContain("VIEW FULL ROSTER EVOLUTION");
+    expect(visualCss).toContain(".gm-final__match-year");
+    expect(visualCss).toContain(".gm-final__franchise-tabs");
+  });
+
+  it("retains actual seeded outcomes, score comparison and private player grades", () => {
     expect(page).toContain("savedMySeasons");
     expect(page).toContain("savedOpponentSeasons");
     expect(page).toContain("savedHasDuplicateFinalist");
-    expect(report).toContain("Original core");
-    expect(report).toContain("Final GM score");
-    expect(report).not.toContain("BEST ROSTER DECISION");
-    expect(report).not.toContain("WHAT COST YOU");
-    expect(report).not.toContain("THE OWNER'S VERDICT");
-    expect(report).not.toContain("WHEELER-DEALER");
-    expect(report).not.toContain("continuity.year3.meter");
-    expect(css).toContain(".football-gm-report__evolution-row");
-    expect(css).toContain(".football-gm-report__ledger");
+    expect(visualReport).toContain("resolvedSeasons: run.resolvedSeasons");
+    expect(visualReport).toContain("resolvedSeasons: opponentRun.resolvedSeasons");
+    expect(visualReport).toContain("ownResult.score > opponentResult.score");
+    expect(visualReport).toContain("footballGmSeasonRecordLabel(season)");
+    expect(visualReport).toContain("footballGmPlayoffFinishLabel(season.finish)");
+    expect(visualReport).toContain("teamOveralls[index]");
+    expect(visualReport).not.toContain("teamGrade.toFixed");
+    expect(visualReport).toContain("Exact grades stay hidden.");
+    expect(visualReport).not.toContain("<svg");
   });
 
-  it("puts the winner, three-year results and true records before any long roster details", () => {
-    expect(report).toContain('gm-result__summary');
-    expect(report).toContain('gm-result__scores');
-    expect(report).toContain('gm-result__season-comparison');
-    expect(report).toContain('gm-result__record');
-    expect(report).toContain('footballGmSeasonRecordLabel(season)');
-    expect(report).toContain('Record unavailable');
-    expect(report.indexOf('gm-result__season-comparison')).toBeLessThan(report.indexOf('gm-result__roster-card'));
-    expect(report.indexOf('gm-result__roster-card')).toBeLessThan(report.indexOf('gm-result__scoring-card'));
-    expect(report).toContain('gm-result__franchise-tabs');
-    expect(report).toContain('aria-pressed={selectedFrontOffice === "opponent"}');
-    expect(report).toContain('<details className="gm-result__expander gm-result__scoring">');
-    expect(report).toContain('VIEW FULL ROSTER EVOLUTION');
-    expect(report.match(/<CoreReport /g)?.length).toBe(1);
-    expect(css).toContain('.gm-result__season.is-versus');
-    expect(css).toContain('.gm-result__record');
-    expect(css).toContain('.gm-result__final-roster');
-  });
-
-  it("shows Team OVR rather than exposing the hidden internal team grade", () => {
+  it("preserves canonical team OVR in head-to-head without leaking player grades", () => {
     expect(page).toContain("footballGmTeamOverall(left.teamGrade)");
     expect(page).toContain("footballGmTeamOverall(right.teamGrade)");
-    expect(report).toContain("teamOveralls[index]");
-    expect(report).toContain(" OVR");
-    expect(report).not.toContain("teamGrade.toFixed");
+    expect(visualReport).toContain("teamOveralls[index]");
+    expect(visualReport).not.toContain("band.final.toFixed");
   });
 
   it("compresses the seven-player offseason core without stripping scouting context", () => {
