@@ -85,10 +85,8 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
   const navigate = useNavigate();
   const identity = useOptionalIdentity();
   const { selectedSport, setSelectedSport } = useSport();
-  const keyboardSessionRef = useRef(false);
   const lastActiveSportTapRef = useRef<Record<SecretSportSection, number>>({ picks: 0, play: 0 });
   const [keyboardOpen, setKeyboardOpen] = useState(false);
-  const [visualViewportShift, setVisualViewportShift] = useState(0);
   const footballMode = location.pathname === "/football" || location.pathname.startsWith("/football/");
   const mlbMode = location.pathname === "/mlb" || location.pathname.startsWith("/mlb/");
   const effectiveSport = selectedSport === "mlb" && !canViewMlbPlayoffs(identity?.profile) ? "ufc" : selectedSport;
@@ -104,60 +102,34 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
     const viewport = window.visualViewport;
     if (!viewport) return undefined;
 
-    let resumeTimer: number | undefined;
-    const syncViewportState = () => {
+    const syncKeyboardState = () => {
+      // iOS may keep stale visualViewport geometry when the PWA resumes.
+      // Never use that geometry to translate the navigation: CSS bottom: 0
+      // is always the sole owner of the dock's physical position.
       const activeElement = document.activeElement;
       const editing = activeElement instanceof HTMLElement
         && activeElement.matches("input, textarea, select, [contenteditable='true']");
       const visualBottom = viewport.height + viewport.offsetTop;
-      const occludedHeight = Math.max(0, window.innerHeight - visualBottom);
-      const materiallyOccluded = occludedHeight > 120;
-      const nextShift = Math.max(0, Math.round(window.innerHeight - visualBottom));
-      setVisualViewportShift(nextShift <= 1 ? 0 : nextShift);
-
-      if (editing && materiallyOccluded) keyboardSessionRef.current = true;
-      const nextKeyboardOpen = keyboardSessionRef.current && materiallyOccluded;
-      if (keyboardSessionRef.current && !materiallyOccluded) keyboardSessionRef.current = false;
-
-      setKeyboardOpen(nextKeyboardOpen);
+      const materiallyOccluded = window.innerHeight - visualBottom > 120;
+      setKeyboardOpen(document.visibilityState === "visible" && editing && materiallyOccluded);
     };
-    const syncAfterFocus = () => window.setTimeout(syncViewportState, 0);
-    let lateResumeTimer: number | undefined;
-    let finalResumeTimer: number | undefined;
-    const syncAfterResume = () => {
-      if (document.visibilityState !== "visible") return;
-      syncViewportState();
-      window.clearTimeout(resumeTimer);
-      window.clearTimeout(lateResumeTimer);
-      window.clearTimeout(finalResumeTimer);
-      resumeTimer = window.setTimeout(syncViewportState, 250);
-      lateResumeTimer = window.setTimeout(syncViewportState, 750);
-      finalResumeTimer = window.setTimeout(syncViewportState, 1500);
-    };
-
-    syncViewportState();
-    viewport.addEventListener("resize", syncViewportState);
-    viewport.addEventListener("scroll", syncViewportState);
-    document.addEventListener("focusin", syncAfterFocus);
-    document.addEventListener("focusout", syncAfterFocus);
-    document.addEventListener("visibilitychange", syncAfterResume);
-    window.addEventListener("orientationchange", syncAfterFocus);
-    window.addEventListener("pageshow", syncAfterResume);
-    window.addEventListener("resize", syncAfterFocus);
-    window.addEventListener("scroll", syncViewportState, { passive: true });
+    const afterFocus = () => window.setTimeout(syncKeyboardState, 0);
+    syncKeyboardState();
+    viewport.addEventListener("resize", syncKeyboardState);
+    viewport.addEventListener("scroll", syncKeyboardState);
+    document.addEventListener("focusin", afterFocus);
+    document.addEventListener("focusout", afterFocus);
+    document.addEventListener("visibilitychange", syncKeyboardState);
+    window.addEventListener("pageshow", syncKeyboardState);
+    window.addEventListener("resize", syncKeyboardState);
     return () => {
-      window.clearTimeout(resumeTimer);
-      window.clearTimeout(lateResumeTimer);
-      window.clearTimeout(finalResumeTimer);
-      viewport.removeEventListener("resize", syncViewportState);
-      viewport.removeEventListener("scroll", syncViewportState);
-      document.removeEventListener("focusin", syncAfterFocus);
-      document.removeEventListener("focusout", syncAfterFocus);
-      document.removeEventListener("visibilitychange", syncAfterResume);
-      window.removeEventListener("orientationchange", syncAfterFocus);
-      window.removeEventListener("pageshow", syncAfterResume);
-      window.removeEventListener("resize", syncAfterFocus);
-      window.removeEventListener("scroll", syncViewportState);
+      viewport.removeEventListener("resize", syncKeyboardState);
+      viewport.removeEventListener("scroll", syncKeyboardState);
+      document.removeEventListener("focusin", afterFocus);
+      document.removeEventListener("focusout", afterFocus);
+      document.removeEventListener("visibilitychange", syncKeyboardState);
+      window.removeEventListener("pageshow", syncKeyboardState);
+      window.removeEventListener("resize", syncKeyboardState);
     };
   }, []);
 
@@ -169,7 +141,6 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
       style={{
         gridTemplateColumns: `repeat(${standardDestinations.length}, minmax(0, 1fr))`,
         display: keyboardOpen ? "none" : "grid",
-        transform: visualViewportShift ? `translate3d(0, ${visualViewportShift}px, 0)` : undefined,
       }}
     >
       {standardDestinations.map((destination) => (
