@@ -20,6 +20,13 @@ import {
   footballGmSeasonResultV2,
 } from "./footballGmStrategy";
 
+import {
+  footballGmMatchDevelopmentSeed,
+  footballGmMatchUsesSeededDevelopment,
+  footballGmSharedSeason,
+} from "./footballGmSharedPostseason";
+import { footballGmEffectiveTeamGrade } from "./footballGmStrategy";
+
 const key = (id: number) => `offseason-test-${id}${FOOTBALL_GM_DEVELOPMENT_SEED_TAG}`;
 const prospect = {
   playerId: "Bears|QB|calebwilliams",
@@ -115,6 +122,40 @@ describe("GM seeded offseason development", () => {
     const second = Array.from({ length: 30 }, (_, i) =>
       projectWheelFootballGmGrade({ ...prospect, playerId: "Bears|QB|anotherplayer", yearsAhead: 1, seed: key(i) }));
     expect(first).not.toEqual(second);
+  });
+
+  it("keeps human match progress on legacy economics without retroactive upgrades", () => {
+    const former = { run_state: { version: "football-gm-v10-shared-real-seasons", roster: [{}] }, year1_result: {} };
+    const newPlayer = { run_state: {}, year1_result: null };
+    expect(footballGmMatchUsesSeededDevelopment([former, newPlayer])).toBe(false);
+    expect(footballGmMatchUsesSeededDevelopment([newPlayer, newPlayer])).toBe(true);
+    const fresh = { run_state: { version: "football-gm-v11-seeded-development", roster: [{}] }, year1_result: null };
+    expect(footballGmMatchUsesSeededDevelopment([fresh, newPlayer])).toBe(true);
+    const left = footballGmMatchDevelopmentSeed("matchseed", "one", true);
+    const right = footballGmMatchDevelopmentSeed("matchseed", "two", true);
+    expect(left).not.toBe(right);
+    expect(left.endsWith(FOOTBALL_GM_DEVELOPMENT_SEED_TAG)).toBe(true);
+    expect(footballGmMatchDevelopmentSeed("matchseed", "one", false)).toBe("matchseed:one");
+  });
+
+  it("uses each head-to-head GM's seeded player grades in the shared league", () => {
+    const roster = cheapestRoster();
+    const leftSeed = key(52);
+    const rightSeed = key(57);
+    const shared = footballGmSharedSeason({
+      matchSeed: "shared-league-52",
+      year: 2,
+      sides: [
+        { key: "left", yearOneRoster: roster, finalRoster: roster, developmentSeed: leftSeed },
+        { key: "right", yearOneRoster: roster, finalRoster: roster, developmentSeed: rightSeed },
+      ],
+    });
+    expect(shared.left?.teamGrade).toBe(
+      footballGmEffectiveTeamGrade(roster, roster, 2, leftSeed).teamGrade,
+    );
+    expect(shared.right?.teamGrade).toBe(
+      footballGmEffectiveTeamGrade(roster, roster, 2, rightSeed).teamGrade,
+    );
   });
 
   it("preserves grade/extension resolution against the live canonical player authority", () => {
