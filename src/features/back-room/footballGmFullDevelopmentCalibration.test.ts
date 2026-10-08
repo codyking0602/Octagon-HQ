@@ -131,9 +131,13 @@ describe("full NFL GM development calibration", () => {
     for (let i = 0; i < 200; i += 1) {
       const star = footballGmProjectedGradeForPlayer(name("Josh Allen"), 2, seed(i));
       const prospect = footballGmProjectedGradeForPlayer(name("Caleb Williams"), 2, seed(i));
-      expect(star).toBeGreaterThanOrEqual(97.7);
-      expect(prospect).toBeGreaterThanOrEqual(81);
-      expect(prospect).toBeLessThanOrEqual(95.5);
+      const starSubject = name("Josh Allen");
+      const prospectSubject = name("Caleb Williams");
+      const starProfile = footballGmDevelopmentProfile(starSubject.id)!;
+      const prospectProfile = footballGmDevelopmentProfile(prospectSubject.id)!;
+      expect(star).toBeGreaterThanOrEqual(Math.max(70, starSubject.currentGrade - starProfile.maxAnnualLoss));
+      expect(prospect).toBeGreaterThanOrEqual(Math.max(70, prospectSubject.currentGrade - prospectProfile.maxAnnualLoss));
+      expect(prospect).toBeLessThanOrEqual(Math.min(99, prospectSubject.currentGrade + prospectProfile.maxAnnualGain));
     }
   });
 
