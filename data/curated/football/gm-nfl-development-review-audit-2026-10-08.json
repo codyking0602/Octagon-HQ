@@ -244,7 +244,7 @@
         "maxAnnualLoss": 5.8,
         "marketVariancePct": 7
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "ARI|RB|jamesconner",
@@ -939,7 +939,7 @@
         "maxAnnualLoss": 7.5,
         "marketVariancePct": 10
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "ATL|RB|bijanrobinson",
@@ -1600,7 +1600,7 @@
         "maxAnnualLoss": 4,
         "marketVariancePct": 7
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "BAL|RB|derrickhenry",
@@ -2227,7 +2227,7 @@
         "maxAnnualLoss": 2.2,
         "marketVariancePct": 4
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "BUF|RB|jamescook",
@@ -2854,7 +2854,7 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "CAR|RB|chubahubbard",
@@ -3520,7 +3520,7 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "CHI|RB|dandreswift",
@@ -4181,7 +4181,7 @@
         "maxAnnualLoss": 4,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "CIN|RB|chasebrown",
@@ -4808,7 +4808,7 @@
         "maxAnnualLoss": 7,
         "marketVariancePct": 11
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "CLE|RB|dylansampson",
@@ -5440,7 +5440,7 @@
         "maxAnnualLoss": 3.5,
         "marketVariancePct": 4
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "DAL|RB|javontewilliams",
@@ -6072,7 +6072,7 @@
         "maxAnnualLoss": 6.2,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "DEN|RB|jkdobbins",
@@ -6766,7 +6766,7 @@
         "maxAnnualLoss": 4.4,
         "marketVariancePct": 4
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "DET|RB|isiahpacheco",
@@ -7406,7 +7406,7 @@
         "maxAnnualLoss": 6.3,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "GB|RB|joshjacobs",
@@ -8038,7 +8038,7 @@
         "maxAnnualLoss": 5.6,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "HOU|RB|davidmontgomery",
@@ -8714,7 +8714,7 @@
         "maxAnnualLoss": 7,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "IND|RB|jonathantaylor",
@@ -9380,7 +9380,7 @@
         "maxAnnualLoss": 4.8,
         "marketVariancePct": 5
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "JAX|RB|bhayshultuten",
@@ -10051,7 +10051,7 @@
         "maxAnnualLoss": 2,
         "marketVariancePct": 4
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "KC|RB|emmettjohnson",
@@ -10679,7 +10679,7 @@
         "maxAnnualLoss": 7.2,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "LAC|RB|keatonmitchell",
@@ -11340,7 +11340,7 @@
         "maxAnnualLoss": 7.5,
         "marketVariancePct": 10
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "LAR|RB|blakecorum",
@@ -11967,7 +11967,7 @@
         "maxAnnualLoss": 8.2,
         "marketVariancePct": 10
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "LV|QB|kirkcousins",
@@ -12001,7 +12001,7 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "LV|RB|ashtonjeanty",
@@ -12633,7 +12633,7 @@
         "maxAnnualLoss": 7,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "MIA|RB|devonachane",
@@ -13260,7 +13260,7 @@
         "maxAnnualLoss": 7,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "MIN|RB|aaronjones",
@@ -13858,7 +13858,7 @@
         "maxAnnualLoss": 6.8,
         "marketVariancePct": 10
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "NE|RB|rhamondrestevenson",
@@ -14529,7 +14529,7 @@
         "maxAnnualLoss": 6.3,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "NO|RB|alvinkamara",
@@ -15161,7 +15161,7 @@
         "maxAnnualLoss": 6.7,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "NYG|QB|jaxsondart",
@@ -15195,7 +15195,7 @@
         "maxAnnualLoss": 8,
         "marketVariancePct": 12
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "NYG|RB|camskattebo",
@@ -15861,7 +15861,7 @@
         "maxAnnualLoss": 5.4,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "NYJ|RB|braelonallen",
@@ -16493,7 +16493,7 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "PHI|RB|saquonbarkley",
@@ -17125,7 +17125,7 @@
         "maxAnnualLoss": 8,
         "marketVariancePct": 12
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "PIT|RB|jaylenwarren",
@@ -17757,7 +17757,7 @@
         "maxAnnualLoss": 5.6,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "SEA|RB|jadarianprice",
@@ -18429,7 +18429,7 @@
         "maxAnnualLoss": 4,
         "marketVariancePct": 4
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "SF|RB|christianmccaffrey",
@@ -19141,7 +19141,7 @@
         "maxAnnualLoss": 5.5,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "TB|RB|buckyirving",
@@ -19812,7 +19812,7 @@
         "maxAnnualLoss": 7,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 2
     },
     {
       "id": "TEN|RB|tonypollard",
@@ -20449,7 +20449,7 @@
         "maxAnnualLoss": 8.5,
         "marketVariancePct": 11
       },
-      "developmentEvidenceSourceCount": 0
+      "developmentEvidenceSourceCount": 3
     },
     {
       "id": "WSH|RB|jacorycroskeymerritt",
