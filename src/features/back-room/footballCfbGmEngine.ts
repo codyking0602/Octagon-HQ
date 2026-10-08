@@ -39,7 +39,7 @@ export type CfbGmPlayer = {
   outlook: "RISING" | "STABLE" | "DECLINE RISK";
 };
 export type CfbGmRosterEntry = { slot: CfbGmSlot; playerId: string; acquired: "draft" | "portal" };
-export type CfbGmDeparture = { playerId: string; slot: CfbGmSlot; reason: "NFL declaration" | "Eligibility" };
+export type CfbGmDeparture = { playerId: string; slot: CfbGmSlot; reason: "NFL declaration" | "Eligibility" | "Transfer portal" };
 export type CfbGmPhase = "intro" | "draft" | "year1" | "offseason" | "year2" | "final";
 export type CfbGmRun = {
   version: typeof CFB_GM_VERSION;
@@ -222,7 +222,7 @@ export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEnt
   }
   return place(0) ? [...resolved].sort((a,b) => CFB_GM_ROSTER_SLOTS.indexOf(a.slot) - CFB_GM_ROSTER_SLOTS.indexOf(b.slot)) : null;
 }
-function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean) {
+function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>) {
   if (roster.some((r) => r.playerId === player.id)) return false;
   const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: player.id, acquired: year === 1 ? "draft" : "portal"}]);
   if (!next) return false;
@@ -234,14 +234,14 @@ function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, bu
   const floor = missing.reduce((sum, slot) => {
     let best = Infinity;
     for (const p of CFB_GM_PLAYERS) {
-      if (!used.has(p.id) && p.eligibleSlots.includes(slot)) best = Math.min(best, cfbGmPrice(p, year));
+      if (!used.has(p.id) && !excluded.has(p.id) && p.eligibleSlots.includes(slot)) best = Math.min(best, cfbGmPrice(p, year));
     }
     return sum + best;
   }, 0);
   return spent + floor <= budget;
 }
 export function cfbGmCandidates(schoolId: string, roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, reserve = true, excluded: ReadonlySet<string> = new Set()) {
-  return cfbGmPlayersAt(schoolId).filter((p) => !excluded.has(p.id) && affordable(roster, p, budget, year, reserve));
+  return cfbGmPlayersAt(schoolId).filter((p) => !excluded.has(p.id) && affordable(roster, p, budget, year, reserve, excluded));
 }
 export function cfbGmEligibleSchools(roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, previous: string | null, pool: readonly string[] = CFB_GM_AP_SCHOOLS, excluded: ReadonlySet<string> = new Set()) {
   const result = pool.filter((schoolId) => cfbGmCandidates(schoolId, roster, budget, year, true, excluded).length > 0);
@@ -264,14 +264,25 @@ export function cfbGmInitial(seed: string, budget: CfbGmBudget = "POWERHOUSE"): 
     pendingSchool: null, spinIndex: 0, previousSchool: null, portalSpins: 0, previousPortalSchool: null};
 }
 export function cfbGmForcedDepartures(run: CfbGmRun) {
+  const seasonFinish = cfbGmSeason(run, 1).finish;
+  // Winning Year 1 moderately improves the probability of keeping a
+  // non-graduating player out of the portal. It does not stop graduation
+  // or an NFL decision and never changes the player's audited HQ grade.
+  const winningBoost: Record<CfbGmFinish, number> = {
+    "Missed CFP": 0, "First Round": 0.025, Quarterfinal: 0.04,
+    Semifinal: 0.055, "National Runner-up": 0.07, "National Champion": 0.08,
+  };
+  const loyaltyBoost = winningBoost[seasonFinish];
   return run.roster.flatMap<CfbGmDeparture>((row) => {
     const player = cfbGmPlayer(row.playerId)!;
     const roll = rate("departure:" + run.seed + ":" + row.playerId);
     // Stochastic projection, not a claim of known future graduation/draft decisions.
     const draftProbability = player.departureRisk === "HIGH" ? 0.23 : player.departureRisk === "MEDIUM" ? 0.11 : 0.035;
     const graduationProbability = 0.085;
+    const portalProbability = Math.max(0.02, 0.15 - loyaltyBoost);
     const reason: CfbGmDeparture["reason"] | null = roll < draftProbability ? "NFL declaration"
-      : roll < draftProbability + graduationProbability ? "Eligibility" : null;
+      : roll < draftProbability + graduationProbability ? "Eligibility"
+      : roll < draftProbability + graduationProbability + portalProbability ? "Transfer portal" : null;
     return reason ? [{playerId: player.id, slot: row.slot, reason}] : [];
   });
 }
@@ -324,7 +335,7 @@ export function cfbGmFinalResult(run: CfbGmRun): CfbGmResult {
   // Only elective departures count against roster management; forced departures
   // influence continuity/competitive outcomes, but are not player choice mistakes.
   const gradeScore = ((seasons[0].teamGrade + seasons[1].teamGrade) / 2 - 65) / 33 * 100;
-  const rosterManagement = Math.min(100, Math.max(45, gradeScore + retained * 0.35 - voluntary * 1.5));
+  const rosterManagement = Math.min(100, Math.max(45, gradeScore + (retained + forced) * 0.35 - voluntary * 1.5));
   const resume = { "Missed CFP": 79, "First Round": 83, "Quarterfinal": 87, "Semifinal": 92, "National Runner-up": 96, "National Champion": 100 };
   const resumeScore = (resume[seasons[0].finish] + resume[seasons[1].finish]) / 2;
   return {seasons, score: Math.round((rosterManagement * 0.55 + resumeScore * 0.45) * 10) / 10,
