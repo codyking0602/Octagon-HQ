@@ -1,0 +1,3284 @@
+{
+  "schemaVersion": 1,
+  "source": "gm-2026-classification-evidence.json",
+  "population": 468,
+  "classified": 423,
+  "players": [
+    {
+      "id": "alabama|brayhubbard",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|calebwoodson",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|danielhill",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|devanthompkins",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|dijonleejr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|ejcrowell",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|kalebedwards",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|keelonrussell",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|keonsabb",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|londonsimmons",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|lotzeirbrooks",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|lukemetz",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|redmorgan",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|ricoscott",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|ryancolemanwilliams",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|terrancegreen",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|traeshawnbrown",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|yhonzaepierre",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|zabienbrown",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "alabama|zyangibson",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|akeemwright",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|benford",
+      "classification": "6TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|boenphelps",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|cambates",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|dylanriley",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|jadenmickey",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|jaydenvirginmorgan",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|jericowashingtonjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|loganbrantley",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|madduxmadsen",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|mattwagner",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|maxstege",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|mikaioedward",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|raseanjones",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|romantillmon",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|sherrodsmith",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|siregaines",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "boise-state|travisanderson",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|bearbachmeier",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|bodieschoonover",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|cadeuluave",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|cannondevries",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|evanjohnson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|faletausatuala",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|hunterclegg",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|jojophillips",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|keanutanuvasa",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|kylerkasper",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|legendglasker",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|ljmartin",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|nusitaumoepeau",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|prestonrex",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|tausiliakana",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|therrianalexanderiii",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|tommyprassas",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "byu|walkerlyons",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|aaronphilo",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|amirjackson",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|benhanksiii",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|brendanbett",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|brycethornton",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|cormanimcclain",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|dallaswilson",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|djcoleman",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|dukeclark",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|ericsingletonjr",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|evanpryor",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|jadanbaugh",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|jadenrobinson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|jaydenwoods",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|jeramiahmccloud",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|kamranjames",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|kanyeclark",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|mylesgraham",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "florida|vernellbrowniii",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|chaunceybowens",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|chriscole",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|craigdandridge",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|demellojones",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|elijahgriffin",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|ellisrobinsoniv",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|gabeharrisjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|gunnerstockton",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|isiahcanion",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|jordanhall",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|khalilbarnes",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|kjbolden",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|kyronjones",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|lawsonluckie",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|natefrazier",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|quintaviusjohnson",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|raylenwilson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|sacoviewhitehelton",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "georgia|talyntaylor",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|amarethomas",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|ashtonporter",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|brandonmackii",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|connerweigman",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|demarionthomas",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|jadenyates",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|jalenmayo",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|javionwhite",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|jordanallen",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|kentrellwebb",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|khalillaufau",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|kobyyoung",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|makhihughes",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|patrickovermyer",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|reshaunsanfordii",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|sionefotu",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|trentwalker",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "houston|willjames",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|amareferrell",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|andrewbarker",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|byronbaldwinjr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|charliebecker",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|davionchandler",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|isaiahjones",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|jamarisharpe",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|joshburnham",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|joshhoover",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|leebeebejr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|mariolandino",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|nickmarsh",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|prestonzachman",
+      "classification": "7TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|rolijahhardy",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|rylandgandy",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|tobiosunsanmi",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|turborichard",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|tylermorris",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "indiana|tyriquetucker",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|anthonyhawkins",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|braedenjackson",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|cambuffington",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|deshaunlee",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|djvonnahme",
+      "classification": "3RD",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|evanjames",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|hankbrown",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|ioseepenesa",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|jaydenmontgomery",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|jaylenwatson",
+      "classification": "3RD",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|kahmaribrown",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|kamarimoulton",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|kennethmerrieweather",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|ljphillipsjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|rashadgodfreyjr",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|reecevanderzee",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|tonydiaz",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "iowa|zachlutmer",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|dashawnspears",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|deucegeralds",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|dilinjones",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|djpickett",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|dylancarpenter",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|eugenewilsoniii",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|jacksonharris",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|jordanross",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|pjwoodland",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|princewillumanmielen",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|samleavitt",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|stacygage",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|tamarcuscooley",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|tjdottery",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|treydezgreen",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|tybenefield",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|whitweeks",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "lsu|winstonwatkinsjr",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|ahmadmoten",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|armondoblount",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|brycefitzgerald",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|charmarbrown",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|chasesmith",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|cooperbarkate",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|damaribrown",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|damonwilsonii",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|darianmensah",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|elijalofton",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|javianmallory",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|joshuamoore",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|malachitoney",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|markfletcherjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|marquiselightfoot",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|mohamedtoure",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|omarthornton",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|xavierlucas",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "miami|zechariahpoyser",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|amareewilliams",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|anthonyevansiii",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|djreed",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|fluffbothwell",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|isaacsmith",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|jjhill",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|jalensmith",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|jaraybledsoe",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|jardingilbert",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|jettjefferson",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|kamariotaylor",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|kelleyjones",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|kolinwilson",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|marcuswilliams",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|marquisjohnson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|samwest",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|sanfriscomagee",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|willwhitson",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|zakaritillman",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "mississippi-state|zionragins",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|ahmadhardy",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|austinsimmons",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|brettnorfleet",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|caydenlee",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|chrisgravesjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|daedenhopkins",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|donovanolugbode",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|jalenmarshall",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|jamalroberts",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|kensleylouidorfaustin",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|langdenkitchen",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|marquisgracial",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|naeshaunmontgomery",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|nicholasrodriguez",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|robertwoodyardjr",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|santanabanner",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|sionelaulea",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|trajengreco",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "missouri|xaishaunedwards",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|adonshuler",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|aneyaswilliams",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|boubacartraore",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|brauntaejohnson",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|bryceyoung",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|christiangray",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|cjcarr",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|cooperflanagan",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|djmckinney",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|draykbowen",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|jaidenausberry",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|jordanfaison",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|keonkeeley",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|kyngstonnviliamuasa",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|leonardmoore",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|luketalich",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|micahgilbert",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|mylangraham",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "notre-dame|nolanjamesjr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|bojackson",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|brandoninniss",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|chrishenryjr",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|christianalliegro",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|devinmccuin",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|devinsanchez",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|earllittlejr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|eddrickhouston",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|jakobijackson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|jaytimmons",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|jaylenmcclain",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|jeremiahsmith",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|jermainemathewsjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|johnwalker",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|juliansayin",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|kenyattajacksonjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|nateroberts",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|paytonpierce",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ohio-state|rileypettijohn",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|calebhawkins",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|carsonkolb",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|chrisbarnes",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|christianbodnar",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|drewmestemaker",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|evanjackson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|imanoates",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|isaiahchisom",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|jaleeljohnson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|jameswilliams",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|justinbowick",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|ladainianfields",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|mohorn",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|quintonhammonds",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|saadiqclements",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|tateromney",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|terrencelewis",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|trepageiii",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oklahoma-state|wyattyoung",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|antoniokite",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|calebodom",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|deucealexander",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|edwinjoseph",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|horatiofields",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|jamariousbrown",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|jaylonbraxton",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|joenelaguero",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|johntaycookii",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|kamfranklin",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|keatonthomas",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|kewanlacy",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|lukeferrelli",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|lukehasz",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|makhifrazier",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|sharifdenson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|suntarineperkins",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|traylonray",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|trinidadchambliss",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ole-miss|willecholes",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|aaronflowers",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|amauriwashington",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|bearalexander",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|brandonfinneyjr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|carlwilliamsiv",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|dakorienmoore",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|dantemoore",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|dierrehilljr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|elijahrushing",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|evanstewart",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|ifyobidegwu",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|jamarijohnson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|jeremiahmcclellan",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|jordondavison",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|koiperich",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|matayouiagalelei",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|messiahhampton",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "oregon|teitumtuioti",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|alexsanfordjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|carsonkent",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|cataurushicks",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|censerelee",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|crucebrookins",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|damonfergusonjr",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|demetricemccray",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|holdengeriner",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|isaiahneal",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|jaedenmoore",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|jakyrianturner",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|jeremiahmarcelin",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|jimmyscott",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|joshguerrier",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|raionstrader",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|rashanmurray",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|shawnleejr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|tonykinsler",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "pittsburgh|zachcrothers",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|aakilwashington",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|alexanderkilgore",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|brandonbooker",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|dramekcogreen",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|irasingletoniv",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|jahkailang",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|jalencooper",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|jarvislee",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|jayvonthomas",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|jimmywyrick",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|kendrickraphael",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|kevinjennings",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|marcellusbarnesjr",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|randypittmanjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|theomelinohrstrom",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|tyrenpolleyjr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|yamirknight",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "smu|yannicksmith",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|amarecampbell",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|arioncarter",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|braylonstaley",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|daevinhobbs",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|dasaahnbrame",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|daunemorris",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|dejuanlane",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|deseanbishop",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|ethandavis",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|georgemacintyre",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|javingordon",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|kayinlee",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|mariyondye",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|mikematthews",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|quamoss",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|radariousjackson",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|tjmetcalf",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|tyredmond",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|tyreeweathersby",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "tennessee|xaviergilliam",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|archmanning",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|bomascoe",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|camcoleman",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|colinsimmons",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|emmettmosleyv",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|gracesonlittleton",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|herokanu",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|hollywoodsmothers",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|jelanimcdonald",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|justincryer",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|kadephillips",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|kobeblack",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|maraadwatson",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|raleekbrown",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|rasheembiles",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|ryanwingo",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|spencershannon",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas|zinaumeozulu",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|ajholmesjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|adamtrick",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|austinromaine",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|benroberts",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|brendenjordan",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|bricepollock",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|camerondickey",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|coyeakin",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|davinmartin",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|jkobywilliams",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|kennyjohnson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|malcolmsimmons",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|malikesquerra",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|mateenibirogba",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|micahhudson",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|peytonmorgan",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|terrancecarterjr",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|treywhite",
+      "classification": "5TH",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "texas-tech|willhammond",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|amierwashington",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|anthonywoods",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|brianrowejr",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|derrickbarksdale",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|jalenwoods",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|joshphifer",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|landonellis",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|malikhartford",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|nicoiamaleava",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|rodrickpleasant",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|sahirwest",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|sammyomosigho",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|scooterjackson",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|scotttaylor",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|semajmorgan",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|tashawnjames",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|tysonford",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "ucla|wayneknight",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|alexgraham",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|braylanshelby",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|chasenjohnson",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|christianpierce",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|desmanstephensii",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|devenbryant",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|jaydenmaiava",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|jontezwilliams",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|kameryncrawford",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|kaydendixonwyatt",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|kingmiller",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|lukewafle",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|markbowman",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|prophetbrown",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|tanookhines",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|trentmosley",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|waymondjordan",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "usc|zacharyuswilliams",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|alexcloward",
+      "classification": "FR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|bradenpegan",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|creedwhittemore",
+      "classification": null,
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|danielbray",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|devondampier",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|elijahdavis",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|elijahelliss",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|elijahreed",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|ethanday",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|jacksonbennee",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|lanceholtzclaw",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|nateritchie",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|noahbennee",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|paulfitzgerald",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|rabbitevans",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|rickyjohnson",
+      "classification": "SO",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|treyreynolds",
+      "classification": "SR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    },
+    {
+      "id": "utah|wayshawnparker",
+      "classification": "JR",
+      "remainingEligibility": null,
+      "earliestDraftYear": null,
+      "draftEligible2027": null
+    }
+  ]
+}
