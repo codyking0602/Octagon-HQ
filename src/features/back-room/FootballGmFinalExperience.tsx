@@ -18,6 +18,7 @@ import {
   footballGmSeasonRecordLabel,
 } from "./footballGmStrategy";
 import { footballGmDevelopmentProfile } from "./wheelFootballGmEconomy";
+import { footballGmDevelopmentResult } from "./footballGmScouting";
 import { loadWheelFootballRoster, wheelFootballTeam } from "./wheelFootballModel";
 import type { FootballGmReportRun } from "./FootballGmFranchiseReport";
 
@@ -29,42 +30,42 @@ function scoutingTier(grade: number) {
   return grade >= 94 ? "ELITE" : grade >= 89 ? "IMPACT" : grade >= 83 ? "STARTER" : "DEPTH";
 }
 
-function clamp(value: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, value));
+/**
+ * Final movement deliberately uses five categorical, FIXED positions.
+ * Never derive a marker position from absolute grade, floor, ceiling,
+ * player-specific bounds, or the size of a change within a category.
+ * The progression should reveal a meaningful direction, not hidden OVR.
+ */
+export function footballGmResultMovementPosition(delta: number) {
+  const result = footballGmDevelopmentResult(delta);
+  switch (result) {
+    case "MAJOR REGRESSION": return 12;
+    case "REGRESSED": return 32;
+    case "HELD STEADY": return 50;
+    case "IMPROVED": return 68;
+    case "BREAKOUT": return 88;
+  }
 }
 
-/**
- * Bounds use the player's authored maximum annual gain/loss for BOTH
- * offseason rolls, and the engine's 70–99 grade clamp. They are possible
- * extremes, not a confidence interval and not a revealed scouting grade.
- */
 export function footballGmResultDevelopmentBand(player: FootballGmPlayer, seed: string) {
   const start = footballGmProjectedGradeForPlayer(player, 1, seed);
   const final = footballGmProjectedGradeForPlayer(player, 3, seed);
-  const profile = footballGmDevelopmentProfile(player.id);
-  const floor = profile ? clamp(start - profile.maxAnnualLoss * 2, 70, 99) : Math.min(start, final);
-  const ceiling = profile ? clamp(start + profile.maxAnnualGain * 2, 70, 99) : Math.max(start, final);
-  const low = Math.min(floor, start, final);
-  const high = Math.max(ceiling, start, final);
-  const span = Math.max(0.1, high - low);
-  const pct = (grade: number) => clamp((grade - low) / span * 100, 0, 100);
   const delta = final - start;
-  const finishedAt = pct(final);
-  const label = delta <= -0.85 && finishedAt <= 15 ? "Near floor"
-    : delta >= 0.85 && finishedAt >= 85 ? "Near ceiling"
-      : delta <= -3 ? "Notable decline"
-        : delta <= -0.85 ? "Slight decline"
-          : delta >= 3 ? "Strong improvement"
-            : delta >= 0.85 ? "Improved" : "Held steady";
+  const movement = footballGmDevelopmentResult(delta);
+  const label = movement === "HELD STEADY" ? "Held steady"
+    : movement === "MAJOR REGRESSION" ? "Major regression"
+      : movement === "REGRESSED" ? "Regressed"
+        : movement === "IMPROVED" ? "Improved" : "Breakout";
   return {
     start,
     final,
     delta,
-    startPercent: pct(start),
-    finalPercent: finishedAt,
+    startPercent: 50,
+    finalPercent: footballGmResultMovementPosition(delta),
     label,
-    tone: delta < -0.85 ? "down" : delta > 0.85 ? "up" : "steady",
-    calibrated: Boolean(profile),
+    tone: movement === "MAJOR REGRESSION" || movement === "REGRESSED" ? "down"
+      : movement === "BREAKOUT" || movement === "IMPROVED" ? "up" : "steady",
+    calibrated: Boolean(footballGmDevelopmentProfile(player.id)),
   };
 }
 
@@ -125,15 +126,15 @@ type RosterRow = {
 
 function OutcomeBand({ band, name }: { band: RosterRow["band"]; name: string }) {
   if (!band.calibrated) {
-    return <div className="gm-final__band-unavailable">DEVELOPMENT RANGE UNAVAILABLE</div>;
+    return <div className="gm-final__band-unavailable">DEVELOPMENT UNAVAILABLE</div>;
   }
   return (
-    <div className="gm-final__band" role="img" aria-label={name + ": " + band.label.toLowerCase() + " relative to original ability. The start and final markers appear on a bounded possible outcome range; exact grades remain hidden."}>
+    <div className="gm-final__band" role="img" aria-label={name + ": " + band.label.toLowerCase() + " across Years 1 through 3. Start is always centered; final movement is categorical. Exact grades remain hidden."}>
       <div className="gm-final__band-track">
         <span className="gm-final__band-start" style={{ left: band.startPercent + "%" }} />
         <span className={"gm-final__band-finish is-" + band.tone} style={{ left: band.finalPercent + "%" }} />
       </div>
-      <div className="gm-final__band-legend"><small>FLOOR</small><small className="gm-final__band-start-label" style={{ left: band.startPercent + "%" }}>START</small><small>CEILING</small></div>
+      <div className="gm-final__band-legend"><small>DECLINED</small><small className="gm-final__band-start-label">START</small><small>IMPROVED</small></div>
     </div>
   );
 }
@@ -324,7 +325,7 @@ export function FootballGmFinalExperience({
 
       <section className="gm-final__section gm-final__roster surface-card" aria-label="Final roster development outcomes">
         <header className="gm-final__heading"><h2>{opponentResult ? selectedName.toUpperCase() + " · FINAL ROSTER" : "YOUR FINAL ROSTER"}</h2><small>YEAR 1 → YEAR 3</small></header>
-        <p className="gm-final__hint">The blue dot is this run's finish. The slim white tick is the player's opening level. Each band reflects that player's possible two-year development range. Exact grades stay hidden.</p>
+        <p className="gm-final__hint">The white tick always marks START in the center. The colored dot shows improvement or decline in five fixed categories. Exact grades stay hidden.</p>
         <div className="gm-final__roster-list">
           {rows.map((row) => {
             const acquisition = row.before?.id === row.player.id ? "RETAINED"

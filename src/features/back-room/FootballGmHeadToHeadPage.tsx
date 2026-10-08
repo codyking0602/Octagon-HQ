@@ -1501,14 +1501,16 @@ export default function FootballGmHeadToHeadPage() {
             </div>
           ) : null}
 
-          <VersusRosterBoard
-            leftName={myDisplayName}
-            rightName={opponentDisplayName}
-            leftRun={run}
-            rightRun={opponentRun}
-            phase={displayedPhase}
-            activeSide={activeSide}
-          />
+          {displayedPhase !== "complete" ? (
+            <VersusRosterBoard
+              leftName={myDisplayName}
+              rightName={opponentDisplayName}
+              leftRun={run}
+              rightRun={opponentRun}
+              phase={displayedPhase}
+              activeSide={activeSide}
+            />
+          ) : null}
 
           {displayedPhase === "draft" ? (
             <>
@@ -1687,7 +1689,7 @@ export default function FootballGmHeadToHeadPage() {
                 <p className="eyebrow">HEAD TO HEAD FINAL</p>
                 <h1>{remote.forfeited_by_profile_id === activeProfileId ? `${opponentDisplayName.toUpperCase()} WINS` : "YOU WIN"}</h1>
                 <strong>BY FORFEIT</strong>
-                <p>{forfeitedProfile?.display_name ?? "A GM"} ended the matchup. Picks and roster progress remain visible above.</p>
+                <p>{forfeitedProfile?.display_name ?? "A GM"} ended the matchup. Picks and roster progress from the matchup remain saved.</p>
                 <button type="button" onClick={replay}>NEW GM MATCH</button>
               </section>
             ) : (
