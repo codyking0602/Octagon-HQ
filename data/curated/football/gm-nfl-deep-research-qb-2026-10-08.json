@@ -1,0 +1,2230 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-gm-qb-deep-research-2026-10-08",
+  "date": "2026-10-08",
+  "coverage": "2025 completed season and 2026 through completed Week 4 games, as of early 2026-10-08 America/Chicago; excludes unplayed Week 5.",
+  "sourceRepository": "codyking0602/Octagon-HQ",
+  "sourceCalibrationPr": 1760,
+  "parentPr": 1759,
+  "sourceCalibrationAuthority": "data/curated/football/gm-nfl-development-profiles-2026-10-07.json",
+  "gradeAuthority": "data/generated/football/wheel-nfl-qb-grades-2026-10-03.json",
+  "integrationSafety": "Research-only artifact. Not imported by game runtime. Do not change any locked HQ grade or existing development profile without integration owner review.",
+  "method": "Individually compare 2025 PFR full-season rates or documented non-participation, 2026 NFL.com Week 5 QB Index covering games through Week 4, and contemporaneous club/NFL/Reuters reporting for material opportunity/injuries. Development category percentages are editorial, transparent game-design judgment, not statistically fit forecasting. 'Breakout' means a true level-of-play leap, distinct from added passing attempts. Market variance is the maximum input volatility assumption, not a claim about measured contract volatility. Missing player-level pressure splits and prognosis explicitly identified, not fabricated.",
+  "researchCount": 34,
+  "players": [
+    {
+      "id": "ARI|QB|jacobybrissett",
+      "name": "Jacoby Brissett",
+      "team": "ARI",
+      "position": "QB",
+      "ageAtCalibration": 33,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 91,
+      "lockedHqGrade": 80,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "14 appearances/12 starts, 3,366 yards, 23 TD/8 INT, 94.1 rating; heavy usage with modest vertical efficiency.",
+        "season2026ThroughWeek4": "Four starts: 818 yards, 6 TD/4 INT, 5.4 yards/attempt; a three-INT Week 4 and closing pick-six.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Experienced distributor; adequate intermediate accuracy and processing, limited off-script creation and shrinking vertical returns. Giants exposed dependence on McBride; pressure-specific splits unverified. Starter role is real but vulnerable.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Established bridge QB likely to remain usable without a late-career breakout; a role loss is as consequential as a talent loss.",
+        "evidenceGap": "Detailed 2026 pressure-to-sack rate not independently verified."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 8,
+        "steadyPct": 45,
+        "declinePct": 46,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 7,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Established bridge QB likely to remain usable without a late-career breakout; a role loss is as consequential as a talent loss. Experienced distributor; adequate intermediate accuracy and processing, limited off-script creation and shrinking vertical returns. Giants exposed dependence on McBride; pressure-specific splits unverified. Starter role is real but vulnerable."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 49,
+        "declinePct": 39,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 7
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -2,
+          "steady": -4,
+          "decline": 7
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "ATL|QB|michaelpenix",
+      "name": "Michael Penix Jr.",
+      "team": "ATL",
+      "position": "QB",
+      "ageAtCalibration": 26,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 8,
+      "lockedHqGrade": 78,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "low",
+      "evidence": {
+        "season2025": "Nine 2025 games: 1,982 yards, 9 TD/3 INT, 60.1% completions; season ended early with torn ACL.",
+        "season2026ThroughWeek4": "Returned to start in Week 3; two games, 479 yards, 73.3% completions, 10.6 Y/A, 2 TD/1 INT.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Left-handed timing/deep-ball arm shows genuine stretch gains, but pass location and full-field decision evidence remain short; rushing escape margin limited. ACL recovery and Atlanta's Bijan-led offense complicate attribution of early efficiency.",
+        "developmentInjuryCoachingStartingOpportunityContext": "High-variance prospective starter: a genuine functional leap is possible, but health and limited NFL starts justify substantial failure and stagnation paths.",
+        "evidenceGap": "Only two 2026 starts after ACL recovery; pressure response and sustained accuracy insufficiently established."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 15,
+        "improvePct": 27,
+        "steadyPct": 20,
+        "declinePct": 38,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 10,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "High-variance prospective starter: a genuine functional leap is possible, but health and limited NFL starts justify substantial failure and stagnation paths. Left-handed timing/deep-ball arm shows genuine stretch gains, but pass location and full-field decision evidence remain short; rushing escape margin limited. ACL recovery and Atlanta's Bijan-led offense complicate attribution of early efficiency."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 17,
+        "improvePct": 23,
+        "steadyPct": 22,
+        "declinePct": 38,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 7.4,
+        "marketVariancePct": 6
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -2,
+          "improve": 4,
+          "steady": -2,
+          "decline": 0
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "Falcons confirm Penix return from 2025 ACL tear",
+          "date": "2026-09-21",
+          "url": "https://www.atlantafalcons.com/news/michael-penix-jr-starting-qb-thursday-night-football-vs-packers",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "BAL|QB|lamarjackson",
+      "name": "Lamar Jackson",
+      "team": "BAL",
+      "position": "QB",
+      "ageAtCalibration": 29,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 32,
+      "lockedHqGrade": 96,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "13 games, 2,549 yards, 21 TD/7 INT, 8.4 Y/A; sustained efficient passing despite abbreviated season.",
+        "season2026ThroughWeek4": "Four appearances, 967 passing yards at 10.1 Y/A, 6 TD/1 INT plus 144 rush yards; ankle injury interrupted Week 4.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Top-tier zone manipulation and explosive creation with legs, improved passing placement and protection recognition; sacks/physical exposure remain important even when turnover totals are low.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Elite established skill is more likely to remain elite than to break out again; injury affects availability, not proof of decline.",
+        "evidenceGap": "Ankle imaging and return date not resolved as of Oct 8; 2026 pressure splits not available."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 13,
+        "steadyPct": 72,
+        "declinePct": 13,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 7,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Elite established skill is more likely to remain elite than to break out again; injury affects availability, not proof of decline. Top-tier zone manipulation and explosive creation with legs, improved passing placement and protection recognition; sacks/physical exposure remain important even when turnover totals are low."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 17,
+        "steadyPct": 73,
+        "declinePct": 7,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -4,
+          "steady": -1,
+          "decline": 6
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "Ravens report ankle injury and uncertain availability",
+          "date": "2026-10-04",
+          "url": "https://www.baltimoreravens.com/news/lamar-jackson-ankle-injury-ravens-titans-tyler-huntley",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "BUF|QB|joshallen",
+      "name": "Josh Allen",
+      "team": "BUF",
+      "position": "QB",
+      "ageAtCalibration": 30,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 7,
+      "lockedHqGrade": 99,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "17 starts, 3,668 passing yards, 25 TD/10 INT, 69.3%, plus major designed/scramble rushing threat.",
+        "season2026ThroughWeek4": "Four starts, 1,039 passing yards, 6 TD/3 INT and seven rushing TD; more fumbles and interceptions early.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Unusually complete deep/short passing, arm angles, pocket escape and designed rushing. Pressure creation is already mature; aggressive plays carry ordinary turnover risk but not evidence of fundamental regression.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Near-cap established elite with almost no room for meaningful breakout; small efficiency fluctuations and normal injury exposure dominate.",
+        "evidenceGap": "No player-specific enduring medical concern confirmed in consulted sources."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 11,
+        "steadyPct": 81,
+        "declinePct": 7,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.2,
+        "marketVariancePct": 4,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Near-cap established elite with almost no room for meaningful breakout; small efficiency fluctuations and normal injury exposure dominate. Unusually complete deep/short passing, arm angles, pocket escape and designed rushing. Pressure creation is already mature; aggressive plays carry ordinary turnover risk but not evidence of fundamental regression."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 79,
+        "declinePct": 4,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": false,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -4,
+          "steady": 2,
+          "decline": 3
+        },
+        "explanation": "Differences are small and reflect the specific full-season versus 2026 evidence weighting; the locked HQ grade remains unchanged."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "CAR|QB|bryceyoung",
+      "name": "Bryce Young",
+      "team": "CAR",
+      "position": "QB",
+      "ageAtCalibration": 25,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 82,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "16 starts, 3,011 yards, 23 TD/11 INT, 6.3 Y/A and 87.8 rating; limited explosives.",
+        "season2026ThroughWeek4": "Four games, NFL-leading 1,246 passing yards, 9 TD/2 INT, 7.9 Y/A; Week 4 strong against Detroit.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Better mid-field anticipation and in-breaking accuracy than 2025; Week 4 14/15 on in-breakers, but 40% pressure rate that game and prior weeks over 50% warn against declaring clean-pocket independence. Limited power still raises contested-window questions.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Raises improvement and lowers bust risk from old profile, without assuming high volume equals a superstar leap; another season of pressure-adjusted efficiency is the test.",
+        "evidenceGap": "Four games cannot establish long-term pressure tolerance; target depth and scheme dependencies remain material."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 20,
+        "improvePct": 39,
+        "steadyPct": 22,
+        "declinePct": 19,
+        "maxAnnualGain": 7.2,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Raises improvement and lowers bust risk from old profile, without assuming high volume equals a superstar leap; another season of pressure-adjusted efficiency is the test. Better mid-field anticipation and in-breaking accuracy than 2025; Week 4 14/15 on in-breakers, but 40% pressure rate that game and prior weeks over 50% warn against declaring clean-pocket independence. Limited power still raises contested-window questions."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 23,
+        "improvePct": 28,
+        "steadyPct": 21,
+        "declinePct": 28,
+        "maxAnnualGain": 8.5,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 8
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -3,
+          "improve": 11,
+          "steady": 1,
+          "decline": -9
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "CHI|QB|calebwilliams",
+      "name": "Caleb Williams",
+      "team": "CHI",
+      "position": "QB",
+      "ageAtCalibration": 24,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 87,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "17 starts, 3,942 yards, 27 TD/7 INT; sack count fell to 24 but 58.1% completions show placement inconsistency.",
+        "season2026ThroughWeek4": "Two games, 407 passing yards and 2 TD/1 INT; superb Week 1 (269 yards at 9.3 Y/A) followed by 138 yards at 5.3; hamstring injury sidelined him for Weeks 3-4.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Big-play improvisation, pocket movement and arm flexibility offer functional upside. First-read rhythm/short-ball accuracy and pressure decisions still vary; 2025 sack reduction is a stronger developmental indicator than sheer yards.",
+        "developmentInjuryCoachingStartingOpportunityContext": "High ceiling but not automatic elite: repeated precision and consistent dropback passing are necessary. Injury interrupts early evaluation, not a current-grade deduction.",
+        "evidenceGap": "No Weeks 3-4 personal play because of hamstring; injury return timing not established."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 19,
+        "improvePct": 34,
+        "steadyPct": 26,
+        "declinePct": 21,
+        "maxAnnualGain": 7.5,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "High ceiling but not automatic elite: repeated precision and consistent dropback passing are necessary. Injury interrupts early evaluation, not a current-grade deduction. Big-play improvisation, pocket movement and arm flexibility offer functional upside. First-read rhythm/short-ball accuracy and pressure decisions still vary; 2025 sack reduction is a stronger developmental indicator than sheer yards."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 27,
+        "improvePct": 37,
+        "steadyPct": 18,
+        "declinePct": 18,
+        "maxAnnualGain": 8,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 8
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -8,
+          "improve": -3,
+          "steady": 8,
+          "decline": 3
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com Caleb Williams 2026 game logs, first two games",
+          "date": "2026-10-08 (accessed)",
+          "url": "https://www.nfl.com/players/caleb-williams/stats/",
+          "type": "club-report"
+        },
+        {
+          "title": "Reuters reports hamstring absence and substitute starter",
+          "date": "2026-10-05",
+          "url": "https://www.reuters.com/sports/no-secret-bears-name-tyson-bagent-starting-qb-vs-packers--flm-2026-10-05/",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "CIN|QB|joeburrow",
+      "name": "Joe Burrow",
+      "team": "CIN",
+      "position": "QB",
+      "ageAtCalibration": 29,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 95,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "Eight games amid availability interruption: 1,809 yards, 17 TD/5 INT, 100.7 rating.",
+        "season2026ThroughWeek4": "Four starts, 1,171 yards, 7 TD/3 INT, 71.3%; poor two-INT outing against Jacksonville.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Precise anticipatory throwing, pocket processing, and timing against tight coverage are established. Protection and pass-heavy workload create exposure; occasional forced balls are different from losing the ability to read pressure.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Elite passing baseline with restrained upside, modest decline tail amplified by the incomplete 2025 season and recent availability history.",
+        "evidenceGap": "A comprehensive longitudinal injury forecast cannot be inferred from passing logs alone."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 71,
+        "declinePct": 12,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 6,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Elite passing baseline with restrained upside, modest decline tail amplified by the incomplete 2025 season and recent availability history. Precise anticipatory throwing, pocket processing, and timing against tight coverage are established. Protection and pass-heavy workload create exposure; occasional forced balls are different from losing the ability to read pressure."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 19,
+        "steadyPct": 71,
+        "declinePct": 7,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 2.2,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -4,
+          "steady": 0,
+          "decline": 5
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "CLE|QB|deshaunwatson",
+      "name": "Deshaun Watson",
+      "team": "CLE",
+      "position": "QB",
+      "ageAtCalibration": 31,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 12,
+      "lockedHqGrade": 78,
+      "lockedGradeConfidence": "low",
+      "researchConfidence": "low",
+      "evidence": {
+        "season2025": "No regular-season games; Browns say he remained in recovery from 2024 Achilles rupture through 2025.",
+        "season2026ThroughWeek4": "Four 2026 starts, 855 yards, 6 TD/2 INT, 69.6% completions, 127 rushing yards; Week 4 24/33 for 268 yards.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Visible functional recovery and faster processing/ball-out time (2.51 sec Week 4); clean-pocket 21/28 vs under-pressure 3/5 with an INT shows dependence on protection. Old 2022-24 limitations not erased by four starts.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Real rebound possibility exceeds prior tiny breakout allocation, but Achilles history, a missed season, ball security, and pressure effectiveness mean large downside remains.",
+        "evidenceGap": "Four post-recovery games; no durable pre/post Achilles movement comparison or verified 2026 pressure season split."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 9,
+        "improvePct": 20,
+        "steadyPct": 32,
+        "declinePct": 39,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 11,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Real rebound possibility exceeds prior tiny breakout allocation, but Achilles history, a missed season, ball security, and pressure effectiveness mean large downside remains. Visible functional recovery and faster processing/ball-out time (2.51 sec Week 4); clean-pocket 21/28 vs under-pressure 3/5 with an INT shows dependence on protection. Old 2022-24 limitations not erased by four starts."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 10,
+        "steadyPct": 41,
+        "declinePct": 46,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 7
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 6,
+          "improve": 10,
+          "steady": -9,
+          "decline": -7
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "Browns report return after Achilles recovery and missed 2025",
+          "date": "2026-06-11",
+          "url": "https://www.clevelandbrowns.com/news/deshaun-watson-utilizes-offseason-program-to-his-advantage-as-he-returns-to-the-field-otas-minicamp",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "DAL|QB|dakprescott",
+      "name": "Dak Prescott",
+      "team": "DAL",
+      "position": "QB",
+      "ageAtCalibration": 33,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 135,
+      "lockedHqGrade": 92,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "17 games, 4,552 yards, 30 TD/10 INT, 67.3%, 7.6 Y/A, QBR 70.2.",
+        "season2026ThroughWeek4": "Four starts, 1,065 yards, 8 TD/1 INT, 70% completions; Week 4 5/7 for 116 vs blitz but 3/9 for 14 under actual pressure.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Established aggressive accurate passer with strong pre-snap answers and intermediate timing; can beat blitz with anticipation but pressure compression exposes sacks/accuracy limitations. The 2025 volume is backed by solid efficiency.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Prime-to-late-prime high-end consistency, limited room to break out, moderate aging/timing downside rather than generic volatile starter.",
+        "evidenceGap": "No confirmed new multi-year injury concern from selected sources."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 69,
+        "declinePct": 10,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 3.5,
+        "marketVariancePct": 4,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Prime-to-late-prime high-end consistency, limited room to break out, moderate aging/timing downside rather than generic volatile starter. Established aggressive accurate passer with strong pre-snap answers and intermediate timing; can beat blitz with anticipation but pressure compression exposes sacks/accuracy limitations. The 2025 volume is backed by solid efficiency."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 16,
+        "steadyPct": 61,
+        "declinePct": 20,
+        "maxAnnualGain": 3.3,
+        "maxAnnualLoss": 4.9,
+        "marketVariancePct": 7
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": 3,
+          "steady": 8,
+          "decline": -10
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "DEN|QB|bonix",
+      "name": "Bo Nix",
+      "team": "DEN",
+      "position": "QB",
+      "ageAtCalibration": 26,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 12,
+      "lockedHqGrade": 79,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "17 starts, 3,931 yards, 25 TD/11 INT, 6.4 Y/A, 87.8 rating; just 22 sacks.",
+        "season2026ThroughWeek4": "Four games: 819 yards, 5 TD/3 INT, 60% and 6.1 Y/A; Week 4 1/9 on 10+ air-yard throws.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Mobile, quick distributor and relatively sack-avoidant but downfield accuracy/anticipation and second-reaction explosiveness have yet to consolidate. NGS short/deep split indicates function rather than just modest volume.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Still has developmental headroom, but two seasons of limited efficiency resist near-certain breakout odds; realistic incremental processing improvement with regression risk.",
+        "evidenceGap": "Need larger 2026 clean-pocket vs pressure sample and coaching-adjusted deep-shot opportunities."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 14,
+        "improvePct": 30,
+        "steadyPct": 30,
+        "declinePct": 26,
+        "maxAnnualGain": 6.8,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 6,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Still has developmental headroom, but two seasons of limited efficiency resist near-certain breakout odds; realistic incremental processing improvement with regression risk. Mobile, quick distributor and relatively sack-avoidant but downfield accuracy/anticipation and second-reaction explosiveness have yet to consolidate. NGS short/deep split indicates function rather than just modest volume."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 17,
+        "improvePct": 30,
+        "steadyPct": 27,
+        "declinePct": 26,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -3,
+          "improve": 0,
+          "steady": 3,
+          "decline": 0
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "DET|QB|jaredgoff",
+      "name": "Jared Goff",
+      "team": "DET",
+      "position": "QB",
+      "ageAtCalibration": 31,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 89,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "17 starts, 4,564 yards, 34 TD/8 INT, 7.9 Y/A, 105.5 passer rating.",
+        "season2026ThroughWeek4": "Four games, 1,114 yards, 8 TD/0 INT, 67.3%; consistent productivity in structured Detroit attack.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Highly accurate timing, reads and intermediate placement when platform stable; mobility/off-platform improvisation limits ceiling against free rushers. Low INT totals across seasons represent repeatable decision quality.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Strong stable veteran; improbable further superstar leap and moderate age/protection-related downside.",
+        "evidenceGap": "2026 individual pressure-only efficiency not verified."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 20,
+        "steadyPct": 62,
+        "declinePct": 16,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 4,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Strong stable veteran; improbable further superstar leap and moderate age/protection-related downside. Highly accurate timing, reads and intermediate placement when platform stable; mobility/off-platform improvisation limits ceiling against free rushers. Low INT totals across seasons represent repeatable decision quality."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 23,
+        "steadyPct": 56,
+        "declinePct": 18,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -3,
+          "steady": 6,
+          "decline": -2
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "GB|QB|jordanlove",
+      "name": "Jordan Love",
+      "team": "GB",
+      "position": "QB",
+      "ageAtCalibration": 27,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 26,
+      "lockedHqGrade": 85,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "15 starts, 3,381 yards, 23 TD/6 INT, 7.7 Y/A and 101.2 rating.",
+        "season2026ThroughWeek4": "Four games, 1,041 yards, 8 TD/3 INT, 56.5% completions; short late INT vs Tampa.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Has demonstrated deep timing and creativity over multiple years, but 2026 underneath placement and consistency are poor; turnover totals alone understate off-target throws. System gives starting stability but not immunity to dropback volatility.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Meaningful rebound toward 2025 form more likely than a brand-new superstar leap; regression share increased from old profile.",
+        "evidenceGap": "No sourced player-specific medical setback; need target-adjusted accuracy and pressure season splits."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 27,
+        "steadyPct": 29,
+        "declinePct": 31,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 6,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Meaningful rebound toward 2025 form more likely than a brand-new superstar leap; regression share increased from old profile. Has demonstrated deep timing and creativity over multiple years, but 2026 underneath placement and consistency are poor; turnover totals alone understate off-target throws. System gives starting stability but not immunity to dropback volatility."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 12,
+        "improvePct": 27,
+        "steadyPct": 35,
+        "declinePct": 26,
+        "maxAnnualGain": 6.4,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 1,
+          "improve": 0,
+          "steady": -6,
+          "decline": 5
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "HOU|QB|cjstroud",
+      "name": "C.J. Stroud",
+      "team": "HOU",
+      "position": "QB",
+      "ageAtCalibration": 25,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 2,
+      "lockedHqGrade": 82,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "14 starts, 3,041 yards, 19 TD/8 INT and 92.9 rating; two-year leveling after 2023 rookie peak.",
+        "season2026ThroughWeek4": "Four starts, 1,141 yards, 5 TD/0 INT, 7.6 Y/A; 347 yards and two TD in Week 4, still 61.6% accuracy.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Re-emerging intermediate/deep pocket creation, more protection of ball, and better downfield efficiency than conservative early weeks; processing vs late pressure remains variable. Stable Texans starting runway.",
+        "developmentInjuryCoachingStartingOpportunityContext": "A more credible improvement path than old profile after four strong ball-protection games, without treating one 347-yard day as a lasting MVP-level breakout.",
+        "evidenceGap": "Four-game clean-pocket/pressure splits and receiving-context adjustment unverified."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 18,
+        "improvePct": 35,
+        "steadyPct": 29,
+        "declinePct": 18,
+        "maxAnnualGain": 7.4,
+        "maxAnnualLoss": 5.6,
+        "marketVariancePct": 6,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "A more credible improvement path than old profile after four strong ball-protection games, without treating one 347-yard day as a lasting MVP-level breakout. Re-emerging intermediate/deep pocket creation, more protection of ball, and better downfield efficiency than conservative early weeks; processing vs late pressure remains variable. Stable Texans starting runway."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 24,
+        "improvePct": 30,
+        "steadyPct": 22,
+        "declinePct": 24,
+        "maxAnnualGain": 8.5,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 6
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -6,
+          "improve": 5,
+          "steady": 7,
+          "decline": -6
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "IND|QB|danieljones",
+      "name": "Daniel Jones",
+      "team": "IND",
+      "position": "QB",
+      "ageAtCalibration": 29,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 6,
+      "lockedHqGrade": 80,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "low",
+      "evidence": {
+        "season2025": "13 games, 3,101 yards, 19 TD/8 INT, 8.1 Y/A, 100.2 rating; Achilles tear in December ended season.",
+        "season2026ThroughWeek4": "Four 2026 games, 754 yards, 3 TD/4 INT and 5.7 Y/A; fumble issues and loss of prior efficiency.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "2025 functional efficiency was legitimate and independent of pure volume; however post-Achilles pocket movement, decision speed and turnovers currently undermine the sustained-bounce-back case. Shane Steichen system offers continuity.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Greater regression probability than old profile; recovery and 2026 ball-security issues explain fragile stability, not a blanket rejection of his 2025 gains.",
+        "evidenceGap": "Recovery to peak mobility after 2025 Achilles tear remains uncertain; no verified exact 2026 post-injury pressure split."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 17,
+        "steadyPct": 37,
+        "declinePct": 41,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 9,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Greater regression probability than old profile; recovery and 2026 ball-security issues explain fragile stability, not a blanket rejection of his 2025 gains. 2025 functional efficiency was legitimate and independent of pure volume; however post-Achilles pocket movement, decision speed and turnovers currently undermine the sustained-bounce-back case. Shane Steichen system offers continuity."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 15,
+        "steadyPct": 48,
+        "declinePct": 32,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 6
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 0,
+          "improve": 2,
+          "steady": -11,
+          "decline": 9
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "Colts confirm 2025 Achilles tear and recovery",
+          "date": "2026-06-10",
+          "url": "https://www.colts.com/news/daniel-jones-achilles-recovery-rehab-training-camp-availability-week-1-nfl-season-opener-will-he-play",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "JAX|QB|trevorlawrence",
+      "name": "Trevor Lawrence",
+      "team": "JAX",
+      "position": "QB",
+      "ageAtCalibration": 26,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 87,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "17 starts, 4,007 yards, 29 TD/12 INT, 7.2 Y/A; meaningful 2025 improvement with some uneven placement.",
+        "season2026ThroughWeek4": "Four games, 843 yards, 8 TD/2 INT, 8.1 Y/A and 69.2% completions.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "2026 is a cleaner execution/ball-placement stretch; athletic pocket movement and higher-level drive finishing more repeatable than one hot game. Multi-year accuracy swings remain the ceiling obstacle.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Higher steady share and lower regression than old; moderate improvement plausible, not an unconstrained jump to Allen-tier.",
+        "evidenceGap": "No specific new long-term injury verified; need future games to confirm 2026 accuracy stability."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 10,
+        "improvePct": 30,
+        "steadyPct": 44,
+        "declinePct": 16,
+        "maxAnnualGain": 5.6,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 5,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Higher steady share and lower regression than old; moderate improvement plausible, not an unconstrained jump to Allen-tier. 2026 is a cleaner execution/ball-placement stretch; athletic pocket movement and higher-level drive finishing more repeatable than one hot game. Multi-year accuracy swings remain the ceiling obstacle."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 12,
+        "improvePct": 29,
+        "steadyPct": 36,
+        "declinePct": 23,
+        "maxAnnualGain": 6.2,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -2,
+          "improve": 1,
+          "steady": 8,
+          "decline": -7
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "KC|QB|patrickmahomes",
+      "name": "Patrick Mahomes",
+      "team": "KC",
+      "position": "QB",
+      "ageAtCalibration": 31,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 10,
+      "lockedHqGrade": 97,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "14 games, 3,587 yards, 22 TD/11 INT, 89.6 passer rating, QBR 68.5; lower raw efficiency than peak.",
+        "season2026ThroughWeek4": "Four starts, 1,037 yards, 9 TD/2 INT and 8.1 Y/A; early-week top-three QB Index, Week 4 50% completions.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Elite coverage manipulation, pocket problem-solving and late-down creation over years; under-center/rushing support currently eases workload. 2025 keeps probabilities anchored to actual current consistency instead of reputation alone.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Established elite near grade cap; wide breakthrough unrealistic, but moderate bounce in passing efficiency entirely credible.",
+        "evidenceGap": "No verified material player-specific injury in 2026 sources."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 81,
+        "declinePct": 5,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2,
+        "marketVariancePct": 4,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Established elite near grade cap; wide breakthrough unrealistic, but moderate bounce in passing efficiency entirely credible. Elite coverage manipulation, pocket problem-solving and late-down creation over years; under-center/rushing support currently eases workload. 2025 keeps probabilities anchored to actual current consistency instead of reputation alone."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 16,
+        "steadyPct": 77,
+        "declinePct": 5,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 1.5,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": false,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -3,
+          "steady": 4,
+          "decline": 0
+        },
+        "explanation": "Differences are small and reflect the specific full-season versus 2026 evidence weighting; the locked HQ grade remains unchanged."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "LAC|QB|justinherbert",
+      "name": "Justin Herbert",
+      "team": "LAC",
+      "position": "QB",
+      "ageAtCalibration": 28,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 6,
+      "lockedHqGrade": 88,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "16 starts, 3,727 yards, 26 TD/13 INT; 54 sacks and 9.54% sack rate with high pressure exposure.",
+        "season2026ThroughWeek4": "Four games, 816 yards, 4 TD/6 INT, 59.7% completions; Week 4 55% pressure rate, 4 sacks and strip-sack.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Exceptional arm/off-platform range survives, but accumulating pocket hero-ball throws and processing under pressure create actual negative outcomes; new scheme/injuries are relevant context, not excuses. Clean pocket Week 4 12/18, 88 yards, TD and INT.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Old 30% decline was already cautionary; 2026 adds credible downside and slightly more rebound upside from low starting stretch. Not every turnover is an enduring loss of arm talent.",
+        "evidenceGap": "2026 offense and injury-context attribution not isolated; season-long pressure response sample still small."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 10,
+        "improvePct": 25,
+        "steadyPct": 27,
+        "declinePct": 38,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 7.2,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Old 30% decline was already cautionary; 2026 adds credible downside and slightly more rebound upside from low starting stretch. Not every turnover is an enduring loss of arm talent. Exceptional arm/off-platform range survives, but accumulating pocket hero-ball throws and processing under pressure create actual negative outcomes; new scheme/injuries are relevant context, not excuses. Clean pocket Week 4 12/18, 88 yards, TD and INT."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 8,
+        "improvePct": 25,
+        "steadyPct": 37,
+        "declinePct": 30,
+        "maxAnnualGain": 5.6,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 2,
+          "improve": 0,
+          "steady": -10,
+          "decline": 8
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "LAR|QB|matthewstafford",
+      "name": "Matthew Stafford",
+      "team": "LAR",
+      "position": "QB",
+      "ageAtCalibration": 38,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 95,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "2025 NFL MVP, 17 starts, 4,707 yards, 46 TD/8 INT, 109.2 rating; elite sustained accuracy.",
+        "season2026ThroughWeek4": "Four games, 1,189 yards, 6 TD/6 INT, 61.1%, 7.3 Y/A; repeated misses and pressure-related errors.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Anticipation and tight-window command remain excellent, but 2026 accuracy/turnover drop is real evidence beyond a single interception. Age 38 raises downside for physical resilience, not proof his processing disappears.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Reduce old 45% steady toward a higher annual decline tail; plausible good season but repeat MVP leap much less likely than normal aging/execution variance.",
+        "evidenceGap": "No specific medical diagnosis is asserted; 2026 turnover origin and pressure attribution need additional film."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 7,
+        "steadyPct": 38,
+        "declinePct": 54,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 10,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Reduce old 45% steady toward a higher annual decline tail; plausible good season but repeat MVP leap much less likely than normal aging/execution variance. Anticipation and tight-window command remain excellent, but 2026 accuracy/turnover drop is real evidence beyond a single interception. Age 38 raises downside for physical resilience, not proof his processing disappears."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 6,
+        "steadyPct": 45,
+        "declinePct": 48,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 9
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 0,
+          "improve": 1,
+          "steady": -7,
+          "decline": 6
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "NFL Week 5 QB Index on Stafford's 2026 interceptions",
+          "date": "2026-10-07",
+          "url": "https://fantasy-www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "LV|QB|fernandomendoza",
+      "name": "Fernando Mendoza",
+      "team": "LV",
+      "position": "QB",
+      "ageAtCalibration": 23,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 73,
+      "lockedGradeConfidence": "low",
+      "researchConfidence": "low",
+      "evidence": {
+        "season2025": "No 2025 NFL games; 2025 Heisman-winning college season for Indiana, which does not count as NFL passing evidence.",
+        "season2026ThroughWeek4": "No 2026 regular-season NFL snaps through Week 4; 10/16, 97 yards and a TD in preseason debut, but Cousins won starting job.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "College anticipatory touch and preseason interior accuracy are promising, yet pro speed, third-down pressure, pocket escape and tight-window ball decisions are essentially untested. Top draft pick gives opportunity, not statistical NFL proof.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Prospect-level uncertainty: broad improvement and bust tails, with steady meaning remaining an unproven backup. Avoid guaranteed elite because of No. 1 pedigree.",
+        "evidenceGap": "Insufficient regular-season NFL evidence by definition; staff timing of possible first start remains unresolved."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 25,
+        "improvePct": 25,
+        "steadyPct": 23,
+        "declinePct": 27,
+        "maxAnnualGain": 9,
+        "maxAnnualLoss": 8.2,
+        "marketVariancePct": 10,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Prospect-level uncertainty: broad improvement and bust tails, with steady meaning remaining an unproven backup. Avoid guaranteed elite because of No. 1 pedigree. College anticipatory touch and preseason interior accuracy are promising, yet pro speed, third-down pressure, pocket escape and tight-window ball decisions are essentially untested. Top draft pick gives opportunity, not statistical NFL proof."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 25,
+        "improvePct": 23,
+        "steadyPct": 18,
+        "declinePct": 34,
+        "maxAnnualGain": 8.8,
+        "maxAnnualLoss": 7.2,
+        "marketVariancePct": 9
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 0,
+          "improve": 2,
+          "steady": 5,
+          "decline": -7
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "NFL.com: Raiders draft 2026 No. 1 pick Mendoza",
+          "date": "2026-04 (draft; exact day not displayed)",
+          "url": "https://www.nfl.com/news/fernando-mendoza-raiders-no-1-overall-pick-2026-nfl-draft",
+          "type": "2025-college-pedigree"
+        },
+        {
+          "title": "NFL on Raiders' selection of Kirk Cousins over rookie Mendoza",
+          "date": "2026-09 (preseason-to-opener; exact article date not displayed)",
+          "url": "https://www.nfl.com/news/raiders-name-kirk-cousins-starting-fernando-mendoza-officially-backup",
+          "type": "club-report"
+        },
+        {
+          "title": "NFL on Mendoza's 2026 preseason debut, 10/16 for 97 yards",
+          "date": "2026-08 (preseason; exact day not displayed)",
+          "url": "https://www.nfl.com/news/fernando-mendoza-passes-first-rookie-test-in-raiders-preseason-debut",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "LV|QB|kirkcousins",
+      "name": "Kirk Cousins",
+      "team": "LV",
+      "position": "QB",
+      "ageAtCalibration": 38,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 102,
+      "lockedHqGrade": 80,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "Ten appearances/eight starts with Atlanta, 1,721 yards, 10 TD/5 INT and 84.8 rating after earlier Achilles history.",
+        "season2026ThroughWeek4": "Four Raiders starts, 1,026 yards, 11 TD/4 INT, 64.6%; top-ten NFL QB Index; first-team choice over Mendoza.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Real anticipation/accuracy in Klint Kubiak's offense and surprisingly productive end-zone decision-making. Reduced movement/off-script escape makes protection crucial, especially with a rookie waiting.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Increase improvement/steady odds vs old despite age, but a multi-year breakout remains unlikely; role displacement and athletic decline are principal negative tails.",
+        "evidenceGap": "No quantified 2026 pressure-conditioned decline; future starting opportunity explicitly depends on Mendoza development."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 15,
+        "steadyPct": 45,
+        "declinePct": 39,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 9,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Increase improvement/steady odds vs old despite age, but a multi-year breakout remains unlikely; role displacement and athletic decline are principal negative tails. Real anticipation/accuracy in Klint Kubiak's offense and surprisingly productive end-zone decision-making. Reduced movement/off-script escape makes protection crucial, especially with a rookie waiting."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 5,
+        "steadyPct": 40,
+        "declinePct": 54,
+        "maxAnnualGain": 2.1,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 11
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 0,
+          "improve": 10,
+          "steady": 5,
+          "decline": -15
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "NFL report on Cousins' 2026 role over Mendoza",
+          "date": "2026-09 (before opening game)",
+          "url": "https://www.nfl.com/news/raiders-name-kirk-cousins-starting-fernando-mendoza-officially-backup",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "MIA|QB|malikwillis",
+      "name": "Malik Willis",
+      "team": "MIA",
+      "position": "QB",
+      "ageAtCalibration": 27,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 86,
+      "lockedHqGrade": 76,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "Four Packers appearances/one start, only 35 attempts: 422 yards, 3 TD/0 INT, 85.7% accuracy; inflated by tiny sample.",
+        "season2026ThroughWeek4": "Four Dolphins starts, 712 yards, 1 TD/2 INT, 56.3% completions and 112 rush yards.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Dynamic rushing and flashes of tight-window throwing; real full-time starter workload has exposed accuracy, drive finishing and coverage processing limitations. 2025 145.5 rating is not a 17-start projection.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Some adaptation possible but old spot-start optimism must be discounted. More negative than breakout paths are justified without treating his legs as passing efficiency.",
+        "evidenceGap": "Small 2025 passing sample and only four 2026 starts; no season-level pressure split verified."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 10,
+        "improvePct": 22,
+        "steadyPct": 30,
+        "declinePct": 38,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Some adaptation possible but old spot-start optimism must be discounted. More negative than breakout paths are justified without treating his legs as passing efficiency. Dynamic rushing and flashes of tight-window throwing; real full-time starter workload has exposed accuracy, drive finishing and coverage processing limitations. 2025 145.5 rating is not a 17-start projection."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 7,
+        "improvePct": 19,
+        "steadyPct": 38,
+        "declinePct": 36,
+        "maxAnnualGain": 5.3,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 6
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 3,
+          "improve": 3,
+          "steady": -8,
+          "decline": 2
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "NFL career passing statistics including small 2025 sample",
+          "date": "2026-10-08 (accessed)",
+          "url": "https://www.nfl.com/players/malik-willis/stats/career",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "MIN|QB|kylermurray",
+      "name": "Kyler Murray",
+      "team": "MIN",
+      "position": "QB",
+      "ageAtCalibration": 29,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 80,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "low",
+      "evidence": {
+        "season2025": "Five 2025 starts, 962 yards, 6 TD/3 INT, 6.0 Y/A; availability sharply limited.",
+        "season2026ThroughWeek4": "Three Vikings starts, 433 yards, 1 TD/2 INT, 6.1 Y/A; Week 4 4.9 intended air yards and no 20+ air-yard attempt.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Still has short-area movement and designed-creation potential but current vertical confidence, field vision and throw depth are constrained. Change of team/coaching environment makes old high-end years weak present predictors.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Reduce breakout and increase decline risk; volume limitations reflect function and fit as well as injury history. A modest rebound remains viable.",
+        "evidenceGap": "Need explanation of 2025 limited availability and controlled post-change environment; no specific new 2026 diagnosis asserted."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 16,
+        "steadyPct": 31,
+        "declinePct": 48,
+        "maxAnnualGain": 5.4,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 9,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Reduce breakout and increase decline risk; volume limitations reflect function and fit as well as injury history. A modest rebound remains viable. Still has short-area movement and designed-creation potential but current vertical confidence, field vision and throw depth are constrained. Change of team/coaching environment makes old high-end years weak present predictors."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 6,
+        "improvePct": 21,
+        "steadyPct": 40,
+        "declinePct": 33,
+        "maxAnnualGain": 6.1,
+        "maxAnnualLoss": 6.9,
+        "marketVariancePct": 6
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -5,
+          "steady": -9,
+          "decline": 15
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "NE|QB|drakemaye",
+      "name": "Drake Maye",
+      "team": "NE",
+      "position": "QB",
+      "ageAtCalibration": 24,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 3,
+      "lockedHqGrade": 88,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "17 starts, 4,394 yards, 31 TD/8 INT, 72.0%, 8.9 Y/A, 113.5 rating; MVP runner-up.",
+        "season2026ThroughWeek4": "Four starts, 854 yards, 4 TD/7 INT, 62.4%; Week 4 comeback 269 yards and three TD vs Buffalo.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "2025 deep accuracy and second-reaction creation were demonstrated over a season, not merely draft hope. However 2026 decision forcing, turnovers and drop from 72% to 62% accuracy require real regression probability; Week 4 does not erase Weeks 1-3.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Meaningful rebound/improve likelihood from a proven peak, but old 11% decline was too optimistic amid seven INT. Keep upside capped by high baseline, with 2026 loss tail widened.",
+        "evidenceGap": "Potential shoulder rumor is not treated as diagnosis; pressure-adjusted causes of INT spike remain insufficiently established."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 19,
+        "improvePct": 39,
+        "steadyPct": 21,
+        "declinePct": 21,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 10,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Meaningful rebound/improve likelihood from a proven peak, but old 11% decline was too optimistic amid seven INT. Keep upside capped by high baseline, with 2026 loss tail widened. 2025 deep accuracy and second-reaction creation were demonstrated over a season, not merely draft hope. However 2026 decision forcing, turnovers and drop from 72% to 62% accuracy require real regression probability; Week 4 does not erase Weeks 1-3."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 22,
+        "improvePct": 41,
+        "steadyPct": 26,
+        "declinePct": 11,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 8
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -3,
+          "improve": -2,
+          "steady": -5,
+          "decline": 10
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "NO|QB|tylershough",
+      "name": "Tyler Shough",
+      "team": "NO",
+      "position": "QB",
+      "ageAtCalibration": 27,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 40,
+      "lockedHqGrade": 82,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "11 games, 2,384 yards, 10 TD/6 INT, 67.6% completions, 7.3 Y/A; credible late starting stretch.",
+        "season2026ThroughWeek4": "Four 2026 games, 1,203 yards, 9 TD/3 INT, 67.2%; five fumbles and 6.7 Y/A.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Mature pocket operation and intermediate accuracy can produce good counting totals; modest depth efficiency and fumbles mean output is not all functional growth. Late-draft age and limited long tenure reduce upside ceiling.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Strengthen moderate improvement but retain material turnover/regression outcomes. 27-year-old second-year player is not a typical high-ceiling 22-year-old rookie.",
+        "evidenceGap": "Team-reported left-hand limitation in October not yet medically characterized from a primary detailed report."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 29,
+        "steadyPct": 29,
+        "declinePct": 29,
+        "maxAnnualGain": 6.4,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Strengthen moderate improvement but retain material turnover/regression outcomes. 27-year-old second-year player is not a typical high-ceiling 22-year-old rookie. Mature pocket operation and intermediate accuracy can produce good counting totals; modest depth efficiency and fumbles mean output is not all functional growth. Late-draft age and limited long tenure reduce upside ceiling."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 10,
+        "improvePct": 22,
+        "steadyPct": 37,
+        "declinePct": 31,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 6
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 3,
+          "improve": 7,
+          "steady": -8,
+          "decline": -2
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "NYG|QB|jameiswinston",
+      "name": "Jameis Winston",
+      "team": "NYG",
+      "position": "QB",
+      "ageAtCalibration": 32,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 72,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "Three appearances, 567 yards, 2 TD/2 INT; very small 2025 sample, historically turnover-prone.",
+        "season2026ThroughWeek4": "Three 2026 starts, 479 yards, 3 TD/3 INT and 55.1% completions as injured Dart's replacement.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Strong arm and willingness to challenge tight windows still create chunks, but delayed reads, forced throws and skittish pocket footwork remain unstable. Limited evidence of adaptation across years.",
+        "developmentInjuryCoachingStartingOpportunityContext": "A reserve with episodic big throws, more likely to lose efficiency or role than develop fundamentally new risk management.",
+        "evidenceGap": "Only three starts in 2026; pressure-dependent rates and future backup role not verified."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 11,
+        "steadyPct": 28,
+        "declinePct": 59,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 6.7,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "A reserve with episodic big throws, more likely to lose efficiency or role than develop fundamentally new risk management. Strong arm and willingness to challenge tight windows still create chunks, but delayed reads, forced throws and skittish pocket footwork remain unstable. Limited evidence of adaptation across years."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 38,
+        "declinePct": 50,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 0,
+          "improve": 1,
+          "steady": -10,
+          "decline": 9
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        },
+        {
+          "title": "ESPN Jameis Winston 2025 game log and career stats",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.espn.com/nfl/player/gamelog/_/id/2969939/jameis-winston",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "NYG|QB|jaxsondart",
+      "name": "Jaxson Dart",
+      "team": "NYG",
+      "position": "QB",
+      "ageAtCalibration": 23,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 25,
+      "lockedHqGrade": 82,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "low",
+      "evidence": {
+        "season2025": "14 games, 2,272 passing yards, 15 TD/5 INT, 63.7% completions, with dual-threat value.",
+        "season2026ThroughWeek4": "Two 2026 games, 250 yards and 3 TD/0 INT; first opener excellent, then suffered significant knee injury; Giants confirm out rest of regular season.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Real 2025 improvised/rushing ability and a strong 2026 first game are promising, but accuracy and passing anticipation over long samples are not elite-proven. Knee recovery particularly affects rushing creation.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Reduce original breakout enthusiasm and expand downside/volatility due lost year, without automatically declaring a draft bust.",
+        "evidenceGap": "No post-rehabilitation return-to-mobility evidence; only two 2026 games, one truncated."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 19,
+        "improvePct": 30,
+        "steadyPct": 22,
+        "declinePct": 29,
+        "maxAnnualGain": 8.5,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 12,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Reduce original breakout enthusiasm and expand downside/volatility due lost year, without automatically declaring a draft bust. Real 2025 improvised/rushing ability and a strong 2026 first game are promising, but accuracy and passing anticipation over long samples are not elite-proven. Knee recovery particularly affects rushing creation."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 27,
+        "improvePct": 33,
+        "steadyPct": 18,
+        "declinePct": 22,
+        "maxAnnualGain": 8.4,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 8
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -8,
+          "improve": -3,
+          "steady": 4,
+          "decline": 7
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "Giants confirm Dart out for remainder of 2026 regular season",
+          "date": "2026-09-24",
+          "url": "https://www.giants.com/news/jaxson-dart-to-miss-rest-of-regular-season-jameis-winston-to-start-quarterback-injury-john-harbaugh",
+          "type": "club-report"
+        },
+        {
+          "title": "NFL 2026 Dart splits for two played games",
+          "date": "2026-10-08 (accessed)",
+          "url": "https://www.nfl.com/players/jaxson-dart/stats/splits/2026/",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "NYJ|QB|genosmith",
+      "name": "Geno Smith",
+      "team": "NYJ",
+      "position": "QB",
+      "ageAtCalibration": 35,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 39,
+      "lockedHqGrade": 82,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "15 starts with Raiders in 2025, 3,025 yards, 19 TD/17 INT, 84.7 rating and 55 sacks.",
+        "season2026ThroughWeek4": "Four Jets starts, 902 yards, 5 TD/0 INT, 72.6%, 7.7 Y/A; limited Week 4 offensive snaps.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Reasserted short/intermediate placement and ball control, but protection exposure and 2025 mistake-prone processing cannot be discarded after four games. Aging reduces play-extension range.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Less regression than previous 40% profile given clean 2026 opening, but lower probability of breakout and stable veteran rather than transformed superstar.",
+        "evidenceGap": "2026 pressure-triggered turnovers have no verified stress-test volume; small four-game clean sample."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 19,
+        "steadyPct": 49,
+        "declinePct": 29,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 5.4,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Less regression than previous 40% profile given clean 2026 opening, but lower probability of breakout and stable veteran rather than transformed superstar. Reasserted short/intermediate placement and ball control, but protection exposure and 2025 mistake-prone processing cannot be discarded after four games. Aging reduces play-extension range."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 11,
+        "steadyPct": 47,
+        "declinePct": 40,
+        "maxAnnualGain": 3.4,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 1,
+          "improve": 8,
+          "steady": 2,
+          "decline": -11
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "PHI|QB|jalenhurts",
+      "name": "Jalen Hurts",
+      "team": "PHI",
+      "position": "QB",
+      "ageAtCalibration": 28,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 53,
+      "lockedHqGrade": 85,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "16 starts, 3,224 yards, 25 TD/6 INT; 98.5 rating with major designed-run/red-zone value.",
+        "season2026ThroughWeek4": "Four games, 713 passing yards, 7 TD/3 INT, 59.6%, 6.3 Y/A plus 105 rushing yards.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Physical red-zone and scramble strength are repeatable, but poor downfield passing volume, protection answers, and sporadic placement suppress QB-only passing trajectory; rushing TD value is not a breakout in accuracy.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Established starter with downside from passing stagnation but protected by elite contextual rushing utility; modest correction more likely than sudden new throwing tier.",
+        "evidenceGap": "Offense-wide low output complicates independent receiver/route attribution; no new confirmed injury."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 7,
+        "improvePct": 21,
+        "steadyPct": 42,
+        "declinePct": 30,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 6,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Established starter with downside from passing stagnation but protected by elite contextual rushing utility; modest correction more likely than sudden new throwing tier. Physical red-zone and scramble strength are repeatable, but poor downfield passing volume, protection answers, and sporadic placement suppress QB-only passing trajectory; rushing TD value is not a breakout in accuracy."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 8,
+        "improvePct": 27,
+        "steadyPct": 41,
+        "declinePct": 24,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -6,
+          "steady": 1,
+          "decline": 6
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "PIT|QB|aaronrodgers",
+      "name": "Aaron Rodgers",
+      "team": "PIT",
+      "position": "QB",
+      "ageAtCalibration": 42,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 24,
+      "lockedHqGrade": 79,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "Age 42 season: 16 starts, 3,322 yards, 24 TD/7 INT, 6.7 Y/A, with reduced creation.",
+        "season2026ThroughWeek4": "Four 2026 starts, 999 yards, 7 TD/4 INT, 57.5% completions and 6.5 Y/A; five sacks in Week 4.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Quick recognition and occasional precise throws survive, but lower throwing consistency, limited movement under pressure and physical aging reduce functional ceiling.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Aging decline dominates two-year forecast; near-zero real breakout even if individual hot games still occur.",
+        "evidenceGap": "Exact season-to-season retirement/roster status is not forecast from statistics."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 0,
+        "improvePct": 2,
+        "steadyPct": 27,
+        "declinePct": 71,
+        "maxAnnualGain": 1,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 12,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Aging decline dominates two-year forecast; near-zero real breakout even if individual hot games still occur. Quick recognition and occasional precise throws survive, but lower throwing consistency, limited movement under pressure and physical aging reduce functional ceiling."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 3,
+        "steadyPct": 34,
+        "declinePct": 62,
+        "maxAnnualGain": 1.3,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 9
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -1,
+          "improve": -1,
+          "steady": -7,
+          "decline": 9
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "SEA|QB|samdarnold",
+      "name": "Sam Darnold",
+      "team": "SEA",
+      "position": "QB",
+      "ageAtCalibration": 29,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 3,
+      "lockedHqGrade": 88,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "17 starts, 4,048 yards, 25 TD/14 INT, 8.5 Y/A and 99.1 rating; strong second consecutive starter year.",
+        "season2026ThroughWeek4": "Three games due missed time, 560 yards, 6 TD/3 INT, 8.1 Y/A; NFL notes rust returning from injury.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Useful explosive progression and play-action accuracy across two years, though turnover risk and pressure-triggered decisions remain; the short 2026 sample does not nullify legitimate multi-year growth.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Good starter stability with some further refining, limited superstar probability. Maintain a meaningful fumble/INT downside without reverting to old Jets-era baseline.",
+        "evidenceGap": "Exact 2026 missed-time injury details not established in these citations."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 7,
+        "improvePct": 27,
+        "steadyPct": 47,
+        "declinePct": 19,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 5.6,
+        "marketVariancePct": 6,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Good starter stability with some further refining, limited superstar probability. Maintain a meaningful fumble/INT downside without reverting to old Jets-era baseline. Useful explosive progression and play-action accuracy across two years, though turnover risk and pressure-triggered decisions remain; the short 2026 sample does not nullify legitimate multi-year growth."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 26,
+        "steadyPct": 50,
+        "declinePct": 19,
+        "maxAnnualGain": 4.4,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 2,
+          "improve": 1,
+          "steady": -3,
+          "decline": 0
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "SF|QB|brockpurdy",
+      "name": "Brock Purdy",
+      "team": "SF",
+      "position": "QB",
+      "ageAtCalibration": 26,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 262,
+      "lockedHqGrade": 89,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "high",
+      "evidence": {
+        "season2025": "2025 passer rating 100.5 with 69.4% completion and 7.0% TD rate; productive but missed substantial time.",
+        "season2026ThroughWeek4": "Four games, 1,007 yards, 11 TD/1 INT, 69.9% and 8.9 Y/A; top of Week 5 QB Index.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Pre/post-snap anticipation and improvisation within Shanahan structure are repeatable; 2026 clean under-pressure play plus escape example are encouraging. Current hot streak remains shorter than full-year evidence.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Proven efficient starter with constrained downside; a 99-tier long-term leap should not be extrapolated from four games.",
+        "evidenceGap": "No complete individual 2026 pressure split; 2025 injury/availability details need fuller chronology."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 26,
+        "steadyPct": 59,
+        "declinePct": 10,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 4,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Proven efficient starter with constrained downside; a 99-tier long-term leap should not be extrapolated from four games. Pre/post-snap anticipation and improvisation within Shanahan structure are repeatable; 2026 clean under-pressure play plus escape example are encouraging. Current hot streak remains shorter than full-year evidence."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 29,
+        "steadyPct": 53,
+        "declinePct": 13,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 0,
+          "improve": -3,
+          "steady": 6,
+          "decline": -3
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "TB|QB|bakermayfield",
+      "name": "Baker Mayfield",
+      "team": "TB",
+      "position": "QB",
+      "ageAtCalibration": 31,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 86,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "17 starts, 3,693 yards, 26 TD/11 INT, 90.6 rating; down from 2024 peak but sustained starter workload.",
+        "season2026ThroughWeek4": "Three 2026 games before right throwing-thumb dislocation; struggled in initial weeks, then missed Week 4 and expected at least three weeks out.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Creative aggressiveness and pocket escape still bring functional value, but placement/turnover decision volatility is evident across systems. Temporary thumb injury affects opportunity and short-term passing accuracy.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Moderate rebound plausible if thumb heals, though sustaining 2024 ceiling is less likely; availability tail and 2025 dip justify higher decline than old 17%.",
+        "evidenceGap": "Precise return date and post-healing throw accuracy unknown."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 6,
+        "improvePct": 21,
+        "steadyPct": 43,
+        "declinePct": 30,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 8,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Moderate rebound plausible if thumb heals, though sustaining 2024 ceiling is less likely; availability tail and 2025 dip justify higher decline than old 17%. Creative aggressiveness and pocket escape still bring functional value, but placement/turnover decision volatility is evident across systems. Temporary thumb injury affects opportunity and short-term passing accuracy."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 27,
+        "steadyPct": 51,
+        "declinePct": 17,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 4
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": 1,
+          "improve": -6,
+          "steady": -8,
+          "decline": 13
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "Buccaneers confirm throwing-thumb dislocation; min. 3 weeks missed",
+          "date": "2026-09-28",
+          "url": "https://www.buccaneers.com/news/baker-mayfield-three-weeks-minimum-thumb-injury-update",
+          "type": "club-report"
+        }
+      ]
+    },
+    {
+      "id": "TEN|QB|camward",
+      "name": "Cam Ward",
+      "team": "TEN",
+      "position": "QB",
+      "ageAtCalibration": 24,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 1,
+      "lockedHqGrade": 75,
+      "lockedGradeConfidence": "high",
+      "researchConfidence": "medium",
+      "evidence": {
+        "season2025": "17 starts, 3,169 yards, 15 TD/7 INT, 59.8%, 5.9 Y/A, 55 sacks; weak but not solely turnover driven.",
+        "season2026ThroughWeek4": "Four games, 726 yards, 3 TD/2 INT, 6.1 Y/A and two rushing TD; flashes in constrained Tennessee offense.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Arm-angle ability and creative escape remain real; under-pressure sack avoidance, anticipation and consistent intermediate placement are insufficient. Conservative Brian Daboll design limits evaluated throw menu.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Keep significant second-year development runway but not a lottery-ticket certainty; moderate functional processing improvement more likely than MVP leap.",
+        "evidenceGap": "Schemed pass-depth constraints and offensive-line share of 55-sack 2025 load not individually resolved."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 21,
+        "improvePct": 36,
+        "steadyPct": 18,
+        "declinePct": 25,
+        "maxAnnualGain": 9,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 9,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Keep significant second-year development runway but not a lottery-ticket certainty; moderate functional processing improvement more likely than MVP leap. Arm-angle ability and creative escape remain real; under-pressure sack avoidance, anticipation and consistent intermediate placement are insufficient. Conservative Brian Daboll design limits evaluated throw menu."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 27,
+        "improvePct": 24,
+        "steadyPct": 19,
+        "declinePct": 30,
+        "maxAnnualGain": 8.7,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 6
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -6,
+          "improve": 12,
+          "steady": -1,
+          "decline": -5
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "NFL.com QB Index, Week 5, Nick Shook",
+          "date": "2026-10-07",
+          "url": "https://www.nfl.com/news/nfl-qb-rankings-week-5-2026-nfl-season",
+          "type": "2026-week-1-to-4-stats-and-analysis"
+        }
+      ]
+    },
+    {
+      "id": "WSH|QB|jaydendaniels",
+      "name": "Jayden Daniels",
+      "team": "WSH",
+      "position": "QB",
+      "ageAtCalibration": 25,
+      "professionalExperience": "2026 NFL season / experience evaluated in assessment",
+      "draftOverall": 2,
+      "lockedHqGrade": 84,
+      "lockedGradeConfidence": "medium",
+      "researchConfidence": "low",
+      "evidence": {
+        "season2025": "Only seven 2025 games due injuries; 2024 high-level rookie rushing and anticipatory accuracy form longer-term positive anchor.",
+        "season2026ThroughWeek4": "Played opening two games, threw three TD without turnover; dislocated nonthrowing left elbow Week 2, sat Weeks 3-4; full practice Oct 7 with brace.",
+        "functionalPassingAccuracyDecisionCreationPressureAssessment": "Rare rushing acceleration/second-reaction creation plus NFL rookie-season passing proof; repeated elbow injury limits exposure and makes sustained processing/accuracy sample scarce. Returning without surgery is not proof of future durability.",
+        "developmentInjuryCoachingStartingOpportunityContext": "Explosive improvement remains possible but uninterrupted multi-year elite passage cannot be presumed; higher injury/decline tail versus original profile.",
+        "evidenceGap": "Recurring left-elbow issue and brace effects on rushing/contact unresolved; 2026 two-game sample too small."
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 20,
+        "improvePct": 32,
+        "steadyPct": 20,
+        "declinePct": 28,
+        "maxAnnualGain": 8.5,
+        "maxAnnualLoss": 8.5,
+        "marketVariancePct": 11,
+        "twoSeasonInterpretation": "Apply the player-specific Year 2 baseline; Year 3 must use the existing conditional progression logic and realized Year 2 grade, not blindly repeat Year 2 odds.",
+        "justification": "Explosive improvement remains possible but uninterrupted multi-year elite passage cannot be presumed; higher injury/decline tail versus original profile. Rare rushing acceleration/second-reaction creation plus NFL rookie-season passing proof; repeated elbow injury limits exposure and makes sustained processing/accuracy sample scarce. Returning without surgery is not proof of future durability."
+      },
+      "previousDevelopment": {
+        "breakoutPct": 24,
+        "improvePct": 34,
+        "steadyPct": 19,
+        "declinePct": 23,
+        "maxAnnualGain": 8,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 8
+      },
+      "deviationFromExisting": {
+        "material": true,
+        "deltaPct": {
+          "breakout": -4,
+          "improve": -2,
+          "steady": 1,
+          "decline": 5
+        },
+        "explanation": "The player-specific 2025 full-year, 2026 played-game and available health/role evidence summarized above warrants the listed redistribution versus initial hand calibration; this is not a revision to the locked HQ grade."
+      },
+      "sourceReferences": [
+        {
+          "title": "Pro Football Reference — 2025 NFL regular-season passing",
+          "date": "2025 season; accessed 2026-10-08",
+          "url": "https://www.pro-football-reference.com/years/2025/passing.htm",
+          "type": "2025-statistical-record"
+        },
+        {
+          "title": "Commanders report return to practice with elbow brace following two missed games",
+          "date": "2026-10-07",
+          "url": "https://www.commanders.com/news/practice-notes-jayden-daniels-returns-to-practice",
+          "type": "club-report"
+        },
+        {
+          "title": "Reuters confirms prior missed 2025 time and 2026 elbow recurrence",
+          "date": "2026-10-07",
+          "url": "https://www.reuters.com/sports/commanders-qb-jayden-daniels-embrace-brace-play-vs-giants--flm-2026-10-07/",
+          "type": "club-report"
+        }
+      ]
+    }
+  ]
+}
