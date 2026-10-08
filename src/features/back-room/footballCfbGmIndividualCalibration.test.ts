@@ -8,7 +8,10 @@ import {
 
 const researched = JSON.parse(readFileSync(
   "data/curated/football/cfb/gm-2026-classification-evidence.json", "utf8",
-)).players as Array<{id:string;remainingEligibility:number|null;calibration?:{
+)).players as Array<{id:string;remainingEligibility:number|null;nilMarketEvidence?:{
+  asOf:string;provider:string;providerRank:number;sourceUrl:string;sourceMethod:string;
+  reportedValuationEstimate:number;year1:number;year2Baseline:number;confidence:string;
+};calibration?:{
   status:string;development:{breakout:number;improve:number;steady:number;decline:number;
     maxGain:number;maxLoss:number;volatility:string};
   draftDeclarationProbability:number|null;portalExitProbability:number|null;
@@ -68,6 +71,29 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     expect(CFB_GM_BUDGETS.BUILDER).toBe(7_500_000);
   });
 
+  it("uses exactly 48 player-matched externally published NIL valuation estimates, never HQ as a price input", () => {
+    const priced=researched.filter((r)=>r.nilMarketEvidence);
+    expect(priced).toHaveLength(48);
+    expect(new Set(priced.map((r)=>r.nilMarketEvidence!.providerRank)).size).toBe(48);
+    for(const row of priced){
+      const market=row.nilMarketEvidence!, player=cfbGmPlayer(row.id)!;
+      expect(market.provider).toBe("On3");
+      expect(market.asOf).toBe("2026-10-08");
+      expect(market.sourceUrl).toBe("https://www.on3.com/nil/rankings/player/college/football/");
+      expect(market.sourceMethod).toContain("not an audited");
+      expect(market.year1).toBe(market.reportedValuationEstimate);
+      expect(player.nilYear1).toBe(market.year1);
+      expect(player.nilYear2).toBe(market.year2Baseline);
+      expect(player.nilYear1%25_000).toBe(0);
+      expect(player.nilYear2%25_000).toBe(0);
+      expect(market.providerRank).toBeGreaterThanOrEqual(1);
+      expect(market.providerRank).toBeLessThanOrEqual(100);
+    }
+    expect(cfbGmPlayer("miami|darianmensah")?.nilYear1).toBe(6_500_000);
+    expect(cfbGmPlayer("texas|archmanning")?.nilYear1).toBe(2_500_000);
+    expect(cfbGmPlayer("texas|camcoleman")?.nilYear1).toBe(3_000_000);
+  });
+
   it("honors actual NFL draft timing and forced final-year eligibility in every seeded result", () => {
     const arch=cfbGmPlayer("texas|archmanning")!;
     const toure=cfbGmPlayer("miami|mohamedtoure")!;
@@ -89,5 +115,11 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     expect(researched.find((r)=>r.id==="texas|archmanning")?.remainingEligibility).toBe(1);
     expect(researched.find((r)=>r.id==="miami|mohamedtoure")?.remainingEligibility).toBe(0);
     expect(researched.find((r)=>r.id==="georgia|gunnerstockton")?.remainingEligibility).toBe(0);
+    expect(researched.find((r)=>r.id==="indiana|joshhoover")?.remainingEligibility).toBe(0);
+    expect(researched.find((r)=>r.id==="smu|kevinjennings")?.remainingEligibility).toBe(0);
+    expect(researched.find((r)=>r.id==="ole-miss|trinidadchambliss")?.remainingEligibility).toBe(0);
+    expect(isModelDraftEligible("oklahoma-state|drewmestemaker","SO")).toBe(true);
+    for(const id of ["byu|bearbachmeier","mississippi-state|kamariotaylor","miami|malachitoney","tennessee|georgemacintyre"])
+      expect(isModelDraftEligible(id,cfbGmPlayer(id)!.classification)).toBe(false);
   });
 });
