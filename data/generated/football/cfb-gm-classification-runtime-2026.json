@@ -1148,7 +1148,7 @@
     {
       "id": "lsu|samleavitt",
       "classification": "JR",
-      "remainingEligibility": null,
+      "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
       "calibration": {
@@ -2261,7 +2261,7 @@
     {
       "id": "oregon|dantemoore",
       "classification": "SR",
-      "remainingEligibility": null,
+      "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
       "calibration": {
@@ -2758,7 +2758,7 @@
     {
       "id": "texas|archmanning",
       "classification": "SR",
-      "remainingEligibility": null,
+      "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
       "calibration": {
