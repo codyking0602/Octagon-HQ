@@ -500,10 +500,38 @@
       "redshirt": null
     },
     {
+      "id": "missouri|chrisgravesjr",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/chris-graves-jr",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
+      "redshirt": null
+    },
+    {
+      "id": "missouri|jalenmarshall",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/jalen-marshall",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
+      "redshirt": null
+    },
+    {
+      "id": "missouri|marquisgracial",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/player/marquis-gracial",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
+      "redshirt": null
+    },
+    {
       "id": "missouri|robertwoodyardjr",
       "classification": "SR",
       "sourceUrl": "https://mutigers.com/sports/football/roster",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "missouri|sionelaulea",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/sione-laulea",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
       "redshirt": null
     },
     {
