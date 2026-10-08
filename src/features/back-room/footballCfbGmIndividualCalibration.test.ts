@@ -75,6 +75,7 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     for(const row of researched.filter((r)=>r.calibration)){
       const c=row.calibration!, d=c.development;
       expect(c.status).toBe("evidence-informed-estimate");
+      expect(Array.isArray(c.sources)).toBe(true);
       expect(c.sources.length).toBeGreaterThan(0);
       expect(c.sources.every((url)=>url.startsWith("https://"))).toBe(true);
       expect(c.summary.length).toBeGreaterThan(40);
