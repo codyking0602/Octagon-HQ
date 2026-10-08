@@ -276,6 +276,13 @@
       "redshirt": null
     },
     {
+      "id": "indiana|joshhoover",
+      "classification": "5TH",
+      "sourceUrl": "https://iuhoosiers.com/sports/football/roster/josh-hoover/21051",
+      "evidence": "2026 official team roster, fifth-year cohort; previously generic SR",
+      "redshirt": null
+    },
+    {
       "id": "indiana|prestonzachman",
       "classification": "7TH",
       "sourceUrl": "https://iuhoosiers.com/sports/football/roster/print",
@@ -483,6 +490,13 @@
       "classification": "6TH",
       "sourceUrl": "https://smumustangs.com/sports/football/roster/jimmy-wyrick/15630",
       "evidence": "Official 2026 bio accounts for 2021-2023 Stanford, 2024-2025 UTSA and 2026 SMU: sixth college year",
+      "redshirt": null
+    },
+    {
+      "id": "smu|kevinjennings",
+      "classification": "5TH",
+      "sourceUrl": "https://smumustangs.com/sports/football/roster",
+      "evidence": "2026 official team roster, fifth-year cohort; previously generic SR",
       "redshirt": null
     },
     {
