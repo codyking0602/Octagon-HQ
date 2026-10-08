@@ -549,6 +549,20 @@
       "redshirt": null
     },
     {
+      "id": "texas|herokanu",
+      "classification": "5TH",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/hero-kanu/17032",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
+      "redshirt": null
+    },
+    {
+      "id": "texas|hollywoodsmothers",
+      "classification": "SR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/hollywood-smothers/16939",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
+      "redshirt": null
+    },
+    {
       "id": "texas|maraadwatson",
       "classification": "JR",
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
@@ -556,10 +570,24 @@
       "redshirt": null
     },
     {
+      "id": "texas|raleekbrown",
+      "classification": "5TH",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/raleek-brown/16937",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
+      "redshirt": null
+    },
+    {
       "id": "texas|ryanwingo",
       "classification": "JR",
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas|spencershannon",
+      "classification": "SR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/spencer-shannon/17023",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
       "redshirt": null
     },
     {
