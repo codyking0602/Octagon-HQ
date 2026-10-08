@@ -18,6 +18,27 @@ describe("CFB The GM owner preview", () => {
     expect(CFB_GM_AP_SCHOOLS).not.toContain("kentucky");
   });
 
+
+  it("keeps the compact public grade projection identical to the canonical audited Wheel sources", () => {
+    const projection = JSON.parse(readFileSync("data/generated/football/wheel-cfb-gm-grade-projection-2026-10-07.json","utf8")) as {
+      sourceAuthority:string[]; boiseAuthority:string;
+      grades:Array<{school:string;family:string;player:string;grade:number}>;
+    };
+    const families = ["QB","RB","WR","TE","Front Seven","Secondary"];
+    const canonical = projection.sourceAuthority.flatMap((path, i) => (
+      (JSON.parse(readFileSync(path,"utf8")) as {grades:Array<{school:string;player:string;grade:number}>}).grades
+        .map((r) => ({school:r.school,family:families[i]!,player:r.player,grade:r.grade}))
+    ));
+    const boise = (JSON.parse(readFileSync(projection.boiseAuthority,"utf8")) as {
+      grades:Array<{family:string;name:string;grade:number}>;
+    }).grades.filter((r) => r.family !== "Head Coach").map((r) => ({
+      school:"Boise State",family:r.family,player:r.name,grade:r.grade,
+    }));
+    const sort = (rows: typeof projection.grades) => rows.sort((a,b) =>
+      a.school.localeCompare(b.school) || a.family.localeCompare(b.family) || a.player.localeCompare(b.player));
+    expect(projection.grades).toEqual(sort([...canonical,...boise]));
+  });
+
   it("reads the locked Wheel grades rather than inferring quality from NIL amounts", () => {
     expect(CFB_GM_PLAYERS.length).toBeGreaterThan(200);
     expect(new Set(CFB_GM_PLAYERS.map((p) => p.id)).size).toBe(CFB_GM_PLAYERS.length);
