@@ -81,7 +81,7 @@ describe("NFL GM locked scouting pills", () => {
 
   it("keeps draft reprice exposure separate and never shows stale market risk in the offseason", () => {
     expect(["LOW", "MEDIUM", "HIGH", "LOCKED"].map(x =>
-      footballGmRepriceLabel(x as "LOW" | "MEDIUM" | "HIGH" | "LOCKED"))
+      footballGmRepriceLabel(x as "LOW" | "MEDIUM" | "HIGH" | "LOCKED")))
       .toEqual(["LOW REPRICE", "MED REPRICE", "HIGH REPRICE", "SALARY LOCKED"]);
     const solo = src("src/features/back-room/FootballGmModePage.tsx");
     expect(solo).toContain('footballGmRepriceLabel(player.extensionRisk)');
