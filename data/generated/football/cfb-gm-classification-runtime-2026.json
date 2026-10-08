@@ -508,9 +508,23 @@
     {
       "id": "boise-state|madduxmadsen",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 59,
+          "decline": 17,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.56,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "boise-state|mattwagner",
@@ -956,78 +970,232 @@
       "id": "florida|aaronphilo",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 35,
+          "steady": 42,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.06
+      }
     },
     {
       "id": "florida|amirjackson",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 36,
+          "steady": 38,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.09
+      }
     },
     {
       "id": "florida|benhanksiii",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 32,
+          "steady": 46,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08
+      }
     },
     {
       "id": "florida|brendanbett",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 52,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "florida|brycethornton",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 52,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.51,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "florida|cormanimcclain",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 29,
+          "steady": 42,
+          "decline": 20,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.1
+      }
     },
     {
       "id": "florida|dallaswilson",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 11,
+          "improve": 37,
+          "steady": 40,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08
+      }
     },
     {
       "id": "florida|djcoleman",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 23,
+          "steady": 57,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.59,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "florida|dukeclark",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 38,
+          "steady": 37,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.11
+      }
     },
     {
       "id": "florida|ericsingletonjr",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 15,
+          "improve": 32,
+          "steady": 29,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.1
+      }
     },
     {
       "id": "florida|evanpryor",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "6TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 14,
+          "improve": 29,
+          "steady": 33,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.12,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "florida|jadanbaugh",
@@ -1060,50 +1228,148 @@
       "id": "florida|jadenrobinson",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 52,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.52,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "florida|jaydenwoods",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "florida|jeramiahmccloud",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 38,
+          "steady": 37,
+          "decline": 13,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08
+      }
     },
     {
       "id": "florida|kamranjames",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 52,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.53,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "florida|kanyeclark",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 48,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.5,
+        "portalExitProbability": 0.06
+      }
     },
     {
       "id": "florida|mylesgraham",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 57,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.74,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "florida|vernellbrowniii",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 33,
+          "steady": 47,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "georgia|chaunceybowens",
@@ -1540,9 +1806,23 @@
     {
       "id": "houston|connerweigman",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 21,
+          "steady": 57,
+          "decline": 18,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.8,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "houston|demarionthomas",
@@ -2093,8 +2373,22 @@
       "id": "iowa|hankbrown",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 46,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "iowa|ioseepenesa",
@@ -4949,10 +5243,24 @@
     },
     {
       "id": "pittsburgh|holdengeriner",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 32,
+          "decline": 22,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.1,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "pittsburgh|isaiahneal",
@@ -6147,8 +6455,22 @@
       "id": "texas-tech|willhammond",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 36,
+          "steady": 42,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "ucla|amierwashington",
@@ -6210,13 +6532,27 @@
       "id": "ucla|nicoiamaleava",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 40,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 44,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.08
       }
     },
     {
@@ -6328,13 +6664,27 @@
       "id": "usc|jaydenmaiava",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 56,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 62,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.03
       }
     },
     {
@@ -6472,13 +6822,27 @@
       "id": "utah|devondampier",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 46,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 22,
+          "steady": 57,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.82,
+        "portalExitProbability": 0.04
       }
     },
     {
