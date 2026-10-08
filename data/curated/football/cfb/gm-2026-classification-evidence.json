@@ -4,7 +4,7 @@
   "snapshotAt": "2026-10-08T16:34:59.519Z",
   "schoolCount": 25,
   "population": 468,
-  "classified": 414,
+  "classified": 423,
   "exactMatches": 384,
   "failures": [
     {
@@ -1885,13 +1885,13 @@
       "groups": [
         "QB"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1923,13 +1923,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1961,13 +1961,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1999,13 +1999,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2038,13 +2038,13 @@
         "WR",
         "Flex"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2135,13 +2135,13 @@
         "WR",
         "Flex"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2404,13 +2404,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "7TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "7TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://iuhoosiers.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2615,13 +2615,13 @@
         "TE",
         "Flex"
       ],
-      "classification": null,
+      "classification": "3RD",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "3RD",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://hawkeyesports.com/sports/football/roster",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2710,13 +2710,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "3RD",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "3RD",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://hawkeyesports.com/sports/football/roster",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -9006,10 +9006,13 @@
       "draftEligible2027": null
     }
   ],
-  "officialOverrides": 30,
+  "officialOverrides": 39,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
+    "https://uhcougars.com/sports/football/roster/print",
+    "https://iuhoosiers.com/sports/football/roster/print",
+    "https://hawkeyesports.com/sports/football/roster",
     "https://olemisssports.com/sports/football/roster/print",
     "https://goducks.com/sports/football/roster/print",
     "https://texastech.com/sports/football/roster/print",
