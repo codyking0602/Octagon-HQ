@@ -7384,8 +7384,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 49,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.45,
+        "portalExitProbability": 0.05,
+        "summary": "Oregon junior safety redshirted in 2024, then started all 15 games in 2025 with 70 tackles, one interception, three breakups and two forced fumbles over 741 defensive snaps, earning All-Big Ten honorable mention. Demonstrated full-season durability reduces breakout volatility; improvement in coverage is plausible. The 2026 roster identifies him as a junior; no exact 2026 season stat claim made.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/aaron-flowers/18299"
+        ]
+      }
     },
     {
       "id": "oregon|amauriwashington",
@@ -7403,8 +7422,27 @@
       "sourceUrl": "https://goducks.com/sports/football/roster/washington-amauri/18341",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 19,
+          "steady": 59,
+          "decline": 19,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.81,
+        "portalExitProbability": 0.03,
+        "summary": "Oregon senior defensive tackle started all 15 games in 2025, earning All-Big Ten third team: 33 tackles, 4.5 TFL, 1.5 sacks, eight pass breakups and 22 QB pressures, with an 83.8 PFF run-defense grade in school bio. Established high-level interior disruption and run defense imply a high steady rate rather than speculative major development; 2026 preseason major-award watch lists reinforce established status. Senior class does not itself prove 2027 eligibility exhaustion.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/a-mauri-washington/18341"
+        ]
+      }
     },
     {
       "id": "oregon|bearalexander",
@@ -7474,8 +7512,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 56,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08,
+        "summary": "Oregon sophomore corner started all 15 games as a true freshman in 2025, earned FWAA Freshman All-America, coaches' second-team All-Big Ten and Orange Bowl defensive MVP. Produced 42 tackles, three interceptions, eight pass breakups, two forced fumbles and a sack. Already strong proven coverage and playmaking reduce enormous breakout odds, while sophomore consistency improvement remains viable. Enrolled in 2025 so not NFL Draft eligible in 2027.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/brandon-finney-jr/18298"
+        ]
+      }
     },
     {
       "id": "oregon|carlwilliamsiv",
@@ -7493,8 +7550,27 @@
       "sourceUrl": "https://goducks.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 30,
+          "steady": 31,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.12,
+        "summary": "Oregon senior DB transferred from Baylor for 2026 after a 2025 medical redshirt limited him to one game while recovering from a 2024 injury. In 2024 started seven of eight appearances and recorded 35 tackles, five TFL, a sack, a forced fumble and a pass breakup. Proven previous conference starting competence creates rebound upside, but prolonged injuries and new program fit warrant substantial decline and availability risk. No invented 2026 production.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/carl-williams-iv/18357"
+        ]
+      }
     },
     {
       "id": "oregon|dakorienmoore",
@@ -7604,8 +7680,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 36,
+          "steady": 42,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08,
+        "summary": "Oregon true sophomore RB in 2025 appeared in all 15 games, with one start, 75 rushes for 656 yards (8.75 yards per carry) and five touchdowns, plus 16 receptions for 137 yards and one TD. Oregon lists PFF 90.8 overall and 91.4 rushing grades and explosive gains, but one-start workload makes repeat efficiency uncertain. 2025 college entry bars 2027 draft and supports higher-volume 2027 development.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/dierre-hill-jr-/18305"
+        ]
+      }
     },
     {
       "id": "oregon|elijahrushing",
@@ -7623,8 +7718,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 38,
+          "steady": 25,
+          "decline": 17,
+          "maxGain": 7,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.07,
+        "portalExitProbability": 0.12,
+        "summary": "Oregon junior edge defender played four games in 2024 using a redshirt and seven games in 2025 with just three total tackles; 2025 bio indicates no sustained starting production despite a strong high-school prospect résumé. Physical upside can yield a meaningful year-two breakout if playing time increases, but current collegiate evidence is thin and draft-declaration odds should be very low rather than fame-based. 2024 matriculation permits 2027 declaration under normal rule.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/elijah-rushing/18332"
+        ]
+      }
     },
     {
       "id": "oregon|evanstewart",
@@ -7694,8 +7808,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 44,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.08,
+        "summary": "Oregon junior corner appeared in all 15 games and made 12 starts as a redshirt freshman in 2025, recording 24 tackles, six pass breakups, one interception and 423 defensive snaps. This is meaningful coverage responsibility even with modest tackle totals; a modest Year 2 leap is more plausible than a giant breakout or a class-based automatic decline. Redshirt freshman 2025 after 2024 matriculation yields draft eligibility in 2027.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/ify-obidegwu/18323"
+        ]
+      }
     },
     {
       "id": "oregon|jamarijohnson",
@@ -7714,8 +7847,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 51,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.05,
+        "summary": "Oregon senior TE and Louisville transfer made 10 starts in 15 games in 2025, catching 32 passes for 510 yards and three TD, sixth in school TE single-season yardage. Previous Louisville redshirt-sophomore 2024 produced 13 catches for 158 yards and a TD before injury. Proven receiving growth, 600 snaps and 78.2 PFF overall grade in 2025 substantiate value, but senior size/role limits repeat breakout likelihood; exact remaining college eligibility unverified.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/jamari-johnson/18309"
+        ]
+      }
     },
     {
       "id": "oregon|jeremiahmcclellan",
@@ -7733,8 +7885,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 42,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.47,
+        "portalExitProbability": 0.08,
+        "summary": "Oregon junior receiver emerged as a 2025 redshirt freshman with 38 receptions for 557 yards and three TD across 15 games and nine starts; started final eight games and played 520 offensive snaps, 71.8 PFF overall in school bio. Can expand targets and role in 2026–27 yet 2025 evidence proves him more than an unused reserve. 2024 initial enrollment permits 2027 draft but modest established production means declaration far from certain.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/jeremiah-mcclellan/18313"
+        ]
+      }
     },
     {
       "id": "oregon|jordondavison",
@@ -7896,8 +8067,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 22,
+          "improve": 40,
+          "steady": 25,
+          "decline": 13,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.15,
+        "summary": "Oregon 2026 true freshman WR; official roster biography presently shows only high-school accomplishments and no collegiate statistics for the player. His high-school production and multi-role experience identify athletic opportunity, not demonstrated high-level college WR play; set a high-uncertainty young-player development trajectory with greater downside risk and keep NFL ineligible until the normal 2029 first entry window.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/messiah-hampton/18356"
+        ]
+      }
     },
     {
       "id": "oregon|teitumtuioti",
@@ -11229,5 +11419,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented."
 }
