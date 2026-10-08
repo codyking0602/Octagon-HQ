@@ -622,6 +622,7 @@ export default function FootballGmHeadToHeadPage() {
     if (!matchCode || !repository || !activeProfileId) return;
     let active = true;
     let timer = 0;
+    let syncInFlight = false;
 
     const applyState = (next: FootballGmMatchState) => {
       if (!active) return;
@@ -645,23 +646,39 @@ export default function FootballGmHeadToHeadPage() {
     };
 
     const sync = async (open = false) => {
+      // One active request at a time. Safari focus events must not cause
+      // overlapping downloads of both franchises' full run_state payloads.
+      if (syncInFlight || (!open && document.visibilityState !== "visible")) return;
+      syncInFlight = true;
       try {
         const next = open ? await repository.open(matchCode) : await repository.load(matchCode);
         applyState(next);
+        // Finished matches have sealed results and no reason to keep
+        // downloading full historical rosters every five seconds.
+        if (active && (next.phase === "complete" || next.declined_at || next.forfeited_at)) {
+          window.clearInterval(timer);
+          timer = 0;
+        }
       } catch (reason) {
         if (!active) return;
         setRemoteError(reason instanceof Error ? reason.message : "The GM match could not be loaded.");
+      } finally {
+        syncInFlight = false;
       }
     };
 
     void sync(true);
     timer = window.setInterval(() => void sync(false), 5_000);
-    const onFocus = () => void sync(false);
-    window.addEventListener("focus", onFocus);
+    const onForeground = () => {
+      if (document.visibilityState === "visible") void sync(false);
+    };
+    window.addEventListener("focus", onForeground);
+    document.addEventListener("visibilitychange", onForeground);
     return () => {
       active = false;
       window.clearInterval(timer);
-      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("focus", onForeground);
+      document.removeEventListener("visibilitychange", onForeground);
     };
   }, [activeProfileId, matchCode, repository]);
 
