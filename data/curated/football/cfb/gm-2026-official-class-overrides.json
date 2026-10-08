@@ -633,10 +633,38 @@
       "redshirt": null
     },
     {
+      "id": "tennessee|braylonstaley",
+      "classification": "JR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/braylon-staley/23047",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|deseanbishop",
+      "classification": "SR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/desean-bishop/22996",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|ethandavis",
+      "classification": "SR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/ethan-davis/23003",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
+      "redshirt": null
+    },
+    {
       "id": "tennessee|tyreeweathersby",
       "classification": "SR",
       "sourceUrl": "https://utsports.com/sports/football/roster/tyree-weathersby/23053",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|xaviergilliam",
+      "classification": "JR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/xavier-gilliam/23068",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
       "redshirt": null
     },
     {
