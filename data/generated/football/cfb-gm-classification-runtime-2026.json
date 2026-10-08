@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": "gm-2026-classification-evidence.json",
   "population": 468,
-  "classified": 423,
+  "classified": 466,
   "players": [
     {
       "id": "alabama|brayhubbard",
@@ -13,7 +13,7 @@
     },
     {
       "id": "alabama|calebwoodson",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -27,7 +27,7 @@
     },
     {
       "id": "alabama|devanthompkins",
-      "classification": null,
+      "classification": "5TH",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -69,7 +69,7 @@
     },
     {
       "id": "alabama|londonsimmons",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -97,7 +97,7 @@
     },
     {
       "id": "alabama|ricoscott",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -286,7 +286,7 @@
     },
     {
       "id": "byu|cadeuluave",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -328,7 +328,7 @@
     },
     {
       "id": "byu|keanutanuvasa",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -356,7 +356,7 @@
     },
     {
       "id": "byu|nusitaumoepeau",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -426,7 +426,7 @@
     },
     {
       "id": "florida|brycethornton",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -440,7 +440,7 @@
     },
     {
       "id": "florida|dallaswilson",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -461,7 +461,7 @@
     },
     {
       "id": "florida|ericsingletonjr",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -489,7 +489,7 @@
     },
     {
       "id": "florida|jaydenwoods",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1084,7 +1084,7 @@
     },
     {
       "id": "lsu|eugenewilsoniii",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1105,14 +1105,14 @@
     },
     {
       "id": "lsu|pjwoodland",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
     },
     {
       "id": "lsu|princewillumanmielen",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1161,21 +1161,21 @@
     },
     {
       "id": "lsu|whitweeks",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
     },
     {
       "id": "lsu|winstonwatkinsjr",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
     },
     {
       "id": "miami|ahmadmoten",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1224,7 +1224,7 @@
     },
     {
       "id": "miami|damonwilsonii",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1308,7 +1308,7 @@
     },
     {
       "id": "mississippi-state|amareewilliams",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1392,14 +1392,14 @@
     },
     {
       "id": "mississippi-state|kolinwilson",
-      "classification": null,
+      "classification": "FR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
     },
     {
       "id": "mississippi-state|marcuswilliams",
-      "classification": null,
+      "classification": "6TH",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1413,7 +1413,7 @@
     },
     {
       "id": "mississippi-state|samwest",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1427,7 +1427,7 @@
     },
     {
       "id": "mississippi-state|willwhitson",
-      "classification": null,
+      "classification": "7TH",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1546,7 +1546,7 @@
     },
     {
       "id": "missouri|robertwoodyardjr",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1588,7 +1588,7 @@
     },
     {
       "id": "notre-dame|aneyaswilliams",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1609,7 +1609,7 @@
     },
     {
       "id": "notre-dame|bryceyoung",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1777,7 +1777,7 @@
     },
     {
       "id": "ohio-state|jaytimmons",
-      "classification": null,
+      "classification": "FR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1805,7 +1805,7 @@
     },
     {
       "id": "ohio-state|johnwalker",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1910,7 +1910,7 @@
     },
     {
       "id": "oklahoma-state|jameswilliams",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1973,7 +1973,7 @@
     },
     {
       "id": "oklahoma-state|wyattyoung",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2127,7 +2127,7 @@
     },
     {
       "id": "oregon|amauriwashington",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2316,7 +2316,7 @@
     },
     {
       "id": "pittsburgh|jakyrianturner",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2631,7 +2631,7 @@
     },
     {
       "id": "tennessee|tyreeweathersby",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2834,7 +2834,7 @@
     },
     {
       "id": "texas-tech|jkobywilliams",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2904,14 +2904,14 @@
     },
     {
       "id": "ucla|amierwashington",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
     },
     {
       "id": "ucla|anthonywoods",
-      "classification": null,
+      "classification": "5TH",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2932,7 +2932,7 @@
     },
     {
       "id": "ucla|jalenwoods",
-      "classification": null,
+      "classification": "5TH",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2974,7 +2974,7 @@
     },
     {
       "id": "ucla|sahirwest",
-      "classification": null,
+      "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2995,7 +2995,7 @@
     },
     {
       "id": "ucla|scotttaylor",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -3079,7 +3079,7 @@
     },
     {
       "id": "usc|jontezwilliams",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -3107,7 +3107,7 @@
     },
     {
       "id": "usc|lukewafle",
-      "classification": null,
+      "classification": "FR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -3149,7 +3149,7 @@
     },
     {
       "id": "usc|zacharyuswilliams",
-      "classification": null,
+      "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -3170,7 +3170,7 @@
     },
     {
       "id": "utah|creedwhittemore",
-      "classification": null,
+      "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
