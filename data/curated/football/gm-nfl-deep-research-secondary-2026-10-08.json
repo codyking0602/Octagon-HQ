@@ -6,7 +6,7 @@
   "baseCalibrationHead": "30e34c38142f828dd4c8d324c04dfac4d169b527",
   "nonRuntimeResearchOnly": true,
   "lockedGrades": true,
-  "reviewedCount": 104,
+  "reviewedCount": 130,
   "batchLog": [
     {
       "batch": 1,
@@ -31,6 +31,12 @@
       "teams": "KC LAC LAR LV MIA",
       "count": 25,
       "individual2026SourceCount": 25
+    },
+    {
+      "batch": 5,
+      "teams": "MIN NE NO NYG NYJ",
+      "count": 26,
+      "individual2026SourceCount": 26
     }
   ],
   "scopeLimitations": [
@@ -5339,6 +5345,1332 @@
           "season": 2026,
           "publishedOrAsOf": "By 2026-10-08",
           "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIN|Secondary|byronmurphy",
+      "name": "Byron Murphy Jr.",
+      "team": "MIN",
+      "position": "CB",
+      "age": 28,
+      "draftOverall": 33,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 18,
+        "steadyPct": 48,
+        "declinePct": 30,
+        "maxAnnualGain": 3.1,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Vikings veteran boundary/slot versatility remained essential on Brian Flores' disguise-heavy defense.",
+        "through2026Week4": "2026 undefeated Vikings but limited individual coverage breakdown; do not treat 4-0 team record as elite CB confirmation.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→30; veteran cover versatility protects steady value but later-prime age and pattern-matching load grow.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.vikings.com/news/2025-position-recap-safety-cornerback-harrison-smith",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.dailynorseman.com/minnesota-vikings-analysis/100141/week-4-observations-definitely-maybe-minnesota-vikings",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIN|Secondary|harrisonsmith",
+      "name": "Harrison Smith",
+      "team": "MIN",
+      "position": "S",
+      "age": 37,
+      "draftOverall": 29,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 7,
+        "steadyPct": 42,
+        "declinePct": 50,
+        "maxAnnualGain": 2.2,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 4,
+        "steadyPct": 23,
+        "declinePct": 72,
+        "maxAnnualGain": 0.9,
+        "maxAnnualLoss": 9.2,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 missed early games due illness but returned for strong December including three PBUs, sack and pick versus Detroit.",
+        "through2026Week4": "2026 Week4 recap specifically flags his coverage struggles at age37.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 50→72, improvement 7→4; processing leadership remains but physical deep range is likely declining.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.vikings.com/news/2025-position-recap-safety-cornerback-harrison-smith",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.dailynorseman.com/minnesota-vikings-analysis/100141/week-4-observations-definitely-maybe-minnesota-vikings",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIN|Secondary|isaiahrodgers",
+      "name": "Isaiah Rodgers",
+      "team": "MIN",
+      "position": "CB",
+      "age": 28,
+      "draftOverall": 211,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 18,
+        "steadyPct": 48,
+        "declinePct": 30,
+        "maxAnnualGain": 3.5,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 turnover splash against Bengals (INT return and fumble return TD) was exceptional, not repeatable coverage expectation.",
+        "through2026Week4": "2026 Week4 Dolphins performance described as solid; remains relied upon in Vikings CB scheme.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→30 and breakout 4 unchanged; coverage steadiness more predictive than two defensive scores.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.vikings.com/news/2025-position-recap-safety-cornerback-harrison-smith",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.dailynorseman.com/minnesota-vikings-analysis/100141/week-4-observations-definitely-maybe-minnesota-vikings",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIN|Secondary|jayward",
+      "name": "Jay Ward",
+      "team": "MIN",
+      "position": "S",
+      "age": 26,
+      "draftOverall": 134,
+      "lockedHQGrade": 75,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 17,
+        "steadyPct": 33,
+        "declinePct": 47,
+        "maxAnnualGain": 3.4,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 returned Vikings depth safety/special teams duty without fully securing permanent top-two safety slot.",
+        "through2026Week4": "2026 veteran Smith, Metellus and other DBs still crowd every-down safety opportunities.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 23→47, preserve steady possibility; opportunity risk matters as much as raw athletic development.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.vikings.com/news/2025-position-recap-safety-cornerback-harrison-smith",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.vikings.com/news/2025-position-recap-safety-cornerback-harrison-smith",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIN|Secondary|joshuametellus",
+      "name": "Joshua Metellus",
+      "team": "MIN",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 205,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 53,
+        "declinePct": 28,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 4.7,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 Vikings hybrid slot/box safety and blitz piece with unusual alignment versatility; role is stable within Flores scheme.",
+        "through2026Week4": "2026 continues in complex coverage/disguised pressures; no directly verified 2026 full individual tackling split.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 15→28 at age28 for physically demanding role, while 2025 established processing guards stability.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.vikings.com/news/2025-position-recap-safety-cornerback-harrison-smith",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.vikings.com/news/2025-position-recap-safety-cornerback-harrison-smith",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NE|Secondary|carltondavis",
+      "name": "Carlton Davis III",
+      "team": "NE",
+      "position": "CB",
+      "age": 29,
+      "draftOverall": 63,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 58,
+        "declinePct": 21,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 14,
+        "steadyPct": 39,
+        "declinePct": 45,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 New England starting outside corner opposite Gonzalez, physical press skills at 29.",
+        "through2026Week4": "2026 Week5 missed practice with neck injury after incomplete Week4 coverage unit; short-term issue, recurrence unknown.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 21→45 and market variance, uncertain health plus coverage role; no diagnosis invented.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.patspulpit.com/new-england-patriots-news/139791/patriots-vs-raiders-wednesday-injury-report-mack-hollins-christian-gonzalez-carlton-davis-karon-prunty-sidelined",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NE|Secondary|christiangonzalez",
+      "name": "Christian Gonzalez",
+      "team": "NE",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 17,
+      "lockedHQGrade": 97,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 74,
+        "declinePct": 5,
+        "maxAnnualGain": 2.1,
+        "maxAnnualLoss": 2,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 18,
+        "steadyPct": 59,
+        "declinePct": 22,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 one of top man CBs, PFF secondary preview credits just 43.4% receptions allowed.",
+        "through2026Week4": "2026 missed Week4 with shoulder and still DNP Week5 Wednesday; no return date confirmed.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 5→22 due availability risk, not current locked 97 grade; reduce improvement only modestly.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.patspulpit.com/new-england-patriots-news/139791/patriots-vs-raiders-wednesday-injury-report-mack-hollins-christian-gonzalez-carlton-davis-karon-prunty-sidelined",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NE|Secondary|craigwoodson",
+      "name": "Craig Woodson",
+      "team": "NE",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 106,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 19,
+        "improvePct": 36,
+        "steadyPct": 26,
+        "declinePct": 19,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 26,
+        "steadyPct": 23,
+        "declinePct": 32,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 young safety PFF 89.7 run-defense grade, physical tackles; run work stronger verified facet than deep coverage.",
+        "through2026Week4": "2026 missed Week3 with shoulder, returned Week4 against Buffalo, one interception; returns as listed starter.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→32 as medical/coverage uncertainty balances strong run game; don't forecast sustained pick rate.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.patriots.com/news/roster-analysis-seven-questionable-patriots-make-the-trip-to-buffalo-two-elevated-from-the-practice-squad-for-week-4-vs-bills",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NE|Secondary|kevinbyard",
+      "name": "Kevin Byard III",
+      "team": "NE",
+      "position": "S",
+      "age": 33,
+      "draftOverall": 64,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 43,
+        "declinePct": 45,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 7,
+        "steadyPct": 30,
+        "declinePct": 62,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 7.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 veteran deep safety with long coverage/communication career; now age33.",
+        "through2026Week4": "2026 New England safety veteran relies on range/reads while younger Woodson handles downhill role; personal coverage split unavailable.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 45→62: positional age curve and range wear outstrip unlikely late-career skill leap.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NE|Secondary|marcusjones",
+      "name": "Marcus Jones",
+      "team": "NE",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 85,
+      "lockedHQGrade": 85,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 5,
+        "improvePct": 20,
+        "steadyPct": 48,
+        "declinePct": 27,
+        "maxAnnualGain": 3.4,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 high-level inside nickel plus special-teams return role; outside man responsibility not presumed.",
+        "through2026Week4": "2026 made key plays during Week4 win at Buffalo; not all return value belongs in DB coverage outlook.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Decline 19→27 to account for two-way workload; improve 20 steady, slot acceleration retains upside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.patspulpit.com/new-england-patriots-news/139287/nfl-week-4-instant-analysis-patriots-bills",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NO|Secondary|jonassanker",
+      "name": "Jonas Sanker",
+      "team": "NO",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 93,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 25,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 28,
+        "steadyPct": 29,
+        "declinePct": 31,
+        "maxAnnualGain": 5.2,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 rookie played all 17 Saints games and started from Week2 when Julian Blackmon hurt; consistent duties.",
+        "through2026Week4": "2026 first-team safety depth more complex with Blackmon and Reid; defensive snaps may be less guaranteed.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise breakout 8→12 and decline 25→31; legitimate NFL starting reps justify upside, role competition raises risk.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.neworleanssaints.com/news/jonas-sanker-justin-reid-2025-season-recap",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/nor/2026-snap-counts.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NO|Secondary|julianblackmon",
+      "name": "Julian Blackmon",
+      "team": "NO",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 85,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 18,
+        "steadyPct": 37,
+        "declinePct": 42,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 New Orleans starter whose early-season injury opened door for Jonas Sanker; role continuation fragile.",
+        "through2026Week4": "2026 initial snap chart shows heavy safety usage with Justin Reid, but health/rotation sustainability unclear.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→42; veteran value real when active, repeated role displacement possible.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.neworleanssaints.com/news/jonas-sanker-justin-reid-2025-season-recap",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/nor/2026-snap-counts.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NO|Secondary|justinreid",
+      "name": "Justin Reid",
+      "team": "NO",
+      "position": "S",
+      "age": 29,
+      "draftOverall": 68,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 14,
+        "steadyPct": 49,
+        "declinePct": 35,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 Saints captain started 15 games, 72 tackles, six PBUs and pick-six; missed two for knee.",
+        "through2026Week4": "2026 listed first-team and extensive defensive snaps early, communication stable despite past knee.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 25→35 with age/health; leadership makes steady far more plausible than breakout.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.neworleanssaints.com/news/jonas-sanker-justin-reid-2025-season-recap",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/nor/2026-snap-counts.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NO|Secondary|koolaidmckinstry",
+      "name": "Kool-Aid McKinstry",
+      "team": "NO",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 41,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 22,
+        "improvePct": 32,
+        "steadyPct": 27,
+        "declinePct": 19,
+        "maxAnnualGain": 6.2,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 started all 17, 17 PBUs, 76 tackles and 3 INT; teammate-called shutdown corner with real outside volume.",
+        "through2026Week4": "2026 high-floor starting corner, not just an INT specialist; early individual coverage efficiency unavailable.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Breakout 17→22 but improve 36→32 and decline stays19: performance warrants room to reach high-end ceiling.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.neworleanssaints.com/news/jonas-sanker-justin-reid-2025-season-recap",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.neworleanssaints.com/news/kool-aid-mckinstry-quincy-riley-2025-season-recap",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NO|Secondary|quincyriley",
+      "name": "Quincy Riley",
+      "team": "NO",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 131,
+      "lockedHQGrade": 75,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 28,
+        "steadyPct": 35,
+        "declinePct": 28,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 16,
+        "improvePct": 32,
+        "steadyPct": 25,
+        "declinePct": 27,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 fourth-round rookie earned 5 starts over 17 games, 10 PBUs and INT; coverage reps expanded by injury.",
+        "through2026Week4": "2026 early roster usage includes outside snaps but long-run CB2 starting security unproven.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise breakout 9→16, decline 28→27, improve 28→32; gradual role rise possible without betting on turnovers.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.neworleanssaints.com/news/jonas-sanker-justin-reid-2025-season-recap",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.neworleanssaints.com/news/kool-aid-mckinstry-quincy-riley-2025-season-recap",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYG|Secondary|deontebanks",
+      "name": "Deonte Banks",
+      "team": "NYG",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 24,
+      "lockedHQGrade": 77,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 10,
+        "improvePct": 28,
+        "steadyPct": 31,
+        "declinePct": 31,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 15,
+        "improvePct": 22,
+        "steadyPct": 20,
+        "declinePct": 43,
+        "maxAnnualGain": 6.1,
+        "maxAnnualLoss": 8.1,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 Giants first-round corner had reduced role after struggle in man coverage; reputation/draft slot not guaranteed.",
+        "through2026Week4": "2026 Week4 pick-six versus Arizona a positive confidence moment, not proof whole-season lockdown.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 31→43 and breakout 10→15; wide two-tail prospect with recent splash and earlier role loss.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://nypost.com/2026/10/04/sports/deonte-banks-needed-his-98-yard-pick-6-even-if-the-giants-didnt/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYG|Secondary|druphillips",
+      "name": "Dru Phillips",
+      "team": "NYG",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 70,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 29,
+        "steadyPct": 27,
+        "declinePct": 24,
+        "maxAnnualGain": 5.6,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 young Giants slot CB with physical closing speed and tackling, developed in heavy man/inside assignments.",
+        "through2026Week4": "2026 Week4 Giants contested 34% of passes, nickel Phillips involved though no verified personal split.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise breakout 17→20, decline 19→24; aggressive nickel role demands consistency beyond contested team rate.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.bigblueview.com/new-york-giants-analysis/174370/pro-football-focus-grades-and-advanced-stats-for-the-giants-victory-over-the-cardinals",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYG|Secondary|gregnewsome",
+      "name": "Greg Newsome II",
+      "team": "NYG",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 26,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 39,
+        "declinePct": 31,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 8,
+        "improvePct": 19,
+        "steadyPct": 34,
+        "declinePct": 39,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 6.7,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Jaguars starting outside CB before trade, length and press technique but inconsistent long-ball coverage.",
+        "through2026Week4": "2026 Giants competing at boundary; Week4 collective coverage improved but individual role depends on matchup.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 31→39, breakout 12→8; third-team change with no clear elite coverage trajectory.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.bigblueview.com/new-york-giants-analysis/174370/pro-football-focus-grades-and-advanced-stats-for-the-giants-victory-over-the-cardinals",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYG|Secondary|jevonholland",
+      "name": "Jevón Holland",
+      "team": "NYG",
+      "position": "S",
+      "age": 26,
+      "draftOverall": 36,
+      "lockedHQGrade": 85,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 20,
+        "steadyPct": 65,
+        "declinePct": 12,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "2025 Giants starting versatile safety, known deep range and pressure blitz support.",
+        "through2026Week4": "Early 2026 PFF around 90.4 overall, 83.9 coverage/90.8 run, a strong two-way start that backs sustainability.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Reduce decline 15→12, improve 19→20; not overvalue three interceptions, but coverage/run grades validate.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/jevon-holland/83873",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYG|Secondary|paulsonadebo",
+      "name": "Paulson Adebo",
+      "team": "NYG",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 76,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 7,
+        "improvePct": 21,
+        "steadyPct": 39,
+        "declinePct": 33,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Giants outside CB as physical length player with disruption; injuries limited year-to-year continuity historically.",
+        "through2026Week4": "2026 high-contest Giants coverage unit Week4; specific yards allowed to Adebo not verified.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→33 due availability/physical press volatility rather than assuming every breakup signals shutdown.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.bigblueview.com/new-york-giants-analysis/174370/pro-football-focus-grades-and-advanced-stats-for-the-giants-victory-over-the-cardinals",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYG|Secondary|tylernubin",
+      "name": "Tyler Nubin",
+      "team": "NYG",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 47,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 14,
+        "improvePct": 28,
+        "steadyPct": 28,
+        "declinePct": 30,
+        "maxAnnualGain": 5.6,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 young Giants strong safety with box tackling and communication assignments, less demonstrated elite deep range.",
+        "through2026Week4": "2026 coverage unit had strong Week4 contest rate, but team result not an individual deep-coverage chart.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→30 while maintaining improve28; natural progression tempered by possible defensive-system fit.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.bigblueview.com/new-york-giants-analysis/174370/pro-football-focus-grades-and-advanced-stats-for-the-giants-victory-over-the-cardinals",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYJ|Secondary|azareyehthomas",
+      "name": "Azareye'h Thomas",
+      "team": "NYJ",
+      "position": "CB",
+      "age": 22,
+      "draftOverall": 73,
+      "lockedHQGrade": 79,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 21,
+        "improvePct": 33,
+        "steadyPct": 18,
+        "declinePct": 28,
+        "maxAnnualGain": 6.7,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 rookie played 12 Jets games before season-ending shoulder and broke up passes in six consecutive games.",
+        "through2026Week4": "2026 first-team outside competitor alongside Nahshon Wright; Week4 coverage workload ongoing.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise breakout 18→21, decline 22→28; length and real rookie coverage flashes versus shoulder return.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.newyorkjets.com/news/minkah-fitzpatrick-nahshon-wright-add-to-revamped-secondary-07-14-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.newyorkjets.com/news/2026-jets-unofficial-depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYJ|Secondary|brandonstephens",
+      "name": "Brandon Stephens",
+      "team": "NYJ",
+      "position": "CB",
+      "age": 28,
+      "draftOverall": 104,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 50,
+        "declinePct": 29,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 15,
+        "steadyPct": 35,
+        "declinePct": 47,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 6.7,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Jets starter played 99% defensive snaps across 16 games, volume rather than shutdown guarantee.",
+        "through2026Week4": "2026 stays first-team CB; Week4 near interception negated by penalty, not a coverage achievement.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 29→47: snap durability credible but high-volume target exposure limits improvement likelihood.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.newyorkjets.com/news/minkah-fitzpatrick-nahshon-wright-add-to-revamped-secondary-07-14-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://nypost.com/2026/10/05/sports/jets-streak-busting-interception-was-lone-highlight-in-dreadful-loss/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYJ|Secondary|danebelton",
+      "name": "Dane Belton",
+      "team": "NYJ",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 114,
+      "lockedHQGrade": 79,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 25,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 9,
+        "improvePct": 24,
+        "steadyPct": 34,
+        "declinePct": 33,
+        "maxAnnualGain": 4.8,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Giants safety logged career-high 705 defensive snaps and 100 tackles; part-time to major box duties.",
+        "through2026Week4": "2026 Jets newcomer sharing centerfield/box duties with Minkah and Andre Cisco; new defense affects communication.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise breakout 8→9, decline 25→33: tackler reliable, but depth competition changes role forecast.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.newyorkjets.com/news/minkah-fitzpatrick-nahshon-wright-add-to-revamped-secondary-07-14-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.newyorkjets.com/news/2026-jets-unofficial-depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYJ|Secondary|jarvisbrownlee",
+      "name": "Jarvis Brownlee Jr.",
+      "team": "NYJ",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 146,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 17,
+        "improvePct": 26,
+        "steadyPct": 18,
+        "declinePct": 39,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 7.8,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 acquired by Jets midseason, seven games after Titans trade; raw nickel/press opportunity but interrupted continuity.",
+        "through2026Week4": "2026 opening nickel starter; Week4 reportedly injured, miss status uncertain.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→39, breakout 15→17: slot upside undercut by current medical/role instability.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.newyorkjets.com/news/minkah-fitzpatrick-nahshon-wright-add-to-revamped-secondary-07-14-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://nypost.com/2026/10/05/sports/jets-streak-busting-interception-was-lone-highlight-in-dreadful-loss/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "NYJ|Secondary|minkahfitzpatrick",
+      "name": "Minkah Fitzpatrick",
+      "team": "NYJ",
+      "position": "S",
+      "age": 29,
+      "draftOverall": 11,
+      "lockedHQGrade": 90,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 3,
+        "improvePct": 18,
+        "steadyPct": 55,
+        "declinePct": 24,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 44,
+        "declinePct": 39,
+        "maxAnnualGain": 2.4,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 veteran All-Pro career deep safety returned to Miami before 2026 Jets switch, leadership and pattern processing durable.",
+        "through2026Week4": "2026 missed two games with groin, returned Week4, played substantial snaps and earned interception.",
+        "limitations": "Named group-level or teammate results may not isolate player coverage effectiveness, and 2026 Week4 data are a small sample."
+      },
+      "reasonRelativeToExisting": "Raise decline 24→39 for groin and age risk but preserve coverage floor; one pick alone doesn't justify breakout.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.newyorkjets.com/news/minkah-fitzpatrick-nahshon-wright-add-to-revamped-secondary-07-14-2026",
+          "season": 2025,
+          "publishedOrAsOf": "Jan–Aug 2026 review of 2025 season",
+          "scope": "2025 role evidence"
+        },
+        {
+          "url": "https://www.reuters.com/sports/jets-s-minkah-fitzpatrick-practices-fully-expects-play-vs-bears--flm-2026-10-02/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "2026 role or individual report"
         }
       ],
       "auditStatus": "individual-2025-2026-review"
