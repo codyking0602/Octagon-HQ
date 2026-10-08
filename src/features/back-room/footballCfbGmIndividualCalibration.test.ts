@@ -25,7 +25,7 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     expect(new Set(CFB_GM_PLAYERS.map((p) => p.id)).size).toBe(468);
     expect(new Set(researched.map((r) => r.id)).size).toBe(468);
     expect(new Set(CFB_GM_PLAYERS.map((p) => p.schoolId))).toEqual(new Set(CFB_GM_AP_SCHOOLS));
-    expect(researched.filter((r) => r.calibration)).toHaveLength(294);
+    expect(researched.filter((r) => r.calibration)).toHaveLength(311);
     for (const row of researched) {
       const player = cfbGmPlayer(row.id);
       expect(player, row.id).toBeTruthy();
@@ -51,8 +51,8 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     }
   });
 
-  it("has fifteen completely audited school cohorts with exact existing identities and grades", () => {
-    for(const schoolId of ["alabama","oregon","texas","ohio-state","miami","georgia","lsu","notre-dame","byu","indiana","smu","florida","tennessee","boise-state","houston"){
+  it("has sixteen completely audited school cohorts with exact existing identities and grades", () => {
+    for(const schoolId of ["alabama","oregon","texas","ohio-state","miami","georgia","lsu","notre-dame","byu","indiana","smu","florida","tennessee","boise-state","houston","iowa"){
       const school=CFB_GM_PLAYERS.filter((p)=>p.schoolId===schoolId);
       expect(school.length).toBeGreaterThan(10);
       for(const player of school){
