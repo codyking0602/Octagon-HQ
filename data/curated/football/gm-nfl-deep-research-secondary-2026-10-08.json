@@ -6,12 +6,18 @@
   "baseCalibrationHead": "30e34c38142f828dd4c8d324c04dfac4d169b527",
   "nonRuntimeResearchOnly": true,
   "lockedGrades": true,
-  "reviewedCount": 28,
+  "reviewedCount": 54,
   "batchLog": [
     {
       "batch": 1,
       "teams": "ARI ATL BAL BUF CAR",
       "count": 28,
+      "individual2026SourceCount": 26
+    },
+    {
+      "batch": 2,
+      "teams": "CHI CIN CLE DAL DEN",
+      "count": 26,
       "individual2026SourceCount": 26
     }
   ],
@@ -69,7 +75,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": null
     },
     {
       "id": "ARI|Secondary|buddabaker",
@@ -119,7 +126,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 36
     },
     {
       "id": "ARI|Secondary|denzelburke",
@@ -169,7 +177,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 174
     },
     {
       "id": "ARI|Secondary|garrettwilliams",
@@ -219,7 +228,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 72
     },
     {
       "id": "ARI|Secondary|maxmelton",
@@ -269,7 +279,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 43
     },
     {
       "id": "ARI|Secondary|willjohnson",
@@ -319,7 +330,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 47
     },
     {
       "id": "ATL|Secondary|ajterrell",
@@ -369,7 +381,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 16
     },
     {
       "id": "ATL|Secondary|billybowman",
@@ -419,7 +432,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 118
     },
     {
       "id": "ATL|Secondary|cjhenderson",
@@ -469,7 +483,8 @@
           "scope": "team/article context"
         }
       ],
-      "auditStatus": "contextual-2026-evidence"
+      "auditStatus": "contextual-2026-evidence",
+      "draftOverall": 9
     },
     {
       "id": "ATL|Secondary|jessiebates",
@@ -519,7 +534,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 54
     },
     {
       "id": "ATL|Secondary|mikehughes",
@@ -569,7 +585,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 30
     },
     {
       "id": "ATL|Secondary|xavierwatts",
@@ -619,7 +636,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 96
     },
     {
       "id": "BAL|Secondary|jaylinnhawkins",
@@ -669,7 +687,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 134
     },
     {
       "id": "BAL|Secondary|kylehamilton",
@@ -719,7 +738,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 14
     },
     {
       "id": "BAL|Secondary|malakistarks",
@@ -769,7 +789,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 27
     },
     {
       "id": "BAL|Secondary|marlonhumphrey",
@@ -819,7 +840,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 16
     },
     {
       "id": "BAL|Secondary|natewiggins",
@@ -869,7 +891,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 30
     },
     {
       "id": "BUF|Secondary|christianbenford",
@@ -919,7 +942,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 185
     },
     {
       "id": "BUF|Secondary|cjgardnerjohnson",
@@ -969,7 +993,8 @@
           "scope": "team/article context"
         }
       ],
-      "auditStatus": "contextual-2026-evidence"
+      "auditStatus": "contextual-2026-evidence",
+      "draftOverall": 105
     },
     {
       "id": "BUF|Secondary|colebishop",
@@ -1019,7 +1044,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 60
     },
     {
       "id": "BUF|Secondary|deealford",
@@ -1069,7 +1095,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": null
     },
     {
       "id": "BUF|Secondary|maxwellhairston",
@@ -1119,7 +1146,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 30
     },
     {
       "id": "CAR|Secondary|akaylebevans",
@@ -1169,7 +1197,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 118
     },
     {
       "id": "CAR|Secondary|jayceehorn",
@@ -1219,7 +1248,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 8
     },
     {
       "id": "CAR|Secondary|lathanransom",
@@ -1269,7 +1299,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 122
     },
     {
       "id": "CAR|Secondary|nickscott",
@@ -1319,7 +1350,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 243
     },
     {
       "id": "CAR|Secondary|trevonmoehrig",
@@ -1369,7 +1401,8 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 43
     },
     {
       "id": "CAR|Secondary|willlee",
@@ -1419,7 +1452,1334 @@
           "scope": "individual PFF profile"
         }
       ],
-      "auditStatus": "individual-2026-evidence"
+      "auditStatus": "individual-2026-evidence",
+      "draftOverall": 129
+    },
+    {
+      "id": "CHI|Secondary|dillonthieneman",
+      "name": "Dillon Thieneman",
+      "team": "CHI",
+      "position": "S",
+      "age": 22,
+      "draftOverall": 25,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 25,
+        "improvePct": 40,
+        "steadyPct": 13,
+        "declinePct": 22,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 26,
+        "improvePct": 32,
+        "steadyPct": 18,
+        "declinePct": 24,
+        "maxAnnualGain": 7.3,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL regular season; college prospect tape, not NFL proof, underlies 2026 first-year evaluation.",
+        "through2026Week4": "Week 4 rookie coverage contributed to holding targets to low passer rating; long-term deep-range communication remains to be proven.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise breakout 25→26, reduce improvement 40→32 and raise decline 22→24: bright rookie indicators, still a new starter.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CHI|Secondary|jaylonjohnson",
+      "name": "Jaylon Johnson",
+      "team": "CHI",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 50,
+      "lockedHQGrade": 85,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 19,
+        "steadyPct": 50,
+        "declinePct": 27,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "Established Bears boundary CB; 2025 stretch of injury and inconsistent availability reduced sample versus peak.",
+        "through2026Week4": "2026 return managed after injury; boundary matchup ability remains but weekly health/continuity is a material concern.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 15→27, breakout 2→4; his demonstrated coverage ceiling gives rebound potential, availability broadens downside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124578/chicago-bears-midweek-musings-dennis-allen-magician",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CHI|Secondary|kylergordon",
+      "name": "Kyler Gordon",
+      "team": "CHI",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 39,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 11,
+        "improvePct": 24,
+        "steadyPct": 38,
+        "declinePct": 27,
+        "maxAnnualGain": 4.9,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "Slot/nickel specialist with blitz and tackling utility; 2025 injury interruptions reduced dependable playing time.",
+        "through2026Week4": "2026 defensive role remains slot-dependent while Chicago rotates personnel; no clean full-season 2026 coverage sample.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 17→27 despite slot skills; scheme value more secure than untouchable playing-time security.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124578/chicago-bears-midweek-musings-dennis-allen-magician",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CHI|Secondary|malikmuhammad",
+      "name": "Malik Muhammad II",
+      "team": "CHI",
+      "position": "CB",
+      "age": 22,
+      "draftOverall": 124,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 28,
+        "steadyPct": 35,
+        "declinePct": 28,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 17,
+        "improvePct": 34,
+        "steadyPct": 18,
+        "declinePct": 31,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 6.7,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL season; prospect, with draft investment not equivalent to verified pro coverage.",
+        "through2026Week4": "In 2026 Week 4 the rookie helped hold Jets' coverage targets down; small-sample role has increased.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Breakout 9→17 for rapid acclimation, decline 28→31 because rookie coverage exposure still uncertain.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CHI|Secondary|tyriquestevenson",
+      "name": "Tyrique Stevenson Sr.",
+      "team": "CHI",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 56,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 39,
+        "declinePct": 31,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 6,
+        "improvePct": 15,
+        "steadyPct": 28,
+        "declinePct": 51,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 7.7,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 outside CB starter experienced volatile coverage and tackle/discipline concerns despite physical tools.",
+        "through2026Week4": "2026 remains one of the Bears' more scrutinized coverage points; competition limits locked-in boundary assignments.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 31→51; improvement 18→15 despite youth because repetition of assignment lapses is more important than pedigree.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124578/chicago-bears-midweek-musings-dennis-allen-magician",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CHI|Secondary|xavierwoods",
+      "name": "Xavier Woods",
+      "team": "CHI",
+      "position": "S",
+      "age": 31,
+      "draftOverall": 191,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 8,
+        "steadyPct": 36,
+        "declinePct": 55,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "Veteran deep safety with extensive starts; more dependent on assignment consistency than splash turnovers.",
+        "through2026Week4": "2026 Bears role exposure/competition; no reliable sourced individual early-season range efficiency available.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 38→55 and cap gain below 2; age 31 and replacement competition reduce likely sustainable upward swing.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.windycitygridiron.com/chicago-bears-analysis/124695/chicago-bears-vs-jets-week-4-recap-nfl-pfn-grades",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.pff.com/news/pff-safety-rankings-the-top-32-players-ahead-of-the-2026-nfl-season",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CIN|Secondary|bryancook",
+      "name": "Bryan Cook",
+      "team": "CIN",
+      "position": "S",
+      "age": 27,
+      "draftOverall": 62,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 18,
+        "steadyPct": 58,
+        "declinePct": 21,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 3.6,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "Joined CIN after 2025 KC coverage grade 83.2; missed-tackle rate only 5.3%, both from official Bengals preview.",
+        "through2026Week4": "2026 new safety communication partnership with Jordan Battle; no full-season proof of transfer to new scheme.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Small decline rise 15→21; 2025 coverage/tackling anchors strong steady, scheme move modestly increases downside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CIN|Secondary|daxhill",
+      "name": "Dax Hill",
+      "team": "CIN",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 31,
+      "lockedHQGrade": 81,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 39,
+        "declinePct": 31,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 15,
+        "improvePct": 27,
+        "steadyPct": 36,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "After Week 11 in 2025 PFF coverage 78.9; 16 catches on 35 targets with no touchdowns in noted stretch.",
+        "through2026Week4": "2026 projects opposite DJ Turner with workload increase; second-half 2025 improvement may carry but is not a full-season guarantee.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise breakout 12→15 and improvement 18→27 while cutting decline 31→22; genuine encouraging CB transition.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CIN|Secondary|djturner",
+      "name": "DJ Turner II",
+      "team": "CIN",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 60,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 19,
+        "improvePct": 36,
+        "steadyPct": 26,
+        "declinePct": 19,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 13,
+        "improvePct": 26,
+        "steadyPct": 42,
+        "declinePct": 19,
+        "maxAnnualGain": 4.8,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 580 coverage snaps, 31 completions on 66 targets, 78.1 PFF coverage; 18 PBUs and full starter role.",
+        "through2026Week4": "2026 established boundary CB after breakout; no complete four-week individual chart published in linked club preview.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Reduce breakout 19→13 due 2025 already realized; reduce decline 19→19 unchanged and prioritize stabilization.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CIN|Secondary|jordanbattle",
+      "name": "Jordan Battle",
+      "team": "CIN",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 95,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 28,
+        "steadyPct": 36,
+        "declinePct": 24,
+        "maxAnnualGain": 4.4,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 first full starting season yielded 112 tackles and four interceptions; box tackling volume established.",
+        "through2026Week4": "2026 partnership with coverage-first Bryan Cook may free strong-safety downhill role; interceptions not predictive on their own.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Lower breakout 15→12, improvement 36→28; tackle/box duties secure but 2025 interception rate is unlikely to compound.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CIN|Secondary|tacariodavis",
+      "name": "Tacario Davis",
+      "team": "CIN",
+      "position": "CB",
+      "age": 22,
+      "draftOverall": 72,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 23,
+        "improvePct": 31,
+        "steadyPct": 20,
+        "declinePct": 26,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 6.9,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL regular season; 2025 University of Washington standout, third-round draft press corner.",
+        "through2026Week4": "2026 CB depth behind Turner/Hill; tall speed profile gives upside but NFL route-matching remains uncertain.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise breakout 18→23, decline 22→26; starter opportunity uncertain but unusually high length/speed potential.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bengals.com/news/2026-position-primer-secondary-bryan-cook-dj-turner-ii",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CLE|Secondary|denzelward",
+      "name": "Denzel Ward",
+      "team": "CLE",
+      "position": "CB",
+      "age": 29,
+      "draftOverall": 4,
+      "lockedHQGrade": 94,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 16,
+        "steadyPct": 65,
+        "declinePct": 17,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4.1,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 64,
+        "declinePct": 19,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "2025 Pro Bowl boundary corner with 15 starts; outside assignments against top receivers.",
+        "through2026Week4": "2026 four starts, 10 completions on 25 targets and three coverage TDs permitted by early PFR chart; interceptions don't outweigh TDs.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Slight decline 17→19; trusted shutdown ability, but 2026 red-zone allowance warrants some uncertainty.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/cle/2025_roster.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/cle/2026_advanced.htm",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CLE|Secondary|grantdelpit",
+      "name": "Grant Delpit",
+      "team": "CLE",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 44,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 55,
+        "declinePct": 21,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "2025 16 starts, 3 sacks, 1 INT, 2 fumble recoveries; box support and blitzing role.",
+        "through2026Week4": "2026 four starts, 10 completions on 20 targets in advanced chart; intercepted game-sealing ball versus PIT.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Minor increase decline 19→21; versatile, dependable safety but role requires physical tackling exposure.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/cle/2025_roster.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.reuters.com/sports/nfl/browns-blow-11-point-lead-rally-past-steelers--flm-2026-10-02/",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CLE|Secondary|mylesharden",
+      "name": "Myles Harden",
+      "team": "CLE",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 227,
+      "lockedHQGrade": 73,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 10,
+        "improvePct": 28,
+        "steadyPct": 31,
+        "declinePct": 31,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 24,
+        "steadyPct": 22,
+        "declinePct": 42,
+        "maxAnnualGain": 5.9,
+        "maxAnnualLoss": 7.8,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 reserve/young nickel options after 2024 seventh-round draft status; thin validated coverage history.",
+        "through2026Week4": "2026 Cleveland depth chart lists him nickel, while team coverage chart has little individual volume.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 31→42 but retain meaningful improve 24; expanded slot workload is both opportunity and risk.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/cle/2025_roster.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.clevelandbrowns.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CLE|Secondary|ronniehickman",
+      "name": "Ronnie Hickman",
+      "team": "CLE",
+      "position": "S",
+      "age": 24,
+      "draftOverall": null,
+      "lockedHQGrade": 79,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 19,
+        "improvePct": 29,
+        "steadyPct": 16,
+        "declinePct": 36,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 11
+      },
+      "proposed": {
+        "breakoutPct": 13,
+        "improvePct": 24,
+        "steadyPct": 22,
+        "declinePct": 41,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 started all 17 at free safety and produced 2 interceptions; consistent snaps, not proven range domination.",
+        "through2026Week4": "2026 team retains him atop FS depth chart but snaps/coverage results inconclusive from broad team chart.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Lower breakout 19→13 and raise decline 36→41; everyday experience supports steady but assignment busts remain possible.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/cle/2025_roster.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.clevelandbrowns.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "CLE|Secondary|tysoncampbell",
+      "name": "Tyson Campbell",
+      "team": "CLE",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 33,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 9,
+        "improvePct": 21,
+        "steadyPct": 36,
+        "declinePct": 34,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Cleveland trade acquisition and 12 starts, one INT; physical long outside corner.",
+        "through2026Week4": "Returned after Week 3 absence for Week 4; early 2026 advanced chart shows 9/12 catches allowed, 179 yards.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 17→34; recent coverage concession pattern and availability risk offset natural starting status.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/cle/2025_roster.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/cle/2026_advanced.htm",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DAL|Secondary|calebdowns",
+      "name": "Caleb Downs",
+      "team": "DAL",
+      "position": "S",
+      "age": 21,
+      "draftOverall": 11,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 24,
+        "improvePct": 29,
+        "steadyPct": 24,
+        "declinePct": 23,
+        "maxAnnualGain": 7.5,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 24,
+        "improvePct": 31,
+        "steadyPct": 17,
+        "declinePct": 28,
+        "maxAnnualGain": 7.8,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL season; impact Ohio State safety prospect drafted for deep/box versatility.",
+        "through2026Week4": "Week 4 Dallas safety rookie suffered coverage lapses; complex communication responsibilities still new.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise improve 29→31 and decline 23→28, breakout kept 24; unusually high ceiling with nontrivial first-year mistakes.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/dal/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bloggingtheboys.com/dallas-cowboys-discussion/221332/texans-game-brandon-aubrey-ceedee-lamb",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DAL|Secondary|daronbland",
+      "name": "DaRon Bland",
+      "team": "DAL",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 167,
+      "lockedHQGrade": 85,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 17,
+        "steadyPct": 51,
+        "declinePct": 29,
+        "maxAnnualGain": 2.9,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 starting Dallas outside CB, strong ball production earlier career, but interceptions cannot stand in for down-to-down coverage.",
+        "through2026Week4": "2026 Week4 criticism for lapses against Houston; still a starter with leverage to rebound.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 15→29; high variance coverage risk despite 2025 established ability and grade 85.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/dal/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bloggingtheboys.com/dallas-cowboys-discussion/221332/texans-game-brandon-aubrey-ceedee-lamb",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DAL|Secondary|joeyporter",
+      "name": "Joey Porter Jr.",
+      "team": "DAL",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 32,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 6,
+        "improvePct": 27,
+        "steadyPct": 43,
+        "declinePct": 24,
+        "maxAnnualGain": 4.6,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Pittsburgh man-coverage boundary starter, physical press trait with penalty volatility.",
+        "through2026Week4": "New 2026 Cowboys opportunity; debut against HOU positive but one game is small.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Increase improve 19→27, decline 15→24; adjustment to new communication structure cuts certainty.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/dal/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bloggingtheboys.com/dallas-cowboys-discussion/221332/texans-game-brandon-aubrey-ceedee-lamb",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DAL|Secondary|malikhooker",
+      "name": "Malik Hooker",
+      "team": "DAL",
+      "position": "S",
+      "age": 30,
+      "draftOverall": 15,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 9,
+        "steadyPct": 37,
+        "declinePct": 53,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "2025 Dallas veteran safety logged about 594 defensive snaps; range/instincts matter more than turnover totals.",
+        "through2026Week4": "2026 Dallas experimenting with Caleb Downs pairing; limited 2026 validated individual tracking.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 38→53, trim gain: aging veteran's playing-time competition rather than abrupt inferred skill collapse.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/dal/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bloggingtheboys.com/dallas-cowboys-discussion/221332/texans-game-brandon-aubrey-ceedee-lamb",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DAL|Secondary|markquesebell",
+      "name": "Markquese Bell",
+      "team": "DAL",
+      "position": "S",
+      "age": 27,
+      "draftOverall": null,
+      "lockedHQGrade": 75,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 19,
+        "steadyPct": 39,
+        "declinePct": 38,
+        "maxAnnualGain": 3.1,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Dallas rotation/special teams hybrid with roughly 356 defensive snaps rather than full-time FS volume.",
+        "through2026Week4": "2026 depth assignment behind Downs/Hooker limits pathways to sustained every-down role.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 23→38; big role leap less plausible than depth/special teams stability.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/dal/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.bloggingtheboys.com/dallas-cowboys-discussion/221332/texans-game-brandon-aubrey-ceedee-lamb",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DEN|Secondary|brandonjones",
+      "name": "Brandon Jones",
+      "team": "DEN",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 70,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 6,
+        "improvePct": 26,
+        "steadyPct": 50,
+        "declinePct": 18,
+        "maxAnnualGain": 4.2,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 Denver multi-role safety and Pro Bowl alternate history, deep coverage paired with Hufanga box duties.",
+        "through2026Week4": "2026 strong first four starts prompted Oct8 contract-extension commentary; no signal of diminished range.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise improvement 20→26, reduce decline 19→18, modest breakout 4→6; high-floor safety can still refine angles.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.denverbroncos.com/news/broncos-camp-preview-all-pros-pat-surtain-ii-talanoa-hufanga-lead-talented-denver-secondary-into-training-camp",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.milehighreport.com/general/187981/should-the-broncos-try-to-extend-brandon-jones",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DEN|Secondary|jaquanmcmillian",
+      "name": "Ja'Quan McMillian",
+      "team": "DEN",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": null,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 8,
+        "improvePct": 27,
+        "steadyPct": 43,
+        "declinePct": 22,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 PFF 78.9 coverage grade as established Denver slot, substantial disguised-pressure/screen tackling tasks.",
+        "through2026Week4": "2026 continues as incumbent nickel versus Barron competition; scheme demands more than interception total.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Improve 25→27; strong slot evidence supports continued growth but outside-CB ceiling not assumed.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.denverbroncos.com/news/broncos-camp-preview-all-pros-pat-surtain-ii-talanoa-hufanga-lead-talented-denver-secondary-into-training-camp",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.pff.com/news/nfl-denver-broncos-2026-preview",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DEN|Secondary|patsurtain",
+      "name": "Pat Surtain II",
+      "team": "DEN",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 9,
+      "lockedHQGrade": 96,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 75,
+        "declinePct": 5,
+        "maxAnnualGain": 1.7,
+        "maxAnnualLoss": 1.8,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 15,
+        "steadyPct": 71,
+        "declinePct": 13,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 4.2,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2024 DPOY and first-team All-Pro with durable elite man-coverage responsibilities into 2025.",
+        "through2026Week4": "Week 4 suffered noncontact ankle injury and left game; no medical diagnosis established in reviewed Reuters report.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 5→13 due to currently unresolved ankle status, not regrading elite lockdown coverage.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.denverbroncos.com/news/broncos-camp-preview-all-pros-pat-surtain-ii-talanoa-hufanga-lead-talented-denver-secondary-into-training-camp",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.reuters.com/sports/broncos-star-cb-pat-surtain-ii-injures-ankle-loss-49ers--flm-2026-10-05/",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DEN|Secondary|rileymoss",
+      "name": "Riley Moss",
+      "team": "DEN",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 83,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 44,
+        "declinePct": 22,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 8,
+        "improvePct": 20,
+        "steadyPct": 28,
+        "declinePct": 44,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 co-led NFL with 19 pass breakups; 2026 starter due to matchup/scheme versatility.",
+        "through2026Week4": "Week 4 rib injury forced exit; coverage workload and durability risk more predictive than picks.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Raise decline 22→44 and lower improve 25→20 because early injury uncertainty threatens sustained snaps.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.denverbroncos.com/news/broncos-camp-preview-all-pros-pat-surtain-ii-talanoa-hufanga-lead-talented-denver-secondary-into-training-camp",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.reuters.com/sports/broncos-star-cb-pat-surtain-ii-injures-ankle-loss-49ers--flm-2026-10-05/",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DEN|Secondary|talanoahufanga",
+      "name": "Talanoa Hufanga",
+      "team": "DEN",
+      "position": "S",
+      "age": 26,
+      "draftOverall": 180,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 54,
+        "declinePct": 27,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Denver strong safety, 1,225 snaps and 76.3 PFF run-defense grade; box play and contact add wear.",
+        "through2026Week4": "2026 prime-age box partner for Brandon Jones, but recurrent prior injuries remain a future volatility input.",
+        "limitations": "Week 4 2026 sample is small; PFF or team early snapshots may trail latest games; no unsourced coverage film claims."
+      },
+      "reasonRelativeToExisting": "Decline 15→27 while preserving meaningful steadiness; his run support likely translates better than turnover flashes.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.denverbroncos.com/news/broncos-camp-preview-all-pros-pat-surtain-ii-talanoa-hufanga-lead-talented-denver-secondary-into-training-camp",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 preseason",
+          "scope": "team/group evidence; verify named fact in description"
+        },
+        {
+          "url": "https://www.denverbroncos.com/news/broncos-camp-preview-all-pros-pat-surtain-ii-talanoa-hufanga-lead-talented-denver-secondary-into-training-camp",
+          "season": 2026,
+          "publishedOrAsOf": "As available by 2026-10-08",
+          "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
     }
   ]
 }
