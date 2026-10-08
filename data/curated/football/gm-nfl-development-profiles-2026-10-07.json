@@ -4148,14 +4148,22 @@
       "gradeAtCalibration": 94,
       "confidence": "medium",
       "draftOverall": 45,
-      "breakoutPct": 3,
-      "improvePct": 21,
-      "declinePct": 9,
+      "breakoutPct": 2,
+      "improvePct": 17,
+      "declinePct": 21,
       "maxAnnualGain": 2.7,
-      "maxAnnualLoss": 2.7,
+      "maxAnnualLoss": 4.4,
       "marketVariancePct": 8,
       "cohort": "early-career",
-      "calibration": "individual-review"
+      "calibration": "individual-review",
+      "reviewDate": "2026-10-08",
+      "recentEvidence": {
+        "type": "major-injury-context",
+        "source": "https://www.detroitlions.com/news/detroit-lions-brian-branch-cade-mays-return-to-practice-abney",
+        "asOf": "2026-10-08",
+        "note": "Returning to practice October 7 after 2025 Achilles tear; high established current grade retained, recovery risk affects future volatility."
+      },
+      "reviewRationale": "Earlier individually reviewed impact player: grade 94. Returning to practice October 7 after 2025 Achilles tear; high established current grade retained, recovery risk affects future volatility."
     },
     {
       "id": "DET|Secondary|djreed",
@@ -4211,17 +4219,23 @@
       "gradeAtCalibration": 88,
       "confidence": "high",
       "draftOverall": 97,
-      "breakoutPct": 12,
-      "improvePct": 30,
-      "declinePct": 17,
+      "breakoutPct": 3,
+      "improvePct": 21,
+      "declinePct": 34,
       "maxAnnualGain": 2.3,
-      "maxAnnualLoss": 2.9,
+      "maxAnnualLoss": 5.8,
       "marketVariancePct": 5,
       "cohort": "early-career",
       "calibration": "individual-review",
       "reviewClass": "elite",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kerby Joseph: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 25, Secondary, pick #97."
+      "reviewRationale": "Kerby Joseph: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 25, Secondary, pick #97. 2026 knee rehab and extended return uncertainty; retain existing HQ grade and add downside volatility.",
+      "recentEvidence": {
+        "type": "major-injury-context",
+        "source": "https://www.nfl.com/news/lions-safeties-brian-branch-kerby-joseph-remain-out-indefinitely-dan-campbell-says",
+        "asOf": "2026-10-08",
+        "note": "2026 knee rehab and extended return uncertainty; retain existing HQ grade and add downside volatility."
+      }
     },
     {
       "id": "DET|Secondary|rogermccreary",
@@ -4356,14 +4370,22 @@
       "gradeAtCalibration": 84,
       "confidence": "medium",
       "draftOverall": 45,
-      "breakoutPct": 17,
-      "improvePct": 31,
-      "declinePct": 19,
+      "breakoutPct": 12,
+      "improvePct": 24,
+      "declinePct": 32,
       "maxAnnualGain": 6.4,
-      "maxAnnualLoss": 5.1,
+      "maxAnnualLoss": 6.1,
       "marketVariancePct": 8,
       "cohort": "early-career",
-      "calibration": "individual-review"
+      "calibration": "individual-review",
+      "reviewDate": "2026-10-08",
+      "recentEvidence": {
+        "type": "major-injury-context",
+        "source": "https://www.packers.com/news/lb-edgerrin-cooper-is-tough-one-to-lose-for-packers-oct-5-2026",
+        "asOf": "2026-10-08",
+        "note": "2026 season-ending Achilles injury confirmed by Packers; development ceiling remains but durability/return uncertainty raises regression risk."
+      },
+      "reviewRationale": "Earlier individually reviewed impact player: grade 84. 2026 season-ending Achilles injury confirmed by Packers; development ceiling remains but durability/return uncertainty raises regression risk."
     },
     {
       "id": "GB|Front Seven|javonhargrave",
