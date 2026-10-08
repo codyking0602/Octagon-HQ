@@ -473,8 +473,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 22,
+          "steady": 60,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.9,
+        "portalExitProbability": 0.03,
+        "summary": "Alabama junior corner and 2026 permanent captain: 2025 39 tackles, six PBUs, two interception returns for TD and a standout Tennessee coverage game allowing 16 yards on six targets. Four 2026 PBUs and nine tackles by early October. Already proven high-level cover corner, making another giant breakout less likely than steady production and 2027 NFL consideration.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/zabien-brown/17427"
+        ]
+      }
     },
     {
       "id": "alabama|zyangibson",
@@ -1910,8 +1929,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 2,
+          "improve": 13,
+          "steady": 70,
+          "decline": 15,
+          "maxGain": 1,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.96,
+        "portalExitProbability": 0.02,
+        "summary": "Georgia junior safety: 2025 76 tackles, two INT and five PBUs while starting all 14 games, Second Team All-American and All-SEC. In 2026 opening five games added a pick against Oklahoma and seven solo stops vs Vanderbilt, stabilizing elite near-99 HQ profile. Further full-grade breakout improbable; very high NFL exit estimate, not guaranteed.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/kj-bolden/10541"
+        ]
+      }
     },
     {
       "id": "georgia|kyronjones",
@@ -1969,8 +2007,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 33,
+          "steady": 47,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.7,
+        "portalExitProbability": 0.05,
+        "summary": "Georgia junior RB 2025 861 rushing yards/six TD on 158 carries plus receiving TD, with 10 starts in 14 games and All-SEC Third Team. 2026 first three games 72yd/threeTD against Tennessee State, 55yd/TD WKU, 75yd/TD Arkansas. Steady power-run SEC evidence and opportunity justify moderate improvement, not generic junior regression or automatic elite max-ceiling.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/nate-frazier/10638"
+        ]
+      }
     },
     {
       "id": "georgia|quintaviusjohnson",
@@ -4069,8 +4126,28 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 51,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.69,
+        "portalExitProbability": 0.07,
+        "summary": "Miami fourth-year senior RB began college in 2023 and earned 2025 third-team All-ACC and Cotton Bowl offensive MVP recognition. Multi-season physical feature-back résumé implies useful continuation, with modest gain and decline risk; senior roster label alone does not prove all 2027 eligibility exhausted.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster",
+          "https://miamihurricanes.com/sports/football/roster/season/2024-25/player/mark-fletcher-jr"
+        ]
+      }
     },
     {
       "id": "miami|marquiselightfoot",
@@ -5482,8 +5559,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 36,
+          "steady": 43,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07,
+        "summary": "Ohio State official sophomore RB gained 1,090 rushing yards and six rushing TD with 19 catches for 200 yards in 2025 while starting 10 of 13 games. In 2026 through Iowa he posted 83/74/73/56/70 rushing yards across first five games, showing real ability but ordinary week-to-week variance. 2025 matriculation means 2027 NFL Draft ordinarily unavailable; substantial growth plausible but not an unproven recruit.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/bo-jackson/13305"
+        ]
+      }
     },
     {
       "id": "ohio-state|brandoninniss",
@@ -5501,8 +5597,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 30,
+          "steady": 42,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.34,
+        "portalExitProbability": 0.12,
+        "summary": "Ohio State 2026 senior slot WR/return captain: 2025 35 receptions for 271 yards/three TD in 14 games and six starts, 17 punt returns for 181yd and All-Big Ten special teams HM. First four games 2026 include 78-yard four-catch outing vs Kent State but limited other receiving opportunity. More high-volume role upside remains than his senior class implies; NFL declaration chance lower than elite WR peers.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/innissbrandon/13304"
+        ]
+      }
     },
     {
       "id": "ohio-state|chrishenryjr",
@@ -7142,8 +7257,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 40,
+          "steady": 37,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09,
+        "summary": "Oregon 2026 true sophomore RB was 2025 All-Big Ten honorable mention after 14 games, one start and 113 carries for 667 yards with team-leading 15 rushing TD. Red-zone skill is demonstrated, but limited 2025 starting volume and 2026 expanding role support meaningful development and some college variance. First matriculated in 2025, so not 2027 NFL eligible.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/jordon-davison/18296"
+        ]
+      }
     },
     {
       "id": "oregon|koiperich",
@@ -8785,8 +8919,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 26,
+          "steady": 53,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.73,
+        "portalExitProbability": 0.04,
+        "summary": "Texas official senior DB played 43 career games/21 starts heading into 2026; 2025 started all 13 games with interceptions against UTEP, Sam Houston and Arkansas and 14 tackles at Mississippi State. 2026 started all first four and registered 8/7/3/8 tackles against Texas State, Ohio State, UTSA and Tennessee. High current workload supports stable/solid gains but no giant ceiling leap.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/jelani-mcdonald/16944"
+        ]
+      }
     },
     {
       "id": "texas|justincryer",
@@ -10580,5 +10733,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development."
 }
