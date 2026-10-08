@@ -10,6 +10,7 @@ import {
 import {
   FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT,
   FOOTBALL_GM_DEVELOPMENT_SEED_TAG,
+  footballGmDevelopmentOdds,
   footballGmDevelopmentProfile,
 } from "./wheelFootballGmEconomy";
 import {
@@ -114,6 +115,96 @@ describe("full NFL GM development calibration", () => {
       expect(star).toBeGreaterThanOrEqual(97.7);
       expect(prospect).toBeGreaterThanOrEqual(81);
       expect(prospect).toBeLessThanOrEqual(95.5);
+    }
+  });
+
+  it("retains Year 2 identity odds but reduces repeat breakouts after a Year 2 leap", () => {
+    const player = name("Caleb Williams");
+    const input = {
+      playerId: player.id,
+      position: "QB" as const,
+      age: player.age + 1,
+      originalGrade: player.currentGrade,
+    };
+    const first = footballGmDevelopmentOdds({
+      ...input, age: player.age, step: 0, grade: player.currentGrade,
+    })!;
+    expect(first).toEqual({
+      breakoutPct: 27, improvePct: 37, declinePct: 18, steadyPct: 18,
+    });
+
+    const breakout = footballGmDevelopmentOdds({ ...input, step: 1, grade: 93 })!;
+    const setback = footballGmDevelopmentOdds({ ...input, step: 1, grade: 82 })!;
+    expect(breakout.breakoutPct).toBeLessThan(first.breakoutPct * 0.5);
+    expect(breakout.improvePct).toBeLessThan(first.improvePct);
+    expect(setback.breakoutPct).toBeGreaterThan(breakout.breakoutPct);
+    expect(setback.improvePct).toBeGreaterThan(first.improvePct);
+    expect(breakout.steadyPct).toBeGreaterThan(first.steadyPct);
+  });
+
+  it("makes age-related Year 3 regression more likely without changing player identity", () => {
+    const runningBack = name("Derrick Henry");
+    const fixed = {
+      playerId: runningBack.id,
+      step: 1 as const,
+      grade: runningBack.currentGrade,
+      originalGrade: runningBack.currentGrade,
+      position: "RB" as const,
+    };
+    const prior = footballGmDevelopmentOdds({ ...fixed, age: 26 })!;
+    const aged = footballGmDevelopmentOdds({ ...fixed, age: runningBack.age + 1 })!;
+    expect(aged.declinePct).toBeGreaterThan(prior.declinePct);
+    expect(aged.declinePct).toBeGreaterThanOrEqual(55);
+  });
+
+  it("keeps every Year 3 probability valid through setbacks, leaps and the rating ceiling", () => {
+    for (const player of FOOTBALL_GM_PLAYER_POOL) {
+      const marketPosition = player.eligibleSlots.includes("QB") ? "QB"
+        : player.eligibleSlots.includes("RB") ? "RB"
+          : player.family === "TE" ? "FLEX"
+            : player.eligibleSlots.includes("WR") ? "WR"
+              : player.eligibleSlots.includes("LB") ? "LB"
+                : player.eligibleSlots.includes("DB") ? "DB" : "DL";
+      for (const grade of [
+        Math.max(70, player.currentGrade - 5),
+        player.currentGrade,
+        Math.min(99, player.currentGrade + 6),
+        99,
+      ]) {
+        const odds = footballGmDevelopmentOdds({
+          playerId: player.id,
+          step: 1,
+          grade,
+          originalGrade: player.currentGrade,
+          position: marketPosition,
+          age: player.age + 1,
+        })!;
+        for (const value of Object.values(odds)) {
+          expect(value, player.id).toBeGreaterThanOrEqual(0);
+          expect(value, player.id).toBeLessThanOrEqual(100);
+        }
+        expect(
+          odds.breakoutPct + odds.improvePct + odds.declinePct + odds.steadyPct,
+        ).toBeCloseTo(100, 7);
+      }
+    }
+  });
+
+  it("replays Year 3 exactly, with its own outcome and no second contract repricing", () => {
+    const player = name("Caleb Williams");
+    const runs = Array.from({ length: 200 }, (_, i) => {
+      const key = seed(1000 + i);
+      return {
+        year2: footballGmProjectedGradeForPlayer(player, 2, key),
+        year3: footballGmProjectedGradeForPlayer(player, 3, key),
+        salary2: footballGmAdjustedSalaryForPlayer(player, 2, key, {}),
+        salary3: footballGmAdjustedSalaryForPlayer(player, 3, key, {}),
+      };
+    });
+    expect(new Set(runs.map((row) => row.year3 - row.year2)).size).toBeGreaterThan(12);
+    for (let i = 0; i < runs.length; i += 1) {
+      expect(footballGmProjectedGradeForPlayer(player, 3, seed(1000 + i))).toBe(runs[i]!.year3);
+      expect(runs[i]!.salary3).toBe(runs[i]!.salary2);
     }
   });
 
