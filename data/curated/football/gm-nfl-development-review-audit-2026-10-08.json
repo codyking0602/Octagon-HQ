@@ -6,7 +6,7 @@
   "sourceGradeAuthority": "data/generated/football/wheel-nfl-*-grades-2026-10-03.json",
   "reviewCount": 594,
   "followupReviewCount": 417,
-  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies.",
+  "note": "Full 594-player GM development review ledger, with 177 initially priority-calibrated and 417 second-pass. On 2026-10-08, seven user-approved Secondary CURRENT ability grades were synchronized with the HQ grade authority; NO development outcome probabilities, annual caps, market variances, or player IDs were recalibrated by this approval.",
   "reviews": [
     {
       "id": "ARI|Front Seven|dantestills",
@@ -2207,13 +2207,18 @@
       "name": "Caleb Downs",
       "team": "DAL",
       "family": "Secondary",
-      "gradeAtReview": 84,
+      "gradeAtReview": 81,
       "ageAtReview": 21,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-07",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Caleb Downs; audited HQ grade 84 and age 21 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Caleb Downs; audited HQ grade 81 and age 21 updated as the approved current-ability base. Exact odds and magnitude limits remain in the gameplay profile. Approved secondary ability review 2026-10-08: 84→81. Rookie NFL communication/coverage remains a small sample; current ability should not import college potential. No future development odds or magnitude caps revised.",
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 84,
+        "approvedGrade": 81
+      }
     },
     {
       "id": "DAL|Secondary|daronbland",
@@ -3324,13 +3329,18 @@
       "name": "Reed Blankenship",
       "team": "HOU",
       "family": "Secondary",
-      "gradeAtReview": 83,
+      "gradeAtReview": 78,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Reed Blankenship: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 27, Secondary, draft slot not recorded."
+      "reviewRationale": "Reed Blankenship: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 78 (high confidence), age 27, Secondary, draft slot not recorded. Approved secondary ability review 2026-10-08: 83→78. Weak 2025 coverage continued into early 2026, below prior solid-starter 83 placement. No future development odds or magnitude caps revised.",
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 83,
+        "approvedGrade": 78
+      }
     },
     {
       "id": "HOU|TE|daltonschultz",
@@ -4122,13 +4132,18 @@
       "name": "Mansoor Delane",
       "team": "KC",
       "family": "Secondary",
-      "gradeAtReview": 85,
+      "gradeAtReview": 82,
       "ageAtReview": 22,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-07",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Mansoor Delane; audited HQ grade 85 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Mansoor Delane; audited HQ grade 82 and age 22 updated as the approved current-ability base. Exact odds and magnitude limits remain in the gameplay profile. Approved secondary ability review 2026-10-08: 85→82. Promising four-game rookie stretch insufficient for established 85 ability; college pedigree excluded. No future development odds or magnitude caps revised.",
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 85,
+        "approvedGrade": 82
+      }
     },
     {
       "id": "KC|Secondary|nohlwilliams",
@@ -5365,26 +5380,36 @@
       "name": "Byron Murphy Jr.",
       "team": "MIN",
       "family": "Secondary",
-      "gradeAtReview": 86,
+      "gradeAtReview": 82,
       "ageAtReview": 28,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Byron Murphy Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 86 (high confidence), age 28, Secondary, pick #33."
+      "reviewRationale": "Byron Murphy Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 28, Secondary, pick #33. Approved secondary ability review 2026-10-08: 86→82. Underlying 2025–2026 coverage less convincing than high-end 86, though Minnesota role demands remain difficult. No future development odds or magnitude caps revised.",
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 86,
+        "approvedGrade": 82
+      }
     },
     {
       "id": "MIN|Secondary|harrisonsmith",
       "name": "Harrison Smith",
       "team": "MIN",
       "family": "Secondary",
-      "gradeAtReview": 83,
+      "gradeAtReview": 80,
       "ageAtReview": 37,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-07",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Harrison Smith; audited HQ grade 83 and age 37 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Harrison Smith; audited HQ grade 80 and age 37 updated as the approved current-ability base. Exact odds and magnitude limits remain in the gameplay profile. Approved secondary ability review 2026-10-08: 83→80. Current 2026 range and coverage are below his former peak despite continued veteran recognition/processing. No future development odds or magnitude caps revised.",
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 83,
+        "approvedGrade": 80
+      }
     },
     {
       "id": "MIN|Secondary|isaiahrodgers",
@@ -5417,13 +5442,18 @@
       "name": "Joshua Metellus",
       "team": "MIN",
       "family": "Secondary",
-      "gradeAtReview": 87,
+      "gradeAtReview": 81,
       "ageAtReview": 28,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "proven",
-      "reviewRationale": "Joshua Metellus: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 28, Secondary, pick #205."
+      "reviewRationale": "Joshua Metellus: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 81 (high confidence), age 28, Secondary, pick #205. Approved secondary ability review 2026-10-08: 87→81. Coverage inconsistency over 2025 and early 2026 does not sustain an 87; retain hybrid utility. No future development odds or magnitude caps revised.",
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 87,
+        "approvedGrade": 81
+      }
     },
     {
       "id": "MIN|TE|tjhockenson",
@@ -8270,13 +8300,18 @@
       "name": "Amik Robertson",
       "team": "WSH",
       "family": "Secondary",
-      "gradeAtReview": 80,
+      "gradeAtReview": 84,
       "ageAtReview": 28,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Amik Robertson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 80 (high confidence), age 28, Secondary, pick #139."
+      "reviewRationale": "Amik Robertson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 28, Secondary, pick #139. Approved secondary ability review 2026-10-08: 80→84. Strong 2026 coverage and run support warrant a good-starter rating without rewarding interception totals. No future development odds or magnitude caps revised.",
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 80,
+        "approvedGrade": 84
+      }
     },
     {
       "id": "WSH|Secondary|mikesainristil",
