@@ -89,6 +89,19 @@ export default function FootballBackRoomPage() {
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/weekly-auction")} />
       <ChallengeCenter sport="football" />
       <PlayLandingGameLibrary sport="football" onNavigate={navigate} />
+      {identity.status === "ready" && identity.profile?.canControlPicks === true ? (
+        <section className="play-landing-library" data-sport="football" aria-label="Owner GM preview">
+          <div className="play-landing-library__grid">
+            <button className="play-landing-game-card is-strategic" type="button" onClick={() => navigate("/football/gm-cfb-preview")}>
+              <span className="play-landing-game-card__icon" aria-hidden="true">GM</span>
+              <span className="play-landing-game-card__status">OWNER PREVIEW</span>
+              <strong>The GM · College</strong>
+              <small>AP Top 25 · 2 seasons · 1 portal offseason · $11M or $7.5M NIL budget.</small>
+              <em>PLAYTEST →</em>
+            </button>
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }
