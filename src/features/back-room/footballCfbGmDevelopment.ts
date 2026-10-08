@@ -1,3 +1,5 @@
+import classEvidence from "../../../data/generated/football/cfb-gm-classification-runtime-2026.json";
+
 /**
  * CFB GM development: two-year college-stage model, intentionally independent
  * of the canonical 2026 Wheel/HQ current-ability grades.
@@ -35,13 +37,22 @@ const special:Readonly<Record<string,readonly [number,number,number,number,numbe
   "texas|ryanwingo":[11,35,43,11,5,4],
   "texas|camcoleman":[12,32,43,13,5,5],
 };
+type ReviewedDevelopment = Omit<CfbGmDevProfile, "confidence">;
+const reviewed = new Map<string, ReviewedDevelopment>(
+  (classEvidence.players as Array<{id:string; calibration?:{development:ReviewedDevelopment}}>).
+    filter((row) => Boolean(row.calibration?.development)).
+    map((row) => [row.id, row.calibration!.development]),
+);
 export function cfbGmDevProfile(id:string,grade:number,stage:CfbGmClass):CfbGmDevProfile{
-  const prior=special[id]??classes[stage??"JR"]??classes.JR;
+  const individual=reviewed.get(id);
+  const prior=individual
+    ? [individual.breakout,individual.improve,individual.steady,individual.decline,individual.maxGain,individual.maxLoss] as const
+    : special[id]??classes[stage??"JR"]??classes.JR;
   const [breakout,improve,steady,decline,maxGain,maxLoss]=prior;
-  const volatility=stage==="FR"||stage==="SO"?"HIGH":stage==="JR"||stage==="3RD"?"MEDIUM":"LOW";
+  const volatility=individual?.volatility ?? (stage==="FR"||stage==="SO"?"HIGH":stage==="JR"||stage==="3RD"?"MEDIUM":"LOW");
   // Grade ceiling is mathematical, never an excuse to rewrite Wheel HQ grades.
   return {breakout,improve,steady,decline,maxGain:Math.min(maxGain,Math.max(0,99-grade)),maxLoss,volatility,
-    confidence:special[id]?"reviewed-anchor":"provisional"};
+    confidence:individual||special[id]?"reviewed-anchor":"provisional"};
 }
 export function cfbGmDevelop(id:string,grade:number,stage:CfbGmClass,runSeed:string):CfbGmDevResult {
   if(!Number.isFinite(grade)||grade<50||grade>99)throw Error("Invalid CFB development authority grade");
