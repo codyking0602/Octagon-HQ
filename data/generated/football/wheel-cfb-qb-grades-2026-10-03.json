@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "version": "cfb-wheel-qb-grades-2026-10-03-v1",
-  "status": "audit-locked-not-runtime",
-  "effectiveDate": "2026-10-03",
+  "version": "cfb-wheel-current-ability-recalibration-2026-10-07-v2-qb",
+  "status": "audit-locked-runtime",
+  "effectiveDate": "2026-10-07",
   "populationSource": {
     "path": "data/generated/football/cfb/wheel-football-current-priorities-2026.json",
     "priorityAuditPath": "data/curated/football/cfb/wheel-football-priority-audit-2026-10-03.json",
     "mainSha": "f77ca3c2e917d9cb4ca21d6f9877877647d80e3c",
-    "qbCount": 68,
+    "qbCount": 70,
     "note": "Current main re-resolved to the same audited 68-QB population across 68 schools before merge."
   },
   "gradingSemantic": "CURRENT COLLEGE FOOTBALL ABILITY AT QUARTERBACK RIGHT NOW; position-normalized; current 2026 performance matters heavily but ordinary one/two-game noise does not erase a stronger established college sample; no NFL projection, recruiting ranking, draft stock, career greatness, fame, school prestige, fantasy value, or future-upside bonus.",
@@ -49,7 +49,7 @@
     ],
     [
       "Keelon Russell",
-      90,
+      93,
       "very good / rising"
     ],
     [
@@ -103,12 +103,12 @@
     {
       "school": "Alabama",
       "player": "Keelon Russell",
-      "grade": 90,
+      "grade": 93,
       "kind": "anchor",
       "confidence": "medium",
       "eaCfb27Week4Rating": 86,
-      "eaDelta": 4,
-      "reason": "Explosive 2026 breakout with real rushing/creation value; still a short college starter sample, so no recruiting-pedigree premium."
+      "eaDelta": 7,
+      "reason": "Five-game breakout with real current passing and creation; 93 aligns with Stockton/Sayin rather than overpaying for recruiting."
     },
     {
       "school": "Arkansas",
@@ -183,12 +183,12 @@
     {
       "school": "Missouri",
       "player": "Austin Simmons",
-      "grade": 86,
+      "grade": 91,
       "kind": "graded",
       "confidence": "medium",
       "eaCfb27Week4Rating": 82,
-      "eaDelta": 4,
-      "reason": "Strong arm/creation flashes and good current production support an above-average grade; the established starting sample is still relatively short."
+      "eaDelta": 9,
+      "reason": "New 2026 starts and the Florida performance justify 91; nearby Maiava/Mestemaker remain 92."
     },
     {
       "school": "Oklahoma",
@@ -779,6 +779,26 @@
       "eaCfb27Week4Rating": 93,
       "eaDelta": 2,
       "reason": "Elite 2025 efficiency followed by another excellent 2026 start make him a fully demonstrated elite current college quarterback."
+    },
+    {
+      "school": "Pittsburgh",
+      "player": "Holden Geriner",
+      "grade": 79,
+      "kind": "recalibrated-role-addition",
+      "reason": "Current Pitt QB after Heintschel ACL; 19-of-26 for 219 yards and two touchdowns in 2026 relief but thin established starting evidence.",
+      "confidence": "low",
+      "eaCfb27Week4Rating": null,
+      "eaDelta": null
+    },
+    {
+      "school": "Tennessee",
+      "player": "George MacIntyre",
+      "grade": 79,
+      "kind": "recalibrated-role-addition",
+      "reason": "Named current Tennessee starter for Arkansas; 14-of-20 for 148 yards and one touchdown before first start, so low starter grade.",
+      "confidence": "low",
+      "eaCfb27Week4Rating": null,
+      "eaDelta": null
     }
   ],
   "pairwiseAudit": {
@@ -868,5 +888,49 @@
     "note": "Distribution was inspected only after player-by-player grading and audits; no grade was moved to manufacture a target shape."
   },
   "runtimeBoundary": "No production/runtime grading behavior is changed by this artifact. It is the locked QB calibration authority for later server-owned Wheel grading integration.",
-  "futureVersioning": "Any future QB grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check. Normal maintenance is a targeted exception scan, not a full regrade."
+  "futureVersioning": "Any future QB grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check. Normal maintenance is a targeted exception scan, not a full regrade.",
+  "recalibration": {
+    "previousArtifactVersion": "cfb-wheel-qb-grades-2026-10-03-v1",
+    "effectiveDate": "2026-10-07",
+    "evidenceThrough": "2026-10-04",
+    "gradeChanges": [
+      {
+        "school": "Alabama",
+        "positionGroup": "QB",
+        "player": "Keelon Russell",
+        "previousGrade": 90,
+        "newGrade": 93,
+        "effectiveDate": "2026-10-07",
+        "reason": "Five-game breakout with real current passing and creation; 93 aligns with Stockton/Sayin rather than overpaying for recruiting."
+      },
+      {
+        "school": "Missouri",
+        "positionGroup": "QB",
+        "player": "Austin Simmons",
+        "previousGrade": 86,
+        "newGrade": 91,
+        "effectiveDate": "2026-10-07",
+        "reason": "New 2026 starts and the Florida performance justify 91; nearby Maiava/Mestemaker remain 92."
+      },
+      {
+        "school": "Pittsburgh",
+        "positionGroup": "QB",
+        "player": "Holden Geriner",
+        "previousGrade": null,
+        "newGrade": 79,
+        "effectiveDate": "2026-10-07",
+        "reason": "Current Pitt QB after Heintschel ACL; 19-of-26 for 219 yards and two touchdowns in 2026 relief but thin established starting evidence."
+      },
+      {
+        "school": "Tennessee",
+        "positionGroup": "QB",
+        "player": "George MacIntyre",
+        "previousGrade": null,
+        "newGrade": 79,
+        "effectiveDate": "2026-10-07",
+        "reason": "Named current Tennessee starter for Arkansas; 14-of-20 for 148 yards and one touchdown before first start, so low starter grade."
+      }
+    ],
+    "priorEvidenceSnapshotPreserved": true
+  }
 }

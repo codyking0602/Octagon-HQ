@@ -18,15 +18,16 @@ describe("Wheel of Football AP Top 25 runtime", () => {
   const page = readFileSync("src/features/back-room/FootballWheelPage.tsx", "utf8");
 
   it("locks the latest AP poll snapshot to exactly 25 unique schools", () => {
-    expect(WHEEL_FOOTBALL_AP_TOP_25_POLL_DATE).toBe("2026-09-27");
+    expect(WHEEL_FOOTBALL_AP_TOP_25_POLL_DATE).toBe("2026-10-04");
     expect(WHEEL_FOOTBALL_AP_TOP_25_SOURCE_URL).toContain("apnews.com/");
     expect(WHEEL_FOOTBALL_AP_TOP_25).toHaveLength(25);
     expect(WHEEL_FOOTBALL_AP_TOP_25.map((entry) => entry.rank)).toEqual(
       Array.from({ length: 25 }, (_, index) => index + 1),
     );
     expect(new Set(WHEEL_FOOTBALL_AP_TOP_25.map((entry) => entry.schoolId)).size).toBe(25);
+    expect(WHEEL_FOOTBALL_AP_TOP_25.at(-1)).toEqual({ rank: 25, schoolId: "pittsburgh" });
     expect(WHEEL_FOOTBALL_AP_TOP_25[0]).toEqual({ rank: 1, schoolId: "texas" });
-    expect(WHEEL_FOOTBALL_AP_TOP_25[21]).toEqual({ rank: 22, schoolId: "boise-state" });
+    expect(WHEEL_FOOTBALL_AP_TOP_25[22]).toEqual({ rank: 23, schoolId: "boise-state" });
   });
 
   it("keeps the backend AP pool private and the Boise grading authority on the audited v2 snapshot", () => {
