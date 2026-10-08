@@ -62,7 +62,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 24
+        "providerRank": 24,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -130,7 +131,8 @@
       "nilMarket": {
         "year1": 1800000,
         "year2Baseline": 1975000,
-        "providerRank": 49
+        "providerRank": 49,
+        "confidence": "medium"
       }
     },
     {
@@ -156,7 +158,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 79
+        "providerRank": 79,
+        "confidence": "medium"
       }
     },
     {
@@ -308,7 +311,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 28
+        "providerRank": 28,
+        "confidence": "medium"
       }
     },
     {
@@ -516,7 +520,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 97
+        "providerRank": 97,
+        "confidence": "medium"
       }
     },
     {
@@ -605,7 +610,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 100
+        "providerRank": 100,
+        "confidence": "medium"
       }
     },
     {
@@ -631,7 +637,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 45
+        "providerRank": 45,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -916,7 +923,8 @@
       "nilMarket": {
         "year1": 4000000,
         "year2Baseline": 4400000,
-        "providerRank": 8
+        "providerRank": 8,
+        "confidence": "medium"
       }
     },
     {
@@ -1187,7 +1195,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 59
+        "providerRank": 59,
+        "confidence": "medium"
       }
     },
     {
@@ -1199,7 +1208,8 @@
       "nilMarket": {
         "year1": 4500000,
         "year2Baseline": 4950000,
-        "providerRank": 5
+        "providerRank": 5,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -1246,7 +1256,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 98
+        "providerRank": 98,
+        "confidence": "medium"
       }
     },
     {
@@ -1258,7 +1269,8 @@
       "nilMarket": {
         "year1": 1200000,
         "year2Baseline": 1325000,
-        "providerRank": 68
+        "providerRank": 68,
+        "confidence": "medium"
       }
     },
     {
@@ -1270,7 +1282,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 78
+        "providerRank": 78,
+        "confidence": "medium"
       }
     },
     {
@@ -1289,7 +1302,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 65
+        "providerRank": 65,
+        "confidence": "medium"
       }
     },
     {
@@ -1343,7 +1357,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 48
+        "providerRank": 48,
+        "confidence": "medium"
       }
     },
     {
@@ -1355,7 +1370,8 @@
       "nilMarket": {
         "year1": 6500000,
         "year2Baseline": 7150000,
-        "providerRank": 1
+        "providerRank": 1,
+        "confidence": "medium"
       }
     },
     {
@@ -1388,7 +1404,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 25
+        "providerRank": 25,
+        "confidence": "medium"
       }
     },
     {
@@ -1526,7 +1543,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 62
+        "providerRank": 62,
+        "confidence": "medium"
       }
     },
     {
@@ -1608,7 +1626,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 34
+        "providerRank": 34,
+        "confidence": "medium"
       }
     },
     {
@@ -1753,7 +1772,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 55
+        "providerRank": 55,
+        "confidence": "medium"
       }
     },
     {
@@ -1786,7 +1806,8 @@
       "nilMarket": {
         "year1": 3000000,
         "year2Baseline": 3300000,
-        "providerRank": 12
+        "providerRank": 12,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -1861,7 +1882,8 @@
       "nilMarket": {
         "year1": 1200000,
         "year2Baseline": 1325000,
-        "providerRank": 69
+        "providerRank": 69,
+        "confidence": "medium"
       }
     },
     {
@@ -1978,7 +2000,8 @@
       "nilMarket": {
         "year1": 5000000,
         "year2Baseline": 5500000,
-        "providerRank": 4
+        "providerRank": 4,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -2018,7 +2041,8 @@
       "nilMarket": {
         "year1": 2500000,
         "year2Baseline": 2750000,
-        "providerRank": 18
+        "providerRank": 18,
+        "confidence": "medium"
       }
     },
     {
@@ -2058,7 +2082,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 84
+        "providerRank": 84,
+        "confidence": "medium"
       }
     },
     {
@@ -2091,7 +2116,8 @@
       "nilMarket": {
         "year1": 3500000,
         "year2Baseline": 3850000,
-        "providerRank": 9
+        "providerRank": 9,
+        "confidence": "medium"
       }
     },
     {
@@ -2278,7 +2304,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 36
+        "providerRank": 36,
+        "confidence": "medium"
       }
     },
     {
@@ -2332,7 +2359,8 @@
       "nilMarket": {
         "year1": 5000000,
         "year2Baseline": 5500000,
-        "providerRank": 3
+        "providerRank": 3,
+        "confidence": "medium"
       }
     },
     {
@@ -2365,7 +2393,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 52
+        "providerRank": 52,
+        "confidence": "medium"
       }
     },
     {
@@ -2412,7 +2441,8 @@
       "nilMarket": {
         "year1": 5000000,
         "year2Baseline": 5500000,
-        "providerRank": 2
+        "providerRank": 2,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -2452,7 +2482,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 64
+        "providerRank": 64,
+        "confidence": "medium"
       }
     },
     {
@@ -2492,7 +2523,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 26
+        "providerRank": 26,
+        "confidence": "medium"
       }
     },
     {
@@ -2504,7 +2536,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 22
+        "providerRank": 22,
+        "confidence": "medium"
       }
     },
     {
@@ -2523,7 +2556,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 58
+        "providerRank": 58,
+        "confidence": "medium"
       }
     },
     {
@@ -2745,7 +2779,8 @@
       "nilMarket": {
         "year1": 3000000,
         "year2Baseline": 3300000,
-        "providerRank": 15
+        "providerRank": 15,
+        "confidence": "medium"
       }
     },
     {
@@ -2862,7 +2897,8 @@
       "nilMarket": {
         "year1": 1600000,
         "year2Baseline": 1750000,
-        "providerRank": 51
+        "providerRank": 51,
+        "confidence": "medium"
       }
     },
     {
@@ -2895,7 +2931,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 91
+        "providerRank": 91,
+        "confidence": "medium"
       }
     },
     {
@@ -2949,7 +2986,8 @@
       "nilMarket": {
         "year1": 2500000,
         "year2Baseline": 2750000,
-        "providerRank": 20
+        "providerRank": 20,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -2982,7 +3020,8 @@
       "nilMarket": {
         "year1": 3000000,
         "year2Baseline": 3300000,
-        "providerRank": 14
+        "providerRank": 14,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -3008,7 +3047,8 @@
       "nilMarket": {
         "year1": 2500000,
         "year2Baseline": 2750000,
-        "providerRank": 21
+        "providerRank": 21,
+        "confidence": "medium"
       },
       "calibration": {
         "status": "evidence-informed-estimate",
@@ -3104,7 +3144,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 95
+        "providerRank": 95,
+        "confidence": "medium"
       }
     },
     {
@@ -3186,7 +3227,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 75
+        "providerRank": 75,
+        "confidence": "medium"
       }
     },
     {
@@ -3345,7 +3387,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 40
+        "providerRank": 40,
+        "confidence": "medium"
       }
     },
     {
@@ -3462,7 +3505,8 @@
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
-        "providerRank": 56
+        "providerRank": 56,
+        "confidence": "medium"
       }
     },
     {
@@ -3509,7 +3553,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 82
+        "providerRank": 82,
+        "confidence": "medium"
       }
     },
     {
@@ -3542,7 +3587,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 73
+        "providerRank": 73,
+        "confidence": "medium"
       }
     },
     {
@@ -3589,7 +3635,8 @@
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
-        "providerRank": 46
+        "providerRank": 46,
+        "confidence": "medium"
       }
     },
     {
@@ -3685,7 +3732,8 @@
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
-        "providerRank": 83
+        "providerRank": 83,
+        "confidence": "medium"
       }
     }
   ]
