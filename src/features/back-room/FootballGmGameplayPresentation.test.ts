@@ -33,7 +33,9 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain('aria-pressed={selectedPosition === position}');
     expect(page).toContain('visibleCandidates.map(({ player, salary }) => (');
     expect(page).toContain('onClick={() => onPick(player.id)}');
-    expect(page).toContain('player.eligibleSlots.includes("DL")');
+    expect(page).toContain('if (player.family === "Front Seven") return "FRONT 7";');
+    expect(page).toContain('const positions = ["QB", "RB", "WR", "TE", "FRONT 7", "DB"] as const;');
+    expect(page).not.toContain('player.eligibleSlots.includes("DL")');
     expect(page).not.toContain('onPick(player.id, selectedPosition)');
     expect(page).toContain('className="football-wheel-picker__headshot"');
     expect(page).toContain("ELITE / IMPACT / STARTER / DEPTH");
