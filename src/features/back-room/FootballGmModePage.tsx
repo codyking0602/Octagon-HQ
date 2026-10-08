@@ -438,15 +438,16 @@ export function PlayerHeadshot({
 
 export function PlayerQualityPill({
   player, year = 1, seed,
-}: { player: FootballGmPlayer; year?: 1 | 2; seed?: string }) {
+}: { player: FootballGmPlayer; year?: 1 | 2 | 3; seed?: string }) {
   const tier = footballGmScoutingSnapshot(player, year, seed).tier;
   return <span className={`football-gm__quality-pill quality-${tier.toLowerCase()}`}>{tier}</span>;
 }
 
 export function PlayerOutlookPill({
   player, year = 1, seed,
-}: { player: FootballGmPlayer; year?: 1 | 2; seed?: string }) {
+}: { player: FootballGmPlayer; year?: 1 | 2 | 3; seed?: string }) {
   const outlook = footballGmScoutingSnapshot(player, year, seed).outlook;
+  if (!outlook) return null;
   const tone = outlook === "HIGH UPSIDE" ? "upside"
     : outlook === "RISING" ? "rising"
       : outlook === "BOOM/BUST" ? "volatile"
