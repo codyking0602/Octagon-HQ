@@ -3,6 +3,34 @@
   "evidenceCutoff": "2026-10-08",
   "rows": [
     {
+      "id": "alabama|calebwoodson",
+      "classification": "SR",
+      "sourceUrl": "https://rolltide.com/sports/football/roster/",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "alabama|devanthompkins",
+      "classification": "5TH",
+      "sourceUrl": "https://rolltide.com/sports/football/roster/",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "alabama|londonsimmons",
+      "classification": "SO",
+      "sourceUrl": "https://rolltide.com/sports/football/roster/",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "alabama|ricoscott",
+      "classification": "JR",
+      "sourceUrl": "https://rolltide.com/sports/football/roster/",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
       "id": "boise-state|akeemwright",
       "classification": "SR",
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
@@ -129,6 +157,55 @@
       "redshirt": null
     },
     {
+      "id": "byu|cadeuluave",
+      "classification": "SR",
+      "sourceUrl": "https://byucougars.com/sports/football/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "byu|keanutanuvasa",
+      "classification": "SR",
+      "sourceUrl": "https://byucougars.com/sports/football/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "byu|nusitaumoepeau",
+      "classification": "SO",
+      "sourceUrl": "https://byucougars.com/sports/football/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "florida|brycethornton",
+      "classification": "SR",
+      "sourceUrl": "https://floridagators.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "florida|dallaswilson",
+      "classification": "SO",
+      "sourceUrl": "https://floridagators.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "florida|ericsingletonjr",
+      "classification": "SR",
+      "sourceUrl": "https://floridagators.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "florida|jaydenwoods",
+      "classification": "SO",
+      "sourceUrl": "https://floridagators.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
       "id": "georgia|gunnerstockton",
       "classification": "5TH",
       "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
@@ -220,10 +297,150 @@
       "redshirt": null
     },
     {
+      "id": "lsu|eugenewilsoniii",
+      "classification": "JR",
+      "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "lsu|pjwoodland",
+      "classification": "JR",
+      "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "lsu|princewillumanmielen",
+      "classification": "SR",
+      "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "lsu|whitweeks",
+      "classification": "SR",
+      "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "lsu|winstonwatkinsjr",
+      "classification": "SO",
+      "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "miami|ahmadmoten",
+      "classification": "SR",
+      "sourceUrl": "https://miamihurricanes.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "miami|damonwilsonii",
+      "classification": "SR",
+      "sourceUrl": "https://miamihurricanes.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "mississippi-state|amareewilliams",
+      "classification": "JR",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "mississippi-state|kolinwilson",
+      "classification": "FR",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "mississippi-state|marcuswilliams",
+      "classification": "6TH",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "mississippi-state|samwest",
+      "classification": "JR",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "mississippi-state|willwhitson",
+      "classification": "7TH",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "missouri|robertwoodyardjr",
+      "classification": "SR",
+      "sourceUrl": "https://mutigers.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "notre-dame|aneyaswilliams",
+      "classification": "JR",
+      "sourceUrl": "https://fightingirish.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "notre-dame|bryceyoung",
+      "classification": "JR",
+      "sourceUrl": "https://fightingirish.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ohio-state|jaytimmons",
+      "classification": "FR",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ohio-state|johnwalker",
+      "classification": "SR",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "oklahoma-state|jameswilliams",
+      "classification": "SR",
+      "sourceUrl": "https://okstate.com/sports/football/roster/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "oklahoma-state|wyattyoung",
+      "classification": "JR",
+      "sourceUrl": "https://okstate.com/sports/football/roster/2026",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
       "id": "ole-miss|keatonthomas",
       "classification": "5TH",
       "sourceUrl": "https://olemisssports.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "oregon|amauriwashington",
+      "classification": "SR",
+      "sourceUrl": "https://goducks.com/sports/football/roster/washington-amauri/18341",
+      "evidence": "2026 official school football roster class",
       "redshirt": null
     },
     {
@@ -245,6 +462,27 @@
       "classification": "SR",
       "sourceUrl": "https://goducks.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|jakyrianturner",
+      "classification": "SO",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jakyrian-turner/15115",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|tyreeweathersby",
+      "classification": "SR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/tyree-weathersby/23053",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|jkobywilliams",
+      "classification": "JR",
+      "sourceUrl": "https://texastech.com/sports/football/roster/jkoby-williams/14332",
+      "evidence": "2026 official school football roster class",
       "redshirt": null
     },
     {
@@ -273,6 +511,69 @@
       "classification": "JR",
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ucla|amierwashington",
+      "classification": "SR",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ucla|anthonywoods",
+      "classification": "5TH",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ucla|jalenwoods",
+      "classification": "5TH",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ucla|sahirwest",
+      "classification": "JR",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ucla|scotttaylor",
+      "classification": "SO",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "usc|jontezwilliams",
+      "classification": "SR",
+      "sourceUrl": "https://usctrojans.com/sports/football/roster/",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "usc|lukewafle",
+      "classification": "FR",
+      "sourceUrl": "https://usctrojans.com/sports/football/roster/",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "usc|zacharyuswilliams",
+      "classification": "SO",
+      "sourceUrl": "https://usctrojans.com/sports/football/roster/",
+      "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "utah|creedwhittemore",
+      "classification": "SR",
+      "sourceUrl": "https://utahutes.com/sports/football/roster",
+      "evidence": "2026 official school football roster class",
       "redshirt": null
     }
   ]
