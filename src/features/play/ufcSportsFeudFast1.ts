@@ -1611,7 +1611,8 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Frankie Edgar",
           "Josh Koscheck",
           "Jon Fitch",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1632,7 +1633,8 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Randy Couture",
           "Frankie Edgar",
           "Josh Koscheck",
-          "Jon Fitch"
+          "Jon Fitch",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1653,7 +1655,8 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Frankie Edgar",
           "Josh Koscheck",
           "Jon Fitch",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1674,7 +1677,8 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Chael Sonnen",
           "Frankie Edgar",
           "Josh Koscheck",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1695,7 +1699,8 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Frankie Edgar",
           "Josh Koscheck",
           "Jon Fitch",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev"
         ]
       }
     ],
