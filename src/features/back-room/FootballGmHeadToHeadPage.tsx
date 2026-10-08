@@ -59,6 +59,7 @@ import FootballGmSoloPage, {
   FreeAgencyBoard,
   GmFootballWheel,
   PlayerHeadshot,
+  PlayerDevelopmentNote,
   PlayerOutlookPill,
   PlayerQualityPill,
   RosterGrid,
@@ -205,8 +206,9 @@ function VersusRosterBoard({
           <strong>{player.name}</strong>
           <small>{footballGmMoney(salary)}</small>
           <span className="football-gm-versus__pills">
-            <PlayerQualityPill player={player} />
-            <PlayerOutlookPill outlook={player.outlook} />
+            <PlayerQualityPill player={player} year={showFuture ? 2 : 1} seed={run.seed} />
+            <PlayerOutlookPill player={player} year={showFuture ? 2 : 1} seed={run.seed} />
+            {showFuture ? <PlayerDevelopmentNote player={player} seed={run.seed} /> : null}
           </span>
         </span>
       </div>

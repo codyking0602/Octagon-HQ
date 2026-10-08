@@ -14,8 +14,11 @@ const css = readFileSync(
 describe("Football GM gameplay presentation", () => {
   it("shows the same outlook pill during draft, roster management, trade targeting, and asking prices", () => {
     expect(page).toContain('function PlayerOutlookPill');
-    expect(page).toContain('<PlayerOutlookPill outlook={player.outlook} />');
-    expect(page.match(/PlayerOutlookPill outlook=/g)?.length ?? 0).toBeGreaterThanOrEqual(6);
+    expect(page).toContain('<PlayerOutlookPill player={player} />');
+    expect(page).toContain('<PlayerOutlookPill player={player} year={2} seed={seed} />');
+    expect(page).toContain('<PlayerDevelopmentNote player={player} seed={seed} />');
+    expect(page).toContain('footballGmRepriceLabel(player.extensionRisk)');
+    expect(page.match(/PlayerOutlookPill player=/g)?.length ?? 0).toBeGreaterThanOrEqual(6);
     expect(css).toContain(".football-gm__outlook-pill");
     expect(css).toContain(".football-gm__trade-targets button .football-gm__outlook-pill");
     expect(css).toContain(".football-gm__trade-package-player .football-gm__outlook-pill");
@@ -39,7 +42,8 @@ describe("Football GM gameplay presentation", () => {
     expect(page).not.toContain('onPick(player.id, selectedPosition)');
     expect(page).toContain('className="football-wheel-picker__headshot"');
     expect(page).toContain("ELITE / IMPACT / STARTER / DEPTH");
-    expect(page).toContain("REPRICE RISK");
+    expect(page).toContain("LOW / MED / HIGH REPRICE");
+    expect(page).toContain("HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK");
     expect(page).toContain("SCOUT KEY");
     expect(page).toContain("Exact grades stay hidden.");
     expect(page).not.toContain("EXTENSION RISK");

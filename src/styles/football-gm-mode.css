@@ -3810,3 +3810,67 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
     font-size: 9px;
   }
 }
+
+
+/* Draft: salary increase exposure is distinct from a player's future outlook. */
+.football-gm__candidate-tags .risk-low { color: #8ddbb3; border-color: rgba(120,220,167,.25); }
+.football-gm__candidate-tags .risk-medium { color: #e4cc83; border-color: rgba(232,189,93,.27); }
+.football-gm__candidate-tags .risk-high { color: #ffb18f; border-color: rgba(255,140,105,.35); }
+.football-gm__roster-reprice {
+  font-size: 7px;
+  font-weight: 900;
+  color: #9fb5c3;
+  letter-spacing: .035em;
+  text-align: right;
+  line-height: 1.2;
+}
+.football-gm__outlook-pill.outlook-upside {
+  border-color: rgba(105,224,159,.35);
+  color: #75dfa5;
+}
+.football-gm__outlook-pill.outlook-volatile {
+  border-color: rgba(231,179,86,.34);
+  color: #f0c077;
+}
+/* Year-1 outcome is a subordinate text note, never a fourth scouting pill. */
+.football-gm__development-note,
+.football-gm__candidate-tags > span.football-gm__development-note,
+.football-gm__roster-scouting .football-gm__development-note,
+.football-gm__trade-scouting .football-gm__development-note,
+.football-gm-versus__pills .football-gm__development-note {
+  display: block;
+  flex: 1 0 100%;
+  width: 100%;
+  padding: 0;
+  margin: 2px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #9cafbd;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1.2;
+  white-space: normal;
+}
+.football-gm__development-note.is-up,
+.football-gm__candidate-tags > span.football-gm__development-note.is-up { color: #83d9aa; }
+.football-gm__development-note.is-down,
+.football-gm__candidate-tags > span.football-gm__development-note.is-down { color: #ecaa96; }
+.football-gm__development-note.is-steady,
+.football-gm__candidate-tags > span.football-gm__development-note.is-steady { color: #8b9fac; }
+/* Preserve one-line identity and stay readable inside the compact seven-man core. */
+.football-gm__roster.is-compact .football-gm__roster-scouting .football-gm__development-note {
+  font-size: 7px;
+  line-height: 1.18;
+}
+.football-gm-versus__pills .football-gm__development-note {
+  font-size: 7px;
+  text-align: start;
+}
+.football-gm-versus__cell.right .football-gm__development-note { text-align: right; }
+/* Outlook remains visible after Year 1, including on narrow multiplayer screens. */
+@media (max-width: 680px) {
+  .football-gm-versus__pills .football-gm__outlook-pill { display: inline-flex; }
+  .football-gm-versus__pills .football-gm__development-note { font-size: 6.5px; }
+}
