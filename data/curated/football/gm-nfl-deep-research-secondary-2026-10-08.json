@@ -6,7 +6,7 @@
   "baseCalibrationHead": "30e34c38142f828dd4c8d324c04dfac4d169b527",
   "nonRuntimeResearchOnly": true,
   "lockedGrades": true,
-  "reviewedCount": 152,
+  "reviewedCount": 168,
   "batchLog": [
     {
       "batch": 1,
@@ -43,12 +43,19 @@
       "teams": "PHI PIT SEA SF",
       "count": 22,
       "individual2026SourceCount": 22
+    },
+    {
+      "batch": 7,
+      "teams": "TB TEN WSH",
+      "count": 16,
+      "individual2026SourceCount": 16
     }
   ],
   "scopeLimitations": [
     "Assessments have individually reasoned projections but some 2025 source links provide position-group context rather than complete per-player advanced coverage tables.",
     "PFF public indexed snapshots may lag the latest Week 4 games; all explicit gaps are noted rather than replaced with invented statistics.",
-    "No grades or shared runtime profiles have been modified."
+    "No grades or shared runtime profiles have been modified.",
+    "Not every player has a verifiable individually published 2025 and Week 4 2026 coverage split; group-level official team articles and advanced snippets are explicitly separated from single-player evidence. The projections are independently authored judgments, not another runtime formula or film-grade rewrite."
   ],
   "assessments": [
     {
@@ -6697,8 +6704,8 @@
         "steadyPct": 24,
         "declinePct": 22,
         "maxAnnualGain": 5.1,
-        "maxAnnualLoss": 6.1,
-        "marketVariancePct": 7
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
       },
       "proposed": {
         "breakoutPct": 20,
@@ -6748,8 +6755,8 @@
         "steadyPct": 61,
         "declinePct": 9,
         "maxAnnualGain": 3.4,
-        "maxAnnualLoss": 3.8,
-        "marketVariancePct": 5
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 6
       },
       "proposed": {
         "breakoutPct": 5,
@@ -6799,8 +6806,8 @@
         "steadyPct": 48,
         "declinePct": 38,
         "maxAnnualGain": 1.9,
-        "maxAnnualLoss": 8,
-        "marketVariancePct": 7
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
       },
       "proposed": {
         "breakoutPct": 1,
@@ -6850,8 +6857,8 @@
         "steadyPct": 63,
         "declinePct": 10,
         "maxAnnualGain": 3.1,
-        "maxAnnualLoss": 4.8,
-        "marketVariancePct": 5
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 6
       },
       "proposed": {
         "breakoutPct": 3,
@@ -6901,8 +6908,8 @@
         "steadyPct": 49,
         "declinePct": 17,
         "maxAnnualGain": 2.7,
-        "maxAnnualLoss": 6.1,
-        "marketVariancePct": 7
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
       },
       "proposed": {
         "breakoutPct": 10,
@@ -6952,7 +6959,7 @@
         "steadyPct": 35,
         "declinePct": 34,
         "maxAnnualGain": 4.7,
-        "maxAnnualLoss": 7.6,
+        "maxAnnualLoss": 5.1,
         "marketVariancePct": 9
       },
       "proposed": {
@@ -7003,8 +7010,8 @@
         "steadyPct": 51,
         "declinePct": 25,
         "maxAnnualGain": 2.7,
-        "maxAnnualLoss": 9.1,
-        "marketVariancePct": 10
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
       },
       "proposed": {
         "breakoutPct": 2,
@@ -7054,8 +7061,8 @@
         "steadyPct": 45,
         "declinePct": 41,
         "maxAnnualGain": 3,
-        "maxAnnualLoss": 8.3,
-        "marketVariancePct": 8
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 4
       },
       "proposed": {
         "breakoutPct": 1,
@@ -7105,8 +7112,8 @@
         "steadyPct": 58,
         "declinePct": 21,
         "maxAnnualGain": 1.2,
-        "maxAnnualLoss": 7.2,
-        "marketVariancePct": 8
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
       },
       "proposed": {
         "breakoutPct": 2,
@@ -7156,8 +7163,8 @@
         "steadyPct": 57,
         "declinePct": 19,
         "maxAnnualGain": 2.7,
-        "maxAnnualLoss": 6.2,
-        "marketVariancePct": 7
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
       },
       "proposed": {
         "breakoutPct": 4,
@@ -7207,8 +7214,8 @@
         "steadyPct": 76,
         "declinePct": 5,
         "maxAnnualGain": 1.8,
-        "maxAnnualLoss": 2.8,
-        "marketVariancePct": 3
+        "maxAnnualLoss": 1.9,
+        "marketVariancePct": 6
       },
       "proposed": {
         "breakoutPct": 1,
@@ -7258,8 +7265,8 @@
         "steadyPct": 58,
         "declinePct": 23,
         "maxAnnualGain": 2.6,
-        "maxAnnualLoss": 5.9,
-        "marketVariancePct": 6
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
       },
       "proposed": {
         "breakoutPct": 3,
@@ -7309,8 +7316,8 @@
         "steadyPct": 64,
         "declinePct": 15,
         "maxAnnualGain": 1.2,
-        "maxAnnualLoss": 7.5,
-        "marketVariancePct": 8
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
       },
       "proposed": {
         "breakoutPct": 2,
@@ -7360,8 +7367,8 @@
         "steadyPct": 31,
         "declinePct": 20,
         "maxAnnualGain": 6.3,
-        "maxAnnualLoss": 5.3,
-        "marketVariancePct": 7
+        "maxAnnualLoss": 5.4,
+        "marketVariancePct": 6
       },
       "proposed": {
         "breakoutPct": 20,
@@ -7411,8 +7418,8 @@
         "steadyPct": 24,
         "declinePct": 28,
         "maxAnnualGain": 7.2,
-        "maxAnnualLoss": 8.7,
-        "marketVariancePct": 10
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 6
       },
       "proposed": {
         "breakoutPct": 21,
@@ -7462,8 +7469,8 @@
         "steadyPct": 58,
         "declinePct": 23,
         "maxAnnualGain": 2.6,
-        "maxAnnualLoss": 8.1,
-        "marketVariancePct": 7
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
       },
       "proposed": {
         "breakoutPct": 3,
@@ -7513,8 +7520,8 @@
         "steadyPct": 57,
         "declinePct": 19,
         "maxAnnualGain": 1.8,
-        "maxAnnualLoss": 5.5,
-        "marketVariancePct": 6
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
       },
       "proposed": {
         "breakoutPct": 4,
@@ -7564,8 +7571,8 @@
         "steadyPct": 58,
         "declinePct": 23,
         "maxAnnualGain": 2.6,
-        "maxAnnualLoss": 7.4,
-        "marketVariancePct": 8
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
       },
       "proposed": {
         "breakoutPct": 9,
@@ -7615,8 +7622,8 @@
         "steadyPct": 18,
         "declinePct": 33,
         "maxAnnualGain": 5.4,
-        "maxAnnualLoss": 7,
-        "marketVariancePct": 8
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 9
       },
       "proposed": {
         "breakoutPct": 22,
@@ -7666,8 +7673,8 @@
         "steadyPct": 34,
         "declinePct": 30,
         "maxAnnualGain": 3.7,
-        "maxAnnualLoss": 8.8,
-        "marketVariancePct": 9
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 7
       },
       "proposed": {
         "breakoutPct": 11,
@@ -7717,7 +7724,7 @@
         "steadyPct": 30,
         "declinePct": 19,
         "maxAnnualGain": 4.7,
-        "maxAnnualLoss": 5.7,
+        "maxAnnualLoss": 3.3,
         "marketVariancePct": 7
       },
       "proposed": {
@@ -7768,8 +7775,8 @@
         "steadyPct": 23,
         "declinePct": 24,
         "maxAnnualGain": 4.7,
-        "maxAnnualLoss": 7.6,
-        "marketVariancePct": 9
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 8
       },
       "proposed": {
         "breakoutPct": 20,
@@ -7799,6 +7806,822 @@
           "season": 2026,
           "publishedOrAsOf": "By 2026-10-08",
           "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TB|Secondary|antoinewinfield",
+      "name": "Antoine Winfield Jr.",
+      "team": "TB",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 45,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 16,
+        "steadyPct": 39,
+        "declinePct": 43,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 7.4,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 Tampa versatile box/deep safety and Pro Bowler, high physical workload and recognized turnover creator.",
+        "through2026Week4": "2026 Week4 fractured rib, club says 2–4 week absence; this is specific short-term injury, not assumption of lasting athletic decline.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline 15→43 and annual loss due missed-time risk, while keeping baseline grade86 locked.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.buccaneers.com/news/october-2026-updates",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TB|Secondary|jacobparrish",
+      "name": "Jacob Parrish",
+      "team": "TB",
+      "position": "CB",
+      "age": 22,
+      "draftOverall": 84,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 33,
+        "steadyPct": 22,
+        "declinePct": 25,
+        "maxAnnualGain": 5.9,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 young Tampa slot/outside CB with emerging nickel usage, not fully proven lockdown perimeter.",
+        "through2026Week4": "2026 Week4 red-zone interception against Packers; PFF early coverage around 55.2, so pick should not mask concessions.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise breakout 17→20, decline 19→25; development potential with still uneven route coverage.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.bucsnation.com/tampa-bay-buccaneers-game-information/68886/week-4-game-recap-daniels-flashes-not-enough-as-bucs-fall-0-4",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TB|Secondary|keiontescott",
+      "name": "Keionte Scott",
+      "team": "TB",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 116,
+      "lockedHQGrade": 79,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 28,
+        "steadyPct": 35,
+        "declinePct": 28,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 16,
+        "improvePct": 31,
+        "steadyPct": 25,
+        "declinePct": 28,
+        "maxAnnualGain": 5.5,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL regular season; rookie CB, not a credible established starting record.",
+        "through2026Week4": "2026 PFF indexed run grade 82.9 and coverage ~68, suggests early tackling more reliable than elite man shadowing.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise breakout 9→16, decline 28 unchanged; promising physical nickel/zone work plus high rookie uncertainty.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/keionte-scott/163644",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TB|Secondary|tykeesmith",
+      "name": "Tykee Smith",
+      "team": "TB",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 89,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 19,
+        "improvePct": 36,
+        "steadyPct": 26,
+        "declinePct": 19,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 32,
+        "steadyPct": 32,
+        "declinePct": 16,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Tampa versatile safety/slot player with downhill tackling and matchup strength, established major snaps.",
+        "through2026Week4": "2026 indexed PFF overall 81.2 and run92.5 but coverage69.3; not elite blanket cover simply because productive box.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise breakout 19→20, decline 19→16; strong repeatable run fits, coverage still development path.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/tykee-smith/99500",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TB|Secondary|zyonmccollum",
+      "name": "Zyon McCollum",
+      "team": "TB",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 157,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 23,
+        "steadyPct": 33,
+        "declinePct": 32,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 starting Buccaneers outside CB, tall/fast recovery ability but route consistency debated.",
+        "through2026Week4": "2026 first-team perimeter and Bucs total defense top four through four games; team-level context not individual coverage success.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline17→32, breakout9→12; talent enables peak but isolated deep exposure means more volatility.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.buccaneers.com/news/bucs-release-week-five-depth-chart-ifeatu-melifonwu-next-up-at-safety",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TEN|Secondary|alontaetaylor",
+      "name": "Alontae Taylor",
+      "team": "TEN",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 49,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 5,
+        "improvePct": 20,
+        "steadyPct": 33,
+        "declinePct": 42,
+        "maxAnnualGain": 3.5,
+        "maxAnnualLoss": 6.9,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 New Orleans nickel/CB role before Tennessee 2026 move; physicality and blitz experience.",
+        "through2026Week4": "2026 Tennessee outside CB4 starts; early chart shows 13 catches on 15 targets (86.7%), 104 yards allowed.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline19→42; high catch rate deserves caution even when overall yards per reception limited.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.tennesseetitans.com/team/stats/2025/reg",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/oti/2026_advanced.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TEN|Secondary|amanihooker",
+      "name": "Amani Hooker",
+      "team": "TEN",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 116,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 17,
+        "steadyPct": 47,
+        "declinePct": 33,
+        "maxAnnualGain": 3.1,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Tennessee safety 81 tackles and a sack, long-term coverage communication and box support.",
+        "through2026Week4": "2026 Titans starting safety; new teammates scheme and exposure, no reliable individual four-week coverage grade found.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→33; prime age stability stronger than breakout but physical role limits upside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.tennesseetitans.com/team/stats/2025/reg",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.tennesseetitans.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TEN|Secondary|cordaleflott",
+      "name": "Cor'Dale Flott",
+      "team": "TEN",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 81,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 10,
+        "improvePct": 31,
+        "steadyPct": 38,
+        "declinePct": 21,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.5,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 32,
+        "declinePct": 29,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Giants developmental outside CB with press/slot versatility, moved to Titans 2026.",
+        "through2026Week4": "2026 official Tennessee LCB starter opposite Alontae, opportunity rises with new defense and opponent matchups.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise breakout10→11, decline21→29: moving from NYC creates both development runway and assignment transition risk.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.tennesseetitans.com/team/stats/2025/reg",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.tennesseetitans.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TEN|Secondary|kevinwinston",
+      "name": "Kevin Winston Jr.",
+      "team": "TEN",
+      "position": "S",
+      "age": 22,
+      "draftOverall": 82,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 31,
+        "steadyPct": 18,
+        "declinePct": 33,
+        "maxAnnualGain": 5.4,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 18,
+        "improvePct": 29,
+        "steadyPct": 17,
+        "declinePct": 36,
+        "maxAnnualGain": 6.3,
+        "maxAnnualLoss": 7.7,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 Titans young safety recorded 34 tackles and a sack, partial-season workload after prior leg injury in college.",
+        "through2026Week4": "2026 listed starting FS, but long-term range/availability still a question under heavier snaps.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline33→36 while keeping breakout18; strong athletic prospect must still develop processing/coverage range.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.tennesseetitans.com/team/stats/2025/reg",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.tennesseetitans.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "TEN|Secondary|marcusharris",
+      "name": "Marcus Harris",
+      "team": "TEN",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 183,
+      "lockedHQGrade": 75,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 25,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 10,
+        "improvePct": 24,
+        "steadyPct": 24,
+        "declinePct": 42,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 6.9,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 Titans reserve/slot CB with 28 tackles, limited sustained man coverage evidence.",
+        "through2026Week4": "2026 promoted nickel, 4 games/1 start; PFR early charts 11 completions on 16 targets and 117 yards allowed.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline25→42, improve28→24; immediate role against slots exposes coverage and tackle floors.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.tennesseetitans.com/team/stats/2025/reg",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/oti/2026_advanced.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "WSH|Secondary|amikrobertson",
+      "name": "Amik Robertson",
+      "team": "WSH",
+      "position": "CB",
+      "age": 28,
+      "draftOverall": 139,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 29,
+        "steadyPct": 43,
+        "declinePct": 16,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Detroit physical slot/inside outside versatility after challenging earlier career; 2026 new Commanders outside role.",
+        "through2026Week4": "2026 PFF 86.4 coverage, 85.3 run through Oct7 with 7 PBUs, zero INT and 99% defensive snaps; strong without picks.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise breakout4→12, improve20→29, reduce decline19→16: sound coverage and physical tackling now outperform old role class.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.washingtonpost.com/sports/2026/08/04/commanders-corners-struggled-last-season-they-will-be-tested-again/",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/amik-robertson/55619",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "WSH|Secondary|mikesainristil",
+      "name": "Mike Sainristil",
+      "team": "WSH",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 50,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 13,
+        "improvePct": 18,
+        "steadyPct": 35,
+        "declinePct": 34,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 21,
+        "steadyPct": 21,
+        "declinePct": 46,
+        "maxAnnualGain": 5.4,
+        "maxAnnualLoss": 7.7,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 Washington defensive back rotated outside and nickel, disappointing when tasked exclusively inside per team analysis.",
+        "through2026Week4": "2026 official Washington starter at boundary opposite Robertson, new scheme still leaving explosive coverage seams.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline34→46, improve18→21 due potential better matchups; avoid overvaluing name/draft.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.washingtonpost.com/sports/2026/08/04/commanders-corners-struggled-last-season-they-will-be-tested-again/",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.commanders.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "WSH|Secondary|nickcross",
+      "name": "Nick Cross",
+      "team": "WSH",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 96,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 8,
+        "improvePct": 22,
+        "steadyPct": 24,
+        "declinePct": 46,
+        "maxAnnualGain": 4.9,
+        "maxAnnualLoss": 7.4,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 Colts full-time SS with range/run support before 2026 move to Washington.",
+        "through2026Week4": "2026 Washington strong safety, but early PFF coverage 44.1, 109 snaps, 2 missed tackles, and ankle/internal injury evaluation.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline19→46 as new fit/coverage struggles increase risk despite physical tools.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.washingtonpost.com/sports/2026/08/04/commanders-corners-struggled-last-season-they-will-be-tested-again/",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/nick-cross/97514",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "WSH|Secondary|quanmartin",
+      "name": "Quan Martin",
+      "team": "WSH",
+      "position": "S",
+      "age": 26,
+      "draftOverall": 47,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 6,
+        "improvePct": 16,
+        "steadyPct": 32,
+        "declinePct": 46,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 7.1,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 Washington primary deep safety with communication assignments and uneven explosive-play prevention.",
+        "through2026Week4": "2026 official chart lists him second-team FS behind Jeremy Reaves after new coaching scheme; role downshift.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline19→46, reduce improve20→16; losing starting assignment creates stronger future decline risk than old grade alone.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.washingtonpost.com/sports/2026/08/04/commanders-corners-struggled-last-season-they-will-be-tested-again/",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.commanders.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "WSH|Secondary|rasuldouglas",
+      "name": "Rasul Douglas",
+      "team": "WSH",
+      "position": "CB",
+      "age": 32,
+      "draftOverall": 99,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 8,
+        "steadyPct": 28,
+        "declinePct": 63,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 8.4,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 veteran physical outside CB with route anticipation but age31–32 transition to reserve usage.",
+        "through2026Week4": "2026 Washington depth lists backup to Robertson; early PFF coverage ~58 on only 86 snaps through Sep28.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline38→63, lower improve13→8; limited role and declining recovery speed constrain comeback.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.washingtonpost.com/sports/2026/08/04/commanders-corners-struggled-last-season-they-will-be-tested-again/",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/rasul-douglas/11854",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "WSH|Secondary|treyamos",
+      "name": "Trey Amos",
+      "team": "WSH",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 61,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 25,
+        "steadyPct": 13,
+        "declinePct": 43,
+        "maxAnnualGain": 6.4,
+        "maxAnnualLoss": 8.9,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "2025 Washington rookie corner six PBUs with just one TD allowed but PFR 71.1% completions allowed and 8.3 yards/target.",
+        "through2026Week4": "2026 remained PUP due broken fibula/soft-tissue recovery; practiced Oct8, full clearance not yet established.",
+        "limitations": "Two-year development probabilities are subjective projections, not calibrated empirical injury or coverage forecasts; early 2026 coverage sample is small."
+      },
+      "reasonRelativeToExisting": "Raise decline19→43, improve36→25; recovery plus poor prior completion prevention despite playmaking, still upside at age24.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.washingtonpost.com/sports/2026/08/04/commanders-corners-struggled-last-season-they-will-be-tested-again/",
+          "season": 2025,
+          "publishedOrAsOf": "2025 data or review from 2026",
+          "scope": "player history, with team-level context where applicable"
+        },
+        {
+          "url": "https://www.hogshaven.com/washington-commanders-discussion/447134/dont-write-off-te-chig-okonkwo-just-yet-all-atwitter",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current team usage or named performance"
         }
       ],
       "auditStatus": "individual-2025-2026-review"
