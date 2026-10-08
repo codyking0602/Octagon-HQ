@@ -9,7 +9,7 @@
     "lockedGrades": "data/generated/football/wheel-nfl-front-seven-grades-2026-10-03.json"
   },
   "targetPopulation": 191,
-  "completedCount": 75,
+  "completedCount": 100,
   "asOf": "2026-10-08",
   "sourcePolicy": "Source access date recorded; publication dates stated only when verified. Lack of 2026 statistics in a cached NFL page is NOT proof of nonparticipation. Sack/tackle boxes are descriptive, not film/rush-win/coverage ratings.",
   "batches": [
@@ -30,6 +30,13 @@
     {
       "batchNumber": 3,
       "canonicalRange": "51-75",
+      "count": 25,
+      "status": "individual-evidence-researched",
+      "reviewedAt": "2026-10-08"
+    },
+    {
+      "batchNumber": 4,
+      "canonicalRange": "76-100",
       "count": 25,
       "status": "individual-evidence-researched",
       "reviewedAt": "2026-10-08"
@@ -3826,6 +3833,1224 @@
       },
       "differenceFromPrior": "Compared with rising 15/36/30/19, reduce breakthrough odds because no confirmed first-month 2026 role continuity, preserve modest improvement.",
       "methodology": "Individual 2025 season plus early 2026 production and role comparison, injuries separated from current grade, pressure/coverage/run grades not inferred from box scores",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "HOU|Front Seven|jadeveonclowney",
+      "name": "Jadeveon Clowney",
+      "team": "HOU",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 33,
+      "lockedHqGrade": 85,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 1,
+      "sourceBackedResearch": {
+        "season2025": "2025 Dallas: 13 appearances, 38 tackles and 8.5 sacks after 5.5 in Carolina in 2024.",
+        "season2026Through20261008": "2026 Houston: two recorded games, five tackles and 1.5 sacks.",
+        "roleAndProjection": "Experienced edge-setter whose athletic power remains useful against runs and as a pass-rush finisher, but rotational usage at age 33 is likely.",
+        "healthAndEvidenceLimits": "Two-game start may reflect limited availability; acute medical reason unverified."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/jadeveon-clowney/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 37,
+        "declinePct": 46,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 9,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 2,
+        "improvePct": 12,
+        "steadyPct": 47,
+        "declinePct": 39,
+        "maxAnnualGain": 3.3,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 7,
+        "reviewClass": "priority-individual"
+      },
+      "differenceFromPrior": "Compared with priority 2/12/47/39, narrow expected steady window and raise decline due to part-time status, while acknowledging recent 8.5-sack 2025.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "HOU|Front Seven|sheldonrankins",
+      "name": "Sheldon Rankins",
+      "team": "HOU",
+      "family": "Front Seven",
+      "position": "IDL",
+      "ageAtReview": 32,
+      "lockedHqGrade": 81,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 12,
+      "sourceBackedResearch": {
+        "season2025": "2025 Houston: 17 games, 34 tackles and three sacks; full season after seven-game 2024.",
+        "season2026Through20261008": "2026 Houston: two games, five tackles and one sack.",
+        "roleAndProjection": "Sub-package interior pass-rush experience can still matter in rotation, but age and limited early volume make a major breakout unlikely.",
+        "healthAndEvidenceLimits": "No verified specific 2026 injury; 2024 missed games and two current games limit assurance."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/sheldon-rankins/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 43,
+        "declinePct": 43,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 7,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5,
+        "reviewClass": "veteran"
+      },
+      "differenceFromPrior": "Veteran 1/13/48/38 overly stable; move five steady points to decline after early short sample.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "HOU|Front Seven|willanderson",
+      "name": "Will Anderson Jr.",
+      "team": "HOU",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 25,
+      "lockedHqGrade": 99,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 3,
+      "sourceBackedResearch": {
+        "season2025": "2025 Houston: 17 games, 50 tackles, 12 sacks and three forced fumbles, following 11 sacks in 2024.",
+        "season2026Through20261008": "2026: four games, 22 tackles and 4.5 sacks with forced fumble.",
+        "roleAndProjection": "Proven elite three-down rush and run-edge pressure, consistently disruptive despite more attention; very little grade ceiling left at locked 99.",
+        "healthAndEvidenceLimits": "No current major injury verified; exact pass-rush win percentages not independently checked."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/will-anderson-jr/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 17,
+        "steadyPct": 77,
+        "declinePct": 5,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 1.7,
+        "marketVariancePct": 6,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 75,
+        "declinePct": 5,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 1.5,
+        "marketVariancePct": 6,
+        "reviewClass": "priority-individual"
+      },
+      "differenceFromPrior": "Maintain essentially locked superstar stability while reducing breakout from 2 to 1 due to theoretical ceiling.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "IND|Front Seven|akeemdavisgaither",
+      "name": "Akeem Davis-Gaither",
+      "team": "IND",
+      "family": "Front Seven",
+      "position": "LB",
+      "ageAtReview": 29,
+      "lockedHqGrade": 76,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 107,
+      "sourceBackedResearch": {
+        "season2025": "2025 Arizona: 17 games, 107 tackles, five passes defended and an interception.",
+        "season2026Through20261008": "2026 Indianapolis: three recorded games, 29 tackles and one pass defended.",
+        "roleAndProjection": "Former rotational special-teamer became a legitimate high-snap off-ball tackler; should not be treated simply as depth just because HQ grade is lower.",
+        "healthAndEvidenceLimits": "Three current log appearances leave Week 4 availability uncertain; coverage success beyond counting PDs unmeasured."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/akeem-davis-gaither/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 8,
+        "improvePct": 29,
+        "steadyPct": 40,
+        "declinePct": 23,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 7,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 44,
+        "declinePct": 35,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 5,
+        "reviewClass": "limited"
+      },
+      "differenceFromPrior": "Compared with limited 4/17/44/35, double breakout and boost improvement on actual starting-volume 2025, reduce regression materially.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "IND|Front Seven|ardenkey",
+      "name": "Arden Key",
+      "team": "IND",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 30,
+      "lockedHqGrade": 79,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 87,
+      "sourceBackedResearch": {
+        "season2025": "2025 Tennessee: 12 appearances, 22 tackles and four sacks, down from 6.5 sacks in 2024.",
+        "season2026Through20261008": "2026 Indianapolis: four games, eight tackles and half a sack.",
+        "roleAndProjection": "Age-30 EDGE rotational pressure flashes remain, but 2025 decreased availability and new-team deployment suggest a narrower upside.",
+        "healthAndEvidenceLimits": "No confirmed 2026 serious injury; 2025 absences/pressure efficiency require further verification."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/arden-key/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 17,
+        "steadyPct": 45,
+        "declinePct": 35,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 6,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4,
+        "reviewClass": "established"
+      },
+      "differenceFromPrior": "Move decline up from 25 to 35 and improvement down from 20 to 17; still worth moderate rotational credit.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "IND|Front Seven|deforestbuckner",
+      "name": "DeForest Buckner",
+      "team": "IND",
+      "family": "Front Seven",
+      "position": "IDL",
+      "ageAtReview": 32,
+      "lockedHqGrade": 88,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 7,
+      "sourceBackedResearch": {
+        "season2025": "2025 Colts: ten games, 47 tackles and four sacks, a second straight shortened season.",
+        "season2026Through20261008": "2026: four games, 18 tackles and three sacks; rebounding early pocket disruption.",
+        "roleAndProjection": "Veteran multi-technique interior disruptor remains effective, but age 32 and recent shortened seasons create material durability risk.",
+        "healthAndEvidenceLimits": "Underlying injuries behind 2025 ten games not specifically verified; no assumption of current injury from volume alone."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/deforest-buckner/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 35,
+        "declinePct": 45,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 7,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 2,
+        "improvePct": 13,
+        "steadyPct": 44,
+        "declinePct": 41,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 4,
+        "reviewClass": "priority-individual"
+      },
+      "differenceFromPrior": "Prior 2/13/44/41 misses positive early 2026 rush upside but underweights repeated missed games; increase improvement and decline.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "IND|Front Seven|groverstewart",
+      "name": "Grover Stewart",
+      "team": "IND",
+      "family": "Front Seven",
+      "position": "IDL",
+      "ageAtReview": 32,
+      "lockedHqGrade": 86,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 144,
+      "sourceBackedResearch": {
+        "season2025": "2025 Colts: 17 games, 53 tackles, a half sack and four defended passes.",
+        "season2026Through20261008": "2026: four games, ten tackles, half a sack and one pass defended.",
+        "roleAndProjection": "Strong nose tackle value lies in two-gap anchoring and enabling linebackers, not high sack count; run defense role secure but aging.",
+        "healthAndEvidenceLimits": "No major current injury confirmed; double-team and gap-stop effectiveness unquantified."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/grover-stewart/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 12,
+        "steadyPct": 50,
+        "declinePct": 37,
+        "maxAnnualGain": 1.6,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 6,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 0.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5,
+        "reviewClass": "veteran"
+      },
+      "differenceFromPrior": "Keep age-32 veteran similar to 1/13/48/38 with extra steadiness from 2025 full health; lower high-end annual gains.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "IND|Front Seven|jayloncarlies",
+      "name": "Jaylon Carlies",
+      "team": "IND",
+      "family": "Front Seven",
+      "position": "S",
+      "ageAtReview": 25,
+      "lockedHqGrade": 74,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 151,
+      "sourceBackedResearch": {
+        "season2025": "2025 Colts: only three games and no recorded tackles following ten games and 31 tackles as a rookie in 2024.",
+        "season2026Through20261008": "2026: four games, 14 tackles, pass breakup and interception.",
+        "roleAndProjection": "Hybrid safety-to-linebacker coverage asset remains canonically Front Seven even though position label is S; recent 2026 defensive usage restores opportunity.",
+        "healthAndEvidenceLimits": "2025 abbreviated season's injury/coach decision unknown; snaps, run-fit performance and positional change are key uncertainties."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/jaylon-carlies/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 21,
+        "declinePct": 28,
+        "maxAnnualGain": 5.6,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 9,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 25,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6,
+        "reviewClass": "role"
+      },
+      "differenceFromPrior": "Raise role-class breakout from 8 to 15 and improve 28 to 36 on strong 2026 reentry, while keeping medical/role volatility.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "IND|Front Seven|laiatulatu",
+      "name": "Laiatu Latu",
+      "team": "IND",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 25,
+      "lockedHqGrade": 87,
+      "lockedGradeConfidence": "medium",
+      "draftOverall": 15,
+      "sourceBackedResearch": {
+        "season2025": "2025 Colts: 16 games, 43 tackles, 8.5 sacks, five defended passes and three interceptions after four rookie sacks.",
+        "season2026Through20261008": "2026: four games, 14 tackles and one sack.",
+        "roleAndProjection": "Premier college hand-fighting technician has translated pressure and unusual coverage turnovers, but three INT are unlikely annual norm and neurological injury history is relevant.",
+        "healthAndEvidenceLimits": "Prior college neck surgery noted as longstanding context; no independently confirmed new 2026 issue."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/laiatu-latu/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 15,
+        "improvePct": 32,
+        "steadyPct": 32,
+        "declinePct": 21,
+        "maxAnnualGain": 6.1,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 8,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 18,
+        "improvePct": 30,
+        "steadyPct": 31,
+        "declinePct": 21,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 8,
+        "reviewClass": "priority-individual"
+      },
+      "differenceFromPrior": "Adjust from 18/30/31/21 toward reliable improvement over splash breakout, retaining established downside risk.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "JAX|Front Seven|arikarmstead",
+      "name": "Arik Armstead",
+      "team": "JAX",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 32,
+      "lockedHqGrade": 80,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 17,
+      "sourceBackedResearch": {
+        "season2025": "2025 Jacksonville: 16 games, 28 tackles and 5.5 sacks, rebounding from two sacks in 2024.",
+        "season2026Through20261008": "2026: four games, seven tackles and one sack.",
+        "roleAndProjection": "Versatile veteran inside/outside defensive lineman with enough pressure to contribute rotationally, yet at age 32 his alignment/snap management matters.",
+        "healthAndEvidenceLimits": "No serious 2026 injury verified; previous injury history and edge-versus-interior grade comparison are uncertain."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/arik-armstead/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 15,
+        "steadyPct": 48,
+        "declinePct": 36,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 6,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5,
+        "reviewClass": "veteran"
+      },
+      "differenceFromPrior": "Keep limited long-run growth but modestly raise improve versus former 13% on 2025 rebound, trim steady for age decline.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "JAX|Front Seven|davonhamilton",
+      "name": "DaVon Hamilton",
+      "team": "JAX",
+      "family": "Front Seven",
+      "position": "IDL",
+      "ageAtReview": 29,
+      "lockedHqGrade": 76,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 73,
+      "sourceBackedResearch": {
+        "season2025": "2025 Jaguars: 17 games, 35 tackles and one sack; 2024 had 58 tackles and zero sacks.",
+        "season2026Through20261008": "2026: four games, 12 tackles and half sack with a forced fumble.",
+        "roleAndProjection": "Nose tackle gap control and absorbing blockers is the repeatable contribution; pass rush remains situational.",
+        "healthAndEvidenceLimits": "No verified 2026 major injury; quality of double-team wins and line-of-scrimmage control need film/charting."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/davon-hamilton/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 21,
+        "steadyPct": 53,
+        "declinePct": 22,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 5,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4,
+        "reviewClass": "established"
+      },
+      "differenceFromPrior": "Essentially preserve established 4/20/51/25 but shift two downside points into steady given four-game regular usage.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "JAX|Front Seven|foyesadeoluokun",
+      "name": "Foyesade Oluokun",
+      "team": "JAX",
+      "family": "Front Seven",
+      "position": "LB",
+      "ageAtReview": 31,
+      "lockedHqGrade": 86,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 200,
+      "sourceBackedResearch": {
+        "season2025": "2025 Jaguars: started 17 games, 143 club-reported tackles, 11 passes defended and one interception; captain and six straight 100-tackle seasons.",
+        "season2026Through20261008": "2026: four games/four starts, 24 tackles and two picks per Jaguars profile.",
+        "roleAndProjection": "Veteran run-fit/tackle communicator with exceptional durable high-snap history and pass-lane disruption; age 31 makes another leap unlikely.",
+        "healthAndEvidenceLimits": "2026 interception rate may regress; 2024 missed four games, no 2026 major injury reported."
+      },
+      "sources": [
+        {
+          "url": "https://www.jaguars.com/team/players-roster/foye-oluokun/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        },
+        {
+          "url": "https://www.jaguars.com/team/players-roster/foye-oluokun/situational/2026/reg/",
+          "sourceType": "external-report-or-second-source",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 18,
+        "steadyPct": 54,
+        "declinePct": 27,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 5,
+        "confidence": "medium"
+      },
+      "priorProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 0.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5,
+        "reviewClass": "veteran"
+      },
+      "differenceFromPrior": "Reduce breakout to 1% and tilt decline 38 to 27 because durable 2025/26 usage argues steadier than generic veteran aging.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "JAX|Front Seven|joshhinesallen",
+      "name": "Josh Hines-Allen",
+      "team": "JAX",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 29,
+      "lockedHqGrade": 92,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 7,
+      "sourceBackedResearch": {
+        "season2025": "2025 Jaguars: 17 games, 47 tackles, eight sacks and a safety, identical sack count to 2024 but below 17.5 in 2023.",
+        "season2026Through20261008": "2026: four games, 15 tackles and 1.5 sacks.",
+        "roleAndProjection": "Primary pass-rush anchor creates pressure beyond finish totals; stronger future projections require win-rate rather than assuming repeat of 2023 sack spike.",
+        "healthAndEvidenceLimits": "No significant new injury verified; 2026 early sack trend below 2025 pace."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/josh-hines-allen/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 56,
+        "declinePct": 23,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 3.5,
+        "marketVariancePct": 5,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 1,
+        "improvePct": 19,
+        "steadyPct": 59,
+        "declinePct": 21,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3,
+        "reviewClass": "proven"
+      },
+      "differenceFromPrior": "Move a few steady points into decline versus proven 1/19/59/21 as elite sack ceiling may have normalized.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "JAX|Front Seven|travonwalker",
+      "name": "Travon Walker",
+      "team": "JAX",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 25,
+      "lockedHqGrade": 83,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 1,
+      "sourceBackedResearch": {
+        "season2025": "2025 Jacksonville: 14 games, 37 tackles and 3.5 sacks after consecutive double-digit sacks in 2023 and 2024.",
+        "season2026Through20261008": "2026: four games, ten tackles and 1.5 sacks.",
+        "roleAndProjection": "Former first overall pick has legitimate high-end edge-set athletic traits but 2025 reduced workload and rush finish are meaningful; pass rush quality not measured here.",
+        "healthAndEvidenceLimits": "Specific 2025 missed games medical reasons need corroboration; no new verified 2026 injury."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/travon-walker/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 31,
+        "steadyPct": 24,
+        "declinePct": 32,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 5.4,
+        "marketVariancePct": 9,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7,
+        "reviewClass": "rising"
+      },
+      "differenceFromPrior": "Replace rising 15/36/30/19 with higher regression risk after 2025 disruption and more modest growth projections.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "JAX|Front Seven|ventrellmiller",
+      "name": "Ventrell Miller",
+      "team": "JAX",
+      "family": "Front Seven",
+      "position": "LB",
+      "ageAtReview": 27,
+      "lockedHqGrade": 74,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 121,
+      "sourceBackedResearch": {
+        "season2025": "2025 Jacksonville: 17 games, 32 tackles and four defended passes, after 75 tackles in 15 games during 2024.",
+        "season2026Through20261008": "2026: four games, 30 tackles, one sack and one defended pass.",
+        "roleAndProjection": "One-time depth LB now showing early meaningful downhill tackle role; 2025 low total suggests fluctuation in starting opportunities.",
+        "healthAndEvidenceLimits": "No confirmed injury; coverage assignment success and snap share across first four games are unverified."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/ventrell-miller/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 14,
+        "improvePct": 32,
+        "steadyPct": 29,
+        "declinePct": 25,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 8,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 50,
+        "declinePct": 29,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 5,
+        "reviewClass": "limited"
+      },
+      "differenceFromPrior": "Raise breakout 4 to 14 and improve 17 to 32 based on 2026 playing-time signals; keep one-quarter downside if role collapses.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "KC|Front Seven|chrisjones",
+      "name": "Chris Jones",
+      "team": "KC",
+      "family": "Front Seven",
+      "position": "IDL",
+      "ageAtReview": 32,
+      "lockedHqGrade": 94,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 37,
+      "sourceBackedResearch": {
+        "season2025": "2025 Kansas City: 17 games, 27 tackles and seven sacks following five in 2024.",
+        "season2026Through20261008": "2026: four games, 11 tackles and zero sacks while contemporary Chiefs coverage reports a calf problem.",
+        "roleAndProjection": "One of the strongest interior rush disruptors at his peak; sackless month alone is weak evidence, but age 32 plus calf limitation elevate regression tail.",
+        "healthAndEvidenceLimits": "2026 calf injury was mentioned in early-October Kansas City analysis, without confirmed prognosis; urgent need for snap/pressure metrics."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/chris-jones/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        },
+        {
+          "url": "https://www.silverandblackpride.com/las-vegas-raiders-analysis/141534/las-vegas-raiders-chiefs-week-4-preview-kenneth-walker",
+          "sourceType": "external-report-or-second-source",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 15,
+        "steadyPct": 45,
+        "declinePct": 39,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7,
+        "confidence": "medium"
+      },
+      "priorProfile": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 51,
+        "declinePct": 29,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 4,
+        "reviewClass": "priority-individual"
+      },
+      "differenceFromPrior": "Increase previous decline from 29% to 39%, lower improve from 18 to 15 and market variance on verified health uncertainty.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "KC|Front Seven|druetranquill",
+      "name": "Drue Tranquill",
+      "team": "KC",
+      "family": "Front Seven",
+      "position": "LB",
+      "ageAtReview": 31,
+      "lockedHqGrade": 82,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 130,
+      "sourceBackedResearch": {
+        "season2025": "2025 Kansas City: full 17 games, 100 tackles, two sacks and one pass breakup.",
+        "season2026Through20261008": "2026: four games, 28 tackles and two passes defended.",
+        "roleAndProjection": "Veteran inside linebacker/zone coverage communicator still carries substantial early-down and passing responsibilities.",
+        "healthAndEvidenceLimits": "No major new injury verified; tackle and coverage rates do not distinguish coverage execution quality."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/drue-tranquill/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 26,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.4,
+        "marketVariancePct": 5,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.2,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4,
+        "reviewClass": "established"
+      },
+      "differenceFromPrior": "Previous established 4/20/51/25 substantially sound; slightly higher decline with age 31.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "KC|Front Seven|felixanudikeuzomah",
+      "name": "Felix Anudike-Uzomah",
+      "team": "KC",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 24,
+      "lockedHqGrade": 75,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 31,
+      "sourceBackedResearch": {
+        "season2025": "2025: absent from NFL career-stat season list; no recorded official 2025 regular-season line in source.",
+        "season2026Through20261008": "2026 Chiefs: four games, four tackles and one sack; 2024 was 17 games, 25 tackles, 2.5 sacks.",
+        "roleAndProjection": "Former first-round EDGE has opportunity but limited sustained disruption through his first seasons; player-specific development must reflect lost 2025 data.",
+        "healthAndEvidenceLimits": "2025 did-not-play reason not independently verified; serious medical absence cannot be asserted without evidence."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/felix-anudike-uzomah/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 27,
+        "steadyPct": 20,
+        "declinePct": 40,
+        "maxAnnualGain": 5.5,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 10,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 18,
+        "improvePct": 31,
+        "steadyPct": 18,
+        "declinePct": 33,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 9,
+        "reviewClass": "volatile"
+      },
+      "differenceFromPrior": "Lower 18/31 upside and raise prior decline 33 to 40 based on absent 2025 stats and still-minimal 2026 volume.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "KC|Front Seven|georgekarlaftis",
+      "name": "George Karlaftis",
+      "team": "KC",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 25,
+      "lockedHqGrade": 86,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 30,
+      "sourceBackedResearch": {
+        "season2025": "2025 Chiefs: 16 games, 46 tackles and six sacks after eight sacks in 2024.",
+        "season2026Through20261008": "2026: four games, 15 tackles, an interception and no sacks.",
+        "roleAndProjection": "Durable snap-eating power edge holds point of attack and contributes pressure, but sustained rush finishing has trended down and INT is not repeatable.",
+        "healthAndEvidenceLimits": "No verified acute 2026 injury; pressure creation and run-stop wins missing."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/george-karlaftis/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 8,
+        "improvePct": 24,
+        "steadyPct": 42,
+        "declinePct": 26,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 6,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 12,
+        "improvePct": 30,
+        "steadyPct": 41,
+        "declinePct": 17,
+        "maxAnnualGain": 2.3,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 5,
+        "reviewClass": "proven"
+      },
+      "differenceFromPrior": "Reduce prior 12/30 breakthrough and improve, raise decline 17 to 26 due to lower rush finishing across two samples.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "KC|Front Seven|nickbolton",
+      "name": "Nick Bolton",
+      "team": "KC",
+      "family": "Front Seven",
+      "position": "LB",
+      "ageAtReview": 26,
+      "lockedHqGrade": 87,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 58,
+      "sourceBackedResearch": {
+        "season2025": "2025 Chiefs: 17 games, 150 tackles, one sack and six defended passes.",
+        "season2026Through20261008": "2026: four games, 37 tackles and two defended passes.",
+        "roleAndProjection": "Mid-prime every-down defensive organizer with demonstrated 2025 tackle rebound, reliable run fits and zone communication.",
+        "healthAndEvidenceLimits": "No current serious injury confirmed; coverage liability versus demanding routes not documented."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/nick-bolton/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 21,
+        "steadyPct": 60,
+        "declinePct": 16,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3,
+        "reviewClass": "proven"
+      },
+      "differenceFromPrior": "Maintain proven stability yet slightly lift improve 19 to 21 in light of 150-tackle return and modestly cap breakout.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "KC|Front Seven|peterwoods",
+      "name": "Peter Woods",
+      "team": "KC",
+      "family": "Front Seven",
+      "position": "IDL",
+      "ageAtReview": 21,
+      "lockedHqGrade": 80,
+      "lockedGradeConfidence": "medium",
+      "draftOverall": 29,
+      "sourceBackedResearch": {
+        "season2025": "2025 Clemson: college defender only, not an NFL season; first-round draft investment after notable defensive-line collegiate pedigree.",
+        "season2026Through20261008": "2026 Chiefs rookie: four games, nine tackles, no sacks and one pass breakup; team confirms selection 29th overall.",
+        "roleAndProjection": "Young interior lineman with disruptive upside but modest initial NFL box-score output, learning leverage/gap discipline in a rotational front.",
+        "healthAndEvidenceLimits": "Specific pressure/rush-win stats and 2026 defensive snap share unverified, no reported serious injury."
+      },
+      "sources": [
+        {
+          "url": "https://www.chiefs.com/team/players-roster/peter-woods/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        },
+        {
+          "url": "https://www.nfl.com/players/peter-woods/stats/career",
+          "sourceType": "external-report-or-second-source",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 25,
+        "improvePct": 31,
+        "steadyPct": 20,
+        "declinePct": 24,
+        "maxAnnualGain": 8,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 9,
+        "confidence": "medium"
+      },
+      "priorProfile": {
+        "breakoutPct": 27,
+        "improvePct": 27,
+        "steadyPct": 16,
+        "declinePct": 30,
+        "maxAnnualGain": 8.2,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 8,
+        "reviewClass": "priority-individual"
+      },
+      "differenceFromPrior": "Lower prior 27/27/16/30 severe bust probability while raising improvement with actual four-game participation; large gain range reserved for prospect.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "LAC|Front Seven|daiyanhenley",
+      "name": "Daiyan Henley",
+      "team": "LAC",
+      "family": "Front Seven",
+      "position": "LB",
+      "ageAtReview": 26,
+      "lockedHqGrade": 86,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 85,
+      "sourceBackedResearch": {
+        "season2025": "2025 Chargers: 16 games, 101 tackles, 3.5 sacks, five pass breakups and two interceptions after 132 tackles in 2024.",
+        "season2026Through20261008": "2026: four games, 25 tackles and half sack.",
+        "roleAndProjection": "Versatile off-ball coverage/tackle defender has established high-snap responsibility; 2024-to-2025 tackle dip appears manageable.",
+        "healthAndEvidenceLimits": "No current major medical issue verified; detailed coverage grading not included in NFL box scores."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/daiyan-henley/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 26,
+        "steadyPct": 52,
+        "declinePct": 17,
+        "maxAnnualGain": 3.4,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 5,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3,
+        "reviewClass": "proven"
+      },
+      "differenceFromPrior": "Less mechanically steady than generic 2/19/64/15; higher improvement on well-rounded playmaking and moderate downside.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "LAC|Front Seven|dalvintomlinson",
+      "name": "Dalvin Tomlinson",
+      "team": "LAC",
+      "family": "Front Seven",
+      "position": "IDL",
+      "ageAtReview": 32,
+      "lockedHqGrade": 79,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 55,
+      "sourceBackedResearch": {
+        "season2025": "2025 Cardinals: 17 games, 25 tackles and one sack as mainly interior run defender.",
+        "season2026Through20261008": "2026 Chargers: two games, eight tackles and half sack.",
+        "roleAndProjection": "Veteran nose tackle is valued for run-front gap integrity, while limited pass-rush penetration and age 32 cap future leap.",
+        "healthAndEvidenceLimits": "Only two game entries in 2026 NFL log; cause unclear, so injury not asserted."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/dalvin-tomlinson/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 10,
+        "steadyPct": 41,
+        "declinePct": 48,
+        "maxAnnualGain": 1.3,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 8,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5,
+        "reviewClass": "veteran"
+      },
+      "differenceFromPrior": "Decline increased from 38 to 48 because age and two recorded games; moderate steady floor retained.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "LAC|Front Seven|denzelperryman",
+      "name": "Denzel Perryman",
+      "team": "LAC",
+      "family": "Front Seven",
+      "position": "LB",
+      "ageAtReview": 33,
+      "lockedHqGrade": 76,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 48,
+      "sourceBackedResearch": {
+        "season2025": "2025 Chargers: ten games, 44 tackles and three defended passes, his fourth consecutive sub-16-game season.",
+        "season2026Through20261008": "2026: no season row in the retrieved official career page; current playing status remains unverified.",
+        "roleAndProjection": "Thumper run-stopper in situational linebacker duty, but age 33 and recurring missed games cap sustained three-down projection.",
+        "healthAndEvidenceLimits": "Do not assume medical diagnosis from absences; coverage upside and exact 2026 availability unverified."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/denzel-perryman/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 6,
+        "steadyPct": 27,
+        "declinePct": 66,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 10,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 1,
+        "improvePct": 7,
+        "steadyPct": 36,
+        "declinePct": 56,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 8,
+        "reviewClass": "veteran"
+      },
+      "differenceFromPrior": "Raise veteran-category decline 56 to 66 and reduce 2026 steady given shrinking appearances.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
+      "reviewedDate": "2026-10-08"
+    },
+    {
+      "id": "LAC|Front Seven|khalilmack",
+      "name": "Khalil Mack",
+      "team": "LAC",
+      "family": "Front Seven",
+      "position": "ED",
+      "ageAtReview": 35,
+      "lockedHqGrade": 87,
+      "lockedGradeConfidence": "high",
+      "draftOverall": 5,
+      "sourceBackedResearch": {
+        "season2025": "2025 Chargers: 12 games, 32 tackles and 5.5 sacks versus six sacks in 16 games in 2024.",
+        "season2026Through20261008": "2026: four games, 14 tackles and three sacks, a promising early burst.",
+        "roleAndProjection": "All-time edge hand strength and disciplined run setting remain useful; age 35 and recent injury/limited season are stronger forecasting inputs than 2026 extrapolated sacks.",
+        "healthAndEvidenceLimits": "2025 five missed games; no specific 2026 major injury confirmed."
+      },
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/khalil-mack/stats/career",
+          "sourceType": "official-nfl-statistics-or-team-profile",
+          "publicationDate": null,
+          "accessedDate": "2026-10-08"
+        }
+      ],
+      "calibratedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 12,
+        "steadyPct": 43,
+        "declinePct": 43,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 8,
+        "confidence": "medium-low"
+      },
+      "priorProfile": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 46,
+        "declinePct": 42,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 7,
+        "reviewClass": "priority-individual"
+      },
+      "differenceFromPrior": "Remain age-decline weighted, but shift 10 to 12 improve on proven burst and modestly lower prior decline 42? Here decline 43; broadly retains veteran risk.",
+      "methodology": "Individually inspected 2025 season, through-Week-4 2026 NFL/team logs, snap/role where supplied, injuries and uncertainty; no invented rush-win or coverage-film grades.",
       "reviewedDate": "2026-10-08"
     }
   ]
