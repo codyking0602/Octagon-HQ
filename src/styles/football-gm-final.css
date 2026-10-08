@@ -600,3 +600,16 @@
   .gm-final__match-side > em { font-size: 7px; }
   .gm-final__franchise-tabs button { font-size: 10px; }
 }
+
+.football-gm-page:has(.football-gm-final) .football-gm-report__actions > button.gm-final__secondary-action {
+  min-height: 49px;
+  border: 1px solid rgba(127,196,239,.38);
+  background: #102637;
+  color: #a9d5f2;
+}
+.football-gm-page:has(.football-gm-final) .football-gm-report__actions > button:first-child {
+  flex: 2 1 190px;
+}
+.football-gm-page:has(.football-gm-final) .football-gm-report__actions > button.gm-final__secondary-action {
+  flex: 1 1 148px;
+}
