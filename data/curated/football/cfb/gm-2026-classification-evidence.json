@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 384,
+  "exactMatches": 383,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -164,8 +164,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 31,
+          "steady": 49,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08,
+        "summary": "Enrolled 2025, 2026 sophomore starting QB with strong early efficiency after just two backup appearances in 2025; 2027 NFL declaration barred under ordinary three-years-removed rule.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/russell-keelon/17477"
+        ]
+      }
     },
     {
       "id": "alabama|keonsabb",
@@ -1602,9 +1621,29 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 17,
+          "steady": 52,
+          "decline": 26,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0,
+        "summary": "Enrolled January 2022 and Georgia 2026 official fifth-year QB; normal 2026 season exhausts five-year period under both 2026 transitional rules, absent a documented exceptional waiver.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/gunner-stockton/10603",
+          "https://www.ncaa.org/news/division-i-adopts-age-based-eligibility-model/"
+        ]
+      }
     },
     {
       "id": "georgia|isiahcanion",
@@ -3085,8 +3124,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 28,
+          "steady": 47,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.77,
+        "portalExitProbability": 0.07,
+        "summary": "Official 2026 redshirt-junior LSU bio: 2024 Big 12 Freshman of the Year, ASU starter, 2025 injury-shortened seven starts and January 2026 transfer.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/season/2026/player/sam-leavitt"
+        ]
+      }
     },
     {
       "id": "lsu|stacygage",
@@ -3526,9 +3584,29 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://miamihurricanes.com/sports/football/roster/player/mohamed-toure",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2022,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 1,
+          "improve": 9,
+          "steady": 50,
+          "decline": 40,
+          "maxGain": 1,
+          "maxLoss": 7,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.05,
+        "portalExitProbability": 0,
+        "summary": "Documented eighth and final college season in 2026 after 2019 redshirt, COVID exemption and 2022/2024 ACL medical redshirts. Must exit before Year 2 regardless of NFL declaration.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/player/mohamed-toure",
+          "https://www.reuters.com/sports/reports-miami-lb-mohamed-toure-plans-return-8th-season--flm-2026-01-25/"
+        ]
+      }
     },
     {
       "id": "miami|omarthornton",
@@ -4467,8 +4545,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 25,
+          "steady": 51,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.65,
+        "portalExitProbability": 0.07,
+        "summary": "Notre Dame 2024 matriculation; 2025 first 12 college starts with 2,741 passing yards and 24 TDs; productive 2026 start. Legitimate 2027 decision but not an automatic exit.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/season/2025-26/player/cj-carr"
+        ]
+      }
     },
     {
       "id": "notre-dame|cooperflanagan",
@@ -4929,8 +5026,28 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 18,
+          "steady": 62,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.98,
+        "portalExitProbability": 0.02,
+        "summary": "Official Ohio State career and 2026 receiving dominance, 2025 unanimous All-American; CBS projects 2027 No. 1. Little credible room for a giant in-game breakout.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/jeremiah-smith/13335",
+          "https://www.cbssports.com/nfl/draft/mock-draft/"
+        ]
+      }
     },
     {
       "id": "ohio-state|jermainemathewsjr",
@@ -5927,8 +6044,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 39,
+          "steady": 35,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1,
+        "summary": "2025 true freshman Oregon receiver: seven starts, 34 catches, 497 yards and three TDs despite injury; sophomore runway and opportunity support greater development volatility.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/dakorien-moore/18319"
+        ]
+      }
     },
     {
       "id": "oregon|dantemoore",
@@ -5946,8 +6082,28 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 27,
+          "steady": 49,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.86,
+        "portalExitProbability": 0.05,
+        "summary": "Oregon starter returned from a 2026-draft opportunity after strong 2025. Prior demonstrated production supports high, not certain 2027 declaration.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/dante-moore/18320",
+          "https://goducks.com/news/2026/1/14/football-moore-among-several-key-contributors-returning-in-2026"
+        ]
+      }
     },
     {
       "id": "oregon|dierrehilljr",
@@ -7264,16 +7420,36 @@
       "groups": [
         "QB"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "Senior",
       "espnAthleteId": "4870906",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/manning-arch/16963",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 49,
+          "decline": 18,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.06,
+        "summary": "2026 official Texas roster lists Senior (fourth year, enrolled 2023), not ESPN Junior; uneven 2026 efficiency and public discussion of return vs 2027 declaration. One more season may remain; not coded as guaranteed graduation.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/manning-arch/16963",
+          "https://www.cbssports.com/nfl/draft/mock-draft/"
+        ]
+      }
     },
     {
       "id": "texas|bomascoe",
@@ -7311,8 +7487,34 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 32,
+          "steady": 43,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.1,
+        "summary": "Auburn 2024-25 starter, Texas 2026 transfer with high NIL market demand but inconsistent first-four-game production. Gameplay market price estimate raised to $3m against reported ~$4m chatter; not a verified contract.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/cam-coleman/16950",
+          "https://www.burntorangenation.com/texas-longhorns-football/105390/cam-coleman-analysis-texas-longhorns-arch-manning"
+        ],
+        "nil": {
+          "year1": 3000000,
+          "year2Baseline": 3300000,
+          "confidence": "low",
+          "basis": "reported-transfer-market-context-game-estimate"
+        }
+      }
     },
     {
       "id": "texas|colinsimmons",
@@ -7330,8 +7532,28 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 12,
+          "steady": 67,
+          "decline": 18,
+          "maxGain": 1,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.98,
+        "portalExitProbability": 0.02,
+        "summary": "2025 SEC-leading 12 sacks; 2026 five-and-a-half-sack Tennessee game; October 6 mock drafts project top-five selection. Elite established level and very high NFL exit estimate.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/colin-simmons/16936",
+          "https://www.cbssports.com/nfl/draft/mock-draft/"
+        ]
+      }
     },
     {
       "id": "texas|emmettmosleyv",
@@ -7560,8 +7782,27 @@
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 35,
+          "steady": 43,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.56,
+        "portalExitProbability": 0.09,
+        "summary": "Third-year Texas receiver, 2025 second-team All-SEC and current 2026 starter; meaningful improvement possible, not an automatic 2027 draft lock.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/ryan-wingo/16938"
+        ]
+      }
     },
     {
       "id": "texas|spencershannon",
@@ -9006,7 +9247,7 @@
       "draftEligible2027": null
     }
   ],
-  "officialOverrides": 84,
+  "officialOverrides": 85,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -9018,5 +9259,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply."
 }
