@@ -9,6 +9,10 @@ const identityMigration = readFileSync(
   "supabase/migrations/202612310255_wheel_football_generation_suffix_identity.sql",
   "utf8",
 );
+const ownerGradeRevision = readFileSync(
+  "supabase/migrations/202612310283_wheel_nfl_owner_approved_grade_updates.sql",
+  "utf8",
+);
 const repository = readFileSync("src/features/play/wheelFootballRepository.ts", "utf8");
 const page = readFileSync("src/features/back-room/FootballWheelPage.tsx", "utf8");
 
@@ -53,6 +57,20 @@ describe("Wheel of Football locked grading runtime", () => {
 
     expect(expected.size).toBe(626);
     expect(actual.size).toBe(626);
+    const historical = new Map(actual);
+    const revisedKeys = new Set<string>();
+    pattern.lastIndex = 0;
+    while ((match = pattern.exec(ownerGradeRevision))) {
+      const key = `${match[1]}|${match[2]}|${match[3]}`;
+      expect(historical.has(key), key).toBe(true);
+      expect(revisedKeys.has(key), key).toBe(false);
+      expect(historical.get(key), key).not.toBe(Number(match[5]));
+      revisedKeys.add(key);
+      actual.set(key, Number(match[5]));
+    }
+    expect(revisedKeys.size).toBe(34);
+    expect(ownerGradeRevision).toContain("'2026-10-08'");
+    expect(ownerGradeRevision).not.toContain("wheel_football_picks");
     expect(actual).toEqual(expected);
   });
 
