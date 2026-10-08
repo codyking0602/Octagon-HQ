@@ -12,6 +12,23 @@
 - The `proven` category describes established and relatively stable players, **not necessarily elite HQ ratings**: an 83–87 grade stays an 83–87 even if the development distribution is relatively stable.
 - This is **a player-by-player game-design judgment based on the existing HQ grade authority**, not 417 independently verified film-study/scouting reports. Current confirmed injury reporting was separately checked for 10 subjects, and those risk outlooks were adjusted without changing any base HQ grades. Do not claim wider 2026 medical or individual scouting sourcing than these reviews establish.
 
+## Independent position-by-position research integration — October 8, 2026
+
+The original 594 development profiles were a mixture of hand calibrations and cohort-based reasoning. Six independently reviewed research ledgers now provide **594/594 player-specific recommendations**, including the original 177 priority profiles:
+
+| Position | Research PR | Covered |
+| --- | --- | ---: |
+| QB | #1772 | 34 |
+| RB | #1775 | 65 |
+| WR | #1774 | 103 |
+| TE | #1773 | 33 |
+| Front Seven | #1777 | 191 |
+| Secondary | #1776 | 168 |
+
+The canonical client-side profile values now match **each individually recommended** breakout, improvement, decline, annual gain/loss limit, and market variance. Steady is the remainder to 100%. All six complete source files are retained as `gm-nfl-deep-research-*-2026-10-08.json` next to the 594-row review audit; the large evidence ledgers do not ship as client runtime profiles. Explicit 2025/2026 evidence, injury/role uncertainty, source URLs and citation limitations remain in those ledgers. Some public defensive performance evidence has medium-low confidence or nonuniform 2026 coverage; research notes disclose these constraints rather than invent missing charting.
+
+The calibration anchor percentages in the *original* table below are historical initial examples; **the JSON authority (not this table) is the current gameplay source** after integration. Current demonstrated NFL ability grades were preserved in this development-only step. The 34 separately owner-approved HQ present-ability revisions are applied and validated in a separate grade correction PR, with append-only private Wheel grade snapshots rather than rewriting historical matches.
+
 ## Model behavior
 
 - New `:gmdev1` seeds opt in. Previously created runs without this suffix retain their exact deterministic model.
