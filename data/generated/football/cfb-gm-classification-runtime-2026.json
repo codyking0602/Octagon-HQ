@@ -194,8 +194,22 @@
       "id": "alabama|zabienbrown",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 22,
+          "steady": 60,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.9,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "alabama|zyangibson",
@@ -750,8 +764,22 @@
       "id": "georgia|kjbolden",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 2,
+          "improve": 13,
+          "steady": 70,
+          "decline": 15,
+          "maxGain": 1,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.96,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "georgia|kyronjones",
@@ -771,8 +799,22 @@
       "id": "georgia|natefrazier",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 33,
+          "steady": 47,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.7,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "georgia|quintaviusjohnson",
@@ -1622,8 +1664,22 @@
       "id": "miami|markfletcherjr",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 51,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.69,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "miami|marquiselightfoot",
@@ -2184,15 +2240,43 @@
       "id": "ohio-state|bojackson",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 36,
+          "steady": 43,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "ohio-state|brandoninniss",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 11,
+          "improve": 30,
+          "steady": 42,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.34,
+        "portalExitProbability": 0.12
+      }
     },
     {
       "id": "ohio-state|chrishenryjr",
@@ -2861,8 +2945,22 @@
       "id": "oregon|jordondavison",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 40,
+          "steady": 37,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09
+      }
     },
     {
       "id": "oregon|koiperich",
@@ -3531,8 +3629,22 @@
       "id": "texas|jelanimcdonald",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 26,
+          "steady": 53,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.73,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "texas|justincryer",
