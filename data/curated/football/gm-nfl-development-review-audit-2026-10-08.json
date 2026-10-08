@@ -6,7 +6,7 @@
   "sourceGradeAuthority": "data/generated/football/wheel-nfl-*-grades-2026-10-03.json",
   "reviewCount": 594,
   "followupReviewCount": 417,
-  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies.",
+  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies. Owner-approved 2026-10-08 current-HQ-grade updates for three QBs were mirrored into review-grade snapshots; development chances and magnitudes were deliberately not recalibrated.",
   "reviews": [
     {
       "id": "ARI|Front Seven|dantestills",
@@ -1126,13 +1126,13 @@
       "name": "Bryce Young",
       "team": "CAR",
       "family": "QB",
-      "gradeAtReview": 82,
+      "gradeAtReview": 83,
       "ageAtReview": 25,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Bryce Young; audited HQ grade 82 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Owner-approved 2026-10-08 current HQ grade adjustment 82 → 83 for Bryce Young. Reason: Owner-approved Oct 8 increase from 82 to 83. 2026 accuracy, intermediate placement, and decision-making gains merit a modest adjustment, but pressure exposure and a short 2026 sample do not support jumping to the Jordan Love/Jalen Hurts 85 tier. Peer check: above Tyler Shough and Geno Smith (82). Development probabilities and annual development ceilings remain unchanged pending six-position research integration."
     },
     {
       "id": "CAR|RB|chubahubbard",
@@ -2412,13 +2412,13 @@
       "name": "Bo Nix",
       "team": "DEN",
       "family": "QB",
-      "gradeAtReview": 79,
+      "gradeAtReview": 82,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Bo Nix; audited HQ grade 79 and age 26 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Owner-approved 2026-10-08 current HQ grade adjustment 79 → 82 for Bo Nix. Reason: Owner-approved Oct 8 increase from 79 to 82. Two years of functional NFL starting performance, processing, mobility, and sack avoidance merit the same broadly solid-starter tier as Tyler Shough and Geno Smith (82) and above Jacoby Brissett (80), while inconsistent 2026 deeper accuracy keeps him below Bryce Young (83). Development probabilities and annual development ceilings remain unchanged pending six-position research integration."
     },
     {
       "id": "DEN|RB|jkdobbins",
@@ -7398,13 +7398,13 @@
       "name": "Brock Purdy",
       "team": "SF",
       "family": "QB",
-      "gradeAtReview": 89,
+      "gradeAtReview": 90,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Brock Purdy; audited HQ grade 89 and age 26 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Owner-approved 2026-10-08 current HQ grade adjustment 89 → 90 for Brock Purdy. Reason: Owner-approved Oct 8 increase from 89 to 90. Sustained efficient 2025 quarterbacking plus a strong early 2026 showing justify modest placement above Jared Goff 89 and below Dak Prescott 92. This is current functional passing and anticipation, not a small-sample projection bonus. Development probabilities and annual development ceilings remain unchanged pending six-position research integration."
     },
     {
       "id": "SF|RB|christianmccaffrey",
