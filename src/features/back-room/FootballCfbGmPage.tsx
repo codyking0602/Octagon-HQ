@@ -89,7 +89,7 @@ function Roster({roster, year, seed, compact = false, onPortalOut, limited = fal
           {player ? <>
             <div className="football-gm__roster-player">
               <PlayerHeadshot player={{team: player.schoolId, name: player.name}} />
-              <span><strong>{player.name}</strong><em>{player.school} · {player.family} · {player.classification ?? "CLASS UNVERIFIED"}</em>
+              <span><strong>{player.name}</strong><em>{player.school} · {player.family} · {player.classification ? "2026 " + player.classification : "CLASS UNVERIFIED"}</em>
                 <span className="football-gm__roster-scouting"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} /><Outlook value={player.outlook} /></span>
               </span>
             </div>
@@ -159,7 +159,7 @@ function Board({schoolId, roster, budget, year, seed, excluded, onPick}: {
         {visibleCandidates.map((player) => <button key={player.id} type="button" onClick={() => onPick(player.id)}>
           <PlayerHeadshot player={{team: player.schoolId, name: player.name}} className="football-wheel-picker__headshot" />
           <span className="football-gm__picker-player-copy">
-            <strong>{player.name}</strong><small>{player.family} · {player.classification ?? "CLASS UNVERIFIED"} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
+            <strong>{player.name}</strong><small>{player.family} · {player.classification ? "2026 " + player.classification : "CLASS UNVERIFIED"} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
             <span className="football-gm__candidate-tags"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} /><Outlook value={player.outlook} /></span>
           </span>
           <span className="football-gm__picker-action"><b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
