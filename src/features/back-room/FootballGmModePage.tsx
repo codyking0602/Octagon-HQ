@@ -55,6 +55,8 @@ import {
   type FootballGmTradeProposal,
 } from "./footballGmStrategy";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
+import { FootballGmDevelopmentReport } from "./FootballGmDevelopmentReport";
+import { FOOTBALL_GM_DEVELOPMENT_SEED_TAG } from "./wheelFootballGmEconomy";
 
 type Phase = "intro" | "draft" | "year1" | "offseason" | "years23" | "final";
 
@@ -107,14 +109,16 @@ function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJso
 
 function challengeSeed(value: ChallengeJson | undefined) {
   const row = record(value);
-  return [FOOTBALL_GM_VERSION, "football-gm-v9-grade-driven-playoffs"].includes(String(row?.version)) && typeof row?.seed === "string"
+  return [FOOTBALL_GM_VERSION, "football-gm-v10-shared-real-seasons", "football-gm-v9-grade-driven-playoffs"].includes(String(row?.version)) && typeof row?.seed === "string"
     ? row.seed
     : null;
 }
 
 function freshSeed() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const id = typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return `${id}${FOOTBALL_GM_DEVELOPMENT_SEED_TAG}`;
 }
 
 export function initialRun(seed: string): PersistedRun {
@@ -158,6 +162,7 @@ function parsePersistedRun(value: unknown) {
   if (!value || Array.isArray(value) || typeof value !== "object") return null;
   const parsed = value as Partial<PersistedRun>;
   const compatibleVersion = parsed.version === FOOTBALL_GM_VERSION
+    || parsed.version === "football-gm-v10-shared-real-seasons"
     || parsed.version === "football-gm-v9-grade-driven-playoffs"
     || parsed.version === "football-gm-v8-head-to-head";
   if (
@@ -1915,7 +1920,7 @@ export default function FootballGmModePage({
               <b>2</b>
               <span>
                 <strong>OFFSEASON</strong>
-                <small>1YR deals reprice. Trade and use free agency to get under the cap.</small>
+                <small>Players develop differently in every run. 1YR deals reprice; 3YR salaries stay locked.</small>
               </span>
             </article>
             <article>
@@ -1977,6 +1982,7 @@ export default function FootballGmModePage({
 
       {run.phase === "offseason" ? (
         <>
+          <FootballGmDevelopmentReport roster={run.roster} seed={run.seed} />
           <div className="football-gm__dual-cap">
             <CapMeter roster={run.finalRoster} tradeChipPlayerIds={run.tradeChipPlayerIds} year={2} seed={run.seed} consequences={run.negotiationConsequences} />
             <CapMeter roster={run.finalRoster} tradeChipPlayerIds={run.tradeChipPlayerIds} year={3} seed={run.seed} consequences={run.negotiationConsequences} />
