@@ -9,7 +9,14 @@ const preferencesRowSchema = z.object({
   football_team: z.enum(["cowboys", "longhorns"]).nullable().optional(),
 });
 
+export interface ProfilePreferencesSnapshot {
+  favoriteFighterSlug: string | null;
+  avatarPhotoData: string | null;
+  footballTeam: FootballTeam | null;
+}
+
 export interface ProfilePreferencesRepository {
+  loadSnapshot?: () => Promise<ProfilePreferencesSnapshot>;
   loadFavoriteFighter: () => Promise<string | null>;
   saveFavoriteFighter: (fighterSlug: string | null) => Promise<string | null>;
   loadAvatarPhoto?: () => Promise<string | null>;
@@ -52,6 +59,11 @@ export function createProfilePreferencesRepository(): ProfilePreferencesReposito
   }
 
   return {
+    // One RPC supplies all three fields. Avoid downloading the avatar three times.
+    async loadSnapshot() {
+      return loadPreferences();
+    },
+
     async loadFavoriteFighter() {
       return (await loadPreferences()).favoriteFighterSlug;
     },
