@@ -3,26 +3,26 @@
 ## Explicit quality status
 
 This PR does **not** complete the requested 468 individual performance/NIL/eligibility studies.
-The 468-player source roster is preserved and still playable; **216 specific players** have sourced individual development/departure calibration records, while **252** use clearly marked provisional development and/or market priors. These fallbacks must never be called researched.
+The 468-player source roster is preserved and still playable; **260 specific players** have sourced individual development/departure calibration records, while **208** use clearly marked provisional development and/or market priors. These fallbacks must never be called researched.
 The existing Wheel of Football HQ grades are unchanged. There are **no new HQ grade proposals** in this isolated change.
 
 ## Measured calibration distribution (partial population)
 
-These are computed from the ledger for the **216 individually researched** development profiles, **not** representative league-wide estimates for the remaining 252 generic-prior cases.
+These are computed from the ledger for the **260 individually researched** development profiles, **not** representative league-wide estimates for the remaining 208 generic-prior cases.
 
 | Primary group | Total CFB GM roster | Individual profiles completed |
 | --- | ---: | ---: |
-| QB | 25 | 16 |
-| RB | 57 | 27 |
-| WR | 86 | 38 |
-| TE | 28 | 13 |
-| Front Seven | 145 | 64 |
-| Secondary | 127 | 58 |
-| **Total** | **468** | **216** |
+| QB | 25 | 25 |
+| RB | 57 | 32 |
+| WR | 86 | 43 |
+| TE | 28 | 16 |
+| Front Seven | 145 | 76 |
+| Secondary | 127 | 68 |
+| **Total** | **468** | **260** |
 
-- **Researched cohort development average:** breakout 9.6%, improve 28.9%, steady 45.9%, decline 15.6%; max annual gain 4.4 grade points and loss 5.2 grade points before HQ ceiling clipping. Not representative league-wide estimates.
+- **Researched cohort development average:** breakout 9.6%, improve 29.1%, steady 45.9%, decline 15.5%; max annual gain 4.4 grade points and loss 5.2 grade points before HQ ceiling clipping. Not representative league-wide estimates.
 - **NIL:** among the 48 On3 matched names, Year 1 market estimate range **$1.00m–$6.50m**, median **$1.80m**, mean **$2.12m**. These are ranked-source sampled stars, not full 468-player NIL medians, and cannot substitute for future research into the 420 unmatched athletes.
-- **Eligibility:** 169 researched entries are considered eligible for the 2027 NFL Draft, 47 not eligible; **37** researched remaining-eligibility fields have explicit 2026 terminal/return assessment, 431 remain unknown. All 468 have a 2026 roster classification (188 SR / 137 JR / 33 5TH / 80 SO / 22 FR / 3 6TH / 2 7TH / 2 3RD / 1 8TH).
+- **Eligibility:** 201 researched entries are modeled eligible for the 2027 NFL Draft, 59 not eligible; **42** researched remaining-eligibility fields have explicit 2026 terminal/return assessments, 426 remain unknown. All 468 have a 2026 roster classification (188 SR / 137 JR / 34 5TH / 78 SO / 22 FR / 4 6TH / 2 7TH / 2 3RD / 1 8TH).
 
 ## Additional school-by-school sourced batches (same October 8 research window)
 
@@ -42,23 +42,25 @@ The existing research ledger contains exact URLs, full evidence notes and all in
 - **Indiana — school pool complete.** Seventeen new official 2026 biographies, including 2025 national champions, 2026 rising RBs Turbo Richard and Lee Beebe Jr., injury-return WR Tyler Morris and seventh-year Preston Zachman. Eight seniors officially corrected to 5TH.
 - **SMU — school pool complete.** Seventeen new official player records, including 2025 Cal 943-yard RB Kendrick Raphael, five-year Texas A&M TE Theo Melin Öhrström, experienced six-year safety Jimmy Wyrick, 2025 All-ACC production and injured veteran Aakil Washington. All percentages remain game assumptions and exceptional eligibility requires institution verification.
 
+- **Florida — school pool complete.** Nineteen Florida athletes have individual official-biography research recorded in the source ledger, including projected 2027 draft timing and development distributions.
+- **Tennessee — school pool complete (new verified batch).** Eighteen additional official Tennessee 2026 player biographies reviewed, bringing the school to 20/20. Amare Campbell (2025 PSU 103 tackles and Tennessee's explicit final year), Arion Carter (2025 76 tackles), Braylon Staley (2025 68/837/6), DeSean Bishop (2025 1,076 rushing yards/16 TD), Mariyon Dye (four early 2026 sacks), Ty Redmond (2025 freshman All-American), and Xavier Gilliam (2026 Furman three-sack performance, small-sample caution) illustrate player-specific paths. Four official 2026 class corrections: **Braylon Staley JR, DeSean Bishop SR, Ethan Davis SR, Xavier Gilliam JR**. Six 2025 matriculants are explicitly ineligible for the 2027 draft; published production does not establish future NIL compensation. No HQ grades changed.
 
-All eleven completed schools retain the exact roster IDs and canonical Wheel HQ grades. These are evidence-informed probabilistic gameplay evaluations, **not institutional projections or certified NCAA rulings**.
+All thirteen completed schools retain the exact roster IDs and canonical Wheel HQ grades. These are evidence-informed probabilistic gameplay evaluations, **not institutional projections or certified NCAA rulings**.
 
 ## Evidence inventory
 
-- 468/468 exact CFB GM ID/classification rows; 108 official school class overrides, including the correction of Arch Manning's 2026 official Texas **senior** designation.
-- 216 individual GM research entries in the **existing** `data/curated/football/cfb/gm-2026-classification-evidence.json` ledger, with dated source links and player-specific trajectory/risk judgments.
-- 216 individually assessed 2027 NFL timing fields, including six newer players modeled ineligible to enter the 2027 Draft after entering college in 2025. Drew Mestemaker is a redshirt sophomore whose 2024 college entry makes a 2027 draft possible despite the class label.
-- **37 assessed remaining-season fields**: 33 modeled terminal: Devan Thompkins, Keon Sabb, Bodie Schoonover, Evan Johnson, Keanu Tanuvasa, Preston Rex, Gunner Stockton, Isaiah Jones, Jamari Sharpe, Josh Burnham, Josh Hoover, Lee Beebe Jr., Preston Zachman, Ryland Gandy, Tobi Osunsanmi, Tyler Morris, Tyrique Tucker, TJ Dottery, Ahmad Moten, Cooper Barkate, Mohamed Toure, DJ McKinney, Earl Little Jr., Ja'Kobi Jackson, Kenyatta Jackson Jr., Trinidad Chambliss, Bear Alexander, Evan Stewart, Jimmy Wyrick, Kevin Jennings, Theo Melin Ohrstrom, Hero Kanu, Raleek Brown; 4 modeled with plausible additional 2027 year: Sam Leavitt, Darian Mensah, Dante Moore, Arch Manning. These are **gameplay inferences, not compliance-office eligibility determinations**; the 2026 NCAA transition, injury appeals and extra-year court cases may modify outcomes.
-- 252 players retain **null** for unresearched remaining seasons, draft timing and 2027 eligibility rather than a fabricated verified declaration.
+- 468/468 exact CFB GM ID/classification rows; 114 official school class overrides, including the correction of Arch Manning's 2026 official Texas **senior** designation.
+- 260 individual GM research entries in the **existing** `data/curated/football/cfb/gm-2026-classification-evidence.json` ledger, with dated source links and player-specific trajectory/risk judgments.
+- 260 individually assessed 2027 NFL timing fields, including six newer players modeled ineligible to enter the 2027 Draft after entering college in 2025. Drew Mestemaker is a redshirt sophomore whose 2024 college entry makes a 2027 draft possible despite the class label.
+- **42 assessed remaining-season fields**: 38 modeled terminal — Devan Thompkins, Keon Sabb, Maddux Madsen, Bodie Schoonover, Evan Johnson, Keanu Tanuvasa, Preston Rex, Evan Pryor, Gunner Stockton, Conner Weigman, Isaiah Jones, Jamari Sharpe, Josh Burnham, Josh Hoover, Lee Beebe Jr., Preston Zachman, Ryland Gandy, Tobi Osunsanmi, Tyler Morris, Tyrique Tucker, TJ Dottery, Ahmad Moten, Cooper Barkate, Mohamed Toure, DJ McKinney, Earl Little Jr., Ja'Kobi Jackson, Kenyatta Jackson Jr., Trinidad Chambliss, Bear Alexander, Evan Stewart, Holden Geriner, Jimmy Wyrick, Kevin Jennings, Theo Melin Ohrstrom, Amare Campbell, Hero Kanu, Raleek Brown; 4 modeled with plausible additional 2027 year: Sam Leavitt, Darian Mensah, Dante Moore, Arch Manning. These are **gameplay inferences, not compliance-office eligibility determinations**; the 2026 NCAA transition, injury appeals and extra-year court cases may modify outcomes.
+- 208 unresearched players retain **null** for unresearched remaining seasons, draft timing and 2027 eligibility rather than a fabricated verified declaration.
 - **48 exact-ID On3 October 8, 2026 NIL valuations** sourced from its [football valuation board](https://www.on3.com/nil/rankings/player/college/football/). On3 changed its model on July 1, 2026 to a **deal-based valuation**. We use this published market reference as a gameplay Year 1 estimate, **not as audit-confirmed cash paid under a private contract**. All 48 entries carry the source URL, rank, quoted valuation, and an explicit provisional +10% Year 2 assumption.
 - Market shifts include Darian Mensah $6.5m, Dante Moore $5m, Trinidad Chambliss $5m, Jeremiah Smith $5m, Josh Hoover $4m, Cam Coleman $3m, Arch Manning $2.5m and Colin Simmons $2.5m. The 420 without On3 matched valuations retain either older named anchors or class/role/school estimates; **those are not independently verified NIL research**.
 - Pricing is identical in both game budgets, independent of HQ grades. The economics must be stress-tested after these wider updates.
 
 ## Player-by-player research sources and football reasoning
 
-Each of the 216 records has its own `calibration.summary` and `calibration.sources` in the existing ledger, not in a new standalone athlete database:
+Each of the 260 records has its own `calibration.summary` and `calibration.sources` in the existing ledger, not in a new standalone athlete database:
 
 | Player | Key documented reason and game treatment |
 | --- | --- |
@@ -161,11 +163,11 @@ NFL draft declaration odds are **game probability judgments**, not actual declar
 
 ## Outstanding 468-player quality gate
 
-**This PR remains incomplete versus the owner-requested full calibration.** Development: 216/468 sourced. NIL: 48/468 sourced market anchors (source valuations are still estimates). Remaining work:
-1. Review all 252 additional existing IDs using official biographies/statistics and capture 2025/2026 production, transfers, position roles, years first enrolled, redshirt history and actual remaining eligibility where documented.
+**This PR remains incomplete versus the owner-requested full calibration.** Development: 260/468 sourced. NIL: 48/468 sourced market anchors (source valuations are still estimates). Remaining work:
+1. Review all 208 additional existing IDs using official biographies/statistics and capture 2025/2026 production, transfers, position roles, years first enrolled, redshirt history and actual remaining eligibility where documented.
 2. Research 420 further personalized NIL price judgments, and independently evaluate the 48 market values against real game economics. Market-wide Year 2 10% baseline is still a placeholder, not a per-player prediction.
-3. Set 252 individual breakout/improve/steady/decline and gain/loss/volatility assessments, without generating superficially varied numbers from a generic formula.
-4. Research the remaining 252 per-player transfer and 2027 declaration risks; review all unusual sixth-to-eighth-year cases and NCAA transitional exceptions.
+3. Set 208 individual breakout/improve/steady/decline and gain/loss/volatility assessments, without generating superficially varied numbers from a generic formula.
+4. Research the remaining 208 per-player transfer and 2027 declaration risks; review all unusual sixth-to-eighth-year cases and NCAA transitional exceptions.
 5. Run extended affordability simulations for both budgets and full two-year playthroughs, reconcile the grade and price distributions and any proposed HQ grade flags separately.
 6. Run complete CI on exact PR head, then integration owner/owner decides on merge. This branch must not be deployed as a purported full 468-player research completion.
 
