@@ -4,6 +4,7 @@ import wrJson from "../../../data/generated/football/wheel-cfb-wr-grades-2026-10
 import teJson from "../../../data/generated/football/wheel-cfb-te-grades-2026-10-03.json";
 import frontJson from "../../../data/generated/football/wheel-cfb-front-seven-grades-2026-10-03.json";
 import secondaryJson from "../../../data/generated/football/wheel-cfb-secondary-grades-2026-10-03.json";
+import boiseGradeAudit from "../../../data/curated/football/cfb/wheel-football-boise-state-grading-audit-2026-10-03.json";
 import { wheelFootballCfbPriorityForSchoolId } from "./wheelFootballCfbPriority";
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
 import { footballGmTeamOverall, footballGmOutcomeProbabilities } from "./footballGmStrategy";
@@ -108,6 +109,10 @@ const nilMarket: Readonly<Record<GradeFamily, readonly [number, number]>> = {
   "Front Seven": [200_000, 1_250_000],
   Secondary: [175_000, 1_150_000],
 };
+for (const row of boiseGradeAudit.grades) {
+  if (row.family === "Head Coach") continue;
+  gradeIndex.set([normalize("Boise State"), row.family, normalize(row.name)].join("|"), row.grade);
+}
 const playerMap = new Map<string, CfbGmPlayer>();
 const schoolPlayers = new Map<string, CfbGmPlayer[]>();
 const eligibleSchools = wheelFootballPoolTeams("AP_TOP_25").map((school) => school.code);
@@ -239,13 +244,13 @@ export function cfbGmCandidates(schoolId: string, roster: readonly CfbGmRosterEn
   return cfbGmPlayersAt(schoolId).filter((p) => !excluded.has(p.id) && affordable(roster, p, budget, year, reserve));
 }
 export function cfbGmEligibleSchools(roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, previous: string | null, pool: readonly string[] = CFB_GM_AP_SCHOOLS, excluded: ReadonlySet<string> = new Set()) {
-  const result = pool.filter((schoolId) => cfbGmCandidates(schoolId, roster, budget, year, year === 1, excluded).length > 0);
+  const result = pool.filter((schoolId) => cfbGmCandidates(schoolId, roster, budget, year, true, excluded).length > 0);
   const nonRepeat = result.filter((id) => id !== previous);
   return nonRepeat.length ? nonRepeat : result;
 }
 export function cfbGmPick(roster: readonly CfbGmRosterEntry[], id: string, budget: number, year: 1 | 2, excluded: ReadonlySet<string> = new Set()) {
   const player = cfbGmPlayer(id);
-  if (!player || !cfbGmCandidates(player.schoolId, roster, budget, year, year === 1, excluded).some((p) => p.id === id)) return null;
+  if (!player || !cfbGmCandidates(player.schoolId, roster, budget, year, true, excluded).some((p) => p.id === id)) return null;
   const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: id, acquired: year === 1 ? "draft" : "portal"}]);
   return next;
 }
