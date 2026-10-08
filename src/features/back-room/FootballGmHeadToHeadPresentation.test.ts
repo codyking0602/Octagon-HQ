@@ -92,8 +92,9 @@ describe("The GM head-to-head presentation", () => {
     expect(page).toContain("function VersusRosterBoard");
     expect(page).toContain("FOOTBALL_GM_ROSTER_SLOTS.map");
     expect(page).toContain("football-gm-versus__row");
-    expect(page).toContain("<PlayerQualityPill player={player} />");
-    expect(page).toContain("<PlayerOutlookPill outlook={player.outlook} />");
+    expect(page).toContain("<PlayerQualityPill player={player} year={showFuture ? 2 : 1} seed={run.seed} />");
+    expect(page).toContain("<PlayerOutlookPill player={player} year={showFuture ? 2 : 1} seed={run.seed} />");
+    expect(page).toContain("<PlayerDevelopmentNote player={player} seed={run.seed} />");
     expect(css).toContain(".football-gm-versus__row");
     expect(css).toContain(".football-gm-versus__pills");
   });
