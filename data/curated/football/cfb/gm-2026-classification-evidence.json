@@ -11389,9 +11389,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 18,
+          "steady": 61,
+          "decline": 18,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.01,
+        "summary": "Penn State's 2025 leading tackler: 103 tackles, 9.5 TFL and three sacks in 13 starts; Tennessee starter with 2026 opener-to-Auburn production. Tennessee explicitly identifies 2026 as his final eligibility year, making offseason exit certain regardless of draft declaration.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/amare-campbell/23060"
+        ]
+      }
     },
     {
       "id": "tennessee|arioncarter",
@@ -11409,8 +11428,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 25,
+          "steady": 55,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.72,
+        "portalExitProbability": 0.02,
+        "summary": "Tennessee's 2025 leading regular-season tackler despite foot injury: 76 tackles and six TFL in ten games, nine starts. Returned with 33 tackles entering Week 6 in 2026; a proven veteran with more steady outcomes than breakout potential.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/arion-carter/23001"
+        ]
+      }
     },
     {
       "id": "tennessee|braylonstaley",
@@ -11420,16 +11458,35 @@
       "groups": [
         "WR"
       ],
-      "classification": "SO",
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": "Sophomore",
+      "sourceClass": "JR",
       "espnAthleteId": "5132629",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utsports.com/sports/football/roster/braylon-staley/23047",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 46,
+          "decline": 10,
+          "maxGain": 4,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.66,
+        "portalExitProbability": 0.06,
+        "summary": "2025 Tennessee receiver played all 13 games as a starter, with 68 catches, 837 receiving yards and six TD; 2026 has two scoring catches through first four games. Official 2026 roster calls him a JUNIOR, correcting the outdated sophomore ledger class. High-level college production, but added upside and usage volatility remain.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/braylon-staley/23047"
+        ]
+      }
     },
     {
       "id": "tennessee|daevinhobbs",
@@ -11447,8 +11504,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 42,
+          "decline": 22,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.05,
+        "summary": "2025 rotational Tennessee DL played final eight games, posting 30 tackles, 3.5 TFL and three sacks after missing earlier action; 2026 logged 1.5 TFL against Texas and three QB hurries against Auburn. Impact flashes and intermittent availability suggest both improvement and downside.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/daevin-hobbs/23014"
+        ]
+      }
     },
     {
       "id": "tennessee|dasaahnbrame",
@@ -11466,8 +11542,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 43,
+          "steady": 31,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.09,
+        "summary": "2025 true freshman Tennessee tight end: six receptions for 63 yards across nine games. Made first start in 2026 and added catches versus Georgia Tech, Texas and Auburn; early rotation-to-start growth, but no established feature-player production. First college enrollment in 2025 means not draft eligible for 2027.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/dasaahn-brame/22998"
+        ]
+      }
     },
     {
       "id": "tennessee|daunemorris",
@@ -11486,8 +11581,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 38,
+          "steady": 34,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1,
+        "summary": "2025 Tennessee freshman reserve RB: 35 carries, 133 yards, one rushing TD. Expanded 2026 work includes 116 yards and a 42-yard TD versus Kennesaw State and 98 yards with TD against Georgia Tech; credible young breakout path but inconsistent SEC role. First college enrollment in 2025 means 2027 draft ineligible.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/daune-morris/23028"
+        ]
+      }
     },
     {
       "id": "tennessee|dejuanlane",
@@ -11505,8 +11619,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 36,
+          "steady": 39,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.07,
+        "summary": "2025 Penn State safety: 30 tackles, 2.5 TFL and one sack in 13 games with three starts. At Tennessee in 2026, started all five opening games, two INT including pick-six against Georgia Tech and two sacks against Auburn. A verified starter/turnover impact warrants higher breakout odds, with limited prior starting sample.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/dejuan-lane/23078"
+        ]
+      }
     },
     {
       "id": "tennessee|deseanbishop",
@@ -11517,16 +11650,35 @@
         "RB",
         "Flex"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "SR",
       "espnAthleteId": "4921108",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utsports.com/sports/football/roster/desean-bishop/22996",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 61,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.8,
+        "portalExitProbability": 0.02,
+        "summary": "Tennessee 2025 second-team All-SEC RB: 1,076 rushing yards, 16 rushing TD in 13 starts at 5.9 yards per carry. Started 2026 with 97 yards against Furman and 147 with two TD against Georgia Tech. Mature featured back, little room for explosive development; official 2026 classification SENIOR, not legacy junior.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/desean-bishop/22996"
+        ]
+      }
     },
     {
       "id": "tennessee|ethandavis",
@@ -11537,16 +11689,35 @@
         "TE",
         "Flex"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "SR",
       "espnAthleteId": "4870683",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utsports.com/sports/football/roster/ethan-davis/23003",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 49,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.54,
+        "portalExitProbability": 0.06,
+        "summary": "Tennessee 2025 junior TE had 21 catches, 257 yards and two TD in nine appearances/four starts, including seven for 85 versus Vanderbilt. Scored TD in first two 2026 games. Official 2026 class SENIOR corrects earlier junior label; moderate opportunity to grow, not an established high-volume receiving star.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/ethan-davis/23003"
+        ]
+      }
     },
     {
       "id": "tennessee|georgemacintyre",
@@ -11616,8 +11787,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 39,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.09,
+        "summary": "Tulane 2025 true freshman RB: 128 carries, 516 yards and five TD, plus 13 catches for 93 yards, six starts on CFP team. Transferred to Tennessee for 2026, with 47 rushing yards in debut and 32 at Georgia Tech. Transfer creates role competition; 2025 college entry bars 2027 NFL Draft.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/javin-gordon/23071"
+        ]
+      }
     },
     {
       "id": "tennessee|kayinlee",
@@ -11635,8 +11825,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 24,
+          "steady": 53,
+          "decline": 17,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.63,
+        "portalExitProbability": 0.04,
+        "summary": "Auburn 2025 starting CB did not allow a TD across 328 coverage snaps, had 31 tackles and four pass breakups in 11 starts. At Tennessee, started first five 2026 games and intercepted Texas; veteran quality supports steady odds, with some new-team variability.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/kayin-lee/23079"
+        ]
+      }
     },
     {
       "id": "tennessee|mariyondye",
@@ -11654,8 +11863,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 23,
+          "improve": 40,
+          "steady": 28,
+          "decline": 9,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.05,
+        "summary": "2025 Tennessee freshman reserve edge recorded eight tackles, 1.5 TFL and one sack in seven games. Broke through early 2026 with four sacks through five games, including two at Georgia Tech and a forced fumble versus Auburn. Strong rise from small sample, greater upside but avoid treating early 2026 sacks as proven multi-season elite. Enrolled in 2025, not 2027 draft eligible.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/mariyon-dye/23005"
+        ]
+      }
     },
     {
       "id": "tennessee|mikematthews",
@@ -11726,8 +11954,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 48,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.51,
+        "portalExitProbability": 0.05,
+        "summary": "Kansas State 2025 STAR starter: 41 tackles, five TFL, one sack and two picks in 12 games/10 starts, zero allowed TD on 286 coverage snaps. At Tennessee 2026 starting nickel and punt returner, 57-yard punt-return TD against Texas; transfer role offers some upside but has mature performance baseline.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/qua-moss/23083"
+        ]
+      }
     },
     {
       "id": "tennessee|radariousjackson",
@@ -11745,8 +11992,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 39,
+          "steady": 34,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.09,
+        "summary": "2025 Tennessee true freshman receiver caught nine passes for 90 yards in nine games. 2026 moved into the starting rotation, including three catches for 64 at Georgia Tech. Young physical receiver has realistic opportunity-driven growth but small SEC target sample; entered college 2025, no 2027 draft eligibility.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/radarious-jackson/23017"
+        ]
+      }
     },
     {
       "id": "tennessee|tjmetcalf",
@@ -11764,8 +12030,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 24,
+          "steady": 53,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.04,
+        "summary": "Michigan 2025 safety started all 13 games, made 58 tackles, four PBUs and one INT, earning All-Big Ten honorable mention; previously played at Arkansas. Started Tennessee's first five 2026 games with 23 tackles. Established multi-year college DB with more steady than breakout probability.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/tj-metcalf/23082"
+        ]
+      }
     },
     {
       "id": "tennessee|tyredmond",
@@ -11783,8 +12068,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 47,
+          "decline": 10,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04,
+        "summary": "2025 Tennessee true freshman CB was Freshman All-American after 12 starts, 43 tackles, three INT and an SEC-best 12 pass breakups. Has five 2026 starts with productive pass defense. Already high demonstrated level for sophomore; first enrolled 2025, ineligible for 2027 draft.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/ty-redmond/23037"
+        ]
+      }
     },
     {
       "id": "tennessee|tyreeweathersby",
@@ -11802,8 +12106,27 @@
       "sourceUrl": "https://utsports.com/sports/football/roster/tyree-weathersby/23053",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 36,
+          "steady": 38,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.36,
+        "portalExitProbability": 0.05,
+        "summary": "2025 Tennessee reserve edge played 13 games with one start and 24 tackles, 2.5 TFL and one sack. In 2026 opened as starter and had 2.5 sacks and TFL against Texas and another sack versus Furman; credible role-driven breakthrough with small-sample volatility.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/tyree-weathersby/23053"
+        ]
+      }
     },
     {
       "id": "tennessee|xaviergilliam",
@@ -11813,16 +12136,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SO",
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": "Sophomore",
+      "sourceClass": "JR",
       "espnAthleteId": "5146422",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utsports.com/sports/football/roster/xavier-gilliam/23068",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 39,
+          "steady": 29,
+          "decline": 13,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.08,
+        "summary": "2025 Penn State sophomore interior DL played 13 games, made 15 tackles and two TFL in 409 defensive snaps. Transferred to Tennessee for 2026 and produced three sacks/five TFL versus Furman, then 0.5 TFL versus Georgia Tech. Big debut against lower-tier opponent should not be over-weighted; 2026 official class JUNIOR, not legacy sophomore.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/xavier-gilliam/23068"
+        ]
+      }
     },
     {
       "id": "texas|archmanning",
@@ -14192,7 +14534,7 @@
       }
     }
   ],
-  "officialOverrides": 110,
+  "officialOverrides": 114,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
