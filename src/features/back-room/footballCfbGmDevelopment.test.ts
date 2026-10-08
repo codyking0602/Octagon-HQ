@@ -25,6 +25,8 @@ describe("CFB GM college-stage development", () => {
       expect(result.delta).toBeLessThanOrEqual(0);
     }
     expect(cfbGmDevProfile("texas|colinsimmons",99,"JR").confidence).toBe("reviewed-anchor");
+    expect(cfbGmDevProfile("alabama|keelonrussell",93,"SO").confidence).toBe("reviewed-anchor");
+    expect(cfbGmDevProfile("oregon|dakorienmoore",80,"SO").volatility).toBe("HIGH");
   });
   it("gives younger development trajectories a different shape from senior veterans", () => {
     let freshmanDelta=0,seniorDelta=0;
