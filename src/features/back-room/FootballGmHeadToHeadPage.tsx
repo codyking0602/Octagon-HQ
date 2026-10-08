@@ -38,7 +38,9 @@ import {
   footballGmTeamOverall,
   footballGmSignFreeAgent,
   type FootballGmTradeProposal,
+  type FootballGmSeasonResultV2,
 } from "./footballGmStrategy";
+import { footballGmSharedSeason, footballGmSharedThreeYears, footballGmRepairLegacyYearOne } from "./footballGmSharedPostseason";
 import FootballGmSoloPage, {
   CandidateBoard,
   CapMeter,
@@ -229,6 +231,7 @@ function YearOneMatchup({
   firstName,
   waiting,
   onContinue,
+  resolved,
 }: {
   leftName: string;
   rightName: string;
@@ -237,9 +240,10 @@ function YearOneMatchup({
   firstName: string | null;
   waiting?: boolean;
   onContinue?: () => void;
+  resolved?: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null;
 }) {
-  const left = footballGmSeasonResultV2({ seed: leftRun.seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
-  const right = footballGmSeasonResultV2({ seed: rightRun.seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
+  const left = resolved?.[0] ?? footballGmSeasonResultV2({ seed: leftRun.seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
+  const right = resolved?.[1] ?? footballGmSeasonResultV2({ seed: rightRun.seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
   return (
     <section className="football-gm__year-reveal football-gm__year1-matchup surface-card">
       <p className="eyebrow">YEAR 1 COMPLETE</p>
@@ -390,14 +394,16 @@ function YearOneMiniRecap({
   rightName,
   leftRun,
   rightRun,
+  resolved,
 }: {
   leftName: string;
   rightName: string;
   leftRun: PersistedRun;
   rightRun: PersistedRun;
+  resolved?: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null;
 }) {
-  const left = footballGmSeasonResultV2({ seed: leftRun.seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
-  const right = footballGmSeasonResultV2({ seed: rightRun.seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
+  const left = resolved?.[0] ?? footballGmSeasonResultV2({ seed: leftRun.seed, yearOneRoster: leftRun.roster, roster: leftRun.roster, year: 1 });
+  const right = resolved?.[1] ?? footballGmSeasonResultV2({ seed: rightRun.seed, yearOneRoster: rightRun.roster, roster: rightRun.roster, year: 1 });
   return (
     <section className="football-gm__year1-mini surface-card">
       <small>YEAR 1 RECAP</small>
@@ -416,20 +422,22 @@ function FinalMatch({
   leftRun,
   rightRun,
   onReplay,
+  resolved,
 }: {
   leftName: string;
   rightName: string;
   leftRun: PersistedRun;
   rightRun: PersistedRun;
   onReplay: () => void;
+  resolved?: readonly [readonly FootballGmSeasonResultV2[], readonly FootballGmSeasonResultV2[]] | null;
 }) {
   return (
     <>
       <FootballGmFranchiseReport
         name={leftName}
-        run={leftRun}
+        run={resolved ? { ...leftRun, resolvedSeasons: resolved[0] } : leftRun}
         opponentName={rightName}
-        opponentRun={rightRun}
+        opponentRun={resolved ? { ...rightRun, resolvedSeasons: resolved[1] } : rightRun}
       />
       <section className="football-gm-report__actions surface-card">
         <button type="button" onClick={onReplay}>NEW GM MATCH</button>
@@ -490,6 +498,32 @@ export default function FootballGmHeadToHeadPage() {
     : null;
 
   const opponentRun = mode === "human" ? remoteOpponentRun ?? initialRun(remote?.seed ?? run.seed) : cpuRun;
+  const myMatchKey = mode === "human" ? activeProfileId ?? "missing-my-profile" : "human";
+  const opponentMatchKey = mode === "human" ? remoteOpponent?.id ?? "missing-opponent" : "cpu";
+  const sharedMatchSeed = mode === "human" ? remote?.seed ?? run.seed : run.seed;
+  const sharedResults = run.roster.length === 7 && opponentRun.roster.length === 7
+    ? footballGmSharedThreeYears(sharedMatchSeed, [
+        { key: myMatchKey, yearOneRoster: run.roster, finalRoster: run.finalRoster.length === 7 ? run.finalRoster : run.roster },
+        { key: opponentMatchKey, yearOneRoster: opponentRun.roster, finalRoster: opponentRun.finalRoster.length === 7 ? opponentRun.finalRoster : opponentRun.roster },
+      ])
+    : null;
+  const storedLeft = remoteMe?.year1_result as FootballGmSeasonResultV2 | null | undefined;
+  const storedRight = remoteOpponent?.year1_result as FootballGmSeasonResultV2 | null | undefined;
+  const legacyYearOne = storedLeft && storedRight
+    ? footballGmRepairLegacyYearOne(storedLeft, storedRight, remote?.offseason_first_profile_id ?? null, myMatchKey, opponentMatchKey)
+    : null;
+  // Preserve all previously locked, valid Year 1 results (including old saves).
+  // Only the impossible duplicate finalists need the compatibility repair.
+  const legalStoredYearOne: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null = storedLeft && storedRight
+    && !(storedLeft.finish === storedRight.finish && ["Champion", "Super Bowl Loss"].includes(storedLeft.finish))
+    ? [storedLeft, storedRight] : null;
+  const yearOnePair: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null = legacyYearOne ?? legalStoredYearOne ?? (
+    sharedResults ? [sharedResults[myMatchKey]![0]!, sharedResults[opponentMatchKey]![0]!] : null
+  );
+  const resolvedThreeYears: readonly [readonly FootballGmSeasonResultV2[], readonly FootballGmSeasonResultV2[]] | null = sharedResults ? [
+    [yearOnePair?.[0] ?? sharedResults[myMatchKey]![0]!, ...sharedResults[myMatchKey]!.slice(1)],
+    [yearOnePair?.[1] ?? sharedResults[opponentMatchKey]![0]!, ...sharedResults[opponentMatchKey]!.slice(1)],
+  ] : null;
   const displayedPhase = mode === "human" ? remote?.phase ?? "waiting" : localPhase;
   const opponentDisplayName = mode === "human"
     ? remoteOpponent?.display_name ?? selectedOpponent?.displayName ?? "OPPONENT"
@@ -630,19 +664,25 @@ export default function FootballGmHeadToHeadPage() {
       || run.roster.length !== 7
     ) return;
     yearOneSubmittedRef.current = true;
-    const result = footballGmSeasonResultV2({
-      seed: run.seed,
-      yearOneRoster: run.roster,
-      roster: run.roster,
+    if (opponentRun.roster.length !== 7 || !remoteOpponent || !activeProfileId) {
+      yearOneSubmittedRef.current = false;
+      return;
+    }
+    const result = footballGmSharedSeason({
+      matchSeed: remote.seed,
       year: 1,
-    });
+      sides: [
+        { key: activeProfileId, yearOneRoster: run.roster, finalRoster: run.roster },
+        { key: remoteOpponent.id, yearOneRoster: opponentRun.roster, finalRoster: opponentRun.roster },
+      ],
+    })[activeProfileId];
     void repository.submitYear1(remote.code, result)
       .then((next) => setRemote(next))
       .catch((reason) => {
         yearOneSubmittedRef.current = false;
         setRemoteError(reason instanceof Error ? reason.message : "Year 1 could not be locked.");
       });
-  }, [mode, remote, remoteMe, repository, run.roster]);
+  }, [mode, remote, remoteMe, remoteOpponent, opponentRun.roster, activeProfileId, repository, run.roster]);
 
   useEffect(() => {
     if (mode !== "cpu" || localPhase !== "draft" || localTurn !== "cpu" || cpuBusyRef.current) return;
@@ -862,8 +902,16 @@ export default function FootballGmHeadToHeadPage() {
   }
 
   function beginCpuOffseason() {
-    const left = footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.roster, year: 1 });
-    const right = footballGmSeasonResultV2({ seed: cpuRun.seed, yearOneRoster: cpuRun.roster, roster: cpuRun.roster, year: 1 });
+    const pair = footballGmSharedSeason({
+      matchSeed: run.seed,
+      year: 1,
+      sides: [
+        { key: "human", yearOneRoster: run.roster, finalRoster: run.roster },
+        { key: "cpu", yearOneRoster: cpuRun.roster, finalRoster: cpuRun.roster },
+      ],
+    });
+    const left = pair.human!;
+    const right = pair.cpu!;
     let first: LocalTurn;
     if (FINISH_RANK[left.finish] !== FINISH_RANK[right.finish]) {
       first = FINISH_RANK[left.finish] < FINISH_RANK[right.finish] ? "user" : "cpu";
@@ -1201,12 +1249,8 @@ export default function FootballGmHeadToHeadPage() {
     humanFirstName = remote.participants.find((row) => row.id === remote.offseason_first_profile_id)?.display_name ?? null;
   }
 
-  const cpuYear1Left = mode === "cpu" && run.roster.length === 7
-    ? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.roster, year: 1 })
-    : null;
-  const cpuYear1Right = mode === "cpu" && cpuRun.roster.length === 7
-    ? footballGmSeasonResultV2({ seed: cpuRun.seed, yearOneRoster: cpuRun.roster, roster: cpuRun.roster, year: 1 })
-    : null;
+  const cpuYear1Left = mode === "cpu" ? yearOnePair?.[0] ?? null : null;
+  const cpuYear1Right = mode === "cpu" ? yearOnePair?.[1] ?? null : null;
   const cpuPriorityName = localOffseasonFirst === "user"
     ? myDisplayName
     : localOffseasonFirst === "cpu"
@@ -1393,6 +1437,7 @@ export default function FootballGmHeadToHeadPage() {
               leftRun={run}
               rightRun={opponentRun}
               firstName={mode === "human" ? humanFirstName : cpuPriorityName}
+              resolved={yearOnePair}
               waiting={mode === "human"}
               onContinue={mode === "cpu" ? beginCpuOffseason : undefined}
             />
@@ -1405,6 +1450,7 @@ export default function FootballGmHeadToHeadPage() {
               leftRun={run}
               rightRun={opponentRun}
               firstName={humanFirstName}
+              resolved={yearOnePair}
               onContinue={() => void acknowledgeYearOne()}
             />
           ) : null}
@@ -1519,6 +1565,7 @@ export default function FootballGmHeadToHeadPage() {
                     rightName={opponentDisplayName}
                     leftRun={run}
                     rightRun={opponentRun}
+                    resolved={yearOnePair}
                   />
                 ) : null}
               </div>
@@ -1540,6 +1587,7 @@ export default function FootballGmHeadToHeadPage() {
                 rightName={opponentDisplayName}
                 leftRun={run}
                 rightRun={opponentRun}
+                resolved={resolvedThreeYears}
                 onReplay={replay}
               />
             )
