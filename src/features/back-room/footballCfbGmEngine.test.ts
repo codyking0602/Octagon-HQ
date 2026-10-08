@@ -124,10 +124,14 @@ describe("CFB GM UI parity and owner gating", () => {
     expect(page).toContain('import { GmFootballWheel, PlayerHeadshot }');
     for (const token of ['football-gm__header','football-gm__intro-stages',
       'football-gm__roster-grid','football-wheel-picker football-gm__picker',
-      'football-gm-report__hero','football-gm-report__evolution-row']) {
+      'football-gm-report__evolution-row']) {
       expect(page).toContain(token);
       expect(nfl + read("src/features/back-room/FootballGmFranchiseReport.tsx")).toContain(token);
     }
+    // CFB owner preview still has its earlier hero; the public NFL result
+    // intentionally leads with the new compact winner + three-year comparison.
+    expect(page).toContain('football-gm-report__hero');
+    expect(read("src/features/back-room/FootballGmFranchiseReport.tsx")).toContain('gm-result__summary');
   });
   it("gates CFB owner route without changing existing public game library order", () => {
     expect(router).toContain('path: "football/gm-cfb-preview"');
