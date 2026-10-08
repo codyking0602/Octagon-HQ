@@ -3,7 +3,7 @@ import { wheelFootballCfbPriorityForSchoolId } from "./wheelFootballCfbPriority"
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
 import { footballGmTeamOverall } from "./footballGmStrategy";
 import { cfbGmSimulateCollegeSeason, type CfbGmCollegeFinish } from "./footballCfbGmSimulation";
-import classEvidence from "../../../data/curated/football/cfb/gm-2026-classification-evidence.json";
+import classEvidence from "../../../data/generated/football/cfb-gm-classification-runtime-2026.json";
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
 import { cfbGmDevProfile, cfbGmDevelop, type CfbGmClass } from "./footballCfbGmDevelopment";
 
