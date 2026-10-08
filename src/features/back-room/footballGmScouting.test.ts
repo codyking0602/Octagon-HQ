@@ -35,8 +35,8 @@ describe("NFL GM locked scouting pills", () => {
     for (const player of FOOTBALL_GM_PLAYER_POOL) {
       const draft = footballGmScoutingSnapshot(player, 1, seed);
       const offseason = footballGmScoutingSnapshot(player, 2, seed);
-      firstYearLabels.add(draft.outlook);
-      secondYearLabels.add(offseason.outlook);
+      firstYearLabels.add(draft.outlook!);
+      secondYearLabels.add(offseason.outlook!);
       expect(draft.tier).toBe(footballGmTalentTier(player.currentGrade));
       expect(offseason.tier).toBe(footballGmTalentTier(footballGmProjectedGradeForPlayer(player, 2, seed)));
       expect(draft.development).toBeNull();
