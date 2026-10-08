@@ -118,7 +118,7 @@ describe("BottomNavigation", () => {
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
   });
 
-  it("pushes the nav back to the layout bottom when iOS resumes with a stale shrunken visual viewport", () => {
+  it("never translates the nav when iOS resumes with a stale shrunken visual viewport", () => {
     const viewport = installVisualViewport();
     renderNavigation();
 
@@ -133,7 +133,7 @@ describe("BottomNavigation", () => {
 
     expect(navigation).not.toHaveClass("is-keyboard-open");
     expect(navigation).toHaveStyle({ display: "grid" });
-    expect((navigation as HTMLElement).style.transform).toBe("translate3d(0, 344px, 0)");
+    expect((navigation as HTMLElement).style.transform).toBe("");
   });
 
   it("still hides the navigation when an editor owns a materially occluded viewport", () => {
@@ -153,7 +153,7 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "none" });
   });
 
-  it("keeps the navigation hidden after blur until the keyboard viewport recovers", () => {
+  it("restores navigation immediately on blur even if iOS keyboard viewport stays stale", () => {
     const viewport = installVisualViewport();
     renderNavigation(["/"], <input aria-label="Message" />);
 
@@ -171,8 +171,8 @@ describe("BottomNavigation", () => {
       input.blur();
       viewport.dispatchEvent(new Event("resize"));
     });
-    expect(navigation).toHaveClass("is-keyboard-open");
-    expect(navigation).toHaveStyle({ display: "none" });
+    expect(navigation).not.toHaveClass("is-keyboard-open");
+    expect(navigation).toHaveStyle({ display: "grid" });
 
     act(() => {
       viewport.height = 844;
