@@ -6,7 +6,7 @@
   "baseCalibrationHead": "30e34c38142f828dd4c8d324c04dfac4d169b527",
   "nonRuntimeResearchOnly": true,
   "lockedGrades": true,
-  "reviewedCount": 79,
+  "reviewedCount": 104,
   "batchLog": [
     {
       "batch": 1,
@@ -23,6 +23,12 @@
     {
       "batch": 3,
       "teams": "DET GB HOU IND JAX",
+      "count": 25,
+      "individual2026SourceCount": 25
+    },
+    {
+      "batch": 4,
+      "teams": "KC LAC LAR LV MIA",
       "count": 25,
       "individual2026SourceCount": 25
     }
@@ -4058,6 +4064,1281 @@
           "season": 2026,
           "publishedOrAsOf": "By 2026-10-08",
           "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "KC|Secondary|alohigilman",
+      "name": "Alohi Gilman",
+      "team": "KC",
+      "position": "S",
+      "age": 29,
+      "draftOverall": 186,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 16,
+        "steadyPct": 44,
+        "declinePct": 37,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 NFL deep safety with Chargers/KC transition experience; veteran fit dependent on reliable deep communication.",
+        "through2026Week4": "2026 Week4 Chiefs listed him starting FS while young Hicks backs up; secure current snap route, modest new upside.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 25→37 as approaching 30 with new team roles; sustained range not evidenced by interceptions.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.chiefs.com/news/pre-camp-breakdown-evaluating-the-chiefs-group-of-defensive-backs-x3876",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.chiefs.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "KC|Secondary|chamarriconner",
+      "name": "Chamarri Conner",
+      "team": "KC",
+      "position": "S",
+      "age": 26,
+      "draftOverall": 119,
+      "lockedHQGrade": 79,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 7,
+        "improvePct": 22,
+        "steadyPct": 44,
+        "declinePct": 27,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Chiefs leader in defensive snaps (1,022) while functioning as primary nickel; 112 tackles, 2 sacks.",
+        "through2026Week4": "Returned from early 2026 absence Week4, played roughly 75% snaps as safety, a different role from 2025 slot.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→27 and breakout 4→7; role flexibility valuable but position switch and recent missed games increase range.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.chiefs.com/news/pre-camp-breakdown-evaluating-the-chiefs-group-of-defensive-backs-x3876",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.arrowheadpride.com/kansas-city-chiefs-analysis/212274/chiefs-week-4-snap-count-analysis-chamarri-conner-back",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "KC|Secondary|ljariussneed",
+      "name": "L'Jarius Sneed",
+      "team": "KC",
+      "position": "CB",
+      "age": 29,
+      "draftOverall": 138,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 33,
+        "declinePct": 37,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 14,
+        "steadyPct": 34,
+        "declinePct": 49,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 7.2,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 Tennessee corner with reduced health-driven continuity; 2026 Chiefs re-signed for physical outside press skills.",
+        "through2026Week4": "2026 starts opposite first-round rookie Delane, but former elite press reputation predates recent availability concerns.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 37→49 and lower improve 18→14; veteran press corner faces health and change-of-system downside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.chiefs.com/news/pre-camp-breakdown-evaluating-the-chiefs-group-of-defensive-backs-x3876",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.chiefs.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "KC|Secondary|mansoordelane",
+      "name": "Mansoor Delane",
+      "team": "KC",
+      "position": "CB",
+      "age": 22,
+      "draftOverall": 6,
+      "lockedHQGrade": 85,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 24,
+        "improvePct": 28,
+        "steadyPct": 26,
+        "declinePct": 22,
+        "maxAnnualGain": 7.7,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 30,
+        "improvePct": 28,
+        "steadyPct": 21,
+        "declinePct": 21,
+        "maxAnnualGain": 7.2,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL season; LSU prospect with significant 2026 first-round corner investment.",
+        "through2026Week4": "2026 Week4 Chiefs win brought strong run support and 10 tackles for second consecutive game; already starter.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise breakout 24→30 while preserving meaningful decline: run fit and opportunity verified, prolonged shadow coverage untested.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.chiefs.com/news/pre-camp-breakdown-evaluating-the-chiefs-group-of-defensive-backs-x3876",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.arrowheadpride.com/kansas-city-chiefs-analysis/212363/good-bad-chiefs-win-raiders",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "KC|Secondary|nohlwilliams",
+      "name": "Nohl Williams",
+      "team": "KC",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 85,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 22,
+        "improvePct": 28,
+        "steadyPct": 21,
+        "declinePct": 29,
+        "maxAnnualGain": 7.5,
+        "maxAnnualLoss": 7.4,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 NFL rookie Kansas City played meaningful CB snaps, with PFF coverage about 75.6 in reported grade survey.",
+        "through2026Week4": "2026 still CB2/CB3 competing with Delane and Sneed; no automatic outside starting permanence.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise breakout 18→22 and decline 22→29; productive rookie coverage, but squeezed depth competition.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.chiefs.com/news/pre-camp-breakdown-evaluating-the-chiefs-group-of-defensive-backs-x3876",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.chiefs.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAC|Secondary|camhart",
+      "name": "Cam Hart",
+      "team": "LAC",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 140,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 15,
+        "improvePct": 29,
+        "steadyPct": 31,
+        "declinePct": 25,
+        "maxAnnualGain": 5.9,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Chargers 640 defensive snaps; outside CB proving physicality but not locked high-end coverage.",
+        "through2026Week4": "2026 indexed snap counts show 168 defensive snaps across early games, ~82% of plays in snapshot.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Lower improve 36→29 and raise decline 19→25; consistent involvement is positive but incomplete coverage quality.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2026-snap-counts.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAC|Secondary|derwinjames",
+      "name": "Derwin James Jr.",
+      "team": "LAC",
+      "position": "S",
+      "age": 30,
+      "draftOverall": 17,
+      "lockedHQGrade": 89,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 58,
+        "declinePct": 21,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 56,
+        "declinePct": 25,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 made Pro Bowl; started 16 games with 2 sacks/3 INT and 895+ snaps, elite inside/outside safety hybrid.",
+        "through2026Week4": "2026 safety remains core multi-alignment player; early heavy workloads continue, physical role has injury exposure.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 21→25, lower improve 19→17; wide utility stabilizes yet 30-year contact load caps leap.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.pff.com/news/pff-safety-rankings-the-top-32-players-ahead-of-the-2026-nfl-season",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAC|Secondary|elijahmolden",
+      "name": "Elijah Molden",
+      "team": "LAC",
+      "position": "S",
+      "age": 27,
+      "draftOverall": 100,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 6,
+        "improvePct": 16,
+        "steadyPct": 29,
+        "declinePct": 49,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 7.9,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 started 12 Chargers games, hybrid safety/corner, 538 defensive snaps; past injuries break continuity.",
+        "through2026Week4": "Early 2026 snap table only 53 defensive snaps, suggesting narrowed role compared with 2025.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 17→49 and lower improve 25→16; role shrink more informative than 2025 single INT.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2026-snap-counts.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAC|Secondary|tarheebstill",
+      "name": "Tarheeb Still",
+      "team": "LAC",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 137,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 21,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 19,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 22,
+        "improvePct": 33,
+        "steadyPct": 22,
+        "declinePct": 23,
+        "maxAnnualGain": 6.8,
+        "maxAnnualLoss": 5.4,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 773 defensive snaps and 13 starts as young outside corner; genuine job security.",
+        "through2026Week4": "Early 2026 179 defensive snaps (~88% in indexed snapshot), continued extensive coverage assignments.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Breakout 21→22, decline 19→23; starter continuity justifies growth, but heavy young coverage workload volatile.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2026-snap-counts.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAC|Secondary|tonyjefferson",
+      "name": "Tony Jefferson",
+      "team": "LAC",
+      "position": "S",
+      "age": 34,
+      "draftOverall": null,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 7,
+        "steadyPct": 36,
+        "declinePct": 56,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 4,
+        "steadyPct": 26,
+        "declinePct": 69,
+        "maxAnnualGain": 1,
+        "maxAnnualLoss": 9.5,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 late-career veteran safety appeared in 8 starts with 492 defensive snaps and 4 interceptions.",
+        "through2026Week4": "2026 still depth/rotation option and age 34; no sound sample backing repeat four-INT output.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 56→69, reduce improve 7→4; aging tackling/availability and role shrink dominate improbable late breakout.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/teams/sdg/2026-snap-counts.htm",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAR|Secondary|jaylenwatson",
+      "name": "Jaylen Watson",
+      "team": "LAR",
+      "position": "CB",
+      "age": 28,
+      "draftOverall": 243,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 5,
+        "improvePct": 23,
+        "steadyPct": 38,
+        "declinePct": 34,
+        "maxAnnualGain": 4.6,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Chiefs physical press outside CB, above-average coverage and matchup with larger receivers.",
+        "through2026Week4": "Moved Rams 2026; out with injury heading into Week4, interrupts system adaptation.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 17→34, lower improve 25→23: reasonable fit in new defense but missed reps are real.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.therams.com/news/countdown-to-camp-how-will-pieces-in-the-secondary-fit-together",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.bleedinggreennation.com/philadelphia-eagles-game-information/185122/eagles-film-preview-scheme-will-have-to-help-this-team-beat-the-rams",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAR|Secondary|kamcurl",
+      "name": "Kam Curl",
+      "team": "LAR",
+      "position": "S",
+      "age": 27,
+      "draftOverall": 216,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 55,
+        "declinePct": 25,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 established Rams safety box/coverage hybrid, re-signed for durable communication and run fits.",
+        "through2026Week4": "2026 starting with Quentin Lake, indexed PFF coverage about 68.5 early season; modest but reliable.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 15→25 to recognize age/physical role, maintain mostly steady long-term projection.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.therams.com/news/countdown-to-camp-how-will-pieces-in-the-secondary-fit-together",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/kamren-curl/55800",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAR|Secondary|kamrenkinchens",
+      "name": "Kamren Kinchens",
+      "team": "LAR",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 99,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 22,
+        "improvePct": 36,
+        "steadyPct": 20,
+        "declinePct": 22,
+        "maxAnnualGain": 4.2,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 23,
+        "improvePct": 33,
+        "steadyPct": 19,
+        "declinePct": 25,
+        "maxAnnualGain": 6.7,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 developing Rams deep safety with ball-reading ability and variable run-defense consistency.",
+        "through2026Week4": "Week4 used on pressures/blitzes against Eagles; injury uncertain pregame, so do not assume full-time deep range.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise breakout 22→23 but decline 22→25; special blitz use opens skills while role consistency unproven.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.therams.com/news/countdown-to-camp-how-will-pieces-in-the-secondary-fit-together",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.turfshowtimes.com/los-angeles-rams-scores-results/150917/rams-eagle-snap-count-reviewl",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAR|Secondary|quentinlake",
+      "name": "Quentin Lake",
+      "team": "LAR",
+      "position": "S",
+      "age": 27,
+      "draftOverall": 211,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 7,
+        "improvePct": 24,
+        "steadyPct": 47,
+        "declinePct": 22,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 4.2,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 versatile Rams safety/nickel with slot and box responsibilities, communication-intensive starter.",
+        "through2026Week4": "2026 Week4 played every defensive snap; coverage adjusted to Eagles after strong blitz front.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Improve 25→24, decline 17→22; reliability high, limited physical ceiling relative to elite pure CBs.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.therams.com/news/countdown-to-camp-how-will-pieces-in-the-secondary-fit-together",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.turfshowtimes.com/los-angeles-rams-scores-results/150917/rams-eagle-snap-count-reviewl",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LAR|Secondary|trentmcduffie",
+      "name": "Trent McDuffie",
+      "team": "LAR",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 21,
+      "lockedHQGrade": 98,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 17,
+        "steadyPct": 76,
+        "declinePct": 6,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 1.8,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 16,
+        "steadyPct": 73,
+        "declinePct": 10,
+        "maxAnnualGain": 1.3,
+        "maxAnnualLoss": 2.8,
+        "marketVariancePct": 3
+      },
+      "evidence": {
+        "season2025": "2025 Kansas City elite technical slot/outside corner; Rams acquired him to play multiple roles.",
+        "through2026Week4": "Early 2026 PFF 90.4 coverage and very low completions on about 250 snaps; sustained beyond interceptions.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 6→10 modestly for team change, retain very high steady at 73; grade98 leaves little growth room.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.therams.com/news/countdown-to-camp-how-will-pieces-in-the-secondary-fit-together",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/trent-mc-duffie/72191",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LV|Secondary|ericstokes",
+      "name": "Eric Stokes",
+      "team": "LV",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 29,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 39,
+        "declinePct": 31,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 5,
+        "improvePct": 15,
+        "steadyPct": 32,
+        "declinePct": 48,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 Raiders coverage about 75.2 by secondary analysis, but limited healthy prolonged all-pro calibre sample.",
+        "through2026Week4": "2026 reported lateral mobility concerns despite team defensive success and starter listing.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 31→48, improvement 18→15; scheme-fit issue should not be masked by low-team points allowed.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.silverandblackpride.com/las-vegas-raiders-analysis/141702/las-vegas-raiders-mailbag-trade-wide-receiver-week-4-chiefs",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LV|Secondary|hezekiahmasses",
+      "name": "Hezekiah Masses",
+      "team": "LV",
+      "position": "CB",
+      "age": 22,
+      "draftOverall": 175,
+      "lockedHQGrade": 74,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 27,
+        "declinePct": 34,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 28,
+        "steadyPct": 14,
+        "declinePct": 39,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 7.3,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL regular season; rookie defensive back rather than proven veteran.",
+        "through2026Week4": "2026 rookie forcing turnovers as CB2 reserve/rotational defender; not full-time starter, per Raiders Week4 depth chart.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise breakout 11→19, decline 34→39: flashes encouraging but turnover spike cannot substitute for coverage chart.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.patspulpit.com/new-england-patriots-analysis/139758/patriots-vs-raiders-preview-nfl-week-5",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LV|Secondary|jeremychinn",
+      "name": "Jeremy Chinn",
+      "team": "LV",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 64,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 5,
+        "improvePct": 23,
+        "steadyPct": 49,
+        "declinePct": 23,
+        "maxAnnualGain": 3.9,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 physical hybrid strong safety with established box tackling and limited pure deep safety workload.",
+        "through2026Week4": "2026 listed starting SS in Raiders new defense; blitz/run support likely most sustainable contributions.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Improve 20→23, decline 19→23; role fit stabilizes, but not assume CB1 coverage ability.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LV|Secondary|taronjohnson",
+      "name": "Taron Johnson",
+      "team": "LV",
+      "position": "CB",
+      "age": 30,
+      "draftOverall": 121,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 16,
+        "steadyPct": 42,
+        "declinePct": 40,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 veteran Buffalo nickel with slot pattern-matching experience and tackle efficiency central.",
+        "through2026Week4": "2026 Raiders slot corner on three-CB depth chart; transition to new terminology at age30 raises risk.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 25→40; slot experience travels but team change and age put health and assignments at risk.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "LV|Secondary|treydanstukes",
+      "name": "Treydan Stukes",
+      "team": "LV",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 38,
+      "lockedHQGrade": 77,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 16,
+        "improvePct": 36,
+        "steadyPct": 26,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 29,
+        "steadyPct": 23,
+        "declinePct": 29,
+        "maxAnnualGain": 6.8,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "No verified 2025 NFL starting season; developing safety with role projection still evolving.",
+        "through2026Week4": "Week4 Raiders officially list him starting free safety, a notable opportunity.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise breakout 16→19, decline 22→29: workload now real but center-field range and communication unverified.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.raiders.com/news/raiders-unofficial-depth-chart-for-week-4-vs-kansas-city-chiefs-100426",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIA|Secondary|chrisjohnson",
+      "name": "Chris Johnson",
+      "team": "MIA",
+      "position": "CB",
+      "age": 21,
+      "draftOverall": 27,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 24,
+        "improvePct": 40,
+        "steadyPct": 17,
+        "declinePct": 19,
+        "maxAnnualGain": 6.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 26,
+        "improvePct": 33,
+        "steadyPct": 18,
+        "declinePct": 23,
+        "maxAnnualGain": 7.7,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL season; new Dolphins high-investment outside corner whose college traits require NFL translation.",
+        "through2026Week4": "2026 early defensive roster/Week4 commentary indicates encouraging young CB moments, but role is still developing.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Breakout 24→26; reduce improvement 40→33, raise decline 19→23, accounting for CB rookie variance.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.thephinsider.com/miami-dolphins-analysis/123282/the-phinsider-mailbag-offense-changes-following-achanes-injury-young-players-and-2027-draft-in-week-4",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIA|Secondary|dantetrader",
+      "name": "Dante Trader Jr.",
+      "team": "MIA",
+      "position": "S",
+      "age": 23,
+      "draftOverall": 155,
+      "lockedHQGrade": 73,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 27,
+        "declinePct": 34,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 13,
+        "improvePct": 27,
+        "steadyPct": 16,
+        "declinePct": 44,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 8.5,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 rookie Dolphins safety experience was intermittent and not a proven two-year deep starter.",
+        "through2026Week4": "2026 competing for box/deep responsibilities; official 2026 preview identifies competition for snaps.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 34→44, breakout 11→13: 73-grade growth upside, high risk of part-time assignment.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIA|Secondary|jasonmarshall",
+      "name": "Jason Marshall Jr.",
+      "team": "MIA",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 150,
+      "lockedHQGrade": 74,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 27,
+        "declinePct": 34,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 13,
+        "improvePct": 29,
+        "steadyPct": 21,
+        "declinePct": 37,
+        "maxAnnualGain": 6.2,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 242 defensive snaps, one interception and two late PBUs, brief flashes rather than full starting year.",
+        "through2026Week4": "2026 Dolphins corner room still reshuffling, playing time plausible but assignment quality unestablished.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Breakout 11→13, improve 28→29, decline 34→37; end-year flashes only partial evidence.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIA|Secondary|jujubrents",
+      "name": "JuJu Brents",
+      "team": "MIA",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 44,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 39,
+        "declinePct": 31,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 22,
+        "steadyPct": 21,
+        "declinePct": 45,
+        "maxAnnualGain": 6.3,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "2025 limited healthy snaps with Indianapolis/Miami move, 2023 second-round frame not reliable if durability fails.",
+        "through2026Week4": "2026 corner depth entering camp; club cites prior flashes but no secure every-game starter role.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise decline 31→45 and loss ceiling; upside still physically credible, chronic availability/role competition dominates.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "MIA|Secondary|michaeltaaffe",
+      "name": "Michael Taaffe",
+      "team": "MIA",
+      "position": "S",
+      "age": 23,
+      "draftOverall": 158,
+      "lockedHQGrade": 74,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 28,
+        "steadyPct": 35,
+        "declinePct": 28,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 32,
+        "steadyPct": 21,
+        "declinePct": 35,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL regular season; college safety prospect, likely challenged by rapid pro communication demands.",
+        "through2026Week4": "2026 Miami safety depth newcomer with projected competition and special-teams responsibilities.",
+        "limitations": "2026 first-four-week data; where linked sources are position-group rather than independent advanced coverage, this constrains confidence."
+      },
+      "reasonRelativeToExisting": "Raise breakout 9→12 and decline 28→35; younger processing upside balanced by uncertain future role.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2025,
+          "publishedOrAsOf": "2025 recap / 2026 pre-camp",
+          "scope": "club/player role context"
+        },
+        {
+          "url": "https://www.miamidolphins.com/news/training-camp-preview-2026-defensive-backs",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "player or current team context"
         }
       ],
       "auditStatus": "individual-2025-2026-review"
