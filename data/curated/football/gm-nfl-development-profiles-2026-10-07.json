@@ -4,7 +4,7 @@
   "effectiveDate": "2026-10-08",
   "gradeAuthority": "data/generated/football/wheel-nfl-*-grades-2026-10-03.json",
   "contractAuthority": "data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
-  "policy": "All 594 player development profiles explicitly reviewed; full 594-row review and supporting HQ grade source notes: data/curated/football/gm-nfl-development-review-audit-2026-10-08.json. Original HQ grades preserved.",
+  "policy": "All 594 player development profiles explicitly reviewed; full 594-row review and supporting HQ grade source notes: data/curated/football/gm-nfl-development-review-audit-2026-10-08.json. Original HQ grades preserved. Current-ability corrections approved 2026-10-08: Jake Ferguson 82→79; Brenton Strange 80→83. Existing development probabilities, upside/downside bounds and market volatility are unchanged.",
   "profileCount": 594,
   "profiles": [
     {
@@ -3111,7 +3111,7 @@
       "family": "TE",
       "position": "TE",
       "ageAtCalibration": 27,
-      "gradeAtCalibration": 82,
+      "gradeAtCalibration": 79,
       "confidence": "high",
       "draftOverall": 129,
       "breakoutPct": 4,
@@ -5220,7 +5220,7 @@
       "family": "TE",
       "position": "TE",
       "ageAtCalibration": 25,
-      "gradeAtCalibration": 80,
+      "gradeAtCalibration": 83,
       "confidence": "high",
       "draftOverall": 61,
       "breakoutPct": 15,
