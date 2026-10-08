@@ -25,7 +25,7 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     expect(new Set(CFB_GM_PLAYERS.map((p) => p.id)).size).toBe(468);
     expect(new Set(researched.map((r) => r.id)).size).toBe(468);
     expect(new Set(CFB_GM_PLAYERS.map((p) => p.schoolId))).toEqual(new Set(CFB_GM_AP_SCHOOLS));
-    expect(researched.filter((r) => r.calibration)).toHaveLength(55);
+    expect(researched.filter((r) => r.calibration)).toHaveLength(65);
     for (const row of researched) {
       const player = cfbGmPlayer(row.id);
       expect(player, row.id).toBeTruthy();
