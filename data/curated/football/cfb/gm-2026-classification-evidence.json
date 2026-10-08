@@ -3721,8 +3721,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 22,
+          "steady": 61,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.02,
+        "summary": "Houston 2025 first-team All-Big 12 receiver: 67 catches, 966 yards, 12 touchdowns, with 157 yards against Arizona and 2026 Biletnikoff/Senior Bowl preseason attention. Veteran established feature WR; modest breakout headroom and high projected 2027 draft exit.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/amare-thomas/9909"
+        ]
+      }
     },
     {
       "id": "houston|ashtonporter",
@@ -3740,8 +3759,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 36,
+          "steady": 36,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.3,
+        "portalExitProbability": 0.08,
+        "summary": "Oregon 2025 reserve DL played all 15 games but had only 20 tackles, 2.5 TFL and one sack; 25 career tackles across three seasons. Houston 2026 senior transfer offers extra reps and growth but limited established starter evidence.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/ashton-porter/10025"
+        ]
+      }
     },
     {
       "id": "houston|brandonmackii",
@@ -3751,16 +3789,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "8TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "8TH",
       "espnAthleteId": "4567252",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/brandon-mack-ii/9880",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 26,
+          "steady": 47,
+          "decline": 21,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.21,
+        "portalExitProbability": 0.02,
+        "summary": "Houston 2025 edge/JACK played 13 games, starting final nine, with five sacks and six TFL after 2024 39 tackles/three sacks. Official 2026 roster uniquely lists EIGHTH YEAR, supported by NCAA waiver/reclassification after Ole Miss 2019 redshirt and multiple injuries; modeled terminal 2026 eligibility, not standard senior.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/brandon-mack-ii/9880"
+        ]
+      }
     },
     {
       "id": "houston|connerweigman",
@@ -3816,8 +3873,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 37,
+          "steady": 33,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.09,
+        "summary": "Oklahoma State 2025 transfer DT managed 13 tackles and 0.5 TFL in four games, after starting 13 games at Vanderbilt in 2024 with 34 tackles and 1.5 sacks. Houston 2026 fresh transfer with role/injury variability and scope for rebound rather than current star projection.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/demarion-thomas/10016"
+        ]
+      }
     },
     {
       "id": "houston|jadenyates",
@@ -3835,8 +3911,27 @@
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 28,
+          "steady": 53,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.56,
+        "portalExitProbability": 0.04,
+        "summary": "Houston 2026 senior LB comes from 2025 Ole Miss: nine opening starts across 14 games with 11 tackles in Tulane game; 176 career tackles over three FBS seasons. 2024 Marshall all-Sun Belt first team with 120 tackles, 7.5 TFL. Veteran high-volume tackler, steady outweighs leap.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/jaden-yates/10019"
+        ]
+      }
     },
     {
       "id": "houston|jalenmayo",
@@ -3846,16 +3941,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "5232344",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/jalen-mayo/10009",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 47,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.38,
+        "portalExitProbability": 0.07,
+        "summary": "Stephen F. Austin 2025 first-team all-Southland defensive back: 48 tackles, team-joint-high four interceptions in 14 games; prior Virginia Union Division II production across two seasons. Houston official 2026 FIFTH YEAR, FCS-to-Big12 jump leaves meaningful performance variance, normal final-season modeling.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/jalen-mayo/10009"
+        ]
+      }
     },
     {
       "id": "houston|javionwhite",
@@ -3873,8 +3987,27 @@
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 32,
+          "steady": 48,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.05,
+        "summary": "Tulane 2024-25 starting defensive back: 25 games/16 starts, four career INT, 61 tackles, five TFL and 13 PBU; 2025 third-team All-AAC with 73.9 coverage grade per official Houston bio. Houston 2026 junior P4 transfer with already demonstrated coverage and moderate upside.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/javion-white/10014"
+        ]
+      }
     },
     {
       "id": "houston|jordanallen",
@@ -3884,16 +4017,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4873636",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/jordan-allen/9838",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 51,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.03,
+        "summary": "Houston 2025 weak-safety starter all 13 games with excellent tackling efficiency: 85.5 cited PFF tackle grade, just 7.4% missed tackles; 2026 official FIFTH-YEAR classification (not legacy senior). After LSU rotational years, proven Big 12 starter with steady most likely; model normal final season.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/jordan-allen/9838"
+        ]
+      }
     },
     {
       "id": "houston|kentrellwebb",
@@ -3910,9 +4062,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 58,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.02,
+        "summary": "Houston 2025 free safety started all 13 games, 71 tackles and no penalties despite 39 targets; 2024 all 12 starts with 54 tackles, prior Tulane. Official 2026 fifth-year veteran, established safety near developed plateau; projected terminal year.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/kentrell-webb/9918"
+        ]
+      }
     },
     {
       "id": "houston|khalillaufau",
@@ -3930,8 +4101,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 50,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.45,
+        "portalExitProbability": 0.04,
+        "summary": "Houston 2025 all-12-game starter on defensive line, preseason 2026 All-Big12/Outland watch. Earlier Washington State 2024 three starts, 16 tackles, five TFL and four sacks. Evolved from backup to experienced interior lineman; limited further breakout probability.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/khalil-laufau/9877"
+        ]
+      }
     },
     {
       "id": "houston|kobyyoung",
@@ -3950,8 +4140,27 @@
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 37,
+          "steady": 35,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.09,
+        "summary": "Houston 2025 sophomore WR played all 13 games/eight starts with career-best four catches and 56 yards against West Virginia and zero drops on at least ten targets. Played just one game in 2024; full-time role now but limited breakout receiving volume, reasonable additional upside.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/koby-young/9926"
+        ]
+      }
     },
     {
       "id": "houston|makhihughes",
@@ -3970,8 +4179,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 33,
+          "steady": 39,
+          "decline": 20,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.35,
+        "portalExitProbability": 0.05,
+        "summary": "Tulane 2023 Freshman All-American and 2023-24 first-team All-AAC running back with 1,378 (2023) and 1,401 (2024) rushing yards; moved to Oregon in 2025 without reported game production on Houston official biography. Houston 2026 senior rebound candidate: exceptional older tape, yet lost recent top-level usage and transition risk.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/makhi-hughes/10011"
+        ]
+      }
     },
     {
       "id": "houston|patrickovermyer",
@@ -3989,8 +4217,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 35,
+          "steady": 43,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.51,
+        "portalExitProbability": 0.04,
+        "summary": "UTSA 2025 receiving TE had 27 catches, 344 yards and five TD and 74.9 cited PFF offense grade; 2024 The Athletic Freshman All-American. Houston 2026 senior preseason Mackey watch; meaningful established receiving chops with opportunity for modest P4 growth.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/patrick-overmyer/10015"
+        ]
+      }
     },
     {
       "id": "houston|reshaunsanfordii",
@@ -4008,8 +4255,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 37,
+          "steady": 27,
+          "decline": 19,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.21,
+        "portalExitProbability": 0.06,
+        "summary": "Houston 2025 sophomore RB did not play after fall-camp injury; 2024 six-start back rushed for team-high 444 yards on 94 carries and caught 18 targets for 157 yards. 2023 preseason injury/redshirt. Repeated missed seasons require substantial volatility in any 2026 rebound rather than inflated stable odds.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/reshaun-sanford-ii/9899"
+        ]
+      }
     },
     {
       "id": "houston|sionefotu",
@@ -4027,8 +4293,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 54,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.03,
+        "summary": "Houston 2025 starting MIKE LB in 12 of 13 games and Big12 defensive player of week, recovered conference-high three fumbles. Prior Utah 2020/2023-24 experience with 2021-22 church mission; 2026 official senior and preseason all-Big12, highly experienced but eligibility beyond game uncertain.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/sione-fotu/9863"
+        ]
+      }
     },
     {
       "id": "houston|trentwalker",
@@ -4046,9 +4331,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 27,
+          "steady": 55,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.02,
+        "summary": "Oregon State 2025 primary receiver 68 catches, 823 yards and two TD, 179-yard game versus App State; 81 catches in 2024. Houston 2026 fifth-year transfer and Biletnikoff preseason watch, extensive productive tape and normal terminal-year model.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/trent-walker/10017"
+        ]
+      }
     },
     {
       "id": "houston|willjames",
@@ -4066,8 +4370,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/248/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 29,
+          "steady": 55,
+          "decline": 11,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.64,
+        "portalExitProbability": 0.03,
+        "summary": "Houston 2025 All-Big12 second-team CB started all 13 games with three INT, eight PBU and two forced fumbles; 2024 at Southern Miss 12 games/10 starts, seven passes defended. 2026 senior preseason Nagurski/Bednarik awards; already high-level proven corner, more steady than breakout.",
+        "sources": [
+          "https://uhcougars.com/sports/football/roster/will-james/9873"
+        ]
+      }
     },
     {
       "id": "indiana|amareferrell",
@@ -14941,7 +15264,7 @@
       }
     }
   ],
-  "officialOverrides": 114,
+  "officialOverrides": 117,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
