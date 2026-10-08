@@ -65,9 +65,25 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     // Classification alone is not NFL eligibility: 2026 redshirt sophomore Drew
     // Mestemaker entered college in 2024 and is eligible for the 2027 draft.
     expect(isModelDraftEligible("oklahoma-state|drewmestemaker","SO")).toBe(true);
-    expect(CFB_GM_PLAYERS.filter((p) => (p.classification === "FR" ||
-      p.classification === "SO") && p.id !== "oklahoma-state|drewmestemaker")
-      .every((p) => !isModelDraftEligible(p.id,p.classification))).toBe(true);
+    // A 2026 redshirt-sophomore label can follow 2024 matriculation.
+    // Check eligibility against the player's researched initial entry rather
+    // than inventing a blanket sophomore prohibition.
+    const classEvidence = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-classification-evidence.json","utf8")) as {
+      players:Array<{id:string;earliestDraftYear:number|null;draftEligible2027:boolean|null}>;
+    };
+    const draftYears=new Map(classEvidence.players.map((row)=>[row.id,row]));
+    for(const player of CFB_GM_PLAYERS.filter((p)=>p.classification==="FR"||p.classification==="SO")) {
+      const observed=isModelDraftEligible(player.id,player.classification);
+      const evidence=draftYears.get(player.id)!;
+      if(observed) {
+        expect(evidence.draftEligible2027,player.id).toBe(true);
+        expect(evidence.earliestDraftYear,player.id).not.toBeNull();
+        expect(evidence.earliestDraftYear!,player.id).toBeLessThanOrEqual(2027);
+      } else if(evidence.draftEligible2027!==null) {
+        expect(evidence.draftEligible2027,player.id).toBe(false);
+      }
+    }
+    expect(isModelDraftEligible("lsu|dilinjones","SO")).toBe(true);
   });
 
   it("applies actual seeded development to the second-year team and leaves Wheel HQ untouched", () => {
