@@ -622,9 +622,13 @@ export default function FootballGmHeadToHeadPage() {
     if (!matchCode || !repository || !activeProfileId) return;
     let active = true;
     let timer = 0;
+    let inFlight = false;
+    let lastSyncedAt = 0;
+    let matchFinished = false;
 
     const applyState = (next: FootballGmMatchState) => {
       if (!active) return;
+      matchFinished = next.phase === "complete" || Boolean(next.completed_at || next.declined_at);
       setRemote(next);
       setRemoteError("");
       const participant = next.participants.find((row) => row.id === activeProfileId);
@@ -645,23 +649,39 @@ export default function FootballGmHeadToHeadPage() {
     };
 
     const sync = async (open = false) => {
+      // Keep 5-second live turns responsive without overlapping large match
+      // snapshots when Safari delivers focus alongside an interval tick.
+      if (!active || inFlight) return;
+      inFlight = true;
+      lastSyncedAt = Date.now();
       try {
         const next = open ? await repository.open(matchCode) : await repository.load(matchCode);
         applyState(next);
       } catch (reason) {
         if (!active) return;
         setRemoteError(reason instanceof Error ? reason.message : "The GM match could not be loaded.");
+      } finally {
+        inFlight = false;
       }
     };
 
     void sync(true);
-    timer = window.setInterval(() => void sync(false), 5_000);
-    const onFocus = () => void sync(false);
+    timer = window.setInterval(() => {
+      if (document.visibilityState !== "visible" || matchFinished) return;
+      void sync(false);
+    }, 5_000);
+    const onFocus = () => {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - lastSyncedAt < 5_000) return;
+      void sync(false);
+    };
     window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
     return () => {
       active = false;
       window.clearInterval(timer);
       window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
     };
   }, [activeProfileId, matchCode, repository]);
 
