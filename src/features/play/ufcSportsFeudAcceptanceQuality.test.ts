@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { normalizeFamilyFeudInput } from "../games/familyFeudEngine";
+import { matchFamilyFeudAnswer, normalizeFamilyFeudInput } from "../games/familyFeudEngine";
+import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
 import { UFC_SPORTS_FEUD_MAIN } from "./ufcSportsFeudMain";
 import { UFC_SPORTS_FEUD_FAST_1 } from "./ufcSportsFeudFast1";
 import { UFC_SPORTS_FEUD_FAST_2 } from "./ufcSportsFeudFast2";
@@ -188,4 +189,64 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
       expect(row.prompt.toLowerCase(), row.id).not.toMatch(/explain|describe why|give a reason|justify/);
     }
   });
+
+  it("accepts six obvious wrestlers on every UFC wrestling prompt", () => {
+    for (const prefix of ["ufc-main-04-", "ufc-fast1-09-"]) {
+      const rows = familyRows(prefix);
+      expect(rows).toHaveLength(5);
+      for (const row of rows) {
+        for (const name of ["Khamzat Chimaev", "Arman Tsarukyan", "Belal Muhammad", "Colby Covington", "Bo Nickal", "Sean Brady"]) {
+          expect(names(row), row.id + " missing " + name).toContain(name);
+        }
+      }
+    }
+    const pack = buildSportsFeudPack("ufc", "2026-10-08");
+    expect(pack.mainBoards[0]?.id).toBe("ufc-main-04-1");
+    expect(matchFamilyFeudAnswer(pack, pack.mainBoards[0]!, "Khamzat Chimaev").status).toBe("matched");
+  });
+
+  it("checks every one of the 350 UFC questions for unintended family exclusions", () => {
+    const banks = [
+      UFC_SPORTS_FEUD_MAIN, UFC_SPORTS_FEUD_FAST_1, UFC_SPORTS_FEUD_FAST_2,
+      UFC_SPORTS_FEUD_FAST_3, UFC_SPORTS_FEUD_FAST_4, UFC_SPORTS_FEUD_FAST_5,
+    ];
+    // These prompts intentionally narrow the family to nicknames,
+    // fighters who later appeared in UFC, or punches rather than all strikes.
+    const scoped = new Set(["ufc-main-12-5", "ufc-fast3-06-1", "ufc-fast3-06-3", "ufc-fast4-03-1"]);
+    let audited = 0;
+    for (const bank of banks) {
+      expect(bank.length % 5).toBe(0);
+      for (let index = 0; index < bank.length; index += 5) {
+        const family = bank.slice(index, index + 5);
+        const union = new Set(family.flatMap(names));
+        for (const row of family) {
+          audited++;
+          const accepted = new Set(names(row));
+          expect(accepted.size, row.id).toBe(names(row).length);
+          if (!scoped.has(row.id)) for (const name of union) {
+            expect(accepted.has(name), row.id + " omitted legitimate " + name).toBe(true);
+          }
+        }
+      }
+    }
+    expect(audited).toBe(350);
+  });
+
+  it("covers documented standout omissions from additional UFC styles and divisions", () => {
+    const required: Array<[string, readonly string[]]> = [
+      ["ufc-main-03-", ["Gilbert Burns", "Ronaldo Souza", "Paul Craig"]],
+      ["ufc-fast1-08-", ["Gilbert Burns", "Ronaldo Souza", "Paul Craig"]],
+      ["ufc-main-02-", ["Josh Emmett", "Michael Chandler"]],
+      ["ufc-fast1-07-", ["Josh Emmett", "Michael Chandler"]],
+      ["ufc-fast5-02-", ["Josh Emmett", "Michael Chandler"]],
+      ["ufc-main-05-", ["Robert Whittaker", "Cory Sandhagen", "Leon Edwards"]],
+      ["ufc-main-08-", ["Arman Tsarukyan", "Michael Chandler"]],
+      ["ufc-main-09-", ["Shavkat Rakhmonov"]],
+      ["ufc-fast5-08-", ["Khamzat Chimaev", "Arman Tsarukyan"]],
+    ];
+    for (const [prefix, candidates] of required) for (const row of familyRows(prefix)) {
+      for (const candidate of candidates) expect(names(row), row.id + " missing " + candidate).toContain(candidate);
+    }
+  });
+
 });
