@@ -248,6 +248,13 @@
       "redshirt": null
     },
     {
+      "id": "houston|brandonmackii",
+      "classification": "8TH",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/brandon-mack-ii/9880",
+      "evidence": "2026 University of Houston official roster and player biography classification",
+      "redshirt": null
+    },
+    {
       "id": "houston|connerweigman",
       "classification": "5TH",
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
@@ -262,10 +269,24 @@
       "redshirt": null
     },
     {
+      "id": "houston|jalenmayo",
+      "classification": "5TH",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/jalen-mayo/10009",
+      "evidence": "2026 University of Houston official roster and player biography classification",
+      "redshirt": null
+    },
+    {
       "id": "houston|javionwhite",
       "classification": "JR",
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class or explicit academic year",
+      "redshirt": null
+    },
+    {
+      "id": "houston|jordanallen",
+      "classification": "5TH",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/jordan-allen/9838",
+      "evidence": "2026 University of Houston official roster and player biography classification",
       "redshirt": null
     },
     {
