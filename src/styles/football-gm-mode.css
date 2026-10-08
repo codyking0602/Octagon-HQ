@@ -3710,3 +3710,10 @@
   .gm-result__player { grid-template-columns: 29px minmax(0,1fr) auto; gap: 6px; padding: 8px; }
   .football-gm__picker .football-gm__position-tabs { grid-template-columns: repeat(4,minmax(0,1fr)); }
 }
+
+.gm-result__scoring-card { padding: 13px 16px; }
+.gm-result__scoring-card .gm-result__scoring {
+  margin: 0;
+  padding: 0;
+  border-top: 0;
+}
