@@ -4,7 +4,7 @@
   "snapshotAt": "2026-10-08T16:34:59.519Z",
   "schoolCount": 25,
   "population": 468,
-  "classified": 405,
+  "classified": 414,
   "exactMatches": 384,
   "failures": [
     {
@@ -1595,13 +1595,13 @@
       "groups": [
         "QB"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1769,13 +1769,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1788,13 +1788,13 @@
       "groups": [
         "WR"
       ],
-      "classification": null,
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "JR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -1808,13 +1808,13 @@
         "WR",
         "Flex"
       ],
-      "classification": null,
+      "classification": "SO",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SO",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -5631,13 +5631,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -5899,13 +5899,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://goducks.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -6111,13 +6111,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://goducks.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -6150,13 +6150,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "SR",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://goducks.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -7937,13 +7937,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "5TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texastech.com/sports/football/roster/print",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -9006,18 +9006,14 @@
       "draftEligible2027": null
     }
   ],
-  "officialOverrides": 21,
+  "officialOverrides": 30,
   "officialSources": [
-    {
-      "schoolId": "boise-state",
-      "url": "https://broncosports.com/sports/football/roster/print",
-      "verifiedPlayers": 18
-    },
-    {
-      "schoolId": "texas",
-      "url": "https://texaslonghorns.com/sports/football/roster/print",
-      "verifiedPlayers": 3
-    }
+    "https://broncosports.com/sports/football/roster/print",
+    "https://georgiadogs.com/sports/football/roster/print",
+    "https://olemisssports.com/sports/football/roster/print",
+    "https://goducks.com/sports/football/roster/print",
+    "https://texastech.com/sports/football/roster/print",
+    "https://texaslonghorns.com/sports/football/roster/print"
   ],
   "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation."
 }
