@@ -366,7 +366,7 @@ export function footballGmOutcomeProbabilities(teamGrade: number) {
       break;
     }
   }
-  const span = Math.max(1, high.grade - low.grade);
+  const span = Math.max(Number.EPSILON, high.grade - low.grade);
   const pct = clamp((bounded - low.grade) / span, 0, 1);
   return Object.fromEntries(FINISH_ORDER.map((finish) => [
     finish,
