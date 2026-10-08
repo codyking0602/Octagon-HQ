@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 378,
+  "exactMatches": 374,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -9404,8 +9404,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 49,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.46,
+        "portalExitProbability": 0.07,
+        "summary": "Texas 2026 senior corner transferred from Rutgers; in 2025 started all 12 games and earned All-Big Ten honorable mention, including a nine-tackle/forced-fumble Ohio State game. Started all four first Texas games in 2026 with tackles and a TFL at Tennessee/UTSA. Proven conference coverage role but first-season system transition brings moderate risk; fourth college year not assumed final.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/bo-mascoe/16946"
+        ]
+      }
     },
     {
       "id": "texas|camcoleman",
@@ -9528,8 +9547,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 34,
+          "steady": 41,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.42,
+        "portalExitProbability": 0.09,
+        "summary": "Third-year Texas receiver transferred from Stanford in 2025. Stanford 2024 true freshman: 48 receptions for 525 yards, six TD and freshman school records; 2025 Texas nine games/eight starts with touchdowns and postseason catches. In 2026 first four games: three for 37, five for 67, three for 28, and one for 43 yards. Upside from full-season role vs established prior production, not an unproven prospect.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/emmett-mosley-v/16942"
+        ]
+      }
     },
     {
       "id": "texas|gracesonlittleton",
@@ -9547,8 +9585,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 32,
+          "steady": 47,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07,
+        "summary": "Texas second-year sophomore defensive back with 11 starts in 17 career appearances through early 2026, eight-tackle career high in 2025 and three INT career total through September 2026. Started three of first four 2026 games including an interception and pass breakup against Ohio State and 59-yard fumble return TD vs Texas State. Proven playmaking in substantial young workload; no 2027 NFL draft under 2025 matriculation.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/graceson-littleton/16980"
+        ]
+      }
     },
     {
       "id": "texas|herokanu",
@@ -9558,16 +9615,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4868356",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/hero-kanu/17032",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 23,
+          "steady": 54,
+          "decline": 17,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.01,
+        "summary": "Official Texas 2026 fifth-year interior DL after Ohio State; 43 career games/15 Texas starts and Phil Steele preseason All-SEC nod. Started all four games with 1.5 TFL against Texas State and 1.5 sacks at Tennessee. Established 2025–26 starter value with ordinary steady probability and modest further growth. 2022 matriculation implies normal fifth-year eligibility ends after 2026 unless waiver.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/hero-kanu/17032"
+        ]
+      }
     },
     {
       "id": "texas|hollywoodsmothers",
@@ -9578,16 +9654,35 @@
         "RB",
         "Flex"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "Senior",
       "espnAthleteId": "4871053",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/hollywood-smothers/16939",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 47,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.5,
+        "portalExitProbability": 0.06,
+        "summary": "Texas 2026 senior RB transfer from NC State, 2025 career highs of 24 rushes/164 yards at Wake Forest and 65-yard carry at Pittsburgh. In 2026 scored twice against Ohio State and a receiving touchdown against Texas State while sharing backfield. Demonstrated multiyear burst and receiving utility, new-school role uncertainty; senior is fourth college year, not confirmed exhausted.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/hollywood-smothers/16939"
+        ]
+      }
     },
     {
       "id": "texas|jelanimcdonald",
@@ -9643,8 +9738,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 30,
+          "steady": 45,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.41,
+        "portalExitProbability": 0.05,
+        "summary": "Texas 2026 senior LB transferred from Florida State where he led LBs with 43 tackles, five TFL and a sack in 2025, eight starts. In Texas first four games started all, recorded nine tackles vs Ohio State and nine at Tennessee with pressure/PBU production. Starting consistency supports moderate improvement with normal new-scheme volatility, not automatic 2026 graduation from fourth-year class.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/justin-cryer/16978"
+        ]
+      }
     },
     {
       "id": "texas|kadephillips",
@@ -9662,8 +9776,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 42,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09,
+        "summary": "Texas sophomore corner/safety played 16 games with seven starts early in 2026. His 2025 highs include eight solo stops and two TFL vs Michigan and two PBUs vs Arkansas. Demonstrated rookie defensive responsibility, but more technique consistency and expanded role possible. 2025 college enrollment makes 2027 NFL Draft ineligible.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/kade-phillips/16951"
+        ]
+      }
     },
     {
       "id": "texas|kobeblack",
@@ -9681,8 +9814,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 34,
+          "steady": 39,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.1,
+        "summary": "Texas junior defensive back entered college 2024, appeared in 30 career games with only four starts by October 2026. First 2025 college interception came against Texas A&M, three starts in first part of 2026 with pass breakup against Texas State. Increased 2026 role makes real improvement possible, but modest established starts temper NFL declaration probability.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/kobe-black/16948"
+        ]
+      }
     },
     {
       "id": "texas|maraadwatson",
@@ -9700,8 +9852,27 @@
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 33,
+          "steady": 45,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.44,
+        "portalExitProbability": 0.06,
+        "summary": "Texas third-year defensive tackle transferred from Syracuse, where he had 11 starts in 13 freshman games; played 12 games/six starts for Texas in 2025 with 1.5 sacks vs San José State. Started all four 2026 games with strip-sack vs Texas State and five tackles/TFL at Tennessee. Established multi-school interior snaps suggest steady to modest upward course.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/maraad-watson/17028"
+        ]
+      }
     },
     {
       "id": "texas|raleekbrown",
@@ -9711,16 +9882,35 @@
       "groups": [
         "RB"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4685268",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/raleek-brown/16937",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 24,
+          "steady": 42,
+          "decline": 26,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.01,
+        "summary": "Texas official 2026 fifth-year RB transferred from Arizona State after starting career at USC; 33 career games across three schools. ASU 2025 career 255 rushing yards at Colorado, then Texas first four 2026 games 48 rushes for 205 yards/four TD, team-leading 67 yards and two TD at Tennessee. Real burst but recurrent transfers/injury history and capped fifth-year eligibility raise volatility. Must exit normally after 2026.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/raleek-brown/16937"
+        ]
+      }
     },
     {
       "id": "texas|rasheembiles",
@@ -9822,16 +10012,35 @@
         "TE",
         "Flex"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "Senior",
       "espnAthleteId": "4921318",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/spencer-shannon/17023",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 33,
+          "steady": 40,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.1,
+        "portalExitProbability": 0.06,
+        "summary": "Texas 2026 senior blocking-oriented tight end, first entered college in 2023. Has played 32 games/five starts; 2025 13 games/three starts with minimal receiving production, then two first-four 2026 starts with short catches against Texas State, Ohio State and UTSA. Functional blocking experience but very limited receiving evidence despite physical size; no NFL-star status from class/school. Fourth year could allow return in 2027.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/spencer-shannon/17023"
+        ]
+      }
     },
     {
       "id": "texas|zinaumeozulu",
@@ -9849,8 +10058,27 @@
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 36,
+          "steady": 33,
+          "decline": 14,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.21,
+        "portalExitProbability": 0.11,
+        "summary": "Texas junior edge redshirted 2024; as of early 2026 had only 17 career games/one start. Registered 2025 sacks against Michigan and 2026 TFL vs Tennessee, but currently limited starting sample and no demonstrated sustained rush production. Reasonable breakout potential if playing time increases with significant variance. 2024 entry makes 2027 NFL eligibility possible but declaration likelihood low.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/zina-umeozulu/16969"
+        ]
+      }
     },
     {
       "id": "texas-tech|ajholmesjr",
@@ -11407,7 +11635,7 @@
       }
     }
   ],
-  "officialOverrides": 90,
+  "officialOverrides": 94,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -11419,5 +11647,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes."
 }
