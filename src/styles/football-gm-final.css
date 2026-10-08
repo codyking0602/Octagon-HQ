@@ -418,3 +418,57 @@
     to { opacity: 1; transform: translateX(-50%) scale(1); }
   }
 }
+
+/* The approved simplified title treatment applies only to the final screen. */
+.football-gm__header.is-final {
+  grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 0;
+}
+.football-gm__header.is-final > button:first-child {
+  justify-self: start;
+  min-height: 38px;
+  padding: 6px 2px;
+  border: 0;
+  color: #87c9f4;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 900;
+}
+.football-gm__header.is-final > span {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+.football-gm__header.is-final > span strong {
+  font-size: clamp(20px,5vw,27px);
+  font-style: italic;
+  letter-spacing: -.04em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.football-gm__header.is-final > span small {
+  font-size: 9px;
+  color: #90b6d1;
+  letter-spacing: .19em;
+}
+.football-gm__header.is-final .football-gm__share-result {
+  justify-self: end;
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid rgba(120,195,244,.35);
+  border-radius: 10px;
+  background: rgba(44,101,143,.12);
+  color: #d2edff;
+  font-size: 10px;
+  font-weight: 900;
+}
+.football-gm__header.is-final .football-gm__share-result:disabled { opacity: .4; }
+@media (max-width: 390px) {
+  .football-gm__header.is-final { gap: 3px; }
+  .football-gm__header.is-final > button:first-child { font-size: 9px; }
+  .football-gm__header.is-final .football-gm__share-result { padding-inline: 6px; font-size: 9px; }
+}
