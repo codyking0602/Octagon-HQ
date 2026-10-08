@@ -54,7 +54,7 @@ for (const row of players) {
   }
 }
 const projection = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   source: "gm-2026-classification-evidence.json",
   population: ledger.population,
   classified: ledger.classified,
