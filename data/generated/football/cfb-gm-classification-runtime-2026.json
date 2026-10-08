@@ -306,13 +306,27 @@
       "id": "byu|bearbachmeier",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 28,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 37,
+          "steady": 40,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.12
       }
     },
     {
@@ -916,15 +930,29 @@
     },
     {
       "id": "indiana|joshhoover",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 4000000,
         "year2Baseline": 4400000,
         "providerRank": 8,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 20,
+          "steady": 56,
+          "decline": 19,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.01
       }
     },
     {
@@ -1364,14 +1392,28 @@
     {
       "id": "miami|darianmensah",
       "classification": "JR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "remainingEligibility": 1,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 6500000,
         "year2Baseline": 7150000,
         "providerRank": 1,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 14,
+          "steady": 69,
+          "decline": 14,
+          "maxGain": 2,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.92,
+        "portalExitProbability": 0.02
       }
     },
     {
@@ -1399,13 +1441,27 @@
       "id": "miami|malachitoney",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 25,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 16,
+          "steady": 66,
+          "decline": 15,
+          "maxGain": 1,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09
       }
     },
     {
@@ -1538,13 +1594,27 @@
       "id": "mississippi-state|kamariotaylor",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 62,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 48,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.17
       }
     },
     {
@@ -1621,13 +1691,27 @@
       "id": "missouri|austinsimmons",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 34,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 14,
+          "improve": 32,
+          "steady": 39,
+          "decline": 15,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.12
       }
     },
     {
@@ -1877,13 +1961,27 @@
       "id": "notre-dame|leonardmoore",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1200000,
         "year2Baseline": 1325000,
         "providerRank": 69,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 15,
+          "steady": 65,
+          "decline": 17,
+          "maxGain": 1,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.94,
+        "portalExitProbability": 0.02
       }
     },
     {
@@ -2036,13 +2134,27 @@
       "id": "ohio-state|juliansayin",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2500000,
         "year2Baseline": 2750000,
         "providerRank": 18,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 61,
+          "decline": 15,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.86,
+        "portalExitProbability": 0.03
       }
     },
     {
@@ -2111,13 +2223,27 @@
       "id": "oklahoma-state|drewmestemaker",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 3500000,
         "year2Baseline": 3850000,
         "providerRank": 9,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 49,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.34,
+        "portalExitProbability": 0.08
       }
     },
     {
@@ -2299,13 +2425,27 @@
       "id": "ole-miss|kewanlacy",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 36,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 16,
+          "steady": 58,
+          "decline": 22,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.84,
+        "portalExitProbability": 0.06
       }
     },
     {
@@ -2353,14 +2493,28 @@
     {
       "id": "ole-miss|trinidadchambliss",
       "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 5000000,
         "year2Baseline": 5500000,
         "providerRank": 3,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 2,
+          "improve": 11,
+          "steady": 68,
+          "decline": 19,
+          "maxGain": 1,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.96,
+        "portalExitProbability": 0.01
       }
     },
     {
@@ -2518,26 +2672,54 @@
       "id": "oregon|koiperich",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 26,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 30,
+          "steady": 43,
+          "decline": 17,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.36,
+        "portalExitProbability": 0.12
       }
     },
     {
       "id": "oregon|matayouiagalelei",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 22,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 14,
+          "steady": 63,
+          "decline": 20,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.91,
+        "portalExitProbability": 0.03
       }
     },
     {
@@ -2772,15 +2954,29 @@
     },
     {
       "id": "smu|kevinjennings",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 3000000,
         "year2Baseline": 3300000,
         "providerRank": 15,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 22,
+          "steady": 47,
+          "decline": 25,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.31,
+        "portalExitProbability": 0.01
       }
     },
     {
@@ -2892,13 +3088,27 @@
       "id": "tennessee|georgemacintyre",
       "classification": "FR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
       "nilMarket": {
         "year1": 1600000,
         "year2Baseline": 1750000,
         "providerRank": 51,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 22,
+          "improve": 42,
+          "steady": 26,
+          "decline": 10,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.13
       }
     },
     {
@@ -3727,13 +3937,27 @@
       "id": "utah|wayshawnparker",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 83,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 26,
+          "steady": 54,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.05
       }
     }
   ]
