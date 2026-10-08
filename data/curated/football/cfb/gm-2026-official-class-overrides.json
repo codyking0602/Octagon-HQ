@@ -346,6 +346,13 @@
       "redshirt": null
     },
     {
+      "id": "miami|mohamedtoure",
+      "classification": "8TH",
+      "sourceUrl": "https://miamihurricanes.com/sports/football/roster/player/mohamed-toure",
+      "evidence": "Official 2026 player bio lists 2025 as seventh-year graduate student; 2026 is eighth college year",
+      "redshirt": null
+    },
+    {
       "id": "mississippi-state|amareewilliams",
       "classification": "JR",
       "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
@@ -469,6 +476,13 @@
       "classification": "SO",
       "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jakyrian-turner/15115",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "smu|jimmywyrick",
+      "classification": "6TH",
+      "sourceUrl": "https://smumustangs.com/sports/football/roster/jimmy-wyrick/15630",
+      "evidence": "Official 2026 bio accounts for 2021-2023 Stanford, 2024-2025 UTSA and 2026 SMU: sixth college year",
       "redshirt": null
     },
     {
