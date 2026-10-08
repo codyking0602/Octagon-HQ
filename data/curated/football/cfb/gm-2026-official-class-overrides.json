@@ -458,10 +458,24 @@
       "redshirt": null
     },
     {
+      "id": "oregon|bearalexander",
+      "classification": "5TH",
+      "sourceUrl": "https://goducks.com/sports/football/roster/Bear-Alexander/18286",
+      "evidence": "Official Oregon 2026 roster explicitly lists fifth year",
+      "redshirt": null
+    },
+    {
       "id": "oregon|carlwilliamsiv",
       "classification": "SR",
       "sourceUrl": "https://goducks.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "oregon|evanstewart",
+      "classification": "5TH",
+      "sourceUrl": "https://goducks.com/sports/football/roster/evan-stewart/18335",
+      "evidence": "Official Oregon 2026 roster explicitly lists fifth year",
       "redshirt": null
     },
     {
