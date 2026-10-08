@@ -21,11 +21,11 @@ export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
   QB: 0.26,
-  RB: 0.10,
-  WR: 0.15,
-  FLEX: 0.09,
+  RB: 0.08,
+  WR: 0.13,
+  FLEX: 0.08,
   DL: 0.15,
-  LB: 0.10,
+  LB: 0.15,
   DB: 0.15,
 };
 
@@ -691,7 +691,7 @@ function tradePositionFactor(player: FootballGmPlayer) {
   if (slot === "QB") return 1.45;
   if (slot === "RB") return 0.90;
   if (slot === "WR") return 1.12;
-  if (slot === "DL") return 1.12;
+  if (slot === "DL" || slot === "LB") return 1.12;
   if (slot === "DB") return 1.08;
   return 1;
 }

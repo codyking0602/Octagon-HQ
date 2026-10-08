@@ -17,11 +17,18 @@ import {
   wheelFootballGmSalaryWindow,
   type WheelFootballGmContractRow,
   type WheelFootballGmRosterSlot,
+  type WheelFootballGmMarketPosition,
 } from "./wheelFootballGmEconomy";
 
 export const FOOTBALL_GM_VERSION = "football-gm-v1-playtest";
 export const FOOTBALL_GM_CAP = WHEEL_FOOTBALL_GM_CAP;
 export const FOOTBALL_GM_ROSTER_SLOTS = WHEEL_FOOTBALL_GM_ROSTER_SLOTS;
+
+// Persist the original DL/LB keys to keep existing solo and shared match saves valid.
+// Both are now player-agnostic Front Seven positions.
+export function footballGmSlotLabel(slot: FootballGmRosterSlot): string {
+  return slot === "DL" ? "FRONT 7 · 1" : slot === "LB" ? "FRONT 7 · 2" : slot;
+}
 
 export type FootballGmRosterSlot = WheelFootballGmRosterSlot;
 export type FootballGmPhase = "draft" | "year1" | "offseason" | "year2" | "final";
@@ -59,6 +66,7 @@ export interface FootballGmPlayer {
   name: string;
   position: string;
   eligibleSlots: readonly FootballGmRosterSlot[];
+  marketPosition: WheelFootballGmMarketPosition;
   age: number;
   salaryApy: number;
   gameContract: "1YR" | "3YR";
@@ -112,12 +120,12 @@ type GradeArtifact = {
 
 const POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
   QB: 0.26,
-  RB: 0.07,
-  WR: 0.15,
-  FLEX: 0.10,
-  DL: 0.16,
-  LB: 0.10,
-  DB: 0.16,
+  RB: 0.08,
+  WR: 0.13,
+  FLEX: 0.08,
+  DL: 0.15,
+  LB: 0.15,
+  DB: 0.15,
 };
 
 function normalizeName(value: string) {
@@ -185,7 +193,10 @@ export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.ma
     family: contract.family,
     name: contract.player,
     position: contract.position,
-    eligibleSlots: [...contract.gmEligibleSlots],
+    // Both defensive roster spots accept any Front Seven player; contract
+    // markets remain based on each player's original distinct DL/LB family.
+    eligibleSlots: contract.family === "Front Seven" ? ["DL", "LB"] : [...contract.gmEligibleSlots],
+    marketPosition,
     age: contract.age,
     salaryApy: contract.salaryApy,
     gameContract: contract.gameContract,
@@ -545,11 +556,7 @@ export function footballGmProjectedGradeForPlayer(
   year: 1 | 2 | 3,
   seed?: string,
 ) {
-  const marketPosition = wheelFootballGmMarketPositionForContract({
-    family: player.family,
-    position: player.position,
-    gmEligibleSlots: player.eligibleSlots,
-  });
+  const marketPosition = player.marketPosition;
   return projectWheelFootballGmGrade({
     currentGrade: player.currentGrade,
     age: player.age,
@@ -566,11 +573,7 @@ export function footballGmProjectedGradeForPlayer(
 /** A single seed-owned Year 2 offer, also locked for Year 3. */
 export function footballGmProjectedExtensionForPlayer(player: FootballGmPlayer, seed: string) {
   if (player.gameContract === "3YR") return player.salaryApy;
-  const marketPosition = wheelFootballGmMarketPositionForContract({
-    family: player.family,
-    position: player.position,
-    gmEligibleSlots: player.eligibleSlots,
-  });
+  const marketPosition = player.marketPosition;
   return projectWheelFootballGmExtensionApy({
     currentGrade: player.currentGrade,
     age: player.age,

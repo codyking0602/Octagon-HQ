@@ -20,6 +20,7 @@ import {
   footballGmPlayerById,
   footballGmReflowRoster,
   footballGmRosterCap,
+  footballGmSlotLabel,
   footballGmSpinTeam,
   type FootballGmRosterEntry,
   type FootballGmRosterSlot,
@@ -230,7 +231,7 @@ function VersusRosterBoard({
         {FOOTBALL_GM_ROSTER_SLOTS.map((slot) => (
           <div className="football-gm-versus__row" key={slot}>
             {cell(leftBySlot.get(slot), "left", leftRun)}
-            <b>{slot}</b>
+            <b>{footballGmSlotLabel(slot)}</b>
             {cell(rightBySlot.get(slot), "right", rightRun)}
           </div>
         ))}
@@ -380,7 +381,7 @@ function ReleasePicker({
           >
             <PlayerHeadshot player={row.player} />
             <span>
-              <small>{row.entry.slot} · {row.teams ? `${row.teams} FA TEAMS` : "NO LEGAL REPLACEMENT"}</small>
+              <small>{footballGmSlotLabel(row.entry.slot)} · {row.teams ? `${row.teams} FA TEAMS` : "NO LEGAL REPLACEMENT"}</small>
               <strong>{row.player.name}</strong>
             </span>
             <b>{footballGmMoney(row.budget)}</b>
@@ -1584,7 +1585,7 @@ export default function FootballGmHeadToHeadPage() {
                     ) : canUseFreeAgency ? (
                       <section className="football-gm__market-wheel">
                         <div className="football-gm__trade-stage-heading">
-                          <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")} OPEN</p>
+                          <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).map(footballGmSlotLabel).join(" · ")} OPEN</p>
                           <h2>SPIN THE 1YR MARKET</h2>
                           <span>Same NFL wheel. Players already held by {opponentDisplayName} are off the board.</span>
                         </div>

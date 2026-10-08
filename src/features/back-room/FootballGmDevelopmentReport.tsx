@@ -2,6 +2,7 @@ import {
   footballGmMoney,
   footballGmPlayerById,
   footballGmProjectedGradeForPlayer,
+  footballGmSlotLabel,
   type FootballGmRosterEntry,
 } from "./footballGmEngine";
 import { footballGmAdjustedSalaryForPlayer } from "./footballGmStrategy";
@@ -40,7 +41,7 @@ export function FootballGmDevelopmentReport({
           const salary = footballGmAdjustedSalaryForPlayer(player, 2, seed, {});
           return (
             <div className="football-gm__development-player" key={entry.playerId}>
-              <b>{entry.slot}</b>
+              <b>{footballGmSlotLabel(entry.slot)}</b>
               <span className="football-gm__development-name">
                 <strong>{player.name}</strong>
                 <small>{player.team} · {player.position}</small>

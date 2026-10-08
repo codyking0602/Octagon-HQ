@@ -32,7 +32,7 @@ function draftChoiceScore(playerId: string, slot: FootballGmRosterSlot) {
   if (!player) return Number.NEGATIVE_INFINITY;
   const futureSalary = Math.max(player.salaryWindow[1], player.salaryWindow[2]);
   const controlBonus = player.gameContract === "3YR" ? 2.2 : 0;
-  const slotBonus = slot === "QB" ? 2.4 : slot === "WR" || slot === "DL" || slot === "DB" ? 1.2 : 0.5;
+  const slotBonus = slot === "QB" ? 2.4 : slot === "WR" || slot === "DL" || slot === "LB" || slot === "DB" ? 1.2 : 0.5;
   return player.currentGrade + controlBonus + slotBonus - (futureSalary / 25_000_000);
 }
 

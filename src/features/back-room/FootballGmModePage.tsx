@@ -25,6 +25,7 @@ import {
   footballGmReflowRoster,
   footballGmRosterCap,
   footballGmRosterPlayers,
+  footballGmSlotLabel,
   footballGmSpinTeam,
   type FootballGmPlayer,
   type FootballGmRosterEntry,
@@ -590,7 +591,7 @@ export function RosterGrid({
           const failedTalks = player ? consequences[player.id] ?? 0 : 0;
           return (
             <article key={slot} className={player ? "is-filled" : ""} style={player ? playerStyle(player.team) : undefined}>
-              <small>{slot}</small>
+              <small>{footballGmSlotLabel(slot)}</small>
               {player ? (
                 <>
                   <div className="football-gm__roster-player">
@@ -654,12 +655,11 @@ export function CandidateBoard({
   const positionFor = (player: FootballGmPlayer) => {
     if (player.position === "TE" || player.family === "TE") return "TE";
     if (player.position === "QB" || player.position === "RB" || player.position === "WR") return player.position;
-    if (player.eligibleSlots.includes("DL")) return "DL";
-    if (player.eligibleSlots.includes("LB")) return "LB";
+    if (player.family === "Front Seven") return "FRONT 7";
     if (player.eligibleSlots.includes("DB")) return "DB";
     return player.eligibleSlots.includes("RB") ? "RB" : "WR";
   };
-  const positions = ["QB", "RB", "WR", "TE", "DL", "LB", "DB"] as const;
+  const positions = ["QB", "RB", "WR", "TE", "FRONT 7", "DB"] as const;
   const availablePositions = positions.filter((position) =>
     candidates.some(({ player }) => positionFor(player) === position));
   const visibleCandidates = selectedPosition && availablePositions.includes(selectedPosition as typeof positions[number])
@@ -823,7 +823,7 @@ export function FreeAgencyBoard({
             <div className="football-gm__market-actions">
               {legalSlots.map((slot) => (
                 <button type="button" key={`open:${slot}`} onClick={() => onPick(player.id, slot)}>
-                  SIGN AS {slot}
+                  SIGN AS {footballGmSlotLabel(slot)}
                 </button>
               ))}
               {displacementOptions.map((option) => {
@@ -834,7 +834,7 @@ export function FreeAgencyBoard({
                     key={`displace:${option.slot}:${option.displacedPlayerId}`}
                     onClick={() => onPick(player.id, option.slot, option.displacedPlayerId)}
                   >
-                    {option.slot} · REPLACE {displaced?.name.toUpperCase() ?? "INCUMBENT"}
+                    {footballGmSlotLabel(option.slot)} · REPLACE {displaced?.name.toUpperCase() ?? "INCUMBENT"}
                   </button>
                 );
               })}
@@ -908,7 +908,7 @@ export function FreeAgencyReleasePanel({
               disabled={!eligibleTeams}
               onClick={() => setSelectedPlayerId(selectedRow ? null : player.id)}
             >
-              <span>{entry.slot} · {eligibleTeams ? `${eligibleTeams} WHEEL TEAMS` : "NO LEGAL REPLACEMENT"}</span>
+              <span>{footballGmSlotLabel(entry.slot)} · {eligibleTeams ? `${eligibleTeams} WHEEL TEAMS` : "NO LEGAL REPLACEMENT"}</span>
               <strong>{player.name}</strong>
               <em>FA BUDGET {footballGmMoney(budget)}</em>
             </button>
@@ -1631,8 +1631,8 @@ export default function FootballGmModePage({
       pendingFreeAgentTeam: null,
       freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
       tradeMessage: displaced
-        ? `${player.name} signed at ${slot}. ${displaced.name} is now a normal trade chip; shop him through the regular Trade Room or release him.`
-        : `${player.name} signed through free agency to fill ${slot}.`,
+        ? `${player.name} signed at ${footballGmSlotLabel(slot)}. ${displaced.name} is now a normal trade chip; shop him through the regular Trade Room or release him.`
+        : `${player.name} signed through free agency to fill ${footballGmSlotLabel(slot)}.`,
     });
   }
 
