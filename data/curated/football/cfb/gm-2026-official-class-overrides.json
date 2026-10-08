@@ -724,10 +724,52 @@
       "redshirt": null
     },
     {
+      "id": "texas-tech|adamtrick",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/adam-trick/14374",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|ajholmesjr",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/aj-holmes-jr/14301",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|benroberts",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/ben-roberts/14322",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|coyeakin",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/eakin-coy/14284",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
       "id": "texas-tech|jkobywilliams",
       "classification": "JR",
       "sourceUrl": "https://texastech.com/sports/football/roster/jkoby-williams/14332",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|mateenibirogba",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/mateen-ibirogba/14360",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|terrancecarterjr",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/terrance-carter-jr-/14275",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
       "redshirt": null
     },
     {
