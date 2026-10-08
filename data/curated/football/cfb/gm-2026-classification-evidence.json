@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 359,
+  "exactMatches": 358,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -1937,8 +1937,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 36,
+          "steady": 38,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.09,
+        "summary": "Florida junior TE, in 2026 first three starts delivered five receptions for 106 yards and a touchdown, with early high SEC run-blocking grades (78.4 PFF cited by school). Authentic expanded blocking and receiving responsibilities, though low catch volume limits certainty of a major breakout; 2024 initial enrollment makes 2027 NFL entry possible.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/amir-jackson/18269"
+        ]
+      }
     },
     {
       "id": "florida|benhanksiii",
@@ -1956,8 +1975,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 32,
+          "steady": 46,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08,
+        "summary": "Florida 2026 sophomore corner: first five starts, 15 tackles (14 solo), two PBUs and a TFL, with 184 yards allowed on 27 targets in school metrics. Young starter has coverage/technique development room with realistic target-based regression; entered college in 2025, so 2027 NFL Draft is unavailable.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/ben-hanks-iii/18266"
+        ]
+      }
     },
     {
       "id": "florida|brendanbett",
@@ -1975,8 +2013,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 52,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.07,
+        "summary": "Florida senior DL arrived from Baylor: started 12 games in 2025 and posted 39 tackles/four TFL/three sacks, then first five 2026 starts with 14 tackles/three TFL and forced fumble. School cited 82.9 PFF run-defense grade; proven run anchor rather than a speculative elite pass-rusher. Fourth-year label does not prove eligibility exhausted.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/brendan--bett/18252"
+        ]
+      }
     },
     {
       "id": "florida|brycethornton",
@@ -1994,8 +2051,27 @@
       "sourceUrl": "https://floridagators.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 52,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.51,
+        "portalExitProbability": 0.07,
+        "summary": "Florida 2026 senior safety and multiyear Gators starter with 2024 SEC defensive weekly recognition, through first five 2026 starts recorded 13 tackles and a PBU. Demonstrated coverage/safety workload across seasons suggests mostly steady current level, with tackle/target variation more credible than an unsubstantiated massive breakout.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/bryce-thornton/18302"
+        ]
+      }
     },
     {
       "id": "florida|cormanimcclain",
@@ -2013,8 +2089,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 29,
+          "steady": 42,
+          "decline": 20,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.1,
+        "summary": "Florida senior corner originally at Colorado; 2026 first five games as Gators starter included eight tackles and an interception vs Auburn. Changes of school, role and earlier uneven usage/injuries make a genuine comeback possible, but recruiting pedigree does not replace a strong verified 2025 starting sample. Wider volatility and modest NFL declaration chance.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/cormani-mcclain/18287"
+        ]
+      }
     },
     {
       "id": "florida|dallaswilson",
@@ -2033,8 +2128,27 @@
       "sourceUrl": "https://floridagators.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 37,
+          "steady": 40,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08,
+        "summary": "Florida 2026 sophomore WR: school lists 18 catches for 302 yards and three receiving TD plus rushing TD through first five games, after 2025 injury-reduced redshirt season with 12 catches/174 yards/three TD and record-setting freshman Texas debut. More healthy 2027 target volume plausible with established SEC game flashes; first college entry 2025 bars 2027 NFL draft.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/dallas-wilson/18309"
+        ]
+      }
     },
     {
       "id": "florida|djcoleman",
@@ -2052,8 +2166,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 23,
+          "steady": 57,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.59,
+        "portalExitProbability": 0.04,
+        "summary": "Florida senior defensive back from Baylor started 2026 first five contests with 14 tackles, three pass breakups and team-leading two interceptions. Multi-school 2025 background and target-based takeaway variation favor repeat coverage over a sudden superstar breakout; senior class not certified graduation.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/dj-coleman/18321"
+        ]
+      }
     },
     {
       "id": "florida|dukeclark",
@@ -2072,8 +2205,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 38,
+          "steady": 37,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.11,
+        "summary": "Florida sophomore RB had 2026 early breakout in five games with 33 carries/260 yards/three TD plus three catches/26 yards and receiving TD. Efficient explosive 7.9 yards/carry may regress with greater volume, but role growth is demonstrated rather than just high-school potential. First enrolled 2025 makes 2027 draft unavailable.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/duke-clark/18258"
+        ]
+      }
     },
     {
       "id": "florida|ericsingletonjr",
@@ -2091,8 +2243,27 @@
       "sourceUrl": "https://floridagators.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 32,
+          "steady": 29,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.1,
+        "summary": "Florida senior WR transferred via Georgia Tech and Auburn after a 2023 FWAA Freshman All-American season and All-ACC honors in 2023–24; first three Florida games in 2026 produced only two catches for 47 yards. Real previous explosive college talent supports bounce-back but new role and current low workload create important downside/usage volatility; do not grade NFL risk from recruitment fame.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/eric-singleton-jr/18349"
+        ]
+      }
     },
     {
       "id": "florida|evanpryor",
@@ -2102,16 +2273,35 @@
       "groups": [
         "RB"
       ],
-      "classification": "SR",
+      "classification": "6TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Sixth Year",
       "espnAthleteId": "4432757",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://floridagators.com/sports/football/roster/evan-pryor/18346",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 29,
+          "steady": 33,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.12,
+        "portalExitProbability": 0.01,
+        "summary": "Official Florida 2026 SIXTH-YEAR RB from Ohio State/Cincinnati. First five 2026 games just 12 rushes for 50 yards and three receptions/nine yards; demonstrated rotational role, not a current bellcow. Injury history and transfers imply potential fit rebound but substantial decline/availability risk. Original 2021 college entry and sixth-year class mean no normal 2027 year without a special ruling.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/evan-pryor/18346"
+        ]
+      }
     },
     {
       "id": "florida|jadanbaugh",
@@ -2182,8 +2372,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 52,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.52,
+        "portalExitProbability": 0.04,
+        "summary": "Florida senior LB: started all 12 games in 2025 with 50 tackles/four TFL/two sacks, four hurries and three PBUs. In first five 2026 games logged 18 tackles, 2.5 TFL and sack as experienced middle defender. Large multi-season workload makes a steady or modest improvement more plausible than a giant 2027 breakout; draft decision possible, not guaranteed.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/jaden-robinson/18294"
+        ]
+      }
     },
     {
       "id": "florida|jaydenwoods",
@@ -2201,8 +2410,27 @@
       "sourceUrl": "https://floridagators.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.05,
+        "summary": "Florida 2026 sophomore JACK edge followed 2025 Freshman All-SEC/PFF All-Freshman honors with five 2026 starts, 21 tackles, six TFL, four sacks and three pressures. Already standout young current ability; 2027 improvement plausible but major breakout less likely from current high baseline, while 2025 college entry precludes 2027 NFL declaration.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/jayden-woods/18310"
+        ]
+      }
     },
     {
       "id": "florida|jeramiahmccloud",
@@ -2220,8 +2448,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 38,
+          "steady": 37,
+          "decline": 13,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08,
+        "summary": "Florida 2026 sophomore interior DL grew from 2025 reserve 11 games/13 tackles/0.5 TFL to three starts in first five 2026 games, with 19 tackles/1.5 TFL/0.5 sacks, five hurries, two PBUs and 78.0 PFF run-defense grade. Rising snap share is real, but modest pressure production suggests developmental ceiling not automatically elite; 2025 matriculation blocks 2027 NFL draft.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/jeramiah-mccloud/18288"
+        ]
+      }
     },
     {
       "id": "florida|kamranjames",
@@ -2239,8 +2486,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 52,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.53,
+        "portalExitProbability": 0.05,
+        "summary": "Florida 2026 senior DL with first-five-game 14 tackles, two TFL, one sack and quarterback hurry. Four years in Gators program and varied role make incremental line development possible but no justification for a giant breakout from a few high-impact plays. NFL eligibility possible, not guaranteed exit or graduation.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/kamran-james/18272"
+        ]
+      }
     },
     {
       "id": "florida|kanyeclark",
@@ -2258,8 +2524,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 48,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.5,
+        "portalExitProbability": 0.06,
+        "summary": "Florida 2026 senior STAR nickel defender arrived from UCLA and started first five games with 14 tackles, 0.5 TFL, one PBU and two QB hurries. Conference experience and current hybrid workload establish functional defense, but one-school transfer makes fit uncertainty and some modest progression appropriate. Senior college class does not prove eligibility used up.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/kanye-clark/18320"
+        ]
+      }
     },
     {
       "id": "florida|mylesgraham",
@@ -2277,8 +2562,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 57,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.74,
+        "portalExitProbability": 0.04,
+        "summary": "Florida junior inside LB, 2024 Freshman All-SEC and 2025 team captain; started all five games in 2026 with 33 tackles, 0.5 sack and fumble recovery to lead Gators. Proven team-level defense and consistent tackle volume favor strong steady probability and meaningful 2027 draft option, not huge upside from recruiting status.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/myles-graham/18265"
+        ]
+      }
     },
     {
       "id": "florida|vernellbrowniii",
@@ -2297,8 +2601,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 33,
+          "steady": 47,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07,
+        "summary": "Florida sophomore WR/returner and 2025 Freshman All-SEC selection; in 2026 started significant games with five catches/56 yards vs South Florida, eight/62 vs LSU, three/72 vs Texas and 77 yards/6 catches vs Texas A&M, plus return contributions. Proven current catch/return ability and role growth, but targets and punt returns fluctuate. 2025 college entry bars 2027 NFL draft.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/vernell-brown-iii/18253"
+        ]
+      }
     },
     {
       "id": "georgia|chaunceybowens",
@@ -13869,7 +14192,7 @@
       }
     }
   ],
-  "officialOverrides": 109,
+  "officialOverrides": 110,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -13881,5 +14204,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes.\n2026-10-08 Indiana complete cohort: 17 exact-name official IU athlete bio studies; eight verified fifth-year corrections, Preston Zachman 7TH and final year status, injury and two-year production evidence. No HQ changes.\n2026-10-08 SMU 17 athlete research batch: each named 2026 SMU roster participant and prior school biography individually considered; official 2025 detailed stats, transfer roles, medical redshirts and class noted. Theo Melin Ohrstrom officially 5TH. Jimmy Wyrick 6TH with 2021 first enrolment; model final eligibility despite possible exceptional appeals.\n2026-10-08 QB final nine study: Boise Madsen, UF Philo, Houston Weigman, Iowa Hank Brown, Pitt Geriner, Texas Tech Hammond, UCLA Nico, USC Maiava, Utah Dampier. All 25/25 GM QB population individually sourced from official career bios; Pitt Holden Geriner corrected to Fifth Year, remaining eligibility exit model. Draft first-entry windows applied."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes.\n2026-10-08 Indiana complete cohort: 17 exact-name official IU athlete bio studies; eight verified fifth-year corrections, Preston Zachman 7TH and final year status, injury and two-year production evidence. No HQ changes.\n2026-10-08 SMU 17 athlete research batch: each named 2026 SMU roster participant and prior school biography individually considered; official 2025 detailed stats, transfer roles, medical redshirts and class noted. Theo Melin Ohrstrom officially 5TH. Jimmy Wyrick 6TH with 2021 first enrolment; model final eligibility despite possible exceptional appeals.\n2026-10-08 QB final nine study: Boise Madsen, UF Philo, Houston Weigman, Iowa Hank Brown, Pitt Geriner, Texas Tech Hammond, UCLA Nico, USC Maiava, Utah Dampier. All 25/25 GM QB population individually sourced from official career bios; Pitt Holden Geriner corrected to Fifth Year, remaining eligibility exit model. Draft first-entry windows applied.\n2026-10-08 Florida 17-player official school review: all 19 GM candidates now have sourced player-specific profiles, incorporating 2025 stats and first five 2026 games, true-sophomore draft bans and transfer/health risks. Evan Pryor corrected to sixth year, final normal 2026 eligibility. No HQ grade changed."
 }
