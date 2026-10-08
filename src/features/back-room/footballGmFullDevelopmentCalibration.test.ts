@@ -1,0 +1,179 @@
+import { describe, expect, it } from "vitest";
+import authority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
+import {
+  FOOTBALL_GM_CAP,
+  FOOTBALL_GM_PLAYER_POOL,
+  FOOTBALL_GM_ROSTER_SLOTS,
+  footballGmProjectedGradeForPlayer,
+  type FootballGmRosterEntry,
+} from "./footballGmEngine";
+import {
+  FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT,
+  FOOTBALL_GM_DEVELOPMENT_SEED_TAG,
+  footballGmDevelopmentProfile,
+} from "./wheelFootballGmEconomy";
+import {
+  footballGmAdjustedSalaryForPlayer,
+  footballGmAdjustedRosterCap,
+  footballGmIsOffseasonCompliantV2,
+  footballGmSeasonResultV2,
+} from "./footballGmStrategy";
+import { footballGmCpuOffseason } from "./footballGmCpu";
+
+const seed = (i: number) => `full-development-audit-${i}${FOOTBALL_GM_DEVELOPMENT_SEED_TAG}`;
+
+const name = (value: string) => {
+  const found = FOOTBALL_GM_PLAYER_POOL.find((player) => player.name === value);
+  if (!found) throw new Error(`Player ${value} missing`);
+  return found;
+};
+
+function cheapestRoster(): FootballGmRosterEntry[] {
+  const used = new Set<string>();
+  return FOOTBALL_GM_ROSTER_SLOTS.map((slot) => {
+    const player = FOOTBALL_GM_PLAYER_POOL
+      .filter((item) => item.eligibleSlots.includes(slot) && !used.has(item.id))
+      .sort((a, b) => a.salaryWindow[1] - b.salaryWindow[1])[0]!;
+    used.add(player.id);
+    return { slot, playerId: player.id, acquired: "draft" as const };
+  });
+}
+
+function playableRoster(i: number, strategy: "balanced" | "upside" | "value"): FootballGmRosterEntry[] {
+  const usedIds = new Set<string>();
+  const usedNames = new Set<string>();
+  const roster: FootballGmRosterEntry[] = [];
+  for (let index = 0; index < FOOTBALL_GM_ROSTER_SLOTS.length; index += 1) {
+    const slot = FOOTBALL_GM_ROSTER_SLOTS[index]!;
+    const taken = roster.reduce((sum, entry) => sum + (FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === entry.playerId)?.salaryApy ?? 0), 0);
+    const reserve = FOOTBALL_GM_ROSTER_SLOTS.slice(index + 1).reduce((sum, remaining) => {
+      return sum + Math.min(...FOOTBALL_GM_PLAYER_POOL.filter((p) => p.eligibleSlots.includes(remaining)).map((p) => p.salaryApy));
+    }, 0);
+    const available = FOOTBALL_GM_PLAYER_POOL.filter((p) =>
+      p.eligibleSlots.includes(slot) && !usedIds.has(p.id) && !usedNames.has(p.name)
+      && taken + p.salaryApy + reserve <= FOOTBALL_GM_CAP);
+    const ordered = available.sort((left, right) => {
+      const score = (player: typeof left) => {
+        const forwardSalary = player.salaryWindow[1] / 1_000_000;
+        return strategy === "upside"
+          ? player.currentGrade + (player.age <= 25 ? 3 : 0) - forwardSalary * 0.20
+          : strategy === "value"
+            ? player.currentGrade - forwardSalary * 0.55
+            : player.currentGrade - forwardSalary * 0.32;
+      };
+      return score(right) - score(left) || left.id.localeCompare(right.id);
+    });
+    const choice = ordered[(i * 7 + index * 13) % Math.min(10, ordered.length)]!;
+    if (!choice) throw new Error(`Cannot construct ${strategy} roster at ${slot}`);
+    usedIds.add(choice.id);
+    usedNames.add(choice.name);
+    roster.push({ slot, playerId: choice.id, acquired: "draft" });
+  }
+  return roster;
+}
+
+describe("full NFL GM development calibration", () => {
+  it("binds exactly one explicit, source-anchored profile to every canonical NFL player", () => {
+    const ids = new Set(FOOTBALL_GM_PLAYER_POOL.map((player) => player.id));
+    const profiles = authority.profiles;
+    expect(FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT).toBe(594);
+    expect(profiles.length).toBe(ids.size);
+    expect(new Set(profiles.map((profile) => profile.id)).size).toBe(profiles.length);
+    expect(new Set(profiles.map((profile) => profile.team)).size).toBe(32);
+    expect(profiles.filter((p) => p.calibration === "individual-review").length).toBeGreaterThanOrEqual(175);
+    for (const profile of profiles) {
+      expect(ids.has(profile.id), profile.id).toBe(true);
+      const player = FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === profile.id)!;
+      expect(footballGmDevelopmentProfile(profile.id)).toEqual(profile);
+      expect(profile.name).toBe(player.name);
+      expect(profile.ageAtCalibration).toBe(player.age);
+      expect(profile.gradeAtCalibration).toBe(player.currentGrade);
+      expect(profile.breakoutPct).toBeGreaterThanOrEqual(0);
+      expect(profile.improvePct).toBeGreaterThanOrEqual(0);
+      expect(profile.declinePct).toBeGreaterThanOrEqual(0);
+      expect(profile.breakoutPct + profile.improvePct + profile.declinePct).toBeLessThanOrEqual(100);
+      expect(profile.maxAnnualGain).toBeGreaterThan(0);
+      expect(profile.maxAnnualLoss).toBeGreaterThan(0);
+      expect(profile.marketVariancePct).toBeGreaterThan(0);
+    }
+  });
+
+  it("separates demonstrated superstars from risky prospects, uneven starters, and old veterans", () => {
+    const superstar = footballGmDevelopmentProfile(name("Josh Allen").id)!;
+    const boom = footballGmDevelopmentProfile(name("Caleb Williams").id)!;
+    const uneven = footballGmDevelopmentProfile(name("Justin Herbert").id)!;
+    const aging = footballGmDevelopmentProfile(name("Aaron Rodgers").id)!;
+    expect(superstar.declinePct).toBeLessThan(boom.declinePct);
+    expect(superstar.maxAnnualLoss).toBeLessThan(uneven.maxAnnualLoss);
+    expect(boom.breakoutPct).toBeGreaterThan(uneven.breakoutPct);
+    expect(aging.declinePct).toBeGreaterThan(uneven.declinePct);
+
+    for (let i = 0; i < 200; i += 1) {
+      const star = footballGmProjectedGradeForPlayer(name("Josh Allen"), 2, seed(i));
+      const prospect = footballGmProjectedGradeForPlayer(name("Caleb Williams"), 2, seed(i));
+      expect(star).toBeGreaterThanOrEqual(97.7);
+      expect(prospect).toBeGreaterThanOrEqual(81);
+      expect(prospect).toBeLessThanOrEqual(95.5);
+    }
+  });
+
+  it("keeps 1YR offers and 3YR locked salaries stable in the same run, across all 594 players", () => {
+    for (const player of FOOTBALL_GM_PLAYER_POOL) {
+      const now = footballGmAdjustedSalaryForPlayer(player, 1, seed(4), {});
+      const next = footballGmAdjustedSalaryForPlayer(player, 2, seed(4), {});
+      const third = footballGmAdjustedSalaryForPlayer(player, 3, seed(4), {});
+      expect(now).toBe(player.salaryApy);
+      expect(next).toBe(third);
+      expect(Number.isFinite(next)).toBe(true);
+      expect(next).toBeGreaterThan(0);
+      if (player.gameContract === "3YR") expect(next).toBe(now);
+      for (const year of [1, 2, 3] as const) {
+        expect(footballGmProjectedGradeForPlayer(player, year, seed(4))).toBeGreaterThanOrEqual(70);
+        expect(footballGmProjectedGradeForPlayer(player, year, seed(4))).toBeLessThanOrEqual(99);
+      }
+    }
+  });
+
+  it("simulates complete three-season economy/season outcomes across diverse draft strategies", () => {
+    const metric: Record<string, { runs: number; ready: number; fixed: number; year2Caps: number[]; year2Grades: number[]; scores: number[] }> = {};
+    for (const strategy of ["value", "balanced", "upside"] as const) {
+      metric[strategy] = { runs: 0, ready: 0, fixed: 0, year2Caps: [], year2Grades: [], scores: [] };
+      for (let i = 0; i < 24; i += 1) {
+        const roster = playableRoster(i, strategy);
+        const key = seed(i + 100 * (strategy === "upside" ? 2 : strategy === "balanced" ? 1 : 0));
+        const previous = footballGmAdjustedRosterCap(roster, 1, key, {});
+        expect(previous).toBeLessThanOrEqual(FOOTBALL_GM_CAP);
+        const ready = footballGmIsOffseasonCompliantV2(roster, key, {}, []);
+        const cpu = footballGmCpuOffseason({ yearOneRoster: roster, seed: key });
+        const settled = cpu.compliant ? cpu.roster : cheapestRoster();
+        expect(footballGmIsOffseasonCompliantV2(settled, key, {}, [])).toBe(true);
+        const years = [1, 2, 3] as const;
+        const finishes = years.map((year) =>
+          footballGmSeasonResultV2({
+            seed: key,
+            yearOneRoster: roster,
+            roster: year === 1 ? roster : settled,
+            year,
+          }));
+        expect(finishes.map((year) => year.year)).toEqual([1, 2, 3]);
+        expect(finishes.every((year) => year.wins! + year.losses! === 17)).toBe(true);
+        expect(footballGmAdjustedRosterCap(settled, 2, key, {})).toBe(footballGmAdjustedRosterCap(settled, 3, key, {}));
+        const row = metric[strategy]!;
+        row.runs++;
+        row.ready += Number(ready);
+        row.fixed += Number(cpu.compliant);
+        row.year2Caps.push(footballGmAdjustedRosterCap(settled, 2, key, {}) / 1_000_000);
+        row.year2Grades.push(finishes[1].teamGrade);
+        row.scores.push(finishes.filter((year) => year.finish === "Champion").length);
+      }
+    }
+    for (const [strategy, value] of Object.entries(metric)) {
+      const mean = (items: number[]) => Math.round(items.reduce((sum, x) => sum + x, 0) / items.length * 10) / 10;
+      console.info("GM 3Y calibration", { strategy, runs: value.runs, initiallyCompliant: value.ready, CPURescued: value.fixed,
+        averageYear2CapMillions: mean(value.year2Caps), averageYear2TeamGrade: mean(value.year2Grades),
+        titlesAcrossSeasons: value.scores.reduce((a, b) => a + b, 0) });
+      expect(mean(value.year2Grades)).toBeGreaterThan(75);
+      expect(mean(value.year2Grades)).toBeLessThan(99);
+    }
+  });
+});
