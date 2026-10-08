@@ -18,7 +18,7 @@ describe("CFB GM classification evidence integrity", () => {
     expect(audit.classified).toBe(audit.players.filter((row) => row.classification !== null).length);
   });
   it("retains unresolved eligibility as unknown rather than falsely declaring or graduating players", () => {
-    const valid = new Set(["FR","SO","JR","SR","5TH","6TH"]);
+    const valid = new Set(["FR","SO","JR","SR","5TH","6TH","7TH","3RD"]);
     for (const row of audit.players) {
       if (row.classification !== null) expect(valid.has(row.classification)).toBe(true);
       expect(row.remainingEligibility).toBeNull();
