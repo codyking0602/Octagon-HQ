@@ -6,7 +6,7 @@
   "sourceGradeAuthority": "data/generated/football/wheel-nfl-*-grades-2026-10-03.json",
   "reviewCount": 594,
   "followupReviewCount": 417,
-  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies.",
+  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies. Owner-approved TE current-ability corrections incorporated 2026-10-08 for Jake Ferguson and Brenton Strange; no change to individual development outcomes.",
   "reviews": [
     {
       "id": "ARI|Front Seven|dantestills",
@@ -2272,17 +2272,17 @@
       "name": "Jake Ferguson",
       "team": "DAL",
       "family": "TE",
-      "gradeAtReview": 82,
+      "gradeAtReview": 79,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Jake Ferguson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, TE, pick #129.",
+      "reviewRationale": "Jake Ferguson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Updated approved HQ grade 79 (high confidence), age 27, TE, pick #129. Current ability corrected from 82 to 79 on 2026-10-08; individual development probabilities were not recalibrated as a consequence.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
-        "reason": "Productive receiving TE with 82 catches/600 yards in 2025 and red-zone value, but repeated sub-60 overall grades and ball-security issues prevent a higher all-around grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
-        "asOf": "2026-10-03"
+        "reason": "Receiving volume and scoring role are useful (82 catches, 600 yards and eight touchdowns in 2025), but 7.3 yards per catch, limited explosive/inline impact and repeat sub-60 overall-grade and ball-security concerns make a 79 more defensible than the original 82. The 2026 opening (12 catches, 83 yards through four games) reinforces but does not independently determine the adjustment.",
+        "asOf": "2026-10-08"
       }
     },
     {
@@ -3881,17 +3881,17 @@
       "name": "Brenton Strange",
       "team": "JAX",
       "family": "TE",
-      "gradeAtReview": 80,
+      "gradeAtReview": 83,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Brenton Strange: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 80 (high confidence), age 25, TE, pick #61.",
+      "reviewRationale": "Brenton Strange: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Updated approved HQ grade 83 (high confidence), age 25, TE, pick #61. Current ability corrected from 80 to 83 on 2026-10-08; individual development probabilities were not recalibrated as a consequence.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
-        "reason": "540 yards in 12 games in 2025 plus excellent zone run-blocking and continued 2026 usefulness make him a strong complete starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
-        "asOf": "2026-10-03"
+        "reason": "True two-way tight-end contribution merits more credit: 46 receptions and 540 yards in 12 games in 2025 plus strong zone run-blocking in the locked TE evidence; 14 catches and 167 yards in the first four 2026 games. The 83 accounts for valuable inline work alongside receiving, without projecting future stardom or overreacting to a short 2026 sample.",
+        "asOf": "2026-10-08"
       }
     },
     {
