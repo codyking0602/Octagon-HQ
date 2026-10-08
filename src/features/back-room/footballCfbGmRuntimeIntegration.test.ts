@@ -12,8 +12,8 @@ import {
 describe("CFB GM 2026 class + NIL + development runtime integration", () => {
   it("binds the complete researched population without inventing class labels", () => {
     expect(CFB_GM_PLAYERS).toHaveLength(468);
-    expect(CFB_GM_PLAYERS.filter((p) => p.classification !== null)).toHaveLength(466);
-    expect(CFB_GM_PLAYERS.filter((p) => p.classification === null)).toHaveLength(2);
+    expect(CFB_GM_PLAYERS.filter((p) => p.classification !== null)).toHaveLength(468);
+    expect(CFB_GM_PLAYERS.filter((p) => p.classification === null)).toHaveLength(0);
     expect(cfbGmPlayer("texas|colinsimmons")?.classification).toBe("JR");
     const ledger = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-classification-evidence.json","utf8"));
     const runtime = JSON.parse(readFileSync("data/generated/football/cfb-gm-classification-runtime-2026.json","utf8"));
@@ -48,6 +48,8 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(isModelDraftEligible("model|sophomore","SO")).toBe(false);
     expect(isModelDraftEligible("model|unknown",null)).toBe(false);
     expect(isModelDraftEligible("model|older","5TH")).toBe(true);
+    expect(isModelDraftEligible("miami|mohamedtoure","8TH")).toBe(true);
+    expect(cfbGmPlayer("smu|jimmywyrick")?.classification).toBe("6TH");
     expect(CFB_GM_PLAYERS.filter((p) => p.classification === "FR" ||
       p.classification === "SO").every((p) => !isModelDraftEligible(p.id,p.classification))).toBe(true);
   });
@@ -75,6 +77,7 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(cfbGmValidateRun(run)).not.toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v2-cfp"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v3-market-development"})).toBeNull();
+    expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v4-official-classes"})).toBeNull();
   });
 
   it("completes multiple seeded seven-player draft paths under both budgets", () => {

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "source": "gm-2026-classification-evidence.json",
   "population": 468,
-  "classified": 466,
+  "classified": 468,
   "players": [
     {
       "id": "alabama|brayhubbard",
@@ -1280,7 +1280,7 @@
     },
     {
       "id": "miami|mohamedtoure",
-      "classification": null,
+      "classification": "8TH",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -2442,7 +2442,7 @@
     },
     {
       "id": "smu|jimmywyrick",
-      "classification": null,
+      "classification": "6TH",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null

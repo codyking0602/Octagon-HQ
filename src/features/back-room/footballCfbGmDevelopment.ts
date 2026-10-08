@@ -6,7 +6,7 @@
  * Do not describe the priors as individualized performance research. A separate
  * 468-player evidence ledger remains the quality gate before final release.
  */
-export type CfbGmClass = "FR" | "SO" | "JR" | "SR" | "3RD" | "5TH" | "6TH" | "7TH" | null;
+export type CfbGmClass = "FR" | "SO" | "JR" | "SR" | "3RD" | "5TH" | "6TH" | "7TH" | "8TH" | null;
 export type CfbGmDevProfile = {
   breakout:number; improve:number; steady:number; decline:number;
   maxGain:number; maxLoss:number; volatility:"LOW"|"MEDIUM"|"HIGH";
@@ -22,7 +22,7 @@ const uniform=(token:string)=>hash(token)/4294967296;
 const classes:Readonly<Record<Exclude<CfbGmClass,null>,readonly [number,number,number,number,number,number]>>={
   FR:[22,43,29,6,8,4], SO:[19,39,33,9,7,4], JR:[12,32,43,13,6,5],
   SR:[8,23,48,21,4,5], "3RD":[13,33,40,14,6,5],
-  "5TH":[6,20,50,24,4,6],"6TH":[4,16,50,30,3,6],"7TH":[4,14,51,31,3,6],
+  "5TH":[6,20,50,24,4,6],"6TH":[4,16,50,30,3,6],"7TH":[4,14,51,31,3,6],"8TH":[2,10,48,40,2,7],
 };
 const special:Readonly<Record<string,readonly [number,number,number,number,number,number]>>={
   // Individually reviewed direction only; exact 2025/2026 season-performance
@@ -70,5 +70,5 @@ export function cfbGmNextClass(stage:CfbGmClass):CfbGmClass {
   if(stage==="SR")return "5TH";
   if(stage==="5TH")return "6TH";
   if(stage==="6TH")return "7TH";
-  return null; // 7th-year exceptions and unknown stages are never invented.
+  return null; // Beyond documented extended-year cohorts, never invent another season.
 }
