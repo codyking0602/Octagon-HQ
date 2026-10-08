@@ -1843,8 +1843,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 36,
+          "steady": 40,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.08,
+        "summary": "Georgia junior RB 2025 SEC all-freshman selection after 526 rushing yards/six TD on 103 carries and three starts in 12 games; 2026 added 45 receiving yards and a TD against Western Kentucky. Behind a proven lead option in Nate Frazier, has receiving/goal-line expansion opportunities but no established elite feature volume. 2024 college matriculation means 2027 Draft eligible.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/Chauncey-Bowens/10542"
+        ]
+      }
     },
     {
       "id": "georgia|chriscole",
@@ -1862,8 +1881,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 41,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.56,
+        "portalExitProbability": 0.05,
+        "summary": "Georgia junior ILB produced 59 tackles, seven TFL and 4.5 sacks in 14 games with one 2025 start, earning 2026 SEC Defensive Player of Week after Oklahoma win. 2024 SEC All-Freshman recognition and current expanded role argue more Year 2 improvement opportunity than typical veteran inside linebacker, not automatic elite breakout.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/chris-cole/10546"
+        ]
+      }
     },
     {
       "id": "georgia|craigdandridge",
@@ -1881,8 +1919,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 42,
+          "steady": 27,
+          "decline": 11,
+          "maxGain": 7,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.12,
+        "summary": "Georgia 2026 true freshman WR began with 2/36 vs Tennessee State, 2/56 vs WKU, 3/74 and first college TD at Arkansas, then receptions versus Oklahoma and Vanderbilt. This is unusually early demonstrated first-year involvement, but not a multi-season high-level profile; sizeable growth and role volatility. First enrolled 2026, earliest 2029 NFL Draft under three-years-removed rule.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/craig-dandridge/10712"
+        ]
+      }
     },
     {
       "id": "georgia|demellojones",
@@ -1900,8 +1957,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 40,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.08,
+        "summary": "Georgia junior defensive back 2025 25 tackles and five PBUs in 12 games after six reserve appearances in 2024; 2026 recorded 43-yard interception and PBU against Western Kentucky plus six tackles at Arkansas. A real young coverage impact and rising usage case, but limited sustained prior starting experience makes Year 2 somewhat volatile.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/demello-jones/10575"
+        ]
+      }
     },
     {
       "id": "georgia|elijahgriffin",
@@ -1971,8 +2047,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 16,
+          "steady": 65,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.92,
+        "portalExitProbability": 0.02,
+        "summary": "Georgia junior CB was 2025 FWAA National Freshman Defensive Player of Year and first-team Freshman All-American with four interceptions (tied SEC lead), 20 tackles/seven PBUs over 12 starts in 14 games. 2026 remained preseason All-American and had two PBUs versus Western Kentucky. Already proven high-tier ball/coverage performer with minimal room for a giant Year 2 breakout.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/ellis-robinson%20iv/10682"
+        ]
+      }
     },
     {
       "id": "georgia|gabeharrisjr",
@@ -2081,8 +2176,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 29,
+          "steady": 42,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.04,
+        "summary": "Georgia senior interior DL began college 2023 and saw 2025 injuries/minutes limit him to eight starts and 12 tackles/2.0 TFL; 2026 early four games featured a comeback watchlist, field-goal block and two TFL. Interior gap work matters beyond tackle counts; injury-recovery range warrants meaningful upside and downside, unlike automatic old-veteran low volatility.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/jordan-hall/10561"
+        ]
+      }
     },
     {
       "id": "georgia|khalilbarnes",
@@ -2100,8 +2214,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 22,
+          "steady": 55,
+          "decline": 18,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.53,
+        "portalExitProbability": 0.06,
+        "summary": "Georgia 2026 senior safety transfer from Clemson: 2023 41 tackles, three interceptions and 2024 60 tackles/four INT; 2025 46 tackles/five PBU in 10 games/nine starts. Started 2026 in a new SEC system with PBUs and early run support. Proven multi-year production but transfer fit and ball-turnover regression create moderate volatility.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/khalil-barnes/10705"
+        ]
+      }
     },
     {
       "id": "georgia|kjbolden",
@@ -2177,8 +2310,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 24,
+          "steady": 55,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.05,
+        "summary": "Georgia senior tight end, 2025 all 14 games/seven starts, 15 catches for 158 yards/four TD including a historic three-TD Ole Miss game. 2026 caught three for 59 yards/TD at Arkansas and another 43-yard catch at Vanderbilt. Established red-zone and blocking contributor with limited statistical receiving volume and modest major breakout probability.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/lawson-luckie/10580"
+        ]
+      }
     },
     {
       "id": "georgia|natefrazier",
@@ -2254,8 +2406,27 @@
       "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 61,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.84,
+        "portalExitProbability": 0.04,
+        "summary": "Georgia senior ILB, SEC All-Freshman in 2023 and established multi-season starter/rotation role. 2026 through Oklahoma produced career-best 11 tackles, one sack, 1.5 TFL and a forced fumble; also two sacks at Arkansas. Demonstrated impact supports high steady likelihood with muted senior-era breakout and strong 2027 Draft exit probability.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/raylen-wilson/10702"
+        ]
+      }
     },
     {
       "id": "georgia|sacoviewhitehelton",
@@ -2293,8 +2464,27 @@
       "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 42,
+          "steady": 31,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1,
+        "summary": "Georgia sophomore WR played only six reserve games with two catches/28 yards as 2025 freshman, then in first four 2026 games posted TD catches against Tennessee State, WKU and Oklahoma, including 110 yards/four catches versus Oklahoma. Real breakout trajectory from limited 2025 sample, but not a settled two-year star; 2025 college entry bars 2027 NFL Draft.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/talyn-taylor/10690"
+        ]
+      }
     },
     {
       "id": "houston|amarethomas",
@@ -10923,5 +11113,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged."
 }
