@@ -42,7 +42,15 @@ import {
   type FootballGmTradeProposal,
   type FootballGmSeasonResultV2,
 } from "./footballGmStrategy";
-import { footballGmSharedSeason, footballGmSharedThreeYears, footballGmRepairLegacyYearOne } from "./footballGmSharedPostseason";
+import {
+  footballGmSharedSeason,
+  footballGmSharedThreeYears,
+  footballGmRepairLegacyYearOne,
+  footballGmMatchDevelopmentSeed,
+  footballGmMatchUsesSeededDevelopment,
+} from "./footballGmSharedPostseason";
+import { FOOTBALL_GM_DEVELOPMENT_SEED_TAG } from "./wheelFootballGmEconomy";
+import { FootballGmDevelopmentReport } from "./FootballGmDevelopmentReport";
 import FootballGmSoloPage, {
   CandidateBoard,
   CapMeter,
@@ -77,9 +85,9 @@ const FINISH_RANK: Record<string, number> = {
 
 function freshSeed() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID().replace(/-/g, "");
+    return crypto.randomUUID().replace(/-/g, "") + FOOTBALL_GM_DEVELOPMENT_SEED_TAG;
   }
-  return `${Date.now()}${Math.random().toString(36).slice(2)}`;
+  return `${Date.now()}${Math.random().toString(36).slice(2)}${FOOTBALL_GM_DEVELOPMENT_SEED_TAG}`;
 }
 
 function normalizedRun(seed: string, value: unknown): PersistedRun {
@@ -497,8 +505,12 @@ export default function FootballGmHeadToHeadPage() {
   const forfeitedProfile = remote?.forfeited_by_profile_id
     ? remote.participants.find((participant) => participant.id === remote.forfeited_by_profile_id) ?? null
     : null;
+  const matchDevelops = remote ? footballGmMatchUsesSeededDevelopment(remote.participants) : false;
   const remoteOpponentRun = remoteOpponent
-    ? normalizedRun(`${remote?.seed ?? run.seed}:${remoteOpponent.id}`, remoteOpponent.run_state)
+    ? normalizedRun(
+        footballGmMatchDevelopmentSeed(remote?.seed ?? run.seed, remoteOpponent.id, matchDevelops),
+        remoteOpponent.run_state,
+      )
     : null;
 
   const opponentRun = mode === "human" ? remoteOpponentRun ?? initialRun(remote?.seed ?? run.seed) : cpuRun;
@@ -507,8 +519,8 @@ export default function FootballGmHeadToHeadPage() {
   const sharedMatchSeed = mode === "human" ? remote?.seed ?? run.seed : run.seed;
   const sharedResults = run.roster.length === 7 && opponentRun.roster.length === 7
     ? footballGmSharedThreeYears(sharedMatchSeed, [
-        { key: myMatchKey, yearOneRoster: run.roster, finalRoster: run.finalRoster.length === 7 ? run.finalRoster : run.roster },
-        { key: opponentMatchKey, yearOneRoster: opponentRun.roster, finalRoster: opponentRun.finalRoster.length === 7 ? opponentRun.finalRoster : opponentRun.roster },
+        { key: myMatchKey, yearOneRoster: run.roster, finalRoster: run.finalRoster.length === 7 ? run.finalRoster : run.roster, developmentSeed: run.seed },
+        { key: opponentMatchKey, yearOneRoster: opponentRun.roster, finalRoster: opponentRun.finalRoster.length === 7 ? opponentRun.finalRoster : opponentRun.roster, developmentSeed: opponentRun.seed },
       ])
     : null;
   const storedLeft = remoteMe?.year1_result as FootballGmSeasonResultV2 | null | undefined;
@@ -629,7 +641,14 @@ export default function FootballGmHeadToHeadPage() {
       setRemoteError("");
       const participant = next.participants.find((row) => row.id === activeProfileId);
       if (!participant) return;
-      const nextRun = normalizedRun(`${next.seed}:${participant.id}`, participant.run_state);
+      const nextRun = normalizedRun(
+        footballGmMatchDevelopmentSeed(
+          next.seed,
+          participant.id,
+          footballGmMatchUsesSeededDevelopment(next.participants),
+        ),
+        participant.run_state,
+      );
       const myOffseason = next.phase === "offseason" && next.current_turn_profile_id === activeProfileId;
       if (!myOffseason) {
         humanHydratedRef.current = false;
@@ -947,7 +966,8 @@ export default function FootballGmHeadToHeadPage() {
     if (FINISH_RANK[left.finish] !== FINISH_RANK[right.finish]) {
       first = FINISH_RANK[left.finish] < FINISH_RANK[right.finish] ? "user" : "cpu";
     } else {
-      first = parseInt(run.seed.slice(-2), 16) % 2 === 0 ? "user" : "cpu";
+      const rawSeed = run.seed.replace(FOOTBALL_GM_DEVELOPMENT_SEED_TAG, "");
+      first = parseInt(rawSeed.slice(-2), 16) % 2 === 0 ? "user" : "cpu";
     }
     setRun((current) => ({ ...current, phase: "offseason", finalRoster: [...current.roster] }));
     setCpuRun((current) => ({ ...current, phase: "offseason", finalRoster: [...current.roster] }));
@@ -1489,6 +1509,7 @@ export default function FootballGmHeadToHeadPage() {
           {displayedPhase === "offseason" && !showPersistentYearOne ? (
             isMyTurn ? (
               <div className="football-gm__front-office">
+                <FootballGmDevelopmentReport roster={run.roster} seed={run.seed} />
                 <FrontOfficeSummary run={run} isReady={offseasonReady} />
                 <RosterGrid
                   roster={run.finalRoster}
