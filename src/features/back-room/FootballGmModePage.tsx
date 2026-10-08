@@ -621,7 +621,7 @@ export function RosterGrid({
                     <b>{footballGmMoney(salary)}</b>
                     <span>{failedTalks && player.gameContract === "1YR"
                       ? `CAMP MARKUP · ${failedTalks} FAILED TALK${failedTalks === 1 ? "" : "S"}`
-                      : showFutureSalary ? "Y2/Y3" : player.gameContract}</span>
+                      : showFutureSalary ? `Y2/Y3 · ${player.gameContract}` : player.gameContract}</span>
                     {year === 1 ? <small className="football-gm__roster-reprice">{footballGmRepriceLabel(player.extensionRisk)}</small> : null}
                   </div>
                   {onShop ? (
@@ -766,10 +766,10 @@ export function CandidateBoard({
             </header>
             <div>
               <p><b>ELITE / IMPACT / STARTER / DEPTH</b><span>Broad current-ability scouting bands. Exact grades stay hidden.</span></p>
-              <p><b>RISING / STABLE / DECLINE RISK</b><span>Scouting outlook based on calibrated development probabilities; it can change after Year 1.</span></p>
+              <p><b>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</b><span>Five outlooks derived from individual development probabilities. They recalculate for Year 3 after the first season.</span></p>
               <p><b>1YR</b><span>Salary reprices after Year 1.</span></p>
               <p><b>3YR · SALARY LOCKED</b><span>Salary stays fixed for the full game.</span></p>
-              <p><b>REPRICE RISK</b><span>Expected size of a 1YR salary increase, not its exact probability.</span></p>
+              <p><b>LOW / MED / HIGH REPRICE</b><span>Expected size of a 1YR salary increase (not an exact probability). Repricing is settled in the offseason.</span></p>
             </div>
           </section>
         </div>
@@ -829,8 +829,7 @@ export function FreeAgencyBoard({
                 <PlayerQualityPill player={player} year={2} seed={seed} />
                 <PlayerOutlookPill player={player} year={2} seed={seed} />
                 <span>1YR</span>
-                  <PlayerDevelopmentNote player={player} seed={seed} />
-                
+                <PlayerDevelopmentNote player={player} seed={seed} />
               </div>
             </div>
             <b>{footballGmMoney(salary)}</b>
