@@ -10419,8 +10419,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -10433,6 +10433,25 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 56,
+          "decline": 9,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.05,
+        "summary": "North Texas 2025 true freshman NCAA-record 29 TD scorer, FBS statistical scoring champion, multiple All-America honors and Doak Walker semifinalist. Oklahoma State 2026 sophomore has proven scoring talent; major leap less likely than steady with transfer uncertainty. 2025 college matriculation disallows 2027 NFL draft.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/caleb-hawkins/14352"
+        ]
       }
     },
     {
@@ -10451,8 +10470,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 41,
+          "steady": 28,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.06,
+        "portalExitProbability": 0.09,
+        "summary": "Oregon State 2025 TE played 12 games but only six tackles on special teams and no verified offensive receiving, after 2024 four-game redshirt. Oklahoma State 2026 redshirt sophomore can grow offensive role, but is unproven college pass catcher; 2024 entry makes 2027 NFL technically possible.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/carson-kolb/14405"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|chrisbarnes",
@@ -10471,8 +10509,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 36,
+          "steady": 39,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.07,
+        "summary": "Wake Forest 2025 freshman receiver/returner 39 catches/547 yards/three TD, 13 rushes/143 yards, 98-yard kickoff TD, 953 all-purpose yards and third-team All-ACC special teams. Oklahoma State 2026 redshirt sophomore with real multi-phase upside and transfer uncertainty.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/chris-barnes/14354"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|christianbodnar",
@@ -10490,8 +10547,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 35,
+          "steady": 35,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.05,
+        "summary": "Liberty 2025 safety returned from 2024 serious hospitalization, won national Comeback Player award, 12 games/nine starts, 44 tackles/two sacks/two pass breakups. Oklahoma State redshirt junior 2026, Big12 translation and health durability must drive high volatility.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/christian-bodnar/14356"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|drewmestemaker",
@@ -10561,8 +10637,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.51,
+        "portalExitProbability": 0.03,
+        "summary": "North Texas 2025 safety 14 games/one start, 44 tackles/two INT/one sack/two PBU, after 2024 nine starts/55 tackles/three INT. Oklahoma State 2026 senior already demonstrated ball production, with P4 transition uncertainty.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/evan-jackson/14350"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|imanoates",
@@ -10579,9 +10674,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 43,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.3,
+        "portalExitProbability": 0.01,
+        "summary": "Oklahoma State 2025 redshirt senior DT 12 games/seven starts, 14 tackles/two TFL and forced fumble; 2024 12 starts, 25 tackles/two sacks. Northeastern Oklahoma A&M JUCO career began earlier than 2023 transfer; mature line rotation, ordinary 2026 terminal eligibility assumed.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/iman-oates/14414"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|isaiahchisom",
@@ -10599,8 +10713,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 31,
+          "steady": 50,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.04,
+        "summary": "UCLA 2025 linebacker started ten of 12, 84 tackles/2.5 TFL/two forced fumbles and top-15 Big Ten tackle rate, 173 tackles/22 starts career from UCLA and Oregon State. Oklahoma State 2026 redshirt junior established P4 starter, so steady profile likely.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/isaiah-chisom/14359"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|jaleeljohnson",
@@ -10617,9 +10750,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 36,
+          "steady": 31,
+          "decline": 20,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.02,
+        "summary": "Oklahoma State 2025 edge three starts in first four games with 16 tackles/2.5 TFL/four pressures before injury, after 2024 21 tackles/two sacks. 2026 redshirt senior rebound has significant availability downside and normal terminal year.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/jaleel-johnson/14295"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|jameswilliams",
@@ -10636,9 +10788,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://okstate.com/sports/football/roster/2026",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 36,
+          "steady": 36,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.03,
+        "summary": "Florida State 2025 DL 11 games/six starts, 19 tackles/three TFL/1.5 sacks/five hurries; Nebraska 2024 reserve with 5.5 TFL/five sacks. Oklahoma State 2026 redshirt senior, P4 experience but recent irregular impact; ordinary final year.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/james-williams/14384"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|justinbowick",
@@ -10656,9 +10827,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 48,
+          "decline": 18,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.01,
+        "summary": "Illinois 2025 WR 12 games/22 catches/265 yards/five TD, Ball State 2024 20/383/3 in four injury-limited starts, Eastern Illinois 2022-23 48 catches/749 yards/eight TD. Oklahoma State 2026 redshirt senior has mature red-zone impact but past injury/role uncertainty and normal terminal eligibility.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/justin-bowick/14357"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|ladainianfields",
@@ -10676,8 +10866,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 37,
+          "steady": 38,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.05,
+        "summary": "Oklahoma State 2025 redshirt freshman CB all 12 games, last six starts, two INT including a 55-yard pick six, 16 tackles/two TFL. Enrolled 2024 and redshirted then, so 2027 draft legally possible but full-time secondary experience still limited.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/ladainian-fields/14278"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|mohorn",
@@ -10695,8 +10904,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 33,
+          "steady": 36,
+          "decline": 20,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.25,
+        "portalExitProbability": 0.02,
+        "summary": "Texas Tech 2025 corner seven games/one start/four tackles/three PBU versus 2024 all-13-start 56 tackles/three TFL. Oklahoma State 2026 redshirt senior transfer offers Big12 starter rebound but recent reduction creates downside.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/mo-horn/14365"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|quintonhammonds",
@@ -10714,8 +10942,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 35,
+          "steady": 42,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.37,
+        "portalExitProbability": 0.04,
+        "summary": "North Texas 2025 sophomore safety 12 games/ten starts, 53 tackles/five TFL/two INT/sack/forced fumble, national defensive weekly honor for two-pick Navy game. Oklahoma State junior 2026 faces P4-level transition with established G5 production.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/quinton-hammonds/14339"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|saadiqclements",
@@ -10733,8 +10980,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 40,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.3,
+        "portalExitProbability": 0.05,
+        "summary": "North Texas 2025 DL 13 games/eight starts, 30 tackles/5.5 TFL/1.5 sacks/forced fumble; Louisville 2023 redshirt and 2024 two reserve games. Oklahoma State 2026 redshirt junior has potential with Big12 transfer context.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/saadiq-clements/14360"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|tateromney",
@@ -10752,8 +11018,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 29,
+          "steady": 38,
+          "decline": 23,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.15,
+        "portalExitProbability": 0.01,
+        "summary": "Arizona State 2025 LB ten games without starts/13 tackles/PBU/fumble recovery, 2024 broken-arm absence, earlier BYU career. Oklahoma State 2026 redshirt senior and oldest roster player, injury rebound high uncertainty; remaining eligibility unresolved without specific ruling.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/tate-romney/14380"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|terrencelewis",
@@ -10771,8 +11056,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 39,
+          "steady": 30,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.07,
+        "summary": "North Texas 2025 freshman WR 12 games, 11 catches/184 yards/three TD, entered Oklahoma State as 2026 sophomore. Small sample yet field-stretching flashes, first 2025 college entry bars 2027 NFL draft.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/terrence-lewis/14343"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|trepageiii",
@@ -10790,8 +11094,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/197/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 37,
+          "steady": 34,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.06,
+        "summary": "Tarleton State 2025 FCS back nine games/112 carries for 839 yards/seven TD, after 2024 two-game redshirt. Oklahoma State 2026 redshirt sophomore with FCS-to-P4 transition risk and 2027 NFL eligibility possible due 2024 first enrollment.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/tre-page-iii/14375"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|wyattyoung",
@@ -10810,8 +11133,27 @@
       "sourceUrl": "https://okstate.com/sports/football/roster/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 32,
+          "steady": 48,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.61,
+        "portalExitProbability": 0.03,
+        "summary": "North Texas 2025 all-conference and PFSN All-America receiver caught 70 passes for 1,264 yards/ten TD; second-most UNT season yards ever. Oklahoma State 2026 junior transfer has proven productivity and Power4 opposition/target-share uncertainty.",
+        "sources": [
+          "https://okstate.com/sports/football/roster/wyatt-young/14351"
+        ]
+      }
     },
     {
       "id": "ole-miss|antoniokite",
