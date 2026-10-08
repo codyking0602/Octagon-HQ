@@ -6,7 +6,7 @@
   "sourceGradeAuthority": "data/generated/football/wheel-nfl-*-grades-2026-10-03.json",
   "reviewCount": 594,
   "followupReviewCount": 417,
-  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies.",
+  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies. Owner-approved Front Seven HQ grade corrections for ten players dated 2026-10-08 synchronized only current-grade snapshots and the affected review notes; all 594 development distributions unchanged.",
   "reviews": [
     {
       "id": "ARI|Front Seven|dantestills",
@@ -1087,13 +1087,13 @@
       "name": "Jaelan Phillips",
       "team": "CAR",
       "family": "Front Seven",
-      "gradeAtReview": 86,
+      "gradeAtReview": 88,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Jaelan Phillips: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 86 (high confidence), age 27, Front Seven, pick #18."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 86 → 88. Sustained 2025 pressure and pass-rush win rate plus early 2026 pressures demonstrate more current rush ability than five 2025 sacks suggest. Peer check: In the Josh Sweat/Byron Young (88) band, below Jared Verse and Highsmith (89). Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "CAR|Front Seven|leehunter",
@@ -4026,13 +4026,13 @@
       "name": "Peter Woods",
       "team": "KC",
       "family": "Front Seven",
-      "gradeAtReview": 80,
+      "gradeAtReview": 78,
       "ageAtReview": 21,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Peter Woods; audited HQ grade 80 and age 21 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 80 → 78. 2025 college credentials and minimal 2026 NFL production do not substantiate grade 80 in demonstrated current NFL ability. Peer check: Provisional young interior tier below Teair Tart/Kenny Clark (80), with development potential independently modeled. Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "KC|QB|patrickmahomes",
@@ -4276,13 +4276,13 @@
       "name": "Tuli Tuipulotu",
       "team": "LAC",
       "family": "Front Seven",
-      "gradeAtReview": 83,
+      "gradeAtReview": 88,
       "ageAtReview": 24,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Tuli Tuipulotu: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 24, Front Seven, pick #54."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 83 → 88. 13 sacks, 23 QB hits and 20 TFL in 2025, plus continued 2026 pressure. Proven strong EDGE impact, not prospect projection. Peer check: Moves alongside Josh Sweat and Byron Young (88); above George Karlaftis (86). Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "LAC|QB|justinherbert",
@@ -4486,13 +4486,13 @@
       "name": "Braden Fiske",
       "team": "LAR",
       "family": "Front Seven",
-      "gradeAtReview": 85,
+      "gradeAtReview": 83,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Braden Fiske: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 26, Front Seven, pick #39."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 85 → 83. After 2024 8.5-sack peak, 2025 fell to three; 2026 rush pressure remains useful but run-defense consistency below other 85-grade interiors. Peer check: Just below Daron Payne and Ed Oliver (85), above Gervon Dexter Sr. (82). Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "LAR|Front Seven|byronyoung",
@@ -5264,13 +5264,13 @@
       "name": "Dallas Turner",
       "team": "MIN",
       "family": "Front Seven",
-      "gradeAtReview": 85,
+      "gradeAtReview": 87,
       "ageAtReview": 23,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Dallas Turner; audited HQ grade 85 and age 23 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 85 → 87. Eight sacks in 2025 and strong early 2026 pressure/win evidence justify stronger demonstrated EDGE ability; run defense limits higher placement. Peer check: With Rashan Gary and Laiatu Latu (87), below Josh Sweat (88). Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "MIN|Front Seven|ericwilson",
@@ -5531,13 +5531,13 @@
       "name": "Milton Williams",
       "team": "NE",
       "family": "Front Seven",
-      "gradeAtReview": 90,
+      "gradeAtReview": 88,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "proven",
-      "reviewRationale": "Milton Williams: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 90 (high confidence), age 27, Front Seven, pick #73."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 90 → 88. Exceptional 2025 playoff pressure is real, but 2025 regular-season grade and early 2026 complete play are less consistently dominant. Peer check: Shares 88 band with Jonathan Allen and DeForest Buckner, below consistent 90 interiors Zach Allen and Leonard Williams. Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "NE|Front Seven|robertspillane",
@@ -6057,13 +6057,13 @@
       "name": "Kayvon Thibodeaux",
       "team": "NYG",
       "family": "Front Seven",
-      "gradeAtReview": 83,
+      "gradeAtReview": 79,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Kayvon Thibodeaux: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 25, Front Seven, pick #5."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 83 → 79. Only 2.5 sacks in ten 2025 games and a weak opening 2026 run-defense/pass-rush sample; older peak no longer supports 83. Peer check: Lower-tier specialist/depth neighborhood rather than Tuli Tuipulotu and Odafe Oweh (83+). Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "NYG|Front Seven|tremaineedmunds",
@@ -6565,13 +6565,13 @@
       "name": "Jihaad Campbell",
       "team": "PHI",
       "family": "Front Seven",
-      "gradeAtReview": 85,
+      "gradeAtReview": 82,
       "ageAtReview": 22,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Jihaad Campbell: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 22, Front Seven, pick #31."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 85 → 82. 2025 rookie contribution is real, but run-fit/coverage limitations and early 2026 play do not yet support a high-end complete linebacker grade. Peer check: Starter/developing band with Patrick Queen (82), below Ernest Jones IV (85). Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "PHI|Front Seven|jonathangreenard",
@@ -7353,13 +7353,13 @@
       "name": "Mykel Williams",
       "team": "SF",
       "family": "Front Seven",
-      "gradeAtReview": 82,
+      "gradeAtReview": 80,
       "ageAtReview": 22,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Mykel Williams: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 22, Front Seven, pick #11. Returning from ACL injury; recovery uncertainty.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 82 → 80. One sack and three QB hits in nine NFL rookie games in 2025; strong run-setting profile but not an established 82-level complete EDGE. Peer check: Developmental 80 tier alongside Chop Robinson/Derick Hall, distinct from rehabilitation risk in progression. Development odds, annual ceilings and market volatility unchanged.",
       "recentEvidence": {
         "type": "injury-context",
         "source": "https://www.sfchronicle.com/sports/49ers/article/49ers-fb-kyle-juszczyk-miss-a-few-weeks-22463706.php",
@@ -7651,13 +7651,13 @@
       "name": "Rueben Bain Jr.",
       "team": "TB",
       "family": "Front Seven",
-      "gradeAtReview": 82,
+      "gradeAtReview": 79,
       "ageAtReview": 22,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Rueben Bain Jr.; audited HQ grade 82 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 82 → 79. 2025 was a college season; small 2026 NFL sample lacks established NFL rush-win evidence for grade 82; do not award collegiate-pedigree bonus. Peer check: Unproven current EDGE band alongside Jonah Elliss (79), with future upside in development probabilities only. Development odds, annual ceilings and market volatility unchanged."
     },
     {
       "id": "TB|Front Seven|vitavea",
