@@ -4,7 +4,7 @@
   "snapshotAt": "2026-10-08T16:34:59.519Z",
   "schoolCount": 25,
   "population": 468,
-  "classified": 466,
+  "classified": 468,
   "exactMatches": 384,
   "failures": [
     {
@@ -3519,13 +3519,13 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": null,
+      "classification": "8TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "8TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://miamihurricanes.com/sports/football/roster/player/mohamed-toure",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -6706,13 +6706,13 @@
       "groups": [
         "Secondary"
       ],
-      "classification": null,
+      "classification": "6TH",
       "redshirt": null,
-      "sourceClass": null,
+      "sourceClass": "6TH",
       "espnAthleteId": null,
-      "matchStatus": "unmatched",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
-      "confidence": "unverified",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://smumustangs.com/sports/football/roster/jimmy-wyrick/15630",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
       "draftEligible2027": null
@@ -9006,7 +9006,7 @@
       "draftEligible2027": null
     }
   ],
-  "officialOverrides": 82,
+  "officialOverrides": 84,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
