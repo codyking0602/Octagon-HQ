@@ -169,9 +169,9 @@
     {
       "team": "CHI",
       "player": "Kyle Monangai",
-      "grade": 82,
+      "grade": 84,
       "confidence": "medium",
-      "reason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      "reason": "2025 rookie: 783 rushing yards at 4.6 YPC; first four 2026 games: 324 at 5.4, with a 146-yard Week 4. Productive downhill power and decisive footwork justify a modest increase, not an elite/three-down projection."
     },
     {
       "team": "CIN",
@@ -295,16 +295,16 @@
     {
       "team": "JAX",
       "player": "Chris Rodriguez Jr.",
-      "grade": 77,
+      "grade": 79,
       "confidence": "high",
-      "reason": "Physical reserve runner with some useful early-down ability but limited receiving/creation evidence."
+      "reason": "2025: 500 rushing yards at 4.5 YPC; 2026 through Week 4: 108 at 4.2. Repeated effective early-down power and useful inside creation justify a higher rotational grade; limited receiving prevents starter-tier inflation."
     },
     {
       "team": "KC",
       "player": "Kenneth Walker",
-      "grade": 89,
+      "grade": 91,
       "confidence": "high",
-      "reason": "Approved high-end/very-good anchor."
+      "reason": "2025: 1,027 rushing yards; first four 2026 games: 537 yards on 87 carries (6.2 YPC). Sustained tackle-breaking and explosive creation support high-end ability; receiving impact remains short of the top complete backs."
     },
     {
       "team": "KC",
@@ -344,9 +344,9 @@
     {
       "team": "LV",
       "player": "Ashton Jeanty",
-      "grade": 83,
+      "grade": 81,
       "confidence": "high",
-      "reason": "Receiving impact and contact talent are evident, but 3.6 career YPC through 20 games prevents grading the college/draft reputation instead of NFL play."
+      "reason": "2025: 975 rushing yards on 266 carries (3.7 YPC); 2026 through Week 4: 264 on 78 (3.4 YPC). Receiving usefulness and blocking context mitigate the inefficiency, but demonstrated NFL rushing creation does not justify 83."
     },
     {
       "team": "LV",
@@ -477,9 +477,9 @@
     {
       "team": "SEA",
       "player": "Zach Charbonnet",
-      "grade": 82,
+      "grade": 85,
       "confidence": "high",
-      "reason": "Reliable power/receiving complement with 730 yards and 12 rushing TD in 2025; solid starter baseline without upper-tier creation."
+      "reason": "2025: 730 rushing yards and 12 rushing TD, strong contact balance and short-yardage value, plus receiving competence. ACL rehabilitation affects future availability/development, not the demonstrated preinjury ability baseline."
     },
     {
       "team": "SF",
@@ -558,24 +558,117 @@
     ],
     "result": "locked",
     "contradictionsRemaining": false,
-    "finalCalibrationStatus": "passed"
+    "finalCalibrationStatus": "passed",
+    "latestApprovedNeighborhoods": [
+      {
+        "band": ">=90",
+        "players": [
+          "Bijan Robinson 99",
+          "Jahmyr Gibbs 98",
+          "Christian McCaffrey 96",
+          "Jonathan Taylor 95",
+          "Derrick Henry 94",
+          "James Cook III 94",
+          "Saquon Barkley 94",
+          "De'Von Achane 91",
+          "Kenneth Walker 91"
+        ]
+      },
+      {
+        "band": "85-89",
+        "players": [
+          "Jaylen Warren 88",
+          "Kyren Williams 88",
+          "Bucky Irving 87",
+          "Breece Hall 86",
+          "Josh Jacobs 86",
+          "TreVeyon Henderson 86",
+          "Chase Brown 85",
+          "Zach Charbonnet 85"
+        ]
+      },
+      {
+        "band": "80-84",
+        "players": [
+          "Chuba Hubbard 84",
+          "J.K. Dobbins 84",
+          "Kyle Monangai 84",
+          "Travis Etienne Jr. 84",
+          "Bhayshul Tuten 83",
+          "D'Andre Swift 83",
+          "James Conner 83",
+          "Javonte Williams 83",
+          "Omarion Hampton 83",
+          "Aaron Jones Sr. 82",
+          "Brian Robinson 82",
+          "Cam Skattebo 82",
+          "David Montgomery 82",
+          "Isiah Pacheco 82",
+          "Jeremiyah Love 82",
+          "Jordan Mason 82",
+          "Rachaad White 82",
+          "Rhamondre Stevenson 82",
+          "Tony Pollard 82",
+          "Tyler Allgeier 82",
+          "Ashton Jeanty 81",
+          "Blake Corum 81",
+          "Jacory Croskey-Merritt 81",
+          "Keaton Mitchell 81",
+          "Tyjae Spears 81",
+          "Alvin Kamara 80",
+          "Najee Harris 80",
+          "Quinshon Judkins 80",
+          "Rico Dowdle 80"
+        ]
+      },
+      {
+        "band": "75-79",
+        "players": [
+          "Chris Rodriguez Jr. 79",
+          "Jaylen Wright 79",
+          "Kenny Gainwell 79",
+          "Tank Bigsby 79",
+          "Woody Marks 79",
+          "Braelon Allen 78",
+          "Jadarian Price 78",
+          "Justice Hill 78",
+          "RJ Harvey 78",
+          "Samaje Perine 78",
+          "Dylan Sampson 77",
+          "Isaac Guerendo 77",
+          "Ty Johnson 77",
+          "Jonathon Brooks 76",
+          "MarShawn Lloyd 76",
+          "Mike Washington Jr. 76",
+          "Emmett Johnson 75"
+        ]
+      },
+      {
+        "band": "<75",
+        "players": [
+          "Tyler Goodson 74",
+          "Seth McGowan 72"
+        ]
+      }
+    ],
+    "latestOwnerApprovalDate": "2026-10-08"
   },
   "postGradeDistribution": {
     "min": 72,
     "max": 99,
-    "mean": 82.75,
+    "mean": 82.86,
     "median": 82,
     "bands": {
       "95-100": 4,
-      "90-94": 4,
+      "90-94": 5,
       "85-89": 8,
-      "80-84": 30,
+      "80-84": 29,
       "75-79": 17,
       "below-75": 2
     },
-    "note": "Final distribution after player-by-player grading, pairwise audit, range/separation calibration and discrepancy review. Distribution did not mechanically set grades."
+    "note": "Current population distribution after October 8 owner-approved five-player regrade; prior October 3 distribution remains archived in finalCalibrationAudit."
   },
-  "runtimeBoundary": "No production/runtime behavior changes. Runtime wiring, historical freezing and hidden reveal remain a later phase.",
+  "runtimeBoundary": "The NFL GM runtime consumes this grade artifact via wheelFootballNflCurrentAuthority. Ordinary Wheel gameplay grade runtime/historical results are not changed by this approval.",
   "futureVersioning": "Any future RB grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison.",
   "calibrationRevision": "final-cross-position-sweep-2026-10-03",
   "finalCalibrationAudit": {
@@ -631,5 +724,48 @@
         "below-75": 2
       }
     }
-  }
+  },
+  "latestOwnerApprovalDate": "2026-10-08",
+  "ownerApprovedGradeAdjustments": [
+    {
+      "id": "KC|RB|Kenneth Walker",
+      "player": "Kenneth Walker",
+      "team": "KC",
+      "previousGrade": 89,
+      "approvedGrade": 91,
+      "reason": "2025: 1,027 rushing yards; first four 2026 games: 537 yards on 87 carries (6.2 YPC). Sustained tackle-breaking and explosive creation support high-end ability; receiving impact remains short of the top complete backs."
+    },
+    {
+      "id": "SEA|RB|Zach Charbonnet",
+      "player": "Zach Charbonnet",
+      "team": "SEA",
+      "previousGrade": 82,
+      "approvedGrade": 85,
+      "reason": "2025: 730 rushing yards and 12 rushing TD, strong contact balance and short-yardage value, plus receiving competence. ACL rehabilitation affects future availability/development, not the demonstrated preinjury ability baseline."
+    },
+    {
+      "id": "LV|RB|Ashton Jeanty",
+      "player": "Ashton Jeanty",
+      "team": "LV",
+      "previousGrade": 83,
+      "approvedGrade": 81,
+      "reason": "2025: 975 rushing yards on 266 carries (3.7 YPC); 2026 through Week 4: 264 on 78 (3.4 YPC). Receiving usefulness and blocking context mitigate the inefficiency, but demonstrated NFL rushing creation does not justify 83."
+    },
+    {
+      "id": "CHI|RB|Kyle Monangai",
+      "player": "Kyle Monangai",
+      "team": "CHI",
+      "previousGrade": 82,
+      "approvedGrade": 84,
+      "reason": "2025 rookie: 783 rushing yards at 4.6 YPC; first four 2026 games: 324 at 5.4, with a 146-yard Week 4. Productive downhill power and decisive footwork justify a modest increase, not an elite/three-down projection."
+    },
+    {
+      "id": "JAX|RB|Chris Rodriguez Jr.",
+      "player": "Chris Rodriguez Jr.",
+      "team": "JAX",
+      "previousGrade": 77,
+      "approvedGrade": 79,
+      "reason": "2025: 500 rushing yards at 4.5 YPC; 2026 through Week 4: 108 at 4.2. Repeated effective early-down power and useful inside creation justify a higher rotational grade; limited receiving prevents starter-tier inflation."
+    }
+  ]
 }

@@ -256,7 +256,7 @@
     {
       "team": "CAR",
       "player": "Jaelan Phillips",
-      "grade": 86,
+      "grade": 88,
       "confidence": "high"
     },
     {
@@ -664,7 +664,7 @@
     {
       "team": "KC",
       "player": "Peter Woods",
-      "grade": 80,
+      "grade": 78,
       "confidence": "medium"
     },
     {
@@ -682,7 +682,7 @@
     {
       "team": "LAC",
       "player": "Tuli Tuipulotu",
-      "grade": 83,
+      "grade": 88,
       "confidence": "high"
     },
     {
@@ -730,7 +730,7 @@
     {
       "team": "LAR",
       "player": "Braden Fiske",
-      "grade": 85,
+      "grade": 83,
       "confidence": "high"
     },
     {
@@ -820,7 +820,7 @@
     {
       "team": "MIN",
       "player": "Dallas Turner",
-      "grade": 85,
+      "grade": 87,
       "confidence": "high"
     },
     {
@@ -868,7 +868,7 @@
     {
       "team": "NE",
       "player": "Milton Williams",
-      "grade": 90,
+      "grade": 88,
       "confidence": "high"
     },
     {
@@ -934,7 +934,7 @@
     {
       "team": "NYG",
       "player": "Kayvon Thibodeaux",
-      "grade": 83,
+      "grade": 79,
       "confidence": "high"
     },
     {
@@ -1018,7 +1018,7 @@
     {
       "team": "PHI",
       "player": "Jihaad Campbell",
-      "grade": 85,
+      "grade": 82,
       "confidence": "high"
     },
     {
@@ -1132,7 +1132,7 @@
     {
       "team": "SF",
       "player": "Mykel Williams",
-      "grade": 82,
+      "grade": 80,
       "confidence": "high"
     },
     {
@@ -1156,7 +1156,7 @@
     {
       "team": "TB",
       "player": "Rueben Bain Jr.",
-      "grade": 82,
+      "grade": 79,
       "confidence": "medium"
     },
     {
@@ -1249,8 +1249,8 @@
       "Myles Garrett 99 = Will Anderson Jr. 99 > Aidan Hutchinson 98 > Fred Warner 97 > Maxx Crosby 96",
       "Danielle Hunter 95 = Cameron Heyward 95 = Jeffery Simmons 95 = Zack Baun 95 > Chris Jones 94 = Derrick Brown 94 = Nick Bosa 94",
       "Quinnen Williams 93 = Jalen Carter 93 = T.J. Watt 93 > Nik Bonitto 92 = Dexter Lawrence II 92 = Devin Lloyd 92 = Josh Hines-Allen 92",
-      "Trey Hendrickson 91 = Jack Campbell 91 > Roquan Smith 90 = Greg Rousseau 90 = Zach Allen 90 = Kobie Turner 90 = Milton Williams 90 = Brian Burns 90 = Leonard Williams 90 = Vita Vea 90",
-      "Jared Verse 89 = Andrew Van Ginkel 89 = Demario Davis 89 = Jonathan Greenard 89 = Alex Highsmith 89 = Byron Murphy II 89 > Josh Sweat 88 = Nnamdi Madubuike 88 = Devin Bush 88 = Jonathan Allen 88 = DeForest Buckner 88 = Byron Young 88 = Zach Sieler 88 = Demarcus Lawrence 88 > Rashan Gary 87 = Laiatu Latu 87 = Nick Bolton 87 = Khalil Mack 87 = Abdul Carter 87 = Dre Greenlaw 87",
+      "Trey Hendrickson 91 = Jack Campbell 91 > Roquan Smith 90 = Greg Rousseau 90 = Zach Allen 90 = Kobie Turner 90 = Brian Burns 90 = Leonard Williams 90 = Vita Vea 90",
+      "Jared Verse 89 = Andrew Van Ginkel 89 = Demario Davis 89 = Jonathan Greenard 89 = Alex Highsmith 89 = Byron Murphy II 89 > Tuli Tuipulotu 88 = Jaelan Phillips 88 = Milton Williams 88 = Josh Sweat 88 = Nnamdi Madubuike 88 = Devin Bush 88 = Jonathan Allen 88 = DeForest Buckner 88 = Byron Young 88 = Zach Sieler 88 = Demarcus Lawrence 88 > Dallas Turner 87 = Rashan Gary 87 = Laiatu Latu 87 = Nick Bolton 87 = Khalil Mack 87 = Abdul Carter 87 = Dre Greenlaw 87",
       "The 85-88 band contains proven quality starters and sub-elite impact players across EDGE/DI/LB; role-specific strengths were compared against anchors rather than raw sack/tackle totals.",
       "The 80-84 band is the competent starter/strong rotation neighborhood; players were deliberately allowed to fall below it when the current evidence did not support starter-level impact.",
       "The 72-79 band is populated by lower-end starters, specialists, depth players and unproven current options; curated membership does not guarantee an 80+ grade."
@@ -1263,17 +1263,18 @@
       "Aaron Donald moved 87 to 85. His historical greatness is excluded; after two retired seasons, the current return sample is good but not yet elite.",
       "T'Vondre Sweat moved 88 to 85: the strong 2025 season remains meaningful, but a poor 2026 opening prevents an upper-80s lock.",
       "Laiatu Latu moved 89 to 87 and Tuli Tuipulotu 85 to 83 after current pass-rush evidence did not fully support the first-pass placements.",
-      "Final Madden discrepancy reconciliation allowed middle-ground corrections: Jack Gibbens 80→78, Calijah Kancey 84→82, Aaron Donald 85→87. Drue Tranquill remained 82."
+      "Final Madden discrepancy reconciliation allowed middle-ground corrections: Jack Gibbens 80→78, Calijah Kancey 84→82, Aaron Donald 85→87. Drue Tranquill remained 82.",
+      "Oct 8 owner approvals supersede the earlier initial-grade notes: Tuipulotu 83→88 and Phillips 86→88 on demonstrated pressure, Turner 85→87, and seven downward current-ability corrections. Development/projection inputs remain independent."
     ],
-    "result": "locked",
+    "result": "owner-approved-subsequent-calibration",
     "contradictionsRemaining": false
   },
   "rangeSeparationAudit": {
     "goal": "Prevent curated-player membership from compressing the lower half upward.",
     "min": 72,
     "median": 83,
-    "countBelow80": 46,
-    "count80To84": 71,
+    "countBelow80": 50,
+    "count80To84": 68,
     "examples": [
       {
         "player": "Tonka Hemingway",
@@ -1313,7 +1314,7 @@
       }
     ],
     "result": "passed",
-    "note": "The final pool intentionally uses the low/mid 70s for weak Wheel options and depth/specialist profiles instead of treating 80 as an automatic floor."
+    "note": "After owner-approved October 8 grade adjustments, retains broad lower grades; position population and grading semantic are unchanged."
   },
   "maddenDiscrepancyAudit": {
     "role": "QA error detector only; Madden never sets a grade.",
@@ -1359,23 +1360,126 @@
   "postGradeDistribution": {
     "min": 72,
     "max": 99,
-    "mean": 83.47,
+    "mean": 83.42,
     "median": 83,
     "bands": {
       "95-100": 10,
-      "90-94": 20,
+      "90-94": 19,
       "85-89": 44,
-      "80-84": 70,
-      "75-79": 41,
+      "80-84": 68,
+      "75-79": 44,
       "below-75": 6
     },
-    "note": "Inspected only after player-by-player, pairwise, range and Madden audits. Distribution did not drive individual grades."
+    "note": "After 10 owner-approved Front Seven current-ability adjustments on 2026-10-08; grade distributions did not determine individual ratings."
   },
   "runtimeBoundary": "No production/runtime grading behavior changes. Runtime wiring, hidden reveals and historical grade freezing remain later work.",
   "futureVersioning": "Any future Front Seven grade change must record previous grade, new grade, effective date, reason, and nearby role-normalized anchor/peer comparison.",
-  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "calibrationRevision": "owner-approved-front-seven-hq-adjustments-2026-10-08",
   "finalCrossPositionValidation": {
-    "status": "passed-no-grade-change",
-    "note": "Revalidated after QB/RB/WR/TE final calibration. Existing range/separation, pairwise and discrepancy audits remained coherent; no additional grade change was warranted."
-  }
+    "status": "owner-approved-subsequent-calibration",
+    "note": "Ten player-specific Front Seven grade changes approved on 2026-10-08; grade identities, census, neighborhood and band math validated; underlying grading semantic remains current demonstrated ability."
+  },
+  "latestReviewedAt": "2026-10-08",
+  "ownerApprovedRevisions": [
+    {
+      "id": "LAC|Front Seven|tulituipulotu",
+      "player": "Tuli Tuipulotu",
+      "team": "LAC",
+      "from": 83,
+      "to": 88,
+      "date": "2026-10-08",
+      "reason": "13 sacks, 23 QB hits and 20 TFL in 2025, plus continued 2026 pressure. Proven strong EDGE impact, not prospect projection.",
+      "peerCheck": "Moves alongside Josh Sweat and Byron Young (88); above George Karlaftis (86)."
+    },
+    {
+      "id": "NYG|Front Seven|kayvonthibodeaux",
+      "player": "Kayvon Thibodeaux",
+      "team": "NYG",
+      "from": 83,
+      "to": 79,
+      "date": "2026-10-08",
+      "reason": "Only 2.5 sacks in ten 2025 games and a weak opening 2026 run-defense/pass-rush sample; older peak no longer supports 83.",
+      "peerCheck": "Lower-tier specialist/depth neighborhood rather than Tuli Tuipulotu and Odafe Oweh (83+)."
+    },
+    {
+      "id": "NE|Front Seven|miltonwilliams",
+      "player": "Milton Williams",
+      "team": "NE",
+      "from": 90,
+      "to": 88,
+      "date": "2026-10-08",
+      "reason": "Exceptional 2025 playoff pressure is real, but 2025 regular-season grade and early 2026 complete play are less consistently dominant.",
+      "peerCheck": "Shares 88 band with Jonathan Allen and DeForest Buckner, below consistent 90 interiors Zach Allen and Leonard Williams."
+    },
+    {
+      "id": "CAR|Front Seven|jaelanphillips",
+      "player": "Jaelan Phillips",
+      "team": "CAR",
+      "from": 86,
+      "to": 88,
+      "date": "2026-10-08",
+      "reason": "Sustained 2025 pressure and pass-rush win rate plus early 2026 pressures demonstrate more current rush ability than five 2025 sacks suggest.",
+      "peerCheck": "In the Josh Sweat/Byron Young (88) band, below Jared Verse and Highsmith (89)."
+    },
+    {
+      "id": "PHI|Front Seven|jihaadcampbell",
+      "player": "Jihaad Campbell",
+      "team": "PHI",
+      "from": 85,
+      "to": 82,
+      "date": "2026-10-08",
+      "reason": "2025 rookie contribution is real, but run-fit/coverage limitations and early 2026 play do not yet support a high-end complete linebacker grade.",
+      "peerCheck": "Starter/developing band with Patrick Queen (82), below Ernest Jones IV (85)."
+    },
+    {
+      "id": "TB|Front Seven|ruebenbain",
+      "player": "Rueben Bain Jr.",
+      "team": "TB",
+      "from": 82,
+      "to": 79,
+      "date": "2026-10-08",
+      "reason": "2025 was a college season; small 2026 NFL sample lacks established NFL rush-win evidence for grade 82; do not award collegiate-pedigree bonus.",
+      "peerCheck": "Unproven current EDGE band alongside Jonah Elliss (79), with future upside in development probabilities only."
+    },
+    {
+      "id": "SF|Front Seven|mykelwilliams",
+      "player": "Mykel Williams",
+      "team": "SF",
+      "from": 82,
+      "to": 80,
+      "date": "2026-10-08",
+      "reason": "One sack and three QB hits in nine NFL rookie games in 2025; strong run-setting profile but not an established 82-level complete EDGE.",
+      "peerCheck": "Developmental 80 tier alongside Chop Robinson/Derick Hall, distinct from rehabilitation risk in progression."
+    },
+    {
+      "id": "LAR|Front Seven|bradenfiske",
+      "player": "Braden Fiske",
+      "team": "LAR",
+      "from": 85,
+      "to": 83,
+      "date": "2026-10-08",
+      "reason": "After 2024 8.5-sack peak, 2025 fell to three; 2026 rush pressure remains useful but run-defense consistency below other 85-grade interiors.",
+      "peerCheck": "Just below Daron Payne and Ed Oliver (85), above Gervon Dexter Sr. (82)."
+    },
+    {
+      "id": "KC|Front Seven|peterwoods",
+      "player": "Peter Woods",
+      "team": "KC",
+      "from": 80,
+      "to": 78,
+      "date": "2026-10-08",
+      "reason": "2025 college credentials and minimal 2026 NFL production do not substantiate grade 80 in demonstrated current NFL ability.",
+      "peerCheck": "Provisional young interior tier below Teair Tart/Kenny Clark (80), with development potential independently modeled."
+    },
+    {
+      "id": "MIN|Front Seven|dallasturner",
+      "player": "Dallas Turner",
+      "team": "MIN",
+      "from": 85,
+      "to": 87,
+      "date": "2026-10-08",
+      "reason": "Eight sacks in 2025 and strong early 2026 pressure/win evidence justify stronger demonstrated EDGE ability; run defense limits higher placement.",
+      "peerCheck": "With Rashan Gary and Laiatu Latu (87), below Josh Sweat (88)."
+    }
+  ]
 }

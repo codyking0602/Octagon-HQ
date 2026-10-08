@@ -1,0 +1,2630 @@
+{
+  "schemaVersion": 1,
+  "version": "nfl-gm-deep-research-te-2026-10-08-v1",
+  "asOf": "2026-10-08",
+  "calibrationHeadExamined": "30e34c38142f828dd4c8d324c04dfac4d169b527",
+  "scope": "Research recommendations ONLY: 33 eligible NFL tight ends, no present grades or runtime shared data changed",
+  "authorities": {
+    "profile": "data/curated/football/gm-nfl-development-profiles-2026-10-07.json",
+    "contracts": "data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+    "lockedTightEndGrades": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json"
+  },
+  "yearInterpretation": "Baseline odds proposed for next offseason (Year 2); Year 3 recalculates conditional odds using realized Year 2 result and individual baseline within existing engine, not a second identical unconditional draw.",
+  "method": "2025 full-season and completed 2026 Week-4 official NFL individual receiving check, locked Oct 3 HQ graded role evidence, Oct 5 contract/draft context, and dated health/usage reporting for relevant cases. Individual game-design probability assessments are subjective, not statistically proven.",
+  "count": 33,
+  "limitations": [
+    "Per-player published advanced route, target, snap, PFF and block-grade evidence was not accessible/verified for all 33; no unverified precision used.",
+    "Live NFL career tables have no publication date; all were checked as of Oct 8 and the URL is retained for each player.",
+    "Some players have fewer than four 2026 appearances; absences are not automatically labeled injuries.",
+    "Current HQ grade values remain locked; development odds cannot serve as ability reratings.",
+    "The sole integration owner must decide whether and how to apply recommendations to shared authority."
+  ],
+  "assessments": [
+    {
+      "id": "ARI|TE|treymcbride",
+      "team": "ARI",
+      "name": "Trey McBride",
+      "age": 26,
+      "draftOverall": 55,
+      "lockedHQGrade": 99,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 126,
+        "yards": 1239,
+        "touchdowns": 11
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 33,
+        "yards": 242,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "After 126 catches and 1,239 yards in 2025, the Cardinals again feed McBride (33 catches in four games). Sustained separation/target trust anchors an elite receiving floor; grade 99 leaves essentially no true breakout headroom. Age 26 favors steady prime output rather than an arbitrary additional leap.",
+      "injuryAndRecovery": "No dated serious personal injury confirmed; do not extrapolate a new diagnosis.",
+      "priorDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 15,
+        "steadyPct": 79,
+        "declinePct": 5,
+        "maxAnnualGain": 1,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 0,
+        "improvePct": 10,
+        "steadyPct": 85,
+        "declinePct": 5,
+        "maxAnnualGain": 1,
+        "maxAnnualLoss": 1.8,
+        "marketVariancePct": 4
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -5,
+        "steadyPct": 6,
+        "declinePct": 0,
+        "maxAnnualGain": 0,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Trey McBride: odds B 1→0, I 15→10, S 79→85, D 5→5; annual gain/loss 1/1.3→1/1.8, contract market variance 4→4. After 126 catches and 1,239 yards in 2025, the Cardinals again feed McBride (33 catches in four games). Sustained separation/target trust anchors an elite receiving floor; grade 99 leaves essentially no true breakout headroom. Age 26 favors steady prime output rather than an arbitrary additional leap.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/trey-mcbride/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved current-ceiling anchor."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #55, age 26; OTC original https://overthecap.com/player/trey-mcbride/10100/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "ATL|TE|kylepitts",
+      "team": "ATL",
+      "name": "Kyle Pitts Sr.",
+      "age": 25,
+      "draftOverall": 4,
+      "lockedHQGrade": 84,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 88,
+        "yards": 928,
+        "touchdowns": 5
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 5,
+        "yards": 67,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "The former fourth overall pick rebounded to 88/928 in 2025, but his Falcons are scarcely targeting TEs in 2026 (five catches in four games). His receiver-like movement mismatch has genuine upside if routes rise; uncertain integration with London and Bijan and limited blocking breadth create more decline risk than pedigree alone suggests.",
+      "injuryAndRecovery": "No confirmed new serious injury; current issue is deployment, not presumed medical decline.",
+      "priorDevelopment": {
+        "breakoutPct": 15,
+        "improvePct": 24,
+        "steadyPct": 33,
+        "declinePct": 28,
+        "maxAnnualGain": 6.8,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 7,
+        "improvePct": 19,
+        "steadyPct": 35,
+        "declinePct": 39,
+        "maxAnnualGain": 5.3,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 8
+      },
+      "changeFromPrior": {
+        "breakoutPct": -8,
+        "improvePct": -5,
+        "steadyPct": 2,
+        "declinePct": 11,
+        "maxAnnualGain": -1.5,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": 2
+      },
+      "changeRationale": "Kyle Pitts Sr.: odds B 15→7, I 24→19, S 33→35, D 28→39; annual gain/loss 6.8/6→5.3/6.5, contract market variance 6→8. The former fourth overall pick rebounded to 88/928 in 2025, but his Falcons are scarcely targeting TEs in 2026 (five catches in four games). His receiver-like movement mismatch has genuine upside if routes rise; uncertain integration with London and Bijan and limited blocking breadth create more decline risk than pedigree alone suggests.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/kyle-pitts/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved very-good/good-boundary anchor; strong 2025 rebound is real, but the empty 2026 opening keeps him below the high-end tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #4, age 25; OTC original https://overthecap.com/player/kyle-pitts/9468/"
+        },
+        {
+          "url": "https://www.thefalcoholic.com/atlanta-falcons-analysis/96869/tight-end-paradox-can-the-falcons-unlock-kyle-pitts-in-2026",
+          "publisher": "www.thefalcoholic.com",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Falcons TE target and alignment analysis"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "BAL|TE|markandrews",
+      "team": "BAL",
+      "name": "Mark Andrews",
+      "age": 31,
+      "draftOverall": 86,
+      "lockedHQGrade": 82,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 48,
+        "yards": 422,
+        "touchdowns": 5
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 18,
+        "yards": 149,
+        "touchdowns": 1
+      },
+      "playerSpecificEvaluation": "Once a 1,361-yard chain-mover, Andrews fell to 422 yards in 2025. His 2026 start (149 in four games) retains route awareness and middle-field contested utility, but at 31 neither target monopoly nor young receiving explosion is likely. Lamar's 2026 ankle uncertainty is supporting-cast risk, not an intrinsic downgrade.",
+      "injuryAndRecovery": "Prior durability and age are concerns; no new Andrews-specific diagnosis verified.",
+      "priorDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 14,
+        "steadyPct": 45,
+        "declinePct": 38,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 11,
+        "steadyPct": 39,
+        "declinePct": 48,
+        "maxAnnualGain": 2.4,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -3,
+        "steadyPct": -6,
+        "declinePct": 10,
+        "maxAnnualGain": -0.8,
+        "maxAnnualLoss": -0.1,
+        "marketVariancePct": 2
+      },
+      "changeRationale": "Mark Andrews: odds B 3→2, I 14→11, S 45→39, D 38→48; annual gain/loss 3.2/6→2.4/5.9, contract market variance 4→6. Once a 1,361-yard chain-mover, Andrews fell to 422 yards in 2025. His 2026 start (149 in four games) retains route awareness and middle-field contested utility, but at 31 neither target monopoly nor young receiving explosion is likely. Lamar's 2026 ankle uncertainty is supporting-cast risk, not an intrinsic downgrade.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/mark-andrews/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "2025 was the weakest season of his career at 422 yards; a solid 2026 opening shows he remains a good starter, but current evidence no longer supports star-tier grading. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #86, age 31; OTC original https://overthecap.com/player/mark-andrews/6971/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "BUF|TE|daltonkincaid",
+      "team": "BUF",
+      "name": "Dalton Kincaid",
+      "age": 26,
+      "draftOverall": 25,
+      "lockedHQGrade": 91,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 12,
+        "receptions": 39,
+        "yards": 571,
+        "touchdowns": 5
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 15,
+        "yards": 270,
+        "touchdowns": 1
+      },
+      "playerSpecificEvaluation": "Kincaid averaged 14.6 yards a catch in 12 games in 2025 and 18 in four 2026 games, with six 20-plus gains. At 26 and a former first-round pick he can consolidate mismatch receiving and better inline assignments, but inconsistent Bills target allocation makes that efficiency hard to project linearly.",
+      "injuryAndRecovery": "His 12-game 2025 season raises availability uncertainty without establishing an unverified 2026 injury.",
+      "priorDevelopment": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 41,
+        "declinePct": 20,
+        "maxAnnualGain": 5.6,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 8,
+        "improvePct": 30,
+        "steadyPct": 47,
+        "declinePct": 15,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 5
+      },
+      "changeFromPrior": {
+        "breakoutPct": -3,
+        "improvePct": 2,
+        "steadyPct": 6,
+        "declinePct": -5,
+        "maxAnnualGain": -1.1,
+        "maxAnnualLoss": -1.2,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Dalton Kincaid: odds B 11→8, I 28→30, S 41→47, D 20→15; annual gain/loss 5.6/5.5→4.5/4.3, contract market variance 4→5. Kincaid averaged 14.6 yards a catch in 12 games in 2025 and 18 in four 2026 games, with six 20-plus gains. At 26 and a former first-round pick he can consolidate mismatch receiving and better inline assignments, but inconsistent Bills target allocation makes that efficiency hard to project linearly.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/dalton-kincaid/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved high-end anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #25, age 26; OTC original https://overthecap.com/player/dalton-kincaid/10849/"
+        },
+        {
+          "url": "https://www.buffalorumblings.com/buffalo-bills-analysis/142247/buffalo-bills-first-quarter-of-season-grades-greg-rousseau-and-outside-pass-rush-rolling-secondary-gets-failing-mark",
+          "publisher": "www.buffalorumblings.com",
+          "publishedDate": "2026-10-07",
+          "accessedDate": "2026-10-08",
+          "finding": "First-quarter team utilization and blocking assessment"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "CAR|TE|tommytremble",
+      "team": "CAR",
+      "name": "Tommy Tremble",
+      "age": 26,
+      "draftOverall": 83,
+      "lockedHQGrade": 76,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 27,
+        "yards": 249,
+        "touchdowns": 2
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 11,
+        "yards": 82,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Useful inline and run-blocking Panthers TE; 249 yards in 2025 and 82 through four 2026 games are consistent with a specialist rather than emerging route winner. Better blocking and catch security can add small total value, but numerical rating headroom does not imply elite receiving potential.",
+      "injuryAndRecovery": "No serious recent injury confirmed in researched record.",
+      "priorDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 11,
+        "steadyPct": 64,
+        "declinePct": 24,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 3.2,
+        "marketVariancePct": 3
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -6,
+        "steadyPct": 6,
+        "declinePct": 1,
+        "maxAnnualGain": -0.6,
+        "maxAnnualLoss": 0.1,
+        "marketVariancePct": -1
+      },
+      "changeRationale": "Tommy Tremble: odds B 2→1, I 17→11, S 58→64, D 23→24; annual gain/loss 2.6/3.1→2/3.2, contract market variance 4→3. Useful inline and run-blocking Panthers TE; 249 yards in 2025 and 82 through four 2026 games are consistent with a specialist rather than emerging route winner. Better blocking and catch security can add small total value, but numerical rating headroom does not imply elite receiving potential.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/tommy-tremble/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved strong-role-player anchor; blocking/inline value is useful, but receiving impact remains limited. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #83, age 26; OTC original https://overthecap.com/player/tommy-tremble/9547/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "CHI|TE|colstonloveland",
+      "team": "CHI",
+      "name": "Colston Loveland",
+      "age": 22,
+      "draftOverall": 10,
+      "lockedHQGrade": 87,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 16,
+        "receptions": 58,
+        "yards": 713,
+        "touchdowns": 6
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 11,
+        "yards": 91,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "The No. 10 pick had 713 yards and ten 20-plus plays as a 2025 rookie, yet just 91 yards in four 2026 games. Age 22, seam versatility and catch radius offer real upside; QB availability, target sharing and developing inline consistency prevent automatic breakout certainty.",
+      "injuryAndRecovery": "No confirmed significant TE medical issue; quarterback disruptions make receiving opportunity variable.",
+      "priorDevelopment": {
+        "breakoutPct": 23,
+        "improvePct": 34,
+        "steadyPct": 25,
+        "declinePct": 18,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 20,
+        "improvePct": 39,
+        "steadyPct": 25,
+        "declinePct": 16,
+        "maxAnnualGain": 6.6,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": -3,
+        "improvePct": 5,
+        "steadyPct": 0,
+        "declinePct": -2,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": -0.5,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Colston Loveland: odds B 23→20, I 34→39, S 25→25, D 18→16; annual gain/loss 7.1/5.3→6.6/4.8, contract market variance 6→6. The No. 10 pick had 713 yards and ten 20-plus plays as a 2025 rookie, yet just 91 yards in four 2026 games. Age 22, seam versatility and catch radius offer real upside; QB availability, target sharing and developing inline consistency prevent automatic breakout certainty.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/colston-loveland/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved high-end/emerging anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #10, age 22; OTC original https://overthecap.com/player/colston-loveland/12370/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "CIN|TE|drewsample",
+      "team": "CIN",
+      "name": "Drew Sample",
+      "age": 30,
+      "draftOverall": 52,
+      "lockedHQGrade": 72,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 15,
+        "yards": 106,
+        "touchdowns": 1
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 3,
+        "receptions": 4,
+        "yards": 19,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "At 30 the Bengals' protection/inline specialist had 106 yards in 2025 and 19 in three 2026 appearances. His blocking creates on-field value, but his career reception ceiling is not evidence of suddenly becoming a separation threat. Prior 17% improvement was too high for his narrow role.",
+      "injuryAndRecovery": "Only three 2026 appearances shown; cannot assign absence cause without a dated report.",
+      "priorDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 52,
+        "declinePct": 29,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 0,
+        "improvePct": 7,
+        "steadyPct": 59,
+        "declinePct": 34,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 3.6,
+        "marketVariancePct": 3
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": -10,
+        "steadyPct": 7,
+        "declinePct": 5,
+        "maxAnnualGain": -1.1,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": -1
+      },
+      "changeRationale": "Drew Sample: odds B 2→0, I 17→7, S 52→59, D 29→34; annual gain/loss 2.6/3.1→1.5/3.6, contract market variance 4→3. At 30 the Bengals' protection/inline specialist had 106 yards in 2025 and 19 in three 2026 appearances. His blocking creates on-field value, but his career reception ceiling is not evidence of suddenly becoming a separation threat. Prior 17% improvement was too high for his narrow role.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/drew-sample/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved low-end Wheel anchor; legitimate blocking utility, minimal receiving creation. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #52, age 30; OTC original https://overthecap.com/player/drew-sample/7843/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "CLE|TE|haroldfannin",
+      "team": "CLE",
+      "name": "Harold Fannin Jr.",
+      "age": 22,
+      "draftOverall": 67,
+      "lockedHQGrade": 84,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 16,
+        "receptions": 72,
+        "yards": 731,
+        "touchdowns": 6
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 17,
+        "yards": 153,
+        "touchdowns": 3
+      },
+      "playerSpecificEvaluation": "Fannin's 72 catches and 731 yards as a rookie already establish real NFL receiving ability; three touchdowns in four 2026 games add red-zone evidence. The third-round 22-year-old can become a better route/contested-catch weapon, but short 9.0-yard 2026 catches and less-proven inline blocking cap confidence in all-around superstar growth.",
+      "injuryAndRecovery": "No current material injury verified.",
+      "priorDevelopment": {
+        "breakoutPct": 22,
+        "improvePct": 33,
+        "steadyPct": 23,
+        "declinePct": 22,
+        "maxAnnualGain": 7.5,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 20,
+        "improvePct": 36,
+        "steadyPct": 26,
+        "declinePct": 18,
+        "maxAnnualGain": 6.6,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 7
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": 3,
+        "steadyPct": 3,
+        "declinePct": -4,
+        "maxAnnualGain": -0.9,
+        "maxAnnualLoss": -0.6,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Harold Fannin Jr.: odds B 22→20, I 33→36, S 23→26, D 22→18; annual gain/loss 7.5/5.8→6.6/5.2, contract market variance 6→7. Fannin's 72 catches and 731 yards as a rookie already establish real NFL receiving ability; three touchdowns in four 2026 games add red-zone evidence. The third-round 22-year-old can become a better route/contested-catch weapon, but short 9.0-yard 2026 catches and less-proven inline blocking cap confidence in all-around superstar growth.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/harold-fannin-jr/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved very-good anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #67, age 22; OTC original https://overthecap.com/player/harold-fannin-jr/12427/"
+        },
+        {
+          "url": "https://www.reuters.com/sports/nfl/browns-blow-11-point-lead-rally-past-steelers--flm-2026-10-02/",
+          "publisher": "www.reuters.com",
+          "publishedDate": "2026-10-02",
+          "accessedDate": "2026-10-08",
+          "finding": "Week-4 red-zone touchdown report"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "DAL|TE|jakeferguson",
+      "team": "DAL",
+      "name": "Jake Ferguson",
+      "age": 27,
+      "draftOverall": 129,
+      "lockedHQGrade": 82,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 82,
+        "yards": 600,
+        "touchdowns": 8
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 12,
+        "yards": 83,
+        "touchdowns": 3
+      },
+      "playerSpecificEvaluation": "Ferguson converted 82 catches into just 600 yards in 2025; 2026's 12/83 with three scores further demonstrates Dallas red-zone utility without explosive after-catch consistency. Ball-security and blocking questions in locked grade notes distinguish this from a true all-around receiver jump.",
+      "injuryAndRecovery": "No verified new major injury; role/efficiency regression more consequential.",
+      "priorDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 16,
+        "steadyPct": 52,
+        "declinePct": 29,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 5
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -4,
+        "steadyPct": -5,
+        "declinePct": 10,
+        "maxAnnualGain": -0.1,
+        "maxAnnualLoss": 0.8,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Jake Ferguson: odds B 4→3, I 20→16, S 57→52, D 19→29; annual gain/loss 2.7/2.9→2.6/3.7, contract market variance 4→5. Ferguson converted 82 catches into just 600 yards in 2025; 2026's 12/83 with three scores further demonstrates Dallas red-zone utility without explosive after-catch consistency. Ball-security and blocking questions in locked grade notes distinguish this from a true all-around receiver jump.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/jake-ferguson/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Productive receiving TE with 82 catches/600 yards in 2025 and red-zone value, but repeated sub-60 overall grades and ball-security issues prevent a higher all-around grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #129, age 27; OTC original https://overthecap.com/player/jake-ferguson/10174/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "DEN|TE|evanengram",
+      "team": "DEN",
+      "name": "Evan Engram",
+      "age": 32,
+      "draftOverall": 23,
+      "lockedHQGrade": 78,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 16,
+        "receptions": 50,
+        "yards": 461,
+        "touchdowns": 1
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 6,
+        "yards": 66,
+        "touchdowns": 1
+      },
+      "playerSpecificEvaluation": "Engram's 2025 Broncos line of 50/461 is far below his 114-catch Jaguar season; six catches over four 2026 games continue the role contraction. At 32 and with weaker inline contributions, a renaissance as elite complete TE is very unlikely despite residual movement skill.",
+      "injuryAndRecovery": "Older injury/availability history noted, but no new serious 2026 injury independently confirmed.",
+      "priorDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 0,
+        "improvePct": 8,
+        "steadyPct": 44,
+        "declinePct": 48,
+        "maxAnnualGain": 1.6,
+        "maxAnnualLoss": 4.9,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -5,
+        "steadyPct": -4,
+        "declinePct": 10,
+        "maxAnnualGain": 0.2,
+        "maxAnnualLoss": 1.1,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Evan Engram: odds B 1→0, I 13→8, S 48→44, D 38→48; annual gain/loss 1.4/3.8→1.6/4.9, contract market variance 5→6. Engram's 2025 Broncos line of 50/461 is far below his 114-catch Jaguar season; six catches over four 2026 games continue the role contraction. At 32 and with weaker inline contributions, a renaissance as elite complete TE is very unlikely despite residual movement skill.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/evan-engram/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Receiving movement skills remain useful, but 2025 was a clear decline and his inline/blocking value remains limited; current play fits a low-end starter grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #23, age 32; OTC original https://overthecap.com/player/evan-engram/5607/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "DET|TE|samlaporta",
+      "team": "DET",
+      "name": "Sam LaPorta",
+      "age": 25,
+      "draftOverall": 34,
+      "lockedHQGrade": 94,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 9,
+        "receptions": 40,
+        "yards": 489,
+        "touchdowns": 3
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 22,
+        "yards": 228,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "LaPorta delivered 489 yards in nine games before November 2025 back surgery; back as a heavily deployed Lions receiver/blocker with 228 yards in four 2026 games. Grade 94 reflects a complete TE, so further upside is modest and target-rich Detroit reduces need for forced receiving volume.",
+      "injuryAndRecovery": "Team confirms back surgery November 2025 and full 2026 July camp participation; future back tolerance remains unknown.",
+      "priorDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 25,
+        "steadyPct": 60,
+        "declinePct": 10,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 3.4,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 27,
+        "steadyPct": 55,
+        "declinePct": 14,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 4.7,
+        "marketVariancePct": 7
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": 2,
+        "steadyPct": -5,
+        "declinePct": 4,
+        "maxAnnualGain": 0.2,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Sam LaPorta: odds B 5→4, I 25→27, S 60→55, D 10→14; annual gain/loss 3/3.4→3.2/4.7, contract market variance 6→7. LaPorta delivered 489 yards in nine games before November 2025 back surgery; back as a heavily deployed Lions receiver/blocker with 228 yards in four 2026 games. Grade 94 reflects a complete TE, so further upside is modest and target-rich Detroit reduces need for forced receiving volume.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/sam-laporta/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved elite/high-end anchor."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #34, age 25; OTC original https://overthecap.com/player/sam-laporta/10858/"
+        },
+        {
+          "url": "https://www.detroitlions.com/news/camp-notes-laporta-full-go-at-practice",
+          "publisher": "www.detroitlions.com",
+          "publishedDate": "2026-07-29",
+          "accessedDate": "2026-10-08",
+          "finding": "Lions surgery, rehabilitation and camp participation report"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "GB|TE|tuckerkraft",
+      "team": "GB",
+      "name": "Tucker Kraft",
+      "age": 25,
+      "draftOverall": 78,
+      "lockedHQGrade": 87,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 8,
+        "receptions": 32,
+        "yards": 489,
+        "touchdowns": 6
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 15,
+        "yards": 148,
+        "touchdowns": 1
+      },
+      "playerSpecificEvaluation": "Kraft's 2025 eight-game line (489 yards at 15.3 per catch and six TDs) showed real YAC and blocker value before ACL tear. Four 2026 appearances confirm return but lower 9.9 yards/catch suggests monitoring explosiveness; recovery warrants both growth and setback tails, not current-grade reduction.",
+      "injuryAndRecovery": "Packers confirmed Nov 2025 torn ACL, July 2026 PUP removal and September extension.",
+      "priorDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 33,
+        "steadyPct": 39,
+        "declinePct": 15,
+        "maxAnnualGain": 5.5,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 11,
+        "improvePct": 32,
+        "steadyPct": 32,
+        "declinePct": 25,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 8
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": -1,
+        "steadyPct": -7,
+        "declinePct": 10,
+        "maxAnnualGain": -0.4,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 2
+      },
+      "changeRationale": "Tucker Kraft: odds B 13→11, I 33→32, S 39→32, D 15→25; annual gain/loss 5.5/4.4→5.1/5.7, contract market variance 6→8. Kraft's 2025 eight-game line (489 yards at 15.3 per catch and six TDs) showed real YAC and blocker value before ACL tear. Four 2026 appearances confirm return but lower 9.9 yards/catch suggests monitoring explosiveness; recovery warrants both growth and setback tails, not current-grade reduction.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/tucker-kraft/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved high-end anchor; injury remains an availability issue rather than an ability downgrade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #78, age 25; OTC original https://overthecap.com/player/tucker-kraft/10902/"
+        },
+        {
+          "url": "https://www.packers.com/news/contract-extension-is-dream-come-true-for-tucker-kraft-sept-18-2026",
+          "publisher": "www.packers.com",
+          "publishedDate": "2026-09-18",
+          "accessedDate": "2026-10-08",
+          "finding": "Packers confirms ACL recovery and role security"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "HOU|TE|daltonschultz",
+      "team": "HOU",
+      "name": "Dalton Schultz",
+      "age": 30,
+      "draftOverall": 137,
+      "lockedHQGrade": 83,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 82,
+        "yards": 777,
+        "touchdowns": 3
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 21,
+        "yards": 214,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Schultz's 82/777 in 2025 and 21/214 in four 2026 games demonstrate dependable Houston chain-moving targets. Age 30 and consistent ~10-yard catches favor a reliable intermediate role; good hands and functional blocking support steady output more than a new downfield mismatch breakthrough.",
+      "injuryAndRecovery": "No specific serious current injury verified.",
+      "priorDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 54,
+        "declinePct": 26,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.5,
+        "marketVariancePct": 4
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": -2,
+        "steadyPct": 3,
+        "declinePct": 1,
+        "maxAnnualGain": -0.1,
+        "maxAnnualLoss": 0.6,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Dalton Schultz: odds B 4→2, I 20→18, S 51→54, D 25→26; annual gain/loss 2.7/2.9→2.6/3.5, contract market variance 4→4. Schultz's 82/777 in 2025 and 21/214 in four 2026 games demonstrate dependable Houston chain-moving targets. Age 30 and consistent ~10-yard catches favor a reliable intermediate role; good hands and functional blocking support steady output more than a new downfield mismatch breakthrough.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/dalton-schultz/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "777 yards in 2025 plus 205 through three 2026 games, dependable hands and steady chain-moving value support a good starter grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #137, age 30; OTC original https://overthecap.com/player/dalton-schultz/7022/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "IND|TE|tylerwarren",
+      "team": "IND",
+      "name": "Tyler Warren",
+      "age": 24,
+      "draftOverall": 14,
+      "lockedHQGrade": 86,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 76,
+        "yards": 817,
+        "touchdowns": 4
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 23,
+        "yards": 130,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "The No. 14 overall 2025 pick quickly amassed 817 yards and multipurpose usage as a Colts rookie. In 2026 his 23 receptions have only 130 yards, suggesting short-area work rather than sustained explosives. Younger route depth, inline refinement and target opportunity still give substantial two-year upside.",
+      "injuryAndRecovery": "No verified major medical problem; four-game change in target depth is too small to assert permanent change.",
+      "priorDevelopment": {
+        "breakoutPct": 20,
+        "improvePct": 35,
+        "steadyPct": 28,
+        "declinePct": 17,
+        "maxAnnualGain": 6.4,
+        "maxAnnualLoss": 4.7,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 17,
+        "improvePct": 35,
+        "steadyPct": 30,
+        "declinePct": 18,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": -3,
+        "improvePct": 0,
+        "steadyPct": 2,
+        "declinePct": 1,
+        "maxAnnualGain": -0.6,
+        "maxAnnualLoss": 0.3,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Tyler Warren: odds B 20→17, I 35→35, S 28→30, D 17→18; annual gain/loss 6.4/4.7→5.8/5, contract market variance 6→6. The No. 14 overall 2025 pick quickly amassed 817 yards and multipurpose usage as a Colts rookie. In 2026 his 23 receptions have only 130 yards, suggesting short-area work rather than sustained explosives. Younger route depth, inline refinement and target opportunity still give substantial two-year upside.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/tyler-warren/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved very-good/high-end anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #14, age 24; OTC original https://overthecap.com/player/tyler-warren/12374/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "JAX|TE|brentonstrange",
+      "team": "JAX",
+      "name": "Brenton Strange",
+      "age": 25,
+      "draftOverall": 61,
+      "lockedHQGrade": 80,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 12,
+        "receptions": 46,
+        "yards": 540,
+        "touchdowns": 3
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 14,
+        "yards": 167,
+        "touchdowns": 1
+      },
+      "playerSpecificEvaluation": "Former second-rounder combines 540 yards in 12 2025 games with 167 in four 2026 games and strong zone run blocking in the locked HQ evidence. Both receiving efficiency and inline value can scale, though Jaguars wideout competition limits target-monopoly breakout odds.",
+      "injuryAndRecovery": "2025 only twelve games; exact injury causes not independently verified for this audit.",
+      "priorDevelopment": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 37,
+        "steadyPct": 32,
+        "declinePct": 18,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": 1,
+        "steadyPct": 2,
+        "declinePct": -1,
+        "maxAnnualGain": 0.4,
+        "maxAnnualLoss": 0.7,
+        "marketVariancePct": -1
+      },
+      "changeRationale": "Brenton Strange: odds B 15→13, I 36→37, S 30→32, D 19→18; annual gain/loss 4.7/3.3→5.1/4, contract market variance 7→6. Former second-rounder combines 540 yards in 12 2025 games with 167 in four 2026 games and strong zone run blocking in the locked HQ evidence. Both receiving efficiency and inline value can scale, though Jaguars wideout competition limits target-monopoly breakout odds.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/brenton-strange/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "540 yards in 12 games in 2025 plus excellent zone run-blocking and continued 2026 usefulness make him a strong complete starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #61, age 25; OTC original https://overthecap.com/player/brenton-strange/10885/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "KC|TE|traviskelce",
+      "team": "KC",
+      "name": "Travis Kelce",
+      "age": 37,
+      "draftOverall": 63,
+      "lockedHQGrade": 88,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 76,
+        "yards": 851,
+        "touchdowns": 5
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 16,
+        "yards": 246,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "Kelce remains a high-level spatial route technician: 851 yards in 2025 and 246 on 16 catches in 2026. At 37, short-term explosives do not restore young-athlete growth; game impact can stay good but role, workload and potential retirement make high decline chance appropriate.",
+      "injuryAndRecovery": "No diagnosed new serious injury established; age alone is not a medical finding.",
+      "priorDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 5,
+        "steadyPct": 42,
+        "declinePct": 52,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 6.3,
+        "marketVariancePct": 7
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 0,
+        "improvePct": 8,
+        "steadyPct": 37,
+        "declinePct": 55,
+        "maxAnnualGain": 1.6,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 8
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": 3,
+        "steadyPct": -5,
+        "declinePct": 3,
+        "maxAnnualGain": -0.2,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Travis Kelce: odds B 1→0, I 5→8, S 42→37, D 52→55; annual gain/loss 1.8/6.3→1.6/6.8, contract market variance 7→8. Kelce remains a high-level spatial route technician: 851 yards in 2025 and 246 on 16 catches in 2026. At 37, short-term explosives do not restore young-athlete growth; game impact can stay good but role, workload and potential retirement make high decline chance appropriate.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/travis-kelce/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved very-good veteran anchor; current play remains strong enough that career reputation is not needed to support the grade."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #63, age 37; OTC original https://overthecap.com/player/travis-kelce/2216/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "LAC|TE|charliekolar",
+      "team": "LAC",
+      "name": "Charlie Kolar",
+      "age": 27,
+      "draftOverall": 128,
+      "lockedHQGrade": 73,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 10,
+        "yards": 142,
+        "touchdowns": 2
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 2,
+        "receptions": 3,
+        "yards": 21,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Moved from Baltimore to the Chargers after a 10-catch 2025 season; only three catches across two 2026 appearances. Valuable in blocking assignments and occasional leaks, yet there is no sustained receiver route share on which to project a large separation/target breakout at 27.",
+      "injuryAndRecovery": "Two appearances do not establish a documented injury or permanent loss of job.",
+      "priorDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 0,
+        "improvePct": 8,
+        "steadyPct": 58,
+        "declinePct": 34,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 4
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": -9,
+        "steadyPct": 0,
+        "declinePct": 11,
+        "maxAnnualGain": -1.1,
+        "maxAnnualLoss": 0.7,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Charlie Kolar: odds B 2→0, I 17→8, S 58→58, D 23→34; annual gain/loss 2.6/3.1→1.5/3.8, contract market variance 4→4. Moved from Baltimore to the Chargers after a 10-catch 2025 season; only three catches across two 2026 appearances. Valuable in blocking assignments and occasional leaks, yet there is no sustained receiver route share on which to project a large separation/target breakout at 27.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/charlie-kolar/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Strong blocking specialist with efficient limited receiving work; useful NFL TE but not a meaningful passing-game starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #128, age 27; OTC original https://overthecap.com/player/charlie-kolar/10173/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "LAC|TE|davidnjoku",
+      "team": "LAC",
+      "name": "David Njoku",
+      "age": 30,
+      "draftOverall": 29,
+      "lockedHQGrade": 81,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 12,
+        "receptions": 33,
+        "yards": 293,
+        "touchdowns": 4
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 2,
+        "receptions": 6,
+        "yards": 67,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Njoku's athletic contested-catch scoring history is credible, but the 2025 Browns output fell to 293 yards in 12 games. Joining the Chargers leaves him with six catches for 67 in two 2026 games; age 30, new scheme, competition and missed time mean a modest rebound is possible, not an automatic 2023-level reset.",
+      "injuryAndRecovery": "Do not invent diagnosis for short 2025/2026 seasons; availability requires follow-up.",
+      "priorDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 18,
+        "steadyPct": 46,
+        "declinePct": 32,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 39,
+        "declinePct": 40,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 7
+      },
+      "changeFromPrior": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": -7,
+        "declinePct": 8,
+        "maxAnnualGain": -0.3,
+        "maxAnnualLoss": 0,
+        "marketVariancePct": 3
+      },
+      "changeRationale": "David Njoku: odds B 4→4, I 18→17, S 46→39, D 32→40; annual gain/loss 4.1/5.7→3.8/5.7, contract market variance 4→7. Njoku's athletic contested-catch scoring history is credible, but the 2025 Browns output fell to 293 yards in 12 games. Joining the Chargers leaves him with six catches for 67 in two 2026 games; age 30, new scheme, competition and missed time mean a modest rebound is possible, not an automatic 2023-level reset.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/david-njoku/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Athletic receiving ability remains real, but 2025 fell to 293 yards in 12 games; early 2026 improvement is not enough to restore his old high-end grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #29, age 30; OTC original https://overthecap.com/player/david-njoku/5613/"
+        },
+        {
+          "url": "https://www.chargers.com/news/agree-to-terms-pro-bowl-tight-end-david-njoku-2026",
+          "publisher": "www.chargers.com",
+          "publishedDate": "2026-05-11",
+          "accessedDate": "2026-10-08",
+          "finding": "Chargers signing and career role report"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "LAR|TE|colbyparkinson",
+      "team": "LAR",
+      "name": "Colby Parkinson",
+      "age": 27,
+      "draftOverall": 133,
+      "lockedHQGrade": 79,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 15,
+        "receptions": 43,
+        "yards": 408,
+        "touchdowns": 8
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 3,
+        "receptions": 3,
+        "yards": 21,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Eight TDs on 43 receptions and 408 yards in 2025 point to valuable Rams red-zone size/inline contribution, but TD conversion may not repeat. Just 21 yards in three 2026 games amid TE competition reduces route confidence; a blocking specialist should not acquire a star receiving ceiling by mathematical headroom.",
+      "injuryAndRecovery": "Rams confirmed knee/shoulder injury and Week-4 inactive designation on October 4.",
+      "priorDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 10,
+        "steadyPct": 50,
+        "declinePct": 39,
+        "maxAnnualGain": 2.1,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 7
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -7,
+        "steadyPct": -8,
+        "declinePct": 16,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": 1.5,
+        "marketVariancePct": 3
+      },
+      "changeRationale": "Colby Parkinson: odds B 2→1, I 17→10, S 58→50, D 23→39; annual gain/loss 2.6/3.1→2.1/4.6, contract market variance 4→7. Eight TDs on 43 receptions and 408 yards in 2025 point to valuable Rams red-zone size/inline contribution, but TD conversion may not repeat. Just 21 yards in three 2026 games amid TE competition reduces route confidence; a blocking specialist should not acquire a star receiving ceiling by mathematical headroom.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/colby-parkinson/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Breakout 2025 included strong receiving efficiency, eight TDs and good run-blocking work; quiet 2026 usage keeps him just below the 85 group. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #133, age 27; OTC original https://overthecap.com/player/colby-parkinson/8873/"
+        },
+        {
+          "url": "https://www.therams.com/news/colby-parkinson-and-aaron-donald-among-rams-inactives-for-week-4-2026-at-eagles",
+          "publisher": "www.therams.com",
+          "publishedDate": "2026-10-04",
+          "accessedDate": "2026-10-08",
+          "finding": "Rams knee/shoulder designation"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "LV|TE|brockbowers",
+      "team": "LV",
+      "name": "Brock Bowers",
+      "age": 23,
+      "draftOverall": 13,
+      "lockedHQGrade": 98,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 12,
+        "receptions": 64,
+        "yards": 680,
+        "touchdowns": 7
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 2,
+        "receptions": 16,
+        "yards": 202,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "Bowers' elite receiving role is already demonstrated by 112/1,194 as a 2024 rookie, 680 yards through injury-limited 2025 and 202 yards in two 2026 games. Raiders use him as a high-volume slot/wide mismatch with Mayer carrying much inline labor. Grade 98 sharply limits true upward jumps while knee risks enlarge downside.",
+      "injuryAndRecovery": "PCL/bone bruise in 2025 and September 2026 knee cleanup surgery caused first two 2026 games missed; present return confirmed.",
+      "priorDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 21,
+        "steadyPct": 71,
+        "declinePct": 6,
+        "maxAnnualGain": 2.3,
+        "maxAnnualLoss": 1.9,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 18,
+        "steadyPct": 70,
+        "declinePct": 11,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 8
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -3,
+        "steadyPct": -1,
+        "declinePct": 5,
+        "maxAnnualGain": -0.3,
+        "maxAnnualLoss": 1.4,
+        "marketVariancePct": 2
+      },
+      "changeRationale": "Brock Bowers: odds B 2→1, I 21→18, S 71→70, D 6→11; annual gain/loss 2.3/1.9→2/3.3, contract market variance 6→8. Bowers' elite receiving role is already demonstrated by 112/1,194 as a 2024 rookie, 680 yards through injury-limited 2025 and 202 yards in two 2026 games. Raiders use him as a high-volume slot/wide mismatch with Mayer carrying much inline labor. Grade 98 sharply limits true upward jumps while knee risks enlarge downside.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/brock-bowers/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved elite/ceiling-adjacent anchor."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #13, age 23; OTC original https://overthecap.com/player/brock-bowers/11621/"
+        },
+        {
+          "url": "https://amp.nfl.com/news/back-from-injury-brock-bowers-retakes-his-place-at-heart-of-raiders-offense",
+          "publisher": "amp.nfl.com",
+          "publishedDate": "2026-09-28",
+          "accessedDate": "2026-10-08",
+          "finding": "NFL knee procedure and return"
+        },
+        {
+          "url": "https://www.silverandblackpride.com/las-vegas-raiders-analysis/141655/raiders-personnel-bowers-wide-receiver",
+          "publisher": "www.silverandblackpride.com",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Receiving alignment and Mayer inline deployment"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "MIA|TE|gregdulcich",
+      "team": "MIA",
+      "name": "Greg Dulcich",
+      "age": 26,
+      "draftOverall": 80,
+      "lockedHQGrade": 75,
+      "lockedGradeConfidence": "medium",
+      "developmentProjectionConfidence": "low",
+      "receiving2025": {
+        "games": 10,
+        "receptions": 26,
+        "yards": 335,
+        "touchdowns": 1
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 3,
+        "receptions": 9,
+        "yards": 90,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Receiving-focused Dolphins TE caught 26 for 335 in ten 2025 games and 9 for 90 through three in 2026. Routes show some big-play gain ability, but injury-disrupted history and limited inline evidence make complete-TE star projection unsound; uncertain playing time should drive larger market volatility.",
+      "injuryAndRecovery": "Past hamstring injuries reported historically; no specific new 2026 diagnosis confirmed.",
+      "priorDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 18,
+        "steadyPct": 35,
+        "declinePct": 34,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 9
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 9,
+        "improvePct": 21,
+        "steadyPct": 31,
+        "declinePct": 39,
+        "maxAnnualGain": 4.6,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 9
+      },
+      "changeFromPrior": {
+        "breakoutPct": -4,
+        "improvePct": 3,
+        "steadyPct": -4,
+        "declinePct": 5,
+        "maxAnnualGain": -0.5,
+        "maxAnnualLoss": 0.8,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Greg Dulcich: odds B 13→9, I 18→21, S 35→31, D 34→39; annual gain/loss 5.1/5.1→4.6/5.9, contract market variance 9→9. Receiving-focused Dolphins TE caught 26 for 335 in ten 2025 games and 9 for 90 through three in 2026. Routes show some big-play gain ability, but injury-disrupted history and limited inline evidence make complete-TE star projection unsound; uncertain playing time should drive larger market volatility.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/greg-dulcich/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "335 yards in 10 games in 2025 and 90 through three 2026 games show useful receiving ability, but limited all-around/inline evidence keeps him below starter baseline. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #80, age 26; OTC original https://overthecap.com/player/greg-dulcich/10125/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "MIN|TE|tjhockenson",
+      "team": "MIN",
+      "name": "T.J. Hockenson",
+      "age": 29,
+      "draftOverall": 8,
+      "lockedHQGrade": 80,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 15,
+        "receptions": 51,
+        "yards": 438,
+        "touchdowns": 3
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 22,
+        "yards": 195,
+        "touchdowns": 1
+      },
+      "playerSpecificEvaluation": "2025's 438 yards were a clear retreat from 2023's 960, but Minnesota has involved Hockenson again (22/195 in four 2026 games). First-round veteran has route/block fundamentals for a modest rebound; at 29 an all-new athletic ceiling is not plausible and competing targets limit explosive volume.",
+      "injuryAndRecovery": "Historical serious knee injury is relevant; no confirmed 2026 recurrence.",
+      "priorDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 20,
+        "steadyPct": 43,
+        "declinePct": 36,
+        "maxAnnualGain": 3.1,
+        "maxAnnualLoss": 4.2,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": 0,
+        "improvePct": 7,
+        "steadyPct": -5,
+        "declinePct": -2,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 0.4,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "T.J. Hockenson: odds B 1→1, I 13→20, S 48→43, D 38→36; annual gain/loss 1.9/3.8→3.1/4.2, contract market variance 5→6. 2025's 438 yards were a clear retreat from 2023's 960, but Minnesota has involved Hockenson again (22/195 in four 2026 games). First-round veteran has route/block fundamentals for a modest rebound; at 29 an all-new athletic ceiling is not plausible and competing targets limit explosive volume.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/t-j-hockenson/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "2025 was his weakest season since his rookie year at 438 yards, and the 2026 start remains modest; prior peak does not preserve a higher current grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #8, age 29; OTC original https://overthecap.com/player/t-j-hockenson/7799/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "NE|TE|hunterhenry",
+      "team": "NE",
+      "name": "Hunter Henry",
+      "age": 31,
+      "draftOverall": 35,
+      "lockedHQGrade": 82,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 60,
+        "yards": 768,
+        "touchdowns": 7
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 12,
+        "yards": 133,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Henry produced 768 yards and seven TDs in 2025 on reliable intermediate and contested red-zone targets, versus 133 yards and no TD through 2026 Week 4. At 31, nuanced route/inline work supports a steady veteran profile; there is no basis for large athletic breakout.",
+      "injuryAndRecovery": "No verified fresh major health concern.",
+      "priorDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 12,
+        "steadyPct": 53,
+        "declinePct": 34,
+        "maxAnnualGain": 2.1,
+        "maxAnnualLoss": 4.1,
+        "marketVariancePct": 5
+      },
+      "changeFromPrior": {
+        "breakoutPct": 0,
+        "improvePct": -1,
+        "steadyPct": 5,
+        "declinePct": -4,
+        "maxAnnualGain": 0.7,
+        "maxAnnualLoss": 0.3,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Hunter Henry: odds B 1→1, I 13→12, S 48→53, D 38→34; annual gain/loss 1.4/3.8→2.1/4.1, contract market variance 5→5. Henry produced 768 yards and seven TDs in 2025 on reliable intermediate and contested red-zone targets, versus 133 yards and no TD through 2026 Week 4. At 31, nuanced route/inline work supports a steady veteran profile; there is no basis for large athletic breakout.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/hunter-henry/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved good-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #35, age 31; OTC original https://overthecap.com/player/hunter-henry/4748/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "NO|TE|juwanjohnson",
+      "team": "NO",
+      "name": "Juwan Johnson",
+      "age": 30,
+      "draftOverall": null,
+      "lockedHQGrade": 86,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 77,
+        "yards": 889,
+        "touchdowns": 3
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 21,
+        "yards": 232,
+        "touchdowns": 3
+      },
+      "playerSpecificEvaluation": "New Orleans' converted-WR tight end has become a real receiving threat, 889 yards in 2025 and 232/3 in four 2026 games. Age 30 and lighter inline/blocking evidence distinguish sustained receiving from new complete-TE superstardom; target concentration brings volume volatility.",
+      "injuryAndRecovery": "No documented current serious injury found.",
+      "priorDevelopment": {
+        "breakoutPct": 10,
+        "improvePct": 22,
+        "steadyPct": 42,
+        "declinePct": 26,
+        "maxAnnualGain": 2.9,
+        "maxAnnualLoss": 3.1,
+        "marketVariancePct": 6
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 5,
+        "improvePct": 22,
+        "steadyPct": 45,
+        "declinePct": 28,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 7
+      },
+      "changeFromPrior": {
+        "breakoutPct": -5,
+        "improvePct": 0,
+        "steadyPct": 3,
+        "declinePct": 2,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 0.9,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Juwan Johnson: odds B 10→5, I 22→22, S 42→45, D 26→28; annual gain/loss 2.9/3.1→3.2/4, contract market variance 6→7. New Orleans' converted-WR tight end has become a real receiving threat, 889 yards in 2025 and 232/3 in four 2026 games. Age 30 and lighter inline/blocking evidence distinguish sustained receiving from new complete-TE superstardom; target concentration brings volume volatility.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/juwan-johnson/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "889 yards in 2025 and 173/3 through three 2026 games establish one of the stronger current receiving profiles; lighter inline/blocking value keeps him below the upper star bands."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #UDFA, age 30; OTC original https://overthecap.com/player/juwan-johnson/9380/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "NYG|TE|isaiahlikely",
+      "team": "NYG",
+      "name": "Isaiah Likely",
+      "age": 26,
+      "draftOverall": 139,
+      "lockedHQGrade": 83,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 14,
+        "receptions": 27,
+        "yards": 307,
+        "touchdowns": 1
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 22,
+        "yards": 190,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "No longer behind Andrews in Baltimore, Likely has 22 receptions and 190 yards in four Giants games after just 27/307 in 2025. Open target access finally gives his separation/YAC upside room, yet this new independent receiving role is only a four-game sample and inline limitations remain.",
+      "injuryAndRecovery": "No verified new injury; uncertain new-team role and QB consistency dominate.",
+      "priorDevelopment": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 14,
+        "improvePct": 32,
+        "steadyPct": 35,
+        "declinePct": 19,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 4.2,
+        "marketVariancePct": 8
+      },
+      "changeFromPrior": {
+        "breakoutPct": 5,
+        "improvePct": 7,
+        "steadyPct": -14,
+        "declinePct": 2,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 1.5,
+        "marketVariancePct": 3
+      },
+      "changeRationale": "Isaiah Likely: odds B 9→14, I 25→32, S 49→35, D 17→19; annual gain/loss 3.6/2.7→5.1/4.2, contract market variance 5→8. No longer behind Andrews in Baltimore, Likely has 22 receptions and 190 yards in four Giants games after just 27/307 in 2025. Open target access finally gives his separation/YAC upside room, yet this new independent receiving role is only a four-game sample and inline limitations remain.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/isaiah-likely/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "2024 showed strong YAC/receiving upside, but 2025 regressed sharply; current body supports a useful starter/TE2 grade rather than a projection-based breakout grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #139, age 26; OTC original https://overthecap.com/player/isaiah-likely/10184/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "NYJ|TE|masontaylor",
+      "team": "NYJ",
+      "name": "Mason Taylor",
+      "age": 22,
+      "draftOverall": 42,
+      "lockedHQGrade": 76,
+      "lockedGradeConfidence": "medium",
+      "developmentProjectionConfidence": "low",
+      "receiving2025": {
+        "games": 13,
+        "receptions": 44,
+        "yards": 369,
+        "touchdowns": 1
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 1,
+        "receptions": 2,
+        "yards": -2,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "The Jets' 2025 second-rounder earned 44 catches as a rookie but only 369 yards with recorded drops; 2026 has two catches for minus two yards in one game. At 22 he can develop hands and routes but currently lacks explosive evidence or secure week-to-week playing time.",
+      "injuryAndRecovery": "2026 missed-game reports and possible Week-5 return; exact impairment not reliably established.",
+      "priorDevelopment": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 32,
+        "steadyPct": 25,
+        "declinePct": 30,
+        "maxAnnualGain": 5.2,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 9
+      },
+      "changeFromPrior": {
+        "breakoutPct": -5,
+        "improvePct": -4,
+        "steadyPct": 1,
+        "declinePct": 8,
+        "maxAnnualGain": 0.1,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Mason Taylor: odds B 18→13, I 36→32, S 24→25, D 22→30; annual gain/loss 5.1/3.9→5.2/5.2, contract market variance 9→9. The Jets' 2025 second-rounder earned 44 catches as a rookie but only 369 yards with recorded drops; 2026 has two catches for minus two yards in one game. At 22 he can develop hands and routes but currently lacks explosive evidence or secure week-to-week playing time.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/mason-taylor/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "44 catches/369 yards as a rookie provide real starter experience, but low explosiveness, eight drops and a near-empty 2026 opening keep him below average-starter level. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #42, age 22; OTC original https://overthecap.com/player/mason-taylor/12402/"
+        },
+        {
+          "url": "https://nypost.com/2026/10/07/sports/jets-aaron-glenn-woody-johnson-have-positive-conversations/",
+          "publisher": "nypost.com",
+          "publishedDate": "2026-10-07",
+          "accessedDate": "2026-10-08",
+          "finding": "Recent missed games and possible return"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "PHI|TE|dallasgoedert",
+      "team": "PHI",
+      "name": "Dallas Goedert",
+      "age": 31,
+      "draftOverall": 49,
+      "lockedHQGrade": 82,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 15,
+        "receptions": 60,
+        "yards": 591,
+        "touchdowns": 11
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 2,
+        "receptions": 5,
+        "yards": 81,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "The Eagles TE remains a reliable blocker, contested target and 2025 red-zone scorer (11 TDs on 60 catches), though volume and downfield creation have eased. Five catches in two 2026 games plus a knee absence make veteran stability/decline more plausible than a fresh late-career breakout.",
+      "injuryAndRecovery": "Week-4 knee-related inactive status confirmed by game-day reporting.",
+      "priorDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 1,
+        "improvePct": 10,
+        "steadyPct": 46,
+        "declinePct": 43,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": 0,
+        "improvePct": -3,
+        "steadyPct": -2,
+        "declinePct": 5,
+        "maxAnnualGain": 0.6,
+        "maxAnnualLoss": 1.2,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Dallas Goedert: odds B 1→1, I 13→10, S 48→46, D 38→43; annual gain/loss 1.4/3.8→2/5, contract market variance 5→6. The Eagles TE remains a reliable blocker, contested target and 2025 red-zone scorer (11 TDs on 60 catches), though volume and downfield creation have eased. Five catches in two 2026 games plus a knee absence make veteran stability/decline more plausible than a fresh late-career breakout.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/dallas-goedert/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved solid-starter anchor; reliable complete TE, but current role and explosive impact have declined from peak."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #49, age 31; OTC original https://overthecap.com/player/dallas-goedert/6934/"
+        },
+        {
+          "url": "https://www.therams.com/news/colby-parkinson-and-aaron-donald-among-rams-inactives-for-week-4-2026-at-eagles",
+          "publisher": "www.therams.com",
+          "publishedDate": "2026-10-04",
+          "accessedDate": "2026-10-08",
+          "finding": "Week-4 knee inactive"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "PIT|TE|patfreiermuth",
+      "team": "PIT",
+      "name": "Pat Freiermuth",
+      "age": 27,
+      "draftOverall": 55,
+      "lockedHQGrade": 82,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 41,
+        "yards": 486,
+        "touchdowns": 4
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 14,
+        "yards": 125,
+        "touchdowns": 2
+      },
+      "playerSpecificEvaluation": "The Steelers' trusted intermediate/red-zone TE has 41/486 in 2025 and 14/125/2 across 2026 Week 4. Previous 65-catch 2024 season supports improvement if targets return, but no new extraordinary YAC/athletic mismatch suggests elite outcomes.",
+      "injuryAndRecovery": "No confirmed substantial personal 2026 injury.",
+      "priorDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 23,
+        "steadyPct": 51,
+        "declinePct": 22,
+        "maxAnnualGain": 3.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "changeFromPrior": {
+        "breakoutPct": 0,
+        "improvePct": 3,
+        "steadyPct": -6,
+        "declinePct": 3,
+        "maxAnnualGain": 0.7,
+        "maxAnnualLoss": 0.9,
+        "marketVariancePct": 1
+      },
+      "changeRationale": "Pat Freiermuth: odds B 4→4, I 20→23, S 57→51, D 19→22; annual gain/loss 2.7/2.9→3.4/3.8, contract market variance 4→5. The Steelers' trusted intermediate/red-zone TE has 41/486 in 2025 and 14/125/2 across 2026 Week 4. Previous 65-catch 2024 season supports improvement if targets return, but no new extraordinary YAC/athletic mismatch suggests elite outcomes.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/pat-freiermuth/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Steady 2024-26 production, red-zone usefulness and dependable intermediate work support a solid starter grade just above the Goedert baseline. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #55, age 27; OTC original https://overthecap.com/player/pat-freiermuth/9519/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "SEA|TE|ajbarner",
+      "team": "SEA",
+      "name": "AJ Barner",
+      "age": 24,
+      "draftOverall": 121,
+      "lockedHQGrade": 81,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 52,
+        "yards": 519,
+        "touchdowns": 6
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 9,
+        "yards": 102,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Seattle's 2024 fourth-round TE rose to 519 yards and six TD in 2025 and remains effective (102 in four 2026 games). Credible high-end run blocking in the locked authority means growth need not rely entirely on targets, but the present pass volume argues against immediate elite-receiver expectations.",
+      "injuryAndRecovery": "No reliable major recent injury established.",
+      "priorDevelopment": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 13,
+        "improvePct": 34,
+        "steadyPct": 38,
+        "declinePct": 15,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "changeFromPrior": {
+        "breakoutPct": -4,
+        "improvePct": -2,
+        "steadyPct": 10,
+        "declinePct": -4,
+        "maxAnnualGain": -0.2,
+        "maxAnnualLoss": 0.4,
+        "marketVariancePct": -1
+      },
+      "changeRationale": "AJ Barner: odds B 17→13, I 36→34, S 28→38, D 19→15; annual gain/loss 4.7/3.3→4.5/3.7, contract market variance 7→6. Seattle's 2024 fourth-round TE rose to 519 yards and six TD in 2025 and remains effective (102 in four 2026 games). Credible high-end run blocking in the locked authority means growth need not rely entirely on targets, but the present pass volume argues against immediate elite-receiver expectations.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/aj-barner/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "519 yards/6 TD in 2025, 90 yards through three 2026 games and high-end run-blocking value create a genuinely complete good-starter profile. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #121, age 24; OTC original https://overthecap.com/player/a-j-barner/11729/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "SF|TE|georgekittle",
+      "team": "SF",
+      "name": "George Kittle",
+      "age": 32,
+      "draftOverall": 146,
+      "lockedHQGrade": 98,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 11,
+        "receptions": 57,
+        "yards": 628,
+        "touchdowns": 7
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 16,
+        "yards": 244,
+        "touchdowns": 4
+      },
+      "playerSpecificEvaluation": "Among the NFL's most complete blocking/YAC TEs with 628 yards in 11 2025 games; 244 and four TD in four 2026 games demonstrate explosive return. Age 32, existing grade 98 and accelerated Achilles recovery eliminate significant new upside while increasing deterioration/injury scenarios across two future years.",
+      "injuryAndRecovery": "49ers confirmed Jan 11 torn Achilles and Aug 23 2026 PUP activation; recovery implications remain uncertain.",
+      "priorDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 14,
+        "steadyPct": 57,
+        "declinePct": 27,
+        "maxAnnualGain": 2.2,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 0,
+        "improvePct": 10,
+        "steadyPct": 50,
+        "declinePct": 40,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 7.1,
+        "marketVariancePct": 9
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": -4,
+        "steadyPct": -7,
+        "declinePct": 13,
+        "maxAnnualGain": -0.7,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 5
+      },
+      "changeRationale": "George Kittle: odds B 2→0, I 14→10, S 57→50, D 27→40; annual gain/loss 2.2/4.8→1.5/7.1, contract market variance 4→9. Among the NFL's most complete blocking/YAC TEs with 628 yards in 11 2025 games; 244 and four TD in four 2026 games demonstrate explosive return. Age 32, existing grade 98 and accelerated Achilles recovery eliminate significant new upside while increasing deterioration/injury scenarios across two future years.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/george-kittle/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Approved elite complete-TE anchor."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #146, age 32; OTC original https://overthecap.com/player/george-kittle/5732/"
+        },
+        {
+          "url": "https://www.49ers.com/news/day-16-of-2026-training-camp-george-kittle-s-remarkable-return",
+          "publisher": "www.49ers.com",
+          "publishedDate": "2026-08-23",
+          "accessedDate": "2026-10-08",
+          "finding": "Achilles surgery return timeline"
+        },
+        {
+          "url": "https://www.sfchronicle.com/sports/49ers/article/sf-49ers-george-kittle-surprised-defense-long-22461578.php",
+          "publisher": "www.sfchronicle.com",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Early 2026 explosive usage"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "TB|TE|cadeotton",
+      "team": "TB",
+      "name": "Cade Otton",
+      "age": 27,
+      "draftOverall": 106,
+      "lockedHQGrade": 79,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "high",
+      "receiving2025": {
+        "games": 16,
+        "receptions": 59,
+        "yards": 572,
+        "touchdowns": 1
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 15,
+        "yards": 157,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Tampa's possession/inline TE remains a reliable hands option with 572 yards in 2025 and 157 through four in 2026, but limited YAC and downfield mismatch traits constrain ceiling. At 27 modest technical gains are likelier than breakout targets in a crowded offense.",
+      "injuryAndRecovery": "No serious new health issue independently verified.",
+      "priorDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 58,
+        "declinePct": 21,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 4
+      },
+      "changeFromPrior": {
+        "breakoutPct": -2,
+        "improvePct": -1,
+        "steadyPct": 1,
+        "declinePct": 2,
+        "maxAnnualGain": -0.1,
+        "maxAnnualLoss": 0.4,
+        "marketVariancePct": 0
+      },
+      "changeRationale": "Cade Otton: odds B 4→2, I 20→19, S 57→58, D 19→21; annual gain/loss 2.7/2.9→2.6/3.3, contract market variance 4→4. Tampa's possession/inline TE remains a reliable hands option with 572 yards in 2025 and 157 through four in 2026, but limited YAC and downfield mismatch traits constrain ceiling. At 27 modest technical gains are likelier than breakout targets in a crowded offense.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/cade-otton/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Sure-handed and dependable with 572 yards in 2025, but limited YAC/explosive creation keeps him below the solid-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #106, age 27; OTC original https://overthecap.com/player/cade-otton/10151/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "TEN|TE|gunnarhelm",
+      "team": "TEN",
+      "name": "Gunnar Helm",
+      "age": 24,
+      "draftOverall": 120,
+      "lockedHQGrade": 76,
+      "lockedGradeConfidence": "medium",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 16,
+        "receptions": 44,
+        "yards": 357,
+        "touchdowns": 2
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 4,
+        "receptions": 9,
+        "yards": 60,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "Tennessee's 2025 fourth-round rookie produced 44/357 and continues steady low-depth duty with 60 yards in four 2026 games. Route/blocking technique can grow at 24, but possession-only evidence (8.1 then 6.7 yards/catch) does not merit 18% genuine breakout odds.",
+      "injuryAndRecovery": "No verified serious new injury; role and passing-game instability matter more.",
+      "priorDevelopment": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 12,
+        "improvePct": 36,
+        "steadyPct": 29,
+        "declinePct": 23,
+        "maxAnnualGain": 4.8,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 8
+      },
+      "changeFromPrior": {
+        "breakoutPct": -6,
+        "improvePct": 0,
+        "steadyPct": 5,
+        "declinePct": 1,
+        "maxAnnualGain": -0.3,
+        "maxAnnualLoss": 0.5,
+        "marketVariancePct": -1
+      },
+      "changeRationale": "Gunnar Helm: odds B 18→12, I 36→36, S 24→29, D 22→23; annual gain/loss 5.1/3.9→4.8/4.4, contract market variance 9→8. Tennessee's 2025 fourth-round rookie produced 44/357 and continues steady low-depth duty with 60 yards in four 2026 games. Route/blocking technique can grow at 24, but possession-only evidence (8.1 then 6.7 yards/catch) does not merit 18% genuine breakout odds.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/gunnar-helm/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "44 catches/357 yards as a rookie and steady early-2026 usage show functional starter traits, but limited explosiveness keeps him below 80+. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #120, age 24; OTC original https://overthecap.com/player/gunnar-helm/12480/"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    },
+    {
+      "id": "WSH|TE|chigokonkwo",
+      "team": "WSH",
+      "name": "Chig Okonkwo",
+      "age": 27,
+      "draftOverall": 143,
+      "lockedHQGrade": 78,
+      "lockedGradeConfidence": "high",
+      "developmentProjectionConfidence": "medium",
+      "receiving2025": {
+        "games": 17,
+        "receptions": 56,
+        "yards": 560,
+        "touchdowns": 2
+      },
+      "receiving2026ThroughCompletedWeek4": {
+        "games": 2,
+        "receptions": 4,
+        "yards": 21,
+        "touchdowns": 0
+      },
+      "playerSpecificEvaluation": "After 56 catches/560 yards with Tennessee in 2025, the YAC-oriented Okonkwo has just 21 yards in two Washington 2026 games. Poor inline blocking in the locked grade audit and new-team receiving competition create role loss downside; age 27 alone should not manufacture an all-around leap.",
+      "injuryAndRecovery": "Washington practice reporting identifies hamstring limitation in early October; extent not established.",
+      "priorDevelopment": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "recommendedDevelopment": {
+        "breakoutPct": 3,
+        "improvePct": 15,
+        "steadyPct": 45,
+        "declinePct": 37,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 8
+      },
+      "changeFromPrior": {
+        "breakoutPct": -1,
+        "improvePct": -5,
+        "steadyPct": -12,
+        "declinePct": 18,
+        "maxAnnualGain": 0.3,
+        "maxAnnualLoss": 1.9,
+        "marketVariancePct": 4
+      },
+      "changeRationale": "Chig Okonkwo: odds B 4→3, I 20→15, S 57→45, D 19→37; annual gain/loss 2.7/2.9→3/4.8, contract market variance 4→8. After 56 catches/560 yards with Tennessee in 2025, the YAC-oriented Okonkwo has just 21 yards in two Washington 2026 games. Poor inline blocking in the locked grade audit and new-team receiving competition create role loss downside; age 27 alone should not manufacture an all-around leap.",
+      "sources": [
+        {
+          "url": "https://www.nfl.com/players/chigoziem-okonkwo/stats/career",
+          "publisher": "NFL.com",
+          "publishedDate": null,
+          "accessedDate": "2026-10-08",
+          "finding": "Official full-season 2025 and completed 2026 receiving totals; undated live stats table"
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+          "publisher": "Octagon HQ locked grading authority",
+          "publishedDate": "2026-10-03",
+          "accessedDate": "2026-10-08",
+          "finding": "Strong YAC ability and 560 yards in 2025 support starter usefulness; very poor run blocking prevents a higher complete-TE grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+        },
+        {
+          "url": "https://github.com/codyking0602/Octagon-HQ/blob/30e34c38142f828dd4c8d324c04dfac4d169b527/data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
+          "publisher": "OverTheCap via nflverse, frozen Octagon HQ identity/contract authority",
+          "publishedDate": "2026-10-05",
+          "accessedDate": "2026-10-08",
+          "finding": "Draft #143, age 27; OTC original https://overthecap.com/player/chigoziem-okonkwo/10188/"
+        },
+        {
+          "url": "https://www.hogshaven.com/washington-commanders-injuries/445274/commanders-vs-colts-thursday-injury-report-chig-okonkwo-frankie-luvu-rachaad-white",
+          "publisher": "www.hogshaven.com",
+          "publishedDate": "2026-10-02",
+          "accessedDate": "2026-10-08",
+          "finding": "Hamstring practice limitation"
+        }
+      ],
+      "evidenceLimitations": "NFL seasonal totals support recorded production and appearances, not independently charted routes, target share, snap share, YPRR, contested catches or blocking grades. Described role/blocking qualities are from the locked HQ grading evidence rather than claimed new film review. No undocumented medical diagnosis. Four weeks maximum of 2026 evidence."
+    }
+  ]
+}
