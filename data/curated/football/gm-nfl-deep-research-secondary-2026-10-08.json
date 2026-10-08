@@ -1,0 +1,1425 @@
+{
+  "schemaVersion": 1,
+  "version": "gm-nfl-secondary-deep-research-2026-10-08",
+  "asOf": "2026-10-08",
+  "canonicalPositionPopulation": 168,
+  "baseCalibrationHead": "30e34c38142f828dd4c8d324c04dfac4d169b527",
+  "nonRuntimeResearchOnly": true,
+  "lockedGrades": true,
+  "reviewedCount": 28,
+  "batchLog": [
+    {
+      "batch": 1,
+      "teams": "ARI ATL BAL BUF CAR",
+      "count": 28,
+      "individual2026SourceCount": 26
+    }
+  ],
+  "scopeLimitations": [
+    "Assessments have individually reasoned projections but some 2025 source links provide position-group context rather than complete per-player advanced coverage tables.",
+    "PFF public indexed snapshots may lag the latest Week 4 games; all explicit gaps are noted rather than replaced with invented statistics.",
+    "No grades or shared runtime profiles have been modified."
+  ],
+  "assessments": [
+    {
+      "id": "ARI|Secondary|andrewwingard",
+      "name": "Andrew Wingard",
+      "team": "ARI",
+      "position": "S",
+      "age": 29,
+      "lockedHQGrade": 77,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 5,
+        "improvePct": 18,
+        "steadyPct": 45,
+        "declinePct": 32,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "New arrival competing with Taylor-Demerson for post-Thompson safety role; veteran Jaguars tenure does not guarantee a full-time future.",
+        "through2026Week4": "2026 PFF: 182 snaps, 65.1 coverage grade but 55.9 run grade and five missed tackles.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 25→32; role uncertainty and open-field tackling outweigh one interception.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.azcardinals.com/news/top-questions-heading-into-2026-training-camp-part-two",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/andrew-wingard/49268",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ARI|Secondary|buddabaker",
+      "name": "Budda Baker",
+      "team": "ARI",
+      "position": "S",
+      "age": 30,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 3,
+        "improvePct": 13,
+        "steadyPct": 44,
+        "declinePct": 40,
+        "maxAnnualGain": 3.5,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 10,
+        "steadyPct": 41,
+        "declinePct": 48,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "2025 PFF coverage grade 35.7 and 17% missed tackle rate, despite continued run-defense value.",
+        "through2026Week4": "2026 early coverage grade 44.7; run defense remains stronger at 72.7.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 40→48 and compress gain: aged box/versatility specialist, not projected to recover former coverage peak automatically.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.azcardinals.com/news/top-questions-heading-into-2026-training-camp-part-two",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/budda-baker/11791",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ARI|Secondary|denzelburke",
+      "name": "Denzel Burke",
+      "team": "ARI",
+      "position": "CB",
+      "age": 23,
+      "lockedHQGrade": 74,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 11,
+        "improvePct": 28,
+        "steadyPct": 27,
+        "declinePct": 34,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 15,
+        "improvePct": 33,
+        "steadyPct": 20,
+        "declinePct": 32,
+        "maxAnnualGain": 6.4,
+        "maxAnnualLoss": 5.6,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "Cardinals report strong second half of 2025 and an inside track for 2026 reps.",
+        "through2026Week4": "2026 PFF early 42.2 coverage grade despite 75.6 run-defense grade; coverage growth unproven.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Increase improvement 28→33 and breakout 11→15 but preserve large decline; young physical corner with coverage adaptation risk.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.azcardinals.com/news/top-questions-heading-into-2026-training-camp-part-two",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/denzel-burke/145070",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ARI|Secondary|garrettwilliams",
+      "name": "Garrett Williams",
+      "team": "ARI",
+      "position": "CB",
+      "age": 25,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 12,
+        "improvePct": 23,
+        "steadyPct": 27,
+        "declinePct": 38,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2024 high-end slot coverage followed by 2025 injury-marred year and torn Achilles.",
+        "through2026Week4": "2026 PFF only 19 snaps as of Sep 29; the 70.5 grade is not a meaningful qualified sample.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Reduce improvement 36→23 and raise decline 19→38 due to uncertain Achilles recovery, without changing HQ current grade.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.azcardinals.com/news/top-questions-heading-into-2026-training-camp-part-two",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/garrett-williams/99723",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ARI|Secondary|maxmelton",
+      "name": "Max Melton",
+      "team": "ARI",
+      "position": "CB",
+      "age": 24,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 16,
+        "improvePct": 28,
+        "steadyPct": 25,
+        "declinePct": 31,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2026 depth competition with Burke, Johnson and Williams; second-round investment yet no assured starter role.",
+        "through2026Week4": "Early 2026 PFF 55.7 coverage, 30.1 run-defense grades on 98 snaps.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Lower improve 36→28 and increase decline 19→31: boundary competition and tackling gaps offset athletic upside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.azcardinals.com/news/top-questions-heading-into-2026-training-camp-part-two",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/max-melton/129889",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ARI|Secondary|willjohnson",
+      "name": "Will Johnson",
+      "team": "ARI",
+      "position": "CB",
+      "age": 23,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 21,
+        "improvePct": 37,
+        "steadyPct": 23,
+        "declinePct": 19,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 rookie corner established 2026 starting candidacy; Arizona's corner depth is competitive.",
+        "through2026Week4": "2026 PFF: 111 snaps and 61.4 coverage grade, allowing six catches; low interception count is not a negative by itself.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Increase breakout 17→21 with sustained upside but limit certainty until full-season coverage quality stabilizes.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.azcardinals.com/news/top-questions-heading-into-2026-training-camp-part-two",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/will-johnson/158536",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ATL|Secondary|ajterrell",
+      "name": "A.J. Terrell Jr.",
+      "team": "ATL",
+      "position": "CB",
+      "age": 28,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 22,
+        "steadyPct": 54,
+        "declinePct": 21,
+        "maxAnnualGain": 2.9,
+        "maxAnnualLoss": 3.5,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "Falcons 2025 recap credits tight coverage; nearest-receiver separation averaged 2 yards, fourth-best outside CB.",
+        "through2026Week4": "2026 PFF only 68 snaps after injury interruption; grade not season-representative.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Moderate improvement 19→22; 2025 evidence keeps stability high, health contributes downside 15→21.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.atlantafalcons.com/news/roster-recap-falcons-cornerbacks-safeties-2025",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/a.j.-terrell/55586",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ATL|Secondary|billybowman",
+      "name": "Billy Bowman Jr.",
+      "team": "ATL",
+      "position": "S",
+      "age": 23,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 28,
+        "steadyPct": 35,
+        "declinePct": 28,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.3,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 13,
+        "improvePct": 26,
+        "steadyPct": 27,
+        "declinePct": 34,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 six games before torn Achilles; disruptive nickel traits, two breakups and forced fumble in short stint.",
+        "through2026Week4": "Only 45 defensive snaps in early 2026 PFF sample, rather than a secure full-time slot role.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise breakout 9→13 but decline 28→34; Achilles rehabilitation and snap competition make trajectory two-sided.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.atlantafalcons.com/news/roster-recap-falcons-cornerbacks-safeties-2025",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/billy-bowman/144638",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ATL|Secondary|cjhenderson",
+      "name": "C.J. Henderson",
+      "team": "ATL",
+      "position": "CB",
+      "age": 28,
+      "lockedHQGrade": 73,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 50,
+        "declinePct": 29,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 16,
+        "steadyPct": 43,
+        "declinePct": 38,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 5.4,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 only four Falcons games and two starts per official season recap; remains depth/contingency corner.",
+        "through2026Week4": "Subbed for injured Terrell in 2026 Week 4; opportunity appears dependent on others' availability.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Lower improvement 17→16; raise decline 29→38 from weak role security rather than counting one good fill-in.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.atlantafalcons.com/news/roster-recap-falcons-cornerbacks-safeties-2025",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.thefalcoholic.com/atlanta-falcons-game-information/96986/falcons-snap-counts-for-a-huge-week-4-win-against-the-saints-jammie-robinson",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "team/article context"
+        }
+      ],
+      "auditStatus": "contextual-2026-evidence"
+    },
+    {
+      "id": "ATL|Secondary|jessiebates",
+      "name": "Jessie Bates III",
+      "team": "ATL",
+      "position": "S",
+      "age": 29,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 3,
+        "improvePct": 19,
+        "steadyPct": 54,
+        "declinePct": 24,
+        "maxAnnualGain": 1.6,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 50,
+        "declinePct": 31,
+        "maxAnnualGain": 2.2,
+        "maxAnnualLoss": 4.7,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "Played 17 starts with 98 tackles, six PBUs and three interceptions in 2025; second-team All-Pro.",
+        "through2026Week4": "2026 coverage grade 68.5 in early PFF sample; Week 4 coverage risks identified.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 24→31 modestly as he nears 30, but retain high steady chance because communication and range persist.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.atlantafalcons.com/news/roster-recap-falcons-cornerbacks-safeties-2025",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/jessie-bates/49162",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ATL|Secondary|mikehughes",
+      "name": "Mike Hughes",
+      "team": "ATL",
+      "position": "CB",
+      "age": 29,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 33,
+        "declinePct": 37,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 6,
+        "improvePct": 16,
+        "steadyPct": 31,
+        "declinePct": 47,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 starting outside corner whose late-season injury affected the rotation.",
+        "through2026Week4": "2026 PFF 46.2 coverage with 15 receptions allowed early, despite better run-defense mark.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise regression 37→47; recurring coverage exposure and age limit likely leap.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.atlantafalcons.com/news/roster-recap-falcons-cornerbacks-safeties-2025",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/mike-hughes/34057/stats",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "ATL|Secondary|xavierwatts",
+      "name": "Xavier Watts",
+      "team": "ATL",
+      "position": "S",
+      "age": 24,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 21,
+        "improvePct": 33,
+        "steadyPct": 19,
+        "declinePct": 27,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 played all 17 games and started each; five interceptions and 11 PBUs, PFWA All-Rookie.",
+        "through2026Week4": "2026 PFF coverage 57.5 on 267 snaps; completion exposure exceeds interception headline.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Increase breakout 17→21 but decline 19→27; ball instincts real, coverage downswings must be acknowledged.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.atlantafalcons.com/news/roster-recap-falcons-cornerbacks-safeties-2025",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/xavier-watts/122914",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BAL|Secondary|jaylinnhawkins",
+      "name": "Jaylinn Hawkins",
+      "team": "BAL",
+      "position": "S",
+      "age": 29,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 14,
+        "steadyPct": 40,
+        "declinePct": 43,
+        "maxAnnualGain": 2.9,
+        "maxAnnualLoss": 5.6,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 work with New England earned veteran safety role in Baltimore; do not extrapolate Patriots team successes.",
+        "through2026Week4": "2026 PFF: 177 snaps, strong 77.4 run defense but 50.1 coverage and eight receptions allowed.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Lower improvement 20→14 and raise decline 25→43; coverage inconsistency limits future as every-down safety.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/jaylinn-hawkins/51423",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BAL|Secondary|kylehamilton",
+      "name": "Kyle Hamilton",
+      "team": "BAL",
+      "position": "S",
+      "age": 25,
+      "lockedHQGrade": 99,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 15,
+        "steadyPct": 79,
+        "declinePct": 5,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 1.3,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 14,
+        "steadyPct": 78,
+        "declinePct": 7,
+        "maxAnnualGain": 1.1,
+        "maxAnnualLoss": 1.6,
+        "marketVariancePct": 2
+      },
+      "evidence": {
+        "season2025": "PFF league-leading 92.6 four-year positional grade entering 2026; versatility across deep/slot/box is sustained.",
+        "through2026Week4": "2026 PFF 81.3 overall, 76.0 coverage and 79.1 run grade through four games.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Keep breakout 1, change decline 5→7 with stable dominant trajectory and tiny headroom at locked grade 99.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/kyle-hamilton/102684",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BAL|Secondary|malakistarks",
+      "name": "Malaki Starks",
+      "team": "BAL",
+      "position": "S",
+      "age": 22,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 19,
+        "improvePct": 34,
+        "steadyPct": 32,
+        "declinePct": 15,
+        "maxAnnualGain": 5.8,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 24,
+        "improvePct": 30,
+        "steadyPct": 20,
+        "declinePct": 26,
+        "maxAnnualGain": 7.3,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 first-round rookie safety on a Ravens unit that disappointed relative to preseason rankings.",
+        "through2026Week4": "Early 2026 PFF sample through Week 3 showed 41.7 coverage grade and several missed assignments.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Increase breakout 19→24 but decline 15→26; young processing/range upside with meaningful coverage volatility.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/malaki-starks/157069",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BAL|Secondary|marlonhumphrey",
+      "name": "Marlon Humphrey",
+      "team": "BAL",
+      "position": "CB",
+      "age": 30,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 58,
+        "declinePct": 21,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 14,
+        "steadyPct": 43,
+        "declinePct": 42,
+        "maxAnnualGain": 2,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "PFF 2025 secondary review flags more than 900 coverage yards allowed — major age/trend caution.",
+        "through2026Week4": "2026 PFF 75.1 coverage through first three games, but injury in Week 4.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 21→42; early coverage rebound merits steady path, not dismissal of full 2025 workload.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/marlon-humphrey/11771",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BAL|Secondary|natewiggins",
+      "name": "Nate Wiggins",
+      "team": "BAL",
+      "position": "CB",
+      "age": 23,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 32,
+        "steadyPct": 34,
+        "declinePct": 17,
+        "maxAnnualGain": 6.2,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 34,
+        "steadyPct": 27,
+        "declinePct": 19,
+        "maxAnnualGain": 6.3,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "PFF 2025 secondary review says 100-plus targets; sustained workload as developing outside starter.",
+        "through2026Week4": "2026 PFF coverage grade 70.7 and two breakups through Week 4, with no picks.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise breakout 17→20; coverage improvement matters more than interceptions, with nonzero volatility.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/nate-wiggins/144143",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BUF|Secondary|christianbenford",
+      "name": "Christian Benford",
+      "team": "BUF",
+      "position": "CB",
+      "age": 26,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 5,
+        "improvePct": 20,
+        "steadyPct": 53,
+        "declinePct": 22,
+        "maxAnnualGain": 3.1,
+        "maxAnnualLoss": 3.5,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 6,
+        "improvePct": 21,
+        "steadyPct": 35,
+        "declinePct": 38,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 6.5,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 established Buffalo outside starter; strong historic performance is not erased by four games.",
+        "through2026Week4": "Early 2026 PFF 38.8 coverage grade, 12 completions allowed; Week 4 missed with injury.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 22→38, preserve moderate rebound path; health and defense-wide communication issues add volatility.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.buffalobills.com/team/stats/",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/christian-benford/79181",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BUF|Secondary|cjgardnerjohnson",
+      "name": "C.J. Gardner-Johnson",
+      "team": "BUF",
+      "position": "S",
+      "age": 28,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 15,
+        "steadyPct": 47,
+        "declinePct": 34,
+        "maxAnnualGain": 3.3,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "Veteran hybrid safety acquired for new 2026 defense; no 2025 individual grade confirmed in reviewed source set.",
+        "through2026Week4": "Four-game Buffalo team stats show 18 tackles and an interception; turnovers alone are not stable coverage value.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→34; role/system change and veteran volatility make steady more likely than breakout.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.buffalobills.com/team/stats/",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.buffalobills.com/team/stats/",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "team/article context"
+        }
+      ],
+      "auditStatus": "contextual-2026-evidence"
+    },
+    {
+      "id": "BUF|Secondary|colebishop",
+      "name": "Cole Bishop",
+      "team": "BUF",
+      "position": "S",
+      "age": 23,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 32,
+        "steadyPct": 20,
+        "declinePct": 29,
+        "maxAnnualGain": 6.4,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "Young developing starting safety in changing Buffalo defensive system; 2025 individual charting not established by team recap.",
+        "through2026Week4": "2026 PFF 282 snaps but 48.8 coverage grade and 14 catches allowed.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise breakout 17→19, drop improvement 36→32, decline 19→29; heavy snaps aid development but coverage is below baseline.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.buffalobills.com/team/stats/",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/cole-bishop/146454",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BUF|Secondary|deealford",
+      "name": "Dee Alford",
+      "team": "BUF",
+      "position": "CB",
+      "age": 28,
+      "lockedHQGrade": 77,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 12,
+        "improvePct": 18,
+        "steadyPct": 39,
+        "declinePct": 31,
+        "maxAnnualGain": 4.3,
+        "maxAnnualLoss": 4.5,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 14,
+        "steadyPct": 37,
+        "declinePct": 45,
+        "maxAnnualGain": 3.2,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "Falcons 2025 recap cites 13 PBUs and three interceptions as valuable nickel work.",
+        "through2026Week4": "2026 PFF coverage 41.8 with 13 receptions allowed in Buffalo; one INT does not erase coverage weakness.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Reduce improvement 18→14 and raise decline 31→45 because change of team/system weakened underlying coverage.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.buffalobills.com/team/stats/",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/dee-alford/110542",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "BUF|Secondary|maxwellhairston",
+      "name": "Maxwell Hairston",
+      "team": "BUF",
+      "position": "CB",
+      "age": 23,
+      "lockedHQGrade": 81,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 25,
+        "improvePct": 40,
+        "steadyPct": 13,
+        "declinePct": 22,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 23,
+        "improvePct": 30,
+        "steadyPct": 13,
+        "declinePct": 34,
+        "maxAnnualGain": 7.4,
+        "maxAnnualLoss": 7.1,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 11 games, three starts and two INT; limited foundation for a future full-time CB1 role.",
+        "through2026Week4": "2026 Week 4 relief role allowed pivotal TDs per Bills recap; early PFF 57 coverage before that game.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Reduce improve 40→30 and increase decline 22→34, breakout 25→23; physically talented but heavy early responsibility.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.buffalobills.com/team/stats/",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/maxwell-hairston/146746",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "CAR|Secondary|akaylebevans",
+      "name": "Akayleb Evans",
+      "team": "CAR",
+      "position": "CB",
+      "age": 27,
+      "lockedHQGrade": 74,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 50,
+        "declinePct": 29,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 34,
+        "declinePct": 49,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 reserve usage and team 2026 positional competition limit security.",
+        "through2026Week4": "2026 PFF 43.0 coverage and 13 completions allowed in 117 snaps.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 29→49; current opportunity exposes coverage shortcomings more than it supports breakout.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/car/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/akayleb-evans/65033",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "CAR|Secondary|jayceehorn",
+      "name": "Jaycee Horn",
+      "team": "CAR",
+      "position": "CB",
+      "age": 26,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 8,
+        "improvePct": 27,
+        "steadyPct": 42,
+        "declinePct": 23,
+        "maxAnnualGain": 4.9,
+        "maxAnnualLoss": 5.2,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 11,
+        "improvePct": 27,
+        "steadyPct": 38,
+        "declinePct": 24,
+        "maxAnnualGain": 4.5,
+        "maxAnnualLoss": 5,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 five interceptions, two consecutive 1,000-snap years; availability trend improved.",
+        "through2026Week4": "2026 early PFF sample limited by current corner injuries; not enough clean coverage volume to overturn prior year.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Slightly raise breakout 8→11 and decline 23→24; durability now less alarming than earlier career but still monitored.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/car/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/jaycee-horn/83375",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "CAR|Secondary|lathanransom",
+      "name": "Lathan Ransom",
+      "team": "CAR",
+      "position": "S",
+      "age": 24,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 39,
+        "declinePct": 25,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 3.7,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 11,
+        "improvePct": 29,
+        "steadyPct": 32,
+        "declinePct": 28,
+        "maxAnnualGain": 5,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 336 defensive snaps as a rookie; coverage/box assignment development still ongoing.",
+        "through2026Week4": "2026 156 defensive snaps, 59.6 coverage but 54.5 run grade.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Increase breakout 8→11; starter opportunity and tackling growth possible but coverage remains uneven.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/car/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/lathan-ransom/129755",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "CAR|Secondary|nickscott",
+      "name": "Nick Scott",
+      "team": "CAR",
+      "position": "S",
+      "age": 31,
+      "lockedHQGrade": 75,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 17,
+        "steadyPct": 44,
+        "declinePct": 35,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 30,
+        "declinePct": 58,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 6,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "2025 1,035 defensive snaps in Carolina, nearly every snap despite mediocre baseline.",
+        "through2026Week4": "2026 fell to 77 snaps through Week 3; 58.4 PFF coverage with a diminished role.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise decline 35→58, reduce improve 17→10: substantial loss of role security at age 31.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/car/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/nick-scott/49012",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "CAR|Secondary|trevonmoehrig",
+      "name": "Tre'von Moehrig",
+      "team": "CAR",
+      "position": "S",
+      "age": 27,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 3.6,
+        "maxAnnualLoss": 2.7,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 7,
+        "improvePct": 23,
+        "steadyPct": 45,
+        "declinePct": 25,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 990 defensive snaps as full-time starter, despite role-reliant box/deep responsibilities.",
+        "through2026Week4": "2026 PFF 275 snaps, 61.9 coverage and 54.4 run grade; no interceptions yet.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Improve reduced 25→23, decline 17→25: volume supports stability but run tackling concerns prevent upside inflation.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/car/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/trevon-moehrig/77847",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    },
+    {
+      "id": "CAR|Secondary|willlee",
+      "name": "Will Lee III",
+      "team": "CAR",
+      "position": "CB",
+      "age": 23,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 10,
+        "improvePct": 28,
+        "steadyPct": 31,
+        "declinePct": 31,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.6,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 22,
+        "improvePct": 31,
+        "steadyPct": 20,
+        "declinePct": 27,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 6.7,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2026 rookie: no 2025 NFL season; collegiate play from Texas A&M is a prospect baseline, not NFL output.",
+        "through2026Week4": "2026 PFF 199 snaps and four PBUs, coverage 62.3 with 15 catches allowed.",
+        "limitations": "2025 group source may not provide individual charting; 2026 PFF snapshots are early-season, and older crawl dates may end before Week 4."
+      },
+      "reasonRelativeToExisting": "Raise breakout 10→22 based on immediate outside opportunity; raise decline 31→27 only modestly as rookie growing pains remain.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pro-football-reference.com/teams/car/2025-snap-counts.htm",
+          "season": 2025,
+          "publishedOrAsOf": "2026 preseason or 2025 season recap",
+          "scope": "position-group context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/will-lee/173110",
+          "season": 2026,
+          "publishedOrAsOf": "2026-10-08 (latest indexed snapshot through Week 4 or earlier)",
+          "scope": "individual PFF profile"
+        }
+      ],
+      "auditStatus": "individual-2026-evidence"
+    }
+  ]
+}
