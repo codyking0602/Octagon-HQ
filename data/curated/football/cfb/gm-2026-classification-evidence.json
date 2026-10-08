@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 370,
+  "exactMatches": 369,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -6180,8 +6180,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 60,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.84,
+        "portalExitProbability": 0.03,
+        "summary": "Notre Dame 2026 senior safety established consecutive starting seasons: 2024 all 16 starts, 59 tackles/three INT, 2025 11 starts with 53 tackles/two picks/two forced fumbles/five PBUs, 2026 early five starts and INT versus Michigan State. Already proven coverage/turnover contributor with relatively little grade upside, and high 2027 draft probability; class senior is not guaranteed college eligibility expiry.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/adon-shuler"
+        ]
+      }
     },
     {
       "id": "notre-dame|aneyaswilliams",
@@ -6200,8 +6219,27 @@
       "sourceUrl": "https://fightingirish.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 33,
+          "steady": 43,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.08,
+        "summary": "Notre Dame junior RB worked behind other feature backs in 2025 (24 rushes/224 yards/five TD and two catches/40 yards), then entered 2026 as starter, opening with 20 carries/90 yards/two TD vs Wisconsin and 80 rushing yards vs Purdue. Higher starter workload supports realistic 2027 improvement but prior 9.3 YPC on limited touches may regress under larger volume. First enrolled 2024 and draft eligible 2027.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/aneyas-williams"
+        ]
+      }
     },
     {
       "id": "notre-dame|boubacartraore",
@@ -6271,8 +6309,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 60,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.74,
+        "portalExitProbability": 0.04,
+        "summary": "Notre Dame junior safety earned FWAA Freshman All-America in 2025 with eight starts in ten games, 48 tackles, four interceptions (including pick-six), three PBUs and special-teams blocked-punt TD. Played early 2026 starter snaps and preseason All-America honors. Two-way coverage/ball skills already recognized, so steady repeat is more likely than a huge new breakout, but 2027 draft remains an individual choice.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/tae-johnson"
+        ]
+      }
     },
     {
       "id": "notre-dame|bryceyoung",
@@ -6290,8 +6347,27 @@
       "sourceUrl": "https://fightingirish.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 36,
+          "steady": 39,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.52,
+        "portalExitProbability": 0.06,
+        "summary": "Notre Dame junior defensive end had 2025 12 games/one start with 20 tackles, two sacks/two TFL and three PBUs, then started 2026 with sack and 2.5 TFL vs Rice plus repeated early season starts. Starter promotion gives authentic developmental runway, more credible than basing 2027 profile on recruiting rank alone. First enrolled 2024.",
+        "sources": [
+          "https://fightingirish.com/sports/mission24k/roster/season/2025-26/player/bryce-young"
+        ]
+      }
     },
     {
       "id": "notre-dame|christiangray",
@@ -6309,8 +6385,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 23,
+          "steady": 60,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.82,
+        "portalExitProbability": 0.03,
+        "summary": "Notre Dame 2026 senior corner built stable 2025 coverage résumé with 10 starts, two interceptions and 11 pass breakups despite only 17 tackles; through early 2026 remained a regular starter with a PBU versus Michigan State. Few tackles are normal for a coverage corner and not evidence of weak ability. High steady rate and NFL departure estimate without presuming a guaranteed draft declaration.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/christian-gray"
+        ]
+      }
     },
     {
       "id": "notre-dame|cjcarr",
@@ -6380,8 +6475,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 25,
+          "steady": 52,
+          "decline": 18,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.05,
+        "summary": "Notre Dame senior TE was predominantly a blocking/role player in 2025 with limited noted receptions, and 2026 started first five games catching touchdowns vs Rice and Purdue while contributing to run blocking. Real red-zone role and size but not established high-volume receiver; modest improvement and some scoring-volume regression both credible. Enrolled 2023, fourth academic year not automatically exhausted.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/cooper-flanagan"
+        ]
+      }
     },
     {
       "id": "notre-dame|djmckinney",
@@ -6391,16 +6505,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4707184",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://fightingirish.com/sports/football/roster/player/dj-mckinney",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 54,
+          "decline": 23,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.45,
+        "portalExitProbability": 0.01,
+        "summary": "Notre Dame official 2026 FIFTH-YEAR CB transfer via Oklahoma State/Colorado: Colorado 2024 13 starts/62 tackles/three INT/nine PBUs, 2025 nine starts/35 tackles/five PBUs and injury final three games. Started early 2026 with 55-yard interception return vs Wisconsin. Recovery/coverage variability increases downside, but multi-year Power Four coverage is proven. 2022 first enrollment and official fifth year imply normal eligibility ends after 2026.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/dj-mckinney"
+        ]
+      }
     },
     {
       "id": "notre-dame|draykbowen",
@@ -6418,8 +6551,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 19,
+          "steady": 62,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.02,
+        "summary": "Notre Dame senior LB won preseason 2026 major-award watch honors after previous sustained starting play; 2026 early games featured nine tackles vs Wisconsin, eight against Michigan State and fumble-recovery touchdown at Purdue. Established tackling instincts/physical readiness make second large college breakout unlikely; very high 2027 pro-exit risk, not guaranteed graduation from senior label.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/drayk-bowen"
+        ]
+      }
     },
     {
       "id": "notre-dame|jaidenausberry",
@@ -6437,8 +6589,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 30,
+          "steady": 48,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.56,
+        "portalExitProbability": 0.05,
+        "summary": "Notre Dame 2026 senior LB started 10 of 12 games in 2025 with 51 tackles and five QB hurries, including eight tackles and first career full sack vs Boise State. Started 2026 Wisconsin opener with seven tackles, showing proven defensive role; improvement from experience possible without projecting all-star certainty. Originally enrolled 2023.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/jaiden-ausberry"
+        ]
+      }
     },
     {
       "id": "notre-dame|jordanfaison",
@@ -6457,8 +6628,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 62,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.79,
+        "portalExitProbability": 0.03,
+        "summary": "Notre Dame 2026 senior WR 2025 led team with 49 catches/640 yards/four TD in 12 starts plus 15 punt returns for 153 yards, Burlsworth Trophy semifinalist. Early 2026 five-game output 25 receptions/371 yards/four TD including 132 yards and two scores against UNC. Multi-year receiving and return value is established; high steady probability, less room for massive last-year leap, strong NFL consideration.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/jordan-faison"
+        ]
+      }
     },
     {
       "id": "notre-dame|keonkeeley",
@@ -6476,8 +6666,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 31,
+          "steady": 38,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.09,
+        "summary": "Notre Dame 2026 senior edge transferred from Alabama after 2025 13 games, 16 tackles/three sacks and blocked punt; 2024 six games/three tackles. In early 2026 appeared on Irish defense with three tackles vs Rice. Still no proven high-snap senior pass-rusher season, so a new-role breakout is possible but not guaranteed by five-star recruitment; rotation/downside remains.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/keon-keeley"
+        ]
+      }
     },
     {
       "id": "notre-dame|kyngstonnviliamuasa",
@@ -6495,8 +6704,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 49,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.81,
+        "portalExitProbability": 0.06,
+        "summary": "Notre Dame 2026 junior LB earned 2026 preseason All-American/award-list recognition after a 2025 11-game campaign with 48 tackles, 7.5 TFL, three sacks, interception and two PBUs in only two starts. Missed final 2025 game through injury and 2026 Wisconsin opener but returned with five tackles/1.5 TFL vs Rice; this has genuine coverage, inside run, and pass-rush value, plus limited medical downside. First enrolled 2024; likely 2027 draft candidate.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/season/2024-25/player/kyngstonn-viliamu-asa"
+        ]
+      }
     },
     {
       "id": "notre-dame|leonardmoore",
@@ -6566,8 +6794,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 23,
+          "steady": 53,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.04,
+        "summary": "Notre Dame 2026 senior safety contributed 2025 25 tackles, three interceptions, three PBUs and special-teams TDs (blocked punt recovery and 84-yard fake-punt receiving score). In first five games 2026 gained starting responsibility, interception vs Michigan State and one against UNC with blocked PAT, proving multi-phase impact beyond pure tackle volume. Moderate growth possible but turnover repeat volatile.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/luke-talich"
+        ]
+      }
     },
     {
       "id": "notre-dame|micahgilbert",
@@ -6586,8 +6833,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 37,
+          "steady": 31,
+          "decline": 15,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.08,
+        "summary": "Notre Dame junior WR broke through in 2026 after limited 2025 reserve line (nine receptions/93 yards/one TD across ten games), starting 2026 with three catches/34 vs Wisconsin, two for 47/TD vs Rice, eight for 170 yards vs Michigan State and two for 83/TD at Purdue. Strong current production and 2024 initial matriculation support high upside, but one explosive month is not a full proven elite season.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/micah-gilbert"
+        ]
+      }
     },
     {
       "id": "notre-dame|mylangraham",
@@ -6605,8 +6871,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 37,
+          "steady": 30,
+          "decline": 15,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.15,
+        "portalExitProbability": 0.12,
+        "summary": "Notre Dame 2026 junior receiver transfer from Ohio State, where his 2025 output was six catches/93 yards in nine games, 2024 four games and no established starter role. Through first 2026 Irish games logged limited catches (2/24 vs Rice, 1/8 vs MSU). Upside rests on expanded snaps, not recruiting hype, and higher role/usage volatility is appropriate. Entered college 2024 and may declare 2027, currently unlikely.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/player/mylan-graham"
+        ]
+      }
     },
     {
       "id": "notre-dame|nolanjamesjr",
@@ -6624,8 +6909,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 39,
+          "steady": 33,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1,
+        "summary": "Notre Dame 2026 sophomore RB only had 14 rushes/37 yards in four 2025 freshman games; breakout 2026 role includes 26 carries/121 yards/TD vs Michigan State and scoring through rushing and receiving in September. This is a real college workload step forward but just a few games as feature back, leaving sizable upward/health/scheme variance. First enrolled 2025 and ineligible for 2027 NFL Draft.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/season/2025-26/player/nolan-james-jr"
+        ]
+      }
     },
     {
       "id": "ohio-state|bojackson",
@@ -12509,7 +12813,7 @@
       }
     }
   ],
-  "officialOverrides": 98,
+  "officialOverrides": 99,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -12521,5 +12825,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited."
 }
