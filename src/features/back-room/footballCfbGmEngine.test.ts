@@ -139,15 +139,24 @@ describe("CFB GM UI parity and owner gating", () => {
       expect(page).toContain(token);
       expect(nfl + read("src/features/back-room/FootballGmFranchiseReport.tsx")).toContain(token);
     }
-    // CFB owner preview still has its earlier hero; the public NFL result
-    // intentionally leads with the new compact winner + three-year comparison.
+    // The CFB final screen follows the locked compact NFL result hierarchy,
+    // but keeps its own two-year CFP seasons and college NIL figures.
     expect(page).toContain('football-gm__position-tabs');
     expect(page).toContain('setSelectedPosition');
     expect(page).toContain('football-gm__cfb-budget-modes');
     expect(page).toContain('data-cfb-gm="true"');
     expect(read("src/features/back-room/footballCfbGmEngine.ts")).toContain('FRONT_7_A: "F7-1"')
-    expect(page).toContain('football-gm-report__hero');
-    expect(read("src/features/back-room/FootballGmFranchiseReport.tsx")).toContain('gm-result__summary');
+    const nflReport = read("src/features/back-room/FootballGmFranchiseReport.tsx");
+    for (const token of ["gm-result__summary","gm-result__scores","gm-result__season-comparison",
+      "gm-result__roster-card","gm-result__front-office","gm-result__final-roster",
+      "gm-result__scoring-card","gm-result__scoring","football-gm-report__evolution-rows"]) {
+      expect(page).toContain(token);
+      expect(nflReport).toContain(token);
+    }
+    expect(page).toContain("YOUR TWO-YEAR GM RESULT");
+    expect(page).toContain("CFP RÉSUMÉ");
+    expect(page).not.toContain("football-gm-report__hero");
+
   });
   it("gates CFB owner route without changing existing public game library order", () => {
     expect(router).toContain('path: "football/gm-cfb-preview"');
