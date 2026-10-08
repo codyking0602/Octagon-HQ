@@ -1,4 +1,6 @@
 import { useState } from "react";
+import "../../styles/football-gm-final.css";
+import { FootballGmFinalExperience } from "./FootballGmFinalExperience";
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
@@ -209,6 +211,10 @@ export function FootballGmFranchiseReport({
     : "YOUR THREE-YEAR GM RESULT";
   const displayedName = selectedFrontOffice === "opponent" && opponentRun ? otherName : name;
   const displayedRun = selectedFrontOffice === "opponent" && opponentRun ? opponentRun : run;
+
+  // Preserve the existing simultaneous franchise comparison for head-to-head.
+  // Solo results use the approved graphic-first postmortem and true development bands.
+  if (!opp) return <FootballGmFinalExperience name={name} run={run} />;
 
   return (
     <div className="football-gm-report gm-result">
