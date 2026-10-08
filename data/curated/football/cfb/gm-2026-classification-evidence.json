@@ -14389,8 +14389,27 @@
       "sourceUrl": "https://uclabruins.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 37,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.05,
+        "summary": "Texas Tech 2025 rotational DT appeared in 12 games with just seven tackles, after 2024 three OLB starts and ten tackles. Across 2023-25 had 26 games, 21 tackles, six TFL and 2.5 sacks; 2023 redshirt and 2026 transfer to UCLA. Starting opportunity upside from reserve background, but do not treat earlier high-school statistics as proven FBS impact.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/amier-washington"
+        ]
+      }
     },
     {
       "id": "ucla|anthonywoods",
@@ -14407,9 +14426,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://uclabruins.com/sports/football/roster",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 39,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.03,
+        "summary": "UCLA 2025 RB had 63 carries for 294 yards plus 24 receptions for 211 yards and two receiving TD, following 2024 Utah redshirt. At Idaho in 2023 had 1,155 rushing yards and 16 TD after 880 in 2022. Official 2026 fifth-year veteran; earlier FCS impact plus recent Power-4 limited role creates upside and role/injury risk, model ordinary eligibility exhaustion after 2026.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/anthony-woods"
+        ]
+      }
     },
     {
       "id": "ucla|brianrowejr",
@@ -14428,8 +14466,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 41,
+          "steady": 31,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.07,
+        "summary": "South Carolina 2025 true-freshman receiver played 11 games with four starts and caught 19 passes for 149 yards and one TD. Official 2026 UCLA sophomore transfer; limited SEC volume but meaningful first-year experience. First college enrollment 2025 means 2027 NFL draft is not yet available under three-years-removed rule.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/brian-rowe-jr"
+        ]
+      }
     },
     {
       "id": "ucla|derrickbarksdale",
@@ -14447,8 +14504,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 53,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.02,
+        "summary": "James Madison 2025 14-start DB had 36 tackles, three TFL, two INT and 12 pass breakups, making third-team All-Sun Belt; 2024 had 42 tackles and two INT. UCLA official 2026 senior transfer. Established production suggests steady profile with some P4 transition risk, rather than inflated breakout expectation.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/dj-barksdale"
+        ]
+      }
     },
     {
       "id": "ucla|jalenwoods",
@@ -14465,9 +14541,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://uclabruins.com/sports/football/roster",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 28,
+          "steady": 47,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.02,
+        "summary": "UCLA linebacker played 12 games with three starts in 2025, producing 47 tackles, 4.5 TFL and 1.5 sacks, with college participation dating to 2022. 2026 official 5th-year status gives an experienced but not clearly elite role profile; ordinary terminal eligibility modeled without suggesting waiver status certified.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/jalen-woods"
+        ]
+      }
     },
     {
       "id": "ucla|joshphifer",
@@ -14486,8 +14581,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 40,
+          "steady": 32,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.07,
+        "summary": "James Madison TE 2025 redshirt sophomore played 12 games with four catches for 40 yards and one touchdown; 2024 played ten games/three starts with two catches/41 yards and TD. Through three seasons 27 appearances but just six catches/81 yards; UCLA 2026 official senior transfer projects more available TE role than proven receiver production.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/season/2026/player/joshua-phifer"
+        ]
+      }
     },
     {
       "id": "ucla|landonellis",
@@ -14506,8 +14620,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 48,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.03,
+        "summary": "James Madison 2025 wideout started 11 of 13 games, caught 36 balls for 624 yards and five TD and earned third-team All-Sun Belt. Prior Richmond 2024 50 catches/588 yards/four TD, 2023 20/214. UCLA 2026 senior transfer with substantial FCS/G5 tape, moderate Big Ten transition volatility.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/landon-ellis"
+        ]
+      }
     },
     {
       "id": "ucla|malikhartford",
@@ -14525,8 +14658,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 36,
+          "steady": 31,
+          "decline": 16,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.07,
+        "summary": "Ohio State 2025 safety appeared in only four games/two tackles then redshirted, after 2024 reserve participation. Career 27 appearances/two starts, 20 tackles and three pass breakups before moving to UCLA 2026 senior. New defensive opportunity could yield improvement but lack of sustained recent starts makes breakout uncertain.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/malik-hartford"
+        ]
+      }
     },
     {
       "id": "ucla|nicoiamaleava",
@@ -14595,8 +14747,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 32,
+          "steady": 46,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.03,
+        "summary": "UCLA 2025 corner started ten games before missing the final two with injury, with 36 tackles and seven pass breakups and honorable mention All-Big Ten. Prior Oregon career included reserve coverage. 2026 senior proven Big Ten starter, steady odds outweigh giant leap, while injury-related decline remains plausible.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/rodrick-pleasant"
+        ]
+      }
     },
     {
       "id": "ucla|sahirwest",
@@ -14614,8 +14785,27 @@
       "sourceUrl": "https://uclabruins.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 31,
+          "steady": 50,
+          "decline": 11,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.73,
+        "portalExitProbability": 0.04,
+        "summary": "James Madison 2025 redshirt freshman DE started 14 games with 45 tackles, 14 TFL and seven sacks, earning Sun Belt Freshman of Year, second-team All-Sun Belt and Freshman All-America notice. 2026 UCLA junior transfer, college matriculation 2024 and demonstrated disruptive production mean 2027 NFL eligibility plausible. Forecast keeps near-peak ability steady rather than automatic leap.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/sahir-west"
+        ]
+      }
     },
     {
       "id": "ucla|sammyomosigho",
@@ -14633,8 +14823,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 42,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.38,
+        "portalExitProbability": 0.06,
+        "summary": "Oklahoma 2025 linebacker played 13 games and posted 50 tackles, 4.5 TFL, two sacks and three PBUs after 2024 39 tackles and three starts. UCLA 2026 senior transfer brings legitimate SEC-impact rotation tape with opportunity for more consistent starts, plus new-scheme variance.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/sammy-omosigho"
+        ]
+      }
     },
     {
       "id": "ucla|scooterjackson",
@@ -14652,8 +14861,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 47,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.47,
+        "portalExitProbability": 0.04,
+        "summary": "UCLA 2025 nickel/safety appeared in 12 games with eight starts, 44 tackles, two interceptions and three pass breakups. Previous Utah Tech career included 55 tackles in 2023-24; 2026 senior has a demonstrable Big Ten starting base, with steady or moderate improvement more likely than huge breakthrough.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/scooter-jackson"
+        ]
+      }
     },
     {
       "id": "ucla|scotttaylor",
@@ -14671,8 +14899,27 @@
       "sourceUrl": "https://uclabruins.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 40,
+          "steady": 30,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1,
+        "summary": "UCLA 2025 true-freshman LB appeared in 12 games largely as reserve and on special teams, 12 tackles, one forced fumble and a blocked field goal. 2026 UCLA sophomore offers a genuine young defensive role-growth opportunity without proven full-season starting production. First 2025 college enrollment disallows a 2027 draft declaration.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/scott-taylor"
+        ]
+      }
     },
     {
       "id": "ucla|semajmorgan",
@@ -14690,8 +14937,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 33,
+          "steady": 36,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.31,
+        "portalExitProbability": 0.04,
+        "summary": "Michigan 2025 receiver played 11 games/three starts with 20 catches for 223 yards and one TD; 2023 national title team and punt-return experience. 2026 UCLA senior transfer could rediscover early-career explosiveness in a different target environment, but recent volume does not support treating him as an elite receiver.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/semaj-morgan"
+        ]
+      }
     },
     {
       "id": "ucla|tashawnjames",
@@ -14709,8 +14975,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 33,
+          "steady": 35,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.37,
+        "portalExitProbability": 0.03,
+        "summary": "Iowa State 2025 DB made six starts in eight games before October season-ending injury; 33 tackles and five pass breakups, after 2024 14 games/41 tackles. UCLA 2026 senior transfer is injury-return case with proven Power-4 ability but uncertain durability and resumed full role.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/tashawn-james"
+        ]
+      }
     },
     {
       "id": "ucla|tysonford",
@@ -14720,16 +15005,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4685341",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster/player/tyson-ford",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 36,
+          "steady": 27,
+          "decline": 19,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.13,
+        "portalExitProbability": 0.02,
+        "summary": "2025 California rotational DL had just seven games and three tackles; 2023 Notre Dame two games with one assisted tackle and 2024 no action. First enrolled Notre Dame January 2022 and redshirted. UCLA explicitly lists fifth-year in 2026, so ordinary final-season treatment with high role-growth upside and little proven FBS disruption despite past prep pedigree.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/tyson-ford"
+        ]
+      }
     },
     {
       "id": "ucla|wayneknight",
@@ -14740,16 +15044,35 @@
         "RB",
         "Flex"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4912342",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster/player/wayne-knight",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 54,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.72,
+        "portalExitProbability": 0.02,
+        "summary": "James Madison 2025 second-team All-American RB ran for 1,373 yards and nine TD on 207 carries, plus 40 receptions for 397 yards and one TD (2,039 all-purpose yards); 2026 UCLA official fifth-year. Top G5 production established, so major breakout less likely than steady outcome, with Big Ten competition and workload adjustment as downside. College first participation 2022 means ordinary eligibility exhaustion modeled.",
+        "sources": [
+          "https://uclabruins.com/sports/football/roster/player/wayne-knight"
+        ]
+      }
     },
     {
       "id": "usc|alexgraham",
@@ -15891,7 +16214,7 @@
       }
     }
   ],
-  "officialOverrides": 122,
+  "officialOverrides": 124,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
