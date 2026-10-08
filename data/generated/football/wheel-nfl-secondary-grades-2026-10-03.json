@@ -388,7 +388,7 @@
     {
       "team": "DAL",
       "player": "Caleb Downs",
-      "grade": 84,
+      "grade": 81,
       "confidence": "medium"
     },
     {
@@ -520,7 +520,7 @@
     {
       "team": "HOU",
       "player": "Reed Blankenship",
-      "grade": 83,
+      "grade": 78,
       "confidence": "high"
     },
     {
@@ -592,7 +592,7 @@
     {
       "team": "KC",
       "player": "Mansoor Delane",
-      "grade": 85,
+      "grade": 82,
       "confidence": "medium"
     },
     {
@@ -736,19 +736,19 @@
     {
       "team": "MIN",
       "player": "Byron Murphy Jr.",
-      "grade": 86,
+      "grade": 82,
       "confidence": "high"
     },
     {
       "team": "MIN",
       "player": "Joshua Metellus",
-      "grade": 87,
+      "grade": 81,
       "confidence": "high"
     },
     {
       "team": "MIN",
       "player": "Harrison Smith",
-      "grade": 83,
+      "grade": 80,
       "confidence": "high"
     },
     {
@@ -1096,7 +1096,7 @@
     {
       "team": "WSH",
       "player": "Amik Robertson",
-      "grade": 80,
+      "grade": 84,
       "confidence": "high"
     },
     {
@@ -1122,7 +1122,7 @@
     "orderedNeighborhoods": [
       "Kyle Hamilton 99 > Trent McDuffie 98 > Christian Gonzalez 97 = Devon Witherspoon 97 > Pat Surtain II 96 > Derek Stingley Jr. 95",
       "Jalen Pitre 94 = Denzel Ward 94 = Brian Branch 94 > Quinyon Mitchell 93 > Cooper DeJean 92 > Sauce Gardner 91 > Minkah Fitzpatrick 90",
-      "Derwin James Jr. 89 = Kamari Lassiter 89 > Xavier McKinney 88 = Kerby Joseph 88 > Jamel Dean 87 = Marlon Humphrey 87 = Nate Wiggins 87 = Joey Porter Jr. 87 = Kam Curl 87 = Joshua Metellus 87 = Carlton Davis III 87 = Julian Love 87",
+      "Derwin James Jr. 89 = Kamari Lassiter 89 > Xavier McKinney 88 = Kerby Joseph 88 > Jamel Dean 87 = Marlon Humphrey 87 = Nate Wiggins 87 = Joey Porter Jr. 87 = Kam Curl 87 = Carlton Davis III 87 = Julian Love 87",
       "The 85-86 band is populated by proven quality starters/high-end specialists whose current evidence is below the elite anchor tier.",
       "The 80-84 band is the broad competent-starter/strong-rotation neighborhood; it is not an automatic floor.",
       "The 73-79 band intentionally contains struggling starters, developmental players, depth options and rookies with insufficient NFL evidence."
@@ -1137,7 +1137,7 @@
       "Evan Williams 84→83; current 75.1 PFF overall is good, but the initial grade was a touch aggressive.",
       "Brian Branch remains 94 despite no 2026 snaps; injury availability is separated from established ability and his 2023-25 body of work remains elite."
     ],
-    "result": "locked",
+    "result": "superseded-by-approved-2026-10-08-secondary-review",
     "contradictionsRemaining": false
   },
   "rangeSeparationAudit": {
@@ -1225,7 +1225,7 @@
       "Kyle Hamilton HQ 99 / Madden Week 3 94: current gap 5 after Madden's Week 3 increase; no mandatory review.",
       "Nate Wiggins HQ 87 / Madden Week 3 83: gap 4.",
       "Evan Williams HQ 83 / Madden Week 3 77: gap 6.",
-      "Mansoor Delane HQ 85 / Madden Week 3 80: gap 5.",
+      "Mansoor Delane HQ 82 / Madden Week 3 80: gap 2 (approved football-evidence adjustment October 8).",
       "Mike Sainristil HQ 78 / Madden Week 3 75: gap 3 after football-driven correction.",
       "Asante Samuel Jr. HQ 79 / Madden Week 3 75: gap 4 after football-driven correction.",
       "Keionte Scott HQ 79 / Madden Week 3 73: gap 6."
@@ -1239,23 +1239,80 @@
   "postGradeDistribution": {
     "min": 73,
     "max": 99,
-    "mean": 82.13,
+    "mean": 82.01,
     "median": 82,
     "bands": {
       "95-100": 6,
       "90-94": 7,
-      "85-89": 25,
-      "80-84": 78,
-      "75-79": 44,
+      "85-89": 22,
+      "80-84": 80,
+      "75-79": 45,
       "below-75": 8
     },
-    "note": "Inspected only after player-by-player, pairwise, range and Madden audits. Distribution did not drive individual grades."
+    "note": "Original audit distribution recalculated after seven explicitly approved October 8 Secondary grade adjustments; cohort target did not determine decisions."
   },
   "runtimeBoundary": "No production/runtime grading behavior changes. Runtime wiring, hidden reveals and historical grade freezing remain later work.",
   "futureVersioning": "Any future Secondary grade change must record previous grade, new grade, effective date, reason, and nearby role-normalized anchor/peer comparison.",
-  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "calibrationRevision": "approved-secondary-hq-review-2026-10-08",
   "finalCrossPositionValidation": {
     "status": "passed-no-grade-change",
     "note": "Revalidated after QB/RB/WR/TE final calibration. Existing range/separation, pairwise and discrepancy audits remained coherent; no additional grade change was warranted."
+  },
+  "approvedHqGradeReview": {
+    "reviewDate": "2026-10-08",
+    "scope": "Secondary; user-approved current ability grade amendments; no changes to future development odds",
+    "source": "168-player individual research wave and follow-up current-HQ-ability review",
+    "changes": [
+      {
+        "team": "MIN",
+        "player": "Joshua Metellus",
+        "previous": 87,
+        "approved": 81,
+        "reason": "2025 and early-2026 coverage inconsistency does not support high-end 87 alongside stronger cover defenders; retain hybrid and run/pressure utility."
+      },
+      {
+        "team": "HOU",
+        "player": "Reed Blankenship",
+        "previous": 83,
+        "approved": 78,
+        "reason": "Poor 2025 coverage grading continued into 2026; the slot/deep communication role alone does not establish solid 83-level ability."
+      },
+      {
+        "team": "MIN",
+        "player": "Byron Murphy Jr.",
+        "previous": 86,
+        "approved": 82,
+        "reason": "2025 and early 2026 coverage effectiveness fits competent starter rather than high-end 86 despite valuable scheme versatility."
+      },
+      {
+        "team": "MIN",
+        "player": "Harrison Smith",
+        "previous": 83,
+        "approved": 80,
+        "reason": "Veteran processing remains valuable but 2026 coverage/range evidence warrants a modest present-ability adjustment distinct from absence or age alone."
+      },
+      {
+        "team": "WSH",
+        "player": "Amik Robertson",
+        "previous": 80,
+        "approved": 84,
+        "reason": "Strong 2026 coverage and tackling evidence in a major defensive workload, not merely interception totals, moves him into good starter territory."
+      },
+      {
+        "team": "KC",
+        "player": "Mansoor Delane",
+        "previous": 85,
+        "approved": 82,
+        "reason": "Rookie's promising pro starts cannot yet support an 85 established-current-ability designation on college reputation and four NFL games."
+      },
+      {
+        "team": "DAL",
+        "player": "Caleb Downs",
+        "previous": 84,
+        "approved": 81,
+        "reason": "Great prospect but early NFL route/communication miscues and small pro sample justify an 81 current demonstrated-ability baseline instead of college-pedigree upside."
+      }
+    ],
+    "unchangedPopulation": 161
   }
 }
