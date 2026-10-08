@@ -1340,6 +1340,13 @@ function FinalScreen({
           <button className="primary-action" type="button" onClick={onChallenge}>CHALLENGE {opponentName}</button>
         ) : null}
         <button type="button" onClick={onReplay}>NEW GM RUN</button>
+        <button type="button" className="gm-final__secondary-action" onClick={() => {
+          const details = document.getElementById("gm-full-roster");
+          if (details instanceof HTMLDetailsElement) {
+            details.open = true;
+            details.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }}>VIEW FULL ROSTER</button>
         <p className="football-gm__status" role="status">
           {isRecipient ? "RESULT SUBMITTED. BOTH GM SCORES REVEAL IN THE CHALLENGE RESULT." : challengeStatus}
         </p>
