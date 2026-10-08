@@ -461,6 +461,13 @@ function FinalMatch({
       />
       <section className="football-gm-report__actions surface-card">
         <button type="button" onClick={onReplay}>NEW GM MATCH</button>
+        <button type="button" className="gm-final__secondary-action" onClick={() => {
+          const details = document.getElementById("gm-full-roster");
+          if (details instanceof HTMLDetailsElement) {
+            details.open = true;
+            details.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }}>VIEW FULL ROSTER</button>
       </section>
     </>
   );
