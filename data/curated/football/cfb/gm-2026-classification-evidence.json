@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 361,
+  "exactMatches": 360,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -10315,7 +10315,24 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 30,
+          "steady": 35,
+          "decline": 22,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.07,
+        "summary": "SMU graduate DE transferred after Liberty and South Alabama: 2024 started 10 of 13 South Alabama games with 41 tackles, while 2025 medically redshirted without appearing in games; accumulated 38 Liberty appearances and multiple sacks before. Earlier starting pass rush supports a possible postmedical rebound, but lengthy college history and no 2025 film imply elevated injury and consistency downside. Earliest NFL draft year cannot be established precisely from 2026 graduate listing alone; draft eligible yes.",
+        "sources": "https://smumustangs.com/sports/football/roster/aakil-washington/15591"
+      }
     },
     {
       "id": "smu|alexanderkilgore",
@@ -10333,8 +10350,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 58,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.66,
+        "portalExitProbability": 0.03,
+        "summary": "SMU 2026 senior starting LB and 2025 team captain: 11 starts in 2025, 60 tackles/3.5 TFL/two INT; 2024 56 tackles/three TFL; 2023 36 tackles/six TFL/3.5 sacks. A stable four-year SMU defender with multi-phase production is likely to repeat his level rather than newly transform into a prospect. Can declare 2027; fourth-year 2026 label does not by itself certify college eligibility exhaustion.",
+        "sources": "https://smumustangs.com/sports/football/roster/alexander-kilgore/15548"
+      }
     },
     {
       "id": "smu|brandonbooker",
@@ -10352,8 +10386,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 44,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.06,
+        "summary": "SMU 2026 junior LB came from 2024 14-game/10-tackle reserve usage to 2025 13 games, 11 starts, 69 tackles, three TFL, four QB hurries and two PBUs. Already functional ACC starter, with upside in coverage and blitz consistency; not a complete unknown breakout bet. 2024 enrollment qualifies for 2027 draft without certainty of declaration.",
+        "sources": "https://smumustangs.com/sports/football/roster/brandon-booker/15515"
+      }
     },
     {
       "id": "smu|dramekcogreen",
@@ -10371,8 +10422,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 42,
+          "steady": 25,
+          "decline": 13,
+          "maxGain": 7,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.12,
+        "summary": "SMU 2026 sophomore RB redshirted as 2025 first-year player after five college games with 25 carries/90 yards and one TD. Significant red-zone/playbook development and carry share possible, but no sustained 2025 feature-back season or prior first-team evidence, so a higher-variance forecast is appropriate. 2025 first college enrollment rules out 2027 draft.",
+        "sources": "https://smumustangs.com/sports/football/roster/dramekco-green/15534"
+      }
     },
     {
       "id": "smu|irasingletoniv",
@@ -10390,8 +10458,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 39,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.35,
+        "portalExitProbability": 0.09,
+        "summary": "SMU 2026 junior defensive end transferred from USF where 2025 played all 13 games: 17 tackles, three TFL, 2.5 sacks, six QB hurries and two fumble recoveries, after 2024 12 appearances/2.5 sacks. Positive rotation disruption but not proven high-snap ACC starring performer; expanded usage offers upside and transfer uncertainty. College entry 2024 means 2027 draft possible.",
+        "sources": "https://smumustangs.com/sports/football/roster/ira-singleton-iv/15627"
+      }
     },
     {
       "id": "smu|jahkailang",
@@ -10409,8 +10494,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 30,
+          "steady": 46,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.07,
+        "summary": "SMU 2026 redshirt junior DL began at Missouri in 2023, registered three sacks in 12 reserve appearances in 2024, then played 13 SMU 2025 games/four starts with 24 tackles and one TFL. A proven conference rotation player with moderate role growth, yet no established elite sack production. First enrolled 2023, eligible for 2027 Draft.",
+        "sources": "https://smumustangs.com/sports/football/roster/jahkai-lang/15550"
+      }
     },
     {
       "id": "smu|jalencooper",
@@ -10429,8 +10531,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 37,
+          "steady": 39,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1,
+        "summary": "SMU 2026 sophomore wide receiver emerged immediately in 2025 as true freshman with all 13 appearances/six starts, 19 catches/321 yards and two touchdowns including a 75-yard score vs Baylor. Proven college splash and development opportunity, but still modest target totals and uncertain high-volume year two. 2025 entry makes 2027 NFL Draft impossible under ordinary rule.",
+        "sources": "https://smumustangs.com/sports/football/roster/jalen--cooper/15522"
+      }
     },
     {
       "id": "smu|jarvislee",
@@ -10448,8 +10567,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 54,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.54,
+        "portalExitProbability": 0.06,
+        "summary": "SMU 2026 senior safety transfer after USF 2025 13 games/55 tackles/four sacks/two interceptions/three forced fumbles/two PBUs, following 2024 rotational 14 tackles/2.5 TFL/sack. Demonstrated rare disruption for a safety but pass-rush/turnover spike may regress at ACC level. College matriculation 2023 establishes NFL draft timing 2026 onwards, not automatic graduation.",
+        "sources": "https://smumustangs.com/sports/football/roster/jarvis-lee/15618"
+      }
     },
     {
       "id": "smu|jayvonthomas",
@@ -10467,8 +10603,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 34,
+          "steady": 34,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.22,
+        "portalExitProbability": 0.1,
+        "summary": "SMU 2026 senior CB from Texas A&M: 2023 nine games/one start; 2024 11 games/four starts with one interception; 2025 13 games but just one tackle, suggesting a much smaller defensive role. A new SMU starting opportunity could restore performance, yet college starter history is limited and role risk is high. Avoid recruiting-pedigree grade inflation; 2023 enrollment means draft eligible 2027.",
+        "sources": "https://smumustangs.com/sports/football/roster/jayvon-thomas/15638"
+      }
     },
     {
       "id": "smu|jimmywyrick",
@@ -10485,9 +10638,26 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://smumustangs.com/sports/football/roster/jimmy-wyrick/15630",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 21,
+          "steady": 55,
+          "decline": 19,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.01,
+        "summary": "SMU 2026 graduate sixth-year safety after Stanford 2021–23 and UTSA 2024–25. Stanford 2021 six starts, 25 tackles/one INT/six PBU; UTSA 2024 season-ending injury after four games, 2025 13 games/62 tackles/eight PBUs, two fumble recoveries/INT. Veteran coverage role and medical uncertainty merit mostly steady and downside, with normal sixth-year 2026 modeled final; 2021 first entry means draft eligible before 2027.",
+        "sources": "https://smumustangs.com/sports/football/roster/jimmy-wyrick/15630"
+      }
     },
     {
       "id": "smu|kendrickraphael",
@@ -10506,8 +10676,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 46,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.59,
+        "portalExitProbability": 0.06,
+        "summary": "SMU 2026 senior RB transferred from Cal after 2025 All-ACC honorable mention: 232 carries for 943 yards/13 rushing TD and 31 catches/231 yards/one receiving TD in 12 games/11 starts. Proven feature workload should stabilize 2027 NFL market, while SEC/ACC workload and new offensive fit can cause efficiency variance; do not mechanically treat a new school as a skill breakout.",
+        "sources": "https://smumustangs.com/sports/football/roster/kendrick-raphael/15625"
+      }
     },
     {
       "id": "smu|kevinjennings",
@@ -10577,8 +10764,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 36,
+          "steady": 39,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.36,
+        "portalExitProbability": 0.07,
+        "summary": "SMU 2026 junior corner previously at Syracuse and SMU: official 2025 SMU redshirt-freshman line of 12 games/seven starts, 32 tackles, two TFL, INT, six PBUs, forced and recovered fumbles. Productive young coverage deployment supports growth, but limited total college starts and transfer history create variability. First Syracuse entry 2024 means 2027 draft possible.",
+        "sources": "https://smumustangs.com/sports/football/roster/marcellus-barnes-jr-/15512"
+      }
     },
     {
       "id": "smu|randypittmanjr",
@@ -10597,8 +10801,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 27,
+          "steady": 49,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.32,
+        "portalExitProbability": 0.07,
+        "summary": "SMU 2026 senior tight end transferred via UCF and Florida State: 2023 19/215/1, 2024 UCF 32/416/2, 2025 FSU nine games/23 receptions/208 yards/two TD. Repeated actual collegiate receiving production across multiple schools, but target role has varied, so steady to modest gain with new offense uncertainty rather than locked TE elite ceiling.",
+        "sources": "https://smumustangs.com/sports/football/roster/randy-pittman-jr-/15624"
+      }
     },
     {
       "id": "smu|theomelinohrstrom",
@@ -10608,16 +10829,33 @@
       "groups": [
         "TE"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4870843",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 51,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.01,
+        "summary": "SMU 2026 official FIFTH-YEAR TE transfer from Texas A&M: 2022 freshman reserve, 2023 12 games, 2024 13 games/four starts with 111-yard career receiving game vs New Mexico State, 2025 13 appearances with 19 catches/168 yards/one TD. Proven blocking and occasional receiving skill, not high-volume route star; model ordinary fifth-year eligibility expires after 2026.",
+        "sources": "https://smumustangs.com/sports/football/roster/theo-melin-ohrstrom/15620"
+      }
     },
     {
       "id": "smu|tyrenpolleyjr",
@@ -10635,8 +10873,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 33,
+          "steady": 44,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09,
+        "summary": "SMU sophomore safety played six college games as 2025 freshman, starting one despite injury-limited season, with 20 tackles and two interceptions (Boston College/Louisville) plus two PBUs. A genuinely promising ballhawk with small starting sample, allowing progression but not a guaranteed takeaway repetition. First enrolled 2025 and draft ineligible 2027.",
+        "sources": "https://smumustangs.com/sports/football/roster/tyren-polley-jr/15572"
+      }
     },
     {
       "id": "smu|yamirknight",
@@ -10654,8 +10909,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 27,
+          "steady": 51,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.06,
+        "summary": "SMU senior WR: 2025 13 games/six starts, 54 receptions/637 yards/five TD, second on SMU in catches; two 100-yard performances including 162 yards at Boston College and 104 in Holiday Bowl, plus punt return value. Established mid/high ACC receiver production favors mostly steady with moderate NFL interest rather than overnight superstar growth.",
+        "sources": "https://smumustangs.com/sports/football/roster/yamir-knight/15549"
+      }
     },
     {
       "id": "smu|yannicksmith",
@@ -10674,8 +10946,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2567/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 36,
+          "steady": 41,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.07,
+        "summary": "SMU 2026 junior receiver transferred from East Carolina after freshman 2024 25 receptions/434 yards/three TD over 13 games/three starts and 2025 44/583/five TD over 11 games with two 100-yard outings. Two credible AAC receiving seasons support steady/modest development in SMU offense, with transfer target-share uncertainty. 2024 first college entry makes 2027 draft possible.",
+        "sources": "https://smumustangs.com/sports/football/roster/yannick-smith/15628"
+      }
     },
     {
       "id": "tennessee|amarecampbell",
@@ -13427,7 +13716,7 @@
       }
     }
   ],
-  "officialOverrides": 107,
+  "officialOverrides": 108,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -13439,5 +13728,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes.\n2026-10-08 Indiana complete cohort: 17 exact-name official IU athlete bio studies; eight verified fifth-year corrections, Preston Zachman 7TH and final year status, injury and two-year production evidence. No HQ changes."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes.\n2026-10-08 Indiana complete cohort: 17 exact-name official IU athlete bio studies; eight verified fifth-year corrections, Preston Zachman 7TH and final year status, injury and two-year production evidence. No HQ changes.\n2026-10-08 SMU 17 athlete research batch: each named 2026 SMU roster participant and prior school biography individually considered; official 2025 detailed stats, transfer roles, medical redshirts and class noted. Theo Melin Ohrstrom officially 5TH. Jimmy Wyrick 6TH with 2021 first enrolment; model final eligibility despite possible exceptional appeals."
 }
