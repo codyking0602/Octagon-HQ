@@ -512,7 +512,12 @@ export default function FootballGmHeadToHeadPage() {
   const legacyYearOne = storedLeft && storedRight
     ? footballGmRepairLegacyYearOne(storedLeft, storedRight, remote?.offseason_first_profile_id ?? null, myMatchKey, opponentMatchKey)
     : null;
-  const yearOnePair: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null = legacyYearOne ?? (
+  // Preserve all previously locked, valid Year 1 results (including old saves).
+  // Only the impossible duplicate finalists need the compatibility repair.
+  const legalStoredYearOne: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null = storedLeft && storedRight
+    && !(storedLeft.finish === storedRight.finish && ["Champion", "Super Bowl Loss"].includes(storedLeft.finish))
+    ? [storedLeft, storedRight] : null;
+  const yearOnePair: readonly [FootballGmSeasonResultV2, FootballGmSeasonResultV2] | null = legacyYearOne ?? legalStoredYearOne ?? (
     sharedResults ? [sharedResults[myMatchKey]![0]!, sharedResults[opponentMatchKey]![0]!] : null
   );
   const resolvedThreeYears: readonly [readonly FootballGmSeasonResultV2[], readonly FootballGmSeasonResultV2[]] | null = sharedResults ? [
