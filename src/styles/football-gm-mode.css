@@ -3721,3 +3721,33 @@
 /* Legacy evolution styles must never force a closed disclosure's body visible. */
 details.gm-result__expander:not([open]) > :not(summary) { display: none !important; }
 .gm-result__expander.football-gm-report__evolution { display: block; }
+
+/* Offseason reveal: one compact, mobile-safe row per player. */
+.football-gm__development-report { display: grid; gap: 12px; }
+.football-gm__development-report > header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.football-gm__development-report > header h2 { margin: 2px 0 0; font-size: 16px; letter-spacing: .02em; }
+.football-gm__development-report > header > span { flex-shrink: 0; font-size: 9px; font-weight: 800; color: #7dbde9; }
+.football-gm__development-report > p { margin: 0; font-size: 12px; line-height: 1.45; color: #acbdca; }
+.football-gm__development-list { display: grid; gap: 5px; }
+.football-gm__development-player {
+  display: grid; grid-template-columns: 29px minmax(0,1fr) minmax(65px,auto) minmax(65px,auto);
+  align-items: center; gap: 8px; padding: 9px 8px; border-radius: 9px;
+  background: rgba(255,255,255,.035);
+}
+.football-gm__development-player > b { color: #82bde4; font-size: 10px; }
+.football-gm__development-name, .football-gm__development-salary { min-width: 0; display: grid; gap: 2px; }
+.football-gm__development-name > strong { font-size: 11px; color: #f0f7fb; overflow-wrap: anywhere; }
+.football-gm__development-name > small, .football-gm__development-salary > small { font-size: 9px; color: #9fb4c3; }
+.football-gm__development-status { text-align: right; font-size: 9px; letter-spacing: .015em; }
+.football-gm__development-status.is-breakout { color: #7ee4a0; }
+.football-gm__development-status.is-improved { color: #94dcca; }
+.football-gm__development-status.is-steady { color: #a3b6c6; }
+.football-gm__development-status.is-decline { color: #ffc18a; }
+.football-gm__development-salary { text-align: right; }
+.football-gm__development-salary > strong { color: #f2f6fb; font-size: 11px; }
+.football-gm__development-footnote { color: #a1b3c0; font-size: 10px; line-height: 1.4; }
+@media (max-width: 390px) {
+  .football-gm__development-player { grid-template-columns: 25px minmax(0,1fr) minmax(55px,auto) minmax(58px,auto); gap: 5px; padding: 8px 5px; }
+  .football-gm__development-status { font-size: 8px; }
+  .football-gm__development-name > strong, .football-gm__development-salary > strong { font-size: 10px; }
+}
