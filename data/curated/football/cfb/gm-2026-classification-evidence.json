@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 381,
+  "exactMatches": 379,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -331,8 +331,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -345,6 +345,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 47,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.74,
+        "portalExitProbability": 0.07,
+        "summary": "Alabama 2026 junior WR formerly known as Ryan Williams. 2024 freshman 865 yards/8 TD, 2025 689 yards/4 TD; 2026 has flashes but less consistent volume. Current 91 HQ anchored by trait talent; efficiency/workload ups and downs justify a meaningful decline scenario and restrained breakout.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -401,8 +421,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -415,6 +435,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 20,
+          "steady": 61,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.03,
+        "summary": "Alabama 2026 senior edge/OLB returned instead of declaring for the 2026 Draft; started first four 2026 games with 14 tackles, 2.5 TFL, 1.5 sacks and five QB hurries plus a pick-six. Established rush/coverage versatility with modest remaining ceiling, high chance to depart for NFL in 2027.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/yhonzae-pierre/17470",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -1408,8 +1448,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -1422,6 +1462,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 2,
+          "improve": 10,
+          "steady": 70,
+          "decline": 18,
+          "maxGain": 1,
+          "maxLoss": 6,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.97,
+        "portalExitProbability": 0.02,
+        "summary": "Florida junior RB ran for 1,170 yards and eight TD in 2025, then reached 613 yards/11 rushing TD through five 2026 games with SEC and national lead in rushing scoring. Proven current HQ 98 leaves almost no numerical breakout upside; only injury or effectiveness regression adds substantial uncertainty.",
+        "sources": [
+          "https://floridagators.com/sports/football/roster/jadan--baugh/18251",
+          "https://floridagators.com/documents/download/2026/1/27/2025_SEASON_REVIEW_NOTES_-_FINAL.pdf"
+        ]
       }
     },
     {
@@ -1650,8 +1710,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -1664,6 +1724,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 38,
+          "steady": 35,
+          "decline": 14,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.11,
+        "summary": "Georgia 2026 sophomore defensive lineman, 2025 14 appearances without start and 22 total tackles/2.5 TFL; 2026 started three games but only three tackles through Sept 19. New starter experience and size support legitimate growth, but 88 HQ grade could be too high relative to demonstrated production; record separately for owner grade review.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/elijah-griffin/10560",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -2576,8 +2656,28 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 35,
+          "steady": 44,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.11,
+        "summary": "Indiana third-year WR arrived from Michigan State with 23 career starts, playing alongside Josh Hoover in a high-level 2026 passing attack. Mature route and contested-target experience, new team role offers 2027 improvement; transfer context and established sample make a huge breakout uncertain.",
+        "sources": [
+          "https://iuhoosiers.com/sports/football/roster/nick-marsh/21049",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
+      }
     },
     {
       "id": "indiana|prestonzachman",
@@ -3249,8 +3349,8 @@
       "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -3263,6 +3363,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 2,
+          "improve": 14,
+          "steady": 66,
+          "decline": 18,
+          "maxGain": 1,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.96,
+        "portalExitProbability": 0.02,
+        "summary": "LSU 2026 senior edge transferred from Ole Miss. 2025 nine sacks/13 TFL ranked among SEC leaders and followed two seasons at Nebraska, plus 2026 impact. Existing HQ 98 is already near ceiling; strong steady and NFL exit odds, not a generic senior breakout.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/season/2026/player/princewill-umanmielen",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -3391,8 +3511,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -3405,6 +3525,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 19,
+          "steady": 59,
+          "decline": 19,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.03,
+        "summary": "LSU junior tight end with 2025 second-team All-SEC honors and 33 receptions/433 yards/seven TD (program TE record), 176 YAC, improved blocking. Already a 97 HQ high-ceiling athlete whose unusual matchup ability is proven; modest 2027 upside with substantial NFL departure risk.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/season/2025/player/treydez-green",
+          "https://lsusports.net/news/2026/08/27/footballs-green-whit-weeks-to-wear-no-7-in-2026"
+        ]
       }
     },
     {
@@ -3423,8 +3563,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -3437,6 +3577,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 23,
+          "steady": 54,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.64,
+        "portalExitProbability": 0.05,
+        "summary": "LSU 2026 senior safety transfer from Boise State, 2025 first-team All-Mountain West after 107 tackles, 8.5 TFL, two INT, 2024 82 tackles and 5 takeaways. Established tackling/coverage and program switch give moderate upside but a large late college breakout is unlikely.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/ty-benefield",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -3455,8 +3615,8 @@
       "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -3469,6 +3629,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 22,
+          "steady": 50,
+          "decline": 21,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.67,
+        "portalExitProbability": 0.04,
+        "summary": "LSU 2026 senior LB: 2024 first-team All-SEC with 125 tackles, but 2025 injury-reduced campaign included only eight starts and 31 tackles, three TFL, one sack. Proven run/hustle leadership and leg-health uncertainty give moderate rebound room and greater decline risk than healthy age-peer.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/whit-weeks",
+          "https://lsusports.net/news/2026/08/27/footballs-green-whit-weeks-to-wear-no-7-in-2026"
+        ]
       }
     },
     {
@@ -3505,9 +3685,9 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://miamihurricanes.com/sports/football/roster",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -3520,6 +3700,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 21,
+          "steady": 54,
+          "decline": 21,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.01,
+        "summary": "Miami 2026 fifth-year defensive tackle, 2025 second-team All-ACC after starting 14 games and posting 31 tackles, nine TFL, 4.5 sacks. Interior veteran with durable role but limited pure breakout upside. Normal five-year clock beginning 2022 exhausts 2026 absent a further waiver.",
+        "sources": [
+          "https://miamihurricanes.com/news/2026/08/21/moten-wilson-named-to-bednarik-award-watch-list",
+          "https://miamihurricanes.com/news/2026/07/20/moten-named-nominee-for-allstate-afca-good-works-team"
+        ]
       }
     },
     {
@@ -3653,8 +3853,8 @@
       "sourceUrl": "https://miamihurricanes.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -3667,6 +3867,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 25,
+          "steady": 47,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.82,
+        "portalExitProbability": 0.07,
+        "summary": "Miami 2026 senior edge transfer via Georgia/Missouri. At Missouri in 2025 started 12/13 games and produced nine sacks, 9.5 TFL, 23 tackles, an INT and forced fumble recovery; role changes support moderate upside but elite 2025 pass rush already proven and new scheme adds some volatility.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/player/damon-wilson-ii",
+          "https://miamihurricanes.com/news/2026/08/21/moten-wilson-named-to-bednarik-award-watch-list"
+        ]
       }
     },
     {
@@ -4837,8 +5057,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/87/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -4851,6 +5071,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 26,
+          "steady": 45,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.65,
+        "portalExitProbability": 0.05,
+        "summary": "Notre Dame senior defensive end with documented 2025 comeback recognition after serious prior injury, 2026 Bednarik/Nagurski watch lists and an opening-game sack with two TFL. Recovery curve allows more upside than usual senior edge, but injury history creates larger downside swing.",
+        "sources": [
+          "https://fightingirish.com/sports/football/roster/season/2025-26/player/boubacar-traore",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -6563,16 +6803,16 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4685244",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://goducks.com/sports/football/roster/Bear-Alexander/18286",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -6585,6 +6825,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 20,
+          "steady": 48,
+          "decline": 26,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.25,
+        "portalExitProbability": 0.02,
+        "summary": "Official Oregon 2026 fifth-year interior DL transferred via Georgia/USC, 2025 second-team All-Big Ten with 50 tackles, 6.5 TFL, one sack and 18 pressures. Dependable run role but relatively limited disruptive pass rush yields moderate physical regression risk; normal 2022-2026 five-year clock exhausted after this season.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/Bear-Alexander/18286",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -6763,16 +7023,16 @@
       "groups": [
         "WR"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4685565",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://goducks.com/sports/football/roster/evan-stewart/18335",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -6785,6 +7045,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 30,
+          "steady": 34,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.01,
+        "summary": "Oregon official 2026 fifth-year receiver who missed 2025 through injury and utilized medical redshirt. 2024 All-Big Ten honorable mention with 48 catches/613 yards/5 TD. Meaningful bounce-back upside exists after injury but no 2025 game sample, so higher downside volatility than a fully healthy veteran; normal five-year period concludes 2026.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/evan-stewart/18335",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -7005,8 +7285,8 @@
       "sourceUrl": "https://goducks.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -7019,6 +7299,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 58,
+          "decline": 19,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.86,
+        "portalExitProbability": 0.03,
+        "summary": "Oregon senior OLB had major 2025 breakthrough: 68 tackles, 16 TFL, 9.5 sacks, 38 pressures, 83.8 PFF grade across 15 starts. With elite measured current 2026 starter responsibilities, a repeat is more plausible than a much larger second breakout; high 2027 NFL departure probability.",
+        "sources": [
+          "https://goducks.com/sports/football/roster/teitum-tuioti/18338",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -8065,8 +8365,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2633/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -8079,6 +8379,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 35,
+          "steady": 41,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.09,
+        "summary": "Tennessee junior WR, 78 career receptions for 1,221 yards/9 TD by early 2026 and four 100-yard games. 2026 team receiving leader after five games (18 receptions, 318 yards, three TD). Legitimate higher-volume usage in Year 2 than veteran developmental plateau, but explosive plays can fluctuate.",
+        "sources": [
+          "https://utsports.com/sports/football/roster/mike-matthews/23024",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -8579,8 +8899,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/251/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -8593,6 +8913,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 14,
+          "steady": 67,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.95,
+        "portalExitProbability": 0.02,
+        "summary": "Texas 2026 senior linebacker transfer from Pitt. In 2025 101 tackles, 17 TFL, 4.5 sacks, six PBUs and two pick-sixes. First four games of 2026 included two INT, 13-tackle Tennessee outing and physical coverage/run support. Proven upper-tier all-around impact, already near 96 HQ ceiling, very likely to seek 2027 Draft.",
+        "sources": [
+          "https://texaslonghorns.com/sports/football/roster/rasheem-biles/16941",
+          "https://www.on3.com/nil/rankings/player/college/football/"
+        ]
       }
     },
     {
@@ -8784,8 +9124,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -8798,6 +9138,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 18,
+          "steady": 61,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.04,
+        "summary": "Texas Tech senior corner: 2025 All-Big 12 first-team with five INT, eight PBUs and 48 tackles. Added two interceptions and four tackles in October 3 Colorado comeback. Proven ball skills and coverage suppress unrealistic breakthrough probability, with still meaningful 2027 draft risk.",
+        "sources": [
+          "https://texastech.com/sports/football/roster/brice-pollock/14318",
+          "https://texastech.com/news/2026/10/3/football-postgame-notes-texas-tech-at-colorado"
+        ]
       }
     },
     {
@@ -9670,8 +10030,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -9684,6 +10044,26 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 22,
+          "improve": 40,
+          "steady": 25,
+          "decline": 13,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.17,
+        "summary": "USC true freshman tight end reclassified from high school in spring 2026; no established multi-season college performance. Outstanding high-school profile and early opportunity support speculative improvement but not a proven 87-level collegiate résumé. Draft timing modeled no earlier than 2029; separate HQ grade review flag recommended.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/mark-bowman/18796",
+          "https://usctrojans.com/news/2026/3/4/2026-usc-trojans-football-spring-outlook-the-time-is-now-lincoln-riley-gary-patterson-jayden-maiava"
+        ]
       }
     },
     {
@@ -10188,7 +10568,7 @@
       }
     }
   ],
-  "officialOverrides": 87,
+  "officialOverrides": 89,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -10200,5 +10580,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed."
 }
