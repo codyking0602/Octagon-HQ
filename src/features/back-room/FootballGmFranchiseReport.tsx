@@ -2,6 +2,7 @@ import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
   footballGmMoney,
+  footballGmPlayoffFinishLabel,
   footballGmPlayerById,
   footballGmProjectedGradeForPlayer,
   type FootballGmPlayer,
@@ -143,7 +144,7 @@ function CoreReport({ name, run }: { name: string; run: FootballGmReportRun }) {
             <article key={season.year}>
               <small>YEAR {season.year}</small>
               <strong>{snap.result.teamOveralls[index]} OVR</strong>
-              <span>{season.finish}</span>
+              <span>{footballGmPlayoffFinishLabel(season.finish)}</span>
             </article>
           ))}
         </div>
@@ -226,9 +227,9 @@ export function FootballGmFranchiseReport({
             <div className="football-gm-report__comparison-head"><span>{name}</span><b>VS</b><span>{opponentName ?? "Opponent"}</span></div>
             {own.result.seasons.map((season, index) => (
               <div key={season.year} className="football-gm-report__comparison-row">
-                <span><b>{own.result.teamOveralls[index]} OVR</b><small>{season.finish}</small></span>
+                <span><b>{own.result.teamOveralls[index]} OVR</b><small>{footballGmPlayoffFinishLabel(season.finish)}</small></span>
                 <strong>Y{season.year}</strong>
-                <span><b>{opp.result.teamOveralls[index]} OVR</b><small>{opp.result.seasons[index]!.finish}</small></span>
+                <span><b>{opp.result.teamOveralls[index]} OVR</b><small>{footballGmPlayoffFinishLabel(opp.result.seasons[index]!.finish)}</small></span>
               </div>
             ))}
             <div className="football-gm-report__comparison-row">
