@@ -6,7 +6,7 @@
   "baseCalibrationHead": "30e34c38142f828dd4c8d324c04dfac4d169b527",
   "nonRuntimeResearchOnly": true,
   "lockedGrades": true,
-  "reviewedCount": 130,
+  "reviewedCount": 152,
   "batchLog": [
     {
       "batch": 1,
@@ -37,6 +37,12 @@
       "teams": "MIN NE NO NYG NYJ",
       "count": 26,
       "individual2026SourceCount": 26
+    },
+    {
+      "batch": 6,
+      "teams": "PHI PIT SEA SF",
+      "count": 22,
+      "individual2026SourceCount": 22
     }
   ],
   "scopeLimitations": [
@@ -6671,6 +6677,1128 @@
           "season": 2026,
           "publishedOrAsOf": "By 2026-10-08",
           "scope": "2026 role or individual report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PHI|Secondary|andrewmukuba",
+      "name": "Andrew Mukuba",
+      "team": "PHI",
+      "position": "S",
+      "age": 23,
+      "draftOverall": 64,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 30,
+        "steadyPct": 24,
+        "declinePct": 26,
+        "maxAnnualGain": 6.7,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 first-year Eagles safety logged ten starts before injury-reserve ending season, with 46 tackles and two INT.",
+        "through2026Week4": "2026 Week4 film praised range and responses against Rams, though late drives exposed overall defense.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Breakout 18→20, improvement 36→30, decline 22→26; young coverage flashes plus durability cap.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.philadelphiaeagles.com/news/meet-the-three-headed-dragon-in-the-eagles-secondary",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.bleedinggreennation.com/philadelphia-eagles-analysis/185826/eagles-rams-film-review-good-not-great-defense",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PHI|Secondary|cooperdejean",
+      "name": "Cooper DeJean",
+      "team": "PHI",
+      "position": "CB",
+      "age": 23,
+      "draftOverall": 40,
+      "lockedHQGrade": 92,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 5,
+        "improvePct": 25,
+        "steadyPct": 61,
+        "declinePct": 9,
+        "maxAnnualGain": 3.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 5,
+        "improvePct": 24,
+        "steadyPct": 59,
+        "declinePct": 12,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 All-Pro inside slot/nickel CB, terrific route pattern-matching and tackling, already elite.",
+        "through2026Week4": "2026 Week4 playmaking included interception; film praised both coverage/tackles, not primarily turnover-dependent.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Keep breakout 5 and improve 25→24, slight decline 9→12; top slot value sustainable, little rating headroom.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.philadelphiaeagles.com/news/meet-the-three-headed-dragon-in-the-eagles-secondary",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.bleedinggreennation.com/philadelphia-eagles-analysis/185826/eagles-rams-film-review-good-not-great-defense",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PHI|Secondary|marcusepps",
+      "name": "Marcus Epps",
+      "team": "PHI",
+      "position": "S",
+      "age": 30,
+      "draftOverall": 191,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 7,
+        "steadyPct": 32,
+        "declinePct": 60,
+        "maxAnnualGain": 1.5,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 veteran free safety with prior major knee/coverage concerns; depth competition at Philadelphia.",
+        "through2026Week4": "2026 listed Week4 out with groin and Oct8 did not practice; prolonged full-time deployment uncertain.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 38→60 and loss potential; unlikely 30-year-old breakout while availability and roster role shrink.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.philadelphiaeagles.com/news/meet-the-three-headed-dragon-in-the-eagles-secondary",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.bleedinggreennation.com/philadelphia-eagles-injuries/186017/eagles-injury-report-saquon-barkley-devonta-smith-among-7-players-who-did-not-practice",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PHI|Secondary|quinyonmitchell",
+      "name": "Quinyon Mitchell",
+      "team": "PHI",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 22,
+      "lockedHQGrade": 93,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 23,
+        "steadyPct": 63,
+        "declinePct": 10,
+        "maxAnnualGain": 3.1,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 23,
+        "steadyPct": 59,
+        "declinePct": 15,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 4.8,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 first-team All-Pro outside CB; difficult boundary matchups, leadership and coverage skill are well established.",
+        "through2026Week4": "2026 Week5 injury report listed limited participant; uncertainty about short-term ailment does not negate shutdown baseline.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Decline 10→15 and improve unchanged23; high stable with slight injury volatility, no interception premium.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.philadelphiaeagles.com/news/meet-the-three-headed-dragon-in-the-eagles-secondary",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.bleedinggreennation.com/philadelphia-eagles-injuries/186017/eagles-injury-report-saquon-barkley-devonta-smith-among-7-players-who-did-not-practice",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PHI|Secondary|riqwoolen",
+      "name": "Riq Woolen",
+      "team": "PHI",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 153,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 9,
+        "improvePct": 25,
+        "steadyPct": 49,
+        "declinePct": 17,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 10,
+        "improvePct": 27,
+        "steadyPct": 37,
+        "declinePct": 26,
+        "maxAnnualGain": 4.8,
+        "maxAnnualLoss": 6.1,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Seattle lengthy outside corner with speed/ball range but coverage penalty volatility; arrived Eagles for 2026.",
+        "through2026Week4": "New 2026 Philadelphia CB3/press matchup in elite Mitchell-DeJean trio; role differs from Seattle shadow volume.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 17→26; talent/height retain upside but new assignment and pressing consistency unresolved.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.philadelphiaeagles.com/news/meet-the-three-headed-dragon-in-the-eagles-secondary",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.philadelphiaeagles.com/news/meet-the-three-headed-dragon-in-the-eagles-secondary",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PIT|Secondary|asantesamuel",
+      "name": "Asante Samuel Jr.",
+      "team": "PIT",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 47,
+      "lockedHQGrade": 79,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 13,
+        "improvePct": 18,
+        "steadyPct": 35,
+        "declinePct": 34,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 7.6,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 14,
+        "improvePct": 24,
+        "steadyPct": 23,
+        "declinePct": 39,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 7.6,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 only six Steelers games and one INT after earlier injury; physical quickness and slot potential.",
+        "through2026Week4": "2026 pushed into larger outside workload by Dean ankle/Porter trade; expanded snaps not equal secure success.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 34→39 with improvement 18→24; more opportunity plus serious missed-time risk.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.steelers.com/news/labriola-on-the-loss-to-the-browns-x2066",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.behindthesteelcurtain.com/pittsburgh-steelers-game-information/175869/steelers-get-positive-injury-update-on-jamel-dean-nfl",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PIT|Secondary|deshonelliott",
+      "name": "DeShon Elliott",
+      "team": "PIT",
+      "position": "S",
+      "age": 29,
+      "draftOverall": 190,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 9.1,
+        "marketVariancePct": 10
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 11,
+        "steadyPct": 25,
+        "declinePct": 62,
+        "maxAnnualGain": 2.3,
+        "maxAnnualLoss": 9.1,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "2025 Steelers only five games due season-ending knee issue; strong box tackling but short durability record recently.",
+        "through2026Week4": "2026 on IR through first four weeks, coach notes workouts promising but no exact return date.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 25→62, reduce improve 20→11; missed seasons and physical strong safety role dominate uncertain aging.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.steelers.com/news/labriola-on-the-loss-to-the-browns-x2066",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.behindthesteelcurtain.com/pittsburgh-steelers-injuries/175803/deshon-elliott-getting-close-to-steelers-return-injury-update-safety-depth-chart-roster-mike-mccarthy",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PIT|Secondary|jalenramsey",
+      "name": "Jalen Ramsey",
+      "team": "PIT",
+      "position": "CB",
+      "age": 31,
+      "draftOverall": 5,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 12,
+        "steadyPct": 45,
+        "declinePct": 41,
+        "maxAnnualGain": 3,
+        "maxAnnualLoss": 8.3,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 10,
+        "steadyPct": 33,
+        "declinePct": 56,
+        "maxAnnualGain": 1.7,
+        "maxAnnualLoss": 8.3,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 17 starts, 88 tackles, 3 sacks as Steelers hybrid nickel; versatile but moved away from prior pure CB.",
+        "through2026Week4": "2026 played Browns with wrist cast on reportedly broken wrist; Oct8 DNP according to team.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 41→56; continued defensive IQ supports floor but age31 and damaged wrist add risk.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.steelers.com/news/labriola-on-the-loss-to-the-browns-x2066",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.steelers.com/team/injury-report/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PIT|Secondary|jameldean",
+      "name": "Jamel Dean",
+      "team": "PIT",
+      "position": "CB",
+      "age": 29,
+      "draftOverall": 94,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 58,
+        "declinePct": 21,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 7.2,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 16,
+        "steadyPct": 42,
+        "declinePct": 40,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 7.2,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 Tampa outside press CB in 14 games, 3 INT, effective man ability, dealt with injury variability.",
+        "through2026Week4": "2026 Steelers outside starter departed Week4 in walking boot (ankle), Wednesday DNP; boot removal not clearance.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 21→40; sticky coverage remains when healthy, short-term injury and age exposure material.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.steelers.com/news/labriola-on-the-loss-to-the-browns-x2066",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.steelers.com/team/injury-report/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "PIT|Secondary|jaquanbrisker",
+      "name": "Jaquan Brisker",
+      "team": "PIT",
+      "position": "S",
+      "age": 27,
+      "draftOverall": 48,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 42,
+        "declinePct": 34,
+        "maxAnnualGain": 3.3,
+        "maxAnnualLoss": 6.2,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Chicago 17 starts, 93 tackles, 1 sack and INT; strong box safety with known contact-injury past.",
+        "through2026Week4": "2026 listed Steelers first-team SS, high snap opportunity while Elliott on IR; expanded communication requirement.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→34 because medical history and new scheme, not undervaluing solid run support.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.steelers.com/news/labriola-on-the-loss-to-the-browns-x2066",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.steelers.com/news/steelers-release-initial-2026-depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SEA|Secondary|devonwitherspoon",
+      "name": "Devon Witherspoon",
+      "team": "SEA",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 5,
+      "lockedHQGrade": 97,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 18,
+        "steadyPct": 76,
+        "declinePct": 5,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 2.8,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 18,
+        "steadyPct": 74,
+        "declinePct": 7,
+        "maxAnnualGain": 1.1,
+        "maxAnnualLoss": 2.8,
+        "marketVariancePct": 3
+      },
+      "evidence": {
+        "season2025": "2025 one of best corners by PFF coverage+run/press grades; can play perimeter, nickel and blitz without picks.",
+        "through2026Week4": "2026 still Seahawk CB1 in Macdonald defense; team identity relies on his versatile coverage and tackling.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Keep breakout1, decline 5→7; elite 97 leaves little chance of multi-point leap and high steady floor.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.seahawks.com/news/a-position-by-position-look-at-the-seahawks-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.seahawks.com/team/depth-chart/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SEA|Secondary|joshjobe",
+      "name": "Josh Jobe",
+      "team": "SEA",
+      "position": "CB",
+      "age": 28,
+      "draftOverall": null,
+      "lockedHQGrade": 79,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 16,
+        "steadyPct": 49,
+        "declinePct": 32,
+        "maxAnnualGain": 2.9,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Seahawks CB made 15 starts and one INT opposite Witherspoon, workmanlike perimeter duties.",
+        "through2026Week4": "2026 first-team outside CB in updated chart; coverage help/scheme dependence limits pure lockdown expectations.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 23→32 due elite-receiver matchup difficulty with long exposure; dependable assignment helps stability.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.seahawks.com/news/a-position-by-position-look-at-the-seahawks-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.seahawks.com/team/depth-chart/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SEA|Secondary|julianlove",
+      "name": "Julian Love",
+      "team": "SEA",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 108,
+      "lockedHQGrade": 87,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 40,
+        "declinePct": 43,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 hamstring affected safety continuity, roughly 634 defense snaps, veteran communicator but some run fits inconsistent.",
+        "through2026Week4": "2026 Week4 calf issue controlled; returned to play versus Chargers, full season availability unproven.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 15→43, cut improve 19→15 due two recurring soft tissue interruptions.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.seahawks.com/news/a-position-by-position-look-at-the-seahawks-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.fieldgulls.com/seattle-seahawks-injury-report/176300/seahawks-chargers-game-designations-jadarian-price-ruled-out-chest-injury-nfl-news",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SEA|Secondary|nickemmanwori",
+      "name": "Nick Emmanwori",
+      "team": "SEA",
+      "position": "S",
+      "age": 22,
+      "draftOverall": 35,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 32,
+        "steadyPct": 31,
+        "declinePct": 20,
+        "maxAnnualGain": 6.3,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 29,
+        "steadyPct": 30,
+        "declinePct": 21,
+        "maxAnnualGain": 6.1,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 rookie dynamic box/slot safety: 11 starts, 2.5 sacks, 1 INT, 73.9 coverage-grade support, size/matchup upside.",
+        "through2026Week4": "2026 full practice ahead Week4; Seattle lists him starting third safety/box role, robust playing opportunity.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise breakout17→20, decline20→21; significant future athletic range but occasional rookie coverage inconsistency.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.seahawks.com/news/a-position-by-position-look-at-the-seahawks-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.seahawks.com/team/depth-chart/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SEA|Secondary|terrionarnold",
+      "name": "Terrion Arnold",
+      "team": "SEA",
+      "position": "CB",
+      "age": 23,
+      "draftOverall": 24,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 21,
+        "improvePct": 27,
+        "steadyPct": 24,
+        "declinePct": 28,
+        "maxAnnualGain": 7.2,
+        "maxAnnualLoss": 8.7,
+        "marketVariancePct": 10
+      },
+      "proposed": {
+        "breakoutPct": 21,
+        "improvePct": 23,
+        "steadyPct": 15,
+        "declinePct": 41,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 8.7,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "2025 Detroit boundary corner former first-round pick, man traits overshadowed by uneven health/coverage efficiency.",
+        "through2026Week4": "2026 Seahawks acquired, but current official depth does not list him first-two CBs; role position/inactive unclear.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 28→41 and lower improve27→23; reputation cannot replace role security after team switch.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.seahawks.com/news/a-position-by-position-look-at-the-seahawks-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.seahawks.com/team/depth-chart/",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SEA|Secondary|tyokada",
+      "name": "Ty Okada",
+      "team": "SEA",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": null,
+      "lockedHQGrade": 77,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 8.1,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 15,
+        "steadyPct": 29,
+        "declinePct": 53,
+        "maxAnnualGain": 3.1,
+        "maxAnnualLoss": 8.1,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 Seahawks safety 11 starts and 1.5 sacks; box/special-teams utility rather than assured deep-CF coverage.",
+        "through2026Week4": "2026 hamstring kept him out early, full practice Oct8; starting chart lists safety alongside Love/Emmanwori.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline23→53, as role availability missing games is major risk; still some stable value as box defender.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.seahawks.com/news/a-position-by-position-look-at-the-seahawks-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.fieldgulls.com/seattle-seahawks-injury-report/176768/seahawks-49ers-wednesday-injury-report-leonard-williams-a-limited-participant",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SF|Secondary|deommodorelenoir",
+      "name": "Deommodore Lenoir",
+      "team": "SF",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 172,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 18,
+        "steadyPct": 50,
+        "declinePct": 28,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 5.5,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 San Francisco established outside starter, physical tackling and wide-zone press discipline.",
+        "through2026Week4": "2026 49ers RCB1 in successful low-explosive defense; total unit success not proof of individual CB lockdown.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→28 modestly: role stable, continued exposure and matchups complicate projection.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.49ers.com/news/position-by-position-breakdown-of-the-49ers-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.49ers.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SF|Secondary|jiayirbrown",
+      "name": "Ji'Ayir Brown",
+      "team": "SF",
+      "position": "S",
+      "age": 26,
+      "draftOverall": 87,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 58,
+        "declinePct": 23,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 7.4,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 9,
+        "improvePct": 19,
+        "steadyPct": 26,
+        "declinePct": 46,
+        "maxAnnualGain": 4.8,
+        "maxAnnualLoss": 7.4,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 free safety secondary role inconsistent, with ball-read flashes but uncertain starting security.",
+        "through2026Week4": "2026 currently 49ers starter at FS; new defensive coordinator emphasizing low-explosive zone coverage.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 23→46, breakout 2→9; genuine upward opportunity but higher risk from low stable-grade baseline.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.49ers.com/news/position-by-position-breakdown-of-the-49ers-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.49ers.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SF|Secondary|malikmustapha",
+      "name": "Malik Mustapha",
+      "team": "SF",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 124,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 31,
+        "steadyPct": 18,
+        "declinePct": 33,
+        "maxAnnualGain": 5.4,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 22,
+        "improvePct": 29,
+        "steadyPct": 20,
+        "declinePct": 29,
+        "maxAnnualGain": 6.3,
+        "maxAnnualLoss": 7,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 knee/PUP affected role; aggressive box safety after early career flashes, without full-year deep tape.",
+        "through2026Week4": "2026 taking over for Sigle after Week4 high ankle injury, high opportunity but same positional health risk.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Breakout18→22, decline33→29 modest: increased deployment allows growth if knee holds.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.49ers.com/news/position-by-position-breakdown-of-the-49ers-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.ninersnation.com/san-francisco-49ers-news/163787/49ers-injury-updates-marques-sigle-has-the-dreaded-high-ankle-sprain",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SF|Secondary|marquessigle",
+      "name": "Marques Sigle",
+      "team": "SF",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 160,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 8,
+        "improvePct": 28,
+        "steadyPct": 34,
+        "declinePct": 30,
+        "maxAnnualGain": 3.7,
+        "maxAnnualLoss": 8.8,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 11,
+        "improvePct": 22,
+        "steadyPct": 16,
+        "declinePct": 51,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 8.8,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 49ers young safety became starter in 2026; coverage/route communication still developing.",
+        "through2026Week4": "2026 Week4 suffered confirmed high ankle sprain and expected 4–6 weeks out; Mustapha replacing.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 30→51 and reduce improve28→22, without mistaking injury for current grade change.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.49ers.com/news/position-by-position-breakdown-of-the-49ers-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.49ers.com/news/kyle-shanahan-provides-injury-updates-following-week-4-win-over-broncos",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SF|Secondary|renardogreen",
+      "name": "Renardo Green",
+      "team": "SF",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 64,
+      "lockedHQGrade": 81,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 16,
+        "improvePct": 29,
+        "steadyPct": 27,
+        "declinePct": 28,
+        "maxAnnualGain": 5.9,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 second-year 49ers outside corner starting opposite Lenoir; press technique and run support developing.",
+        "through2026Week4": "2026 current LCB1, new 49ers scheme limiting explosives; individual 2026 target chart not independently found.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→28; young continued starting reps good but top receiver exposure persists.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.49ers.com/news/position-by-position-breakdown-of-the-49ers-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.49ers.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "SF|Secondary|uptonstout",
+      "name": "Upton Stout",
+      "team": "SF",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 100,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 23,
+        "declinePct": 24,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 7.6,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 28,
+        "steadyPct": 19,
+        "declinePct": 33,
+        "maxAnnualGain": 6.6,
+        "maxAnnualLoss": 7.6,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 rookie nickel CB acquired strong slot/pressure role from early NFL year.",
+        "through2026Week4": "2026 Week4 AC shoulder sprain, day-to-day and did not practice Oct8; ranks 11th among CB in rush attempts per news.",
+        "limitations": "Partial 2026 sample; updated Oct8 injuries often lack a definitive return date and role-focused sources are not equivalent to coverage film grades."
+      },
+      "reasonRelativeToExisting": "Raise decline 24→33 and breakout 17→20: premium blitz/slot value, shoulder may impair physicality.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.49ers.com/news/position-by-position-breakdown-of-the-49ers-2025-initial-53-man-roster",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season or 2026 official preview",
+          "scope": "2025 usage/team evidence"
+        },
+        {
+          "url": "https://www.49ers.com/news/kyle-shanahan-provides-injury-updates-following-week-4-win-over-broncos",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "current role, performance or injury"
         }
       ],
       "auditStatus": "individual-2025-2026-review"
