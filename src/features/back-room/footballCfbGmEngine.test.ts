@@ -76,7 +76,7 @@ describe("CFB The GM owner preview", () => {
     const aFirst = cfbGmTeamGrade([entry(a.id, "FRONT_7_A"), entry(b.id, "FRONT_7_B")]);
     const bFirst = cfbGmTeamGrade([entry(b.id, "FRONT_7_A"), entry(a.id, "FRONT_7_B")]);
     expect(aFirst).toBe(bFirst);
-    expect(aFirst).toBeCloseTo((a.currentGrade + b.currentGrade) * .15, 1);
+    expect(aFirst).toBe(Math.round((a.currentGrade + b.currentGrade) * .15 * 10) / 10);
   });
 
   it("has an affordable seven-round path in both budgets with no unfillable late slots", () => {
