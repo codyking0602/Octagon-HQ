@@ -540,7 +540,11 @@ export function footballGmEligibleReplacementTeams(input: {
   return teams;
 }
 
-export function footballGmProjectedGradeForPlayer(player: FootballGmPlayer, year: 1 | 2 | 3) {
+export function footballGmProjectedGradeForPlayer(
+  player: FootballGmPlayer,
+  year: 1 | 2 | 3,
+  seed?: string,
+) {
   const marketPosition = wheelFootballGmMarketPositionForContract({
     family: player.family,
     position: player.position,
@@ -554,6 +558,28 @@ export function footballGmProjectedGradeForPlayer(player: FootballGmPlayer, year
     draftYear: player.draftYear,
     draftOverall: player.draftOverall,
     projectionAdjustment: player.projectionAdjustment,
+    seed,
+    playerId: player.id,
+  });
+}
+
+/** A single seed-owned Year 2 offer, also locked for Year 3. */
+export function footballGmProjectedExtensionForPlayer(player: FootballGmPlayer, seed: string) {
+  if (player.gameContract === "3YR") return player.salaryApy;
+  const marketPosition = wheelFootballGmMarketPositionForContract({
+    family: player.family,
+    position: player.position,
+    gmEligibleSlots: player.eligibleSlots,
+  });
+  return projectWheelFootballGmExtensionApy({
+    currentGrade: player.currentGrade,
+    age: player.age,
+    position: marketPosition,
+    draftYear: player.draftYear,
+    draftOverall: player.draftOverall,
+    projectionAdjustment: player.projectionAdjustment,
+    seed,
+    playerId: player.id,
   });
 }
 
