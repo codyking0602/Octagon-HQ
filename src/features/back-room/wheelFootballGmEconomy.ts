@@ -103,6 +103,67 @@ function clamp(value: number, low: number, high: number) {
   return Math.max(low, Math.min(high, value));
 }
 
+/**
+ * Only newly created GM run seeds opt into the stochastic model. Existing saved
+ * games (and historical challenges) keep their original fixed projections.
+ */
+export const FOOTBALL_GM_DEVELOPMENT_SEED_TAG = ":gmdev1";
+
+function developmentRoll(seed: string, playerId: string, step: number, salt: string) {
+  const value = `${seed}:${playerId}:${step}:${salt}`;
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  hash ^= hash >>> 16;
+  hash = Math.imul(hash, 0x7feb352d);
+  hash ^= hash >>> 15;
+  hash = Math.imul(hash, 0x846ca68b);
+  return ((hash ^ (hash >>> 16)) >>> 0) / 0x1_0000_0000;
+}
+
+function developmentDelta(input: {
+  seed: string;
+  playerId: string;
+  step: 0 | 1;
+  age: number;
+  grade: number;
+  position: WheelFootballGmMarketPosition;
+  draftYear: number | null;
+  draftOverall: number | null;
+  expectedDelta: number;
+}) {
+  const { age, grade, seed, playerId, step } = input;
+  const recentProspect = age <= 25
+    && (input.draftYear ?? 0) >= 2023
+    && (input.draftOverall ?? 999) <= 64;
+  const primeYoung = age <= 26 && grade < 92;
+  const establishedElite = grade >= 93 && age < (input.position === "QB" ? 35 : 31);
+  const aging = age >= (input.position === "QB" ? 34 : input.position === "RB" ? 28 : 31);
+  const surprise = developmentRoll(seed, playerId, step, "outcome");
+  const magnitude = developmentRoll(seed, playerId, step, "magnitude");
+  const breakoutChance = establishedElite ? 0.02 : recentProspect ? 0.22 : primeYoung ? 0.11 : 0.04;
+  const improvingChance = establishedElite ? 0.15 : primeYoung ? 0.37 : aging ? 0.09 : 0.21;
+  const declineChance = establishedElite ? 0.08 : recentProspect ? 0.18 : aging ? 0.43 : 0.27;
+  let delta: number;
+  if (surprise < breakoutChance) {
+    delta = Math.max(0, input.expectedDelta) + (primeYoung ? 3 : 1.5) + magnitude * (primeYoung ? 4 : 1.6);
+  } else if (surprise < breakoutChance + improvingChance) {
+    delta = Math.max(-0.25, input.expectedDelta * 0.6) + 0.6 + magnitude * 1.6;
+  } else if (surprise < 1 - declineChance) {
+    delta = input.expectedDelta * 0.25 + (magnitude - 0.5) * 1.1;
+  } else {
+    delta = Math.min(0, input.expectedDelta * 0.4) - (0.9 + magnitude * (aging ? 3.2 : 3.5));
+  }
+  // An established prime superstar has much less collapse risk than a
+  // developing/aging player. Old stars are not artificially invulnerable.
+  if (establishedElite) delta = clamp(delta, -1.4, 2);
+  if (grade >= 95 && delta > 0) delta *= 0.5;
+  if (step === 1 && grade >= 92 && delta > 2) delta = 2 + (delta - 2) * 0.3;
+  return clamp(delta, -5.5, 8);
+}
+
 function recentDraftPedigreeBoost(input: {
   draftYear: number | null;
   draftOverall: number | null;
@@ -218,10 +279,12 @@ export function projectWheelFootballGmGrade(input: {
   draftYear?: number | null;
   draftOverall?: number | null;
   projectionAdjustment?: number;
+  seed?: string;
+  playerId?: string;
 }) {
   let grade = input.currentGrade;
   for (let year = 0; year < input.yearsAhead; year += 1) {
-    grade += annualGradeDelta({
+    const expectedDelta = annualGradeDelta({
       position: input.position,
       age: input.age + year,
       currentGrade: grade,
@@ -230,6 +293,19 @@ export function projectWheelFootballGmGrade(input: {
       projectionStep: year as 0 | 1,
       projectionAdjustment: input.projectionAdjustment ?? 0,
     });
+    grade += input.seed?.endsWith(FOOTBALL_GM_DEVELOPMENT_SEED_TAG) && input.playerId
+      ? developmentDelta({
+        seed: input.seed,
+        playerId: input.playerId,
+        step: year as 0 | 1,
+        age: input.age + year,
+        grade,
+        position: input.position,
+        draftYear: input.draftYear ?? null,
+        draftOverall: input.draftOverall ?? null,
+        expectedDelta,
+      })
+      : expectedDelta;
   }
   return Math.round(clamp(grade, 70, 99) * 10) / 10;
 }
@@ -288,13 +364,20 @@ export function projectWheelFootballGmExtensionApy(input: {
   draftYear?: number | null;
   draftOverall?: number | null;
   projectionAdjustment?: number;
+  seed?: string;
+  playerId?: string;
 }) {
   const yearTwoGrade = projectWheelFootballGmGrade({
     ...input,
     yearsAhead: 1,
   });
   const market = interpolateMarketApy(input.position, yearTwoGrade);
-  return roundToHalfMillion(market * veteranMarketFactor(input.position, input.age + 1));
+  // Market interest varies independently from development, but remains tied to
+  // the player's realized grade and is fixed across the two future seasons.
+  const marketVariance = input.seed?.endsWith(FOOTBALL_GM_DEVELOPMENT_SEED_TAG) && input.playerId
+    ? 0.92 + developmentRoll(input.seed, input.playerId, 0, "market") * 0.16
+    : 1;
+  return roundToHalfMillion(market * veteranMarketFactor(input.position, input.age + 1) * marketVariance);
 }
 
 export function wheelFootballGmSalaryWindow(input: {
