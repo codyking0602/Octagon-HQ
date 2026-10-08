@@ -40,9 +40,9 @@ export function footballGmDevelopmentResult(delta: number): FootballGmDevelopmen
   return "HELD STEADY";
 }
 
-export function footballGmScoutingSnapshot(player: FootballGmPlayer, year: 1 | 2, seed?: string) {
+export function footballGmScoutingSnapshot(player: FootballGmPlayer, year: 1 | 2 | 3, seed?: string) {
   const grade = footballGmProjectedGradeForPlayer(player, year, seed);
-  const odds = footballGmDevelopmentOdds({
+  const odds = year === 3 ? null : footballGmDevelopmentOdds({
     playerId: player.id,
     step: year === 1 ? 0 : 1,
     grade,
@@ -52,7 +52,7 @@ export function footballGmScoutingSnapshot(player: FootballGmPlayer, year: 1 | 2
   });
   // Synthetic/legacy fixtures may lack an audited identity profile. Live
   // players all have a profile; fallback retains a neutral, honest scout read.
-  const outlook = odds ? footballGmOutlookFromOdds(odds) : "STEADY";
+  const outlook = odds ? footballGmOutlookFromOdds(odds) : year === 3 ? null : "STEADY";
   const development = year === 2
     ? footballGmDevelopmentResult(grade - player.currentGrade) : null;
   return { tier: footballGmTalentTier(grade), outlook, development };
