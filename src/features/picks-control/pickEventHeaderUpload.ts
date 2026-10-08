@@ -3,6 +3,8 @@ import { PICK_EVENT_HEADER_BUCKET, PICK_EVENT_HEADER_MAX_IMAGES } from "../picks
 import type { PickControlRepository } from "./pickControlRepository";
 
 const EVENT_HEADER_MAX_BYTES = 20 * 1024 * 1024;
+const MIN_OPTIMIZE_BYTES = 600_000;
+const MAX_OPTIMIZED_DIMENSION = 1920;
 const EVENT_HEADER_TYPES = new Set([
   "image/jpeg",
   "image/png",
@@ -21,6 +23,47 @@ interface UploadPickEventHeaderOptions {
   files?: File[];
   repository: PickControlRepository;
   measureImage?: (file: File) => Promise<PickEventHeaderDimensions>;
+  optimizeImage?: (file: File) => Promise<OptimizedEventHeader | null>;
+}
+
+export interface OptimizedEventHeader extends PickEventHeaderDimensions {
+  blob: Blob;
+}
+
+// Uploaded event art can be several megabytes. Keep the exact aspect ratio,
+// preserving approved composition, but serve a right-sized WebP whenever it
+// is actually smaller. Fall back to the original on unsupported devices.
+export async function optimizePickEventHeader(file: File): Promise<OptimizedEventHeader | null> {
+  if (file.size <= MIN_OPTIMIZE_BYTES) return null;
+  let objectUrl: string | null = null;
+  try {
+    objectUrl = URL.createObjectURL(file);
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const next = new Image();
+      next.onload = () => resolve(next);
+      next.onerror = () => reject(new Error("Event artwork cannot be decoded."));
+      next.src = objectUrl!;
+    });
+    const naturalWidth = image.naturalWidth;
+    const naturalHeight = image.naturalHeight;
+    if (!naturalWidth || !naturalHeight) return null;
+    const scale = Math.min(1, MAX_OPTIMIZED_DIMENSION / Math.max(naturalWidth, naturalHeight));
+    const width = Math.max(1, Math.round(naturalWidth * scale));
+    const height = Math.max(1, Math.round(naturalHeight * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    if (!context) return null;
+    context.drawImage(image, 0, 0, width, height);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.82));
+    if (!blob || blob.type !== "image/webp" || blob.size >= file.size) return null;
+    return { blob, width, height };
+  } catch {
+    return null;
+  } finally {
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+  }
 }
 
 export async function measurePickEventHeader(file: File): Promise<PickEventHeaderDimensions> {
@@ -63,6 +106,7 @@ export async function uploadPickEventHeader({
   files,
   repository,
   measureImage = measurePickEventHeader,
+  optimizeImage = optimizePickEventHeader,
 }: UploadPickEventHeaderOptions) {
   const headerFiles = files?.length ? files : [file];
   if (headerFiles.length > PICK_EVENT_HEADER_MAX_IMAGES) {
@@ -86,18 +130,26 @@ export async function uploadPickEventHeader({
 
   const storagePaths = headerStoragePaths(eventId, headerFiles.length);
   const bucket = client.storage.from(PICK_EVENT_HEADER_BUCKET);
+  let savedWidth = width;
+  let savedHeight = height;
 
   for (let index = 0; index < headerFiles.length; index += 1) {
     const currentFile = headerFiles[index];
-    const { error } = await bucket.upload(storagePaths[index], currentFile, {
+    const optimized = await optimizeImage(currentFile);
+    if (index === 0 && optimized) {
+      savedWidth = optimized.width;
+      savedHeight = optimized.height;
+    }
+    const payload = optimized?.blob ?? currentFile;
+    const { error } = await bucket.upload(storagePaths[index], payload, {
       cacheControl: "0",
-      contentType: currentFile.type,
+      contentType: payload.type,
       upsert: true,
     });
     if (error) throw new Error(error.message);
   }
 
   const storagePath = storagePaths[0];
-  await repository.setEventHeader(eventId, storagePath, width, height);
-  return { storagePath, width, height };
+  await repository.setEventHeader(eventId, storagePath, savedWidth, savedHeight);
+  return { storagePath, width: savedWidth, height: savedHeight };
 }
