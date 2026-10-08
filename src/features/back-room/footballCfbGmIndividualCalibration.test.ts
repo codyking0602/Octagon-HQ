@@ -51,6 +51,26 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     }
   });
 
+  it("has four completely audited school cohorts with exact existing identities and grades", () => {
+    for(const schoolId of ["alabama","oregon","texas","ohio-state"]){
+      const school=CFB_GM_PLAYERS.filter((p)=>p.schoolId===schoolId);
+      expect(school.length).toBeGreaterThan(10);
+      for(const player of school){
+        const evidence=researched.find((row)=>row.id===player.id);
+        expect(evidence,player.id).toBeTruthy();
+        expect(evidence!.calibration,player.id).toBeTruthy();
+        expect(evidence!.calibration!.sources[0]).toContain("https://");
+        expect(player.currentGrade).toBeGreaterThanOrEqual(50);
+      }
+    }
+    expect(cfbGmPlayer("texas|herokanu")!.classification).toBe("5TH");
+    expect(cfbGmPlayer("texas|raleekbrown")!.classification).toBe("5TH");
+    expect(cfbGmPlayer("texas|hollywoodsmothers")!.classification).toBe("SR");
+    expect(cfbGmPlayer("texas|spencershannon")!.classification).toBe("SR");
+    for(const id of ["ohio-state|earllittlejr","ohio-state|jakobijackson","ohio-state|kenyattajacksonjr"])
+      expect(cfbGmPlayer(id)!.classification).toBe("5TH");
+  });
+
   it("validates probabilities, defensible sources, independent NIL and safe fallback provenance", () => {
     for(const row of researched.filter((r)=>r.calibration)){
       const c=row.calibration!, d=c.development;
