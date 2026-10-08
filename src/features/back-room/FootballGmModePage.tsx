@@ -91,6 +91,8 @@ export interface PersistedRun {
   pendingTradeResolution: PendingTradeResolution | null;
   negotiationConsequences: Record<string, number>;
   tradeMessage: string;
+  /** Immutable solo results once the franchise is completed. */
+  resolvedSeasons?: FootballGmSeasonResultV2[];
 }
 
 function asJson(value: unknown): ChallengeJson {
@@ -138,6 +140,7 @@ export function initialRun(seed: string): PersistedRun {
     pendingTradeResolution: null,
     negotiationConsequences: {},
     tradeMessage: "",
+    resolvedSeasons: [],
   };
 }
 
@@ -168,6 +171,8 @@ function parsePersistedRun(value: unknown) {
   return {
     ...parsed,
     version: FOOTBALL_GM_VERSION,
+    resolvedSeasons: Array.isArray(parsed.resolvedSeasons) && parsed.resolvedSeasons.length === 3
+      ? parsed.resolvedSeasons : [],
     roster,
     finalRoster,
   } as PersistedRun;
@@ -203,7 +208,15 @@ function runFromAuditSnapshot(value: ChallengeJson | null) {
   const snapshot = value && !Array.isArray(value) && typeof value === "object"
     ? value as { [key: string]: ChallengeJson }
     : null;
-  return parsePersistedRun(snapshot?.run ?? null);
+  const parsed = parsePersistedRun(snapshot?.run ?? null);
+  const finalResult = snapshot?.finalResult && !Array.isArray(snapshot.finalResult)
+    && typeof snapshot.finalResult === "object"
+    ? snapshot.finalResult as { [key: string]: ChallengeJson } : null;
+  const oldSeasons = finalResult?.seasons;
+  if (parsed && parsed.phase === "final" && Array.isArray(oldSeasons) && oldSeasons.length === 3) {
+    return { ...parsed, resolvedSeasons: oldSeasons as unknown as FootballGmSeasonResultV2[] };
+  }
+  return parsed;
 }
 
 function auditPlayer(playerId: string) {
@@ -312,17 +325,17 @@ function gmAuditSnapshot(
       : null,
     seasons: {
       year1: run.roster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-        ? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.roster, year: 1 })
+        ? run.resolvedSeasons?.[0] ?? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.roster, year: 1 })
         : null,
       year2: run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-        ? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.finalRoster, year: 2 })
+        ? run.resolvedSeasons?.[1] ?? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.finalRoster, year: 2 })
         : null,
       year3: run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-        ? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.finalRoster, year: 3 })
+        ? run.resolvedSeasons?.[2] ?? footballGmSeasonResultV2({ seed: run.seed, yearOneRoster: run.roster, roster: run.finalRoster, year: 3 })
         : null,
     },
     finalResult: run.phase === "final" && run.finalRoster.length === FOOTBALL_GM_ROSTER_SLOTS.length
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster: run.roster, finalRoster: run.finalRoster, resolvedSeasons: run.resolvedSeasons })
       : null,
   });
 }
@@ -1452,9 +1465,9 @@ export default function FootballGmModePage({
   const finalRoster = run.finalRoster.length ? run.finalRoster : run.roster;
   const finalResult = useMemo(
     () => run.phase === "final"
-      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster })
+      ? footballGmFinalResultV2({ seed: run.seed, yearOneRoster, finalRoster, resolvedSeasons: run.resolvedSeasons })
       : null,
-    [finalRoster, run.phase, run.seed, yearOneRoster],
+    [finalRoster, run.phase, run.seed, run.resolvedSeasons, yearOneRoster],
   );
 
   useEffect(() => {
@@ -2043,7 +2056,17 @@ export default function FootballGmModePage({
             <SeasonCard seed={run.seed} year={3} yearOneRoster={run.roster} roster={run.finalRoster} />
           </div>
           <p>No second offseason. Talent still drives the team, but a massive Year 2 rebuild carries a continuity cost that partially recovers in Year 3.</p>
-          <button className="primary-action" type="button" onClick={() => patch({ phase: "final" })}>SEE 3-YEAR GM SCORE</button>
+          <button className="primary-action" type="button" onClick={() => {
+            const resolvedSeasons: FootballGmSeasonResultV2[] = [1, 2, 3].map((year) =>
+              footballGmSeasonResultV2({
+                seed: run.seed,
+                yearOneRoster: run.roster,
+                roster: year === 1 ? run.roster : run.finalRoster,
+                year: year as 1 | 2 | 3,
+              }),
+            );
+            patch({ phase: "final", resolvedSeasons });
+          }}>SEE 3-YEAR GM SCORE</button>
         </section>
       ) : null}
 
