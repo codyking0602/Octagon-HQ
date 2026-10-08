@@ -49,6 +49,8 @@ describe("NFL GM locked scouting pills", () => {
       });
       expect(odds).toBeTruthy();
       expect(offseason.outlook).toBe(footballGmOutlookFromOdds(odds!));
+      expect(footballGmScoutingSnapshot(player, 3, seed).tier).toBe(footballGmTalentTier(footballGmProjectedGradeForPlayer(player, 3, seed)));
+      expect(footballGmScoutingSnapshot(player, 3, seed).outlook).toBeNull();
     }
     expect(firstYearLabels.size).toBe(5);
     expect(secondYearLabels.size).toBeGreaterThanOrEqual(4);
