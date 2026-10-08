@@ -12,8 +12,8 @@ import {
 describe("CFB GM 2026 class + NIL + development runtime integration", () => {
   it("binds the complete researched population without inventing class labels", () => {
     expect(CFB_GM_PLAYERS).toHaveLength(468);
-    expect(CFB_GM_PLAYERS.filter((p) => p.classification !== null)).toHaveLength(423);
-    expect(CFB_GM_PLAYERS.filter((p) => p.classification === null)).toHaveLength(45);
+    expect(CFB_GM_PLAYERS.filter((p) => p.classification !== null)).toHaveLength(466);
+    expect(CFB_GM_PLAYERS.filter((p) => p.classification === null)).toHaveLength(2);
     expect(cfbGmPlayer("texas|colinsimmons")?.classification).toBe("JR");
     const ledger = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-classification-evidence.json","utf8"));
     const runtime = JSON.parse(readFileSync("data/generated/football/cfb-gm-classification-runtime-2026.json","utf8"));
@@ -74,6 +74,7 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     const run=cfbGmInitial("cfb-old-protection-123");
     expect(cfbGmValidateRun(run)).not.toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v2-cfp"})).toBeNull();
+    expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v3-market-development"})).toBeNull();
   });
 
   it("completes multiple seeded seven-player draft paths under both budgets", () => {
