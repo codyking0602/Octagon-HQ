@@ -22,7 +22,7 @@ describe("CFB GM classification evidence integrity", () => {
     expect(audit.classified).toBe(468);
     const unresolved = audit.players.filter((row) => row.classification === null).map((row) => row.id).sort();
     expect(unresolved).toEqual([]);
-    expect(overrides.rows).toHaveLength(122);
+    expect(overrides.rows).toHaveLength(124);
     expect(audit.players.find((row) => row.id === "texas|archmanning")?.classification).toBe("SR");
     expect(audit.players.find((row) => row.id === "miami|mohamedtoure")?.classification).toBe("8TH");
     expect(audit.players.find((row) => row.id === "smu|jimmywyrick")?.classification).toBe("6TH");
@@ -33,8 +33,8 @@ describe("CFB GM classification evidence integrity", () => {
   });
   it("retains unknown eligibility where research has not established the fact", () => {
     const valid = new Set(["FR","SO","JR","SR","5TH","6TH","7TH","8TH","3RD"]);
-    expect(audit.players.filter((row) => row.calibration)).toHaveLength(327);
-    expect(audit.players.filter((row) => row.remainingEligibility !== null)).toHaveLength(59);
+    expect(audit.players.filter((row) => row.calibration)).toHaveLength(344);
+    expect(audit.players.filter((row) => row.remainingEligibility !== null)).toHaveLength(63);
     for (const row of audit.players) {
       if (row.classification !== null) expect(valid.has(row.classification)).toBe(true);
       if (!row.calibration) {
