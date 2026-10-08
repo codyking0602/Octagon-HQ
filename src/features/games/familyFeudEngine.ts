@@ -44,7 +44,16 @@ export const FAMILY_FEUD_RAW_MAX = 100;
 
 export type FamilyFeudPhase = "main" | "fast-money" | "complete";
 
+export interface FamilyFeudMainGuess {
+  submittedText: string;
+  matchedName: string | null;
+  points: number;
+  outcome: "correct" | "accepted" | "strike";
+  matchKind: FamilyFeudMatchKind | "unrecognized";
+}
+
 export interface FamilyFeudMainBoardState {
+  attempts?: FamilyFeudMainGuess[];
   revealedEntityIds: string[];
   submittedEntityIds: string[];
   submittedUnrecognized: string[];
@@ -395,6 +404,7 @@ export function createFamilyFeudState(): FamilyFeudState {
     phase: "main",
     mainBoardIndex: 0,
     mainBoards: Array.from({ length: FAMILY_FEUD_MAIN_BOARD_COUNT }, () => ({
+      attempts: [],
       revealedEntityIds: [],
       submittedEntityIds: [],
       submittedUnrecognized: [],
@@ -410,6 +420,7 @@ function cloneState(state: FamilyFeudState): FamilyFeudState {
   return {
     ...state,
     mainBoards: state.mainBoards.map((board) => ({
+      attempts: board.attempts?.map((attempt) => ({ ...attempt })) ?? [],
       revealedEntityIds: [...board.revealedEntityIds],
       submittedEntityIds: [...board.submittedEntityIds],
       submittedUnrecognized: [...board.submittedUnrecognized],
@@ -533,6 +544,13 @@ export function submitFamilyFeudMainAnswer(
     const answer = question.answers[answerIndex]!;
     const displaySlotIndex = board.revealedEntityIds.length;
     board.revealedEntityIds.push(answer.entityId);
+    board.attempts?.push({
+      submittedText: input.trim(),
+      matchedName: entityDisplayName(pack, answer.entityId),
+      points: answer.points,
+      outcome: "correct",
+      matchKind: match.kind,
+    });
     const outcome: FamilyFeudOutcome = {
       type: "board-correct",
       boardIndex,
@@ -551,6 +569,13 @@ export function submitFamilyFeudMainAnswer(
   ) {
     const displaySlotIndex = board.revealedEntityIds.length;
     board.revealedEntityIds.push(match.entityId);
+    board.attempts?.push({
+      submittedText: input.trim(),
+      matchedName: entityDisplayName(pack, match.entityId),
+      points: FAMILY_FEUD_MAIN_ALSO_ACCEPTED_POINTS,
+      outcome: "accepted",
+      matchKind: match.kind,
+    });
     const outcome: FamilyFeudOutcome = {
       type: "board-also-accepted",
       boardIndex,
@@ -563,6 +588,13 @@ export function submitFamilyFeudMainAnswer(
     return { state, outcome };
   }
 
+  board.attempts?.push({
+    submittedText: input.trim(),
+    matchedName: match.status === "matched" ? entityDisplayName(pack, match.entityId) : null,
+    points: 0,
+    outcome: "strike",
+    matchKind: match.status === "matched" ? match.kind : "unrecognized",
+  });
   board.strikes = Math.min(FAMILY_FEUD_STRIKES_PER_BOARD, board.strikes + 1);
   const strikes = board.strikes;
   advanceMainPhase(state);
