@@ -7797,8 +7797,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 64,
+          "decline": 13,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.96,
+        "portalExitProbability": 0.01,
+        "summary": "Missouri 2025 consensus first-team All-American and Doak Walker finalist set program record 1,649 rush yards and 16 TD on 256 carries (6.4 YPC), after 2024 ULM freshman 1,351 yards/13 TD. 2026 junior near elite college production ceiling, making steady and likely 2027 NFL declaration more defensible than a giant fictional breakout.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/ahmad-hardy"
+        ]
+      }
     },
     {
       "id": "missouri|austinsimmons",
@@ -7868,8 +7887,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 27,
+          "steady": 54,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.53,
+        "portalExitProbability": 0.02,
+        "summary": "Missouri 2025 TE appeared in 11 games/ten starts with 31 catches, 254 receiving yards and five TD, adding critical run blocking in Ahmad Hardy's 1,649-yard rushing year. 2024 26/235/2, 2023 freshman All-American and 18/197/3. 2026 senior is established multi-year TE with limited additional breakout headroom and some shoulder history.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/brett-norfleet"
+        ]
+      }
     },
     {
       "id": "missouri|caydenlee",
@@ -7888,8 +7926,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 31,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.67,
+        "portalExitProbability": 0.03,
+        "summary": "Ole Miss 2025 wide receiver started all 15 games with 44 catches, 635 yards and three TD. Missouri 2026 senior transfer is already through first four games with 27 catches, 412 yards and four TD including 11/156/2 vs Mississippi State, indicating strong early fit; established P4 starter with some upside but short new-school sample.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/cayden-lee"
+        ]
+      }
     },
     {
       "id": "missouri|chrisgravesjr",
@@ -7899,16 +7956,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4808749",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/chris-graves-jr",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 46,
+          "decline": 18,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.02,
+        "summary": "Ole Miss 2025 corner started nine of 15 games with 33 tackles and four pass breakups; transferred to Missouri where official 2026 fifth-year roster credits starts in opening five games and six PBU. More consistent full-time role supports mild gains, but moderate transfer/coverage volatility; fifth-year models ordinary terminal 2026 season.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/chris-graves-jr"
+        ]
+      }
     },
     {
       "id": "missouri|daedenhopkins",
@@ -7926,8 +8002,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 41,
+          "steady": 27,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.05,
+        "summary": "Missouri 2025 freshman edge played five games as reserve without sustained verified sacks, then opened 2026 sophomore season with six sacks, 6.5 TFL and two forced fumbles in five games, including a 3.5-sack Mississippi State performance. Real early breakout and high upside, but small five-game output must not imply full-season reliability; 2025 matriculation makes 2027 NFL ineligible.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/daeden-hopkins"
+        ]
+      }
     },
     {
       "id": "missouri|donovanolugbode",
@@ -7946,8 +8041,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 38,
+          "steady": 39,
+          "decline": 10,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04,
+        "summary": "Missouri 2025 true freshman WR had 30 catches, 401 yards and two TD in 13 games; 2026 sophomore 26 catches/407 yards/six TD in opening five games. Clearly ascending volume and red-zone role with youthful volatility, but enrolled 2025 and cannot declare for 2027 NFL draft.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/donovan-olugbode"
+        ]
+      }
     },
     {
       "id": "missouri|jalenmarshall",
@@ -7957,16 +8071,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4872820",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/jalen-marshall",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 35,
+          "steady": 39,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.01,
+        "summary": "Missouri 2025 interior defender appeared all 13 games/one start with 17 tackles, one TFL and a sack; 2024 12 games/one start five tackles, minimal 2022-23 action. Official 2026 fifth-year DT, credible rotational improvement but low recent disruptive ceiling; normal eligibility exhaustion after 2026 modeled.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/jalen-marshall"
+        ]
+      }
     },
     {
       "id": "missouri|jamalroberts",
@@ -7985,8 +8118,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 30,
+          "steady": 51,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.8,
+        "portalExitProbability": 0.02,
+        "summary": "Missouri 2025 reserve-to-feature RB had 124 carries for 753 yards/six TD (6.1 YPC) plus 18 catches/141 yards and receiving TD; 2026 senior opened with 606 rushing yards and six TD in five games, including 211 yards/three TD vs Florida. Strong demonstrated P4 rushing impact; high draft interest and steady profile despite new early-season workload.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/jamal-roberts"
+        ]
+      }
     },
     {
       "id": "missouri|kensleylouidorfaustin",
@@ -8004,8 +8156,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 36,
+          "steady": 41,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.47,
+        "portalExitProbability": 0.05,
+        "summary": "Auburn 2025 defensive back appeared in 11 games/three starts, making 20 tackles, three TFL, one sack, an interception and two PBU. Missouri 2026 junior transfer immediately started opening five games with 23 tackles and five TFL, indicating significant role increase while transfer fit remains partly unproven.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/kensley-louidor-faustin"
+        ]
+      }
     },
     {
       "id": "missouri|langdenkitchen",
@@ -8023,8 +8194,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 39,
+          "steady": 30,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.03,
+        "summary": "Missouri 2025 senior-age reserve edge made 13 tackles and half a TFL in 12 appearances after 2023-24 Northwest Missouri State Division II 20 games, 10.5 TFL/5.5 sacks. Started first four 2026 games with three TFL, eight tackles. P4 role growth possible but earlier DII production must not be treated as equivalent SEC sacks.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/langden-kitchen"
+        ]
+      }
     },
     {
       "id": "missouri|marquisgracial",
@@ -8034,16 +8224,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4726007",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/player/marquis-gracial",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 32,
+          "steady": 44,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.35,
+        "portalExitProbability": 0.01,
+        "summary": "Missouri 2025 rotational DT played all 13 games with 16 tackles, two TFL, one forced fumble and pass breakup; 2024 nine tackles/1.5 TFL, very limited 2022-23 action. Official 2026 fifth-year interior defender and ordinary terminal college season assumption; greater role possible but no historic elite pass rush.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/player/marquis-gracial"
+        ]
+      }
     },
     {
       "id": "missouri|naeshaunmontgomery",
@@ -8061,8 +8270,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 40,
+          "steady": 30,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.07,
+        "summary": "Florida 2025 true freshman WR appeared in four games to preserve redshirt, three catches for 26 yards; Missouri 2026 sophomore transferred in and started first five games, seven catches for 82 yards. Large opportunity leap but low current college target volume and transfer uncertainty; first 2025 matriculation disallows 2027 NFL draft.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/naeshaun-montgomery"
+        ]
+      }
     },
     {
       "id": "missouri|nicholasrodriguez",
@@ -8080,8 +8308,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 33,
+          "steady": 45,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.03,
+        "summary": "Missouri 2025 LB appeared all 13 games with three starts, 61 tackles, four TFL, 1.5 sacks and a team-high seven PBU. By five 2026 junior games started every contest with 50 tackles and a sack including four straight double-digit tackle games, establishing a meaningful rising full-time SEC role, but not guaranteed draft exit.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/nicholas-rodriguez"
+        ]
+      }
     },
     {
       "id": "missouri|robertwoodyardjr",
@@ -8099,8 +8346,27 @@
       "sourceUrl": "https://mutigers.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 47,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.03,
+        "summary": "Auburn 2025 starting linebacker played 12 games/11 starts with 67 tackles, seven TFL and two sacks. Missouri 2026 senior transfer started five games and posted 37 tackles, 2.5 TFL, interception and forced fumble, with injury during Florida contest. Proven SEC impact with moderate steady/improve odds and some durability/transfer uncertainty.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/robert-woodyard-jr"
+        ]
+      }
     },
     {
       "id": "missouri|santanabanner",
@@ -8118,8 +8384,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 27,
+          "steady": 53,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.44,
+        "portalExitProbability": 0.02,
+        "summary": "Missouri 2025 defensive back appeared all 13 games/one start with 59 tackles, one TFL, an interception and three PBU; prior Northern Illinois experience. Through first five games of 2026 senior season started all, 44 tackles, two TFL and three PBU; trusted regular with bounded growth rather than developmental unknown.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/santana-banner"
+        ]
+      }
     },
     {
       "id": "missouri|sionelaulea",
@@ -8129,16 +8414,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "5221314",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/sione-laulea",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 34,
+          "steady": 39,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.33,
+        "portalExitProbability": 0.02,
+        "summary": "Oregon 2025 CB appeared six games with seven tackles, two PBU in 116 defensive snaps; 2024 Oregon four games three tackles/one INT after College of San Mateo 2022-23 (27 tackles/four PBUs in 2023). Missouri official 2026 fifth-year transfer started opening five games, 22 tackles/five PBU and INT. Rise from low recent P4 minutes plus level jump entails volatility, final-year assumption.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/sione-laulea"
+        ]
+      }
     },
     {
       "id": "missouri|trajengreco",
@@ -8156,8 +8460,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 38,
+          "steady": 35,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.31,
+        "portalExitProbability": 0.04,
+        "summary": "Missouri 2025 safety played all games but made just seven tackles/one TFL after 2024 two tackles and special teams, first enrolled January 2024. Earned three early 2026 junior starts, 12 tackles and first college interception vs Mississippi State. Role opportunity merits improvement upside, but limited track record as starter.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/season/2026/player/trajen-greco"
+        ]
+      }
     },
     {
       "id": "missouri|xaishaunedwards",
@@ -8175,8 +8498,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/142/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 38,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.05,
+        "summary": "Houston Christian 2025 standout RB rushed 1,061 yards and 12 TD in 12 games after four carries for 19 yards in 2024 freshman season. Missouri 2026 junior transfer played first four games with 26 rushes for 114 yards/one TD: strong FCS tape and P4 role competition imply both potential breakthrough and risk.",
+        "sources": [
+          "https://mutigers.com/sports/football/roster/player/xaishaun-edwards"
+        ]
+      }
     },
     {
       "id": "notre-dame|adonshuler",
@@ -16518,7 +16860,7 @@
       }
     }
   ],
-  "officialOverrides": 124,
+  "officialOverrides": 128,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
