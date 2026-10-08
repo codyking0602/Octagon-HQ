@@ -1034,3 +1034,35 @@
     padding-left: 12px;
   }
 }
+
+.leaderboard-feud-board__guesses { border-top: 1px solid var(--border); }
+.leaderboard-feud-board__guesses > summary {
+  padding: 11px 13px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+}
+.leaderboard-feud-board__guesses > summary span { color: var(--text-muted); }
+.leaderboard-feud-board__guesses > div { display: grid; border-top: 1px solid var(--border); }
+.leaderboard-feud-board__guess {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  padding: 9px 13px;
+  border-top: 1px solid var(--border);
+}
+.leaderboard-feud-board__guess:first-child { border-top: 0; }
+.leaderboard-feud-board__guess > span { display: grid; gap: 2px; min-width: 0; }
+.leaderboard-feud-board__guess strong { font-size: 0.79rem; overflow-wrap: anywhere; }
+.leaderboard-feud-board__guess small { color: var(--text-muted); font-size: 0.66rem; }
+.leaderboard-feud-board__guess b {
+  flex: 0 0 auto;
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+.leaderboard-feud-board__guess b.is-strike { color: var(--text-muted); }
+.leaderboard-feud-board__guess b.is-credit { color: var(--text-secondary); }
