@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 371,
+  "exactMatches": 370,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -3823,8 +3823,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 47,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.38,
+        "portalExitProbability": 0.06,
+        "summary": "LSU junior safety: 26 games/four career starts through 2025, with 29 tackles, three TFL, one sack and two interceptions in 2025, notably a two-pick SEC Defensive Player of the Week game against Florida. Rotation-to-starter opportunity supports 2027 improvement, but turnover spikes may not persist. First college season 2024 permits a 2027 declaration; not automatic draft lock.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/dashawn-spears"
+        ]
+      }
     },
     {
       "id": "lsu|deucegeralds",
@@ -3842,8 +3861,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 41,
+          "steady": 27,
+          "decline": 12,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.15,
+        "summary": "LSU 2026 true freshman defensive tackle arrives with spectacular Collins Hill prep résumé (2025 91 tackles, 37 TFL, 16 sacks) but official bio does not establish corresponding college playing time or 2026 FBS output. High-school achievements are talent context only; college development and usage remain uncertain. 2026 first college year means first normally NFL-eligible 2029.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/deuce-geralds"
+        ]
+      }
     },
     {
       "id": "lsu|dilinjones",
@@ -3862,8 +3900,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 35,
+          "steady": 31,
+          "decline": 17,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.12,
+        "portalExitProbability": 0.13,
+        "summary": "LSU 2026 redshirt sophomore RB transferred from Wisconsin after first seven 2025 starts (76 carries/300 yards/two TD and nine catches) and season-ending turf-toe injury. Three 2024 reserve appearances for 88 yards. Healthy opportunity may materially increase rushing role, but lower conference efficiency, injury recovery and transfer competition create broad development risk. Original 2024 enrollment makes 2027 NFL draft possible despite sophomore label.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/dilin-jones"
+        ]
+      }
     },
     {
       "id": "lsu|djpickett",
@@ -3881,8 +3938,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 30,
+          "steady": 51,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07,
+        "summary": "LSU 2026 sophomore CB was a 2025 FWAA Freshman All-American and Freshman All-SEC, appearing in 13 games/three starts over 524 snaps, with 37 tackles, three interceptions, three PBUs and 304 pass-coverage snaps. Elite early man-coverage responsibility gives strong steady odds; experience can improve while interception count regresses. Entered 2025, ineligible for 2027 NFL Draft.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/dj-pickett"
+        ]
+      }
     },
     {
       "id": "lsu|dylancarpenter",
@@ -3900,8 +3976,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 36,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.12,
+        "portalExitProbability": 0.08,
+        "summary": "LSU 2026 redshirt junior edge has not established a starting role through 2025: 10 games/zero starts with 10 tackles, 2.5 TFL and two sacks on 119 defensive snaps in 2025, up from four tackles in 2024. NFL declaration should remain rare; greater edge rotation snaps can yield meaningful improvement, with limited evidence of an NFL-caliber ceiling. First college entry 2023.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/dylan-carpenter"
+        ]
+      }
     },
     {
       "id": "lsu|eugenewilsoniii",
@@ -3920,8 +4015,27 @@
       "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 33,
+          "steady": 31,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.47,
+        "portalExitProbability": 0.1,
+        "summary": "LSU 2026 redshirt junior receiver came from Florida with 107 career catches/1,043 yards/10 TD in 22 games/16 starts. Freshman All-American in 2023 (61/538/6), but 2024 season reduced to four games by surgery and 2025 to eight games with 27 catches/239yd/3TD after new injury. Demonstrated high receiving talent plus repeated health problems warrant genuine rebound probability and larger decline/availability swings.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/eugene-wilson-iii"
+        ]
+      }
     },
     {
       "id": "lsu|jacksonharris",
@@ -3940,8 +4054,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 32,
+          "steady": 41,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.54,
+        "portalExitProbability": 0.1,
+        "summary": "LSU redshirt junior WR transferred from Hawaii after 2025 first-team All-Mountain West, 49 receptions for 963 yards and conference-high 12 receiving TD and 19.65 yards per catch, following early Stanford seasons. Explosive proven Group-of-Five productivity can translate, but SEC defensive talent and target-share change create role risk. First enrolled 2023; 2027 NFL decision possible, not certain.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/jackson-harris"
+        ]
+      }
     },
     {
       "id": "lsu|jordanross",
@@ -3959,8 +4092,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 36,
+          "steady": 32,
+          "decline": 15,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.16,
+        "portalExitProbability": 0.12,
+        "summary": "LSU 2026 junior edge transferred from Tennessee, playing 2025 in 11 games/zero starts with 23 tackles, 3.5 TFL, 1.5 sacks on 246 defensive snaps; 2024 11 games with three tackles but Freshman All-SEC special teams recognition after blocked punt touchdown. Role ceiling can grow under new coaches, but recruiting-star pedigree does not establish existing elite college edge play.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/jordan-ross"
+        ]
+      }
     },
     {
       "id": "lsu|pjwoodland",
@@ -3978,8 +4130,27 @@
       "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 59,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.7,
+        "portalExitProbability": 0.05,
+        "summary": "LSU 2026 junior corner started every game in 2025, recording 41 tackles, 11 passes defended, nine PBUs and two picks over 614 defensive snaps, allowing no coverage TD in cited school review. Also appeared in 13 games/two starts in 2024. Established full-season man coverage supports high steady probability, modest grade growth and above-average 2027 NFL declaration risk.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/season/2025/player/pj-woodland"
+        ]
+      }
     },
     {
       "id": "lsu|princewillumanmielen",
@@ -4101,8 +4272,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 21,
+          "improve": 41,
+          "steady": 25,
+          "decline": 13,
+          "maxGain": 7,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.03,
+        "portalExitProbability": 0.17,
+        "summary": "LSU 2026 redshirt sophomore RB transferred from UCF after just 13 carries/63 yards/one TD over eight 2025 games and three 2024 redshirt appearances. LSU bio says entering 2026 with three years remaining; true 2024 initial enrollment technically makes 2027 NFL entry possible but very improbable due to lack of meaningful college production. High upside is role uncertainty, not proof of pro potential.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/stacy-gage"
+        ]
+      }
     },
     {
       "id": "lsu|tamarcuscooley",
@@ -4120,8 +4310,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 58,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.77,
+        "portalExitProbability": 0.05,
+        "summary": "LSU redshirt junior safety transferred from NC State/Maryland, started all 13 LSU games in 2025 with 70 tackles and two interceptions, and previous NC State 2024 nine starts with two interceptions; 28 career games/22 starts/113 tackles/four INT. Multi-program established Power Four safety résumé supports steady outcome and significant 2027 draft interest, not a pure breakout story.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/tamarcus-cooley"
+        ]
+      }
     },
     {
       "id": "lsu|tjdottery",
@@ -4131,16 +4340,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5th-year Senior",
       "espnAthleteId": "5229444",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://lsusports.net/sports/fb/roster/player/tj-dottery",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 17,
+          "steady": 63,
+          "decline": 17,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.01,
+        "summary": "LSU official 2026 fifth-year senior linebacker, first enrolled Clemson in 2022 and Ole Miss 2023–25. Explicit school bio calls 2026 his FINAL season; 2025 led SEC with 98 tackles/5.5 TFL/1.5 sacks after 2024 76 tackles/4.5 TFL/two sacks. Mature proven high-volume tackling leaves very little major further breakout runway, and 2027 return is blocked under normal rule unless separate waiver.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/tj-dottery"
+        ]
+      }
     },
     {
       "id": "lsu|treydezgreen",
@@ -4315,8 +4543,27 @@
       "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 38,
+          "steady": 35,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1,
+        "summary": "LSU sophomore WR spent true freshman 2025 at Ole Miss, appearing in 15 games and catching 26 passes for 373 yards and one touchdown, adding 21 rushing yards on five carries. LSU role is new, but 2025 experience in deep CFP run supports realistic volume improvement, not only high-school hype. Original 2025 enrollment bars 2027 NFL declaration.",
+        "sources": [
+          "https://lsusports.net/sports/fb/roster/player/winston-watkins-jr"
+        ]
+      }
     },
     {
       "id": "miami|ahmadmoten",
@@ -12262,7 +12509,7 @@
       }
     }
   ],
-  "officialOverrides": 97,
+  "officialOverrides": 98,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -12274,5 +12521,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain."
 }
