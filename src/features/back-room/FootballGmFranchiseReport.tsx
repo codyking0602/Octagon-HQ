@@ -75,8 +75,8 @@ function snapshot(run: FootballGmReportRun) {
   };
 }
 
-function tierPill(player: FootballGmPlayer, year: 1 | 3) {
-  const value = tier(footballGmProjectedGradeForPlayer(player, year));
+function tierPill(player: FootballGmPlayer, year: 1 | 3, seed: string) {
+  const value = tier(footballGmProjectedGradeForPlayer(player, year, seed));
   return <span className={"football-gm__quality-pill quality-" + value.toLowerCase()}>{value}</span>;
 }
 
@@ -113,14 +113,14 @@ function EvolutionRow({ slot, run }: { slot: FootballGmRosterSlot; run: Football
         <small>YEAR 1</small>
         <strong>{startPlayer.name}</strong>
         <em>{startPlayer.team} · {footballGmMoney(startPlayer.salaryWindow[0])}</em>
-        <span className="football-gm-report__pills">{tierPill(startPlayer, 1)}{outlookPill(startPlayer)}{contractPill(startPlayer)}</span>
+        <span className="football-gm-report__pills">{tierPill(startPlayer, 1, run.seed)}{outlookPill(startPlayer)}{contractPill(startPlayer)}</span>
       </div>
       <span className={"football-gm-report__move" + (changed ? " is-change" : "")}>{move}<i>→</i></span>
       <div className="is-final">
         <small>YEAR 3</small>
         <strong>{endPlayer.name}</strong>
         <em>{endPlayer.team} · {footballGmMoney(endSalary)}</em>
-        <span className="football-gm-report__pills">{tierPill(endPlayer, 3)}{outlookPill(endPlayer)}{contractPill(endPlayer)}</span>
+        <span className="football-gm-report__pills">{tierPill(endPlayer, 3, run.seed)}{outlookPill(endPlayer)}{contractPill(endPlayer)}</span>
       </div>
     </article>
   );
@@ -154,7 +154,7 @@ function CoreReport({ name, run }: { name: string; run: FootballGmReportRun }) {
             <div className="gm-result__player" key={slot}>
               <b>{slot}</b>
               <span><strong>{player.name}</strong><small>{player.team} · {footballGmMoney(salary)}</small></span>
-              <span className="gm-result__player-meta">{tierPill(player, 3)}{changed ? <small className="gm-result__changed">NEW</small> : null}</span>
+              <span className="gm-result__player-meta">{tierPill(player, 3, run.seed)}{changed ? <small className="gm-result__changed">NEW</small> : null}</span>
             </div>
           );
         })}
