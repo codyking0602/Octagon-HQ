@@ -15191,8 +15191,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 40,
+          "steady": 31,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.04,
+        "portalExitProbability": 0.11,
+        "summary": "Utah official 2026 roster lists FR, but individual bio describes 2024 no action, 2025 three reserve games and lists him SO: conflicting class metadata must remain flagged. No verified 2025 defensive statistics; 2026 first four reserve appearances. College matriculation in 2024 can make 2027 draft legally possible despite 2026 FR roster label. Young developmental edge, limited production and high uncertainty.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/alex-cloward/16567"
+        ]
+      }
     },
     {
       "id": "utah|bradenpegan",
@@ -15210,9 +15229,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 54,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.7,
+        "portalExitProbability": 0.02,
+        "summary": "2025 Utah State first-team All-Mountain West receiver with 60 catches, 926 yards and five TD in 12 games/11 starts. Utah 2026 four starts with 17 catches, 264 yards and four TD, 2026 Biletnikoff watch list. Former UCLA player from 2022-24 (redshirt 2024). Proven upper-tier volume, with restrained further gains and 2026 final-year model (not certified).",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/braden-pegan/17660"
+        ]
+      }
     },
     {
       "id": "utah|creedwhittemore",
@@ -15230,8 +15268,27 @@
       "sourceUrl": "https://utahutes.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 39,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.32,
+        "portalExitProbability": 0.04,
+        "summary": "Utah 2025 reserve/special-teams WR played nine games and caught 12 passes for 92 yards and one TD, after 2023-24 Mississippi State career total 15 catches/167 yards. Through four 2026 games has eight catches/131 yards as reserve. Healthy role expansion possible but prior FBS volume remains modest; senior class does not certify absence of remaining eligibility.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/creed-whittemore/17590"
+        ]
+      }
     },
     {
       "id": "utah|danielbray",
@@ -15250,8 +15307,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 41,
+          "steady": 30,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.08,
+        "summary": "Utah 2025 true freshman played nine games, rushing 40 times for 272 yards/one TD (6.8 yards per carry) including 121 yards at BYU. In four 2026 games recorded 13 carries for 100 yards and a TD plus nine catches/57 yards. Dynamic efficiency in limited carries creates upside but small workload and competition risk; first enrolled 2025, 2027 NFL ineligible.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/daniel-bray/17497"
+        ]
+      }
     },
     {
       "id": "utah|devondampier",
@@ -15312,16 +15388,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4808760",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/elijah-davis/17511",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 21,
+          "steady": 61,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.01,
+        "summary": "Utah 2025 played all 13 games with 11 starts, 34 tackles/two INT returned for 65- and 97-yard pick-sixes, 2025 FBS top-three 162 interception return yards. Started first four 2026 with nine tackles and four pass breakups. Official 2026 fifth-year CB, reliable veteran with limited breakout headroom, modeled terminal college season subject to eligibility exceptions.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/elijah-davis/17511"
+        ]
+      }
     },
     {
       "id": "utah|elijahelliss",
@@ -15339,8 +15434,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 41,
+          "steady": 34,
+          "decline": 10,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.52,
+        "portalExitProbability": 0.04,
+        "summary": "Utah 2025 defensive reserve appeared in 13 games and made 18 tackles, three TFL and two sacks. Earned three starts in opening four 2026 games, 20 tackles, three TFL and two sacks; seven tackles and sack at Iowa State. Genuine step into starting linebacker production after 2024 special teams, but partial-season breakout remains unproven at full-season level.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/elijah-elliss/17516"
+        ]
+      }
     },
     {
       "id": "utah|elijahreed",
@@ -15357,9 +15471,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 48,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.45,
+        "portalExitProbability": 0.03,
+        "summary": "Akron 2025 played 12 games/12 starts as CB with 47 tackles, two TFL, one sack, forced fumble, two interceptions and four defended passes, after 2024 six starts/32 tackles. Utah 2026 first four games with nine tackles and four PBU (three vs Arkansas); began college at Kentucky in 2022 and redshirted. Veteran higher-level-transfer step creates some uncertainty, modeled ordinary final year.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/elijah-reed/17661"
+        ]
+      }
     },
     {
       "id": "utah|ethanday",
@@ -15377,8 +15510,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 33,
+          "steady": 43,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.5,
+        "portalExitProbability": 0.05,
+        "summary": "North Texas 2025 DE started all 13 games with 48 tackles, seven TFL, 4.5 sacks; previously Wyoming in 2023-24 and Modesto Community College in 2022. Utah 2026 three starts in four games with early tackles/PBU. Established group-of-five production, higher-level pass-rush translation uncertain; career began 2022, draft timing eligible.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/ethan-day/17656"
+        ]
+      }
     },
     {
       "id": "utah|jacksonbennee",
@@ -15396,8 +15548,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 56,
+          "decline": 10,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.83,
+        "portalExitProbability": 0.02,
+        "summary": "Utah 2025 All-Big12 honorable mention safety and Burlsworth nominee: 64 tackles, four TFL, four interceptions/103 return yards in 13 games/11 starts and two blocked kicks. Started first four 2026 with 13 tackles, three PBU and two INT; high demonstrated ball production creates steady profile, only bounded incremental development.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/jackson-bennee/17492"
+        ]
+      }
     },
     {
       "id": "utah|lanceholtzclaw",
@@ -15407,16 +15578,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4816097",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/lance-holtzclaw/17534",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 48,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.37,
+        "portalExitProbability": 0.03,
+        "summary": "Utah 2025 edge played all 13 games/one start with 26 tackles, four TFL, 1.5 sacks and three PBU. Opened 2026 with three starts/four games, 11 tackles and two PBU. Prior Washington transfer, officially fifth year in 2026, starter role offers measured upside but limited previous pass rush production and ordinary terminal-year model.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/lance-holtzclaw/17534"
+        ]
+      }
     },
     {
       "id": "utah|nateritchie",
@@ -15434,8 +15624,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 36,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.41,
+        "portalExitProbability": 0.04,
+        "summary": "Utah 2025 started first five games at safety before injury, contributing 25 tackles, 3.5 TFL and one PBU. Returned to all four opening 2026 games/two starts, 19 tackles and 2.5 TFL. Defensive role recovery carries upside and injury risk, not a full uninterrupted 2025 track record.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/nate-ritchie/17570"
+        ]
+      }
     },
     {
       "id": "utah|noahbennee",
@@ -15453,9 +15662,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 39,
+          "steady": 37,
+          "decline": 10,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.02,
+        "summary": "Utah tight end returned from Weber State, where 2025 11 games yielded 23 catches and 264 yards after 2024 six for 44/TD; 2026 four games yielded seven catches for 166 yards/two TD including 113 yards vs Arkansas. College began with Utah 2021-23; senior designation and six calendar years suggest ordinary 2026 terminal model, but unusual eligibility may exist.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/noah-bennee/17654"
+        ]
+      }
     },
     {
       "id": "utah|paulfitzgerald",
@@ -15465,16 +15693,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4878108",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/paul-fitzgerald/17521",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 34,
+          "steady": 34,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.02,
+        "summary": "Utah 2025 reserve edge played four games, 11 tackles and 1.5 TFL, after 2024 four total tackles. Utah State 2023 13-start pass rush season had 46 tackles, nine TFL and eight sacks. Official fifth-year Utah 2026; prior demonstrated impact creates rebound case, but absence of sustained recent production and injury/role risk temper expectations.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/paul-fitzgerald/17521"
+        ]
+      }
     },
     {
       "id": "utah|rabbitevans",
@@ -15484,16 +15731,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "5219993",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/rabbit-evans/17519",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 34,
+          "steady": 38,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.37,
+        "portalExitProbability": 0.02,
+        "summary": "Utah 2024 five-start safety compiled 34 tackles/two TFL, then 2025 defense appearance at Wyoming followed by season-ending injury. Returned for four starting 2026 games with 14 tackles, sack, interception and fumble recovery. Official 2026 fifth year after Blinn College 2022-23; strong rebound evidence with major availability uncertainty.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/rabbit-evans/17519"
+        ]
+      }
     },
     {
       "id": "utah|rickyjohnson",
@@ -15511,8 +15777,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 39,
+          "steady": 31,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.11,
+        "portalExitProbability": 0.08,
+        "summary": "Mississippi State 2024-25 WR played 17 games/one start with only five career receptions/26 yards, including three for 17 yards in 2025. Utah 2026 first four games all starts with nine catches/101 yards: clear increased role but modest verified P4 production. 2024 first college season makes 2027 draft potentially legal despite official sophomore designation.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/ricky-johnson/17647"
+        ]
+      }
     },
     {
       "id": "utah|treyreynolds",
@@ -15529,9 +15814,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 42,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.02,
+        "summary": "Utah 2025 all 13 games/four starts linebacker, 28 tackles, six TFL, 1.5 sacks and two interceptions. First four 2026 starts produced team-high 24 tackles, three TFL and an INT. Collegiate record includes 2021 play and school 2026 senior designation; modeling final college season with only ordinary eligibility assumption.",
+        "sources": [
+          "https://utahutes.com/sports/football/roster/trey-reynolds/17568"
+        ]
+      }
     },
     {
       "id": "utah|wayshawnparker",
@@ -15587,7 +15891,7 @@
       }
     }
   ],
-  "officialOverrides": 118,
+  "officialOverrides": 122,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
