@@ -379,7 +379,7 @@ export function PlayerHeadshot({
   player,
   className = "football-gm__player-headshot",
 }: {
-  player: FootballGmPlayer;
+  player: Pick<FootballGmPlayer, "team" | "name">;
   className?: string;
 }) {
   const cacheKey = `${player.team}:${normalizedGmPlayerName(player.name)}`;
