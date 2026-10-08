@@ -7,7 +7,7 @@ import classEvidence from "../../../data/generated/football/cfb-gm-classificatio
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
 import { cfbGmDevProfile, cfbGmDevelop, type CfbGmClass } from "./footballCfbGmDevelopment";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v4-official-classes";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v5-extended-year-evidence";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -94,7 +94,7 @@ type ClassRow = {id: string; classification: string | null; remainingEligibility
 const classIndex = new Map<string, ClassRow>(
   (classEvidence.players as ClassRow[]).map((row) => [row.id, row]),
 );
-const knownClasses = new Set(["FR", "SO", "JR", "SR", "3RD", "5TH", "6TH", "7TH"]);
+const knownClasses = new Set(["FR", "SO", "JR", "SR", "3RD", "5TH", "6TH", "7TH", "8TH"]);
 function playerClass(id: string): CfbGmClass {
   const value = classIndex.get(id)?.classification;
   return value && knownClasses.has(value) ? value as CfbGmClass : null;
@@ -108,7 +108,7 @@ export function isModelDraftEligible(id: string, classification: CfbGmClass): bo
   if (evidence?.earliestDraftYear !== null && evidence?.earliestDraftYear !== undefined)
     return evidence.earliestDraftYear <= 2027;
   return classification === "JR" || classification === "SR" || classification === "3RD"
-    || classification === "5TH" || classification === "6TH" || classification === "7TH";
+    || classification === "5TH" || classification === "6TH" || classification === "7TH" || classification === "8TH";
 }
 function draftOutlook(id: string, grade: number, classification: CfbGmClass): CfbGmPlayer["departureRisk"] {
   if (!isModelDraftEligible(id, classification)) return "LOW";
@@ -293,7 +293,7 @@ export function cfbGmForcedDepartures(run: CfbGmRun) {
       : player.id === "texas|colinsimmons" ? .90
       : grade >= 96 ? .72 : grade >= 92 ? .54 : grade >= 87 ? .26 : .07;
     const remaining = classIndex.get(player.id)?.remainingEligibility;
-    const exhaustedProbability = remaining === 0 ? 1
+    const exhaustedProbability = remaining === 0 || player.classification === "8TH" ? 1
       : player.classification === "7TH" ? .93
       : player.classification === "6TH" ? .83
       : player.classification === "5TH" ? .70
