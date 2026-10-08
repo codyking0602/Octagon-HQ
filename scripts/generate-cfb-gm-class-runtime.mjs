@@ -16,6 +16,7 @@ const players = ledger.players.map((row) => ({
     year1: row.nilMarketEvidence.year1,
     year2Baseline: row.nilMarketEvidence.year2Baseline,
     providerRank: row.nilMarketEvidence.providerRank,
+    confidence: row.nilMarketEvidence.confidence,
   }} : {}),
   ...(row.calibration ? {calibration: {
     status: row.calibration.status,
