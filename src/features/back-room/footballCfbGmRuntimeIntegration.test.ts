@@ -62,8 +62,12 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(cfbGmPlayer("smu|jimmywyrick")?.classification).toBe("6TH");
     expect(cfbGmPlayer("texas|archmanning")?.classification).toBe("SR");
     expect(isModelDraftEligible("alabama|keelonrussell","SO")).toBe(false);
-    expect(CFB_GM_PLAYERS.filter((p) => p.classification === "FR" ||
-      p.classification === "SO").every((p) => !isModelDraftEligible(p.id,p.classification))).toBe(true);
+    // Classification alone is not NFL eligibility: 2026 redshirt sophomore Drew
+    // Mestemaker entered college in 2024 and is eligible for the 2027 draft.
+    expect(isModelDraftEligible("oklahoma-state|drewmestemaker","SO")).toBe(true);
+    expect(CFB_GM_PLAYERS.filter((p) => (p.classification === "FR" ||
+      p.classification === "SO") && p.id !== "oklahoma-state|drewmestemaker")
+      .every((p) => !isModelDraftEligible(p.id,p.classification))).toBe(true);
   });
 
   it("applies actual seeded development to the second-year team and leaves Wheel HQ untouched", () => {
