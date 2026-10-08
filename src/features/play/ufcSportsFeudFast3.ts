@@ -469,7 +469,8 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "Couture-Liddell",
           "McGregor-Aldo",
           "Nunes-Shevchenko",
-          "Poirier-McGregor"
+          "Poirier-McGregor",
+          "Rousey-Tate"
         ]
       },
       {
@@ -489,7 +490,8 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "Couture-Liddell",
           "Adesanya-Pereira",
           "McGregor-Aldo",
-          "Nunes-Shevchenko"
+          "Nunes-Shevchenko",
+          "Rousey-Tate"
         ]
       },
       {
@@ -509,7 +511,8 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "McGregor-Aldo",
           "Nunes-Shevchenko",
           "Usman-Covington",
-          "Poirier-McGregor"
+          "Poirier-McGregor",
+          "Rousey-Tate"
         ]
       },
       {
@@ -559,7 +562,8 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "McGregor-Aldo",
           "Nunes-Shevchenko",
           "Usman-Covington",
-          "Poirier-McGregor"
+          "Poirier-McGregor",
+          "Rousey-Tate"
         ]
       }
     ],
@@ -651,7 +655,8 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
         "aliases": [
           "Poirier vs McGregor"
         ]
-      }
+      },
+      "Rousey-Tate"
     ]
   },
   {
