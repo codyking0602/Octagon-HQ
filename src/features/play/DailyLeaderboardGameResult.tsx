@@ -347,6 +347,25 @@ function feudAnswerRows(board: JsonRecord): FeudAnswerRow[] {
   return rows;
 }
 
+export function buildSportsFeudBoardGuessRows(board: JsonRecord) {
+  const recorded = records(board.guesses);
+  const legacy = recorded.length ? [] : records(board.slots)
+    .filter((slot) => slot.found === true)
+    .map((slot) => ({
+      submittedText: String(record(slot.entity).display_name ?? ""),
+      matchedName: String(record(slot.entity).display_name ?? ""),
+      points: Number(slot.points ?? 0),
+      outcome: "correct",
+    }));
+  return [...(recorded.length ? recorded : legacy), ...records(board.reviewed_guesses)]
+    .map((entry) => ({
+      submittedText: String(entry.submittedText ?? entry.submitted_text ?? ""),
+      matchedName: String(entry.matchedName ?? entry.matched_name ?? ""),
+      points: Number(entry.points ?? 0),
+      outcome: String(entry.outcome ?? "strike"),
+    })).filter((entry) => entry.submittedText.length > 0);
+}
+
 export function buildSportsFeudFastMoneyRows(
   projection: TodayChallengeProjection,
   resultDetail: JsonRecord,
@@ -709,6 +728,7 @@ function SportsFeudLeaderboardResult({
         {boards.map((board, boardIndex) => {
           const answers = feudAnswerRows(board);
           const foundPoints = answers.filter((answer) => answer.found).reduce((sum, answer) => sum + answer.points, 0);
+          const guesses = buildSportsFeudBoardGuessRows(board);
           return (
             <section className="leaderboard-feud-board" key={String(board.id ?? boardIndex)}>
               <header>
@@ -736,6 +756,30 @@ function SportsFeudLeaderboardResult({
                   </div>
                 ))}
               </div>
+              {guesses.length > 0 ? (
+                <details className="leaderboard-feud-board__guesses">
+                  <summary>YOUR GUESSES <span>{guesses.length}</span></summary>
+                  <div>
+                    {guesses.map((guess, guessIndex) => (
+                      <div className="leaderboard-feud-board__guess" key={guessIndex}>
+                        <span>
+                          <strong>{guess.submittedText}</strong>
+                          {guess.matchedName && guess.matchedName.toLowerCase() !== guess.submittedText.toLowerCase()
+                            ? <small>Matched: {guess.matchedName}</small>
+                            : null}
+                        </span>
+                        <b className={guess.outcome === "strike" ? "is-strike" : "is-credit"}>
+                          {guess.outcome === "accepted-after-review"
+                            ? "VALID · REVIEWED"
+                            : guess.outcome === "strike"
+                              ? "STRIKE"
+                              : `+${guess.points}`}
+                        </b>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              ) : null}
             </section>
           );
         })}
