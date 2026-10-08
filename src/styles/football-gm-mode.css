@@ -3370,3 +3370,343 @@
 .football-gm__challenge-picker .football-wheel-opponent {
   margin: 0;
 }
+
+
+/* GM result v2: show the matchup before the front-office detail. */
+.football-gm__picker .football-gm__position-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(55px, 1fr));
+  gap: 5px;
+  margin: 12px 0;
+}
+.football-gm__position-tabs button {
+  min-height: 40px;
+  border-radius: 9px;
+}
+.football-gm__position-prompt {
+  text-align: center;
+  padding: 16px 6px;
+}
+.gm-result {
+  gap: 12px;
+}
+.gm-result__summary,
+.gm-result__roster-card {
+  padding: 18px 16px;
+}
+.gm-result__headline {
+  text-align: center;
+  display: grid;
+  gap: 5px;
+  margin-bottom: 13px;
+}
+.gm-result__headline small,
+.gm-result__section-heading > strong,
+.gm-result__front-office-heading small {
+  color: #82bfe5;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+.gm-result__headline h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(23px, 6vw, 32px);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+.gm-result__scores {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 17px;
+}
+.gm-result__scores.is-versus {
+  grid-template-columns: minmax(0,1fr) 24px minmax(0,1fr);
+  align-items: center;
+}
+.gm-result__scores > div {
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  padding: 11px 6px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 13px;
+  background: rgba(255,255,255,.025);
+}
+.gm-result__scores > div.is-winner {
+  border-color: rgba(106,189,239,.54);
+  background: linear-gradient(160deg,rgba(36,93,137,.24),rgba(255,255,255,.02));
+}
+.gm-result__scores > div > small,
+.gm-result__scores em {
+  color: #90a8bb;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .055em;
+}
+.gm-result__scores > div > strong {
+  font-size: clamp(30px, 8vw, 42px);
+  letter-spacing: -.05em;
+  line-height: 1.1;
+  color: #fff;
+}
+.gm-result__scores > div.is-winner > strong { color: #93d1fa; }
+.gm-result__versus {
+  text-align: center;
+  font-size: 10px;
+  color: #668396;
+  font-weight: 950;
+}
+.gm-result__season-comparison {
+  display: grid;
+  gap: 8px;
+}
+.gm-result__section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 5px 10px;
+  margin: 2px 0 4px;
+}
+.gm-result__section-heading > small {
+  color: #8198a9;
+  font-size: 9px;
+  letter-spacing: .025em;
+}
+.gm-result__season {
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 5px;
+  border: 1px solid rgba(255,255,255,.085);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(255,255,255,.018);
+}
+.gm-result__season.is-versus {
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 7px;
+}
+.gm-result__season-number {
+  grid-column: 1/-1;
+  text-align: center;
+  color: #8fbad6;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .12em;
+}
+.gm-result__season-side {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  gap: 3px;
+  text-align: center;
+  border-radius: 9px;
+  background: rgba(255,255,255,.032);
+  padding: 10px 6px;
+}
+.gm-result__season-side:first-of-type {
+  background: rgba(36,96,142,.15);
+}
+.gm-result__season-owner {
+  color: #98bacf;
+  font-weight: 950;
+  letter-spacing: .08em;
+  font-size: 9px;
+}
+.gm-result__overall {
+  font-size: clamp(22px, 6.5vw, 31px);
+  color: #fff;
+  line-height: 1.08;
+  white-space: nowrap;
+}
+.gm-result__overall span {
+  font-size: .51em;
+  color: #c8d9e6;
+}
+.gm-result__record {
+  color: #a9e8c2;
+  font-size: 18px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.gm-result__record small { font-size: 9px; color: #a0b7a9; }
+.gm-result__legacy-record {
+  color: #7c8f9d;
+  font-size: 9px;
+}
+.gm-result__finish {
+  color: #9accf0;
+  font-size: 11px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.gm-result__expander {
+  margin-top: 13px;
+  padding: 10px 0 0;
+  border-top: 1px solid rgba(255,255,255,.12);
+}
+.gm-result__expander summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 5px;
+  color: #dcecf7;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .055em;
+}
+.gm-result__expander summary::marker { color: #8cbddf; }
+.gm-result__expander summary > span {
+  color: #88a8bd;
+  font-size: 9px;
+}
+.gm-result__scoring > p {
+  margin: 10px 0;
+  color: #9baebb;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.gm-result__math-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.gm-result__math-row > span {
+  color: #94aabc;
+  font-size: 10px;
+}
+.gm-result__math-row > b {
+  color: #fff;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.gm-result__roster-card {
+  display: grid;
+  gap: 11px;
+}
+.gm-result__franchise-tabs {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 6px;
+}
+.gm-result__franchise-tabs button {
+  padding: 11px 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.025);
+  color: #8aa8bc;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 950;
+}
+.gm-result__franchise-tabs button.is-active {
+  color: #d6efff;
+  background: rgba(39,111,165,.22);
+  border-color: #6bb6e8;
+}
+.gm-result__front-office {
+  display: grid;
+  gap: 12px;
+}
+.gm-result__front-office-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.gm-result__front-office-heading h2 { margin: 3px 0 0; font-size: 18px; }
+.gm-result__front-office-heading > strong {
+  display: grid;
+  justify-items: end;
+  color: #f1f6fa;
+  font-size: 18px;
+}
+.gm-result__front-office-heading > strong small {
+  color: #7b95a8;
+  font-size: 9px;
+}
+.gm-result__final-roster {
+  display: grid;
+  gap: 0;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 11px;
+  overflow: hidden;
+}
+.gm-result__player {
+  display: grid;
+  grid-template-columns: 32px minmax(0,1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.075);
+}
+.gm-result__player:last-child { border-bottom: 0; }
+.gm-result__player > b {
+  color: #83c9f7;
+  font-size: 11px;
+}
+.gm-result__player > span:nth-child(2) {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.gm-result__player > span:nth-child(2) strong {
+  color: #fff;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.gm-result__player > span:nth-child(2) small {
+  color: #819bac;
+  font-size: 10px;
+}
+.gm-result__player-meta {
+  display: grid;
+  gap: 3px;
+  justify-items: end;
+}
+.gm-result__changed {
+  color: #87d5ad;
+  font-size: 9px;
+  font-weight: 900;
+}
+.gm-result__moves {
+  display: grid;
+  gap: 6px;
+  margin-top: 3px;
+}
+.gm-result__move {
+  display: grid;
+  grid-template-columns: 28px minmax(0,1fr);
+  align-items: center;
+  gap: 9px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.025);
+}
+.gm-result__move > b { color: #85c5ee; font-size: 10px; }
+.gm-result__move > span { min-width: 0; display: grid; gap: 3px; }
+.gm-result__move small { font-size: 9px; color: #91a8b8; }
+.gm-result__move strong { font-size: 11px; color: #ecf5fa; overflow-wrap: anywhere; }
+.gm-result__quiet { color: #93a8b7; font-size: 11px; }
+.gm-result__expander .football-gm-report__evolution-rows {
+  display: grid;
+  gap: 0;
+  margin-top: 12px;
+}
+.gm-result__expander h3 { font-size: 11px; letter-spacing: .07em; color: #94bad7; }
+@media (max-width: 390px) {
+  .gm-result__summary, .gm-result__roster-card { padding: 14px 11px; }
+  .gm-result__season-side { padding: 9px 4px; }
+  .gm-result__finish { font-size: 10px; }
+  .gm-result__record { font-size: 16px; }
+  .gm-result__player { grid-template-columns: 29px minmax(0,1fr) auto; gap: 6px; padding: 8px; }
+  .football-gm__picker .football-gm__position-tabs { grid-template-columns: repeat(4,minmax(0,1fr)); }
+}
