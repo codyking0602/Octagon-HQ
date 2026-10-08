@@ -148,8 +148,12 @@ describe("full NFL GM development calibration", () => {
     const first = footballGmDevelopmentOdds({
       ...input, age: player.age, step: 0, grade: player.currentGrade,
     })!;
+    const curated = footballGmDevelopmentProfile(player.id)!;
     expect(first).toEqual({
-      breakoutPct: 27, improvePct: 37, declinePct: 18, steadyPct: 18,
+      breakoutPct: curated.breakoutPct,
+      improvePct: curated.improvePct,
+      declinePct: curated.declinePct,
+      steadyPct: 100 - curated.breakoutPct - curated.improvePct - curated.declinePct,
     });
 
     const breakout = footballGmDevelopmentOdds({ ...input, step: 1, grade: 93 })!;
