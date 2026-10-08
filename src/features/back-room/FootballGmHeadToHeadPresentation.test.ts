@@ -147,7 +147,16 @@ describe("The GM head-to-head presentation", () => {
     expect(report).toContain("FRANCHISE ARC");
     expect(report).toContain("ROSTER EVOLUTION");
     expect(report).toContain("OFFSEASON TRANSACTIONS");
-    expect(report).toContain("WHERE THE MATCH WAS WON");
+    expect(report).toContain("HOW YOUR GM SCORE IS CALCULATED");
+    expect(report).toContain("OVR measures team strength");
+    expect(report).toContain("Year 3 payroll");
+    expect(report).toContain("FOOTBALL_GM_CAP - own.year3Payroll");
+    expect(report).toContain("rosterManagementScore.toFixed(1)");
+    expect(report).toContain("resumeScore.toFixed(1)");
+    expect(report).not.toContain("<small>Year 3 cap</small>");
+    expect(page).toContain("savedMySeasons");
+    expect(page).toContain("savedOpponentSeasons");
+    expect(page).toContain("savedHasDuplicateFinalist");
     expect(report).toContain("Original core");
     expect(report).toContain("GM Score");
     expect(report).not.toContain("BEST ROSTER DECISION");
