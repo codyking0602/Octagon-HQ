@@ -183,52 +183,114 @@ function Season({season}: {season: CfbGmSeason}) {
 }
 function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
   const result = cfbGmFinalResult(run);
-  const changed = run.finalRoster.filter((r) => !run.roster.some((x) => x.playerId === r.playerId));
-  return <div className="football-gm-report">
-    <section className="football-gm-report__hero surface-card">
-      <p className="eyebrow">THE GM · CFB · 2-YEAR RESULT</p>
-      <h1>{result.score.toFixed(1)}</h1>
-      <strong className="football-gm-report__score-label">GM SCORE · TEAM BUILD + 2-YEAR RÉSUMÉ</strong>
-    </section>
-    <section className="football-gm-report__timeline surface-card">
-      <header><span><small>PROGRAM ARC</small><strong>WHAT YOU BUILT</strong></span></header>
-      <div className="football-gm-report__years">
-        {result.seasons.map((season) => <article key={season.year}>
-          <small>YEAR {season.year} · {season.wins}–{season.losses}</small><strong>{season.overall} OVR</strong><span>{season.finish}</span>
+  const additions = run.finalRoster.filter((r) => !run.roster.some((x) => x.playerId === r.playerId));
+  const yearTwoSpent = cfbGmSpent(run.finalRoster, 2);
+  const budget = CFB_GM_BUDGETS[run.budget];
+  return <div className="football-gm-report gm-result">
+    <section className="gm-result__summary surface-card" aria-label="Final college GM score and seasons">
+      <header className="gm-result__headline">
+        <small>THE GM · COLLEGE · TWO-YEAR FINAL</small>
+        <h1>YOUR TWO-YEAR GM RESULT</h1>
+      </header>
+      <div className="gm-result__scores">
+        <div><small>YOUR PROGRAM</small><strong>{result.score.toFixed(1)}</strong><em>GM SCORE</em></div>
+      </div>
+      <div className="gm-result__season-comparison">
+        <div className="gm-result__section-heading">
+          <strong>YOUR TWO SEASONS</strong><small>OVR · REGULAR SEASON · CFP FINISH</small>
+        </div>
+        {result.seasons.map((season) => <article className="gm-result__season" key={season.year}>
+          <small className="gm-result__season-number">YEAR {season.year}</small>
+          <div className="gm-result__season-side">
+            <strong className="gm-result__overall">{season.overall} <span>OVR</span></strong>
+            <strong className="gm-result__record">{season.wins}–{season.losses} <small>W–L</small></strong>
+            <span className="gm-result__finish">{season.finish}{season.cfpSeed ? " · #" + season.cfpSeed + " SEED" : ""}</span>
+          </div>
         </article>)}
       </div>
-      <div className="football-gm-report__offseason-marker">
-        <small>THE OFFSEASON</small>
-        <strong>{result.retained}/7 ORIGINAL CORE RETAINED</strong>
-        <span>{result.forcedDepartures} projected eligibility/NFL/portal departure(s) · {result.voluntaryDepartures} portal-out(s) · {changed.length} portal addition(s)</span>
+    </section>
+
+    <section className="gm-result__roster-card surface-card" aria-label="College front office result">
+      <div className="gm-result__section-heading">
+        <strong>WHAT YOU BUILT</strong><small>YOUR COLLEGE FRONT OFFICE</small>
       </div>
+      <section className="gm-result__front-office" aria-label="2027 college core">
+        <div className="gm-result__front-office-heading">
+          <div><small>PROGRAM ARC · YEAR 2 CORE</small><h2>YOUR 2027 CORE</h2></div>
+          <strong>{result.retained}/7 <small>Original core</small></strong>
+        </div>
+        <div className="gm-result__final-roster" aria-label="Final college roster">
+          {CFB_GM_ROSTER_SLOTS.map((slot) => {
+            const entry = run.finalRoster.find((r) => r.slot === slot);
+            const player = entry ? cfbGmPlayer(entry.playerId) : null;
+            if (!player) return null;
+            const added = !run.roster.some((r) => r.playerId === player.id);
+            return <div className="gm-result__player" key={slot}>
+              <b>{CFB_GM_SLOT_LABELS[slot]}</b>
+              <span><strong>{player.name}</strong><small>{player.school} · {cfbGmMoney(player.nilYear2)}</small></span>
+              <span className="gm-result__player-meta">
+                <Quality grade={cfbGmEffectiveGrade(player, 2, run.seed)} />
+                {added ? <small className="gm-result__changed">NEW</small> : null}
+              </span>
+            </div>;
+          })}
+        </div>
+        <div className="gm-result__moves">
+          <div className="gm-result__section-heading">
+            <strong>OFFSEASON TRANSACTIONS</strong>
+            <small>{result.forcedDepartures} projected departures · {result.voluntaryDepartures} portal-outs · {additions.length} additions</small>
+          </div>
+          {additions.length ? additions.map((entry) => {
+            const player = cfbGmPlayer(entry.playerId);
+            return <div className="gm-result__move" key={entry.playerId}>
+              <b>{CFB_GM_SLOT_LABELS[entry.slot]}</b>
+              <span><small>PORTAL IN</small><strong>{player?.name} · {player?.school}</strong></span>
+            </div>;
+          }) : <p className="gm-result__quiet">All seven core spots filled without a portal addition.</p>}
+        </div>
+        <details className="gm-result__expander football-gm-report__evolution">
+          <summary>VIEW FULL ROSTER EVOLUTION <span>Y1 → Y2</span></summary>
+          <div className="football-gm-report__evolution-rows">
+            <h3>ROSTER EVOLUTION</h3>
+            {CFB_GM_ROSTER_SLOTS.map((slot) => {
+              const fromRow = run.roster.find((r) => r.slot === slot);
+              const toRow = run.finalRoster.find((r) => r.slot === slot);
+              const before = fromRow ? cfbGmPlayer(fromRow.playerId) : null;
+              const after = toRow ? cfbGmPlayer(toRow.playerId) : null;
+              if (!before || !after) return null;
+              const move = before.id === after.id ? "RETAINED"
+                : run.roster.some((r) => r.playerId === after.id) ? "REASSIGNED" : "PORTAL";
+              return <article className="football-gm-report__evolution-row" key={slot}>
+                <b>{CFB_GM_SLOT_LABELS[slot]}</b>
+                <div><small>YEAR 1</small><strong>{before.name}</strong>
+                  <em>{before.school} · {cfbGmMoney(before.nilYear1)}</em>
+                  <span className="football-gm-report__pills"><Quality grade={before.currentGrade} /><Outlook value={before.outlook} /></span>
+                </div>
+                <span className={"football-gm-report__move" + (move !== "RETAINED" ? " is-change" : "")}>{move}<i>→</i></span>
+                <div className="is-final"><small>YEAR 2</small><strong>{after.name}</strong>
+                  <em>{after.school} · {cfbGmMoney(after.nilYear2)} · {cfbGmDevelop(after.id, after.currentGrade, after.classification, run.seed).outcome}</em>
+                  <span className="football-gm-report__pills"><Quality grade={cfbGmEffectiveGrade(after, 2, run.seed)} /><Outlook value={after.outlook} /></span>
+                </div>
+              </article>;
+            })}
+          </div>
+        </details>
+      </section>
     </section>
-    <section className="football-gm-report__evolution surface-card">
-      <header><span><small>ROSTER EVOLUTION</small><strong>YEAR 1 → YEAR 2</strong></span><b>Y1 → Y2</b></header>
-      <div>{CFB_GM_ROSTER_SLOTS.map((slot) => {
-        const fromRow = run.roster.find((r) => r.slot === slot);
-        const toRow = run.finalRoster.find((r) => r.slot === slot);
-        const a = fromRow ? cfbGmPlayer(fromRow.playerId) : null;
-        const b = toRow ? cfbGmPlayer(toRow.playerId) : null;
-        if (!a || !b) return null;
-        return <article className="football-gm-report__evolution-row" key={slot}>
-          <b>{CFB_GM_SLOT_LABELS[slot]}</b>
-          <div><small>YEAR 1</small><strong>{a.name}</strong><em>{a.school} · {cfbGmMoney(a.nilYear1)}</em></div>
-          <span className={"football-gm-report__move" + (a.id !== b.id ? " is-change" : "")}>{a.id === b.id ? "RETAINED" : "PORTAL"}<i>→</i></span>
-          <div className="is-final"><small>YEAR 2</small><strong>{b.name}</strong><em>{b.school} · {cfbGmMoney(b.nilYear2)} · {cfbGmDevelop(b.id, b.currentGrade, b.classification, run.seed).outcome}</em></div>
-        </article>;
-      })}</div>
-    </section>
-    <section className="football-gm-report__ledger surface-card">
-      <header><small>OFFSEASON TRANSACTIONS</small><strong>HOW THE CORE CHANGED</strong></header>
-      <div>{changed.length ? changed.map((entry) => {
-        const player = cfbGmPlayer(entry.playerId);
-        return <article key={entry.playerId}><b>PORTAL IN</b><span><small>{CFB_GM_SLOT_LABELS[entry.slot]}</small>
-          <strong>{player?.name} · {player?.school}</strong></span></article>;
-      }) : <article><b>RETAINED</b><span><strong>No portal additions required</strong></span></article>}</div>
+
+    <section className="gm-result__scoring-card surface-card" aria-label="College GM scoring explanation">
+      <details className="gm-result__expander gm-result__scoring">
+        <summary>HOW YOUR GM SCORE IS CALCULATED <span>55% ROSTER · 45% PLAYOFFS</span></summary>
+        <p>The GM score combines the two-year core management score and the two-year CFP résumé.
+          NIL spending is a roster constraint, not a source of bonus points.</p>
+        <div className="gm-result__math-row"><span>ROSTER MANAGEMENT · 55%</span><b>{result.rosterManagement.toFixed(1)}</b></div>
+        <div className="gm-result__math-row"><span>CFP RÉSUMÉ · 45%</span><b>{result.resumeScore.toFixed(1)}</b></div>
+        <div className="gm-result__math-row"><span>Final GM score</span><b>{result.score.toFixed(1)}</b></div>
+        <div className="gm-result__math-row"><span>YEAR 2 NIL</span><b>{cfbGmMoney(yearTwoSpent)}</b></div>
+        <div className="gm-result__math-row"><span>NIL REMAINING</span><b>{cfbGmMoney(budget - yearTwoSpent)}</b></div>
+      </details>
     </section>
     <section className="football-gm-report__actions surface-card">
-      <p>Roster management {result.rosterManagement.toFixed(1)} · Championship résumé {result.resumeScore.toFixed(1)}</p>
       <button className="primary-action" type="button" onClick={replay}>NEW GM RUN</button>
     </section>
   </div>;
