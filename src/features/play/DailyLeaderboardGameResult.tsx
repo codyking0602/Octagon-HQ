@@ -709,6 +709,10 @@ function SportsFeudLeaderboardResult({
         {boards.map((board, boardIndex) => {
           const answers = feudAnswerRows(board);
           const recordedGuesses = records(board.recorded_guesses);
+          // Old runs cannot reconstruct raw chronological attempts. Keep
+          // independently reviewed answers distinct from the recorded ledger.
+          const reviewedGuesses = records(board.reviewed_guesses);
+          const displayGuesses = [...recordedGuesses, ...reviewedGuesses];
           const foundPoints = answers.filter((answer) => answer.found).reduce((sum, answer) => sum + answer.points, 0);
           return (
             <section className="leaderboard-feud-board" key={String(board.id ?? boardIndex)}>
@@ -737,11 +741,11 @@ function SportsFeudLeaderboardResult({
                   </div>
                 ))}
               </div>
-              {recordedGuesses.length > 0 ? (
+              {displayGuesses.length > 0 ? (
                 <details className="leaderboard-feud-board__guesses">
-                  <summary>RECORDED GUESSES · {recordedGuesses.length}</summary>
+                  <summary>{recordedGuesses.length ? "RECORDED GUESSES" : "GUESS REVIEW"} · {displayGuesses.length}</summary>
                   <div>
-                    {recordedGuesses.map((guess, index) => {
+                    {displayGuesses.map((guess, index) => {
                       const accepted = guess.accepted === true;
                       const submitted = String(guess.submitted_answer ?? "");
                       const matched = String(guess.matched_answer ?? "");
@@ -753,7 +757,7 @@ function SportsFeudLeaderboardResult({
                               ? <small>Matched: {matched}</small>
                               : null}
                           </span>
-                          <em>{accepted ? `+${Number(guess.points ?? 0)}` : "STRIKE"}</em>
+                          <em>{guess.reviewed === true ? "VALID · REVIEWED" : accepted ? `+${Number(guess.points ?? 0)}` : "STRIKE"}</em>
                         </div>
                       );
                     })}

@@ -379,10 +379,14 @@ function hydrateUfcGrapplingAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
     if (question.candidateIds.some((id) => entities.some(
       (entity) => entity.id === id && entity.displayName === "Khamzat Chimaev"
     ))) return question;
-    const nextVariant = (question.alsoAcceptedEntityIds ?? []).length + 1;
-    const entityId = `${question.id}:v${nextVariant}`;
-    if (entities.some((entity) => entity.id === entityId)) {
-      throw new Error("UFC Feud correction entity ID conflicts with published pack.");
+    // Legacy packs can have gaps in v-IDs after a subject was removed, while
+    // newer authored packs may already use later slots. Never replace a prior
+    // identity when hydrating this missing valid wrestler.
+    let nextVariant = (question.alsoAcceptedEntityIds ?? []).length + 1;
+    let entityId = `${question.id}:v${nextVariant}`;
+    while (entities.some((entity) => entity.id === entityId)) {
+      nextVariant += 1;
+      entityId = `${question.id}:v${nextVariant}`;
     }
     entities.push({ id: entityId, displayName: "Khamzat Chimaev", kind: "person", aliases: ["Khamzat", "Chimaev"] });
     return {

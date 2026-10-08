@@ -239,7 +239,9 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Quinton Jackson",
           "Mirko Cro Cop",
           "Sergei Pavlovich",
-          "Tom Aspinall"
+          "Tom Aspinall",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -260,7 +262,9 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Yoel Romero",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich"
+          "Sergei Pavlovich",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -281,7 +285,9 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Yoel Romero",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich"
+          "Sergei Pavlovich",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -302,7 +308,9 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Yoel Romero",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich"
+          "Sergei Pavlovich",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -323,7 +331,9 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Yoel Romero",
           "Quinton Jackson",
           "Mirko Cro Cop",
-          "Sergei Pavlovich"
+          "Sergei Pavlovich",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       }
     ],
@@ -414,7 +424,9 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "aliases": [
           "Aspinall"
         ]
-      }
+      },
+      "Josh Emmett",
+      "Michael Chandler"
     ]
   },
   {
@@ -1428,7 +1440,11 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Ronaldo Souza",
           "Aljamain Sterling",
           "Brian Ortega",
-          "Khamzat Chimaev"
+          "Khamzat Chimaev",
+          "Merab Dvalishvili",
+          "Arman Tsarukyan",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1450,7 +1466,11 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Jim Miller",
           "Rodolfo Vieira",
           "Brian Ortega",
-          "Khamzat Chimaev"
+          "Khamzat Chimaev",
+          "Merab Dvalishvili",
+          "Arman Tsarukyan",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1472,7 +1492,11 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Jim Miller",
           "Ronaldo Souza",
           "Brian Ortega",
-          "Khamzat Chimaev"
+          "Khamzat Chimaev",
+          "Merab Dvalishvili",
+          "Arman Tsarukyan",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1494,7 +1518,11 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Rodolfo Vieira",
           "Gilbert Burns",
           "Ronaldo Souza",
-          "Khamzat Chimaev"
+          "Khamzat Chimaev",
+          "Merab Dvalishvili",
+          "Arman Tsarukyan",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1516,7 +1544,11 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Gilbert Burns",
           "Aljamain Sterling",
           "Brian Ortega",
-          "Khamzat Chimaev"
+          "Khamzat Chimaev",
+          "Merab Dvalishvili",
+          "Arman Tsarukyan",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       }
     ],
@@ -1609,7 +1641,11 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
         "aliases": [
           "T-City"
         ]
-      }
+      },
+      "Merab Dvalishvili",
+      "Arman Tsarukyan",
+      "Bo Nickal",
+      "Sean Brady"
     ]
   },
   {

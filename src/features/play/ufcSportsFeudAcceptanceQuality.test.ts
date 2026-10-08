@@ -215,4 +215,54 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
     }
   });
 
+
+  it("audits all 350 UFC Feud prompts for accidental omission across related family variants", () => {
+    const banks = [
+      UFC_SPORTS_FEUD_MAIN, UFC_SPORTS_FEUD_FAST_1, UFC_SPORTS_FEUD_FAST_2,
+      UFC_SPORTS_FEUD_FAST_3, UFC_SPORTS_FEUD_FAST_4, UFC_SPORTS_FEUD_FAST_5,
+    ];
+    // Narrower historical/categorical questions intentionally exclude otherwise
+    // related entries: the gym-versus-nickname question, PRIDE-to-UFC fighters and punch-only attacks.
+    const scoped = new Set(["ufc-main-12-1", "ufc-main-12-2", "ufc-main-12-3", "ufc-main-12-4", "ufc-main-12-5", "ufc-fast3-06-1", "ufc-fast3-06-3", "ufc-fast4-03-1"]);
+    let audited = 0;
+    for (const bank of banks) {
+      expect(bank.length % 5).toBe(0);
+      for (let index = 0; index < bank.length; index += 5) {
+        const family = bank.slice(index, index + 5);
+        const union = new Set(family.flatMap(names));
+        for (const row of family) {
+          audited++;
+          const accepted = new Set(names(row));
+          expect(accepted.size, row.id).toBe(names(row).length);
+          if (!scoped.has(row.id)) for (const name of union) {
+            expect(accepted.has(name), row.id + " omitted legitimate " + name).toBe(true);
+          }
+        }
+      }
+    }
+    expect(audited).toBe(350);
+  });
+
+  it("locks reviewed UFC off-board standouts into all relevant variants", () => {
+    const required: Array<[string, readonly string[]]> = [
+      ["ufc-main-04-", ["Khamzat Chimaev", "Arman Tsarukyan", "Belal Muhammad", "Colby Covington", "Bo Nickal", "Sean Brady"]],
+      ["ufc-fast1-09-", ["Khamzat Chimaev", "Arman Tsarukyan", "Belal Muhammad", "Colby Covington", "Bo Nickal", "Sean Brady"]],
+      ["ufc-main-03-", ["Gilbert Burns", "Ronaldo Souza", "Paul Craig"]],
+      ["ufc-fast1-08-", ["Gilbert Burns", "Ronaldo Souza", "Paul Craig"]],
+      ["ufc-main-02-", ["Josh Emmett", "Michael Chandler"]],
+      ["ufc-fast1-07-", ["Josh Emmett", "Michael Chandler"]],
+      ["ufc-fast5-02-", ["Josh Emmett", "Michael Chandler"]],
+      ["ufc-main-05-", ["Robert Whittaker", "Cory Sandhagen", "Leon Edwards"]],
+      ["ufc-main-08-", ["Arman Tsarukyan", "Michael Chandler"]],
+      ["ufc-main-09-", ["Shavkat Rakhmonov"]],
+      ["ufc-fast5-08-", ["Khamzat Chimaev", "Arman Tsarukyan", "Merab Dvalishvili"]],
+    ];
+    for (const [prefix, candidates] of required) for (const row of familyRows(prefix)) {
+      expect(row.answers).toHaveLength(8);
+      for (const candidate of candidates) {
+        expect(names(row), row.id + " missing " + candidate).toContain(candidate);
+      }
+    }
+  });
+
 });

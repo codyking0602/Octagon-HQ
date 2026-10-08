@@ -437,11 +437,15 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         "alsoAcceptedAnswers": [
           {
             "name": "Body shot",
-            "aliases": ["Body punch"]
+            "aliases": [
+              "Body punch"
+            ]
           },
           {
             "name": "Liver shot",
-            "aliases": ["Liver punch"]
+            "aliases": [
+              "Liver punch"
+            ]
           }
         ]
       },
@@ -465,7 +469,9 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Hammerfist",
           "Spinning elbow",
           "Superman punch",
-          "Spinning kick"
+          "Spinning kick",
+          "Body shot",
+          "Liver shot"
         ]
       },
       {
@@ -488,7 +494,9 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Hammerfist",
           "Spinning elbow",
           "Superman punch",
-          "Spinning kick"
+          "Spinning kick",
+          "Body shot",
+          "Liver shot"
         ]
       },
       {
@@ -511,7 +519,9 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Hammerfist",
           "Spinning elbow",
           "Superman punch",
-          "Spinning kick"
+          "Spinning kick",
+          "Body shot",
+          "Liver shot"
         ]
       },
       {
@@ -534,7 +544,9 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
           "Hammerfist",
           "Spinning elbow",
           "Superman punch",
-          "Spinning kick"
+          "Spinning kick",
+          "Body shot",
+          "Liver shot"
         ]
       }
     ],
@@ -644,7 +656,9 @@ export const UFC_SPORTS_FEUD_FAST_4 = expandSportsFeudFamilies("ufc-fast4", [
         "aliases": [
           "Spin kick"
         ]
-      }
+      },
+      "Body shot",
+      "Liver shot"
     ]
   },
   {
