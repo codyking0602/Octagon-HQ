@@ -67,7 +67,7 @@ for (const id of ids) {
 }
 out.sort((a,b)=>a.schoolId.localeCompare(b.schoolId)||a.name.localeCompare(b.name));
 if(out.length!==468)throw new Error("CFB population changed: "+out.length);
-const result={schemaVersion:1,source:"2026 ESPN team rosters cross-referenced against manually audited Octagon CFB Wheel shortlist",snapshotAt:new Date().toISOString(),schoolCount:ids.length,population:out.length,classified:out.filter(p=>p.classification).length,exactMatches:out.filter(p=>p.matchStatus==="exact").length,failures,players:out};
+const result={schemaVersion:1,source:"2026 ESPN team rosters cross-referenced against manually audited Octagon CFB Wheel shortlist",snapshotAt:new Date().toISOString(),schoolCount:ids.length,population:out.length,classified:out.filter(p=>p.classification).length,officialOverrides:officialRows.length,exactMatches:out.filter(p=>p.matchStatus==="exact").length,failures,players:out};
 mkdirSync("artifacts",{recursive:true});
 writeFileSync("artifacts/cfb-gm-2026-classification-audit.json",JSON.stringify(result,null,2)+"\n");
 console.log("AUDIT_SUMMARY "+JSON.stringify({population:result.population,classified:result.classified,exactMatches:result.exactMatches,failures:result.failures}));
