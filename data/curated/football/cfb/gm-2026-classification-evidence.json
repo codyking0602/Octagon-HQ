@@ -837,8 +837,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 33,
+          "steady": 39,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.42,
+        "portalExitProbability": 0.08,
+        "summary": "De Anza College 2025 Golden Coast League Offensive MVP and first-team all-region: 59 catches, 1,173 yards, 12 TD, after 964 yards and 13 TD in 2024. First Boise State FBS season in 2026, so JUCO production offers genuine upside but translation and role risk; do not imply proven Pac-12 numbers.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/akeem-wright/14431"
+        ]
+      }
     },
     {
       "id": "boise-state|benford",
@@ -855,9 +874,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 39,
+          "decline": 23,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.17,
+        "portalExitProbability": 0.02,
+        "summary": "Boise 2025: 21 catches, 325 yards and team-high five receiving TD in just seven games/five starts before season-ending injury. Sixth-year veteran who first redshirted in 2021 and missed 2023; 2026 comeback ceiling versus durability uncertainty. Model final year after 2026 barring unusual exception.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/ben-ford/14301"
+        ]
+      }
     },
     {
       "id": "boise-state|boenphelps",
@@ -875,8 +913,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 35,
+          "steady": 44,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.05,
+        "summary": "Boise 2025 redshirt sophomore: 66 tackles, four TFL, nine starts in 14 games, INT return TD against App State and extensive special teams responsibility. Official 2026 senior, preseason all-Pac-12 mention; upward starter role credible but 2026 NFL exit not automatic.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/boen-phelps/14247"
+        ]
+      }
     },
     {
       "id": "boise-state|cambates",
@@ -894,8 +951,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 40,
+          "steady": 34,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.36,
+        "portalExitProbability": 0.07,
+        "summary": "2025 Boise junior-year predecessor: eight starts in 14 games, 301 receiving yards, 78 rushing yards, three total TD. Pac-12 2026 special-teams weekly honor and receiver/return versatility point to expanding 2026 role, but not yet a proven top receiving volume.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/cam-bates/14190"
+        ]
+      }
     },
     {
       "id": "boise-state|dylanriley",
@@ -914,8 +990,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 57,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.83,
+        "portalExitProbability": 0.03,
+        "summary": "2025 Boise second-team All-MW: 1,125 rushing yards and ten rushing TD in 14 games/ten starts, 149 receiving yards and two receiving TD. Sept 2026 Doak Walker weekly award and Pac-12 offensive weekly award confirm continuing impact. Feature RB already established, development more likely steady than huge breakout.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/dylan-riley/14250"
+        ]
+      }
     },
     {
       "id": "boise-state|jadenmickey",
@@ -932,9 +1027,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 56,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.66,
+        "portalExitProbability": 0.02,
+        "summary": "Boise 2025 fifth-year predecessor: 38 tackles, seven TFL, 11 starts in 13 games after Notre Dame career and 2024 redshirt. 2026 Thorpe preseason watch; high-level veteran defensive back, gains bounded, standard 2026 fifth-year final-season assumption.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/jaden-mickey/14328"
+        ]
+      }
     },
     {
       "id": "boise-state|jaydenvirginmorgan",
@@ -951,9 +1065,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 56,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.81,
+        "portalExitProbability": 0.01,
+        "summary": "Boise 2025 14-game starter and second-team All-MW edge: 56 tackles, 13 TFL, team-high six sacks; 2024 first-team All-MW. Official fifth year in 2026, 2026 Senior Bowl Top 300 and Nagurski/Lombardi watch lists; proven edge with moderate pro exit risk, little major growth headroom.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/jayden-virginmorgan/14357"
+        ]
+      }
     },
     {
       "id": "boise-state|jericowashingtonjr",
@@ -971,8 +1104,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 29,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.44,
+        "portalExitProbability": 0.07,
+        "summary": "Kennesaw State 2025 corner: 14 starts, 52 tackles, one sack, 12 pass breakups, two forced fumbles; 2024 All-CUSA with two INT. 2026 Boise senior transfer, project quality secondary play but FBS conference transition tempers high-confidence breakout.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/jerico-washington-jr/14415"
+        ]
+      }
     },
     {
       "id": "boise-state|loganbrantley",
@@ -990,8 +1142,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 35,
+          "steady": 29,
+          "decline": 18,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.08,
+        "portalExitProbability": 0.13,
+        "summary": "Kansas 2025 reserve LB: just eight tackles and 1.5 TFL in 12 appearances; played four games in 2024 before injury. Official Boise 2026 senior transfer, role upside is possible from a tiny Power-4 sample, but no demonstrated dominant starting production.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/logan-brantley/14397"
+        ]
+      }
     },
     {
       "id": "boise-state|madduxmadsen",
@@ -1046,8 +1217,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 42,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.04,
+        "summary": "Boise 2025 TE: 24 receptions, 251 yards and one TD in 14 games/ten starts, after nine 2024 starts and blocking production. 2026 Earl Campbell weekly honorable mention in September suggests early expanded usage, but baseline is possession/blocking TE, not proven major volume.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/matt-wagner/14269"
+        ]
+      }
     },
     {
       "id": "boise-state|maxstege",
@@ -1065,8 +1255,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 33,
+          "steady": 43,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.46,
+        "portalExitProbability": 0.03,
+        "summary": "Boise 2025 starting edge: 27 tackles and seven TFL in all 14 starts, building on sacks and rotational tackles in 2024. 2026 senior preseason all-Pac-12 recognition, realistic mature-role steady/improvement profile with modest disruptive upside.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/max-stege/14258"
+        ]
+      }
     },
     {
       "id": "boise-state|mikaioedward",
@@ -1084,8 +1293,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 34,
+          "steady": 34,
+          "decline": 16,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.09,
+        "summary": "Central Washington Division II 2025 all-Lone Star first-team interior DL: 41 tackles, nine TFL, seven sacks in 12 games, after league Defensive Freshman of Year 2024. Boise 2026 senior transfer has meaningful production but major level-of-competition jump; high volatility, no fabricated FBS sacks.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/mikaio-edward/14405"
+        ]
+      }
     },
     {
       "id": "boise-state|raseanjones",
@@ -1104,8 +1332,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 21,
+          "improve": 43,
+          "steady": 28,
+          "decline": 8,
+          "maxGain": 7,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1,
+        "summary": "Boise official 2026 true freshman receiver, no verified college season statistics in player bio. High school three-star multi-phase athlete with 2025 senior-year 17 catches/345 yards/two TD and 629 rushing yards/ten TD; developmental projection stays high-uncertainty, 2027 NFL Draft ineligible.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/rasean-jones/14382"
+        ]
+      }
     },
     {
       "id": "boise-state|romantillmon",
@@ -1123,8 +1370,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 48,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.07,
+        "summary": "South Dakota 2025 FCS safety: 94 tackles (second on team), 2.5 TFL, six pass breakups and forced fumble; 2024 three starts/19 tackles. Boise 2026 senior transfer with extensive FCS tackling production but coverage and higher-level fit remain to be established.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/roman-tillmon/14424"
+        ]
+      }
     },
     {
       "id": "boise-state|sherrodsmith",
@@ -1142,8 +1408,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 37,
+          "steady": 37,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.34,
+        "portalExitProbability": 0.07,
+        "summary": "Boise 2025 played 12 games/two starts with an interception vs App State and strong late coverage (five catches allowed on 17 targets final three games). College of San Mateo 2024 first-team All-Bay 6 and four INT. 2026 junior opportunity for larger role, not already a full-time starter.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/sherrod-smith/14344"
+        ]
+      }
     },
     {
       "id": "boise-state|siregaines",
@@ -1161,8 +1446,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 37,
+          "steady": 39,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.51,
+        "portalExitProbability": 0.05,
+        "summary": "2025 Boise running back: 811 rushing yards and eight TD in 14 games/two starts, 88.9 cited PFF rushing grade. 2024 true-freshman season cut after three games by injury; 2026 junior can expand workload behind established Dylan Riley but RB sharing tempers breakout.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/sire-gaines/14303"
+        ]
+      }
     },
     {
       "id": "boise-state|travisanderson",
@@ -1180,8 +1484,27 @@
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 41,
+          "steady": 30,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.11,
+        "portalExitProbability": 0.12,
+        "summary": "Boise 2025 defensive back reserve: six tackles in 14 appearances, after playing four 2024 games to preserve redshirt. Official 2026 junior, meaningful role-growth room but little demonstrated defensive workload and higher portal risk than established starters.",
+        "sources": [
+          "https://broncosports.com/sports/football/roster/travis-anderson/14278"
+        ]
+      }
     },
     {
       "id": "byu|bearbachmeier",
