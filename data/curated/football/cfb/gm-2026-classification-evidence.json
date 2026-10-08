@@ -1233,9 +1233,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 56,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.53,
+        "portalExitProbability": 0.01,
+        "summary": "BYU 2026 redshirt senior defensive end, first college 2022 redshirt, then eight games in 2023 and 13 in 2024. Earned 10 starts in 14 games in 2025, producing 38 tackles, 6.5 tackles for loss, 3 sacks and 3 pass breakups. Multi-year role rise is proven, with mainly steady and modest improvement projections. Regular five-year clock normally exhausted after 2026 without exceptional waiver; graduation is gameplay inference.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/bodie-schoonover"
+        ]
+      }
     },
     {
       "id": "byu|cadeuluave",
@@ -1253,8 +1272,27 @@
       "sourceUrl": "https://byucougars.com/sports/football/roster/season/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 58,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.85,
+        "portalExitProbability": 0.03,
+        "summary": "BYU senior linebacker transferred from California after 2025 first-team All-ACC honors with approximately 100 tackles, 12 tackles for loss and an established multi-year ACC starting résumé. Mature proven run/coverage processing strongly favors steadiness and 2027 professional decision; limited evidence for a late giant breakout. Enrolled 2023, senior does not certify eligibility is exhausted.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/cade-uluave"
+        ]
+      }
     },
     {
       "id": "byu|cannondevries",
@@ -1272,8 +1310,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 39,
+          "steady": 31,
+          "decline": 12,
+          "maxGain": 7,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.13,
+        "summary": "BYU 2026 sophomore corner with primarily special-teams duty during 2025; official team bio lists 14 2025 appearances but only four defensive tackles and half TFL. No established full-time college coverage season: development is workload-dependent and uncertain, not justified by high-school honors. First-year 2025 prevents 2027 NFL declaration.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/cannon-devries"
+        ]
+      }
     },
     {
       "id": "byu|evanjohnson",
@@ -1290,9 +1347,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 18,
+          "steady": 61,
+          "decline": 17,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.74,
+        "portalExitProbability": 0.01,
+        "summary": "BYU 2026 redshirt senior corner was a full-time 2025 defensive starter across 14 games, starting 13 and recording 47 tackles, five interceptions and eight pass breakups with Big 12 honorable mention. Established ballhawk in a proven Power Four workload; repeat coverage is likelier than another massive interception-driven leap, and turnover regression remains plausible. Initial matriculation 2022 implies final normal college year 2026.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/evan-johnson"
+        ]
+      }
     },
     {
       "id": "byu|faletausatuala",
@@ -1310,8 +1386,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 27,
+          "steady": 55,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 4,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.77,
+        "portalExitProbability": 0.04,
+        "summary": "BYU junior safety earned 2025 All-American recognition with about 84 tackles and regular physical run and pass support. Entered college 2024, so 2027 NFL eligible; strong established second-year impact merits high steady rather than recruiting-hype development. College seniority not automatically eligibility loss.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/faletau-satuala"
+        ]
+      }
     },
     {
       "id": "byu|hunterclegg",
@@ -1329,8 +1424,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 39,
+          "steady": 26,
+          "decline": 15,
+          "maxGain": 7,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.13,
+        "summary": "BYU sophomore defensive end entered college 2025 and official 2026 roster emphasizes high-school defensive résumé more than verified 2025 extended college participation. No claimed college sack totals or guaranteed starting impact. Potential technique and usage growth is meaningful, with substantial role volatility; 2027 NFL draft ineligible.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/hunter-clegg"
+        ]
+      }
     },
     {
       "id": "byu|jojophillips",
@@ -1348,8 +1462,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 34,
+          "steady": 33,
+          "decline": 19,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.17,
+        "portalExitProbability": 0.12,
+        "summary": "BYU 2026 redshirt junior receiver whose 2025 eight games and six starts were disrupted by missed time; caught 14 passes for 161 yards. Earlier 2024 season included 13 games and two starts. A healthier bigger target role could raise results, but missed games, transfer competition and limited full-season production create genuine downside. First entered 2023 and can enter 2027 NFL Draft; currently not a likely declaration.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/jojo-phillips"
+        ]
+      }
     },
     {
       "id": "byu|keanutanuvasa",
@@ -1366,9 +1499,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://byucougars.com/sports/football/roster/season/2026",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 20,
+          "steady": 60,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.7,
+        "portalExitProbability": 0.01,
+        "summary": "BYU 2026 redshirt senior defensive tackle transferred after Utah, starting all 14 BYU games in 2025 with 25 tackles, 4.5 TFL, 2 sacks and three pass breakups, following extensive Utah front-seven starts. Proven veteran gap responsibility with modest pass-rush ceiling and strong steady scenario. 2022 collegiate entry and 2026 redshirt senior status imply normal final-year exit.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/season/2025/player/keanu-tanuvasa"
+        ]
+      }
     },
     {
       "id": "byu|kylerkasper",
@@ -1387,8 +1539,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 34,
+          "steady": 31,
+          "decline": 19,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.17,
+        "portalExitProbability": 0.12,
+        "summary": "BYU 2026 redshirt junior WR transfer from Oregon has limited reliably documented feature-receiver college production on current BYU profile. A new receiving opportunity and prior injury/usage history support a wide range from breakout to reduced snaps. Avoid inferring elite current college play from recruiting reputation or size; 2023 college entry permits 2027 declaration but evidence does not support high draft odds.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/kyler-kasper"
+        ]
+      }
     },
     {
       "id": "byu|legendglasker",
@@ -1407,8 +1578,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 42,
+          "steady": 26,
+          "decline": 12,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.13,
+        "summary": "BYU true freshman 2026 wide receiver bio mainly provides prep receiving and multi-sport context without an established 2025 college season or authenticated substantial 2026 FBS target workload. Prep stats are not college production. Young-player upside and usage uncertainty dominate; college matriculation 2026 bars 2027 NFL Draft.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/legend-glasker"
+        ]
+      }
     },
     {
       "id": "byu|ljmartin",
@@ -1427,8 +1617,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 17,
+          "steady": 65,
+          "decline": 15,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.92,
+        "portalExitProbability": 0.02,
+        "summary": "BYU senior running back and 2025 Big 12 Offensive Player of the Year, first-team All-Big 12 after 236 carries for 1,305 yards and 12 touchdowns plus 36 catches/255 yards; 2024 723 rushing yards/seven TD and 2023 518/four TD. Mature three-season demonstrated RB production, near talent ceiling and high 2027 NFL exit probability, not automatic fourth-year eligibility exhaustion.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/season/2025/player/lj-martin"
+        ]
+      }
     },
     {
       "id": "byu|nusitaumoepeau",
@@ -1446,8 +1655,27 @@
       "sourceUrl": "https://byucougars.com/sports/football/roster/season/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 38,
+          "steady": 28,
+          "decline": 15,
+          "maxGain": 7,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.15,
+        "summary": "BYU 2026 sophomore interior defensive lineman. Team profile centers on high-school play; no robust individually confirmed 2025/2026 college snaps or sack totals in the roster summary, so avoid overstating demonstrated impact. NFL rule precludes 2027 Draft based on 2025 college start. More snaps could produce a developmental leap, with equally meaningful rotation risk.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/nusi-taumoepeau"
+        ]
+      }
     },
     {
       "id": "byu|prestonrex",
@@ -1465,9 +1693,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 33,
+          "steady": 34,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.04,
+        "portalExitProbability": 0.01,
+        "summary": "BYU 2026 redshirt senior moved from safety to running back; previous BYU years were primarily reserve/special teams with one injury-shortened 2024 appearance, not a proven college feature-back résumé. Position change makes offensive playing time uncertain and year-two development volatile, but 2022 collegiate entry implies 2026 ordinary eligibility exhaustion. No justification to label probable 2027 NFL entrant based solely on final year.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/preston-rex"
+        ]
+      }
     },
     {
       "id": "byu|tausiliakana",
@@ -1485,8 +1732,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 33,
+          "steady": 37,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.16,
+        "portalExitProbability": 0.08,
+        "summary": "BYU 2026 redshirt junior defensive end transferred from Texas. In 2025 BYU bio reports 13 appearances, 15 tackles, 3.5 TFL, 0.5 sack and six QB hurries; still developing from rotation into more consistent pass-rush role. First college enrollment 2023 allows 2027 NFL Draft eligibility but established professional departure risk modest.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/season/2025/player/tausili-akana"
+        ]
+      }
     },
     {
       "id": "byu|therrianalexanderiii",
@@ -1504,8 +1770,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 35,
+          "steady": 34,
+          "decline": 16,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.21,
+        "portalExitProbability": 0.08,
+        "summary": "BYU 2026 junior corner; available official biography provides position/class and prep profile but no verified multi-year 2025 full-time coverage record for individual. Further role and film review needed before confident college ceiling claim, so current draft and progression outlook explicitly low-confidence and growth/usage volatile. First college matriculation 2024 permits a 2027 draft decision.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/season/2025/player/therrian-alexander"
+        ]
+      }
     },
     {
       "id": "byu|tommyprassas",
@@ -1523,8 +1808,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 35,
+          "steady": 38,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.24,
+        "portalExitProbability": 0.08,
+        "summary": "BYU 2026 redshirt sophomore safety first played in 2024, with Big 12 defensive freshman HM, first career interception and a scoop-and-score on special teams. Redshirted 2025 after four regular-season appearances plus title/bowl games, starting two at nickel and recording nine tackles. Has legitimate ball-hawk role upside but a modest 2025 defensive sample. Crucially, 2024 first entry means NFL 2027 possible despite redshirt-sophomore class.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/tommy-prassas"
+        ]
+      }
     },
     {
       "id": "byu|walkerlyons",
@@ -1542,8 +1846,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/252/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 34,
+          "steady": 40,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.35,
+        "portalExitProbability": 0.06,
+        "summary": "BYU 2026 junior TE transferred from USC. At USC in 2024 appeared in 11 games with three starts, and in 2025 caught 20 passes for 223 yards and two TD in 12 games. Functional receiving experience and transfer opportunity support solid growth without inventing tight-end elite production; entered college 2024, potentially 2027 draft-eligible.",
+        "sources": [
+          "https://byucougars.com/sports/football/roster/player/walker-lyons"
+        ]
+      }
     },
     {
       "id": "florida|aaronphilo",
@@ -12825,5 +13148,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes."
 }
