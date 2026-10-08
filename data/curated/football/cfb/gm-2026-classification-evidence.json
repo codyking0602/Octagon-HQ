@@ -5149,8 +5149,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 36,
+          "steady": 40,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.08,
+        "summary": "Transferred from Villanova after 2025 FCS Freshman All-American honors, 59 tackles, two interceptions and nine pass breakups in 15 games. Started Iowa's first two 2026 games at strong safety, six tackles through four. FCS-to-Big Ten projection merits growth but role adjustment risk.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/anthony-hawkins"
+        ]
+      }
     },
     {
       "id": "iowa|braedenjackson",
@@ -5168,8 +5187,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 23,
+          "improve": 42,
+          "steady": 26,
+          "decline": 9,
+          "maxGain": 6,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04,
+        "summary": "Iowa 2025 redshirt with no game action; scored 2026 rushing, receiving and kickoff-return TDs and ran 18 times for 168 yards through four games, including 99-yard kickoff return TD at Michigan. Genuine early spark but limited college usage. First enrolled 2025, not eligible for 2027 NFL draft.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/braeden-jackson"
+        ]
+      }
     },
     {
       "id": "iowa|cambuffington",
@@ -5187,8 +5225,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 39,
+          "steady": 34,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.04,
+        "summary": "Redshirted in 2024 and played just six 2025 games with one interception and limited tackling. Through Iowa's first five 2026 games led Hawkeyes with 44 tackles, three TFL; Big Ten Lott Impact weekly award. Steep new starter production warrants breakout odds but one early college season remains noisy.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/cam-buffington"
+        ]
+      }
     },
     {
       "id": "iowa|deshaunlee",
@@ -5206,8 +5263,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 52,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.59,
+        "portalExitProbability": 0.02,
+        "summary": "Iowa 2025 honorable mention All-Big Ten CB with ten starts, 34 tackles, two INT and six pass breakups; already 25 career starts. Returned to start first three 2026 games, early interception versus Northern Illinois. Mature coverage experience favors steady outcome.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/deshaun-lee"
+        ]
+      }
     },
     {
       "id": "iowa|djvonnahme",
@@ -5226,8 +5302,27 @@
       "sourceUrl": "https://hawkeyesports.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 43,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.54,
+        "portalExitProbability": 0.06,
+        "summary": "2025 FWAA Freshman All-American TE led Iowa in receiving with 29 catches, 434 yards, three TD across 12 games/five starts; 146-yard bowl game vs Vanderbilt. Six catches/67 yards in first two 2026 starts before missed UNI with injury. Strong sophomore-level receiving tape despite explicit official 3rd-year roster designation.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/dj-vonnahme"
+        ]
+      }
     },
     {
       "id": "iowa|evanjames",
@@ -5245,8 +5340,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 40,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1,
+        "summary": "True freshman Furman 2025 FCS production of 65 catches, 796 yards, seven receiving TD plus one rushing TD. Iowa 2026 receiver returned a punt 77 yards for TD, six catches/52 yards through five games. FCS-to-P4 transition and return role warrant volatile growth; 2025 matriculation means 2027 NFL ineligible.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/evan-james"
+        ]
+      }
     },
     {
       "id": "iowa|hankbrown",
@@ -5302,8 +5416,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 43,
+          "steady": 28,
+          "decline": 9,
+          "maxGain": 7,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04,
+        "summary": "Iowa 2025 true freshman played four games and recorded only a single TFL, then started at defensive end in first three 2026 games with limited tackle output and first QB pressure. Young edge with unproven production can improve meaningfully, not an assumed all-star on pedigree; first enrolled 2025, 2027 NFL ineligible.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/lose-epenesa"
+        ]
+      }
     },
     {
       "id": "iowa|jaydenmontgomery",
@@ -5313,16 +5446,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4868407",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://hawkeyesports.com/sports/football/roster/player/jayden-montgomery",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 52,
+          "decline": 13,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.01,
+        "summary": "Iowa 2025 linebacker made 44 tackles, seven starts in 13 games; through first five 2026 starts totaled 27 tackles, four TFL and a sack. Official 2026 fifth-year roster plus 2022 original redshirt confirms experienced final-season modeling under ordinary eligibility.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/jayden-montgomery"
+        ]
+      }
     },
     {
       "id": "iowa|jaylenwatson",
@@ -5340,8 +5492,27 @@
       "sourceUrl": "https://hawkeyesports.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 38,
+          "steady": 35,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.35,
+        "portalExitProbability": 0.04,
+        "summary": "Iowa 2025 played 13 games, two starts, 15 tackles and one breakup. Promoted to five defensive-back starts early 2026, 15 tackles and six pass breakups through five games. Role growth and coverage disruption support genuine upside; official 2026 3rd-year.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/jaylen-watson"
+        ]
+      }
     },
     {
       "id": "iowa|kahmaribrown",
@@ -5359,8 +5530,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 36,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.05,
+        "summary": "Elon 2025 Associated Press second-team All-American edge compiled 66 tackles, 16 TFL, 12 sacks in FCS; already 4.5 sacks at Elon in 2024. Iowa 2026 front rotation has 10 tackles and 1.5 sacks through five games. Higher-level competition changes projection but past pass rush is meaningful.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/kahmari-brown"
+        ]
+      }
     },
     {
       "id": "iowa|kamarimoulton",
@@ -5379,8 +5569,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 28,
+          "steady": 46,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.65,
+        "portalExitProbability": 0.02,
+        "summary": "Iowa 2025 featured RB led team with 878 rushing yards and five TD in 11 games/eight starts despite missing two due injury. 2026 four starts 311 rush yards/two TD, including 183 in opener and missed UNI through injury. Proven Big Ten back with moderate durability downside.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/kamari-moulton"
+        ]
+      }
     },
     {
       "id": "iowa|kennethmerrieweather",
@@ -5398,8 +5607,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 39,
+          "steady": 32,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.05,
+        "summary": "2025 Iowa reserve defensive end appeared in all 13 games, 14 tackles/one TFL after limited 2024 game time; started first four 2026 games but only five tackles and one breakup. Clear playing-time expansion with unproven impact, not an elite pass-rusher.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/kenneth-merrieweather"
+        ]
+      }
     },
     {
       "id": "iowa|ljphillipsjr",
@@ -5417,8 +5645,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 29,
+          "decline": 23,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.3,
+        "portalExitProbability": 0.08,
+        "summary": "South Dakota 2025 first-team FCS All-American and national rushing leader with 1,921 yards and 19 TD across 294 carries; transferred to Iowa 2026 but left opener injured after just four carries/five yards. Massive prior FCS talent but Big Ten projection and injury risk are unusually volatile.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/lj-phillips-jr"
+        ]
+      }
     },
     {
       "id": "iowa|rashadgodfreyjr",
@@ -5436,8 +5683,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 34,
+          "steady": 32,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.16,
+        "portalExitProbability": 0.1,
+        "summary": "Iowa 2025 reserve defensive back played 12 games, 15 tackles, half TFL and forced fumble, with nine tackles at Nebraska. Only one tackle credited in 2026 opener; opportunity exists from reserve profile, but no proven regular defensive starting production.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/rashad-godfrey-jr"
+        ]
+      }
     },
     {
       "id": "iowa|reecevanderzee",
@@ -5456,8 +5722,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 37,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.47,
+        "portalExitProbability": 0.05,
+        "summary": "Iowa 2025 injury-limited WR played final eight games with 15 catches, 219 yards/two TD after 2024 true-freshman starting experience. Iowa 2026 five starting games, 13 catches/178 yards and two decisive fourth-quarter TD vs Michigan. Injury rebound with still-modest usage.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/reece-vander-zee"
+        ]
+      }
     },
     {
       "id": "iowa|tonydiaz",
@@ -5476,8 +5761,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 36,
+          "steady": 38,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.38,
+        "portalExitProbability": 0.06,
+        "summary": "UTRGV 2025 Southland Conference Freshman of Year, 875 receiving yards and 11 TD, 2024 redshirt; Iowa 2026 early starter leads team with 17 catches/201 yards and one TD through three games. FCS award production plus Iowa early role credible, but sample limited and level jump real.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/tony-diaz"
+        ]
+      }
     },
     {
       "id": "iowa|zachlutmer",
@@ -5495,8 +5799,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 55,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.77,
+        "portalExitProbability": 0.02,
+        "summary": "Iowa 2025 second-team All-Big Ten cash/DB with 13 starts, 71 tackles, 5.5 TFL, three INT (one pick-six) and seven pass breakups. Five 2026 starts, 31 tackles/four breakups; extensive defensive production makes steady most likely with meaningful 2027 pro exit risk.",
+        "sources": [
+          "https://hawkeyesports.com/sports/football/roster/player/zach-lutmer"
+        ]
+      }
     },
     {
       "id": "lsu|dashawnspears",
@@ -15264,7 +15587,7 @@
       }
     }
   ],
-  "officialOverrides": 117,
+  "officialOverrides": 118,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
