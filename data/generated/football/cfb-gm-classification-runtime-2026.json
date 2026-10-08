@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "source": "gm-2026-classification-evidence.json",
   "population": 468,
   "classified": 468,
@@ -59,6 +59,11 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 24
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -121,7 +126,12 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1800000,
+        "year2Baseline": 1975000,
+        "providerRank": 49
+      }
     },
     {
       "id": "alabama|terrancegreen",
@@ -142,7 +152,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 79
+      }
     },
     {
       "id": "alabama|zabienbrown",
@@ -289,7 +304,12 @@
       "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 28
+      }
     },
     {
       "id": "byu|bodieschoonover",
@@ -492,7 +512,12 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 97
+      }
     },
     {
       "id": "florida|jadenrobinson",
@@ -576,7 +601,12 @@
       "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 100
+      }
     },
     {
       "id": "georgia|ellisrobinsoniv",
@@ -598,6 +628,11 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 45
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -877,7 +912,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 4000000,
+        "year2Baseline": 4400000,
+        "providerRank": 8
+      }
     },
     {
       "id": "indiana|leebeebejr",
@@ -1143,7 +1183,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 59
+      }
     },
     {
       "id": "lsu|samleavitt",
@@ -1151,6 +1196,11 @@
       "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 4500000,
+        "year2Baseline": 4950000,
+        "providerRank": 5
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -1192,21 +1242,36 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 98
+      }
     },
     {
       "id": "lsu|tybenefield",
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1200000,
+        "year2Baseline": 1325000,
+        "providerRank": 68
+      }
     },
     {
       "id": "lsu|whitweeks",
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 78
+      }
     },
     {
       "id": "lsu|winstonwatkinsjr",
@@ -1220,7 +1285,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 65
+      }
     },
     {
       "id": "miami|armondoblount",
@@ -1269,14 +1339,24 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 48
+      }
     },
     {
       "id": "miami|darianmensah",
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 6500000,
+        "year2Baseline": 7150000,
+        "providerRank": 1
+      }
     },
     {
       "id": "miami|elijalofton",
@@ -1304,7 +1384,12 @@
       "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 25
+      }
     },
     {
       "id": "miami|markfletcherjr",
@@ -1437,7 +1522,12 @@
       "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 62
+      }
     },
     {
       "id": "mississippi-state|kelleyjones",
@@ -1514,7 +1604,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 34
+      }
     },
     {
       "id": "missouri|brettnorfleet",
@@ -1654,7 +1749,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 55
+      }
     },
     {
       "id": "notre-dame|brauntaejohnson",
@@ -1683,6 +1783,11 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 3000000,
+        "year2Baseline": 3300000,
+        "providerRank": 12
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -1752,7 +1857,12 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1200000,
+        "year2Baseline": 1325000,
+        "providerRank": 69
+      }
     },
     {
       "id": "notre-dame|luketalich",
@@ -1865,6 +1975,11 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 5000000,
+        "year2Baseline": 5500000,
+        "providerRank": 4
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -1899,7 +2014,12 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2500000,
+        "year2Baseline": 2750000,
+        "providerRank": 18
+      }
     },
     {
       "id": "ohio-state|kenyattajacksonjr",
@@ -1934,7 +2054,12 @@
       "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 84
+      }
     },
     {
       "id": "oklahoma-state|carsonkolb",
@@ -1962,7 +2087,12 @@
       "classification": "SO",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 3500000,
+        "year2Baseline": 3850000,
+        "providerRank": 9
+      }
     },
     {
       "id": "oklahoma-state|evanjackson",
@@ -2144,7 +2274,12 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 36
+      }
     },
     {
       "id": "ole-miss|lukeferrelli",
@@ -2193,7 +2328,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 5000000,
+        "year2Baseline": 5500000,
+        "providerRank": 3
+      }
     },
     {
       "id": "ole-miss|willecholes",
@@ -2221,7 +2361,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 52
+      }
     },
     {
       "id": "oregon|brandonfinneyjr",
@@ -2264,6 +2409,11 @@
       "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 5000000,
+        "year2Baseline": 5500000,
+        "providerRank": 2
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -2298,7 +2448,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 64
+      }
     },
     {
       "id": "oregon|ifyobidegwu",
@@ -2333,14 +2488,24 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 26
+      }
     },
     {
       "id": "oregon|matayouiagalelei",
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 22
+      }
     },
     {
       "id": "oregon|messiahhampton",
@@ -2354,7 +2519,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 58
+      }
     },
     {
       "id": "pittsburgh|alexsanfordjr",
@@ -2571,7 +2741,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 3000000,
+        "year2Baseline": 3300000,
+        "providerRank": 15
+      }
     },
     {
       "id": "smu|marcellusbarnesjr",
@@ -2683,7 +2858,12 @@
       "classification": "FR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1600000,
+        "year2Baseline": 1750000,
+        "providerRank": 51
+      }
     },
     {
       "id": "tennessee|javingordon",
@@ -2711,7 +2891,12 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 91
+      }
     },
     {
       "id": "tennessee|quamoss",
@@ -2761,6 +2946,11 @@
       "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 2500000,
+        "year2Baseline": 2750000,
+        "providerRank": 20
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -2789,6 +2979,11 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 3000000,
+        "year2Baseline": 3300000,
+        "providerRank": 14
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -2801,13 +2996,7 @@
           "volatility": "MEDIUM"
         },
         "draftDeclarationProbability": 0.62,
-        "portalExitProbability": 0.1,
-        "nil": {
-          "year1": 3000000,
-          "year2Baseline": 3300000,
-          "confidence": "low",
-          "basis": "reported-transfer-market-context-game-estimate"
-        }
+        "portalExitProbability": 0.1
       }
     },
     {
@@ -2816,6 +3005,11 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
+      "nilMarket": {
+        "year1": 2500000,
+        "year2Baseline": 2750000,
+        "providerRank": 21
+      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -2906,7 +3100,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 95
+      }
     },
     {
       "id": "texas|ryanwingo",
@@ -2983,7 +3182,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 75
+      }
     },
     {
       "id": "texas-tech|camerondickey",
@@ -3137,7 +3341,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 40
+      }
     },
     {
       "id": "ucla|rodrickpleasant",
@@ -3249,7 +3458,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "providerRank": 56
+      }
     },
     {
       "id": "usc|jontezwilliams",
@@ -3291,7 +3505,12 @@
       "classification": "FR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 82
+      }
     },
     {
       "id": "usc|prophetbrown",
@@ -3319,7 +3538,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 73
+      }
     },
     {
       "id": "usc|zacharyuswilliams",
@@ -3361,7 +3585,12 @@
       "classification": "SR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "providerRank": 46
+      }
     },
     {
       "id": "utah|elijahdavis",
@@ -3452,7 +3681,12 @@
       "classification": "JR",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarket": {
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "providerRank": 83
+      }
     }
   ]
 }
