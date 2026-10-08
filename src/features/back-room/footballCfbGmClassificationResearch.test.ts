@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 const audit = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-classification-evidence.json", "utf8")) as {
   population:number; classified:number; officialOverrides:number;
   players:Array<{id:string;classification:string|null;confidence:string;matchStatus:string;sourceUrl:string;
-    remainingEligibility:number|null;earliestDraftYear:number|null;draftEligible2027:boolean|null;}>;
+    remainingEligibility:number|null;earliestDraftYear:number|null;draftEligible2027:boolean|null;
+    calibration?:{sources:string[];development:{breakout:number;improve:number;steady:number;decline:number}};}>;
 };
 const overrides = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-official-class-overrides.json", "utf8")) as {
   rows:Array<{id:string;classification:string;sourceUrl:string}>;
@@ -22,6 +23,7 @@ describe("CFB GM classification evidence integrity", () => {
     const unresolved = audit.players.filter((row) => row.classification === null).map((row) => row.id).sort();
     expect(unresolved).toEqual([]);
     expect(overrides.rows).toHaveLength(85);
+    expect(audit.players.find((row) => row.id === "texas|archmanning")?.classification).toBe("SR");
     expect(audit.players.find((row) => row.id === "miami|mohamedtoure")?.classification).toBe("8TH");
     expect(audit.players.find((row) => row.id === "smu|jimmywyrick")?.classification).toBe("6TH");
     expect(audit.players.find((row) => row.id === "usc|lukewafle")?.classification).toBe("FR");
@@ -31,6 +33,8 @@ describe("CFB GM classification evidence integrity", () => {
   });
   it("retains unknown eligibility where research has not established the fact", () => {
     const valid = new Set(["FR","SO","JR","SR","5TH","6TH","7TH","8TH","3RD"]);
+    expect(audit.players.filter((row) => row.calibration)).toHaveLength(12);
+    expect(audit.players.filter((row) => row.remainingEligibility !== null)).toHaveLength(5);
     for (const row of audit.players) {
       if (row.classification !== null) expect(valid.has(row.classification)).toBe(true);
       if (!row.calibration) {
