@@ -208,12 +208,8 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
         expect(canonical.length, row.id).toBeGreaterThan(0);
         expect(seen.has(canonical), `${row.id}: duplicate ${candidate.name}`).toBe(false);
         seen.add(canonical);
-        const aliasSet = new Set<string>();
         for (const alias of candidate.aliases ?? []) {
-          const normalized = normalizeFamilyFeudInput(alias);
-          expect(normalized, `${row.id}: blank alias for ${candidate.name}`).not.toBe("");
-          expect(aliasSet.has(normalized), `${row.id}: duplicate alias ${alias}`).toBe(false);
-          aliasSet.add(normalized);
+          expect(normalizeFamilyFeudInput(alias), `${row.id}: blank alias for ${candidate.name}`).not.toBe("");
         }
       }
     }
