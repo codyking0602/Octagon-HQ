@@ -168,6 +168,24 @@ describe("The GM head-to-head presentation", () => {
     expect(css).toContain(".football-gm-report__ledger");
   });
 
+  it("puts the winner, three-year results and true records before any long roster details", () => {
+    expect(report).toContain('gm-result__summary');
+    expect(report).toContain('gm-result__scores');
+    expect(report).toContain('gm-result__season-comparison');
+    expect(report).toContain('gm-result__record');
+    expect(report).toContain('footballGmSeasonRecordLabel(season)');
+    expect(report).toContain('Record unavailable');
+    expect(report.indexOf('gm-result__season-comparison')).toBeLessThan(report.indexOf('gm-result__roster-card'));
+    expect(report).toContain('gm-result__franchise-tabs');
+    expect(report).toContain('aria-pressed={selectedFrontOffice === "opponent"}');
+    expect(report).toContain('<details className="gm-result__expander gm-result__scoring">');
+    expect(report).toContain('VIEW FULL ROSTER EVOLUTION');
+    expect(report.match(/<CoreReport /g)?.length).toBe(1);
+    expect(css).toContain('.gm-result__season.is-versus');
+    expect(css).toContain('.gm-result__record');
+    expect(css).toContain('.gm-result__final-roster');
+  });
+
   it("shows Team OVR rather than exposing the hidden internal team grade", () => {
     expect(page).toContain("footballGmTeamOverall(left.teamGrade)");
     expect(page).toContain("footballGmTeamOverall(right.teamGrade)");
