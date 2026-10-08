@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "evidenceCutoff": "2026-10-08",
+  "rows": [
+    {
+      "id": "boise-state|akeemwright",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|benford",
+      "classification": "6TH",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|boenphelps",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|cambates",
+      "classification": "JR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|dylanriley",
+      "classification": "JR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|jadenmickey",
+      "classification": "5TH",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|jaydenvirginmorgan",
+      "classification": "5TH",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|jericowashingtonjr",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|loganbrantley",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|madduxmadsen",
+      "classification": "5TH",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|mattwagner",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|maxstege",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|mikaioedward",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|raseanjones",
+      "classification": "FR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|romantillmon",
+      "classification": "SR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|sherrodsmith",
+      "classification": "JR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|siregaines",
+      "classification": "JR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "boise-state|travisanderson",
+      "classification": "JR",
+      "sourceUrl": "https://broncosports.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas|maraadwatson",
+      "classification": "JR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas|ryanwingo",
+      "classification": "JR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas|zinaumeozulu",
+      "classification": "JR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
+      "evidence": "2026 official printed roster class",
+      "redshirt": null
+    }
+  ]
+}
