@@ -88,7 +88,7 @@ describe("The GM head-to-head presentation", () => {
     expect(page).toContain("year={3}");
   });
 
-  it("uses the shared two-sided seven-position board throughout the match", () => {
+  it("uses the two-sided seven-position board while the matchup is active", () => {
     expect(page).toContain("function VersusRosterBoard");
     expect(page).toContain("FOOTBALL_GM_ROSTER_SLOTS.map");
     expect(page).toContain("football-gm-versus__row");
@@ -97,6 +97,12 @@ describe("The GM head-to-head presentation", () => {
     expect(page).toContain("<PlayerDevelopmentNote player={player} seed={run.seed} />");
     expect(css).toContain(".football-gm-versus__row");
     expect(css).toContain(".football-gm-versus__pills");
+    // The live matchup roster belongs to draft / year-one / offseason only.
+    // The final report owns the completed score, winner, and final roster.
+    expect(page).toContain('{displayedPhase !== "complete" ? (\n            <VersusRosterBoard');
+    expect(page).toContain('{displayedPhase === "complete" ? (');
+    expect(page).toContain('<FinalMatch');
+    expect(page).not.toContain("Picks and roster progress remain visible above.");
   });
 
   it("keeps one shared player market and hands the whole offseason to one GM at a time", () => {
