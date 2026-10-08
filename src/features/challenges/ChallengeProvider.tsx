@@ -331,6 +331,7 @@ export function ChallengeProvider({
   const activeProfileIdRef = useRef<string | null>(activeProfile?.id ?? null);
   activeProfileIdRef.current = activeProfile?.id ?? null;
   const inFlightProfileIdRef = useRef<string | null>(null);
+  const queuedRefreshProfileIdRef = useRef<string | null>(null);
   const lastRefreshAtRef = useRef(0);
   const hasPendingChallenges = rows.some(
     (challenge) => !challenge.completedAt
@@ -353,14 +354,19 @@ export function ChallengeProvider({
     return [...map.values()];
   }, [activeProfile, counterparts, members]);
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async function refreshChallenges() {
     if (!repository || !activeProfile) {
       setRows([]);
       setCounterparts([]);
       return;
     }
     const expectedProfileId = activeProfile.id;
-    if (inFlightProfileIdRef.current === expectedProfileId) return;
+    if (inFlightProfileIdRef.current === expectedProfileId) {
+      // Explicit actions must still re-read after an earlier poll completes.
+      // Coalesce any number of overlapping calls into one follow-up refresh.
+      queuedRefreshProfileIdRef.current = expectedProfileId;
+      return;
+    }
     inFlightProfileIdRef.current = expectedProfileId;
     lastRefreshAtRef.current = Date.now();
 
@@ -378,7 +384,13 @@ export function ChallengeProvider({
     } finally {
       if (inFlightProfileIdRef.current === expectedProfileId) {
         inFlightProfileIdRef.current = null;
-        if (activeProfileIdRef.current === expectedProfileId) setLoading(false);
+        if (activeProfileIdRef.current === expectedProfileId) {
+          setLoading(false);
+          if (queuedRefreshProfileIdRef.current === expectedProfileId) {
+            queuedRefreshProfileIdRef.current = null;
+            void refreshChallenges();
+          }
+        }
       }
     }
   }, [activeProfile, repository]);
