@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 374,
+  "exactMatches": 371,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -6131,8 +6131,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 40,
+          "steady": 28,
+          "decline": 13,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.13,
+        "summary": "Ohio State 2026 true freshman WR caught a 15-yard TD in debut vs Ball State and 75-yard TD against Kent State in September. Two explosive catches support real flash but extremely small college workload; high-school ranking cannot justify established starter talent. Major growth potential in 2027 coexists with very high usage volatility; not 2027 draft eligible.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/chris-henry-jr/13356"
+        ]
+      }
     },
     {
       "id": "ohio-state|christianalliegro",
@@ -6150,8 +6169,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 24,
+          "steady": 52,
+          "decline": 17,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.06,
+        "summary": "Ohio State 2026 senior LB transfer from Wisconsin earned 2025 honorable-mention All-Big Ten, with single-game high 16 tackles at Iowa in 2024 and eight career one-sack games. In early 2026 recorded three tackles/TFL vs Ball State, five vs Texas and a pass defense vs Kent State; current full-time program switch creates adjustment risk, but proven conference starting experience favors modest change over huge breakout.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/christian-alliegro/13355"
+        ]
+      }
     },
     {
       "id": "ohio-state|devinmccuin",
@@ -6170,8 +6208,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 32,
+          "steady": 41,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.25,
+        "portalExitProbability": 0.09,
+        "summary": "Ohio State 2026 senior WR transferred from UTSA after 2025 third-team All-American Conference honor and multiple 100-yard college games. In first 2026 game caught six for 97 yards and a TD vs Ball State, but next game just one for five at Texas, reflecting high role/target volatility. Proven Group-of-Five receiver play, not a guaranteed elite Power Four breakout.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/devin-mccuin/13347"
+        ]
+      }
     },
     {
       "id": "ohio-state|devinsanchez",
@@ -6189,8 +6246,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 43,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07,
+        "summary": "Ohio State sophomore corner from 2025 high-school entry took a bigger 2026 role: eight tackles/TFL vs Texas, eight tackles/three pass deflections vs Illinois and two PBUs vs Ball State. No established elite 2025 full-season starting résumé in official bio; emerging corner with legitimate coverage improvement and moderate risk, 2027 draft ineligible under NFL three-year rule.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/devin-sanchez/13330"
+        ]
+      }
     },
     {
       "id": "ohio-state|earllittlejr",
@@ -6200,16 +6276,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4685437",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/earl-little%20jr./13345",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 54,
+          "decline": 23,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.46,
+        "portalExitProbability": 0.01,
+        "summary": "Ohio State official 2026 fifth-year safety transferred from Florida State after leading FSU 2025 with 76 tackles, four INT and two forced fumbles in 12 games/11 starts, earning second-team All-ACC and team Defensive MVP. Multi-school transfer and turnover variation introduce downside, but established ACC coverage/playmaking makes huge breakout unlikely; normal fifth-year college window expires after 2026 absent a special waiver.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/earl-little%20jr./13345"
+        ]
+      }
     },
     {
       "id": "ohio-state|eddrickhouston",
@@ -6227,8 +6322,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 30,
+          "steady": 47,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.05,
+        "summary": "Ohio State junior DE played 13 games/four starts in 2025, earning honorable mention All-Big Ten and totaling a career-high five tackles/1.5 sacks vs Miami in CFP. Early 2026 playing time is real (56 snaps at Texas, 38 at Iowa) with modest tackle totals. Relative to more experienced senior edge prospects, role growth is plausible but not a locked star trajectory.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/eddrick-houston/13302"
+        ]
+      }
     },
     {
       "id": "ohio-state|jakobijackson",
@@ -6238,16 +6352,35 @@
       "groups": [
         "RB"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "5151892",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/jakobi-jackson/13364",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 24,
+          "steady": 43,
+          "decline": 24,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.01,
+        "summary": "Ohio State 2026 fifth-year RB transferred from Florida after injury-shortened 2025 medical redshirt (four games, 27 carries/98 yards). Previously rushed for 116 vs Texas in 2024; 2026 first four Ohio State games included 83 yards/TD vs Ball State and two TD vs Kent State. Useful red-zone runner with medical recovery variance, not a perennial elite bellcow; fifth-year status implies normal 2026 exit unless additional waiver.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/jakobi-jackson/13364"
+        ]
+      }
     },
     {
       "id": "ohio-state|jaytimmons",
@@ -6265,8 +6398,27 @@
       "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 33,
+          "steady": 42,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1,
+        "summary": "Ohio State 2026 true freshman corner earned significant early playing time rather than just prep reputation: two PBUs vs Ball State, six tackles plus forced fumble/recovery at Texas and four additional games in September. Early coverage responsibility is credible, but no 2025 college season limits stability evidence. Draft-ineligible through 2027 from 2026 college entry.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/jay-timmons/13365"
+        ]
+      }
     },
     {
       "id": "ohio-state|jaylenmcclain",
@@ -6284,8 +6436,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 25,
+          "steady": 53,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.72,
+        "portalExitProbability": 0.04,
+        "summary": "Ohio State junior safety was third-team All-Big Ten in 2025, and in 2026 registered five tackles and an INT at Texas and another interception at Iowa. Significant current defensive workload and established conference honors warrant strong steady projection with modest 2027 NFL exit probability to high level. College entry 2024 qualifies for 2027 draft.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/jaylen-mcclain/13317"
+        ]
+      }
     },
     {
       "id": "ohio-state|jeremiahsmith",
@@ -6356,8 +6527,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 21,
+          "steady": 59,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.85,
+        "portalExitProbability": 0.03,
+        "summary": "Ohio State 2026 senior corner played 14 starts in 2025, 799 snaps, 26 tackles, two INT, three deflections and a sack, earning third-team All-Big Ten. Early 2026 starts and Lott watch-list status reinforce experienced Power Four coverage player with limited giant-breakout room and high NFL-declaration estimate, not automatic last-year graduation.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/jermaine-mathews%2520jr./13316"
+        ]
+      }
     },
     {
       "id": "ohio-state|johnwalker",
@@ -6375,8 +6565,27 @@
       "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 48,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.36,
+        "portalExitProbability": 0.06,
+        "summary": "Ohio State 2026 senior DT transfer from UCF, where he started all 12 games in 2025 with 40 tackles, three TFL and one sack. At Ohio State produced four tackles vs Texas on 58 snaps, showing immediate rotation participation with a higher-competition role adjustment. Useful interior defender, limited elite rush disruption; modest improvement upside and normal transfer uncertainty.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/john-walker/13376"
+        ]
+      }
     },
     {
       "id": "ohio-state|juliansayin",
@@ -6438,16 +6647,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "5081821",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/kenyatta-jackson-jr/13306",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 19,
+          "steady": 62,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.84,
+        "portalExitProbability": 0.01,
+        "summary": "Ohio State 2026 official fifth-year defensive end; in 2025 started all 14 games, producing 11 TFL, 6.5 sacks, 28 tackles and All-Big Ten honorable mention. In 2026 logged five tackles/TFL vs Texas, a sack vs Illinois and strip sack vs Iowa. This is an established front-line rush profile with little development runway and high NFL exit risk; normal five-year college clock exhausted after 2026.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/kenyatta-jackson-jr/13306"
+        ]
+      }
     },
     {
       "id": "ohio-state|nateroberts",
@@ -6466,8 +6694,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 40,
+          "steady": 32,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09,
+        "summary": "Ohio State 2026 sophomore TE played 13 games for four catches/30 yards in 2025 then expanded to four catches/36 yards vs Illinois, a 2026 TD against Kent State and more than 40 snaps against Texas. Genuine sophomore receiving-role improvement but limited high-volume history; meaningful Year 2 development opportunity with competition-driven variance, 2027 draft ineligible.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/nate-roberts/13326"
+        ]
+      }
     },
     {
       "id": "ohio-state|paytonpierce",
@@ -6485,8 +6732,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 30,
+          "steady": 48,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.44,
+        "portalExitProbability": 0.06,
+        "summary": "Ohio State junior LB earned 2025 honorable mention All-Big Ten with an interception vs Illinois; in first part of 2026 had nine tackles and forced fumble at Texas, a sack and two TFL vs Illinois. Established tackling/run and pressure participation, with possible increased responsibility but no proof of perennial elite pass-rush production. 2024 college entry permits 2027 declaration.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/payton-pierce/13324"
+        ]
+      }
     },
     {
       "id": "ohio-state|rileypettijohn",
@@ -6504,8 +6770,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/194/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 38,
+          "steady": 37,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07,
+        "summary": "Ohio State sophomore linebacker earned meaningful early 2026 snaps: six tackles vs Ball State, sack and 1.5 TFL at Texas, interception vs Kent State and two TFL vs Illinois, following limited first-year 2025 defensive action including fumble recovery. Real athletic/production breakout path with limited multi-year sample; 2025 matriculation makes 2027 NFL draft impossible.",
+        "sources": [
+          "https://ohiostatebuckeyes.com/sports/football/roster/riley-pettijohn/13323"
+        ]
+      }
     },
     {
       "id": "oklahoma-state|calebhawkins",
@@ -11635,7 +11920,7 @@
       }
     }
   ],
-  "officialOverrides": 94,
+  "officialOverrides": 97,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -11647,5 +11932,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label."
 }
