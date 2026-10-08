@@ -1,4 +1,5 @@
 import {
+  FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
   footballGmMoney,
   footballGmPlayerById,
@@ -67,7 +68,7 @@ function snapshot(run: FootballGmReportRun) {
     changed: FOOTBALL_GM_ROSTER_SLOTS.length - retained,
     tradeAdds,
     freeAgentAdds,
-    year3Cap: footballGmAdjustedRosterCap(end, 3, run.seed, run.negotiationConsequences),
+    year3Payroll: footballGmAdjustedRosterCap(end, 3, run.seed, run.negotiationConsequences),
   };
 }
 
@@ -218,7 +219,10 @@ export function FootballGmFranchiseReport({
       {opp && opponentRun ? (
         <>
           <section className="football-gm-report__comparison surface-card">
-            <header><small>WHERE THE MATCH WAS WON</small><strong>FRANCHISE COMPARISON</strong></header>
+            <header><small>THREE SEASONS · TWO FRONT OFFICES</small><strong>FRANCHISE COMPARISON</strong></header>
+            <p className="football-gm-report__comparison-help">
+              OVR measures team strength. Playoff finishes are simulated, so stronger teams can still lose early.
+            </p>
             <div className="football-gm-report__comparison-head"><span>{name}</span><b>VS</b><span>{opponentName ?? "Opponent"}</span></div>
             {own.result.seasons.map((season, index) => (
               <div key={season.year} className="football-gm-report__comparison-row">
@@ -231,10 +235,26 @@ export function FootballGmFranchiseReport({
               <span><b>{own.retained}/7</b><small>Original core</small></span><strong>CORE</strong><span><b>{opp.retained}/7</b><small>Original core</small></span>
             </div>
             <div className="football-gm-report__comparison-row">
-              <span><b>{footballGmMoney(own.year3Cap)}</b><small>Year 3 cap</small></span><strong>CAP</strong><span><b>{footballGmMoney(opp.year3Cap)}</b><small>Year 3 cap</small></span>
+              <span><b>{footballGmMoney(own.year3Payroll)}</b><small>Year 3 payroll · {footballGmMoney(FOOTBALL_GM_CAP - own.year3Payroll)} left</small></span>
+              <strong>CAP</strong>
+              <span><b>{footballGmMoney(opp.year3Payroll)}</b><small>Year 3 payroll · {footballGmMoney(FOOTBALL_GM_CAP - opp.year3Payroll)} left</small></span>
+            </div>
+            <div className="football-gm-report__score-breakdown">
+              <strong>HOW YOUR GM SCORE IS CALCULATED</strong>
+              <small>55% average team OVR + 45% three-year playoff résumé. Payroll is shown for context, not extra points.</small>
+            </div>
+            <div className="football-gm-report__comparison-row">
+              <span><b>{own.result.rosterManagementScore.toFixed(1)}</b><small>Avg. team OVR</small></span>
+              <strong>55%</strong>
+              <span><b>{opp.result.rosterManagementScore.toFixed(1)}</b><small>Avg. team OVR</small></span>
+            </div>
+            <div className="football-gm-report__comparison-row">
+              <span><b>{own.result.resumeScore.toFixed(1)}</b><small>Playoff résumé score</small></span>
+              <strong>45%</strong>
+              <span><b>{opp.result.resumeScore.toFixed(1)}</b><small>Playoff résumé score</small></span>
             </div>
             <div className="football-gm-report__comparison-row is-score">
-              <span><b>{own.result.score.toFixed(1)}</b><small>GM Score</small></span><strong>FINAL</strong><span><b>{opp.result.score.toFixed(1)}</b><small>GM Score</small></span>
+              <span><b>{own.result.score.toFixed(1)}</b><small>Final GM score</small></span><strong>FINAL</strong><span><b>{opp.result.score.toFixed(1)}</b><small>Final GM score</small></span>
             </div>
           </section>
 
