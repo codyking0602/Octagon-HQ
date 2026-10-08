@@ -107,6 +107,8 @@ function mainBoardPublicState(
     required_answers: FAMILY_FEUD_BOARD_ANSWER_COUNT,
     max_points: FAMILY_FEUD_MAIN_BOARD_MAX,
     settled,
+    // Never expose raw guesses before the board settles.
+    guesses: settled ? (board.attempts ?? []) : [],
     answer_reveal: settled
       ? question.answers.map((answer) => ({
           entity: entityPresentation(pack, answer.entityId),
