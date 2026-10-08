@@ -33,8 +33,8 @@ describe("CFB GM classification evidence integrity", () => {
   });
   it("retains unknown eligibility where research has not established the fact", () => {
     const valid = new Set(["FR","SO","JR","SR","5TH","6TH","7TH","8TH","3RD"]);
-    expect(audit.players.filter((row) => row.calibration)).toHaveLength(260);
-    expect(audit.players.filter((row) => row.remainingEligibility !== null)).toHaveLength(42);
+    expect(audit.players.filter((row) => row.calibration)).toHaveLength(277);
+    expect(audit.players.filter((row) => row.remainingEligibility !== null)).toHaveLength(45);
     for (const row of audit.players) {
       if (row.classification !== null) expect(valid.has(row.classification)).toBe(true);
       if (!row.calibration) {
