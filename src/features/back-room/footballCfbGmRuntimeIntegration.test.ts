@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { cfbGmDevelop } from "./footballCfbGmDevelopment";
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
@@ -14,6 +15,15 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(CFB_GM_PLAYERS.filter((p) => p.classification !== null)).toHaveLength(423);
     expect(CFB_GM_PLAYERS.filter((p) => p.classification === null)).toHaveLength(45);
     expect(cfbGmPlayer("texas|colinsimmons")?.classification).toBe("JR");
+    const ledger = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-classification-evidence.json","utf8"));
+    const runtime = JSON.parse(readFileSync("data/generated/football/cfb-gm-classification-runtime-2026.json","utf8"));
+    expect(runtime.population).toBe(ledger.population);
+    expect(runtime.players).toEqual(ledger.players.map((p: {
+      id: string; classification: string | null; remainingEligibility: number | null;
+      earliestDraftYear: number | null; draftEligible2027: boolean | null;
+    }) => ({id:p.id, classification:p.classification, remainingEligibility:p.remainingEligibility,
+      earliestDraftYear:p.earliestDraftYear, draftEligible2027:p.draftEligible2027})));
+
     for (const player of CFB_GM_PLAYERS) {
       expect(player.classVerified).toBe(player.classification !== null);
       expect(player.nilYear1 % 25_000).toBe(0);
