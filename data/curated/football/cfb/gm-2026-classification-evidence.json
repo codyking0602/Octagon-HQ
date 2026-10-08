@@ -3123,7 +3123,7 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/99/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
+      "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
       "calibration": {
@@ -3143,7 +3143,8 @@
         "summary": "Official 2026 redshirt-junior LSU bio: 2024 Big 12 Freshman of the Year, ASU starter, 2025 injury-shortened seven starts and January 2026 transfer.",
         "sources": [
           "https://lsusports.net/sports/fb/roster/season/2026/player/sam-leavitt"
-        ]
+        ],
+        "eligibilityConfidence": "evidence-supported-inference: fourth-year 2026, possible 2027 season under NCAA transitional 5-year rule"
       }
     },
     {
@@ -6081,7 +6082,7 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2483/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
+      "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
       "calibration": {
@@ -6102,7 +6103,8 @@
         "sources": [
           "https://goducks.com/sports/football/roster/dante-moore/18320",
           "https://goducks.com/news/2026/1/14/football-moore-among-several-key-contributors-returning-in-2026"
-        ]
+        ],
+        "eligibilityConfidence": "evidence-supported-inference: fourth-year 2026, possible 2027 season under NCAA transitional 5-year rule"
       }
     },
     {
@@ -7427,7 +7429,7 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/manning-arch/16963",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
+      "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
       "calibration": {
@@ -7448,7 +7450,8 @@
         "sources": [
           "https://texaslonghorns.com/sports/football/roster/manning-arch/16963",
           "https://www.cbssports.com/nfl/draft/mock-draft/"
-        ]
+        ],
+        "eligibilityConfidence": "evidence-supported-inference: fourth-year 2026, possible 2027 season under NCAA transitional 5-year rule"
       }
     },
     {
