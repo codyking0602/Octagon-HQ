@@ -388,6 +388,13 @@
       "redshirt": null
     },
     {
+      "id": "iowa|jaydenmontgomery",
+      "classification": "5TH",
+      "sourceUrl": "https://hawkeyesports.com/sports/football/roster/player/jayden-montgomery",
+      "evidence": "Iowa official 2026 year 5, 2022 redshirt and 2025 junior biography",
+      "redshirt": true
+    },
+    {
       "id": "iowa|jaylenwatson",
       "classification": "3RD",
       "sourceUrl": "https://hawkeyesports.com/sports/football/roster",
