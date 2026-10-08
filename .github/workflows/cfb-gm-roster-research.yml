@@ -1,0 +1,27 @@
+name: CFB GM roster classification research
+
+on:
+  pull_request:
+    paths:
+      - "scripts/audit-cfb-gm-2026-rosters.mjs"
+      - ".github/workflows/cfb-gm-roster-research.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  roster-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Collect 2026 AP Top 25 roster class evidence
+        run: node scripts/audit-cfb-gm-2026-rosters.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cfb-gm-2026-classification-evidence
+          path: artifacts/cfb-gm-2026-classification-audit.json
