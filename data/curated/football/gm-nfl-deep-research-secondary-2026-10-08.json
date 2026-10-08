@@ -6,7 +6,7 @@
   "baseCalibrationHead": "30e34c38142f828dd4c8d324c04dfac4d169b527",
   "nonRuntimeResearchOnly": true,
   "lockedGrades": true,
-  "reviewedCount": 54,
+  "reviewedCount": 79,
   "batchLog": [
     {
       "batch": 1,
@@ -19,6 +19,12 @@
       "teams": "CHI CIN CLE DAL DEN",
       "count": 26,
       "individual2026SourceCount": 26
+    },
+    {
+      "batch": 3,
+      "teams": "DET GB HOU IND JAX",
+      "count": 25,
+      "individual2026SourceCount": 25
     }
   ],
   "scopeLimitations": [
@@ -2777,6 +2783,1281 @@
           "season": 2026,
           "publishedOrAsOf": "As available by 2026-10-08",
           "scope": "named player or team coverage"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DET|Secondary|brianbranch",
+      "name": "Brian Branch",
+      "team": "DET",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 45,
+      "lockedHQGrade": 94,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 17,
+        "steadyPct": 60,
+        "declinePct": 21,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 8
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 45,
+        "declinePct": 35,
+        "maxAnnualGain": 2.3,
+        "maxAnnualLoss": 7.5,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 Detroit core hybrid safety sustained torn Achilles in December; box/slot coverage was elite before major injury.",
+        "through2026Week4": "Oct7 2026 return to practice after ten months, not full game clearance; team says ramp-up required.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 21→35 rather than assume instant 2025 peak; established 94 grade caps breakout but recovery creates asymmetric downside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.detroitlions.com/news/campbell-provides-injury-updates-ahead-of-first-camp-practice-joseph-branch-conklin-mahogany-izien",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.prideofdetroit.com/detroit-lions-news/176181/brian-branch-kerby-joseph-injury-update-optimism-hope",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DET|Secondary|djreed",
+      "name": "D.J. Reed",
+      "team": "DET",
+      "position": "CB",
+      "age": 29,
+      "draftOverall": 142,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 58,
+        "declinePct": 21,
+        "maxAnnualGain": 2.1,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 39,
+        "declinePct": 44,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 7.1,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 starting outside CB paired with Detroit's other boundary personnel, paid for reliability in coverage.",
+        "through2026Week4": "2026 played with rib issue, then poorly defended Panthers' Week4 passing attack; external recap criticizes performance.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 21→44 as 2026 coverage and health undermine assumed high floor; a stable rebound is still plausible.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.detroitlions.com/news/campbell-provides-injury-updates-ahead-of-first-camp-practice-joseph-branch-conklin-mahogany-izien",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.prideofdetroit.com/detroit-lions-analysis/175689/5-winners-5-losers-detroit-lions-loss-to-carolina-panthers",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DET|Secondary|ennisrakestraw",
+      "name": "Ennis Rakestraw Jr.",
+      "team": "DET",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 61,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 21,
+        "improvePct": 26,
+        "steadyPct": 18,
+        "declinePct": 35,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 7.9,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "2025 young Lions corner with limited injury-interrupted consistent defensive reps; second-round investment cannot replace quality snaps.",
+        "through2026Week4": "Oct8 coach considering larger outside usage after other CBs faltered; encouraging small samples but not a starter lock.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise breakout 17→21, decline 19→35; recent opportunity plus thin sustained evidence produce two tails.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.detroitlions.com/news/campbell-provides-injury-updates-ahead-of-first-camp-practice-joseph-branch-conklin-mahogany-izien",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.prideofdetroit.com/detroit-lions-news/176170/dan-campbell-2-detroit-lions-defenders-more-playing-time-cardinals",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DET|Secondary|kerbyjoseph",
+      "name": "Kerby Joseph",
+      "team": "DET",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 97,
+      "lockedHQGrade": 88,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 3,
+        "improvePct": 21,
+        "steadyPct": 42,
+        "declinePct": 34,
+        "maxAnnualGain": 2.3,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 15,
+        "steadyPct": 29,
+        "declinePct": 54,
+        "maxAnnualGain": 2.6,
+        "maxAnnualLoss": 8.2,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "2025 knee problem derailed his safety role, with extended rehabilitation into 2026; pre-injury ball production not an availability forecast.",
+        "through2026Week4": "As of Oct8 still without firm return despite teammate optimism; coaches cautious about protecting repaired knee.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 34→54 and loss ceiling, reduce improve 21→15 due to extensive uncertainty while preserving locked HQ grade 88.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.detroitlions.com/news/campbell-provides-injury-updates-ahead-of-first-camp-practice-joseph-branch-conklin-mahogany-izien",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.prideofdetroit.com/detroit-lions-news/176181/brian-branch-kerby-joseph-injury-update-optimism-hope",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "DET|Secondary|rogermccreary",
+      "name": "Roger McCreary",
+      "team": "DET",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 35,
+      "lockedHQGrade": 80,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 7,
+        "improvePct": 21,
+        "steadyPct": 30,
+        "declinePct": 42,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 established NFL nickel with slot assignment value, but not demonstrated as elite full-time outside CB.",
+        "through2026Week4": "2026 switched toward Detroit boundary after Rock Ya-Sin benched; major position/assignment change increases exposure.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→42 while retaining some improvement: translating slot coverage to outside is not automatic.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.detroitlions.com/news/campbell-provides-injury-updates-ahead-of-first-camp-practice-joseph-branch-conklin-mahogany-izien",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.prideofdetroit.com/detroit-lions-news/176170/dan-campbell-2-detroit-lions-defenders-more-playing-time-cardinals",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "GB|Secondary|brandoncisse",
+      "name": "Brandon Cisse",
+      "team": "GB",
+      "position": "CB",
+      "age": 21,
+      "draftOverall": 52,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 19,
+        "improvePct": 31,
+        "steadyPct": 14,
+        "declinePct": 36,
+        "maxAnnualGain": 6.2,
+        "maxAnnualLoss": 5.7,
+        "marketVariancePct": 11
+      },
+      "proposed": {
+        "breakoutPct": 21,
+        "improvePct": 27,
+        "steadyPct": 10,
+        "declinePct": 42,
+        "maxAnnualGain": 7.1,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL defensive season; high-upside new Packers outside corner rather than veteran grading sample.",
+        "through2026Week4": "Week3 2026 critical Cover-3 route-match error surrendered long Drake London gain; early responsibility with assignment risk.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise breakout 19→21 but decline 36→42; speed upside, rookie technique/process variance especially high.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.acmepackingcompany.com/green-bay-packers-analysis/87466/packers-film-room-brief-notes-on-the-defenses-coverage-bust-in-week-3",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "GB|Secondary|evanwilliams",
+      "name": "Evan Williams",
+      "team": "GB",
+      "position": "S",
+      "age": 25,
+      "draftOverall": 111,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 15,
+        "improvePct": 36,
+        "steadyPct": 30,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 16,
+        "improvePct": 32,
+        "steadyPct": 36,
+        "declinePct": 16,
+        "maxAnnualGain": 5.2,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 returning safety with range and run fit, used deep while Xavier McKinney shares communication load.",
+        "through2026Week4": "Early 2026 PFF indexed 82.4 overall, 75.7 coverage, 81.3 run: two-way impact more sustainable than picks.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Improve 36→32 but decline 19→16, breakout 15→16; role consolidation and both facets of play protect downside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/evan-williams/73864",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "GB|Secondary|javonbullard",
+      "name": "Javon Bullard",
+      "team": "GB",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 58,
+      "lockedHQGrade": 81,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 17,
+        "improvePct": 36,
+        "steadyPct": 28,
+        "declinePct": 19,
+        "maxAnnualGain": 4.7,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 20,
+        "improvePct": 29,
+        "steadyPct": 26,
+        "declinePct": 25,
+        "maxAnnualGain": 6,
+        "maxAnnualLoss": 5.9,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 second-year Packers safety/nickel utility with variable deep assignments; valuable hybrid but role shifts.",
+        "through2026Week4": "2026 early coverage breakdowns team-wide; no verified individual Week4 coverage split in reviewed public source.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Slight breakout 17→20 and decline 19→25: slot versatility provides pathways, but changing positions complicates year-over-year consistency.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.acmepackingcompany.com/green-bay-packers-analysis/87466/packers-film-room-brief-notes-on-the-defenses-coverage-bust-in-week-3",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "GB|Secondary|keiseannixon",
+      "name": "Keisean Nixon",
+      "team": "GB",
+      "position": "CB",
+      "age": 29,
+      "draftOverall": null,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 51,
+        "declinePct": 25,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 44,
+        "declinePct": 36,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 starting Green Bay CB and return specialist; heavy duty increases exposure, not evidence of high-end lockdown.",
+        "through2026Week4": "2026 Week3 outside coverage lapse after slipping on long London gain; a single slip alone is not proof of systemic decline.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 25→36 from age/assignment strain, with steady still plausible; do not overreact solely to one explosive play.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.acmepackingcompany.com/green-bay-packers-analysis/87466/packers-film-room-brief-notes-on-the-defenses-coverage-bust-in-week-3",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "GB|Secondary|xaviermckinney",
+      "name": "Xavier McKinney",
+      "team": "GB",
+      "position": "S",
+      "age": 27,
+      "draftOverall": 36,
+      "lockedHQGrade": 88,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 19,
+        "steadyPct": 64,
+        "declinePct": 15,
+        "maxAnnualGain": 1.2,
+        "maxAnnualLoss": 2.3,
+        "marketVariancePct": 3
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 18,
+        "steadyPct": 56,
+        "declinePct": 24,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 4.4,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 high-end deep safety and Packers back-end signal caller; coverage quality not tied to forcing interceptions.",
+        "through2026Week4": "2026 indexed PFF grade near 53 coverage despite previous strong reputation; early-season small-sample caution.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 15→24, steady majority; prior range anchors reliability but early coverage uncertainty raises downside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/xavier-mckinney/55775",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "HOU|Secondary|calenbullock",
+      "name": "Calen Bullock",
+      "team": "HOU",
+      "position": "S",
+      "age": 23,
+      "draftOverall": 78,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 21,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 19,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 30,
+        "steadyPct": 24,
+        "declinePct": 27,
+        "maxAnnualGain": 6.7,
+        "maxAnnualLoss": 6.4,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 young Texans starting deep safety with ball tracking and range; full-time role made upside credible.",
+        "through2026Week4": "2026 broader defense communication and zone coverage misfires; can improve if play-calling stabilized.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Improve 36→30 and decline 19→27; avoid assuming 2025 young growth trajectory is linear amid assignment changes.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.battleredblog.com/houston-texans-news/78092/texans-head-coach-demeco-ryans-taking-over-play-calling-on-defense",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "HOU|Secondary|derekstingley",
+      "name": "Derek Stingley Jr.",
+      "team": "HOU",
+      "position": "CB",
+      "age": 25,
+      "draftOverall": 3,
+      "lockedHQGrade": 95,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 2,
+        "improvePct": 20,
+        "steadyPct": 71,
+        "declinePct": 7,
+        "maxAnnualGain": 2.1,
+        "maxAnnualLoss": 2.5,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 20,
+        "steadyPct": 66,
+        "declinePct": 12,
+        "maxAnnualGain": 1.9,
+        "maxAnnualLoss": 3.4,
+        "marketVariancePct": 4
+      },
+      "evidence": {
+        "season2025": "2025 elite outside mirror man CB; coverage down-to-down carries forecast far more than interception totals.",
+        "through2026Week4": "2026 Texans collective pass defense down, though one team-wide slump not individual elite CB proof of collapse.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 7→12 modestly for environment and targeted challenge; locked 95 limits breakout upside.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.battleredblog.com/houston-texans-news/78092/texans-head-coach-demeco-ryans-taking-over-play-calling-on-defense",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "HOU|Secondary|jalenpitre",
+      "name": "Jalen Pitre",
+      "team": "HOU",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 37,
+      "lockedHQGrade": 94,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 21,
+        "steadyPct": 62,
+        "declinePct": 13,
+        "maxAnnualGain": 2.8,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 18,
+        "steadyPct": 49,
+        "declinePct": 29,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 5.4,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 versatile slot/strong-safety defensive chess piece relied on man, run support and communication.",
+        "through2026Week4": "2026 Texans zone communication failures and soft coverage criticized, including Pitre's assignments.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 13→29; hybrid talent still stabilizes but scheme execution not automatically preserved.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.houstonchronicle.com/sports/texans/article/demeco-ryans-nick-caserio-22465883.php",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "HOU|Secondary|kamarilassiter",
+      "name": "Kamari Lassiter",
+      "team": "HOU",
+      "position": "CB",
+      "age": 23,
+      "draftOverall": 42,
+      "lockedHQGrade": 89,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 13,
+        "improvePct": 33,
+        "steadyPct": 40,
+        "declinePct": 14,
+        "maxAnnualGain": 5.5,
+        "maxAnnualLoss": 4,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 15,
+        "improvePct": 26,
+        "steadyPct": 28,
+        "declinePct": 31,
+        "maxAnnualGain": 6.2,
+        "maxAnnualLoss": 6.8,
+        "marketVariancePct": 8
+      },
+      "evidence": {
+        "season2025": "2025 high-volume rising outside CB on top-graded Houston secondary; contested coverage foundation.",
+        "through2026Week4": "2026 Week4 reportedly allowed 136 receiving yards, part of struggling overall coverage unit.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 14→31, breakout 13→15: age/competitive mentality support rebound, but 2026 exposure is substantive.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.battleredblog.com/houston-texans-news/78092/texans-head-coach-demeco-ryans-taking-over-play-calling-on-defense",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "HOU|Secondary|reedblankenship",
+      "name": "Reed Blankenship",
+      "team": "HOU",
+      "position": "S",
+      "age": 27,
+      "draftOverall": null,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 46,
+        "declinePct": 30,
+        "maxAnnualGain": 3.3,
+        "maxAnnualLoss": 5.8,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Eagles deep safety with reliable veteranish communication/run fit; joined Texans for 2026.",
+        "through2026Week4": "2026 new communication responsibilities amid reported Texans defensive struggles; direct individual grade unavailable.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→30 due system transition and exposure; role security steadier than boom projections.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.pff.com/news/nfl-secondary-rankings-2026",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.houstonchronicle.com/sports/texans/article/demeco-ryans-nick-caserio-22465883.php",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "IND|Secondary|ajhaulcy",
+      "name": "AJ Haulcy",
+      "team": "IND",
+      "position": "S",
+      "age": 22,
+      "draftOverall": 78,
+      "lockedHQGrade": 77,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 16,
+        "improvePct": 27,
+        "steadyPct": 14,
+        "declinePct": 43,
+        "maxAnnualGain": 6.5,
+        "maxAnnualLoss": 8.1,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "No 2025 NFL season; college safety prospect rather than validated starter.",
+        "through2026Week4": "2026 starting Colts strong safety according to Sep8 depth chart; early PFF run and coverage both under 40 in indexed sample.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 22→43; immediate starting reps valuable but on-field processing/tackling adjustment substantial.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.colts.com/news/colts-cornerback-justin-walley-sauce-gardner-charvarius-ward",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.colts.com/news/colts-release-first-unofficial-depth-chart-of-2026-regular-season",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "IND|Secondary|cambynum",
+      "name": "Cam Bynum",
+      "team": "IND",
+      "position": "S",
+      "age": 28,
+      "draftOverall": 125,
+      "lockedHQGrade": 83,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 3,
+        "improvePct": 21,
+        "steadyPct": 49,
+        "declinePct": 27,
+        "maxAnnualGain": 3.5,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 Colts safety acquired from Minnesota in 2025, center-field/communication responsibilities.",
+        "through2026Week4": "2026 remains Colts listed starting FS; limited up-to-date individual charting in accessed official report.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 19→27; safe deep veteran tends to steady, high breakout projection unjustified.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.colts.com/news/colts-cornerback-justin-walley-sauce-gardner-charvarius-ward",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.colts.com/news/colts-release-first-unofficial-depth-chart-of-2026-regular-season",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "IND|Secondary|charvariusward",
+      "name": "Charvarius Ward",
+      "team": "IND",
+      "position": "CB",
+      "age": 30,
+      "draftOverall": null,
+      "lockedHQGrade": 86,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 2,
+        "improvePct": 10,
+        "steadyPct": 32,
+        "declinePct": 56,
+        "maxAnnualGain": 2.5,
+        "maxAnnualLoss": 8.4,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "2025 concussion-driven missed time left only one healthy full game alongside Sauce after Jets trade, per club.",
+        "through2026Week4": "2026 listed starting Colts outside with Sauce; medically relevant recurrence risk, no proven Week4 complete clean coverage sample.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 38→56, suppress improvement: past elite press experience does not remove concussion/availability risk.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.colts.com/news/colts-cornerback-justin-walley-sauce-gardner-charvarius-ward",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.colts.com/news/colts-cornerback-justin-walley-sauce-gardner-charvarius-ward",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "IND|Secondary|justinwalley",
+      "name": "Justin Walley",
+      "team": "IND",
+      "position": "CB",
+      "age": 24,
+      "draftOverall": 80,
+      "lockedHQGrade": 75,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 18,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 22,
+        "maxAnnualGain": 5.1,
+        "maxAnnualLoss": 3.9,
+        "marketVariancePct": 9
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 29,
+        "steadyPct": 16,
+        "declinePct": 36,
+        "maxAnnualGain": 7,
+        "maxAnnualLoss": 8.5,
+        "marketVariancePct": 9
+      },
+      "evidence": {
+        "season2025": "No 2025 regular-season NFL snaps: tore ACL during 2025 preseason after being drafted.",
+        "through2026Week4": "2026 primary nickel on opening depth chart; returns to pro snaps but full stability after surgery not yet established.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 22→36, breakout 18→19; opportunity substantial alongside genuine ACL return risk.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.colts.com/news/colts-cornerback-justin-walley-sauce-gardner-charvarius-ward",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.colts.com/news/colts-cornerback-justin-walley-sauce-gardner-charvarius-ward",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "IND|Secondary|saucegardner",
+      "name": "Sauce Gardner",
+      "team": "IND",
+      "position": "CB",
+      "age": 26,
+      "draftOverall": 4,
+      "lockedHQGrade": 91,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 23,
+        "steadyPct": 55,
+        "declinePct": 18,
+        "maxAnnualGain": 4.1,
+        "maxAnnualLoss": 4.7,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 4,
+        "improvePct": 23,
+        "steadyPct": 50,
+        "declinePct": 23,
+        "maxAnnualGain": 3.3,
+        "maxAnnualLoss": 5.1,
+        "marketVariancePct": 5
+      },
+      "evidence": {
+        "season2025": "2025 All-Pro caliber coverage history, yet 2025 injuries yielded only one full game next to Ward following trade.",
+        "through2026Week4": "2026 opening CB1; early PFF around 66 coverage, below peak but inconclusive at four weeks.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Decline 18→23, improve kept 23; top man skill sustainable, health and recent efficiency warrant less certainty.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.colts.com/news/colts-cornerback-justin-walley-sauce-gardner-charvarius-ward",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.pff.com/nfl/players/sauce-gardner/100903",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "JAX|Secondary|antoniojohnson",
+      "name": "Antonio Johnson",
+      "team": "JAX",
+      "position": "S",
+      "age": 24,
+      "draftOverall": 160,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 21,
+        "improvePct": 36,
+        "steadyPct": 24,
+        "declinePct": 19,
+        "maxAnnualGain": 3.8,
+        "maxAnnualLoss": 3.3,
+        "marketVariancePct": 7
+      },
+      "proposed": {
+        "breakoutPct": 19,
+        "improvePct": 28,
+        "steadyPct": 28,
+        "declinePct": 25,
+        "maxAnnualGain": 5.7,
+        "maxAnnualLoss": 5.3,
+        "marketVariancePct": 6
+      },
+      "evidence": {
+        "season2025": "2025 safety contributed 58 tackles and two sacks, increased regular-season role during defense shift.",
+        "through2026Week4": "2026 starter at safety on current Jaguars depth chart, with box/blitz responsibilities.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Reduce breakout 21→19 and improve 36→28, decline 19→25: full-time role growing but tackling/coverage balance still unknown.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.jaguars.com/news/k000589-2026-offseason-a-look-at-jaguars-cornerbacks",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.jaguars.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "JAX|Secondary|ericmurray",
+      "name": "Eric Murray",
+      "team": "JAX",
+      "position": "S",
+      "age": 32,
+      "draftOverall": 106,
+      "lockedHQGrade": 78,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 1.4,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 9,
+        "steadyPct": 31,
+        "declinePct": 59,
+        "maxAnnualGain": 1.3,
+        "maxAnnualLoss": 8,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 54 tackles and a sack as veteran Jaguars safety with deep responsibilities.",
+        "through2026Week4": "2026 first-team safety, but concussion prevented Wednesday Week5 practice, Oct8; no confirmed return timetable.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 38→59 given age32 and immediate concussion, larger annual loss tied to lost role/availability.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.jaguars.com/news/k000589-2026-offseason-a-look-at-jaguars-cornerbacks",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.bleedinggreennation.com/philadelphia-eagles-injuries/186017/eagles-injury-report-saquon-barkley-devonta-smith-among-7-players-who-did-not-practice",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "JAX|Secondary|jourdanlewis",
+      "name": "Jourdan Lewis",
+      "team": "JAX",
+      "position": "CB",
+      "age": 31,
+      "draftOverall": 92,
+      "lockedHQGrade": 84,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 1,
+        "improvePct": 13,
+        "steadyPct": 48,
+        "declinePct": 38,
+        "maxAnnualGain": 0.9,
+        "maxAnnualLoss": 3.8,
+        "marketVariancePct": 5
+      },
+      "proposed": {
+        "breakoutPct": 1,
+        "improvePct": 11,
+        "steadyPct": 39,
+        "declinePct": 49,
+        "maxAnnualGain": 1.8,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 seven Jaguars starts, 39 tackles, veteran nickel/inside corner with strong hands.",
+        "through2026Week4": "2026 Jaguars list him starting CB while Hunter moved outside; risk grows from age31 and assignment load.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise decline 38→49, limit gain; nickel processing valuable but age and expanded role threaten sustain.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.jaguars.com/news/k000589-2026-offseason-a-look-at-jaguars-cornerbacks",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.jaguars.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "JAX|Secondary|montaricbrown",
+      "name": "Montaric Brown",
+      "team": "JAX",
+      "position": "CB",
+      "age": 27,
+      "draftOverall": 222,
+      "lockedHQGrade": 76,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 4,
+        "improvePct": 20,
+        "steadyPct": 57,
+        "declinePct": 19,
+        "maxAnnualGain": 2.7,
+        "maxAnnualLoss": 2.9,
+        "marketVariancePct": 4
+      },
+      "proposed": {
+        "breakoutPct": 7,
+        "improvePct": 19,
+        "steadyPct": 35,
+        "declinePct": 39,
+        "maxAnnualGain": 4,
+        "maxAnnualLoss": 6.6,
+        "marketVariancePct": 7
+      },
+      "evidence": {
+        "season2025": "2025 final 12 starts, team-high 12 PBUs, two INT; legitimate NFL perimeter snaps beyond turnover headline.",
+        "through2026Week4": "2026 listed outside starter opposite Hunter with Lewis in group; deeper route-matching exposure as incumbent.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Lower improve 20→19, raise decline 19→39 due high variance of role quality, despite career-best 2025.",
+      "confidence": "medium",
+      "sources": [
+        {
+          "url": "https://www.jaguars.com/news/k000589-2026-offseason-a-look-at-jaguars-cornerbacks",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.jaguars.com/news/k000589-2026-offseason-a-look-at-jaguars-cornerbacks",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
+        }
+      ],
+      "auditStatus": "individual-2025-2026-review"
+    },
+    {
+      "id": "JAX|Secondary|travishunter",
+      "name": "Travis Hunter",
+      "team": "JAX",
+      "position": "WR",
+      "age": 23,
+      "draftOverall": 2,
+      "lockedHQGrade": 82,
+      "gradeAuthority": "data/generated/football/wheel-nfl-secondary-grades-2026-10-03.json",
+      "gradeChanged": false,
+      "baseline": {
+        "breakoutPct": 26,
+        "improvePct": 22,
+        "steadyPct": 18,
+        "declinePct": 34,
+        "maxAnnualGain": 8.8,
+        "maxAnnualLoss": 7.3,
+        "marketVariancePct": 6
+      },
+      "proposed": {
+        "breakoutPct": 28,
+        "improvePct": 23,
+        "steadyPct": 20,
+        "declinePct": 29,
+        "maxAnnualGain": 7.5,
+        "maxAnnualLoss": 8.2,
+        "marketVariancePct": 10
+      },
+      "evidence": {
+        "season2025": "2025 first NFL season included only two Jaguars corner starts amid injury, splitting defensive and offensive responsibilities.",
+        "through2026Week4": "2026 listed first-team CB and WR at once; full-time two-way workload is substantial constraint on recovery and sustainable technique.",
+        "limitations": "Four-game 2026 sample and injury timing limit long-term inference; absent individual split is flagged rather than fabricated."
+      },
+      "reasonRelativeToExisting": "Raise improvement 22→23 and breakout 26→28, but retain 29 decline due 2025 missed time and dual usage; exactly separate secondary ID/grade.",
+      "confidence": "low",
+      "sources": [
+        {
+          "url": "https://www.jaguars.com/news/k000589-2026-offseason-a-look-at-jaguars-cornerbacks",
+          "season": 2025,
+          "publishedOrAsOf": "2025 season summarized in 2026 preseason or contemporary team report",
+          "scope": "team and player 2025 context"
+        },
+        {
+          "url": "https://www.jaguars.com/team/depth-chart",
+          "season": 2026,
+          "publishedOrAsOf": "By 2026-10-08",
+          "scope": "specific player/role or team report"
         }
       ],
       "auditStatus": "individual-2025-2026-review"
