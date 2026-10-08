@@ -101,7 +101,13 @@ function normalizedRun(seed: string, value: unknown): PersistedRun {
   return {
     ...base,
     ...raw,
-    version: FOOTBALL_GM_VERSION,
+    // Do not silently upgrade an old, actively played head-to-head match.
+    // The seed is the economic authority: untagged saves keep v10 behavior.
+    version: seed.endsWith(FOOTBALL_GM_DEVELOPMENT_SEED_TAG)
+      ? FOOTBALL_GM_VERSION
+      : typeof raw.version === "string" && raw.version
+        ? raw.version
+        : "football-gm-v10-shared-real-seasons",
     seed,
     phase: raw.phase ?? "draft",
     roster,
