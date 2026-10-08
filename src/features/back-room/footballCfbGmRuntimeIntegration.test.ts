@@ -21,8 +21,16 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(runtime.players).toEqual(ledger.players.map((p: {
       id: string; classification: string | null; remainingEligibility: number | null;
       earliestDraftYear: number | null; draftEligible2027: boolean | null;
+      calibration?:{status:string;development:Record<string,number|string>;
+        draftDeclarationProbability:number|null;portalExitProbability:number|null;
+        nil?:{year1:number;year2Baseline:number;confidence:string;basis:string}};
     }) => ({id:p.id, classification:p.classification, remainingEligibility:p.remainingEligibility,
-      earliestDraftYear:p.earliestDraftYear, draftEligible2027:p.draftEligible2027})));
+      earliestDraftYear:p.earliestDraftYear, draftEligible2027:p.draftEligible2027,
+      ...(p.calibration ? {calibration:{status:p.calibration.status,
+        development:p.calibration.development,
+        draftDeclarationProbability:p.calibration.draftDeclarationProbability,
+        portalExitProbability:p.calibration.portalExitProbability,
+        ...(p.calibration.nil ? {nil:p.calibration.nil} : {})}} : {})})));
 
     for (const player of CFB_GM_PLAYERS) {
       expect(player.classVerified).toBe(player.classification !== null);
@@ -50,6 +58,8 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(isModelDraftEligible("model|older","5TH")).toBe(true);
     expect(isModelDraftEligible("miami|mohamedtoure","8TH")).toBe(true);
     expect(cfbGmPlayer("smu|jimmywyrick")?.classification).toBe("6TH");
+    expect(cfbGmPlayer("texas|archmanning")?.classification).toBe("SR");
+    expect(isModelDraftEligible("alabama|keelonrussell","SO")).toBe(false);
     expect(CFB_GM_PLAYERS.filter((p) => p.classification === "FR" ||
       p.classification === "SO").every((p) => !isModelDraftEligible(p.id,p.classification))).toBe(true);
   });
@@ -78,6 +88,7 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v2-cfp"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v3-market-development"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v4-official-classes"})).toBeNull();
+    expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v5-extended-year-evidence"})).toBeNull();
   });
 
   it("completes multiple seeded seven-player draft paths under both budgets", () => {
