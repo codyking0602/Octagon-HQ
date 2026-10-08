@@ -4,6 +4,7 @@ import {
   FOOTBALL_GM_ROSTER_SLOTS,
   FOOTBALL_GM_TEAMS,
   footballGmPlayerById,
+  footballGmProjectedExtensionForPlayer,
   footballGmProjectedGradeForPlayer,
   footballGmReflowRoster,
   footballGmSpinTeam,
@@ -15,7 +16,7 @@ import {
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
 
-export const FOOTBALL_GM_VERSION = "football-gm-v10-shared-real-seasons";
+export const FOOTBALL_GM_VERSION = "football-gm-v11-seeded-development";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
 
 export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
@@ -276,12 +277,12 @@ function preferredSlotForPlayer(player: FootballGmPlayer) {
   return "FLEX";
 }
 
-function rawWeightedGrade(roster: readonly FootballGmRosterEntry[], year: 1 | 2 | 3) {
+function rawWeightedGrade(roster: readonly FootballGmRosterEntry[], year: 1 | 2 | 3, seed?: string) {
   if (roster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return 0;
   const score = roster.reduce((sum, entry) => {
     const player = footballGmPlayerById(entry.playerId);
     return player
-      ? sum + (footballGmProjectedGradeForPlayer(player, year) * FOOTBALL_GM_POSITION_WEIGHTS[entry.slot])
+      ? sum + (footballGmProjectedGradeForPlayer(player, year, seed) * FOOTBALL_GM_POSITION_WEIGHTS[entry.slot])
       : sum;
   }, 0);
   return Math.round(score * 10) / 10;
@@ -290,12 +291,13 @@ function rawWeightedGrade(roster: readonly FootballGmRosterEntry[], year: 1 | 2 
 export function footballGmWeakLinkPenalty(
   roster: readonly FootballGmRosterEntry[],
   year: 1 | 2 | 3,
+  seed?: string,
 ) {
   if (roster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return 0;
   const grades = roster
     .map((entry) => {
       const player = footballGmPlayerById(entry.playerId);
-      return player ? footballGmProjectedGradeForPlayer(player, year) : 70;
+      return player ? footballGmProjectedGradeForPlayer(player, year, seed) : 70;
     })
     .sort((a, b) => a - b);
   const lowest = grades[0] ?? 82;
@@ -346,9 +348,10 @@ export function footballGmEffectiveTeamGrade(
   yearOneRoster: readonly FootballGmRosterEntry[],
   roster: readonly FootballGmRosterEntry[],
   year: 1 | 2 | 3,
+  seed?: string,
 ) {
-  const rawTeamGrade = rawWeightedGrade(roster, year);
-  const weakLinkPenalty = footballGmWeakLinkPenalty(roster, year);
+  const rawTeamGrade = rawWeightedGrade(roster, year, seed);
+  const weakLinkPenalty = footballGmWeakLinkPenalty(roster, year, seed);
   const continuity = year === 1 ? null : footballGmContinuity(yearOneRoster, roster, year);
   const continuityAdjustment = continuity?.adjustment ?? 0;
   const teamGrade = Math.round((rawTeamGrade - weakLinkPenalty + continuityAdjustment) * 10) / 10;
@@ -424,7 +427,11 @@ export function footballGmAdjustedSalaryForPlayer(
   seed: string,
   consequences: FootballGmNegotiationConsequences,
 ) {
-  const base = player.salaryWindow[year - 1];
+  // The development/market roll is resolved once for each run. 3YR salaries
+  // never reprice, even if the player's ability changes dramatically.
+  const base = year === 1 || player.gameContract === "3YR"
+    ? player.salaryWindow[year - 1]
+    : footballGmProjectedExtensionForPlayer(player, seed);
   if (year === 1 || player.gameContract === "3YR") return base;
   const failedCount = consequences[player.id] ?? 0;
   const premium = footballGmNegotiationPremiumPct(seed, player.id, failedCount);
@@ -533,7 +540,7 @@ export function footballGmFreeAgencyCandidatesForTeam(input: {
       }];
     })
     .sort((left, right) => (
-      footballGmProjectedGradeForPlayer(right.player, 2) - footballGmProjectedGradeForPlayer(left.player, 2)
+      footballGmProjectedGradeForPlayer(right.player, 2, input.seed) - footballGmProjectedGradeForPlayer(left.player, 2, input.seed)
       || left.salary - right.salary
       || left.player.name.localeCompare(right.player.name)
     ));
@@ -641,7 +648,7 @@ export function footballGmSeasonResultV2(input: {
   roster: readonly FootballGmRosterEntry[];
   year: 1 | 2 | 3;
 }) {
-  const grade = footballGmEffectiveTeamGrade(input.yearOneRoster, input.roster, input.year);
+  const grade = footballGmEffectiveTeamGrade(input.yearOneRoster, input.roster, input.year, input.seed);
   const season = footballGmSimulateLeagueSeason({
     seed: input.seed,
     year: input.year,
@@ -711,8 +718,8 @@ function tradeControlFactor(player: FootballGmPlayer) {
   return 1.08 + Math.max(-0.08, surplus * 0.18);
 }
 
-export function footballGmTradeAssetValue(player: FootballGmPlayer, acquiringTeam: string) {
-  const grade = footballGmProjectedGradeForPlayer(player, 2);
+export function footballGmTradeAssetValue(player: FootballGmPlayer, acquiringTeam: string, seed?: string) {
+  const grade = footballGmProjectedGradeForPlayer(player, 2, seed);
   const talent = Math.pow(Math.max(5, grade - 64), 1.45);
   return talent
     * tradePositionFactor(player)
@@ -988,11 +995,11 @@ export function footballGmEvaluateTradeProposal(input: {
   }
 
   const partnerReceivesValue = outgoingPlayers.reduce(
-    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam),
+    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam, input.seed),
     0,
   );
   const partnerSendsValue = incomingPlayers.reduce(
-    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam),
+    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam, input.seed),
     0,
   );
   const packageKey = [

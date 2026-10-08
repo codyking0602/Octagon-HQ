@@ -95,8 +95,8 @@ function replacementScore(input: {
   // Every cleanup move is monotonic across both years.
   if (savings2 < 0 || savings3 < 0 || (savings2 === 0 && savings3 === 0)) return null;
 
-  const gradeDelta = footballGmProjectedGradeForPlayer(incoming, 2)
-    - footballGmProjectedGradeForPlayer(outgoingPlayer, 2);
+  const gradeDelta = footballGmProjectedGradeForPlayer(incoming, 2, input.seed)
+    - footballGmProjectedGradeForPlayer(outgoingPlayer, 2, input.seed);
   const usableSavings = Math.max(0, savings2) + Math.max(0, savings3);
   const controlBonus = incoming.gameContract === "3YR" ? 1.25 : 0;
   return (usableSavings / 1_000_000) + (gradeDelta * 1.8) + controlBonus;

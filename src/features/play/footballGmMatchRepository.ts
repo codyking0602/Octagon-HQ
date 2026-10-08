@@ -183,8 +183,8 @@ export function createFootballGmMatchRepository(
         if (activeParticipant && other && other.offseason_complete && otherRun && otherRun.finalRoster.length === 7) {
           // The second offseason close atomically locks BOTH franchises' results.
           const shared = footballGmSharedThreeYears(beforeFinish.seed, [
-            { key: activeParticipant.id, yearOneRoster: resolved.roster, finalRoster: resolved.finalRoster },
-            { key: other.id, yearOneRoster: otherRun.roster, finalRoster: otherRun.finalRoster },
+            { key: activeParticipant.id, yearOneRoster: resolved.roster, finalRoster: resolved.finalRoster, developmentSeed: resolved.seed },
+            { key: other.id, yearOneRoster: otherRun.roster, finalRoster: otherRun.finalRoster, developmentSeed: otherRun.seed },
           ]);
           const oldMine = storedYearOneResult(activeParticipant.year1_result);
           const oldOther = storedYearOneResult(other.year1_result);
