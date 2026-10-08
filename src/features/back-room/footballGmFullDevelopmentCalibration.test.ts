@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import authority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
+import audit from "../../../data/curated/football/gm-nfl-development-review-audit-2026-10-08.json";
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_PLAYER_POOL,
@@ -86,9 +87,20 @@ describe("full NFL GM development calibration", () => {
     expect(new Set(profiles.map((profile) => profile.id)).size).toBe(profiles.length);
     expect(new Set(profiles.map((profile) => profile.team)).size).toBe(32);
     expect(profiles.filter((p) => p.calibration === "individual-review").length).toBe(594);
-    expect(profiles.filter((p) => "reviewClass" in p && p.reviewClass).length).toBe(417);
-    expect(profiles.filter((p) => "reviewDate" in p && p.reviewDate === "2026-10-08").length).toBeGreaterThanOrEqual(417);
-    expect(profiles.filter((p) => "reviewRationale" in p && String(p.reviewRationale).length > 65).length).toBeGreaterThanOrEqual(417);
+    expect(audit.reviewCount).toBe(594);
+    expect(audit.followupReviewCount).toBe(417);
+    expect(audit.reviews.filter((p) => p.reviewClass !== "priority-individual")).toHaveLength(417);
+    expect(audit.reviews.filter((p) => p.supportingHQEvidence).length).toBe(123);
+    expect(audit.reviews.filter((p) => p.recentEvidence).length).toBeGreaterThanOrEqual(10);
+    expect(new Set(audit.reviews.map(p => p.id)).size).toBe(594);
+    // None of the long scouting-review notes should ship in the player-facing bundle.
+    expect(profiles.every((p) => !("reviewRationale" in p) && !("recentEvidence" in p))).toBe(true);
+    for (const review of audit.reviews) {
+      const player = FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === review.id);
+      expect(player, review.id).not.toBeUndefined();
+      expect(player!.currentGrade).toBe(review.gradeAtReview);
+      expect(review.reviewRationale.length, review.id).toBeGreaterThan(65);
+    }
     for (const profile of profiles) {
       expect(ids.has(profile.id), profile.id).toBe(true);
       const player = FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === profile.id)!;
