@@ -42,7 +42,8 @@ describe("Football GM gameplay presentation", () => {
     expect(page).not.toContain('onPick(player.id, selectedPosition)');
     expect(page).toContain('className="football-wheel-picker__headshot"');
     expect(page).toContain("ELITE / IMPACT / STARTER / DEPTH");
-    expect(page).toContain("REPRICE RISK");
+    expect(page).toContain("LOW / MED / HIGH REPRICE");
+    expect(page).toContain("HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK");
     expect(page).toContain("SCOUT KEY");
     expect(page).toContain("Exact grades stay hidden.");
     expect(page).not.toContain("EXTENSION RISK");
