@@ -1,0 +1,28 @@
+import { readFileSync, writeFileSync } from "node:fs";
+
+const sourcePath = "data/curated/football/cfb/gm-2026-classification-evidence.json";
+const targetPath = "data/generated/football/cfb-gm-classification-runtime-2026.json";
+const ledger = JSON.parse(readFileSync(sourcePath, "utf8"));
+if (ledger.population !== 468 || ledger.players.length !== ledger.population) {
+  throw Error("CFB GM candidate universe changed: audit roster and Wheel authority first");
+}
+const players = ledger.players.map((row) => ({
+  id: row.id,
+  classification: row.classification,
+  remainingEligibility: row.remainingEligibility,
+  earliestDraftYear: row.earliestDraftYear,
+  draftEligible2027: row.draftEligible2027,
+}));
+if (new Set(players.map((row) => row.id)).size !== players.length) {
+  throw Error("Duplicate CFB GM classification identity");
+}
+const projection = {
+  schemaVersion: 1,
+  source: "gm-2026-classification-evidence.json",
+  population: ledger.population,
+  classified: ledger.classified,
+  players,
+};
+writeFileSync(targetPath, JSON.stringify(projection, null, 2) + "\n");
+console.log("CFB GM class projection:", projection.population, "players;",
+  projection.classified, "classified");
