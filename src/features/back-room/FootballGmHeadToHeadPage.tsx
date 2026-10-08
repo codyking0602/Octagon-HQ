@@ -15,6 +15,7 @@ import {
   footballGmAutoAddPick,
   footballGmEligibleTeams,
   footballGmMoney,
+  footballGmPlayoffFinishLabel,
   footballGmOpenSlots,
   footballGmPlayerById,
   footballGmReflowRoster,
@@ -252,14 +253,14 @@ function YearOneMatchup({
           <small>{leftName}</small>
           <em>TEAM OVERALL</em>
           <strong>{footballGmTeamOverall(left.teamGrade)} OVR</strong>
-          <b>{left.finish}</b>
+          <b>{footballGmPlayoffFinishLabel(left.finish)}</b>
         </article>
         <span>VS</span>
         <article>
           <small>{rightName}</small>
           <em>TEAM OVERALL</em>
           <strong>{footballGmTeamOverall(right.teamGrade)} OVR</strong>
-          <b>{right.finish}</b>
+          <b>{footballGmPlayoffFinishLabel(right.finish)}</b>
         </article>
       </div>
       {firstName ? (
@@ -408,9 +409,9 @@ function YearOneMiniRecap({
     <section className="football-gm__year1-mini surface-card">
       <small>YEAR 1 RECAP</small>
       <div>
-        <span><b>{leftName}</b><strong>{footballGmTeamOverall(left.teamGrade)} OVR</strong><em>{left.finish}</em></span>
+        <span><b>{leftName}</b><strong>{footballGmTeamOverall(left.teamGrade)} OVR</strong><em>{footballGmPlayoffFinishLabel(left.finish)}</em></span>
         <i>VS</i>
-        <span><b>{rightName}</b><strong>{footballGmTeamOverall(right.teamGrade)} OVR</strong><em>{right.finish}</em></span>
+        <span><b>{rightName}</b><strong>{footballGmTeamOverall(right.teamGrade)} OVR</strong><em>{footballGmPlayoffFinishLabel(right.finish)}</em></span>
       </div>
     </section>
   );

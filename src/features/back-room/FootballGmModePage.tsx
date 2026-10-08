@@ -21,6 +21,7 @@ import {
   footballGmMoney,
   footballGmOpenSlots,
   footballGmPlayerById,
+  footballGmPlayoffFinishLabel,
   footballGmReflowRoster,
   footballGmRosterCap,
   footballGmRosterPlayers,
@@ -943,7 +944,7 @@ export function SeasonCard({
       <small>YEAR {year}</small>
       <strong>{footballGmTeamOverall(result.teamGrade)} OVR</strong>
       <span>TEAM OVR · {result.titleOdds.toFixed(1)}% TITLE ODDS</span>
-      <b>{result.finish}</b>
+      <b>{footballGmPlayoffFinishLabel(result.finish)}</b>
 
     </article>
   );
