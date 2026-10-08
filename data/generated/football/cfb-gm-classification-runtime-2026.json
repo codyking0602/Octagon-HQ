@@ -126,13 +126,27 @@
       "id": "alabama|ryancolemanwilliams",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1800000,
         "year2Baseline": 1975000,
         "providerRank": 49,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 47,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.74,
+        "portalExitProbability": 0.07
       }
     },
     {
@@ -153,13 +167,27 @@
       "id": "alabama|yhonzaepierre",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 79,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 20,
+          "steady": 61,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.03
       }
     },
     {
@@ -529,13 +557,27 @@
       "id": "florida|jadanbaugh",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 97,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 2,
+          "improve": 10,
+          "steady": 70,
+          "decline": 18,
+          "maxGain": 1,
+          "maxLoss": 6,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.97,
+        "portalExitProbability": 0.02
       }
     },
     {
@@ -619,13 +661,27 @@
       "id": "georgia|elijahgriffin",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 100,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 38,
+          "steady": 35,
+          "decline": 14,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.11
       }
     },
     {
@@ -973,8 +1029,22 @@
       "id": "indiana|nickmarsh",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 35,
+          "steady": 44,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.11
+      }
     },
     {
       "id": "indiana|prestonzachman",
@@ -1218,13 +1288,27 @@
       "id": "lsu|princewillumanmielen",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 59,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 2,
+          "improve": 14,
+          "steady": 66,
+          "decline": 18,
+          "maxGain": 1,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.96,
+        "portalExitProbability": 0.02
       }
     },
     {
@@ -1279,39 +1363,81 @@
       "id": "lsu|treydezgreen",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 98,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 19,
+          "steady": 59,
+          "decline": 19,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.03
       }
     },
     {
       "id": "lsu|tybenefield",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1200000,
         "year2Baseline": 1325000,
         "providerRank": 68,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 23,
+          "steady": 54,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.64,
+        "portalExitProbability": 0.05
       }
     },
     {
       "id": "lsu|whitweeks",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 78,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 22,
+          "steady": 50,
+          "decline": 21,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.67,
+        "portalExitProbability": 0.04
       }
     },
     {
@@ -1324,14 +1450,28 @@
     {
       "id": "miami|ahmadmoten",
       "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 65,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 21,
+          "steady": 54,
+          "decline": 21,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.01
       }
     },
     {
@@ -1380,13 +1520,27 @@
       "id": "miami|damonwilsonii",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 2000000,
         "year2Baseline": 2200000,
         "providerRank": 48,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 25,
+          "steady": 47,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.82,
+        "portalExitProbability": 0.07
       }
     },
     {
@@ -1851,13 +2005,27 @@
       "id": "notre-dame|boubacartraore",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 55,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 26,
+          "steady": 45,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.65,
+        "portalExitProbability": 0.05
       }
     },
     {
@@ -2540,15 +2708,29 @@
     },
     {
       "id": "oregon|bearalexander",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 52,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 20,
+          "steady": 48,
+          "decline": 26,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.25,
+        "portalExitProbability": 0.02
       }
     },
     {
@@ -2629,15 +2811,29 @@
     },
     {
       "id": "oregon|evanstewart",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 64,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 30,
+          "steady": 34,
+          "decline": 24,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.01
       }
     },
     {
@@ -2733,13 +2929,27 @@
       "id": "oregon|teitumtuioti",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1500000,
         "year2Baseline": 1650000,
         "providerRank": 58,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 58,
+          "decline": 19,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.86,
+        "portalExitProbability": 0.03
       }
     },
     {
@@ -3136,13 +3346,27 @@
       "id": "tennessee|mikematthews",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 91,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 35,
+          "steady": 41,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.09
       }
     },
     {
@@ -3349,13 +3573,27 @@
       "id": "texas|rasheembiles",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 95,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 14,
+          "steady": 67,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.95,
+        "portalExitProbability": 0.02
       }
     },
     {
@@ -3432,13 +3670,27 @@
       "id": "texas-tech|bricepollock",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 75,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 18,
+          "steady": 61,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.04
       }
     },
     {
@@ -3758,13 +4010,27 @@
       "id": "usc|markbowman",
       "classification": "FR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
       "nilMarket": {
         "year1": 1000000,
         "year2Baseline": 1100000,
         "providerRank": 82,
         "confidence": "medium"
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 22,
+          "improve": 40,
+          "steady": 25,
+          "decline": 13,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.17
       }
     },
     {
