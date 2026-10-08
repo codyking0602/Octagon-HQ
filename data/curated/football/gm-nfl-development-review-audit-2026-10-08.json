@@ -1424,17 +1424,23 @@
       "name": "Kyle Monangai",
       "team": "CHI",
       "family": "RB",
-      "gradeAtReview": 82,
+      "gradeAtReview": 84,
       "ageAtReview": 24,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Kyle Monangai: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 24, RB, pick #233.",
+      "reviewRationale": "Kyle Monangai: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (medium confidence), age 24, RB, pick #233. Owner-approved HQ correction on 2026-10-08 (82 → 84), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
-        "reason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
-        "asOf": "2026-10-03"
+        "reason": "2025 rookie: 783 rushing yards at 4.6 YPC; first four 2026 games: 324 at 5.4, with a 146-yard Week 4. Productive downhill power and decisive footwork justify a modest increase, not an elite/three-down projection.",
+        "asOf": "2026-10-08"
+      },
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 82,
+        "newGrade": 84,
+        "reason": "2025 rookie: 783 rushing yards at 4.6 YPC; first four 2026 games: 324 at 5.4, with a 146-yard Week 4. Productive downhill power and decisive footwork justify a modest increase, not an elite/three-down projection."
       }
     },
     {
@@ -3798,17 +3804,23 @@
       "name": "Chris Rodriguez Jr.",
       "team": "JAX",
       "family": "RB",
-      "gradeAtReview": 77,
+      "gradeAtReview": 79,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "role",
-      "reviewRationale": "Chris Rodriguez Jr.: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 27, RB, pick #193.",
+      "reviewRationale": "Chris Rodriguez Jr.: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 27, RB, pick #193. Owner-approved HQ correction on 2026-10-08 (77 → 79), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
-        "reason": "Physical reserve runner with some useful early-down ability but limited receiving/creation evidence.",
-        "asOf": "2026-10-03"
+        "reason": "2025: 500 rushing yards at 4.5 YPC; 2026 through Week 4: 108 at 4.2. Repeated effective early-down power and useful inside creation justify a higher rotational grade; limited receiving prevents starter-tier inflation.",
+        "asOf": "2026-10-08"
+      },
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 77,
+        "newGrade": 79,
+        "reason": "2025: 500 rushing yards at 4.5 YPC; 2026 through Week 4: 108 at 4.2. Repeated effective early-down power and useful inside creation justify a higher rotational grade; limited receiving prevents starter-tier inflation."
       }
     },
     {
@@ -4070,13 +4082,19 @@
       "name": "Kenneth Walker",
       "team": "KC",
       "family": "RB",
-      "gradeAtReview": 89,
+      "gradeAtReview": 91,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Kenneth Walker; audited HQ grade 89 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Kenneth Walker; audited HQ grade 91 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved HQ correction on 2026-10-08 (89 → 91), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 89,
+        "newGrade": 91,
+        "reason": "2025: 1,027 rushing yards; first four 2026 games: 537 yards on 87 carries (6.2 YPC). Sustained tackle-breaking and explosive creation support high-end ability; receiving impact remains short of the top complete backs."
+      }
     },
     {
       "id": "KC|Secondary|alohigilman",
@@ -4826,13 +4844,19 @@
       "name": "Ashton Jeanty",
       "team": "LV",
       "family": "RB",
-      "gradeAtReview": 83,
+      "gradeAtReview": 81,
       "ageAtReview": 22,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Ashton Jeanty; audited HQ grade 83 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Ashton Jeanty; audited HQ grade 81 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved HQ correction on 2026-10-08 (83 → 81), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 83,
+        "newGrade": 81,
+        "reason": "2025: 975 rushing yards on 266 carries (3.7 YPC); 2026 through Week 4: 264 on 78 (3.4 YPC). Receiving usefulness and blocking context mitigate the inefficiency, but demonstrated NFL rushing creation does not justify 83."
+      }
     },
     {
       "id": "LV|RB|mikewashington",
@@ -7156,17 +7180,23 @@
       "name": "Zach Charbonnet",
       "team": "SEA",
       "family": "RB",
-      "gradeAtReview": 82,
+      "gradeAtReview": 85,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Zach Charbonnet: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 25, RB, pick #52.",
+      "reviewRationale": "Zach Charbonnet: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 25, RB, pick #52. Owner-approved HQ correction on 2026-10-08 (82 → 85), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
-        "reason": "Reliable power/receiving complement with 730 yards and 12 rushing TD in 2025; solid starter baseline without upper-tier creation.",
-        "asOf": "2026-10-03"
+        "reason": "2025: 730 rushing yards and 12 rushing TD, strong contact balance and short-yardage value, plus receiving competence. ACL rehabilitation affects future availability/development, not the demonstrated preinjury ability baseline.",
+        "asOf": "2026-10-08"
+      },
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 82,
+        "newGrade": 85,
+        "reason": "2025: 730 rushing yards and 12 rushing TD, strong contact balance and short-yardage value, plus receiving competence. ACL rehabilitation affects future availability/development, not the demonstrated preinjury ability baseline."
       }
     },
     {
@@ -8405,5 +8435,18 @@
       "reviewClass": "priority-individual",
       "reviewRationale": "Priority individual development profile already calibrated for Terry McLaurin; audited HQ grade 87 and age 31 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
     }
-  ]
+  ],
+  "ownerApprovedGradeCorrections": {
+    "date": "2026-10-08",
+    "count": 5,
+    "source": "Five owner-approved October 8 RB HQ rating recommendations",
+    "ids": [
+      "KC|RB|kennethwalker",
+      "SEA|RB|zachcharbonnet",
+      "LV|RB|ashtonjeanty",
+      "CHI|RB|kylemonangai",
+      "JAX|RB|chrisrodriguez"
+    ],
+    "note": "Base grade evidence and identities updated to match GM authority. Development probabilities and role outlooks intentionally unchanged; separate RB deep-research PR stays untouched."
+  }
 }

@@ -4,7 +4,7 @@
   "effectiveDate": "2026-10-08",
   "gradeAuthority": "data/generated/football/wheel-nfl-*-grades-2026-10-03.json",
   "contractAuthority": "data/generated/football/wheel-nfl-gm-contracts-2026-10-05.json",
-  "policy": "All 594 player development profiles explicitly reviewed; full 594-row review and supporting HQ grade source notes: data/curated/football/gm-nfl-development-review-audit-2026-10-08.json. Original HQ grades preserved.",
+  "policy": "All 594 development profiles remain individually curated; five RB base HQ grades were subsequently changed by owner approval October 8, 2026. No development odds or bounds changed as part of that grade approval; full review notes remain in the audit authority.",
   "profileCount": 594,
   "profiles": [
     {
@@ -1952,7 +1952,7 @@
       "family": "RB",
       "position": "RB",
       "ageAtCalibration": 24,
-      "gradeAtCalibration": 82,
+      "gradeAtCalibration": 84,
       "confidence": "medium",
       "draftOverall": 233,
       "breakoutPct": 18,
@@ -5106,7 +5106,7 @@
       "family": "RB",
       "position": "RB",
       "ageAtCalibration": 27,
-      "gradeAtCalibration": 77,
+      "gradeAtCalibration": 79,
       "confidence": "high",
       "draftOverall": 193,
       "breakoutPct": 2,
@@ -5467,7 +5467,7 @@
       "family": "RB",
       "position": "RB",
       "ageAtCalibration": 25,
-      "gradeAtCalibration": 89,
+      "gradeAtCalibration": 91,
       "confidence": "high",
       "draftOverall": 41,
       "breakoutPct": 10,
@@ -6512,7 +6512,7 @@
       "family": "RB",
       "position": "RB",
       "ageAtCalibration": 22,
-      "gradeAtCalibration": 83,
+      "gradeAtCalibration": 81,
       "confidence": "high",
       "draftOverall": 6,
       "breakoutPct": 27,
@@ -9647,7 +9647,7 @@
       "family": "RB",
       "position": "RB",
       "ageAtCalibration": 25,
-      "gradeAtCalibration": 82,
+      "gradeAtCalibration": 85,
       "confidence": "high",
       "draftOverall": 52,
       "breakoutPct": 15,
@@ -11293,5 +11293,17 @@
       "cohort": "veteran",
       "calibration": "individual-review"
     }
-  ]
+  ],
+  "ownerApprovedGradeCorrections": {
+    "date": "2026-10-08",
+    "count": 5,
+    "changedIds": [
+      "KC|RB|kennethwalker",
+      "SEA|RB|zachcharbonnet",
+      "LV|RB|ashtonjeanty",
+      "CHI|RB|kylemonangai",
+      "JAX|RB|chrisrodriguez"
+    ],
+    "note": "Only base gradeAtCalibration values updated to remain aligned with the live NFL GM grade authority; development probability distribution, maximum annual gain/loss and market variance unchanged."
+  }
 }
