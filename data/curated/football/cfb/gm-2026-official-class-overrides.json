@@ -801,6 +801,20 @@
       "redshirt": null
     },
     {
+      "id": "ucla|tysonford",
+      "classification": "5TH",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster/player/tyson-ford",
+      "evidence": "UCLA 2026 official roster labels 5th year; athlete biography confirms 2022 entry",
+      "redshirt": null
+    },
+    {
+      "id": "ucla|wayneknight",
+      "classification": "5TH",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster/player/wayne-knight",
+      "evidence": "UCLA 2026 official roster labels 5th year; athlete biography confirms 2022 entry",
+      "redshirt": null
+    },
+    {
       "id": "usc|jontezwilliams",
       "classification": "SR",
       "sourceUrl": "https://usctrojans.com/sports/football/roster/",
