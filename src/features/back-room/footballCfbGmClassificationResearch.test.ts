@@ -21,7 +21,7 @@ describe("CFB GM classification evidence integrity", () => {
     expect(audit.classified).toBe(468);
     const unresolved = audit.players.filter((row) => row.classification === null).map((row) => row.id).sort();
     expect(unresolved).toEqual([]);
-    expect(overrides.rows).toHaveLength(84);
+    expect(overrides.rows).toHaveLength(85);
     expect(audit.players.find((row) => row.id === "miami|mohamedtoure")?.classification).toBe("8TH");
     expect(audit.players.find((row) => row.id === "smu|jimmywyrick")?.classification).toBe("6TH");
     expect(audit.players.find((row) => row.id === "usc|lukewafle")?.classification).toBe("FR");
@@ -29,13 +29,20 @@ describe("CFB GM classification evidence integrity", () => {
     expect(audit.players.find((row) => row.id === "pittsburgh|jakyrianturner")?.classification).toBe("SO");
     expect(audit.players.find((row) => row.id === "mississippi-state|willwhitson")?.classification).toBe("7TH");
   });
-  it("retains unresolved eligibility as unknown rather than falsely declaring or graduating players", () => {
+  it("retains unknown eligibility where research has not established the fact", () => {
     const valid = new Set(["FR","SO","JR","SR","5TH","6TH","7TH","8TH","3RD"]);
     for (const row of audit.players) {
       if (row.classification !== null) expect(valid.has(row.classification)).toBe(true);
-      expect(row.remainingEligibility).toBeNull();
-      expect(row.earliestDraftYear).toBeNull();
-      expect(row.draftEligible2027).toBeNull();
+      if (!row.calibration) {
+        expect(row.remainingEligibility).toBeNull();
+        expect(row.earliestDraftYear).toBeNull();
+        expect(row.draftEligible2027).toBeNull();
+      }
+      if (row.calibration) {
+        expect(row.calibration.sources.length).toBeGreaterThan(0);
+        const d = row.calibration.development;
+        expect(d.breakout+d.improve+d.steady+d.decline).toBe(100);
+      }
     }
   });
   it("reconciles official roster overrides by exact identity without duplication", () => {
