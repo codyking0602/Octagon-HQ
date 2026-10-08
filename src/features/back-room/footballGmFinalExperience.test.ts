@@ -28,7 +28,7 @@ describe("NFL GM final report development outcomes", () => {
 
   it("keeps numerical individual grades private and draws no franchise line graph", () => {
     const file = readFileSync(resolve(process.cwd(), "src/features/back-room/FootballGmFinalExperience.tsx"), "utf-8");
-    expect(file).toContain("footballGmResultDevelopmentBand(player, run.seed)");
+    expect(file).toContain("footballGmResultDevelopmentBand(player, selectedRun.seed)");
     expect(file).toContain("Exact grades stay hidden.");
     expect(file).toContain("footballGmDevelopmentProfile(player.id)");
     expect(file).not.toContain("band.final.toFixed");
