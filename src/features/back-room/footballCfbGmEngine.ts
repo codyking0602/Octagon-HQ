@@ -7,7 +7,7 @@ import classEvidence from "../../../data/generated/football/cfb-gm-classificatio
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
 import { cfbGmDevProfile, cfbGmDevelop, type CfbGmClass } from "./footballCfbGmDevelopment";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v5-extended-year-evidence";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v6-individual-evidence";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -90,7 +90,8 @@ for (const row of gradeProjection.grades as {school:string;family:GradeFamily;pl
 // Class labels are a 2026 roster snapshot, NOT verification of a
 // prospect's graduation, remaining eligibility or NFL Draft decision.
 type ClassRow = {id: string; classification: string | null; remainingEligibility: number | null;
-  earliestDraftYear: number | null; draftEligible2027: boolean | null};
+  earliestDraftYear: number | null; draftEligible2027: boolean | null;
+  calibration?: {draftDeclarationProbability:number|null;portalExitProbability:number|null};};
 const classIndex = new Map<string, ClassRow>(
   (classEvidence.players as ClassRow[]).map((row) => [row.id, row]),
 );
@@ -112,6 +113,8 @@ export function isModelDraftEligible(id: string, classification: CfbGmClass): bo
 }
 function draftOutlook(id: string, grade: number, classification: CfbGmClass): CfbGmPlayer["departureRisk"] {
   if (!isModelDraftEligible(id, classification)) return "LOW";
+  const researched = classIndex.get(id)?.calibration?.draftDeclarationProbability;
+  if (researched !== null && researched !== undefined) return researched >= .55 ? "HIGH" : researched >= .20 ? "MEDIUM" : "LOW";
   return grade >= 92 ? "HIGH" : grade >= 86 ? "MEDIUM" : "LOW";
 }
 function collegeOutlook(id: string, grade: number, classification: CfbGmClass): CfbGmPlayer["outlook"] {
@@ -289,17 +292,19 @@ export function cfbGmForcedDepartures(run: CfbGmRun) {
     // NFL declarations are possible only for modeled draft-eligible cohorts.
     // A "senior" label is not proof that a redshirt year is exhausted.
     const grade = player.currentGrade;
+    const researched = classIndex.get(player.id)?.calibration;
     const draftProbability = !isModelDraftEligible(player.id, player.classification) ? 0
-      : player.id === "texas|colinsimmons" ? .90
-      : grade >= 96 ? .72 : grade >= 92 ? .54 : grade >= 87 ? .26 : .07;
+      : researched?.draftDeclarationProbability ?? (grade >= 96 ? .72 : grade >= 92 ? .54 : grade >= 87 ? .26 : .07);
     const remaining = classIndex.get(player.id)?.remainingEligibility;
-    const exhaustedProbability = remaining === 0 || player.classification === "8TH" ? 1
+    const exhaustedProbability = remaining === 0 ? 1
+      : remaining !== null && remaining !== undefined && remaining > 0 ? 0
+      : player.classification === "8TH" ? 1
       : player.classification === "7TH" ? .93
       : player.classification === "6TH" ? .83
       : player.classification === "5TH" ? .70
       : player.classification === "SR" ? .57 : 0;
     const eligibleRoll = draftProbability + (1 - draftProbability) * exhaustedProbability;
-    const portalProbability = Math.max(0.02, 0.15 - loyaltyBoost);
+    const portalProbability = Math.max(0.02, (researched?.portalExitProbability ?? 0.15) - loyaltyBoost);
     const reason: CfbGmDeparture["reason"] | null = roll < draftProbability ? "NFL declaration"
       : roll < eligibleRoll ? "Eligibility"
       : roll < eligibleRoll + (1 - eligibleRoll) * portalProbability ? "Transfer portal" : null;
