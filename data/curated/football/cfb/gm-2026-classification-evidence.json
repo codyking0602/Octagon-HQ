@@ -7379,8 +7379,27 @@
       "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 37,
+          "steady": 39,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.47,
+        "portalExitProbability": 0.04,
+        "summary": "Florida State 2024-25 reserve defensive end transferred into Mississippi State's 2026 lineup, five consecutive starts, 10-tackle/two TFL/one sack breakout game at South Carolina and 2026 SEC Defensive Lineman of Week. Small sample of P4 impact with a clear expanded role; junior 2027 draft possible but not certain.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/amaree-williams/12985"
+        ]
+      }
     },
     {
       "id": "mississippi-state|anthonyevansiii",
@@ -7398,8 +7417,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.02,
+        "summary": "Mississippi State 2025 WR Georgia transfer made a critical game-winning touchdown catch at Arkansas as junior after special teams/receiver development; 2026 official senior with multiple college seasons of SEC experience. Moderate rise in senior targets possible, but available college evidence does not establish an elite 1,000-yard performer.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/anthony-evans-iii/12875"
+        ]
+      }
     },
     {
       "id": "mississippi-state|djreed",
@@ -7417,8 +7455,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 38,
+          "steady": 35,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.04,
+        "summary": "Mississippi State 2025 Auburn-transfer DL played all 13 games as backup with zero starts, 21 tackles, two TFL/two sacks, three quarterback hurries and PBU; 2023 Auburn one game/redshirt and 2024 two appearances without stats. 2026 redshirt junior can grow role but no sustained starting output.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/dj-reed/12911"
+        ]
+      }
     },
     {
       "id": "mississippi-state|fluffbothwell",
@@ -7437,8 +7494,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 48,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.64,
+        "portalExitProbability": 0.04,
+        "summary": "Mississippi State 2025 sophomore South Alabama transfer RB rushed 142 times for 677 yards and six TD in 11 games/five starts, following 2024 third-team All-Sun Belt and 13 touchdown season. Started SEC games and has 1,500+ career yards by 2026; feature potential real but volatile workload/injury.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/fluff-bothwell/12865"
+        ]
+      }
     },
     {
       "id": "mississippi-state|isaacsmith",
@@ -7456,8 +7532,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 56,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.77,
+        "portalExitProbability": 0.01,
+        "summary": "Mississippi State 2025 hybrid safety/linebacker 64 tackles in ten games/nine starts and second-team All-SEC safety from PFSN, after 2024 SEC tackle lead. 2026 senior began all five games with 2026 shoulder/injury interruption noted. High established defense ability, very little giant breakout runway, moderate durability downside.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/isaac-smith/12919"
+        ]
+      }
     },
     {
       "id": "mississippi-state|jjhill",
@@ -7475,8 +7570,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 24,
+          "improve": 43,
+          "steady": 26,
+          "decline": 7,
+          "maxGain": 7,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.09,
+        "summary": "Mississippi State 2026 true freshman running back J.J. (Jaeden) Hill entered from Tupelo high school, school bio cites 2025 1,500+ prep rushing yards and 14 touchdowns, but NO independently established college 2025 production. Development is high-uncertainty young talent, 2027 draft ineligible.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/jaeden-hill/13007"
+        ]
+      }
     },
     {
       "id": "mississippi-state|jalensmith",
@@ -7494,8 +7608,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 40,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.03,
+        "summary": "Mississippi State 2025 Tennessee transfer LB had career 95 tackles after 35 college appearances/five starts, SEC All-Freshman 2024; in 2026 opened with five starts and recorded eight tackles in three games and first career interception vs South Carolina before Alabama injury. Role expansion and injury risk balance.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/jalen-smith/12920"
+        ]
+      }
     },
     {
       "id": "mississippi-state|jaraybledsoe",
@@ -7505,16 +7638,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4717429",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/jaray-bledsoe/12863",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 47,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.37,
+        "portalExitProbability": 0.01,
+        "summary": "Mississippi State 2025 Texas-transfer DL 13 games/four starts, 28 tackles, 5.5 TFL and 1.5 sacks. Started all first five in 2026 with sack at Minnesota and forced fumble versus Alabama. 2026 official fifth-year/redshirt senior after first college entry 2022; modeled ordinary terminal eligibility with improving starter role.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/jaray-bledsoe/12863"
+        ]
+      }
     },
     {
       "id": "mississippi-state|jardingilbert",
@@ -7524,16 +7676,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "6TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "6TH",
       "espnAthleteId": "4603193",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/jardin-gilbert/13004",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 49,
+          "decline": 18,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.45,
+        "portalExitProbability": 0.01,
+        "summary": "Mississippi State 2026 sixth-year safety transfer started all five early games and has 47 career games/29 starts; LSU 2024-25 preceded by Texas A&M 2021-23, earlier school cites 145 tackles/three INT/nine PBU/1.5 sacks. Shoulder injury in 2023 caused redshirt. Ordinary sixth-year final-season departure modeled while acknowledging waivers possible.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/jardin-gilbert/13004"
+        ]
+      }
     },
     {
       "id": "mississippi-state|jettjefferson",
@@ -7551,8 +7722,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 38,
+          "steady": 33,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.25,
+        "portalExitProbability": 0.06,
+        "summary": "Mississippi State 2025 JUCO-transfer CB played only four games, no starts and 10 tackles due injury/redshirt; previously East Central CC 2024 four INT/40 tackles. In 2026 started first five and led SEC in early pass breakups. Clear upside in higher-level coverage but prior P4 sample small and injury raises downside.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/amarien-jefferson/12887"
+        ]
+      }
     },
     {
       "id": "mississippi-state|kamariotaylor",
@@ -7622,8 +7812,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 23,
+          "steady": 59,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.8,
+        "portalExitProbability": 0.01,
+        "summary": "Mississippi State 2025 SEC third-team coaches CB started all 13 games, 34 tackles, 11 PBU and two INT. PFF school bio reports only 11 catches allowed on 38 targets. Returning official 2026 senior five starts through Alabama, elite SEC coverage sample makes steady likely, limited remaining development headroom.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/kelley-jones/12892"
+        ]
+      }
     },
     {
       "id": "mississippi-state|kolinwilson",
@@ -7641,8 +7850,27 @@
       "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 22,
+          "improve": 41,
+          "steady": 27,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.09,
+        "summary": "Mississippi State redshirt freshman 2026 after 2025 true-freshman reserve: five appearances, six carries for 26 yards, no FBS starts, 2025 high school Gulf Shores career 4,500 yards is PREP not college production. First matriculated 2025, therefore 2027 NFL ineligible; more room to grow than established back.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/kolin-wilson/12936"
+        ]
+      }
     },
     {
       "id": "mississippi-state|marcuswilliams",
@@ -7659,9 +7887,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 47,
+          "decline": 18,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.01,
+        "summary": "Rice 2025 safety 12 of 13 starts, 67 tackles, 3.5 TFL and five PBU despite prior injury history; started five opening games at Mississippi State in 2026 with repeated five-plus tackle games. Official sixth-year after Rice 2021-25, modeled 2026 terminal eligibility, scheme-transition and injury volatility.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/marcus-williams/13017"
+        ]
+      }
     },
     {
       "id": "mississippi-state|marquisjohnson",
@@ -7679,8 +7926,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 35,
+          "steady": 38,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.33,
+        "portalExitProbability": 0.03,
+        "summary": "Missouri 2025 junior WR 28 receptions for 340 yards/two TD across 12 games/seven starts after 2023 13 catches for 383 yards/three TD. Mississippi State 2026 senior transfer with 37 career games/nine starts and some big-play capacity but modest recent college volume; SEC transfer role unknown.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/marquis-johnson/12982"
+        ]
+      }
     },
     {
       "id": "mississippi-state|samwest",
@@ -7699,8 +7965,27 @@
       "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 39,
+          "steady": 31,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.16,
+        "portalExitProbability": 0.05,
+        "summary": "Mississippi State 2025 Indiana-transfer TE played 13 games/two starts with five catches for 41 yards/one TD; 2024 Indiana only one catch for 37 yards, 2023 redshirt. 2026 redshirt junior can earn larger passing role, but low sample says not already a feature receiver.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/sam-west/12929"
+        ]
+      }
     },
     {
       "id": "mississippi-state|sanfriscomagee",
@@ -7719,8 +8004,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 39,
+          "steady": 33,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.13,
+        "portalExitProbability": 0.05,
+        "summary": "Mississippi State 2025 redshirt freshman WR caught only five passes for 80 yards/one TD in seven games; first four 2026 starts scored five receiving touchdowns including two at Missouri, but early red-zone conversion on tiny career sample is volatile. First college entry 2024; 2027 NFL technically possible but limited established volume.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/sanfrisco-magee/12899"
+        ]
+      }
     },
     {
       "id": "mississippi-state|willwhitson",
@@ -7737,9 +8041,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 47,
+          "decline": 22,
+          "maxGain": 3,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.01,
+        "summary": "Mississippi State 2025 DL from Coastal Carolina SEC D-Line weekly award and medical waiver to return for 2026; began Independence CC 2020-22, has seven-year official 2026 classification. Before 2026 had 71 tackles/13.5 TFL/seven sacks over 19 college appearances and multi-injury seasons. Model ordinary terminal 2026 after special medical permission, no assumed 2027 eighth-year grant.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/will-whitson/12391"
+        ]
+      }
     },
     {
       "id": "mississippi-state|zakaritillman",
@@ -7757,8 +8080,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 43,
+          "decline": 20,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.02,
+        "summary": "Mississippi State 2025 junior LB had 47 tackles/three TFL/one sack/one INT in 12 games/ten starts, missed final bowl with injury. 2026 senior missed four of first five weeks injured and only returned vs Missouri for three tackles per school updated bio; real healthy starter ability but more decline/injury risk than stable dominance.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/zakari-tillman/12926"
+        ]
+      }
     },
     {
       "id": "mississippi-state|zionragins",
@@ -7777,8 +8119,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/344/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 40,
+          "steady": 34,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.14,
+        "portalExitProbability": 0.07,
+        "summary": "Oklahoma 2024 freshman receiver played 13 games/five starts with ten catches for 68 yards, redshirted after two games in 2025. Mississippi State 2026 redshirt sophomore four starts with three touchdown receptions in first four and team-leading yards/catch early. Young role and speed upside but tiny P4 receiver volume and transfer risk.",
+        "sources": [
+          "https://hailstate.com/sports/football/roster/zion-ragins/13027"
+        ]
+      }
     },
     {
       "id": "missouri|ahmadhardy",
@@ -17183,7 +17544,7 @@
       }
     }
   ],
-  "officialOverrides": 134,
+  "officialOverrides": 136,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
