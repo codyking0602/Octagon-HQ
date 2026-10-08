@@ -27,7 +27,7 @@ export const FOOTBALL_GM_ROSTER_SLOTS = WHEEL_FOOTBALL_GM_ROSTER_SLOTS;
 // Persist the original DL/LB keys to keep existing solo and shared match saves valid.
 // Both are now player-agnostic Front Seven positions.
 export function footballGmSlotLabel(slot: FootballGmRosterSlot): string {
-  return slot === "DL" ? "FRONT 7 · 1" : slot === "LB" ? "FRONT 7 · 2" : slot;
+  return slot === "DL" ? "F7-1" : slot === "LB" ? "F7-2" : slot;
 }
 
 export type FootballGmRosterSlot = WheelFootballGmRosterSlot;
