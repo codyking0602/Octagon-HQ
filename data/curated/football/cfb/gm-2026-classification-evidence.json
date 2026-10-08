@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 369,
+  "exactMatches": 361,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -3382,8 +3382,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 60,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.82,
+        "portalExitProbability": 0.03,
+        "summary": "2026 Indiana fourth-year corner played 41 career games/28 starts through 2025, including 16 appearances/15 starts in championship 2025, second-team All-Big Ten media honors and eight career interceptions. Proved high-level coverage over several seasons, so significant 2027 draft consideration and a predominantly steady profile rather than generic breakout. Fourth-year class does not by itself end college eligibility.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/amare-ferrell/20932"
+      }
     },
     {
       "id": "indiana|andrewbarker",
@@ -3402,8 +3419,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 21,
+          "improve": 41,
+          "steady": 26,
+          "decline": 12,
+          "maxGain": 7,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.13,
+        "summary": "Indiana 2026 second-year TE had just one collegiate game in 2025 (Kennesaw State, fourth-quarter offensive debut), with no 2025 college catch/receiving totals. Prep football receiving résumé cannot be counted as proven Big Ten ability. Opportunity-dependent growth and high uncertainty appropriate; 2025 first matriculation makes 2027 NFL draft unavailable.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/andrew-barker/20908"
+      }
     },
     {
       "id": "indiana|byronbaldwinjr",
@@ -3421,8 +3455,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 39,
+          "steady": 30,
+          "decline": 13,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1,
+        "summary": "Indiana 2026 second-year defensive back saw eight 2025 freshman games, primarily kickoff coverage and reserve defense; debuted versus UCLA and made small tackle/forced-fumble recovery contributions. No prior full-time starting sample, so 2027 development should show potential with real playing-time volatility rather than guaranteed draft-worthy traits; first college year 2025 bars 2027 NFL.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/byron-baldwin-jr-/20907"
+      }
     },
     {
       "id": "indiana|charliebecker",
@@ -3441,8 +3492,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 27,
+          "steady": 49,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.06,
+        "summary": "Indiana 2026 third-year WR played all 16 games with eight starts in 2025 after special teams 2024; produced multiple 100-yard games late 2025 and exploded in first three 2026 games with six TD receptions, including three at Howard and 127 receiving yards at Western Kentucky. Demonstrated actual college breakout supports useful established production, while small 2026 sample makes continued six-TD pace unsustainable. Entered college 2024, eligible 2027 NFL.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/charlie-becker/20909"
+      }
     },
     {
       "id": "indiana|davionchandler",
@@ -3460,8 +3528,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 37,
+          "steady": 36,
+          "decline": 13,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09,
+        "summary": "Indiana 2026 second-year receiver played just 2025 reserve/special team snaps including a 65-yard first collegiate reception TD vs Purdue; official 2026 bio notes unusual touchdown rate on first few receptions. Explosive catch rate cannot prove full starter-level volume, but genuine scoring and role opportunity warrant moderate growth. Entered 2025, draft ineligible in 2027.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/davion-chandler/20923"
+      }
     },
     {
       "id": "indiana|isaiahjones",
@@ -3471,16 +3556,33 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4819232",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 22,
+          "steady": 58,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.66,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana official 2026 fifth-year linebacker, 2025 third-team All-Big Ten with 16 appearances/seven starts and national championship blocked-punt recovery touchdown. Started opening four 2026 contests, making 12 tackles versus North Texas and second collegiate interception vs Western Kentucky. Veteran usage warrants high steadiness with modest pro-exit chance and modeled final normal collegiate season after 2022 first entry.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/isaiah-jones/20943"
+      }
     },
     {
       "id": "indiana|jamarisharpe",
@@ -3490,16 +3592,33 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4881031",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 21,
+          "steady": 57,
+          "decline": 17,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.73,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana official 2026 fifth-year CB, 43 career appearances and 31 starts by early 2026. Started all 16 2025 games and sealed championship against Miami with fourth-quarter interception; 2026 sustained minor injury opening game but returned to multiple starts. Experience and repeat coverage are established; normal five-year eligibility ends 2026 absent an exceptional waiver.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/jamari-sharpe/20977"
+      }
     },
     {
       "id": "indiana|joshburnham",
@@ -3509,16 +3628,33 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4685299",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 22,
+          "steady": 54,
+          "decline": 19,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.65,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana official 2026 fifth-year DL from Notre Dame: 40 appearances/23 starts over 2022–25 including 2024 ten starts and 2025 all 12 appearances/four starts. Pass-rush flashes include 2025 three TFL at Boston College and two sacks at Pitt. Established Power Four experience with change-of-school uncertainty, moderate decline/medical risk, normal 2026 final season.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/josh-burnham/21050"
+      }
     },
     {
       "id": "indiana|joshhoover",
@@ -3580,16 +3716,33 @@
       "groups": [
         "RB"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "5091725",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 30,
+          "steady": 44,
+          "decline": 17,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.35,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana 2026 official fifth-year RB transferred after UAB 2024 All-AAC third team, but 2025 first Indiana year limited to three appearances after injury. By four 2026 games rushed 112 yards vs Howard and 203 vs Northwestern (first Hoosier 200-yard performance since 2018) following two TD vs WKU, showing meaningful comeback. Injury and shared backfield create real variance; collegiate 2022 first year implies final normal year 2026.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/lee-beebe-jr-/20910"
+      }
     },
     {
       "id": "indiana|mariolandino",
@@ -3607,8 +3760,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 48,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.05,
+        "summary": "Indiana 2026 third-year defensive tackle completed 2025 all 16 games with 11 starts, generating 32 QB pressures (sixth among interior defenders per IU bio), solo sacks versus Indiana State and Ohio State and two CFP semifinal fumble recoveries versus Oregon. First collegiate appearance 2024. A proven run/pass interior starting season supports steady or moderate improvement, with normal 2027 draft opportunity.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/mario-landino/20951"
+      }
     },
     {
       "id": "indiana|nickmarsh",
@@ -3665,9 +3835,26 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://iuhoosiers.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2020,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 22,
+          "steady": 43,
+          "decline": 29,
+          "maxGain": 3,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana 2026 SEVENTH-YEAR safety transferred from Wisconsin, initially enrolled 2020 and played 35 career games/20 starts through 2025 but missed 2021, parts of 2022 and last part of 2025 due to injuries. 2024 full 12-game starting season and multiple interceptions establish defensive ability; 2025 only three starts before injury. High medical/availability volatility, remaining seventh year modeled last season with no further ordinary college eligibility. NFL exit less likely than eligibility departure.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/preston-zachman/21046"
+      }
     },
     {
       "id": "indiana|rolijahhardy",
@@ -3685,8 +3872,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 60,
+          "decline": 11,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.79,
+        "portalExitProbability": 0.03,
+        "summary": "Indiana 2026 third-year LB started all 16 2025 championship games, received second-team All-Big Ten, and already has multiple 10-tackle games plus two career pick-sixes. Began 2026 with 7/5/9/8 tackles, including a 19-yard interception-return touchdown against Howard. Mature established sideline-to-sideline run defense favors steady and 2027 NFL interest over giant developmental leaps.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/rolijah-hardy/20940"
+      }
     },
     {
       "id": "indiana|rylandgandy",
@@ -3696,16 +3900,33 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4837465",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 22,
+          "steady": 52,
+          "decline": 20,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.54,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana 2026 fifth-year corner transfer from Pittsburgh, official roster identifies 2022 original matriculation and experienced Pittsburgh-to-Indiana secondary play. Exact 2025 college interception or PBU totals not independently verified in this record, so projection is moderately conservative with new-team role and coverage variability. Normal fifth-year eligibility ends after 2026 absent waiver.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/ryland-gandy/20935"
+      }
     },
     {
       "id": "indiana|tobiosunsanmi",
@@ -3715,16 +3936,33 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4857878",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 51,
+          "decline": 18,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.61,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana official fifth-year DL moved from Kansas State, played 36 games/5 starts across 2022–25 with injury-limited final six games of 2025 after generating consistent TFL in prior six. First four Indiana 2026 games: three starts, two TFL vs North Texas, first Indiana sack vs Howard, strip sack vs WKU and a sack vs Northwestern. 2026 role is proven but pass-rush health and transfer volatility persist; normal final year.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/tobi-osunsanmi/21052"
+      }
     },
     {
       "id": "indiana|turborichard",
@@ -3743,8 +3981,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 33,
+          "steady": 43,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.54,
+        "portalExitProbability": 0.08,
+        "summary": "Indiana 2026 third-year RB transferred from Boston College after 2025 11 starts and three 100-yard rushing games; with Indiana first 2026 games produced 108 rushing yards vs Howard, 149 versus Western Kentucky and 68 on nine carries at Northwestern before exiting injured. Established Power Four starting speed and more role upside, with injury and shared carries causing moderate volatility. Entered college 2024, draft eligible 2027.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/turbo-richard/21044"
+      }
     },
     {
       "id": "indiana|tylermorris",
@@ -3754,16 +4009,33 @@
       "groups": [
         "WR"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4685464",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "h",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 31,
+          "steady": 32,
+          "decline": 23,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana official 2026 fifth-year receiver played 34 Michigan games/14 starts across 2022–24, including 2024 10 starts with receiving TD versus Minnesota/Oregon. Missed entire 2025 Indiana season through injury. A return in 2026 could be a real performance rebound but no 2025 college catches can substantiate current elite tier; post-injury decline meaningful. 2022 first entry and fifth-year status imply normal final college year.",
+        "sources": "https://iuhoosiers.com/sports/football/roster/tyler-morris/20965"
+      }
     },
     {
       "id": "indiana|tyriquetucker",
@@ -3773,16 +4045,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4912358",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/84/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://iuhoosiers.com/sports/football/roster/tyrique-tucker/20985",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 19,
+          "steady": 62,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.83,
+        "portalExitProbability": 0.01,
+        "summary": "Indiana 2026 fifth-year defensive tackle was 2025 AP Third-Team All-American and first-team All-Big Ten after all 16 starts, with 2024 PFF interior grade top-25 nationally per school notes. Four 2026 games include solo sack vs North Texas, TFL vs WKU and Northwestern. Elite established run-defense interior profile should be predominantly steady; normal eligibility finishes 2026.",
+        "sources": [
+          "https://iuhoosiers.com/sports/football/roster/tyrique-tucker/20985"
+        ]
+      }
     },
     {
       "id": "iowa|anthonyhawkins",
@@ -13136,7 +13427,7 @@
       }
     }
   ],
-  "officialOverrides": 99,
+  "officialOverrides": 107,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -13148,5 +13439,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes.\n2026-10-08 Indiana complete cohort: 17 exact-name official IU athlete bio studies; eight verified fifth-year corrections, Preston Zachman 7TH and final year status, injury and two-year production evidence. No HQ changes."
 }
