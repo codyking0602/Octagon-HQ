@@ -188,4 +188,31 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
       expect(row.prompt.toLowerCase(), row.id).not.toMatch(/explain|describe why|give a reason|justify/);
     }
   });
+  it("accepts Khamzat as a valid alternative on every UFC wrestling and grappling prompt", () => {
+    const ids = ["ufc-main-04", "ufc-fast1-09", "ufc-fast5-08"];
+    for (const prefix of ids) {
+      const rows = familyRows(prefix + "-");
+      expect(rows, prefix).toHaveLength(5);
+      for (const row of rows) {
+        expect(names(row), row.id).toContain("Khamzat Chimaev");
+        expect(row.answers.map((answer) => answer.name), row.id).not.toContain("Khamzat Chimaev");
+      }
+    }
+  });
+
+  it("audits all 350 UFC prompts for their complete accepted universes and duplicates", () => {
+    for (const row of UFC_ALL) {
+      const seen = new Set<string>();
+      for (const candidate of candidates(row)) {
+        const canonical = normalizeFamilyFeudInput(candidate.name);
+        expect(canonical.length, row.id).toBeGreaterThan(0);
+        expect(seen.has(canonical), `${row.id}: duplicate ${candidate.name}`).toBe(false);
+        seen.add(canonical);
+        for (const alias of candidate.aliases ?? []) {
+          expect(normalizeFamilyFeudInput(alias), `${row.id}: blank alias for ${candidate.name}`).not.toBe("");
+        }
+      }
+    }
+  });
+
 });

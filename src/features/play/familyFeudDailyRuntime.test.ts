@@ -4,6 +4,7 @@ import {
   buildFamilyFeudDailySetup,
 } from "./familyFeudDailyRuntime";
 import type { FamilyFeudPack } from "../games/familyFeudEngine";
+import { buildSportsFeudPack } from "./sportsFeudDailyBanks";
 
 const entities = [
   "Alpha One",
@@ -470,5 +471,59 @@ describe("Family Feud V2 Daily persistence contract", () => {
       fast_money_points: 0,
       fast_money_time_remaining_ms: 0,
     });
+  });
+});
+
+
+describe("UFC Feud accepted-guess record and historical-pack hydration", () => {
+  it("records exact accepted and rejected main-board guesses only after board settlement", () => {
+    const pub = buildFamilyFeudDailySetup(pack, "2026-10-09", "recorded-guesses-test");
+    let submission: Record<string, unknown> = {};
+    let result!: ReturnType<typeof advanceFamilyFeudDailyRuntime>;
+    for (const answer of ["not a real answer", "Alpha One", "Bravo Two", "Charlie Three", "Delta Four"]) {
+      result = advanceFamilyFeudDailyRuntime(context(pub, submission), { type: "answer", answer });
+      submission = result.submissionState;
+      if (answer !== "Delta Four") {
+        const board = (result.publicState.main_boards as Record<string, unknown>[])[0]!;
+        expect(board.recorded_guesses).toEqual([]);
+      }
+    }
+    const board = (result.publicState.main_boards as Record<string, unknown>[])[0]!;
+    expect(board.strikes).toBe(1);
+    expect(board.recorded_guesses).toEqual([
+      { submitted_answer: "not a real answer", matched_answer: null, points: 0, accepted: false },
+      { submitted_answer: "Alpha One", matched_answer: "Alpha One", points: 10, accepted: true },
+      { submitted_answer: "Bravo Two", matched_answer: "Bravo Two", points: 8, accepted: true },
+      { submitted_answer: "Charlie Three", matched_answer: "Charlie Three", points: 7, accepted: true },
+      { submitted_answer: "Delta Four", matched_answer: "Delta Four", points: 5, accepted: true },
+    ]);
+  });
+
+  it("corrects an already-published Oct 8 UFC pack without reassigning ranked answer IDs", () => {
+    const original = buildSportsFeudPack("ufc", "2026-10-08");
+    const board = original.mainBoards.find((row) => row.id === "ufc-main-04-1");
+    expect(board).toBeDefined();
+    const khamzat = original.entities.find((entity) =>
+      entity.displayName === "Khamzat Chimaev" && entity.id.startsWith("ufc-main-04-1:"));
+    expect(khamzat).toBeDefined();
+    const legacy: FamilyFeudPack = {
+      ...original,
+      entities: original.entities.filter((row) => row.id !== khamzat!.id),
+      mainBoards: original.mainBoards.map((row) => row.id !== board!.id ? row : {
+        ...row,
+        candidateIds: row.candidateIds.filter((id) => id !== khamzat!.id),
+        alsoAcceptedEntityIds: (row.alsoAcceptedEntityIds ?? []).filter((id) => id !== khamzat!.id),
+      }),
+    };
+    const pub = buildFamilyFeudDailySetup(legacy, "2026-10-08", "legacy-published-ufc");
+    const result = advanceFamilyFeudDailyRuntime(context(pub), {
+      type: "answer",
+      answer: "Khamzat Chimaev",
+    });
+    expect(result.publicState.last_feedback).toMatchObject({ type: "correct", points: 2 });
+    const settled = result.submissionState.engine_state as { mainBoards: Array<{ strikes: number }> };
+    expect(settled.mainBoards[0]!.strikes).toBe(0);
+    const recorded = result.submissionState.engine_state as { mainBoards: Array<{ attempts: Array<{ submittedText: string }> }> };
+    expect(recorded.mainBoards[0]!.attempts[0]!.submittedText).toBe("Khamzat Chimaev");
   });
 });

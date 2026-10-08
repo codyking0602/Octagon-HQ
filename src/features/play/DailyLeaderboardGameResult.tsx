@@ -708,6 +708,7 @@ function SportsFeudLeaderboardResult({
       <div className="leaderboard-game-result__boards">
         {boards.map((board, boardIndex) => {
           const answers = feudAnswerRows(board);
+          const recordedGuesses = records(board.recorded_guesses);
           const foundPoints = answers.filter((answer) => answer.found).reduce((sum, answer) => sum + answer.points, 0);
           return (
             <section className="leaderboard-feud-board" key={String(board.id ?? boardIndex)}>
@@ -736,6 +737,29 @@ function SportsFeudLeaderboardResult({
                   </div>
                 ))}
               </div>
+              {recordedGuesses.length > 0 ? (
+                <details className="leaderboard-feud-board__guesses">
+                  <summary>RECORDED GUESSES · {recordedGuesses.length}</summary>
+                  <div>
+                    {recordedGuesses.map((guess, index) => {
+                      const accepted = guess.accepted === true;
+                      const submitted = String(guess.submitted_answer ?? "");
+                      const matched = String(guess.matched_answer ?? "");
+                      return (
+                        <div key={index} className={accepted ? "is-accepted" : "is-rejected"}>
+                          <span>
+                            <strong>{submitted}</strong>
+                            {accepted && matched && submitted.toLowerCase() !== matched.toLowerCase()
+                              ? <small>Matched: {matched}</small>
+                              : null}
+                          </span>
+                          <em>{accepted ? `+${Number(guess.points ?? 0)}` : "STRIKE"}</em>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </details>
+              ) : null}
             </section>
           );
         })}

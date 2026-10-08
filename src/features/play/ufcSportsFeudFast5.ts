@@ -1427,7 +1427,8 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Gilbert Burns",
           "Ronaldo Souza",
           "Aljamain Sterling",
-          "Brian Ortega"
+          "Brian Ortega",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1448,7 +1449,8 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Mackenzie Dern",
           "Jim Miller",
           "Rodolfo Vieira",
-          "Brian Ortega"
+          "Brian Ortega",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1469,7 +1471,8 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Frank Mir",
           "Jim Miller",
           "Ronaldo Souza",
-          "Brian Ortega"
+          "Brian Ortega",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1490,7 +1493,8 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Jim Miller",
           "Rodolfo Vieira",
           "Gilbert Burns",
-          "Ronaldo Souza"
+          "Ronaldo Souza",
+          "Khamzat Chimaev"
         ]
       },
       {
@@ -1511,7 +1515,8 @@ export const UFC_SPORTS_FEUD_FAST_5 = expandSportsFeudFamilies("ufc-fast5", [
           "Rodolfo Vieira",
           "Gilbert Burns",
           "Aljamain Sterling",
-          "Brian Ortega"
+          "Brian Ortega",
+          "Khamzat Chimaev"
         ]
       }
     ],

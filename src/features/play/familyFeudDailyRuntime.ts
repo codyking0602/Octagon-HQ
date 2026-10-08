@@ -107,6 +107,22 @@ function mainBoardPublicState(
     required_answers: FAMILY_FEUD_BOARD_ANSWER_COUNT,
     max_points: FAMILY_FEUD_MAIN_BOARD_MAX,
     settled,
+    // Past runs retain only normalized misses; new runs preserve exact guess text and award.
+    recorded_guesses: settled
+      ? (board.attempts?.length
+        ? board.attempts.map((attempt) => ({
+            submitted_answer: attempt.submittedText,
+            matched_answer: attempt.entityId ? entityPresentation(pack, attempt.entityId).display_name : null,
+            points: attempt.points,
+            accepted: attempt.status === "accepted",
+          }))
+        : board.submittedUnrecognized.map((text) => ({
+            submitted_answer: text,
+            matched_answer: null,
+            points: 0,
+            accepted: false,
+          })))
+      : [],
     answer_reveal: settled
       ? question.answers.map((answer) => ({
           entity: entityPresentation(pack, answer.entityId),
@@ -353,6 +369,36 @@ function stateFromSubmission(context: FamilyFeudDailyRuntimeContext) {
   return structuredClone(row) as unknown as FamilyFeudState;
 }
 
+// Refresh known fair-answer omissions in already-published daily packs without
+// changing their ranked answers, immutable setup proof, or completed scores.
+function hydrateUfcGrapplingAcceptance(pack: FamilyFeudPack): FamilyFeudPack {
+  const eligible = /^ufc-(?:main-04|fast1-09|fast5-08)-[1-5]$/;
+  const entities = [...pack.entities];
+  const correct = (question: FamilyFeudPack["mainBoards"][number]) => {
+    if (!eligible.test(question.id)) return question;
+    if (question.candidateIds.some((id) => entities.some(
+      (entity) => entity.id === id && entity.displayName === "Khamzat Chimaev"
+    ))) return question;
+    const nextVariant = (question.alsoAcceptedEntityIds ?? []).length + 1;
+    const entityId = `${question.id}:v${nextVariant}`;
+    if (entities.some((entity) => entity.id === entityId)) {
+      throw new Error("UFC Feud correction entity ID conflicts with published pack.");
+    }
+    entities.push({ id: entityId, displayName: "Khamzat Chimaev", kind: "person", aliases: ["Khamzat", "Chimaev"] });
+    return {
+      ...question,
+      candidateIds: [...question.candidateIds, entityId],
+      alsoAcceptedEntityIds: [...(question.alsoAcceptedEntityIds ?? []), entityId],
+    };
+  };
+  return {
+    ...pack,
+    entities,
+    mainBoards: pack.mainBoards.map(correct),
+    fastMoney: pack.fastMoney.map(correct),
+  };
+}
+
 function privatePack(context: FamilyFeudDailyRuntimeContext) {
   const raw = context.privateSetupEvidence.pack;
   const persisted = asRecord(raw, "Family Feud private pack") as unknown as FamilyFeudPack;
@@ -374,8 +420,9 @@ function privatePack(context: FamilyFeudDailyRuntimeContext) {
       };
     }),
   };
-  assertFamilyFeudPack(pack);
-  return pack;
+  const corrected = hydrateUfcGrapplingAcceptance(pack);
+  assertFamilyFeudPack(corrected);
+  return corrected;
 }
 
 function finalSubmission(
