@@ -446,64 +446,190 @@
       "id": "boise-state|akeemwright",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 33,
+          "steady": 39,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.42,
+        "portalExitProbability": 0.08
+      }
     },
     {
       "id": "boise-state|benford",
       "classification": "6TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 39,
+          "decline": 23,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.17,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "boise-state|boenphelps",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 35,
+          "steady": 44,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "boise-state|cambates",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 15,
+          "improve": 40,
+          "steady": 34,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.36,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "boise-state|dylanriley",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 57,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.83,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "boise-state|jadenmickey",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 56,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.66,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "boise-state|jaydenvirginmorgan",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 56,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.81,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "boise-state|jericowashingtonjr",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 29,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.44,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "boise-state|loganbrantley",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 18,
+          "improve": 35,
+          "steady": 29,
+          "decline": 18,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.08,
+        "portalExitProbability": 0.13
+      }
     },
     {
       "id": "boise-state|madduxmadsen",
@@ -530,57 +656,169 @@
       "id": "boise-state|mattwagner",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 42,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "boise-state|maxstege",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 33,
+          "steady": 43,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.46,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "boise-state|mikaioedward",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 16,
+          "improve": 34,
+          "steady": 34,
+          "decline": 16,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.09
+      }
     },
     {
       "id": "boise-state|raseanjones",
       "classification": "FR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 21,
+          "improve": 43,
+          "steady": 28,
+          "decline": 8,
+          "maxGain": 7,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1
+      }
     },
     {
       "id": "boise-state|romantillmon",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 48,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.27,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "boise-state|sherrodsmith",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 14,
+          "improve": 37,
+          "steady": 37,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.34,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "boise-state|siregaines",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 11,
+          "improve": 37,
+          "steady": 39,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.51,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "boise-state|travisanderson",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 18,
+          "improve": 41,
+          "steady": 30,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.11,
+        "portalExitProbability": 0.12
+      }
     },
     {
       "id": "byu|bearbachmeier",
