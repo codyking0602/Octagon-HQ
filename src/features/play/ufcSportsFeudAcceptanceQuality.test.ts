@@ -222,8 +222,8 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
       UFC_SPORTS_FEUD_FAST_3, UFC_SPORTS_FEUD_FAST_4, UFC_SPORTS_FEUD_FAST_5,
     ];
     // Narrower historical/categorical questions intentionally exclude otherwise
-    // related entries: fighter nicknames, PRIDE-to-UFC fighters and punch-only attacks.
-    const scoped = new Set(["ufc-main-12-5", "ufc-fast3-06-1", "ufc-fast3-06-3", "ufc-fast4-03-1"]);
+    // related entries: the gym-versus-nickname question, PRIDE-to-UFC fighters and punch-only attacks.
+    const scoped = new Set(["ufc-main-12-1", "ufc-main-12-2", "ufc-main-12-3", "ufc-main-12-4", "ufc-main-12-5", "ufc-fast3-06-1", "ufc-fast3-06-3", "ufc-fast4-03-1"]);
     let audited = 0;
     for (const bank of banks) {
       expect(bank.length % 5).toBe(0);
