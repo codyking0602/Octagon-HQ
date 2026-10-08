@@ -1,10 +1,13 @@
 import gradeProjection from "../../../data/generated/football/wheel-cfb-gm-grade-projection-2026-10-07.json";
+import classData from "../../../data/generated/football/cfb/gm-2026-runtime-classes.json";
+import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
+import { cfbGmDevelop, cfbGmDevProfile, type CfbGmClass } from "./footballCfbGmDevelopment";
 import { wheelFootballCfbPriorityForSchoolId } from "./wheelFootballCfbPriority";
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
 import { footballGmTeamOverall } from "./footballGmStrategy";
 import { cfbGmSimulateCollegeSeason, type CfbGmCollegeFinish } from "./footballCfbGmSimulation";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v2-cfp";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v3-market-development";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -28,6 +31,8 @@ export type CfbGmPlayer = {
   currentGrade: number;
   nilYear1: number;
   nilYear2: number;
+  classification: CfbGmClass;
+  redshirt: boolean | null;
   departureRisk: "LOW" | "MEDIUM" | "HIGH";
   outlook: "RISING" | "STABLE" | "DECLINE RISK";
 };
@@ -85,17 +90,16 @@ for (const row of gradeProjection.grades as {school:string;family:GradeFamily;pl
   if (gradeIndex.has(key)) throw new Error("Duplicate CFB GM grade: " + key);
   gradeIndex.set(key, row.grade);
 }
-// Fictional market estimates, not reported NIL deals. The price model deliberately
-// never reads a player's HQ grade, preserving independent scouting and salary decisions.
-// Stable identity prices are identical in Powerhouse and Builder, and across sessions.
-const nilMarket: Readonly<Record<GradeFamily, readonly [number, number]>> = {
-  QB: [500_000, 2_700_000],
-  RB: [175_000, 1_250_000],
-  WR: [200_000, 1_550_000],
-  TE: [125_000, 850_000],
-  "Front Seven": [200_000, 1_250_000],
-  Secondary: [175_000, 1_150_000],
-};
+// Preserve only compact classification facts in the runtime bundle.
+// Full per-subject sourcing and unresolved eligibility remain in private audit artifacts.
+const classes: Readonly<Record<string, {class:CfbGmClass;redshirt:boolean|null}>> = classData.subjects as Record<string,{class:CfbGmClass;redshirt:boolean|null}>;
+const classFor = (id:string):CfbGmClass => classes[id]?.class ?? null;
+const isLikelyDraftEligible = (stage:CfbGmClass):boolean =>
+  stage==="JR"||stage==="SR"||stage==="3RD"||stage==="5TH"||stage==="6TH"||stage==="7TH";
+function outlookFor(id:string,grade:number,stage:CfbGmClass):CfbGmPlayer["outlook"] {
+  const profile=cfbGmDevProfile(id,grade,stage);
+  return profile.breakout+profile.improve>=55?"RISING":profile.decline>=28?"DECLINE RISK":"STABLE";
+}
 const playerMap = new Map<string, CfbGmPlayer>();
 const schoolPlayers = new Map<string, CfbGmPlayer[]>();
 const eligibleSchools = wheelFootballPoolTeams("AP_TOP_25").map((school) => school.code);
@@ -115,7 +119,7 @@ for (const schoolId of eligibleSchools) {
   for (const [group, family, slots] of groups) {
     const names = school[group];
     if (!Array.isArray(names)) continue;
-    for (const name of names as readonly string[]) {
+    for (const [roleRank, name] of (names as readonly string[]).entries()) {
       const nameKey = normalize(name);
       const id = schoolId + "|" + nameKey;
       const existing = teamMap.get(id);
@@ -125,16 +129,17 @@ for (const schoolId of eligibleSchools) {
       }
       const grade = gradeIndex.get([normalize(school.school), family, nameKey].join("|"));
       if (grade === undefined) throw new Error("CFB GM ungraded candidate: " + school.school + " " + name + " " + family);
-      const [floor, ceiling] = nilMarket[family];
-      const nilYear1 = roundedNil(floor + (ceiling - floor) * rate("nil:26:" + id));
-      const reprice = -0.07 + rate("nil:27:" + id) * 0.53;
-      const nilYear2 = roundedNil(Math.max(75_000, nilYear1 * (1 + reprice)));
-      const departureRisk = grade >= 94 ? "HIGH" : grade >= 88 ? "MEDIUM" : "LOW";
-      const drift = rate("player:2027:" + id);
+      const market=cfbGmEstimateNil({schoolId,name,family,positionRoleRank:roleRank,
+        apRank:eligibleSchools.indexOf(schoolId)+1});
+      const stage=classFor(id);
+      const departureRisk=isLikelyDraftEligible(stage)&&grade>=93?"HIGH":
+        (isLikelyDraftEligible(stage)||stage==="SR"?"MEDIUM":"LOW");
       const player: CfbGmPlayer = {
         id, schoolId, school: school.school, name, family,
-        eligibleSlots: [...slots], currentGrade: grade, nilYear1, nilYear2,
-        departureRisk, outlook: drift > 0.76 ? "RISING" : drift < 0.10 ? "DECLINE RISK" : "STABLE",
+        eligibleSlots: [...slots], currentGrade: grade,
+        nilYear1:market.year1, nilYear2:market.year2Baseline,
+        classification:stage, redshirt:classes[id]?.redshirt??null,
+        departureRisk,outlook:outlookFor(id,grade,stage),
       };
       teamMap.set(id, player);
       playerMap.set(id, player);
@@ -154,15 +159,15 @@ for (const schoolId of eligibleSchools) {
     ));
     if (!family) throw new Error("CFB GM Flex player missing grade: " + school.school + " " + name);
     const grade = gradeIndex.get([normalize(school.school), family, key].join("|"))!;
-    const [floor, ceiling] = nilMarket[family];
-    const nilYear1 = roundedNil(floor + (ceiling - floor) * rate("nil:26:" + id));
-    const nilYear2 = roundedNil(Math.max(75_000, nilYear1 * (0.93 + 0.53 * rate("nil:27:" + id))));
-    const drift = rate("player:2027:" + id);
+    const market=cfbGmEstimateNil({schoolId,name,family,positionRoleRank:school.Flex.indexOf(name),
+      apRank:eligibleSchools.indexOf(schoolId)+1});
+    const stage=classFor(id);
     const player: CfbGmPlayer = {
       id, schoolId, school: school.school, name, family, eligibleSlots: ["FLEX"],
-      currentGrade: grade, nilYear1, nilYear2,
-      departureRisk: grade >= 94 ? "HIGH" : grade >= 88 ? "MEDIUM" : "LOW",
-      outlook: drift > 0.76 ? "RISING" : drift < 0.10 ? "DECLINE RISK" : "STABLE",
+      currentGrade: grade, nilYear1:market.year1, nilYear2:market.year2Baseline,
+      classification:stage, redshirt:classes[id]?.redshirt??null,
+      departureRisk:isLikelyDraftEligible(stage)&&grade>=93?"HIGH":isLikelyDraftEligible(stage)?"MEDIUM":"LOW",
+      outlook:outlookFor(id,grade,stage),
     };
     teamMap.set(id, player);
     playerMap.set(id, player);
@@ -172,6 +177,8 @@ for (const schoolId of eligibleSchools) {
 
 export const CFB_GM_AP_SCHOOLS = eligibleSchools;
 export const CFB_GM_PLAYERS = [...playerMap.values()];
+if(CFB_GM_PLAYERS.length!==classData.population || CFB_GM_PLAYERS.some(p=>!(p.id in classes)))
+  throw new Error("CFB GM classification and selection populations are out of sync");
 export function cfbGmPlayer(id: string) { return playerMap.get(id) ?? null; }
 export function cfbGmPlayersAt(schoolId: string) { return schoolPlayers.get(schoolId) ?? []; }
 export function cfbGmPrice(player: CfbGmPlayer, year: 1 | 2) { return year === 1 ? player.nilYear1 : player.nilYear2; }
