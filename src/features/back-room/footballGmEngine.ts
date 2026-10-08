@@ -33,6 +33,23 @@ export type FootballGmPlayoffFinish =
   | "Super Bowl Loss"
   | "Champion";
 
+/**
+ * The stored playoff finish remains a stable internal key for simulation,
+ * scoring, and historical runs. Public-facing labels must describe whether
+ * the team WON or LOST, not merely name the round it reached.
+ */
+export function footballGmPlayoffFinishLabel(finish: FootballGmPlayoffFinish): string {
+  const labels: Record<FootballGmPlayoffFinish, string> = {
+    "Missed Playoffs": "Missed Playoffs",
+    "Wild Card": "Lost Wild Card Round",
+    Divisional: "Lost Divisional Round",
+    "Conference Championship": "Lost Conference Championship",
+    "Super Bowl Loss": "Lost Super Bowl",
+    Champion: "Super Bowl Champion",
+  };
+  return labels[finish];
+}
+
 export type FootballGmExtensionRisk = "LOCKED" | "LOW" | "MEDIUM" | "HIGH";
 
 export interface FootballGmPlayer {
