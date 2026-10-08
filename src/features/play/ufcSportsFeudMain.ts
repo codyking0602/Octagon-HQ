@@ -29,7 +29,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Chuck Liddell",
           "BJ Penn",
           "Brock Lesnar",
-          "Islam Makhachev"
+          "Islam Makhachev",
+          "Royce Gracie"
         ]
       },
       {
@@ -82,7 +83,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Alexander Volkanovski",
           "Israel Adesanya",
           "BJ Penn",
-          "Islam Makhachev"
+          "Islam Makhachev",
+          "Royce Gracie"
         ]
       },
       {
@@ -108,7 +110,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Chuck Liddell",
           "BJ Penn",
           "Brock Lesnar",
-          "Islam Makhachev"
+          "Islam Makhachev",
+          "Royce Gracie"
         ]
       },
       {
@@ -134,7 +137,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Israel Adesanya",
           "BJ Penn",
           "Brock Lesnar",
-          "Islam Makhachev"
+          "Islam Makhachev",
+          "Royce Gracie"
         ]
       }
     ],
@@ -259,7 +263,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
         "aliases": [
           "Islam"
         ]
-      }
+      },
+      "Royce Gracie"
     ]
   },
   {
@@ -3965,7 +3970,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Ronda Rousey",
           "Tai Tuivasa",
           "Mike Perry",
-          "Diego Sanchez"
+          "Diego Sanchez",
+          "Nate Diaz"
         ]
       },
       {
@@ -4008,7 +4014,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Ronda Rousey",
           "Tai Tuivasa",
           "Mike Perry",
-          "Diego Sanchez"
+          "Diego Sanchez",
+          "Nate Diaz"
         ]
       },
       {
@@ -4029,7 +4036,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "The Korean Zombie",
           "Tai Tuivasa",
           "Mike Perry",
-          "Diego Sanchez"
+          "Diego Sanchez",
+          "Nate Diaz"
         ]
       },
       {
@@ -4050,7 +4058,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Ronda Rousey",
           "Tai Tuivasa",
           "Mike Perry",
-          "Diego Sanchez"
+          "Diego Sanchez",
+          "Nate Diaz"
         ]
       }
     ],
@@ -4113,7 +4122,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
       },
       "Tai Tuivasa",
       "Mike Perry",
-      "Diego Sanchez"
+      "Diego Sanchez",
+      "Nate Diaz"
     ]
   }
 ] as const);
