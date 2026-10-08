@@ -1,0 +1,1880 @@
+{
+  "schemaVersion": 1,
+  "season": 2026,
+  "population": 468,
+  "sourceBackedClassifications": 423,
+  "subjects": {
+    "alabama|brayhubbard": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "alabama|calebwoodson": {
+      "class": null,
+      "redshirt": null
+    },
+    "alabama|danielhill": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "alabama|devanthompkins": {
+      "class": null,
+      "redshirt": null
+    },
+    "alabama|dijonleejr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "alabama|ejcrowell": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "alabama|kalebedwards": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "alabama|keelonrussell": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "alabama|keonsabb": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "alabama|londonsimmons": {
+      "class": null,
+      "redshirt": null
+    },
+    "alabama|lotzeirbrooks": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "alabama|lukemetz": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "alabama|redmorgan": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "alabama|ricoscott": {
+      "class": null,
+      "redshirt": null
+    },
+    "alabama|ryancolemanwilliams": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "alabama|terrancegreen": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "alabama|traeshawnbrown": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "alabama|yhonzaepierre": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "alabama|zabienbrown": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "alabama|zyangibson": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "boise-state|akeemwright": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|benford": {
+      "class": "6TH",
+      "redshirt": null
+    },
+    "boise-state|boenphelps": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|cambates": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "boise-state|dylanriley": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "boise-state|jadenmickey": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "boise-state|jaydenvirginmorgan": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "boise-state|jericowashingtonjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|loganbrantley": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|madduxmadsen": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "boise-state|mattwagner": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|maxstege": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|mikaioedward": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|raseanjones": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "boise-state|romantillmon": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "boise-state|sherrodsmith": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "boise-state|siregaines": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "boise-state|travisanderson": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "byu|bearbachmeier": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "byu|bodieschoonover": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "byu|cadeuluave": {
+      "class": null,
+      "redshirt": null
+    },
+    "byu|cannondevries": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "byu|evanjohnson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "byu|faletausatuala": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "byu|hunterclegg": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "byu|jojophillips": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "byu|keanutanuvasa": {
+      "class": null,
+      "redshirt": null
+    },
+    "byu|kylerkasper": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "byu|legendglasker": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "byu|ljmartin": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "byu|nusitaumoepeau": {
+      "class": null,
+      "redshirt": null
+    },
+    "byu|prestonrex": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "byu|tausiliakana": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "byu|therrianalexanderiii": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "byu|tommyprassas": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "byu|walkerlyons": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "florida|aaronphilo": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "florida|amirjackson": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "florida|benhanksiii": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "florida|brendanbett": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "florida|brycethornton": {
+      "class": null,
+      "redshirt": null
+    },
+    "florida|cormanimcclain": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "florida|dallaswilson": {
+      "class": null,
+      "redshirt": null
+    },
+    "florida|djcoleman": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "florida|dukeclark": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "florida|ericsingletonjr": {
+      "class": null,
+      "redshirt": null
+    },
+    "florida|evanpryor": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "florida|jadanbaugh": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "florida|jadenrobinson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "florida|jaydenwoods": {
+      "class": null,
+      "redshirt": null
+    },
+    "florida|jeramiahmccloud": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "florida|kamranjames": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "florida|kanyeclark": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "florida|mylesgraham": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "florida|vernellbrowniii": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "georgia|chaunceybowens": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|chriscole": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|craigdandridge": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "georgia|demellojones": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|elijahgriffin": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "georgia|ellisrobinsoniv": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|gabeharrisjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "georgia|gunnerstockton": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "georgia|isiahcanion": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|jordanhall": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "georgia|khalilbarnes": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "georgia|kjbolden": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|kyronjones": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "georgia|lawsonluckie": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "georgia|natefrazier": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|quintaviusjohnson": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|raylenwilson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "georgia|sacoviewhitehelton": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "georgia|talyntaylor": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "houston|amarethomas": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|ashtonporter": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|brandonmackii": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|connerweigman": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "houston|demarionthomas": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|jadenyates": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|jalenmayo": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|javionwhite": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "houston|jordanallen": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|kentrellwebb": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "houston|khalillaufau": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|kobyyoung": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "houston|makhihughes": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|patrickovermyer": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|reshaunsanfordii": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "houston|sionefotu": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "houston|trentwalker": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "houston|willjames": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|amareferrell": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|andrewbarker": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "indiana|byronbaldwinjr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "indiana|charliebecker": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "indiana|davionchandler": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "indiana|isaiahjones": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|jamarisharpe": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|joshburnham": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|joshhoover": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|leebeebejr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|mariolandino": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "indiana|nickmarsh": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "indiana|prestonzachman": {
+      "class": "7TH",
+      "redshirt": null
+    },
+    "indiana|rolijahhardy": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "indiana|rylandgandy": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|tobiosunsanmi": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|turborichard": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "indiana|tylermorris": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "indiana|tyriquetucker": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "iowa|anthonyhawkins": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "iowa|braedenjackson": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "iowa|cambuffington": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "iowa|deshaunlee": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "iowa|djvonnahme": {
+      "class": "3RD",
+      "redshirt": null
+    },
+    "iowa|evanjames": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "iowa|hankbrown": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "iowa|ioseepenesa": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "iowa|jaydenmontgomery": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "iowa|jaylenwatson": {
+      "class": "3RD",
+      "redshirt": null
+    },
+    "iowa|kahmaribrown": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "iowa|kamarimoulton": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "iowa|kennethmerrieweather": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "iowa|ljphillipsjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "iowa|rashadgodfreyjr": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "iowa|reecevanderzee": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "iowa|tonydiaz": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "iowa|zachlutmer": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "lsu|dashawnspears": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "lsu|deucegeralds": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "lsu|dilinjones": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "lsu|djpickett": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "lsu|dylancarpenter": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "lsu|eugenewilsoniii": {
+      "class": null,
+      "redshirt": null
+    },
+    "lsu|jacksonharris": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "lsu|jordanross": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "lsu|pjwoodland": {
+      "class": null,
+      "redshirt": null
+    },
+    "lsu|princewillumanmielen": {
+      "class": null,
+      "redshirt": null
+    },
+    "lsu|samleavitt": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "lsu|stacygage": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "lsu|tamarcuscooley": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "lsu|tjdottery": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "lsu|treydezgreen": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "lsu|tybenefield": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "lsu|whitweeks": {
+      "class": null,
+      "redshirt": null
+    },
+    "lsu|winstonwatkinsjr": {
+      "class": null,
+      "redshirt": null
+    },
+    "miami|ahmadmoten": {
+      "class": null,
+      "redshirt": null
+    },
+    "miami|armondoblount": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|brycefitzgerald": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "miami|charmarbrown": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|chasesmith": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "miami|cooperbarkate": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "miami|damaribrown": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|damonwilsonii": {
+      "class": null,
+      "redshirt": null
+    },
+    "miami|darianmensah": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|elijalofton": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|javianmallory": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "miami|joshuamoore": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "miami|malachitoney": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "miami|markfletcherjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "miami|marquiselightfoot": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|mohamedtoure": {
+      "class": null,
+      "redshirt": null
+    },
+    "miami|omarthornton": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|xavierlucas": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "miami|zechariahpoyser": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "mississippi-state|amareewilliams": {
+      "class": null,
+      "redshirt": null
+    },
+    "mississippi-state|anthonyevansiii": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "mississippi-state|djreed": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "mississippi-state|fluffbothwell": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "mississippi-state|isaacsmith": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "mississippi-state|jjhill": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "mississippi-state|jalensmith": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "mississippi-state|jaraybledsoe": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "mississippi-state|jardingilbert": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "mississippi-state|jettjefferson": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "mississippi-state|kamariotaylor": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "mississippi-state|kelleyjones": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "mississippi-state|kolinwilson": {
+      "class": null,
+      "redshirt": null
+    },
+    "mississippi-state|marcuswilliams": {
+      "class": null,
+      "redshirt": null
+    },
+    "mississippi-state|marquisjohnson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "mississippi-state|samwest": {
+      "class": null,
+      "redshirt": null
+    },
+    "mississippi-state|sanfriscomagee": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "mississippi-state|willwhitson": {
+      "class": null,
+      "redshirt": null
+    },
+    "mississippi-state|zakaritillman": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "mississippi-state|zionragins": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "missouri|ahmadhardy": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "missouri|austinsimmons": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|brettnorfleet": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|caydenlee": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|chrisgravesjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|daedenhopkins": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "missouri|donovanolugbode": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "missouri|jalenmarshall": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|jamalroberts": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|kensleylouidorfaustin": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "missouri|langdenkitchen": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|marquisgracial": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|naeshaunmontgomery": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "missouri|nicholasrodriguez": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "missouri|robertwoodyardjr": {
+      "class": null,
+      "redshirt": null
+    },
+    "missouri|santanabanner": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|sionelaulea": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "missouri|trajengreco": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "missouri|xaishaunedwards": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "notre-dame|adonshuler": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|aneyaswilliams": {
+      "class": null,
+      "redshirt": null
+    },
+    "notre-dame|boubacartraore": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|brauntaejohnson": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "notre-dame|bryceyoung": {
+      "class": null,
+      "redshirt": null
+    },
+    "notre-dame|christiangray": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|cjcarr": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "notre-dame|cooperflanagan": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|djmckinney": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|draykbowen": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|jaidenausberry": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|jordanfaison": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|keonkeeley": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|kyngstonnviliamuasa": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "notre-dame|leonardmoore": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "notre-dame|luketalich": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "notre-dame|micahgilbert": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "notre-dame|mylangraham": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "notre-dame|nolanjamesjr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "ohio-state|bojackson": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "ohio-state|brandoninniss": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ohio-state|chrishenryjr": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "ohio-state|christianalliegro": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ohio-state|devinmccuin": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ohio-state|devinsanchez": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "ohio-state|earllittlejr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ohio-state|eddrickhouston": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ohio-state|jakobijackson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ohio-state|jaytimmons": {
+      "class": null,
+      "redshirt": null
+    },
+    "ohio-state|jaylenmcclain": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ohio-state|jeremiahsmith": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ohio-state|jermainemathewsjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ohio-state|johnwalker": {
+      "class": null,
+      "redshirt": null
+    },
+    "ohio-state|juliansayin": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ohio-state|kenyattajacksonjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ohio-state|nateroberts": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "ohio-state|paytonpierce": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ohio-state|rileypettijohn": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|calebhawkins": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|carsonkolb": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|chrisbarnes": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|christianbodnar": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oklahoma-state|drewmestemaker": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|evanjackson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oklahoma-state|imanoates": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oklahoma-state|isaiahchisom": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oklahoma-state|jaleeljohnson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oklahoma-state|jameswilliams": {
+      "class": null,
+      "redshirt": null
+    },
+    "oklahoma-state|justinbowick": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oklahoma-state|ladainianfields": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|mohorn": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oklahoma-state|quintonhammonds": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oklahoma-state|saadiqclements": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oklahoma-state|tateromney": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oklahoma-state|terrencelewis": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|trepageiii": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oklahoma-state|wyattyoung": {
+      "class": null,
+      "redshirt": null
+    },
+    "ole-miss|antoniokite": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|calebodom": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|deucealexander": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|edwinjoseph": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|horatiofields": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|jamariousbrown": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|jaylonbraxton": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|joenelaguero": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|johntaycookii": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|kamfranklin": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|keatonthomas": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "ole-miss|kewanlacy": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|lukeferrelli": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "ole-miss|lukehasz": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|makhifrazier": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|sharifdenson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|suntarineperkins": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|traylonray": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ole-miss|trinidadchambliss": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ole-miss|willecholes": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oregon|aaronflowers": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oregon|amauriwashington": {
+      "class": null,
+      "redshirt": null
+    },
+    "oregon|bearalexander": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oregon|brandonfinneyjr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oregon|carlwilliamsiv": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oregon|dakorienmoore": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oregon|dantemoore": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oregon|dierrehilljr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oregon|elijahrushing": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oregon|evanstewart": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oregon|ifyobidegwu": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oregon|jamarijohnson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oregon|jeremiahmcclellan": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oregon|jordondavison": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "oregon|koiperich": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "oregon|matayouiagalelei": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "oregon|messiahhampton": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "oregon|teitumtuioti": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|alexsanfordjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|carsonkent": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|cataurushicks": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|censerelee": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|crucebrookins": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|damonfergusonjr": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "pittsburgh|demetricemccray": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "pittsburgh|holdengeriner": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|isaiahneal": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|jaedenmoore": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|jakyrianturner": {
+      "class": null,
+      "redshirt": null
+    },
+    "pittsburgh|jeremiahmarcelin": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "pittsburgh|jimmyscott": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|joshguerrier": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "pittsburgh|raionstrader": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|rashanmurray": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "pittsburgh|shawnleejr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "pittsburgh|tonykinsler": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "pittsburgh|zachcrothers": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "smu|aakilwashington": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|alexanderkilgore": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|brandonbooker": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "smu|dramekcogreen": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "smu|irasingletoniv": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "smu|jahkailang": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|jalencooper": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "smu|jarvislee": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|jayvonthomas": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|jimmywyrick": {
+      "class": null,
+      "redshirt": null
+    },
+    "smu|kendrickraphael": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|kevinjennings": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|marcellusbarnesjr": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "smu|randypittmanjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|theomelinohrstrom": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|tyrenpolleyjr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "smu|yamirknight": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "smu|yannicksmith": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "tennessee|amarecampbell": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "tennessee|arioncarter": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "tennessee|braylonstaley": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "tennessee|daevinhobbs": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "tennessee|dasaahnbrame": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "tennessee|daunemorris": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "tennessee|dejuanlane": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "tennessee|deseanbishop": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "tennessee|ethandavis": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "tennessee|georgemacintyre": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "tennessee|javingordon": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "tennessee|kayinlee": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "tennessee|mariyondye": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "tennessee|mikematthews": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "tennessee|quamoss": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "tennessee|radariousjackson": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "tennessee|tjmetcalf": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "tennessee|tyredmond": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "tennessee|tyreeweathersby": {
+      "class": null,
+      "redshirt": null
+    },
+    "tennessee|xaviergilliam": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "texas|archmanning": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|bomascoe": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas|camcoleman": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|colinsimmons": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|emmettmosleyv": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|gracesonlittleton": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "texas|herokanu": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas|hollywoodsmothers": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|jelanimcdonald": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas|justincryer": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas|kadephillips": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "texas|kobeblack": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|maraadwatson": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|raleekbrown": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas|rasheembiles": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas|ryanwingo": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|spencershannon": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas|zinaumeozulu": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas-tech|ajholmesjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|adamtrick": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|austinromaine": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|benroberts": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|brendenjordan": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|bricepollock": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|camerondickey": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas-tech|coyeakin": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|davinmartin": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|jkobywilliams": {
+      "class": null,
+      "redshirt": null
+    },
+    "texas-tech|kennyjohnson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|malcolmsimmons": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas-tech|malikesquerra": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas-tech|mateenibirogba": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|micahhudson": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas-tech|peytonmorgan": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "texas-tech|terrancecarterjr": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "texas-tech|treywhite": {
+      "class": "5TH",
+      "redshirt": null
+    },
+    "texas-tech|willhammond": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "ucla|amierwashington": {
+      "class": null,
+      "redshirt": null
+    },
+    "ucla|anthonywoods": {
+      "class": null,
+      "redshirt": null
+    },
+    "ucla|brianrowejr": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "ucla|derrickbarksdale": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|jalenwoods": {
+      "class": null,
+      "redshirt": null
+    },
+    "ucla|joshphifer": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|landonellis": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|malikhartford": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|nicoiamaleava": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|rodrickpleasant": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|sahirwest": {
+      "class": null,
+      "redshirt": null
+    },
+    "ucla|sammyomosigho": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|scooterjackson": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|scotttaylor": {
+      "class": null,
+      "redshirt": null
+    },
+    "ucla|semajmorgan": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|tashawnjames": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|tysonford": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "ucla|wayneknight": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "usc|alexgraham": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "usc|braylanshelby": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "usc|chasenjohnson": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "usc|christianpierce": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "usc|desmanstephensii": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "usc|devenbryant": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "usc|jaydenmaiava": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "usc|jontezwilliams": {
+      "class": null,
+      "redshirt": null
+    },
+    "usc|kameryncrawford": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "usc|kaydendixonwyatt": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "usc|kingmiller": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "usc|lukewafle": {
+      "class": null,
+      "redshirt": null
+    },
+    "usc|markbowman": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "usc|prophetbrown": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "usc|tanookhines": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "usc|trentmosley": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "usc|waymondjordan": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "usc|zacharyuswilliams": {
+      "class": null,
+      "redshirt": null
+    },
+    "utah|alexcloward": {
+      "class": "FR",
+      "redshirt": null
+    },
+    "utah|bradenpegan": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|creedwhittemore": {
+      "class": null,
+      "redshirt": null
+    },
+    "utah|danielbray": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "utah|devondampier": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|elijahdavis": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|elijahelliss": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "utah|elijahreed": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|ethanday": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "utah|jacksonbennee": {
+      "class": "JR",
+      "redshirt": null
+    },
+    "utah|lanceholtzclaw": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|nateritchie": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|noahbennee": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|paulfitzgerald": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|rabbitevans": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|rickyjohnson": {
+      "class": "SO",
+      "redshirt": null
+    },
+    "utah|treyreynolds": {
+      "class": "SR",
+      "redshirt": null
+    },
+    "utah|wayshawnparker": {
+      "class": "JR",
+      "redshirt": null
+    }
+  }
+}
