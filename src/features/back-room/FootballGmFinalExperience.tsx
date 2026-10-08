@@ -133,44 +133,69 @@ function OutcomeBand({ band, name }: { band: RosterRow["band"]; name: string }) 
         <span className="gm-final__band-start" style={{ left: band.startPercent + "%" }} />
         <span className={"gm-final__band-finish is-" + band.tone} style={{ left: band.finalPercent + "%" }} />
       </div>
-      <div className="gm-final__band-legend"><small>FLOOR</small><small>START</small><small>CEILING</small></div>
+      <div className="gm-final__band-legend"><small>FLOOR</small><small className="gm-final__band-start-label" style={{ left: band.startPercent + "%" }}>START</small><small>CEILING</small></div>
     </div>
   );
 }
 
-export function FootballGmFinalExperience({ name, run }: { name: string; run: FootballGmReportRun }) {
-  const end = run.finalRoster.length ? run.finalRoster : run.roster;
-  const result = footballGmFinalResultV2({
+export function FootballGmFinalExperience({
+  name,
+  run,
+  opponentName,
+  opponentRun,
+}: {
+  name: string;
+  run: FootballGmReportRun;
+  opponentName?: string | null;
+  opponentRun?: FootballGmReportRun | null;
+}) {
+  const [selected, setSelected] = useState<"mine" | "opponent">("mine");
+  const ownResult = footballGmFinalResultV2({
     seed: run.seed,
     yearOneRoster: run.roster,
-    finalRoster: end,
+    finalRoster: run.finalRoster.length ? run.finalRoster : run.roster,
     resolvedSeasons: run.resolvedSeasons,
+  });
+  const opponentResult = opponentRun ? footballGmFinalResultV2({
+    seed: opponentRun.seed,
+    yearOneRoster: opponentRun.roster,
+    finalRoster: opponentRun.finalRoster.length ? opponentRun.finalRoster : opponentRun.roster,
+    resolvedSeasons: opponentRun.resolvedSeasons,
+  }) : null;
+  const selectedRun = selected === "opponent" && opponentRun ? opponentRun : run;
+  const selectedName = selected === "opponent" && opponentRun ? opponentName ?? "Opponent" : name;
+  const end = selectedRun.finalRoster.length ? selectedRun.finalRoster : selectedRun.roster;
+  const result = footballGmFinalResultV2({
+    seed: selectedRun.seed,
+    yearOneRoster: selectedRun.roster,
+    finalRoster: end,
+    resolvedSeasons: selectedRun.resolvedSeasons,
   });
   const rows: RosterRow[] = FOOTBALL_GM_ROSTER_SLOTS.flatMap((slot) => {
     const entry = slotEntry(end, slot);
     const player = entry ? footballGmPlayerById(entry.playerId) : null;
     if (!entry || !player) return [];
-    const prior = slotEntry(run.roster, slot);
+    const prior = slotEntry(selectedRun.roster, slot);
     return [{
       slot,
       entry,
       player,
       before: prior ? footballGmPlayerById(prior.playerId) ?? null : null,
-      salary: footballGmAdjustedSalaryForPlayer(player, 3, run.seed, run.negotiationConsequences),
-      band: footballGmResultDevelopmentBand(player, run.seed),
+      salary: footballGmAdjustedSalaryForPlayer(player, 3, selectedRun.seed, selectedRun.negotiationConsequences),
+      band: footballGmResultDevelopmentBand(player, selectedRun.seed),
     }];
   });
   const retained = rows.filter((row) => row.before?.id === row.player.id);
   const changes = rows.filter((row) => row.before && row.before.id !== row.player.id);
   const trades = changes.filter((row) => row.entry.acquired === "trade").length;
   const freeAgents = changes.length - trades;
-  const payroll = footballGmAdjustedRosterCap(end, 3, run.seed, run.negotiationConsequences);
+  const payroll = footballGmAdjustedRosterCap(end, 3, selectedRun.seed, selectedRun.negotiationConsequences);
   const moved = [...changes].sort((a, b) => {
-    const impact = (row: RosterRow) => row.band.final - (row.before?.currentGrade ?? row.band.start);
+    const impact = (row: RosterRow) => row.band.final - (row.before ? footballGmProjectedGradeForPlayer(row.before, 3, selectedRun.seed) : row.band.start);
     return impact(b) - impact(a);
   });
   const bestMove = moved[0] ?? null;
-  const bestMoveImproved = bestMove && bestMove.before && bestMove.band.final > bestMove.before.currentGrade + 0.85;
+  const bestMoveImproved = bestMove && bestMove.before && bestMove.band.final > footballGmProjectedGradeForPlayer(bestMove.before, 3, selectedRun.seed) + 0.85;
   const coreAnchor = [...retained].sort((a, b) => b.band.final - a.band.final)[0] ?? rows[0];
   const breakout = [...rows].sort((a, b) => b.band.delta - a.band.delta)[0] ?? null;
   const regression = [...rows].sort((a, b) => a.band.delta - b.band.delta)[0] ?? null;
@@ -192,11 +217,36 @@ export function FootballGmFinalExperience({ name, run }: { name: string; run: Fo
   return (
     <div className="football-gm-final gm-final" aria-label="Three-year NFL GM final result">
       <section className="gm-final__hero surface-card">
-        <div className="gm-final__eyebrow">YOUR FINAL RESULT <span>{name.toUpperCase()}</span></div>
-        <div className="gm-final__hero-main">
-          <div className="gm-final__score"><strong>{result.score.toFixed(1)}</strong><span>GM SCORE</span></div>
-          <div className="gm-final__verdict"><small>BOTTOM LINE</small><b>{verdict}</b><span>{subtitle}</span></div>
-        </div>
+        {opponentResult ? (
+          <>
+            <div className="gm-final__eyebrow">HEAD-TO-HEAD FINAL <span>3-YEAR GM MATCH</span></div>
+            <div className="gm-final__match-scoreboard">
+              <div className={ownResult.score >= opponentResult.score ? "is-leading" : ""}>
+                <small>{name.toUpperCase()}</small>
+                <strong>{ownResult.score.toFixed(1)}</strong>
+                <span>GM SCORE</span>
+              </div>
+              <b>VS</b>
+              <div className={opponentResult.score >= ownResult.score ? "is-leading" : ""}>
+                <small>{(opponentName ?? "OPPONENT").toUpperCase()}</small>
+                <strong>{opponentResult.score.toFixed(1)}</strong>
+                <span>GM SCORE</span>
+              </div>
+            </div>
+            <div className="gm-final__match-verdict">
+              {ownResult.score === opponentResult.score ? "DEAD EVEN"
+                : (ownResult.score > opponentResult.score ? name : opponentName ?? "Opponent").toUpperCase() + " WINS"}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="gm-final__eyebrow">YOUR FINAL RESULT <span>{name.toUpperCase()}</span></div>
+            <div className="gm-final__hero-main">
+              <div className="gm-final__score"><strong>{result.score.toFixed(1)}</strong><span>GM SCORE</span></div>
+              <div className="gm-final__verdict"><small>BOTTOM LINE</small><b>{verdict}</b><span>{subtitle}</span></div>
+            </div>
+          </>
+        )}
         <div className="gm-final__stats">
           <div><b>{result.rosterManagementScore.toFixed(1)}</b><small>AVG TEAM OVR</small></div>
           <div><b>{result.resumeScore.toFixed(1)}</b><small>PLAYOFF RÉSUMÉ</small></div>
@@ -207,18 +257,50 @@ export function FootballGmFinalExperience({ name, run }: { name: string; run: Fo
 
       <section className="gm-final__section surface-card" aria-label="Three-year franchise results">
         <header className="gm-final__heading"><h2>THREE-YEAR RESULTS</h2><small>OVR · RECORD · PLAYOFF FINISH</small></header>
-        <div className="gm-final__seasons">
-          {result.seasons.map((season, index) => (
-            <div className="gm-final__season" key={season.year}>
-              <small>YEAR {season.year}</small>
-              <div><strong>{result.teamOveralls[index]}</strong><span>OVR</span></div>
-              <b>{record(season)}</b>
-              <em>{footballGmPlayoffFinishLabel(season.finish)}</em>
-            </div>
-          ))}
-        </div>
+        {opponentResult ? (
+          <div className="gm-final__seasons is-match">
+            {ownResult.seasons.map((season, index) => {
+              const rival = opponentResult.seasons[index]!;
+              return (
+                <div className="gm-final__match-year" key={season.year}>
+                  <small>YEAR {season.year}</small>
+                  <div className="gm-final__match-side">
+                    <span>{name.toUpperCase()}</span>
+                    <strong>{ownResult.teamOveralls[index]} <small>OVR</small></strong>
+                    <b>{record(season)}</b>
+                    <em>{footballGmPlayoffFinishLabel(season.finish)}</em>
+                  </div>
+                  <div className="gm-final__match-side is-opponent">
+                    <span>{(opponentName ?? "OPPONENT").toUpperCase()}</span>
+                    <strong>{opponentResult.teamOveralls[index]} <small>OVR</small></strong>
+                    <b>{record(rival)}</b>
+                    <em>{footballGmPlayoffFinishLabel(rival.finish)}</em>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="gm-final__seasons">
+            {result.seasons.map((season, index) => (
+              <div className="gm-final__season" key={season.year}>
+                <small>YEAR {season.year}</small>
+                <div><strong>{result.teamOveralls[index]}</strong><span>OVR</span></div>
+                <b>{record(season)}</b>
+                <em>{footballGmPlayoffFinishLabel(season.finish)}</em>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
+      {opponentResult ? (
+        <div className="gm-final__franchise-tabs" role="group" aria-label="Choose GM franchise results">
+          <button type="button" aria-pressed={selected === "mine"} className={selected === "mine" ? "is-active" : ""} onClick={() => setSelected("mine")}>{name.toUpperCase()}</button>
+          <button type="button" aria-pressed={selected === "opponent"} className={selected === "opponent" ? "is-active" : ""} onClick={() => setSelected("opponent")}>{(opponentName ?? "OPPONENT").toUpperCase()}</button>
+        </div>
+      ) : null}
+      
       <section className="gm-final__section surface-card" aria-label="Run highlights">
         <header className="gm-final__heading"><h2>RUN HIGHLIGHTS</h2></header>
         <div className="gm-final__highlights">
@@ -241,7 +323,7 @@ export function FootballGmFinalExperience({ name, run }: { name: string; run: Fo
       </section>
 
       <section className="gm-final__section gm-final__roster surface-card" aria-label="Final roster development outcomes">
-        <header className="gm-final__heading"><h2>YOUR FINAL ROSTER</h2><small>YEAR 1 → YEAR 3</small></header>
+        <header className="gm-final__heading"><h2>{opponentResult ? selectedName.toUpperCase() + " · FINAL ROSTER" : "YOUR FINAL ROSTER"}</h2><small>YEAR 1 → YEAR 3</small></header>
         <p className="gm-final__hint">The blue dot is this run's finish. The slim white tick is the player's opening level. Each band reflects that player's possible two-year development range. Exact grades stay hidden.</p>
         <div className="gm-final__roster-list">
           {rows.map((row) => {
