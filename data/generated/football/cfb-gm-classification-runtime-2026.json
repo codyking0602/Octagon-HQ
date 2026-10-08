@@ -7442,57 +7442,169 @@
       "id": "ucla|amierwashington",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 37,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "ucla|anthonywoods",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 39,
+          "decline": 17,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.28,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ucla|brianrowejr",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 17,
+          "improve": 41,
+          "steady": 31,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "ucla|derrickbarksdale",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 53,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ucla|jalenwoods",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 28,
+          "steady": 47,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ucla|joshphifer",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 15,
+          "improve": 40,
+          "steady": 32,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.23,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "ucla|landonellis",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 48,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ucla|malikhartford",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 17,
+          "improve": 36,
+          "steady": 31,
+          "decline": 16,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "ucla|nicoiamaleava",
@@ -7525,64 +7637,190 @@
       "id": "ucla|rodrickpleasant",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 32,
+          "steady": 46,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ucla|sahirwest",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 31,
+          "steady": 50,
+          "decline": 11,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.73,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "ucla|sammyomosigho",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 42,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.38,
+        "portalExitProbability": 0.06
+      }
     },
     {
       "id": "ucla|scooterjackson",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 47,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.47,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "ucla|scotttaylor",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 20,
+          "improve": 40,
+          "steady": 30,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1
+      }
     },
     {
       "id": "ucla|semajmorgan",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 33,
+          "steady": 36,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.31,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "ucla|tashawnjames",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 33,
+          "steady": 35,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.37,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ucla|tysonford",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 18,
+          "improve": 36,
+          "steady": 27,
+          "decline": 19,
+          "maxGain": 6,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.13,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ucla|wayneknight",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 25,
+          "steady": 54,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.72,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "usc|alexgraham",
