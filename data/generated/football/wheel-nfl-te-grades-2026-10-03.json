@@ -141,9 +141,9 @@
     {
       "team": "DAL",
       "player": "Jake Ferguson",
-      "grade": 82,
+      "grade": 79,
       "confidence": "high",
-      "reason": "Productive receiving TE with 82 catches/600 yards in 2025 and red-zone value, but repeated sub-60 overall grades and ball-security issues prevent a higher all-around grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      "reason": "Receiving volume and scoring role are useful (82 catches, 600 yards and eight touchdowns in 2025), but 7.3 yards per catch, limited explosive/inline impact and repeat sub-60 overall-grade and ball-security concerns make a 79 more defensible than the original 82. The 2026 opening (12 catches, 83 yards through four games) reinforces but does not independently determine the adjustment."
     },
     {
       "team": "DEN",
@@ -183,9 +183,9 @@
     {
       "team": "JAX",
       "player": "Brenton Strange",
-      "grade": 80,
+      "grade": 83,
       "confidence": "high",
-      "reason": "540 yards in 12 games in 2025 plus excellent zone run-blocking and continued 2026 usefulness make him a strong complete starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      "reason": "True two-way tight-end contribution merits more credit: 46 receptions and 540 yards in 12 games in 2025 plus strong zone run-blocking in the locked TE evidence; 14 catches and 167 yards in the first four 2026 games. The 83 accounts for valuable inline work alongside receiving, without projecting future stardom or overreacting to a short 2026 sample."
     },
     {
       "team": "KC",
@@ -345,11 +345,11 @@
       "95-100": 3,
       "90-94": 2,
       "85-89": 5,
-      "80-84": 13,
-      "75-79": 8,
+      "80-84": 12,
+      "75-79": 9,
       "below-75": 2
     },
-    "note": "Final distribution after player-by-player grading, pairwise audit, range/separation calibration and discrepancy review. Distribution did not mechanically set grades."
+    "note": "Current distribution after owner-approved current-ability adjustments dated 2026-10-08. Historical Oct 3 calibration results remain in finalCalibrationAudit."
   },
   "runtimeBoundary": "No production/runtime behavior changes. Runtime wiring, historical freezing and hidden reveal remain a later phase.",
   "futureVersioning": "Any future TE grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison.",
@@ -514,5 +514,28 @@
         "below-75": 2
       }
     }
+  },
+  "approvedGradeRevision": {
+    "effectiveDate": "2026-10-08",
+    "review": "Owner-approved player-by-player TE current-ability grade review after 33-player GM development research",
+    "note": "These are audited present-ability grade corrections, NOT prospective player development or progress probabilities. Original October 3 pairwise and final calibration sections are historical records.",
+    "changes": [
+      {
+        "player": "Jake Ferguson",
+        "team": "DAL",
+        "previousGrade": 82,
+        "approvedGrade": 79,
+        "reason": "Receiving volume and scoring role are useful (82 catches, 600 yards and eight touchdowns in 2025), but 7.3 yards per catch, limited explosive/inline impact and repeat sub-60 overall-grade and ball-security concerns make a 79 more defensible than the original 82. The 2026 opening (12 catches, 83 yards through four games) reinforces but does not independently determine the adjustment.",
+        "peerComparison": "Cade Otton 79 and Colby Parkinson 79 for functional but limited overall starting value; below more complete Hunter Henry 82 and Dalton Schultz 83."
+      },
+      {
+        "player": "Brenton Strange",
+        "team": "JAX",
+        "previousGrade": 80,
+        "approvedGrade": 83,
+        "reason": "True two-way tight-end contribution merits more credit: 46 receptions and 540 yards in 12 games in 2025 plus strong zone run-blocking in the locked TE evidence; 14 catches and 167 yards in the first four 2026 games. The 83 accounts for valuable inline work alongside receiving, without projecting future stardom or overreacting to a short 2026 sample.",
+        "peerComparison": "Dalton Schultz 83 and Isaiah Likely 83 as different forms of useful starting value; above AJ Barner 81 pending more durable evidence."
+      }
+    ]
   }
 }

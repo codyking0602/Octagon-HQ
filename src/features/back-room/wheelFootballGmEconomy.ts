@@ -1,4 +1,15 @@
+import profileAuthority from "../../../data/curated/football/gm-nfl-development-profiles-2026-10-07.json";
+
 export const WHEEL_FOOTBALL_GM_CAP = 150_000_000;
+
+export type FootballGmDevelopmentProfile = (typeof profileAuthority.profiles)[number];
+const developmentProfiles = new Map(profileAuthority.profiles.map((profile) => [profile.id, profile]));
+export const FOOTBALL_GM_DEVELOPMENT_PROFILE_COUNT = profileAuthority.profileCount;
+
+/** Identity-bound authored calibration; synthetic grade tests retain the old fallback. */
+export function footballGmDevelopmentProfile(playerId: string): FootballGmDevelopmentProfile | null {
+  return developmentProfiles.get(playerId) ?? null;
+}
 
 export const WHEEL_FOOTBALL_GM_ROSTER_SLOTS = [
   "QB",
@@ -123,6 +134,58 @@ function developmentRoll(seed: string, playerId: string, step: number, salt: str
   return ((hash ^ (hash >>> 16)) >>> 0) / 0x1_0000_0000;
 }
 
+/**
+ * Y1 -> Y2 uses the authored player odds unchanged. Y2 -> Y3 uses the same
+ * identity profile, adjusted for realized Y2 improvement, available rating
+ * headroom, and age. The residual outcome is steady.
+ */
+export function footballGmDevelopmentOdds(input: {
+  playerId: string;
+  step: 0 | 1;
+  grade: number;
+  originalGrade: number;
+  age: number;
+  position: WheelFootballGmMarketPosition;
+}) {
+  const profile = footballGmDevelopmentProfile(input.playerId);
+  if (!profile) return null;
+  if (input.step === 0) {
+    return {
+      breakoutPct: profile.breakoutPct,
+      improvePct: profile.improvePct,
+      declinePct: profile.declinePct,
+      steadyPct: 100 - profile.breakoutPct - profile.improvePct - profile.declinePct,
+    };
+  }
+
+  const headroom = Math.max(0, 99 - clamp(input.grade, 70, 99));
+  const priorGain = input.grade - input.originalGrade;
+  // A year-two 87 -> 93 breakout shouldn't repeat at original odds.
+  // A disappointing year still permits a comeback, not a guaranteed bust.
+  const repeatBreakoutFactor = clamp(1 - Math.max(0, priorGain - 2) / 9, 0.35, 1);
+  const breakoutPct = profile.breakoutPct * clamp(headroom / 10, 0.08, 1) * repeatBreakoutFactor;
+  const improvePct = profile.improvePct * clamp(headroom / 7, 0.2, 1)
+    + (priorGain <= -3 ? 3 : 0);
+
+  const agingThreshold = input.position === "QB" ? 34
+    : input.position === "RB" ? 28
+      : input.position === "WR" ? 30
+        : input.position === "FLEX" || input.position === "DL" ? 31 : 30;
+  const agingPressure = input.age >= agingThreshold + 3 ? 10
+    : input.age >= agingThreshold ? 6 : 0;
+  const declinePct = clamp(
+    profile.declinePct + agingPressure + (priorGain <= -4 ? 2 : 0),
+    0,
+    Math.max(0, 100 - breakoutPct - improvePct),
+  );
+  return {
+    breakoutPct,
+    improvePct,
+    declinePct,
+    steadyPct: Math.max(0, 100 - breakoutPct - improvePct - declinePct),
+  };
+}
+
 function developmentDelta(input: {
   seed: string;
   playerId: string;
@@ -133,16 +196,47 @@ function developmentDelta(input: {
   draftYear: number | null;
   draftOverall: number | null;
   expectedDelta: number;
+  originalGrade: number;
 }) {
   const { age, grade, seed, playerId, step } = input;
+  const profile = footballGmDevelopmentProfile(playerId);
+  const sharedIdentity = profile?.name === "Travis Hunter"
+    ? `${profile.team}:travishunter` : playerId;
+  const surprise = developmentRoll(seed, sharedIdentity, step, "outcome");
+  const magnitude = developmentRoll(seed, sharedIdentity, step, "magnitude");
+
+  if (profile) {
+    // Each year's separate seeded roll is weighted by its resolved odds.
+    const odds = footballGmDevelopmentOdds({
+      playerId, step, grade, originalGrade: input.originalGrade,
+      age, position: input.position,
+    })!;
+    const breakout = odds.breakoutPct / 100;
+    const improve = odds.improvePct / 100;
+    const decline = odds.declinePct / 100;
+    const up = profile.maxAnnualGain;
+    const down = profile.maxAnnualLoss;
+    let delta: number;
+    if (surprise < breakout) {
+      delta = Math.min(up, Math.max(0, input.expectedDelta * 0.4) + up * (0.55 + magnitude * 0.45));
+    } else if (surprise < breakout + improve) {
+      delta = Math.min(up * 0.6, Math.max(-0.1, input.expectedDelta * 0.2) + 0.35 + magnitude * Math.min(2.4, up * 0.48));
+    } else if (surprise < 1 - decline) {
+      delta = input.expectedDelta * 0.22 + (magnitude - 0.5) * Math.min(1.3, up * 0.35);
+    } else {
+      delta = Math.max(-down, Math.min(0, input.expectedDelta * 0.2) - (0.35 + magnitude * (down - 0.35)));
+    }
+    return Math.round(clamp(delta, -down, up) * 100) / 100;
+  }
+
+  // Compatibility only for synthetic fixtures not present in the audited
+  // player pool. Every live player is required to have a profile by tests.
   const recentProspect = age <= 25
     && (input.draftYear ?? 0) >= 2023
     && (input.draftOverall ?? 999) <= 64;
   const primeYoung = age <= 26 && grade < 92;
   const establishedElite = grade >= 93 && age < (input.position === "QB" ? 35 : 31);
   const aging = age >= (input.position === "QB" ? 34 : input.position === "RB" ? 28 : 31);
-  const surprise = developmentRoll(seed, playerId, step, "outcome");
-  const magnitude = developmentRoll(seed, playerId, step, "magnitude");
   const breakoutChance = establishedElite ? 0.02 : recentProspect ? 0.22 : primeYoung ? 0.11 : 0.04;
   const improvingChance = establishedElite ? 0.15 : primeYoung ? 0.37 : aging ? 0.09 : 0.21;
   const declineChance = establishedElite ? 0.08 : recentProspect ? 0.18 : aging ? 0.43 : 0.27;
@@ -156,8 +250,6 @@ function developmentDelta(input: {
   } else {
     delta = Math.min(0, input.expectedDelta * 0.4) - (0.9 + magnitude * (aging ? 3.2 : 3.5));
   }
-  // An established prime superstar has much less collapse risk than a
-  // developing/aging player. Old stars are not artificially invulnerable.
   if (establishedElite) delta = clamp(delta, -1.4, 2);
   if (grade >= 95 && delta > 0) delta *= 0.5;
   if (step === 1 && grade >= 92 && delta > 2) delta = 2 + (delta - 2) * 0.3;
@@ -304,6 +396,7 @@ export function projectWheelFootballGmGrade(input: {
         draftYear: input.draftYear ?? null,
         draftOverall: input.draftOverall ?? null,
         expectedDelta,
+        originalGrade: input.currentGrade,
       })
       : expectedDelta;
   }
@@ -374,8 +467,10 @@ export function projectWheelFootballGmExtensionApy(input: {
   const market = interpolateMarketApy(input.position, yearTwoGrade);
   // Market interest varies independently from development, but remains tied to
   // the player's realized grade and is fixed across the two future seasons.
+  const profile = input.playerId ? footballGmDevelopmentProfile(input.playerId) : null;
+  const spread = (profile?.marketVariancePct ?? 8) / 100;
   const marketVariance = input.seed?.endsWith(FOOTBALL_GM_DEVELOPMENT_SEED_TAG) && input.playerId
-    ? 0.92 + developmentRoll(input.seed, input.playerId, 0, "market") * 0.16
+    ? 1 - spread + developmentRoll(input.seed, input.playerId, 0, "market") * spread * 2
     : 1;
   return roundToHalfMillion(market * veteranMarketFactor(input.position, input.age + 1) * marketVariance);
 }
