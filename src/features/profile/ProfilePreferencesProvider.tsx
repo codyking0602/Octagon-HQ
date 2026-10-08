@@ -47,6 +47,7 @@ export function ProfilePreferencesProvider({
   const profileId = identity.profile?.id ?? null;
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;
+  const lastRefreshAtRef = useRef(0);
   const [repository] = useState<ProfilePreferencesRepository | null>(() => (
     suppliedRepository === undefined
       ? createProfilePreferencesRepository()
@@ -81,20 +82,29 @@ export function ProfilePreferencesProvider({
       return;
     }
 
+    lastRefreshAtRef.current = Date.now();
     setLoading(true);
     try {
-      const [favorite, avatar, team] = await Promise.all([
-        repository.loadFavoriteFighter(),
-        repository.loadAvatarPhoto ? repository.loadAvatarPhoto() : Promise.resolve(null),
-        repository.loadFootballTeam ? repository.loadFootballTeam() : Promise.resolve(null),
-      ]);
+      // Production uses one RPC. Keep injected mock repositories compatible.
+      const snapshot = repository.loadSnapshot
+        ? await repository.loadSnapshot()
+        : await Promise.all([
+          repository.loadFavoriteFighter(),
+          repository.loadAvatarPhoto ? repository.loadAvatarPhoto() : Promise.resolve(null),
+          repository.loadFootballTeam ? repository.loadFootballTeam() : Promise.resolve(null),
+        ]).then(([favoriteFighterSlug, avatarPhotoData, footballTeam]) => ({
+          favoriteFighterSlug,
+          avatarPhotoData,
+          footballTeam,
+        }));
       if (profileIdRef.current !== expectedProfileId) return;
-      setFavoriteFighterSlug(favorite);
-      setAvatarPhotoData(avatar);
-      setFootballTeamValue(team);
+      setFavoriteFighterSlug(snapshot.favoriteFighterSlug);
+      setAvatarPhotoData(snapshot.avatarPhotoData);
+      setFootballTeamValue(snapshot.footballTeam);
       setError("");
     } catch (nextError) {
       if (profileIdRef.current !== expectedProfileId) return;
+      lastRefreshAtRef.current = 0; // Retry on the next foreground event.
       setError(readableError(nextError));
     } finally {
       if (profileIdRef.current === expectedProfileId) setLoading(false);
@@ -102,6 +112,7 @@ export function ProfilePreferencesProvider({
   }, [profileId, repository]);
 
   useEffect(() => {
+    lastRefreshAtRef.current = 0;
     setSaving(false);
     setSavingAvatar(false);
     setSavingFootballTeam(false);
@@ -110,15 +121,17 @@ export function ProfilePreferencesProvider({
 
   useEffect(() => {
     if (!profileId || !repository) return undefined;
-    const onFocus = () => void refresh();
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") void refresh();
+    // Don't redownload the full base64 avatar for quick app switches.
+    const refreshIfStale = () => {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - lastRefreshAtRef.current < 10 * 60_000) return;
+      void refresh();
     };
-    window.addEventListener("focus", onFocus);
-    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("focus", refreshIfStale);
+    document.addEventListener("visibilitychange", refreshIfStale);
     return () => {
-      window.removeEventListener("focus", onFocus);
-      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("focus", refreshIfStale);
+      document.removeEventListener("visibilitychange", refreshIfStale);
     };
   }, [profileId, refresh, repository]);
 
