@@ -9,6 +9,10 @@ if (ids.length !== 25 || new Set(ids).size !== 25) throw new Error("AP Top 25 so
 
 const normalize = (x) => String(x||"").normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
 const groups = ["QB","RB","WR","TE","Flex","Front Seven","Secondary"];
+const officialRows = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-official-class-overrides.json","utf8")).rows;
+const officialById = new Map(officialRows.map((row) => [row.id,row]));
+if (officialById.size !== officialRows.length) throw new Error("Duplicate official classification overrides");
+
 const classLabels = {fr:"FR",freshman:"FR",so:"SO",sophomore:"SO",jr:"JR",junior:"JR",sr:"SR",senior:"SR","5th":"5TH",graduate:"GR",grad:"GR",gr:"GR"};
 function classification(item) {
   const exp = item.experience && typeof item.experience === "object" ? item.experience : {};
@@ -46,12 +50,14 @@ for (const id of ids) {
     const matching=athletes.filter(x=>x.key===normalize(player.name));
     const single=matching.length===1?matching[0]:null;
     const cls=single?classification(single.item):{label:null,redshirt:null,raw:null};
+    const official=officialById.get(player.id);
     out.push({...player,
-      classification:cls.label,redshirt:cls.redshirt,sourceClass:cls.raw,
+      classification:official?.classification || cls.label,redshirt:official?.redshirt ?? cls.redshirt,
+      sourceClass:official?.classification || cls.raw,
       espnAthleteId:single?String(single.item.id||""):null,
-      matchStatus:single?"exact":matching.length>1?"ambiguous":"unmatched",
-      sourceUrl:roster.url,
-      confidence:single&&cls.label?"roster-classification":"unverified",
+      matchStatus:official?"official-school-roster":single?"exact":matching.length>1?"ambiguous":"unmatched",
+      sourceUrl:official?.sourceUrl || roster.url,
+      confidence:official?"official-roster-2026":single&&cls.label?"roster-classification":"unverified",
       // Class alone cannot certify remaining seasons after redshirts, exceptions, or transfers.
       remainingEligibility:null,earliestDraftYear:null,draftEligible2027:null,
     });
