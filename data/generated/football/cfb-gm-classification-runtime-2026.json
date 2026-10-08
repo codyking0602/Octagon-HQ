@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "source": "gm-2026-classification-evidence.json",
   "population": 468,
   "classified": 468,
@@ -57,8 +57,22 @@
       "id": "alabama|keelonrussell",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 31,
+          "steady": 49,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.08
+      }
     },
     {
       "id": "alabama|keonsabb",
@@ -581,9 +595,23 @@
     {
       "id": "georgia|gunnerstockton",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 17,
+          "steady": 52,
+          "decline": 26,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0
+      }
     },
     {
       "id": "georgia|isiahcanion",
@@ -1121,8 +1149,22 @@
       "id": "lsu|samleavitt",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 28,
+          "steady": 47,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.77,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "lsu|stacygage",
@@ -1281,9 +1323,23 @@
     {
       "id": "miami|mohamedtoure",
       "classification": "8TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2022,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 1,
+          "improve": 9,
+          "steady": 50,
+          "decline": 40,
+          "maxGain": 1,
+          "maxLoss": 7,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.05,
+        "portalExitProbability": 0
+      }
     },
     {
       "id": "miami|omarthornton",
@@ -1625,8 +1681,22 @@
       "id": "notre-dame|cjcarr",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 25,
+          "steady": 51,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.65,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "notre-dame|cooperflanagan",
@@ -1793,8 +1863,22 @@
       "id": "ohio-state|jeremiahsmith",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 18,
+          "steady": 62,
+          "decline": 16,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.98,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ohio-state|jermainemathewsjr",
@@ -2157,15 +2241,43 @@
       "id": "oregon|dakorienmoore",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 15,
+          "improve": 39,
+          "steady": 35,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.1
+      }
     },
     {
       "id": "oregon|dantemoore",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 27,
+          "steady": 49,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.86,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "oregon|dierrehilljr",
@@ -2645,10 +2757,24 @@
     },
     {
       "id": "texas|archmanning",
-      "classification": "JR",
+      "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 49,
+          "decline": 18,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.06
+      }
     },
     {
       "id": "texas|bomascoe",
@@ -2661,15 +2787,49 @@
       "id": "texas|camcoleman",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 32,
+          "steady": 43,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.1,
+        "nil": {
+          "year1": 3000000,
+          "year2Baseline": 3300000,
+          "confidence": "low",
+          "basis": "reported-transfer-market-context-game-estimate"
+        }
+      }
     },
     {
       "id": "texas|colinsimmons",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 12,
+          "steady": 67,
+          "decline": 18,
+          "maxGain": 1,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.98,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "texas|emmettmosleyv",
@@ -2752,8 +2912,22 @@
       "id": "texas|ryanwingo",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 11,
+          "improve": 35,
+          "steady": 43,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.56,
+        "portalExitProbability": 0.09
+      }
     },
     {
       "id": "texas|spencershannon",
