@@ -103,7 +103,7 @@ function record(value: ChallengeJson | undefined): { [key: string]: ChallengeJso
 
 function challengeSeed(value: ChallengeJson | undefined) {
   const row = record(value);
-  return row?.version === FOOTBALL_GM_VERSION && typeof row.seed === "string"
+  return [FOOTBALL_GM_VERSION, "football-gm-v9-grade-driven-playoffs"].includes(String(row?.version)) && typeof row?.seed === "string"
     ? row.seed
     : null;
 }
@@ -153,6 +153,7 @@ function parsePersistedRun(value: unknown) {
   if (!value || Array.isArray(value) || typeof value !== "object") return null;
   const parsed = value as Partial<PersistedRun>;
   const compatibleVersion = parsed.version === FOOTBALL_GM_VERSION
+    || parsed.version === "football-gm-v9-grade-driven-playoffs"
     || parsed.version === "football-gm-v8-head-to-head";
   if (
     !compatibleVersion
