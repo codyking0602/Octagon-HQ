@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type PropsWithChildren,
 } from "react";
@@ -327,6 +328,15 @@ export function ChallengeProvider({
   const [preferredRecipientName, setPreferredRecipientName] = useState("");
 
   const activeProfile = identity.profile;
+  const activeProfileIdRef = useRef<string | null>(activeProfile?.id ?? null);
+  activeProfileIdRef.current = activeProfile?.id ?? null;
+  const inFlightProfileIdRef = useRef<string | null>(null);
+  const lastRefreshAtRef = useRef(0);
+  const hasPendingChallenges = rows.some(
+    (challenge) => !challenge.completedAt
+      && !challenge.declinedAt
+      && new Date(challenge.expiresAt).getTime() > Date.now(),
+  );
   const configured = Boolean(repository);
   const enabled = Boolean(repository && activeProfile);
   const profiles = useMemo(() => {
@@ -349,21 +359,32 @@ export function ChallengeProvider({
       setCounterparts([]);
       return;
     }
+    const expectedProfileId = activeProfile.id;
+    if (inFlightProfileIdRef.current === expectedProfileId) return;
+    inFlightProfileIdRef.current = expectedProfileId;
+    lastRefreshAtRef.current = Date.now();
 
     setLoading(true);
     try {
       const snapshot = await repository.load();
+      if (activeProfileIdRef.current !== expectedProfileId) return;
       setRows(snapshot.challenges);
       setCounterparts(snapshot.profiles);
       setError("");
     } catch (nextError) {
+      if (activeProfileIdRef.current !== expectedProfileId) return;
+      lastRefreshAtRef.current = 0;
       setError(challengeRepositoryError(nextError));
     } finally {
-      setLoading(false);
+      if (inFlightProfileIdRef.current === expectedProfileId) {
+        inFlightProfileIdRef.current = null;
+        if (activeProfileIdRef.current === expectedProfileId) setLoading(false);
+      }
     }
   }, [activeProfile, repository]);
 
   useEffect(() => {
+    lastRefreshAtRef.current = 0;
     setComposer(null);
     setResultCode(null);
     setPreferredRecipientName("");
@@ -390,19 +411,25 @@ export function ChallengeProvider({
 
   useEffect(() => {
     if (!enabled) return undefined;
-    const interval = window.setInterval(() => void refresh(), 15_000);
-    const onFocus = () => void refresh();
-    const onVisibility = () => {
+    // Do not poll hidden tabs. Active challenges remain responsive; idle
+    // accounts no longer query the entire challenge list every 15 seconds.
+    const poll = () => {
       if (document.visibilityState === "visible") void refresh();
     };
-    window.addEventListener("focus", onFocus);
-    document.addEventListener("visibilitychange", onVisibility);
+    const interval = window.setInterval(poll, hasPendingChallenges ? 30_000 : 120_000);
+    const refreshOnForeground = () => {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - lastRefreshAtRef.current < 15_000) return;
+      void refresh();
+    };
+    window.addEventListener("focus", refreshOnForeground);
+    document.addEventListener("visibilitychange", refreshOnForeground);
     return () => {
       window.clearInterval(interval);
-      window.removeEventListener("focus", onFocus);
-      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("focus", refreshOnForeground);
+      document.removeEventListener("visibilitychange", refreshOnForeground);
     };
-  }, [enabled, refresh]);
+  }, [enabled, hasPendingChallenges, refresh]);
 
   useEffect(() => {
     if (!composer && !resultCode) return undefined;
