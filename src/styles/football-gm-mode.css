@@ -3751,3 +3751,62 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   .football-gm__development-status { font-size: 8px; }
   .football-gm__development-name > strong, .football-gm__development-salary > strong { font-size: 10px; }
 }
+
+
+/* CFB GM owner-preview parity: reuse NFL components without leaking into NFL. */
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-budget-modes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-budget-modes > button {
+  min-width: 0;
+  min-height: 46px;
+  padding: 9px 6px;
+  border: 1px solid rgba(150,191,225,.24);
+  border-radius: 11px;
+  background: rgba(12,28,43,.65);
+  color: #d0e3ee;
+  font-size: clamp(9px, 2.6vw, 12px);
+  font-weight: 900;
+  cursor: pointer;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-budget-modes > button.is-selected {
+  border-color: #83c9fa;
+  background: linear-gradient(135deg, #154d77, #1e709d);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.16);
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__picker .football-gm__position-tabs {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__position-tabs button {
+  padding-inline: 3px;
+  font-size: clamp(8px, 1.9vw, 11px);
+  white-space: nowrap;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article:not(.is-filled) {
+  min-height: 36px;
+  padding-block: 4px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article > small {
+  white-space: nowrap;
+  font-size: 10px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article:not(.is-filled) .football-gm__open {
+  justify-self: start;
+  font-size: 10px;
+}
+@media (max-width: 420px) {
+  .football-gm-page[data-cfb-gm="true"] .football-gm__picker .football-gm__position-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article {
+    grid-template-columns: 29px minmax(0, 1fr) auto;
+    gap: 6px;
+    padding-inline: 8px;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article > small {
+    font-size: 9px;
+  }
+}

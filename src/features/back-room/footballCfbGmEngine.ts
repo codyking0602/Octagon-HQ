@@ -13,7 +13,7 @@ export const CFB_GM_BUDGETS: Readonly<Record<CfbGmBudget, number>> = {
 };
 export const CFB_GM_SLOT_LABELS: Readonly<Record<CfbGmSlot, string>> = {
   QB: "QB", RB: "RB", WR: "WR", FLEX: "FLEX",
-  FRONT_7_A: "FRONT 7", FRONT_7_B: "FRONT 7", SECONDARY: "SECONDARY",
+  FRONT_7_A: "F7-1", FRONT_7_B: "F7-2", SECONDARY: "SECONDARY",
 };
 
 type GradeFamily = "QB" | "RB" | "WR" | "TE" | "Front Seven" | "Secondary";
@@ -287,7 +287,7 @@ export function cfbGmContinuity(run: CfbGmRun) {
   return { retained: initial, adjustment: (initial - 5) * 0.45 };
 }
 const weights: Readonly<Record<CfbGmSlot, number>> = {
-  QB: 0.26, RB: 0.10, WR: 0.15, FLEX: 0.09, FRONT_7_A: 0.15, FRONT_7_B: 0.10, SECONDARY: 0.15,
+  QB: 0.26, RB: 0.08, WR: 0.13, FLEX: 0.08, FRONT_7_A: 0.15, FRONT_7_B: 0.15, SECONDARY: 0.15,
 };
 export function cfbGmTeamGrade(roster: readonly CfbGmRosterEntry[]) {
   return Math.round(roster.reduce((sum, row) => sum + (cfbGmPlayer(row.playerId)?.currentGrade ?? 0) * weights[row.slot], 0) * 10) / 10;
