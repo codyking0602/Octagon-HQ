@@ -17,7 +17,6 @@ export type CfbGmDevResult={
   before:number; after:number; delta:number; outcome:CfbGmDevOutcome;
   profile:CfbGmDevProfile;
 };
-const normalize=(name:string)=>name.normalize("NFKD").toLowerCase().replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
 const hash=(value:string)=>{let x=2166136261;for(let i=0;i<value.length;i++){x^=value.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0};
 const uniform=(token:string)=>hash(token)/4294967296;
 const classes:Readonly<Record<Exclude<CfbGmClass,null>,readonly [number,number,number,number,number,number]>>={
