@@ -6,6 +6,24 @@ This PR does **not** complete the requested 468 individual performance/NIL/eligi
 The 468-player source roster is preserved and still playable; **75 specific players** have sourced individual development/departure calibration records, while **393** use clearly marked provisional development and/or market priors. These fallbacks must never be called researched.
 The existing Wheel of Football HQ grades are unchanged. There are **no new HQ grade proposals** in this isolated change.
 
+## Measured calibration distribution (partial population)
+
+These are computed from the ledger for the **75 individually researched** development profiles, **not** representative league-wide estimates for the remaining 393 generic-prior cases.
+
+| Primary group | Total CFB GM roster | Individual profiles completed |
+| --- | ---: | ---: |
+| QB | 25 | 16 |
+| RB | 57 | 10 |
+| WR | 86 | 13 |
+| TE | 28 | 4 |
+| Front Seven | 145 | 18 |
+| Secondary | 127 | 14 |
+| **Total** | **468** | **75** |
+
+- **Researched cohort development average:** breakout 8.2%, improve 26.3%, steady 49.5%, decline 16.0%; max annual gain 3.9 grade points and loss 5.1 grade points before HQ ceiling clipping. Distribution is intentionally skewed because obvious special cases were researched first, not a population benchmark.
+- **NIL:** among the 48 On3 matched names, Year 1 market estimate range **$1.00m–$6.50m**, median **$1.80m**, mean **$2.12m**. These are ranked-source sampled stars, not full 468-player NIL medians, and cannot substitute for future research into the 420 unmatched athletes.
+- **Eligibility:** 58 researched entries are considered eligible for the 2027 NFL Draft, 17 not eligible; **14** researched remaining-eligibility fields have explicit 2026 terminal/return assessment, 454 remain unknown. All 468 have a 2026 roster classification (202 SR / 139 JR / 17 5TH / 80 SO / 22 FR / 3 6TH / 2 7TH / 2 3RD / 1 8TH).
+
 ## Evidence inventory
 
 - 468/468 exact CFB GM ID/classification rows; 90 official school class overrides, including the correction of Arch Manning's 2026 official Texas **senior** designation.
