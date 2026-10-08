@@ -158,7 +158,7 @@ describe("The GM head-to-head presentation", () => {
     expect(page).toContain("savedOpponentSeasons");
     expect(page).toContain("savedHasDuplicateFinalist");
     expect(report).toContain("Original core");
-    expect(report).toContain("GM Score");
+    expect(report).toContain("Final GM score");
     expect(report).not.toContain("BEST ROSTER DECISION");
     expect(report).not.toContain("WHAT COST YOU");
     expect(report).not.toContain("THE OWNER'S VERDICT");
