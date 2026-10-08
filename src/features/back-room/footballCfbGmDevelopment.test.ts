@@ -42,6 +42,9 @@ describe("CFB GM college-stage development", () => {
     expect(cfbGmNextClass("JR")).toBe("SR");
     expect(cfbGmNextClass("6TH")).toBe("7TH");
     expect(cfbGmNextClass("7TH")).toBeNull();
+    expect(cfbGmNextClass("8TH")).toBeNull();
+    const veteran=cfbGmDevProfile("miami|mohamedtoure",82,"8TH");
+    expect(veteran.breakout+veteran.improve+veteran.steady+veteran.decline).toBe(100);
     expect(cfbGmNextClass(null)).toBeNull();
   });
 });
