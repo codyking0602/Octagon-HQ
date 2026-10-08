@@ -1,9 +1,10 @@
 import gradeProjection from "../../../data/generated/football/wheel-cfb-gm-grade-projection-2026-10-07.json";
 import { wheelFootballCfbPriorityForSchoolId } from "./wheelFootballCfbPriority";
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
-import { footballGmTeamOverall, footballGmOutcomeProbabilities } from "./footballGmStrategy";
+import { footballGmTeamOverall } from "./footballGmStrategy";
+import { cfbGmSimulateCollegeSeason, type CfbGmCollegeFinish } from "./footballCfbGmSimulation";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v1";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v2-cfp";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -49,8 +50,9 @@ export type CfbGmRun = {
   portalSpins: number;
   previousPortalSchool: string | null;
 };
-export type CfbGmFinish = "Missed CFP" | "First Round" | "Quarterfinal" | "Semifinal" | "National Runner-up" | "National Champion";
-export type CfbGmSeason = { year: 1 | 2; teamGrade: number; overall: number; finish: CfbGmFinish; continuity: number; winOdds: number };
+export type CfbGmFinish = CfbGmCollegeFinish;
+export type CfbGmSeason = { year: 1 | 2; teamGrade: number; overall: number; finish: CfbGmFinish; continuity: number; winOdds: number;
+  wins:number; losses:number; cfpSeed:number|null; nationalChampion:string; };
 export type CfbGmResult = { seasons: [CfbGmSeason, CfbGmSeason]; score: number; rosterManagement: number; resumeScore: number; retained: number; forcedDepartures: number; voluntaryDepartures: number };
 
 function normalize(value: string) {
@@ -250,8 +252,8 @@ export function cfbGmForcedDepartures(run: CfbGmRun) {
   // non-graduating player out of the portal. It does not stop graduation
   // or an NFL decision and never changes the player's audited HQ grade.
   const winningBoost: Record<CfbGmFinish, number> = {
-    "Missed CFP": 0, "First Round": 0.025, Quarterfinal: 0.04,
-    Semifinal: 0.055, "National Runner-up": 0.07, "National Champion": 0.08,
+    "Missed CFP": 0, "Lost First Round": 0.025, "Lost Quarterfinal": 0.04,
+    "Lost Semifinal": 0.055, "National Runner-up": 0.07, "National Champion": 0.08,
   };
   const loyaltyBoost = winningBoost[seasonFinish];
   return run.roster.flatMap<CfbGmDeparture>((row) => {
@@ -292,21 +294,14 @@ const weights: Readonly<Record<CfbGmSlot, number>> = {
 export function cfbGmTeamGrade(roster: readonly CfbGmRosterEntry[]) {
   return Math.round(roster.reduce((sum, row) => sum + (cfbGmPlayer(row.playerId)?.currentGrade ?? 0) * weights[row.slot], 0) * 10) / 10;
 }
-const finishes: readonly CfbGmFinish[] = ["Missed CFP", "First Round", "Quarterfinal", "Semifinal", "National Runner-up", "National Champion"];
 export function cfbGmSeason(run: CfbGmRun, year: 1 | 2): CfbGmSeason {
   const roster = year === 1 ? run.roster : run.finalRoster;
   const teamGrade = cfbGmTeamGrade(roster);
   const continuity = year === 1 ? 0 : cfbGmContinuity(run).adjustment;
-  const probabilities = footballGmOutcomeProbabilities(teamGrade + continuity);
-  const outcomeKeys = ["Missed Playoffs", "Wild Card", "Divisional", "Conference Championship", "Super Bowl Loss", "Champion"] as const;
-  const roll = rate("cfb-gm-season:" + run.seed + ":" + year);
-  let outcome = 5, progress = 0;
-  for (let i = 0; i < outcomeKeys.length; i += 1) {
-    progress += probabilities[outcomeKeys[i]!];
-    if (roll < progress) { outcome = i; break; }
-  }
-  return {year, teamGrade, overall: footballGmTeamOverall(teamGrade), finish: finishes[outcome]!,
-    continuity, winOdds: Math.round(probabilities.Champion * 1000) / 10};
+  const season = cfbGmSimulateCollegeSeason(run.seed, year, teamGrade + continuity);
+  return {year, teamGrade, overall: footballGmTeamOverall(teamGrade), finish: season.finish,
+    continuity, winOdds: season.winOdds, wins:season.wins, losses:season.losses,
+    cfpSeed:season.cfpSeed, nationalChampion:season.champion};
 }
 export function cfbGmFinalResult(run: CfbGmRun): CfbGmResult {
   const seasons: [CfbGmSeason, CfbGmSeason] = [cfbGmSeason(run, 1), cfbGmSeason(run, 2)];
@@ -317,7 +312,10 @@ export function cfbGmFinalResult(run: CfbGmRun): CfbGmResult {
   // influence continuity/competitive outcomes, but are not player choice mistakes.
   const gradeScore = ((seasons[0].teamGrade + seasons[1].teamGrade) / 2 - 65) / 33 * 100;
   const rosterManagement = Math.min(100, Math.max(45, gradeScore + (retained + forced) * 0.35 - voluntary * 1.5));
-  const resume = { "Missed CFP": 79, "First Round": 83, "Quarterfinal": 87, "Semifinal": 92, "National Runner-up": 96, "National Champion": 100 };
+  const resume: Record<CfbGmFinish, number> = {
+    "Missed CFP": 79, "Lost First Round": 83, "Lost Quarterfinal": 87,
+    "Lost Semifinal": 92, "National Runner-up": 96, "National Champion": 100,
+  };
   const resumeScore = (resume[seasons[0].finish] + resume[seasons[1].finish]) / 2;
   return {seasons, score: Math.round((rosterManagement * 0.55 + resumeScore * 0.45) * 10) / 10,
     rosterManagement: Math.round(rosterManagement * 10) / 10, resumeScore, retained,
