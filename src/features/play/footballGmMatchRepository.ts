@@ -194,6 +194,11 @@ export function createFootballGmMatchRepository(
           if (legacy) {
             shared[activeParticipant.id]![0] = legacy[0];
             shared[other.id]![0] = legacy[1];
+          } else if (oldMine && oldOther) {
+            // Existing legal Year 1 finishes were already locked by the backend.
+            // Never rewrite them merely because the new shared model ships later.
+            shared[activeParticipant.id]![0] = oldMine;
+            shared[other.id]![0] = oldOther;
           }
           lockedRunState = {
             ...resolved,
