@@ -6,7 +6,7 @@
   "sourceGradeAuthority": "data/generated/football/wheel-nfl-*-grades-2026-10-03.json",
   "reviewCount": 594,
   "followupReviewCount": 417,
-  "note": "Review decisions are documented here, outside the player-facing runtime bundle. 177 original priority calibrations were preserved, 417 formerly auto-cohort players reclassified and recalibrated. These are game-design projections tied to already-reviewed HQ grades; not 594 independent film studies.",
+  "note": "Initial 594-player review retained audited present-ability HQ grades. Subsequently the owner explicitly approved seven WR current-grade corrections on 2026-10-08; the corresponding grade authority, review ledger and profile snapshots are updated together. Development odds were not changed. Classification remains gameplay research, not 594 independent film reports.",
   "reviews": [
     {
       "id": "ARI|Front Seven|dantestills",
@@ -1297,17 +1297,23 @@
       "name": "Xavier Legette",
       "team": "CAR",
       "family": "WR",
-      "gradeAtReview": 80,
+      "gradeAtReview": 78,
       "ageAtReview": 25,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "volatile",
-      "reviewRationale": "Xavier Legette: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 80 (medium confidence), age 25, WR, pick #32.",
+      "reviewRationale": "Xavier Legette: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (medium confidence), age 25, WR, pick #32. Owner-approved current-grade adjustment 80→78 on 2026-10-08; development odds unchanged. Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
-        "reason": "Physical traits and vertical ability remain useful, but route/production consistency has not established more than a low-end starter level.",
-        "asOf": "2026-10-03"
+        "reason": "Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty.",
+        "asOf": "2026-10-08"
+      },
+      "ownerApprovedGradeChange": {
+        "old": 80,
+        "current": 78,
+        "approvedOn": "2026-10-08",
+        "reason": "Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty."
       }
     },
     {
@@ -1533,17 +1539,23 @@
       "name": "Kalif Raymond",
       "team": "CHI",
       "family": "WR",
-      "gradeAtReview": 81,
+      "gradeAtReview": 79,
       "ageAtReview": 32,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "veteran",
-      "reviewRationale": "Kalif Raymond: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 81 (high confidence), age 32, WR, draft slot not recorded.",
+      "reviewRationale": "Kalif Raymond: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 79 (high confidence), age 32, WR, draft slot not recorded. Owner-approved current-grade adjustment 81→79 on 2026-10-08; development odds unchanged. Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
-        "reason": "Current 2026 efficiency is excellent, but his established NFL role remains more specialist/WR3 than quality primary starter.",
-        "asOf": "2026-10-03"
+        "reason": "Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments.",
+        "asOf": "2026-10-08"
+      },
+      "ownerApprovedGradeChange": {
+        "old": 81,
+        "current": 79,
+        "approvedOn": "2026-10-08",
+        "reason": "Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments."
       }
     },
     {
@@ -1564,13 +1576,19 @@
       "name": "Rome Odunze",
       "team": "CHI",
       "family": "WR",
-      "gradeAtReview": 88,
+      "gradeAtReview": 87,
       "ageAtReview": 24,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Rome Odunze; audited HQ grade 88 and age 24 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Rome Odunze; audited HQ grade 87 and age 24 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 88→87 on 2026-10-08; development odds unchanged. Size and catch-point tools remain strong, but demonstrated target-winning and efficiency across available 2025-26 NFL games are less established than proven 88-grade peers; no deduction for missed games themselves.",
+      "ownerApprovedGradeChange": {
+        "old": 88,
+        "current": 87,
+        "approvedOn": "2026-10-08",
+        "reason": "Size and catch-point tools remain strong, but demonstrated target-winning and efficiency across available 2025-26 NFL games are less established than proven 88-grade peers; no deduction for missed games themselves."
+      }
     },
     {
       "id": "CIN|Front Seven|barrettcarter",
@@ -3622,17 +3640,23 @@
       "name": "Alec Pierce",
       "team": "IND",
       "family": "WR",
-      "gradeAtReview": 84,
+      "gradeAtReview": 85,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Alec Pierce: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 26, WR, pick #53.",
+      "reviewRationale": "Alec Pierce: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 26, WR, pick #53. Owner-approved current-grade adjustment 84→85 on 2026-10-08; development odds unchanged. Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
-        "reason": "One of the league's best true vertical threats by 2025 yards per catch, but route/target breadth is narrower than higher-tier complete receivers.",
-        "asOf": "2026-10-03"
+        "reason": "Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile.",
+        "asOf": "2026-10-08"
+      },
+      "ownerApprovedGradeChange": {
+        "old": 84,
+        "current": 85,
+        "approvedOn": "2026-10-08",
+        "reason": "Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile."
       }
     },
     {
@@ -4198,13 +4222,19 @@
       "name": "Xavier Worthy",
       "team": "KC",
       "family": "WR",
-      "gradeAtReview": 85,
+      "gradeAtReview": 83,
       "ageAtReview": 23,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Xavier Worthy; audited HQ grade 85 and age 23 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Xavier Worthy; audited HQ grade 83 and age 23 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 85→83 on 2026-10-08; development odds unchanged. Exceptional vertical speed and designed-touch explosiveness, but more limited independent target earning and complete-route efficiency than surrounding 85-grade receivers.",
+      "ownerApprovedGradeChange": {
+        "old": 85,
+        "current": 83,
+        "approvedOn": "2026-10-08",
+        "reason": "Exceptional vertical speed and designed-touch explosiveness, but more limited independent target earning and complete-route efficiency than surrounding 85-grade receivers."
+      }
     },
     {
       "id": "LAC|Front Seven|daiyanhenley",
@@ -4442,13 +4472,19 @@
       "name": "Quentin Johnston",
       "team": "LAC",
       "family": "WR",
-      "gradeAtReview": 83,
+      "gradeAtReview": 82,
       "ageAtReview": 25,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Quentin Johnston; audited HQ grade 83 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Quentin Johnston; audited HQ grade 82 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 83→82 on 2026-10-08; development odds unchanged. Big plays and improved finishing coexist with uneven separation, target command and receiving consistency; grade-82 secondary-starter comparables better capture demonstrated ability.",
+      "ownerApprovedGradeChange": {
+        "old": 83,
+        "current": 82,
+        "approvedOn": "2026-10-08",
+        "reason": "Big plays and improved finishing coexist with uneven separation, target command and receiving consistency; grade-82 secondary-starter comparables better capture demonstrated ability."
+      }
     },
     {
       "id": "LAC|WR|treharris",
@@ -5974,13 +6010,19 @@
       "name": "Chris Olave",
       "team": "NO",
       "family": "WR",
-      "gradeAtReview": 90,
+      "gradeAtReview": 91,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Chris Olave; audited HQ grade 90 and age 26 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
+      "reviewRationale": "Priority individual development profile already calibrated for Chris Olave; audited HQ grade 91 and age 26 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 90→91 on 2026-10-08; development odds unchanged. Consistent target command, route precision and receiving production across 2025 and the 2026 opening better match Drake London/Garrett Wilson grade-91 peers than the grade-90 band.",
+      "ownerApprovedGradeChange": {
+        "old": 90,
+        "current": 91,
+        "approvedOn": "2026-10-08",
+        "reason": "Consistent target command, route precision and receiving production across 2025 and the 2026 opening better match Drake London/Garrett Wilson grade-91 peers than the grade-90 band."
+      }
     },
     {
       "id": "NO|WR|devaughnvele",
@@ -8405,5 +8447,60 @@
       "reviewClass": "priority-individual",
       "reviewRationale": "Priority individual development profile already calibrated for Terry McLaurin; audited HQ grade 87 and age 31 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile."
     }
-  ]
+  ],
+  "ownerApprovedWrGradeChanges": {
+    "approvedOn": "2026-10-08",
+    "changes": [
+      {
+        "id": "CAR|WR|xavierlegette",
+        "team": "CAR",
+        "name": "Xavier Legette",
+        "from": 80,
+        "to": 78
+      },
+      {
+        "id": "KC|WR|xavierworthy",
+        "team": "KC",
+        "name": "Xavier Worthy",
+        "from": 85,
+        "to": 83
+      },
+      {
+        "id": "CHI|WR|kalifraymond",
+        "team": "CHI",
+        "name": "Kalif Raymond",
+        "from": 81,
+        "to": 79
+      },
+      {
+        "id": "NO|WR|chrisolave",
+        "team": "NO",
+        "name": "Chris Olave",
+        "from": 90,
+        "to": 91
+      },
+      {
+        "id": "IND|WR|alecpierce",
+        "team": "IND",
+        "name": "Alec Pierce",
+        "from": 84,
+        "to": 85
+      },
+      {
+        "id": "CHI|WR|romeodunze",
+        "team": "CHI",
+        "name": "Rome Odunze",
+        "from": 88,
+        "to": 87
+      },
+      {
+        "id": "LAC|WR|quentinjohnston",
+        "team": "LAC",
+        "name": "Quentin Johnston",
+        "from": 83,
+        "to": 82
+      }
+    ],
+    "priorAllOtherGradeValuesPreserved": true
+  }
 }
