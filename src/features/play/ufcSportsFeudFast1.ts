@@ -1214,7 +1214,9 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Mirko Cro Cop",
           "Quinton Jackson",
           "Sergei Pavlovich",
-          "Tai Tuivasa"
+          "Tai Tuivasa",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -1235,7 +1237,9 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Justin Gaethje",
           "Mirko Cro Cop",
           "Quinton Jackson",
-          "Sergei Pavlovich"
+          "Sergei Pavlovich",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -1256,7 +1260,9 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Mirko Cro Cop",
           "Quinton Jackson",
           "Sergei Pavlovich",
-          "Tai Tuivasa"
+          "Tai Tuivasa",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -1277,7 +1283,9 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Mirko Cro Cop",
           "Quinton Jackson",
           "Sergei Pavlovich",
-          "Tai Tuivasa"
+          "Tai Tuivasa",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       },
       {
@@ -1298,7 +1306,9 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Mirko Cro Cop",
           "Quinton Jackson",
           "Sergei Pavlovich",
-          "Tai Tuivasa"
+          "Tai Tuivasa",
+          "Josh Emmett",
+          "Michael Chandler"
         ]
       }
     ],
@@ -1384,7 +1394,9 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "aliases": [
           "Bam Bam"
         ]
-      }
+      },
+      "Josh Emmett",
+      "Michael Chandler"
     ]
   },
   {
@@ -1410,7 +1422,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Khabib Nurmagomedov",
           "Jim Miller",
           "Islam Makhachev",
-          "Fabricio Werdum"
+          "Fabricio Werdum",
+          "Gilbert Burns",
+          "Ronaldo Souza",
+          "Aljamain Sterling",
+          "Paul Craig"
         ]
       },
       {
@@ -1431,7 +1447,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Rodolfo Vieira",
           "Tony Ferguson",
           "Jim Miller",
-          "Royce Gracie"
+          "Royce Gracie",
+          "Gilbert Burns",
+          "Ronaldo Souza",
+          "Aljamain Sterling",
+          "Paul Craig"
         ]
       },
       {
@@ -1452,7 +1472,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Tony Ferguson",
           "Khabib Nurmagomedov",
           "Jim Miller",
-          "Royce Gracie"
+          "Royce Gracie",
+          "Gilbert Burns",
+          "Ronaldo Souza",
+          "Aljamain Sterling",
+          "Paul Craig"
         ]
       },
       {
@@ -1473,7 +1497,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Tony Ferguson",
           "Jim Miller",
           "Brian Ortega",
-          "Royce Gracie"
+          "Royce Gracie",
+          "Gilbert Burns",
+          "Ronaldo Souza",
+          "Aljamain Sterling",
+          "Paul Craig"
         ]
       },
       {
@@ -1494,7 +1522,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Khabib Nurmagomedov",
           "Jim Miller",
           "Islam Makhachev",
-          "Fabricio Werdum"
+          "Fabricio Werdum",
+          "Gilbert Burns",
+          "Ronaldo Souza",
+          "Aljamain Sterling",
+          "Paul Craig"
         ]
       }
     ],
@@ -1585,7 +1617,11 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "aliases": [
           "Werdum"
         ]
-      }
+      },
+      "Gilbert Burns",
+      "Ronaldo Souza",
+      "Aljamain Sterling",
+      "Paul Craig"
     ]
   },
   {
@@ -1611,7 +1647,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Frankie Edgar",
           "Josh Koscheck",
           "Jon Fitch",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev",
+          "Arman Tsarukyan",
+          "Belal Muhammad",
+          "Colby Covington",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1632,7 +1674,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Randy Couture",
           "Frankie Edgar",
           "Josh Koscheck",
-          "Jon Fitch"
+          "Jon Fitch",
+          "Khamzat Chimaev",
+          "Arman Tsarukyan",
+          "Belal Muhammad",
+          "Colby Covington",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1653,7 +1701,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Frankie Edgar",
           "Josh Koscheck",
           "Jon Fitch",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev",
+          "Arman Tsarukyan",
+          "Belal Muhammad",
+          "Colby Covington",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1674,7 +1728,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Chael Sonnen",
           "Frankie Edgar",
           "Josh Koscheck",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev",
+          "Arman Tsarukyan",
+          "Belal Muhammad",
+          "Colby Covington",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       },
       {
@@ -1695,7 +1755,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Frankie Edgar",
           "Josh Koscheck",
           "Jon Fitch",
-          "Chad Mendes"
+          "Chad Mendes",
+          "Khamzat Chimaev",
+          "Arman Tsarukyan",
+          "Belal Muhammad",
+          "Colby Covington",
+          "Bo Nickal",
+          "Sean Brady"
         ]
       }
     ],
@@ -1768,7 +1834,13 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
       "Frankie Edgar",
       "Josh Koscheck",
       "Jon Fitch",
-      "Chad Mendes"
+      "Chad Mendes",
+      "Khamzat Chimaev",
+      "Arman Tsarukyan",
+      "Belal Muhammad",
+      "Colby Covington",
+      "Bo Nickal",
+      "Sean Brady"
     ]
   },
   {
@@ -1794,7 +1866,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Alexander Volkanovski",
           "Justin Gaethje",
           "Petr Yan",
-          "Ilia Topuria"
+          "Ilia Topuria",
+          "Robert Whittaker",
+          "Cory Sandhagen",
+          "Leon Edwards"
         ]
       },
       {
@@ -1815,7 +1890,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Justin Gaethje",
           "Valentina Shevchenko",
           "Petr Yan",
-          "Ilia Topuria"
+          "Ilia Topuria",
+          "Robert Whittaker",
+          "Cory Sandhagen",
+          "Leon Edwards"
         ]
       },
       {
@@ -1836,7 +1914,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Dustin Poirier",
           "Justin Gaethje",
           "Petr Yan",
-          "Ilia Topuria"
+          "Ilia Topuria",
+          "Robert Whittaker",
+          "Cory Sandhagen",
+          "Leon Edwards"
         ]
       },
       {
@@ -1857,7 +1938,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Dustin Poirier",
           "Alexander Volkanovski",
           "Justin Gaethje",
-          "Ilia Topuria"
+          "Ilia Topuria",
+          "Robert Whittaker",
+          "Cory Sandhagen",
+          "Leon Edwards"
         ]
       },
       {
@@ -1878,7 +1962,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
           "Dustin Poirier",
           "Justin Gaethje",
           "Petr Yan",
-          "Ilia Topuria"
+          "Ilia Topuria",
+          "Robert Whittaker",
+          "Cory Sandhagen",
+          "Leon Edwards"
         ]
       }
     ],
@@ -1964,7 +2051,10 @@ export const UFC_SPORTS_FEUD_FAST_1 = expandSportsFeudFamilies("ufc-fast1", [
         "aliases": [
           "Topuria"
         ]
-      }
+      },
+      "Robert Whittaker",
+      "Cory Sandhagen",
+      "Leon Edwards"
     ]
   }
 ] as const);
