@@ -127,18 +127,32 @@ function Board({schoolId, roster, budget, year, excluded, onPick}: {
   const team = wheelFootballTeam(schoolId);
   const candidates = cfbGmCandidates(schoolId, roster, budget, year, true, excluded);
   const [scoutKey, setScoutKey] = useState(false);
-  useEffect(() => setScoutKey(false), [schoolId]);
+  const [selectedPosition, setSelectedPosition] = useState<CfbGmPlayer["family"] | null>(null);
+  useEffect(() => {
+    setScoutKey(false);
+    setSelectedPosition(null);
+  }, [schoolId, roster.length]);
+  const positions: CfbGmPlayer["family"][] = ["QB", "RB", "WR", "TE", "Front Seven", "Secondary"];
+  const availablePositions = positions.filter((position) => candidates.some((player) => player.family === position));
+  const visibleCandidates = candidates.filter((player) => player.family === selectedPosition);
   if (!team) return null;
   return <>
     <section className="football-wheel-picker football-gm__picker surface-card" style={teamStyle(schoolId)}>
       <header><TeamLogo schoolId={schoolId} />
         <div><p className="eyebrow">{year === 1 ? "YOUR SPIN" : "TRANSFER PORTAL"}</p><h2>{team.name}</h2>
-          <span>Choose one player. GM automatically fits the legal roster spots.</span></div>
+          <span>Choose a position, then a player. GM automatically fits the legal roster spots.</span></div>
         <button className="football-gm__scout-key-button" type="button" onClick={() => setScoutKey(true)}
           aria-label="Open player scouting key">?</button>
       </header>
-      <div className="football-wheel-picker__candidates football-gm__picker-candidates" aria-label="Available players">
-        {candidates.map((player) => <button key={player.id} type="button" onClick={() => onPick(player.id)}>
+      <div className="football-wheel-picker__slots football-gm__position-tabs" aria-label="Available positions">
+        {availablePositions.map((position) => <button type="button" key={position}
+          className={selectedPosition === position ? "is-active" : ""}
+          aria-pressed={selectedPosition === position} onClick={() => setSelectedPosition(position)}>
+          <strong>{position === "Front Seven" ? "FRONT 7" : position === "Secondary" ? "SEC" : position}</strong>
+        </button>)}
+      </div>
+      {selectedPosition ? <div className="football-wheel-picker__candidates football-gm__picker-candidates" aria-label={selectedPosition + " candidates"}>
+        {visibleCandidates.map((player) => <button key={player.id} type="button" onClick={() => onPick(player.id)}>
           <PlayerHeadshot player={{team: player.schoolId, name: player.name}} className="football-wheel-picker__headshot" />
           <span className="football-gm__picker-player-copy">
             <strong>{player.name}</strong><small>{player.family} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
@@ -147,8 +161,9 @@ function Board({schoolId, roster, budget, year, excluded, onPick}: {
           <span className="football-gm__picker-action"><b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
             <em>SELECT →</em></span>
         </button>)}
-      </div>
-      {!candidates.length ? <p>No affordable legal player from this school. Continue the portal search.</p> : null}
+      </div> : <p className="football-wheel-picker__message football-gm__position-prompt">
+        {candidates.length ? "Choose a position to scout available players." : "No affordable legal player from this school. Continue the portal search."}
+      </p>}
     </section>
     {scoutKey ? <ScoutKey close={() => setScoutKey(false)} /> : null}
   </>;
@@ -314,9 +329,9 @@ export default function FootballCfbGmPage() {
         <article><b>3</b><span><strong>2-YEAR RESULT</strong><small>Team quality, continuity, and College Football Playoff outcomes.</small></span></article>
       </div>
       <div className="football-gm__intro-facts" aria-label="Key game rules"><span>7-MAN CORE</span><span>1 OFFSEASON</span><span>HIDDEN GRADES</span></div>
-      <div className="football-gm__intro-facts" aria-label="Select NIL budget">
+      <div className="football-gm__cfb-budget-modes" role="group" aria-label="Select NIL budget">
         {(["POWERHOUSE", "BUILDER"] as const).map((mode) => <button key={mode} type="button"
-          className={run.budget === mode ? "primary-action" : ""}
+          className={run.budget === mode ? "is-selected" : ""}
           aria-pressed={run.budget === mode} onClick={() => chooseBudget(mode)}>{mode} · {cfbGmMoney(CFB_GM_BUDGETS[mode])}</button>)}
       </div>
       <p>Player NIL figures and offseason decisions are modeled game estimates, not verified private contracts or future departures.</p>
