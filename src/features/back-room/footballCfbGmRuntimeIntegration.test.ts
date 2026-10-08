@@ -6,7 +6,7 @@ import {
   CFB_GM_BUDGETS, CFB_GM_PLAYERS, cfbGmCandidates, cfbGmEffectiveGrade,
   cfbGmEligibleSchools, cfbGmEnterOffseason, cfbGmInitial, cfbGmPick,
   cfbGmPlayer, cfbGmPortalOut, cfbGmSeason, cfbGmSpent,
-  cfbGmSpin, cfbGmTeamGrade, cfbGmValidateRun, isModelDraftEligible,
+  cfbGmSpin, cfbGmTeamGrade, cfbGmValidateRun, cfbGmFinalResult, isModelDraftEligible,
 } from "./footballCfbGmEngine";
 
 describe("CFB GM 2026 class + NIL + development runtime integration", () => {
@@ -106,4 +106,55 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
       expect(run.phase).toBe("offseason");
     }
   });
+  it("finishes seeded two-year games after realistic forced departures and portal replacements", () => {
+    for (const mode of ["POWERHOUSE","BUILDER"] as const) for (let i=0;i<8;i++) {
+      let run=cfbGmInitial("full-cfb-game-"+mode+"-"+i, mode);
+      const budget=CFB_GM_BUDGETS[mode];
+      for (let round=0;round<7;round++) {
+        const schools=cfbGmEligibleSchools(run.roster,budget,1,run.previousSchool);
+        expect(schools.length).toBeGreaterThan(0);
+        const school=cfbGmSpin(run.seed,round,schools)!;
+        const choices=[...cfbGmCandidates(school,run.roster,budget,1)]
+          .sort((a,b)=>a.nilYear1-b.nilYear1);
+        const player=choices[Math.floor((choices.length-1)/4)]!;
+        const roster=cfbGmPick(run.roster,player.id,budget,1)!;
+        expect(roster).not.toBeNull();
+        run={...run,roster,previousSchool:school,spinIndex:round+1};
+      }
+      run=cfbGmEnterOffseason({...run,phase:"year1"});
+      let attempts=0;
+      while (run.finalRoster.length<7 || cfbGmSpent(run.finalRoster,2)>budget) {
+        expect(attempts++).toBeLessThan(12);
+        const excluded=new Set([...run.roster.map(p=>p.playerId),
+          ...run.departures.map(p=>p.playerId), ...run.voluntaryPortalOuts]);
+        const schools=run.finalRoster.length<7
+          ? cfbGmEligibleSchools(run.finalRoster,budget,2,run.previousPortalSchool,run.schoolIds,excluded)
+          : [];
+        if (!schools.length) {
+          expect(run.voluntaryPortalOuts.length).toBeLessThan(2);
+          const highest=[...run.finalRoster].sort((a,b)=>
+            cfbGmPlayer(b.playerId)!.nilYear2-cfbGmPlayer(a.playerId)!.nilYear2)[0]!;
+          run=cfbGmPortalOut(run,highest.playerId)!;
+          expect(run).not.toBeNull();
+          continue;
+        }
+        const school=cfbGmSpin(run.seed,100+run.portalSpins,schools)!;
+        const choices=[...cfbGmCandidates(school,run.finalRoster,budget,2,true,excluded)]
+          .sort((a,b)=>a.nilYear2-b.nilYear2);
+        expect(choices.length).toBeGreaterThan(0);
+        const roster=cfbGmPick(run.finalRoster,choices[0]!.id,budget,2,excluded)!;
+        expect(roster).not.toBeNull();
+        run={...run,finalRoster:roster,previousPortalSchool:school,portalSpins:run.portalSpins+1};
+      }
+      expect(run.finalRoster).toHaveLength(7);
+      expect(cfbGmSpent(run.finalRoster,2)).toBeLessThanOrEqual(budget);
+      run={...run,phase:"final"};
+      const report=cfbGmFinalResult(run);
+      expect(report.seasons).toHaveLength(2);
+      expect(Number.isFinite(report.score)).toBe(true);
+      expect(report.seasons.every(s=>s.wins+s.losses===12)).toBe(true);
+      expect(report.seasons[1].teamGrade).toBe(cfbGmTeamGrade(run.finalRoster,2,run.seed));
+    }
+  });
+
 });
