@@ -11,11 +11,38 @@ import {
   type FootballGmSeasonResultV2,
 } from "./footballGmStrategy";
 import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
+import { FOOTBALL_GM_DEVELOPMENT_SEED_TAG } from "./wheelFootballGmEconomy";
 
 export interface FootballGmSharedSide {
   key: string;
   yearOneRoster: readonly FootballGmRosterEntry[];
   finalRoster: readonly FootballGmRosterEntry[];
+  /** Preserves historical untagged runs while giving new matches per-GM development. */
+  developmentSeed?: string;
+}
+
+export function footballGmMatchDevelopmentSeed(
+  matchSeed: string,
+  profileId: string,
+  enabled: boolean,
+) {
+  return `${matchSeed}:${profileId}${enabled ? FOOTBALL_GM_DEVELOPMENT_SEED_TAG : ""}`;
+}
+
+/** Legacy matches must not have their already-active offseason changed on release. */
+export function footballGmMatchUsesSeededDevelopment(participants: readonly {
+  run_state: Record<string, unknown>;
+  year1_result: unknown;
+}[]) {
+  const versions = participants.map((participant) => String(participant.run_state.version ?? ""));
+  if (versions.some((version) => /football-gm-v(?:8|9|10)-/.test(version))) return false;
+  if (versions.some((version) => version === "football-gm-v11-seeded-development")) return true;
+  // Fresh, untouched matches can safely adopt the new model. Active unknown
+  // historical matches do not get a different offseason retroactively.
+  return participants.every((participant) => (
+    !participant.year1_result
+    && (!Array.isArray(participant.run_state.roster) || participant.run_state.roster.length === 0)
+  ));
 }
 
 export function footballGmSharedPlayoffOutcomes(input: {
@@ -42,6 +69,7 @@ export function footballGmSharedSeason(input: {
     side.yearOneRoster,
     input.year === 1 ? side.yearOneRoster : side.finalRoster,
     input.year,
+    side.developmentSeed,
   )) as [ReturnType<typeof footballGmEffectiveTeamGrade>, ReturnType<typeof footballGmEffectiveTeamGrade>];
   const outcomes = footballGmSimulateLeagueSeason({
     seed: input.matchSeed,
