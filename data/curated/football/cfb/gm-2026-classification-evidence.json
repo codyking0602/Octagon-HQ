@@ -2201,8 +2201,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 46,
+          "decline": 18,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.05,
+        "summary": "Georgia senior edge 2025 started 13 games, 26 tackles, 6.5 TFL and a sack following a 2024 14-tackle, two-sack reserve season. Early 2026 started games with sacks vs Western Kentucky and Vanderbilt. This is a multi-year SEC rotation-to-starter rise with moderate further pass-rush improvement, rather than a high-grade breakout guarantee; fourth-year status alone does not prove graduation.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/gabe-harris-jr/10563"
+        ]
+      }
     },
     {
       "id": "georgia|gunnerstockton",
@@ -2273,8 +2292,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 41,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.09,
+        "summary": "Georgia junior WR transferred from Georgia Tech for 2026 after a 2025 sophomore season of 33 receptions, 480 yards and four TD in 12 starts; 2024 freshman six catches for 83 yards. In first three 2026 Georgia games logged just three receptions/28 yards despite starts, so both role expansion and disappointing production paths are plausible. 2024 first enrollment permits 2027 declaration but limited elite receiving proof.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/isiah-canion/10709"
+        ]
+      }
     },
     {
       "id": "georgia|jordanhall",
@@ -2406,8 +2444,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 29,
+          "steady": 43,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.07,
+        "summary": "Georgia senior DB with six starts in 2025, 24 tackles and fumble recovery, including 10 tackles versus Tennessee; previous 2024 role was mostly reserve. Early 2026 featured short rotations and three solo stops across opening games. More consistent starting work is possible but injury/role uncertainty and little multi-year top-tier coverage production keep early NFL declaration low.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/kyron-jones/10576"
+        ]
+      }
     },
     {
       "id": "georgia|lawsonluckie",
@@ -2503,8 +2560,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/61/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 48,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.53,
+        "portalExitProbability": 0.05,
+        "summary": "Georgia junior OLB started all 14 games in 2025 with 35 tackles, six TFL, two sacks and five pass breakups following four reserve tackles in 2024. Through four 2026 games logged seven tackles, 1.5 TFL and a pass breakup across four starts. Real role and SEC film support useful starter trajectory, but early lower-count 2026 production argues against inflation to elite rush dominance.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/quintavius-johnson/10573"
+        ]
+      }
     },
     {
       "id": "georgia|raylenwilson",
@@ -2560,8 +2636,27 @@
       "sourceUrl": "https://georgiadogs.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 38,
+          "steady": 33,
+          "decline": 14,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.12,
+        "portalExitProbability": 0.08,
+        "summary": "Georgia junior slot/return WR played all 14 2025 games but only eight receptions for 70 yards, plus five punt returns for 57 yards. In 2026 turned one reception into a 70-yard touchdown versus Western Kentucky. Explosive play provides real evidence of sudden-play utility, yet limited sustained target usage makes breakout and week-to-week inconsistency credible; not proven NFL-ready WR solely on one catch.",
+        "sources": [
+          "https://georgiadogs.com/sports/football/roster/sacovie-white/10611"
+        ]
+      }
     },
     {
       "id": "georgia|talyntaylor",
@@ -12179,5 +12274,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged."
 }
