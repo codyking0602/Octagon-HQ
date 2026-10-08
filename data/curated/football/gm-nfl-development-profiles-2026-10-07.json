@@ -49,7 +49,7 @@
       "calibration": "individual-review",
       "reviewClass": "limited",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jack Gibbens: Low-confidence/depth grade supports limited assured growth; regression remains possible. Existing HQ grade 78 (high confidence), age 27, Front Seven, undrafted."
+      "reviewRationale": "Jack Gibbens: Low-confidence/depth grade supports limited assured growth; regression remains possible. Existing HQ grade 78 (high confidence), age 27, Front Seven, draft slot not recorded."
     },
     {
       "id": "ARI|Front Seven|joshsweat",
@@ -69,9 +69,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Josh Sweat: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 29, Front Seven, pick #130."
+      "reviewRationale": "Josh Sweat: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 88 (high confidence), age 29, Front Seven, pick #130."
     },
     {
       "id": "ARI|Front Seven|mackwilson",
@@ -213,7 +213,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tyler Allgeier: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 26, RB, pick #151."
+      "reviewRationale": "Tyler Allgeier: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 26, RB, pick #151.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Proven efficient rotational runner with power and ball security; limited passing-game value keeps him around the starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "ARI|Secondary|andrewwingard",
@@ -235,7 +240,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Andrew Wingard: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 77 (high confidence), age 29, Secondary, undrafted."
+      "reviewRationale": "Andrew Wingard: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 77 (high confidence), age 29, Secondary, draft slot not recorded."
     },
     {
       "id": "ARI|Secondary|buddabaker",
@@ -383,7 +388,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kendrick Bourne: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 79 (high confidence), age 31, WR, undrafted."
+      "reviewRationale": "Kendrick Bourne: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 79 (high confidence), age 31, WR, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Savvy veteran separator with useful versatility, but current explosiveness and volume profile fit a rotational/low-end starter band.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "ARI|WR|marvinharrison",
@@ -424,7 +434,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Michael Wilson: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 26, WR, pick #94."
+      "reviewRationale": "Michael Wilson: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 26, WR, pick #94.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "A 1,006-yard 2025 season plus heavy early-2026 target volume establish a good current starter with boundary strength and reliable intermediate work.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "ATL|Front Seven|divinedeablo",
@@ -610,7 +625,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Brian Robinson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 27, RB, pick #98."
+      "reviewRationale": "Brian Robinson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 27, RB, pick #98.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Physical, reliable early-down starter profile with adequate receiving value; lacks the creation/efficiency of the upper bands.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "ATL|Secondary|ajterrell",
@@ -630,9 +650,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "A.J. Terrell Jr.: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 84 (high confidence), age 28, Secondary, pick #16."
+      "reviewRationale": "A.J. Terrell Jr.: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 84 (high confidence), age 28, Secondary, pick #16."
     },
     {
       "id": "ATL|Secondary|billybowman",
@@ -696,9 +716,9 @@
       "marketVariancePct": 5,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jessie Bates III: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 86 (medium confidence), age 29, Secondary, pick #54."
+      "reviewRationale": "Jessie Bates III: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 86 (medium confidence), age 29, Secondary, pick #54."
     },
     {
       "id": "ATL|Secondary|mikehughes",
@@ -802,7 +822,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jahan Dotson: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (high confidence), age 26, WR, pick #16."
+      "reviewRationale": "Jahan Dotson: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (high confidence), age 26, WR, pick #16.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Route quickness and field-stretching ability remain useful, but inconsistent volume and efficiency keep him around low-end starter territory. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "ATL|WR|olamidezaccheaus",
@@ -824,7 +849,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Olamide Zaccheaus: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 78 (high confidence), age 29, WR, undrafted."
+      "reviewRationale": "Olamide Zaccheaus: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 78 (high confidence), age 29, WR, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Reliable role receiver with speed and alignment versatility; limited ability to command targets keeps him below starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "BAL|Front Seven|calaiscampbell",
@@ -863,9 +893,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Nnamdi Madubuike: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 28, Front Seven, pick #71."
+      "reviewRationale": "Nnamdi Madubuike: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 88 (high confidence), age 28, Front Seven, pick #71."
     },
     {
       "id": "BAL|Front Seven|roquansmith",
@@ -948,9 +978,9 @@
       "marketVariancePct": 3,
       "cohort": "veteran",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Trey Hendrickson: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 91 (high confidence), age 31, Front Seven, pick #103."
+      "reviewRationale": "Trey Hendrickson: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 91 (high confidence), age 31, Front Seven, pick #103."
     },
     {
       "id": "BAL|QB|lamarjackson",
@@ -1010,7 +1040,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Justice Hill: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 78 (high confidence), age 28, RB, pick #113."
+      "reviewRationale": "Justice Hill: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 78 (high confidence), age 28, RB, pick #113.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Approved strong-role-player anchor.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "BAL|Secondary|jaylinnhawkins",
@@ -1090,9 +1125,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Marlon Humphrey: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 30, Secondary, pick #16."
+      "reviewRationale": "Marlon Humphrey: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 30, Secondary, pick #16."
     },
     {
       "id": "BAL|Secondary|natewiggins",
@@ -1152,7 +1187,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ja'Kobi Lane: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 22, WR, pick #80."
+      "reviewRationale": "Ja'Kobi Lane: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 22, WR, pick #80.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Very limited NFL evidence; promising size/ball skills are not enough to project beyond the lower Wheel band.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "BAL|WR|rashodbateman",
@@ -1174,7 +1214,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Rashod Bateman: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 26, WR, pick #27."
+      "reviewRationale": "Rashod Bateman: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 26, WR, pick #27.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Vertical and intermediate route value remain starter-caliber, but target-command and consistency limitations cap the grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "BAL|WR|zayflowers",
@@ -1279,9 +1324,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Greg Rousseau: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 90 (high confidence), age 26, Front Seven, pick #30."
+      "reviewRationale": "Greg Rousseau: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 90 (high confidence), age 26, Front Seven, pick #30."
     },
     {
       "id": "BUF|Front Seven|terrelbernard",
@@ -1385,7 +1430,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ty Johnson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 29, RB, pick #186."
+      "reviewRationale": "Ty Johnson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 29, RB, pick #186.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Useful receiving/change-of-pace back with real NFL value but not a quality primary-back profile.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "BUF|Secondary|christianbenford",
@@ -1473,7 +1523,7 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Dee Alford: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 77 (high confidence), age 28, Secondary, undrafted."
+      "reviewRationale": "Dee Alford: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 77 (high confidence), age 28, Secondary, draft slot not recorded."
     },
     {
       "id": "BUF|Secondary|maxwellhairston",
@@ -1536,7 +1586,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "DJ Moore: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 86 (high confidence), age 29, WR, pick #24."
+      "reviewRationale": "DJ Moore: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 86 (high confidence), age 29, WR, pick #24.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Established three-level/YAC receiver with repeated 1,000-yard caliber play; recent inconsistency keeps him below the high-end tier.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "BUF|WR|keoncoleman",
@@ -1577,7 +1632,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Khalil Shakir: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 26, WR, pick #148."
+      "reviewRationale": "Khalil Shakir: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 26, WR, pick #148.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Reliable separator and YAC option with strong catch efficiency; lacks the boundary/vertical dominance of higher bands.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CAR|Front Seven|bobbyokereke",
@@ -1638,9 +1698,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Devin Lloyd: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 92 (high confidence), age 28, Front Seven, pick #27."
+      "reviewRationale": "Devin Lloyd: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 92 (high confidence), age 28, Front Seven, pick #27."
     },
     {
       "id": "CAR|Front Seven|jaelanphillips",
@@ -1747,7 +1807,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Chuba Hubbard: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, RB, pick #126."
+      "reviewRationale": "Chuba Hubbard: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, RB, pick #126.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "2024 established real starter quality; 2025 dipped, but a strong 2026 opening and receiving value support a good starter grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CAR|RB|jonathonbrooks",
@@ -1917,7 +1982,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tommy Tremble: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 76 (high confidence), age 26, TE, pick #83."
+      "reviewRationale": "Tommy Tremble: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 76 (high confidence), age 26, TE, pick #83.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Approved strong-role-player anchor; blocking/inline value is useful, but receiving impact remains limited. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CAR|WR|jalencoker",
@@ -1939,7 +2009,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jalen Coker: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 24, WR, undrafted."
+      "reviewRationale": "Jalen Coker: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 24, WR, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful route runner with starter-level flashes, but limited established volume keeps him at the solid baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CAR|WR|tetairoamcmillan",
@@ -1980,7 +2055,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Xavier Legette: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 80 (medium confidence), age 25, WR, pick #32."
+      "reviewRationale": "Xavier Legette: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 80 (medium confidence), age 25, WR, pick #32.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Physical traits and vertical ability remain useful, but route/production consistency has not established more than a low-end starter level.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CHI|Front Seven|austinbooker",
@@ -2044,9 +2124,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Devin Bush: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 28, Front Seven, pick #10."
+      "reviewRationale": "Devin Bush: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 88 (high confidence), age 28, Front Seven, pick #10."
     },
     {
       "id": "CHI|Front Seven|gradyjarrett",
@@ -2112,7 +2192,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "T.J. Edwards: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 30, Front Seven, undrafted."
+      "reviewRationale": "T.J. Edwards: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 30, Front Seven, draft slot not recorded."
     },
     {
       "id": "CHI|QB|calebwilliams",
@@ -2153,7 +2233,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "D'Andre Swift: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 27, RB, pick #35."
+      "reviewRationale": "D'Andre Swift: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 27, RB, pick #35.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Versatile established starter with receiving value and adequate efficiency, but limited tackle-breaking/inside consistency caps him.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CHI|RB|kylemonangai",
@@ -2175,7 +2260,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kyle Monangai: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 24, RB, pick #233."
+      "reviewRationale": "Kyle Monangai: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 24, RB, pick #233.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CHI|Secondary|dillonthieneman",
@@ -2217,9 +2307,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jaylon Johnson: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 85 (high confidence), age 27, Secondary, pick #50."
+      "reviewRationale": "Jaylon Johnson: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 85 (high confidence), age 27, Secondary, pick #50."
     },
     {
       "id": "CHI|Secondary|kylergordon",
@@ -2348,7 +2438,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kalif Raymond: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 81 (high confidence), age 32, WR, undrafted."
+      "reviewRationale": "Kalif Raymond: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 81 (high confidence), age 32, WR, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Current 2026 efficiency is excellent, but his established NFL role remains more specialist/WR3 than quality primary starter.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CHI|WR|lutherburden",
@@ -2472,9 +2567,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Dexter Lawrence II: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 92 (high confidence), age 28, Front Seven, pick #17."
+      "reviewRationale": "Dexter Lawrence II: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 92 (high confidence), age 28, Front Seven, pick #17."
     },
     {
       "id": "CIN|Front Seven|jonathanallen",
@@ -2578,7 +2673,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Samaje Perine: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 31, RB, pick #114."
+      "reviewRationale": "Samaje Perine: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 31, RB, pick #114.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Reliable passing-down and short-yardage role player, but no longer a primary-back level runner.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CIN|Secondary|bryancook",
@@ -2598,9 +2698,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Bryan Cook: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 86 (high confidence), age 27, Secondary, pick #62."
+      "reviewRationale": "Bryan Cook: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 86 (high confidence), age 27, Secondary, pick #62."
     },
     {
       "id": "CIN|Secondary|daxhill",
@@ -2710,7 +2810,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Drew Sample: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 72 (high confidence), age 30, TE, pick #52."
+      "reviewRationale": "Drew Sample: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 72 (high confidence), age 30, TE, pick #52.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Approved low-end Wheel anchor; legitimate blocking utility, minimal receiving creation. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CIN|WR|andreiiosivas",
@@ -2732,7 +2837,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Andrei Iosivas: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 26, WR, pick #206."
+      "reviewRationale": "Andrei Iosivas: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 26, WR, pick #206.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful size/speed role receiver with red-zone value; limited target-command keeps him near low-end starter territory. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CIN|WR|jamarrchase",
@@ -2934,7 +3044,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Dylan Sampson: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 77 (medium confidence), age 22, RB, pick #126."
+      "reviewRationale": "Dylan Sampson: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 77 (medium confidence), age 22, RB, pick #126.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Useful speed/receiving role with limited proof as a complete NFL runner.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CLE|RB|quinshonjudkins",
@@ -3038,7 +3153,7 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ronnie Hickman: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 79 (medium confidence), age 24, Secondary, undrafted."
+      "reviewRationale": "Ronnie Hickman: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 79 (medium confidence), age 24, Secondary, draft slot not recorded."
     },
     {
       "id": "CLE|Secondary|tysoncampbell",
@@ -3101,7 +3216,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Denzel Boston: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 22, WR, pick #39."
+      "reviewRationale": "Denzel Boston: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 22, WR, pick #39.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Limited NFL evidence; size and catch-point upside are noted without granting a draft/projection premium.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CLE|WR|jerryjeudy",
@@ -3123,7 +3243,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jerry Jeudy: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, WR, pick #15."
+      "reviewRationale": "Jerry Jeudy: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, WR, pick #15.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Starter-quality separator with proven volume production, but week-to-week consistency and finishing keep him below the upper tiers.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "CLE|WR|kcconcepcion",
@@ -3145,7 +3270,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "KC Concepcion Jr.: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 80 (low confidence), age 22, WR, pick #24."
+      "reviewRationale": "KC Concepcion Jr.: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 80 (low confidence), age 22, WR, pick #24.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Early NFL evidence shows useful burst and route versatility, but the sample is too small for a projection-driven grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DAL|Front Seven|deewinters",
@@ -3272,9 +3402,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Rashan Gary: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 28, Front Seven, pick #12."
+      "reviewRationale": "Rashan Gary: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 28, Front Seven, pick #12."
     },
     {
       "id": "DAL|QB|dakprescott",
@@ -3307,15 +3437,20 @@
       "draftOverall": 35,
       "breakoutPct": 4,
       "improvePct": 20,
-      "declinePct": 19,
+      "declinePct": 23,
       "maxAnnualGain": 2.7,
-      "maxAnnualLoss": 2.9,
+      "maxAnnualLoss": 3.5,
       "marketVariancePct": 4,
       "cohort": "prime",
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Javonte Williams: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 26, RB, pick #35."
+      "reviewRationale": "Javonte Williams: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 26, RB, pick #35. Audited current grade notes incomplete post-injury efficiency recovery.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Complete skill set and receiving usefulness remain starter-caliber; post-injury rushing efficiency has not returned to his early-career ceiling.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DAL|RB|tylergoodson",
@@ -3337,7 +3472,12 @@
       "calibration": "individual-review",
       "reviewClass": "limited",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tyler Goodson: Low-confidence/depth grade supports limited assured growth; regression remains possible. Existing HQ grade 74 (high confidence), age 25, RB, undrafted."
+      "reviewRationale": "Tyler Goodson: Low-confidence/depth grade supports limited assured growth; regression remains possible. Existing HQ grade 74 (high confidence), age 25, RB, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Approved weak current Wheel option anchor.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DAL|Secondary|calebdowns",
@@ -3376,9 +3516,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "DaRon Bland: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 85 (high confidence), age 27, Secondary, pick #167."
+      "reviewRationale": "DaRon Bland: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 85 (high confidence), age 27, Secondary, pick #167."
     },
     {
       "id": "DAL|Secondary|joeyporter",
@@ -3398,9 +3538,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Joey Porter Jr.: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 26, Secondary, pick #32."
+      "reviewRationale": "Joey Porter Jr.: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 26, Secondary, pick #32."
     },
     {
       "id": "DAL|Secondary|malikhooker",
@@ -3444,7 +3584,7 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Markquese Bell: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 75 (high confidence), age 27, Secondary, undrafted."
+      "reviewRationale": "Markquese Bell: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 75 (high confidence), age 27, Secondary, draft slot not recorded."
     },
     {
       "id": "DAL|TE|jakeferguson",
@@ -3466,7 +3606,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jake Ferguson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, TE, pick #129."
+      "reviewRationale": "Jake Ferguson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, TE, pick #129.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Productive receiving TE with 82 catches/600 yards in 2025 and red-zone value, but repeated sub-60 overall grades and ball-security issues prevent a higher all-around grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DAL|WR|ceedeelamb",
@@ -3526,7 +3671,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ryan Flournoy: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (medium confidence), age 26, WR, pick #216."
+      "reviewRationale": "Ryan Flournoy: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (medium confidence), age 26, WR, pick #216.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Physical role player with useful vertical ability, but limited established production keeps him below starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DEN|Front Seven|alexsingleton",
@@ -3548,7 +3698,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Alex Singleton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 32, Front Seven, undrafted."
+      "reviewRationale": "Alex Singleton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 32, Front Seven, draft slot not recorded."
     },
     {
       "id": "DEN|Front Seven|djjones",
@@ -3653,9 +3803,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Zach Allen: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 90 (high confidence), age 29, Front Seven, pick #65."
+      "reviewRationale": "Zach Allen: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 90 (high confidence), age 29, Front Seven, pick #65."
     },
     {
       "id": "DEN|QB|bonix",
@@ -3696,7 +3846,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "J.K. Dobbins: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, RB, pick #55."
+      "reviewRationale": "J.K. Dobbins: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, RB, pick #55.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "5.0 YPC in 2025 plus prior efficient seasons establish good current rushing ability; limited receiving and a slow 2026 start prevent higher.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DEN|RB|rjharvey",
@@ -3718,7 +3873,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "RJ Harvey: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 25, RB, pick #60."
+      "reviewRationale": "RJ Harvey: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 25, RB, pick #60.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Very small NFL sample with useful receiving/space flashes; insufficient current evidence for a starter-level grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DEN|Secondary|brandonjones",
@@ -3762,7 +3922,7 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ja'Quan McMillian: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 26, Secondary, undrafted."
+      "reviewRationale": "Ja'Quan McMillian: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 26, Secondary, draft slot not recorded."
     },
     {
       "id": "DEN|Secondary|patsurtain",
@@ -3829,9 +3989,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Talanoa Hufanga: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 86 (high confidence), age 26, Secondary, pick #180."
+      "reviewRationale": "Talanoa Hufanga: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 86 (high confidence), age 26, Secondary, pick #180."
     },
     {
       "id": "DEN|TE|evanengram",
@@ -3853,7 +4013,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Evan Engram: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 32, TE, pick #23."
+      "reviewRationale": "Evan Engram: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 32, TE, pick #23.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Receiving movement skills remain useful, but 2025 was a clear decline and his inline/blocking value remains limited; current play fits a low-end starter grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DEN|WR|courtlandsutton",
@@ -3875,7 +4040,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Courtland Sutton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 30, WR, pick #40."
+      "reviewRationale": "Courtland Sutton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 30, WR, pick #40.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Approved good-starter anchor.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DEN|WR|jaylenwaddle",
@@ -3916,7 +4086,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Marvin Mims Jr.: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 24, WR, pick #63."
+      "reviewRationale": "Marvin Mims Jr.: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 24, WR, pick #63.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Explosive vertical/YAC weapon with legitimate starter value, but target volume and route completeness remain narrower than higher tiers.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DEN|WR|patbryant",
@@ -3944,6 +4119,11 @@
         "source": "https://www.reuters.com/sports/broncos-star-cb-pat-surtain-ii-injures-ankle-loss-49ers--flm-2026-10-05/",
         "asOf": "2026-10-08",
         "note": "Carted off with 2026 ankle injury; recovery window uncertain."
+      },
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Encouraging early NFL efficiency, but three games are insufficient to establish starter-level ability. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
       }
     },
     {
@@ -4117,7 +4297,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Isiah Pacheco: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, RB, pick #251."
+      "reviewRationale": "Isiah Pacheco: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, RB, pick #251.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Physical, decisive NFL starter profile remains intact, but recent production and receiving impact do not support a higher tier.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DET|RB|jahmyrgibbs",
@@ -4183,9 +4368,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "D.J. Reed: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 83 (high confidence), age 29, Secondary, pick #142."
+      "reviewRationale": "D.J. Reed: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 83 (high confidence), age 29, Secondary, pick #142."
     },
     {
       "id": "DET|Secondary|ennisrakestraw",
@@ -4227,9 +4412,9 @@
       "marketVariancePct": 5,
       "cohort": "early-career",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kerby Joseph: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 25, Secondary, pick #97. 2026 knee rehab and extended return uncertainty; retain existing HQ grade and add downside volatility.",
+      "reviewRationale": "Kerby Joseph: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 88 (high confidence), age 25, Secondary, pick #97. 2026 knee rehab and extended return uncertainty; retain existing HQ grade and add downside volatility.",
       "recentEvidence": {
         "type": "major-injury-context",
         "source": "https://www.nfl.com/news/lions-safeties-brian-branch-kerby-joseph-remain-out-indefinitely-dan-campbell-says",
@@ -4317,7 +4502,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Isaac TeSlaa: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 79 (medium confidence), age 24, WR, pick #70."
+      "reviewRationale": "Isaac TeSlaa: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 79 (medium confidence), age 24, WR, pick #70.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful size/vertical role and athletic traits, but limited target-command and production keep him below starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "DET|WR|jamesonwilliams",
@@ -4522,15 +4712,20 @@
       "draftOverall": 88,
       "breakoutPct": 20,
       "improvePct": 29,
-      "declinePct": 38,
+      "declinePct": 41,
       "maxAnnualGain": 6.5,
-      "maxAnnualLoss": 6.5,
+      "maxAnnualLoss": 7,
       "marketVariancePct": 12,
       "cohort": "early-career",
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "MarShawn Lloyd: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 25, RB, pick #88."
+      "reviewRationale": "MarShawn Lloyd: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 25, RB, pick #88. Audited current grade notes limited available NFL workload.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Limited NFL workload and availability leave very little demonstrated current evidence despite athletic flashes.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "GB|Secondary|brandoncisse",
@@ -4618,7 +4813,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Keisean Nixon: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 29, Secondary, undrafted."
+      "reviewRationale": "Keisean Nixon: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 29, Secondary, draft slot not recorded."
     },
     {
       "id": "GB|Secondary|xaviermckinney",
@@ -4638,9 +4833,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Xavier McKinney: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 27, Secondary, pick #36."
+      "reviewRationale": "Xavier McKinney: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 88 (high confidence), age 27, Secondary, pick #36."
     },
     {
       "id": "GB|TE|tuckerkraft",
@@ -4681,7 +4876,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Christian Watson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 85 (high confidence), age 27, WR, pick #34."
+      "reviewRationale": "Christian Watson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 85 (high confidence), age 27, WR, pick #34.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "High-end size/speed field-stretcher with strong per-target efficiency when healthy; route/volume consistency keeps him below 86+.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "GB|WR|jaydenreed",
@@ -4703,7 +4903,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jayden Reed: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 26, WR, pick #50."
+      "reviewRationale": "Jayden Reed: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 26, WR, pick #50.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Versatile separator and YAC option with slot/outside utility; not yet a consistently dominant target earner.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "GB|WR|matthewgolden",
@@ -4725,7 +4930,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Matthew Golden: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (medium confidence), age 23, WR, pick #23."
+      "reviewRationale": "Matthew Golden: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (medium confidence), age 23, WR, pick #23.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful speed and route traits with developing NFL evidence; current body of work supports a low-end starter grade, not projection inflation.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "HOU|Front Seven|azeezalshaair",
@@ -4747,7 +4957,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Azeez Al-Shaair: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 29, Front Seven, undrafted."
+      "reviewRationale": "Azeez Al-Shaair: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 29, Front Seven, draft slot not recorded."
     },
     {
       "id": "HOU|Front Seven|daniellehunter",
@@ -4889,7 +5099,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "David Montgomery: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 29, RB, pick #73."
+      "reviewRationale": "David Montgomery: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 29, RB, pick #73.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Power, contact balance and receiving competence remain starter-quality, but reduced workload and 2.8 YPC start to 2026 cap him at the baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "HOU|RB|woodymarks",
@@ -4911,7 +5126,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Woody Marks: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 79 (high confidence), age 25, RB, pick #116."
+      "reviewRationale": "Woody Marks: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 79 (high confidence), age 25, RB, pick #116.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Useful receiving ability and real workload experience, but 3.5 career YPC keeps him below starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "HOU|Secondary|calenbullock",
@@ -5012,7 +5232,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Reed Blankenship: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 27, Secondary, undrafted."
+      "reviewRationale": "Reed Blankenship: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 27, Secondary, draft slot not recorded."
     },
     {
       "id": "HOU|TE|daltonschultz",
@@ -5034,7 +5254,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Dalton Schultz: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 30, TE, pick #137."
+      "reviewRationale": "Dalton Schultz: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 30, TE, pick #137.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "777 yards in 2025 plus 205 through three 2026 games, dependable hands and steady chain-moving value support a good starter grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "HOU|WR|kayshonboutte",
@@ -5056,7 +5281,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kayshon Boutte: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 24, WR, pick #187."
+      "reviewRationale": "Kayshon Boutte: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 24, WR, pick #187.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Strong vertical efficiency and real starter flashes, but a narrower route/volume profile keeps him in the solid-starter band.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "HOU|WR|nicocollins",
@@ -5089,15 +5319,20 @@
       "draftOverall": 69,
       "breakoutPct": 5,
       "improvePct": 20,
-      "declinePct": 22,
+      "declinePct": 27,
       "maxAnnualGain": 2.2,
-      "maxAnnualLoss": 3.5,
+      "maxAnnualLoss": 4.5,
       "marketVariancePct": 6,
       "cohort": "prime",
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tank Dell: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (medium confidence), age 26, WR, pick #69."
+      "reviewRationale": "Tank Dell: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (medium confidence), age 26, WR, pick #69. Audited current grade reports recent missed time and limited current sample.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Dynamic separator with proven NFL explosiveness; recent missed time and limited current sample keep him below his peak projection.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "HOU|WR|xavierhutchinson",
@@ -5119,7 +5354,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Xavier Hutchinson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 78 (high confidence), age 26, WR, pick #205."
+      "reviewRationale": "Xavier Hutchinson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 78 (high confidence), age 26, WR, pick #205.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Physical depth receiver with limited target-command and production; useful rotational player rather than established starter.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "IND|Front Seven|akeemdavisgaither",
@@ -5305,7 +5545,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Seth McGowan: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 72 (low confidence), age 24, RB, pick #237."
+      "reviewRationale": "Seth McGowan: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 72 (low confidence), age 24, RB, pick #237.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Only six NFL carries with minimal rushing production; special-teams value does not raise the RB ability grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "IND|Secondary|ajhaulcy",
@@ -5371,7 +5616,7 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Charvarius Ward: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 86 (high confidence), age 30, Secondary, undrafted."
+      "reviewRationale": "Charvarius Ward: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 86 (high confidence), age 30, Secondary, draft slot not recorded."
     },
     {
       "id": "IND|Secondary|justinwalley",
@@ -5453,7 +5698,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Alec Pierce: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 26, WR, pick #53."
+      "reviewRationale": "Alec Pierce: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 26, WR, pick #53.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "One of the league's best true vertical threats by 2025 yards per catch, but route/target breadth is narrower than higher-tier complete receivers.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "IND|WR|dariusslayton",
@@ -5475,7 +5725,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Darius Slayton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 81 (high confidence), age 29, WR, pick #171."
+      "reviewRationale": "Darius Slayton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 81 (high confidence), age 29, WR, pick #171.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Proven vertical starter with useful speed and outside ability, but limited target-command keeps him just below average-starter anchor range.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "IND|WR|joshdowns",
@@ -5497,7 +5752,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Josh Downs: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 25, WR, pick #79."
+      "reviewRationale": "Josh Downs: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 25, WR, pick #79.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Consistently wins underneath/intermediate with separation and volume; size/vertical limitations keep him below the upper bands.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "IND|WR|keenanallen",
@@ -5602,9 +5862,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Josh Hines-Allen: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 92 (high confidence), age 29, Front Seven, pick #7."
+      "reviewRationale": "Josh Hines-Allen: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 92 (high confidence), age 29, Front Seven, pick #7."
     },
     {
       "id": "JAX|Front Seven|travonwalker",
@@ -5689,7 +5949,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Bhayshul Tuten: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (medium confidence), age 24, RB, pick #104."
+      "reviewRationale": "Bhayshul Tuten: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (medium confidence), age 24, RB, pick #104.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Three strong 2026 starts at 4.7 YPC show real starter capability, but a 3.7 rookie-season rushing average keeps the sample from supporting more.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "JAX|RB|chrisrodriguez",
@@ -5711,7 +5976,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Chris Rodriguez Jr.: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 27, RB, pick #193."
+      "reviewRationale": "Chris Rodriguez Jr.: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 27, RB, pick #193.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Physical reserve runner with some useful early-down ability but limited receiving/creation evidence.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "JAX|Secondary|antoniojohnson",
@@ -5840,7 +6110,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Brenton Strange: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 80 (high confidence), age 25, TE, pick #61."
+      "reviewRationale": "Brenton Strange: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 80 (high confidence), age 25, TE, pick #61.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "540 yards in 12 games in 2025 plus excellent zone run-blocking and continued 2026 usefulness make him a strong complete starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "JAX|WR|brianthomas",
@@ -5881,7 +6156,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jakobi Meyers: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 29, WR, undrafted."
+      "reviewRationale": "Jakobi Meyers: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 29, WR, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Approved solid/average starter anchor.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "JAX|WR|parkerwashington",
@@ -5893,17 +6173,22 @@
       "gradeAtCalibration": 80,
       "confidence": "high",
       "draftOverall": 185,
-      "breakoutPct": 17,
+      "breakoutPct": 14,
       "improvePct": 36,
-      "declinePct": 19,
-      "maxAnnualGain": 4.7,
+      "declinePct": 21,
+      "maxAnnualGain": 4.4,
       "maxAnnualLoss": 3.3,
       "marketVariancePct": 7,
       "cohort": "early-career",
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Parker Washington: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 80 (high confidence), age 24, WR, pick #185."
+      "reviewRationale": "Parker Washington: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 80 (high confidence), age 24, WR, pick #185. Audited current grade indicates useful slot and return value but limited target-command.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful slot/return versatility and route quickness, but limited target-command keeps him near low-end starter territory.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "JAX|WR|travishunter",
@@ -6005,9 +6290,9 @@
       "marketVariancePct": 5,
       "cohort": "early-career",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "George Karlaftis: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 86 (high confidence), age 25, Front Seven, pick #30."
+      "reviewRationale": "George Karlaftis: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 86 (high confidence), age 25, Front Seven, pick #30."
     },
     {
       "id": "KC|Front Seven|nickbolton",
@@ -6027,9 +6312,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Nick Bolton: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 26, Front Seven, pick #58."
+      "reviewRationale": "Nick Bolton: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 26, Front Seven, pick #58."
     },
     {
       "id": "KC|Front Seven|peterwoods",
@@ -6089,7 +6374,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Emmett Johnson: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (low confidence), age 22, RB, pick #161."
+      "reviewRationale": "Emmett Johnson: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (low confidence), age 22, RB, pick #161.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Current NFL evidence is still limited; enough all-around ability for a useful rotation grade without projection-based inflation. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "KC|RB|kennethwalker",
@@ -6281,6 +6571,11 @@
         "source": "https://www.reuters.com/sports/nfl-injury-roundup-lamar-jackson-hurts-ankle-star-wrs-go-down--flm-2026-10-05/",
         "asOf": "2026-10-08",
         "note": "Serious 2026 dislocated ankle; material durability uncertainty."
+      },
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Vertical speed remains useful, but limited route/volume consistency keeps him below starter baseline.",
+        "asOf": "2026-10-03"
       }
     },
     {
@@ -6320,9 +6615,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Daiyan Henley: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 86 (high confidence), age 26, Front Seven, pick #85."
+      "reviewRationale": "Daiyan Henley: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 86 (high confidence), age 26, Front Seven, pick #85."
     },
     {
       "id": "LAC|Front Seven|dalvintomlinson",
@@ -6407,7 +6702,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Teair Tart: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 80 (high confidence), age 29, Front Seven, undrafted."
+      "reviewRationale": "Teair Tart: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 80 (high confidence), age 29, Front Seven, draft slot not recorded."
     },
     {
       "id": "LAC|Front Seven|tulituipulotu",
@@ -6528,9 +6823,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Derwin James Jr.: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 89 (high confidence), age 30, Secondary, pick #17."
+      "reviewRationale": "Derwin James Jr.: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 89 (high confidence), age 30, Secondary, pick #17."
     },
     {
       "id": "LAC|Secondary|elijahmolden",
@@ -6596,7 +6891,7 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tony Jefferson: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 34, Secondary, undrafted."
+      "reviewRationale": "Tony Jefferson: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 34, Secondary, draft slot not recorded."
     },
     {
       "id": "LAC|TE|charliekolar",
@@ -6618,7 +6913,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Charlie Kolar: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 73 (high confidence), age 27, TE, pick #128."
+      "reviewRationale": "Charlie Kolar: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 73 (high confidence), age 27, TE, pick #128.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Strong blocking specialist with efficient limited receiving work; useful NFL TE but not a meaningful passing-game starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LAC|TE|davidnjoku",
@@ -6659,7 +6959,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ladd McConkey: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 24, WR, pick #34."
+      "reviewRationale": "Ladd McConkey: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 24, WR, pick #34.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Excellent route craft and separation remain, but his 2025 production dipped and the 2026 opening is quieter, so 2024 reputation does not hold an 88+ grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LAC|WR|quentinjohnston",
@@ -6700,7 +7005,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tre' Harris: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (medium confidence), age 24, WR, pick #55."
+      "reviewRationale": "Tre' Harris: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (medium confidence), age 24, WR, pick #55.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "149 yards through three 2026 games is encouraging, but the sample remains too short for a higher established grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LAR|Front Seven|aarondonald",
@@ -6783,9 +7093,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kobie Turner: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 90 (high confidence), age 27, Front Seven, pick #89."
+      "reviewRationale": "Kobie Turner: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 90 (high confidence), age 27, Front Seven, pick #89."
     },
     {
       "id": "LAR|Front Seven|mylesgarrett",
@@ -6826,7 +7136,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Nate Landman: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, Front Seven, undrafted."
+      "reviewRationale": "Nate Landman: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, Front Seven, draft slot not recorded."
     },
     {
       "id": "LAR|QB|matthewstafford",
@@ -6867,7 +7177,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Blake Corum: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (medium confidence), age 25, RB, pick #83."
+      "reviewRationale": "Blake Corum: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (medium confidence), age 25, RB, pick #83.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Credible power/vision in a complementary role, but not enough established independent production to reach the starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LAR|RB|kyrenwilliams",
@@ -6928,9 +7243,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kam Curl: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 27, Secondary, pick #216."
+      "reviewRationale": "Kam Curl: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 27, Secondary, pick #216."
     },
     {
       "id": "LAR|Secondary|kamrenkinchens",
@@ -7015,7 +7330,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Colby Parkinson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 27, TE, pick #133."
+      "reviewRationale": "Colby Parkinson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 27, TE, pick #133.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Breakout 2025 included strong receiving efficiency, eight TDs and good run-blocking work; quiet 2026 usage keeps him just below the 85 group. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LAR|WR|davanteadams",
@@ -7056,7 +7376,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Konata Mumpfield: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 23, WR, pick #242."
+      "reviewRationale": "Konata Mumpfield: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 23, WR, pick #242.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Limited NFL evidence and target-command; lower-tier Wheel option until a larger professional sample exists.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LAR|WR|pukanacua",
@@ -7097,7 +7422,7 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Adam Butler: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 32, Front Seven, undrafted."
+      "reviewRationale": "Adam Butler: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 78 (high confidence), age 32, Front Seven, draft slot not recorded."
     },
     {
       "id": "LV|Front Seven|kwitypaye",
@@ -7283,7 +7608,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Mike Washington Jr.: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 23, RB, pick #122."
+      "reviewRationale": "Mike Washington Jr.: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 23, RB, pick #122.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Explosive 6.8 YPC through 15 NFL carries is encouraging, but the sample is far too small for a starter-level grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LV|Secondary|ericstokes",
@@ -7434,7 +7764,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jack Bech: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 23, WR, pick #58."
+      "reviewRationale": "Jack Bech: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 76 (low confidence), age 23, WR, pick #58.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Physical slot/boundary versatility is useful, but the NFL evidence remains too limited for a starter-grade projection. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LV|WR|jalennailor",
@@ -7456,7 +7791,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jalen Nailor: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 81 (high confidence), age 27, WR, pick #191."
+      "reviewRationale": "Jalen Nailor: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 81 (high confidence), age 27, WR, pick #191.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Legitimate vertical/secondary starter with touchdown and field-stretching value, but limited target share caps the grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "LV|WR|tretucker",
@@ -7478,7 +7818,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tre Tucker: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 25, WR, pick #100."
+      "reviewRationale": "Tre Tucker: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 25, WR, pick #100.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Speed and route growth have produced credible starter value; still lacks the target-command and complete profile of higher bands.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIA|Front Seven|choprobinson",
@@ -7605,9 +7950,9 @@
       "marketVariancePct": 3,
       "cohort": "veteran",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Zach Sieler: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 88 (high confidence), age 31, Front Seven, pick #238."
+      "reviewRationale": "Zach Sieler: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 88 (high confidence), age 31, Front Seven, pick #238."
     },
     {
       "id": "MIA|QB|malikwillis",
@@ -7667,7 +8012,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jaylen Wright: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 79 (medium confidence), age 23, RB, pick #120."
+      "reviewRationale": "Jaylen Wright: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 79 (medium confidence), age 23, RB, pick #120.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Speed and space ability remain useful, but limited established workload and consistency keep him in the rotation tier.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIA|Secondary|chrisjohnson",
@@ -7799,7 +8149,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Greg Dulcich: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (medium confidence), age 26, TE, pick #80."
+      "reviewRationale": "Greg Dulcich: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (medium confidence), age 26, TE, pick #80.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "335 yards in 10 games in 2025 and 90 through three 2026 games show useful receiving ability, but limited all-around/inline evidence keeps him below starter baseline. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIA|WR|calebdouglas",
@@ -7859,7 +8214,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Malik Washington: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (medium confidence), age 25, WR, pick #184."
+      "reviewRationale": "Malik Washington: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (medium confidence), age 25, WR, pick #184.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Quickness, YAC and current target growth support low-end starter ability; established volume remains limited. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIN|Front Seven|andrewvanginkel",
@@ -7944,7 +8304,7 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Eric Wilson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 32, Front Seven, undrafted."
+      "reviewRationale": "Eric Wilson: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 32, Front Seven, draft slot not recorded."
     },
     {
       "id": "MIN|Front Seven|jalenredmond",
@@ -7966,7 +8326,7 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jalen Redmond: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 27, Front Seven, undrafted."
+      "reviewRationale": "Jalen Redmond: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 27, Front Seven, draft slot not recorded."
     },
     {
       "id": "MIN|Front Seven|tyrioningramdawkins",
@@ -8029,7 +8389,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Aaron Jones Sr.: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 31, RB, pick #182."
+      "reviewRationale": "Aaron Jones Sr.: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 31, RB, pick #182.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Vision, receiving and versatility remain starter-quality; recent rushing efficiency and explosive margin have declined from his peak.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIN|RB|jordanmason",
@@ -8051,7 +8416,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jordan Mason: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, RB, undrafted."
+      "reviewRationale": "Jordan Mason: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, RB, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Physical, efficient early-down runner with proven spot-starting ability; passing-game limitations keep him at the baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIN|Secondary|byronmurphy",
@@ -8156,9 +8526,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Joshua Metellus: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 28, Secondary, pick #205."
+      "reviewRationale": "Joshua Metellus: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 28, Secondary, pick #205."
     },
     {
       "id": "MIN|TE|tjhockenson",
@@ -8180,7 +8550,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "T.J. Hockenson: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 80 (high confidence), age 29, TE, pick #8."
+      "reviewRationale": "T.J. Hockenson: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 80 (high confidence), age 29, TE, pick #8.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "2025 was his weakest season since his rookie year at 438 yards, and the 2026 start remains modest; prior peak does not preserve a higher current grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIN|WR|jauanjennings",
@@ -8202,7 +8577,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jauan Jennings: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (medium confidence), age 29, WR, pick #217."
+      "reviewRationale": "Jauan Jennings: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (medium confidence), age 29, WR, pick #217.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Physical route runner and excellent blocker with real red-zone value; 2025 production was strong but current receiving role is less dominant.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "MIN|WR|jordanaddison",
@@ -8326,9 +8706,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Milton Williams: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 90 (high confidence), age 27, Front Seven, pick #73."
+      "reviewRationale": "Milton Williams: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 90 (high confidence), age 27, Front Seven, pick #73."
     },
     {
       "id": "NE|Front Seven|robertspillane",
@@ -8350,7 +8730,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Robert Spillane: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 30, Front Seven, undrafted."
+      "reviewRationale": "Robert Spillane: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 30, Front Seven, draft slot not recorded."
     },
     {
       "id": "NE|QB|drakemaye",
@@ -8391,7 +8771,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Rhamondre Stevenson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 28, RB, pick #120."
+      "reviewRationale": "Rhamondre Stevenson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 28, RB, pick #120.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Power and receiving utility remain starter-level, but recent rushing efficiency and ball-security volatility prevent a higher grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NE|RB|treveyonhenderson",
@@ -8430,9 +8815,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Carlton Davis III: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 29, Secondary, pick #63."
+      "reviewRationale": "Carlton Davis III: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 29, Secondary, pick #63."
     },
     {
       "id": "NE|Secondary|christiangonzalez",
@@ -8536,7 +8921,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Hunter Henry: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 31, TE, pick #35."
+      "reviewRationale": "Hunter Henry: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 31, TE, pick #35.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Approved good-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NE|WR|ajbrown",
@@ -8577,7 +8967,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "DeMario Douglas: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 81 (high confidence), age 25, WR, pick #210."
+      "reviewRationale": "DeMario Douglas: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 81 (high confidence), age 25, WR, pick #210.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Quick slot separator with useful YAC, but role and catch radius limit overall starter ceiling.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NE|WR|mackhollins",
@@ -8599,7 +8994,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Mack Hollins: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 76 (high confidence), age 33, WR, pick #118."
+      "reviewRationale": "Mack Hollins: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 76 (high confidence), age 33, WR, pick #118.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Approved strong-role-player/weak-Wheel-option anchor.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NE|WR|romeodoubs",
@@ -8621,7 +9021,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Romeo Doubs: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 26, WR, pick #132."
+      "reviewRationale": "Romeo Doubs: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 26, WR, pick #132.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Reliable boundary route runner with red-zone/vertical value; not enough consistent target-command for 85+.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NO|Front Seven|bryanbresee",
@@ -8687,7 +9092,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Carl Granderson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 29, Front Seven, undrafted."
+      "reviewRationale": "Carl Granderson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 29, Front Seven, draft slot not recorded."
     },
     {
       "id": "NO|Front Seven|chaseyoung",
@@ -8813,7 +9218,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Travis Etienne Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, RB, pick #25."
+      "reviewRationale": "Travis Etienne Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 27, RB, pick #25.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Still a good all-around runner/receiver with proven starter production, but recent efficiency is not strong enough for the upper band.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NO|Secondary|jonassanker",
@@ -8945,7 +9355,12 @@
       "calibration": "individual-review",
       "reviewClass": "breakthrough",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Juwan Johnson: Emerging impact is credible but a durable high-end level is not yet proven. Existing HQ grade 86 (high confidence), age 30, TE, undrafted."
+      "reviewRationale": "Juwan Johnson: Emerging impact is credible but a durable high-end level is not yet proven. Existing HQ grade 86 (high confidence), age 30, TE, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "889 yards in 2025 and 173/3 through three 2026 games establish one of the stronger current receiving profiles; lighter inline/blocking value keeps him below the upper star bands.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NO|WR|brycelance",
@@ -8967,7 +9382,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Bryce Lance: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (low confidence), age 24, WR, pick #136."
+      "reviewRationale": "Bryce Lance: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (low confidence), age 24, WR, pick #136.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Very limited NFL evidence; no college/draft projection bonus.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NO|WR|chrisolave",
@@ -9008,7 +9428,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Devaughn Vele: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 80 (medium confidence), age 28, WR, pick #235."
+      "reviewRationale": "Devaughn Vele: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 80 (medium confidence), age 28, WR, pick #235.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Size and intermediate route utility support low-end starter value, but limited volume and separation keep him here.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYG|Front Seven|abdulcarter",
@@ -9066,9 +9491,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Brian Burns: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 90 (high confidence), age 28, Front Seven, pick #16."
+      "reviewRationale": "Brian Burns: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 90 (high confidence), age 28, Front Seven, pick #16."
     },
     {
       "id": "NYG|Front Seven|djreader",
@@ -9213,7 +9638,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Najee Harris: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 80 (high confidence), age 28, RB, pick #24."
+      "reviewRationale": "Najee Harris: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 80 (high confidence), age 28, RB, pick #24.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Durable, physical and competent, but limited explosiveness and middling efficiency now fit below-average starter territory.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYG|Secondary|deontebanks",
@@ -9299,9 +9729,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jevón Holland: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 85 (high confidence), age 26, Secondary, pick #36."
+      "reviewRationale": "Jevón Holland: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 85 (high confidence), age 26, Secondary, pick #36."
     },
     {
       "id": "NYG|Secondary|paulsonadebo",
@@ -9367,7 +9797,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Isaiah Likely: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 26, TE, pick #139."
+      "reviewRationale": "Isaiah Likely: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 26, TE, pick #139.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "2024 showed strong YAC/receiving upside, but 2025 regressed sharply; current body supports a useful starter/TE2 grade rather than a projection-based breakout grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYG|WR|darnellmooney",
@@ -9389,7 +9824,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Darnell Mooney: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 28, WR, pick #173."
+      "reviewRationale": "Darnell Mooney: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 28, WR, pick #173.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Established vertical/secondary starter with useful separation; consistency and target-command fit the solid baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYG|WR|malachifields",
@@ -9411,7 +9851,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Malachi Fields: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 23, WR, pick #74."
+      "reviewRationale": "Malachi Fields: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 23, WR, pick #74.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Limited NFL sample with useful size; too little professional evidence for starter-level grading.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYG|WR|maliknabers",
@@ -9600,7 +10045,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Braelon Allen: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 78 (high confidence), age 22, RB, pick #134."
+      "reviewRationale": "Braelon Allen: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 78 (high confidence), age 22, RB, pick #134.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Size/power role remains useful, but 3.7 career YPC and limited receiving/creation evidence keep him as a role player.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYJ|RB|breecehall",
@@ -9748,7 +10198,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Mason Taylor: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 76 (medium confidence), age 22, TE, pick #42."
+      "reviewRationale": "Mason Taylor: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 76 (medium confidence), age 22, TE, pick #42.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "44 catches/369 yards as a rookie provide real starter experience, but low explosiveness, eight drops and a near-empty 2026 opening keep him below average-starter level. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYJ|WR|adonaimitchell",
@@ -9770,7 +10225,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Adonai Mitchell: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 81 (medium confidence), age 23, WR, pick #52."
+      "reviewRationale": "Adonai Mitchell: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 81 (medium confidence), age 23, WR, pick #52.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Vertical and route talent are evident, but efficiency/consistency have not established more than low-end starter ability.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "NYJ|WR|garrettwilson",
@@ -9801,17 +10261,22 @@
       "gradeAtCalibration": 72,
       "confidence": "medium",
       "draftOverall": null,
-      "breakoutPct": 9,
+      "breakoutPct": 7,
       "improvePct": 28,
-      "declinePct": 28,
+      "declinePct": 32,
       "maxAnnualGain": 4.1,
-      "maxAnnualLoss": 4.3,
+      "maxAnnualLoss": 4.8,
       "marketVariancePct": 8,
       "cohort": "early-career",
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Isaiah Williams: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 72 (medium confidence), age 25, WR, undrafted."
+      "reviewRationale": "Isaiah Williams: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 72 (medium confidence), age 25, WR, draft slot not recorded. Audited HQ rating reflects rotational role and limited receiving volume.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful slot/return quickness, but limited receiving volume keeps him in a rotational band. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules. Final discrepancy reconciliation 74→72.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PHI|Front Seven|jalencarter",
@@ -9894,9 +10359,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jonathan Greenard: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 89 (high confidence), age 29, Front Seven, pick #90."
+      "reviewRationale": "Jonathan Greenard: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 89 (high confidence), age 29, Front Seven, pick #90."
     },
     {
       "id": "PHI|Front Seven|jordandavis",
@@ -9997,7 +10462,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tank Bigsby: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 24, RB, pick #88."
+      "reviewRationale": "Tank Bigsby: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 24, RB, pick #88.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Strong 2024/25 efficiency in spots shows useful rushing ability, but tiny role and poor 2026 opening keep him below starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PHI|Secondary|andrewmukuba",
@@ -10123,7 +10593,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Dallas Goedert: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 31, TE, pick #49."
+      "reviewRationale": "Dallas Goedert: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 31, TE, pick #49.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Approved solid-starter anchor; reliable complete TE, but current role and explosive impact have declined from peak.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PHI|WR|devontasmith",
@@ -10145,7 +10620,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "DeVonta Smith: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 88 (high confidence), age 27, WR, pick #10."
+      "reviewRationale": "DeVonta Smith: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 88 (high confidence), age 27, WR, pick #10.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Elite route craft and repeated 1,000-yard-level efficiency support a very-good starter grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PHI|WR|dontayvionwicks",
@@ -10167,7 +10647,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Dontayvion Wicks: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 25, WR, pick #159."
+      "reviewRationale": "Dontayvion Wicks: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 25, WR, pick #159.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Separation metrics and current route efficiency are strong, but drops/volume inconsistency keep him at starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PHI|WR|makailemon",
@@ -10206,9 +10691,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Alex Highsmith: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 89 (high confidence), age 29, Front Seven, pick #102."
+      "reviewRationale": "Alex Highsmith: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 89 (high confidence), age 29, Front Seven, pick #102."
     },
     {
       "id": "PIT|Front Seven|cameronheyward",
@@ -10372,7 +10857,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Rico Dowdle: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 80 (high confidence), age 28, RB, undrafted."
+      "reviewRationale": "Rico Dowdle: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 80 (high confidence), age 28, RB, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Proven volume competence, but current efficiency and limited special traits fit below-average starter territory.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PIT|Secondary|asantesamuel",
@@ -10455,9 +10945,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jamel Dean: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 29, Secondary, pick #94."
+      "reviewRationale": "Jamel Dean: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 29, Secondary, pick #94."
     },
     {
       "id": "PIT|Secondary|jaquanbrisker",
@@ -10501,7 +10991,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Pat Freiermuth: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, TE, pick #55."
+      "reviewRationale": "Pat Freiermuth: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, TE, pick #55.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Steady 2024-26 production, red-zone usefulness and dependable intermediate work support a solid starter grade just above the Goedert baseline. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PIT|WR|dkmetcalf",
@@ -10542,7 +11037,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Michael Pittman Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 29, WR, pick #34."
+      "reviewRationale": "Michael Pittman Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 29, WR, pick #34.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Physical possession receiver with reliable intermediate work; recent efficiency and explosiveness fit the solid-starter band.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "PIT|WR|romanwilson",
@@ -10564,7 +11064,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Roman Wilson: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 77 (low confidence), age 25, WR, pick #84."
+      "reviewRationale": "Roman Wilson: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 77 (low confidence), age 25, WR, pick #84.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Limited professional production with enough route talent for a rotational grade, not a starter projection. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SEA|Front Seven|byronmurphy",
@@ -10584,9 +11089,9 @@
       "marketVariancePct": 5,
       "cohort": "high-draft-upside",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Byron Murphy II: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 89 (high confidence), age 24, Front Seven, pick #16."
+      "reviewRationale": "Byron Murphy II: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 89 (high confidence), age 24, Front Seven, pick #16."
     },
     {
       "id": "SEA|Front Seven|demarcuslawrence",
@@ -10652,7 +11157,7 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Drake Thomas: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 26, Front Seven, undrafted."
+      "reviewRationale": "Drake Thomas: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 26, Front Seven, draft slot not recorded."
     },
     {
       "id": "SEA|Front Seven|ernestjones",
@@ -10737,7 +11242,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jadarian Price: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 22, RB, pick #32."
+      "reviewRationale": "Jadarian Price: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 22, RB, pick #32.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Three-game rookie sample shows useful burst but two fumbles and limited all-around evidence prevent a higher grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SEA|RB|zachcharbonnet",
@@ -10759,7 +11269,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Zach Charbonnet: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 25, RB, pick #52."
+      "reviewRationale": "Zach Charbonnet: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 25, RB, pick #52.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Reliable power/receiving complement with 730 yards and 12 rushing TD in 2025; solid starter baseline without upper-tier creation.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SEA|Secondary|devonwitherspoon",
@@ -10800,7 +11315,7 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Josh Jobe: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 28, Secondary, undrafted."
+      "reviewRationale": "Josh Jobe: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 28, Secondary, draft slot not recorded."
     },
     {
       "id": "SEA|Secondary|julianlove",
@@ -10820,9 +11335,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Julian Love: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 87 (high confidence), age 28, Secondary, pick #108."
+      "reviewRationale": "Julian Love: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 28, Secondary, pick #108."
     },
     {
       "id": "SEA|Secondary|nickemmanwori",
@@ -10882,7 +11397,7 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ty Okada: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 27, Secondary, undrafted."
+      "reviewRationale": "Ty Okada: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 27, Secondary, draft slot not recorded."
     },
     {
       "id": "SEA|TE|ajbarner",
@@ -10904,7 +11419,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "AJ Barner: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (high confidence), age 24, TE, pick #121."
+      "reviewRationale": "AJ Barner: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (high confidence), age 24, TE, pick #121.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "519 yards/6 TD in 2025, 90 yards through three 2026 games and high-end run-blocking value create a genuinely complete good-starter profile. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SEA|WR|cooperkupp",
@@ -10964,7 +11484,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Rashid Shaheed: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 28, WR, undrafted."
+      "reviewRationale": "Rashid Shaheed: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 28, WR, draft slot not recorded.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Elite field-stretching speed plus improving complete-route utility support a good starter grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SF|Front Seven|dregreenlaw",
@@ -11156,7 +11681,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Isaac Guerendo: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 77 (medium confidence), age 26, RB, pick #129."
+      "reviewRationale": "Isaac Guerendo: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 77 (medium confidence), age 26, RB, pick #129.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Excellent 2024 efficiency and athletic ability remain evidence, but almost no 2025/26 offensive workload prevents a starter-level grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SF|Secondary|deommodorelenoir",
@@ -11341,7 +11871,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Deebo Samuel Sr.: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 84 (high confidence), age 30, WR, pick #36."
+      "reviewRationale": "Deebo Samuel Sr.: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 84 (high confidence), age 30, WR, pick #36.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "YAC/versatility still create unique value, but route separation and receiving consistency have declined from peak level.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SF|WR|jacobcowing",
@@ -11363,7 +11898,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jacob Cowing: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (medium confidence), age 25, WR, pick #135."
+      "reviewRationale": "Jacob Cowing: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 75 (medium confidence), age 25, WR, pick #135.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful speed/slot traits and depth value, but limited target-command keep him rotational. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "SF|WR|mikeevans",
@@ -11404,7 +11944,12 @@
       "calibration": "individual-review",
       "reviewClass": "breakthrough",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ricky Pearsall: Emerging impact is credible but a durable high-end level is not yet proven. Existing HQ grade 84 (medium confidence), age 26, WR, pick #31."
+      "reviewRationale": "Ricky Pearsall: Emerging impact is credible but a durable high-end level is not yet proven. Existing HQ grade 84 (medium confidence), age 26, WR, pick #31.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Route quickness and all-level separation flashes support good-starter ability; still short of a long established sample.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TB|Front Seven|alexanzalone",
@@ -11593,7 +12138,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Kenny Gainwell: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 27, RB, pick #150."
+      "reviewRationale": "Kenny Gainwell: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 27, RB, pick #150.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Versatile receiving/change-of-pace back with useful spot-start value but not enough rushing creation for starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TB|Secondary|antoinewinfield",
@@ -11613,9 +12163,9 @@
       "marketVariancePct": 3,
       "cohort": "prime",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Antoine Winfield Jr.: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 86 (high confidence), age 28, Secondary, pick #45."
+      "reviewRationale": "Antoine Winfield Jr.: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 86 (high confidence), age 28, Secondary, pick #45."
     },
     {
       "id": "TB|Secondary|jacobparrish",
@@ -11725,7 +12275,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Cade Otton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 79 (high confidence), age 27, TE, pick #106."
+      "reviewRationale": "Cade Otton: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 79 (high confidence), age 27, TE, pick #106.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Sure-handed and dependable with 572 yards in 2025, but limited YAC/explosive creation keeps him below the solid-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TB|WR|chrisgodwin",
@@ -11739,15 +12294,20 @@
       "draftOverall": 84,
       "breakoutPct": 4,
       "improvePct": 20,
-      "declinePct": 25,
+      "declinePct": 31,
       "maxAnnualGain": 1.8,
-      "maxAnnualLoss": 2.9,
+      "maxAnnualLoss": 3.8,
       "marketVariancePct": 4,
       "cohort": "prime",
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Chris Godwin Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 85 (high confidence), age 30, WR, pick #84."
+      "reviewRationale": "Chris Godwin Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 85 (high confidence), age 30, WR, pick #84. Audited current grade notes injuries and reduced explosiveness.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Route intelligence, hands and slot/outside versatility remain starter-plus; recent injuries and reduced explosiveness cap the grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TB|WR|emekaegbuka",
@@ -11788,7 +12348,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jalen McMillan: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 79 (medium confidence), age 24, WR, pick #92."
+      "reviewRationale": "Jalen McMillan: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 79 (medium confidence), age 24, WR, pick #92.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful route/size profile and touchdown production, but consistency and target-command remain low-end starter level. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TB|WR|tedhurst",
@@ -11810,7 +12375,12 @@
       "calibration": "individual-review",
       "reviewClass": "volatile",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Ted Hurst III: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 22, WR, pick #84."
+      "reviewRationale": "Ted Hurst III: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (low confidence), age 22, WR, pick #84.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Early 2026 flashes are encouraging, but the NFL sample is too small for a starter-level grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TEN|Front Seven|anthonyhill",
@@ -11874,9 +12444,9 @@
       "marketVariancePct": 3,
       "cohort": "established-elite",
       "calibration": "individual-review",
-      "reviewClass": "elite",
+      "reviewClass": "proven",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jeffery Simmons: Demonstrated high-end HQ grade implies a comparatively stable level and less additional headroom. Existing HQ grade 95 (high confidence), age 29, Front Seven, pick #19."
+      "reviewRationale": "Jeffery Simmons: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 95 (high confidence), age 29, Front Seven, pick #19."
     },
     {
       "id": "TEN|Front Seven|jermainejohnson",
@@ -11983,7 +12553,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tony Pollard: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 29, RB, pick #128."
+      "reviewRationale": "Tony Pollard: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 82 (high confidence), age 29, RB, pick #128.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Approved solid/average starter anchor.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TEN|RB|tyjaespears",
@@ -12005,7 +12580,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Tyjae Spears: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (high confidence), age 25, RB, pick #81."
+      "reviewRationale": "Tyjae Spears: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 81 (high confidence), age 25, RB, pick #81.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Efficient change-of-pace runner and receiving option with enough completeness to sit just below starter baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TEN|Secondary|alontaetaylor",
@@ -12137,7 +12717,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Gunnar Helm: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 76 (medium confidence), age 24, TE, pick #120."
+      "reviewRationale": "Gunnar Helm: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 76 (medium confidence), age 24, TE, pick #120.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "44 catches/357 yards as a rookie and steady early-2026 usage show functional starter traits, but limited explosiveness keeps him below 80+. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TEN|WR|calvinridley",
@@ -12159,7 +12744,12 @@
       "calibration": "individual-review",
       "reviewClass": "veteran",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Calvin Ridley: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 83 (high confidence), age 31, WR, pick #26."
+      "reviewRationale": "Calvin Ridley: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 83 (high confidence), age 31, WR, pick #26.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Still a capable separator/vertical receiver, but recent consistency and efficiency fit the solid-starter band.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "TEN|WR|carnelltate",
@@ -12200,7 +12790,12 @@
       "calibration": "individual-review",
       "reviewClass": "rising",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Wan'Dale Robinson: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 25, WR, pick #43."
+      "reviewRationale": "Wan'Dale Robinson: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 25, WR, pick #43.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "A 92-catch, 1,014-yard 2025 established strong slot/YAC starter ability; limited vertical/catch-point profile caps the grade.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "WSH|Front Seven|daronpayne",
@@ -12244,7 +12839,7 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Frankie Luvu: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (medium confidence), age 30, Front Seven, undrafted."
+      "reviewRationale": "Frankie Luvu: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (medium confidence), age 30, Front Seven, draft slot not recorded."
     },
     {
       "id": "WSH|Front Seven|javonkinlaw",
@@ -12370,7 +12965,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Jacory Croskey-Merritt: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 81 (high confidence), age 25, RB, pick #245."
+      "reviewRationale": "Jacory Croskey-Merritt: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 81 (high confidence), age 25, RB, pick #245.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "805 yards at 4.6 in 2025 showed real rushing ability; 3.0 YPC through three 2026 games and limited receiving cap him below baseline.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "WSH|RB|rachaadwhite",
@@ -12392,7 +12992,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Rachaad White: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 27, RB, pick #91."
+      "reviewRationale": "Rachaad White: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 82 (high confidence), age 27, RB, pick #91.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
+        "reason": "Useful receiving and improved recent rushing efficiency support a starter-baseline grade, though he lacks consistent high-end rushing creation.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "WSH|Secondary|amikrobertson",
@@ -12546,7 +13151,12 @@
       "calibration": "individual-review",
       "reviewClass": "established",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Chig Okonkwo: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 78 (high confidence), age 27, TE, pick #143."
+      "reviewRationale": "Chig Okonkwo: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 78 (high confidence), age 27, TE, pick #143.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
+        "reason": "Strong YAC ability and 560 yards in 2025 support starter usefulness; very poor run blocking prevents a higher complete-TE grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "WSH|WR|dyamibrown",
@@ -12568,7 +13178,12 @@
       "calibration": "individual-review",
       "reviewClass": "role",
       "reviewDate": "2026-10-08",
-      "reviewRationale": "Dyami Brown: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 80 (high confidence), age 26, WR, pick #82."
+      "reviewRationale": "Dyami Brown: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 80 (high confidence), age 26, WR, pick #82.",
+      "supportingHQEvidence": {
+        "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
+        "reason": "Useful vertical role and outside depth value, but target-command and complete-route consistency remain low-end starter level.",
+        "asOf": "2026-10-03"
+      }
     },
     {
       "id": "WSH|WR|stefondiggs",
