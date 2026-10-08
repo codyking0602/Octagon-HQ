@@ -160,10 +160,10 @@
     {
       "team": "SF",
       "player": "Brock Purdy",
-      "grade": 89,
+      "grade": 90,
       "kind": "anchor",
       "confidence": "high",
-      "reason": "Very good current quarterback whose 2026 heater is real evidence but not enough to promote him into the Dak/elite neighborhood after a more mixed prior sample."
+      "reason": "Owner-approved Oct 8 increase from 89 to 90. Sustained efficient 2025 quarterbacking plus a strong early 2026 showing justify modest placement above Jared Goff 89 and below Dak Prescott 92. This is current functional passing and anticipation, not a small-sample projection bonus."
     },
     {
       "team": "DET",
@@ -296,18 +296,18 @@
     {
       "team": "CAR",
       "player": "Bryce Young",
-      "grade": 82,
+      "grade": 83,
       "kind": "graded",
       "confidence": "medium",
-      "reason": "Early 2026 improvement is encouraging and materially better than his prior baseline, but three games do not yet justify moving above the established starter line."
+      "reason": "Owner-approved Oct 8 increase from 82 to 83. 2026 accuracy, intermediate placement, and decision-making gains merit a modest adjustment, but pressure exposure and a short 2026 sample do not support jumping to the Jordan Love/Jalen Hurts 85 tier. Peer check: above Tyler Shough and Geno Smith (82)."
     },
     {
       "team": "DEN",
       "player": "Bo Nix",
-      "grade": 79,
+      "grade": 82,
       "kind": "graded",
       "confidence": "high",
-      "reason": "Two full seasons of competent but low-efficiency play plus a shaky 2026 opening place him just below the average-starter anchor. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules."
+      "reason": "Owner-approved Oct 8 increase from 79 to 82. Two years of functional NFL starting performance, processing, mobility, and sack avoidance merit the same broadly solid-starter tier as Tyler Shough and Geno Smith (82) and above Jacoby Brissett (80), while inconsistent 2026 deeper accuracy keeps him below Bryce Young (83)."
     },
     {
       "team": "CLE",
@@ -369,40 +369,39 @@
   "pairwiseAudit": {
     "orderedNeighborhoods": [
       "Josh Allen 99 > Patrick Mahomes 97 > Lamar Jackson 96 > Matthew Stafford 95 = Joe Burrow 95",
-      "Dak Prescott 92 > Brock Purdy 89 = Jared Goff 89 > Drake Maye 88 = Sam Darnold 88 = Justin Herbert 88",
-      "Justin Herbert 88 = Drake Maye 88 = Sam Darnold 88 > Trevor Lawrence 87 = Jayden Daniels 87 = Jalen Hurts 87 > Baker Mayfield 86 > Jordan Love 85",
-      "Jordan Love 85 > C.J. Stroud 84 = Caleb Williams 84 = Kyler Murray 84 > Daniel Jones 83 = Kirk Cousins 83 = Jaxson Dart 83 = Geno Smith 83 = Deshaun Watson 83",
-      "Jacoby Brissett 82 = Tyler Shough 82 = Bryce Young 82 > Bo Nix 81 > Aaron Rodgers 80 = Michael Penix Jr. 80",
-      "Aaron Rodgers 80 = Michael Penix Jr. 80 > Malik Willis 78 > Cam Ward 77 > Fernando Mendoza 75 > Jameis Winston 74"
+      "Dak Prescott 92 > Brock Purdy 90 > Jared Goff 89 > Drake Maye 88 = Justin Herbert 88 = Sam Darnold 88",
+      "Trevor Lawrence 87 = Caleb Williams 87 > Baker Mayfield 86 > Jalen Hurts 85 = Jordan Love 85 > Jayden Daniels 84",
+      "Bryce Young 83 > C.J. Stroud 82 = Geno Smith 82 = Jaxson Dart 82 = Tyler Shough 82 = Bo Nix 82 > Kyler Murray 80 = Daniel Jones 80 = Kirk Cousins 80 = Jacoby Brissett 80 > Aaron Rodgers 79",
+      "Deshaun Watson 78 = Michael Penix Jr. 78 > Malik Willis 76 > Cam Ward 75 > Fernando Mendoza 73",
+      "Jameis Winston 72"
     ],
     "resolvedPressurePoints": [
-      "Purdy and Herbert remain at the user-approved corrected anchor values (89 and 88); neither receives a trait/reputation or three-game-hot-streak premium.",
-      "Maye moves from 90 to 88: his 2025 MVP-caliber season remains powerful evidence, but a 1:6 TD/INT start is too severe for the 90 tier.",
-      "Hurts moves from 90 to 87. His rushing value and 2024-25 efficiency remain good-starter evidence, but current passing performance does not support a high-end grade.",
-      "Darnold moves from 85 to 88 because two consecutive strong full seasons plus another efficient start are now an established current level, not a one-year fluke.",
-      "Love moves from 87 to 85; Stroud from 86 to 84; Geno from 84 to 83. Each correction reduces reputation/short-hot-streak carryover and better matches the established current body.",
-      "Watson moves from 81 to 83. Four improved 2026 games justify recognition, but not enough to erase the weak 2022-24 evidence.",
-      "Mendoza remains provisional at 75; first meaningful regular-season snaps should trigger a targeted review."
+      "Owner-approved Oct 8: Brock Purdy 89→90. Peer check: above Goff 89; below Dak 92 on demonstrated current passing.",
+      "Owner-approved Oct 8: Bryce Young 82→83. Peer check: above the 82 starter cluster; below Love/Hurts 85 given pressure and sample uncertainty.",
+      "Owner-approved Oct 8: Bo Nix 79→82. Peer check: same current-ability band as Shough/Geno 82; below Bryce Young 83.",
+      "Previously calibrated elite quarterbacks retain their present-ability grades. No youth-upside, retirement, or fantasy-value bonus.",
+      "Drake Maye 88 after full 2025 evidence balanced with seven 2026 early interceptions; no Oct 8 change.",
+      "Caleb Williams 87; Sam Darnold 88; Jalen Hurts 85; Jayden Daniels 84; C.J. Stroud 82 remain as in the completed cross-position sweep."
     ],
-    "result": "locked",
+    "result": "owner-approved-subsequent-calibration",
     "contradictionsRemaining": false,
-    "finalCalibrationStatus": "passed"
+    "finalCalibrationStatus": "passed-with-three-owner-approved-revisions"
   },
   "postGradeDistribution": {
     "min": 72,
     "max": 99,
-    "mean": 84.41,
-    "median": 84,
+    "mean": 84.56,
+    "median": 83.5,
     "bands": {
       "95-100": 5,
-      "90-94": 1,
-      "85-89": 10,
-      "80-84": 10,
-      "75-79": 6,
+      "90-94": 2,
+      "85-89": 9,
+      "80-84": 11,
+      "75-79": 5,
       "below-75": 2
     },
-    "note": "Final distribution after all calibration and discrepancy reconciliation; distribution did not mechanically set grades.",
-    "below80": 8
+    "below80": 7,
+    "note": "Distribution after owner-approved Oct 8, 2026 QB grade updates; the population and ratings scale were not mechanically set."
   },
   "runtimeBoundary": "No production/runtime grading behavior is changed by this artifact. Phase 5 will wire server-owned grades, frozen historical selection grades, and hidden reveal behavior separately.",
   "futureVersioning": "Any future grade change must record previous grade, new grade, effective date, concise reason, and nearby anchor/peer sanity check.",
@@ -522,6 +521,71 @@
         "75-79": 6,
         "below-75": 2
       }
+    },
+    "ownerApprovedRevisions": [
+      {
+        "player": "Bryce Young",
+        "from": 82,
+        "to": 83,
+        "date": "2026-10-08",
+        "peerCheck": "Owner-approved Oct 8 increase from 82 to 83. 2026 accuracy, intermediate placement, and decision-making gains merit a modest adjustment, but pressure exposure and a short 2026 sample do not support jumping to the Jordan Love/Jalen Hurts 85 tier. Peer check: above Tyler Shough and Geno Smith (82)."
+      },
+      {
+        "player": "Brock Purdy",
+        "from": 89,
+        "to": 90,
+        "date": "2026-10-08",
+        "peerCheck": "Owner-approved Oct 8 increase from 89 to 90. Sustained efficient 2025 quarterbacking plus a strong early 2026 showing justify modest placement above Jared Goff 89 and below Dak Prescott 92. This is current functional passing and anticipation, not a small-sample projection bonus."
+      },
+      {
+        "player": "Bo Nix",
+        "from": 79,
+        "to": 82,
+        "date": "2026-10-08",
+        "peerCheck": "Owner-approved Oct 8 increase from 79 to 82. Two years of functional NFL starting performance, processing, mobility, and sack avoidance merit the same broadly solid-starter tier as Tyler Shough and Geno Smith (82) and above Jacoby Brissett (80), while inconsistent 2026 deeper accuracy keeps him below Bryce Young (83)."
+      }
+    ],
+    "rangeAfterOwnerRevisions": {
+      "min": 72,
+      "max": 99,
+      "mean": 84.56,
+      "median": 83.5,
+      "bands": {
+        "95-100": 5,
+        "90-94": 2,
+        "85-89": 9,
+        "80-84": 11,
+        "75-79": 5,
+        "below-75": 2
+      },
+      "below80": 7
     }
-  }
+  },
+  "latestReviewedAt": "2026-10-08",
+  "ownerApprovedRevisions": [
+    {
+      "player": "Bryce Young",
+      "team": "CAR",
+      "from": 82,
+      "to": 83,
+      "date": "2026-10-08",
+      "reason": "Owner-approved Oct 8 increase from 82 to 83. 2026 accuracy, intermediate placement, and decision-making gains merit a modest adjustment, but pressure exposure and a short 2026 sample do not support jumping to the Jordan Love/Jalen Hurts 85 tier. Peer check: above Tyler Shough and Geno Smith (82)."
+    },
+    {
+      "player": "Brock Purdy",
+      "team": "SF",
+      "from": 89,
+      "to": 90,
+      "date": "2026-10-08",
+      "reason": "Owner-approved Oct 8 increase from 89 to 90. Sustained efficient 2025 quarterbacking plus a strong early 2026 showing justify modest placement above Jared Goff 89 and below Dak Prescott 92. This is current functional passing and anticipation, not a small-sample projection bonus."
+    },
+    {
+      "player": "Bo Nix",
+      "team": "DEN",
+      "from": 79,
+      "to": 82,
+      "date": "2026-10-08",
+      "reason": "Owner-approved Oct 8 increase from 79 to 82. Two years of functional NFL starting performance, processing, mobility, and sack avoidance merit the same broadly solid-starter tier as Tyler Shough and Geno Smith (82) and above Jacoby Brissett (80), while inconsistent 2026 deeper accuracy keeps him below Bryce Young (83)."
+    }
+  ]
 }
