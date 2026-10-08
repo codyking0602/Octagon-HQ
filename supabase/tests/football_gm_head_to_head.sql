@@ -46,7 +46,8 @@ begin
     into v_year1_definition;
   if position('football_gm_finish_rank' in v_year1_definition) = 0
     or position('offseason_first_profile_id' in v_year1_definition) = 0
-    or position('order by' in v_year1_definition) = 0 then
+    or position('order by' in v_year1_definition) = 0
+    or position('football_gm_repair_duplicate_finalists' in v_year1_definition) = 0 then
     raise exception 'The GM Year 1 offseason-priority contract drifted';
   end if;
 
@@ -72,6 +73,25 @@ begin
     or position('forfeited_by_profile_id = v_user_id' in v_forfeit_definition) = 0
     or position('exception when others then' in v_forfeit_definition) = 0 then
     raise exception 'The GM active-match forfeit contract drifted';
+  end if;
+
+  if to_regprocedure('private.football_gm_repair_duplicate_finalists(uuid,uuid)') is null then
+    raise exception 'GM legacy double-finalist normalizer is missing';
+  end if;
+
+  if exists (
+    select 1
+    from private.football_gm_matches match
+    join private.football_gm_participants participant
+      on participant.challenge_id = match.challenge_id
+    where match.phase = 'complete'
+      and match.offseason_first_profile_id is not null
+    group by match.challenge_id
+    having count(*) = 2
+      and count(distinct participant.year1_result ->> 'finish') = 1
+      and max(participant.year1_result ->> 'finish') in ('Champion', 'Super Bowl Loss')
+  ) then
+    raise exception 'Legacy GM match still has two exclusive Super Bowl finalists';
   end if;
 
   if has_table_privilege('anon', 'private.football_gm_matches', 'select')
