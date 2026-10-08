@@ -718,8 +718,8 @@ function tradeControlFactor(player: FootballGmPlayer) {
   return 1.08 + Math.max(-0.08, surplus * 0.18);
 }
 
-export function footballGmTradeAssetValue(player: FootballGmPlayer, acquiringTeam: string) {
-  const grade = footballGmProjectedGradeForPlayer(player, 2);
+export function footballGmTradeAssetValue(player: FootballGmPlayer, acquiringTeam: string, seed?: string) {
+  const grade = footballGmProjectedGradeForPlayer(player, 2, seed);
   const talent = Math.pow(Math.max(5, grade - 64), 1.45);
   return talent
     * tradePositionFactor(player)
@@ -995,11 +995,11 @@ export function footballGmEvaluateTradeProposal(input: {
   }
 
   const partnerReceivesValue = outgoingPlayers.reduce(
-    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam),
+    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam, input.seed),
     0,
   );
   const partnerSendsValue = incomingPlayers.reduce(
-    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam),
+    (sum, player) => sum + footballGmTradeAssetValue(player, input.partnerTeam, input.seed),
     0,
   );
   const packageKey = [
