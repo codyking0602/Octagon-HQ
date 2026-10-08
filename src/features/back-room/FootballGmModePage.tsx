@@ -51,6 +51,7 @@ import {
   footballGmSignFreeAgent,
   footballGmTradePartnerPlayers,
   type FootballGmNegotiationConsequences,
+  type FootballGmSeasonResultV2,
   type FootballGmTradeProposal,
 } from "./footballGmStrategy";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
