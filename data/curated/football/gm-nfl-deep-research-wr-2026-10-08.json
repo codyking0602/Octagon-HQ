@@ -19,7 +19,8 @@
     "Injury is modeled as future availability/development uncertainty; audited present HQ grades cannot change. No medical prognosis asserted beyond cited team reporting.",
     "Team names and canonical IDs represent the specified calibration pool dated October 8, not predictions of future roster transactions.",
     "Development breakout/improve/steady/decline are Year 2 baseline scenario odds. Year 3 conditional logic remains owned by the parent engine and is not changed by this file.",
-    "Some ratings rationale in 'auditedPresentAbilityInterpretation' is explicitly preexisting HQ audit evidence, not newly authored independent scouting."
+    "Some ratings rationale in 'auditedPresentAbilityInterpretation' is explicitly preexisting HQ audit evidence, not newly authored independent scouting.",
+    "Confidence applies to the strength and recency of cited receiving/health evidence, not to the preexisting HQ present-grade confidence. Elite veterans with repeated production may be high confidence while most rotation and injury-limited forecasts remain medium or low."
   ],
   "count": 103,
   "qualityControlBatches": [
@@ -87,7 +88,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 1,
         "improvePct": 13,
@@ -207,7 +208,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 9,
         "improvePct": 25,
@@ -333,7 +334,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 12,
         "improvePct": 18,
@@ -393,7 +394,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 17,
@@ -513,7 +514,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -645,7 +646,7 @@
           "scope": "Shoulder injury, Week 4 departure; prognosis not established"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -765,7 +766,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 9,
         "improvePct": 25,
@@ -957,7 +958,7 @@
           "scope": "Knee injury; at least four games on injured reserve"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 26,
         "improvePct": 33,
@@ -1017,7 +1018,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 1,
         "improvePct": 13,
@@ -1143,7 +1144,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 13,
         "improvePct": 33,
@@ -1203,7 +1204,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 17,
@@ -1329,7 +1330,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 5,
         "improvePct": 23,
@@ -1449,7 +1450,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -1761,7 +1762,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -1821,7 +1822,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 7,
         "improvePct": 27,
@@ -1881,7 +1882,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 17,
         "improvePct": 36,
@@ -2259,7 +2260,7 @@
           "scope": "Neck surgery ends 2026 season; NFL reports coach does not expect career to end"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -2379,7 +2380,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 17,
         "improvePct": 36,
@@ -2418,7 +2419,7 @@
       "fixedHQGrade": 92,
       "hqGradeLocked": true,
       "researchAsOf": "2026-10-08",
-      "season2025Evidence": "2025 74 catches 1,138 yards on 124 targets and PFF 2.27 YPRR, reliable catch point",
+      "season2025Evidence": "2025 74 catches and 1,117 receiving yards in the Pro Football Reference regular-season table; the PFF article's 1,138 total conflicts and is not adopted. PFF's 2.27 YPRR is directional only.",
       "completed2026GamesEvidence": "2026 missed Weeks2-3 hamstring, cleared for Week4; early 7 catches 75 yards before missed games",
       "playerSpecificTraitsOpportunityDurability": "Injury affects availability not established high-end ability; age 27 makes repeatable alpha more likely than breakout.",
       "auditedPresentAbilityInterpretation": "Approved high-end anchor.",
@@ -2449,6 +2450,12 @@
           "publisher": "PFF",
           "publishedOn": "2026-07-07",
           "scope": "Direction of route-efficiency evidence only: article season aggregate counts conflict with other published 2025 tables; disputed absolute totals NOT used"
+        },
+        {
+          "url": "https://www.pro-football-reference.com/years/2025/receiving.htm",
+          "publisher": "Pro Football Reference",
+          "accessedOn": "2026-10-08",
+          "scope": "2025 receiving regular-season official table; 1,117 receiving yards"
         }
       ],
       "evidenceConfidence": "high",
@@ -2479,7 +2486,7 @@
         "loss": 1,
         "marketVariancePp": 2
       },
-      "rationale": "Injury affects availability not established high-end ability; age 27 makes repeatable alpha more likely than breakout. For the next two seasons: 4% genuine breakout, 21% moderate improvement, 51% essentially steady, and 24% regression. This differs from the existing profile by -1pp breakout and +7pp decline; annual bound +3.6/-5.5 grades and 6% contract-market dispersion express this receiver's role, durability, target opportunity and 2025-to-2026 evidence without changing current HQ ability."
+      "rationale": "2025 verified 1,117 receiving yards, repeated target earning and boundary/contested ability argue for high stability. Weeks 2-3 hamstring absence and Week 4 return affect availability more than present skill. Over Years 2-3: 4% breakout, 21% improvement, 51% steady, 24% decline, with +3.6/-5.5 annual grade limits and 6% market dispersion. Compared with baseline, breakout -1pp and decline +7pp, specifically from hamstring/age exposure rather than speculative loss of ability."
     },
     {
       "id": "HOU|WR|tankdell",
@@ -2517,7 +2524,7 @@
           "scope": "Practice window anticipated after severe knee rehab; not yet active"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 5,
         "improvePct": 20,
@@ -2577,7 +2584,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 17,
@@ -2643,7 +2650,7 @@
           "scope": "March ankle surgery, late-August practice resumption; October status separately uncertain"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 9,
         "improvePct": 25,
@@ -2703,7 +2710,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -2763,7 +2770,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 19,
         "improvePct": 36,
@@ -2823,7 +2830,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 11,
@@ -2943,7 +2950,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -3003,7 +3010,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 14,
         "improvePct": 36,
@@ -3063,7 +3070,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 26,
         "improvePct": 22,
@@ -3123,7 +3130,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 9,
         "improvePct": 29,
@@ -3303,7 +3310,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 21,
         "improvePct": 36,
@@ -3483,7 +3490,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 11,
@@ -3681,7 +3688,7 @@
           "scope": "Moved to injured reserve; duration beyond minimum uncertain"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 20,
         "improvePct": 31,
@@ -3741,7 +3748,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 17,
@@ -3801,7 +3808,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 15,
         "improvePct": 36,
@@ -4101,7 +4108,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 10,
         "improvePct": 31,
@@ -4293,7 +4300,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 10,
         "improvePct": 31,
@@ -4359,7 +4366,7 @@
           "scope": "Mack Hollins exited game; extent unknown"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 11,
@@ -4419,7 +4426,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -4659,7 +4666,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 17,
@@ -4965,7 +4972,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 7,
         "improvePct": 28,
@@ -5031,7 +5038,7 @@
           "scope": "Hamstring, out for Week 4"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -5211,7 +5218,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -5271,7 +5278,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -5391,7 +5398,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 3,
         "improvePct": 13,
@@ -5517,7 +5524,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -5577,7 +5584,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 1,
         "improvePct": 13,
@@ -5637,7 +5644,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 19,
         "improvePct": 29,
@@ -5697,7 +5704,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 11,
@@ -5763,7 +5770,7 @@
           "scope": "Pearsall reported among SF WR on injured reserve"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 18,
         "improvePct": 26,
@@ -5823,7 +5830,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 20,
@@ -5883,7 +5890,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 17,
         "improvePct": 33,
@@ -5949,7 +5956,7 @@
           "scope": "Knee injury and injured reserve, outcome not established"
         }
       ],
-      "evidenceConfidence": "medium",
+      "evidenceConfidence": "low",
       "previousDevelopment": {
         "breakoutPct": 19,
         "improvePct": 31,
@@ -6069,7 +6076,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 1,
         "improvePct": 13,
@@ -6189,7 +6196,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 19,
         "improvePct": 36,
@@ -6249,7 +6256,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 17,
@@ -6309,7 +6316,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 2,
         "improvePct": 10,
@@ -6369,7 +6376,7 @@
           "scope": "2025 regular season and 2026 completed-games receiving/game logs; source pages may lag the latest game"
         }
       ],
-      "evidenceConfidence": "high",
+      "evidenceConfidence": "medium",
       "previousDevelopment": {
         "breakoutPct": 4,
         "improvePct": 19,
