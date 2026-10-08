@@ -15090,8 +15090,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 40,
+          "steady": 31,
+          "decline": 10,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.07,
+        "summary": "USC 2025 true freshman safety/corner had just five appearances, two starts including UCLA and the Alamo Bowl, and 15 tackles/two TFL; missed early games due to injury. Official 2026 redshirt freshman who entered college spring 2025. No 2027 NFL declaration eligibility; strong role-growth opportunity but tiny college sample and injury risk.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/alex-graham/18817"
+        ]
+      }
     },
     {
       "id": "usc|braylanshelby",
@@ -15109,8 +15128,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 50,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.53,
+        "portalExitProbability": 0.02,
+        "summary": "USC 2025 junior DE logged 29 tackles, seven TFL, 4.5 sacks and one interception in 13 games/six starts; 2024 had 28 tackles/five TFL/three sacks. 2026 senior with 37 career appearances and 9.5 sacks across years, established rotational/partial-starter impact, more likely steady than huge breakout.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/braylan-shelby/18761"
+        ]
+      }
     },
     {
       "id": "usc|chasenjohnson",
@@ -15128,8 +15166,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 33,
+          "steady": 29,
+          "decline": 23,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.21,
+        "portalExitProbability": 0.07,
+        "summary": "UCF 2024 freshman corner appeared in 12 games/four starts with 18 tackles/two breakups; at USC 2025 played two games/one tackle before season-ending Purdue injury. 2026 USC redshirt sophomore needs injury rebound and larger role; first college entry 2024 means 2027 NFL possible, but minimal 2025 verified production.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/chasen-johnson/18827"
+        ]
+      }
     },
     {
       "id": "usc|christianpierce",
@@ -15147,8 +15204,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 26,
+          "steady": 54,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.67,
+        "portalExitProbability": 0.02,
+        "summary": "USC 2025 full-time safety started nine of 13 games and produced 64 tackles, 2.5 TFL, three PBU, one interception and forced fumble, versus only 15 tackles across first two years. 2026 senior with demonstrated Big Ten role; most likely steady, not guaranteed pro declaration.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/christian-pierce/18850"
+        ]
+      }
     },
     {
       "id": "usc|desmanstephensii",
@@ -15166,8 +15242,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 49,
+          "decline": 11,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.67,
+        "portalExitProbability": 0.03,
+        "summary": "USC 2025 sophomore LB started all 13 games and led team with 89 tackles, 3 TFL, one forced fumble, including 17 tackles vs Oregon. 2024 13 games and 13 tackles. 2026 junior already a proven major-conference regular, modest incremental gain and solid 2027 draft candidacy rather than artificial sophomore breakout.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/desman-stephens-ii/18764"
+        ]
+      }
     },
     {
       "id": "usc|devenbryant",
@@ -15185,8 +15280,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 35,
+          "steady": 42,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.44,
+        "portalExitProbability": 0.05,
+        "summary": "Washington 2025 linebacker started ten of 12 games with 62 tackles, two TFL and two PBUs. Across 2023-25 24 appearances/ten starts and 69 tackles, then transferred to USC 2026 redshirt junior. Meaningful Big Ten starter base and scheme adjustment, moderate improvement path with role competition.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/devan-bryant/18799"
+        ]
+      }
     },
     {
       "id": "usc|jaydenmaiava",
@@ -15254,9 +15368,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://usctrojans.com/sports/football/roster/",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 28,
+          "steady": 43,
+          "decline": 21,
+          "maxGain": 4,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.02,
+        "summary": "Iowa State 2024 all-Big12 second-team CB had 46 tackles, four interceptions and five PBU in 14 games/12 starts; 2025 opening five starts 15 tackles/one INT before season-ending knee injury. Transferred to USC for 2026 official redshirt senior, previously redshirted 2022. Injury-return top corner but volatility remains high; ordinary 2026 final year modeled.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/jontez-williams/18783"
+        ]
+      }
     },
     {
       "id": "usc|kameryncrawford",
@@ -15274,8 +15407,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.72,
+        "portalExitProbability": 0.03,
+        "summary": "USC 2025 starting defensive end recorded 41 tackles, 10.5 TFL and 5.5 sacks in 13 games/eight starts; 2024 19 tackles/two TFL in eight games/four starts. 2026 junior with consistent impact and 15 career TFL across two seasons, growth bounded with high plausible NFL interest.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/kameryn-crawford/18805"
+        ]
+      }
     },
     {
       "id": "usc|kaydendixonwyatt",
@@ -15294,8 +15446,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 24,
+          "improve": 44,
+          "steady": 25,
+          "decline": 7,
+          "maxGain": 8,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1,
+        "summary": "Official USC 2026 true freshman wide receiver enrolled spring 2026 from Mater Dei with no verified college 2025 production. High-school receiving résumé and recruiting grade are not proof of present college dominance. Modeling larger potential gains with big uncertainty, and 2027 draft ineligible after first 2026 matriculation.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/kayden-dixonwyatt/18706"
+        ]
+      }
     },
     {
       "id": "usc|kingmiller",
@@ -15314,8 +15485,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 52,
+          "decline": 13,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.69,
+        "portalExitProbability": 0.02,
+        "summary": "USC 2025 redshirt freshman running back rushed 156 times for 972 yards and eight TD (6.2 YPC), seven starts in 13 appearances; earned All-Big Ten honorable mention and Freshman All-American second-team recognition after walk-on breakthrough. 2026 redshirt sophomore enrolled in 2024, making 2027 NFL possible; demonstrated feature value makes steady/improve likelier than huge breakout.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/king-miller/18739"
+        ]
+      }
     },
     {
       "id": "usc|lukewafle",
@@ -15333,8 +15523,27 @@
       "sourceUrl": "https://usctrojans.com/sports/football/roster/",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 23,
+          "improve": 42,
+          "steady": 28,
+          "decline": 7,
+          "maxGain": 8,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.1,
+        "summary": "USC official 2026 true freshman DE enrolled January/spring 2026 from the Hun School of Princeton, with no verified college season statistics. High-school 2024 53 tackles, 18 TFL/eight sacks demonstrate prep pedigree only; large uncertain college projection and 2027 NFL Draft not permitted.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/luke-wafle/18879"
+        ]
+      }
     },
     {
       "id": "usc|markbowman",
@@ -15404,9 +15613,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 30,
+          "steady": 30,
+          "decline": 28,
+          "maxGain": 5,
+          "maxLoss": 8,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.01,
+        "summary": "USC 2026 redshirt senior safety missed all of 2025 following fall-camp season-ending injury. Across five prior college years recorded only 31 tackles and two PBUs in 39 games/one start (2024 11 tackles in 13 appearances); injury comeback offers role upside but very high downside and ordinary final year 2026.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/prophet-brown/18798"
+        ]
+      }
     },
     {
       "id": "usc|tanookhines",
@@ -15424,8 +15652,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 39,
+          "steady": 37,
+          "decline": 11,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.05,
+        "summary": "USC 2025 true-freshman receiver had 34 receptions for 561 yards and two TD in 13 games/eight starts, including six catches/141 yards vs Oregon and six/163 in Alamo Bowl vs TCU. 2026 sophomore with established deep-target flashes, meaningful improvement runway, but first enrolled 2025 and ineligible to enter 2027 draft.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/tanook-hines/18716"
+        ]
+      }
     },
     {
       "id": "usc|trentmosley",
@@ -15444,8 +15691,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 23,
+          "improve": 44,
+          "steady": 25,
+          "decline": 8,
+          "maxGain": 7,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.12,
+        "summary": "USC 2026 official freshman receiver enrolled spring 2026 after finishing high school early, with no verified college-game statistics as of biography. Four-star recruit and past high-school rushing/receiving production are projection inputs only; big uncertainty and 2027 draft ineligible.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/trent-mosley/18843"
+        ]
+      }
     },
     {
       "id": "usc|waymondjordan",
@@ -15462,9 +15728,9 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -15477,6 +15743,25 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 37,
+          "decline": 23,
+          "maxGain": 5,
+          "maxLoss": 8,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.55,
+        "portalExitProbability": 0.01,
+        "summary": "USC 2025 RB rushed 88 times for 576 yards/five TD (6.5 per carry) in only six games before season-ending Michigan injury; productive Hutchinson CC background including 1,000-yard season. Official 2026 redshirt senior first enrolled 2022, modeled terminal season. Strong explosiveness meets genuine injury durability risk; avoid projecting inevitable breakout.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/waymond-jordan/18728"
+        ]
       }
     },
     {
@@ -15495,8 +15780,27 @@
       "sourceUrl": "https://usctrojans.com/sports/football/roster/",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 18,
+          "improve": 36,
+          "steady": 31,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.09,
+        "summary": "USC 2025 receiver played only five games/one start due to Georgia Southern injury and caught three passes for 80 yards; at Utah in 2024 freshman season had ten catches for 101 yards in ten games. 2026 redshirt sophomore, first 2024 college enrollment makes 2027 NFL legally possible but career target volume tiny, so development volatile.",
+        "sources": [
+          "https://usctrojans.com/sports/football/roster/zacharyus-williams/18888"
+        ]
+      }
     },
     {
       "id": "utah|alexcloward",
