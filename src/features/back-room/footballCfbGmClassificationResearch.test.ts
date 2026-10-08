@@ -17,6 +17,16 @@ describe("CFB GM classification evidence integrity", () => {
     expect(new Set(audit.players.map((row) => row.id)).size).toBe(468);
     expect(audit.classified).toBe(audit.players.filter((row) => row.classification !== null).length);
   });
+  it("uses official 2026 class evidence for 466 players, preserving exactly two graduate-student unknowns", () => {
+    expect(audit.classified).toBe(466);
+    const unresolved = audit.players.filter((row) => row.classification === null).map((row) => row.id).sort();
+    expect(unresolved).toEqual(["miami|mohamedtoure","smu|jimmywyrick"]);
+    expect(overrides.rows).toHaveLength(82);
+    expect(audit.players.find((row) => row.id === "usc|lukewafle")?.classification).toBe("FR");
+    expect(audit.players.find((row) => row.id === "ohio-state|jaytimmons")?.classification).toBe("FR");
+    expect(audit.players.find((row) => row.id === "pittsburgh|jakyrianturner")?.classification).toBe("SO");
+    expect(audit.players.find((row) => row.id === "mississippi-state|willwhitson")?.classification).toBe("7TH");
+  });
   it("retains unresolved eligibility as unknown rather than falsely declaring or graduating players", () => {
     const valid = new Set(["FR","SO","JR","SR","5TH","6TH","7TH","3RD"]);
     for (const row of audit.players) {
