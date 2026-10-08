@@ -38,6 +38,7 @@ import {
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
   footballGmSeasonRecordLabel,
+  footballGmFinalResultV2,
   footballGmTeamOverall,
   footballGmSignFreeAgent,
   type FootballGmTradeProposal,
@@ -1342,11 +1343,34 @@ export default function FootballGmHeadToHeadPage() {
 
   return (
     <div className="page football-gm-page football-gm-h2h">
-      <header className="football-gm__header">
-        <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
-        <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
-        <b>3 YEARS</b>
-      </header>
+      {displayedPhase === "complete" && !remote?.forfeited_at ? (
+        <header className="football-gm__header is-final">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><strong>THE GM</strong><small>HEAD TO HEAD · 3 YEARS</small></span>
+          <button type="button" className="football-gm__share-result" onClick={() => {
+            const myResult = footballGmFinalResultV2({
+              seed: run.seed, yearOneRoster: run.roster,
+              finalRoster: run.finalRoster.length ? run.finalRoster : run.roster,
+              resolvedSeasons: resolvedThreeYears?.[0],
+            });
+            const rivalResult = footballGmFinalResultV2({
+              seed: opponentRun.seed, yearOneRoster: opponentRun.roster,
+              finalRoster: opponentRun.finalRoster.length ? opponentRun.finalRoster : opponentRun.roster,
+              resolvedSeasons: resolvedThreeYears?.[1],
+            });
+            const text = "Octagon HQ · The GM: " + myDisplayName + " "
+              + myResult.score.toFixed(1) + " vs " + opponentDisplayName + " " + rivalResult.score.toFixed(1);
+            if (navigator.share) void navigator.share({ title: "The GM · Head to Head", text }).catch(() => {});
+            else if (navigator.clipboard?.writeText) void navigator.clipboard.writeText(text).catch(() => {});
+          }}>SHARE ↗</button>
+        </header>
+      ) : (
+        <header className="football-gm__header">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
+          <b>3 YEARS</b>
+        </header>
+      )}
 
       {mode === "human" && remote && remote.phase !== "waiting" && remote.phase !== "complete" && !remote.declined_at ? (
         <section className="football-gm__match-controls surface-card">
