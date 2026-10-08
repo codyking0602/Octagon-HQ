@@ -1,10 +1,4 @@
-import qbJson from "../../../data/generated/football/wheel-cfb-qb-grades-2026-10-03.json";
-import rbJson from "../../../data/generated/football/wheel-cfb-rb-grades-2026-10-03.json";
-import wrJson from "../../../data/generated/football/wheel-cfb-wr-grades-2026-10-03.json";
-import teJson from "../../../data/generated/football/wheel-cfb-te-grades-2026-10-03.json";
-import frontJson from "../../../data/generated/football/wheel-cfb-front-seven-grades-2026-10-03.json";
-import secondaryJson from "../../../data/generated/football/wheel-cfb-secondary-grades-2026-10-03.json";
-import boiseGradeAudit from "../../../data/curated/football/cfb/wheel-football-boise-state-grading-audit-2026-10-03.json";
+import gradeProjection from "../../../data/generated/football/wheel-cfb-gm-grade-projection-2026-10-07.json";
 import { wheelFootballCfbPriorityForSchoolId } from "./wheelFootballCfbPriority";
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
 import { footballGmTeamOverall, footballGmOutcomeProbabilities } from "./footballGmStrategy";
@@ -23,8 +17,6 @@ export const CFB_GM_SLOT_LABELS: Readonly<Record<CfbGmSlot, string>> = {
 };
 
 type GradeFamily = "QB" | "RB" | "WR" | "TE" | "Front Seven" | "Secondary";
-type GradeRow = { school: string; player: string; grade: number };
-type GradeArtifact = { grades: GradeRow[] };
 export type CfbGmPlayer = {
   id: string;
   schoolId: string;
@@ -82,21 +74,14 @@ export function cfbGmMoney(value: number) {
   return "$" + (value / 1_000_000).toFixed(2).replace(/0+$/, "").replace(/\.$/, "") + "M";
 }
 
-const source: readonly [GradeFamily, GradeArtifact][] = [
-  ["QB", qbJson as GradeArtifact],
-  ["RB", rbJson as GradeArtifact],
-  ["WR", wrJson as GradeArtifact],
-  ["TE", teJson as GradeArtifact],
-  ["Front Seven", frontJson as GradeArtifact],
-  ["Secondary", secondaryJson as GradeArtifact],
-];
+// Lossless, grade-only projection of the audited Wheel authority. The source
+// grading artifacts and rationale stay intact; the private comments and
+// playtest QA notes never enter the public application bundle.
 const gradeIndex = new Map<string, number>();
-for (const [family, artifact] of source) {
-  for (const row of artifact.grades) {
-    const key = [normalize(row.school), family, normalize(row.player)].join("|");
-    if (gradeIndex.has(key)) throw new Error("Duplicate CFB GM grade: " + key);
-    gradeIndex.set(key, row.grade);
-  }
+for (const row of gradeProjection.grades as {school:string;family:GradeFamily;player:string;grade:number}[]) {
+  const key = [normalize(row.school), row.family, normalize(row.player)].join("|");
+  if (gradeIndex.has(key)) throw new Error("Duplicate CFB GM grade: " + key);
+  gradeIndex.set(key, row.grade);
 }
 // Fictional market estimates, not reported NIL deals. The price model deliberately
 // never reads a player's HQ grade, preserving independent scouting and salary decisions.
@@ -109,10 +94,6 @@ const nilMarket: Readonly<Record<GradeFamily, readonly [number, number]>> = {
   "Front Seven": [200_000, 1_250_000],
   Secondary: [175_000, 1_150_000],
 };
-for (const row of boiseGradeAudit.grades) {
-  if (row.family === "Head Coach") continue;
-  gradeIndex.set([normalize("Boise State"), row.family, normalize(row.name)].join("|"), row.grade);
-}
 const playerMap = new Map<string, CfbGmPlayer>();
 const schoolPlayers = new Map<string, CfbGmPlayer[]>();
 const eligibleSchools = wheelFootballPoolTeams("AP_TOP_25").map((school) => school.code);
