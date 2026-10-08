@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "version": "nfl-wheel-wr-grades-2026-10-03-v1",
   "status": "audit-locked-not-runtime",
-  "effectiveDate": "2026-10-03",
+  "effectiveDate": "2026-10-08",
   "populationSource": {
     "path": "data/generated/football/wheel-football-priorities.json",
     "mainSha": "f295e359d9e70f5c55d0452f4f94d9487fbc3f06",
@@ -49,7 +49,7 @@
     },
     {
       "player": "Chris Olave",
-      "grade": 90
+      "grade": 91
     },
     {
       "player": "Tee Higgins",
@@ -183,16 +183,16 @@
     {
       "team": "CAR",
       "player": "Xavier Legette",
-      "grade": 80,
+      "grade": 78,
       "confidence": "medium",
-      "reason": "Physical traits and vertical ability remain useful, but route/production consistency has not established more than a low-end starter level."
+      "reason": "Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty."
     },
     {
       "team": "CHI",
       "player": "Rome Odunze",
-      "grade": 88,
+      "grade": 87,
       "confidence": "high",
-      "reason": "High-end size, route and catch-point profile with a strong established 2025 step forward; just below the true star tier."
+      "reason": "Size and catch-point tools remain strong, but demonstrated target-winning and efficiency across available 2025-26 NFL games are less established than proven 88-grade peers; no deduction for missed games themselves."
     },
     {
       "team": "CHI",
@@ -204,9 +204,9 @@
     {
       "team": "CHI",
       "player": "Kalif Raymond",
-      "grade": 81,
+      "grade": 79,
       "confidence": "high",
-      "reason": "Current 2026 efficiency is excellent, but his established NFL role remains more specialist/WR3 than quality primary starter."
+      "reason": "Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments."
     },
     {
       "team": "CIN",
@@ -386,9 +386,9 @@
     {
       "team": "IND",
       "player": "Alec Pierce",
-      "grade": 84,
+      "grade": 85,
       "confidence": "high",
-      "reason": "One of the league's best true vertical threats by 2025 yards per catch, but route/target breadth is narrower than higher-tier complete receivers."
+      "reason": "Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile."
     },
     {
       "team": "IND",
@@ -435,9 +435,9 @@
     {
       "team": "KC",
       "player": "Xavier Worthy",
-      "grade": 85,
+      "grade": 83,
       "confidence": "medium",
-      "reason": "Rare speed and improving route usage create real starter-plus value, but consistency and complete-route evidence remain below the high-end tier."
+      "reason": "Exceptional vertical speed and designed-touch explosiveness, but more limited independent target earning and complete-route efficiency than surrounding 85-grade receivers."
     },
     {
       "team": "KC",
@@ -456,9 +456,9 @@
     {
       "team": "LAC",
       "player": "Quentin Johnston",
-      "grade": 83,
+      "grade": 82,
       "confidence": "medium",
-      "reason": "Big-play ability and improved finishing support a solid starter grade; separation/consistency remain uneven."
+      "reason": "Big plays and improved finishing coexist with uneven separation, target command and receiving consistency; grade-82 secondary-starter comparables better capture demonstrated ability."
     },
     {
       "team": "LAC",
@@ -582,9 +582,9 @@
     {
       "team": "NO",
       "player": "Chris Olave",
-      "grade": 90,
+      "grade": 91,
       "confidence": "high",
-      "reason": "Approved very-good/high-end anchor."
+      "reason": "Consistent target command, route precision and receiving production across 2025 and the 2026 opening better match Drake London/Garrett Wilson grade-91 peers than the grade-90 band."
     },
     {
       "team": "NO",
@@ -806,17 +806,18 @@
   ],
   "pairwiseAudit": {
     "orderedNeighborhoods": [
-      "Ja'Marr Chase 99 = Jaxon Smith-Njigba 99 > Puka Nacua 98 > Justin Jefferson 97 > Amon-Ra St. Brown 96 = CeeDee Lamb 96",
-      "George Pickens 93 > Nico Collins 92 = A.J. Brown 92 > Drake London 91 = Garrett Wilson 91 > Chris Olave 90 = Zay Flowers 90 = Tetairoa McMillan 90 = Rashee Rice 90 > Malik Nabers 89",
-      "Tee Higgins 88 = Rome Odunze 88 = DeVonta Smith 88 = DK Metcalf 88 > Jameson Williams 87 = Davante Adams 87 = Mike Evans 87 = Emeka Egbuka 87 = Terry McLaurin 87",
-      "Jaylen Waddle 86 = DJ Moore 86 = Brian Thomas Jr. 86 = Jordan Addison 86 = Stefon Diggs 86 > Marvin Harrison Jr. 85 = Michael Wilson 85 = Christian Watson 85 = Xavier Worthy 85 = Ladd McConkey 85 = Chris Godwin Jr. 85",
-      "Courtland Sutton 84 = Khalil Shakir 84 = Luther Burden III 84 = Jerry Jeudy 84 = Jayden Reed 84 = Tank Dell 84 = Josh Downs 84 = Alec Pierce 84 = Jauan Jennings 84 = Rashid Shaheed 84 = Deebo Samuel Sr. 84 = Ricky Pearsall 84 = Wan'Dale Robinson 84",
-      "Rashod Bateman 83 = Kayshon Boutte 83 = Keenan Allen 83 = Quentin Johnston 83 = Romeo Doubs 83 = Michael Pittman Jr. 83 = Calvin Ridley 83",
-      "Jakobi Meyers 82 = Jalen Coker 82 = Marvin Mims Jr. 82 = Tre Tucker 82 = Darnell Mooney 82 = Dontayvion Wicks 82 = Cooper Kupp 82",
-      "Keon Coleman 81 = Matthew Golden 81 = Darius Slayton 81 = Jalen Nailor 81 = Malik Washington 81 = DeMario Douglas 81 = Adonai Mitchell 81 = Jalen McMillan 81",
-      "Jahan Dotson 80 = Xavier Legette 80 = Andrei Iosivas 80 = KC Concepcion Jr. 80 = Parker Washington 80 = Tre' Harris 80 = Devaughn Vele 80 = Dyami Brown 80",
-      "Kendrick Bourne 79 = Ryan Flournoy 79 = Pat Bryant 79 = Isaac TeSlaa 79 = Tyquan Thornton 79 = Jack Bech 79 = Roman Wilson 79 = Carnell Tate 79",
-      "Olamide Zaccheaus 78 = Xavier Hutchinson 78 = Malachi Fields 78 = Jacob Cowing 78 = Ted Hurst III 78 > Travis Hunter 77 = Isaiah Williams 77 = Makai Lemon 77 > Ja'Kobi Lane 76 = Denzel Boston 76 = Konata Mumpfield 76 = Mack Hollins 76 > Caleb Douglas 75 = Chris Bell 75 = Bryce Lance 75"
+      "Ja'Marr Chase 99 = Jaxon Smith-Njigba 99 > Puka Nacua 98",
+      "Justin Jefferson 97 > Amon-Ra St. Brown 96 = CeeDee Lamb 96",
+      "George Pickens 93",
+      "A.J. Brown 92 = Nico Collins 92 > Chris Olave 91 = Drake London 91 = Garrett Wilson 91 > Rashee Rice 90 = Tetairoa McMillan 90 = Zay Flowers 90",
+      "Malik Nabers 89 > DeVonta Smith 88 = DK Metcalf 88 = Tee Higgins 88 > Davante Adams 87 = Emeka Egbuka 87 = Jameson Williams 87 = Mike Evans 87 = Rome Odunze 87 = Terry McLaurin 87",
+      "Brian Thomas Jr. 86 = DJ Moore 86 = Jaylen Waddle 86 = Jordan Addison 86 = Stefon Diggs 86 > Alec Pierce 85 = Chris Godwin Jr. 85 = Christian Watson 85 = Ladd McConkey 85 = Marvin Harrison Jr. 85 = Michael Wilson 85",
+      "Courtland Sutton 84 = Deebo Samuel Sr. 84 = Jauan Jennings 84 = Jayden Reed 84 = Jerry Jeudy 84 = Josh Downs 84 = Khalil Shakir 84 = Luther Burden III 84 = Rashid Shaheed 84 = Ricky Pearsall 84 = Tank Dell 84 = Wan'Dale Robinson 84 > Calvin Ridley 83 = Kayshon Boutte 83 = Keenan Allen 83 = Michael Pittman Jr. 83 = Rashod Bateman 83 = Romeo Doubs 83 = Xavier Worthy 83",
+      "Cooper Kupp 82 = Darnell Mooney 82 = Dontayvion Wicks 82 = Jakobi Meyers 82 = Jalen Coker 82 = Marvin Mims Jr. 82 = Quentin Johnston 82 = Tre Tucker 82 > Adonai Mitchell 81 = Darius Slayton 81 = DeMario Douglas 81 = Jalen Nailor 81 = Keon Coleman 81 = Matthew Golden 81",
+      "Devaughn Vele 80 = Dyami Brown 80 = KC Concepcion Jr. 80 = Parker Washington 80 > Andrei Iosivas 79 = Carnell Tate 79 = Isaac TeSlaa 79 = Jalen McMillan 79 = Kalif Raymond 79 = Kendrick Bourne 79 = Ryan Flournoy 79 = Tyquan Thornton 79",
+      "Jahan Dotson 78 = Malachi Fields 78 = Malik Washington 78 = Olamide Zaccheaus 78 = Ted Hurst III 78 = Tre' Harris 78 = Xavier Hutchinson 78 = Xavier Legette 78 > Makai Lemon 77 = Roman Wilson 77 = Travis Hunter 77",
+      "Denzel Boston 76 = Ja'Kobi Lane 76 = Jack Bech 76 = Konata Mumpfield 76 = Mack Hollins 76 = Pat Bryant 76 > Bryce Lance 75 = Caleb Douglas 75 = Chris Bell 75 = Jacob Cowing 75",
+      "Isaiah Williams 72"
     ],
     "resolvedPressurePoints": [
       "The user-locked ceiling is Chase 99 = JSN 99 > Puka 98 > Jefferson 97. JSN is not treated as a one-season fluke after a 1,793-yard OPOY season and a league-leading 405 yards through Week 3 of 2026.",
@@ -826,7 +827,8 @@
       "Tetairoa McMillan reaches 90 because the 2025 Offensive Rookie of the Year season (1,014 yards) plus a productive 2026 start provide real NFL proof, not projection.",
       "Rashee Rice reaches 90 on demonstrated separation/YAC ability and a strong 2026 return; no fantasy-volume premium is applied.",
       "Brian Thomas Jr. sits at 86 rather than carrying his rookie reputation into the high-end tier because 2025-26 consistency has not yet supported it.",
-      "Travis Hunter is 77 as a WR because current NFL receiving evidence is almost nonexistent; college greatness and two-way projection are excluded."
+      "Travis Hunter is 77 as a WR because current NFL receiving evidence is almost nonexistent; college greatness and two-way projection are excluded.",
+      "Owner-approved 2026-10-08 WR re-review: Olave rises to 91 with Garrett Wilson/London; Pierce to 85 on repeatable vertical traits; Odunze to 87, Worthy to 83, Johnston to 82, Legette to 78 and Raymond to 79 on current demonstrated receiving value, without assigning credit for future potential or punishing medical absence alone."
     ],
     "result": "locked",
     "contradictionsRemaining": false,
@@ -835,22 +837,22 @@
   "postGradeDistribution": {
     "min": 72,
     "max": 99,
-    "mean": 83.42,
+    "mean": 83.36,
     "median": 83,
     "bands": {
       "95-100": 6,
       "90-94": 9,
       "85-89": 21,
-      "80-84": 39,
-      "75-79": 27,
+      "80-84": 37,
+      "75-79": 29,
       "below-75": 1
     },
-    "note": "Final distribution after all calibration and discrepancy reconciliation; distribution did not mechanically set grades.",
-    "below80": 28
+    "note": "2026-10-08 distribution after seven owner-approved current-ability grade adjustments; not a mechanical grade-setting rule.",
+    "below80": 30
   },
   "runtimeBoundary": "No production/runtime behavior changes. Runtime wiring, historical freezing and hidden reveal remain a later phase.",
   "futureVersioning": "Any future WR grade change must record previous grade, new grade, effective date, reason, and nearby anchor/peer comparison.",
-  "calibrationRevision": "final-cross-position-sweep-2026-10-03",
+  "calibrationRevision": "owner-approved-seven-wr-grade-adjustments-2026-10-08",
   "finalCalibrationAudit": {
     "status": "locked",
     "principle": "Re-opened prior grades after the full-position project exposed scale compression. Madden/external ratings are discrepancy alarms only; final grades may stay, move toward them, or move away based on football evidence.",
@@ -928,5 +930,69 @@
         "below-75": 1
       }
     }
+  },
+  "ownerApprovedGradeReview": {
+    "approvedOn": "2026-10-08",
+    "source": "Conversation-approved all seven individually flagged NFL WR HQ grade reviews",
+    "changes": [
+      {
+        "id": "CAR|WR|xavierlegette",
+        "team": "CAR",
+        "player": "Xavier Legette",
+        "from": 80,
+        "to": 78,
+        "reason": "Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty."
+      },
+      {
+        "id": "KC|WR|xavierworthy",
+        "team": "KC",
+        "player": "Xavier Worthy",
+        "from": 85,
+        "to": 83,
+        "reason": "Exceptional vertical speed and designed-touch explosiveness, but more limited independent target earning and complete-route efficiency than surrounding 85-grade receivers."
+      },
+      {
+        "id": "CHI|WR|kalifraymond",
+        "team": "CHI",
+        "player": "Kalif Raymond",
+        "from": 81,
+        "to": 79,
+        "reason": "Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments."
+      },
+      {
+        "id": "NO|WR|chrisolave",
+        "team": "NO",
+        "player": "Chris Olave",
+        "from": 90,
+        "to": 91,
+        "reason": "Consistent target command, route precision and receiving production across 2025 and the 2026 opening better match Drake London/Garrett Wilson grade-91 peers than the grade-90 band."
+      },
+      {
+        "id": "IND|WR|alecpierce",
+        "team": "IND",
+        "player": "Alec Pierce",
+        "from": 84,
+        "to": 85,
+        "reason": "Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile."
+      },
+      {
+        "id": "CHI|WR|romeodunze",
+        "team": "CHI",
+        "player": "Rome Odunze",
+        "from": 88,
+        "to": 87,
+        "reason": "Size and catch-point tools remain strong, but demonstrated target-winning and efficiency across available 2025-26 NFL games are less established than proven 88-grade peers; no deduction for missed games themselves."
+      },
+      {
+        "id": "LAC|WR|quentinjohnston",
+        "team": "LAC",
+        "player": "Quentin Johnston",
+        "from": 83,
+        "to": 82,
+        "reason": "Big plays and improved finishing coexist with uneven separation, target command and receiving consistency; grade-82 secondary-starter comparables better capture demonstrated ability."
+      }
+    ],
+    "untouchedOtherWrs": 96,
+    "developmentOddsUntouched": true
   }
 }

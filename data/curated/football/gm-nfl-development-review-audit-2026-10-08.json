@@ -2725,13 +2725,13 @@
       "name": "Jaelan Phillips",
       "team": "CAR",
       "family": "Front Seven",
-      "gradeAtReview": 86,
+      "gradeAtReview": 88,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Jaelan Phillips: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 86 (high confidence), age 27, Front Seven, pick #18.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 86 → 88. Sustained 2025 pressure and pass-rush win rate plus early 2026 pressures demonstrate more current rush ability than five 2025 sacks suggest. Peer check: In the Josh Sweat/Byron Young (88) band, below Jared Verse and Highsmith (89). Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium-low",
@@ -2752,7 +2752,9 @@
         "maxAnnualLoss": 4,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 86,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "CAR|Front Seven|leehunter",
@@ -2827,13 +2829,13 @@
       "name": "Bryce Young",
       "team": "CAR",
       "family": "QB",
-      "gradeAtReview": 82,
+      "gradeAtReview": 83,
       "ageAtReview": 25,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Bryce Young; audited HQ grade 82 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Owner-approved 2026-10-08 current HQ grade adjustment 82 → 83 for Bryce Young. Reason: Owner-approved Oct 8 increase from 82 to 83. 2026 accuracy, intermediate placement, and decision-making gains merit a modest adjustment, but pressure exposure and a short 2026 sample do not support jumping to the Jordan Love/Jalen Hurts 85 tier. Peer check: above Tyler Shough and Geno Smith (82). Development probabilities and annual development ceilings remain unchanged pending six-position research integration.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-qb-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -2854,7 +2856,9 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 82,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "CAR|RB|chubahubbard",
@@ -3250,17 +3254,17 @@
       "name": "Xavier Legette",
       "team": "CAR",
       "family": "WR",
-      "gradeAtReview": 80,
+      "gradeAtReview": 78,
       "ageAtReview": 25,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "volatile",
-      "reviewRationale": "Xavier Legette: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 80 (medium confidence), age 25, WR, pick #32.",
+      "reviewRationale": "Xavier Legette: High possible upside and translation/role volatility justify both breakout and disappointment tails. Existing HQ grade 78 (medium confidence), age 25, WR, pick #32. Owner-approved current-grade adjustment 80→78 on 2026-10-08; development odds unchanged. Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
-        "reason": "Physical traits and vertical ability remain useful, but route/production consistency has not established more than a low-end starter level.",
-        "asOf": "2026-10-03"
+        "reason": "Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-wr-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -3282,7 +3286,15 @@
         "maxAnnualLoss": 7.5,
         "marketVariancePct": 13
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 80,
+      "ownerApprovedGradeChange": {
+        "old": 80,
+        "current": 78,
+        "approvedOn": "2026-10-08",
+        "reason": "Two seasons without sustained separation or reliable target command; physical tools and draft pedigree do not establish average-starter receiving ability. The knee injury affects future availability, not a permanent talent penalty."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "CHI|Front Seven|austinbooker",
@@ -3566,17 +3578,17 @@
       "name": "Kyle Monangai",
       "team": "CHI",
       "family": "RB",
-      "gradeAtReview": 82,
+      "gradeAtReview": 84,
       "ageAtReview": 24,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Kyle Monangai: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (medium confidence), age 24, RB, pick #233.",
+      "reviewRationale": "Kyle Monangai: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (medium confidence), age 24, RB, pick #233. Owner-approved HQ correction on 2026-10-08 (82 → 84), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
-        "reason": "783 yards at 4.6 as a rookie plus a strong 2026 opening show genuine current ability; still a short NFL sample, so no jump beyond the good-starter tier. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
-        "asOf": "2026-10-03"
+        "reason": "2025 rookie: 783 rushing yards at 4.6 YPC; first four 2026 games: 324 at 5.4, with a 146-yard Week 4. Productive downhill power and decisive footwork justify a modest increase, not an elite/three-down projection.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-rb-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -3598,7 +3610,15 @@
         "maxAnnualLoss": 4.2,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 82,
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 82,
+        "newGrade": 84,
+        "reason": "2025 rookie: 783 rushing yards at 4.6 YPC; first four 2026 games: 324 at 5.4, with a 146-yard Week 4. Productive downhill power and decisive footwork justify a modest increase, not an elite/three-down projection."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "CHI|Secondary|dillonthieneman",
@@ -3843,17 +3863,17 @@
       "name": "Kalif Raymond",
       "team": "CHI",
       "family": "WR",
-      "gradeAtReview": 81,
+      "gradeAtReview": 79,
       "ageAtReview": 32,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "veteran",
-      "reviewRationale": "Kalif Raymond: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 81 (high confidence), age 32, WR, draft slot not recorded.",
+      "reviewRationale": "Kalif Raymond: Career stage limits new upside and raises regression exposure without predetermining retirement. Existing HQ grade 79 (high confidence), age 32, WR, draft slot not recorded. Owner-approved current-grade adjustment 81→79 on 2026-10-08; development odds unchanged. Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
-        "reason": "Current 2026 efficiency is excellent, but his established NFL role remains more specialist/WR3 than quality primary starter.",
-        "asOf": "2026-10-03"
+        "reason": "Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-wr-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -3875,7 +3895,15 @@
         "maxAnnualLoss": 4.5,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 81,
+      "ownerApprovedGradeChange": {
+        "old": 81,
+        "current": 79,
+        "approvedOn": "2026-10-08",
+        "reason": "Useful speedy slot/return and complementary specialist; the small early-2026 receiving surge does not establish quality primary-starter separation across route assignments."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "CHI|WR|lutherburden",
@@ -3916,13 +3944,13 @@
       "name": "Rome Odunze",
       "team": "CHI",
       "family": "WR",
-      "gradeAtReview": 88,
+      "gradeAtReview": 87,
       "ageAtReview": 24,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Rome Odunze; audited HQ grade 88 and age 24 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Rome Odunze; original HQ grade 88 changed to owner-approved HQ grade 87; age 24 and existing development odds retained. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 88→87 on 2026-10-08; development odds unchanged. Size and catch-point tools remain strong, but demonstrated target-winning and efficiency across available 2025-26 NFL games are less established than proven 88-grade peers; no deduction for missed games themselves.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-wr-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -3943,7 +3971,15 @@
         "maxAnnualLoss": 5.1,
         "marketVariancePct": 7
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 88,
+      "ownerApprovedGradeChange": {
+        "old": 88,
+        "current": 87,
+        "approvedOn": "2026-10-08",
+        "reason": "Size and catch-point tools remain strong, but demonstrated target-winning and efficiency across available 2025-26 NFL games are less established than proven 88-grade peers; no deduction for missed games themselves."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "CIN|Front Seven|barrettcarter",
@@ -5525,13 +5561,13 @@
       "name": "Caleb Downs",
       "team": "DAL",
       "family": "Secondary",
-      "gradeAtReview": 84,
+      "gradeAtReview": 81,
       "ageAtReview": 21,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-07",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Caleb Downs; audited HQ grade 84 and age 21 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Caleb Downs; audited HQ grade 81 and age 21 updated as the approved current-ability base. Exact odds and magnitude limits remain in the gameplay profile. Approved secondary ability review 2026-10-08: 84→81. Rookie NFL communication/coverage remains a small sample; current ability should not import college potential. No future development odds or magnitude caps revised.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-secondary-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -5552,7 +5588,14 @@
         "maxAnnualLoss": 6.8,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 84,
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 84,
+        "approvedGrade": 81
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "DAL|Secondary|daronbland",
@@ -5695,17 +5738,17 @@
       "name": "Jake Ferguson",
       "team": "DAL",
       "family": "TE",
-      "gradeAtReview": 82,
+      "gradeAtReview": 79,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Jake Ferguson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 27, TE, pick #129.",
+      "reviewRationale": "Jake Ferguson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Updated approved HQ grade 79 (high confidence), age 27, TE, pick #129. Current ability corrected from 82 to 79 on 2026-10-08; individual development probabilities were not recalibrated as a consequence.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
-        "reason": "Productive receiving TE with 82 catches/600 yards in 2025 and red-zone value, but repeated sub-60 overall grades and ball-security issues prevent a higher all-around grade. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
-        "asOf": "2026-10-03"
+        "reason": "Receiving volume and scoring role are useful (82 catches, 600 yards and eight touchdowns in 2025), but 7.3 yards per catch, limited explosive/inline impact and repeat sub-60 overall-grade and ball-security concerns make a 79 more defensible than the original 82. The 2026 opening (12 catches, 83 yards through four games) reinforces but does not independently determine the adjustment.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-te-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -5727,7 +5770,9 @@
         "maxAnnualLoss": 3.7,
         "marketVariancePct": 5
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 82,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "DAL|WR|ceedeelamb",
@@ -6045,13 +6090,13 @@
       "name": "Bo Nix",
       "team": "DEN",
       "family": "QB",
-      "gradeAtReview": 79,
+      "gradeAtReview": 82,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Bo Nix; audited HQ grade 79 and age 26 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Owner-approved 2026-10-08 current HQ grade adjustment 79 → 82 for Bo Nix. Reason: Owner-approved Oct 8 increase from 79 to 82. Two years of functional NFL starting performance, processing, mobility, and sack avoidance merit the same broadly solid-starter tier as Tyler Shough and Geno Smith (82) and above Jacoby Brissett (80), while inconsistent 2026 deeper accuracy keeps him below Bryce Young (83). Development probabilities and annual development ceilings remain unchanged pending six-position research integration.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-qb-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -6072,7 +6117,9 @@
         "maxAnnualLoss": 6.2,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 79,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "DEN|RB|jkdobbins",
@@ -8259,13 +8306,13 @@
       "name": "Reed Blankenship",
       "team": "HOU",
       "family": "Secondary",
-      "gradeAtReview": 83,
+      "gradeAtReview": 78,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Reed Blankenship: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 83 (high confidence), age 27, Secondary, draft slot not recorded.",
+      "reviewRationale": "Reed Blankenship: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 78 (high confidence), age 27, Secondary, draft slot not recorded. Approved secondary ability review 2026-10-08: 83→78. Weak 2025 coverage continued into early 2026, below prior solid-starter 83 placement. No future development odds or magnitude caps revised.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-secondary-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "low",
@@ -8286,7 +8333,14 @@
         "maxAnnualLoss": 7,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 83,
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 83,
+        "approvedGrade": 78
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "HOU|TE|daltonschultz",
@@ -8998,17 +9052,17 @@
       "name": "Alec Pierce",
       "team": "IND",
       "family": "WR",
-      "gradeAtReview": 84,
+      "gradeAtReview": 85,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Alec Pierce: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 84 (high confidence), age 26, WR, pick #53.",
+      "reviewRationale": "Alec Pierce: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 26, WR, pick #53. Owner-approved current-grade adjustment 84→85 on 2026-10-08; development odds unchanged. Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-wr-grades-2026-10-03.json",
-        "reason": "One of the league's best true vertical threats by 2025 yards per catch, but route/target breadth is narrower than higher-tier complete receivers.",
-        "asOf": "2026-10-03"
+        "reason": "Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-wr-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -9030,7 +9084,15 @@
         "maxAnnualLoss": 5.5,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 84,
+      "ownerApprovedGradeChange": {
+        "old": 84,
+        "current": 85,
+        "approvedOn": "2026-10-08",
+        "reason": "Repeated league-leading caliber yards-per-catch efficiency and legitimate difficult downfield route execution justify a modest increase despite narrow full-tree/target-volume profile."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "IND|WR|dariusslayton",
@@ -9426,17 +9488,17 @@
       "name": "Chris Rodriguez Jr.",
       "team": "JAX",
       "family": "RB",
-      "gradeAtReview": 77,
+      "gradeAtReview": 79,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "role",
-      "reviewRationale": "Chris Rodriguez Jr.: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 77 (high confidence), age 27, RB, pick #193.",
+      "reviewRationale": "Chris Rodriguez Jr.: Specialist/depth-level current grade limits an unlikely elite leap; retain a useful steady outcome. Existing HQ grade 79 (high confidence), age 27, RB, pick #193. Owner-approved HQ correction on 2026-10-08 (77 → 79), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
-        "reason": "Physical reserve runner with some useful early-down ability but limited receiving/creation evidence.",
-        "asOf": "2026-10-03"
+        "reason": "2025: 500 rushing yards at 4.5 YPC; 2026 through Week 4: 108 at 4.2. Repeated effective early-down power and useful inside creation justify a higher rotational grade; limited receiving prevents starter-tier inflation.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-rb-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -9458,7 +9520,15 @@
         "maxAnnualLoss": 3.3,
         "marketVariancePct": 5
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 77,
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 77,
+        "newGrade": 79,
+        "reason": "2025: 500 rushing yards at 4.5 YPC; 2026 through Week 4: 108 at 4.2. Repeated effective early-down power and useful inside creation justify a higher rotational grade; limited receiving prevents starter-tier inflation."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "JAX|Secondary|antoniojohnson",
@@ -9635,17 +9705,17 @@
       "name": "Brenton Strange",
       "team": "JAX",
       "family": "TE",
-      "gradeAtReview": 80,
+      "gradeAtReview": 83,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Brenton Strange: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 80 (high confidence), age 25, TE, pick #61.",
+      "reviewRationale": "Brenton Strange: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Updated approved HQ grade 83 (high confidence), age 25, TE, pick #61. Current ability corrected from 80 to 83 on 2026-10-08; individual development probabilities were not recalibrated as a consequence.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-te-grades-2026-10-03.json",
-        "reason": "540 yards in 12 games in 2025 plus excellent zone run-blocking and continued 2026 usefulness make him a strong complete starter. Final cross-position calibration adjusted the grade under the locked range/discrepancy rules.",
-        "asOf": "2026-10-03"
+        "reason": "True two-way tight-end contribution merits more credit: 46 receptions and 540 yards in 12 games in 2025 plus strong zone run-blocking in the locked TE evidence; 14 catches and 167 yards in the first four 2026 games. The 83 accounts for valuable inline work alongside receiving, without projecting future stardom or overreacting to a short 2026 sample.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-te-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -9667,7 +9737,9 @@
         "maxAnnualLoss": 4,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 80,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "JAX|WR|brianthomas",
@@ -9990,13 +10062,13 @@
       "name": "Peter Woods",
       "team": "KC",
       "family": "Front Seven",
-      "gradeAtReview": 80,
+      "gradeAtReview": 78,
       "ageAtReview": 21,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Peter Woods; audited HQ grade 80 and age 21 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 80 → 78. 2025 college credentials and minimal 2026 NFL production do not substantiate grade 80 in demonstrated current NFL ability. Peer check: Provisional young interior tier below Teair Tart/Kenny Clark (80), with development potential independently modeled. Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -10017,7 +10089,9 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 80,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "KC|QB|patrickmahomes",
@@ -10097,13 +10171,13 @@
       "name": "Kenneth Walker",
       "team": "KC",
       "family": "RB",
-      "gradeAtReview": 89,
+      "gradeAtReview": 91,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Kenneth Walker; audited HQ grade 89 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Kenneth Walker; audited HQ grade 91 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved HQ correction on 2026-10-08 (89 → 91), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-rb-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "high",
@@ -10124,7 +10198,15 @@
         "maxAnnualLoss": 4.1,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 89,
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 89,
+        "newGrade": 91,
+        "reason": "2025: 1,027 rushing yards; first four 2026 games: 537 yards on 87 carries (6.2 YPC). Sustained tackle-breaking and explosive creation support high-end ability; receiving impact remains short of the top complete backs."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "KC|Secondary|alohigilman",
@@ -10233,13 +10315,13 @@
       "name": "Mansoor Delane",
       "team": "KC",
       "family": "Secondary",
-      "gradeAtReview": 85,
+      "gradeAtReview": 82,
       "ageAtReview": 22,
       "sourceConfidence": "medium",
       "reviewed": true,
       "reviewDate": "2026-10-07",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Mansoor Delane; audited HQ grade 85 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Mansoor Delane; audited HQ grade 82 and age 22 updated as the approved current-ability base. Exact odds and magnitude limits remain in the gameplay profile. Approved secondary ability review 2026-10-08: 85→82. Promising four-game rookie stretch insufficient for established 85 ability; college pedigree excluded. No future development odds or magnitude caps revised.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-secondary-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -10260,7 +10342,14 @@
         "maxAnnualLoss": 6.1,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 85,
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 85,
+        "approvedGrade": 82
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "KC|Secondary|nohlwilliams",
@@ -10414,13 +10503,13 @@
       "name": "Xavier Worthy",
       "team": "KC",
       "family": "WR",
-      "gradeAtReview": 85,
+      "gradeAtReview": 83,
       "ageAtReview": 23,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Xavier Worthy; audited HQ grade 85 and age 23 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Xavier Worthy; original HQ grade 85 changed to owner-approved HQ grade 83; age 23 and existing development odds retained. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 85→83 on 2026-10-08; development odds unchanged. Exceptional vertical speed and designed-touch explosiveness, but more limited independent target earning and complete-route efficiency than surrounding 85-grade receivers.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-wr-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -10441,7 +10530,15 @@
         "maxAnnualLoss": 7.2,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 85,
+      "ownerApprovedGradeChange": {
+        "old": 85,
+        "current": 83,
+        "approvedOn": "2026-10-08",
+        "reason": "Exceptional vertical speed and designed-touch explosiveness, but more limited independent target earning and complete-route efficiency than surrounding 85-grade receivers."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "LAC|Front Seven|daiyanhenley",
@@ -10618,13 +10715,13 @@
       "name": "Tuli Tuipulotu",
       "team": "LAC",
       "family": "Front Seven",
-      "gradeAtReview": 83,
+      "gradeAtReview": 88,
       "ageAtReview": 24,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Tuli Tuipulotu: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 24, Front Seven, pick #54.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 83 → 88. 13 sacks, 23 QB hits and 20 TFL in 2025, plus continued 2026 pressure. Proven strong EDGE impact, not prospect projection. Peer check: Moves alongside Josh Sweat and Byron Young (88); above George Karlaftis (86). Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium-low",
@@ -10645,7 +10742,9 @@
         "maxAnnualLoss": 3.2,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 83,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "LAC|QB|justinherbert",
@@ -11036,13 +11135,13 @@
       "name": "Quentin Johnston",
       "team": "LAC",
       "family": "WR",
-      "gradeAtReview": 83,
+      "gradeAtReview": 82,
       "ageAtReview": 25,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Quentin Johnston; audited HQ grade 83 and age 25 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Quentin Johnston; original HQ grade 83 changed to owner-approved HQ grade 82; age 25 and existing development odds retained. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 83→82 on 2026-10-08; development odds unchanged. Big plays and improved finishing coexist with uneven separation, target command and receiving consistency; grade-82 secondary-starter comparables better capture demonstrated ability.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-wr-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -11063,7 +11162,15 @@
         "maxAnnualLoss": 7.4,
         "marketVariancePct": 10
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 83,
+      "ownerApprovedGradeChange": {
+        "old": 83,
+        "current": 82,
+        "approvedOn": "2026-10-08",
+        "reason": "Big plays and improved finishing coexist with uneven separation, target command and receiving consistency; grade-82 secondary-starter comparables better capture demonstrated ability."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "LAC|WR|treharris",
@@ -11143,13 +11250,13 @@
       "name": "Braden Fiske",
       "team": "LAR",
       "family": "Front Seven",
-      "gradeAtReview": 85,
+      "gradeAtReview": 83,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Braden Fiske: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 26, Front Seven, pick #39.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 85 → 83. After 2024 8.5-sack peak, 2025 fell to three; 2026 rush pressure remains useful but run-defense consistency below other 85-grade interiors. Peer check: Just below Daron Payne and Ed Oliver (85), above Gervon Dexter Sr. (82). Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium-low",
@@ -11170,7 +11277,9 @@
         "maxAnnualLoss": 4.7,
         "marketVariancePct": 7
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 85,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "LAR|Front Seven|byronyoung",
@@ -12008,13 +12117,13 @@
       "name": "Ashton Jeanty",
       "team": "LV",
       "family": "RB",
-      "gradeAtReview": 83,
+      "gradeAtReview": 81,
       "ageAtReview": 22,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Ashton Jeanty; audited HQ grade 83 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Ashton Jeanty; audited HQ grade 81 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved HQ correction on 2026-10-08 (83 → 81), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-rb-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "high",
@@ -12035,7 +12144,15 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 8
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 83,
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 83,
+        "newGrade": 81,
+        "reason": "2025: 975 rushing yards on 266 carries (3.7 YPC); 2026 through Week 4: 264 on 78 (3.4 YPC). Receiving usefulness and blocking context mitigate the inefficiency, but demonstrated NFL rushing creation does not justify 83."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "LV|RB|mikewashington",
@@ -13097,13 +13214,13 @@
       "name": "Dallas Turner",
       "team": "MIN",
       "family": "Front Seven",
-      "gradeAtReview": 85,
+      "gradeAtReview": 87,
       "ageAtReview": 23,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Dallas Turner; audited HQ grade 85 and age 23 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 85 → 87. Eight sacks in 2025 and strong early 2026 pressure/win evidence justify stronger demonstrated EDGE ability; run defense limits higher placement. Peer check: With Rashan Gary and Laiatu Latu (87), below Josh Sweat (88). Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium-low",
@@ -13124,7 +13241,9 @@
         "maxAnnualLoss": 4,
         "marketVariancePct": 7
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 85,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "MIN|Front Seven|ericwilson",
@@ -13345,13 +13464,13 @@
       "name": "Byron Murphy Jr.",
       "team": "MIN",
       "family": "Secondary",
-      "gradeAtReview": 86,
+      "gradeAtReview": 82,
       "ageAtReview": 28,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Byron Murphy Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 86 (high confidence), age 28, Secondary, pick #33.",
+      "reviewRationale": "Byron Murphy Jr.: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 82 (high confidence), age 28, Secondary, pick #33. Approved secondary ability review 2026-10-08: 86→82. Underlying 2025–2026 coverage less convincing than high-end 86, though Minnesota role demands remain difficult. No future development odds or magnitude caps revised.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-secondary-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "low",
@@ -13372,20 +13491,27 @@
         "maxAnnualLoss": 5.7,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 86,
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 86,
+        "approvedGrade": 82
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "MIN|Secondary|harrisonsmith",
       "name": "Harrison Smith",
       "team": "MIN",
       "family": "Secondary",
-      "gradeAtReview": 83,
+      "gradeAtReview": 80,
       "ageAtReview": 37,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-07",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Harrison Smith; audited HQ grade 83 and age 37 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Harrison Smith; audited HQ grade 80 and age 37 updated as the approved current-ability base. Exact odds and magnitude limits remain in the gameplay profile. Approved secondary ability review 2026-10-08: 83→80. Current 2026 range and coverage are below his former peak despite continued veteran recognition/processing. No future development odds or magnitude caps revised.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-secondary-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -13406,7 +13532,14 @@
         "maxAnnualLoss": 9.2,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 83,
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 83,
+        "approvedGrade": 80
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "MIN|Secondary|isaiahrodgers",
@@ -13481,13 +13614,13 @@
       "name": "Joshua Metellus",
       "team": "MIN",
       "family": "Secondary",
-      "gradeAtReview": 87,
+      "gradeAtReview": 81,
       "ageAtReview": 28,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "proven",
-      "reviewRationale": "Joshua Metellus: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 87 (high confidence), age 28, Secondary, pick #205.",
+      "reviewRationale": "Joshua Metellus: Established, reliable current grade merits fewer extreme outcomes than an unproven prospect; this does not imply an elite HQ rating. Existing HQ grade 81 (high confidence), age 28, Secondary, pick #205. Approved secondary ability review 2026-10-08: 87→81. Coverage inconsistency over 2025 and early 2026 does not sustain an 87; retain hybrid utility. No future development odds or magnitude caps revised.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-secondary-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -13508,7 +13641,14 @@
         "maxAnnualLoss": 4.7,
         "marketVariancePct": 5
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 87,
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 87,
+        "approvedGrade": 81
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "MIN|TE|tjhockenson",
@@ -13763,13 +13903,13 @@
       "name": "Milton Williams",
       "team": "NE",
       "family": "Front Seven",
-      "gradeAtReview": 90,
+      "gradeAtReview": 88,
       "ageAtReview": 27,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "proven",
-      "reviewRationale": "Milton Williams: Verified high-end HQ grade and established play merit narrower swings than a speculative developing player. Existing HQ grade 90 (high confidence), age 27, Front Seven, pick #73.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 90 → 88. Exceptional 2025 playoff pressure is real, but 2025 regular-season grade and early 2026 complete play are less consistently dominant. Peer check: Shares 88 band with Jonathan Allen and DeForest Buckner, below consistent 90 interiors Zach Allen and Leonard Williams. Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium-low",
@@ -13790,7 +13930,9 @@
         "maxAnnualLoss": 3.8,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 90,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "NE|Front Seven|robertspillane",
@@ -14857,13 +14999,13 @@
       "name": "Chris Olave",
       "team": "NO",
       "family": "WR",
-      "gradeAtReview": 90,
+      "gradeAtReview": 91,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Chris Olave; audited HQ grade 90 and age 26 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Priority individual development profile already calibrated for Chris Olave; original HQ grade 90 changed to owner-approved HQ grade 91; age 26 and existing development odds retained. Exact odds and magnitude limits remain in the gameplay profile. Owner-approved current-grade adjustment 90→91 on 2026-10-08; development odds unchanged. Consistent target command, route precision and receiving production across 2025 and the 2026 opening better match Drake London/Garrett Wilson grade-91 peers than the grade-90 band.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-wr-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "high",
@@ -14884,7 +15026,15 @@
         "maxAnnualLoss": 5.5,
         "marketVariancePct": 6
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 90,
+      "ownerApprovedGradeChange": {
+        "old": 90,
+        "current": 91,
+        "approvedOn": "2026-10-08",
+        "reason": "Consistent target command, route precision and receiving production across 2025 and the 2026 opening better match Drake London/Garrett Wilson grade-91 peers than the grade-90 band."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "NO|WR|devaughnvele",
@@ -15066,13 +15216,13 @@
       "name": "Kayvon Thibodeaux",
       "team": "NYG",
       "family": "Front Seven",
-      "gradeAtReview": 83,
+      "gradeAtReview": 79,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Kayvon Thibodeaux: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 83 (high confidence), age 25, Front Seven, pick #5.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 83 → 79. Only 2.5 sacks in ten 2025 games and a weak opening 2026 run-defense/pass-rush sample; older peak no longer supports 83. Peer check: Lower-tier specialist/depth neighborhood rather than Tuli Tuipulotu and Odafe Oweh (83+). Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium-low",
@@ -15093,7 +15243,9 @@
         "maxAnnualLoss": 6.1,
         "marketVariancePct": 10
       },
-      "developmentEvidenceSourceCount": 1
+      "developmentEvidenceSourceCount": 1,
+      "approvedCurrentAbilityOriginalGrade": 83,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "NYG|Front Seven|tremaineedmunds",
@@ -16330,13 +16482,13 @@
       "name": "Jihaad Campbell",
       "team": "PHI",
       "family": "Front Seven",
-      "gradeAtReview": 85,
+      "gradeAtReview": 82,
       "ageAtReview": 22,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Jihaad Campbell: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 22, Front Seven, pick #31.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 85 → 82. 2025 rookie contribution is real, but run-fit/coverage limitations and early 2026 play do not yet support a high-end complete linebacker grade. Peer check: Starter/developing band with Patrick Queen (82), below Ernest Jones IV (85). Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -16357,7 +16509,9 @@
         "maxAnnualLoss": 4.7,
         "marketVariancePct": 9
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 85,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "PHI|Front Seven|jonathangreenard",
@@ -17803,17 +17957,17 @@
       "name": "Zach Charbonnet",
       "team": "SEA",
       "family": "RB",
-      "gradeAtReview": 82,
+      "gradeAtReview": 85,
       "ageAtReview": 25,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Zach Charbonnet: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 25, RB, pick #52.",
+      "reviewRationale": "Zach Charbonnet: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 85 (high confidence), age 25, RB, pick #52. Owner-approved HQ correction on 2026-10-08 (82 → 85), based on demonstrated 2025 and 2026 rushing/receiving value and peer comparison; progression probabilities unchanged.",
       "supportingHQEvidence": {
         "source": "data/generated/football/wheel-nfl-rb-grades-2026-10-03.json",
-        "reason": "Reliable power/receiving complement with 730 yards and 12 rushing TD in 2025; solid starter baseline without upper-tier creation.",
-        "asOf": "2026-10-03"
+        "reason": "2025: 730 rushing yards and 12 rushing TD, strong contact balance and short-yardage value, plus receiving competence. ACL rehabilitation affects future availability/development, not the demonstrated preinjury ability baseline.",
+        "asOf": "2026-10-08"
       },
       "researchFile": "data/curated/football/gm-nfl-deep-research-rb-2026-10-08.json",
       "researchDate": "2026-10-08",
@@ -17835,7 +17989,15 @@
         "maxAnnualLoss": 7.6,
         "marketVariancePct": 11
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 82,
+      "approvedGradeCorrection": {
+        "date": "2026-10-08",
+        "previousGrade": 82,
+        "newGrade": 85,
+        "reason": "2025: 730 rushing yards and 12 rushing TD, strong contact balance and short-yardage value, plus receiving competence. ACL rehabilitation affects future availability/development, not the demonstrated preinjury ability baseline."
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "SEA|Secondary|devonwitherspoon",
@@ -18294,13 +18456,13 @@
       "name": "Mykel Williams",
       "team": "SF",
       "family": "Front Seven",
-      "gradeAtReview": 82,
+      "gradeAtReview": 80,
       "ageAtReview": 22,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "rising",
-      "reviewRationale": "Mykel Williams: Developing impact traits and age leave credible improvement headroom, with normal setback risk. Existing HQ grade 82 (high confidence), age 22, Front Seven, pick #11. Returning from ACL injury; recovery uncertainty.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 82 → 80. One sack and three QB hits in nine NFL rookie games in 2025; strong run-setting profile but not an established 82-level complete EDGE. Peer check: Developmental 80 tier alongside Chop Robinson/Derick Hall, distinct from rehabilitation risk in progression. Development odds, annual ceilings and market volatility unchanged.",
       "recentEvidence": {
         "type": "injury-context",
         "source": "https://www.sfchronicle.com/sports/49ers/article/49ers-fb-kyle-juszczyk-miss-a-few-weeks-22463706.php",
@@ -18327,7 +18489,9 @@
         "maxAnnualLoss": 6.7,
         "marketVariancePct": 11
       },
-      "developmentEvidenceSourceCount": 3
+      "developmentEvidenceSourceCount": 3,
+      "approvedCurrentAbilityOriginalGrade": 82,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "SF|Front Seven|nickbosa",
@@ -18402,13 +18566,13 @@
       "name": "Brock Purdy",
       "team": "SF",
       "family": "QB",
-      "gradeAtReview": 89,
+      "gradeAtReview": 90,
       "ageAtReview": 26,
       "sourceConfidence": "high",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Brock Purdy; audited HQ grade 89 and age 26 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Owner-approved 2026-10-08 current HQ grade adjustment 89 → 90 for Brock Purdy. Reason: Owner-approved Oct 8 increase from 89 to 90. Sustained efficient 2025 quarterbacking plus a strong early 2026 showing justify modest placement above Jared Goff 89 and below Dak Prescott 92. This is current functional passing and anticipation, not a small-sample projection bonus. Development probabilities and annual development ceilings remain unchanged pending six-position research integration.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-qb-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "high",
@@ -18429,7 +18593,9 @@
         "maxAnnualLoss": 4,
         "marketVariancePct": 4
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 89,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "SF|RB|christianmccaffrey",
@@ -19012,13 +19178,13 @@
       "name": "Rueben Bain Jr.",
       "team": "TB",
       "family": "Front Seven",
-      "gradeAtReview": 82,
+      "gradeAtReview": 79,
       "ageAtReview": 22,
       "sourceConfidence": "medium",
       "reviewed": true,
-      "reviewDate": "2026-10-07",
+      "reviewDate": "2026-10-08",
       "reviewClass": "priority-individual",
-      "reviewRationale": "Priority individual development profile already calibrated for Rueben Bain Jr.; audited HQ grade 82 and age 22 kept as the unchanged base. Exact odds and magnitude limits remain in the gameplay profile.",
+      "reviewRationale": "Owner-approved 2026-10-08 current ability HQ grade 82 → 79. 2025 was a college season; small 2026 NFL sample lacks established NFL rush-win evidence for grade 82; do not award collegiate-pedigree bonus. Peer check: Unproven current EDGE band alongside Jonah Elliss (79), with future upside in development probabilities only. Development odds, annual ceilings and market volatility unchanged.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-front-seven-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "medium",
@@ -19039,7 +19205,9 @@
         "maxAnnualLoss": 6,
         "marketVariancePct": 10
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 82,
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "TB|Front Seven|vitavea",
@@ -20534,13 +20702,13 @@
       "name": "Amik Robertson",
       "team": "WSH",
       "family": "Secondary",
-      "gradeAtReview": 80,
+      "gradeAtReview": 84,
       "ageAtReview": 28,
       "sourceConfidence": "high",
       "reviewed": true,
       "reviewDate": "2026-10-08",
       "reviewClass": "established",
-      "reviewRationale": "Amik Robertson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 80 (high confidence), age 28, Secondary, pick #139.",
+      "reviewRationale": "Amik Robertson: Established starter-level current performance is more predictive than draft pedigree; limit extreme moves. Existing HQ grade 84 (high confidence), age 28, Secondary, pick #139. Approved secondary ability review 2026-10-08: 80→84. Strong 2026 coverage and run support warrant a good-starter rating without rewarding interception totals. No future development odds or magnitude caps revised.",
       "researchFile": "data/curated/football/gm-nfl-deep-research-secondary-2026-10-08.json",
       "researchDate": "2026-10-08",
       "researchConfidence": "high",
@@ -20561,7 +20729,14 @@
         "maxAnnualLoss": 4.3,
         "marketVariancePct": 7
       },
-      "developmentEvidenceSourceCount": 2
+      "developmentEvidenceSourceCount": 2,
+      "approvedCurrentAbilityOriginalGrade": 80,
+      "hqGradeApproval": {
+        "approvedOn": "2026-10-08",
+        "previousGrade": 80,
+        "approvedGrade": 84
+      },
+      "ownerApprovedHqGradeAsOf": "2026-10-08"
     },
     {
       "id": "WSH|Secondary|mikesainristil",
@@ -20889,5 +21064,18 @@
     1777
   ],
   "positionResearchCount": 594,
-  "positionResearchPolicy": "Development only; six individual source ledgers, 594 profiles. Owner-approved present-ability changes tracked separately."
+  "positionResearchPolicy": "Development only; six individual source ledgers, 594 profiles. Owner-approved present-ability changes tracked separately.",
+  "ownerApprovedCurrentAbilityCorrections": {
+    "date": "2026-10-08",
+    "count": 34,
+    "sourcePrs": [
+      1778,
+      1779,
+      1780,
+      1781,
+      1782,
+      1783
+    ],
+    "reason": "Explicitly owner-approved corrections; independent development proposals unchanged."
+  }
 }
