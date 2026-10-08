@@ -3717,3 +3717,7 @@
   padding: 0;
   border-top: 0;
 }
+
+/* Legacy evolution styles must never force a closed disclosure's body visible. */
+details.gm-result__expander:not([open]) > :not(summary) { display: none !important; }
+.gm-result__expander.football-gm-report__evolution { display: block; }
