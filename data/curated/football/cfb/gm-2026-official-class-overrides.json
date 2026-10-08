@@ -423,6 +423,20 @@
       "redshirt": null
     },
     {
+      "id": "ohio-state|earllittlejr",
+      "classification": "5TH",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/earl-little%20jr./13345",
+      "evidence": "2026 Ohio State official biography explicitly confirms fifth year; corrects older generic senior label",
+      "redshirt": null
+    },
+    {
+      "id": "ohio-state|jakobijackson",
+      "classification": "5TH",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/jakobi-jackson/13364",
+      "evidence": "2026 Ohio State official biography explicitly confirms fifth year; corrects older generic senior label",
+      "redshirt": null
+    },
+    {
       "id": "ohio-state|jaytimmons",
       "classification": "FR",
       "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
@@ -434,6 +448,13 @@
       "classification": "SR",
       "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ohio-state|kenyattajacksonjr",
+      "classification": "5TH",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/kenyatta-jackson-jr/13306",
+      "evidence": "2026 Ohio State official biography explicitly confirms fifth year; corrects older generic senior label",
       "redshirt": null
     },
     {
