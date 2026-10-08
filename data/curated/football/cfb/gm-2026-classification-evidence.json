@@ -184,6 +184,19 @@
         "sources": [
           "https://rolltide.com/sports/football/roster/russell-keelon/17477"
         ]
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 24,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -319,7 +332,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 49,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1800000,
+        "year1": 1800000,
+        "year2Baseline": 1975000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "alabama|terrancegreen",
@@ -376,7 +402,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 79,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "alabama|zabienbrown",
@@ -779,7 +818,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 28,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "byu|bodieschoonover",
@@ -1337,7 +1389,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 97,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "florida|jadenrobinson",
@@ -1566,7 +1631,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 100,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "georgia|ellisrobinsoniv",
@@ -1643,6 +1721,19 @@
           "https://georgiadogs.com/sports/football/roster/gunner-stockton/10603",
           "https://www.ncaa.org/news/division-i-adopts-age-based-eligibility-model/"
         ]
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 45,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -2375,7 +2466,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 8,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 4000000,
+        "year1": 4000000,
+        "year2Baseline": 4400000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "indiana|leebeebejr",
@@ -3106,7 +3210,20 @@
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 59,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "lsu|samleavitt",
@@ -3145,6 +3262,19 @@
           "https://lsusports.net/sports/fb/roster/season/2026/player/sam-leavitt"
         ],
         "eligibilityConfidence": "evidence-supported-inference: fourth-year 2026, possible 2027 season under NCAA transitional 5-year rule"
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 5,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 4500000,
+        "year1": 4500000,
+        "year2Baseline": 4950000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -3222,7 +3352,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 98,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "lsu|tybenefield",
@@ -3241,7 +3384,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 68,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1200000,
+        "year1": 1200000,
+        "year2Baseline": 1325000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "lsu|whitweeks",
@@ -3260,7 +3416,20 @@
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 78,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "lsu|winstonwatkinsjr",
@@ -3298,7 +3467,20 @@
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 65,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "miami|armondoblount",
@@ -3432,7 +3614,20 @@
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 48,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "miami|darianmensah",
@@ -3451,7 +3646,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 1,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 6500000,
+        "year1": 6500000,
+        "year2Baseline": 7150000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "miami|elijalofton",
@@ -3529,7 +3737,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 25,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "miami|markfletcherjr",
@@ -3874,7 +4095,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 62,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "mississippi-state|kelleyjones",
@@ -4087,7 +4321,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 34,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "missouri|brettnorfleet",
@@ -4471,7 +4718,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 55,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "notre-dame|brauntaejohnson",
@@ -4566,6 +4826,19 @@
         "sources": [
           "https://fightingirish.com/sports/football/roster/season/2025-26/player/cj-carr"
         ]
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 12,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 3000000,
+        "year1": 3000000,
+        "year2Baseline": 3300000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -4720,7 +4993,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 69,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1200000,
+        "year1": 1200000,
+        "year2Baseline": 1325000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "notre-dame|luketalich",
@@ -5048,6 +5334,19 @@
           "https://ohiostatebuckeyes.com/sports/football/roster/jeremiah-smith/13335",
           "https://www.cbssports.com/nfl/draft/mock-draft/"
         ]
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 4,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 5000000,
+        "year1": 5000000,
+        "year2Baseline": 5500000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -5105,7 +5404,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 18,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2500000,
+        "year1": 2500000,
+        "year2Baseline": 2750000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "ohio-state|kenyattajacksonjr",
@@ -5202,7 +5514,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 84,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "oklahoma-state|carsonkolb",
@@ -5279,7 +5604,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 9,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 3500000,
+        "year1": 3500000,
+        "year2Baseline": 3850000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "oklahoma-state|evanjackson",
@@ -5778,7 +6116,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 36,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "ole-miss|lukeferrelli",
@@ -5912,7 +6263,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 3,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 5000000,
+        "year1": 5000000,
+        "year2Baseline": 5500000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "ole-miss|willecholes",
@@ -5988,7 +6352,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 52,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "oregon|brandonfinneyjr",
@@ -6105,6 +6482,19 @@
           "https://goducks.com/news/2026/1/14/football-moore-among-several-key-contributors-returning-in-2026"
         ],
         "eligibilityConfidence": "evidence-supported-inference: fourth-year 2026, possible 2027 season under NCAA transitional 5-year rule"
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 2,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 5000000,
+        "year1": 5000000,
+        "year2Baseline": 5500000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -6162,7 +6552,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 64,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "oregon|ifyobidegwu",
@@ -6259,7 +6662,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 26,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "oregon|matayouiagalelei",
@@ -6278,7 +6694,20 @@
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 22,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "oregon|messiahhampton",
@@ -6317,7 +6746,20 @@
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 58,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "pittsburgh|alexsanfordjr",
@@ -6912,7 +7354,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 15,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 3000000,
+        "year1": 3000000,
+        "year2Baseline": 3300000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "smu|marcellusbarnesjr",
@@ -7221,7 +7676,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 51,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1600000,
+        "year1": 1600000,
+        "year2Baseline": 1750000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "tennessee|javingordon",
@@ -7298,7 +7766,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 91,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "tennessee|quamoss",
@@ -7452,6 +7933,19 @@
           "https://www.cbssports.com/nfl/draft/mock-draft/"
         ],
         "eligibilityConfidence": "evidence-supported-inference: fourth-year 2026, possible 2027 season under NCAA transitional 5-year rule"
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 20,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2500000,
+        "year1": 2500000,
+        "year2Baseline": 2750000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -7510,13 +8004,20 @@
         "sources": [
           "https://texaslonghorns.com/sports/football/roster/cam-coleman/16950",
           "https://www.burntorangenation.com/texas-longhorns-football/105390/cam-coleman-analysis-texas-longhorns-arch-manning"
-        ],
-        "nil": {
-          "year1": 3000000,
-          "year2Baseline": 3300000,
-          "confidence": "low",
-          "basis": "reported-transfer-market-context-game-estimate"
-        }
+        ]
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 14,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 3000000,
+        "year1": 3000000,
+        "year2Baseline": 3300000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -7556,6 +8057,19 @@
           "https://texaslonghorns.com/sports/football/roster/colin-simmons/16936",
           "https://www.cbssports.com/nfl/draft/mock-draft/"
         ]
+      },
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 21,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2500000,
+        "year1": 2500000,
+        "year2Baseline": 2750000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
       }
     },
     {
@@ -7766,7 +8280,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 95,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "texas|ryanwingo",
@@ -7958,7 +8485,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 75,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "texas-tech|camerondickey",
@@ -8383,7 +8923,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 40,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "ucla|rodrickpleasant",
@@ -8688,7 +9241,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 56,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1500000,
+        "year1": 1500000,
+        "year2Baseline": 1650000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "usc|jontezwilliams",
@@ -8805,7 +9371,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 82,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "usc|prophetbrown",
@@ -8882,7 +9461,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 73,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "usc|zacharyuswilliams",
@@ -8998,7 +9590,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 46,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 2000000,
+        "year1": 2000000,
+        "year2Baseline": 2200000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     },
     {
       "id": "utah|elijahdavis",
@@ -9247,7 +9852,20 @@
       "confidence": "roster-classification",
       "remainingEligibility": null,
       "earliestDraftYear": null,
-      "draftEligible2027": null
+      "draftEligible2027": null,
+      "nilMarketEvidence": {
+        "asOf": "2026-10-08",
+        "provider": "On3",
+        "providerRank": 83,
+        "sourceUrl": "https://www.on3.com/nil/rankings/player/college/football/",
+        "sourceMethod": "deal-based valuation estimate; not an audited player contract",
+        "reportedValuationEstimate": 1000000,
+        "year1": 1000000,
+        "year2Baseline": 1100000,
+        "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
+        "confidence": "medium",
+        "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      }
     }
   ],
   "officialOverrides": 85,
@@ -9262,5 +9880,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation."
 }
