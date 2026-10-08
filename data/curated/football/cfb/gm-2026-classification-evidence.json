@@ -4291,8 +4291,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 37,
+          "steady": 34,
+          "decline": 13,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.1,
+        "summary": "Miami junior DL saw eight games/two tackles as a 2024 true freshman, then 15 appearances, 17 tackles, 2.5 sacks and six quarterback pressures in 2025 without established every-down starter volume. Improved rush technique and a larger 2026 role could drive meaningful development, but recruiting reputation alone cannot warrant near-certain breakout. Entered college in 2024; 2027 NFL-eligible but declaration risk low.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/player/armondo-blount"
+        ]
+      }
     },
     {
       "id": "miami|brycefitzgerald",
@@ -4310,8 +4329,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 28,
+          "steady": 55,
+          "decline": 11,
+          "maxGain": 4,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.07,
+        "summary": "Miami 2026 sophomore defensive back earned FWAA Freshman All-America after six interceptions in 2025, tied for conference lead across 16 games and four starts; also recorded 16 tackles. Elite takeaway rate may regress even if coverage improves, making repeat huge turnover output less certain than underlying ability. First 2025 collegiate entry precludes a 2027 NFL declaration.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2026-27/player/bryce-fitzgerald"
+        ]
+      }
     },
     {
       "id": "miami|charmarbrown",
@@ -4329,8 +4367,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 33,
+          "steady": 42,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.09,
+        "summary": "Miami redshirt junior RB arrived from North Dakota State, where in 2024 he rushed for 1,181 yards and 15 touchdowns after a 2023 redshirt. As a Miami reserve/rotation runner in 2025 gained 474 rushing yards and seven rushing TD, plus 20 catches/138 yards/two TD. Proven productive FCS starter but limited established Miami feature role supports moderate upside and real Big-conference volume risk. Entered college 2023, so 2027 draft eligible.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/charmar-brown"
+        ]
+      }
     },
     {
       "id": "miami|chasesmith",
@@ -4348,8 +4405,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 23,
+          "steady": 52,
+          "decline": 20,
+          "maxGain": 3,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.06,
+        "summary": "Miami linebacker returned for 2026 following 2025 redshirt-senior season with 31 tackles in 16 games. Originally enrolled in 2021 and retained eligibility into the sixth calendar year; prior ACL injury history and unusual redshirt status make assumed final-year expiration unreliable without a specific compliance ruling. Veteran experience favors steady production, with injury/usage downside and limited major breakout.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2026-27/player/chase-smith"
+        ]
+      }
     },
     {
       "id": "miami|cooperbarkate",
@@ -4367,9 +4443,28 @@
       "matchStatus": "exact",
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 19,
+          "steady": 58,
+          "decline": 20,
+          "maxGain": 2,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.52,
+        "portalExitProbability": 0.01,
+        "summary": "Miami 2026 redshirt-senior receiver played 2022–24 at Harvard and 2025 at Duke, where he was All-ACC second-team, after 2024 FCS All-American recognition. Career through 2025: 37 games/33 starts, 185 receptions, 2,848 yards and 21 TD. Elite FCS and proven ACC receiver production yields high steady chance, while program change and normal fifth-year finish reduce 2027 college return likelihood. The 2026 eligibility exhaustion is a model inference absent documented waiver.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/player/cooper-barkate"
+        ]
+      }
     },
     {
       "id": "miami|damaribrown",
@@ -4387,8 +4482,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 41,
+          "decline": 16,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.31,
+        "portalExitProbability": 0.11,
+        "summary": "Miami 2026 redshirt junior corner debuted in 2023 and started final three games as freshman; injuries limited him to two games in 2024, and 2025 featured 12 appearances/five starts, 24 tackles and one PBU. Physical cover traits and expanded role have upside, but two interrupted seasons and health history warrant elevated volatility rather than class-based automatic improvement. Eligible for 2027 draft; declaration remains speculative.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/damari-brown"
+        ]
+      }
     },
     {
       "id": "miami|damonwilsonii",
@@ -4510,8 +4624,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 36,
+          "steady": 40,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.33,
+        "portalExitProbability": 0.07,
+        "summary": "Miami junior hybrid tight end played 15 games/four starts as a sophomore in 2025 with 23 catches for 218 yards and three TD after limited 2024 freshman use. Receiving and blocking role can expand in 2026-27, but no established top-tier season yet. 2024 first enrollment permits 2027 draft eligibility without making an early declaration likely.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/elija-lofton"
+        ]
+      }
     },
     {
       "id": "miami|javianmallory",
@@ -4529,8 +4662,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 23,
+          "improve": 41,
+          "steady": 25,
+          "decline": 11,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.16,
+        "summary": "Miami 2026 true freshman RB official roster bio reports strong high-school senior production (1,114 rush yards/14 TD) but does not verify comparable college playing volume or 2026 college statistics. His college development is speculative, not demonstrated by prep results; new-team role and youth imply high growth and uncertainty. Entered college 2026 and cannot declare in 2027.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/player/javian-mallory"
+        ]
+      }
     },
     {
       "id": "miami|joshuamoore",
@@ -4549,8 +4701,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 16,
+          "improve": 38,
+          "steady": 34,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.09,
+        "summary": "Miami 2026 sophomore WR emerged in 2025 debut season with 17 catches/210 yards/two TD across 16 games as true freshman. Experience in CFP run supports readiness but no sustained featured-target body of work. Sophomore growth and receiver-role competition create a wider improvement and usage range; first enrollment 2025 bars 2027 NFL declaration.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/joshua-moore"
+        ]
+      }
     },
     {
       "id": "miami|malachitoney",
@@ -4661,8 +4832,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 35,
+          "steady": 39,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.08,
+        "summary": "Miami 2026 junior edge defender played 2025 all 16 games/one start with 25 tackles, 5.5 TFL, 2.5 sacks and six QB hurries after nine freshman games in 2024. Demonstrated rotational pass rush warrants upward role trajectory, but one-start sample and evolving technique cap certainty of a major breakout. First college year 2024 makes him 2027 draft eligible.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/marquise-lightfoot"
+        ]
+      }
     },
     {
       "id": "miami|mohamedtoure",
@@ -4719,8 +4909,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 27,
+          "steady": 51,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.61,
+        "portalExitProbability": 0.08,
+        "summary": "Miami 2026 junior defensive back transfer from Boston College after 2025 All-ACC honorable mention in 12 games/11 starts with 82 tackles, eight TFL, four forced fumbles, two sacks and one interception. Established ACC disruptive nickel/run-support level with transfer-fit uncertainty; likely modest progress or steady rather than pure breakout. 2024 original college enrollment makes a 2027 NFL decision possible.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/player/omar-thornton"
+        ]
+      }
     },
     {
       "id": "miami|xavierlucas",
@@ -4738,8 +4947,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 52,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.63,
+        "portalExitProbability": 0.07,
+        "summary": "Miami 2026 junior corner transferred from Wisconsin after 2024 freshman 11 appearances/one start. Started 13 of Miami's 16 2025 games with 45 tackles, eight pass breakups and one interception. Proven higher-level coverage role, limited new breakout headroom relative to established play, but corner turnover/coverage grades can vary with targets. 2024 matriculation enables 2027 draft.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/xavier-lucas"
+        ]
+      }
     },
     {
       "id": "miami|zechariahpoyser",
@@ -4757,8 +4985,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2390/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 24,
+          "steady": 54,
+          "decline": 17,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.67,
+        "portalExitProbability": 0.05,
+        "summary": "Miami 2026 redshirt junior safety first played Jacksonville State in 2023 (four games/redshirt). Produced 2024 FWAA Freshman All-American season: 75 tackles, three interceptions and eight TFL. Started all 16 2025 Miami games earning All-ACC honorable mention, 68 tackles, three TFL, sack and six PBUs. With two established starting seasons, steady repeat outweighs huge breakout despite remaining improvement potential.",
+        "sources": [
+          "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/zechariah-poyser"
+        ]
+      }
     },
     {
       "id": "mississippi-state|amareewilliams",
@@ -11932,5 +12179,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes."
 }
