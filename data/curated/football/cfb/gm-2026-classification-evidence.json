@@ -5,7 +5,7 @@
   "schoolCount": 25,
   "population": 468,
   "classified": 468,
-  "exactMatches": 360,
+  "exactMatches": 359,
   "failures": [
     {
       "schoolId": "boise-state",
@@ -1008,9 +1008,26 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://broncosports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 20,
+          "steady": 59,
+          "decline": 17,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.56,
+        "portalExitProbability": 0.01,
+        "summary": "Boise State 2026 FIFTH-YEAR QB and multi-year starter was 2025 Mountain West Championship Offensive MVP; earned 2024 All-Mountain West honorable mention and entered 2026 on Maxwell, Walter Camp, Unitas and Wuerffel watch lists. Strong sustained conference starter/field processing, with limited gigantic further breakout runway and meaningful NFL evaluation despite questions over size. Entered college 2022, modeled last normal eligible year 2026.",
+        "sources": "https://broncosports.com/sports/football/roster/maddux-madsen/14321"
+      }
     },
     {
       "id": "boise-state|mattwagner",
@@ -1884,8 +1901,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/57/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 35,
+          "steady": 42,
+          "decline": 13,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.06,
+        "summary": "Florida 2026 JUNIOR QB transferred from Georgia Tech; through five Gators starts completed 84-of-121 passes (69.4%) for 1,114 yards/eight pass TD/two interceptions, plus three rushing TD and 165.3 efficiency rating. Existing Georgia Tech experience and fast 2026 SEC start justify above-base prospect growth without blindly assuming a small-sample 2027 Heisman. First college enrollment 2024 means 2027 NFL eligible.",
+        "sources": "https://floridagators.com/sports/football/roster/aaron-philo/18345"
+      }
     },
     {
       "id": "florida|amirjackson",
@@ -3093,9 +3127,26 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 21,
+          "steady": 57,
+          "decline": 18,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.8,
+        "portalExitProbability": 0.01,
+        "summary": "Houston 2026 FIFTH-YEAR QB transferred from Texas A&M after injuries/recovery, then started all 13 Cougars 2025 games and produced 25 passing plus 11 rushing TD, tying Big 12 conference lead with 36 total TD. 2026 returned on major QB award watch lists. High established dual-threat ability with injury history rather than a generic old-QB breakout; original 2022 college entry normally exhausts eligibility after 2026.",
+        "sources": "https://uhcougars.com/sports/football/roster/conner-weigman/9919"
+      }
     },
     {
       "id": "houston|demarionthomas",
@@ -4206,8 +4257,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2294/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 46,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.05,
+        "summary": "Iowa 2026 FOURTH-YEAR QB after Auburn transfer started opening five games, going 78-of-124 for 832 yards/five pass TD/one INT and one rushing TD. His 21-of-35, 227-yard two-TD fourth-quarter comeback against No. 18 Michigan earned Davey O'Brien Great 8. Demonstrated midrange starter success and moderate continuing refinement, while five-game 2026 sample does not establish an unquestioned long-career elite QB. Initial 2023 college entry allows 2027 draft.",
+        "sources": "https://hawkeyesports.com/sports/football/roster/player/hank-brown"
+      }
     },
     {
       "id": "iowa|ioseepenesa",
@@ -10076,16 +10144,33 @@
       "groups": [
         "QB"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "Fifth Year",
       "espnAthleteId": "4714300",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/holden-geriner/15190",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 34,
+          "steady": 32,
+          "decline": 22,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.1,
+        "portalExitProbability": 0.01,
+        "summary": "Pitt 2026 FIFTH-YEAR QB newly transferred from Texas State, after just three 2025 games and only eight prior Auburn games across 2022–24, completing nine passes for 116 yards at Auburn. Strong prep highlights are NOT comparable to a proven high-volume college starting season; a 2026 spot start could bring upside but uncertainty is very high, and normal five-year period expires after 2026 unless waiver.",
+        "sources": "https://pittsburghpanthers.com/sports/football/roster/holden-geriner/15190"
+      }
     },
     {
       "id": "pittsburgh|isaiahneal",
@@ -12556,8 +12641,25 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/2641/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 36,
+          "steady": 42,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.07,
+        "summary": "Texas Tech 2026 JUNIOR QB played eight games/two starts in 2025 behind Behren Morton before knee injury, completing 69 of 109 passes (63.3%) for 680 yards/seven TD/three INT and rushing 43 times for 299 yards/five TD. Already demonstrated legitimate dual-threat flashes; knee recovery and new starting workload create both improvement and inconsistency possibilities. First matriculated 2024, 2027 NFL entry possible not guaranteed.",
+        "sources": "https://texastech.com/sports/football/roster/hammond-will/14292"
+      }
     },
     {
       "id": "ucla|amierwashington",
@@ -12730,8 +12832,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/26/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -12744,6 +12846,23 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 44,
+          "decline": 18,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.08,
+        "summary": "UCLA 2026 SENIOR QB played 29 college games/25 starts through Tennessee and UCLA across 2023–25. In 2025 as UCLA starter: 208-of-323 passes for 1,928 yards/13 TD/seven INT plus team-leading 505 rushing yards/four rush TD. His October 2025 upset of No. 7 Penn State featured three rushing/two passing TD and national weekly honors, but broader 2025 passing efficiency/turnovers were inconsistent. Genuine dual-threat and rebound upside with senior role risk; 2023 entry permits 2027 NFL decision.",
+        "sources": "https://uclabruins.com/sports/football/roster/player/nico-iamaleava"
       }
     },
     {
@@ -13048,8 +13167,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/30/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -13062,6 +13181,23 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 19,
+          "steady": 62,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.03,
+        "summary": "USC 2026 redshirt SENIOR QB and returning starter threw 265-of-403 (65.8%) for 3,711 yards/24 TD/10 INT in all 13 2025 starts, ran for six TD and led the nation in ESPN QBR at 91.2 according to USC, earning third-team All-Big Ten. Repeat upper-tier Power Four efficiency is likelier than giant 2027 new breakout. 2023 first college entry, high 2027 pro-declaration estimate but senior label not proof of graduation.",
+        "sources": "https://usctrojans.com/sports/football/roster/jayden-maiava/18836"
       }
     },
     {
@@ -13417,8 +13553,8 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/254/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null,
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
       "nilMarketEvidence": {
         "asOf": "2026-10-08",
         "provider": "On3",
@@ -13431,6 +13567,23 @@
         "year2Basis": "uniform provisional 10% baseline uplift pending player-specific offseason research",
         "confidence": "medium",
         "assessment": "Exact-identity match to October 8 On3 2026 football valuation board; source estimate used as game market anchor. Not a verified private NIL payment."
+      },
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 22,
+          "steady": 57,
+          "decline": 16,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.82,
+        "portalExitProbability": 0.04,
+        "summary": "Utah 2026 SENIOR QB/team captain won 2025 Big 12 Offensive Newcomer of the Year as dual threat, starting 12 games and throwing for 2,490 yards/24 passing TD plus rushing for 835 yards/10 rushing scores. Earlier 2024 New Mexico first-team All-Mountain West 2,768 passing/1,166 rushing yards. Proven two-team high-level rushing offense supports steady performance and high professional declaration probability, rather than inflated new upside from school brand.",
+        "sources": "https://utahutes.com/sports/football/roster/devon-dampier/17509"
       }
     },
     {
@@ -13716,7 +13869,7 @@
       }
     }
   ],
-  "officialOverrides": 108,
+  "officialOverrides": 109,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
@@ -13728,5 +13881,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes.\n2026-10-08 Indiana complete cohort: 17 exact-name official IU athlete bio studies; eight verified fifth-year corrections, Preston Zachman 7TH and final year status, injury and two-year production evidence. No HQ changes.\n2026-10-08 SMU 17 athlete research batch: each named 2026 SMU roster participant and prior school biography individually considered; official 2025 detailed stats, transfer roles, medical redshirts and class noted. Theo Melin Ohrstrom officially 5TH. Jimmy Wyrick 6TH with 2021 first enrolment; model final eligibility despite possible exceptional appeals."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics.\n2026-10-08 Oregon research batch: ten Oregon athletes individually evaluated against official school 2025/2026 bios; explicit season production or nonproduction, enrollment, injury and transfer context. No HQ grades changed; unverified 2026 stats and remaining eligibility not invented.\n2026-10-08 Texas source review: 12 official athlete bios individually evaluated from 2024-26 histories; 2026 class fixes Hero Kanu/Raleek Brown 5TH and Hollywood Smothers/Spencer Shannon SR; two fifth-year normal eligibility exits. No HQ grade changes.\n2026-10-08 Ohio State official full-school source batch: 15 named player biographies tied to 2025 and completed 2026 games, with three official fifth-year corrections. Draft timing uses initial college entry, not simple FR/SO label.\n2026-10-08 Miami sourced team batch: 13 existing exact-ID subjects, official 2025/2026 biographical statistics and injury histories, NCAA initial-entry timing; no assumed 2026 college stats for 2026 freshmen. One normal-final-year redshirt senior market inference for Cooper Barkate, not certified compliance outcome. No HQ changes.\n2026-10-08 Georgia final five roster evaluations individually backed by 2025 plus September 2026 Georgia official player stats; all 19 Georgia candidates researched, with independent HQ grade review flags unchanged.\n2026-10-08 LSU school review: 13 official 2025/26 athlete biographies; source-backed career stats, transfer/injury context, 2027 draft rules, TJ Dottery documented final 5th-year eligibility. Prospects without major playing time explicitly uncertain.\n2026-10-08 Notre Dame official 2026 source batch: complete all 16 remaining Notre Dame athletes, including updated first-five-game statistics, previous-season verified performance, injury and role context, one fifth-year DJ McKinney correction. No Wheel current grades edited.\n2026-10-08 BYU school review: all 17 remaining exact-ID athletes individually studied using BYU 2025/2026 official biographies, with injury, role and prior performance caveats and modeled 2027 declaration risks. RS SO Tommy Prassas entered college 2024 and remains 2027 draft-eligible despite sophomore label; no senior class relied upon alone for verified graduation. No HQ changes.\n2026-10-08 Indiana complete cohort: 17 exact-name official IU athlete bio studies; eight verified fifth-year corrections, Preston Zachman 7TH and final year status, injury and two-year production evidence. No HQ changes.\n2026-10-08 SMU 17 athlete research batch: each named 2026 SMU roster participant and prior school biography individually considered; official 2025 detailed stats, transfer roles, medical redshirts and class noted. Theo Melin Ohrstrom officially 5TH. Jimmy Wyrick 6TH with 2021 first enrolment; model final eligibility despite possible exceptional appeals.\n2026-10-08 QB final nine study: Boise Madsen, UF Philo, Houston Weigman, Iowa Hank Brown, Pitt Geriner, Texas Tech Hammond, UCLA Nico, USC Maiava, Utah Dampier. All 25/25 GM QB population individually sourced from official career bios; Pitt Holden Geriner corrected to Fifth Year, remaining eligibility exit model. Draft first-entry windows applied."
 }
