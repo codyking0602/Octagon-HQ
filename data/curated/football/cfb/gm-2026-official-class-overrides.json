@@ -827,6 +827,34 @@
       "sourceUrl": "https://utahutes.com/sports/football/roster",
       "evidence": "2026 official school football roster class",
       "redshirt": null
+    },
+    {
+      "id": "utah|elijahdavis",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/elijah-davis/17511",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
+      "redshirt": null
+    },
+    {
+      "id": "utah|lanceholtzclaw",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/lance-holtzclaw/17534",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
+      "redshirt": null
+    },
+    {
+      "id": "utah|paulfitzgerald",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/paul-fitzgerald/17521",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
+      "redshirt": null
+    },
+    {
+      "id": "utah|rabbitevans",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/rabbit-evans/17519",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
+      "redshirt": null
     }
   ]
 }
