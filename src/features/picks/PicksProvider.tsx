@@ -102,6 +102,7 @@ export function PicksProvider({
   const profileIdRef = useRef(profileId);
   profileIdRef.current = profileId;
   const revisionRef = useRef(0);
+  const lastFullRefreshAtRef = useRef(0);
   const [repository] = useState<PicksRepository | null>(() => (
     suppliedRepository === undefined ? createPicksRepository() : suppliedRepository
   ));
@@ -138,6 +139,7 @@ export function PicksProvider({
   const refresh = useCallback(async () => {
     const expectedProfileId = profileId;
     const revision = ++revisionRef.current;
+    lastFullRefreshAtRef.current = Date.now();
 
     if (!repository) {
       setEvent(null);
@@ -266,6 +268,7 @@ export function PicksProvider({
       setError("");
     } catch (nextError) {
       if (revision !== revisionRef.current) return;
+      lastFullRefreshAtRef.current = 0;
       setError(readableError(nextError));
     } finally {
       if (revision === revisionRef.current) {
@@ -276,6 +279,7 @@ export function PicksProvider({
   }, [includeFootballSummary, profileId, repository, sport]);
 
   useEffect(() => {
+    lastFullRefreshAtRef.current = 0;
     setSavingBoutId(null);
     setSavingLock(false);
     setSavingFootballFutures(false);
@@ -284,15 +288,19 @@ export function PicksProvider({
 
   useEffect(() => {
     if (!repository) return undefined;
-    const onFocus = () => void refresh();
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") void refresh();
+    // Safari fires both focus and visibilitychange on the same foreground.
+    // Keep manual refresh and game actions immediate, but avoid two expensive
+    // Picks history/event fan-outs for a single quick app switch.
+    const refreshIfStale = () => {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - lastFullRefreshAtRef.current < 60_000) return;
+      void refresh();
     };
-    window.addEventListener("focus", onFocus);
-    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("focus", refreshIfStale);
+    document.addEventListener("visibilitychange", refreshIfStale);
     return () => {
-      window.removeEventListener("focus", onFocus);
-      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("focus", refreshIfStale);
+      document.removeEventListener("visibilitychange", refreshIfStale);
     };
   }, [refresh, repository]);
 
