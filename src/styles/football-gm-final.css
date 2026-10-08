@@ -296,9 +296,11 @@
   transform: translateX(-50%);
 }
 .gm-final__band-finish.is-up { background: #55d6a2; }
-.gm-final__band-finish.is-down { background: #6aafff; }
-.gm-final__band-legend { display: flex; justify-content: space-between; gap: 3px; }
+.gm-final__band-finish.is-down { background: #e18c77; }
+.gm-final__band-legend { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); align-items: center; gap: 2px; }
 .gm-final__band-legend small { color: #8fa8ba; font-size: 7px; font-weight: 850; }
+.gm-final__band-legend small:nth-child(2) { text-align: center; }
+.gm-final__band-legend small:last-child { text-align: right; }
 .gm-final__band-unavailable { color: #8fa8ba; font-size: 9px; }
 .gm-final__outcome-text {
   width: 88px;
@@ -588,12 +590,7 @@
   color: #e9f7ff;
   background: linear-gradient(140deg,#154569,#1d5370);
 }
-.gm-final__band-legend { position: relative; }
-.gm-final__band-legend > .gm-final__band-start-label {
-  position: absolute;
-  transform: translateX(-50%);
-  left: 50%;
-}
+
 @media (max-width:390px) {
   .gm-final__match-year { padding-inline: 3px; }
   .gm-final__match-side > strong { font-size: 16px; }
