@@ -172,8 +172,9 @@ function Season({season}: {season: CfbGmSeason}) {
   return <article className="football-gm__season-card">
     <small>YEAR {season.year} · {season.year === 1 ? "2026" : "2027"}</small>
     <strong>{season.overall} OVR</strong>
-    <span>TEAM OVR · {season.winOdds.toFixed(1)}% TITLE ODDS</span>
+    <span>REGULAR SEASON {season.wins}–{season.losses} · {season.cfpSeed ? "#" + season.cfpSeed + " CFP SEED" : "OUTSIDE CFP"}</span>
     <b>{season.finish}</b>
+    <small>{season.winOdds.toFixed(1)}% EST. TITLE CHANCE</small>
   </article>;
 }
 function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
@@ -189,7 +190,7 @@ function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
       <header><span><small>PROGRAM ARC</small><strong>WHAT YOU BUILT</strong></span></header>
       <div className="football-gm-report__years">
         {result.seasons.map((season) => <article key={season.year}>
-          <small>YEAR {season.year}</small><strong>{season.overall} OVR</strong><span>{season.finish}</span>
+          <small>YEAR {season.year} · {season.wins}–{season.losses}</small><strong>{season.overall} OVR</strong><span>{season.finish}</span>
         </article>)}
       </div>
       <div className="football-gm-report__offseason-marker">
