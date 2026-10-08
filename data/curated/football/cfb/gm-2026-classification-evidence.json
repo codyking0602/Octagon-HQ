@@ -67,8 +67,27 @@
       "sourceUrl": "https://rolltide.com/sports/football/roster/",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 47,
+          "decline": 16,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.06,
+        "summary": "Alabama 2026 senior starting middle linebacker after Virginia Tech 2023–25 (152 career tackles, 2024 72 tackles/11 starts, 2025 58 tackles/five starts in nine games). In first four 2026 games led Alabama with 30 tackles and two sacks, including 12 tackles vs Kentucky and another 12 vs South Carolina. More responsibility supports impact but not guaranteed elite breakout.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/caleb-woodson/17539"
+        ]
+      }
     },
     {
       "id": "alabama|danielhill",
@@ -367,8 +386,27 @@
       "sourceUrl": "https://rolltide.com/sports/football/roster/",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 38,
+          "steady": 36,
+          "decline": 12,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.11,
+        "summary": "Alabama sophomore interior DL emerged from 2025 rotation to two starts in four 2026 games, totaling eight tackles, a half-sack and hurry. Missed spring practice due to injury but roster lists him healthy for fall. Limited sustained disruption and recent promotion create real improvement opportunity and position/health risk; 2025 college entry bars 2027 NFL Draft.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/london-simmons/17484"
+        ]
+      }
     },
     {
       "id": "alabama|lotzeirbrooks",
@@ -501,8 +539,27 @@
       "sourceUrl": "https://rolltide.com/sports/football/roster/",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 14,
+          "improve": 40,
+          "steady": 35,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.08,
+        "summary": "Alabama junior WR played all 15 games with three starts in 2025 but caught 11 passes for 98 yards and two TD. His 2026 starting role expanded to four starts and 12 catches for 140 yards/one TD in first four games, a clear opportunity increase without established high-end workload. Development upside and moderate volume volatility, modest immediate 2027 NFL exit risk.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/rico-scott/17483"
+        ]
+      }
     },
     {
       "id": "alabama|ryancolemanwilliams",
@@ -573,8 +630,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 34,
+          "steady": 36,
+          "decline": 15,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.4,
+        "portalExitProbability": 0.06,
+        "summary": "Alabama senior DL transferred from Oregon after only 22 tackles/three TFL/one sack in 25 games across 2023–25, then logged eight tackles, three TFL and two sacks in four 2026 Alabama starts. This is documented starting-role breakout after limited reserve experience; 2027 grade could rise or regress because of the thin 2026 high-impact sample.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/terrance-green/17508"
+        ]
+      }
     },
     {
       "id": "alabama|traeshawnbrown",
@@ -592,8 +668,28 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 21,
+          "improve": 40,
+          "steady": 25,
+          "decline": 14,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.15,
+        "summary": "Alabama true freshman 2026 RB, late addition to recruiting class after 2025 Huntsville High 1,362 rushing yards/17 TD and 204 receiving yards. Official 2026 active roster confirms role, but no reliably established significant collegiate 2026 statistics in current public player biography; college breakout estimate remains high-uncertainty rather than treating prep production as proven FBS output. First 2026 college entry makes 2027 draft impossible.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/traeshawn-brown/17421",
+          "https://rolltide.com/sports/football/roster/"
+        ]
+      }
     },
     {
       "id": "alabama|yhonzaepierre",
@@ -701,8 +797,28 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/333/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 40,
+          "steady": 26,
+          "decline": 14,
+          "maxGain": 8,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": null,
+        "portalExitProbability": 0.14,
+        "summary": "Alabama 2026 true freshman corner with strong high-school speed/return profile and state-level sprint results, but no documented 2025 college action and no authenticated 2026 defensive game sample in currently available school bio. Treat college ability/development as uncertain, not recruiting grade; 2026 entry means no 2027 draft eligibility.",
+        "sources": [
+          "https://rolltide.com/sports/football/roster/zyan-gibson/17328",
+          "https://rolltide.com/sports/football/roster/"
+        ]
+      }
     },
     {
       "id": "boise-state|akeemwright",
@@ -11113,5 +11229,5 @@
     "https://texastech.com/sports/football/roster/print",
     "https://texaslonghorns.com/sports/football/roster/print"
   ],
-  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged."
+  "auditNote": "Official roster overrides supersede incomplete ESPN records; classification is not equivalent to verified remaining eligibility, NFL Draft eligibility or graduation.\n2026-10-08 evidence-informed GM calibration: 12 named candidates reviewed against attached source URLs; remaining unresearched values explicitly retain provisional priors. Official Texas Arch Manning 2026 senior class corrects ESPN-based junior label. Draft/market probabilities are gameplay judgments, NOT verified NCAA rulings or private NIL deals. NCAA 2026 transition rules apply.\n2026-10-08 NIL source pass: 48 exact roster ID matches from current On3 football 100 rankings. On3's July 2026 methodology became deal-based. 2026 valuation is a market reference, not verified contractual cash payment. 2027 +10% uses explicitly provisional market-wide inflation, not individualized price negotiation.\n2026-10-08 second individual source batch: 16 individually assessed QB/skill/defensive prospects from official school 2025/2026 biographies and current reports. Josh Hoover and Kevin Jennings class corrected to official 5TH; 2026 eligibility-exhaustion game inference reviewed for them and Chambliss litigation.\n2026-10-08 third source batch: 19 individualized RB/WR/TE/Front Seven/Secondary development/risk records grounded in official school biographies and up-to-date 2026 game notes. Oregon fifth-year Evan Stewart and Bear Alexander class corrected. Mark Bowman and Elijah Griffin current HQ grades referred to owner for separate review; no grades changed.\n2026-10-08 fourth source batch: eight official 2026 school roster studies: Ohio State Bo Jackson and Brandon Inniss; Georgia KJ Bolden and Nate Frazier; Miami Mark Fletcher Jr.; Alabama Zabien Brown; Texas Jelani McDonald; Oregon Jordon Davison. Include 2025 statistics, 2026 games, timing and individually assessed development.\n2026-10-08 fifth source batch: ten official Alabama player bio studies with each 2025/2026 season evidence, draft timing and class, plus Keon Sabb official 5TH correction.\n2026-10-08 sixth evidence batch: ten official Georgia player bios including first five games of 2026 and 2025 role statistics; existing HQ grades unchanged.\n2026-10-08 seventh batch: six more Alabama exact-ID bios. Two 2026 true freshmen have unverified college production, so documented as high-uncertainty estimates and no unsupported statistics."
 }
