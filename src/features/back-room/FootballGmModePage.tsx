@@ -1888,11 +1888,35 @@ export default function FootballGmModePage({
 
   return (
     <div className="page football-gm-page">
-      <header className="football-gm__header">
-        <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
-        <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
-        <b>3 YEARS</b>
-      </header>
+      {run.phase === "final" ? (
+        <header className="football-gm__header is-final">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><strong>THE GM</strong><small>3 YEARS</small></span>
+          <button type="button" className="football-gm__share-result" disabled={!finalResult} onClick={() => {
+            if (!finalResult) return;
+            const text = "My Octagon HQ GM score: " + finalResult.score.toFixed(1)
+              + ". Three seasons: " + finalResult.seasons.map((season) => "Year " + season.year
+                + " " + (footballGmSeasonRecordLabel(season) ?? "—")
+                + " (" + footballGmPlayoffFinishLabel(season.finish) + ")").join(" · ");
+            if (navigator.share) {
+              void navigator.share({ title: "The GM · Octagon HQ", text }).catch(() => {});
+            } else if (navigator.clipboard?.writeText) {
+              void navigator.clipboard.writeText(text).then(
+                () => setChallengeStatus("RESULT COPIED TO CLIPBOARD"),
+                () => setChallengeStatus("SHARING UNAVAILABLE ON THIS DEVICE"),
+              );
+            } else {
+              setChallengeStatus("SHARING UNAVAILABLE ON THIS DEVICE");
+            }
+          }}>SHARE ↗</button>
+        </header>
+      ) : (
+        <header className="football-gm__header">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
+          <b>3 YEARS</b>
+        </header>
+      )}
 
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
