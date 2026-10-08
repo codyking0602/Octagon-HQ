@@ -126,7 +126,7 @@ type RosterRow = {
 
 function OutcomeBand({ band, name }: { band: RosterRow["band"]; name: string }) {
   if (!band.calibrated) {
-    return <div className="gm-final__band-unavailable">DEVELOPMENT RANGE UNAVAILABLE</div>;
+    return <div className="gm-final__band-unavailable">DEVELOPMENT UNAVAILABLE</div>;
   }
   return (
     <div className="gm-final__band" role="img" aria-label={name + ": " + band.label.toLowerCase() + " across Years 1 through 3. Start is always centered; final movement is categorical. Exact grades remain hidden."}>
@@ -325,7 +325,7 @@ export function FootballGmFinalExperience({
 
       <section className="gm-final__section gm-final__roster surface-card" aria-label="Final roster development outcomes">
         <header className="gm-final__heading"><h2>{opponentResult ? selectedName.toUpperCase() + " · FINAL ROSTER" : "YOUR FINAL ROSTER"}</h2><small>YEAR 1 → YEAR 3</small></header>
-        <p className="gm-final__hint">The white tick always marks START in the center. The colored dot shows whether the player improved or declined, using five fixed categories—not hidden overall grades.</p>
+        <p className="gm-final__hint">The white tick always marks START in the center. The colored dot shows improvement or decline in five fixed categories. Exact grades stay hidden.</p>
         <div className="gm-final__roster-list">
           {rows.map((row) => {
             const acquisition = row.before?.id === row.player.id ? "RETAINED"
