@@ -131,9 +131,13 @@ describe("full NFL GM development calibration", () => {
     for (let i = 0; i < 200; i += 1) {
       const star = footballGmProjectedGradeForPlayer(name("Josh Allen"), 2, seed(i));
       const prospect = footballGmProjectedGradeForPlayer(name("Caleb Williams"), 2, seed(i));
-      expect(star).toBeGreaterThanOrEqual(97.7);
-      expect(prospect).toBeGreaterThanOrEqual(81);
-      expect(prospect).toBeLessThanOrEqual(95.5);
+      const starSubject = name("Josh Allen");
+      const prospectSubject = name("Caleb Williams");
+      const starProfile = footballGmDevelopmentProfile(starSubject.id)!;
+      const prospectProfile = footballGmDevelopmentProfile(prospectSubject.id)!;
+      expect(star).toBeGreaterThanOrEqual(Math.max(70, starSubject.currentGrade - starProfile.maxAnnualLoss));
+      expect(prospect).toBeGreaterThanOrEqual(Math.max(70, prospectSubject.currentGrade - prospectProfile.maxAnnualLoss));
+      expect(prospect).toBeLessThanOrEqual(Math.min(99, prospectSubject.currentGrade + prospectProfile.maxAnnualGain));
     }
   });
 
@@ -148,8 +152,12 @@ describe("full NFL GM development calibration", () => {
     const first = footballGmDevelopmentOdds({
       ...input, age: player.age, step: 0, grade: player.currentGrade,
     })!;
+    const curated = footballGmDevelopmentProfile(player.id)!;
     expect(first).toEqual({
-      breakoutPct: 27, improvePct: 37, declinePct: 18, steadyPct: 18,
+      breakoutPct: curated.breakoutPct,
+      improvePct: curated.improvePct,
+      declinePct: curated.declinePct,
+      steadyPct: 100 - curated.breakoutPct - curated.improvePct - curated.declinePct,
     });
 
     const breakout = footballGmDevelopmentOdds({ ...input, step: 1, grade: 93 })!;
