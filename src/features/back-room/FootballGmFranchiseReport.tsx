@@ -6,6 +6,7 @@ import {
   footballGmPlayoffFinishLabel,
   footballGmPlayerById,
   footballGmProjectedGradeForPlayer,
+  footballGmSlotLabel,
   type FootballGmPlayer,
   type FootballGmRosterEntry,
   type FootballGmRosterSlot,
@@ -108,7 +109,7 @@ function EvolutionRow({ slot, run }: { slot: FootballGmRosterSlot; run: Football
 
   return (
     <article className="football-gm-report__evolution-row">
-      <b>{slot}</b>
+      <b>{footballGmSlotLabel(slot)}</b>
       <div>
         <small>YEAR 1</small>
         <strong>{startPlayer.name}</strong>
@@ -152,7 +153,7 @@ function CoreReport({ name, run }: { name: string; run: FootballGmReportRun }) {
           const changed = slotEntry(run.roster, slot)?.playerId !== entry?.playerId;
           return (
             <div className="gm-result__player" key={slot}>
-              <b>{slot}</b>
+              <b>{footballGmSlotLabel(slot)}</b>
               <span><strong>{player.name}</strong><small>{player.team} · {footballGmMoney(salary)}</small></span>
               <span className="gm-result__player-meta">{tierPill(player, 3, run.seed)}{changed ? <small className="gm-result__changed">NEW</small> : null}</span>
             </div>
@@ -163,7 +164,7 @@ function CoreReport({ name, run }: { name: string; run: FootballGmReportRun }) {
         <div className="gm-result__section-heading"><strong>OFFSEASON TRANSACTIONS</strong><small>{snap.changed} position{snap.changed === 1 ? "" : "s"} changed · {snap.tradeAdds} trades · {snap.freeAgentAdds} FA</small></div>
         {moves.length ? moves.map((move) => (
           <div className="gm-result__move" key={move.slot}>
-            <b>{move.slot}</b>
+            <b>{footballGmSlotLabel(move.slot)}</b>
             <span><small>{move.acquired === "trade" ? "TRADE" : "FREE AGENCY"}</small><strong>{move.left.name} → {move.right.name}</strong></span>
           </div>
         )) : <p className="gm-result__quiet">All seven original players retained.</p>}
