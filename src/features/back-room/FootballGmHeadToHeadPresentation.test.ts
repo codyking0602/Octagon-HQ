@@ -176,6 +176,7 @@ describe("The GM head-to-head presentation", () => {
     expect(report).toContain('footballGmSeasonRecordLabel(season)');
     expect(report).toContain('Record unavailable');
     expect(report.indexOf('gm-result__season-comparison')).toBeLessThan(report.indexOf('gm-result__roster-card'));
+    expect(report.indexOf('gm-result__roster-card')).toBeLessThan(report.indexOf('gm-result__scoring-card'));
     expect(report).toContain('gm-result__franchise-tabs');
     expect(report).toContain('aria-pressed={selectedFrontOffice === "opponent"}');
     expect(report).toContain('<details className="gm-result__expander gm-result__scoring">');
