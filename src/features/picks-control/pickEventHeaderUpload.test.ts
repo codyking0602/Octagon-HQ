@@ -167,4 +167,34 @@ describe("Picks event header upload", () => {
     expect(upload).toHaveBeenCalledTimes(1);
     expect(control.setEventHeader).toHaveBeenCalledTimes(1);
   });
+
+  it("uploads a smaller WebP while retaining the compressed header's real dimensions", async () => {
+    const control = repository();
+    const file = imageFile("image/png", "large-source.png");
+    Object.defineProperty(file, "size", { value: 4_000_000 });
+    const blob = new Blob(["compressed"], { type: "image/webp" });
+    const optimizeImage = vi.fn().mockResolvedValue({ blob, width: 1200, height: 600 });
+
+    await expect(uploadPickEventHeader({
+      eventId: "football-week-2",
+      file,
+      repository: control.value,
+      measureImage,
+      optimizeImage,
+    })).resolves.toEqual({
+      storagePath: "football-week-2/event-header",
+      width: 1200,
+      height: 600,
+    });
+
+    expect(optimizeImage).toHaveBeenCalledWith(file);
+    expect(upload).toHaveBeenCalledWith("football-week-2/event-header", blob, {
+      cacheControl: "0",
+      contentType: "image/webp",
+      upsert: true,
+    });
+    expect(control.setEventHeader).toHaveBeenCalledWith(
+      "football-week-2", "football-week-2/event-header", 1200, 600,
+    );
+  });
 });
