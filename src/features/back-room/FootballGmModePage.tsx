@@ -643,9 +643,26 @@ export function CandidateBoard({
     excludedPlayerIds,
   });
   const [showScoutKey, setShowScoutKey] = useState(false);
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+  // Position tabs filter the legal market only. Picking is still auto-reflowed,
+  // so WR/RB/TE players can fill FLEX without the user pre-assigning a slot.
+  const positionFor = (player: FootballGmPlayer) => {
+    if (player.position === "TE" || player.family === "TE") return "TE";
+    if (player.position === "QB" || player.position === "RB" || player.position === "WR") return player.position;
+    if (player.eligibleSlots.includes("DL")) return "DL";
+    if (player.eligibleSlots.includes("LB")) return "LB";
+    if (player.eligibleSlots.includes("DB")) return "DB";
+    return player.eligibleSlots.includes("RB") ? "RB" : "WR";
+  };
+  const positions = ["QB", "RB", "WR", "TE", "DL", "LB", "DB"] as const;
+  const availablePositions = positions.filter((position) =>
+    candidates.some(({ player }) => positionFor(player) === position));
+  const visibleCandidates = selectedPosition && availablePositions.includes(selectedPosition as typeof positions[number])
+    ? candidates.filter(({ player }) => positionFor(player) === selectedPosition) : [];
 
   useEffect(() => {
     setShowScoutKey(false);
+    setSelectedPosition(null);
   }, [teamCode]);
 
   if (!team) return null;
@@ -658,7 +675,7 @@ export function CandidateBoard({
           <div>
             <p className="eyebrow">YOUR SPIN</p>
             <h2>{team.name}</h2>
-            <span>Choose one player. GM automatically fits the legal roster spots.</span>
+            <span>Choose a position, then a player. GM automatically fits the legal roster spots.</span>
           </div>
           <button
             className="football-gm__scout-key-button"
@@ -668,8 +685,22 @@ export function CandidateBoard({
           >?</button>
         </header>
 
-        <div className="football-wheel-picker__candidates football-gm__picker-candidates" aria-label="Available players">
-          {candidates.map(({ player, salary }) => (
+        <div className="football-wheel-picker__slots football-gm__position-tabs" aria-label="Available positions">
+          {availablePositions.map((position) => (
+            <button
+              type="button"
+              key={position}
+              className={selectedPosition === position ? "is-active" : ""}
+              aria-pressed={selectedPosition === position}
+              onClick={() => setSelectedPosition(position)}
+            >
+              <strong>{position}</strong>
+            </button>
+          ))}
+        </div>
+        {selectedPosition ? (
+        <div className="football-wheel-picker__candidates football-gm__picker-candidates" aria-label={`${selectedPosition} candidates`}>
+          {visibleCandidates.map(({ player, salary }) => (
             <button
               type="button"
               onClick={() => onPick(player.id)}
@@ -694,10 +725,12 @@ export function CandidateBoard({
               </span>
             </button>
           ))}
-          {!candidates.length ? (
-            <p className="football-wheel-picker__message">No legal player from this team fits the remaining roster and cap.</p>
-          ) : null}
         </div>
+        ) : (
+          <p className="football-wheel-picker__message football-gm__position-prompt">
+            {candidates.length ? "Select a position to see available players." : "No legal player from this team fits the remaining roster and cap."}
+          </p>
+        )}
       </section>
 
       {showScoutKey ? (

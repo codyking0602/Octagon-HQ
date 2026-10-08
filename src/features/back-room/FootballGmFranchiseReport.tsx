@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_ROSTER_SLOTS,
@@ -127,59 +128,62 @@ function EvolutionRow({ slot, run }: { slot: FootballGmRosterSlot; run: Football
 
 function CoreReport({ name, run }: { name: string; run: FootballGmReportRun }) {
   const snap = snapshot(run);
-  const changedRows = FOOTBALL_GM_ROSTER_SLOTS.flatMap((slot) => {
-    const startEntry = slotEntry(run.roster, slot);
-    const endEntry = slotEntry(snap.end, slot);
-    const startPlayer = startEntry ? footballGmPlayerById(startEntry.playerId) : null;
-    const endPlayer = endEntry ? footballGmPlayerById(endEntry.playerId) : null;
-    if (!startPlayer || !endPlayer || startPlayer.id === endPlayer.id) return [];
-    return [{ slot, startPlayer, endPlayer, endEntry }];
+  const moves = FOOTBALL_GM_ROSTER_SLOTS.flatMap((slot) => {
+    const before = slotEntry(run.roster, slot);
+    const after = slotEntry(snap.end, slot);
+    const left = before ? footballGmPlayerById(before.playerId) : null;
+    const right = after ? footballGmPlayerById(after.playerId) : null;
+    if (!left || !right || left.id === right.id) return [];
+    return [{ slot, left, right, acquired: after?.acquired }];
   });
 
   return (
-    <div className="football-gm-report__core">
-      <section className="football-gm-report__timeline surface-card">
-        <header><span><small>FRANCHISE ARC</small><strong>{name.toUpperCase()}</strong></span></header>
-        <div className="football-gm-report__years">
-          {snap.result.seasons.map((season, index) => (
-            <article key={season.year}>
-              <small>YEAR {season.year}</small>
-              <strong>{snap.result.teamOveralls[index]} OVR</strong>
-              {footballGmSeasonRecordLabel(season) ? <small className="football-gm-report__record">{footballGmSeasonRecordLabel(season)} REG SEASON</small> : null}
-              <span>{footballGmPlayoffFinishLabel(season.finish)}</span>
-            </article>
-          ))}
+    <section className="gm-result__front-office" aria-label={name + " front office"}>
+      <div className="gm-result__front-office-heading">
+        <div><small>FRANCHISE ARC · YEAR 3 CORE</small><h2>{name.toUpperCase()}</h2></div>
+        <strong>{snap.retained}/7 <small>Original core</small></strong>
+      </div>
+      <div className="gm-result__final-roster" aria-label={name + " Year 3 roster"}>
+        {FOOTBALL_GM_ROSTER_SLOTS.map((slot) => {
+          const entry = slotEntry(snap.end, slot);
+          const player = entry ? footballGmPlayerById(entry.playerId) : null;
+          if (!player) return null;
+          const salary = footballGmAdjustedSalaryForPlayer(player, 3, run.seed, run.negotiationConsequences);
+          const changed = slotEntry(run.roster, slot)?.playerId !== entry?.playerId;
+          return (
+            <div className="gm-result__player" key={slot}>
+              <b>{slot}</b>
+              <span><strong>{player.name}</strong><small>{player.team} · {footballGmMoney(salary)}</small></span>
+              <span className="gm-result__player-meta">{tierPill(player, 3)}{changed ? <small className="gm-result__changed">NEW</small> : null}</span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="gm-result__moves">
+        <div className="gm-result__section-heading"><strong>OFFSEASON TRANSACTIONS</strong><small>{snap.changed} position{snap.changed === 1 ? "" : "s"} changed · {snap.tradeAdds} trades · {snap.freeAgentAdds} FA</small></div>
+        {moves.length ? moves.map((move) => (
+          <div className="gm-result__move" key={move.slot}>
+            <b>{move.slot}</b>
+            <span><small>{move.acquired === "trade" ? "TRADE" : "FREE AGENCY"}</small><strong>{move.left.name} → {move.right.name}</strong></span>
+          </div>
+        )) : <p className="gm-result__quiet">All seven original players retained.</p>}
+      </div>
+      <details className="gm-result__expander football-gm-report__evolution">
+        <summary>VIEW FULL ROSTER EVOLUTION <span>Y1 → Y3</span></summary>
+        <div className="football-gm-report__evolution-rows">
+          <h3>ROSTER EVOLUTION</h3>
+          {FOOTBALL_GM_ROSTER_SLOTS.map((slot) => <EvolutionRow key={slot} slot={slot} run={run} />)}
         </div>
-        <div className="football-gm-report__offseason-marker">
-          <small>THE OFFSEASON</small>
-          <strong>{snap.changed} POSITION{snap.changed === 1 ? "" : "S"} CHANGED</strong>
-          <span>{snap.tradeAdds} trade addition{snap.tradeAdds === 1 ? "" : "s"} · {snap.freeAgentAdds} free-agent addition{snap.freeAgentAdds === 1 ? "" : "s"} · {snap.retained}/7 original core retained</span>
-        </div>
-      </section>
-
-      <section className="football-gm-report__evolution surface-card">
-        <header><span><small>ROSTER EVOLUTION</small><strong>WHAT YOU BUILT</strong></span><b>Y1 → Y3</b></header>
-        <div>{FOOTBALL_GM_ROSTER_SLOTS.map((slot) => <EvolutionRow key={slot} slot={slot} run={run} />)}</div>
-      </section>
-
-      <section className="football-gm-report__ledger surface-card">
-        <header><small>OFFSEASON TRANSACTIONS</small><strong>HOW THE CORE CHANGED</strong></header>
-        <div>
-          {changedRows.length ? changedRows.map((row) => {
-            const action = row.endEntry?.acquired === "trade" ? "TRADE" : "FREE AGENCY";
-            return (
-              <article key={row.slot}>
-                <b>{action}</b>
-                <span><small>{row.slot}</small><strong>{row.startPlayer.name} → {row.endPlayer.name}</strong></span>
-              </article>
-            );
-          }) : (
-            <article><b>RETAINED</b><span><small>ALL 7</small><strong>No offseason starter changes</strong></span></article>
-          )}
-        </div>
-      </section>
-    </div>
+      </details>
+    </section>
   );
+}
+
+function RecordLabel({ season }: { season: FootballGmSeasonResultV2 }) {
+  const record = footballGmSeasonRecordLabel(season);
+  return record
+    ? <strong className="gm-result__record">{record} <small>W–L</small></strong>
+    : <span className="gm-result__legacy-record">Record unavailable</span>;
 }
 
 export function FootballGmFranchiseReport({
@@ -193,80 +197,90 @@ export function FootballGmFranchiseReport({
   opponentName?: string | null;
   opponentRun?: FootballGmReportRun | null;
 }) {
+  const [selectedFrontOffice, setSelectedFrontOffice] = useState<"mine" | "opponent">("mine");
   const own = snapshot(run);
   const opp = opponentRun ? snapshot(opponentRun) : null;
+  const otherName = opponentName ?? "Opponent";
   const winner = opp
-    ? own.result.score === opp.result.score
-      ? "DEAD EVEN"
-      : own.result.score > opp.result.score
-        ? name.toUpperCase() + " WINS"
-        : (opponentName ?? "OPPONENT").toUpperCase() + " WINS"
-    : null;
+    ? own.result.score === opp.result.score ? "DEAD EVEN"
+      : own.result.score > opp.result.score ? name.toUpperCase() + " WINS"
+      : otherName.toUpperCase() + " WINS"
+    : "YOUR THREE-YEAR GM RESULT";
+  const displayedName = selectedFrontOffice === "opponent" && opponentRun ? otherName : name;
+  const displayedRun = selectedFrontOffice === "opponent" && opponentRun ? opponentRun : run;
 
   return (
-    <div className="football-gm-report">
-      <section className="football-gm-report__hero surface-card">
-        <p className="eyebrow">THE GM · 3-YEAR RESULT</p>
-        <h1>{winner ?? own.result.score.toFixed(1)}</h1>
-        {opp ? (
-          <div className="football-gm-report__scoreboard">
-            <article><small>{name} · GM SCORE</small><strong>{own.result.score.toFixed(1)}</strong></article>
-            <span>VS</span>
-            <article><small>{opponentName ?? "Opponent"} · GM SCORE</small><strong>{opp.result.score.toFixed(1)}</strong></article>
+    <div className="football-gm-report gm-result">
+      <section className="gm-result__summary surface-card" aria-label="Final GM score and comparison">
+        <header className="gm-result__headline">
+          <small>THE GM · THREE-YEAR FINAL</small>
+          <h1>{winner}</h1>
+        </header>
+        <div className={"gm-result__scores" + (opp ? " is-versus" : "")}>
+          <div className={opp && own.result.score >= opp.result.score ? "is-winner" : ""}>
+            <small>{name.toUpperCase()}</small><strong>{own.result.score.toFixed(1)}</strong><em>GM SCORE</em>
           </div>
-        ) : <strong className="football-gm-report__score-label">GM SCORE · TEAM BUILD + 3-YEAR RÉSUMÉ</strong>}
+          {opp ? (
+            <>
+              <span className="gm-result__versus">VS</span>
+              <div className={opp.result.score > own.result.score ? "is-winner" : ""}>
+                <small>{otherName.toUpperCase()}</small><strong>{opp.result.score.toFixed(1)}</strong><em>GM SCORE</em>
+              </div>
+            </>
+          ) : null}
+        </div>
+        <div className="gm-result__season-comparison">
+          <div className="gm-result__section-heading">
+            <strong>{opp ? "THREE-YEAR COMPARISON" : "YOUR THREE SEASONS"}</strong>
+            <small>OVR · REGULAR SEASON · PLAYOFF FINISH</small>
+          </div>
+          {own.result.seasons.map((season, index) => (
+            <article className={"gm-result__season" + (opp ? " is-versus" : "")} key={season.year}>
+              <small className="gm-result__season-number">YEAR {season.year}</small>
+              <div className="gm-result__season-side">
+                {opp ? <small className="gm-result__season-owner">{name.toUpperCase()}</small> : null}
+                <strong className="gm-result__overall">{own.result.teamOveralls[index]} <span>OVR</span></strong>
+                <RecordLabel season={season} />
+                <span className="gm-result__finish">{footballGmPlayoffFinishLabel(season.finish)}</span>
+              </div>
+              {opp ? (
+                <div className="gm-result__season-side">
+                  <small className="gm-result__season-owner">{otherName.toUpperCase()}</small>
+                  <strong className="gm-result__overall">{opp.result.teamOveralls[index]} <span>OVR</span></strong>
+                  <RecordLabel season={opp.result.seasons[index]!} />
+                  <span className="gm-result__finish">{footballGmPlayoffFinishLabel(opp.result.seasons[index]!.finish)}</span>
+                </div>
+              ) : null}
+            </article>
+          ))}
+        </div>
+
       </section>
 
-      <CoreReport name={name} run={run} />
-
-      {opp && opponentRun ? (
-        <>
-          <section className="football-gm-report__comparison surface-card">
-            <header><small>THREE SEASONS · TWO FRONT OFFICES</small><strong>FRANCHISE COMPARISON</strong></header>
-            <p className="football-gm-report__comparison-help">
-              OVR measures team strength. Records come from a 17-game season, then playoff matchups decide how far each team advances.
-            </p>
-            <div className="football-gm-report__comparison-head"><span>{name}</span><b>VS</b><span>{opponentName ?? "Opponent"}</span></div>
-            {own.result.seasons.map((season, index) => (
-              <div key={season.year} className="football-gm-report__comparison-row">
-                <span><b>{own.result.teamOveralls[index]} OVR</b>{footballGmSeasonRecordLabel(season) ? <small>{footballGmSeasonRecordLabel(season)} REG SEASON</small> : null}<small>{footballGmPlayoffFinishLabel(season.finish)}</small></span>
-                <strong>Y{season.year}</strong>
-                <span><b>{opp.result.teamOveralls[index]} OVR</b>{footballGmSeasonRecordLabel(opp.result.seasons[index]!) ? <small>{footballGmSeasonRecordLabel(opp.result.seasons[index]!)} REG SEASON</small> : null}<small>{footballGmPlayoffFinishLabel(opp.result.seasons[index]!.finish)}</small></span>
-              </div>
-            ))}
-            <div className="football-gm-report__comparison-row">
-              <span><b>{own.retained}/7</b><small>Original core</small></span><strong>CORE</strong><span><b>{opp.retained}/7</b><small>Original core</small></span>
-            </div>
-            <div className="football-gm-report__comparison-row">
-              <span><b>{footballGmMoney(own.year3Payroll)}</b><small>Year 3 payroll · {footballGmMoney(FOOTBALL_GM_CAP - own.year3Payroll)} left</small></span>
-              <strong>CAP</strong>
-              <span><b>{footballGmMoney(opp.year3Payroll)}</b><small>Year 3 payroll · {footballGmMoney(FOOTBALL_GM_CAP - opp.year3Payroll)} left</small></span>
-            </div>
-            <div className="football-gm-report__score-breakdown">
-              <strong>HOW YOUR GM SCORE IS CALCULATED</strong>
-              <small>55% average team OVR + 45% three-year playoff résumé. Payroll is shown for context, not extra points.</small>
-            </div>
-            <div className="football-gm-report__comparison-row">
-              <span><b>{own.result.rosterManagementScore.toFixed(1)}</b><small>Avg. team OVR</small></span>
-              <strong>55%</strong>
-              <span><b>{opp.result.rosterManagementScore.toFixed(1)}</b><small>Avg. team OVR</small></span>
-            </div>
-            <div className="football-gm-report__comparison-row">
-              <span><b>{own.result.resumeScore.toFixed(1)}</b><small>Playoff résumé score</small></span>
-              <strong>45%</strong>
-              <span><b>{opp.result.resumeScore.toFixed(1)}</b><small>Playoff résumé score</small></span>
-            </div>
-            <div className="football-gm-report__comparison-row is-score">
-              <span><b>{own.result.score.toFixed(1)}</b><small>Final GM score</small></span><strong>FINAL</strong><span><b>{opp.result.score.toFixed(1)}</b><small>Final GM score</small></span>
-            </div>
-          </section>
-
-          <details className="football-gm-report__opponent surface-card">
-            <summary>VIEW {(opponentName ?? "OPPONENT").toUpperCase()}'S FRONT OFFICE</summary>
-            <CoreReport name={opponentName ?? "Opponent"} run={opponentRun} />
-          </details>
-        </>
-      ) : null}
+      <section className="gm-result__roster-card surface-card" aria-label="Franchise roster breakdown">
+        <div className="gm-result__section-heading">
+          <strong>WHAT YOU BUILT</strong>
+          <small>YOUR FRONT OFFICE</small>
+        </div>
+        {opp && opponentRun ? (
+          <div className="gm-result__franchise-tabs" role="group" aria-label="Choose franchise">
+            <button type="button" aria-pressed={selectedFrontOffice === "mine"} className={selectedFrontOffice === "mine" ? "is-active" : ""} onClick={() => setSelectedFrontOffice("mine")}>{name.toUpperCase()}</button>
+            <button type="button" aria-pressed={selectedFrontOffice === "opponent"} className={selectedFrontOffice === "opponent" ? "is-active" : ""} onClick={() => setSelectedFrontOffice("opponent")}>{otherName.toUpperCase()}</button>
+          </div>
+        ) : null}
+        <CoreReport name={displayedName} run={displayedRun} />
+      </section>
+      <section className="gm-result__scoring-card surface-card" aria-label="GM score explanation">
+        <details className="gm-result__expander gm-result__scoring">
+          <summary>HOW YOUR GM SCORE IS CALCULATED <span>55% ROSTER · 45% PLAYOFFS</span></summary>
+          <p>OVR measures team strength. Final GM score combines 55% average team OVR and 45% three-year playoff résumé. Payroll is context, not extra points.</p>
+          <div className="gm-result__math-row"><span>AVERAGE TEAM OVR · 55%</span><b>{own.result.rosterManagementScore.toFixed(1)}</b>{opp ? <b>{opp.result.rosterManagementScore.toFixed(1)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>PLAYOFF RÉSUMÉ · 45%</span><b>{own.result.resumeScore.toFixed(1)}</b>{opp ? <b>{opp.result.resumeScore.toFixed(1)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>Final GM score</span><b>{own.result.score.toFixed(1)}</b>{opp ? <b>{opp.result.score.toFixed(1)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>Year 3 payroll</span><b>{footballGmMoney(own.year3Payroll)}</b>{opp ? <b>{footballGmMoney(opp.year3Payroll)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>CAP REMAINING</span><b>{footballGmMoney(FOOTBALL_GM_CAP - own.year3Payroll)}</b>{opp ? <b>{footballGmMoney(FOOTBALL_GM_CAP - opp.year3Payroll)}</b> : null}</div>
+        </details>
+      </section>
     </div>
   );
 }
