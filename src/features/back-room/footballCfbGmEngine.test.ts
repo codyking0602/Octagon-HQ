@@ -68,6 +68,17 @@ describe("CFB The GM owner preview", () => {
     expect(cfbGmReflow([roster![0]!, roster![0]!])).toBeNull();
   });
 
+  it("weights both Front Seven spots equally at the latest NFL 15% standard", () => {
+    const fronts = CFB_GM_PLAYERS.filter((p) => p.family === "Front Seven" && p.currentGrade !== 85);
+    const a = fronts[0]!, b = fronts.find((p) => p.currentGrade !== a.currentGrade)!;
+    const entry = (playerId: string, slot: "FRONT_7_A" | "FRONT_7_B") =>
+      ({playerId, slot, acquired: "draft" as const});
+    const aFirst = cfbGmTeamGrade([entry(a.id, "FRONT_7_A"), entry(b.id, "FRONT_7_B")]);
+    const bFirst = cfbGmTeamGrade([entry(b.id, "FRONT_7_A"), entry(a.id, "FRONT_7_B")]);
+    expect(aFirst).toBe(bFirst);
+    expect(aFirst).toBeCloseTo((a.currentGrade + b.currentGrade) * .15, 1);
+  });
+
   it("has an affordable seven-round path in both budgets with no unfillable late slots", () => {
     for (const budget of Object.values(CFB_GM_BUDGETS)) {
       let roster: ReturnType<typeof cfbGmPick> = [];
@@ -130,6 +141,11 @@ describe("CFB GM UI parity and owner gating", () => {
     }
     // CFB owner preview still has its earlier hero; the public NFL result
     // intentionally leads with the new compact winner + three-year comparison.
+    expect(page).toContain('football-gm__position-tabs');
+    expect(page).toContain('setSelectedPosition');
+    expect(page).toContain('football-gm__cfb-budget-modes');
+    expect(page).toContain('data-cfb-gm="true"');
+    expect(read("src/features/back-room/footballCfbGmEngine.ts")).toContain('FRONT_7_A: "F7-1"')
     expect(page).toContain('football-gm-report__hero');
     expect(read("src/features/back-room/FootballGmFranchiseReport.tsx")).toContain('gm-result__summary');
   });
