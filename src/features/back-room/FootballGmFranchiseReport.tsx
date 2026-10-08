@@ -254,15 +254,7 @@ export function FootballGmFranchiseReport({
             </article>
           ))}
         </div>
-        <details className="gm-result__expander gm-result__scoring">
-          <summary>HOW YOUR GM SCORE IS CALCULATED <span>55% ROSTER · 45% PLAYOFFS</span></summary>
-          <p>OVR measures team strength. Final GM score combines 55% average team OVR and 45% three-year playoff résumé. Payroll is context, not extra points.</p>
-          <div className="gm-result__math-row"><span>AVERAGE TEAM OVR · 55%</span><b>{own.result.rosterManagementScore.toFixed(1)}</b>{opp ? <b>{opp.result.rosterManagementScore.toFixed(1)}</b> : null}</div>
-          <div className="gm-result__math-row"><span>PLAYOFF RÉSUMÉ · 45%</span><b>{own.result.resumeScore.toFixed(1)}</b>{opp ? <b>{opp.result.resumeScore.toFixed(1)}</b> : null}</div>
-          <div className="gm-result__math-row"><span>Final GM score</span><b>{own.result.score.toFixed(1)}</b>{opp ? <b>{opp.result.score.toFixed(1)}</b> : null}</div>
-          <div className="gm-result__math-row"><span>Year 3 payroll</span><b>{footballGmMoney(own.year3Payroll)}</b>{opp ? <b>{footballGmMoney(opp.year3Payroll)}</b> : null}</div>
-          <div className="gm-result__math-row"><span>CAP REMAINING</span><b>{footballGmMoney(FOOTBALL_GM_CAP - own.year3Payroll)}</b>{opp ? <b>{footballGmMoney(FOOTBALL_GM_CAP - opp.year3Payroll)}</b> : null}</div>
-        </details>
+
       </section>
 
       <section className="gm-result__roster-card surface-card" aria-label="Franchise roster breakdown">
@@ -277,6 +269,17 @@ export function FootballGmFranchiseReport({
           </div>
         ) : null}
         <CoreReport name={displayedName} run={displayedRun} />
+      </section>
+      <section className="gm-result__scoring-card surface-card" aria-label="GM score explanation">
+        <details className="gm-result__expander gm-result__scoring">
+          <summary>HOW YOUR GM SCORE IS CALCULATED <span>55% ROSTER · 45% PLAYOFFS</span></summary>
+          <p>OVR measures team strength. Final GM score combines 55% average team OVR and 45% three-year playoff résumé. Payroll is context, not extra points.</p>
+          <div className="gm-result__math-row"><span>AVERAGE TEAM OVR · 55%</span><b>{own.result.rosterManagementScore.toFixed(1)}</b>{opp ? <b>{opp.result.rosterManagementScore.toFixed(1)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>PLAYOFF RÉSUMÉ · 45%</span><b>{own.result.resumeScore.toFixed(1)}</b>{opp ? <b>{opp.result.resumeScore.toFixed(1)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>Final GM score</span><b>{own.result.score.toFixed(1)}</b>{opp ? <b>{opp.result.score.toFixed(1)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>Year 3 payroll</span><b>{footballGmMoney(own.year3Payroll)}</b>{opp ? <b>{footballGmMoney(opp.year3Payroll)}</b> : null}</div>
+          <div className="gm-result__math-row"><span>CAP REMAINING</span><b>{footballGmMoney(FOOTBALL_GM_CAP - own.year3Payroll)}</b>{opp ? <b>{footballGmMoney(FOOTBALL_GM_CAP - opp.year3Payroll)}</b> : null}</div>
+        </details>
       </section>
     </div>
   );
