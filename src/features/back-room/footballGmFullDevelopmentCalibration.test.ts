@@ -4,7 +4,11 @@ import {
   FOOTBALL_GM_CAP,
   FOOTBALL_GM_PLAYER_POOL,
   FOOTBALL_GM_ROSTER_SLOTS,
+  footballGmAddPick,
+  footballGmCandidatesForTeam,
+  footballGmEligibleTeams,
   footballGmProjectedGradeForPlayer,
+  footballGmSpinTeam,
   type FootballGmRosterEntry,
 } from "./footballGmEngine";
 import {
@@ -81,7 +85,10 @@ describe("full NFL GM development calibration", () => {
     expect(profiles.length).toBe(ids.size);
     expect(new Set(profiles.map((profile) => profile.id)).size).toBe(profiles.length);
     expect(new Set(profiles.map((profile) => profile.team)).size).toBe(32);
-    expect(profiles.filter((p) => p.calibration === "individual-review").length).toBeGreaterThanOrEqual(175);
+    expect(profiles.filter((p) => p.calibration === "individual-review").length).toBe(594);
+    expect(profiles.filter((p) => "reviewClass" in p && p.reviewClass).length).toBe(417);
+    expect(profiles.filter((p) => "reviewDate" in p && p.reviewDate === "2026-10-08").length).toBeGreaterThanOrEqual(417);
+    expect(profiles.filter((p) => "reviewRationale" in p && String(p.reviewRationale).length > 65).length).toBeGreaterThanOrEqual(417);
     for (const profile of profiles) {
       expect(ids.has(profile.id), profile.id).toBe(true);
       const player = FOOTBALL_GM_PLAYER_POOL.find((p) => p.id === profile.id)!;
@@ -267,4 +274,78 @@ describe("full NFL GM development calibration", () => {
       expect(mean(value.year2Grades)).toBeLessThan(99);
     }
   });
+  it("plays wheel-constrained drafts through all three seasons with CPU cap repairs", () => {
+    const audit = {
+      drafts: 0,
+      offseasonCrises: 0,
+      rescued: 0,
+      year3Varies: 0,
+      capped: 0,
+      previousTeams: 0,
+      observed: new Set<string>(),
+    };
+    for (let i = 0; i < 64; i += 1) {
+      const key = seed(1500 + i);
+      let roster: FootballGmRosterEntry[] = [];
+      let previousTeam: string | null = null;
+      for (let turn = 0; turn < FOOTBALL_GM_ROSTER_SLOTS.length; turn += 1) {
+        const eligible = footballGmEligibleTeams({ roster, year: 1, previousTeam });
+        expect(eligible.length, `draft ${i} pick ${turn}`).toBeGreaterThan(0);
+        const team = footballGmSpinTeam(key, turn, eligible);
+        expect(team).not.toBeNull();
+        if (team !== previousTeam) audit.previousTeams++;
+        const candidates = footballGmCandidatesForTeam({ team: team!, roster, year: 1 });
+        expect(candidates.length).toBeGreaterThan(0);
+        const choices = candidates.flatMap(({ player, legalSlots }) =>
+          legalSlots.map(slot => ({ player, slot })));
+        const strategy = i % 3;
+        const score = (item: typeof choices[number]) =>
+          strategy === 0
+            ? item.player.currentGrade - item.player.salaryApy / 2_000_000
+            : strategy === 1
+              ? item.player.currentGrade + (item.player.age <= 25 ? 3 : 0) - item.player.salaryApy / 6_000_000
+              : item.player.currentGrade - item.player.salaryApy / 4_000_000;
+        choices.sort((a,b) => score(b) - score(a) || Number(a.slot === "FLEX") - Number(b.slot === "FLEX") || a.player.id.localeCompare(b.player.id));
+        const selected = choices[(i + turn) % Math.min(3, choices.length)]!;
+        roster = footballGmAddPick(roster, selected.player.id, selected.slot);
+        audit.observed.add(selected.player.id);
+        previousTeam = team;
+      }
+      expect(roster).toHaveLength(7);
+      expect(footballGmAdjustedRosterCap(roster, 1, key, {})).toBeLessThanOrEqual(FOOTBALL_GM_CAP);
+      const compliant = footballGmIsOffseasonCompliantV2(roster, key, {}, []);
+      audit.offseasonCrises += Number(!compliant);
+      const offseason = footballGmCpuOffseason({ yearOneRoster: roster, seed: key });
+      if (offseason.compliant) audit.rescued++;
+      expect(offseason.compliant, `wheel run ${i} could not be repaired`).toBe(true);
+      expect(footballGmAdjustedRosterCap(offseason.roster, 2, key, {})).toBeLessThanOrEqual(FOOTBALL_GM_CAP);
+      expect(footballGmAdjustedRosterCap(offseason.roster, 3, key, {})).toBeLessThanOrEqual(FOOTBALL_GM_CAP);
+      const seasons = ([1,2,3] as const).map(year => footballGmSeasonResultV2({
+        yearOneRoster: roster,
+        roster: year === 1 ? roster : offseason.roster,
+        year,
+        seed: key,
+      }));
+      for(const season of seasons){
+        expect(season.wins! + season.losses!).toBe(17);
+        expect(season.teamGrade).toBeGreaterThanOrEqual(70);
+        expect(season.teamGrade).toBeLessThanOrEqual(99);
+      }
+      if (seasons[1].teamGrade !== seasons[2].teamGrade) audit.year3Varies++;
+      audit.drafts++;
+      audit.capped++;
+    }
+    console.info("GM wheel player-reviewed 3Y audit",{
+      runs:audit.drafts,
+      futureCapCrises:audit.offseasonCrises,
+      resolvedCapCrises:audit.rescued,
+      distinctDraftedPlayers:audit.observed.size,
+      distinctYear3Outcomes:audit.year3Varies,
+      completedSeasons: audit.drafts * 3,
+    });
+    expect(audit.observed.size).toBeGreaterThan(70);
+    expect(audit.year3Varies).toBeGreaterThan(35);
+    expect(audit.offseasonCrises).toBeGreaterThan(0);
+  });
+
 });
