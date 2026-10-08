@@ -3078,6 +3078,33 @@
   gap: 2px;
 }
 
+.football-gm-report__comparison-help {
+  margin: 0 0 2px;
+  color: #9badbb;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.football-gm-report__score-breakdown {
+  display: grid;
+  gap: 4px;
+  margin-top: 5px;
+  padding: 11px 0 2px;
+  border-top: 1px solid rgba(129,197,239,.22);
+}
+
+.football-gm-report__score-breakdown > strong {
+  color: #9bcdec;
+  font-size: 10px;
+  letter-spacing: .075em;
+}
+
+.football-gm-report__score-breakdown > small {
+  color: #9badbb;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
 .football-gm-report__comparison-head,
 .football-gm-report__comparison-row {
   display: grid;
