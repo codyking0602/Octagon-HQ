@@ -21,11 +21,13 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(runtime.players).toEqual(ledger.players.map((p: {
       id: string; classification: string | null; remainingEligibility: number | null;
       earliestDraftYear: number | null; draftEligible2027: boolean | null;
+      nilMarketEvidence?:{year1:number;year2Baseline:number;providerRank:number;confidence:string};
       calibration?:{status:string;development:Record<string,number|string>;
         draftDeclarationProbability:number|null;portalExitProbability:number|null;
         nil?:{year1:number;year2Baseline:number;confidence:string;basis:string}};
     }) => ({id:p.id, classification:p.classification, remainingEligibility:p.remainingEligibility,
       earliestDraftYear:p.earliestDraftYear, draftEligible2027:p.draftEligible2027,
+      ...(p.nilMarketEvidence ? {nilMarket:{year1:p.nilMarketEvidence.year1,year2Baseline:p.nilMarketEvidence.year2Baseline,providerRank:p.nilMarketEvidence.providerRank,confidence:p.nilMarketEvidence.confidence}} : {}),
       ...(p.calibration ? {calibration:{status:p.calibration.status,
         development:p.calibration.development,
         draftDeclarationProbability:p.calibration.draftDeclarationProbability,
@@ -41,8 +43,8 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
 
   it("uses the NIL authority independently from the audited HQ grades and both budget settings", () => {
     const arch = cfbGmPlayer("texas|archmanning")!;
-    expect(arch.nilYear1).toBe(4_200_000);
-    expect(arch.nilYear2).toBe(4_625_000);
+    expect(arch.nilYear1).toBe(2_500_000);
+    expect(arch.nilYear2).toBe(2_750_000);
     const sameMarket = cfbGmEstimateNil({schoolId:"texas",name:"Arch Manning",
       family:"QB",positionRoleRank:0,apRank:1});
     expect(arch.nilYear1).toBe(sameMarket.year1);
