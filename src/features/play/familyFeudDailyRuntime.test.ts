@@ -471,4 +471,27 @@ describe("Family Feud V2 Daily persistence contract", () => {
       fast_money_time_remaining_ms: 0,
     });
   });
+
+  it("records main-board guesses in order, but keeps them private until the board settles", () => {
+    const publication = buildFamilyFeudDailySetup(pack, "2026-10-08", "test-schedule");
+    let submission: Record<string, unknown> = {};
+    const actions = ["Alpha One", "impossible entrant", "Bravo Two", "Charlie Three", "Delta Four"];
+    for (const [index, answer] of actions.entries()) {
+      const advanced = advanceFamilyFeudDailyRuntime(
+        context(publication, submission), { type: "answer", answer },
+      );
+      submission = advanced.submissionState;
+      const boards = advanced.publicState.main_boards as Array<Record<string, unknown>>;
+      const recorded = boards[0]!.guesses as Array<Record<string, unknown>>;
+      if (index < 4) expect(recorded).toHaveLength(0);
+      else {
+        expect(recorded.map((guess) => guess.submittedText)).toEqual(actions);
+        expect(recorded.map((guess) => guess.points)).toEqual([10, 0, 8, 7, 5]);
+        expect(recorded.map((guess) => guess.outcome)).toEqual([
+          "correct", "strike", "correct", "correct", "correct",
+        ]);
+      }
+    }
+  });
+
 });
