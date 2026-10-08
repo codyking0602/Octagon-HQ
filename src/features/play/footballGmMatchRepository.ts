@@ -3,6 +3,7 @@ import { getSupabaseClient } from "../../lib/supabase";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { FOOTBALL_GM_ROSTER_SLOTS, type FootballGmRosterEntry, type FootballGmRosterSlot } from "../back-room/footballGmEngine";
 import { FOOTBALL_GM_VERSION, footballGmSeasonResultV2, type FootballGmSeasonResultV2 } from "../back-room/footballGmStrategy";
+import { footballGmRepairLegacyYearOne, footballGmSharedThreeYears } from "../back-room/footballGmSharedPostseason";
 
 const phaseSchema = z.enum(["waiting", "draft", "year1", "offseason", "complete"]);
 
@@ -177,26 +178,42 @@ export function createFootballGmMatchRepository(
             roster: resolved.roster,
             year: 1,
           });
-        const resolvedSeasons = [
-          yearOne,
-          footballGmSeasonResultV2({
-            seed: resolved.seed,
-            yearOneRoster: resolved.roster,
-            roster: resolved.finalRoster,
-            year: 2,
-          }),
-          footballGmSeasonResultV2({
-            seed: resolved.seed,
-            yearOneRoster: resolved.roster,
-            roster: resolved.finalRoster,
-            year: 3,
-          }),
-        ];
-        lockedRunState = {
-          ...resolved,
-          version: FOOTBALL_GM_VERSION,
-          resolvedSeasons,
-        };
+        const other = beforeFinish.participants.find((participant) => participant.id !== activeParticipant?.id);
+        const otherRun = resolvableRunState(other?.run_state);
+        if (activeParticipant && other && other.offseason_complete && otherRun && otherRun.finalRoster.length === 7) {
+          // The second offseason close atomically locks BOTH franchises' results.
+          const shared = footballGmSharedThreeYears(beforeFinish.seed, [
+            { key: activeParticipant.id, yearOneRoster: resolved.roster, finalRoster: resolved.finalRoster },
+            { key: other.id, yearOneRoster: otherRun.roster, finalRoster: otherRun.finalRoster },
+          ]);
+          const oldMine = storedYearOneResult(activeParticipant.year1_result);
+          const oldOther = storedYearOneResult(other.year1_result);
+          const legacy = oldMine && oldOther
+            ? footballGmRepairLegacyYearOne(oldMine, oldOther, beforeFinish.offseason_first_profile_id, activeParticipant.id, other.id)
+            : null;
+          if (legacy) {
+            shared[activeParticipant.id]![0] = legacy[0];
+            shared[other.id]![0] = legacy[1];
+          }
+          lockedRunState = {
+            ...resolved,
+            version: FOOTBALL_GM_VERSION,
+            resolvedSeasons: shared[activeParticipant.id],
+            opponentResolvedSeasons: shared[other.id],
+          };
+        } else {
+          // First offseason finisher cannot know the opponent's final roster yet.
+          // The server replaces this provisional record when the second GM locks.
+          lockedRunState = {
+            ...resolved,
+            version: FOOTBALL_GM_VERSION,
+            resolvedSeasons: [
+              yearOne,
+              footballGmSeasonResultV2({ seed: resolved.seed, yearOneRoster: resolved.roster, roster: resolved.finalRoster, year: 2 }),
+              footballGmSeasonResultV2({ seed: resolved.seed, yearOneRoster: resolved.roster, roster: resolved.finalRoster, year: 3 }),
+            ],
+          };
+        }
       }
       return stateSchema.parse(await rpc(client, "finish_football_gm_offseason", {
         p_code: code,
