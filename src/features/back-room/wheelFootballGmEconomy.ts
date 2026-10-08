@@ -134,6 +134,58 @@ function developmentRoll(seed: string, playerId: string, step: number, salt: str
   return ((hash ^ (hash >>> 16)) >>> 0) / 0x1_0000_0000;
 }
 
+/**
+ * Y1 -> Y2 uses the authored player odds unchanged. Y2 -> Y3 uses the same
+ * identity profile, adjusted for realized Y2 improvement, available rating
+ * headroom, and age. The residual outcome is steady.
+ */
+export function footballGmDevelopmentOdds(input: {
+  playerId: string;
+  step: 0 | 1;
+  grade: number;
+  originalGrade: number;
+  age: number;
+  position: WheelFootballGmMarketPosition;
+}) {
+  const profile = footballGmDevelopmentProfile(input.playerId);
+  if (!profile) return null;
+  if (input.step === 0) {
+    return {
+      breakoutPct: profile.breakoutPct,
+      improvePct: profile.improvePct,
+      declinePct: profile.declinePct,
+      steadyPct: 100 - profile.breakoutPct - profile.improvePct - profile.declinePct,
+    };
+  }
+
+  const headroom = Math.max(0, 99 - clamp(input.grade, 70, 99));
+  const priorGain = input.grade - input.originalGrade;
+  // A year-two 87 -> 93 breakout shouldn't repeat at original odds.
+  // A disappointing year still permits a comeback, not a guaranteed bust.
+  const repeatBreakoutFactor = clamp(1 - Math.max(0, priorGain - 2) / 9, 0.35, 1);
+  const breakoutPct = profile.breakoutPct * clamp(headroom / 10, 0.08, 1) * repeatBreakoutFactor;
+  const improvePct = profile.improvePct * clamp(headroom / 7, 0.2, 1)
+    + (priorGain <= -3 ? 3 : 0);
+
+  const agingThreshold = input.position === "QB" ? 34
+    : input.position === "RB" ? 28
+      : input.position === "WR" ? 30
+        : input.position === "FLEX" || input.position === "DL" ? 31 : 30;
+  const agingPressure = input.age >= agingThreshold + 3 ? 10
+    : input.age >= agingThreshold ? 6 : 0;
+  const declinePct = clamp(
+    profile.declinePct + agingPressure + (priorGain <= -4 ? 2 : 0),
+    0,
+    Math.max(0, 100 - breakoutPct - improvePct),
+  );
+  return {
+    breakoutPct,
+    improvePct,
+    declinePct,
+    steadyPct: Math.max(0, 100 - breakoutPct - improvePct - declinePct),
+  };
+}
+
 function developmentDelta(input: {
   seed: string;
   playerId: string;
@@ -144,6 +196,7 @@ function developmentDelta(input: {
   draftYear: number | null;
   draftOverall: number | null;
   expectedDelta: number;
+  originalGrade: number;
 }) {
   const { age, grade, seed, playerId, step } = input;
   const profile = footballGmDevelopmentProfile(playerId);
@@ -153,11 +206,14 @@ function developmentDelta(input: {
   const magnitude = developmentRoll(seed, sharedIdentity, step, "magnitude");
 
   if (profile) {
-    // Individual probabilities are authored and audited, not inferred from age
-    // at runtime. Market prices are separately rolled from realized grades.
-    const breakout = profile.breakoutPct / 100;
-    const improve = profile.improvePct / 100;
-    const decline = profile.declinePct / 100;
+    // Each year's separate seeded roll is weighted by its resolved odds.
+    const odds = footballGmDevelopmentOdds({
+      playerId, step, grade, originalGrade: input.originalGrade,
+      age, position: input.position,
+    })!;
+    const breakout = odds.breakoutPct / 100;
+    const improve = odds.improvePct / 100;
+    const decline = odds.declinePct / 100;
     const up = profile.maxAnnualGain;
     const down = profile.maxAnnualLoss;
     let delta: number;
@@ -340,6 +396,7 @@ export function projectWheelFootballGmGrade(input: {
         draftYear: input.draftYear ?? null,
         draftOverall: input.draftOverall ?? null,
         expectedDelta,
+        originalGrade: input.currentGrade,
       })
       : expectedDelta;
   }
