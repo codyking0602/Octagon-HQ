@@ -114,7 +114,7 @@ export default function ChampionshipLeaderboardPage() {
   useEffect(() => {
     let active = true;
     setData(null); setWeekly(null); setMlb(null);
-    setLoading(true); setError(""); setSelectedPlayer(null); setArchiveOpen(false); setWeekIndex(0);
+    setLoading(true); setError(""); setArchiveOpen(false); setWeekIndex(0);
     if (!identity.profile?.id) {
       setLoading(false);
       return () => { active = false; };
@@ -195,7 +195,7 @@ export default function ChampionshipLeaderboardPage() {
               : "UFC: 60% Picks + 40% Daily until Featured Weekly games are available."} Weekly champions are crowned separately from these season scores.</p>
           </div>
           {currentWeek ? (
-            <section className="champ-board__weekly">
+            <section className="champ-board__weekly" id="weekly-champions">
               <header><span>CHAMPION OF THE WEEK</span><span>{formatWeek(currentWeek.week_start, currentWeek.week_end)}</span></header>
               <div className="champ-board__weekly-winner"><span>🏆</span>
                 <strong>{currentWeek.winner.display_name}</strong>
