@@ -55,7 +55,13 @@ describe("College GM auto-fitting respects weighted slot value", () => {
     const fitted = cfbGmReflow(input, 2, seed)!;
     expect(fitted.find(row => row.slot === "WR")?.playerId).toBe(second);
     expect(fitted.find(row => row.slot === "FLEX")?.playerId).toBe(first);
-    expect(cfbGmTeamGrade(fitted, 2, seed)).toBeGreaterThan(cfbGmTeamGrade(input, 2, seed));
+    // The internal contribution must improve even when 0.1-point UI rounding ties.
+    const before = (cfbGmEffectiveGrade(CFB_GM_PLAYERS.find(p=>p.id===first)!, 2, seed)-80)*.14
+      + (cfbGmEffectiveGrade(CFB_GM_PLAYERS.find(p=>p.id===second)!, 2, seed)-80)*.08*1.05;
+    const after = (cfbGmEffectiveGrade(CFB_GM_PLAYERS.find(p=>p.id===second)!, 2, seed)-80)*.14
+      + (cfbGmEffectiveGrade(CFB_GM_PLAYERS.find(p=>p.id===first)!, 2, seed)-80)*.08*1.05;
+    expect(after).toBeGreaterThan(before);
+    expect(cfbGmTeamGrade(fitted, 2, seed)).toBeGreaterThanOrEqual(cfbGmTeamGrade(input, 2, seed));
   });
 
 });
