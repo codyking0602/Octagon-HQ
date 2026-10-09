@@ -7,7 +7,7 @@ import {
 } from "../play/sportChampionshipRepository";
 import "../../styles/home-championship-owner.css";
 
-type SportFilter = "all" | "football" | "ufc" | "mlb";
+export type SportFilter = "all" | "football" | "ufc" | "mlb";
 type ChampionshipSport = "football" | "ufc";
 
 function formatRank(rank: number | null | undefined) {
@@ -71,12 +71,15 @@ export function OwnerChampionshipHome({
   streak,
   streakLoading,
   showMlb,
+  sport,
+  onSportChange,
 }: {
   streak: number;
   streakLoading: boolean;
   showMlb: boolean;
+  sport: SportFilter;
+  onSportChange: (nextSport: SportFilter) => void;
 }) {
-  const [sport, setSport] = useState<SportFilter>("all");
   const [football, setFootball] = useState<SportChampionship | null>(null);
   const [ufc, setUfc] = useState<SportChampionship | null>(null);
   const [mlb, setMlb] = useState<MlbChampionship | null>(null);
@@ -117,7 +120,7 @@ export function OwnerChampionshipHome({
         <div><h2>Your HQ</h2><small>CHAMPIONSHIP · OWNER PREVIEW</small></div>
         <label className="home-champ-preview__filter">
           <span className="sr-only">Home sport</span>
-          <select aria-label="Home sport" value={chosen} onChange={(event) => setSport(event.target.value as SportFilter)}>
+          <select aria-label="Home sport" value={chosen} onChange={(event) => onSportChange(event.target.value as SportFilter)}>
             <option value="all">All sports</option>
             <option value="football">Football</option>
             <option value="ufc">UFC</option>
