@@ -6932,50 +6932,148 @@
       "id": "pittsburgh|alexsanfordjr",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 45,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.42,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "pittsburgh|carsonkent",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 43,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "pittsburgh|cataurushicks",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 33,
+          "steady": 40,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "pittsburgh|censerelee",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 29,
+          "steady": 33,
+          "decline": 26,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "pittsburgh|crucebrookins",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.66,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "pittsburgh|damonfergusonjr",
       "classification": "FR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 20,
+          "improve": 42,
+          "steady": 28,
+          "decline": 10,
+          "maxGain": 7,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.09
+      }
     },
     {
       "id": "pittsburgh|demetricemccray",
       "classification": "FR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 25,
+          "improve": 43,
+          "steady": 24,
+          "decline": 8,
+          "maxGain": 8,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.11
+      }
     },
     {
       "id": "pittsburgh|holdengeriner",
@@ -7002,78 +7100,232 @@
       "id": "pittsburgh|isaiahneal",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 30,
+          "steady": 45,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "pittsburgh|jaedenmoore",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 17,
+          "improve": 34,
+          "steady": 28,
+          "decline": 21,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.24,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "pittsburgh|jakyrianturner",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 37,
+          "steady": 44,
+          "decline": 9,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "pittsburgh|jeremiahmarcelin",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 19,
+          "improve": 33,
+          "steady": 25,
+          "decline": 23,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.08,
+        "portalExitProbability": 0.09
+      }
     },
     {
       "id": "pittsburgh|jimmyscott",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 6,
+          "improve": 26,
+          "steady": 54,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "pittsburgh|joshguerrier",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 20,
+          "improve": 38,
+          "steady": 31,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.07
+      }
     },
     {
       "id": "pittsburgh|raionstrader",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 53,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "pittsburgh|rashanmurray",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 15,
+          "improve": 37,
+          "steady": 29,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "pittsburgh|shawnleejr",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 9,
+          "improve": 35,
+          "steady": 44,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "pittsburgh|tonykinsler",
       "classification": "SO",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 22,
+          "improve": 38,
+          "steady": 29,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.11
+      }
     },
     {
       "id": "pittsburgh|zachcrothers",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 17,
+          "improve": 33,
+          "steady": 29,
+          "decline": 21,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "smu|aakilwashington",
