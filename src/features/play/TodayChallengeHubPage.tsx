@@ -3,7 +3,7 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "./PlayLandingPresentation";
 import TodayChallengeHub from "./TodayChallengeHub";
-import { WeeklyChampionshipRecap } from "./WeeklyChampionshipRecap";
+import { WeeklyOverallChampionBanner } from "./WeeklyOverallChampionBanner";
 
 export default function TodayChallengeHubPage() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export default function TodayChallengeHubPage() {
   return (
     <div className="page play-page today-challenge-hub-page">
       <PlayLandingHeader sport="ufc" />
-      {identity.status === "ready" && identity.profile?.id ? <WeeklyChampionshipRecap sport="ufc" /> : null}
+      {identity.status === "ready" && identity.profile?.id ? <WeeklyOverallChampionBanner sport="ufc" /> : null}
 
       <TodayChallengeHub />
       <ChallengeCenter />
