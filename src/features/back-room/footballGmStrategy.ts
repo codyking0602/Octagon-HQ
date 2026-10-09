@@ -116,14 +116,18 @@ export interface FootballGmContinuity {
   qbRetained: boolean;
   meter: number;
   label: "ELITE" | "STRONG" | "MIXED" | "LOW" | "RESET";
-  adjustment: number;
+  /** Per-game win-probability disadvantage, 0.02 means two percentage points. */
+  winChancePenalty: number;
 }
 
 export interface FootballGmSeasonResultV2 {
   year: 1 | 2 | 3;
   rawTeamGrade: number;
   weakLinkPenalty: number;
-  continuityAdjustment: number;
+  /** Per-game continuity risk, never deducted from team grade. */
+  continuityWinChancePenalty: number;
+  /** Historical saved reports may contain the old grade adjustment. */
+  continuityAdjustment?: number;
   teamGrade: number;
   finish: FootballGmPlayoffFinish;
   postseasonBonus: number;
@@ -272,7 +276,8 @@ function preferredSlotForPlayer(player: FootballGmPlayer) {
 
 function rawWeightedGrade(roster: readonly FootballGmRosterEntry[], year: 1 | 2 | 3, seed?: string) {
   if (roster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return 0;
-  const score = roster.reduce((sum, entry) => {
+  const optimized = footballGmReflowRoster(roster, year, seed) ?? roster;
+  const score = optimized.reduce((sum, entry) => {
     const player = footballGmPlayerById(entry.playerId);
     return player
       ? sum + footballGmWeightedContribution(player, entry.slot, footballGmProjectedGradeForPlayer(player, year, seed))
@@ -311,10 +316,12 @@ export function footballGmContinuity(
   const currentQb = currentRoster.find((entry) => entry.slot === "QB")?.playerId ?? null;
   const qbRetained = Boolean(originalQb && currentQb && originalQb === currentQb);
 
-  const yearTwoByRetained = [ -2.0, -1.75, -1.5, -1.15, -0.75, -0.35, 0, 0.35 ] as const;
-  const yearThreeByRetained = [ -1.0, -0.9, -0.75, -0.55, -0.3, 0, 0.2, 0.55 ] as const;
-  let adjustment = (year === 2 ? yearTwoByRetained : yearThreeByRetained)[clamp(retained, 0, 7)] ?? 0;
-  if (!qbRetained) adjustment -= year === 2 ? 0.25 : 0.10;
+  // Normal offseason movement (one or two replacements) is free.
+  // Chemistry is a probability risk, never artificial lost player ability.
+  const yearTwoByChanges = [0, 0, 0, 0.01, 0.02, 0.03, 0.04, 0.05] as const;
+  const base = yearTwoByChanges[clamp(changes, 0, 7)]!;
+  const qbTurnover = qbRetained ? 0 : 0.015;
+  const winChancePenalty = (base + qbTurnover) * (year === 3 ? 0.5 : 1);
 
   const meter = clamp(Math.round(16 + retained * 12 - (qbRetained ? 0 : 5)), 0, 100);
   const label: FootballGmContinuity["label"] = meter >= 88
@@ -333,7 +340,7 @@ export function footballGmContinuity(
     qbRetained,
     meter,
     label,
-    adjustment: Math.round(adjustment * 10) / 10,
+    winChancePenalty,
   };
 }
 
@@ -346,9 +353,9 @@ export function footballGmEffectiveTeamGrade(
   const rawTeamGrade = rawWeightedGrade(roster, year, seed);
   const weakLinkPenalty = footballGmWeakLinkPenalty(roster, year, seed);
   const continuity = year === 1 ? null : footballGmContinuity(yearOneRoster, roster, year);
-  const continuityAdjustment = continuity?.adjustment ?? 0;
-  const teamGrade = Math.round((rawTeamGrade - weakLinkPenalty + continuityAdjustment) * 10) / 10;
-  return { rawTeamGrade, weakLinkPenalty, continuityAdjustment, teamGrade, continuity };
+  const continuityWinChancePenalty = continuity?.winChancePenalty ?? 0;
+  const teamGrade = Math.round((rawTeamGrade - weakLinkPenalty) * 10) / 10;
+  return { rawTeamGrade, weakLinkPenalty, continuityWinChancePenalty, teamGrade, continuity };
 }
 
 export function footballGmOutcomeProbabilities(teamGrade: number) {
@@ -645,21 +652,25 @@ export function footballGmSeasonResultV2(input: {
   const season = footballGmSimulateLeagueSeason({
     seed: input.seed,
     year: input.year,
-    franchises: [{ key: "solo", grade: grade.teamGrade }],
+    franchises: [{ key: "solo", grade: grade.teamGrade, winChancePenalty: grade.continuityWinChancePenalty }],
   }).franchises.solo!;
   const finish = season.finish;
   return {
     year: input.year,
     rawTeamGrade: grade.rawTeamGrade,
     weakLinkPenalty: grade.weakLinkPenalty,
-    continuityAdjustment: grade.continuityAdjustment,
+    continuityWinChancePenalty: grade.continuityWinChancePenalty,
     teamGrade: grade.teamGrade,
     finish,
     wins: season.wins,
     losses: season.losses,
     playoffSeed: season.playoffSeed,
     postseasonBonus: footballGmPostseasonBonus(finish),
-    titleOdds: Math.round(footballGmTitleOdds(grade.teamGrade) * 1000) / 10,
+    // Same game-winner disadvantage reflected in the displayed title estimate;
+    // team grade and the displayed Team OVR remain pure roster talent.
+    titleOdds: Math.round(footballGmTitleOdds(
+      Math.min(grade.teamGrade, 92.5) - grade.continuityWinChancePenalty / 0.065,
+    ) * 1000) / 10,
   } satisfies FootballGmSeasonResultV2;
 }
 
@@ -1000,7 +1011,8 @@ export function footballGmEvaluateTradeProposal(input: {
     "for",
     ...proposal.incomingPlayerIds.slice().sort(),
   ].join(":");
-  const threshold = 1 + ((hashString(`${input.seed}:trade-threshold:${input.partnerTeam}:${packageKey}`) % 6) * 0.005);
+  // Fair, near-even exchanges: a realistic 0–1% counterparty margin.
+  const threshold = 1 + ((hashString(`${input.seed}:trade-threshold:${input.partnerTeam}:${packageKey}`) % 5) * 0.0025);
   const accepted = partnerReceivesValue >= partnerSendsValue * threshold;
   return {
     accepted,

@@ -75,8 +75,8 @@ export function footballGmSharedSeason(input: {
     seed: input.matchSeed,
     year: input.year,
     franchises: [
-      { key: input.sides[0].key, grade: grades[0].teamGrade },
-      { key: input.sides[1].key, grade: grades[1].teamGrade },
+      { key: input.sides[0].key, grade: grades[0].teamGrade, winChancePenalty: grades[0].continuityWinChancePenalty },
+      { key: input.sides[1].key, grade: grades[1].teamGrade, winChancePenalty: grades[1].continuityWinChancePenalty },
     ],
   }).franchises;
   return Object.fromEntries(input.sides.map((side, i) => {
@@ -87,14 +87,16 @@ export function footballGmSharedSeason(input: {
       year: input.year,
       rawTeamGrade: grade.rawTeamGrade,
       weakLinkPenalty: grade.weakLinkPenalty,
-      continuityAdjustment: grade.continuityAdjustment,
+      continuityWinChancePenalty: grade.continuityWinChancePenalty,
       teamGrade: grade.teamGrade,
       finish,
       wins: season.wins,
       losses: season.losses,
       playoffSeed: season.playoffSeed,
       postseasonBonus: footballGmPostseasonBonus(finish),
-      titleOdds: Math.round(footballGmTitleOdds(grade.teamGrade) * 1000) / 10,
+      titleOdds: Math.round(footballGmTitleOdds(
+        Math.min(grade.teamGrade, 92.5) - grade.continuityWinChancePenalty / 0.065,
+      ) * 1000) / 10,
     } satisfies FootballGmSeasonResultV2];
   }));
 }

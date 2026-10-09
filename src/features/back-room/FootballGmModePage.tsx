@@ -589,7 +589,8 @@ export function RosterGrid({
   onShop?: (playerId: string) => void;
   shoppedPlayerIds?: readonly string[];
 }) {
-  const bySlot = new Map(roster.map((entry) => [entry.slot, entry]));
+  const optimized = footballGmReflowRoster(roster, year, seed) ?? roster;
+  const bySlot = new Map(optimized.map((entry) => [entry.slot, entry]));
   return (
     <section className={"football-gm__roster surface-card" + (compact ? " is-compact" : "")}>
       <header><span><small>YOUR TEAM</small><strong>7-MAN CORE</strong></span><b>{roster.length}/7</b></header>
@@ -1037,7 +1038,7 @@ export function ContinuityMeter({
       </header>
       <i><em style={{ width: `${year2.meter}%` }} /></i>
       <p>{year2.retained}/7 Year 1 players retained{year2.qbRetained ? " · QB retained" : " · new QB"}.</p>
-      <small>YEAR 2 IMPACT {year2.adjustment > 0 ? "+" : ""}{year2.adjustment.toFixed(1)} · YEAR 3 {year3.adjustment > 0 ? "+" : ""}{year3.adjustment.toFixed(1)} as the rebuilt group settles in.</small>
+      <small>YEAR 2 GAME ODDS −{(year2.winChancePenalty * 100).toFixed(1)} PP · YEAR 3 −{(year3.winChancePenalty * 100).toFixed(1)} PP · Team OVR unaffected.</small>
     </section>
   );
 }
@@ -1213,7 +1214,7 @@ export function TradeRoom({
             <button type="button" onClick={onEndTalks}>KEEP {anchor.name.toUpperCase()} · END TALKS</button>
           </div>
           <small className="football-gm__trade-warning">
-            Your target is final once selected. Walking away still counts as shopping {anchor.name}; a 1YR player's camp can raise its extension demand.
+            Your target is final once selected. Walking away uses this shopping attempt but does not raise {anchor.name}'s salary.
           </small>
         </>
       ) : (
@@ -1699,26 +1700,19 @@ export default function FootballGmModePage({
     });
   }
 
+  // Walking away from a trade never changes salary; the attempt is still spent.
   function applyShoppingConsequence(messagePrefix: string, additionalShoppedIds: readonly string[] = []) {
     const anchor = run.tradeAnchorPlayerId ? footballGmPlayerById(run.tradeAnchorPlayerId) : null;
     if (!anchor) return;
-    const nextConsequences = { ...run.negotiationConsequences };
-    if (anchor.gameContract === "1YR") {
-      nextConsequences[anchor.id] = (nextConsequences[anchor.id] ?? 0) + 1;
-    }
-    const newSalary = footballGmAdjustedSalaryForPlayer(anchor, 2, run.seed, nextConsequences);
     patch({
-      negotiationConsequences: nextConsequences,
-      shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, ...additionalShoppedIds])],
+      shoppedPlayerIds: [...new Set([...run.shoppedPlayerIds, anchor.id, ...additionalShoppedIds])],
       previousTradePartner: run.tradePartnerTeam,
       tradeSpinIndex: run.tradeSpinIndex + 1,
       tradeAnchorPlayerId: null,
       tradePartnerTeam: null,
       tradeTargetPlayerId: null,
       pendingTradeResolution: null,
-      tradeMessage: anchor.gameContract === "1YR"
-        ? `${messagePrefix} ${anchor.name}'s camp raised the extension demand to ${footballGmMoney(newSalary)}.`
-        : `${messagePrefix} ${anchor.name} remains under a locked 3YR deal.`,
+      tradeMessage: `${messagePrefix} ${anchor.name}'s salary remains unchanged.`,
     });
   }
 

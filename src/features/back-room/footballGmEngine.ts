@@ -236,8 +236,13 @@ export function footballGmRosterPlayers(roster: readonly FootballGmRosterEntry[]
   });
 }
 
+/** Optimize legal slots using the player grade for the requested season.
+ * Deterministic ties preserve prior slots, never hidden draft order.
+ */
 export function footballGmReflowRoster(
   roster: readonly FootballGmRosterEntry[],
+  year: 1 | 2 | 3 = 1,
+  seed?: string,
 ): FootballGmRosterEntry[] | null {
   if (roster.length > FOOTBALL_GM_ROSTER_SLOTS.length) return null;
   const seen = new Set<string>();
@@ -246,52 +251,42 @@ export function footballGmReflowRoster(
     const player = footballGmPlayerById(entry.playerId);
     if (!player) return [];
     seen.add(entry.playerId);
-    return [{ entry, player, index }];
+    return [{ entry, player, index, grade: footballGmProjectedGradeForPlayer(player, year, seed) }];
   });
   if (rows.length !== roster.length) return null;
-
-  const ordered = [...rows].sort((left, right) => (
-    left.player.eligibleSlots.length - right.player.eligibleSlots.length
-    || left.index - right.index
-  ));
+  const ordered = [...rows].sort((a, b) =>
+    a.player.eligibleSlots.length - b.player.eligibleSlots.length || a.index - b.index);
   const used = new Set<FootballGmRosterSlot>();
-  const current: FootballGmRosterEntry[] = [];
-  let resolved: FootballGmRosterEntry[] | null = null;
+  const assignments: FootballGmRosterEntry[] = [];
+  let best: FootballGmRosterEntry[] | null = null;
+  let bestValue = Number.NEGATIVE_INFINITY;
+  let bestStability = -1;
 
-  function place(index: number): boolean {
-    if (index >= ordered.length) {
-      resolved = current
-        .map((entry) => ({ ...entry }))
-        .sort((left, right) => (
-          FOOTBALL_GM_ROSTER_SLOTS.indexOf(left.slot) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(right.slot)
-        ));
-      return true;
+  function place(index: number, value: number, stability: number) {
+    if (index === ordered.length) {
+      if (value > bestValue + 1e-9 ||
+          (Math.abs(value - bestValue) <= 1e-9 && stability > bestStability)) {
+        best = assignments.map(entry => ({ ...entry })).sort(
+          (a,b) => FOOTBALL_GM_ROSTER_SLOTS.indexOf(a.slot) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(b.slot));
+        bestValue = value;
+        bestStability = stability;
+      }
+      return;
     }
-
-    const row = ordered[index]!;
-    const slots = [...row.player.eligibleSlots].sort((left, right) => {
-      const rank = (slot: FootballGmRosterSlot) => {
-        if (slot !== "FLEX" && slot === row.entry.slot) return 0;
-        if (slot !== "FLEX") return 1;
-        if (slot === row.entry.slot) return 2;
-        return 3;
-      };
-      return rank(left) - rank(right)
-        || FOOTBALL_GM_ROSTER_SLOTS.indexOf(left) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(right);
-    });
-
-    for (const slot of slots) {
+    const { entry, player, grade } = ordered[index]!;
+    for (const slot of player.eligibleSlots) {
       if (used.has(slot)) continue;
       used.add(slot);
-      current.push({ slot, playerId: row.player.id, acquired: row.entry.acquired });
-      if (place(index + 1)) return true;
-      current.pop();
+      assignments.push({ slot, playerId: player.id, acquired: entry.acquired });
+      place(index + 1,
+        value + footballGmWeightedContribution(player, slot, grade),
+        stability + Number(slot === entry.slot));
+      assignments.pop();
       used.delete(slot);
     }
-    return false;
   }
-
-  return place(0) ? resolved : null;
+  place(0, 0, 0);
+  return best;
 }
 
 export function footballGmOpenSlots(roster: readonly FootballGmRosterEntry[]) {

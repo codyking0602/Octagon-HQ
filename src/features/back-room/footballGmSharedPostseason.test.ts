@@ -71,6 +71,7 @@ describe("GM joint 32-team postseason", () => {
       rawTeamGrade: 90,
       weakLinkPenalty: 0,
       continuityAdjustment: 0,
+      continuityWinChancePenalty: 0,
       teamGrade: 90,
       finish,
       postseasonBonus: finish === "Champion" ? 7 : 5,
