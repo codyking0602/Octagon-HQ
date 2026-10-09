@@ -1,95 +1,95 @@
-# CFB GM — 468 individual 2026 Year 1 NIL valuations (RESEARCH ONLY)
+# CFB GM — all 468 individualized 2026 Year 1 NIL estimates
 
-**Date:** October 9, 2026  
-**Research branch:** `research/cfb-gm-2026-individual-nil-valuations-20261009`  
-**Snapshot base:** `b1d1fc3a61a6e8434769e018295091d9f62e8768` (main when research branch was created)  
-**Source roster:** `data/curated/football/cfb/gm-2026-classification-evidence.json`  
-**Deliverable:** `data/curated/football/cfb/gm-2026-nil-individual-valuations.json`
+**Completed:** October 9, 2026  
+**Research PR:** https://github.com/codyking0602/Octagon-HQ/pull/1816 (draft; do not merge)  
+**Isolated branch:** `research/cfb-gm-2026-individual-nil-valuations-20261009`  
+**Original main base:** `b1d1fc3a61a6e8434769e018295091d9f62e8768`  
+**Valuation data:** `data/curated/football/cfb/gm-2026-nil-individual-valuations.json`  
+**Canonical roster source:** `data/curated/football/cfb/gm-2026-classification-evidence.json`
 
-## Handoff and scope
+## Completion and provenance reconciliation
 
-The research task is **complete: 468 distinct athlete IDs and prices / 468; 25/25 schools**.
+**468 distinct player IDs valued out of 468 / 25 schools.** Every record has a player-specific dollar amount for **2026 Year 1**, a separate football/source-evidence note, source URLs, confidence, observation or case-review date, rationale, and uncertainty. This is an *estimated player NIL market price* data product, **not independently audited payments or verified employment contracts**.
 
-- **48/48** preexisting On3-ranked player NIL records recovered from the historical Oct. 8 calibration file at Git commit `2cd3a5f26ff3f39ef2c63bbda878a6b5736e546f`. Each record's historical rank, dollar estimate, source/date and confidence remains present separately as `recovered20261008NilReference`, even where its amount was updated.
-- **52** roster athletes matched by exact identity to the On3 football board updated Oct. 9, 2026; some overlap the recovered 48. **Two additional** previously evaluated or newly checked direct athlete profiles are separately sourced: Missouri RB Ahmad Hardy and Georgia CB Ellis Robinson IV (both profile pages updated October 9, 2026).
-- **60** distinct players therefore use an individually identifiable, dated On3 published valuation reference (52 current board, two direct profiles and six additional archived ranked entries). Remaining **408** have manually reviewed, player-specific Octagon market estimates. Every non-On3 estimate has its own explicit valuation rationale, separately linked player football biographies / evidence and clear low-confidence labeling.
-- **All 468** have an evidence narrative, player-specific external football source URL(s), as-of date, dollar value, source category, confidence, price rationale and uncertainty statement. No player is assigned an unreviewed generic school/rating/budget price.
-- All amounts are *Year 1 (2026)* in integer USD. **No 2027 NIL escalation or gameplay contract model is supplied** by this research-only PR.
-- No Wheel ratings, HQ grades, simulated talent/development outcomes, roster chemistry weights, salary caps, or Powerhouse/Builder budgets were consulted in assigning prices. The game can have genuine expensive underperformers and inexpensive outperformers.
-
-## Research method
-
-1. Use the canonical **468 identity / 2026 roster / source biography** records already individually researched and preserved in current main. Each athlete has unique `schoolId|normalizedName` identity, factual 2025/2026 usage/awards/injury/transfer context and linked official football bios in `reviewedFootballEvidence`.
-2. Restore historic source NIL estimates instead of replacing them with a synthetic formula. For 2026-10-09 ranked On3 values, use the most recent matched observation; for six unmatched names, retain the dated 2026-10-08 ranking as historic market evidence rather than claim it is a current ranking.
-3. Preserve two direct player-profile checks, including **Ahmad Hardy $1.00M** (On3 profile marked *Confirmed Deal*, updated October 9) and **Ellis Robinson IV $750K** (On3 profile marked *Market-based*, updated October 9). No contract text or actually paid cash was independently verified; these are the provider's published amounts and classifications.
-4. For each of the 408 without a player-specific confirmed/reliable public valuation, make a separate editorial judgment using **that athlete's** actual current production, award distinction, starting share, college experience, transfer history, injuries, emerging role, and visibility. Broad QB/skill/defensive portal price reporting supplies *market context*, not a hidden price algorithm. Each athlete's case-specific notes and football source URLs reside in the JSON. Confidence remains **low** because football performance does not verify NIL cash payments. These are **individually reasoned editorial decisions**, not independently verified player-specific salary offers or purported one-to-one published NIL appraisals.
-5. Keep the real source vs. estimate distinction explicit in `publishedNilReference`, `recovered20261008NilReference`, `sourceBasis`, `confidence`, `uncertaintyNote`, and `marketReasoning`. On3-marked profile `Confirmed Deal` is not, by itself, an independently audited pay statement.
-
-### Sources and the previously considered third-party publisher
-
-- [On3 college-football NIL valuation board](https://www.on3.com/nil/rankings/player/college/football/) — 2026-10-09 observation for 52 roster athletes and prior archived 2026-10-08 record for 48, with historical rank and original amount retained separately.
-- [On3 valuation methodology](https://www.on3.com/nil/news/about-on3-nil-valuation-per-post-value/) — estimated dollar figures / deal-based sourcing need to be distinguished from confirmed underlying contract payments.
-- [On3 Ahmad Hardy player profile](https://www.on3.com/rivals/ahmad-hardy-240668/nil/) — $1.00M, provider label *Confirmed Deal*, page updated October 9, 2026.
-- [On3 Ellis Robinson IV player profile](https://www.on3.com/rivals/ellis-robinson-iv-41558/nil/) — $750K, provider label *Market-based*, page updated October 9, 2026.
-- [CBS Sports: 2026 transfer-portal position price ranges](https://www.cbssports.com/college-football/news/what-the-transfer-portal-costs-now-position-by-position-price-ranges-amid-a-market-surge/) — wider position compensation ranges based on coach/GM/agent reporting, never presented as a specific athlete's NIL offer.
-- [Opendorse: 2026 annual NIL report](https://biz.opendorse.com/annual-nil-report-2026/) — general market context.
-- [The NIL Standard data use policy](https://thenilstandard.com/data-use) — this separate publisher's *36 previously evaluated independent player estimates* were found in the older PR history but **were not reintroduced** into this research file. Its policy requires commercial use / redistribution licensing; these 36 are not treated as retained licensed-source valuations. Its published methods were examined only as industry context.
-
-**Source-use gate — mandatory, not a minor note:** The historical integration PR #1798 removed third-party published amounts from the live game over data rights concerns. [On3's terms](https://www.on3.com/page/terms-of-service/) limit website content use to personal/noncommercial purposes without written permission, and explicitly constrain extraction/redistribution/commercial exploitation. The NIL Standard independently requires a license to put its figures in a product. **This research-only file must not be wired into the commercial/live game or merged into production until source terms/permissions and independent replacement options have been reviewed and approved by the integration owner.** Attribution alone does not resolve licensing. A legitimate independent editorial estimate is not a representation of a player's audited NIL payment.
-
-## Distribution and realism checkpoints
-
-| Group | Athletes | Mean 2026 Year 1 market estimate |
-|---|---:|---:|
-| Quarterbacks | 25 | $2.536M |
-| Running backs | 57 | $0.721M |
-| Wide receivers | 86 | $0.745M |
-| Tight ends | 28 | $0.541M |
-| Front Seven | 145 | $0.694M |
-| Secondary | 127 | $0.646M |
-| **Total** | **468** | **$0.783M overall** |
-
-Range **$200,000–$6,500,000**; median **$625,000**. These descriptive outputs were computed **after** athlete-specific valuations. They were **not** used to force the salary data to game budgets.
-
-Representative price checks:
-
-| Athlete | Research Year 1 | Evidence/rationale |
+| Source category | Unique athletes | Interpretation |
 |---|---:|---|
-| Darian Mensah, Miami QB | $6.50M | On3 Oct. 9 rank 1, explicit player-specific valuation |
-| Dante Moore, Oregon QB | $5.00M | On3 Oct. 9 ranked published estimate |
-| Jeremiah Smith, Ohio State WR | $5.00M | On3 Oct. 9 ranked published estimate |
-| Arch Manning, Texas QB | $2.50M | On3 Oct. 9 estimate despite prior first-party game prominence anchor of $4.20M |
-| Ahmad Hardy, Missouri RB | $1.00M | Direct On3 Oct. 9 player profile, confirmed-deal-labeled valuation, rather than editorial $1.85M |
-| Ryan Wingo, Texas WR | $1.00M | On3 rank-based estimate; current football production is a distinct source |
-| Ellis Robinson IV, Georgia CB | $0.75M | Oct. 9 On3 individual market-based estimate, not forced up to our initial editorial $1.4M despite accolades |
-| Bray Hubbard, Alabama S | $1.10M | Individual editorial estimate based on All-SEC / All-American evidence; no public NIL contract asserted |
-| Holden Geriner, Pittsburgh QB | $0.65M | QB position context but very limited verified college starts; low-confidence editorial estimate |
-| Tony Kinsler, Pittsburgh WR | $0.225M | One four-yard 2025 collegiate reception; high school profile not mistaken for college feature production |
+| On3 college football 2026-10-09 top-ranked board (matching in-game identities) | 52 | Publicly published **estimated** NIL value on dated board |
+| Archived On3 2026-10-08 ranking, not on the Oct 9 matched board | 6 | Retain dated historical published estimated value, not mislabelled current ranking |
+| Individually verified On3 athlete NIL pages, not already ranked matches | 29 | Dated athlete-specific market estimate or provider-confirmed-deal **valuation** |
+| Independent Octagon case-specific editorial estimates without athlete-specific published NIL value | 381 | Lower-confidence opinion derived from each named athlete's football facts and public NIL market context |
+| **Total** | **468** | **87 unique On3-published estimated value references; 381 individually reviewed editorial valuations** |
 
-These deliberate spreads avoid mapping money to HQ ratings, development potential, or a seven-player lineup budget.
+**Original research restored:** all **48** Oct 8 On3-ranked player identity/amount/rank/provider/date/source entries recovered from Git history commit `2cd3a5f26ff3f39ef2c63bbda878a6b5736e546f`. Each of those original 48 records appears in `recovered20261008NilReference` *unaltered*, even if a fresher source/reference supplies the chosen Year 1 number. The current 58 rank-backed athletes comprise 52 current and six archived-only. Distinct direct profile URLs belong to the other 29 athletes. **No TNS modeled roster valuations were copied into this data.**
 
-## Reconciliation, validation and integration instructions
+**What 2026 public values mean:** On3 calls some direct athlete entries *Confirmed Deal*, others *Market-based*. The former is a provider designation of its estimated valuation method: we have not independently verified full payment schedules, signed agreement values, or that the displayed number equals cash paid to an athlete. No source is presented as an audited compensation ledger. The separate `sourceBasis`, `publishedNilReference`, `confidence` and `uncertaintyNote` fields identify the distinction.
 
-### Mechanical data gates already completed
+## Independent price research methodology (381 individual judgments)
 
-- JSON parses; precisely **468 records** with **468 unique canonical IDs**, corresponding to source player records; all **25 schools** represented.
-- All **48 archive source values** reconciled unchanged in separate original-provenance fields; all **60** source-based current chosen prices have individual date, URL and amount.
-- All **408 unsourced-price cases** have individual written estimates with dated `marketCaseReviewAsOf`, source football bio, value, confidence and supporting narrative. **0 unsourced unreviewed or fallback-only cases**.
-- Min/median/max, confidence flags, no claim of verified actual cash, and no gameplay/rating changes checked.
-- Source roster blob remains identical after main advanced during parallel integration work.
+1. Match the full 468 canonical 2026 roster and exact ID, school, role, and existing completed player-specific research in the current main classification ledger. Preserve source 2025-26 performances and individual official university/athlete bios. No duplicate or guessed identities.
+2. Recover and check dated On3 rankings and direct named On3 profiles, prioritizing a correctly matched newer displayed value where one exists. Keep **original historic values** in a separate field instead of rewriting the old research.
+3. For every one of the 381 without a separately usable published player valuation, manually consider that named player's actual college role and starts, quantified production, verified conference/national awards, transfers, injury/inactive periods, true freshman college sample, recruiting visibility and broad transfer-portal market context. Record a **specific case decision** in `marketDecisionNote` and `marketReasoning`, with the original university football evidence in `reviewedFootballEvidence`. These figures are **editorial estimates** (low confidence), not reported NIL offers.
+4. Compare price spread **after** individual estimates instead of adjusting values to make Powerhouse or Builder seven-player budgets easier. **No Wheel HQ grades, numeric talent ratings, future 2027 development, rookie contract multipliers, team OVR, or salary cap target is an input.** Preserve plausible overpriced veterans, undervalued emerging starters and top-premium brand performers. Low source-estimate accuracy is acknowledged rather than masked.
+5. All figures are integer US dollars for **2026 Year 1 only**. There is no Year 2 baseline or automated annual increase; the integration owner handles 2027 NIL negotiations and retention in existing CFB GM gameplay.
 
-### Integration owner — actions required, deliberately outside this PR
+### Reference sources
 
-1. Inspect this file against the then-current main and current CFB GM player IDs; the source-of-truth Wheel grades, player identity, and any integration-owner changes retain priority.
-2. Resolve **On3 commercial/source rights** before displaying, shipping, republishing, or automatically importing published provider values. The provider-derived portions may require permission or independent replacement; source attribution is not a substitute. Consider whether research-only source-derived entries may be made public.
-3. After authorization, explicitly map the approved data-only Year 1 field into the *existing* CFB GM market/retention architecture with focused gameplay PRs; do not import this research file as an alternate ratings or 2027 valuation engine. Keep Year 1 prices the same in both budget modes.
-4. Simulate Powerhouse and Builder, sample affordability/bargain/overpriced distributions, test player-role fidelity, portal-retention negotiation behavior, 2027 price recalculation independence, save compatibility and mobile parity on the **exact integration head**.
-5. The integration owner alone controls main. **Do not merge this PR, deploy gameplay, or deploy third-party market numbers as part of research.** Owner-preview acceptance and deployment are separate decisions.
+- [On3 2026 college-football NIL valuation board](https://www.on3.com/nil/rankings/player/college/football/), October 9 snapshot and recovered Oct 8 Git history for the 48 earlier checked individuals.
+- [On3 individual player NIL profiles](https://www.on3.com/nil/), directly recorded on each applicable athlete's `publishedNilReference.url` and date. Example: [Ahmad Hardy](https://www.on3.com/rivals/ahmad-hardy-240668/nil/) $1M *Confirmed Deal* valuation; [Ellis Robinson IV](https://www.on3.com/rivals/ellis-robinson-iv-41558/nil/) $750K *Market-based* valuation. Both updated October 9.
+- [On3 NIL estimated value explanation](https://www.on3.com/nil/news/about-on3-nil-valuation-per-post-value/) for how published valuation differs from certified income.
+- [CBS Sports analysis of 2026 transfer-portal market and positional price bands](https://www.cbssports.com/college-football/news/what-the-transfer-portal-costs-now-position-by-position-price-ranges-amid-a-market-surge/) (published December 30, 2025): **general market context only**, not proof of any player's offer.
+- [Opendorse annual NIL report 2026](https://biz.opendorse.com/annual-nil-report-2026/) landing page: supplemental market context, **full gated numeric report not independently ingested or verified**.
+- Original 468 player-specific 2026 football university bios and participation source URL(s): retained individually in `reviewedFootballEvidence.sourceUrls` from the separately researched and merged classification ledger. **Not freshly independently reverified one-by-one during this NIL pricing pass.**
 
-## Research-only result
+**Other publisher previously evaluated in Git history:** The NIL Standard's independent roster valuation records were removed from the earlier integration branch and remain excluded. Its [data use policy](https://thenilstandard.com/data-use) expressly requires permission/license for integration into a product; this research PR does **not** restore them.
 
-This PR adds only the 468-player JSON ledger and this documentation; **zero gameplay/UI/runtime/tests** are modified. It is a completed **research handoff, not a deployment approval or a licensor permission assertion**.
+## Price distribution, computed after assessment
 
-## Final source verification (October 9, 2026)
+| Player category | Records | Mean Year 1 NIL estimate |
+|---|---:|---:|
+| Secondary | 127 | $0.631M |
+| Front Seven | 145 | $0.677M |
+| RB | 57 | $0.682M |
+| TE | 28 | $0.529M |
+| QB | 25 | $2.5M |
+| WR | 86 | $0.738M |
+| **All athletes** | **468** | **$0.765M** |
 
-Live checks confirmed the [On3 college-football valuation ranking](https://www.on3.com/nil/rankings/player/college/football/) is dated October 9, 2026, and that [Ahmad Hardy](https://www.on3.com/rivals/ahmad-hardy-240668/nil/) and [Ellis Robinson IV](https://www.on3.com/rivals/ellis-robinson-iv-41558/nil/) profiles both display **Updated 10/9/26**. The [CBS Sports positional market article](https://www.cbssports.com/college-football/news/what-the-transfer-portal-costs-now-position-by-position-price-ranges-amid-a-market-surge/) was published December 30, 2025 for the 2026 winter portal; this is a market comparison, not a 2026 player-specific deal source. The [Opendorse 2026 NIL report page](https://biz.opendorse.com/annual-nil-report-2026/) provides an explanatory overview and a gated download, **not a freely validated full numeric report**. The independent prices are research judgments with low confidence, not invented source-reported salaries. Reference football evidence was taken from the verified development/classification research already committed to main, not freshly re-verified for every player during this NIL valuation pass.
+- **Min:** $0.2M; **median:** $0.625M; **max:** $6.5M.
+- No model was fit to these outputs; a wide price/production divergence is part of a defensible market.
+
+Selected source-over-editorial examples (always Year 1, never 2027):
+
+| Player | USD | Chosen evidence tier |
+|---|---:|---|
+| Darian Mensah (Miami) | $6.5M | On3 individual ranked board |
+| Dante Moore (Oregon) | $5M | On3 individual ranked board |
+| Jeremiah Smith (Ohio State) | $5M | On3 individual ranked board |
+| Arch Manning (Texas) | $2.5M | On3 individual ranked board |
+| Ahmad Hardy (Missouri) | $1M | On3 individual dated athlete profile |
+| Rolijah Hardy (Indiana) | $0.35M | On3 individual dated athlete profile |
+| KJ Bolden (Georgia) | $0.7M | On3 individual dated athlete profile |
+| Bo Jackson (Ohio State) | $0.75M | On3 individual dated athlete profile |
+| Conner Weigman (Houston) | $1M | On3 individual dated athlete profile |
+| Ellis Robinson IV (Georgia) | $0.75M | On3 individual dated athlete profile |
+| Holden Geriner (Pittsburgh) | $0.65M | Low-confidence individually reasoned editorial estimate |
+| Tony Kinsler (Pittsburgh) | $0.225M | Low-confidence individually reasoned editorial estimate |
+
+Notably, the On3 profile for **Indiana LB Rolijah Hardy** is $350K, far below his original $1.05M editorial estimate. Likewise Ohio State RB **Bo Jackson** $750K vs original $1.25M, and Georgia S **KJ Bolden** $700K vs original $1.425M. These observed provider-derived discrepancies remain **unmodified**, not repriced to match any player grades. The ledger preserves `previouslyReviewedIndependentEstimateUsd` for late-sourced comparisons.
+
+## Mechanical verification
+
+- **468 unique IDs / 468 records / 25 school populations** reconcile to source 2026 roster; original authoritative Wheel grades and roster IDs never edited.
+- **48/48** recovered history amounts and ranks retained under original provenance; **87** distinct date+URL+amount published-valuation selections (**58** ranked, **29** direct profile); **381/381** independent remaining estimates contain individual case review date and rationale.
+- All athletes have at least one player-identity football research URL and separate football context, and their price uses no numeric HQ/OVR/contract model input.
+- This isolated PR adds only the valuation JSON and this handoff Markdown file. No UI, gameplay engine, 2027 logic, test code or Wheel HQ source changed.
+- **No production deploy or main merge was performed.** Neither CI green status nor legal source-use authorization is implied by research completion.
+
+## Integration-owner handoff: REQUIRED HOLD
+
+1. Reinspect current `main` and live CFB GM integration; this branch is isolated and parallel gameplay work may have advanced. The canonical roster IDs and existing engine must remain authoritative.
+2. **Resolve content-use/commercial licensing before any merge or use of On3 prices in the app.** Earlier #1798 removed published NIL data over licensing. See [On3's Terms of Service](https://www.on3.com/page/terms-of-service/) and [The NIL Standard policy](https://thenilstandard.com/data-use). Attribution does **not** equal a right to copy/reproduce provider values in a commercial game. Obtain consent/permission or have the integration owner choose independently derived, non-copying replacements. This data-only PR is **draft and research-only**, not itself licensing approval.
+3. Review price quality, original identity/source matching, source dates, individual estimates, and whether alternative price choices are warranted; do not substitute grades or enforce budget-friendly pricing.
+4. If/when approved, explicitly incorporate **2026 Year 1** amounts into the existing GM architecture (with focused separate implementation), maintain same Year 1 price across Powerhouse and Builder, never overwrite the game owner's 2027 development/NIL/portal/retention work.
+5. Run full exact-integration-head typecheck, Vitest, build, simulation balancing, rosters/roles, mobile parity, owner preview and production gates **after** independent integration authorization. Only the designated GM integration owner may coordinate changes to `main`.
+
+**Conclusion:** The 468-valuations research dataset and documented handoff are complete; commercial deployment and incorporation intentionally remain blocked pending source rights and integration-owner signoff.
