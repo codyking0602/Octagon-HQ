@@ -8,7 +8,7 @@ import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
 import { cfbGmDevProfile, cfbGmDevelop, type CfbGmClass } from "./footballCfbGmDevelopment";
 import { footballGmOutlookFromOdds } from "./footballGmScouting";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v8-nfl-parity";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v9-portal-integrity";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -112,26 +112,58 @@ export function isModelDraftEligible(id: string, classification: CfbGmClass): bo
   return classification === "JR" || classification === "SR" || classification === "3RD"
     || classification === "5TH" || classification === "6TH" || classification === "7TH" || classification === "8TH";
 }
-/** Draft-pick signal covers modeled NFL, eligibility and portal exits, not just NFL declarations.
- * Probabilities remain game estimates; never reveal a particular run's seeded result.
+/** Player research stays immutable; these game-phase factors model how NIL-era
+ * retention and opt-in choices differ from raw prospect departure priors.
+ * Verified zero remaining eligibility is NEVER softened.
  */
-export function cfbGmDepartureRisk(id: string, grade: number, classification: CfbGmClass): CfbGmPlayer["departureRisk"] {
+const NIL_ERA_NFL_STAY_FACTOR = .82;
+function departureOdds(id: string, grade: number, classification: CfbGmClass, loyalty = 0) {
   const evidence = classIndex.get(id);
-  const drafted = isModelDraftEligible(id, classification);
   const researched = evidence?.calibration;
-  const draftChance = drafted
-    ? (researched?.draftDeclarationProbability ?? (grade >= 96 ? .72 : grade >= 92 ? .54 : grade >= 87 ? .26 : .07))
+  const draftProbability = isModelDraftEligible(id, classification)
+    ? Math.min(.99, (researched?.draftDeclarationProbability ?? (grade >= 96 ? .72 : grade >= 92 ? .54 : grade >= 87 ? .26 : .07)) * NIL_ERA_NFL_STAY_FACTOR)
     : 0;
   const remaining = evidence?.remainingEligibility;
-  const terminal = remaining === 0 ? 1
-    : remaining !== null && remaining !== undefined && remaining > 0 ? 0
+  // Unknown senior eligibility is a risk, never a documented automatic exit.
+  const exhaustedProbability = remaining === 0 ? 1 : remaining != null && remaining > 0 ? 0
     : classification === "8TH" ? 1 : classification === "7TH" ? .93
     : classification === "6TH" ? .83 : classification === "5TH" ? .70
-    : classification === "SR" ? .57 : 0;
-  const portal = researched?.portalExitProbability ?? .15;
-  const estimated = draftChance + (1 - draftChance) * terminal
-    + (1 - draftChance) * (1 - terminal) * portal;
-  return estimated >= .6 ? "HIGH" : estimated >= .25 ? "MEDIUM" : "LOW";
+    : classification === "SR" ? .27 : 0;
+  const portalProbability = Math.max(.02, (researched?.portalExitProbability ?? .15) - loyalty);
+  const eligibilityThreshold = draftProbability + (1 - draftProbability) * exhaustedProbability;
+  return {draftProbability, exhaustedProbability, portalProbability, eligibilityThreshold,
+    exitProbability: eligibilityThreshold + (1 - eligibilityThreshold) * portalProbability};
+}
+export function cfbGmDepartureRisk(id: string, grade: number, classification: CfbGmClass): CfbGmPlayer["departureRisk"] {
+  const chance = departureOdds(id, grade, classification).exitProbability;
+  return chance >= .6 ? "HIGH" : chance >= .25 ? "MEDIUM" : "LOW";
+}
+/** Short, actionable scouting distinction instead of seven identical warning pills. */
+export function cfbGmExitSignal(player: Pick<CfbGmPlayer,"id"|"classification"|"currentGrade">) {
+  const remaining = classIndex.get(player.id)?.remainingEligibility;
+  const odds = departureOdds(player.id, player.currentGrade, player.classification);
+  if (remaining === 0) return {label:"FINAL YEAR",tone:"high" as const,
+    detail:"No 2027 eligibility remains. Draft for a one-season peak."};
+  if (odds.draftProbability >= .48) return {label:"NFL LEAP",tone:"high" as const,
+    detail:"Meaningful modeled NFL decision risk; returning is still possible."};
+  if (odds.exhaustedProbability >= .25) return {label:"ELIGIBILITY ?",tone:"medium" as const,
+    detail:"Remaining 2027 eligibility is not verified. Departure is uncertain."};
+  if (odds.draftProbability >= .23) return {label:"NFL CHANCE",tone:"medium" as const,
+    detail:"Moderate modeled chance of an NFL declaration."};
+  if (odds.portalProbability >= .18) return {label:"PORTAL RISK",tone:"medium" as const,
+    detail:"Player may transfer after 2026."};
+  return {label:"RETURN LIKELY",tone:"low" as const,
+    detail:"Returning is favored, but no 2027 outcome is guaranteed."};
+}
+/** Don't make a player who is definitively out of college in 2027 a transfer.
+ * For unresolved 2026 senior/extended-year cases, a speculative extra year
+ * is NOT sufficient evidence to add that player to the 2027 marketplace.
+ */
+export function cfbGmEligibleIn2027(id: string, classification: CfbGmClass) {
+  const remaining = classIndex.get(id)?.remainingEligibility;
+  if (remaining === 0) return false;
+  if (remaining != null && remaining > 0) return true;
+  return classification === "FR" || classification === "SO" || classification === "JR" || classification === "3RD";
 }
 function collegeOutlook(id: string, grade: number, classification: CfbGmClass): CfbGmPlayer["outlook"] {
   const p = cfbGmDevProfile(id, grade, classification);
@@ -216,6 +248,25 @@ for (const schoolId of eligibleSchools) {
 
 export const CFB_GM_AP_SCHOOLS = eligibleSchools;
 export const CFB_GM_PLAYERS = [...playerMap.values()];
+/** A seeded, fictional 2027 transfer market; NOT a claim that any real player
+ * entered the portal. Guaranteed affordable depth avoids unwinnable cap states.
+ */
+const affordablePortalDepth = new Set<string>();
+for (const slot of CFB_GM_ROSTER_SLOTS) {
+  CFB_GM_PLAYERS.filter((p) => p.eligibleSlots.includes(slot) && cfbGmEligibleIn2027(p.id,p.classification))
+    .sort((a,b) => a.nilYear2 - b.nilYear2 || a.id.localeCompare(b.id))
+    .slice(0, 12).forEach(p => affordablePortalDepth.add(p.id));
+}
+export function cfbGmPortalAvailable(player: CfbGmPlayer, seed: string) {
+  if (!cfbGmEligibleIn2027(player.id, player.classification)) return false;
+  if (affordablePortalDepth.has(player.id)) return true;
+  const odds = departureOdds(player.id, player.currentGrade, player.classification);
+  // Draft-bound players rarely enter the modeled market. The remainder can
+  // opt in to this particular seeded window, independent of the user's team.
+  return rate("portal:2027:nfl:" + seed + ":" + player.id) >= odds.draftProbability
+    && rate("portal:2027:interest:" + seed + ":" + player.id) < .66;
+}
+
 export function cfbGmPlayer(id: string) { return playerMap.get(id) ?? null; }
 export function cfbGmPlayersAt(schoolId: string) { return schoolPlayers.get(schoolId) ?? []; }
 export function cfbGmPrice(player: CfbGmPlayer, year: 1 | 2) { return year === 1 ? player.nilYear1 : player.nilYear2; }
@@ -253,8 +304,9 @@ export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEnt
   }
   return place(0) ? [...resolved].sort((a,b) => CFB_GM_ROSTER_SLOTS.indexOf(a.slot) - CFB_GM_ROSTER_SLOTS.indexOf(b.slot)) : null;
 }
-function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>) {
+function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>, portalSeed: string) {
   if (roster.some((r) => r.playerId === player.id)) return false;
+  if (year === 2 && !cfbGmPortalAvailable(player,portalSeed)) return false;
   const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: player.id, acquired: year === 1 ? "draft" : "portal"}]);
   if (!next) return false;
   const spent = cfbGmSpent(next, year);
@@ -265,23 +317,24 @@ function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, bu
   const floor = missing.reduce((sum, slot) => {
     let best = Infinity;
     for (const p of CFB_GM_PLAYERS) {
-      if (!used.has(p.id) && !excluded.has(p.id) && p.eligibleSlots.includes(slot)) best = Math.min(best, cfbGmPrice(p, year));
+      if (!used.has(p.id) && !excluded.has(p.id) && p.eligibleSlots.includes(slot)
+        && (year === 1 || cfbGmPortalAvailable(p,portalSeed))) best = Math.min(best, cfbGmPrice(p, year));
     }
     return sum + best;
   }, 0);
   return spent + floor <= budget;
 }
-export function cfbGmCandidates(schoolId: string, roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, reserve = true, excluded: ReadonlySet<string> = new Set()) {
-  return cfbGmPlayersAt(schoolId).filter((p) => !excluded.has(p.id) && affordable(roster, p, budget, year, reserve, excluded));
+export function cfbGmCandidates(schoolId: string, roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, reserve = true, excluded: ReadonlySet<string> = new Set(), portalSeed = "") {
+  return cfbGmPlayersAt(schoolId).filter((p) => !excluded.has(p.id) && affordable(roster, p, budget, year, reserve, excluded, portalSeed));
 }
-export function cfbGmEligibleSchools(roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, previous: string | null, pool: readonly string[] = CFB_GM_AP_SCHOOLS, excluded: ReadonlySet<string> = new Set()) {
-  const result = pool.filter((schoolId) => cfbGmCandidates(schoolId, roster, budget, year, true, excluded).length > 0);
+export function cfbGmEligibleSchools(roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, previous: string | null, pool: readonly string[] = CFB_GM_AP_SCHOOLS, excluded: ReadonlySet<string> = new Set(), portalSeed = "") {
+  const result = pool.filter((schoolId) => cfbGmCandidates(schoolId, roster, budget, year, true, excluded, portalSeed).length > 0);
   const nonRepeat = result.filter((id) => id !== previous);
   return nonRepeat.length ? nonRepeat : result;
 }
-export function cfbGmPick(roster: readonly CfbGmRosterEntry[], id: string, budget: number, year: 1 | 2, excluded: ReadonlySet<string> = new Set()) {
+export function cfbGmPick(roster: readonly CfbGmRosterEntry[], id: string, budget: number, year: 1 | 2, excluded: ReadonlySet<string> = new Set(), portalSeed = "") {
   const player = cfbGmPlayer(id);
-  if (!player || !cfbGmCandidates(player.schoolId, roster, budget, year, true, excluded).some((p) => p.id === id)) return null;
+  if (!player || !cfbGmCandidates(player.schoolId, roster, budget, year, true, excluded, portalSeed).some((p) => p.id === id)) return null;
   const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: id, acquired: year === 1 ? "draft" : "portal"}]);
   return next;
 }
@@ -309,23 +362,10 @@ export function cfbGmForcedDepartures(run: CfbGmRun) {
     const roll = rate("departure:" + run.seed + ":" + row.playerId);
     // NFL declarations are possible only for modeled draft-eligible cohorts.
     // A "senior" label is not proof that a redshirt year is exhausted.
-    const grade = player.currentGrade;
-    const researched = classIndex.get(player.id)?.calibration;
-    const draftProbability = !isModelDraftEligible(player.id, player.classification) ? 0
-      : researched?.draftDeclarationProbability ?? (grade >= 96 ? .72 : grade >= 92 ? .54 : grade >= 87 ? .26 : .07);
-    const remaining = classIndex.get(player.id)?.remainingEligibility;
-    const exhaustedProbability = remaining === 0 ? 1
-      : remaining !== null && remaining !== undefined && remaining > 0 ? 0
-      : player.classification === "8TH" ? 1
-      : player.classification === "7TH" ? .93
-      : player.classification === "6TH" ? .83
-      : player.classification === "5TH" ? .70
-      : player.classification === "SR" ? .57 : 0;
-    const eligibleRoll = draftProbability + (1 - draftProbability) * exhaustedProbability;
-    const portalProbability = Math.max(0.02, (researched?.portalExitProbability ?? 0.15) - loyaltyBoost);
-    const reason: CfbGmDeparture["reason"] | null = roll < draftProbability ? "NFL declaration"
-      : roll < eligibleRoll ? "Eligibility"
-      : roll < eligibleRoll + (1 - eligibleRoll) * portalProbability ? "Transfer portal" : null;
+    const odds = departureOdds(player.id, player.currentGrade, player.classification, loyaltyBoost);
+    const reason: CfbGmDeparture["reason"] | null = roll < odds.draftProbability ? "NFL declaration"
+      : roll < odds.eligibilityThreshold ? "Eligibility"
+      : roll < odds.exitProbability ? "Transfer portal" : null;
     return reason ? [{playerId: player.id, slot: row.slot, reason}] : [];
   });
 }
