@@ -108,7 +108,24 @@ export function expandSportsFeudFamilies(
       }
 
       const rankedNames = new Set(rankedAnswers.slice(0, 8).map(answerName));
-      const offBoardAnswers = acceptedAnswers?.filter((value) => !rankedNames.has(answerName(value)));
+      // Curated NFL defense answers: keep the 8 ranked choices stable while
+      // recognizing valid traits and common football-language equivalents.
+      const nflDefense = prefix === "nfl-main" && family.collisionGroup === "defense";
+      const offBoardAnswers = acceptedAnswers?.filter((value) => !rankedNames.has(answerName(value))) ?? [];
+      if (nflDefense && !rankedNames.has("agility") && !offBoardAnswers.some((value) => answerName(value) === "agility")) {
+        offBoardAnswers.push("Agility");
+      }
+      const contextualAnswer = (value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer => {
+        const base = answer(value);
+        const aliases = nflDefense
+          ? base.name === "Turnovers"
+            ? ["Force Turnovers", "Forced Turnovers", "Interception", "Interceptions", "Takeaways"]
+            : base.name === "Coverage"
+              ? ["Sticky Man Coverage", "Man Coverage", "Pass Coverage", "Tight Coverage"]
+              : []
+          : [];
+        return aliases.length ? { ...base, aliases: [...(base.aliases ?? []), ...aliases] } : base;
+      };
 
       questions.push({
         id: prefix + "-" + String(familyIndex + 1).padStart(2, "0") + "-" + (promptIndex + 1),
@@ -116,9 +133,9 @@ export function expandSportsFeudFamilies(
         entityKind: variant?.entityKind ?? family.entityKind,
         collisionGroup: variant?.collisionGroup ?? family.collisionGroup,
         prompt,
-        answers: rankedAnswers.slice(0, 8).map(answer),
+        answers: rankedAnswers.slice(0, 8).map(contextualAnswer),
         ...(offBoardAnswers?.length
-          ? { alsoAcceptedAnswers: offBoardAnswers.map(answer) }
+          ? { alsoAcceptedAnswers: offBoardAnswers.map(contextualAnswer) }
           : {}),
       });
     });
