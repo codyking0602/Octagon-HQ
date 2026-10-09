@@ -182,6 +182,12 @@ Alongside the existing 48 ranked On3 source valuations, two additional named On3
 
 **Licensing safeguard:** Third-party independent roster-model values discovered during research were **not retained in the app or source ledger**, because the publisher requires a commercial data license for product use. Do not reintroduce that dataset absent appropriate permission. The 418 remaining players without a matched On3 value still use lower-confidence game price estimates. No HQ grades were changed.
 
+## Third-party data usage gate
+
+Before putting any sourced NIL prices into a publicly distributed or commercial product, confirm the required rights. On3's published Terms of Service (last modified April 21, 2026, https://www.on3.com/page/terms-of-service/) limit site content to personal, non-commercial use absent express written consent for commercial use. This PR contains 48 prior On3 ranking values and two individually documented On3 profile valuations; their use as app prices warrants permission or replacement with independently derived, non-copying game estimates before deployment.
+
+The NIL Standard's August 2026 Data Use & Citation Policy (https://thenilstandard.com/data-use) explicitly requires a license for using its valuation numbers in a product. No TNS pricing values or derivative comparison records remain in the committed player ledger, generated runtime or game tests. Do not restore them without authorization. These are source-usage gates, not statements about whether an individual athlete has been paid the amount.
+
 ## Outstanding quality and deployment gates
 
 Development: **468/468 individualized, evidence-informed profiles complete**. Published On3 NIL ranking matches: **48/468**, plus **2** directly published player-profile valuations. **418** others still lack individual licensed external market estimates. None of these should be confused with verified private NIL salary disclosures.
@@ -190,7 +196,7 @@ Development: **468/468 individualized, evidence-informed profiles complete**. Pu
 2. Review 376 unresolved remaining-eligibility fields, including exceptional extended-year and new NCAA age-model cases; retain null wherever specific information cannot be established.
 3. Run both game budgets, complete seven-slot draft paths and seeded full two-season offseason replacement simulations; check that forced exits and repricing do not produce blocked runs.
 4. Run full exact-head TypeScript, Vitest, production build and final CI after reconciling latest `main`. Previous successful runs and skipped checks do **not** verify this exact head.
-5. Obtain integration authorization before merge; verify production only if a green-checked merge is explicitly requested.
+5. Resolve third-party NIL data usage permission (or replace proprietary prices with independently derived game values), obtain integration authorization, and merge only when exact-head checks are green. Verify production after an authorized merge.
 
 ## Safety
 
