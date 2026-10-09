@@ -170,31 +170,6 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
                 }
                 lastActiveSportTapRef.current[section] = now;
                 if (location.pathname === activeRoot) {
-                    event.preventDefault();
-                    scrollPageToTop("smooth");
-                  }
-                  return;
-                }
-                if (now - lastActiveSportTapRef.current[section] <= SECRET_SPORT_TAP_WINDOW_MS) {
-                  event.preventDefault();
-                  lastActiveSportTapRef.current[section] = 0;
-                  const targetPath = section === "play"
-                    ? (footballMode ? "/play" : "/football")
-                    : (footballMode ? "/picks" : "/football/picks");
-
-                  if (footballMode) {
-                    setSelectedSport("ufc");
-                    navigate(targetPath);
-                  } else {
-                    setSelectedSport("football");
-                    const entryState = nextFootballEntryState(section);
-                    if (entryState) navigate(targetPath, { state: entryState });
-                    else navigate(targetPath);
-                  }
-                  return;
-                }
-                lastActiveSportTapRef.current[section] = now;
-                if (location.pathname === activeRoot) {
                   event.preventDefault();
                   scrollPageToTop("smooth");
                   return;
