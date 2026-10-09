@@ -1,5 +1,6 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { SportProvider } from "../../app/SportProvider";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile } from "../challenges/challengeModel";
 import type { PickEvent } from "../picks/picksModel";
@@ -145,7 +146,9 @@ const pickEvent: PickEvent = {
 };
 
 function renderHome() {
-  return render(<MemoryRouter><HomePage /></MemoryRouter>);
+  const view = render(<MemoryRouter><SportProvider><HomePage /></SportProvider></MemoryRouter>);
+  fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "all" } });
+  return view;
 }
 
 function ufcHq() {
@@ -227,10 +230,10 @@ describe("Home UFC HQ", () => {
     expect(within(section).getByText("#2 OF 3")).toBeInTheDocument();
     expect(within(section).getByText("2026 PICKS STANDING")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "Open UFC Championship Picks leaderboard" }))
-      .toHaveAttribute("href", "/picks?view=standings#picks-season-leaderboard");
+      .toHaveAttribute("href", "/championship/ufc?tab=picks");
     expect(within(section).getByText("69 PTS")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "Open UFC Play leaderboard" }))
-      .toHaveAttribute("href", "/play?standings=me#championship-standings");
+      .toHaveAttribute("href", "/championship/ufc?tab=play");
     expect(within(section).getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
     expect(within(section).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toBeInTheDocument();
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
