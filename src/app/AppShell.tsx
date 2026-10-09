@@ -103,19 +103,18 @@ function SportContextRow({
         {context.sport === "mlb" ? "MLB PLAYOFFS" : context.sport.toUpperCase()} {context.section}
       </strong>
       {context.switchable ? (
-        <div className={`sport-context-row__switch${showMlb ? " sport-context-row__switch--three" : ""}`} role="group" aria-label={`${sectionLabel} sport`}>
-          {(["ufc", "football", ...(showMlb ? ["mlb"] as const : [])] as SelectedSport[]).map((sport) => (
-            <button
-              key={sport}
-              type="button"
-              className={context.sport === sport ? "is-active" : ""}
-              aria-pressed={context.sport === sport}
-              onClick={() => onSelectSport(sport)}
-            >
-              {sport === "ufc" ? "UFC" : sport === "football" ? "Football" : "MLB"}
-            </button>
-          ))}
-        </div>
+        <label className="sport-context-row__select">
+          <span className="sr-only">{"Sport for " + sectionLabel}</span>
+          <select
+            aria-label={"Sport for " + sectionLabel}
+            value={context.sport}
+            onChange={(event) => onSelectSport(event.target.value as SelectedSport)}
+          >
+            <option value="football">Football</option>
+            <option value="ufc">UFC</option>
+            {showMlb ? <option value="mlb">MLB</option> : null}
+          </select>
+        </label>
       ) : null}
     </div>
   );
