@@ -43,7 +43,7 @@ describe("NFL GM double Front Seven positions", () => {
     }
   });
 
-  it("applies equal 15% influence to both Front Seven slots in both scoring paths", () => {
+  it("keeps equal nominal 14% Front Seven slots but values actual roles in both scoring paths", () => {
     const pick = (family: string, skipId?: string) =>
       FOOTBALL_GM_PLAYER_POOL.find((player) => player.family === family && player.id !== skipId)!;
     const first = pick("Front Seven");
@@ -58,8 +58,8 @@ describe("NFL GM double Front Seven positions", () => {
       { slot: "DB", playerId: pick("Secondary").id, acquired },
     ];
     expect(FOOTBALL_GM_POSITION_WEIGHTS).toEqual({
-      QB: 0.26, RB: 0.08, WR: 0.13, FLEX: 0.08,
-      DL: 0.15, LB: 0.15, DB: 0.15,
+      QB: 0.28, RB: 0.08, WR: 0.14, FLEX: 0.08,
+      DL: 0.14, LB: 0.14, DB: 0.14,
     });
     expect(Object.values(FOOTBALL_GM_POSITION_WEIGHTS).reduce((sum, value) => sum + value, 0)).toBeCloseTo(1, 9);
     const swapped = roster.map((entry) =>

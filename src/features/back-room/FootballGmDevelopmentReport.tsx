@@ -6,13 +6,15 @@ import {
   type FootballGmRosterEntry,
 } from "./footballGmEngine";
 import { footballGmAdjustedSalaryForPlayer } from "./footballGmStrategy";
+import { footballGmDevelopmentResult } from "./footballGmScouting";
 
 function developmentLabel(change: number) {
-  if (change >= 3) return { label: "BREAKOUT", tone: "breakout" };
-  if (change >= 0.85) return { label: "IMPROVED", tone: "improved" };
-  if (change <= -2.5) return { label: "MAJOR REGRESSION", tone: "decline" };
-  if (change <= -0.85) return { label: "REGRESSED", tone: "decline" };
-  return { label: "STEADY", tone: "steady" };
+  const outcome = footballGmDevelopmentResult(change);
+  const label = outcome === "HELD STEADY" ? "STEADY" : outcome;
+  const tone = outcome === "BREAKOUT" ? "breakout"
+    : outcome === "IMPROVED" ? "improved"
+      : outcome === "REGRESSED" || outcome === "MAJOR REGRESSION" ? "decline" : "steady";
+  return { label, tone };
 }
 
 export function FootballGmDevelopmentReport({

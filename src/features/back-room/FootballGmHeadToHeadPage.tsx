@@ -38,6 +38,7 @@ import {
   footballGmResolveTradeAssets,
   footballGmSeasonResultV2,
   footballGmSeasonRecordLabel,
+  footballGmFinalResultV2,
   footballGmTeamOverall,
   footballGmSignFreeAgent,
   type FootballGmTradeProposal,
@@ -58,6 +59,7 @@ import FootballGmSoloPage, {
   FreeAgencyBoard,
   GmFootballWheel,
   PlayerHeadshot,
+  PlayerDevelopmentNote,
   PlayerOutlookPill,
   PlayerQualityPill,
   RosterGrid,
@@ -204,8 +206,9 @@ function VersusRosterBoard({
           <strong>{player.name}</strong>
           <small>{footballGmMoney(salary)}</small>
           <span className="football-gm-versus__pills">
-            <PlayerQualityPill player={player} />
-            <PlayerOutlookPill outlook={player.outlook} />
+            <PlayerQualityPill player={player} year={showFuture ? 2 : 1} seed={run.seed} />
+            <PlayerOutlookPill player={player} year={showFuture ? 2 : 1} seed={run.seed} />
+            {showFuture ? <PlayerDevelopmentNote player={player} seed={run.seed} /> : null}
           </span>
         </span>
       </div>
@@ -460,6 +463,13 @@ function FinalMatch({
       />
       <section className="football-gm-report__actions surface-card">
         <button type="button" onClick={onReplay}>NEW GM MATCH</button>
+        <button type="button" className="gm-final__secondary-action" onClick={() => {
+          const details = document.getElementById("gm-full-roster");
+          if (details instanceof HTMLDetailsElement) {
+            details.open = true;
+            details.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }}>VIEW FULL ROSTER</button>
       </section>
     </>
   );
@@ -1342,11 +1352,34 @@ export default function FootballGmHeadToHeadPage() {
 
   return (
     <div className="page football-gm-page football-gm-h2h">
-      <header className="football-gm__header">
-        <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
-        <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
-        <b>3 YEARS</b>
-      </header>
+      {displayedPhase === "complete" && !remote?.forfeited_at ? (
+        <header className="football-gm__header is-final">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><strong>THE GM</strong><small>HEAD TO HEAD · 3 YEARS</small></span>
+          <button type="button" className="football-gm__share-result" onClick={() => {
+            const myResult = footballGmFinalResultV2({
+              seed: run.seed, yearOneRoster: run.roster,
+              finalRoster: run.finalRoster.length ? run.finalRoster : run.roster,
+              resolvedSeasons: resolvedThreeYears?.[0],
+            });
+            const rivalResult = footballGmFinalResultV2({
+              seed: opponentRun.seed, yearOneRoster: opponentRun.roster,
+              finalRoster: opponentRun.finalRoster.length ? opponentRun.finalRoster : opponentRun.roster,
+              resolvedSeasons: resolvedThreeYears?.[1],
+            });
+            const text = "Octagon HQ · The GM: " + myDisplayName + " "
+              + myResult.score.toFixed(1) + " vs " + opponentDisplayName + " " + rivalResult.score.toFixed(1);
+            if (navigator.share) void navigator.share({ title: "The GM · Head to Head", text }).catch(() => {});
+            else if (navigator.clipboard?.writeText) void navigator.clipboard.writeText(text).catch(() => {});
+          }}>SHARE ↗</button>
+        </header>
+      ) : (
+        <header className="football-gm__header">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
+          <b>3 YEARS</b>
+        </header>
+      )}
 
       {mode === "human" && remote && remote.phase !== "waiting" && remote.phase !== "complete" && !remote.declined_at ? (
         <section className="football-gm__match-controls surface-card">
@@ -1468,14 +1501,16 @@ export default function FootballGmHeadToHeadPage() {
             </div>
           ) : null}
 
-          <VersusRosterBoard
-            leftName={myDisplayName}
-            rightName={opponentDisplayName}
-            leftRun={run}
-            rightRun={opponentRun}
-            phase={displayedPhase}
-            activeSide={activeSide}
-          />
+          {displayedPhase !== "complete" ? (
+            <VersusRosterBoard
+              leftName={myDisplayName}
+              rightName={opponentDisplayName}
+              leftRun={run}
+              rightRun={opponentRun}
+              phase={displayedPhase}
+              activeSide={activeSide}
+            />
+          ) : null}
 
           {displayedPhase === "draft" ? (
             <>
@@ -1654,7 +1689,7 @@ export default function FootballGmHeadToHeadPage() {
                 <p className="eyebrow">HEAD TO HEAD FINAL</p>
                 <h1>{remote.forfeited_by_profile_id === activeProfileId ? `${opponentDisplayName.toUpperCase()} WINS` : "YOU WIN"}</h1>
                 <strong>BY FORFEIT</strong>
-                <p>{forfeitedProfile?.display_name ?? "A GM"} ended the matchup. Picks and roster progress remain visible above.</p>
+                <p>{forfeitedProfile?.display_name ?? "A GM"} ended the matchup. Picks and roster progress from the matchup remain saved.</p>
                 <button type="button" onClick={replay}>NEW GM MATCH</button>
               </section>
             ) : (

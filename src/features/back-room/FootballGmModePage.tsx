@@ -58,6 +58,7 @@ import {
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
 import { FootballGmDevelopmentReport } from "./FootballGmDevelopmentReport";
 import { FOOTBALL_GM_DEVELOPMENT_SEED_TAG } from "./wheelFootballGmEconomy";
+import { footballGmRepriceLabel, footballGmScoutingSnapshot } from "./footballGmScouting";
 
 type Phase = "intro" | "draft" | "year1" | "offseason" | "years23" | "final";
 
@@ -435,24 +436,35 @@ export function PlayerHeadshot({
   );
 }
 
-type FootballGmScoutingTier = "ELITE" | "IMPACT" | "STARTER" | "DEPTH";
-
-function footballGmScoutingTier(grade: number): FootballGmScoutingTier {
-  if (grade >= 94) return "ELITE";
-  if (grade >= 89) return "IMPACT";
-  if (grade >= 83) return "STARTER";
-  return "DEPTH";
-}
-
-export function PlayerQualityPill({ player }: { player: FootballGmPlayer }) {
-  const tier = footballGmScoutingTier(player.currentGrade);
+export function PlayerQualityPill({
+  player, year = 1, seed,
+}: { player: FootballGmPlayer; year?: 1 | 2 | 3; seed?: string }) {
+  const tier = footballGmScoutingSnapshot(player, year, seed).tier;
   return <span className={`football-gm__quality-pill quality-${tier.toLowerCase()}`}>{tier}</span>;
 }
 
-export function PlayerOutlookPill({ outlook }: { outlook: FootballGmPlayer["outlook"] }) {
-  const label = outlook === "ELITE UPSIDE" ? "RISING" : outlook;
-  const tone = label === "RISING" ? "rising" : label === "DECLINE RISK" ? "decline" : "stable";
-  return <span className={`football-gm__outlook-pill outlook-${tone}`}>{label}</span>;
+export function PlayerOutlookPill({
+  player, year = 1, seed,
+}: { player: FootballGmPlayer; year?: 1 | 2 | 3; seed?: string }) {
+  const outlook = footballGmScoutingSnapshot(player, year, seed).outlook;
+  if (!outlook) return null;
+  const tone = outlook === "HIGH UPSIDE" ? "upside"
+    : outlook === "RISING" ? "rising"
+      : outlook === "BOOM/BUST" ? "volatile"
+        : outlook === "DECLINE RISK" ? "decline" : "stable";
+  return <span className={`football-gm__outlook-pill outlook-${tone}`}>{outlook}</span>;
+}
+
+/** Historical movement stays secondary to talent, outlook and contract. */
+export function PlayerDevelopmentNote({ player, seed }: { player: FootballGmPlayer; seed: string }) {
+  const outcome = footballGmScoutingSnapshot(player, 2, seed).development;
+  if (!outcome) return null;
+  const tone = outcome === "BREAKOUT" || outcome === "IMPROVED" ? "up"
+    : outcome === "REGRESSED" || outcome === "MAJOR REGRESSION" ? "down" : "steady";
+  const arrow = tone === "up" ? "↗" : tone === "down" ? "↘" : "–";
+  return <span className={`football-gm__development-note is-${tone}`}>
+    <span aria-hidden="true">{arrow}</span> {outcome === "HELD STEADY" ? "Held steady in Year 1" : `${outcome.charAt(0)}${outcome.slice(1).toLowerCase()} in Year 1`}
+  </span>;
 }
 
 function wheelTeamBackground(teams: readonly WheelFootballTeam[]) {
@@ -600,8 +612,9 @@ export function RosterGrid({
                       <strong>{player.name}</strong>
                       <em>{player.team} · {player.position}</em>
                       <span className="football-gm__roster-scouting">
-                        <PlayerQualityPill player={player} />
-                        <PlayerOutlookPill outlook={player.outlook} />
+                        <PlayerQualityPill player={player} year={year} seed={seed} />
+                        <PlayerOutlookPill player={player} year={year} seed={seed} />
+                        {year === 2 ? <PlayerDevelopmentNote player={player} seed={seed} /> : null}
                       </span>
                     </span>
                   </div>
@@ -609,7 +622,8 @@ export function RosterGrid({
                     <b>{footballGmMoney(salary)}</b>
                     <span>{failedTalks && player.gameContract === "1YR"
                       ? `CAMP MARKUP · ${failedTalks} FAILED TALK${failedTalks === 1 ? "" : "S"}`
-                      : showFutureSalary ? "Y2/Y3" : player.gameContract}</span>
+                      : showFutureSalary ? `Y2/Y3 · ${player.gameContract}` : player.gameContract}</span>
+                    {year === 1 ? <small className="football-gm__roster-reprice">{footballGmRepriceLabel(player.extensionRisk)}</small> : null}
                   </div>
                   {onShop ? (
                     <button
@@ -717,10 +731,10 @@ export function CandidateBoard({
                 <small>{player.position} · AGE {player.age}</small>
                 <span className="football-gm__candidate-tags">
                   <PlayerQualityPill player={player} />
-                  <PlayerOutlookPill outlook={player.outlook} />
+                  <PlayerOutlookPill player={player} />
                   <span>{player.gameContract}</span>
                   <span className={`risk-${player.extensionRisk.toLowerCase()}`}>
-                    {player.extensionRisk === "LOCKED" ? "SALARY LOCKED" : `${player.extensionRisk} RISK`}
+                    {footballGmRepriceLabel(player.extensionRisk)}
                   </span>
                 </span>
               </span>
@@ -753,10 +767,10 @@ export function CandidateBoard({
             </header>
             <div>
               <p><b>ELITE / IMPACT / STARTER / DEPTH</b><span>Broad current-ability scouting bands. Exact grades stay hidden.</span></p>
-              <p><b>RISING / STABLE / DECLINE RISK</b><span>Expected career direction across the three-year window.</span></p>
+              <p><b>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</b><span>Five outlooks derived from individual development probabilities. They recalculate for Year 3 after the first season.</span></p>
               <p><b>1YR</b><span>Salary reprices after Year 1.</span></p>
               <p><b>3YR · SALARY LOCKED</b><span>Salary stays fixed for the full game.</span></p>
-              <p><b>REPRICE RISK</b><span>How likely a 1YR player is to demand a meaningful Year 2 raise.</span></p>
+              <p><b>LOW / MED / HIGH REPRICE</b><span>Expected size of a 1YR salary increase (not an exact probability). Repricing is settled in the offseason.</span></p>
             </div>
           </section>
         </div>
@@ -813,10 +827,10 @@ export function FreeAgencyBoard({
               <strong>{player.name}</strong>
               <small>{player.position} · AGE {player.age}</small>
               <div className="football-gm__candidate-tags">
-                <PlayerQualityPill player={player} />
-                <PlayerOutlookPill outlook={player.outlook} />
+                <PlayerQualityPill player={player} year={2} seed={seed} />
+                <PlayerOutlookPill player={player} year={2} seed={seed} />
                 <span>1YR</span>
-                <span>Y2/Y3 MARKET</span>
+                <PlayerDevelopmentNote player={player} seed={seed} />
               </div>
             </div>
             <b>{footballGmMoney(salary)}</b>
@@ -964,8 +978,9 @@ export function TradeChipPanel({
               <strong>{player.name}</strong>
               <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, seed, consequences))}</em>
               <span className="football-gm__trade-scouting">
-                <PlayerQualityPill player={player} />
-                <PlayerOutlookPill outlook={player.outlook} />
+                <PlayerQualityPill player={player} year={2} seed={seed} />
+                <PlayerOutlookPill player={player} year={2} seed={seed} />
+                <PlayerDevelopmentNote player={player} seed={seed} />
               </span>
               <div className="football-gm__inline-actions">
                 <button type="button" disabled={shopped} onClick={() => onShop(playerId)}>
@@ -1051,8 +1066,9 @@ function TradePackagePlayer({
       <strong>{player.name}</strong>
       <em>{footballGmMoney(salary)}</em>
       <span className="football-gm__trade-scouting">
-        <PlayerQualityPill player={player} />
-        <PlayerOutlookPill outlook={player.outlook} />
+        <PlayerQualityPill player={player} year={2} seed={seed} />
+        <PlayerOutlookPill player={player} year={2} seed={seed} />
+        <PlayerDevelopmentNote player={player} seed={seed} />
       </span>
     </div>
   );
@@ -1186,8 +1202,9 @@ export function TradeRoom({
                 <strong>{player.name}</strong>
                 <em>{footballGmMoney(footballGmAdjustedSalaryForPlayer(player, 2, run.seed, run.negotiationConsequences))}</em>
                 <span className="football-gm__trade-scouting">
-                  <PlayerQualityPill player={player} />
-                  <PlayerOutlookPill outlook={player.outlook} />
+                  <PlayerQualityPill player={player} year={2} seed={run.seed} />
+                  <PlayerOutlookPill player={player} year={2} seed={run.seed} />
+                    <PlayerDevelopmentNote player={player} seed={run.seed} />
                 </span>
               </button>
             ))}
@@ -1340,6 +1357,13 @@ function FinalScreen({
           <button className="primary-action" type="button" onClick={onChallenge}>CHALLENGE {opponentName}</button>
         ) : null}
         <button type="button" onClick={onReplay}>NEW GM RUN</button>
+        <button type="button" className="gm-final__secondary-action" onClick={() => {
+          const details = document.getElementById("gm-full-roster");
+          if (details instanceof HTMLDetailsElement) {
+            details.open = true;
+            details.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }}>VIEW FULL ROSTER</button>
         <p className="football-gm__status" role="status">
           {isRecipient ? "RESULT SUBMITTED. BOTH GM SCORES REVEAL IN THE CHALLENGE RESULT." : challengeStatus}
         </p>
@@ -1888,11 +1912,35 @@ export default function FootballGmModePage({
 
   return (
     <div className="page football-gm-page">
-      <header className="football-gm__header">
-        <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
-        <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
-        <b>3 YEARS</b>
-      </header>
+      {run.phase === "final" ? (
+        <header className="football-gm__header is-final">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><strong>THE GM</strong><small>3 YEARS</small></span>
+          <button type="button" className="football-gm__share-result" disabled={!finalResult} onClick={() => {
+            if (!finalResult) return;
+            const text = "My Octagon HQ GM score: " + finalResult.score.toFixed(1)
+              + ". Three seasons: " + finalResult.seasons.map((season) => "Year " + season.year
+                + " " + (footballGmSeasonRecordLabel(season) ?? "—")
+                + " (" + footballGmPlayoffFinishLabel(season.finish) + ")").join(" · ");
+            if (navigator.share) {
+              void navigator.share({ title: "The GM · Octagon HQ", text }).catch(() => {});
+            } else if (navigator.clipboard?.writeText) {
+              void navigator.clipboard.writeText(text).then(
+                () => setChallengeStatus("RESULT COPIED TO CLIPBOARD"),
+                () => setChallengeStatus("SHARING UNAVAILABLE ON THIS DEVICE"),
+              );
+            } else {
+              setChallengeStatus("SHARING UNAVAILABLE ON THIS DEVICE");
+            }
+          }}>SHARE ↗</button>
+        </header>
+      ) : (
+        <header className="football-gm__header">
+          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
+          <b>3 YEARS</b>
+        </header>
+      )}
 
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
@@ -1937,6 +1985,11 @@ export default function FootballGmModePage({
             <span>1YR / 3YR CONTRACTS</span>
             <span>HIDDEN GRADES</span>
           </div>
+
+          <details className="football-gm__position-guide">
+            <summary>HOW POSITION VALUE WORKS</summary>
+            <p>QB and WR carry a little more weight. EDGE and CB have a modest positional premium; linebackers, safeties and FLEX options are valued by their real role. Every match uses the same rules, and player HQ grades stay unchanged.</p>
+          </details>
 
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
         </section>
