@@ -168,7 +168,7 @@ export function PicksSeasonHub({
           </div>
         </summary>
 
-        <div className="picks-season-hub__body">
+        {hubOpen ? <div className="picks-season-hub__body">
           <div className="picks-season-tabs" role="tablist" aria-label="Picks season views">
             <Link className="picks-season-champ-link" to={"/championship/" + sport + "?tab=picks"} aria-label="Open Picks Championship leaderboard">CHAMPIONSHIP ↗</Link>
             <button
@@ -270,7 +270,7 @@ export function PicksSeasonHub({
               ) : null}
             </section>
           )}
-        </div>
+        </div> : null}
       </details>
     </section>
   );
