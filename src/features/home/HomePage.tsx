@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSport } from "../../app/SportProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -144,7 +145,14 @@ export default function HomePage() {
   const signedIn = Boolean(identity.profile?.id);
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
   const ownerPreview = identity.profile?.canControlPicks === true;
-  const [ownerSport, setOwnerSport] = useState<SportFilter>("all");
+  const { selectedSport, setSelectedSport } = useSport();
+  // All is a Home-only view; selecting a sport persists it for Picks and Play.
+  const [homeOverview, setHomeOverview] = useState(false);
+  const ownerSport: SportFilter = homeOverview ? "all" : selectedSport;
+  const setOwnerSport = (next: SportFilter) => {
+    if (next === "all") setHomeOverview(true);
+    else { setSelectedSport(next); setHomeOverview(false); }
+  };
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
   const ufcDailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport: "ufc" });
   const ufcDailyOverview = useTodayChallengeOverview({
