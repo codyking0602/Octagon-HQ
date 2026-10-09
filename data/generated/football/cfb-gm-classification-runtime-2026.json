@@ -6084,80 +6084,234 @@
     },
     {
       "id": "ole-miss|antoniokite",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 50,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ole-miss|calebodom",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 37,
+          "steady": 39,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.05
+      }
     },
     {
       "id": "ole-miss|deucealexander",
-      "classification": "JR",
+      "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 31,
+          "steady": 49,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ole-miss|edwinjoseph",
-      "classification": "JR",
+      "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 52,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.6,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ole-miss|horatiofields",
-      "classification": "SR",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "classification": "5TH",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 32,
+          "steady": 34,
+          "decline": 21,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.22,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "ole-miss|jamariousbrown",
-      "classification": "JR",
+      "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ole-miss|jaylonbraxton",
-      "classification": "JR",
+      "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ole-miss|joenelaguero",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 54,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.68,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ole-miss|johntaycookii",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 41,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "ole-miss|kamfranklin",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.02
+      }
     },
     {
       "id": "ole-miss|keatonthomas",
       "classification": "5TH",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 5,
+          "improve": 22,
+          "steady": 58,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "ole-miss|kewanlacy",
@@ -6188,45 +6342,129 @@
     },
     {
       "id": "ole-miss|lukeferrelli",
-      "classification": "SO",
+      "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 33,
+          "steady": 47,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.73,
+        "portalExitProbability": 0.04
+      }
     },
     {
       "id": "ole-miss|lukehasz",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 32,
+          "decline": 20,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.3,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ole-miss|makhifrazier",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 12,
+          "improve": 38,
+          "steady": 36,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.38,
+        "portalExitProbability": 0.06
+      }
     },
     {
       "id": "ole-miss|sharifdenson",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 49,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.61,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ole-miss|suntarineperkins",
       "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 4,
+          "improve": 21,
+          "steady": 61,
+          "decline": 14,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "ole-miss|traylonray",
-      "classification": "JR",
+      "classification": "SR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 13,
+          "improve": 34,
+          "steady": 31,
+          "decline": 22,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.22,
+        "portalExitProbability": 0.03
+      }
     },
     {
       "id": "ole-miss|trinidadchambliss",
@@ -6259,8 +6497,22 @@
       "id": "ole-miss|willecholes",
       "classification": "JR",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "development": {
+          "breakout": 3,
+          "improve": 18,
+          "steady": 64,
+          "decline": 15,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.94,
+        "portalExitProbability": 0.01
+      }
     },
     {
       "id": "oregon|aaronflowers",
