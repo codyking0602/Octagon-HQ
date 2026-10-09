@@ -337,11 +337,23 @@ function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, bu
   // There are at most three simultaneous future assignments here; retaining
   // the three cheapest choices per slot is exact for a minimum-cost matching.
   if (missing.length <= 3) {
-    const choices = missing.map(slot => CFB_GM_PLAYERS.filter(p =>
-      !used.has(p.id) && !excluded.has(p.id) && p.eligibleSlots.includes(slot)
-      && (year === 1 || cfbGmPortalAvailable(p,portalSeed)))
-      .sort((a,b) => cfbGmPrice(a,year,portalSeed,offers) - cfbGmPrice(b,year,portalSeed,offers)
-        || a.id.localeCompare(b.id)).slice(0, missing.length));
+    // Keep only the cheapest N distinct candidates in one pass instead of
+    // sorting the entire pool for every phone-side wheel option.
+    const choices = missing.map(slot => {
+      const cheapest: Array<{player:CfbGmPlayer;cost:number}> = [];
+      for (const player of CFB_GM_PLAYERS) {
+        if (used.has(player.id) || excluded.has(player.id) || !player.eligibleSlots.includes(slot)
+          || (year === 2 && !cfbGmPortalAvailable(player,portalSeed))) continue;
+        const cost = cfbGmPrice(player,year,portalSeed,offers);
+        const at = cheapest.findIndex(other => cost < other.cost
+          || (cost === other.cost && player.id < other.player.id));
+        if (at < 0) {
+          if (cheapest.length < missing.length) cheapest.push({player,cost});
+        } else cheapest.splice(at,0,{player,cost});
+        if (cheapest.length > missing.length) cheapest.pop();
+      }
+      return cheapest.map(item => item.player);
+    });
     if (choices.some(group => !group.length)) return false;
     let lowest = Infinity;
     const taken = new Set<string>();
