@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
@@ -53,7 +53,7 @@ function sportContextForPath(pathname: string): SportContext | null {
 function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqThemeScope {
   const context = sportContextForPath(pathname);
 
-  if (context?.switchable) return selectedSport;
+  if (context?.switchable) return context.sport;
   if (context) return context.sport;
 
   if (
@@ -165,6 +165,14 @@ export function AppShell() {
   const effectiveSelectedSport = selectedSport === "mlb" && !mlbVisible ? "ufc" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
+  // Direct/deep-linked sport URLs must keep the persisted tab preference in sync
+  // with the actual sport being displayed, never show Football tabs on UFC content.
+  useEffect(() => {
+    if (sportContext?.switchable && sportContext.sport !== selectedSport) {
+      setSelectedSport(sportContext.sport);
+    }
+  }, [sportContext?.sport, sportContext?.switchable, selectedSport, setSelectedSport]);
+
 
   if (isMlb && !mlbVisible) {
     return <Navigate to="/" replace />;
