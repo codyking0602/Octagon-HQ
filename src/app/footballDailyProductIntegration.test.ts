@@ -88,7 +88,8 @@ describe("Football Daily product integration", () => {
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {
     expect(hq).toContain('<TodayChallengeHub sport="football" />');
     expect(todayHub).toContain('sport === "football" ? "/football/today"');
-    expect(todayHub).toContain("<DailyChallengeStandings");
+    expect(todayHub).not.toContain("<DailyChallengeStandings");
+    expect(todayHub).toContain('/championship/" + sport + "?tab=play"');
     expect(hq).toContain('<ChallengeCenter sport="football"');
     expect(page).toContain("shareDailyChallengeResult");
     expect(page).toContain("SHARE RESULT");
