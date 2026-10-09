@@ -49,7 +49,7 @@ function advance(context: OfficialDailyRuntimeContext, action: Record<string, un
 }
 
 describe("Millionaire official Daily runtime", () => {
-  it("features one accurate Ditka question in Oct 10 NFL Millionaire only", () => {
+  it("features one accurate Ditka question in Oct 10 CFB Millionaire only", () => {
     const previous = buildMillionaireDailySetup("football", "2026-10-07", "football-daily-v20-resume-v18-oct3");
     const memorial = buildMillionaireDailySetup("football", "2026-10-10", "football-daily-v20-resume-v18-oct3");
     const next = buildMillionaireDailySetup("football", "2026-10-26", "football-daily-v20-resume-v18-oct3");
