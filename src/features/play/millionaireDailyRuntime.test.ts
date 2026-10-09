@@ -49,6 +49,21 @@ function advance(context: OfficialDailyRuntimeContext, action: Record<string, un
 }
 
 describe("Millionaire official Daily runtime", () => {
+  it("features one accurate Ditka question in Oct 10 NFL Millionaire only", () => {
+    const friday = buildMillionaireDailySetup("football", "2026-10-09", "football-daily-v20-resume-v18-oct3");
+    const memorial = buildMillionaireDailySetup("football", "2026-10-10", "football-daily-v20-resume-v18-oct3");
+    const sunday = buildMillionaireDailySetup("football", "2026-10-11", "football-daily-v20-resume-v18-oct3");
+    expect(memorial.publicSetup.league).toBe("nfl");
+    expect(memorial.publicSetup.question_count).toBe(8);
+    const run = memorial.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+    expect(run.filter((question) => question.id.includes("ditka-memorial"))).toHaveLength(1);
+    const question = run[3]!;
+    expect(question.prompt).toContain("Mike Ditka");
+    expect(question.choices.find((choice) => choice.id === question.correctChoiceId)?.text).toBe("Tight end");
+    expect(friday.publicSetup.questions).not.toEqual(memorial.publicSetup.questions);
+    expect((sunday.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
+  });
+
   it("debuts CFB for Football and UFC for UFC on September 19", () => {
     expect(millionaireDailyLeague("football", "2026-09-19")).toBe("cfb");
     expect(millionaireDailyLeague("ufc", "2026-09-19")).toBe("ufc");
