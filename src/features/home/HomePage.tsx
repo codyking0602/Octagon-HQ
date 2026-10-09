@@ -31,7 +31,6 @@ import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
-import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
 import { HqImpostorHomeCard } from "../impostor/HqImpostorHomeCard";
 import "../../styles/home-football-hq.css";
 import "../../styles/home-ufc-hq.css";
@@ -318,8 +317,8 @@ export default function HomePage() {
             to="/championship/ufc?tab=picks"
             aria-label="Open UFC Championship Picks leaderboard"
           >
-            <span>{recordSeason} PICKS STANDING</span>
-            <b>{signedIn && currentUfcRankLabel ? `${currentUfcRankLabel} OF ${ufcStandings.length}` : "—"}</b>
+            <span>{recordSeason} PICKS RECORD</span>
+            <b>{signedIn ? pickRecord(picks.summary) : "—"}</b>
             <small>
               {!signedIn
                 ? "SIGN IN TO TRACK"
@@ -339,13 +338,6 @@ export default function HomePage() {
           )
         ) : null}
       </section>
-
-      <WeeklyGamesStandingLink
-        sport="ufc"
-        standing={ufcChampionship}
-        loading={ufcDailyOverview.standingsLoading}
-        signedIn={signedIn}
-      />
 
       {ufcDailyChallenge}
       {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}
