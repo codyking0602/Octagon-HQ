@@ -67,17 +67,16 @@ function DevelopmentNote({player, seed}: {player: CfbGmPlayer; seed: string}) {
 }
 function ExitSignal({player}: {player: CfbGmPlayer}) {
   const signal = cfbGmExitSignal(player);
-  return <small title={signal.detail} className={"football-gm__cfb-exit-risk risk-" + signal.tone}>
+  return <span title={signal.detail} className={"football-gm__cfb-exit-risk risk-" + signal.tone}>
     {signal.label}
-  </small>;
+  </span>;
 }
-function RoleFit({player, slot}: {player:CfbGmPlayer; slot?:string}) {
-  const assignedSlot = slot as typeof CFB_GM_ROSTER_SLOTS[number] | undefined;
-  const fitting = assignedSlot ? cfbGmRoleFit(player,assignedSlot) : null;
-  const label = fitting?.label ?? (player.eligibleSlots.length > 1 ? "MULTI-SLOT" :
-    player.family === "Front Seven" ? "FRONT 7" : player.family === "Secondary" ? "SECONDARY" : "NATURAL FIT");
-  return <small className="football-gm__cfb-role-fit" title={"Verified scouting family: " + player.family + ". No unverified sub-position assigned."}>
-    {label}</small>;
+function RoleFit({player, slot}: {player:CfbGmPlayer; slot:typeof CFB_GM_ROSTER_SLOTS[number]}) {
+  // Only call out a genuine lineup decision. Eligible positions already appear
+  // in the draft subline; repeating "multi-slot" is not scouting information.
+  if (cfbGmRoleFit(player, slot).label !== "FLEX FIT") return null;
+  return <span className="football-gm__cfb-role-fit"
+    title={"Verified " + player.family + " eligible for this FLEX role."}>FLEX FIT</span>;
 }
 function Cap({roster, year, budget, seed = "", offers = {}}: {roster: readonly CfbGmRosterEntry[];
   year: 1 | 2; budget: number; seed?: string; offers?: Record<string,CfbGmRetentionAgreement>}) {
@@ -143,7 +142,7 @@ function ScoutKey({close}: {close: () => void}) {
       <div>
         <p><b>ELITE / IMPACT / STARTER / DEPTH</b><span>Current college ability. Exact audited grades are hidden.</span></p>
         <p><b>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</b><span>Same five probability-based outlook categories as NFL; college development odds are independently researched.</span></p>
-        <p><b>COLLEGE DEPARTURES</b><span>FINAL YEAR means verified no 2027 eligibility. NFL LEAP / CHANCE, ELIGIBILITY ? and PORTAL RISK are separate, probabilistic outcomes. NIL-era returning incentives are modeled, not guaranteed.</span></p>
+        <p><b>COLLEGE DEPARTURES</b><span>FINAL YEAR means verified no 2027 eligibility. NFL LEAP / CHANCE, RETURN UNCERTAIN and PORTAL RISK describe modeled departure risk. RETURN UNCERTAIN means another eligible season is not verified, not that the player definitely leaves.</span></p>
         <p><b>2026 NIL</b><span>Modeled player market prices, not verified NIL contracts; independent of HQ grades.</span></p>
         <p><b>2026 CLASS</b><span>Roster-listed FR/SO/JR/SR or extended-year class; unverified when the source has no reliable match. A class is not a confirmed draft decision.</span></p>
         <p><b>2027 DEVELOPMENT</b><span>Returning players can improve, break out, remain steady, or decline. Current HQ ratings stay unchanged; only modeled 2027 performance moves.</span></p>
@@ -191,11 +190,11 @@ function Board({schoolId, roster, budget, year, seed, excluded, onPick, offers =
           <span className="football-gm__picker-player-copy">
             <strong>{player.name}</strong><small>{player.family} · {player.classification ? "2026 " + player.classification : "CLASS UNVERIFIED"} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
             <span className="football-gm__candidate-tags"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} />
-              {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /><RoleFit player={player} /></>
-                : <><DevelopmentNote player={player} seed={seed} /><RoleFit player={player} /></>}</span>
+              {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /></>
+                : <DevelopmentNote player={player} seed={seed} />}</span>
           </span>
           <span className="football-gm__picker-action"><b>{cfbGmMoney(cfbGmPrice(player, year, seed, offers))}</b>
-            <em>{year === 1 ? "2027 NEGOTIATE" : "SELECT"} →</em></span>
+            <em>SELECT →</em></span>
         </button>)}
       </div> : <p className="football-wheel-picker__message football-gm__position-prompt">
         {candidates.length ? "Choose a position to scout available players." : "No affordable legal recruit from this school. Continue the search."}

@@ -4158,3 +4158,57 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
 [data-cfb-gm="true"] .football-gm__cfb-diagnostics th,
 [data-cfb-gm="true"] .football-gm__cfb-diagnostics td { padding: .4rem .5rem; border-bottom: 1px solid rgba(128,128,128,.2); text-align: left; }
 [data-cfb-gm="true"] .football-gm__cfb-diagnostics h3 { margin: 1.1rem 0 .4rem; font-size: .9rem; }
+
+/* College GM scouting cards: match NFL's three quick-read chips. Reserve the
+ * fourth role-fit chip for a filled FLEX slot where it adds real information.
+ * Keep each chip's existing tier/risk tone while unifying its geometry. */
+.football-gm-page[data-cfb-gm="true"] .football-gm__candidate-tags > :is(
+  .football-gm__quality-pill, .football-gm__outlook-pill, .football-gm__cfb-exit-risk
+) {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 24px;
+  margin: 0;
+  padding: 4px 7px;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .035em;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-scouting > :is(
+  .football-gm__quality-pill, .football-gm__outlook-pill,
+  .football-gm__cfb-exit-risk, .football-gm__cfb-role-fit
+) {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 21px;
+  margin: 0;
+  padding: 3px 6px;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .025em;
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-role-fit {
+  opacity: 1;
+  border: 1px solid rgba(139, 182, 217, .28);
+  background: rgba(139, 182, 217, .065);
+  color: #a4cbe4;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__picker-action em {
+  color: #79b9f1;
+}
