@@ -510,11 +510,10 @@ export default function FootballCfbGmPage() {
       {run.pendingSchool ? <Board schoolId={run.pendingSchool} roster={run.finalRoster} budget={budget}
         year={2} seed={run.seed} excluded={excluded} onPick={pick} /> :
       run.finalRoster.length < 7 ? <>
-        <section className="football-gm__wheel surface-card">
-          <p className="eyebrow">TRANSFER PORTAL · {cfbGmOpenSlots(run.finalRoster).map((slot) => CFB_GM_SLOT_LABELS[slot]).join(" · ")}</p>
-          <h2>REBUILD YOUR CORE</h2>
-          <p>Spin an AP Top 25 school for a modeled, 2027-eligible recruit who fits your NIL budget.</p>
-        </section>
+        <div className="football-gm__cfb-portal-step">
+          <strong>RECRUIT {cfbGmOpenSlots(run.finalRoster).length} REPLACEMENT{cfbGmOpenSlots(run.finalRoster).length === 1 ? "" : "S"}</strong>
+          <span>{cfbGmOpenSlots(run.finalRoster).map((slot) => CFB_GM_SLOT_LABELS[slot]).join(" · ")}</span>
+        </div>
         <GmFootballWheel teams={wheelTeams} rotation={rotation} spinning={spinning}
           pendingTeam={pending} canSpin={Boolean(wheelTeams.length)} onSpin={spin} />
         {!wheelTeams.length ? <section className="football-gm__offseason-status surface-card is-crisis">
