@@ -2,6 +2,7 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { useState } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
 
@@ -48,7 +49,8 @@ function projection(sport: "football" | "ufc") {
 function Preview({ showMlb = true }: { showMlb?: boolean }) {
   const [sport, setSport] = useState<SportFilter>("all");
   return (
-    <div>
+    <MemoryRouter>
+      <div>
       <OwnerChampionshipHome
         streak={11}
         streakLoading={false}
@@ -57,7 +59,8 @@ function Preview({ showMlb = true }: { showMlb?: boolean }) {
         onSportChange={setSport}
       />
       <output data-testid="active-sport">{sport}</output>
-    </div>
+      </div>
+    </MemoryRouter>
   );
 }
 
@@ -73,8 +76,8 @@ describe("Owner Championship Home preview", () => {
 
   it("shows the separate sport standings and streak without inventing a combined rank", async () => {
     render(<Preview />);
-    expect(await screen.findByText("91.3 RATING")).toBeInTheDocument();
-    expect(screen.getByText("87.3 RATING")).toBeInTheDocument();
+    expect(await screen.findByText("91.3 SEASON SCORE")).toBeInTheDocument();
+    expect(screen.getByText("87.3 SEASON SCORE")).toBeInTheDocument();
     expect(screen.getByText("MLB POSTSEASON")).toBeInTheDocument();
     expect(screen.getByText("11 days")).toBeInTheDocument();
     expect(loader.sport).toHaveBeenCalledWith("football");
@@ -84,21 +87,21 @@ describe("Owner Championship Home preview", () => {
 
   it("switches to a focused Football hero with 60% Picks / 40% Play", async () => {
     render(<Preview />);
-    await screen.findByText("91.3 RATING");
+    await screen.findByText("91.3 SEASON SCORE");
     fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), {
       target: { value: "football" },
     });
     expect(screen.getByTestId("active-sport")).toHaveTextContent("football");
     const hero = screen.getByRole("region", { name: "Your HQ" });
-    expect(within(hero).getByText("PICKS · 60%")).toBeInTheDocument();
-    expect(within(hero).getByText("PLAY · 40%")).toBeInTheDocument();
+    expect(within(hero).getByText("PICKS · 60% ↗")).toBeInTheDocument();
+    expect(within(hero).getByText("PLAY · 40% ↗")).toBeInTheDocument();
     expect(within(hero).getByText("Play: 30% Daily · 10% Featured Weekly")).toBeInTheDocument();
     expect(within(hero).queryByText("UFC CHAMPIONSHIP")).not.toBeInTheDocument();
   });
 
   it("uses UFC's existing Daily allocation while no Featured result is finalized", async () => {
     render(<Preview showMlb={false} />);
-    await screen.findByText("87.3 RATING");
+    await screen.findByText("87.3 SEASON SCORE");
     expect(screen.queryByRole("option", { name: "MLB" })).not.toBeInTheDocument();
     fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), {
       target: { value: "ufc" },
