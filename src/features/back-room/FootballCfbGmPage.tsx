@@ -20,6 +20,7 @@ import {
 } from "./footballCfbGmEngine";
 import { cfbGmDevelop } from "./footballCfbGmDevelopment";
 import { footballGmDevelopmentResult, footballGmTalentTier } from "./footballGmScouting";
+import { FootballCfbGmDiagnostics } from "./FootballCfbGmDiagnostics";
 
 function freshSeed() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -588,5 +589,7 @@ export default function FootballCfbGmPage() {
     </section> : null}
 
     {run.phase === "final" ? <Final run={run} replay={replay} /> : null}
+
+    <FootballCfbGmDiagnostics run={run} />
   </div>;
 }
