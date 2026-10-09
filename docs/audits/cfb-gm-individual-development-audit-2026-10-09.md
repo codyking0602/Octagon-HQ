@@ -33,8 +33,8 @@ These labels describe the current **developmental trajectory** and are **not pre
 | Proposed label | Audited count | Intended scouting read |
 | --- | ---: | --- |
 | **ESTABLISHED** | **256** | Proven or relatively stable current ability; can still get better, but growth is not promised. |
-| **ASCENDING** | **89** | Meaningful evidence-backed opportunity for another step; remaining runway is credible, not automatic. |
-| **EMERGING** | **41** | Early collegiate track record or unusually limited proven opportunity; uncertainty is part of the upside. |
+| **ASCENDING** | **90** | Meaningful evidence-backed opportunity for another step; remaining runway is credible, not automatic. |
+| **EMERGING** | **40** | Early collegiate track record or unusually limited proven opportunity; uncertainty is part of the upside. |
 | **VOLATILE** | **57** | Injury, changing role/competition level, thin sample or inconsistent output warrants wider outcomes. |
 | **PLATEAUING** | **25** | Evidence or HQ ceiling suggests an already-established high level with limited *additional grade gains*; still an excellent player, not a declining one. |
 | **TOTAL** | **468** | No player is labeled solely based on age/class. |
@@ -45,7 +45,7 @@ This is a first-pass, explainable classification of the **individual evidence na
 
 - **PLATEAUING:** strong steady probability, proven top-grade current performance, small remaining numeric headroom and/or explicit near-ceiling narrative. A 99 can have 0 points of upside but still be an excellent player.
 - **VOLATILE:** player-specific documented role/competition transition, injury/recovery or sample-size caveat **plus** a high-variance developmental profile. The label is not based on generic transfer status.
-- **EMERGING:** true freshmen and select sophomores with credible developmental runway; confidence is limited if college production remains sparse.
+- **EMERGING:** freshmen and select sophomores with individually supported developmental runway; class alone is insufficient. Confidence is limited if college production remains sparse.
 - **ASCENDING:** sourced individual breakout/playing-time increase combined with meaningfully positive improvement odds.
 - **ESTABLISHED:** does not meet the above thresholds, reflects known ability or a mature steady profile; stage does not imply senior age.
 
@@ -92,6 +92,18 @@ Specific review-flag counts (flags overlap, so totals do not sum to 468):
 | **Keelon Russell, Alabama** | 93 | RISING | **ESTABLISHED** | Current HQ already high; further improvement is possible, not guaranteed. |
 
 These are **audit interpretations**, not newly verified 2026 season statistics. See individual source biographies in the 468-row CSV.
+
+### Research-led exception: class is not the label
+
+**Jay Timmons (Ohio State)** is a true freshman, but his official 2026 research documents actual college-level coverage responsibility and game production. He is proposed **ASCENDING**, not automatically EMERGING based on his freshman designation. More generally, freshman status alone should not decide the label.
+
+### Data-provenance housekeeping identified in the research ledger
+
+The source ledger has **468 complete player rows** and individual evidence URLs, but its aggregate metadata is inconsistent:
+
+- Top-level `exactMatches: 358` contrasts with **320** current rows tagged `matchStatus: "exact"` and **148** tagged `"official-school-roster"`. Treat the aggregate count as stale until reconciled; do not use it as a quality claim.
+- The top-level `failures` collection still includes a Boise State roster-parse error even though Boise State has completed, sourced player profiles. Preserve the warning until the original import/retry is investigated; it does not mean the player research is missing.
+- A directly checked official Georgia biography supports Elijah Griffin's sophomore class, 2025 participation and early 2026 role. **Sample corroboration is not independent verification of all 468 biographies.** Source: https://georgiadogs.com/sports/football/roster/elijah-griffin/10560.
 
 ## Development mechanics changes recommended AFTER research approval
 
