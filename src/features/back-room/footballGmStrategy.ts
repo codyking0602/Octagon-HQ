@@ -876,6 +876,41 @@ export function footballGmResolveTradeAssets(input: {
   return assignBestRoster(players);
 }
 
+/** A displaced holding remains owned. Let the GM choose which core player
+ * goes to the trade pool, rather than relying on automatic slot assignment.
+ * This is NOT a release, acquisition, trade, or extra free-agency opening.
+ */
+export function footballGmSwapDisplacedAsset(input: {
+  roster: readonly FootballGmRosterEntry[];
+  tradeChipPlayerIds: readonly string[];
+  promotePlayerId: string;
+  displacePlayerId: string;
+  seed?: string;
+}): FootballGmResolvedOffseasonAssets | null {
+  const { roster, tradeChipPlayerIds, promotePlayerId, displacePlayerId } = input;
+  const heldIds = [...roster.map((entry) => entry.playerId), ...tradeChipPlayerIds];
+  if (
+    heldIds.length > FOOTBALL_GM_ROSTER_SLOTS.length
+    || new Set(heldIds).size !== heldIds.length
+    || promotePlayerId === displacePlayerId
+    || !tradeChipPlayerIds.includes(promotePlayerId)
+    || !roster.some((entry) => entry.playerId === displacePlayerId)
+    || !footballGmPlayerById(promotePlayerId)
+  ) return null;
+
+  const candidate = roster.map((entry) => entry.playerId === displacePlayerId
+    ? { ...entry, playerId: promotePlayerId, acquired: "trade" as const }
+    : entry);
+  // Reassign flex positions only if the entire chosen core remains legal.
+  const nextRoster = footballGmReflowRoster(candidate, 2, input.seed);
+  if (!nextRoster || nextRoster.length !== roster.length) return null;
+
+  return {
+    roster: nextRoster,
+    tradeChipPlayerIds: tradeChipPlayerIds.map((id) => id === promotePlayerId ? displacePlayerId : id),
+  };
+}
+
 export function footballGmResolveTradeRoster(input: {
   roster: readonly FootballGmRosterEntry[];
   proposal: FootballGmTradeProposal;
