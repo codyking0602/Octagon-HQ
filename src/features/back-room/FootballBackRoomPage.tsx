@@ -5,7 +5,7 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
 import TodayChallengeHub from "../play/TodayChallengeHub";
-import { WeeklyChampionshipRecap } from "../play/WeeklyChampionshipRecap";
+import { WeeklyOverallChampionBanner } from "../play/WeeklyOverallChampionBanner";
 import {
   createFootballWeeklyAuctionRepository,
   type FootballWeeklyAuctionActiveState,
@@ -71,7 +71,7 @@ export default function FootballBackRoomPage() {
   return (
     <div className="page football-room-page">
       <PlayLandingHeader sport="football" />
-      {identity.status === "ready" && identity.profile?.id ? <WeeklyChampionshipRecap sport="football" /> : null}
+      {identity.status === "ready" && identity.profile?.id ? <WeeklyOverallChampionBanner sport="football" /> : null}
       <TodayChallengeHub sport="football" />
       <FootballWeeklyAuctionQuickAccess onOpen={() => navigate("/football/weekly-auction")} />
       <ChallengeCenter sport="football" />
