@@ -1209,6 +1209,7 @@ export function footballGmFinalResultV2(input: {
         footballGmSeasonResultV2({ seed: input.seed, yearOneRoster: input.yearOneRoster, roster: input.finalRoster, year: 2 }),
         footballGmSeasonResultV2({ seed: input.seed, yearOneRoster: input.yearOneRoster, roster: input.finalRoster, year: 3 }),
       ];
+  const optimizedFinal = footballGmReflowRoster(input.finalRoster, 3, input.seed) ?? input.finalRoster;
   const teamOveralls = seasons.map((season) => footballGmTeamOverall(season.teamGrade));
   const rosterManagementScore = Math.round((teamOveralls.reduce((sum, overall) => sum + overall, 0) / teamOveralls.length) * 10) / 10;
   const resumeScore = footballGmThreeYearResumeScore(seasons.map((season) => season.finish));
@@ -1223,7 +1224,7 @@ export function footballGmFinalResultV2(input: {
       year2: footballGmContinuity(input.yearOneRoster, input.finalRoster, 2),
       year3: footballGmContinuity(input.yearOneRoster, input.finalRoster, 3),
     },
-    roster: input.finalRoster.map((entry) => {
+    roster: optimizedFinal.map((entry) => {
       const player = footballGmPlayerById(entry.playerId);
       return {
         slot: entry.slot,
