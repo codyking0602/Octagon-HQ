@@ -12736,8 +12736,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 31,
+          "steady": 45,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.42,
+        "portalExitProbability": 0.03,
+        "summary": "Purdue 2025 LB played all 12 games, starting nine, 46 tackles/3.5 TFL and one fumble recovery; Arkansas 2023-24 chiefly special teams in 23 of 24 games. Pitt 2026 official senior transfer, established P4 role but not yet dominant all-conference performance.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/alex-sanford-jr-/15187"
+        ]
+      }
     },
     {
       "id": "pittsburgh|carsonkent",
@@ -12748,16 +12767,35 @@
         "TE",
         "Flex"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "5083135",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/carson-kent/15178",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 11,
+          "improve": 32,
+          "steady": 43,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.26,
+        "portalExitProbability": 0.01,
+        "summary": "Oklahoma 2025 TE played 13 games but had only three catches for 26 yards; Kennesaw State 2022-24 made 15 starts across 21 appearances with 32 receptions/382 yards/three TD. Official 2026 Pitt fifth year; transfer/rebound opportunity, but modern P4 receiving usage quite limited. Model ordinary final season.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/carson-kent/15178"
+        ]
+      }
     },
     {
       "id": "pittsburgh|cataurushicks",
@@ -12776,8 +12814,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 33,
+          "steady": 40,
+          "decline": 15,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.49,
+        "portalExitProbability": 0.04,
+        "summary": "Pitt 2025 transfer WR broke through with 24 receptions for 422 yards and four TD, including 84-yard score against NC State, after 13 catches for 160 yards across Louisville 2023-24. 2026 senior has explosive usage but limited sustained high-volume starter history, so moderate upside and risk.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/cataurus-blue-hicks/15003"
+        ]
+      }
     },
     {
       "id": "pittsburgh|censerelee",
@@ -12787,16 +12844,35 @@
       "groups": [
         "WR"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "5089539",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/censere-lee/15012",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 29,
+          "steady": 33,
+          "decline": 26,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.29,
+        "portalExitProbability": 0.01,
+        "summary": "Pitt 2025 WR injury-restricted to four games and five catches/86 yards, after 2024 19/254/three TD in ten games before another injury. Western Carolina 2022-23 had 82 catches/1,426 yards and 14 TD in 22 games/14 starts. Official 2026 fifth year, high rebound possible but recurring durability and FCS-to-P4 volume risks. Model terminal season.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/censere-lee/15012"
+        ]
+      }
     },
     {
       "id": "pittsburgh|crucebrookins",
@@ -12814,8 +12890,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.66,
+        "portalExitProbability": 0.02,
+        "summary": "Pitt 2025 starting safety eight of ten games earned honorable mention All-ACC, 53 tackles/two interceptions/two PBU, following 2024 35 tackles/two INT. Official 2026 senior has proven ACC ball production, steady most likely with modest further growth.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/cruce-brookins/15130"
+        ]
+      }
     },
     {
       "id": "pittsburgh|damonfergusonjr",
@@ -12833,8 +12928,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 42,
+          "steady": 28,
+          "decline": 10,
+          "maxGain": 7,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.09,
+        "summary": "Pitt 2026 true freshman running back first enrolled June 2026; college 2026 game highs include 102 rushing yards at Syracuse and two early 2026 scoring-game impact flashes. High school career 2,951 rushing yards/36 TD is preparatory evidence, not a 2025 FBS season. High developmental potential and variance; first 2026 college entry prevents 2027 draft.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/damon-ferguson-jr-/15291"
+        ]
+      }
     },
     {
       "id": "pittsburgh|demetricemccray",
@@ -12852,8 +12966,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2029,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 25,
+          "improve": 43,
+          "steady": 24,
+          "decline": 8,
+          "maxGain": 8,
+          "maxLoss": 4,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.11,
+        "summary": "Pitt 2026 true freshman WR enrolled January 2026 after First Academy, 2025 prep senior 29 catches/445 yards and nine total TD. No documented collegiate 2025 production. Recruited potential is not demonstrated FBS usage; uncertain freshman growth and no 2027 NFL Draft eligibility.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/demetrice-mccray/15168"
+        ]
+      }
     },
     {
       "id": "pittsburgh|holdengeriner",
@@ -12909,8 +13042,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 30,
+          "steady": 45,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.02,
+        "summary": "Pitt 2025 DT-to-DE conversion for injury needs: 13 games/nine starts with career-high 36 tackles, seven TFL, 3.5 sacks and four quarterback hurries. 2024 21 tackles/three TFL/1.5 sacks. Official 2026 senior with proven versatile defensive workload and measured opportunity for growth.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/isaiah-neal/15022"
+        ]
+      }
     },
     {
       "id": "pittsburgh|jaedenmoore",
@@ -12928,8 +13080,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 34,
+          "steady": 28,
+          "decline": 21,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.24,
+        "portalExitProbability": 0.03,
+        "summary": "Pitt 2025 edge transfer from Oregon played only four games after training-camp injury, making two tackles and one QB hurry; Oregon 2023-24 17 games, just eight tackles/one TFL/half-sack. 2026 senior rebound role possible, but health and low career defensive production create high downside; prep awards not proof of current P4 dominance.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/jaeden-moore/15020"
+        ]
+      }
     },
     {
       "id": "pittsburgh|jakyrianturner",
@@ -12948,8 +13119,27 @@
       "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jakyrian-turner/15115",
       "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 37,
+          "steady": 44,
+          "decline": 9,
+          "maxGain": 5,
+          "maxLoss": 4,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04,
+        "summary": "Pitt 2025 true-freshman RB started five of 12 games, rushed 140 times for team-leading 745 yards and seven TD, plus 25 receptions/150 yards; 201-yard Georgia Tech game earned ACC rookie and RB weekly honors. 2026 sophomore already demonstrated real P4 role, more improvement/steady than blind prospect hype; 2025 entry rules out 2027 draft.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/jakyrian-turner/15115"
+        ]
+      }
     },
     {
       "id": "pittsburgh|jeremiahmarcelin",
@@ -12967,8 +13157,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 19,
+          "improve": 33,
+          "steady": 25,
+          "decline": 23,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.08,
+        "portalExitProbability": 0.09,
+        "summary": "Pitt 2025 linebacker missed entire season with training-camp injury and redshirt, after 2024 ten special-teams/backup appearances and only one tackle. Official 2026 junior first entered 2024. Very limited P4 production and injury-recovery risk justify high volatility; 2027 draft legally possible but unlikely on present evidence.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/jeremiah-marcelin/15017"
+        ]
+      }
     },
     {
       "id": "pittsburgh|jimmyscott",
@@ -12978,16 +13187,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4688840",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jimmy-scott/15028",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 6,
+          "improve": 26,
+          "steady": 54,
+          "decline": 14,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.01,
+        "summary": "Pitt 2025 starting edge played 13 games/12 starts, 18 tackles/eight TFL/4.5 sacks, following 2024 all-13-start 30 tackles/12.5 TFL/six sacks and ACC Defensive Lineman of Week vs Cal. Official 2026 fifth-year veteran, known pressure production, limited dramatic breakout headroom and normal terminal-year exit.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/jimmy-scott/15028"
+        ]
+      }
     },
     {
       "id": "pittsburgh|joshguerrier",
@@ -13005,8 +13233,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 20,
+          "improve": 38,
+          "steady": 31,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.07,
+        "summary": "Pitt 2025 true-freshman CB appeared all 13 games, eight tackles and three PBU plus key blocked punt vs Florida State; reserve/special teams contributions without established starting role. Official 2026 sophomore first enrolled 2025, development runway real but draft ineligible until 2028.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/josh-guerrier/15147"
+        ]
+      }
     },
     {
       "id": "pittsburgh|raionstrader",
@@ -13024,8 +13271,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 53,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.57,
+        "portalExitProbability": 0.02,
+        "summary": "Auburn 2025 corner played 12 games/nine tackles/three PBU; Miami Ohio 2023-24 started 24 of 25 games with 110 tackles, 32 PBU/three INT, named 2024 MAC CB of Year by College Football News. Pitt 2026 senior veteran with transferable coverage chops but less recent SEC starting evidence, moderate role adaptation.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/raion-strader/15181"
+        ]
+      }
     },
     {
       "id": "pittsburgh|rashanmurray",
@@ -13035,16 +13301,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "5265269",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/rashan-murray/15021",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 15,
+          "improve": 37,
+          "steady": 29,
+          "decline": 19,
+          "maxGain": 5,
+          "maxLoss": 6,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.18,
+        "portalExitProbability": 0.01,
+        "summary": "Pitt 2025 reserve CB played just three games, one tackle and one PBU after California (PA) 2022-24 32 games/78 tackles/four INT/25 PBU and Division II second-team All-American recognition. Official 2026 fifth year, role translation from DII to ACC remains uncertain and terminal-year modeling appropriate.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/rashan-murray/15021"
+        ]
+      }
     },
     {
       "id": "pittsburgh|shawnleejr",
@@ -13062,8 +13347,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 9,
+          "improve": 35,
+          "steady": 44,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.04,
+        "summary": "Pitt 2025 true freshman CB honorable mention All-ACC and On3 true-freshman All-American after 13 games, 31 tackles/4.5 TFL, one pick-six and five PBU. 2026 sophomore has established impact plus upside but initial 2025 college entry makes 2027 NFL draft ineligible.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/shawn-lee-jr/15013"
+        ]
+      }
     },
     {
       "id": "pittsburgh|tonykinsler",
@@ -13082,8 +13386,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2028,
+      "draftEligible2027": false,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 22,
+          "improve": 38,
+          "steady": 29,
+          "decline": 11,
+          "maxGain": 6,
+          "maxLoss": 5,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0,
+        "portalExitProbability": 0.11,
+        "summary": "Pitt 2025 true freshman receiver participated 12 of 13 games mostly on special teams, catching only one pass for four yards vs Boston College. High school had back-to-back 1,000-yard receiving seasons, but no FBS production at scale. 2026 sophomore faces significant target competition and development uncertainty, 2027 NFL ineligible.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/tony-kinsler/15011"
+        ]
+      }
     },
     {
       "id": "pittsburgh|zachcrothers",
@@ -13101,8 +13424,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/221/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 17,
+          "improve": 33,
+          "steady": 29,
+          "decline": 21,
+          "maxGain": 6,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.2,
+        "portalExitProbability": 0.03,
+        "summary": "Pitt 2025 DL appeared only four games before season-ending injury, but made 15 tackles/three TFL/1.5 sacks including breakout vs Central Michigan; 2024 redshirt without game action. Official 2026 junior, first enrolled 2024, can declare 2027 by elapsed years, but demonstrated season volume tiny with meaningful durability risk.",
+        "sources": [
+          "https://pittsburghpanthers.com/sports/football/roster/zach-crothers/15139"
+        ]
+      }
     },
     {
       "id": "smu|aakilwashington",
@@ -18228,7 +18570,7 @@
       }
     }
   ],
-  "officialOverrides": 144,
+  "officialOverrides": 148,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
