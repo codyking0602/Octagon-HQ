@@ -204,17 +204,17 @@ describe("BottomNavigation", () => {
   ] as const)("double taps %s through Football, UFC, MLB, then Football without intro videos", (_section, first, second, third) => {
     window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
     renderNavigation([first], <LocationProbe />);
-    const tab = screen.getByRole("link", { name: _section === "play" ? "Play" : "Picks" });
-    fireEvent.click(tab);
-    fireEvent.click(tab);
+    const tab = () => screen.getByRole("link", { name: _section === "play" ? "Play" : "Picks" });
+    fireEvent.click(tab());
+    fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(second + "|plain");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
-    fireEvent.click(tab);
-    fireEvent.click(tab);
+    fireEvent.click(tab());
+    fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(third + "|plain");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
-    fireEvent.click(tab);
-    fireEvent.click(tab);
+    fireEvent.click(tab());
+    fireEvent.click(tab());
     expect(screen.getByTestId("location")).toHaveTextContent(first + "|plain");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
   });
