@@ -619,10 +619,66 @@
       "redshirt": null
     },
     {
+      "id": "ole-miss|antoniokite",
+      "classification": "5TH",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/antonio-kite/6483",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|deucealexander",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/deuce-alexander/6437",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|edwinjoseph",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/edwin-joseph/6589",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|horatiofields",
+      "classification": "5TH",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/horatio-fields/6584",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|jamariousbrown",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/jamarious-brown/6451",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|jaylonbraxton",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/jaylon-braxton/6449",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
       "id": "ole-miss|keatonthomas",
       "classification": "5TH",
       "sourceUrl": "https://olemisssports.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|lukeferrelli",
+      "classification": "JR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/luke-ferrelli/6583",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|traylonray",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/traylon-ray/6498",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
       "redshirt": null
     },
     {
