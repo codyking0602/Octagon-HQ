@@ -72,3 +72,8 @@ export function useSport() {
 
   return context;
 }
+
+/** Optional access for independently rendered Home previews and unit tests. */
+export function useOptionalSport() {
+  return useContext(SportContext);
+}
