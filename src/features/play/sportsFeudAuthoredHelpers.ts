@@ -57,6 +57,7 @@ const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
   "Yards per attempt": ["YPA"],
   "Tackles for loss": ["TFL", "TFLs"],
   "Demian Maia": ["Maya"],
+  "Rob Gronkowski": ["Gronk"],
 };
 
 export function standardSportsFeudAliases(name: string): readonly string[] {
