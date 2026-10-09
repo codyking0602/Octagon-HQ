@@ -1157,17 +1157,21 @@
         "WR",
         "Flex"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 50000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/players/legend-glasker",
+        "asOf": "2026-09-17"
+      },
       "footballEvidenceSources": [
         "https://byucougars.com/sports/football/roster/player/legend-glasker"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 38000,
       "historicalOn3Rank": null,
-      "marketRationale": "Legend Glasker: college exposure is still developing. Individual 2025–26 football evidence: BYU true freshman 2026 wide receiver bio mainly provides prep receiving and multi-sport context without an established 2025 college season or authenticated substantial 2026 FBS target workload. Prep stats are not college production. Young-player upside and usage uncertainty dominate; college matriculation 2026 bars 2027 NFL Draft. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 byu estimate from The NIL Standard is $38,000; independently sourced on-field profile supports Legend Glasker's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "byu|ljmartin",
@@ -3165,17 +3169,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 550000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 200000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/teams/iowa?view=portal",
+        "asOf": "2026-09-28"
+      },
       "footballEvidenceSources": [
         "https://hawkeyesports.com/sports/football/roster/player/anthony-hawkins"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 188218,
       "historicalOn3Rank": null,
-      "marketRationale": "Anthony Hawkins: All-American recognition increases NIL demand; documented first-team role raises near-term market relevance; transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: Transferred from Villanova after 2025 FCS Freshman All-American honors, 59 tackles, two interceptions and nine pass breakups in 15 games. Started Iowa's first two 2026 games at strong safety, six tackles through four. FCS-to-Big Ten projection merits growth but role adjustment risk. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 iowa estimate from The NIL Standard is $188,218; independently sourced on-field profile supports Anthony Hawkins's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "iowa|braedenjackson",
@@ -3266,17 +3274,21 @@
       "positionGroups": [
         "WR"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 700000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/teams/iowa?view=portal",
+        "asOf": "2026-09-28"
+      },
       "footballEvidenceSources": [
         "https://hawkeyesports.com/sports/football/roster/player/evan-james"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 693000,
       "historicalOn3Rank": null,
-      "marketRationale": "Evan James: college exposure is still developing. Individual 2025–26 football evidence: True freshman Furman 2025 FCS production of 65 catches, 796 yards, seven receiving TD plus one rushing TD. Iowa 2026 receiver returned a punt 77 yards for TD, six catches/52 yards through five games. FCS-to-P4 transition and return role warrant volatile growth; 2025 matriculation means 2027 NFL ineligible. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 iowa estimate from The NIL Standard is $693,000; independently sourced on-field profile supports Evan James's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "iowa|hankbrown",
@@ -3366,17 +3378,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 625000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 225000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/teams/iowa?view=portal",
+        "asOf": "2026-09-28"
+      },
       "footballEvidenceSources": [
         "https://hawkeyesports.com/sports/football/roster/player/kahmari-brown"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 218048,
       "historicalOn3Rank": null,
-      "marketRationale": "Kahmari Brown: All-American recognition increases NIL demand. Individual 2025–26 football evidence: Elon 2025 Associated Press second-team All-American edge compiled 66 tackles, 16 TFL, 12 sacks in FCS; already 4.5 sacks at Elon in 2024. Iowa 2026 front rotation has 10 tackles and 1.5 sacks through five games. Higher-level competition changes projection but past pass rush is meaningful. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 iowa estimate from The NIL Standard is $218,048; independently sourced on-field profile supports Kahmari Brown's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "iowa|kamarimoulton",
@@ -3427,17 +3443,21 @@
       "positionGroups": [
         "RB"
       ],
-      "year1USD": 725000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 150000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/teams/iowa?view=portal",
+        "asOf": "2026-09-28"
+      },
       "footballEvidenceSources": [
         "https://hawkeyesports.com/sports/football/roster/player/lj-phillips-jr"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 147000,
       "historicalOn3Rank": null,
-      "marketRationale": "L.J. Phillips Jr.: All-American recognition increases NIL demand; evidenced high-volume output improves visibility; transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: South Dakota 2025 first-team FCS All-American and national rushing leader with 1,921 yards and 19 TD across 294 carries; transferred to Iowa 2026 but left opener injured after just four carries/five yards. Massive prior FCS talent but Big Ten projection and injury risk are unusually volatile. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 iowa estimate from The NIL Standard is $147,000; independently sourced on-field profile supports L.J. Phillips Jr.'s role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "iowa|rashadgodfreyjr",
@@ -3489,17 +3509,21 @@
         "WR",
         "Flex"
       ],
-      "year1USD": 375000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 575000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/teams/iowa?view=portal",
+        "asOf": "2026-09-28"
+      },
       "footballEvidenceSources": [
         "https://hawkeyesports.com/sports/football/roster/player/tony-diaz"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 577500,
       "historicalOn3Rank": null,
-      "marketRationale": "Tony Diaz: documented first-team role raises near-term market relevance; college exposure is still developing. Individual 2025–26 football evidence: UTRGV 2025 Southland Conference Freshman of Year, 875 receiving yards and 11 TD, 2024 redshirt; Iowa 2026 early starter leads team with 17 catches/201 yards and one TD through three games. FCS award production plus Iowa early role credible, but sample limited and level jump real. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 iowa estimate from The NIL Standard is $577,500; independently sourced on-field profile supports Tony Diaz's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "iowa|zachlutmer",
@@ -3529,17 +3553,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 300000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 700000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/dashawn-spears"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 704227,
       "historicalOn3Rank": null,
-      "marketRationale": "Dashawn Spears: limited public compensation data; role, documented collegiate exposure and verified football history support a conservative subjective range. Individual 2025–26 football evidence: LSU junior safety: 26 games/four career starts through 2025, with 29 tackles, three TFL, one sack and two interceptions in 2025, notably a two-pick SEC Defensive Player of the Week game against Florida. Rotation-to-starter opportunity supports 2027 improvement, but turnover spikes may not persist. First college season 2024 permits a 2027 declaration; not automatic draft lock. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $704,227; independently sourced on-field profile supports Dashawn Spears's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|deucegeralds",
@@ -3570,17 +3598,21 @@
         "RB",
         "Flex"
       ],
-      "year1USD": 175000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 525000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/dilin-jones"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 530689,
       "historicalOn3Rank": null,
-      "marketRationale": "Dilin Jones: transfer mobility indicates active recruiting demand; limited proven college production restrains estimate; availability uncertainty discounts market demand. Individual 2025–26 football evidence: LSU 2026 redshirt sophomore RB transferred from Wisconsin after first seven 2025 starts (76 carries/300 yards/two TD and nine catches) and season-ending turf-toe injury. Three 2024 reserve appearances for 88 yards. Healthy opportunity may materially increase rushing role, but lower conference efficiency, injury recovery and transfer competition create broad development risk. Original 2024 enrollment makes 2027 NFL draft possible despite sophomore label. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $530,689; independently sourced on-field profile supports Dilin Jones's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|djpickett",
@@ -3590,17 +3622,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 500000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1200000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/dj-pickett"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1200000,
       "historicalOn3Rank": null,
-      "marketRationale": "DJ Pickett: All-American recognition increases NIL demand; recognized conference impact supports a market premium; college exposure is still developing. Individual 2025–26 football evidence: LSU 2026 sophomore CB was a 2025 FWAA Freshman All-American and Freshman All-SEC, appearing in 13 games/three starts over 524 snaps, with 37 tackles, three interceptions, three PBUs and 304 pass-coverage snaps. Elite early man-coverage responsibility gives strong steady odds; experience can improve while interception count regresses. Entered 2025, ineligible for 2027 NFL Draft. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $1,200,000; independently sourced on-field profile supports DJ Pickett's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|dylancarpenter",
@@ -3652,17 +3688,21 @@
         "WR",
         "Flex"
       ],
-      "year1USD": 450000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1100000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/jackson-harris"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1101100,
       "historicalOn3Rank": null,
-      "marketRationale": "Jackson Harris: transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: LSU redshirt junior WR transferred from Hawaii after 2025 first-team All-Mountain West, 49 receptions for 963 yards and conference-high 12 receiving TD and 19.65 yards per catch, following early Stanford seasons. Explosive proven Group-of-Five productivity can translate, but SEC defensive talent and target-share change create role risk. First enrolled 2023; 2027 NFL decision possible, not certain. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $1,101,100; independently sourced on-field profile supports Jackson Harris's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|jordanross",
@@ -3672,17 +3712,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 450000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1100000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/jordan-ross"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1110094,
       "historicalOn3Rank": null,
-      "marketRationale": "Jordan Ross: recognized conference impact supports a market premium; transfer mobility indicates active recruiting demand; college exposure is still developing. Individual 2025–26 football evidence: LSU 2026 junior edge transferred from Tennessee, playing 2025 in 11 games/zero starts with 23 tackles, 3.5 TFL, 1.5 sacks on 246 defensive snaps; 2024 11 games with three tackles but Freshman All-SEC special teams recognition after blocked punt touchdown. Role ceiling can grow under new coaches, but recruiting-star pedigree does not establish existing elite college edge play. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $1,110,094; independently sourced on-field profile supports Jordan Ross's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|pjwoodland",
@@ -3692,17 +3736,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 875000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/season/2025/player/pj-woodland"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 876521,
       "historicalOn3Rank": null,
-      "marketRationale": "Pj Woodland: documented first-team role raises near-term market relevance. Individual 2025–26 football evidence: LSU 2026 junior corner started every game in 2025, recording 41 tackles, 11 passes defended, nine PBUs and two picks over 614 defensive snaps, allowing no coverage TD in cited school review. Also appeared in 13 games/two starts in 2024. Established full-season man coverage supports high steady probability, modest grade growth and above-average 2027 NFL declaration risk. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $876,521; independently sourced on-field profile supports Pj Woodland's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|princewillumanmielen",
@@ -3780,17 +3828,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1100000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/tamarcus-cooley"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1100000,
       "historicalOn3Rank": null,
-      "marketRationale": "Tamarcus Cooley: transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: LSU redshirt junior safety transferred from NC State/Maryland, started all 13 LSU games in 2025 with 70 tackles and two interceptions, and previous NC State 2024 nine starts with two interceptions; 28 career games/22 starts/113 tackles/four INT. Multi-program established Power Four safety résumé supports steady outcome and significant 2027 draft interest, not a pure breakout story. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $1,100,000; independently sourced on-field profile supports Tamarcus Cooley's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|tjdottery",
@@ -3800,17 +3852,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 400000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 725000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/tj-dottery"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 729849,
       "historicalOn3Rank": null,
-      "marketRationale": "TJ Dottery: limited public compensation data; role, documented collegiate exposure and verified football history support a conservative subjective range. Individual 2025–26 football evidence: LSU official 2026 fifth-year senior linebacker, first enrolled Clemson in 2022 and Ole Miss 2023–25. Explicit school bio calls 2026 his FINAL season; 2025 led SEC with 98 tackles/5.5 TFL/1.5 sacks after 2024 76 tackles/4.5 TFL/two sacks. Mature proven high-volume tackling leaves very little major further breakout runway, and 2027 return is blocked under normal rule unless separate waiver. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $729,849; independently sourced on-field profile supports TJ Dottery's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "lsu|treydezgreen",
@@ -3895,17 +3951,21 @@
       "positionGroups": [
         "WR"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 875000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/lsu-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://lsusports.net/sports/fb/roster/player/winston-watkins-jr"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 865000,
       "historicalOn3Rank": null,
-      "marketRationale": "Winston Watkins Jr.: college exposure is still developing. Individual 2025–26 football evidence: LSU sophomore WR spent true freshman 2025 at Ole Miss, appearing in 15 games and catching 26 passes for 373 yards and one touchdown, adding 21 rushing yards on five carries. LSU role is new, but 2025 experience in deep CFP run supports realistic volume improvement, not only high-school hype. Original 2025 enrollment bars 2027 NFL declaration. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 lsu estimate from The NIL Standard is $865,000; independently sourced on-field profile supports Winston Watkins Jr.'s role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|ahmadmoten",
@@ -3960,17 +4020,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 275000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 625000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/season/2026-27/player/bryce-fitzgerald"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 636921,
       "historicalOn3Rank": null,
-      "marketRationale": "Bryce Fitzgerald: college exposure is still developing. Individual 2025–26 football evidence: Miami 2026 sophomore defensive back earned FWAA Freshman All-America after six interceptions in 2025, tied for conference lead across 16 games and four starts; also recorded 16 tackles. Elite takeaway rate may regress even if coverage improves, making repeat huge turnover output less certain than underlying ability. First 2025 collegiate entry precludes a 2027 NFL declaration. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $636,921; independently sourced on-field profile supports Bryce Fitzgerald's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|charmarbrown",
@@ -4000,17 +4064,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 325000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 500000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/season/2026-27/player/chase-smith"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 507000,
       "historicalOn3Rank": null,
-      "marketRationale": "Chase Smith: availability uncertainty discounts market demand. Individual 2025–26 football evidence: Miami linebacker returned for 2026 following 2025 redshirt-senior season with 31 tackles in 16 games. Originally enrolled in 2021 and retained eligibility into the sixth calendar year; prior ACL injury history and unusual redshirt status make assumed final-year expiration unreliable without a specific compliance ruling. Veteran experience favors steady production, with injury/usage downside and limited major breakout. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $507,000; independently sourced on-field profile supports Chase Smith's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|cooperbarkate",
@@ -4021,17 +4089,21 @@
         "WR",
         "Flex"
       ],
-      "year1USD": 750000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1225000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/player/cooper-barkate"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1213929,
       "historicalOn3Rank": null,
-      "marketRationale": "Cooper Barkate: All-American recognition increases NIL demand; recognized conference impact supports a market premium. Individual 2025–26 football evidence: Miami 2026 redshirt-senior receiver played 2022–24 at Harvard and 2025 at Duke, where he was All-ACC second-team, after 2024 FCS All-American recognition. Career through 2025: 37 games/33 starts, 185 receptions, 2,848 yards and 21 TD. Elite FCS and proven ACC receiver production yields high steady chance, while program change and normal fifth-year finish reduce 2027 college return likelihood. The 2026 eligibility exhaustion is a model inference absent documented waiver. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $1,213,929; independently sourced on-field profile supports Cooper Barkate's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|damaribrown",
@@ -4110,17 +4182,21 @@
       "positionGroups": [
         "TE"
       ],
-      "year1USD": 200000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 500000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/elija-lofton"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 509478,
       "historicalOn3Rank": null,
-      "marketRationale": "Elija Lofton: college exposure is still developing. Individual 2025–26 football evidence: Miami junior hybrid tight end played 15 games/four starts as a sophomore in 2025 with 23 catches for 218 yards and three TD after limited 2024 freshman use. Receiving and blocking role can expand in 2026-27, but no established top-tier season yet. 2024 first enrollment permits 2027 draft eligibility without making an early declaration likely. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $509,478; independently sourced on-field profile supports Elija Lofton's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|javianmallory",
@@ -4197,18 +4273,22 @@
         "RB",
         "Flex"
       ],
-      "year1USD": 400000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1200000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster",
         "https://miamihurricanes.com/sports/football/roster/season/2024-25/player/mark-fletcher-jr"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1200000,
       "historicalOn3Rank": null,
-      "marketRationale": "Mark Fletcher Jr.: recognized conference impact supports a market premium. Individual 2025–26 football evidence: Miami fourth-year senior RB began college in 2023 and earned 2025 third-team All-ACC and Cotton Bowl offensive MVP recognition. Multi-season physical feature-back résumé implies useful continuation, with modest gain and decline risk; senior roster label alone does not prove all 2027 eligibility exhausted. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $1,200,000; independently sourced on-field profile supports Mark Fletcher Jr.'s role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|marquiselightfoot",
@@ -4218,17 +4298,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1100000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/marquise-lightfoot"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1096333,
       "historicalOn3Rank": null,
-      "marketRationale": "Marquise Lightfoot: college exposure is still developing. Individual 2025–26 football evidence: Miami 2026 junior edge defender played 2025 all 16 games/one start with 25 tackles, 5.5 TFL, 2.5 sacks and six QB hurries after nine freshman games in 2024. Demonstrated rotational pass rush warrants upward role trajectory, but one-start sample and evolving technique cap certainty of a major breakout. First college year 2024 makes him 2027 draft eligible. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $1,096,333; independently sourced on-field profile supports Marquise Lightfoot's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|mohamedtoure",
@@ -4238,18 +4322,22 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 325000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 800000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/player/mohamed-toure",
         "https://www.reuters.com/sports/reports-miami-lb-mohamed-toure-plans-return-8th-season--flm-2026-01-25/"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 800000,
       "historicalOn3Rank": null,
-      "marketRationale": "Mohamed Toure: availability uncertainty discounts market demand. Individual 2025–26 football evidence: Documented eighth and final college season in 2026 after 2019 redshirt, COVID exemption and 2022/2024 ACL medical redshirts. Must exit before Year 2 regardless of NFL declaration. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $800,000; independently sourced on-field profile supports Mohamed Toure's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|omarthornton",
@@ -4259,17 +4347,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 425000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 900000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/player/omar-thornton"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 901073,
       "historicalOn3Rank": null,
-      "marketRationale": "Omar Thornton: recognized conference impact supports a market premium; transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: Miami 2026 junior defensive back transfer from Boston College after 2025 All-ACC honorable mention in 12 games/11 starts with 82 tackles, eight TFL, four forced fumbles, two sacks and one interception. Established ACC disruptive nickel/run-support level with transfer-fit uncertainty; likely modest progress or steady rather than pure breakout. 2024 original college enrollment makes a 2027 NFL decision possible. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $901,073; independently sourced on-field profile supports Omar Thornton's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "miami|xavierlucas",
@@ -4299,17 +4391,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 500000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 700000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/miami-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://miamihurricanes.com/sports/football/roster/season/2025-26/player/zechariah-poyser"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 702000,
       "historicalOn3Rank": null,
-      "marketRationale": "Zechariah Poyser: All-American recognition increases NIL demand; recognized conference impact supports a market premium; college exposure is still developing. Individual 2025–26 football evidence: Miami 2026 redshirt junior safety first played Jacksonville State in 2023 (four games/redshirt). Produced 2024 FWAA Freshman All-American season: 75 tackles, three interceptions and eight TFL. Started all 16 2025 Miami games earning All-ACC honorable mention, 68 tackles, three TFL, sack and six PBUs. With two established starting seasons, steady repeat outweighs huge breakout despite remaining improvement potential. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 miami estimate from The NIL Standard is $702,000; independently sourced on-field profile supports Zechariah Poyser's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "mississippi-state|amareewilliams",
@@ -7270,17 +7366,21 @@
       "positionGroups": [
         "RB"
       ],
-      "year1USD": 325000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 150000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/players/dierre-hill-jr",
+        "asOf": "2026-10-09"
+      },
       "footballEvidenceSources": [
         "https://goducks.com/sports/football/roster/dierre-hill-jr-/18305"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 153578,
       "historicalOn3Rank": null,
-      "marketRationale": "Dierre Hill Jr.: limited public compensation data; role, documented collegiate exposure and verified football history support a conservative subjective range. Individual 2025–26 football evidence: Oregon true sophomore RB in 2025 appeared in all 15 games, with one start, 75 rushes for 656 yards (8.75 yards per carry) and five touchdowns, plus 16 receptions for 137 yards and one TD. Oregon lists PFF 90.8 overall and 91.4 rushing grades and explosive gains, but one-start workload makes repeat efficiency uncertain. 2025 college entry bars 2027 draft and supports higher-volume 2027 development. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 oregon estimate from The NIL Standard is $153,578; independently sourced on-field profile supports Dierre Hill Jr.'s role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "oregon|elijahrushing",
@@ -8377,17 +8477,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 400000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 750000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/amare-campbell/23060"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 750000,
       "historicalOn3Rank": null,
-      "marketRationale": "Amare Campbell: limited public compensation data; role, documented collegiate exposure and verified football history support a conservative subjective range. Individual 2025–26 football evidence: Penn State's 2025 leading tackler: 103 tackles, 9.5 TFL and three sacks in 13 starts; Tennessee starter with 2026 opener-to-Auburn production. Tennessee explicitly identifies 2026 as his final eligibility year, making offseason exit certain regardless of draft declaration. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $750,000; independently sourced on-field profile supports Amare Campbell's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|arioncarter",
@@ -8397,17 +8501,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 325000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 775000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/arion-carter/23001"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 775000,
       "historicalOn3Rank": null,
-      "marketRationale": "Arion Carter: availability uncertainty discounts market demand. Individual 2025–26 football evidence: Tennessee's 2025 leading regular-season tackler despite foot injury: 76 tackles and six TFL in ten games, nine starts. Returned with 33 tackles entering Week 6 in 2026; a proven veteran with more steady outcomes than breakout potential. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $775,000; independently sourced on-field profile supports Arion Carter's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|braylonstaley",
@@ -8417,17 +8525,21 @@
       "positionGroups": [
         "WR"
       ],
-      "year1USD": 400000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 775000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/braylon-staley/23047"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 783164,
       "historicalOn3Rank": null,
-      "marketRationale": "Braylon Staley: limited public compensation data; role, documented collegiate exposure and verified football history support a conservative subjective range. Individual 2025–26 football evidence: 2025 Tennessee receiver played all 13 games as a starter, with 68 catches, 837 receiving yards and six TD; 2026 has two scoring catches through first four games. Official 2026 roster calls him a JUNIOR, correcting the outdated sophomore ledger class. High-level college production, but added upside and usage volatility remain. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $783,164; independently sourced on-field profile supports Braylon Staley's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|daevinhobbs",
@@ -8437,17 +8549,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 400000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1050000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/daevin-hobbs/23014"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1044852,
       "historicalOn3Rank": null,
-      "marketRationale": "Daevin Hobbs: limited public compensation data; role, documented collegiate exposure and verified football history support a conservative subjective range. Individual 2025–26 football evidence: 2025 rotational Tennessee DL played final eight games, posting 30 tackles, 3.5 TFL and three sacks after missing earlier action; 2026 logged 1.5 TFL against Texas and three QB hurries against Auburn. Impact flashes and intermittent availability suggest both improvement and downside. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $1,044,852; independently sourced on-field profile supports Daevin Hobbs's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|dasaahnbrame",
@@ -8519,17 +8635,21 @@
         "RB",
         "Flex"
       ],
-      "year1USD": 650000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 1000000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/desean-bishop/22996"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 1000000,
       "historicalOn3Rank": null,
-      "marketRationale": "DeSean Bishop: recognized conference impact supports a market premium; evidenced high-volume output improves visibility; documented first-team role raises near-term market relevance. Individual 2025–26 football evidence: Tennessee 2025 second-team All-SEC RB: 1,076 rushing yards, 16 rushing TD in 13 starts at 5.9 yards per carry. Started 2026 with 97 yards against Furman and 147 with two TD against Georgia Tech. Mature featured back, little room for explosive development; official 2026 classification SENIOR, not legacy junior. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $1,000,000; independently sourced on-field profile supports DeSean Bishop's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|ethandavis",
@@ -8540,17 +8660,21 @@
         "TE",
         "Flex"
       ],
-      "year1USD": 225000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 600000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/ethan-davis/23003"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 588649,
       "historicalOn3Rank": null,
-      "marketRationale": "Ethan Davis: limited public compensation data; role, documented collegiate exposure and verified football history support a conservative subjective range. Individual 2025–26 football evidence: Tennessee 2025 junior TE had 21 catches, 257 yards and two TD in nine appearances/four starts, including seven for 85 versus Vanderbilt. Scored TD in first two 2026 games. Official 2026 class SENIOR corrects earlier junior label; moderate opportunity to grow, not an established high-volume receiving star. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $588,649; independently sourced on-field profile supports Ethan Davis's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|georgemacintyre",
@@ -8604,17 +8728,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 800000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/kayin-lee/23079"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 801970,
       "historicalOn3Rank": null,
-      "marketRationale": "Kayin Lee: documented first-team role raises near-term market relevance. Individual 2025–26 football evidence: Auburn 2025 starting CB did not allow a TD across 328 coverage snaps, had 31 tackles and four pass breakups in 11 starts. At Tennessee, started first five 2026 games and intercepted Texas; veteran quality supports steady odds, with some new-team variability. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $801,970; independently sourced on-field profile supports Kayin Lee's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|mariyondye",
@@ -8669,17 +8797,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 400000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 850000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/qua-moss/23083"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 842400,
       "historicalOn3Rank": null,
-      "marketRationale": "Qua Moss: documented first-team role raises near-term market relevance; transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: Kansas State 2025 STAR starter: 41 tackles, five TFL, one sack and two picks in 12 games/10 starts, zero allowed TD on 286 coverage snaps. At Tennessee 2026 starting nickel and punt returner, 57-yard punt-return TD against Texas; transfer role offers some upside but has mature performance baseline. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $842,400; independently sourced on-field profile supports Qua Moss's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|radariousjackson",
@@ -8689,17 +8821,21 @@
       "positionGroups": [
         "WR"
       ],
-      "year1USD": 450000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 425000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/radarious-jackson/23017"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 418409,
       "historicalOn3Rank": null,
-      "marketRationale": "Radarious Jackson: recognized conference impact supports a market premium; documented first-team role raises near-term market relevance; college exposure is still developing. Individual 2025–26 football evidence: 2025 Tennessee true freshman receiver caught nine passes for 90 yards in nine games. 2026 moved into the starting rotation, including three catches for 64 at Georgia Tech. Young physical receiver has realistic opportunity-driven growth but small SEC target sample; entered college 2025, no 2027 draft eligibility. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $418,409; independently sourced on-field profile supports Radarious Jackson's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|tjmetcalf",
@@ -8709,17 +8845,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 425000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 775000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/tj-metcalf/23082"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 784491,
       "historicalOn3Rank": null,
-      "marketRationale": "TJ Metcalf: recognized conference impact supports a market premium; documented first-team role raises near-term market relevance. Individual 2025–26 football evidence: Michigan 2025 safety started all 13 games, made 58 tackles, four PBUs and one INT, earning All-Big Ten honorable mention; previously played at Arkansas. Started Tennessee's first five 2026 games with 23 tackles. Established multi-year college DB with more steady than breakout probability. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $784,491; independently sourced on-field profile supports TJ Metcalf's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|tyredmond",
@@ -8729,17 +8869,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 425000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 850000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/ty-redmond/23037"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 850000,
       "historicalOn3Rank": null,
-      "marketRationale": "Ty Redmond: All-American recognition increases NIL demand; college exposure is still developing. Individual 2025–26 football evidence: 2025 Tennessee true freshman CB was Freshman All-American after 12 starts, 43 tackles, three INT and an SEC-best 12 pass breakups. Has five 2026 starts with productive pass defense. Already high demonstrated level for sophomore; first enrolled 2025, ineligible for 2027 draft. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $850,000; independently sourced on-field profile supports Ty Redmond's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|tyreeweathersby",
@@ -8749,17 +8893,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 250000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 925000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/tyree-weathersby/23053"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 913636,
       "historicalOn3Rank": null,
-      "marketRationale": "Tyree Weathersby: documented first-team role raises near-term market relevance; limited proven college production restrains estimate. Individual 2025–26 football evidence: 2025 Tennessee reserve edge played 13 games with one start and 24 tackles, 2.5 TFL and one sack. In 2026 opened as starter and had 2.5 sacks and TFL against Texas and another sack versus Furman; credible role-driven breakthrough with small-sample volatility. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $913,636; independently sourced on-field profile supports Tyree Weathersby's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "tennessee|xaviergilliam",
@@ -8769,17 +8917,21 @@
       "positionGroups": [
         "Front Seven"
       ],
-      "year1USD": 450000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 850000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/insights/tennessee-roster-valuation-2026",
+        "asOf": "2026-08-23"
+      },
       "footballEvidenceSources": [
         "https://utsports.com/sports/football/roster/xavier-gilliam/23068"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 858000,
       "historicalOn3Rank": null,
-      "marketRationale": "Xavier Gilliam: transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: 2025 Penn State sophomore interior DL played 13 games, made 15 tackles and two TFL in 409 defensive snaps. Transferred to Tennessee for 2026 and produced three sacks/five TFL versus Furman, then 0.5 TFL versus Georgia Tech. Big debut against lower-tier opponent should not be over-weighted; 2026 official class JUNIOR, not legacy sophomore. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 tennessee estimate from The NIL Standard is $858,000; independently sourced on-field profile supports Xavier Gilliam's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "texas|archmanning",
@@ -10538,17 +10690,21 @@
         "WR",
         "Flex"
       ],
-      "year1USD": 350000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 50000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/players/trent-mosley",
+        "asOf": "2026-09-22"
+      },
       "footballEvidenceSources": [
         "https://usctrojans.com/sports/football/roster/trent-mosley/18843"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 61665,
       "historicalOn3Rank": null,
-      "marketRationale": "Trent Mosley: college exposure is still developing. Individual 2025–26 football evidence: USC 2026 official freshman receiver enrolled spring 2026 after finishing high school early, with no verified college-game statistics as of biography. Four-star recruit and past high-school rushing/receiving production are projection inputs only; big uncertainty and 2027 draft ineligible. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "An individually matched 2026 usc estimate from The NIL Standard is $61,665; independently sourced on-field profile supports Trent Mosley's role/visibility context. Rounded to nearest $25,000 for proposed Year 1. Model-only estimate; not a verified NIL payment or budget/HQ-derived price."
     },
     {
       "id": "usc|waymondjordan",
