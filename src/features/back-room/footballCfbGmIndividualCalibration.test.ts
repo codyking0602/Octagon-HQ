@@ -125,7 +125,7 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     }>;
     const independent = market.filter((row)=>row.calibration?.nilEvidence);
     expect(independent).toHaveLength(2);
-    expect(new Set(independent.map((row)=>row.id)).size).toBe(36);
+    expect(new Set(independent.map((row)=>row.id)).size).toBe(2);
     for (const row of independent) {
       expect(row.nilMarketEvidence).toBeUndefined();
       const evidence = row.calibration!.nilEvidence!;
