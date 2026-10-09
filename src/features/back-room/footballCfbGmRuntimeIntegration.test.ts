@@ -43,8 +43,8 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
 
   it("uses the NIL authority independently from the audited HQ grades and both budget settings", () => {
     const arch = cfbGmPlayer("texas|archmanning")!;
-    expect(arch.nilYear1).toBe(2_500_000);
-    expect(arch.nilYear2).toBe(2_750_000);
+    expect(arch.nilYear1).toBe(4_200_000);
+    expect(arch.nilYear2).toBe(4_625_000);
     const sameMarket = cfbGmEstimateNil({schoolId:"texas",name:"Arch Manning",
       family:"QB",positionRoleRank:0,apRank:1});
     expect(arch.nilYear1).toBe(sameMarket.year1);
@@ -111,6 +111,7 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v3-market-development"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v4-official-classes"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v5-extended-year-evidence"})).toBeNull();
+    expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v6-individual-evidence"})).toBeNull();
   });
 
   it("completes multiple seeded seven-player draft paths under both budgets", () => {

@@ -1,10 +1,9 @@
-import calibration from "../../../data/generated/football/cfb-gm-classification-runtime-2026.json";
-
 /**
  * College GM NIL market estimate, not reported contract compensation.
  * Deliberately separate from HQ grades and development probabilities.
  * Inputs are the manually audited 2026 CFB wheel role ranking, school context,
- * and independently sourced/hand-reviewed player market prominence anchors.
+ * and independently chosen game-only player prominence anchors.
+ * No external NIL published valuations or third-party market ranks.
  * Budget selection MUST NOT affect estimates.
  */
 export type CfbGmNilFamily = "QB" | "RB" | "WR" | "TE" | "Front Seven" | "Secondary";
@@ -18,7 +17,7 @@ export type CfbGmNilInput = {
 export type CfbGmNilEstimate = {
   year1:number; year2Baseline:number;
   estimated:true;
-  basis:"market-prominence-anchor"|"position-role-and-school-market"|"researched-game-estimate"|"sourced-valuation-estimate";
+  basis:"market-prominence-anchor"|"position-role-and-school-market";
   confidence:"medium"|"low";
 };
 const normalize=(name:string)=>name.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
@@ -44,32 +43,27 @@ export const CFB_GM_NIL_MARKET_ANCHORS: Readonly<Record<string,number>>=Object.f
   "indiana|nickmarsh":1_750_000,
   "alabama|keelonrussell":2_300_000,
   "oregon|dakorienmoore":1_650_000,
+  "miami|darianmensah":4_350_000,
+  "miami|malachitoney":2_925_000,
+  "ohio-state|juliansayin":3_125_000,
+  "missouri|ahmadhardy":1_925_000,
+  "notre-dame|leonardmoore":1_725_000,
+  "ole-miss|kewanlacy":1_775_000,
+  "georgia|ellisrobinsoniv":1_625_000,
+  "byu|ljmartin":1_825_000,
 });
-type MarketOverride = {year1:number;year2Baseline:number;confidence:"low"|"medium"};
-const sourcedMarket = new Map<string, MarketOverride>(
-  (calibration.players as Array<{id:string;nilMarket?:MarketOverride}>).
-    filter((row) => Boolean(row.nilMarket)).
-    map((row) => [row.id,row.nilMarket!]),
-);
-const researchedMarket = new Map<string, MarketOverride>(
-  (calibration.players as Array<{id:string;calibration?:{nil?:MarketOverride}}>).
-    filter((row) => Boolean(row.calibration?.nil)).
-    map((row) => [row.id,row.calibration!.nil!]),
-);
 const roleScale=[1,.78,.66,.55,.47,.4,.35] as const;
 function scale(rank:number) { return roleScale[Math.max(0,Math.min(6,Number.isFinite(rank)?Math.floor(rank):6))]!; }
 export function cfbGmEstimateNil(player:CfbGmNilInput):CfbGmNilEstimate {
   const id=player.schoolId+"|"+normalize(player.name);
-  const sourced=sourcedMarket.get(id);
-  const researched=researchedMarket.get(id);
   const anchored=CFB_GM_NIL_MARKET_ANCHORS[id];
   const brand=player.apRank<=7?1.16:player.apRank<=16?1.04:.93;
   const roleValue=round25(base[player.family]*scale(player.positionRoleRank)*brand);
-  const year1=Math.max(150_000,sourced?.year1??researched?.year1??anchored??roleValue);
+  const year1=Math.max(150_000,anchored??roleValue);
   // Baseline market inflation is distinct from eventual seeded player
   // progression and individual offseason retention negotiations.
-  const year2Baseline=sourced?.year2Baseline??researched?.year2Baseline??round25(year1*1.10);
+  const year2Baseline=round25(year1*1.10);
   return {year1,year2Baseline,estimated:true,
-    basis:sourced?"sourced-valuation-estimate":researched?"researched-game-estimate":anchored?"market-prominence-anchor":"position-role-and-school-market",
-    confidence:sourced?.confidence??researched?.confidence??(anchored?"medium":"low")};
+    basis:anchored?"market-prominence-anchor":"position-role-and-school-market",
+    confidence:anchored?"medium":"low"};
 }

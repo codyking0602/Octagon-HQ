@@ -157,12 +157,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 24,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -310,12 +304,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1800000,
-        "year2Baseline": 1975000,
-        "providerRank": 49,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -379,12 +367,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 79,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -826,12 +808,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 28,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -1441,12 +1417,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 97,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -1699,12 +1669,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 100,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -1738,12 +1702,7 @@
           "volatility": "LOW"
         },
         "draftDeclarationProbability": 0.92,
-        "portalExitProbability": 0.02,
-        "nil": {
-          "year1": 750000,
-          "year2Baseline": 825000,
-          "confidence": "medium"
-        }
+        "portalExitProbability": 0.02
       }
     },
     {
@@ -1773,12 +1732,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 45,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -2577,12 +2530,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 4000000,
-        "year2Baseline": 4400000,
-        "providerRank": 8,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3381,12 +3328,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 59,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3408,12 +3349,6 @@
       "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 4500000,
-        "year2Baseline": 4950000,
-        "providerRank": 5,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3498,12 +3433,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 98,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3525,12 +3454,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1200000,
-        "year2Baseline": 1325000,
-        "providerRank": 68,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3552,12 +3475,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 78,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3600,12 +3517,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 65,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3753,12 +3664,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 48,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3780,12 +3685,6 @@
       "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 6500000,
-        "year2Baseline": 7150000,
-        "providerRank": 1,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -3870,12 +3769,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 25,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -4233,12 +4126,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 62,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -4461,12 +4348,7 @@
           "volatility": "LOW"
         },
         "draftDeclarationProbability": 0.96,
-        "portalExitProbability": 0.01,
-        "nil": {
-          "year1": 1000000,
-          "year2Baseline": 1100000,
-          "confidence": "medium"
-        }
+        "portalExitProbability": 0.01
       }
     },
     {
@@ -4475,12 +4357,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 34,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -4901,12 +4777,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 55,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -4991,12 +4861,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 3000000,
-        "year2Baseline": 3300000,
-        "providerRank": 12,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -5165,12 +5029,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1200000,
-        "year2Baseline": 1325000,
-        "providerRank": 69,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -5507,12 +5365,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 5000000,
-        "year2Baseline": 5500000,
-        "providerRank": 4,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -5576,12 +5428,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2500000,
-        "year2Baseline": 2750000,
-        "providerRank": 18,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -5687,12 +5533,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 84,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -5777,12 +5617,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 3500000,
-        "year2Baseline": 3850000,
-        "providerRank": 9,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6329,12 +6163,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 36,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6482,12 +6310,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 5000000,
-        "year2Baseline": 5500000,
-        "providerRank": 3,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6572,12 +6394,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 52,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6662,12 +6478,6 @@
       "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 5000000,
-        "year2Baseline": 5500000,
-        "providerRank": 2,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6731,12 +6541,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 64,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6842,12 +6646,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 26,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6869,12 +6667,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 22,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -6917,12 +6709,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 58,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -7574,12 +7360,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 3000000,
-        "year2Baseline": 3300000,
-        "providerRank": 15,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -7916,12 +7696,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2028,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 1600000,
-        "year2Baseline": 1750000,
-        "providerRank": 51,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -8006,12 +7780,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 91,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -8159,12 +7927,6 @@
       "remainingEligibility": 1,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2500000,
-        "year2Baseline": 2750000,
-        "providerRank": 20,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -8207,12 +7969,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 3000000,
-        "year2Baseline": 3300000,
-        "providerRank": 14,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -8234,12 +7990,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2500000,
-        "year2Baseline": 2750000,
-        "providerRank": 21,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -8471,12 +8221,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 95,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -8666,12 +8410,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 75,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -9134,12 +8872,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 40,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -9476,12 +9208,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1500000,
-        "year2Baseline": 1650000,
-        "providerRank": 56,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -9608,12 +9334,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2029,
       "draftEligible2027": false,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 82,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -9698,12 +9418,6 @@
       "remainingEligibility": 0,
       "earliestDraftYear": 2025,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 73,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -9830,12 +9544,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2026,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 2000000,
-        "year2Baseline": 2200000,
-        "providerRank": 46,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {
@@ -10109,12 +9817,6 @@
       "remainingEligibility": null,
       "earliestDraftYear": 2027,
       "draftEligible2027": true,
-      "nilMarket": {
-        "year1": 1000000,
-        "year2Baseline": 1100000,
-        "providerRank": 83,
-        "confidence": "medium"
-      },
       "calibration": {
         "status": "evidence-informed-estimate",
         "development": {

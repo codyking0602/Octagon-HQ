@@ -7,7 +7,7 @@ import classEvidence from "../../../data/generated/football/cfb-gm-classificatio
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
 import { cfbGmDevProfile, cfbGmDevelop, type CfbGmClass } from "./footballCfbGmDevelopment";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v6-individual-evidence";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v7-first-party-market";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
