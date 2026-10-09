@@ -343,7 +343,7 @@ describe("completed recap polish", () => {
     expect(screen.getAllByText("T-1")).toHaveLength(2);
     expect(screen.getByText("3")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
+    fireEvent.click(screen.getByText("FINISHED EVENTS"));
     fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
     fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
