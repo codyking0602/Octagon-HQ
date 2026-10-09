@@ -5,7 +5,7 @@ import {
   CFB_GM_AP_SCHOOLS, CFB_GM_BUDGETS, CFB_GM_PLAYERS, CFB_GM_ROSTER_SLOTS, CFB_GM_POSITION_WEIGHTS, cfbGmDepartureRisk, cfbGmEligibleIn2027, cfbGmPortalAvailable, cfbGmExitSignal,
   cfbGmCandidates, cfbGmEligibleSchools, cfbGmEnterOffseason, cfbGmFinalResult,
   cfbGmInitial, cfbGmOpenSlots, cfbGmPick, cfbGmPlayer, cfbGmPortalOut,
-  cfbGmReflow, cfbGmSeason, cfbGmSpent, cfbGmSpin, cfbGmTeamGrade,
+  cfbGmReflow, cfbGmSeason, cfbGmSpent, cfbGmSpin, cfbGmTeamGrade, cfbGmTeamOverall, cfbGmRoleFit,
 } from "./footballCfbGmEngine";
 
 describe("CFB The GM owner preview", () => {
@@ -80,6 +80,36 @@ describe("CFB The GM owner preview", () => {
     expect(aFirst).toBe(Math.round((80 + (a.currentGrade - 80 + b.currentGrade - 80) * .14) * 10) / 10);
   });
 
+  it("uses a College-calibrated team overall scale, not NFL anchors",()=>{
+    expect(cfbGmTeamOverall(72)).toBe(60);
+    expect(cfbGmTeamOverall(80)).toBe(74);
+    expect(cfbGmTeamOverall(88)).toBe(90);
+    expect(cfbGmTeamOverall(92)).toBe(97);
+    expect(cfbGmTeamOverall(98)).toBe(99);
+    let last=0;
+    for(let grade=65;grade<=99;grade+=.25) {
+      const ovr=cfbGmTeamOverall(grade);
+      expect(ovr).toBeGreaterThanOrEqual(last);
+      last=ovr;
+    }
+  });
+  it("assigns each of 468 athletes only to their documented family slots",()=>{
+    for(const player of CFB_GM_PLAYERS) {
+      const all=CFB_GM_ROSTER_SLOTS.map(slot=>({slot,fit:cfbGmRoleFit(player,slot)}));
+      expect(all.filter(x=>x.fit.eligible).map(x=>x.slot).sort(),player.id)
+        .toEqual([...player.eligibleSlots].sort());
+      for(const role of all) {
+        if(!role.fit.eligible)expect(role.fit.label).toBe("INVALID ROLE");
+        if(role.slot==="FLEX"&&role.fit.eligible) {
+          expect(["RB","WR","TE"],player.id).toContain(player.family);
+          expect(role.fit.label).toBe("FLEX FIT");
+        }
+      }
+      if(["Front Seven","Secondary"].includes(player.family)) {
+        expect(player.eligibleSlots).not.toContain("FLEX");
+      }
+    }
+  });
   it("scouts all 468 individual profiles and combines departures, class and portal risks honestly", () => {
     expect(CFB_GM_PLAYERS).toHaveLength(468);
     for (const p of CFB_GM_PLAYERS) {

@@ -13,6 +13,7 @@ import {
   cfbGmPlayer, cfbGmPortalOut, cfbGmSeason, cfbGmSpent, cfbGmSpin,
   cfbGmValidateRun, cfbGmEffectiveGrade, cfbGmExitSignal,
   cfbGmPrice, cfbGmChemistry, cfbGmNegotiateRetention, cfbGmOffseasonReady,
+  cfbGmRoleFit,
   cfbGmPendingRetentions, cfbGmRetentionQuote,
   type CfbGmBudget, type CfbGmPlayer, type CfbGmRosterEntry, type CfbGmRun,
   type CfbGmSeason, type CfbGmRetentionAgreement, type CfbGmRetentionTier,
@@ -70,8 +71,10 @@ function ExitSignal({player}: {player: CfbGmPlayer}) {
   </small>;
 }
 function RoleFit({player, slot}: {player:CfbGmPlayer; slot?:string}) {
-  const label = slot === "FLEX" ? "FLEX FIT" : player.eligibleSlots.length > 1 ? "MULTI-SLOT" :
-    player.family === "Front Seven" ? "FRONT 7" : player.family === "Secondary" ? "SECONDARY" : "NATURAL FIT";
+  const assignedSlot = slot as typeof CFB_GM_ROSTER_SLOTS[number] | undefined;
+  const fitting = assignedSlot ? cfbGmRoleFit(player,assignedSlot) : null;
+  const label = fitting?.label ?? (player.eligibleSlots.length > 1 ? "MULTI-SLOT" :
+    player.family === "Front Seven" ? "FRONT 7" : player.family === "Secondary" ? "SECONDARY" : "NATURAL FIT");
   return <small className="football-gm__cfb-role-fit" title={"Verified scouting family: " + player.family + ". No unverified sub-position assigned."}>
     {label}</small>;
 }
