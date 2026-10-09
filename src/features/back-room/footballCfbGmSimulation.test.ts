@@ -54,6 +54,27 @@ describe("CFB GM 2026-style 12-team CFP and regular-season simulator", () => {
     expect(strong).toBeGreaterThan(weak+220);
     expect(upsets).toBeGreaterThan(0);
   });
+  it("stays calibrated across hundreds of deterministic weak, competitive and championship-caliber cores", () => {
+    const grades=[84,86,88,90,92,94] as const;
+    const metrics=grades.map(grade=>{
+      let wins=0,appearances=0;
+      for(let index=0;index<240;index++){
+        const result=cfbGmSimulateCollegeSeason("cfp-quality-"+index,1,grade);
+        wins+=result.wins;
+        appearances+=Number(result.cfpSeed!==null);
+      }
+      return {grade,meanWins:wins/240,cfpRate:appearances/240};
+    });
+    for(let i=1;i<metrics.length;i++) {
+      expect(metrics[i]!.meanWins).toBeGreaterThan(metrics[i-1]!.meanWins);
+      expect(metrics[i]!.cfpRate).toBeGreaterThan(metrics[i-1]!.cfpRate);
+    }
+    expect(metrics[0]!.cfpRate).toBeLessThan(.15);
+    expect(metrics[2]!.cfpRate).toBeGreaterThan(.2);
+    expect(metrics[3]!.cfpRate).toBeGreaterThan(.4);
+    expect(metrics[5]!.cfpRate).toBeGreaterThan(.7);
+    expect(metrics[5]!.cfpRate).toBeLessThan(.96);
+  });
   it("versions the preview so old saved simulations cannot silently adopt the new college bracket", () => {
     const run=cfbGmInitial("sample-cfb-seed-2026");
     expect(CFB_GM_VERSION).toContain("v10-retention-chemistry");
