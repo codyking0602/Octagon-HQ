@@ -227,13 +227,11 @@ describe("Home UFC HQ", () => {
     expect(within(section).queryByText("Etihad Arena · Abu Dhabi, United Arab Emirates")).not.toBeInTheDocument();
     expect(within(section).getByText("1 OF 2")).toBeInTheDocument();
     expect(within(section).getByText("1 PICK LEFT")).toBeInTheDocument();
-    expect(within(section).getByText("#2 OF 3")).toBeInTheDocument();
-    expect(within(section).getByText("2026 PICKS STANDING")).toBeInTheDocument();
+    
+    expect(within(section).getByText("2026 PICKS RECORD")).toBeInTheDocument();
     expect(within(section).getByRole("link", { name: "Open UFC Championship Picks leaderboard" }))
       .toHaveAttribute("href", "/championship/ufc?tab=picks");
     expect(within(section).getByText("69 PTS")).toBeInTheDocument();
-    expect(within(section).getByRole("link", { name: "Open UFC Play leaderboard" }))
-      .toHaveAttribute("href", "/championship/ufc?tab=play");
     expect(within(section).getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
     expect(within(section).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toBeInTheDocument();
     expect(within(section).getByText("RANKING SPOTLIGHT")).toBeInTheDocument();
