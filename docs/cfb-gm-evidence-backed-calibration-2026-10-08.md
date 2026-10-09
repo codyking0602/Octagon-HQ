@@ -175,11 +175,20 @@ The NCAA's June 23, 2026 [age-based eligibility model](https://www.ncaa.org/news
 
 NFL draft declaration odds are **game probability judgments**, not actual declarations or guaranteed draft outcomes. Individual source records distinguish public performance evidence from guessed likelihood.
 
+
+## Individually sourced secondary NIL market cross-check (October 8)
+
+The existing 48 top-ranked On3 valuations retain top priority. A further **36 distinct players** have exact-name 2026 valuation comparisons from current publicly visible player-specific On3 pages (where available) or The NIL Standard’s independently modeled 2026 team rosters. These are **secondary estimates**, never assumed verified salaries; published-model values are rounded to the nearest $25,000 for the game and preserved in `calibration.nilEvidence` with provider, observed estimated value, cutoff date, source URL and provenance. The linked price applies identically in Builder and Powerhouse. The year-two +10% remains a provisional nominal baseline, not a forecast of actual compensation.
+
+Current ledger: 48 rank-matched On3 valuations; 36 additional individualized market estimates; **384** remain older manual anchors or game role/school priors without player-level independent price evidence. No Wheel HQ grade input or changes.
+
+Some disparities warrant attention: Texas Tech veteran pass rushers Adam Trick and Trey White have independent model values around $1.52M versus substantially lower role-rank formula estimates; Missouri RB Ahmad Hardy has an On3 **$1M confirmed-deal valuation** on October 8 rather than a rank-based estimate, and Georgia CB Ellis Robinson IV has an On3 **$750K market-based profile valuation** (not confirmed cash). Independent model pricing is intentionally not misrepresented as a reported contract.
+
 ## Outstanding quality and deployment gates
 
-Development: **468/468 individualized, evidence-informed profiles complete**. Published On3 NIL valuation matches: **48/468**. Unmatched NIL pricing is explicitly estimated from role/school prominence or manually reviewed anchors, not verified private NIL compensation.
+Development: **468/468 individualized, evidence-informed profiles complete**. Published On3 NIL ranking matches: **48/468**; 36 additional individual cross-source estimates preserved separately. Remaining 384 still lack individual external market estimates. None of these should be confused with verified private NIL salary disclosures.
 
-1. Conduct individual NIL market-pricing reviews for the remaining 420 without matched reported valuations, keeping source evidence and confidence distinct from game estimates. Examine price spread, affordability, and Year 2 re-pricing; the default +10% remains a provisional assumption.
+1. Continue individual NIL market-pricing reviews for the remaining 384 without an externally matched price, keeping source evidence and confidence distinct from game estimates. Examine price spread, affordability, and Year 2 re-pricing; the default +10% remains a provisional assumption.
 2. Review 376 unresolved remaining-eligibility fields, including exceptional extended-year and new NCAA age-model cases; retain null wherever specific information cannot be established.
 3. Run both game budgets, complete seven-slot draft paths and seeded full two-season offseason replacement simulations; check that forced exits and repricing do not produce blocked runs.
 4. Run full exact-head TypeScript, Vitest, production build and final CI after reconciling latest `main`. Previous successful runs and skipped checks do **not** verify this exact head.
