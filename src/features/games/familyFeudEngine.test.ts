@@ -136,6 +136,31 @@ describe("Family Feud V2 engine contract", () => {
     });
   });
 
+  it("recognizes defensive physicality and aggressiveness on existing and new boards", () => {
+    const physicality = { id: "physicality", displayName: "Physicality", kind: "other" as const };
+    const question = {
+      id: "defensive-trait",
+      prompt: "Name a defensive trait.",
+      candidateIds: ["physicality"],
+      answers: [{ entityId: "physicality", points: 10 }],
+    };
+    const historicalPack: FamilyFeudPack = { ...pack, entities: [...pack.entities, physicality] };
+    expect(matchFamilyFeudAnswer(historicalPack, question, "Physical")).toMatchObject({
+      status: "matched", entityId: "physicality",
+    });
+    expect(matchFamilyFeudAnswer(historicalPack, question, "Aggresiveness")).toMatchObject({
+      status: "matched", entityId: "physicality",
+    });
+    const modernPack: FamilyFeudPack = {
+      ...historicalPack,
+      entities: [...historicalPack.entities, { id: "aggressiveness", displayName: "Aggressiveness", kind: "other" }],
+    };
+    const modernQuestion = { ...question, candidateIds: ["physicality", "aggressiveness"] };
+    expect(matchFamilyFeudAnswer(modernPack, modernQuestion, "Aggresiveness")).toMatchObject({
+      status: "matched", entityId: "aggressiveness",
+    });
+  });
+
   it("forgives common two-edit misspellings on unique five-letter person surnames", () => {
     const question = {
       id: "short-name-typos",

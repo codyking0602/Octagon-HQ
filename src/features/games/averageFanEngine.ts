@@ -247,6 +247,12 @@ export function averageFanAnswersMatch(
   if (accepted.includes(candidate)) return true;
   if (question.format !== "short-answer") return false;
 
+  // Numeric round answers are equivalent to their ordinary spoken ordinals.
+  // Keep this scoped to canonical "Round N" answers so "5th" cannot match
+  // unrelated numbers, fight times, seasons, or multiple-choice questions.
+  const round = /^(?:round )?([1-5])(?:st|nd|rd|th)?(?: round)?$/.exec(candidate);
+  if (round && accepted.includes(`round ${round[1]}`)) return true;
+
   const authoredMisses = (question.fanMisses ?? []).map(normalizePlayerAnswer);
   if (authoredMisses.includes(candidate)) return false;
 

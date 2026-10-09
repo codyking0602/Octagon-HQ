@@ -111,9 +111,9 @@ export function OfficialBlindResumeV3DailyView({
       return (
         <div className="page blind-resume-page" data-game="blind_resume" data-version="v3" data-sport={mlb ? "mlb" : "ufc"}>
           <section className={`blind-resume-verdict ${correct ? "is-correct" : "is-miss"}`}>
-            <p className="eyebrow">{correct ? (mlb ? "YOU PICKED THE BETTER RÉSUMÉ" : "YOU PICKED THE MODEL WINNER") : (mlb ? "THE RANKING DISAGREES" : "THE MODEL DISAGREES")}</p>
-            <h1>{winner.name} ranks higher</h1>
-            <p>{rankCopy(winner, mlb)}. {loser.name} is {rankCopy(loser, mlb).replace(/^(Men’s|Women’s) UFC GOAT /, "")}.</p>
+            <p className="eyebrow">{correct ? (mlb ? "YOU PICKED THE HIGHER CAREER WAR" : "YOU PICKED THE MODEL WINNER") : (mlb ? "LOWER CAREER WAR" : "THE MODEL DISAGREES")}</p>
+            <h1>{mlb ? `${winner.name} had more career WAR` : `${winner.name} ranks higher`}</h1>
+            <p>{mlb ? "Winner determined by Baseball-Reference career WAR." : `${rankCopy(winner, mlb)}. ${loser.name} is ${rankCopy(loser, mlb).replace(/^(Men’s|Women’s) UFC GOAT /, "")}.`}</p>
             <strong>+{points} POINTS</strong>
           </section>
           <section className="blind-resume-reveal-grid">
@@ -187,7 +187,7 @@ export function OfficialBlindResumeV3DailyView({
   return (
     <div className="page blind-resume-page" data-game="blind_resume" data-version="v3" data-sport={mlb ? "mlb" : "ufc"}>
       <section className="blind-resume-scoreboard">
-        <div><p className="eyebrow">{mlb ? "MLB PLAYOFF CHALLENGE" : "TODAY’S CHALLENGE"}</p><h1>{mlb ? "Which MLB career ranks higher?" : "Which UFC career ranks higher?"}</h1></div>
+        <div><p className="eyebrow">{mlb ? "MLB PLAYOFF CHALLENGE" : "TODAY’S CHALLENGE"}</p><h1>{mlb ? "Who had the higher career WAR?" : "Which UFC career ranks higher?"}</h1></div>
         <aside><span>ROUND {integer(currentRound?.round_number, results.length + 1)} OF 5</span><b>{earnedPoints} PTS · {correctCount}-{results.length - correctCount}</b></aside>
       </section>
       {currentRound ? (
