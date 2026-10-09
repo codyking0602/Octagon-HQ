@@ -82,18 +82,22 @@ begin
   -- Only genuine participants are in the Championship field; use the same
   -- eligible field for all three lanes, even on a day some players miss.
   active_profiles as (
-    -- The weekly field is the full season Championship cohort. Someone who
-    -- misses a week receives last-place points rather than disappearing.
+    -- Freeze the active cohort as of this completed week. A future late joiner
+    -- must not retroactively change an already-awarded weekly champion.
+    -- Someone who already entered a prior week and misses this one still
+    -- receives the cohort's last-place points rather than disappearing.
     select pick.profile_id
     from public.profile_event_picks pick
     join public.pick_events event on event.event_id = pick.event_id
     where event.sport = v_pick_sport and event.season = p_season and event.status = 'complete'
+      and event.starts_at < ((p_week_end + 1)::timestamp at time zone 'America/Chicago')
     union
     select history.profile_id
     from private.daily_challenge_history history
     join private.daily_challenge_schedule_versions schedule on schedule.version = history.schedule_version
     where schedule.sport = p_sport
       and history.central_day between v_daily_start and v_season_end - 1
+      and history.central_day <= p_week_end
     union
     select result.profile_id
     from private.football_weekly_auction_results result
@@ -101,6 +105,7 @@ begin
     where p_sport = 'football'
       and week.finalized_at is not null
       and week.week_start between v_daily_start and v_season_end - 1
+      and week.week_start <= p_week_end
       and result.final_score is not null
   ),
   field as (
