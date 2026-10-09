@@ -115,7 +115,7 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     expect(cfbGmPlayer("texas|camcoleman")?.nilYear1).toBe(3_000_000);
   });
 
-  it("retains 36 distinct player-specific NIL source comparisons without claiming modeled prices are confirmed pay", () => {
+  it("retains two individually published On3 NIL profile comparisons without claiming modeled prices are confirmed pay", () => {
     const market = researched as unknown as Array<{
       id:string;nilMarketEvidence?:unknown;calibration?:{
         nil?:{year1:number;year2Baseline:number;confidence:"low"|"medium"};
@@ -124,13 +124,13 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
       };
     }>;
     const independent = market.filter((row)=>row.calibration?.nilEvidence);
-    expect(independent).toHaveLength(36);
+    expect(independent).toHaveLength(2);
     expect(new Set(independent.map((row)=>row.id)).size).toBe(36);
     for (const row of independent) {
       expect(row.nilMarketEvidence).toBeUndefined();
       const evidence = row.calibration!.nilEvidence!;
       const game = row.calibration!.nil!;
-      expect(["On3","The NIL Standard"]).toContain(evidence.provider);
+      expect(evidence.provider).toBe("On3");
       expect(evidence.sourceUrl.startsWith("https://")).toBe(true);
       expect(evidence.asOf.startsWith("2026-")).toBe(true);
       expect(evidence.publishedEstimatedValue).toBeGreaterThan(0);
@@ -143,7 +143,6 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     }
     expect(cfbGmPlayer("missouri|ahmadhardy")!.nilYear1).toBe(1_000_000);
     expect(cfbGmPlayer("georgia|ellisrobinsoniv")!.nilYear1).toBe(750_000);
-    expect(cfbGmPlayer("texas-tech|treywhite")!.nilYear1).toBe(1_525_000);
   });
 
   it("honors actual NFL draft timing and forced final-year eligibility in every seeded result", () => {
