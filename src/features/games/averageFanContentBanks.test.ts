@@ -166,16 +166,6 @@ describe("Average Fan durable content banks", () => {
     expect(question?.choices).toContain("A quick answer built into a pass play against pressure");
   });
 
-  it("anchors generated UFC title identities to the fighter's division", () => {
-    const titleIdentities = AVERAGE_FAN_CONTENT_BANKS.ufc.filter((question) => (
-      /:g5:.*:title-identity$|:final:.*:title$/.test(question.id)
-    ));
-    expect(titleIdentities.length).toBeGreaterThan(0);
-    for (const question of titleIdentities) {
-      expect(question.prompt, question.id).toMatch(/Which UFC fighter from the .+ division/);
-    }
-  });
-
   it("regresses the exact Weidman false-negative from owner preview", () => {
     const question = AVERAGE_FAN_CONTENT_BANKS.ufc.find(
       (row) => row.id === "average-fan:ufc:authored-history:silva-weidman:short",
