@@ -16,6 +16,9 @@ import {
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
   footballSpotlightKindAt,
   footballSpotlightPairAt,
+  footballDitkaMemorialIsActive,
+  FOOTBALL_DITKA_MEMORIAL_PHOTO,
+  FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT,
   type FootballPlayerSpotlight,
   type FootballSpotlightKind,
   type FootballSpotlightPhotoSources,
@@ -146,10 +149,12 @@ function PlayerSpotlight({
   photoSource,
   canManagePhoto,
   onManagePhoto,
+  memorial = false,
 }: {
   spotlight: FootballPlayerSpotlight;
   photoSource: string | null;
   canManagePhoto: boolean;
+  memorial?: boolean;
   onManagePhoto?: () => void;
 }) {
   const holdTimer = useRef<number | null>(null);
@@ -207,16 +212,16 @@ function PlayerSpotlight({
 
   return (
     <article
-      className="football-player-spotlight"
-      aria-label="Football Player Spotlight"
+      className={`football-player-spotlight${memorial ? " football-player-spotlight--memorial" : ""}`}
+      aria-label={memorial ? "In memory of Mike Ditka" : "Football Player Spotlight"}
       style={{ "--player-team-color": spotlight.teamColor } as CSSProperties}
     >
       {media}
       <div className="football-player-spotlight__copy">
-        <span>PLAYER SPOTLIGHT</span>
+        <span>{memorial ? "IN MEMORY · 1939–2026" : "PLAYER SPOTLIGHT"}</span>
         <h3>{spotlight.name}</h3>
         <strong>{spotlight.team.toUpperCase()} · {spotlight.position}</strong>
-        <div className="football-player-spotlight__stats" aria-label={`${spotlight.name} featured-game stats`}>
+        <div className="football-player-spotlight__stats" aria-label={memorial ? `${spotlight.name} career milestones` : `${spotlight.name} featured-game stats`}>
           {spotlight.stats.map((stat) => (
             <span key={stat.label}><b>{stat.value}</b><small>{stat.label}</small></span>
           ))}
@@ -225,7 +230,7 @@ function PlayerSpotlight({
           {spotlight.result} · {spotlight.measurements}
         </p>
         <a href={spotlight.highlightUrl} target="_blank" rel="noreferrer">
-          WATCH HIGHLIGHT ↗
+          {memorial ? "REMEMBER IRON MIKE ↗" : "WATCH HIGHLIGHT ↗"}
         </a>
       </div>
     </article>
@@ -353,8 +358,9 @@ export function FootballHq({
     : activePairPhotos[alternateSpotlightKind]
       ? alternateSpotlightKind
       : scheduledSpotlightKind;
-  const activeSpotlight = activePair.spotlights[activeSpotlightKind];
-  const activeSpotlightPhoto = activePairPhotos[activeSpotlightKind] ?? null;
+  const memorial = footballDitkaMemorialIsActive(spotlightNow);
+  const activeSpotlight = memorial ? FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT : activePair.spotlights[activeSpotlightKind];
+  const activeSpotlightPhoto = memorial ? FOOTBALL_DITKA_MEMORIAL_PHOTO : activePairPhotos[activeSpotlightKind] ?? null;
 
   const progress = pickProgress(event, selections);
   const progressPercent = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
@@ -437,8 +443,9 @@ export function FootballHq({
       <PlayerSpotlight
         spotlight={activeSpotlight}
         photoSource={activeSpotlightPhoto}
-        canManagePhoto={canManagePlayerPhoto}
-        onManagePhoto={onManagePlayerPhoto}
+        memorial={memorial}
+        canManagePhoto={!memorial && canManagePlayerPhoto}
+        onManagePhoto={memorial ? undefined : onManagePlayerPhoto}
       />
 
       {featuredMatchups.length ? (
