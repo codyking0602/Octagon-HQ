@@ -66,6 +66,10 @@ function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqTh
     return "neutral";
   }
 
+  if (pathname.startsWith("/championship/football")) return "football";
+  if (pathname.startsWith("/championship/mlb")) return "mlb";
+  if (pathname.startsWith("/championship/ufc")) return "ufc";
+
   if (pathname === "/football" || pathname.startsWith("/football/")) return "football";
   if (pathname === "/mlb" || pathname.startsWith("/mlb/")) return "mlb";
 
