@@ -92,57 +92,19 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
     expect(CFB_GM_BUDGETS.BUILDER).toBe(7_500_000);
   });
 
-  it("uses exactly 48 player-matched externally published NIL valuation estimates, never HQ as a price input", () => {
-    const priced=researched.filter((r)=>r.nilMarketEvidence);
-    expect(priced).toHaveLength(48);
-    expect(new Set(priced.map((r)=>r.nilMarketEvidence!.providerRank)).size).toBe(48);
-    for(const row of priced){
-      const market=row.nilMarketEvidence!, player=cfbGmPlayer(row.id)!;
-      expect(market.provider).toBe("On3");
-      expect(market.asOf).toBe("2026-10-08");
-      expect(market.sourceUrl).toBe("https://www.on3.com/nil/rankings/player/college/football/");
-      expect(market.sourceMethod).toContain("not an audited");
-      expect(market.year1).toBe(market.reportedValuationEstimate);
-      expect(player.nilYear1).toBe(market.year1);
-      expect(player.nilYear2).toBe(market.year2Baseline);
-      expect(player.nilYear1%25_000).toBe(0);
-      expect(player.nilYear2%25_000).toBe(0);
-      expect(market.providerRank).toBeGreaterThanOrEqual(1);
-      expect(market.providerRank).toBeLessThanOrEqual(100);
+  it("keeps all external NIL valuation-provider dollars and ranks out of runtime and research", () => {
+    expect(researched.filter((r) => r.nilMarketEvidence)).toHaveLength(0);
+    for (const row of researched) {
+      const c=row.calibration as typeof row.calibration & {nilEvidence?:unknown};
+      expect(c?.nil).toBeUndefined();
+      expect(c?.nilEvidence).toBeUndefined();
+      expect(c?.sources.every(url=>!url.includes("on3.com"))).toBe(true);
+      const game=cfbGmPlayer(row.id)!;
+      expect(game.nilYear1).toBeGreaterThanOrEqual(150_000);
+      expect(game.nilYear2).toBeGreaterThan(game.nilYear1);
     }
-    expect(cfbGmPlayer("miami|darianmensah")?.nilYear1).toBe(6_500_000);
-    expect(cfbGmPlayer("texas|archmanning")?.nilYear1).toBe(2_500_000);
-    expect(cfbGmPlayer("texas|camcoleman")?.nilYear1).toBe(3_000_000);
-  });
-
-  it("retains two individually published On3 NIL profile comparisons without claiming modeled prices are confirmed pay", () => {
-    const market = researched as unknown as Array<{
-      id:string;nilMarketEvidence?:unknown;calibration?:{
-        nil?:{year1:number;year2Baseline:number;confidence:"low"|"medium"};
-        nilEvidence?:{provider:string;asOf:string;sourceUrl:string;kind:string;
-          publishedEstimatedValue:number;gameYear1:number;conversion:string};
-      };
-    }>;
-    const independent = market.filter((row)=>row.calibration?.nilEvidence);
-    expect(independent).toHaveLength(2);
-    expect(new Set(independent.map((row)=>row.id)).size).toBe(2);
-    for (const row of independent) {
-      expect(row.nilMarketEvidence).toBeUndefined();
-      const evidence = row.calibration!.nilEvidence!;
-      const game = row.calibration!.nil!;
-      expect(evidence.provider).toBe("On3");
-      expect(evidence.sourceUrl.startsWith("https://")).toBe(true);
-      expect(evidence.asOf.startsWith("2026-")).toBe(true);
-      expect(evidence.publishedEstimatedValue).toBeGreaterThan(0);
-      expect(evidence.gameYear1).toBe(game.year1);
-      expect(game.year1 % 25_000).toBe(0);
-      expect(game.year2Baseline % 25_000).toBe(0);
-      expect(cfbGmPlayer(row.id)!.nilYear1).toBe(game.year1);
-      expect(cfbGmPlayer(row.id)!.nilYear2).toBe(game.year2Baseline);
-      expect(evidence.conversion).toContain("Not audited");
-    }
-    expect(cfbGmPlayer("missouri|ahmadhardy")!.nilYear1).toBe(1_000_000);
-    expect(cfbGmPlayer("georgia|ellisrobinsoniv")!.nilYear1).toBe(750_000);
+    expect(cfbGmPlayer("missouri|ahmadhardy")!.nilYear1).toBe(1_925_000);
+    expect(cfbGmPlayer("georgia|ellisrobinsoniv")!.nilYear1).toBe(1_625_000);
   });
 
   it("honors actual NFL draft timing and forced final-year eligibility in every seeded result", () => {

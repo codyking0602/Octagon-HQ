@@ -1,9 +1,9 @@
-# CFB The GM — October 8, 2026 player-development research complete (NIL and verification pending)
+# CFB The GM — October 8, 2026 player-development research complete (first-party NIL game market)
 
 ## Explicit quality status
 
-This PR **completes individual development and departure research for all 468 players**, but it does not establish 468 published NIL valuations, certify remaining eligibility, or pass final test/production gates.
-The 468-player source roster is preserved and still playable; **468 specific players** have sourced individual development/departure calibration records, while **0** retain unreviewed development priors. **420 players still use unsourced market estimates** for NIL pricing; those are not verified NIL deals or individual published valuation records.
+This PR **completes individual development and departure research for all 468 players**, but it does not certify NIL payments or remaining eligibility; all monetary values are internal game-economy estimates.
+The 468-player source roster is preserved and still playable; **468 specific players** have sourced individual development/departure calibration records, while **0** retain unreviewed development priors. All 468 players use Octagon's first-party school/role or editorial high-prominence game prices. No provider-published NIL figures are embedded.
 The existing Wheel of Football HQ grades are unchanged. There are **no new HQ grade proposals** in this isolated change.
 
 ## Measured calibration distribution (complete development population)
@@ -21,7 +21,7 @@ These are computed from all **468 individually researched** development profiles
 | **Total** | **468** | **468** |
 
 - **Researched cohort development average:** breakout 10.3%, improve 30.6%, steady 44.1%, decline 15.0%; max annual gain 4.4 points and loss 5.3 points before HQ ceiling clipping.
-- **NIL:** among the 48 On3 matched names, Year 1 market estimate range **$1.00m–$6.50m**, median **$1.80m**, mean **$2.12m**. These are ranked-source sampled stars, not full 468-player NIL medians, and cannot substitute for future research into the 420 unmatched athletes.
+- **NIL game market:** 468/468 first-party estimated prices, 21 subjective game-prominence premium anchors, 0 copied provider-published valuations, 0 actual confirmed salary claims.
 - **Eligibility:** 384 individually modeled eligible for 2027 NFL Draft, 84 ineligible. **92** explicit remaining-eligibility cases; 376 unknown. School-verified 2026 class alone is not a compliance certification.
 
 ## Additional school-by-school sourced batches (same October 8 research window)
@@ -68,8 +68,8 @@ All twenty-five completed schools retain the exact roster IDs and canonical Whee
 - 468 individually assessed 2027 NFL timing fields, including six newer players modeled ineligible to enter the 2027 Draft after entering college in 2025. Drew Mestemaker is a redshirt sophomore whose 2024 college entry makes a 2027 draft possible despite the class label.
 - **92 assessed remaining-season fields:** 88 modeled terminal, 4 plausible 2027 return; specific 2026 school source URLs and gameplay assumptions appear in the ledger. Not institutional eligibility determinations.
 - **376 remaining eligibility fields remain null/unknown**, despite all 468 players having individual draft-timing and development research. Unknown remaining college seasons must not be interpreted as automatic graduation.
-- **48 exact-ID On3 October 8, 2026 NIL valuations** sourced from its [football valuation board](https://www.on3.com/nil/rankings/player/college/football/). On3 changed its model on July 1, 2026 to a **deal-based valuation**. We use this published market reference as a gameplay Year 1 estimate, **not as audit-confirmed cash paid under a private contract**. All 48 entries carry the source URL, rank, quoted valuation, and an explicit provisional +10% Year 2 assumption.
-- Market shifts include Darian Mensah $6.5m, Dante Moore $5m, Trinidad Chambliss $5m, Jeremiah Smith $5m, Josh Hoover $4m, Cam Coleman $3m, Arch Manning $2.5m and Colin Simmons $2.5m. The 420 without On3 matched valuations retain either older named anchors or class/role/school estimates; **those are not independently verified NIL research**.
+- **Third-party valuation data removed:** all 48 previously retained ranking values and two athlete-profile valuation records are removed from the ledger, runtime and tests. There are no provider price ranks or sourced-dollar fields in the app.
+- High-profile football athletes still receive selective editorial prominence price premiums; these are independent estimates, not reproductions of third-party NIL reports.
 - Pricing is identical in both game budgets, independent of HQ grades. The economics must be stress-tested after these wider updates.
 
 ## Player-by-player research sources and football reasoning
@@ -84,7 +84,7 @@ Each of the 468 records has its own `calibration.summary` and `calibration.sourc
 | Dante Moore | Oregon opted out of a realistic 2026 draft candidacy; high but non-certain 2027 declaration, 86% |
 | Sam Leavitt | LSU redshirt junior, productive ASU transfer; 77% declaration estimate |
 | Ryan Wingo | Third-year Texas receiver and 2025 All-SEC selection; 56% declaration estimate |
-| Cam Coleman | Productive Auburn past, 2026 Texas transfer and reported NIL demand, uneven four-game sample; market raised to $3m |
+| Cam Coleman | Productive Auburn past, 2026 Texas transfer and football visibility, uneven four-game sample; internal prominence-price judgment |
 | Keelon Russell | First 2025 enrollment, emerged as Alabama starter in 2026; not modeled NFL eligible for 2027 |
 | Dakorien Moore | Oregon sophomore with meaningful 2025 freshman production despite injury; volatility elevated |
 | Mohamed Toure | Documented 2026 eighth/last season after medical/COVID exceptions; always leaves after Year 1 |
@@ -165,7 +165,7 @@ Each of the 468 records has its own `calibration.summary` and `calibration.sourc
 - The 468-player **curated research ledger** is authoritative for source notes and sourced vs provisional distinction.
 - Existing `scripts/generate-cfb-gm-class-runtime.mjs` projects compact source-backed override data into the existing generated 468-player runtime; rejects negative/invalid probabilities and NIL amounts.
 - `footballCfbGmDevelopment.ts` prioritizes individually researched outcome/bounds/volatility over class priors, with deterministic seeded rolls and unchanged Wheel HQ grades.
-- `footballCfbGmNilMarket.ts` prioritizes 48 published On3 per-player estimates over prior named anchor/role formula and remains independent of HQ grade and game-budget mode.
+- `footballCfbGmNilMarket.ts` sets first-party prices from position, shortlist role and school context with subjective premium exceptions; HQ grades and budget mode are never inputs.
 - `footballCfbGmEngine.ts` prioritizes a researched player's NFL declaration and transfer risk, lets known remaining eligibility override synthetic senior-class exhaustion, and always exits known final-year players.
 - Owner-save version upgraded from v5 to v6, preventing old result snapshots from silently inheriting changed outcomes.
 
@@ -176,27 +176,21 @@ The NCAA's June 23, 2026 [age-based eligibility model](https://www.ncaa.org/news
 NFL draft declaration odds are **game probability judgments**, not actual declarations or guaranteed draft outcomes. Individual source records distinguish public performance evidence from guessed likelihood.
 
 
-## Individual On3 player-profile market comparisons (October 8)
+## First-party NIL pricing and provenance
 
-Alongside the existing 48 ranked On3 source valuations, two additional named On3 athlete profiles were checked: Missouri RB Ahmad Hardy (October 8, confirmed-deal valuation **$1M**) and Georgia DB Ellis Robinson IV (August 22, market-based estimate **$750K**). These are provider-published values rounded to the game's $25K step and retain per-player evidence metadata. The model's Year 2 +10% remains provisional; On3 market estimates are not interchangeable with proven cash actually paid.
+The 48 previously embedded external valuation board figures, two athlete profile valuations, and 23 secondary valuation-board URLs were removed. Every player still has an original individual football research dossier anchored in official school facts or other independent football reporting. No third-party NIL market data is stored in the client source, runtime or test expectations.
 
-**Licensing safeguard:** Third-party independent roster-model values discovered during research were **not retained in the app or source ledger**, because the publisher requires a commercial data license for product use. Do not reintroduce that dataset absent appropriate permission. The 418 remaining players without a matched On3 value still use lower-confidence game price estimates. No HQ grades were changed.
-
-## Third-party data usage gate
-
-Before putting any sourced NIL prices into a publicly distributed or commercial product, confirm the required rights. On3's published Terms of Service (last modified April 21, 2026, https://www.on3.com/page/terms-of-service/) limit site content to personal, non-commercial use absent express written consent for commercial use. This PR contains 48 prior On3 ranking values and two individually documented On3 profile valuations; their use as app prices warrants permission or replacement with independently derived, non-copying game estimates before deployment.
-
-The NIL Standard's August 2026 Data Use & Citation Policy (https://thenilstandard.com/data-use) explicitly requires a license for using its valuation numbers in a product. No TNS pricing values or derivative comparison records remain in the committed player ledger, generated runtime or game tests. Do not restore them without authorization. These are source-usage gates, not statements about whether an individual athlete has been paid the amount.
+Octagon now uses 21 opinion-based gameplay prominence anchors and a role/school price model for 447 others. These are **not** real compensation disclosures. The v7 saved-run version prevents older preview prices from silently changing.
 
 ## Outstanding quality and deployment gates
 
-Development: **468/468 individualized, evidence-informed profiles complete**. Published On3 NIL ranking matches: **48/468**, plus **2** directly published player-profile valuations. **418** others still lack individual licensed external market estimates. None of these should be confused with verified private NIL salary disclosures.
+Development: **468/468 individualized, evidence-informed profiles complete**. First-party NIL gameplay prices: **468/468**. Embedded published NIL valuations from external providers: **0**. None are verified real athlete payments.
 
-1. Continue individual NIL market-pricing reviews for the remaining 418 without an externally matched price, keeping source evidence and confidence distinct from game estimates. Examine price spread, affordability, and Year 2 re-pricing; the default +10% remains a provisional assumption.
+1. Continue first-party gameplay price fairness review, keeping football evidence separate from editorial market estimates. Examine price spread, affordability, and Year 2 re-pricing; the default +10% remains a provisional assumption.
 2. Review 376 unresolved remaining-eligibility fields, including exceptional extended-year and new NCAA age-model cases; retain null wherever specific information cannot be established.
 3. Run both game budgets, complete seven-slot draft paths and seeded full two-season offseason replacement simulations; check that forced exits and repricing do not produce blocked runs.
 4. Run full exact-head TypeScript, Vitest, production build and final CI after reconciling latest `main`. Previous successful runs and skipped checks do **not** verify this exact head.
-5. Resolve third-party NIL data usage permission (or replace proprietary prices with independently derived game values), obtain integration authorization, and merge only when exact-head checks are green. Verify production after an authorized merge.
+5. Reverify absence of provider market data, obtain integration authorization, and merge only when exact-head checks are green. Verify production after an authorized merge.
 
 ## Safety
 
