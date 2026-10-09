@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
 import {
-  CFB_GM_AP_SCHOOLS, CFB_GM_BUDGETS, CFB_GM_PLAYERS, CFB_GM_ROSTER_SLOTS, CFB_GM_POSITION_WEIGHTS, cfbGmDepartureRisk,
+  CFB_GM_AP_SCHOOLS, CFB_GM_BUDGETS, CFB_GM_PLAYERS, CFB_GM_ROSTER_SLOTS, CFB_GM_POSITION_WEIGHTS, cfbGmDepartureRisk, cfbGmEligibleIn2027, cfbGmPortalAvailable, cfbGmExitSignal,
   cfbGmCandidates, cfbGmEligibleSchools, cfbGmEnterOffseason, cfbGmFinalResult,
   cfbGmInitial, cfbGmOpenSlots, cfbGmPick, cfbGmPlayer, cfbGmPortalOut,
   cfbGmReflow, cfbGmSeason, cfbGmSpent, cfbGmSpin, cfbGmTeamGrade,
@@ -93,6 +93,41 @@ describe("CFB The GM owner preview", () => {
     expect(eighth!.departureRisk).toBe("HIGH");
   });
 
+  it("never recruits a player with exhausted 2027 eligibility or unverified senior extension", () => {
+    const player = cfbGmPlayer("tennessee|amarecampbell")!;
+    expect(player.classification).toBe("SR");
+    expect(cfbGmEligibleIn2027(player.id, player.classification)).toBe(false);
+    expect(cfbGmExitSignal(player).label).toBe("FINAL YEAR");
+    expect(cfbGmPortalAvailable(player, "portal-integrity-123")).toBe(false);
+    expect(CFB_GM_PLAYERS.some(p => cfbGmEligibleIn2027(p.id,p.classification))).toBe(true);
+    const seed = "portal-integrity-123";
+    const available = CFB_GM_PLAYERS.filter(p=>cfbGmPortalAvailable(p,seed));
+    expect(available.length).toBeGreaterThan(45);
+    expect(available.length).toBeLessThan(CFB_GM_PLAYERS.length / 2);
+    for (const p of available) expect(cfbGmEligibleIn2027(p.id,p.classification),p.id).toBe(true);
+    const next = CFB_GM_PLAYERS.filter(p=>cfbGmPortalAvailable(p,"portal-integrity-456"));
+    expect(available.map(p=>p.id)).not.toEqual(next.map(p=>p.id));
+    // Year 2 must use the same seeded marketplace in both the school wheel and
+    // the final pick validator; a direct pick cannot bypass it.
+    const eligible = cfbGmEligibleSchools([], CFB_GM_BUDGETS.POWERHOUSE, 2, null, CFB_GM_AP_SCHOOLS, new Set(), seed);
+    for (const school of eligible) for (const candidate of cfbGmCandidates(school,[],CFB_GM_BUDGETS.POWERHOUSE,2,true,new Set(),seed)) {
+      expect(cfbGmPortalAvailable(candidate,seed),candidate.id).toBe(true);
+      expect(cfbGmPick([],candidate.id,CFB_GM_BUDGETS.POWERHOUSE,2,new Set(),seed)).not.toBeNull();
+    }
+  });
+
+  it("provides 2027 budget depth in every required slot despite seeded market opt-ins", () => {
+    for (const mode of ["POWERHOUSE","BUILDER"] as const) for (let i=0;i<25;i++) {
+      const seed = "portal-depth-"+mode+"-"+i;
+      const candidates = CFB_GM_PLAYERS.filter(p=>cfbGmPortalAvailable(p,seed));
+      for(const slot of CFB_GM_ROSTER_SLOTS) {
+        const options=candidates.filter(p=>p.eligibleSlots.includes(slot));
+        expect(options.length,seed+" "+slot).toBeGreaterThanOrEqual(5);
+        expect(options.some(p=>p.nilYear2<CFB_GM_BUDGETS[mode]/4)).toBe(true);
+      }
+    }
+  });
+
   it("has an affordable seven-round path in both budgets with no unfillable late slots", () => {
     for (const budget of Object.values(CFB_GM_BUDGETS)) {
       let roster: ReturnType<typeof cfbGmPick> = [];
@@ -169,7 +204,7 @@ describe("CFB GM UI parity and owner gating", () => {
       expect(nflFinal).toContain(token);
     }
     expect(page).toContain('style={{left: "50%"}}');
-    expect(page).toContain("EXIT RISK");
+    expect(page).toContain("COLLEGE DEPARTURES");
     expect(page).toContain("TWO-YEAR RESULTS");
     expect(page).toContain("CFP RÉSUMÉ");
     expect(page).not.toContain("gm-result__summary");
