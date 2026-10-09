@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSport } from "../../app/SportProvider";
+import { useOptionalSport } from "../../app/SportProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -144,7 +144,9 @@ export default function HomePage() {
   const signedIn = Boolean(identity.profile?.id);
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
   const ownerPreview = signedIn;
-  const { selectedSport, setSelectedSport } = useSport();
+  const sportPreference = useOptionalSport();
+  const selectedSport = sportPreference?.selectedSport ?? "football";
+  const setSelectedSport = (sport: "football" | "ufc" | "mlb") => sportPreference?.setSelectedSport(sport);
   // All is a Home-only view; selecting a sport persists it for Picks and Play.
   const [homeOverview, setHomeOverview] = useState(false);
   const ownerSport: SportFilter = homeOverview ? "all" : selectedSport;
