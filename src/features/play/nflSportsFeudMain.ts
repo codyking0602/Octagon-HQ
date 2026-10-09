@@ -657,31 +657,31 @@ export const NFL_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("nfl-main", [
       {
         prompt: "Name a trait every great NFL defense needs.",
         answers: ["Pass rush", "Tackling", "Coverage", "Turnovers", "Physicality", "Communication", "Run defense", "Discipline"],
-        alsoAcceptedAnswers: ["Speed", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness"],
+        alsoAcceptedAnswers: ["Speed", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness", "Agility"],
       },
       {
         prompt: "Name something that can make a defense hard to play against.",
         answers: ["Pass rush", "Coverage", "Turnovers", "Tackling", "Physicality", "Run defense", "Speed", "Versatility"],
-        alsoAcceptedAnswers: ["Communication", "Discipline", "Red-zone defense", "Depth", "Pursuit", "Technique", "Conditioning", "Disguise", "Awareness", "Aggressiveness"],
+        alsoAcceptedAnswers: ["Communication", "Discipline", "Red-zone defense", "Depth", "Pursuit", "Technique", "Conditioning", "Disguise", "Awareness", "Aggressiveness", "Agility"],
       },
       {
         prompt: "Name a quality coaches want from a defensive unit.",
         answers: ["Communication", "Discipline", "Tackling", "Physicality", "Speed", "Depth", "Versatility", "Run defense"],
-        alsoAcceptedAnswers: ["Pass rush", "Coverage", "Turnovers", "Pursuit", "Technique", "Conditioning", "Red-zone defense", "Awareness", "Aggressiveness"],
+        alsoAcceptedAnswers: ["Pass rush", "Coverage", "Turnovers", "Pursuit", "Technique", "Conditioning", "Red-zone defense", "Awareness", "Aggressiveness", "Agility"],
       },
       {
         prompt: "Name something fans praise when their defense is elite.",
         answers: ["Pass rush", "Turnovers", "Coverage", "Tackling", "Run defense", "Physicality", "Red-zone defense", "Speed"],
-        alsoAcceptedAnswers: ["Communication", "Discipline", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness"],
+        alsoAcceptedAnswers: ["Communication", "Discipline", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness", "Agility"],
       },
       {
         prompt: "Name a defensive trait that can travel in the playoffs.",
         answers: ["Pass rush", "Run defense", "Tackling", "Coverage", "Physicality", "Turnovers", "Discipline", "Depth"],
-        alsoAcceptedAnswers: ["Communication", "Speed", "Red-zone defense", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness"],
+        alsoAcceptedAnswers: ["Communication", "Speed", "Red-zone defense", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness", "Agility"],
       },
     ],
     answers: ["Pass rush", "Tackling", "Turnovers", "Coverage", "Physicality", "Communication", "Speed", "Discipline"],
-    alsoAcceptedAnswers: ["Run defense", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness"],
+    alsoAcceptedAnswers: ["Run defense", "Red-zone defense", "Depth", "Versatility", "Pursuit", "Technique", "Conditioning", "Awareness", "Aggressiveness", "Agility"],
   },
   {
     category: "culture",
