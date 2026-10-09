@@ -231,6 +231,13 @@ function selectFast(
   return selected;
 }
 
+// Only these NFL defensive-trait boards should translate play descriptions
+// into their canonical answer. Avoid broad aliases that change other games.
+const NFL_DEFENSIVE_TRAIT_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  Turnovers: ["Force Turnovers", "Forced Turnovers", "Interception", "Interceptions", "Takeaway", "Takeaways"],
+  Coverage: ["Pass Defense", "Pass Coverage", "Man Coverage", "Sticky Man Coverage"],
+};
+
 function answerAliases(
   domain: SportsFeudBankDomain,
   question: SportsFeudAuthoredQuestion,
@@ -244,6 +251,7 @@ function answerAliases(
       ? (SCOPED_ALIAS_INDEX[domain].get(`${group}|${answer.name}`) ?? [])
       : []),
     ...automaticAliases(answer.name, domain),
+    ...(domain === "nfl" && group === "defense" ? (NFL_DEFENSIVE_TRAIT_ALIASES[answer.name] ?? []) : []),
   ]).filter((alias) => alias.trim() && alias !== answer.name);
 }
 
