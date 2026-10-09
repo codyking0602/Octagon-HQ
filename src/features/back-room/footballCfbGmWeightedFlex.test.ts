@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  CFB_GM_PLAYERS, cfbGmReflow, cfbGmTeamGrade,
+  CFB_GM_PLAYERS, cfbGmReflow, cfbGmTeamGrade, cfbGmEffectiveGrade,
 } from "./footballCfbGmEngine";
 
 describe("College GM auto-fitting respects weighted slot value", () => {
@@ -33,4 +33,29 @@ describe("College GM auto-fitting respects weighted slot value", () => {
       {slot:"FLEX",playerId:receiver.id,acquired:"draft"},
     ])).toBeNull();
   });
+  it("reassigns Year 2 WR/FLEX using developed 2027 ability rather than 2026 grade or pick order", () => {
+    const receivers = CFB_GM_PLAYERS.filter(player => player.family === "WR"
+      && player.eligibleSlots.includes("WR") && player.eligibleSlots.includes("FLEX"));
+    let crossed: [string, string, string] | null = null;
+    for (let n = 0; n < 40 && !crossed; n++) {
+      const seed = "cfb-year2-flex-role-" + n;
+      for (const first of receivers) {
+        const after = cfbGmEffectiveGrade(first, 2, seed);
+        const second = receivers.find(other => other.id !== first.id && other.currentGrade === first.currentGrade
+          && cfbGmEffectiveGrade(other, 2, seed) > after);
+        if (second) { crossed = [first.id, second.id, seed]; break; }
+      }
+    }
+    expect(crossed).not.toBeNull();
+    const [first, second, seed] = crossed!;
+    const input = [
+      { slot: "WR" as const, playerId: first, acquired: "draft" as const },
+      { slot: "FLEX" as const, playerId: second, acquired: "draft" as const },
+    ];
+    const fitted = cfbGmReflow(input, 2, seed)!;
+    expect(fitted.find(row => row.slot === "WR")?.playerId).toBe(second);
+    expect(fitted.find(row => row.slot === "FLEX")?.playerId).toBe(first);
+    expect(cfbGmTeamGrade(fitted, 2, seed)).toBeGreaterThan(cfbGmTeamGrade(input, 2, seed));
+  });
+
 });
