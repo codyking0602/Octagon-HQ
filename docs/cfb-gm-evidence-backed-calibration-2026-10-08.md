@@ -176,19 +176,17 @@ The NCAA's June 23, 2026 [age-based eligibility model](https://www.ncaa.org/news
 NFL draft declaration odds are **game probability judgments**, not actual declarations or guaranteed draft outcomes. Individual source records distinguish public performance evidence from guessed likelihood.
 
 
-## Individually sourced secondary NIL market cross-check (October 8)
+## Individual On3 player-profile market comparisons (October 8)
 
-The existing 48 top-ranked On3 valuations retain top priority. A further **36 distinct players** have exact-name 2026 valuation comparisons from current publicly visible player-specific On3 pages (where available) or The NIL Standard’s independently modeled 2026 team rosters. These are **secondary estimates**, never assumed verified salaries; published-model values are rounded to the nearest $25,000 for the game and preserved in `calibration.nilEvidence` with provider, observed estimated value, cutoff date, source URL and provenance. The linked price applies identically in Builder and Powerhouse. The year-two +10% remains a provisional nominal baseline, not a forecast of actual compensation.
+Alongside the existing 48 ranked On3 source valuations, two additional named On3 athlete profiles were checked: Missouri RB Ahmad Hardy (October 8, confirmed-deal valuation **$1M**) and Georgia DB Ellis Robinson IV (August 22, market-based estimate **$750K**). These are provider-published values rounded to the game's $25K step and retain per-player evidence metadata. The model's Year 2 +10% remains provisional; On3 market estimates are not interchangeable with proven cash actually paid.
 
-Current ledger: 48 rank-matched On3 valuations; 36 additional individualized market estimates; **384** remain older manual anchors or game role/school priors without player-level independent price evidence. No Wheel HQ grade input or changes.
-
-Some disparities warrant attention: Texas Tech veteran pass rushers Adam Trick and Trey White have independent model values around $1.52M versus substantially lower role-rank formula estimates; Missouri RB Ahmad Hardy has an On3 **$1M confirmed-deal valuation** on October 8 rather than a rank-based estimate, and Georgia CB Ellis Robinson IV has an On3 **$750K market-based profile valuation** (not confirmed cash). Independent model pricing is intentionally not misrepresented as a reported contract.
+**Licensing safeguard:** Third-party independent roster-model values discovered during research were **not retained in the app or source ledger**, because the publisher requires a commercial data license for product use. Do not reintroduce that dataset absent appropriate permission. The 418 remaining players without a matched On3 value still use lower-confidence game price estimates. No HQ grades were changed.
 
 ## Outstanding quality and deployment gates
 
-Development: **468/468 individualized, evidence-informed profiles complete**. Published On3 NIL ranking matches: **48/468**; 36 additional individual cross-source estimates preserved separately. Remaining 384 still lack individual external market estimates. None of these should be confused with verified private NIL salary disclosures.
+Development: **468/468 individualized, evidence-informed profiles complete**. Published On3 NIL ranking matches: **48/468**, plus **2** directly published player-profile valuations. **418** others still lack individual licensed external market estimates. None of these should be confused with verified private NIL salary disclosures.
 
-1. Continue individual NIL market-pricing reviews for the remaining 384 without an externally matched price, keeping source evidence and confidence distinct from game estimates. Examine price spread, affordability, and Year 2 re-pricing; the default +10% remains a provisional assumption.
+1. Continue individual NIL market-pricing reviews for the remaining 418 without an externally matched price, keeping source evidence and confidence distinct from game estimates. Examine price spread, affordability, and Year 2 re-pricing; the default +10% remains a provisional assumption.
 2. Review 376 unresolved remaining-eligibility fields, including exceptional extended-year and new NCAA age-model cases; retain null wherever specific information cannot be established.
 3. Run both game budgets, complete seven-slot draft paths and seeded full two-season offseason replacement simulations; check that forced exits and repricing do not produce blocked runs.
 4. Run full exact-head TypeScript, Vitest, production build and final CI after reconciling latest `main`. Previous successful runs and skipped checks do **not** verify this exact head.
