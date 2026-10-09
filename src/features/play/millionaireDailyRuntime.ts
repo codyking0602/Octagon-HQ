@@ -246,7 +246,7 @@ function withDitkaMemorialQuestion(run: MillionaireRun): MillionaireRun {
       survivorChoiceIds: ["B", "C"],
       removalChoiceIds: ["A", "D"],
     },
-  }) as MillionaireRun;
+  }) as unknown as MillionaireRun;
 }
 
 function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string) {
