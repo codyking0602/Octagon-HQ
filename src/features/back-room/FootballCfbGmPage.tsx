@@ -11,7 +11,7 @@ import {
   cfbGmCandidates, cfbGmContinuity, cfbGmEligibleSchools, cfbGmEnterOffseason,
   cfbGmFinalResult, cfbGmInitial, cfbGmMoney, cfbGmOpenSlots, cfbGmPick,
   cfbGmPlayer, cfbGmPortalOut, cfbGmSeason, cfbGmSpent, cfbGmSpin,
-  cfbGmValidateRun, cfbGmEffectiveGrade,
+  cfbGmValidateRun, cfbGmEffectiveGrade, cfbGmExitSignal,
   type CfbGmBudget, type CfbGmPlayer, type CfbGmRosterEntry, type CfbGmRun,
   type CfbGmSeason,
 } from "./footballCfbGmEngine";
@@ -59,11 +59,12 @@ function Outlook({value}: {value: CfbGmPlayer["outlook"]}) {
 }
 function DevelopmentNote({player, seed}: {player: CfbGmPlayer; seed: string}) {
   const delta = cfbGmDevelop(player.id, player.currentGrade, player.classification, seed).delta;
-  return <small className="football-gm__development-note">YEAR 1: {footballGmDevelopmentResult(delta)}</small>;
+  return <small className="football-gm__development-note">2027: {footballGmDevelopmentResult(delta)}</small>;
 }
-function ExitRisk({risk}: {risk: CfbGmPlayer["departureRisk"]}) {
-  return <small className={"football-gm__cfb-exit-risk risk-" + risk.toLowerCase()}>
-    {risk} EXIT RISK
+function ExitSignal({player}: {player: CfbGmPlayer}) {
+  const signal = cfbGmExitSignal(player);
+  return <small title={signal.detail} className={"football-gm__cfb-exit-risk risk-" + signal.tone}>
+    {signal.label}
   </small>;
 }
 function Cap({roster, year, budget}: {roster: readonly CfbGmRosterEntry[]; year: 1 | 2; budget: number}) {
@@ -96,19 +97,19 @@ function Roster({roster, year, seed, compact = false, onPortalOut, limited = fal
         const row = bySlot.get(slot);
         const player = row ? cfbGmPlayer(row.playerId) : null;
         return <article key={slot} className={player ? "is-filled" : ""} style={player ? teamStyle(player.schoolId) : undefined}>
-          <small>{CFB_GM_SLOT_LABELS[slot]}</small>
+          <small>{slot === "SECONDARY" ? "SEC" : CFB_GM_SLOT_LABELS[slot]}</small>
           {player ? <>
             <div className="football-gm__roster-player">
               <PlayerHeadshot player={{team: player.schoolId, name: player.name}} />
               <span><strong>{player.name}</strong><em>{player.school} · {player.family} · {player.classification ? "2026 " + player.classification : "CLASS UNVERIFIED"}</em>
                 <span className="football-gm__roster-scouting"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} />
-                  {year === 1 ? <><Outlook value={player.outlook} /><ExitRisk risk={player.departureRisk} /></>
+                  {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /></>
                     : <DevelopmentNote player={player} seed={seed} />}</span>
               </span>
             </div>
             <div className="football-gm__roster-contract">
               <b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
-              <span>{year === 1 ? "2026 NIL · +10% EST. 2027" : row?.acquired === "portal" ? "PORTAL IN" : "2027 RETENTION"}</span>
+              <span>{year === 1 ? "2026 NIL" : row?.acquired === "portal" ? "PORTAL IN" : "2027 RETENTION"}</span>
             </div>
             {onPortalOut ? <button type="button" disabled={limited} onClick={() => onPortalOut(player.id)}>
               {limited ? "2 / 2 USED" : "PORTAL OUT"}
@@ -128,12 +129,12 @@ function ScoutKey({close}: {close: () => void}) {
       <div>
         <p><b>ELITE / IMPACT / STARTER / DEPTH</b><span>Current college ability. Exact audited grades are hidden.</span></p>
         <p><b>HIGH UPSIDE / RISING / STEADY / BOOM/BUST / DECLINE RISK</b><span>Same five probability-based outlook categories as NFL; college development odds are independently researched.</span></p>
-        <p><b>EXIT RISK</b><span>Combined modeled NFL declaration, eligibility and portal departure risk. It is not a guaranteed Year 1 departure.</span></p>
+        <p><b>COLLEGE DEPARTURES</b><span>FINAL YEAR means verified no 2027 eligibility. NFL LEAP / CHANCE, ELIGIBILITY ? and PORTAL RISK are separate, probabilistic outcomes. NIL-era returning incentives are modeled, not guaranteed.</span></p>
         <p><b>2026 NIL</b><span>Modeled player market prices, not verified NIL contracts; independent of HQ grades.</span></p>
         <p><b>2026 CLASS</b><span>Roster-listed FR/SO/JR/SR or extended-year class; unverified when the source has no reliable match. A class is not a confirmed draft decision.</span></p>
         <p><b>2027 DEVELOPMENT</b><span>Returning players can improve, break out, remain steady, or decline. Current HQ ratings stay unchanged; only modeled 2027 performance moves.</span></p>
         <p><b>2027 REPRICE</b><span>Player NIL game prices use a projected 10% Year 2 increase; this is not a real contract or NFL 1YR/3YR exposure.</span></p>
-        <p><b>PORTAL OUT</b><span>Up to two voluntary departures, plus modeled forced eligibility/NFL departures.</span></p>
+        <p><b>TRANSFER WINDOW</b><span>Only modeled 2027-eligible recruits available in this game appear. This fictional recruitment pool is not a real-world portal listing. Up to two voluntary portal-outs.</span></p>
       </div>
     </section>
   </div>;
@@ -143,7 +144,7 @@ function Board({schoolId, roster, budget, year, seed, excluded, onPick}: {
   seed: string; excluded: ReadonlySet<string>; onPick: (id: string) => void;
 }) {
   const team = wheelFootballTeam(schoolId);
-  const candidates = cfbGmCandidates(schoolId, roster, budget, year, true, excluded);
+  const candidates = cfbGmCandidates(schoolId, roster, budget, year, true, excluded, seed);
   const [scoutKey, setScoutKey] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<CfbGmPlayer["family"] | null>(null);
   useEffect(() => {
@@ -175,14 +176,14 @@ function Board({schoolId, roster, budget, year, seed, excluded, onPick}: {
           <span className="football-gm__picker-player-copy">
             <strong>{player.name}</strong><small>{player.family} · {player.classification ? "2026 " + player.classification : "CLASS UNVERIFIED"} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
             <span className="football-gm__candidate-tags"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} />
-              {year === 1 ? <><Outlook value={player.outlook} /><ExitRisk risk={player.departureRisk} /></>
+              {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /></>
                 : <DevelopmentNote player={player} seed={seed} />}</span>
           </span>
           <span className="football-gm__picker-action"><b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
             <em>{year === 1 ? "Y2 " + cfbGmMoney(player.nilYear2) : "SELECT"} →</em></span>
         </button>)}
       </div> : <p className="football-wheel-picker__message football-gm__position-prompt">
-        {candidates.length ? "Choose a position to scout available players." : "No affordable legal player from this school. Continue the portal search."}
+        {candidates.length ? "Choose a position to scout available players." : "No affordable legal recruit from this school. Continue the search."}
       </p>}
     </section>
     {scoutKey ? <ScoutKey close={() => setScoutKey(false)} /> : null}
@@ -372,7 +373,7 @@ export default function FootballCfbGmPage() {
   const eligible = useMemo(() => run.phase === "draft" || run.phase === "offseason"
     ? cfbGmEligibleSchools(roster, budget, year,
       run.phase === "draft" ? run.previousSchool : run.previousPortalSchool, run.schoolIds,
-      run.phase === "offseason" ? excluded : new Set<string>())
+      run.phase === "offseason" ? excluded : new Set<string>(), run.seed)
     : [], [run.phase, run.previousSchool, run.previousPortalSchool, run.schoolIds, roster, budget, year, excluded]);
   const wheelTeams = eligible.map((schoolId) => wheelFootballTeam(schoolId)).filter((t): t is WheelFootballTeam => Boolean(t));
   const pending = run.pendingSchool ? wheelFootballTeam(run.pendingSchool) : null;
@@ -414,7 +415,7 @@ export default function FootballCfbGmPage() {
     window.setTimeout(() => { patch({pendingSchool: school}); setSpinning(false); }, 1550);
   }
   function pick(id: string) {
-    const next = cfbGmPick(roster, id, budget, year, run.phase === "offseason" ? excluded : new Set());
+    const next = cfbGmPick(roster, id, budget, year, run.phase === "offseason" ? excluded : new Set(), run.seed);
     if (!next) { setMessage("That roster or NIL budget fit is no longer legal."); return; }
     const school = cfbGmPlayer(id)?.schoolId ?? null;
     if (run.phase === "draft") patch({roster: next, pendingSchool: null, previousSchool: school,
@@ -487,20 +488,23 @@ export default function FootballCfbGmPage() {
 
     {run.phase === "offseason" ? <>
       <Cap roster={run.finalRoster} year={2} budget={budget} />
-      <section className="football-gm__offseason-status surface-card">
-        <p className="eyebrow">THE OFFSEASON · TRANSFER PORTAL</p>
-        <h2>RETAIN. REPRICE. REBUILD.</h2>
-        <p>{run.departures.length} modeled NFL/eligibility/portal departure(s). Up to two voluntary portal-outs ({run.voluntaryPortalOuts.length}/2 used). Retained players use their Year 2 NIL figures.</p>
-        {run.departures.length ? <div className="football-gm__intro-facts">
-          {run.departures.map((d) => <span key={d.playerId}>{cfbGmPlayer(d.playerId)?.name}: {d.reason.toUpperCase()} (PROJECTED)</span>)}
-        </div> : null}
-      </section>
-      <section className="football-gm__offseason-status surface-card">
-        <p className="eyebrow">CONTINUITY</p>
-        <strong>{cfbGmContinuity(run).retained}/7 ORIGINAL PLAYERS RETAINED</strong>
-        <p>Turnover affects your playoff odds, not the displayed team OVR. Forced departures don't penalize the management score.</p>
-      </section>
-      <Roster roster={run.finalRoster} year={2} seed={run.seed} compact
+      <section className="football-gm__offseason-status football-gm__cfb-portal-summary surface-card">
+         <p className="eyebrow">THE OFFSEASON · 2027</p>
+         <h2>THE TRANSFER WINDOW</h2>
+         <div className="football-gm__cfb-portal-headline"><strong>{run.departures.length} DEPARTED</strong>
+           <span>{cfbGmContinuity(run).retained}/7 CORE RETAINED · {run.voluntaryPortalOuts.length}/2 PORTAL-OUTS</span></div>
+         {run.departures.length ? <div className="football-gm__cfb-departures" aria-label="Players who departed after 2026">
+           {run.departures.map((d) => <div key={d.playerId}>
+             <strong>{cfbGmPlayer(d.playerId)?.name}</strong>
+             <span>{d.reason === "NFL declaration" ? "NFL DECLARATION" :
+               d.reason === "Eligibility" ? "ELIGIBILITY EXPIRED" : "TRANSFERRED OUT"}</span>
+           </div>)}
+         </div> : <p>Your original core returned. You can still make up to two voluntary moves.</p>}
+         <details className="football-gm__cfb-portal-help"><summary>HOW RETENTION & NIL WORK</summary>
+           <p>Forced exits don't directly penalize the management score. Continuity affects playoff odds, not displayed OVR. Returning players use 2027 NIL values; the transfer pool is fictional and eligibility-screened.</p>
+         </details>
+       </section>
+       <Roster roster={run.finalRoster} year={2} seed={run.seed} compact
         limited={run.voluntaryPortalOuts.length >= 2 || Boolean(run.pendingSchool)} onPortalOut={portalOut} />
       {message ? <section className="football-gm__trade-message surface-card" role="status">{message}</section> : null}
       {run.pendingSchool ? <Board schoolId={run.pendingSchool} roster={run.finalRoster} budget={budget}
@@ -508,16 +512,16 @@ export default function FootballCfbGmPage() {
       run.finalRoster.length < 7 ? <>
         <section className="football-gm__wheel surface-card">
           <p className="eyebrow">TRANSFER PORTAL · {cfbGmOpenSlots(run.finalRoster).map((slot) => CFB_GM_SLOT_LABELS[slot]).join(" · ")}</p>
-          <h2>FIND YOUR REPLACEMENT</h2>
-          <p>Spin an AP Top 25 school for an available replacement. Every addition must fit your Year 2 NIL budget.</p>
+          <h2>REBUILD YOUR CORE</h2>
+          <p>Spin an AP Top 25 school for a modeled, 2027-eligible recruit who fits your NIL budget.</p>
         </section>
         <GmFootballWheel teams={wheelTeams} rotation={rotation} spinning={spinning}
           pendingTeam={pending} canSpin={Boolean(wheelTeams.length)} onSpin={spin} />
         {!wheelTeams.length ? <section className="football-gm__offseason-status surface-card is-crisis">
           <h2>YOUR NIL BUDGET NEEDS ROOM</h2>
           <p>{run.voluntaryPortalOuts.length < 2
-            ? "No affordable portal replacement fits yet. Consider releasing a retained player with a large NIL commitment."
-            : "No legal replacement remains within the budget. This modeled offseason has reached a dead end."}</p>
+            ? "No recruit fits this cap and roster. Consider releasing an expensive retained player."
+            : "No legal recruit is left at this budget. Your current offseason cannot be completed."}</p>
         </section> : null}
       </> : <section className={"football-gm__offseason-status surface-card" + (offseasonReady ? " is-ready" : " is-crisis")}>
         <p className="eyebrow">{offseasonReady ? "WINDOW SET" : "NIL CAP CRISIS"}</p>
