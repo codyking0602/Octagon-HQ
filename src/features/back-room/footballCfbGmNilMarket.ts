@@ -2,7 +2,8 @@
  * College GM NIL market estimate, not reported contract compensation.
  * Deliberately separate from HQ grades and development probabilities.
  * Inputs are the manually audited 2026 CFB wheel role ranking, school context,
- * and independently sourced/hand-reviewed player market prominence anchors.
+ * and independently chosen game-only player prominence anchors.
+ * No external NIL published valuations or third-party market ranks.
  * Budget selection MUST NOT affect estimates.
  */
 export type CfbGmNilFamily = "QB" | "RB" | "WR" | "TE" | "Front Seven" | "Secondary";
@@ -42,11 +43,20 @@ export const CFB_GM_NIL_MARKET_ANCHORS: Readonly<Record<string,number>>=Object.f
   "indiana|nickmarsh":1_750_000,
   "alabama|keelonrussell":2_300_000,
   "oregon|dakorienmoore":1_650_000,
+  "miami|darianmensah":4_350_000,
+  "miami|malachitoney":2_925_000,
+  "ohio-state|juliansayin":3_125_000,
+  "missouri|ahmadhardy":1_925_000,
+  "notre-dame|leonardmoore":1_725_000,
+  "ole-miss|kewanlacy":1_775_000,
+  "georgia|ellisrobinsoniv":1_625_000,
+  "byu|ljmartin":1_825_000,
 });
 const roleScale=[1,.78,.66,.55,.47,.4,.35] as const;
 function scale(rank:number) { return roleScale[Math.max(0,Math.min(6,Number.isFinite(rank)?Math.floor(rank):6))]!; }
 export function cfbGmEstimateNil(player:CfbGmNilInput):CfbGmNilEstimate {
-  const anchored=CFB_GM_NIL_MARKET_ANCHORS[player.schoolId+"|"+normalize(player.name)];
+  const id=player.schoolId+"|"+normalize(player.name);
+  const anchored=CFB_GM_NIL_MARKET_ANCHORS[id];
   const brand=player.apRank<=7?1.16:player.apRank<=16?1.04:.93;
   const roleValue=round25(base[player.family]*scale(player.positionRoleRank)*brand);
   const year1=Math.max(150_000,anchored??roleValue);

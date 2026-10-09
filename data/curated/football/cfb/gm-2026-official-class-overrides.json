@@ -17,6 +17,13 @@
       "redshirt": null
     },
     {
+      "id": "alabama|keonsabb",
+      "classification": "5TH",
+      "sourceUrl": "https://rolltide.com/sports/football/roster/keon-sabb/17478",
+      "evidence": "Official Alabama 2026 Fifth Year roster, not generic senior",
+      "redshirt": null
+    },
+    {
       "id": "alabama|londonsimmons",
       "classification": "SO",
       "sourceUrl": "https://rolltide.com/sports/football/roster/",
@@ -199,6 +206,13 @@
       "redshirt": null
     },
     {
+      "id": "florida|evanpryor",
+      "classification": "6TH",
+      "sourceUrl": "https://floridagators.com/sports/football/roster/evan-pryor/18346",
+      "evidence": "2026 official Florida bio lists sixth year and college entry 2021; previous generic senior class corrected",
+      "redshirt": null
+    },
+    {
       "id": "florida|jaydenwoods",
       "classification": "SO",
       "sourceUrl": "https://floridagators.com/sports/football/roster",
@@ -234,6 +248,13 @@
       "redshirt": null
     },
     {
+      "id": "houston|brandonmackii",
+      "classification": "8TH",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/brandon-mack-ii/9880",
+      "evidence": "2026 University of Houston official roster and player biography classification",
+      "redshirt": null
+    },
+    {
       "id": "houston|connerweigman",
       "classification": "5TH",
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
@@ -248,10 +269,24 @@
       "redshirt": null
     },
     {
+      "id": "houston|jalenmayo",
+      "classification": "5TH",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/jalen-mayo/10009",
+      "evidence": "2026 University of Houston official roster and player biography classification",
+      "redshirt": null
+    },
+    {
       "id": "houston|javionwhite",
       "classification": "JR",
       "sourceUrl": "https://uhcougars.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class or explicit academic year",
+      "redshirt": null
+    },
+    {
+      "id": "houston|jordanallen",
+      "classification": "5TH",
+      "sourceUrl": "https://uhcougars.com/sports/football/roster/jordan-allen/9838",
+      "evidence": "2026 University of Houston official roster and player biography classification",
       "redshirt": null
     },
     {
@@ -276,10 +311,73 @@
       "redshirt": null
     },
     {
+      "id": "indiana|isaiahjones",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|jamarisharpe",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|joshburnham",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|joshhoover",
+      "classification": "5TH",
+      "sourceUrl": "https://iuhoosiers.com/sports/football/roster/josh-hoover/21051",
+      "evidence": "2026 official team roster, fifth-year cohort; previously generic SR",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|leebeebejr",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
+      "redshirt": null
+    },
+    {
       "id": "indiana|prestonzachman",
       "classification": "7TH",
       "sourceUrl": "https://iuhoosiers.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class or explicit academic year",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|rylandgandy",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|tobiosunsanmi",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|tylermorris",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
+      "redshirt": null
+    },
+    {
+      "id": "indiana|tyriquetucker",
+      "classification": "5TH",
+      "sourceUrl": "https://iuhoosiers.com/sports/football/roster/tyrique-tucker/20985",
+      "evidence": "Official Indiana 2026 athlete biography lists fifth season; previous generic senior label corrected",
       "redshirt": null
     },
     {
@@ -288,6 +386,13 @@
       "sourceUrl": "https://hawkeyesports.com/sports/football/roster",
       "evidence": "2026 official printed roster class or explicit academic year",
       "redshirt": null
+    },
+    {
+      "id": "iowa|jaydenmontgomery",
+      "classification": "5TH",
+      "sourceUrl": "https://hawkeyesports.com/sports/football/roster/player/jayden-montgomery",
+      "evidence": "Iowa official 2026 year 5, 2022 redshirt and 2025 junior biography",
+      "redshirt": true
     },
     {
       "id": "iowa|jaylenwatson",
@@ -315,6 +420,13 @@
       "classification": "SR",
       "sourceUrl": "https://lsusports.net/sports/fb/roster/season/2026",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "lsu|tjdottery",
+      "classification": "5TH",
+      "sourceUrl": "https://lsusports.net/sports/fb/roster/player/tj-dottery",
+      "evidence": "2026 official LSU roster identifies 5th-year Senior and biography says final season",
       "redshirt": null
     },
     {
@@ -360,6 +472,20 @@
       "redshirt": null
     },
     {
+      "id": "mississippi-state|jaraybledsoe",
+      "classification": "5TH",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/jaray-bledsoe/12863",
+      "evidence": "Mississippi State 2026 official roster and player biography exact extended-year class",
+      "redshirt": null
+    },
+    {
+      "id": "mississippi-state|jardingilbert",
+      "classification": "6TH",
+      "sourceUrl": "https://hailstate.com/sports/football/roster/jardin-gilbert/13004",
+      "evidence": "Mississippi State 2026 official roster and player biography exact extended-year class",
+      "redshirt": null
+    },
+    {
       "id": "mississippi-state|kolinwilson",
       "classification": "FR",
       "sourceUrl": "https://hailstate.com/sports/football/roster/2026",
@@ -388,10 +514,38 @@
       "redshirt": null
     },
     {
+      "id": "missouri|chrisgravesjr",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/chris-graves-jr",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
+      "redshirt": null
+    },
+    {
+      "id": "missouri|jalenmarshall",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/jalen-marshall",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
+      "redshirt": null
+    },
+    {
+      "id": "missouri|marquisgracial",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/player/marquis-gracial",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
+      "redshirt": null
+    },
+    {
       "id": "missouri|robertwoodyardjr",
       "classification": "SR",
       "sourceUrl": "https://mutigers.com/sports/football/roster",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "missouri|sionelaulea",
+      "classification": "5TH",
+      "sourceUrl": "https://mutigers.com/sports/football/roster/season/2026/player/sione-laulea",
+      "evidence": "Missouri official 2026 roster and athlete bio lists fifth-year class",
       "redshirt": null
     },
     {
@@ -409,6 +563,27 @@
       "redshirt": null
     },
     {
+      "id": "notre-dame|djmckinney",
+      "classification": "5TH",
+      "sourceUrl": "https://fightingirish.com/sports/football/roster/player/dj-mckinney",
+      "evidence": "Official Notre Dame 2026 roster lists Fifth Year and initial 2022 college enrollment",
+      "redshirt": null
+    },
+    {
+      "id": "ohio-state|earllittlejr",
+      "classification": "5TH",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/earl-little%20jr./13345",
+      "evidence": "2026 Ohio State official biography explicitly confirms fifth year; corrects older generic senior label",
+      "redshirt": null
+    },
+    {
+      "id": "ohio-state|jakobijackson",
+      "classification": "5TH",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/jakobi-jackson/13364",
+      "evidence": "2026 Ohio State official biography explicitly confirms fifth year; corrects older generic senior label",
+      "redshirt": null
+    },
+    {
       "id": "ohio-state|jaytimmons",
       "classification": "FR",
       "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
@@ -420,6 +595,13 @@
       "classification": "SR",
       "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ohio-state|kenyattajacksonjr",
+      "classification": "5TH",
+      "sourceUrl": "https://ohiostatebuckeyes.com/sports/football/roster/kenyatta-jackson-jr/13306",
+      "evidence": "2026 Ohio State official biography explicitly confirms fifth year; corrects older generic senior label",
       "redshirt": null
     },
     {
@@ -437,10 +619,66 @@
       "redshirt": null
     },
     {
+      "id": "ole-miss|antoniokite",
+      "classification": "5TH",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/antonio-kite/6483",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|deucealexander",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/deuce-alexander/6437",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|edwinjoseph",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/edwin-joseph/6589",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|horatiofields",
+      "classification": "5TH",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/horatio-fields/6584",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|jamariousbrown",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/jamarious-brown/6451",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|jaylonbraxton",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/jaylon-braxton/6449",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
       "id": "ole-miss|keatonthomas",
       "classification": "5TH",
       "sourceUrl": "https://olemisssports.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|lukeferrelli",
+      "classification": "JR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/luke-ferrelli/6583",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
+      "redshirt": null
+    },
+    {
+      "id": "ole-miss|traylonray",
+      "classification": "SR",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/traylon-ray/6498",
+      "evidence": "2026 Ole Miss official age-based class designation; fifth-year is final year and senior has two years remaining",
       "redshirt": null
     },
     {
@@ -451,10 +689,24 @@
       "redshirt": null
     },
     {
+      "id": "oregon|bearalexander",
+      "classification": "5TH",
+      "sourceUrl": "https://goducks.com/sports/football/roster/Bear-Alexander/18286",
+      "evidence": "Official Oregon 2026 roster explicitly lists fifth year",
+      "redshirt": null
+    },
+    {
       "id": "oregon|carlwilliamsiv",
       "classification": "SR",
       "sourceUrl": "https://goducks.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "oregon|evanstewart",
+      "classification": "5TH",
+      "sourceUrl": "https://goducks.com/sports/football/roster/evan-stewart/18335",
+      "evidence": "Official Oregon 2026 roster explicitly lists fifth year",
       "redshirt": null
     },
     {
@@ -472,10 +724,45 @@
       "redshirt": null
     },
     {
+      "id": "pittsburgh|carsonkent",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/carson-kent/15178",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|censerelee",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/censere-lee/15012",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|holdengeriner",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/holden-geriner/15190",
+      "evidence": "Pittsburgh official 2026 Fifth Year roster, 2022 Auburn first year",
+      "redshirt": null
+    },
+    {
       "id": "pittsburgh|jakyrianturner",
       "classification": "SO",
       "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jakyrian-turner/15115",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|jimmyscott",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jimmy-scott/15028",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|rashanmurray",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/rashan-murray/15021",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
       "redshirt": null
     },
     {
@@ -486,10 +773,80 @@
       "redshirt": null
     },
     {
+      "id": "smu|kevinjennings",
+      "classification": "5TH",
+      "sourceUrl": "https://smumustangs.com/sports/football/roster",
+      "evidence": "2026 official team roster, fifth-year cohort; previously generic SR",
+      "redshirt": null
+    },
+    {
+      "id": "smu|theomelinohrstrom",
+      "classification": "5TH",
+      "sourceUrl": "h",
+      "evidence": "Official 2026 SMU roster lists 5TH YR and Texas A&M 2022 matriculation",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|braylonstaley",
+      "classification": "JR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/braylon-staley/23047",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|deseanbishop",
+      "classification": "SR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/desean-bishop/22996",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|ethandavis",
+      "classification": "SR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/ethan-davis/23003",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
+      "redshirt": null
+    },
+    {
       "id": "tennessee|tyreeweathersby",
       "classification": "SR",
       "sourceUrl": "https://utsports.com/sports/football/roster/tyree-weathersby/23053",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "tennessee|xaviergilliam",
+      "classification": "JR",
+      "sourceUrl": "https://utsports.com/sports/football/roster/xavier-gilliam/23068",
+      "evidence": "Official Tennessee 2026 player bio classification (replaces stale ESPN/legacy class)",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|adamtrick",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/adam-trick/14374",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|ajholmesjr",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/aj-holmes-jr/14301",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|benroberts",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/ben-roberts/14322",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|coyeakin",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/eakin-coy/14284",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
       "redshirt": null
     },
     {
@@ -500,10 +857,45 @@
       "redshirt": null
     },
     {
+      "id": "texas-tech|mateenibirogba",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/mateen-ibirogba/14360",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
+      "id": "texas-tech|terrancecarterjr",
+      "classification": "5TH",
+      "sourceUrl": "https://texastech.com/sports/football/roster/terrance-carter-jr-/14275",
+      "evidence": "Texas Tech official 2026 roster and individual athlete bio lists fifth year/final college season",
+      "redshirt": null
+    },
+    {
       "id": "texas-tech|treywhite",
       "classification": "5TH",
       "sourceUrl": "https://texastech.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas|archmanning",
+      "classification": "SR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/manning-arch/16963",
+      "evidence": "2026 official Texas senior (fourth-year) roster, correcting ESPN junior label",
+      "redshirt": null
+    },
+    {
+      "id": "texas|herokanu",
+      "classification": "5TH",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/hero-kanu/17032",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
+      "redshirt": null
+    },
+    {
+      "id": "texas|hollywoodsmothers",
+      "classification": "SR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/hollywood-smothers/16939",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
       "redshirt": null
     },
     {
@@ -514,10 +906,24 @@
       "redshirt": null
     },
     {
+      "id": "texas|raleekbrown",
+      "classification": "5TH",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/raleek-brown/16937",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
+      "redshirt": null
+    },
+    {
       "id": "texas|ryanwingo",
       "classification": "JR",
       "sourceUrl": "https://texaslonghorns.com/sports/football/roster/print",
       "evidence": "2026 official printed roster class",
+      "redshirt": null
+    },
+    {
+      "id": "texas|spencershannon",
+      "classification": "SR",
+      "sourceUrl": "https://texaslonghorns.com/sports/football/roster/spencer-shannon/17023",
+      "evidence": "Current official Texas 2026 roster and biographical year field correct generic class from older source",
       "redshirt": null
     },
     {
@@ -563,6 +969,20 @@
       "redshirt": null
     },
     {
+      "id": "ucla|tysonford",
+      "classification": "5TH",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster/player/tyson-ford",
+      "evidence": "UCLA 2026 official roster labels 5th year; athlete biography confirms 2022 entry",
+      "redshirt": null
+    },
+    {
+      "id": "ucla|wayneknight",
+      "classification": "5TH",
+      "sourceUrl": "https://uclabruins.com/sports/football/roster/player/wayne-knight",
+      "evidence": "UCLA 2026 official roster labels 5th year; athlete biography confirms 2022 entry",
+      "redshirt": null
+    },
+    {
       "id": "usc|jontezwilliams",
       "classification": "SR",
       "sourceUrl": "https://usctrojans.com/sports/football/roster/",
@@ -588,6 +1008,34 @@
       "classification": "SR",
       "sourceUrl": "https://utahutes.com/sports/football/roster",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "utah|elijahdavis",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/elijah-davis/17511",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
+      "redshirt": null
+    },
+    {
+      "id": "utah|lanceholtzclaw",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/lance-holtzclaw/17534",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
+      "redshirt": null
+    },
+    {
+      "id": "utah|paulfitzgerald",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/paul-fitzgerald/17521",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
+      "redshirt": null
+    },
+    {
+      "id": "utah|rabbitevans",
+      "classification": "5TH",
+      "sourceUrl": "https://utahutes.com/sports/football/roster/rabbit-evans/17519",
+      "evidence": "2026 University of Utah official roster and individual profile explicitly say Fifth Year",
       "redshirt": null
     }
   ]

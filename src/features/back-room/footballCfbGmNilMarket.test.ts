@@ -8,7 +8,12 @@ describe("CFB GM independent NIL price estimation", () => {
     const colin=cfbGmEstimateNil({schoolId:"texas",name:"Colin Simmons",family:"Front Seven",positionRoleRank:0,apRank:1});
     expect(arch.year1).toBe(4_200_000);
     expect(colin.year1).toBe(2_350_000);
+    const cam=cfbGmEstimateNil({schoolId:"texas",name:"Cam Coleman",family:"WR",positionRoleRank:0,apRank:1});
+    expect(cam.year1).toBe(1_975_000);
+    expect(cam.year2Baseline).toBe(2_175_000);
+    expect(cam.basis).toBe("market-prominence-anchor");
     expect(arch.basis).toBe("market-prominence-anchor");
+    expect(cfbGmEstimateNil({schoolId:"miami",name:"Darian Mensah",family:"QB",positionRoleRank:0,apRank:10}).year1).toBe(4_350_000);
     expect(cfbGmEstimateNil({...qb,currentGrade:50} as typeof qb)).toEqual(
       cfbGmEstimateNil({...qb,currentGrade:99} as typeof qb));
   });

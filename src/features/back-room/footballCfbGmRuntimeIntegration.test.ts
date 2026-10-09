@@ -21,8 +21,18 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(runtime.players).toEqual(ledger.players.map((p: {
       id: string; classification: string | null; remainingEligibility: number | null;
       earliestDraftYear: number | null; draftEligible2027: boolean | null;
+      nilMarketEvidence?:{year1:number;year2Baseline:number;providerRank:number;confidence:string};
+      calibration?:{status:string;development:Record<string,number|string>;
+        draftDeclarationProbability:number|null;portalExitProbability:number|null;
+        nil?:{year1:number;year2Baseline:number;confidence:string;basis:string}};
     }) => ({id:p.id, classification:p.classification, remainingEligibility:p.remainingEligibility,
-      earliestDraftYear:p.earliestDraftYear, draftEligible2027:p.draftEligible2027})));
+      earliestDraftYear:p.earliestDraftYear, draftEligible2027:p.draftEligible2027,
+      ...(p.nilMarketEvidence ? {nilMarket:{year1:p.nilMarketEvidence.year1,year2Baseline:p.nilMarketEvidence.year2Baseline,providerRank:p.nilMarketEvidence.providerRank,confidence:p.nilMarketEvidence.confidence}} : {}),
+      ...(p.calibration ? {calibration:{status:p.calibration.status,
+        development:p.calibration.development,
+        draftDeclarationProbability:p.calibration.draftDeclarationProbability,
+        portalExitProbability:p.calibration.portalExitProbability,
+        ...(p.calibration.nil ? {nil:p.calibration.nil} : {})}} : {})})));
 
     for (const player of CFB_GM_PLAYERS) {
       expect(player.classVerified).toBe(player.classification !== null);
@@ -50,8 +60,30 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(isModelDraftEligible("model|older","5TH")).toBe(true);
     expect(isModelDraftEligible("miami|mohamedtoure","8TH")).toBe(true);
     expect(cfbGmPlayer("smu|jimmywyrick")?.classification).toBe("6TH");
-    expect(CFB_GM_PLAYERS.filter((p) => p.classification === "FR" ||
-      p.classification === "SO").every((p) => !isModelDraftEligible(p.id,p.classification))).toBe(true);
+    expect(cfbGmPlayer("texas|archmanning")?.classification).toBe("SR");
+    expect(isModelDraftEligible("alabama|keelonrussell","SO")).toBe(false);
+    // Classification alone is not NFL eligibility: 2026 redshirt sophomore Drew
+    // Mestemaker entered college in 2024 and is eligible for the 2027 draft.
+    expect(isModelDraftEligible("oklahoma-state|drewmestemaker","SO")).toBe(true);
+    // A 2026 redshirt-sophomore label can follow 2024 matriculation.
+    // Check eligibility against the player's researched initial entry rather
+    // than inventing a blanket sophomore prohibition.
+    const classEvidence = JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-classification-evidence.json","utf8")) as {
+      players:Array<{id:string;earliestDraftYear:number|null;draftEligible2027:boolean|null}>;
+    };
+    const draftYears=new Map(classEvidence.players.map((row)=>[row.id,row]));
+    for(const player of CFB_GM_PLAYERS.filter((p)=>p.classification==="FR"||p.classification==="SO")) {
+      const observed=isModelDraftEligible(player.id,player.classification);
+      const evidence=draftYears.get(player.id)!;
+      if(observed) {
+        expect(evidence.draftEligible2027,player.id).toBe(true);
+        expect(evidence.earliestDraftYear,player.id).not.toBeNull();
+        expect(evidence.earliestDraftYear!,player.id).toBeLessThanOrEqual(2027);
+      } else if(evidence.draftEligible2027!==null) {
+        expect(evidence.draftEligible2027,player.id).toBe(false);
+      }
+    }
+    expect(isModelDraftEligible("lsu|dilinjones","SO")).toBe(true);
   });
 
   it("applies actual seeded development to the second-year team and leaves Wheel HQ untouched", () => {
@@ -69,7 +101,7 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(cfbGmPlayer(player.id)?.currentGrade).toBe(initialGrade);
     const roster = [{slot: "WR" as const, playerId: player.id, acquired: "draft" as const}];
     expect(cfbGmTeamGrade(roster,2,"cfb-integrated-1"))
-      .toBe(Math.round(cfbGmEffectiveGrade(player,2,"cfb-integrated-1")*.13*10)/10);
+      .toBe(Math.round((80 + (cfbGmEffectiveGrade(player,2,"cfb-integrated-1") - 80)*.14)*10)/10);
   });
 
   it("version-gates existing owner runs so previous outcomes are never silently recalculated", () => {
@@ -78,6 +110,8 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v2-cfp"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v3-market-development"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v4-official-classes"})).toBeNull();
+    expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v5-extended-year-evidence"})).toBeNull();
+    expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v6-individual-evidence"})).toBeNull();
   });
 
   it("completes multiple seeded seven-player draft paths under both budgets", () => {

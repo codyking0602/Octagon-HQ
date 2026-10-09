@@ -1,22 +1,18 @@
-# CFB The GM — NIL market estimation (2026-10-08)
+# CFB The GM — first-party college market gameplay prices (October 8, 2026)
 
-This game needs a balanced seven-player market in which Powerhouse ($11m) sometimes makes compromises and Builder ($7.5m) has meaningful affordable choices. Both modes always share the exact same valuations.
+The game has a 7-player draft and two shared pricing modes: Powerhouse $11m and Builder $7.5m. Every monetary amount is an **Octagon game estimate**, not a reported NIL contract, salary, private payment, or independently published athlete valuation.
 
-## Source distinction
+## Method and independence
 
-- **Not actual private deal information:** a player's NIL is generally not public as an audited cash contract. No number here is represented as a verified payment or exact contract.
-- Current college market reference: [On3 NIL Rankings](https://www.on3.com/nil/rankings/player/college/football/), especially reported/prominence-based estimates at the top of the college football market. These are contextual benchmarks, **not** a direct lookup of contracts.
-- Role/identity authority: the manually audited Octagon 2026 CFB Wheel school depth-chart shortlist and 2026 AP Top 25 scope.
-- High-profile subjective anchors are independently reviewed market assumptions. They never read, derive from, or modify a player's current HQ grade.
+- Inputs are 2026 CFB player positions, the already manually curated Wheel school depth-chart shortlist (role rank only), AP Top 25 school ordering, and editorial **game prominence** for specific familiar football athletes. Player identities remain distinct from any money source.
+- **No third-party NIL valuation numbers, ranks, provider feed or published athlete NIL dollar estimates are copied or embedded** in the app or its source ledger. Independent school-reported football results are used for assessing on-field prominence.
+- First-party role baselines are QB $1.50m, RB $600k, WR $845k, TE $430k, Front Seven $870k, Secondary $615k. A shortlist role discount (100%, 78%, 66%, 55%, 47%, 40%, 35%) and school-context factor (top 7: 116%, 8–16: 104%, remaining: 93%) shape the baseline.
+- 21 named editorial premium anchors represent especially recognizable college talent; eight were added in this license-safe revision. **They are fictional game-economy opinions**, never quotes of external valuations. Named premiums have medium editorial confidence; generic role/school estimates low individual-price confidence.
+- Prices are rounded to $25k increments, minimum $150k, with a provisional +10% Year 2 baseline. Player performance/development outcomes and school salary budgets are **not** inputs to the market price. HQ current grades are completely independent of the price.
 
-## Implementation
+## Validation
 
-- footballCfbGmNilMarket.ts provides position-specific market baselines, role-order discounts, modest school-context adjustments, and separate named high-prominence anchors.
-- Numeric amounts are game-market estimates rounded to $25k, not source-verified paid amounts.
-- Static Year 2 baseline uses 10% market growth; eventual retention/repricing needs to depend on actual seeded development and portal market conditions, not this alone.
-- Prices are independent of current HQ grades, future upside probabilities, draft eligibility, and budget mode.
-- Confidence is **medium** for manually considered prominent anchors, **low** for role/school formulas. Neither is a verified private contract.
-
-## Outstanding audit gates
-
-The first market formula is an integration input, **not** a claim that 468 players have individualized NIL market evidence. Before owner-release signoff, run thousands of full Powerhouse/Builder builds, verify every spin's legal affordability, examine the top and bottom price ladders, revise the anchor set where researched market evidence demands it, and audit player-specific roles and market premium with sources.
+- The research ledger has all 468 development studies but no third-party NIL valuation metadata. The generated runtime excludes provider NIL data and the generator rejects accidental reintroduction.
+- The CFB GM save version is changed to v7 because prices changed. Previous version save objects are rejected, not silently repriced or rewritten.
+- Verify project-native TypeScript, Vitest, production build, 2-budget 2-season pathways, injury/eligibility departures and affordability on the exact integration head before any merge.
+- Do not alter authoritative Wheel grades, the NFL GM, or production as part of NIL game-price calibration.

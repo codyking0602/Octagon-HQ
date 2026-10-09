@@ -3874,3 +3874,38 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   .football-gm-versus__pills .football-gm__outlook-pill { display: inline-flex; }
   .football-gm-versus__pills .football-gm__development-note { font-size: 6.5px; }
 }
+
+
+/* College owner preview: honest modeled departure signal, sized for phone cards. */
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-exit-risk {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+  padding: 3px 6px;
+  border: 1px solid rgba(139, 182, 217, .25);
+  border-radius: 6px;
+  color: #afcce0;
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1.25;
+  letter-spacing: .025em;
+  white-space: normal;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-exit-risk.risk-high {
+  color: #ffd2a5;
+  border-color: rgba(255, 174, 115, .45);
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-exit-risk.risk-medium {
+  color: #f4dfa2;
+  border-color: rgba(238, 198, 113, .36);
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__candidate-tags,
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-scouting {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.football-gm-page[data-cfb-gm="true"] .gm-final__player-identity,
+.football-gm-page[data-cfb-gm="true"] .gm-final__player-name {
+  min-width: 0;
+}
