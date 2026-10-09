@@ -93,7 +93,7 @@ begin
     if v_attempt is null then continue; end if;
     v_score:=case when v_who='LIB' then 39 else 81 end;
     if v_old=v_score then continue; end if;
-    if v_old<>case when v_who='LIB' then 26 else 72 end
+    if (v_who='LIB' and v_old<>26) or (v_who='TYLER' and v_old<>72)
       then raise exception 'Oct 9 % score changed unexpectedly from %',v_who,v_old; end if;
 
     select public_state,submission_state into v_public,v_submission
