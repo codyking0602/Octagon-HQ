@@ -441,6 +441,7 @@ export default function HomePage() {
               />
             ) : null
       ) : (
+        <>
       {isFootballSeason() ? (
         <>
           {footballHq}
@@ -466,6 +467,7 @@ export default function HomePage() {
           ) : null}
         </>
       )}
+        </>
       )}
     </div>
   );
