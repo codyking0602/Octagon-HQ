@@ -5,8 +5,7 @@ import { footballGmTeamOverall } from "./footballGmStrategy";
 import { cfbGmSimulateCollegeSeason, type CfbGmCollegeFinish } from "./footballCfbGmSimulation";
 import classEvidence from "../../../data/generated/football/cfb-gm-classification-runtime-2026.json";
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
-import { cfbGmDevProfile, cfbGmDevelop, type CfbGmClass } from "./footballCfbGmDevelopment";
-import { footballGmOutlookFromOdds } from "./footballGmScouting";
+import { cfbGmDevProfile, cfbGmDevelop, cfbGmDevelopmentLabel, type CfbGmClass } from "./footballCfbGmDevelopment";
 
 export const CFB_GM_VERSION = "cfb-gm-owner-preview-v9-portal-integrity";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
@@ -167,10 +166,7 @@ export function cfbGmEligibleIn2027(id: string, classification: CfbGmClass) {
 }
 function collegeOutlook(id: string, grade: number, classification: CfbGmClass): CfbGmPlayer["outlook"] {
   const p = cfbGmDevProfile(id, grade, classification);
-  return footballGmOutlookFromOdds({
-    breakoutPct: p.breakout, improvePct: p.improve,
-    steadyPct: p.steady, declinePct: p.decline,
-  });
+  return cfbGmDevelopmentLabel(p, grade);
 }
 const playerMap = new Map<string, CfbGmPlayer>();
 const schoolPlayers = new Map<string, CfbGmPlayer[]>();

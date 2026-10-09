@@ -43,6 +43,21 @@ const reviewed = new Map<string, ReviewedDevelopment>(
     filter((row) => Boolean(row.calibration?.development)).
     map((row) => [row.id, row.calibration!.development]),
 );
+/** Owner-approved college-specific adaptation of the existing NFL five labels.
+ * This is a read-only interpretation of the 468 researched probabilities.
+ * It never modifies source odds, HQ grades or a player's development roll.
+ */
+export function cfbGmDevelopmentLabel(profile: CfbGmDevProfile, grade: number):
+  "HIGH UPSIDE" | "RISING" | "STEADY" | "BOOM/BUST" | "DECLINE RISK" {
+  const positive = profile.breakout + profile.improve;
+  const headroom = Math.min(profile.maxGain, Math.max(0, 99 - grade));
+  if (profile.volatility === "HIGH" && profile.breakout >= 13 && profile.decline >= 17
+    && profile.maxLoss >= 6 && headroom >= 3) return "BOOM/BUST";
+  if (profile.decline >= 22 && (profile.decline >= positive * .65 || profile.decline >= 27)) return "DECLINE RISK";
+  if (profile.breakout >= 18 && positive >= 50 && headroom >= 5 && profile.decline <= 18) return "HIGH UPSIDE";
+  if (positive >= 45 && positive >= profile.steady + 8 && headroom >= 2 && profile.decline <= 20) return "RISING";
+  return "STEADY";
+}
 export function cfbGmDevProfile(id:string,grade:number,stage:CfbGmClass):CfbGmDevProfile{
   const individual=reviewed.get(id);
   const prior=individual
