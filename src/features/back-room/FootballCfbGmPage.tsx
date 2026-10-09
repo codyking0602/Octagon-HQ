@@ -384,7 +384,8 @@ export default function FootballCfbGmPage() {
     ...run.departures.map((r) => r.playerId),
     ...run.voluntaryPortalOuts,
   ]), [run.roster, run.departures, run.voluntaryPortalOuts]);
-  // A binding NIL offer can change 2027 portal affordability without changing the roster.\n  const eligible = useMemo(() => run.phase === "draft" || run.phase === "offseason"
+  // A binding NIL offer can change 2027 portal affordability without changing the roster.
+  const eligible = useMemo(() => run.phase === "draft" || run.phase === "offseason"
     ? cfbGmEligibleSchools(roster, budget, year,
       run.phase === "draft" ? run.previousSchool : run.previousPortalSchool, run.schoolIds,
       run.phase === "offseason" ? excluded : new Set<string>(), run.seed, run.retentionOffers)
