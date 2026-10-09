@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../styles/football-gm-mode.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
@@ -10,8 +10,6 @@ import {
   createFootballWeeklyAuctionRepository,
   type FootballWeeklyAuctionActiveState,
 } from "../play/footballWeeklyAuctionRepository";
-import { FootballEntryTransition } from "./FootballEntryTransition";
-import type { FootballEntryState } from "./footballEntrySession";
 
 type WeeklyAuctionQuickState = Pick<
   FootballWeeklyAuctionActiveState,
@@ -68,21 +66,10 @@ function FootballWeeklyAuctionQuickAccess({ onOpen }: { onOpen: () => void }) {
 
 export default function FootballBackRoomPage() {
   const navigate = useNavigate();
-  const location = useLocation();
   const identity = useIdentity();
-  const entrySurface = (location.state as FootballEntryState | null)?.footballEntry;
-  const entryRequested = entrySurface === "play";
-  const showTransition = entryRequested;
 
   return (
     <div className="page football-room-page">
-      {showTransition ? (
-        <FootballEntryTransition
-          surface="play"
-          onComplete={() => navigate("/football", { replace: true, state: null })}
-        />
-      ) : null}
-
       <PlayLandingHeader sport="football" />
       {identity.status === "ready" && identity.profile?.id ? <WeeklyChampionshipRecap sport="football" /> : null}
       <TodayChallengeHub sport="football" />
