@@ -606,8 +606,8 @@ describe("Football GM strategy v7", () => {
     const tradeChipPlayerIds = [playerId("Bhayshul Tuten")];
     const seed = "tuten-corum-owner-run:gmdev1";
     const beforeIds = [...roster.map((entry) => entry.playerId), ...tradeChipPlayerIds];
-    const year2Cap = footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, 2, seed);
-    const year3Cap = footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, 3, seed);
+    const year2Cap = footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, 2, seed, {});
+    const year3Cap = footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, 3, seed, {});
     const swapped = footballGmSwapDisplacedAsset({
       roster, tradeChipPlayerIds,
       promotePlayerId: playerId("Bhayshul Tuten"),
@@ -620,8 +620,8 @@ describe("Football GM strategy v7", () => {
     expect(swapped!.tradeChipPlayerIds).toEqual([playerId("Blake Corum")]);
     expect(swapped!.roster).toHaveLength(roster.length);
     expect([...swapped!.roster.map((entry) => entry.playerId), ...swapped!.tradeChipPlayerIds].sort()).toEqual(beforeIds.sort());
-    expect(footballGmAdjustedHoldingsCap(swapped!.roster, swapped!.tradeChipPlayerIds, 2, seed)).toBe(year2Cap);
-    expect(footballGmAdjustedHoldingsCap(swapped!.roster, swapped!.tradeChipPlayerIds, 3, seed)).toBe(year3Cap);
+    expect(footballGmAdjustedHoldingsCap(swapped!.roster, swapped!.tradeChipPlayerIds, 2, seed, {})).toBe(year2Cap);
+    expect(footballGmAdjustedHoldingsCap(swapped!.roster, swapped!.tradeChipPlayerIds, 3, seed, {})).toBe(year3Cap);
 
     // Swapping does not consume a trade attempt: even the replacement chip
     // remains a held asset available for an ordinary trade or release.
