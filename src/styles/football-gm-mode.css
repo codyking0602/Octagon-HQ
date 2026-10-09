@@ -4142,3 +4142,19 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   [data-cfb-gm="true"] .football-gm__cfb-retention-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   [data-cfb-gm="true"] .football-gm__cfb-retention-options button { min-width: 0; overflow-wrap: anywhere; }
 }
+
+/* Owner-only CFB GM diagnostics: horizontally scrollable tables on phones. */
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics { min-width: 0; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics summary { cursor: pointer; font-weight: 800; letter-spacing: .025em; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics summary small { opacity: .6; margin-left: .5rem; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics dl {
+ display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,15rem),1fr)); gap: .5rem; padding: .5rem 0;
+}
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics dl > div { min-width: 0; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics dt { font-size: .7rem; opacity: .72; text-transform: uppercase; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics dd { margin: .15rem 0; overflow-wrap: anywhere; font-weight: 700; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics-table { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics table { width: 100%; min-width: 38rem; border-collapse: collapse; font-size: .75rem; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics th,
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics td { padding: .4rem .5rem; border-bottom: 1px solid rgba(128,128,128,.2); text-align: left; }
+[data-cfb-gm="true"] .football-gm__cfb-diagnostics h3 { margin: 1.1rem 0 .4rem; font-size: .9rem; }
