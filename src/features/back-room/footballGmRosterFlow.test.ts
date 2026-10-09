@@ -90,3 +90,32 @@ describe("The GM automatic roster reflow", () => {
     expect(footballGmOpenSlots(legacy)).toContain("FLEX");
   });
 });
+
+describe("GM weighted-slot automatic assignment", () => {
+  it("puts Jefferson in WR and Egbuka in FLEX regardless of pick order", () => {
+    const egbuka = player("Emeka Egbuka");
+    const jefferson = player("Justin Jefferson");
+    for (const flipped of [false, true]) {
+      const rows: FootballGmRosterEntry[] = flipped
+        ? [{ slot: "WR", playerId: jefferson.id, acquired: "draft" }, { slot: "FLEX", playerId: egbuka.id, acquired: "draft" }]
+        : [{ slot: "WR", playerId: egbuka.id, acquired: "draft" }, { slot: "FLEX", playerId: jefferson.id, acquired: "draft" }];
+      const placed = footballGmReflowRoster(rows)!;
+      expect(placed.find(x => x.slot === "WR")?.playerId).toBe(jefferson.id);
+      expect(placed.find(x => x.slot === "FLEX")?.playerId).toBe(egbuka.id);
+    }
+  });
+
+  it("recalculates optimal WR/FLEX positions using each season's seeded development", () => {
+    const egbuka = player("Emeka Egbuka");
+    const jefferson = player("Justin Jefferson");
+    const rows: FootballGmRosterEntry[] = [
+      { slot: "WR", playerId: egbuka.id, acquired: "draft" },
+      { slot: "FLEX", playerId: jefferson.id, acquired: "draft" },
+    ];
+    for (const year of [1, 2, 3] as const) {
+      const placed = footballGmReflowRoster(rows, year, "developed-slot-test:gmdev1")!;
+      expect(placed).toHaveLength(2);
+      expect(placed.find(x => x.slot === "WR")?.playerId).toBe(jefferson.id);
+    }
+  });
+});

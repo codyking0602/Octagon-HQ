@@ -67,3 +67,48 @@ describe("GM v10 shared NFL league", () => {
     expect(exceptional.champion).toBeLessThan(0.60);
   });
 });
+
+describe("Probability-only continuity in the shared NFL league", () => {
+  it("keeps the underlying talent grade unchanged and outcomes seed-deterministic", () => {
+    const baseline = solo("continuity-a", 88, 2);
+    const changed = footballGmSimulateLeagueSeason({
+      seed: "continuity-a", year: 2,
+      franchises: [{ key: "solo", grade: 88, winChancePenalty: 0.02 }],
+    });
+    expect(changed.franchises.solo?.grade).toBe(baseline.franchises.solo?.grade);
+    expect(changed.franchises.solo?.winChancePenalty).toBe(0.02);
+    expect(footballGmSimulateLeagueSeason({
+      seed: "continuity-a", year: 2,
+      franchises: [{ key: "solo", grade: 88, winChancePenalty: 0.02 }],
+    })).toEqual(changed);
+  });
+
+  it("calibrates a 2 pp per-game setback across rebuilding, balanced, strong and elite rosters", () => {
+    const samples = 500;
+    for (const grade of [84, 87, 90, 92]) {
+      function outcomes(penalty: number) {
+        const reached = Array(5).fill(0) as number[];
+        let wins = 0;
+        for (let i = 0; i < samples; i++) {
+          const club = footballGmSimulateLeagueSeason({
+            seed: `penalty-cal-${i}`, year: 2,
+            franchises: [{ key: "solo", grade, winChancePenalty: penalty }],
+          }).franchises.solo!;
+          wins += club.wins;
+          if (club.playoffSeed !== null) reached[0]!++;
+          if (["Divisional", "Conference Championship", "Super Bowl Loss", "Champion"].includes(club.finish)) reached[1]!++;
+          if (["Conference Championship", "Super Bowl Loss", "Champion"].includes(club.finish)) reached[2]!++;
+          if (["Super Bowl Loss", "Champion"].includes(club.finish)) reached[3]!++;
+          if (club.finish === "Champion") reached[4]!++;
+        }
+        return { wins: wins / samples, milestones: reached.map(x => x / samples) };
+      }
+      const intact = outcomes(0);
+      const turnover = outcomes(0.02);
+      expect(turnover.wins).toBeLessThan(intact.wins - 0.1);
+      for (let i = 0; i < 5; i++) {
+        expect(turnover.milestones[i]!).toBeLessThanOrEqual(intact.milestones[i]! + 0.035);
+      }
+    }
+  });
+});

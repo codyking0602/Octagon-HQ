@@ -366,10 +366,16 @@ describe("Football GM strategy v7", () => {
     const resetYear3 = footballGmContinuity(original, rebuilt, 3);
 
     expect(intact.retained).toBe(7);
-    expect(intact.adjustment).toBeGreaterThan(0);
+    expect(intact.winChancePenalty).toBe(0);
     expect(resetYear2.retained).toBe(0);
-    expect(resetYear2.adjustment).toBeLessThan(0);
-    expect(resetYear3.adjustment).toBeGreaterThan(resetYear2.adjustment);
+    expect(resetYear2.winChancePenalty).toBeCloseTo(0.065);
+    expect(resetYear3.winChancePenalty).toBeCloseTo(0.0325);
+
+    const rebuiltGrade = footballGmEffectiveTeamGrade(original, rebuilt, 2, "test-seed");
+    const noTurnoverGrade = footballGmEffectiveTeamGrade(rebuilt, rebuilt, 2, "test-seed");
+    expect(rebuiltGrade.teamGrade).toBe(noTurnoverGrade.teamGrade);
+    expect(rebuiltGrade.continuityWinChancePenalty).toBeGreaterThan(0);
+    expect(noTurnoverGrade.continuityWinChancePenalty).toBe(0);
   });
 
   it("raises a 1YR star's extension demand after failed trade talks without changing his player grade", () => {
@@ -719,7 +725,7 @@ describe("Football GM strategy v7", () => {
     }
   });
 
-  it("uses only a zero to 2.5 percent CPU trade premium", () => {
+  it("uses only a zero to one percent CPU trade premium", () => {
     const roster = codyRunRoster();
     const thresholds = new Set<number>();
     for (let index = 0; index < 200; index += 1) {
@@ -735,10 +741,10 @@ describe("Football GM strategy v7", () => {
       });
       thresholds.add(evaluation.threshold);
       expect(evaluation.threshold).toBeGreaterThanOrEqual(1);
-      expect(evaluation.threshold).toBeLessThanOrEqual(1.025);
+      expect(evaluation.threshold).toBeLessThanOrEqual(1.01);
     }
     expect(thresholds.has(1)).toBe(true);
-    expect(thresholds.has(1.025)).toBe(true);
+    expect(thresholds.has(1.01)).toBe(true);
   });
 
   it("curates asking prices to non-dominated near-threshold packages with useful shape diversity", () => {
@@ -820,5 +826,34 @@ describe("Football GM strategy v7", () => {
     expect(evaluation.nextRoster).not.toBeNull();
     const slots = evaluation.nextRoster!.map((entry) => entry.slot as FootballGmRosterSlot);
     expect(new Set(slots).size).toBe(slots.length);
+  });
+});
+
+describe("The GM offseason continuity calibration", () => {
+  it("waives two replacements, grades only ability, then charges modest per-game odds", () => {
+    const original = codyRunRoster();
+    const replacements = fullTurnoverRoster(original);
+    for (let changed = 0; changed <= 7; changed++) {
+      const newRoster = original.map((entry, index) =>
+        index < changed ? replacements[index]! : entry);
+      const expected = [0, 0, 0, 0.01, 0.02, 0.03, 0.04, 0.05][changed]!;
+      const qbChanged = newRoster.find(p => p.slot === "QB")?.playerId !==
+        original.find(p => p.slot === "QB")?.playerId;
+      const year2 = footballGmContinuity(original, newRoster, 2);
+      const year3 = footballGmContinuity(original, newRoster, 3);
+      expect(year2.winChancePenalty).toBeCloseTo(expected + (qbChanged ? 0.015 : 0));
+      expect(year3.winChancePenalty).toBeCloseTo(year2.winChancePenalty / 2);
+      const gradeWithChange = footballGmEffectiveTeamGrade(original, newRoster, 2, "test-continuity");
+      const gradeWithoutChange = footballGmEffectiveTeamGrade(newRoster, newRoster, 2, "test-continuity");
+      expect(gradeWithChange.teamGrade).toBe(gradeWithoutChange.teamGrade);
+    }
+  });
+
+  it("keeps a failed contract-negotiation price distinct from no-cost trade browsing", () => {
+    const player = footballGmPlayerById(playerId("Lamar Jackson"))!;
+    const base = footballGmAdjustedSalaryForPlayer(player, 2, "shop-salary", {});
+    const premium = footballGmAdjustedSalaryForPlayer(player, 2, "shop-salary", { [player.id]: 1 });
+    expect(base).toBeGreaterThan(0);
+    expect(premium).toBeGreaterThan(base);
   });
 });

@@ -5,6 +5,7 @@ import {
   FOOTBALL_GM_ROSTER_SLOTS,
   FOOTBALL_GM_TEAMS,
   footballGmCandidatesForTeam,
+  footballGmAutoAddPick,
   footballGmEligibleTeams,
   footballGmFinalResult,
   footballGmIsOffseasonCompliant,
@@ -27,11 +28,7 @@ function greedyValueRoster(seed = "gm-engine-test") {
     const candidates = footballGmCandidatesForTeam({ team: team!, roster, year: 1 });
     expect(candidates.length).toBeGreaterThan(0);
     const candidate = [...candidates].sort((left, right) => left.salary - right.salary)[0]!;
-    roster.push({
-      slot: candidate.legalSlots[0]!,
-      playerId: candidate.player.id,
-      acquired: "draft",
-    });
+    roster.splice(0, roster.length, ...footballGmAutoAddPick(roster, candidate.player.id));
     previousTeam = candidate.player.team;
   }
 

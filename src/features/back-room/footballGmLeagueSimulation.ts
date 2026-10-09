@@ -15,6 +15,7 @@ export interface FootballGmLeagueClub {
   conference: 0 | 1;
   division: number;
   grade: number;
+  winChancePenalty: number;
   wins: number;
   losses: number;
   playoffSeed: number | null;
@@ -24,6 +25,7 @@ export interface FootballGmLeagueClub {
 export interface FootballGmLeagueFranchise {
   key: string;
   grade: number;
+  winChancePenalty?: number;
 }
 
 function hash(input: string): number {
@@ -54,7 +56,8 @@ function strength(grade: number): number {
 }
 
 function winChance(a: FootballGmLeagueClub, b: FootballGmLeagueClub, seedBonus = 0): number {
-  return clamp(0.5 + 0.065 * (strength(a.grade) - strength(b.grade)) + seedBonus, 0.08, 0.92);
+  return clamp(0.5 + 0.065 * (strength(a.grade) - strength(b.grade)) + seedBonus
+    - a.winChancePenalty + b.winChancePenalty, 0.08, 0.92);
 }
 
 function compareStandings(a: FootballGmLeagueClub, b: FootballGmLeagueClub): number {
@@ -88,6 +91,7 @@ export function footballGmSimulateLeagueSeason(input: {
       conference: (index < 16 ? 0 : 1) as 0 | 1,
       division: index % 4,
       grade: owned ? owned.grade : 82.5 + 7 * roll(`${seed}:npc-grade:${index}`),
+      winChancePenalty: owned?.winChancePenalty ?? 0,
       wins: 0,
       losses: 0,
       playoffSeed: null,
