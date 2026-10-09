@@ -57,7 +57,7 @@ describe("CFB GM college-stage development", () => {
 describe("owner-approved 468-player development labels", () => {
   it("matches every locked per-player label without changing original development probabilities", () => {
     const csv = readFileSync("docs/audits/cfb-gm-468-development-labels-approved-2026-10-09.csv","utf8");
-    const rows = csv.trim().split(/\\r?\\n/).slice(1).map(row => row.split(","));
+    const rows = csv.trim().split(/\r?\n/).slice(1).map(row => row.split(","));
     expect(rows).toHaveLength(468);
     const seen = new Set<string>();
     const counts: Record<string, number> = {};
