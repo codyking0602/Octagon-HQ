@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { SportProvider } from "../../app/SportProvider";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile } from "../challenges/challengeModel";
 import type { PickEvent, PickHistory } from "../picks/picksModel";
@@ -121,7 +122,7 @@ const pickEvent: PickEvent = {
 };
 
 function renderHome() {
-  return render(<MemoryRouter><HomePage /></MemoryRouter>);
+  return render(<MemoryRouter><SportProvider><HomePage /></SportProvider></MemoryRouter>);
 }
 
 function yourHqSection() {
@@ -250,6 +251,7 @@ describe("Home Your HQ", () => {
         });
 
     renderHome();
+    fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "all" } });
 
     const ufcCard = screen.getByRole("link", { name: /Open UFC Today’s Challenge/i });
     const footballCard = screen.getByRole("link", { name: /Open Football Today’s Challenge/i });
@@ -479,27 +481,22 @@ describe("Home Your HQ", () => {
 
     renderHome();
 
-    expect(within(screen.getByText("HQ Daily streak").closest("article")!).getByText("7")).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "all" } });
+    expect(within(yourHqSection()).getByText("7 days")).toBeInTheDocument();
+    expect(within(yourHqSection()).getByRole("link", { name: "Open football Championship standings" })).toHaveAttribute("href", "/championship/football?tab=overall");
+    expect(within(yourHqSection()).getByRole("link", { name: "Open ufc Championship standings" })).toHaveAttribute("href", "/championship/ufc?tab=overall");
+    expect(screen.getByRole("region", { name: "Football HQ" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "UFC HQ" })).toBeInTheDocument();
 
-    const football = screen.getByText("Football Picks").closest("article")!;
-    expect(within(football).getByText("9-3")).toBeInTheDocument();
-    expect(within(football).getByText("#1 OF 2 · PICKS STANDING")).toBeInTheDocument();
-    expect(within(football).getByText("#1 · WEEKLY GAMES")).toBeInTheDocument();
-
-    const ufc = screen.getByText("UFC Picks").closest("article")!;
-    expect(within(ufc).getByText("12-8")).toBeInTheDocument();
-    expect(within(ufc).getByText("#1 OF 2 · PICKS STANDING")).toBeInTheDocument();
-    expect(within(ufc).getByText("#2 · WEEKLY GAMES")).toBeInTheDocument();
-
-    expect(within(yourHqSection()).queryByRole("link")).not.toBeInTheDocument();
   });
-  it("reveals the redesigned Home only to the existing owner permission and filters HQs", () => {
+  it("uses the Championship Home for all signed-in users and filters HQs", () => {
     const ownerProfile = { ...cody, canControlPicks: true };
     mocks.identity.profile = ownerProfile;
     renderHome();
-    expect(screen.getByText("CHAMPIONSHIP · OWNER PREVIEW")).toBeInTheDocument();
+    expect(screen.getByText("CHAMPIONSHIP · 2026 SEASON")).toBeInTheDocument();
     const sport = screen.getByRole("combobox", { name: "Home sport" });
-    expect(sport).toHaveValue("all");
+    expect(sport).toHaveValue("football");
+    fireEvent.change(sport, { target: { value: "all" } });
     expect(screen.getByRole("region", { name: "Football HQ" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "UFC HQ" })).toBeInTheDocument();
 

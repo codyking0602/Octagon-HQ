@@ -339,14 +339,13 @@ describe("completed recap polish", () => {
   it("shows authoritative tied finish labels and keeps fight details collapsed until requested", async () => {
     renderPage(repository({ currentEvent: null, history: recapHistory }));
 
-    expect(await screen.findByText("T-1 OF 4")).toBeInTheDocument();
-    expect(screen.getAllByText("T-1")).toHaveLength(2);
-    expect(screen.getByText("3")).toBeInTheDocument();
+    expect(await screen.findByText("Picks Results Archive")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("STANDINGS & EVENTS"));
+    fireEvent.click(screen.getByText("FINISHED EVENTS"));
     fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
     fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(screen.getAllByText("T-1").length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText("MAIN EVENT")).toBeInTheDocument();
     expect(screen.getByText("MAIN CARD · FIGHT 2")).toBeInTheDocument();
     expect(screen.queryByText("FIGHT 7")).not.toBeInTheDocument();

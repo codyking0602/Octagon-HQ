@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   groupRankLabel,
   pickWinPercentage,
@@ -66,7 +66,7 @@ export function PicksSeasonHub({
     [history.events, targetEventId],
   );
   const [activeTab, setActiveTab] = useState<"standings" | "events">(
-    targetEventId && !standingsRequested ? "events" : "standings",
+    "events",
   );
   const [hubOpen, setHubOpen] = useState(Boolean(targetEventId || standingsRequested));
   const hubRef = useRef<HTMLElement | null>(null);
@@ -154,31 +154,28 @@ export function PicksSeasonHub({
         open={hubOpen}
         onToggle={(toggleEvent) => setHubOpen(toggleEvent.currentTarget.open)}
       >
-        <summary className="picks-season-hub__summary">
+        <summary className="picks-season-hub__summary"
+          onClick={(event) => {
+            event.preventDefault();
+            setHubOpen((open) => !open);
+          }}
+        >
           <div className="picks-season-hub__identity">
             <span>{football ? `${season} FOOTBALL SEASON` : `${season} SEASON`}</span>
-            <strong id="picks-season-title">{finish}</strong>
+            <strong id="picks-season-title">Picks Results Archive</strong>
             <small>
               {record.correct}-{record.incorrect}{football ? " ATS" : ""} · {winPercentageLabel(record.correct, record.incorrect)} WIN · {recordPoints} PTS
             </small>
           </div>
           <div className="picks-season-hub__meta">
             <span>{standings.length} {standings.length === 1 ? "PLAYER" : "PLAYERS"}</span>
-            {football ? <em>STANDINGS &amp; WEEKS</em> : <em>STANDINGS &amp; EVENTS</em>}
+            <em>FINISHED EVENTS</em>
           </div>
         </summary>
 
-        <div className="picks-season-hub__body">
+        {hubOpen ? <div className="picks-season-hub__body">
           <div className="picks-season-tabs" role="tablist" aria-label="Picks season views">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === "standings"}
-              className={activeTab === "standings" ? "is-active" : ""}
-              onClick={() => setActiveTab("standings")}
-            >
-              STANDINGS
-            </button>
+            <Link className="picks-season-champ-link" to={"/championship/" + sport + "?tab=picks"} aria-label="Open Picks Championship leaderboard">CHAMPIONSHIP ↗</Link>
             <button
               type="button"
               role="tab"
@@ -278,7 +275,7 @@ export function PicksSeasonHub({
               ) : null}
             </section>
           )}
-        </div>
+        </div> : null}
       </details>
     </section>
   );

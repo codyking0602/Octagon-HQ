@@ -45,6 +45,9 @@
   gap: 7px;
 }
 .home-champ-preview__summary {
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .15s ease, transform .15s ease;
   display: grid;
   align-content: center;
   gap: 6px;
@@ -56,7 +59,8 @@
   text-align: center;
 }
 .home-champ-preview__summary[data-sport="football"] { border-top: 2px solid var(--football-brand-blue, #8EBCE6); }
-.home-champ-preview__summary[data-sport="ufc"] { border-top: 2px solid var(--ufc-red-strong, #e50914); }
+.home-champ-preview__summary[data-sport="ufc"] { border-top: 2px solid var(--ufc-red, #d20a0a); }
+.home-champ-preview__summary[data-sport="mlb"] { border-top: 2px solid var(--mlb-green, #2f855f); }
 .home-champ-preview__summary > span,
 .home-champ-preview__summary > small {
   font-size: 9px;
@@ -93,8 +97,8 @@
   background: var(--surface-raised);
   min-width: 0;
 }
-.home-champ-preview__detail[data-sport="football"] { border-color: rgba(142,188,230,.42); }
-.home-champ-preview__detail[data-sport="ufc"] { border-color: rgba(229,9,20,.38); }
+.home-champ-preview__detail[data-sport="football"] { border-color: rgba(var(--football-brand-blue-rgb),.42); }
+.home-champ-preview__detail[data-sport="ufc"] { border-color: var(--ufc-red); }
 .home-champ-preview__kicker {
   color: var(--text-secondary);
   font-size: 10px;
@@ -102,7 +106,19 @@
   letter-spacing: .09em;
 }
 .home-champ-preview__headline { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.home-champ-preview__headline > div { display: grid; gap: 3px; min-width: 0; }
+.home-champ-preview__headline > a { display: grid; gap: 3px; min-width: 0; }
+.home-champ-preview__headline a {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 5px;
+}
+.home-champ-preview__headline a:focus-visible,
+.home-champ-preview__lanes a:focus-visible,
+.home-champ-preview__summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
 .home-champ-preview__headline strong {
   font-size: clamp(32px, 10vw, 44px);
   letter-spacing: -.065em;
@@ -115,7 +131,9 @@
   font-weight: 800;
 }
 .home-champ-preview__lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.home-champ-preview__lanes > div {
+.home-champ-preview__lanes > a {
+  color: inherit;
+  text-decoration: none;
   display: grid;
   gap: 3px;
   padding: 10px;
@@ -139,3 +157,6 @@
   .home-champ-preview__summary > strong { font-size: 26px; }
   .home-champ-preview__summary > span { font-size: 8px; }
 }
+
+.home-champ-preview__detail[data-sport="mlb"] { border-color: rgba(var(--mlb-green-rgb), .46); }
+.home-champ-preview__summary:hover,.home-champ-preview__headline a:hover,.home-champ-preview__lanes a:hover { filter: brightness(1.12); }

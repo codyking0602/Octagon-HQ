@@ -113,7 +113,7 @@ describe("predictable navigation scroll", () => {
       fireEvent.click(screen.getByRole("link", { name: "Picks" }));
     });
 
-    expect(router.state.location.pathname).toBe("/picks");
+    expect(router.state.location.pathname).toBe("/football/picks");
     expect(scrollTo).not.toHaveBeenCalled();
   });
 });

@@ -82,11 +82,11 @@ describe("BottomNavigation", () => {
     expect(screen.queryByRole("link", { name: /War Room/i })).not.toBeInTheDocument();
   });
 
-  it("keeps UFC destinations for Picks, Play, and Rankings", () => {
+  it("uses Football destinations by default for Picks and Play", () => {
     renderNavigation();
 
-    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/picks");
-    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/play");
+    expect(screen.getByRole("link", { name: "Picks" })).toHaveAttribute("href", "/football/picks");
+    expect(screen.getByRole("link", { name: "Play" })).toHaveAttribute("href", "/football");
     expect(screen.getByRole("link", { name: "Rankings" })).toHaveAttribute("href", "/rankings");
   });
 
@@ -107,8 +107,8 @@ describe("BottomNavigation", () => {
     const play = screen.getByRole("link", { name: "Play" });
     expect(picks).toHaveClass("is-active");
     expect(play).not.toHaveClass("is-active");
-    expect(picks).toHaveAttribute("href", "/picks");
-    expect(play).toHaveAttribute("href", "/play");
+    expect(picks).toHaveAttribute("href", "/football/picks");
+    expect(play).toHaveAttribute("href", "/football");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBeNull();
 
     cleanup();
@@ -197,77 +197,26 @@ describe("BottomNavigation", () => {
     expect(navigation).toHaveStyle({ display: "grid" });
   });
 
-  it("enters Football only after a second tap on the active Play tab", () => {
-    installVisualViewport();
-    renderNavigation(["/play"], <LocationProbe />);
 
-    const play = screen.getByRole("link", { name: "Play" });
-    fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
-
-    fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football|play");
+  it.each([
+    ["play", "/football", "/play", "/mlb"],
+    ["picks", "/football/picks", "/picks", "/mlb/picks"],
+  ] as const)("double taps %s through Football, UFC, MLB, then Football without intro videos", (_section, first, second, third) => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+    renderNavigation([first], <LocationProbe />);
+    const tab = () => screen.getByRole("link", { name: _section === "play" ? "Play" : "Picks" });
+    fireEvent.click(tab());
+    fireEvent.click(tab());
+    expect(screen.getByTestId("location")).toHaveTextContent(second + "|plain");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
+    fireEvent.click(tab());
+    fireEvent.click(tab());
+    expect(screen.getByTestId("location")).toHaveTextContent(third + "|plain");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
+    fireEvent.click(tab());
+    fireEvent.click(tab());
+    expect(screen.getByTestId("location")).toHaveTextContent(first + "|plain");
     expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
   });
 
-  it("double-taps the active Football Play tab back to UFC", () => {
-    installVisualViewport();
-    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
-    renderNavigation(["/football"], <LocationProbe />);
-
-    const play = screen.getByRole("link", { name: "Play" });
-    fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football|plain");
-
-    fireEvent.click(play);
-    expect(screen.getByTestId("location")).toHaveTextContent("/play|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
-  });
-
-  it("enters Football only after a second tap on the active Picks tab", () => {
-    installVisualViewport();
-    renderNavigation(["/picks"], <LocationProbe />);
-
-    const picks = screen.getByRole("link", { name: "Picks" });
-    fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/picks|plain");
-
-    fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|picks");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
-  });
-
-  it("double-taps the active Football Picks tab back to UFC", () => {
-    installVisualViewport();
-    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
-    renderNavigation(["/football/picks"], <LocationProbe />);
-
-    const picks = screen.getByRole("link", { name: "Picks" });
-    fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|plain");
-
-    fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/picks|plain");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("ufc");
-  });
-
-  it("plays the hidden Football reveal only once per app session", () => {
-    installVisualViewport();
-    renderNavigation(["/picks"], <LocationProbe />);
-
-    let picks = screen.getByRole("link", { name: "Picks" });
-    fireEvent.click(picks);
-    fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|picks");
-
-    picks = screen.getByRole("link", { name: "Picks" });
-    fireEvent.click(picks);
-    fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/picks|plain");
-
-    picks = screen.getByRole("link", { name: "Picks" });
-    fireEvent.click(picks);
-    fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|plain");
-  });
 });

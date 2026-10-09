@@ -12,6 +12,10 @@ beforeEach(() => {
 afterEach(cleanup);
 
 function renderRoute(path: string) {
+  // Explicit legacy /picks and /play URLs refer to UFC even when Football is the app default.
+  if ((path === "/picks" || path === "/play") && !window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)) {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "ufc");
+  }
   const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
   render(
     <AppProviders>
@@ -25,6 +29,11 @@ async function sportContext(label: string) {
   const row = await screen.findByTestId("sport-context-row");
   expect(row).toHaveTextContent(label);
   return row;
+}
+
+function switchSport(row: HTMLElement, next: "football" | "ufc" | "mlb") {
+  const section = row.textContent?.includes("PICKS") ? "Picks" : "Play";
+  fireEvent.change(within(row).getByRole("combobox", { name: "Sport for " + section }), { target: { value: next } });
 }
 
 async function expectPath(router: ReturnType<typeof renderRoute>, pathname: string) {
@@ -46,7 +55,7 @@ describe("The HQ sport switching", () => {
     const row = await sportContext("UFC PICKS");
     expectThemeScope("ufc");
 
-    fireEvent.click(within(row).getByRole("button", { name: "Football" }));
+    switchSport(row, "football");
 
     await expectPath(router, "/football/picks");
     await sportContext("FOOTBALL PICKS");
@@ -60,7 +69,7 @@ describe("The HQ sport switching", () => {
     const row = await sportContext("FOOTBALL PICKS");
     expectThemeScope("football");
 
-    fireEvent.click(within(row).getByRole("button", { name: "UFC" }));
+    switchSport(row, "ufc");
 
     await expectPath(router, "/picks");
     await sportContext("UFC PICKS");
@@ -73,7 +82,7 @@ describe("The HQ sport switching", () => {
     const row = await sportContext("UFC PLAY");
     expectThemeScope("ufc");
 
-    fireEvent.click(within(row).getByRole("button", { name: "Football" }));
+    switchSport(row, "football");
 
     await expectPath(router, "/football");
     await sportContext("FOOTBALL PLAY");
@@ -87,7 +96,7 @@ describe("The HQ sport switching", () => {
     const row = await sportContext("FOOTBALL PLAY");
     expectThemeScope("football");
 
-    fireEvent.click(within(row).getByRole("button", { name: "UFC" }));
+    switchSport(row, "ufc");
 
     await expectPath(router, "/play");
     await sportContext("UFC PLAY");
@@ -99,7 +108,7 @@ describe("The HQ sport switching", () => {
     const router = renderRoute("/picks");
     let row = await sportContext("UFC PICKS");
 
-    fireEvent.click(within(row).getByRole("button", { name: "Football" }));
+    switchSport(row, "football");
     await expectPath(router, "/football/picks");
     expectThemeScope("football");
 
@@ -108,7 +117,7 @@ describe("The HQ sport switching", () => {
     row = await sportContext("FOOTBALL PLAY");
     expectThemeScope("football");
 
-    fireEvent.click(within(row).getByRole("button", { name: "UFC" }));
+    switchSport(row, "ufc");
     await expectPath(router, "/play");
     expectThemeScope("ufc");
 
@@ -144,9 +153,9 @@ describe("The HQ sport switching", () => {
     renderRoute(path);
 
     const row = await sportContext(label);
-    const selector = within(row).getByRole("group", { name: groupName });
-    expect(within(selector).getByRole("button", { name: "UFC" })).toBeInTheDocument();
-    expect(within(selector).getByRole("button", { name: "Football" })).toBeInTheDocument();
+    const selector = within(row).getByRole("combobox", { name: "Sport for " + groupName.split(" ")[0] });
+    expect(within(selector).getByRole("option", { name: "UFC" })).toBeInTheDocument();
+    expect(within(selector).getByRole("option", { name: "Football" })).toBeInTheDocument();
     expectThemeScope(theme);
   });
 
@@ -156,7 +165,7 @@ describe("The HQ sport switching", () => {
 
     const row = await sportContext("UFC RANKINGS");
     expectThemeScope("ufc");
-    expect(within(row).queryByRole("group")).not.toBeInTheDocument();
+    expect(within(row).queryByRole("combobox")).not.toBeInTheDocument();
     expect(within(row).queryByRole("button", { name: "Football" })).not.toBeInTheDocument();
   });
 

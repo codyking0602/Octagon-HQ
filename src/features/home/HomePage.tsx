@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useOptionalSport } from "../../app/SportProvider";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -30,7 +31,6 @@ import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
 import { dailyRankingSpotlight } from "./homeSpotlightModel";
 import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
-import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
 import { HqImpostorHomeCard } from "../impostor/HqImpostorHomeCard";
 import "../../styles/home-football-hq.css";
 import "../../styles/home-ufc-hq.css";
@@ -143,8 +143,17 @@ export default function HomePage() {
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
-  const ownerPreview = identity.profile?.canControlPicks === true;
-  const [ownerSport, setOwnerSport] = useState<SportFilter>("all");
+  const ownerPreview = signedIn;
+  const sportPreference = useOptionalSport();
+  const selectedSport = sportPreference?.selectedSport ?? "football";
+  const setSelectedSport = (sport: "football" | "ufc" | "mlb") => sportPreference?.setSelectedSport(sport);
+  // All is a Home-only view; selecting a sport persists it for Picks and Play.
+  const [homeOverview, setHomeOverview] = useState(false);
+  const ownerSport: SportFilter = homeOverview ? "all" : selectedSport;
+  const setOwnerSport = (next: SportFilter) => {
+    if (next === "all") setHomeOverview(true);
+    else { setSelectedSport(next); setHomeOverview(false); }
+  };
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
   const ufcDailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport: "ufc" });
   const ufcDailyOverview = useTodayChallengeOverview({
@@ -307,11 +316,11 @@ export default function HomePage() {
           </div>
           <Link
             className="home-event-card__standing"
-            to="/picks?view=standings#picks-season-leaderboard"
-            aria-label="Open UFC Picks season standings"
+            to="/championship/ufc?tab=picks"
+            aria-label="Open UFC Championship Picks leaderboard"
           >
-            <span>{recordSeason} PICKS STANDING</span>
-            <b>{signedIn && currentUfcRankLabel ? `${currentUfcRankLabel} OF ${ufcStandings.length}` : "—"}</b>
+            <span>{recordSeason} PICKS RECORD</span>
+            <b>{signedIn ? pickRecord(picks.summary) : "—"}</b>
             <small>
               {!signedIn
                 ? "SIGN IN TO TRACK"
@@ -331,13 +340,6 @@ export default function HomePage() {
           )
         ) : null}
       </section>
-
-      <WeeklyGamesStandingLink
-        sport="ufc"
-        standing={ufcChampionship}
-        loading={ufcDailyOverview.standingsLoading}
-        signedIn={signedIn}
-      />
 
       {ufcDailyChallenge}
       {spotlight ? <RankingSpotlightCard fighter={spotlight} /> : null}

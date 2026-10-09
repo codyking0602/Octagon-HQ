@@ -58,9 +58,9 @@ describe("SportProvider", () => {
     expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
   });
 
-  it("drives switchable contextual theme scope from the canonical selected sport", () => {
-    expect(appShellSource).toContain("if (context?.switchable) return selectedSport;");
-    expect(appShellSource).not.toContain("context.sport === selectedSport");
+  it("drives contextual theme from actual route while synchronizing the one sport preference", () => {
+    expect(appShellSource).toContain("if (context?.switchable) return context.sport;");
+    expect(appShellSource).toContain("setSelectedSport(sportContext.sport);");
   });
 
   it("keeps one canonical theme/style initialization path", () => {
@@ -97,10 +97,10 @@ describe("SportProvider", () => {
     expect(bottomNavigationSource).not.toContain("bottom-nav--football-team-");
   });
 
-  it("defaults the canonical selected sport to UFC", () => {
+  it("defaults the canonical selected sport to Football", () => {
     renderSportProvider();
 
-    expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("selected-sport")).toHaveTextContent("football");
   });
 
   it("restores the last selected sport between sessions", () => {
@@ -130,6 +130,6 @@ describe("SportProvider", () => {
 
     renderSportProvider();
 
-    expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("selected-sport")).toHaveTextContent("football");
   });
 });

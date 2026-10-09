@@ -3,8 +3,7 @@ import { createPortal } from "react-dom";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import type { HqThemeScope } from "../app/AppShell";
 import { scrollPageToTop } from "../app/RouteScrollManager";
-import { useSport } from "../app/SportProvider";
-import { nextFootballEntryState } from "../features/back-room/footballEntrySession";
+import { nextSport, useSport } from "../app/SportProvider";
 import { useOptionalIdentity } from "../features/identity/IdentityProvider";
 import { canViewMlbPlayoffs } from "../features/mlb/mlbPlayoffsConfig";
 
@@ -157,30 +156,16 @@ export function BottomNavigation({ themeScope = "neutral" }: { themeScope?: HqTh
                 const activeRoot = section === "play"
                   ? (footballMode ? "/football" : mlbMode ? "/mlb" : "/play")
                   : (footballMode ? "/football/picks" : mlbMode ? "/mlb/picks" : "/picks");
-                if (mlbMode) {
-                  lastActiveSportTapRef.current[section] = now;
-                  if (location.pathname === activeRoot) {
-                    event.preventDefault();
-                    scrollPageToTop("smooth");
-                  }
-                  return;
-                }
                 if (now - lastActiveSportTapRef.current[section] <= SECRET_SPORT_TAP_WINDOW_MS) {
                   event.preventDefault();
                   lastActiveSportTapRef.current[section] = 0;
+                  const currentSport = footballMode ? "football" : mlbMode ? "mlb" : "ufc";
+                  const next = nextSport(currentSport, canViewMlbPlayoffs(identity?.profile));
+                  setSelectedSport(next);
                   const targetPath = section === "play"
-                    ? (footballMode ? "/play" : "/football")
-                    : (footballMode ? "/picks" : "/football/picks");
-
-                  if (footballMode) {
-                    setSelectedSport("ufc");
-                    navigate(targetPath);
-                  } else {
-                    setSelectedSport("football");
-                    const entryState = nextFootballEntryState(section);
-                    if (entryState) navigate(targetPath, { state: entryState });
-                    else navigate(targetPath);
-                  }
+                    ? next === "football" ? "/football" : next === "mlb" ? "/mlb" : "/play"
+                    : next === "football" ? "/football/picks" : next === "mlb" ? "/mlb/picks" : "/picks";
+                  navigate(targetPath);
                   return;
                 }
                 lastActiveSportTapRef.current[section] = now;

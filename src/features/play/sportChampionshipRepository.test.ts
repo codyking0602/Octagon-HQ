@@ -28,6 +28,7 @@ function makeProjection(sport: "football" | "ufc") {
     picks_played: 3,
     daily_played: 7,
     featured_played: featured ? 1 : 0,
+    event_results: [],
   };
   return {
     sport,

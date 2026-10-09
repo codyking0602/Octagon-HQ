@@ -5,6 +5,7 @@ import { AppShell } from "./AppShell";
 import { MlbGate } from "../features/mlb/MlbGate";
 
 const HomePage = lazy(() => import("../features/home/HomePage"));
+const ChampionshipLeaderboardPage = lazy(() => import("../features/home/ChampionshipLeaderboardPage"));
 const ShanesWatchlistPage = lazy(() => import("../features/home/ShanesWatchlistPage"));
 const RankingsPage = lazy(() => import("../features/rankings/RankingsPage"));
 const FighterProfilePage = lazy(() => import("../features/rankings/FighterProfilePage"));
@@ -66,6 +67,7 @@ export const appRoutes: RouteObject[] = [
     errorElement: <AppRouteError />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "championship/:sport", element: <ChampionshipLeaderboardPage /> },
       { path: "fighters-to-watch", element: <ShanesWatchlistPage /> },
       { path: "rankings", element: <RankingsPage /> },
       { path: "fighters/:slug", element: <FighterProfilePage /> },

@@ -1,0 +1,31 @@
+.weekly-overall__backdrop {
+  --weekly-accent: var(--football-brand-blue, #8ebce6);
+  position: fixed; inset: 0; z-index: 2500; overflow-y: auto;
+  display: grid; place-items: center; padding: max(15px,env(safe-area-inset-top)) 12px max(15px,env(safe-area-inset-bottom));
+  background: rgba(0,0,0,.87);
+}
+.weekly-overall__backdrop[data-sport="ufc"] { --weekly-accent: var(--ufc-red-strong,#f01717); }
+.weekly-overall__dialog {
+  display: grid; gap: 14px; width: min(100%,440px);
+  padding: 18px; border-radius: 18px; border: 1px solid var(--weekly-accent);
+  background: #151515; color: #fff;
+}
+.weekly-overall__dialog header { display: grid; gap: 8px; text-align: center; padding: 12px 4px; }
+.weekly-overall__dialog header span { color: var(--weekly-accent); font-size: 11px; font-weight: 950; letter-spacing: .13em; }
+.weekly-overall__dialog header h2 { margin: 0; font-size: 23px; }
+.weekly-overall__dialog header strong { font-size: 32px; }
+.weekly-overall__dialog header small { color: #a7a7ad; font-size: 11px; }
+.weekly-overall__dialog header b { font-size: 15px; color: var(--weekly-accent); }
+.weekly-overall__standings { max-height: 38vh; overflow-y: auto; border: 1px solid #343438; border-radius: 11px; }
+.weekly-overall__heading, .weekly-overall__row { display: flex; justify-content: space-between; gap: 9px; padding: 10px 12px; }
+.weekly-overall__heading { color: #8f8f95; background: #202023; font-size: 10px; font-weight: 850; }
+.weekly-overall__row { border-top: 1px solid #2b2b2e; font-size: 12px; }
+.weekly-overall__row:first-of-type { color: var(--weekly-accent); }
+.weekly-overall__dialog > p { color: #a7a7ad; font-size: 11px; line-height: 1.5; margin: 0; }
+.weekly-overall__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.weekly-overall__actions a,.weekly-overall__actions button {
+  border: 1px solid var(--weekly-accent); color: #fff; background: #232326;
+  border-radius: 10px; padding: 12px 6px; font: inherit; text-align: center; font-size: 11px; font-weight: 850;
+  text-decoration: none;
+}
+.weekly-overall__actions a { color: #101217; background: var(--weekly-accent); }

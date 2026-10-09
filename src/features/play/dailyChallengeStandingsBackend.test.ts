@@ -134,8 +134,9 @@ describe("Daily Challenge Standings backend contract", () => {
     expect(component).toContain('["Who Am I", (entry: TodayChallengeStandingsEntry) => entry.gameAverages.whoAmI]');
   });
 
-  it("replaces the old history accordion with only the approved collapsed standings and member detail", () => {
-    expect(hub).toContain("<DailyChallengeStandings");
+  it("retires duplicate Daily titles from Play while preserving individual official results", () => {
+    expect(hub).not.toContain("<DailyChallengeStandings");
+    expect(hub).toContain('navigate("/championship/" + sport + "?tab=play")');
     expect(hub).not.toContain("Official challenge record");
     expect(hub).not.toContain("today-hub-history");
     expect(component).toContain("Championship Standings");

@@ -179,13 +179,9 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("FOOTBALL PICKS")).toBeInTheDocument();
     expect(within(hq).getByText("1 OF 3")).toBeInTheDocument();
     expect(within(hq).getByText("2 PICKS LEFT")).toBeInTheDocument();
-    expect(within(hq).getByText("#2 OF 2")).toBeInTheDocument();
-    expect(within(hq).getByText("2026 PICKS STANDING")).toBeInTheDocument();
-    expect(within(hq).getByRole("link", { name: "Open Football Picks season standings" }))
-      .toHaveAttribute("href", "/football/picks?view=standings#picks-season-leaderboard");
-    expect(within(hq).getByText("#1 overall · 2 titles")).toBeInTheDocument();
-    expect(within(hq).getByRole("link", { name: "View Football Championship Standings" }))
-      .toHaveAttribute("href", "/football?standings=me#championship-standings");
+    expect(within(hq).getByText("2026 PICKS RECORD")).toBeInTheDocument();
+    expect(within(hq).getByRole("link", { name: "Open Football Championship Picks leaderboard" }))
+      .toHaveAttribute("href", "/championship/football?tab=picks");
     expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
 
     expect(within(hq).getByText("Drew Mestemaker")).toBeInTheDocument();
@@ -268,7 +264,7 @@ describe("Football HQ Home summary", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("T-1 OF 2")).toBeInTheDocument();
+    expect(screen.getByText("2026 PICKS RECORD")).toBeInTheDocument();
     expect(screen.queryByText("#T-1 OF 2")).not.toBeInTheDocument();
 
     const photo = screen.getByRole("button", { name: "Manage player spotlight photo" });

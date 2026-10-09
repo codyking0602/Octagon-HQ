@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { RouteLoading } from "../components/RouteLoading";
@@ -53,7 +53,7 @@ function sportContextForPath(pathname: string): SportContext | null {
 function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqThemeScope {
   const context = sportContextForPath(pathname);
 
-  if (context?.switchable) return selectedSport;
+  if (context?.switchable) return context.sport;
   if (context) return context.sport;
 
   if (
@@ -65,6 +65,10 @@ function themeScopeForPath(pathname: string, selectedSport: SelectedSport): HqTh
   ) {
     return "neutral";
   }
+
+  if (pathname.startsWith("/championship/football")) return "football";
+  if (pathname.startsWith("/championship/mlb")) return "mlb";
+  if (pathname.startsWith("/championship/ufc")) return "ufc";
 
   if (pathname === "/football" || pathname.startsWith("/football/")) return "football";
   if (pathname === "/mlb" || pathname.startsWith("/mlb/")) return "mlb";
@@ -103,19 +107,18 @@ function SportContextRow({
         {context.sport === "mlb" ? "MLB PLAYOFFS" : context.sport.toUpperCase()} {context.section}
       </strong>
       {context.switchable ? (
-        <div className={`sport-context-row__switch${showMlb ? " sport-context-row__switch--three" : ""}`} role="group" aria-label={`${sectionLabel} sport`}>
-          {(["ufc", "football", ...(showMlb ? ["mlb"] as const : [])] as SelectedSport[]).map((sport) => (
-            <button
-              key={sport}
-              type="button"
-              className={context.sport === sport ? "is-active" : ""}
-              aria-pressed={context.sport === sport}
-              onClick={() => onSelectSport(sport)}
-            >
-              {sport === "ufc" ? "UFC" : sport === "football" ? "Football" : "MLB"}
-            </button>
-          ))}
-        </div>
+        <label className="sport-context-row__select">
+          <span className="sr-only">{"Sport for " + sectionLabel}</span>
+          <select
+            aria-label={"Sport for " + sectionLabel}
+            value={context.sport}
+            onChange={(event) => onSelectSport(event.target.value as SelectedSport)}
+          >
+            <option value="football">Football</option>
+            <option value="ufc">UFC</option>
+            {showMlb ? <option value="mlb">MLB</option> : null}
+          </select>
+        </label>
       ) : null}
     </div>
   );
@@ -162,6 +165,14 @@ export function AppShell() {
   const effectiveSelectedSport = selectedSport === "mlb" && !mlbVisible ? "ufc" : selectedSport;
   const sportContext = sportContextForPath(location.pathname);
   const themeScope = themeScopeForPath(location.pathname, effectiveSelectedSport);
+  // Direct/deep-linked sport URLs must keep the persisted tab preference in sync
+  // with the actual sport being displayed, never show Football tabs on UFC content.
+  useEffect(() => {
+    if (sportContext?.switchable && sportContext.sport !== selectedSport) {
+      setSelectedSport(sportContext.sport);
+    }
+  }, [sportContext?.sport, sportContext?.switchable, selectedSport, setSelectedSport]);
+
 
   if (isMlb && !mlbVisible) {
     return <Navigate to="/" replace />;

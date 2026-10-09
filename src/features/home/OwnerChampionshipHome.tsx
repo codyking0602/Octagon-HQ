@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { loadMlbChampionship, type MlbChampionship } from "../mlb/mlbChampionship";
 import {
@@ -21,11 +22,11 @@ function formatRating(rating: number | null | undefined) {
 function Summary({ sport, result }: { sport: ChampionshipSport; result: SportChampionship | null }) {
   const own = result?.own ?? null;
   return (
-    <article className="home-champ-preview__summary" data-sport={sport}>
+    <Link className="home-champ-preview__summary" data-sport={sport} to={"/championship/" + sport + "?tab=overall"} aria-label={"Open " + sport + " Championship standings"}>
       <span>{sport === "ufc" ? "UFC" : "FOOTBALL"} CHAMPIONSHIP</span>
       <strong>{formatRank(own?.rank)}</strong>
-      <small>{own?.rating != null ? formatRating(own.rating) + " RATING" : "STANDING PENDING"}</small>
-    </article>
+      <small>{own?.rating != null ? formatRating(own.rating) + " SEASON SCORE" : "STANDING PENDING"}</small>
+    </Link>
   );
 }
 
@@ -49,12 +50,16 @@ function Detail({ sport, result, loading, error }: {
       ) : (
         <>
           <div className="home-champ-preview__headline">
-            <div><strong>{formatRank(own.rank)}</strong><span>OF {result?.field_size ?? 0}</span></div>
-            <div><strong>{formatRating(own.rating)}</strong><span>CHAMPIONSHIP RATING</span></div>
+            <Link to={"/championship/" + sport + "?tab=overall"} aria-label={"Open " + label + " overall leaderboard"}>
+              <strong>{formatRank(own.rank)}</strong><span>OF {result?.field_size ?? 0} · OVERALL</span>
+            </Link>
+            <Link to={"/championship/" + sport + "?tab=overall&player=" + own.profile_id} aria-label={"View your " + label + " Season Score breakdown"}>
+              <strong>{formatRating(own.rating)}</strong><span>SEASON SCORE</span>
+            </Link>
           </div>
           <div className="home-champ-preview__lanes">
-            <div><span>PICKS · 60%</span><strong>{formatRank(own.picks_rank)}</strong><small>{formatRating(own.picks_rating)} rating</small></div>
-            <div><span>PLAY · 40%</span><strong>{formatRank(own.play_rank)}</strong><small>{formatRating(own.play_rating)} rating</small></div>
+            <Link to={"/championship/" + sport + "?tab=picks"}><span>PICKS · 60% ↗</span><strong>{formatRank(own.picks_rank)}</strong><small>{formatRating(own.picks_rating)} placement score</small></Link>
+            <Link to={"/championship/" + sport + "?tab=play"}><span>PLAY · 40% ↗</span><strong>{formatRank(own.play_rank)}</strong><small>{formatRating(own.play_rating)} placement score</small></Link>
           </div>
           <p className="home-champ-preview__weights">
             {result?.weights.featured
@@ -117,7 +122,7 @@ export function OwnerChampionshipHome({
       aria-label="Your HQ"
     >
       <div className="home-champ-preview__top">
-        <div><h2>Your HQ</h2><small>CHAMPIONSHIP · OWNER PREVIEW</small></div>
+        <div><h2>Your HQ</h2><small>CHAMPIONSHIP · 2026 SEASON</small></div>
         <label className="home-champ-preview__filter">
           <span className="sr-only">Home sport</span>
           <select aria-label="Home sport" value={chosen} onChange={(event) => onSportChange(event.target.value as SportFilter)}>
@@ -134,11 +139,11 @@ export function OwnerChampionshipHome({
             <Summary sport="football" result={football} />
             <Summary sport="ufc" result={ufc} />
             {showMlb ? (
-              <article className="home-champ-preview__summary" data-sport="mlb">
+              <Link className="home-champ-preview__summary" data-sport="mlb" to="/championship/mlb" aria-label="Open MLB Postseason Championship standings">
                 <span>MLB POSTSEASON</span>
                 <strong>{formatRank(mlb?.own?.overall_rank)}</strong>
                 <small>{mlb?.own ? String(mlb.own.total_points) + " PTS" : "STANDING PENDING"}</small>
-              </article>
+              </Link>
             ) : null}
           </div>
           <div className="home-champ-preview__streak">
@@ -150,8 +155,8 @@ export function OwnerChampionshipHome({
         <div className="home-champ-preview__detail" data-sport="mlb">
           <div className="home-champ-preview__kicker">MLB POSTSEASON CHAMPIONSHIP</div>
           <div className="home-champ-preview__headline">
-            <div><strong>{formatRank(mlb?.own?.overall_rank)}</strong><span>OF {mlb?.standings.length ?? 0}</span></div>
-            <div><strong>{mlb?.own?.total_points ?? "—"}</strong><span>CHAMPIONSHIP POINTS</span></div>
+            <Link to="/championship/mlb"><strong>{formatRank(mlb?.own?.overall_rank)}</strong><span>OF {mlb?.standings.length ?? 0}</span></Link>
+            <Link to="/championship/mlb"><strong>{mlb?.own?.total_points ?? "—"}</strong><span>CHAMPIONSHIP POINTS</span></Link>
           </div>
           <p className="home-champ-preview__weights">MLB retains its existing postseason scoring rules.</p>
         </div>

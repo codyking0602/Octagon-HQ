@@ -8,7 +8,7 @@ import {
 } from "./public-supabase-config.mjs";
 
 export const requiredApplicationMarkers = [
-  "STANDINGS & EVENTS",
+  "Picks Results Archive",
   "GROUP STANDINGS",
   "EVENT ARCHIVE",
   "OPEN FULL RECAP",
