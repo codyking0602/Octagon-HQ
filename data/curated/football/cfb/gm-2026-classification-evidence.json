@@ -3189,7 +3189,21 @@
         "summary": "Georgia junior CB was 2025 FWAA National Freshman Defensive Player of Year and first-team Freshman All-American with four interceptions (tied SEC lead), 20 tackles/seven PBUs over 12 starts in 14 games. 2026 remained preseason All-American and had two PBUs versus Western Kentucky. Already proven high-tier ball/coverage performer with minimal room for a giant Year 2 breakout.",
         "sources": [
           "https://georgiadogs.com/sports/football/roster/ellis-robinson%20iv/10682"
-        ]
+        ],
+        "nil": {
+          "year1": 750000,
+          "year2Baseline": 825000,
+          "confidence": "medium"
+        },
+        "nilEvidence": {
+          "provider": "On3",
+          "asOf": "2026-08-22",
+          "sourceUrl": "https://www.on3.com/rivals/ellis-robinson-iv-41558/nil/",
+          "kind": "market-based-player-profile",
+          "publishedEstimatedValue": 750000,
+          "gameYear1": 750000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8177,7 +8191,21 @@
         "summary": "Missouri 2025 consensus first-team All-American and Doak Walker finalist set program record 1,649 rush yards and 16 TD on 256 carries (6.4 YPC), after 2024 ULM freshman 1,351 yards/13 TD. 2026 junior near elite college production ceiling, making steady and likely 2027 NFL declaration more defensible than a giant fictional breakout.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/ahmad-hardy"
-        ]
+        ],
+        "nil": {
+          "year1": 1000000,
+          "year2Baseline": 1100000,
+          "confidence": "medium"
+        },
+        "nilEvidence": {
+          "provider": "On3",
+          "asOf": "2026-10-08",
+          "sourceUrl": "https://www.on3.com/rivals/ahmad-hardy-240668/nil/",
+          "kind": "confirmed-deal-valued-player-profile",
+          "publishedEstimatedValue": 1000000,
+          "gameYear1": 1000000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8267,7 +8295,21 @@
         "summary": "Missouri 2025 TE appeared in 11 games/ten starts with 31 catches, 254 receiving yards and five TD, adding critical run blocking in Ahmad Hardy's 1,649-yard rushing year. 2024 26/235/2, 2023 freshman All-American and 18/197/3. 2026 senior is established multi-year TE with limited additional breakout headroom and some shoulder history.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/brett-norfleet"
-        ]
+        ],
+        "nil": {
+          "year1": 600000,
+          "year2Baseline": 650000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 604595,
+          "gameYear1": 600000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8306,7 +8348,21 @@
         "summary": "Ole Miss 2025 wide receiver started all 15 games with 44 catches, 635 yards and three TD. Missouri 2026 senior transfer is already through first four games with 27 catches, 412 yards and four TD including 11/156/2 vs Mississippi State, indicating strong early fit; established P4 starter with some upside but short new-school sample.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/cayden-lee"
-        ]
+        ],
+        "nil": {
+          "year1": 1000000,
+          "year2Baseline": 1100000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1000000,
+          "gameYear1": 1000000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8344,7 +8400,21 @@
         "summary": "Ole Miss 2025 corner started nine of 15 games with 33 tackles and four pass breakups; transferred to Missouri where official 2026 fifth-year roster credits starts in opening five games and six PBU. More consistent full-time role supports mild gains, but moderate transfer/coverage volatility; fifth-year models ordinary terminal 2026 season.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/chris-graves-jr"
-        ]
+        ],
+        "nil": {
+          "year1": 725000,
+          "year2Baseline": 800000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 722377,
+          "gameYear1": 725000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8382,7 +8452,21 @@
         "summary": "Missouri 2025 freshman edge played five games as reserve without sustained verified sacks, then opened 2026 sophomore season with six sacks, 6.5 TFL and two forced fumbles in five games, including a 3.5-sack Mississippi State performance. Real early breakout and high upside, but small five-game output must not imply full-season reliability; 2025 matriculation makes 2027 NFL ineligible.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/daeden-hopkins"
-        ]
+        ],
+        "nil": {
+          "year1": 300000,
+          "year2Baseline": 325000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 308249,
+          "gameYear1": 300000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8421,7 +8505,21 @@
         "summary": "Missouri 2025 true freshman WR had 30 catches, 401 yards and two TD in 13 games; 2026 sophomore 26 catches/407 yards/six TD in opening five games. Clearly ascending volume and red-zone role with youthful volatility, but enrolled 2025 and cannot declare for 2027 NFL draft.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/donovan-olugbode"
-        ]
+        ],
+        "nil": {
+          "year1": 600000,
+          "year2Baseline": 650000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 600721,
+          "gameYear1": 600000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8459,7 +8557,21 @@
         "summary": "Missouri 2025 interior defender appeared all 13 games/one start with 17 tackles, one TFL and a sack; 2024 12 games/one start five tackles, minimal 2022-23 action. Official 2026 fifth-year DT, credible rotational improvement but low recent disruptive ceiling; normal eligibility exhaustion after 2026 modeled.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/jalen-marshall"
-        ]
+        ],
+        "nil": {
+          "year1": 800000,
+          "year2Baseline": 875000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 792000,
+          "gameYear1": 800000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8498,7 +8610,21 @@
         "summary": "Missouri 2025 reserve-to-feature RB had 124 carries for 753 yards/six TD (6.1 YPC) plus 18 catches/141 yards and receiving TD; 2026 senior opened with 606 rushing yards and six TD in five games, including 211 yards/three TD vs Florida. Strong demonstrated P4 rushing impact; high draft interest and steady profile despite new early-season workload.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/jamal-roberts"
-        ]
+        ],
+        "nil": {
+          "year1": 575000,
+          "year2Baseline": 625000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 579868,
+          "gameYear1": 575000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8536,7 +8662,21 @@
         "summary": "Auburn 2025 defensive back appeared in 11 games/three starts, making 20 tackles, three TFL, one sack, an interception and two PBU. Missouri 2026 junior transfer immediately started opening five games with 23 tackles and five TFL, indicating significant role increase while transfer fit remains partly unproven.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/kensley-louidor-faustin"
-        ]
+        ],
+        "nil": {
+          "year1": 725000,
+          "year2Baseline": 800000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 718255,
+          "gameYear1": 725000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8574,7 +8714,21 @@
         "summary": "Missouri 2025 senior-age reserve edge made 13 tackles and half a TFL in 12 appearances after 2023-24 Northwest Missouri State Division II 20 games, 10.5 TFL/5.5 sacks. Started first four 2026 games with three TFL, eight tackles. P4 role growth possible but earlier DII production must not be treated as equivalent SEC sacks.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/langden-kitchen"
-        ]
+        ],
+        "nil": {
+          "year1": 600000,
+          "year2Baseline": 650000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 600600,
+          "gameYear1": 600000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8612,7 +8766,21 @@
         "summary": "Missouri 2025 rotational DT played all 13 games with 16 tackles, two TFL, one forced fumble and pass breakup; 2024 nine tackles/1.5 TFL, very limited 2022-23 action. Official 2026 fifth-year interior defender and ordinary terminal college season assumption; greater role possible but no historic elite pass rush.",
         "sources": [
           "https://mutigers.com/sports/football/roster/player/marquis-gracial"
-        ]
+        ],
+        "nil": {
+          "year1": 800000,
+          "year2Baseline": 875000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 795775,
+          "gameYear1": 800000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8650,7 +8818,21 @@
         "summary": "Florida 2025 true freshman WR appeared in four games to preserve redshirt, three catches for 26 yards; Missouri 2026 sophomore transferred in and started first five games, seven catches for 82 yards. Large opportunity leap but low current college target volume and transfer uncertainty; first 2025 matriculation disallows 2027 NFL draft.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/naeshaun-montgomery"
-        ]
+        ],
+        "nil": {
+          "year1": 450000,
+          "year2Baseline": 500000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 438464,
+          "gameYear1": 450000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8688,7 +8870,21 @@
         "summary": "Missouri 2025 LB appeared all 13 games with three starts, 61 tackles, four TFL, 1.5 sacks and a team-high seven PBU. By five 2026 junior games started every contest with 50 tackles and a sack including four straight double-digit tackle games, establishing a meaningful rising full-time SEC role, but not guaranteed draft exit.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/nicholas-rodriguez"
-        ]
+        ],
+        "nil": {
+          "year1": 550000,
+          "year2Baseline": 600000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 551272,
+          "gameYear1": 550000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8726,7 +8922,21 @@
         "summary": "Auburn 2025 starting linebacker played 12 games/11 starts with 67 tackles, seven TFL and two sacks. Missouri 2026 senior transfer started five games and posted 37 tackles, 2.5 TFL, interception and forced fumble, with injury during Florida contest. Proven SEC impact with moderate steady/improve odds and some durability/transfer uncertainty.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/robert-woodyard-jr"
-        ]
+        ],
+        "nil": {
+          "year1": 550000,
+          "year2Baseline": 600000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 542206,
+          "gameYear1": 550000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8764,7 +8974,21 @@
         "summary": "Missouri 2025 defensive back appeared all 13 games/one start with 59 tackles, one TFL, an interception and three PBU; prior Northern Illinois experience. Through first five games of 2026 senior season started all, 44 tackles, two TFL and three PBU; trusted regular with bounded growth rather than developmental unknown.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/santana-banner"
-        ]
+        ],
+        "nil": {
+          "year1": 550000,
+          "year2Baseline": 600000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 541494,
+          "gameYear1": 550000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8802,7 +9026,21 @@
         "summary": "Oregon 2025 CB appeared six games with seven tackles, two PBU in 116 defensive snaps; 2024 Oregon four games three tackles/one INT after College of San Mateo 2022-23 (27 tackles/four PBUs in 2023). Missouri official 2026 fifth-year transfer started opening five games, 22 tackles/five PBU and INT. Rise from low recent P4 minutes plus level jump entails volatility, final-year assumption.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/sione-laulea"
-        ]
+        ],
+        "nil": {
+          "year1": 450000,
+          "year2Baseline": 500000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 448499,
+          "gameYear1": 450000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8840,7 +9078,21 @@
         "summary": "Missouri 2025 safety played all games but made just seven tackles/one TFL after 2024 two tackles and special teams, first enrolled January 2024. Earned three early 2026 junior starts, 12 tackles and first college interception vs Mississippi State. Role opportunity merits improvement upside, but limited track record as starter.",
         "sources": [
           "https://mutigers.com/sports/football/roster/season/2026/player/trajen-greco"
-        ]
+        ],
+        "nil": {
+          "year1": 350000,
+          "year2Baseline": 375000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 356175,
+          "gameYear1": 350000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -8878,7 +9130,21 @@
         "summary": "Houston Christian 2025 standout RB rushed 1,061 yards and 12 TD in 12 games after four carries for 19 yards in 2024 freshman season. Missouri 2026 junior transfer played first four games with 26 rushes for 114 yards/one TD: strong FCS tape and P4 role competition imply both potential breakthrough and risk.",
         "sources": [
           "https://mutigers.com/sports/football/roster/player/xaishaun-edwards"
-        ]
+        ],
+        "nil": {
+          "year1": 150000,
+          "year2Baseline": 175000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-04",
+          "sourceUrl": "https://thenilstandard.com/football/teams/missouri",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 150000,
+          "gameYear1": 150000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -15720,7 +15986,21 @@
         "summary": "Texas Tech 2025 AP second-team All-American interior DL appeared in all 14 games, made final eight starts, logged 38 tackles, nine TFL, 4.5 sacks and 37 PFF pressures; ranked among the top run defenders. Official 2026 fifth-year roster and final collegiate season, so high NFL exit and little further grade-room rather than invented dominant growth.",
         "sources": [
           "https://texastech.com/sports/football/roster/aj-holmes-jr/14301"
-        ]
+        ],
+        "nil": {
+          "year1": 1500000,
+          "year2Baseline": 1650000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1500000,
+          "gameYear1": 1500000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -15758,7 +16038,21 @@
         "summary": "Miami Ohio 2025 first-team All-MAC edge after multi-year development; career 41 games/16 starts, 102 tackles, 18 TFL, 13 sacks, three forced fumbles. Texas Tech 2026 official fifth year and last college eligibility, Big12 transition presents both modest improvement and risk; do not equate MAC sack totals to tested Power4 elite consistency.",
         "sources": [
           "https://texastech.com/sports/football/roster/adam-trick/14374"
-        ]
+        ],
+        "nil": {
+          "year1": 1525000,
+          "year2Baseline": 1675000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1522191,
+          "gameYear1": 1525000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -15796,7 +16090,21 @@
         "summary": "Kansas State 2025 second-team All-Big12 linebacker, three-time all-conference player with 34 appearances/26 starts across 2023-25, moving to Texas Tech as 2026 senior. Demonstrated veteran P4 level, high likelihood of steady play and NFL interest, while school bio cites two eligibility seasons on transfer under 5-for-5 rule, so do not hard-code exhausted eligibility.",
         "sources": [
           "https://texastech.com/sports/football/roster/austin-romaine/14371"
-        ]
+        ],
+        "nil": {
+          "year1": 1000000,
+          "year2Baseline": 1100000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1000000,
+          "gameYear1": 1000000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -15834,7 +16142,21 @@
         "summary": "Texas Tech 2025 fourteen-start linebacker with 90 tackles, four TFL and major Big12 Championship Game outstanding player award; 2023 Big12 Defensive Freshman of Year, at least 80 tackles for three seasons. Official 2026 fifth-year and final collegiate season. Mature upper-end talent has very little breakout runway, and game eligibility should force exit.",
         "sources": [
           "https://texastech.com/sports/football/roster/ben-roberts/14322"
-        ]
+        ],
+        "nil": {
+          "year1": 575000,
+          "year2Baseline": 625000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 579150,
+          "gameYear1": 575000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -15872,7 +16194,21 @@
         "summary": "Texas Tech 2025 senior predecessor started all 14 games at boundary safety, 59 tackles, two TFL, one interception and forced fumble; 2026 official senior returning after increase from prior 56 combined career tackles. Veteran secondary starter likely stable; slight new-role improvement possible but no giant leap.",
         "sources": [
           "https://texastech.com/sports/football/roster/brenden-jordan/14305"
-        ]
+        ],
+        "nil": {
+          "year1": 675000,
+          "year2Baseline": 750000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 674414,
+          "gameYear1": 675000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -15963,7 +16299,21 @@
         "summary": "Texas Tech 2025 second-team All-Big12 and Doak Walker semifinalist RB rushed 209 times for 1,124 yards and 14 TD in 14 games/nine starts, forming a top duo with J'Koby Williams. Already proven near high college production ceiling as 2026 junior, with 2027 NFL Draft eligible and significant declaration risk.",
         "sources": [
           "https://texastech.com/sports/football/roster/cameron-dickey/14282"
-        ]
+        ],
+        "nil": {
+          "year1": 800000,
+          "year2Baseline": 875000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 800000,
+          "gameYear1": 800000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16001,7 +16351,21 @@
         "summary": "Texas Tech 2025 slot receiver started 12 of 14 contests, 48 catches/637 yards/six TD and 2025 Big12 title game offensive MVP, after 2024 600-yard performance. 2026 official fifth-year veteran, expected ordinary terminal college season and mature steady profile rather than automatic high breakout.",
         "sources": [
           "https://texastech.com/sports/football/roster/eakin-coy/14284"
-        ]
+        ],
+        "nil": {
+          "year1": 975000,
+          "year2Baseline": 1075000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 985515,
+          "gameYear1": 975000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16039,7 +16403,21 @@
         "summary": "UTSA 2025 CB played 11 games/eight starts for 26 tackles, one INT and two pass breakups, with zero coverage TDs on 33 targets per school bio. Texas Tech 2026 senior after three UTSA years, incoming P4 competition creates credible growth opportunity and coverage volatility; official bio cites two years eligibility, not a certain forced exit.",
         "sources": [
           "https://texastech.com/sports/football/roster/davin-martin/14367"
-        ]
+        ],
+        "nil": {
+          "year1": 550000,
+          "year2Baseline": 600000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 550000,
+          "gameYear1": 550000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16077,7 +16455,21 @@
         "summary": "Texas Tech 2025 junior predecessor all-around RB/returner had 868 rushing yards/six TD on 155 carries plus 388 receiving yards, 242 kick returns and 1,525 all-purpose yards across 14 games/six starts; AllBig12 returner and Paul Hornung finalist. With proven production in multiple phases by 2026 junior season, steady likely and 2027 NFL interest high.",
         "sources": [
           "https://texastech.com/sports/football/roster/jkoby-williams/14332"
-        ]
+        ],
+        "nil": {
+          "year1": 775000,
+          "year2Baseline": 850000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 765000,
+          "gameYear1": 775000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16116,7 +16508,21 @@
         "summary": "Pitt 2025 all-ACC honorable mention receiver and 2023-25 return threat: 109 receptions/1,354 yards/nine TD and 2,664 all-purpose yards in 38 games/28 starts, with punt and kick return touchdowns. Texas Tech 2026 senior transfer has clear feature utility with Big12 transition; school notes two eligibility years remaining, so normal senior label alone must not force departure.",
         "sources": [
           "https://texastech.com/sports/football/roster/kenny-johnson/14362"
-        ]
+        ],
+        "nil": {
+          "year1": 1025000,
+          "year2Baseline": 1125000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1026381,
+          "gameYear1": 1025000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16154,7 +16560,21 @@
         "summary": "Auburn 2025 sophomore WR played all 12 games/three starts, caught 25 passes for 457 yards/two receiving TD and 42 rush yards/one rush TD, with consecutive final 140-plus receiving yard games; combined career 65 catches/908 yards. Texas Tech 2026 junior transfer with legit explosive flashes but inconsistent week-to-week volume; school projects additional years under 5-for-5.",
         "sources": [
           "https://texastech.com/sports/football/roster/malcolm-simmons/14372"
-        ]
+        ],
+        "nil": {
+          "year1": 600000,
+          "year2Baseline": 650000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 600000,
+          "gameYear1": 600000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16192,7 +16612,21 @@
         "summary": "Texas Tech 2025 safety appeared all 14 games mostly reserve and special teams, just eight tackles in four games and no verified interceptions. 2024 redshirt appearance in two games. 2026 junior has growth opportunity but has not demonstrated consistent starter-level Big12 defensive production; moderate portal/playing-time risk.",
         "sources": [
           "https://texastech.com/sports/football/roster/malik-esquerra/14286"
-        ]
+        ],
+        "nil": {
+          "year1": 200000,
+          "year2Baseline": 225000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 212212,
+          "gameYear1": 200000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16230,7 +16664,21 @@
         "summary": "Wake Forest 2025 starting DT played 12 games/21 tackles/3.5 TFL/two sacks; previously Georgetown first-team All-Patriot 2023. Career 37 games, 17.5 TFL/nine sacks, 79 PFF pressures. Official Texas Tech 2026 fifth-year and last eligibility, veteran interior rusher with competition-adjustment uncertainty and terminal-season exit.",
         "sources": [
           "https://texastech.com/sports/football/roster/mateen-ibirogba/14360"
-        ]
+        ],
+        "nil": {
+          "year1": 1000000,
+          "year2Baseline": 1100000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1000000,
+          "gameYear1": 1000000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16269,7 +16717,21 @@
         "summary": "Texas Tech 2025 sophomore reserve WR played 14 games mainly as kickoff returner, without verified full-time receiving star production; 2024 rookie in eight games/one start caught eight balls for 123 yards while battling injury. Highly recruited status is not a substitute for college tape. 2026 junior can rise with larger role but also has real underperformance/injury risk.",
         "sources": [
           "https://texastech.com/sports/football/roster/micah-hudson/14302"
-        ]
+        ],
+        "nil": {
+          "year1": 1000000,
+          "year2Baseline": 1100000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1000000,
+          "gameYear1": 1000000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16307,7 +16769,21 @@
         "summary": "Texas Tech 2025 sophomore defensive backup safety played 12 of 14 games, 11 tackles/half TFL and three pass breakups after only spot action as true freshman. 2026 junior with legitimate opportunity for a larger Big12 role, but 2025 season didn't demonstrate full-time defensive impact.",
         "sources": [
           "https://texastech.com/sports/football/roster/peyton-morgan/14315"
-        ]
+        ],
+        "nil": {
+          "year1": 550000,
+          "year2Baseline": 600000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 550027,
+          "gameYear1": 550000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16346,7 +16822,21 @@
         "summary": "Texas Tech 2025 second-team All-Big12 TE started 12 of 13 appearances, 55 catches for 624 yards and five TD, among best Red Raider tight-end yardage since Jace Amaro. 2026 official fifth-year receiving TE, already high demonstrated offensive value and likely draft declaration/eligibility completion, so steady more likely than big improvement.",
         "sources": [
           "https://texastech.com/sports/football/roster/terrance-carter-jr-/14275"
-        ]
+        ],
+        "nil": {
+          "year1": 700000,
+          "year2Baseline": 775000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 700000,
+          "gameYear1": 700000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
@@ -16384,7 +16874,21 @@
         "summary": "San Diego State 2025 first-team All-Mountain West edge started all 13 games with 53 tackles, 10.5 TFL and seven sacks, after 2024 first-team All-MW, 31 career TFL and 19.5 sacks. Texas Tech 2026 official fifth-year final season; high proven rush skill, meaningful Power4 transfer translation, and normal forced departure.",
         "sources": [
           "https://texastech.com/sports/football/roster/trey-white/14375"
-        ]
+        ],
+        "nil": {
+          "year1": 1525000,
+          "year2Baseline": 1675000,
+          "confidence": "low"
+        },
+        "nilEvidence": {
+          "provider": "The NIL Standard",
+          "asOf": "2026-10-06",
+          "sourceUrl": "https://thenilstandard.com/football/teams/texas-tech",
+          "kind": "independent-modeled-roster-value",
+          "publishedEstimatedValue": 1521449,
+          "gameYear1": 1525000,
+          "conversion": "Rounded published estimated annual value to nearest $25k; game Year 2 +10% provisional. Not audited private contract cash."
+        }
       }
     },
     {
