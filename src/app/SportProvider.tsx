@@ -11,7 +11,14 @@ export type SelectedSport = "ufc" | "football" | "mlb";
 
 export const SELECTED_SPORT_STORAGE_KEY = "the-hq:selected-sport";
 
-const DEFAULT_SPORT: SelectedSport = "ufc";
+export const SPORT_ORDER: readonly SelectedSport[] = ["football", "ufc", "mlb"];
+
+export function nextSport(current: SelectedSport, showMlb = true): SelectedSport {
+  const available = SPORT_ORDER.filter((sport) => showMlb || sport !== "mlb");
+  return available[(available.indexOf(current) + 1) % available.length] ?? "football";
+}
+
+const DEFAULT_SPORT: SelectedSport = "football";
 
 function isSelectedSport(value: string | null): value is SelectedSport {
   return value === "ufc" || value === "football" || value === "mlb";
