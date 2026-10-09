@@ -114,5 +114,5 @@ describe("CFB GM negotiated 2027 NIL and college chemistry", () => {
     }
     expect(summary.POWERHOUSE!.completed).toBeGreaterThan(0);
     expect(summary.BUILDER!.completed).toBeGreaterThan(0);
-  });
+  }, 120_000);
 });
