@@ -52,7 +52,7 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
   });
 
   it("has twenty-five completely audited school cohorts with exact existing identities and grades", () => {
-    for(const schoolId of ["alabama","oregon","texas","ohio-state","miami","georgia","lsu","notre-dame","byu","indiana","smu","florida","tennessee","boise-state","houston","iowa","utah","ucla","usc","missouri","texas-tech","mississippi-state","oklahoma-state","ole-miss","pittsburgh"){
+    for(const schoolId of ["alabama","oregon","texas","ohio-state","miami","georgia","lsu","notre-dame","byu","indiana","smu","florida","tennessee","boise-state","houston","iowa","utah","ucla","usc","missouri","texas-tech","mississippi-state","oklahoma-state","ole-miss","pittsburgh"]) {
       const school=CFB_GM_PLAYERS.filter((p)=>p.schoolId===schoolId);
       expect(school.length).toBeGreaterThan(10);
       for(const player of school){
