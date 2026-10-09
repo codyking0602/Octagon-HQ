@@ -136,7 +136,7 @@ describe("Daily Challenge Standings backend contract", () => {
 
   it("retires duplicate Daily titles from Play while preserving individual official results", () => {
     expect(hub).not.toContain("<DailyChallengeStandings");
-    expect(hub).toContain('to={"/championship/" + sport + "?tab=play"}');
+    expect(hub).toContain('navigate("/championship/" + sport + "?tab=play")');
     expect(hub).not.toContain("Official challenge record");
     expect(hub).not.toContain("today-hub-history");
     expect(component).toContain("Championship Standings");
