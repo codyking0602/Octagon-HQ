@@ -45,7 +45,7 @@ export type WheelFootballGmContractRow = {
 
 type MarketPoint = readonly [grade: number, apy: number];
 
-const MARKET_CURVES: Readonly<Record<WheelFootballGmMarketPosition | FootballGmActualRole, readonly MarketPoint[]>> = {
+const MARKET_CURVES: Readonly<Record<WheelFootballGmMarketPosition | Exclude<FootballGmActualRole, "TE">, readonly MarketPoint[]>> = {
   QB: [
     [75, 5_000_000],
     [80, 15_000_000],
@@ -502,7 +502,8 @@ export function projectWheelFootballGmExtensionApy(input: {
     ...input,
     yearsAhead: 1,
   });
-  const market = interpolateMarketApy(input.marketRole ?? input.position, yearTwoGrade);
+  const role = input.marketRole === "TE" ? "FLEX" : (input.marketRole ?? input.position);
+  const market = interpolateMarketApy(role, yearTwoGrade);
   // Market interest varies independently from development, but remains tied to
   // the player's realized grade and is fixed across the two future seasons.
   const profile = input.playerId ? footballGmDevelopmentProfile(input.playerId) : null;

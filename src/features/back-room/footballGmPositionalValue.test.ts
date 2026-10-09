@@ -25,7 +25,8 @@ describe("NFL GM role-sensitive valuation", () => {
     expect(footballGmActualRole(player("Fred Warner"))).toBe("LB");
     expect(footballGmActualRole(player("Cameron Heyward"))).toBe("IDL");
     expect(footballGmActualRole(player("Kyle Hamilton"))).toBe("S");
-    expect(footballGmActualRole(player("Travis Hunter"))).toBe("WR");
+    const hunter = FOOTBALL_GM_PLAYER_POOL.filter(row => row.name === "Travis Hunter");
+    expect(hunter.map(row => footballGmActualRole(row)).sort()).toEqual(["CB", "WR"]);
   });
 
   it("adjusts only the excess above neutral 80; both front-seven slots are equivalent", () => {
