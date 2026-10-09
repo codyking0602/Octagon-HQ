@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChallengeProfile } from "../challenges/challengeModel";
@@ -493,4 +493,22 @@ describe("Home Your HQ", () => {
 
     expect(within(yourHqSection()).queryByRole("link")).not.toBeInTheDocument();
   });
+  it("reveals the redesigned Home only to the existing owner permission and filters HQs", () => {
+    mocks.identity.profile = { ...cody, canControlPicks: true };
+    renderHome();
+    expect(screen.getByText("CHAMPIONSHIP · OWNER PREVIEW")).toBeInTheDocument();
+    const sport = screen.getByRole("combobox", { name: "Home sport" });
+    expect(sport).toHaveValue("all");
+    expect(screen.getByRole("region", { name: "Football HQ" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "UFC HQ" })).toBeInTheDocument();
+
+    fireEvent.change(sport, { target: { value: "football" } });
+    expect(screen.getByRole("region", { name: "Football HQ" })).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "UFC HQ" })).not.toBeInTheDocument();
+
+    fireEvent.change(sport, { target: { value: "ufc" } });
+    expect(screen.getByRole("region", { name: "UFC HQ" })).toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Football HQ" })).not.toBeInTheDocument();
+  });
+
 });
