@@ -90,6 +90,23 @@ function strikeOutBothBoards(publication: ReturnType<typeof buildFamilyFeudDaily
 }
 
 describe("Family Feud V2 Daily persistence contract", () => {
+  it("accepts the October 9 NFL defensive board's four fair slots", () => {
+    const original = buildSportsFeudPack("nfl", "2026-10-09");
+    expect(original.mainBoards[0]?.id).toBe("nfl-main-19-5");
+    const publication = buildFamilyFeudDailySetup(original, "2026-10-09", "fair-test");
+    let submission: Record<string, unknown> = {};
+    const awarded: number[] = [];
+    for (const answer of ["Tackling", "Aggresiveness", "Turnovers", "Physical"]) {
+      const result = advanceFamilyFeudDailyRuntime(context(publication, submission), { type: "answer", answer });
+      submission = result.submissionState;
+      awarded.push(Number((result.publicState.last_feedback as Record<string, unknown>).points));
+    }
+    expect(awarded).toEqual([7, 2, 4, 5]);
+    expect((submission.engine_state as Record<string, unknown>).mainBoardIndex).toBe(1);
+    const another = advanceFamilyFeudDailyRuntime(context(publication), { type: "answer", answer: "Awareness" });
+    expect(another.publicState.last_feedback).toMatchObject({ points: 2 });
+  });
+
   it("publishes prompts and rules without leaking accepted identities or candidate universes", () => {
     const publication = buildFamilyFeudDailySetup(pack, "2026-09-20", "test-schedule");
     const publicJson = JSON.stringify(publication.publicSetup);
