@@ -154,7 +154,12 @@ export function PicksSeasonHub({
         open={hubOpen}
         onToggle={(toggleEvent) => setHubOpen(toggleEvent.currentTarget.open)}
       >
-        <summary className="picks-season-hub__summary">
+        <summary className="picks-season-hub__summary"
+          onClick={(event) => {
+            event.preventDefault();
+            setHubOpen((open) => !open);
+          }}
+        >
           <div className="picks-season-hub__identity">
             <span>{football ? `${season} FOOTBALL SEASON` : `${season} SEASON`}</span>
             <strong id="picks-season-title">Picks Results Archive</strong>
