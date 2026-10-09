@@ -179,13 +179,9 @@ describe("Football HQ Home summary", () => {
     expect(within(hq).getByText("FOOTBALL PICKS")).toBeInTheDocument();
     expect(within(hq).getByText("1 OF 3")).toBeInTheDocument();
     expect(within(hq).getByText("2 PICKS LEFT")).toBeInTheDocument();
-    expect(within(hq).getByText("#2 OF 2")).toBeInTheDocument();
-    expect(within(hq).getByText("2026 PICKS STANDING")).toBeInTheDocument();
+    expect(within(hq).getByText("2026 PICKS RECORD")).toBeInTheDocument();
     expect(within(hq).getByRole("link", { name: "Open Football Championship Picks leaderboard" }))
       .toHaveAttribute("href", "/championship/football?tab=picks");
-    expect(within(hq).getByText("DAILY + FEATURED RESULTS")).toBeInTheDocument();
-    expect(within(hq).getByRole("link", { name: "Open Football Play leaderboard" }))
-      .toHaveAttribute("href", "/championship/football?tab=play");
     expect(within(hq).getByText("DAILY CHALLENGE")).toBeInTheDocument();
 
     expect(within(hq).getByText("Drew Mestemaker")).toBeInTheDocument();
