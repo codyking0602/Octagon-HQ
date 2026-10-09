@@ -235,3 +235,30 @@ export function footballSpotlightNextPair(
   const activeIndex = FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.findIndex((pair) => pair.id === active.id);
   return FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[activeIndex + 1] ?? null;
 }
+
+/** One Central-time day of remembrance; the established weekly pair resumes Oct. 11. */
+export const FOOTBALL_DITKA_MEMORIAL_DAY = "2026-10-10";
+export const FOOTBALL_DITKA_MEMORIAL_PHOTO = "https://images2.minutemediacdn.com/image/upload/c_fill,w_1200,ar_1:1,f_auto,q_auto/images/ImagnImages/mmsport/60/01h2rdtzkv214xnfwj7c.jpg";
+export const FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT: FootballPlayerSpotlight = {
+  name: "Mike Ditka",
+  team: "Chicago Bears",
+  position: "TE · HEAD COACH",
+  stats: [
+    { value: "89", label: "RETIRED" },
+    { value: "1963", label: "NFL TITLE" },
+    { value: "XX", label: "SUPER BOWL" },
+    { value: "1988", label: "HOF" },
+  ],
+  result: "IRON MIKE · DA COACH",
+  measurements: "1939–2026",
+  teamColor: "#C83803",
+  highlightUrl: "https://www.chicagobears.com/news/bears-legend-mike-ditka-passes-away-at-86",
+};
+
+export function footballDitkaMemorialIsActive(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? "";
+  return `${value("year")}-${value("month")}-${value("day")}` === FOOTBALL_DITKA_MEMORIAL_DAY;
+}
