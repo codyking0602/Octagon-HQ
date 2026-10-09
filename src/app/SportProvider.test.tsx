@@ -58,9 +58,9 @@ describe("SportProvider", () => {
     expect(sportProviderSource.match(/localStorage\.setItem/g) ?? []).toHaveLength(1);
   });
 
-  it("drives switchable contextual theme scope from the canonical selected sport", () => {
-    expect(appShellSource).toContain("if (context?.switchable) return selectedSport;");
-    expect(appShellSource).not.toContain("context.sport === selectedSport");
+  it("drives contextual theme from actual route while synchronizing the one sport preference", () => {
+    expect(appShellSource).toContain("if (context?.switchable) return context.sport;");
+    expect(appShellSource).toContain("setSelectedSport(sportContext.sport);");
   });
 
   it("keeps one canonical theme/style initialization path", () => {
