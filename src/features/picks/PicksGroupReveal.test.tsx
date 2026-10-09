@@ -220,7 +220,7 @@ describe("Picks group reveals", () => {
   it("keeps the tappable group reveal in the completed fight-by-fight recap", async () => {
     renderPage(null, completedHistory);
 
-    fireEvent.click(await screen.findByText("STANDINGS & EVENTS"));
+    fireEvent.click(await screen.findByText("FINISHED EVENTS"));
     fireEvent.click(screen.getByRole("tab", { name: "EVENTS" }));
     fireEvent.click(screen.getByRole("button", { name: /OPEN FULL RECAP/i }));
 
