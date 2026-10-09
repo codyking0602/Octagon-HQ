@@ -2,40 +2,23 @@ import { Link } from "react-router-dom";
 import type { DailyChallengeChampionshipSnapshot } from "../play/dailyChallengeChampionship";
 import type { PlaySport } from "../play/playRegistry";
 
-function titleCountLabel(count: number) {
-  return `${count} ${count === 1 ? "title" : "titles"}`;
-}
-
+/** Contextual link only: all season standings now live in the Championship hub. */
 export function WeeklyGamesStandingLink({
-  sport,
-  standing,
-  loading,
-  signedIn,
+  sport, standing, loading, signedIn,
 }: {
   sport: PlaySport;
   standing: DailyChallengeChampionshipSnapshot | null;
   loading: boolean;
   signedIn: boolean;
 }) {
-  const destination = sport === "football"
-    ? "/football?standings=me#championship-standings"
-    : "/play?standings=me#championship-standings";
-  const summary = !signedIn
-    ? "SIGN IN TO TRACK"
-    : loading && !standing
-      ? "LOADING"
-      : standing
-        ? `#${standing.rank} overall · ${titleCountLabel(standing.weeklyTitles)}`
-        : "NO STANDING YET";
-
+  const summary = !signedIn ? "SIGN IN TO TRACK"
+    : loading && !standing ? "LOADING"
+      : "DAILY + FEATURED RESULTS";
   return (
-    <Link
-      className="home-weekly-games-row"
-      to={destination}
-      aria-label={`View ${sport === "football" ? "Football" : "UFC"} Championship Standings`}
-    >
+    <Link className="home-weekly-games-row" to={"/championship/" + sport + "?tab=play"}
+      aria-label={"Open " + (sport === "football" ? "Football" : "UFC") + " Play leaderboard"}>
       <span className="home-weekly-games-row__copy">
-        <small>WEEKLY GAMES</small>
+        <small>PLAY STANDINGS</small>
         <strong>{summary}</strong>
       </span>
       <b>VIEW →</b>
