@@ -166,7 +166,7 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
         const excluded=new Set([...run.roster.map(p=>p.playerId),
           ...run.departures.map(p=>p.playerId), ...run.voluntaryPortalOuts]);
         const schools=run.finalRoster.length<7
-          ? cfbGmEligibleSchools(run.finalRoster,budget,2,run.previousPortalSchool,run.schoolIds,excluded)
+          ? cfbGmEligibleSchools(run.finalRoster,budget,2,run.previousPortalSchool,run.schoolIds,excluded,run.seed)
           : [];
         if (!schools.length) {
           expect(run.voluntaryPortalOuts.length).toBeLessThan(2);
@@ -177,10 +177,10 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
           continue;
         }
         const school=cfbGmSpin(run.seed,100+run.portalSpins,schools)!;
-        const choices=[...cfbGmCandidates(school,run.finalRoster,budget,2,true,excluded)]
+        const choices=[...cfbGmCandidates(school,run.finalRoster,budget,2,true,excluded,run.seed)]
           .sort((a,b)=>a.nilYear2-b.nilYear2);
         expect(choices.length).toBeGreaterThan(0);
-        const roster=cfbGmPick(run.finalRoster,choices[0]!.id,budget,2,excluded)!;
+        const roster=cfbGmPick(run.finalRoster,choices[0]!.id,budget,2,excluded,run.seed)!;
         expect(roster).not.toBeNull();
         run={...run,finalRoster:roster,previousPortalSchool:school,portalSpins:run.portalSpins+1};
       }
