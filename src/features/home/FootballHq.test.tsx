@@ -264,7 +264,7 @@ describe("Football HQ Home summary", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("T-1 OF 2")).toBeInTheDocument();
+    expect(screen.getByText("2026 PICKS RECORD")).toBeInTheDocument();
     expect(screen.queryByText("#T-1 OF 2")).not.toBeInTheDocument();
 
     const photo = screen.getByRole("button", { name: "Manage player spotlight photo" });
