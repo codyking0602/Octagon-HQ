@@ -9,15 +9,16 @@
     "schools": 25,
     "archivedOn3Recovered": 48,
     "currentOn3Matched": 52,
-    "publishedReferenceMatched": 58,
-    "independentCaseEstimates": 410
+    "publishedReferenceMatched": 60,
+    "independentCaseEstimates": 408,
+    "profileOnlyOn3Matched": 2
   },
   "sourcePolicy": "On3 published NIL valuation is an estimate, not verified cash compensation; all non-On3 amounts are player-specific editorial judgments based on sourced football evidence and market comparables, not HQ grades, in-game budgets, or an AP-rank pricing formula.",
   "marketReferenceUrls": [
     "https://www.on3.com/nil/rankings/player/college/football/",
     "https://www.on3.com/nil/news/about-on3-nil-valuation-per-post-value/",
     "https://biz.opendorse.com/annual-nil-report-2026/",
-    "https://hubapi.cbssports.com/college-football/news/what-the-transfer-portal-costs-now-position-by-position-price-ranges-amid-a-market-surge/"
+    "https://www.cbssports.com/college-football/news/what-the-transfer-portal-costs-now-position-by-position-price-ranges-amid-a-market-surge/"
   ],
   "consumers": "NO RUNTIME CHANGE. Integration owner must validate mappings and explicitly wire data after review.",
   "players": [
@@ -2554,12 +2555,19 @@
       "playerName": "Ellis Robinson IV",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 1400000,
+      "year1NilEstimateUsd": 750000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-player-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 750000,
+        "url": "https://www.on3.com/rivals/ellis-robinson-iv-41558/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -2568,15 +2576,10 @@
           "https://georgiadogs.com/sports/football/roster/ellis-robinson%20iv/10682"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: FWAA 2025 national freshman defensive player of year with four interceptions, exceptional Georgia corner recognition. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
-      "marketDecisionNote": "FWAA 2025 national freshman defensive player of year with four interceptions, exceptional Georgia corner recognition",
-      "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "marketReasoning": "On3 explicitly marks the 2026-10-09 individual Georgia CB valuation as 'Market-based', not confirmed compensation; the $750K estimate is retained rather than replacing it with a larger fictional award-derived price despite his freshman national defensive-player honor. Source page checked October 9, 2026; neither a certified payment statement nor endorsement of commercial redistribution.",
+      "uncertaintyNote": "A publisher modeled market valuation, not a confirmed NIL deal or verified payment.",
+      "marketDecisionNote": "On3 explicitly marks the 2026-10-09 individual Georgia CB valuation as 'Market-based', not confirmed compensation; the $750K estimate is retained rather than replacing it with a larger fictional award-derived price despite his freshman national defensive-player honor.",
+      "marketCaseReviewAsOf": "2026-10-09"
     },
     {
       "id": "georgia|gabeharrisjr",
@@ -6552,12 +6555,19 @@
       "playerName": "Ahmad Hardy",
       "positionGroup": "RB",
       "year": 2026,
-      "year1NilEstimateUsd": 1850000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-player-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/ahmad-hardy-240668/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -6566,15 +6576,10 @@
           "https://mutigers.com/sports/football/roster/season/2026/player/ahmad-hardy"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: 2025 consensus first-team All-American RB ran for 1,649 yards and 16 TD, major individual NIL name value. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
-      "marketDecisionNote": "2025 consensus first-team All-American RB ran for 1,649 yards and 16 TD, major individual NIL name value",
-      "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "marketReasoning": "On3 explicitly marks the 2026-10-06 player profile valuation as 'Confirmed Deal'; it does not provide a verified full underlying contract amount. This published $1M price is retained even though his consensus All-American rushing production can imply much greater game football ability. Source page checked October 9, 2026; neither a certified payment statement nor endorsement of commercial redistribution.",
+      "uncertaintyNote": "Provider flags a confirmed deal but no independently audited contract terms or precise paid sum; underlying terms undisclosed.",
+      "marketDecisionNote": "On3 explicitly marks the 2026-10-06 player profile valuation as 'Confirmed Deal'; it does not provide a verified full underlying contract amount. This published $1M price is retained even though his consensus All-American rushing production can imply much greater game football ability.",
+      "marketCaseReviewAsOf": "2026-10-09"
     },
     {
       "id": "missouri|austinsimmons",
@@ -14889,15 +14894,16 @@
     }
   ],
   "researchAudit": {
-    "individuallyReviewedAdditionalCases": 410,
+    "individuallyReviewedAdditionalCases": 408,
     "casePriceOverridesMissed": 0,
     "marketEstimateBasis": "Player-specific football biographies and market comparables, with documented case-specific editorial overrides; non-provider prices remain estimates and should never be presented as published NIL valuations",
     "constraint": "No HQ grades, development probabilities, Powerhouse/Builder budgets or salary cap coefficients used",
     "totalSourceOrCaseReviewed": 468,
-    "sourceBasedValuations": 58,
+    "sourceBasedValuations": 60,
     "footballEvidenceWithSource": 468,
-    "year1ValuationMethod": "No grades/budgets/cap optimization; 58 individual dated public NIL valuation references; 410 separately reviewed and justified estimated dollar amounts, incorporating individual football award/production, injury/recruiting/role evidence, and broad non-athlete-specific college NIL market context.",
-    "statisticalGradeIndependence": "No HQ grades, future development probabilities, draft simulations, lineup budgets or Powerhouse/Builder salary caps used to derive dollar amounts."
+    "year1ValuationMethod": "No grades/budgets/cap optimization; 58 ranked or archived individual On3 records + 2 unranked current On3 player profiles, and 408 manually reviewed athlete-specific independent editorial market estimates, based on official player football performance, recruiting history and broad NIL transfer-market context.",
+    "statisticalGradeIndependence": "No HQ grades, future development probabilities, draft simulations, lineup budgets or Powerhouse/Builder salary caps used to derive dollar amounts.",
+    "publishedPriceExceptions": "On3 athlete profile on 2026-10-06: Ahmad Hardy $1M, 'Confirmed Deal'; and on 2026-10-09: Ellis Robinson IV $750K 'Market-based'. Both replace initially higher independent editorial estimates. Neither number certifies privately audited compensation."
   },
   "marketReferenceCatalog": {
     "ON3_FOOTBALL_BOARD": {
@@ -14909,7 +14915,7 @@
       "purpose": "Provider describes evolving NIL valuation methodology; estimates are not verified private contracts."
     },
     "CBS_2026_PORTAL_MARKET": {
-      "url": "https://hubapi.cbssports.com/college-football/news/what-the-transfer-portal-costs-now-position-by-position-price-ranges-amid-a-market-surge/",
+      "url": "https://www.cbssports.com/college-football/news/what-the-transfer-portal-costs-now-position-by-position-price-ranges-amid-a-market-surge/",
       "purpose": "Broad positional portal marketplace context, not published player compensation."
     },
     "OPENDORSE_2026_FOOTBALL_REPORT": {
