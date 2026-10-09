@@ -41,6 +41,7 @@ import {
   footballGmFinalResultV2,
   footballGmTeamOverall,
   footballGmSignFreeAgent,
+  footballGmSwapDisplacedAsset,
   type FootballGmTradeProposal,
   type FootballGmSeasonResultV2,
 } from "./footballGmStrategy";
@@ -1224,6 +1225,30 @@ export default function FootballGmHeadToHeadPage() {
     });
   }
 
+  function swapDisplacedAsset(promotePlayerId: string, displacePlayerId: string) {
+    // A multiplayer swap only rearranges our seven held assets. Existing
+    // turn ownership and Supabase offseason persistence remain authoritative.
+    if (
+      displayedPhase !== "offseason" || !isMyTurn || matchBusy
+      || run.pendingFreeAgentTeam || run.tradeAnchorPlayerId || run.pendingTradeResolution
+    ) return;
+    const next = footballGmSwapDisplacedAsset({
+      roster: run.finalRoster,
+      tradeChipPlayerIds: run.tradeChipPlayerIds,
+      promotePlayerId,
+      displacePlayerId,
+      seed: run.seed,
+    });
+    if (!next) return;
+    const incoming = footballGmPlayerById(promotePlayerId);
+    const outgoing = footballGmPlayerById(displacePlayerId);
+    patch({
+      finalRoster: [...next.roster],
+      tradeChipPlayerIds: [...next.tradeChipPlayerIds],
+      tradeMessage: `${incoming?.name ?? "Player"} moved into the lineup; ${outgoing?.name ?? "the former starter"} is now a trade asset. No player was released.`,
+    });
+  }
+
   function releaseTradeChip(playerId: string) {
     if (!run.tradeChipPlayerIds.includes(playerId)) return;
     const player = footballGmPlayerById(playerId);
@@ -1598,9 +1623,12 @@ export default function FootballGmHeadToHeadPage() {
                     {run.tradeChipPlayerIds.length ? (
                       <TradeChipPanel
                         playerIds={run.tradeChipPlayerIds}
+                        roster={run.finalRoster}
                         seed={run.seed}
                         consequences={run.negotiationConsequences}
                         shoppedPlayerIds={run.shoppedPlayerIds}
+                        canSwap={isMyTurn && !matchBusy && !run.pendingFreeAgentTeam}
+                        onSwap={swapDisplacedAsset}
                         onShop={beginTrade}
                         onRelease={releaseTradeChip}
                       />
