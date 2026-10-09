@@ -12,6 +12,10 @@ beforeEach(() => {
 afterEach(cleanup);
 
 function renderRoute(path: string) {
+  // Explicit legacy /picks and /play URLs refer to UFC even when Football is the app default.
+  if ((path === "/picks" || path === "/play") && !window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)) {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "ufc");
+  }
   const router = createMemoryRouter(appRoutes, { initialEntries: [path] });
   render(
     <AppProviders>
