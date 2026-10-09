@@ -3909,3 +3909,180 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
 .football-gm-page[data-cfb-gm="true"] .gm-final__player-name {
   min-width: 0;
 }
+
+
+/* College GM mobile acceptance: a compact seven-player roster without
+ * truncated identities, column collisions or bleeding development labels. */
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article:not(.is-filled) {
+  grid-template-columns: 43px minmax(0, 1fr);
+  gap: 12px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article:not(.is-filled) .football-gm__open {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: start;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-player strong {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.2;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-player > span { min-width: 0; }
+.football-gm-page[data-cfb-gm="true"] .football-gm__roster-contract span {
+  text-align: right;
+  line-height: 1.25;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-exit-risk {
+  font-size: 8px;
+  max-width: 100%;
+  padding: 3px 5px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-exit-risk.risk-low {
+  border-color: rgba(103, 182, 144, .24);
+  color: #92cdb0;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__picker .football-gm__position-tabs {
+  margin: 10px 0 12px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__picker-candidates > button {
+  height: auto;
+  min-height: 84px;
+  overflow: hidden;
+  padding-block: 11px;
+  align-items: start;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__picker-player-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  align-content: start;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__picker-player-copy .football-gm__candidate-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  min-width: 0;
+  height: auto;
+  margin: 6px 0 0;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__picker-candidates .football-gm__development-note {
+  display: block;
+  position: static;
+  flex: 1 0 100%;
+  width: 100%;
+  min-height: 0;
+  height: auto;
+  line-height: 1.3;
+  margin: 5px 0 0;
+  padding: 0;
+  white-space: normal;
+  font-size: 9px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-summary { padding: 16px; }
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-summary h2 {
+  font-size: clamp(19px, 5.1vw, 25px);
+  margin: 5px 0 10px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-headline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 14px;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 11px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-headline strong {
+  font-size: 13px;
+  color: #e6f4ff;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-headline span {
+  font-size: 10px;
+  font-weight: 850;
+  color: #8fb7d2;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-departures {
+  display: grid;
+  border: 1px solid rgba(149, 190, 221, .13);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-departures > div {
+  min-width: 0;
+  padding: 9px 11px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, .065);
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-departures > div:last-child { border-bottom: 0; }
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-departures strong {
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-departures span {
+  color: #8ecaf0;
+  font-size: 9px;
+  font-weight: 800;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-help {
+  padding-top: 12px;
+  color: #99b4c7;
+  font-size: 10px;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-help summary {
+  cursor: pointer;
+  color: #8cccf8;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+.football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-help p {
+  line-height: 1.45;
+  margin: 8px 0 0;
+}
+@media (max-width: 540px) {
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster-grid > article.is-filled {
+    grid-template-columns: 31px minmax(0, 1fr) minmax(57px, max-content);
+    gap: 7px;
+    padding: 9px 8px;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-grid > article.is-filled {
+    grid-template-columns: 27px minmax(0, 1fr) 61px;
+    gap: 7px;
+    min-height: 59px;
+    padding: 9px 8px;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-grid > article > button {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    width: auto;
+    min-height: 29px;
+    justify-self: end;
+    padding: 5px 10px;
+    font-size: 9px;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-player strong {
+    font-size: 11px;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-player em {
+    font-size: 8px;
+    line-height: 1.3;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-scouting .football-gm__quality-pill {
+    font-size: 8px;
+    padding: 3px 5px;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-scouting .football-gm__development-note {
+    font-size: 8px;
+    line-height: 1.3;
+    margin-top: 3px;
+  }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-contract b { font-size: 11px; }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__roster.is-compact .football-gm__roster-contract span { font-size: 8px; }
+  .football-gm-page[data-cfb-gm="true"] .football-gm__cfb-portal-summary { padding: 13px 12px; }
+}
