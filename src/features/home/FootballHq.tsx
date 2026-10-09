@@ -414,8 +414,8 @@ export function FootballHq({
           </div>
           <Link
             className="home-event-card__standing"
-            to="/football/picks?view=standings#picks-season-leaderboard"
-            aria-label="Open Football Picks season standings"
+            to="/championship/football?tab=picks"
+            aria-label="Open Football Championship Picks leaderboard"
           >
             <span>{season} PICKS STANDING</span>
             <b>{signedIn && rank ? `${rank} OF ${standings.length}` : "—"}</b>
