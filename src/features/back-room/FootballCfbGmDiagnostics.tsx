@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   CFB_GM_BUDGETS, CFB_GM_VERSION, cfbGmEffectiveGrade, cfbGmMoney,
   cfbGmPlayer, cfbGmSeason, cfbGmSpent, cfbGmTeamGrade,
+  cfbGmPrice, cfbGmYear2Ask, cfbGmChemistry, cfbGmPendingRetentions,
   type CfbGmRun,
 } from "./footballCfbGmEngine";
 import { cfbGmDevelop } from "./footballCfbGmDevelopment";
@@ -41,20 +42,29 @@ export function FootballCfbGmDiagnostics({run}: {run:CfbGmRun}) {
         <div><dt>Seed</dt><dd>{run.seed}</dd></div>
         <div><dt>Phase / Budget</dt><dd>{run.phase} · {run.budget} ({cfbGmMoney(CFB_GM_BUDGETS[run.budget])})</dd></div>
         <div><dt>Original draft</dt><dd>{run.roster.length}/7 · {cfbGmMoney(cfbGmSpent(run.roster,1))} spent</dd></div>
+        <div><dt>2027 committed</dt><dd>{cfbGmMoney(cfbGmSpent(run.finalRoster,2,run.seed,run.retentionOffers))} / {cfbGmMoney(CFB_GM_BUDGETS[run.budget])}</dd></div>
+        <div><dt>2027 retained offers pending</dt><dd>{run.phase==="offseason" ? cfbGmPendingRetentions(run).length : "N/A"}</dd></div>
+        <div><dt>2027 team chemistry</dt><dd>{cfbGmChemistry(run.finalRoster,2,run.roster).meter}/100</dd></div>
         <div><dt>Current team-grade</dt><dd>{cfbGmTeamGrade(run.roster,1,run.seed).toFixed(1)} Y1
           {run.finalRoster.length? " / " + cfbGmTeamGrade(run.finalRoster,2,run.seed).toFixed(1)+" Y2":""}</dd></div>
         <div><dt>CFP outcomes</dt><dd>{first?first.finish+" ("+first.wins+"-"+first.losses+")":"Draft incomplete"}
           {second? " → "+second.finish+" ("+second.wins+"-"+second.losses+")":""}</dd></div>
       </dl>
       <div className="football-gm__cfb-diagnostics-table" role="region" aria-label="Individual source grades and development audit" tabIndex={0}>
-        <table><thead><tr><th>Year / Slot</th><th>Player</th><th>Family</th><th>HQ</th><th>2027</th><th>Y1 NIL</th><th>2027 base</th></tr></thead>
+        <table><thead><tr><th>Year / Slot</th><th>Player</th><th>Family</th><th>HQ</th><th>2027</th><th>Y1 NIL</th><th>2027 ask</th><th>Agreed / Portal</th></tr></thead>
           <tbody>{rows.map(({row,player},index)=><tr key={index}>
             <td>{index<run.roster.length?"2026":"2027"} / {row.slot}</td>
             <td>{player.name} · {player.school}</td><td>{player.family}</td>
             <td>{player.currentGrade}</td>
             <td>{cfbGmEffectiveGrade(player,2,run.seed)}
               <small> ({cfbGmDevelop(player.id,player.currentGrade,player.classification,run.seed).delta>=0?"+":""}{cfbGmDevelop(player.id,player.currentGrade,player.classification,run.seed).delta})</small></td>
-            <td>{cfbGmMoney(player.nilYear1)}</td><td>{cfbGmMoney(player.nilYear2)}</td>
+            <td>{cfbGmMoney(player.nilYear1)}</td>
+            <td>{cfbGmMoney(cfbGmYear2Ask(player,run.seed))}</td>
+            <td>{run.retentionOffers[player.id]?.accepted
+              ? cfbGmMoney(run.retentionOffers[player.id]!.amount)+" "+run.retentionOffers[player.id]!.tier
+              : index>=run.roster.length && row.acquired==="portal"
+                ? cfbGmMoney(cfbGmPrice(player,2,run.seed,run.retentionOffers))+" PORTAL"
+                : run.retentionOffers[player.id]?.accepted===false ? "REJECTED" : "NO AGREEMENT"}</td>
           </tr>)}</tbody>
         </table>
       </div>
