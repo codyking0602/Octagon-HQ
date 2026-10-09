@@ -331,6 +331,35 @@ function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, bu
   if (!reserve) return true;
   const missing = cfbGmOpenSlots(next);
   const used = new Set(next.map((r) => r.playerId));
+  // The final three vacancies must be reserved against DISTINCT players.
+  // Summing one cheap dual-eligible RB/WR or the same Front Seven player twice
+  // can falsely allow a pick that leaves the GM with an unfillable cap.
+  // There are at most three simultaneous future assignments here; retaining
+  // the three cheapest choices per slot is exact for a minimum-cost matching.
+  if (missing.length <= 3) {
+    const choices = missing.map(slot => CFB_GM_PLAYERS.filter(p =>
+      !used.has(p.id) && !excluded.has(p.id) && p.eligibleSlots.includes(slot)
+      && (year === 1 || cfbGmPortalAvailable(p,portalSeed)))
+      .sort((a,b) => cfbGmPrice(a,year,portalSeed,offers) - cfbGmPrice(b,year,portalSeed,offers)
+        || a.id.localeCompare(b.id)).slice(0, missing.length));
+    if (choices.some(group => !group.length)) return false;
+    let lowest = Infinity;
+    const taken = new Set<string>();
+    const search = (index: number, cost: number) => {
+      if (cost >= lowest) return;
+      if (index === choices.length) { lowest = Math.min(lowest, cost); return; }
+      for (const option of choices[index]!) {
+        if (taken.has(option.id)) continue;
+        taken.add(option.id);
+        search(index+1, cost+cfbGmPrice(option,year,portalSeed,offers));
+        taken.delete(option.id);
+      }
+    };
+    search(0,0);
+    return spent + lowest <= budget;
+  }
+  // Fast optimistic floor while many positions remain. The exact distinct
+  // matching is enforced as soon as three or fewer positions are empty.
   const floor = missing.reduce((sum, slot) => {
     let best = Infinity;
     for (const p of CFB_GM_PLAYERS) {
