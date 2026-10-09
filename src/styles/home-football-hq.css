@@ -438,3 +438,17 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
     margin: 0;
   }
 }
+
+/* One-day Mike Ditka memorial: Bears identity, preserving the existing compact card. */
+.football-player-spotlight--memorial {
+  border-color: rgba(200, 56, 3, .76);
+  background:
+    radial-gradient(circle at 15% 18%, rgba(200, 56, 3, .22), transparent 43%),
+    linear-gradient(135deg, #111c2b, #080f1b 68%);
+}
+.football-player-spotlight--memorial .football-player-spotlight__copy > span {
+  color: #ffb783;
+}
+.football-player-spotlight--memorial .football-player-spotlight__media {
+  background: #101e30;
+}
