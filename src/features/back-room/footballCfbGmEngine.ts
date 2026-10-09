@@ -1,7 +1,6 @@
 import gradeProjection from "../../../data/generated/football/wheel-cfb-gm-grade-projection-2026-10-07.json";
 import { wheelFootballCfbPriorityForSchoolId } from "./wheelFootballCfbPriority";
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
-import { footballGmTeamOverall } from "./footballGmStrategy";
 import { cfbGmSimulateCollegeSeason, type CfbGmCollegeFinish } from "./footballCfbGmSimulation";
 import classEvidence from "../../../data/generated/football/cfb-gm-classification-runtime-2026.json";
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
@@ -473,14 +472,47 @@ export function cfbGmContinuity(run: CfbGmRun) {
 export const CFB_GM_POSITION_WEIGHTS: Readonly<Record<CfbGmSlot, number>> = {
   QB: 0.28, RB: 0.08, WR: 0.14, FLEX: 0.08, FRONT_7_A: 0.14, FRONT_7_B: 0.14, SECONDARY: 0.14,
 };
+/** College's own seven-core overall scale. Independent from the NFL GM
+ * rating-to-OVR transfer function and from any individual Wheel rating.
+ * A core of 88 is competitive, not automatically an NFL-style 92 OVR.
+ */
+const CFB_GM_OVR_ANCHORS = [[72,60],[76,66],[80,74],[82,78],[84,82],[86,86],
+  [88,90],[90,94],[92,97],[94,98],[96,99]] as const;
+export function cfbGmTeamOverall(grade: number) {
+  if (!Number.isFinite(grade)) throw new Error("Invalid College GM team grade");
+  if (grade <= CFB_GM_OVR_ANCHORS[0]![0]) return CFB_GM_OVR_ANCHORS[0]![1];
+  for (let i=1;i<CFB_GM_OVR_ANCHORS.length;i++) {
+    const [highX,highY]=CFB_GM_OVR_ANCHORS[i]!;
+    if (grade > highX) continue;
+    const [lowX,lowY]=CFB_GM_OVR_ANCHORS[i-1]!;
+    return Math.round(lowY+(grade-lowX)/(highX-lowX)*(highY-lowY));
+  }
+  return 99;
+}
+/** Explicit roster family, not an inferred EDGE/LB/CB/S specialty. The 468
+ * CFB source records do not verify every player's defensive subposition.
+ */
+export function cfbGmRoleFit(player: Pick<CfbGmPlayer,"family"|"eligibleSlots">, slot: CfbGmSlot) {
+  const eligible = player.eligibleSlots.includes(slot);
+  const natural = (slot === "QB" && player.family === "QB")
+    || (slot === "RB" && player.family === "RB")
+    || (slot === "WR" && player.family === "WR")
+    || (slot.startsWith("FRONT_7") && player.family === "Front Seven")
+    || (slot === "SECONDARY" && player.family === "Secondary");
+  const multiplier = slot !== "FLEX" ? 1
+    : player.family === "WR" ? 1.05 : player.family === "TE" ? 1.03
+    : player.family === "RB" ? .96 : 1;
+  return {eligible, label: !eligible ? "INVALID ROLE" : natural ? "PRIMARY FIT" :
+    slot === "FLEX" ? "FLEX FIT" : "UTILITY FIT", multiplier};
+}
 export function cfbGmTeamGrade(roster: readonly CfbGmRosterEntry[], year: 1 | 2 = 1, seed = "") {
   const neutral = 80;
   const contribution = roster.reduce((sum, row) => {
     const player = cfbGmPlayer(row.playerId);
     if (!player) return sum;
-    const flexRole = row.slot === "FLEX"
-      ? player.family === "WR" ? 1.05 : player.family === "TE" ? 1.03 : .96
-      : 1;
+    const role = cfbGmRoleFit(player, row.slot);
+    if (!role.eligible) throw new Error("College GM illegal role: "+player.id+" / "+row.slot);
+    const flexRole = role.multiplier;
     return sum + (cfbGmEffectiveGrade(player, year, seed) - neutral)
       * CFB_GM_POSITION_WEIGHTS[row.slot] * flexRole;
   }, 0);
@@ -492,7 +524,7 @@ export function cfbGmSeason(run: CfbGmRun, year: 1 | 2): CfbGmSeason {
   const chemistry = cfbGmChemistry(roster, year, run.roster);
   const continuity = (year === 1 ? 0 : cfbGmContinuity(run).adjustment) + chemistry.adjustment;
   const season = cfbGmSimulateCollegeSeason(run.seed, year, teamGrade + continuity);
-  return {year, teamGrade, overall: footballGmTeamOverall(teamGrade), finish: season.finish,
+  return {year, teamGrade, overall: cfbGmTeamOverall(teamGrade), finish: season.finish,
     chemistry: chemistry.meter, continuity, winOdds: season.winOdds, wins:season.wins, losses:season.losses,
     cfpSeed:season.cfpSeed, nationalChampion:season.champion};
 }
