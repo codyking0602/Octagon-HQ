@@ -226,10 +226,10 @@ describe("Home UFC HQ", () => {
     expect(within(section).getByText("1 PICK LEFT")).toBeInTheDocument();
     expect(within(section).getByText("#2 OF 3")).toBeInTheDocument();
     expect(within(section).getByText("2026 PICKS STANDING")).toBeInTheDocument();
-    expect(within(section).getByRole("link", { name: "Open UFC Picks season standings" }))
+    expect(within(section).getByRole("link", { name: "Open UFC Championship Picks leaderboard" }))
       .toHaveAttribute("href", "/picks?view=standings#picks-season-leaderboard");
     expect(within(section).getByText("69 PTS")).toBeInTheDocument();
-    expect(within(section).getByRole("link", { name: "View UFC Championship Standings" }))
+    expect(within(section).getByRole("link", { name: "Open UFC Play leaderboard" }))
       .toHaveAttribute("href", "/play?standings=me#championship-standings");
     expect(within(section).getByRole("link", { name: "MAKE PICKS →" })).toHaveAttribute("href", "/picks");
     expect(within(section).getByRole("link", { name: /Open UFC Today’s Challenge/i })).toBeInTheDocument();
