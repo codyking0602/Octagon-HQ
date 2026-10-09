@@ -314,7 +314,9 @@ function questionEntities(pack: FamilyFeudPack, question: FamilyFeudQuestion) {
 
 function matchTerms(pack: FamilyFeudPack, question: FamilyFeudQuestion) {
   const terms: MatchTerm[] = [];
-  for (const entity of questionEntities(pack, question)) {
+  const entities = questionEntities(pack, question);
+  const hasAggressiveness = entities.some((entity) => normalizeFamilyFeudInput(entity.displayName) === "aggressiveness");
+  for (const entity of entities) {
     terms.push({
       entityId: entity.id,
       term: normalizeFamilyFeudInput(entity.displayName),
@@ -323,6 +325,14 @@ function matchTerms(pack: FamilyFeudPack, question: FamilyFeudQuestion) {
     for (const alias of entity.aliases ?? []) {
       const term = normalizeFamilyFeudInput(alias);
       if (term) terms.push({ entityId: entity.id, term, kind: "alias" });
+    }
+    // Repair the historical published defensive-trait boards as well as new
+    // ones: "physical" should count as "physicality". Older packs have no
+    // separate aggressiveness answer; newer packs should award that answer
+    // independently, not ambiguously claim it for physicality.
+    if (entity.kind === "other" && normalizeFamilyFeudInput(entity.displayName) === "physicality") {
+      terms.push({ entityId: entity.id, term: "physical", kind: "alias" });
+      if (!hasAggressiveness) terms.push({ entityId: entity.id, term: "aggressiveness", kind: "alias" });
     }
     if (entity.kind === "person") {
       const firstName = personFirstName(entity.displayName);
