@@ -49,7 +49,9 @@ describe("CFB GM negotiated 2027 NIL and college chemistry", () => {
     expect(agreed.retentionOffers[player.id]).toEqual({tier:"PRIORITY",amount:quote.PRIORITY,accepted:true});
     expect(cfbGmNegotiateRetention(agreed,player.id,"VALUE")).toBeNull();
     expect(cfbGmPrice(player,2,run.seed,agreed.retentionOffers)).toBe(quote.PRIORITY);
-    for(const prospect of cfbGmPendingRetentions(agreed))run=cfbGmNegotiateRetention(run.retentionOffers[player.id]?run:agreed,prospect.id,"MARKET")??agreed;
+    let resolved=agreed;
+    for(const prospect of cfbGmPendingRetentions(agreed)) resolved=cfbGmNegotiateRetention(resolved,prospect.id,"MARKET")!;
+    expect(cfbGmPendingRetentions(resolved)).toHaveLength(0);
   });
   it("stress-tests Powerhouse and Builder complete seasons through negotiated retention and portal", () => {
     const summary:Record<string,{completed:number;cfp:number;score:number}>={};
