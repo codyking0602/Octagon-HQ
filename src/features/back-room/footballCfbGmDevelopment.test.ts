@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { CFB_GM_PLAYERS } from "./footballCfbGmEngine";
 import { describe, expect, it } from "vitest";
 import { cfbGmDevelop, cfbGmDevProfile, cfbGmNextClass } from "./footballCfbGmDevelopment";
 
@@ -48,5 +50,26 @@ describe("CFB GM college-stage development", () => {
     const veteran=cfbGmDevProfile("miami|mohamedtoure",82,"8TH");
     expect(veteran.breakout+veteran.improve+veteran.steady+veteran.decline).toBe(100);
     expect(cfbGmNextClass(null)).toBeNull();
+  });
+});
+
+
+describe("owner-approved 468-player development labels", () => {
+  it("matches every locked per-player label without changing original development probabilities", () => {
+    const csv = readFileSync("docs/audits/cfb-gm-468-development-labels-approved-2026-10-09.csv","utf8");
+    const rows = csv.trim().split(/\\r?\\n/).slice(1).map(row => row.split(","));
+    expect(rows).toHaveLength(468);
+    const seen = new Set<string>();
+    const counts: Record<string, number> = {};
+    for (const row of rows) {
+      const id = row[0]!, approved = row[7]!;
+      expect(seen.has(id), id).toBe(false);
+      seen.add(id);
+      const player = CFB_GM_PLAYERS.find(p => p.id === id);
+      expect(player, id).toBeDefined();
+      expect(player!.outlook, id).toBe(approved);
+      counts[player!.outlook] = (counts[player!.outlook] ?? 0) + 1;
+    }
+    expect(counts).toEqual({STEADY:298, "HIGH UPSIDE":44, RISING:86, "BOOM/BUST":28, "DECLINE RISK":12});
   });
 });
