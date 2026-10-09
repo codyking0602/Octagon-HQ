@@ -22,5 +22,11 @@ describe("CFB GM private owner diagnostics", () => {
     expect(panel).toContain("useState(false)");
     expect(panel).not.toContain("gradeProjection");
     expect(panel).not.toContain("writeFileSync");
+    expect(panel).toContain("cfbGmSpent(run.finalRoster,2,run.seed,run.retentionOffers)");
+    expect(panel).toContain("cfbGmPendingRetentions(run)");
+    expect(panel).toContain("cfbGmYear2Ask(player,run.seed)");
+    expect(panel).toContain("cfbGmPrice(player,2,run.seed,run.retentionOffers)");
+    expect(panel).toContain("cfbGmChemistry(run.finalRoster,2,run.roster)");
+    expect(panel).toContain("REJECTED");
   });
 });
