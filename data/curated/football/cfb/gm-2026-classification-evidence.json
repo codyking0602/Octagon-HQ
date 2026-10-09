@@ -11163,16 +11163,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4708488",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/antonio-kite/6483",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 28,
+          "steady": 50,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.62,
+        "portalExitProbability": 0.02,
+        "summary": "Ole Miss 2025 defensive back started 12 games, recorded 34 tackles and five pass breakups after 2024 Auburn eight-game rotation (six tackles/one interception). Two Alabama reserve years preceded transfer. Official 2026 fifth-year CB; proven P4 starter but limited big-play splash and mature plateau favor steady outcomes and modeled final season.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/antonio-kite/6483"
+        ]
+      }
     },
     {
       "id": "ole-miss|calebodom",
@@ -11191,8 +11210,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 37,
+          "steady": 39,
+          "decline": 12,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.39,
+        "portalExitProbability": 0.05,
+        "summary": "Ole Miss 2025 sophomore tight end caught 19 balls for 197 yards and two TD in 15 games, including six catches/64 yards against The Citadel; Alabama freshman 2024 seven receptions/65 yards in 12 appearances. 2026 junior has role and receiving growth potential but modest P4 production relative to elite TE reputation.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/caleb-odom/6492"
+        ]
+      }
     },
     {
       "id": "ole-miss|deucealexander",
@@ -11203,16 +11241,35 @@
         "WR",
         "Flex"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "SR",
       "espnAthleteId": "5152158",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/deuce-alexander/6437",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 31,
+          "steady": 49,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.02,
+        "summary": "Ole Miss 2025 wide receiver appeared all 15 games with 44 catches, 684 yards/two TD and 122 rushing yards on 19 carries; Wake Forest 2024 36/400/two. 2026 official senior and Senior Bowl Top 300. Established P4 slot/return versatility, more moderate improvement than unproven giant breakout.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/deuce-alexander/6437"
+        ]
+      }
     },
     {
       "id": "ole-miss|edwinjoseph",
@@ -11222,16 +11279,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "SR",
       "espnAthleteId": "4870765",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/edwin-joseph/6589",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 52,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.6,
+        "portalExitProbability": 0.03,
+        "summary": "Florida State 2025 starting safety played 12 games/ten starts, 37 tackles, 3.5 TFL, three interceptions/five pass breakups and a forced fumble. 2024 produced 13 tackles and one pick; Ole Miss 2026 official senior transfer, proven coverage playmaking but new scheme adaptation.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/edwin-joseph/6589"
+        ]
+      }
     },
     {
       "id": "ole-miss|horatiofields",
@@ -11241,16 +11317,35 @@
       "groups": [
         "WR"
       ],
-      "classification": "SR",
+      "classification": "5TH",
       "redshirt": null,
-      "sourceClass": "Senior",
+      "sourceClass": "5TH",
       "espnAthleteId": "4711408",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/horatio-fields/6584",
+      "confidence": "official-roster-2026",
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2024,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 32,
+          "steady": 34,
+          "decline": 21,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.22,
+        "portalExitProbability": 0.01,
+        "summary": "Auburn 2025 WR limited by season-ending injury after four games/one start and 12 catches/106 yards/TD. Wake Forest 2024 had 39 receptions/463 yards/four TD across 12 games. Official Ole Miss 2026 Fifth Year+ after multi-year Wake Forest and Auburn career: meaningful healthy rebound path but significant durability risk; model terminal year, not guaranteed compliance status.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/horatio-fields/6584"
+        ]
+      }
     },
     {
       "id": "ole-miss|jamariousbrown",
@@ -11260,16 +11355,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "SR",
       "espnAthleteId": "4870640",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/jamarious-brown/6451",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.48,
+        "portalExitProbability": 0.03,
+        "summary": "Ole Miss 2025 DT played all 15 games as a key rotational lineman, 24 tackles, 1.5 TFL, one sack and three QB hurries; 2024 FWAA Freshman All-American honor. Official senior 2026 with credible defensive rotation and opportunity for more starts, but low recent disruption means no automatic elite leap.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/jamarious-brown/6451"
+        ]
+      }
     },
     {
       "id": "ole-miss|jaylonbraxton",
@@ -11279,16 +11393,35 @@
       "groups": [
         "Secondary"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "SR",
       "espnAthleteId": "4918093",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/jaylon-braxton/6449",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 30,
+          "steady": 48,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.58,
+        "portalExitProbability": 0.03,
+        "summary": "Ole Miss 2025 CB/safety appeared 11 games/eight starts, 24 tackles, 1.5 TFL, one interception and three pass breakups after earlier Arkansas defensive experience. 2026 official senior; positional versatility with proven P4 snaps, moderate scheme/health variance, steady most plausible.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/jaylon-braxton/6449"
+        ]
+      }
     },
     {
       "id": "ole-miss|joenelaguero",
@@ -11306,8 +11439,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 27,
+          "steady": 54,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.68,
+        "portalExitProbability": 0.02,
+        "summary": "Georgia 2025 safety started all 12 games with 39 tackles, 0.5 TFL and one pick; 2024 eleven games/five starts and 26 tackles. Ole Miss 2026 senior transfer from Georgia brings meaningful proven SEC safety workload, greater steady likelihood than speculative extreme development.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/joenel-aguero/6557"
+        ]
+      }
     },
     {
       "id": "ole-miss|johntaycookii",
@@ -11325,8 +11477,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 10,
+          "improve": 34,
+          "steady": 41,
+          "decline": 15,
+          "maxGain": 4,
+          "maxLoss": 6,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.43,
+        "portalExitProbability": 0.04,
+        "summary": "Syracuse 2025 receiver led team with 45 catches, 549 yards and two touchdowns in 12 games/nine starts, after Texas 2023-24 combined 16 catches/273 yards. 2026 Ole Miss senior transfer offers SEC step-up and sustained target chance but inconsistent past major-college usage; not simply elite from HS recruitment.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/johntay-cook-ii/6567"
+        ]
+      }
     },
     {
       "id": "ole-miss|kamfranklin",
@@ -11344,8 +11515,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 7,
+          "improve": 29,
+          "steady": 52,
+          "decline": 12,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.02,
+        "summary": "Ole Miss 2025 DT/DE started all 15 games and ranked among team leaders with 69 tackles, now 2026 preseason All-SEC third-team as junior. Demonstrated starter with sustained interior value; NFL exit odds meaningful, breakout capped relative to already proven SEC level.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/kam-franklin/6469"
+        ]
+      }
     },
     {
       "id": "ole-miss|keatonthomas",
@@ -11362,9 +11552,28 @@
       "matchStatus": "official-school-roster",
       "sourceUrl": "https://olemisssports.com/sports/football/roster/print",
       "confidence": "official-roster-2026",
-      "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "remainingEligibility": 0,
+      "earliestDraftYear": 2025,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 5,
+          "improve": 22,
+          "steady": 58,
+          "decline": 15,
+          "maxGain": 3,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.78,
+        "portalExitProbability": 0.01,
+        "summary": "Baylor 2025 all-12-game starting LB made 103 tackles, seven TFL, an interception and fumble-return TD, after 114 tackles and first-team All-Big12 in 2024; 219 tackles in 25 Baylor starts. Ole Miss 2026 officially fifth year, mature productive linebacker with limited giant growth headroom and ordinary terminal game year.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/keaton-thomas/6570"
+        ]
+      }
     },
     {
       "id": "ole-miss|kewanlacy",
@@ -11427,16 +11636,35 @@
       "groups": [
         "Front Seven"
       ],
-      "classification": "SO",
+      "classification": "JR",
       "redshirt": null,
-      "sourceClass": "Sophomore",
+      "sourceClass": "JR",
       "espnAthleteId": "5139216",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/luke-ferrelli/6583",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 33,
+          "steady": 47,
+          "decline": 12,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.73,
+        "portalExitProbability": 0.04,
+        "summary": "Cal 2025 redshirt freshman LB started all 13 games, 91 tackles, five TFL, one sack/one interception and ACC Defensive Rookie of Year; no playing time in 2024. Ole Miss official 2026 junior transfer, established major-conference tackle production with moderate second-system uncertainty and high plausible 2027 NFL interest.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/luke-ferrelli/6583"
+        ]
+      }
     },
     {
       "id": "ole-miss|lukehasz",
@@ -11454,8 +11682,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 35,
+          "steady": 32,
+          "decline": 20,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.3,
+        "portalExitProbability": 0.03,
+        "summary": "Ole Miss 2025 tight end received only three passes for 28 yards and one TD across 12 appearances after Arkansas 2023-24 totaled 42 receptions, 577 yards and seven TD in 17 games. Early Arkansas 2023 broken collarbone adds health context. 2026 senior rebound possible, but recent SEC usage substantially lower than previous peak.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/luke-hasz/6475"
+        ]
+      }
     },
     {
       "id": "ole-miss|makhifrazier",
@@ -11473,8 +11720,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 12,
+          "improve": 38,
+          "steady": 36,
+          "decline": 14,
+          "maxGain": 5,
+          "maxLoss": 5,
+          "volatility": "MEDIUM"
+        },
+        "draftDeclarationProbability": 0.38,
+        "portalExitProbability": 0.06,
+        "summary": "Michigan State 2025 RB led Spartans with 520 yards and two rushing TD on 116 carries, adding 12 receptions/25 yards; only 21 yards on seven carries in 2024. Ole Miss 2026 junior transfer brings Big Ten workload base with SEC opportunity/competition but not proven 1,000-yard P4 superstar.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/makhi-frazier/6585"
+        ]
+      }
     },
     {
       "id": "ole-miss|sharifdenson",
@@ -11492,8 +11758,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 8,
+          "improve": 29,
+          "steady": 49,
+          "decline": 14,
+          "maxGain": 4,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.61,
+        "portalExitProbability": 0.03,
+        "summary": "Florida 2025 DB started 11 of 12 games, recording 53 tackles/two TFL/one breakup, following 2024 37 tackles/five TFL/two sacks/one INT over six starts. Ole Miss 2026 senior transfer with 36 games and 17 Florida starts. Established P4 defender, likely steady with role variance.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/sharif-denson/6574"
+        ]
+      }
     },
     {
       "id": "ole-miss|suntarineperkins",
@@ -11511,8 +11796,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 4,
+          "improve": 21,
+          "steady": 61,
+          "decline": 14,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.89,
+        "portalExitProbability": 0.01,
+        "summary": "Ole Miss 2025 all-15-start senior predecessor linebacker had 81 tackles, 12.5 TFL, 4.5 sacks, three forced fumbles and 12 QB hurries; 2024 all-SEC and 2026 preseason All-America. Proven upper-tier SEC edge/LB, little modeled upside to enormous improvement and strong projected NFL declaration risk.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/suntarine-perkins/6496"
+        ]
+      }
     },
     {
       "id": "ole-miss|traylonray",
@@ -11523,16 +11827,35 @@
         "WR",
         "Flex"
       ],
-      "classification": "JR",
+      "classification": "SR",
       "redshirt": null,
-      "sourceClass": "Junior",
+      "sourceClass": "SR",
       "espnAthleteId": "4870912",
-      "matchStatus": "exact",
-      "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
-      "confidence": "roster-classification",
+      "matchStatus": "official-school-roster",
+      "sourceUrl": "https://olemisssports.com/sports/football/roster/traylon-ray/6498",
+      "confidence": "official-roster-2026",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2026,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 13,
+          "improve": 34,
+          "steady": 31,
+          "decline": 22,
+          "maxGain": 5,
+          "maxLoss": 7,
+          "volatility": "HIGH"
+        },
+        "draftDeclarationProbability": 0.22,
+        "portalExitProbability": 0.03,
+        "summary": "Ole Miss 2025 WR appeared only three games as reserve with zero recorded receptions and two special-teams tackles; West Virginia 2024 had 28 catches/426 yards/four TD and 2023 18 catches/321 yards. 2026 official senior could rebound with greater usage but huge 2025 role collapse demands higher downside and uncertain NFL exit.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/traylon-ray/6498"
+        ]
+      }
     },
     {
       "id": "ole-miss|trinidadchambliss",
@@ -11602,8 +11925,27 @@
       "sourceUrl": "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/145/roster",
       "confidence": "roster-classification",
       "remainingEligibility": null,
-      "earliestDraftYear": null,
-      "draftEligible2027": null
+      "earliestDraftYear": 2027,
+      "draftEligible2027": true,
+      "calibration": {
+        "status": "evidence-informed-estimate",
+        "asOf": "2026-10-08",
+        "development": {
+          "breakout": 3,
+          "improve": 18,
+          "steady": 64,
+          "decline": 15,
+          "maxGain": 2,
+          "maxLoss": 5,
+          "volatility": "LOW"
+        },
+        "draftDeclarationProbability": 0.94,
+        "portalExitProbability": 0.01,
+        "summary": "Ole Miss 2025 defensive tackle started all 15 games, 68 tackles, 11.5 TFL/five sacks and tied linemen leader in PBUs; Associated Press first-team All-SEC and Phil Steele fourth-team All-American, plus 39 PFF pressures and 35 stops, Sugar Bowl defensive MVP. 2026 junior already demonstrated elite SEC interior ability, so near-ceiling steady outcome and very high projected NFL exit.",
+        "sources": [
+          "https://olemisssports.com/sports/football/roster/will-echoles/6465"
+        ]
+      }
     },
     {
       "id": "oregon|aaronflowers",
@@ -17886,7 +18228,7 @@
       }
     }
   ],
-  "officialOverrides": 136,
+  "officialOverrides": 144,
   "officialSources": [
     "https://broncosports.com/sports/football/roster/print",
     "https://georgiadogs.com/sports/football/roster/print",
