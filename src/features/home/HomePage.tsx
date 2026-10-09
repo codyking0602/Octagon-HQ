@@ -144,7 +144,7 @@ export default function HomePage() {
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
-  const ownerPreview = identity.profile?.canControlPicks === true;
+  const ownerPreview = signedIn;
   const { selectedSport, setSelectedSport } = useSport();
   // All is a Home-only view; selecting a sport persists it for Picks and Play.
   const [homeOverview, setHomeOverview] = useState(false);
@@ -315,8 +315,8 @@ export default function HomePage() {
           </div>
           <Link
             className="home-event-card__standing"
-            to="/picks?view=standings#picks-season-leaderboard"
-            aria-label="Open UFC Picks season standings"
+            to="/championship/ufc?tab=picks"
+            aria-label="Open UFC Championship Picks leaderboard"
           >
             <span>{recordSeason} PICKS STANDING</span>
             <b>{signedIn && currentUfcRankLabel ? `${currentUfcRankLabel} OF ${ufcStandings.length}` : "—"}</b>
