@@ -44,7 +44,7 @@ begin
   if p_sport not in ('football', 'ufc') or p_sport is null then
     raise exception 'unsupported Championship sport: %', p_sport;
   end if;
-  if p_season not between 2026 and 2100 then
+  if p_season is null or p_season not between 2026 and 2100 then
     raise exception 'invalid Championship season: %', p_season;
   end if;
 
@@ -200,7 +200,9 @@ begin
   ),
   featured_ranks as (
     select result.profile_id, result.week_start,
-      result.final_rank as placement
+      rank() over (
+        partition by result.week_start order by result.final_rank
+      )::integer as placement
     from private.football_weekly_auction_results result
     join featured_events event on event.week_start = result.week_start
     join field member on member.profile_id = result.profile_id
