@@ -143,7 +143,7 @@ export function OwnerChampionshipHome({
                 <span>MLB POSTSEASON</span>
                 <strong>{formatRank(mlb?.own?.overall_rank)}</strong>
                 <small>{mlb?.own ? String(mlb.own.total_points) + " PTS" : "STANDING PENDING"}</small>
-              </article>
+              </Link>
             ) : null}
           </div>
           <div className="home-champ-preview__streak">
