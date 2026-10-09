@@ -33,7 +33,7 @@ describe("MLB Blind Resume owner run", () => {
     const { container } = renderRun();
     expect(container.querySelector('.blind-resume-page[data-sport="mlb"]')).toBeTruthy();
     expect(container.textContent).toContain("MLB PLAYOFF CHALLENGE");
-    expect(container.textContent).toContain("Which MLB career ranks higher?");
+    expect(container.textContent).toContain("Who had the higher career WAR?");
     expect(container.textContent).toContain("ROUND 1 OF 5");
     expect(container.textContent).not.toMatch(/preview|demo|test|owner review|prototype|disposable/i);
   });

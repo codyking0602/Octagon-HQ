@@ -158,6 +158,19 @@ describe("Average Fan canonical question contract", () => {
     }), "George St-Pierre")).toBe(false);
   });
 
+  it("accepts ordinary round ordinals without conflating other numbered trivia answers", () => {
+    const round = fixture({ format: "short-answer", answer: "Round 5", aliases: [] });
+    expect(averageFanAnswersMatch(round, "5th")).toBe(true);
+    expect(averageFanAnswersMatch(round, "5")).toBe(true);
+    expect(averageFanAnswersMatch(round, "round 5")).toBe(true);
+    expect(averageFanAnswersMatch(round, "4th")).toBe(false);
+    expect(averageFanAnswersMatch(fixture({
+      format: "short-answer",
+      answer: "5 seconds",
+      aliases: [],
+    }), "5th")).toBe(false);
+  });
+
   it("protects dedicated finals from ordinary board eligibility", () => {
     const board = fixture({ grade: 5, protectedFinal: false });
     const final = fixture({ id: "final", grade: 5, protectedFinal: true });
