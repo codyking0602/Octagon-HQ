@@ -6,6 +6,7 @@ import {
   footballGmPlayerById,
   footballGmPlayoffFinishLabel,
   footballGmProjectedGradeForPlayer,
+  footballGmReflowRoster,
   footballGmSlotLabel,
   type FootballGmPlayer,
   type FootballGmRosterEntry,
@@ -165,7 +166,10 @@ export function FootballGmFinalExperience({
   }) : null;
   const selectedRun = selected === "opponent" && opponentRun ? opponentRun : run;
   const selectedName = selected === "opponent" && opponentRun ? opponentName ?? "Opponent" : name;
-  const end = selectedRun.finalRoster.length ? selectedRun.finalRoster : selectedRun.roster;
+  const originallyFinal = selectedRun.finalRoster.length ? selectedRun.finalRoster : selectedRun.roster;
+  const end = footballGmReflowRoster(originallyFinal, 3, selectedRun.seed) ?? originallyFinal;
+  const openingRoster = footballGmReflowRoster(selectedRun.roster, 1, selectedRun.seed) ?? selectedRun.roster;
+  const retainedIds = new Set(openingRoster.map(entry => entry.playerId));
   const result = footballGmFinalResultV2({
     seed: selectedRun.seed,
     yearOneRoster: selectedRun.roster,
@@ -176,7 +180,7 @@ export function FootballGmFinalExperience({
     const entry = slotEntry(end, slot);
     const player = entry ? footballGmPlayerById(entry.playerId) : null;
     if (!entry || !player) return [];
-    const prior = slotEntry(selectedRun.roster, slot);
+    const prior = slotEntry(openingRoster, slot);
     return [{
       slot,
       entry,
@@ -186,8 +190,9 @@ export function FootballGmFinalExperience({
       band: footballGmResultDevelopmentBand(player, selectedRun.seed),
     }];
   });
-  const retained = rows.filter((row) => row.before?.id === row.player.id);
-  const changes = rows.filter((row) => row.before && row.before.id !== row.player.id);
+  // Assignment swaps alone are not offseason transactions.
+  const retained = rows.filter((row) => retainedIds.has(row.player.id));
+  const changes = rows.filter((row) => !retainedIds.has(row.player.id));
   const trades = changes.filter((row) => row.entry.acquired === "trade").length;
   const freeAgents = changes.length - trades;
   const payroll = footballGmAdjustedRosterCap(end, 3, selectedRun.seed, selectedRun.negotiationConsequences);
@@ -328,7 +333,7 @@ export function FootballGmFinalExperience({
         <p className="gm-final__hint">The white tick always marks START in the center. The colored dot shows improvement or decline in five fixed categories. Exact grades stay hidden.</p>
         <div className="gm-final__roster-list">
           {rows.map((row) => {
-            const acquisition = row.before?.id === row.player.id ? "RETAINED"
+            const acquisition = retainedIds.has(row.player.id) ? "RETAINED"
               : row.entry.acquired === "trade" ? "TRADE" : "FREE AGENT";
             const tier = scoutingTier(row.band.final);
             return (
