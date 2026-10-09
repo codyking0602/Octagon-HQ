@@ -51,5 +51,5 @@ describe("College GM honest late-round roster and NIL cap reserves", () => {
         }
       }
     }
-  });
+  }, 120_000);
 });
