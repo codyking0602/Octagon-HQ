@@ -957,12 +957,12 @@ export function TradeChipPanel({
   onRelease,
 }: {
   playerIds: readonly string[];
-  roster: readonly FootballGmRosterEntry[];
+  roster?: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   shoppedPlayerIds: readonly string[];
-  canSwap: boolean;
-  onSwap: (promotePlayerId: string, displacePlayerId: string) => void;
+  canSwap?: boolean;
+  onSwap?: (promotePlayerId: string, displacePlayerId: string) => void;
   onShop: (playerId: string) => void;
   onRelease: (playerId: string) => void;
 }) {
@@ -981,7 +981,7 @@ export function TradeChipPanel({
           const player = footballGmPlayerById(playerId);
           if (!player) return null;
           const shopped = shoppedPlayerIds.includes(playerId);
-          const legalSwaps = canSwap ? roster.filter((entry) => footballGmSwapDisplacedAsset({
+          const legalSwaps = canSwap && onSwap && roster ? roster.filter((entry) => footballGmSwapDisplacedAsset({
             roster,
             tradeChipPlayerIds: playerIds,
             promotePlayerId: playerId,
@@ -1020,7 +1020,7 @@ export function TradeChipPanel({
                       return (
                         <button type="button" key={incumbent.id}
                           onClick={() => {
-                            onSwap(playerId, incumbent.id);
+                            onSwap?.(playerId, incumbent.id);
                             setSwappingPlayerId(null);
                           }}>
                           <span>{footballGmSlotLabel(entry.slot)}</span>
