@@ -724,6 +724,20 @@
       "redshirt": null
     },
     {
+      "id": "pittsburgh|carsonkent",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/carson-kent/15178",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|censerelee",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/censere-lee/15012",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
+      "redshirt": null
+    },
+    {
       "id": "pittsburgh|holdengeriner",
       "classification": "5TH",
       "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/holden-geriner/15190",
@@ -735,6 +749,20 @@
       "classification": "SO",
       "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jakyrian-turner/15115",
       "evidence": "2026 official school football roster class",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|jimmyscott",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/jimmy-scott/15028",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
+      "redshirt": null
+    },
+    {
+      "id": "pittsburgh|rashanmurray",
+      "classification": "5TH",
+      "sourceUrl": "https://pittsburghpanthers.com/sports/football/roster/rashan-murray/15021",
+      "evidence": "Pitt 2026 official player bio fifth-year classification",
       "redshirt": null
     },
     {
