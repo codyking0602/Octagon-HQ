@@ -116,6 +116,22 @@ describe("The GM head-to-head presentation", () => {
     expect(migration).toContain("The remaining market is yours");
   });
 
+  it("lets either head-to-head GM promote a displaced player using the shared solo picker", () => {
+    expect(page).toContain("footballGmSwapDisplacedAsset,");
+    expect(page).toContain("function swapDisplacedAsset(promotePlayerId: string, displacePlayerId: string)");
+    expect(page).toContain('displayedPhase !== "offseason" || !isMyTurn || matchBusy');
+    expect(page).toContain("tradeChipPlayerIds: [...next.tradeChipPlayerIds]");
+    expect(page).toContain("roster={run.finalRoster}");
+    expect(page).toContain("canSwap={isMyTurn && !matchBusy && !run.pendingFreeAgentTeam}");
+    expect(page).toContain("onSwap={swapDisplacedAsset}");
+    // Human head-to-head already saves each full offline-reordered roster on
+    // the owning participant's authorized offseason turn.
+    expect(page).toContain("repository.saveOffseason(matchCode, run)");
+    expect(migration).toContain("v_match.current_turn_profile_id <> v_user_id");
+    expect(migration).toContain("raise exception 'That player is already held by the other GM'");
+    expect(css).toContain(".football-gm__chip-swap-options");
+  });
+
   it("uses the same wheel treatment for draft, trade partner, and free agency", () => {
     expect(page.match(/<GmFootballWheel/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
     expect(page).toContain("SPIN THE 1YR MARKET");
