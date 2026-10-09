@@ -494,7 +494,8 @@ describe("Home Your HQ", () => {
     expect(within(yourHqSection()).queryByRole("link")).not.toBeInTheDocument();
   });
   it("reveals the redesigned Home only to the existing owner permission and filters HQs", () => {
-    mocks.identity.profile = { ...cody, canControlPicks: true };
+    const ownerProfile = { ...cody, canControlPicks: true };
+    mocks.identity.profile = ownerProfile;
     renderHome();
     expect(screen.getByText("CHAMPIONSHIP · OWNER PREVIEW")).toBeInTheDocument();
     const sport = screen.getByRole("combobox", { name: "Home sport" });
