@@ -147,7 +147,7 @@ export function cfbGmExitSignal(player: Pick<CfbGmPlayer,"id"|"classification"|"
     detail:"No 2027 eligibility remains. Draft for a one-season peak."};
   if (odds.draftProbability >= .48) return {label:"NFL LEAP",tone:"high" as const,
     detail:"Meaningful modeled NFL decision risk; returning is still possible."};
-  if (odds.exhaustedProbability >= .25) return {label:"ELIGIBILITY ?",tone:"medium" as const,
+  if (odds.exhaustedProbability >= .25) return {label:"RETURN UNCERTAIN",tone:"medium" as const,
     detail:"Remaining 2027 eligibility is not verified. Departure is uncertain."};
   if (odds.draftProbability >= .23) return {label:"NFL CHANCE",tone:"medium" as const,
     detail:"Moderate modeled chance of an NFL declaration."};
