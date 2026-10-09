@@ -312,10 +312,9 @@ export function cfbGmOpenSlots(roster: readonly CfbGmRosterEntry[]) {
   const taken = new Set(roster.map((entry) => entry.slot));
   return CFB_GM_ROSTER_SLOTS.filter((slot) => !taken.has(slot));
 }
-/** Resolve all legal roster assignments and place the strongest player in the
- * higher-value slot. Draft/pick order must never determine FLEX's weighted
- * contribution. Use developed grades for 2027 while preserving verified eligibility
- * are used; this does not alter Wheel ratings or reveal them in the UI.
+/** Choose the strongest weighted legal assignment, independent of draft order.
+ * Year 2 uses seeded developed ability. Preserve verified eligibility and
+ * locked Wheel ratings without exposing hidden grades in the UI.
  */
 export function cfbGmReflow(roster: readonly CfbGmRosterEntry[], year: 1 | 2 = 1, seed = ""): CfbGmRosterEntry[] | null {
   if (roster.length > CFB_GM_ROSTER_SLOTS.length) return null;
