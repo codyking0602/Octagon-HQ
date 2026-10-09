@@ -226,6 +226,29 @@ export function millionaireDailyHostNumber(sport: "ufc" | "football", day: strin
   return ((appearance % 3) + 3) % 3 + 1;
 }
 
+/** One moderate-difficulty memorial question; preserve the eight-question ladder and lifelines. */
+function withDitkaMemorialQuestion(run: MillionaireRun): MillionaireRun {
+  return run.map((question, index) => index !== 3 ? question : {
+    ...question,
+    id: "nfl-mike-ditka-memorial-2026-10-10-q4",
+    type: "hall-of-fame-history",
+    prompt: "Mike Ditka was the first player at which position inducted into the Pro Football Hall of Fame?",
+    choices: [
+      { id: "A", text: "Fullback" },
+      { id: "B", text: "Tight end" },
+      { id: "C", text: "Linebacker" },
+      { id: "D", text: "Guard" },
+    ],
+    correctChoiceId: "B",
+    explanation: "Ditka was enshrined in 1988 as the first tight end in the Pro Football Hall of Fame. He later coached Chicago to a Super Bowl XX championship.",
+    statSheet: "The fifth overall pick in the 1961 draft caught 56 passes for 1,076 yards as an NFL rookie.",
+    fiftyFifty: {
+      survivorChoiceIds: ["B", "C"],
+      removalChoiceIds: ["A", "D"],
+    },
+  }) as MillionaireRun;
+}
+
 function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string) {
   return [
     MILLIONAIRE_DAILY_CONTENT_VERSION,
@@ -349,7 +372,13 @@ export function buildMillionaireDailySetup(
   const runIndex = millionaireDailyRunIndex(sport, day);
   const hostNumber = millionaireDailyHostNumber(sport, day);
   const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
-  const run = balanceRun(themedRun ?? millionaireDailyRun(league, runIndex), runIndex);
+  const baseRun = themedRun ?? millionaireDailyRun(league, runIndex);
+  const run = balanceRun(
+    sport === "football" && day === "2026-10-10" && league === "nfl"
+      ? withDitkaMemorialQuestion(baseRun)
+      : baseRun,
+    runIndex,
+  );
   assertMillionaireRun(run);
   const state = createMillionaireState(run);
   const proof = proofFor(run, league, day, scheduleVersion);
