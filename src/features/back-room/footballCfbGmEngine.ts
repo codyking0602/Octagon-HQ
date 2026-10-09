@@ -340,7 +340,8 @@ export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEnt
     }
   };
   place(0);
-  return best ? [...best].sort((a,b) => CFB_GM_ROSTER_SLOTS.indexOf(a.slot) - CFB_GM_ROSTER_SLOTS.indexOf(b.slot)) : null;
+  const optimal = best as CfbGmRosterEntry[] | null;
+  return optimal ? [...optimal].sort((a,b) => CFB_GM_ROSTER_SLOTS.indexOf(a.slot) - CFB_GM_ROSTER_SLOTS.indexOf(b.slot)) : null;
 }
 function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>, portalSeed: string, offers: Readonly<Record<string, CfbGmRetentionAgreement>>) {
   if (roster.some((r) => r.playerId === player.id)) return false;
