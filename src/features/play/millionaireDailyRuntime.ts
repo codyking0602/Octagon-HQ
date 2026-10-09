@@ -228,20 +228,20 @@ export function millionaireDailyHostNumber(sport: "ufc" | "football", day: strin
 
 /** One moderate-difficulty memorial question; preserve the eight-question ladder and lifelines. */
 function withDitkaMemorialQuestion(run: MillionaireRun): MillionaireRun {
-  return run.map((question, index) => index !== 3 ? question : {
+  return run.map((question, index) => index !== 2 ? question : {
     ...question,
-    id: "nfl-mike-ditka-memorial-2026-10-10-q4",
-    type: "hall-of-fame-history",
-    prompt: "Mike Ditka was the first player at which position inducted into the Pro Football Hall of Fame?",
+    id: "cfb-mike-ditka-memorial-2026-10-10-q3",
+    type: "college-football-history",
+    prompt: "Before his Hall of Fame NFL career, Mike Ditka played college football at which school?",
     choices: [
-      { id: "A", text: "Fullback" },
-      { id: "B", text: "Tight end" },
-      { id: "C", text: "Linebacker" },
-      { id: "D", text: "Guard" },
+      { id: "A", text: "Notre Dame" },
+      { id: "B", text: "Pittsburgh" },
+      { id: "C", text: "Syracuse" },
+      { id: "D", text: "Penn State" },
     ],
     correctChoiceId: "B",
-    explanation: "Ditka was enshrined in 1988 as the first tight end in the Pro Football Hall of Fame. He later coached Chicago to a Super Bowl XX championship.",
-    statSheet: "The fifth overall pick in the 1961 draft caught 56 passes for 1,076 yards as an NFL rookie.",
+    explanation: "Mike Ditka played tight end and defensive end at Pittsburgh from 1958 through 1960, earned All-America honors and entered the College Football Hall of Fame in 1986.",
+    statSheet: "Iron Mike led Pitt in receiving for three straight seasons before Chicago selected him fifth overall in the 1961 NFL Draft.",
     fiftyFifty: {
       survivorChoiceIds: ["B", "C"],
       removalChoiceIds: ["A", "D"],
@@ -374,7 +374,7 @@ export function buildMillionaireDailySetup(
   const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
   const baseRun = themedRun ?? millionaireDailyRun(league, runIndex);
   const run = balanceRun(
-    sport === "football" && day === "2026-10-10" && league === "nfl"
+    sport === "football" && day === "2026-10-10" && league === "cfb"
       ? withDitkaMemorialQuestion(baseRun)
       : baseRun,
     runIndex,
