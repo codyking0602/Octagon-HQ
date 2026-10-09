@@ -9,9 +9,9 @@
     "schools": 25,
     "archivedOn3Recovered": 48,
     "currentOn3Matched": 52,
-    "publishedReferenceMatched": 60,
-    "independentCaseEstimates": 408,
-    "profileOnlyOn3Matched": 2
+    "publishedReferenceMatched": 83,
+    "independentCaseEstimates": 385,
+    "profileOnlyOn3Matched": 25
   },
   "sourcePolicy": "On3 published NIL valuation is an estimate, not verified cash compensation; all non-On3 amounts are player-specific editorial judgments based on sourced football evidence and market comparables, not HQ grades, in-game budgets, or an AP-rank pricing formula.",
   "marketReferenceUrls": [
@@ -29,12 +29,19 @@
       "playerName": "Bray Hubbard",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 1100000,
+      "year1NilEstimateUsd": 700000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 700000,
+        "url": "https://www.on3.com/rivals/bray-hubbard-151315/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -43,15 +50,11 @@
           "https://rolltide.com/sports/football/roster/brayson-hubbard/17446"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: First-team All-SEC and AFCA All-American safety with 2025 79 tackles and four interceptions; award appeal goes beyond a typical DB contract. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $700,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,100,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "First-team All-SEC and AFCA All-American safety with 2025 79 tackles and four interceptions; award appeal goes beyond a typical DB contract",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1100000
     },
     {
       "id": "alabama|calebwoodson",
@@ -609,12 +612,19 @@
       "playerName": "Zabien Brown",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 1000000,
+      "year1NilEstimateUsd": 800000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 800000,
+        "url": "https://www.on3.com/rivals/zabien-brown-147175/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -623,15 +633,11 @@
           "https://rolltide.com/sports/football/roster/zabien-brown/17427"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Alabama defensive captain, productive SEC corner with multiple 2025 interception-return touchdowns. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-09: $800,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,000,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Alabama defensive captain, productive SEC corner with multiple 2025 interception-return touchdowns",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1000000
     },
     {
       "id": "alabama|zyangibson",
@@ -2209,10 +2215,17 @@
       "year": 2026,
       "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/jayden-woods-162306/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -2221,15 +2234,11 @@
           "https://floridagators.com/sports/football/roster/jayden-woods/18310"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Sophomore Freshman All-SEC edge produced four sacks and six tackles for loss in early 2026 starts. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,000,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Sophomore Freshman All-SEC edge produced four sacks and six tackles for loss in early 2026 starts",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1000000
     },
     {
       "id": "florida|jeramiahmccloud",
@@ -2362,12 +2371,19 @@
       "playerName": "Vernell Brown III",
       "positionGroup": "WR",
       "year": 2026,
-      "year1NilEstimateUsd": 950000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-08",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-08",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/vernell-brown-iii-152985/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -2376,15 +2392,11 @@
           "https://floridagators.com/sports/football/roster/vernell-brown-iii/18253"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Freshman All-SEC sophomore wideout becoming 2026 primary target and return contributor. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-08: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $950,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Freshman All-SEC sophomore wideout becoming 2026 primary target and return contributor",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 950000
     },
     {
       "id": "georgia|chaunceybowens",
@@ -2751,12 +2763,19 @@
       "playerName": "KJ Bolden",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 1425000,
+      "year1NilEstimateUsd": 700000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 700000,
+        "url": "https://www.on3.com/rivals/kj-bolden-75425/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -2765,15 +2784,11 @@
           "https://georgiadogs.com/sports/football/roster/kj-bolden/10541"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: 2025 All-American and all-conference Georgia safety with 76 tackles and continued top-program visibility. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $700,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,425,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "2025 All-American and all-conference Georgia safety with 76 tackles and continued top-program visibility",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1425000
     },
     {
       "id": "georgia|kyronjones",
@@ -2844,12 +2859,19 @@
       "playerName": "Nate Frazier",
       "positionGroup": "RB",
       "year": 2026,
-      "year1NilEstimateUsd": 1200000,
+      "year1NilEstimateUsd": 750000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 750000,
+        "url": "https://www.on3.com/rivals/nate-frazier-151716/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -2858,15 +2880,11 @@
           "https://georgiadogs.com/sports/football/roster/nate-frazier/10638"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: SEC all-conference feature back rushed 861 yards last year and started 2026 with multiple-TD games. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual confirmed-deal-labeled NIL valuation published/updated 2026-10-09: $750,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,200,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider labels a confirmed deal, but neither contract schedule, terms, nor actual cash receipts independently verified.",
       "marketDecisionNote": "SEC all-conference feature back rushed 861 yards last year and started 2026 with multiple-TD games",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1200000
     },
     {
       "id": "georgia|quintaviusjohnson",
@@ -3092,12 +3110,19 @@
       "playerName": "Conner Weigman",
       "positionGroup": "QB",
       "year": 2026,
-      "year1NilEstimateUsd": 1900000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/conner-weigman-25459/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -3106,15 +3131,11 @@
           "https://uhcougars.com/sports/football/roster/conner-weigman/9919"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Returning starting Houston QB scored 36 total 2025 touchdowns; earlier injuries retain price uncertainty. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; transfer, injury or changed usage adds pricing uncertainty.",
+      "marketReasoning": "On3 individual confirmed-deal-labeled NIL valuation published/updated 2026-10-09: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,900,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider labels a confirmed deal, but neither contract schedule, terms, nor actual cash receipts independently verified.",
       "marketDecisionNote": "Returning starting Houston QB scored 36 total 2025 touchdowns; earlier injuries retain price uncertainty",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1900000
     },
     {
       "id": "houston|demarionthomas",
@@ -3967,12 +3988,19 @@
       "playerName": "Rolijah Hardy",
       "positionGroup": "Front Seven",
       "year": 2026,
-      "year1NilEstimateUsd": 1050000,
+      "year1NilEstimateUsd": 350000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 350000,
+        "url": "https://www.on3.com/rivals/rolijah-hardy-152340/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -3981,15 +4009,11 @@
           "https://iuhoosiers.com/sports/football/roster/rolijah-hardy/20940"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Big Ten all-conference national-title linebacker with sixteen 2025 starts and repeated 2026 double-digit tackles. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $350,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,050,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Big Ten all-conference national-title linebacker with sixteen 2025 starts and repeated 2026 double-digit tackles",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1050000
     },
     {
       "id": "indiana|rylandgandy",
@@ -4122,12 +4146,19 @@
       "playerName": "Tyrique Tucker",
       "positionGroup": "Front Seven",
       "year": 2026,
-      "year1NilEstimateUsd": 1225000,
+      "year1NilEstimateUsd": 500000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 500000,
+        "url": "https://www.on3.com/rivals/tyrique-tucker-118740/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -4136,15 +4167,11 @@
           "https://iuhoosiers.com/sports/football/roster/tyrique-tucker/20985"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: 2025 AP third-team All-American Indiana defensive tackle with all sixteen championship-season starts. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-09: $500,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,225,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "2025 AP third-team All-American Indiana defensive tackle with all sixteen championship-season starts",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1225000
     },
     {
       "id": "iowa|anthonyhawkins",
@@ -4804,12 +4831,19 @@
       "playerName": "DJ Pickett",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 1150000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-07",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-07",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/dj-pickett-37324/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -4818,15 +4852,11 @@
           "https://lsusports.net/sports/fb/roster/player/dj-pickett"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: LSU Freshman All-American corner with 2025 37 tackles, three interceptions and SEC 2026 starting opportunity. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-07: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,150,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "LSU Freshman All-American corner with 2025 37 tackles, three interceptions and SEC 2026 starting opportunity",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1150000
     },
     {
       "id": "lsu|dylancarpenter",
@@ -5376,12 +5406,19 @@
       "playerName": "Bryce Fitzgerald",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 975000,
+      "year1NilEstimateUsd": 600000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-09-13",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-09-13",
+        "rank": null,
+        "valuationEstimateUsd": 600000,
+        "url": "https://www.on3.com/rivals/bryce-fitzgerald-175337/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -5390,15 +5427,11 @@
           "https://miamihurricanes.com/sports/football/roster/season/2026-27/player/bryce-fitzgerald"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Miami FWAA Freshman All-American corner logged six 2025 interceptions and continued sophomore demand. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-09-13: $600,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $975,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Miami FWAA Freshman All-American corner logged six 2025 interceptions and continued sophomore demand",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 975000
     },
     {
       "id": "miami|charmarbrown",
@@ -5469,12 +5502,19 @@
       "playerName": "Cooper Barkate",
       "positionGroup": "WR",
       "year": 2026,
-      "year1NilEstimateUsd": 925000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/cooper-barkate-25829/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -5483,15 +5523,11 @@
           "https://miamihurricanes.com/sports/football/roster/player/cooper-barkate"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Harvard FCS All-American then Duke All-ACC receiver with 185 career receptions and 2,848 yards. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-09: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $925,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Harvard FCS All-American then Duke All-ACC receiver with 185 career receptions and 2,848 yards",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 925000
     },
     {
       "id": "miami|damaribrown",
@@ -7447,12 +7483,19 @@
       "playerName": "Drayk Bowen",
       "positionGroup": "Front Seven",
       "year": 2026,
-      "year1NilEstimateUsd": 1050000,
+      "year1NilEstimateUsd": 500000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-08",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-08",
+        "rank": null,
+        "valuationEstimateUsd": 500000,
+        "url": "https://www.on3.com/rivals/drayk-bowen-38845/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -7461,15 +7504,11 @@
           "https://fightingirish.com/sports/football/roster/player/drayk-bowen"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Senior Notre Dame defensive captain-type linebacker with major-award watch recognition and repeated 2026 starts. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; transfer, injury or changed usage adds pricing uncertainty.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-08: $500,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,050,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Senior Notre Dame defensive captain-type linebacker with major-award watch recognition and repeated 2026 starts",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1050000
     },
     {
       "id": "notre-dame|jaidenausberry",
@@ -7764,12 +7803,19 @@
       "playerName": "Bo Jackson",
       "positionGroup": "RB",
       "year": 2026,
-      "year1NilEstimateUsd": 1250000,
+      "year1NilEstimateUsd": 750000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 750000,
+        "url": "https://www.on3.com/rivals/bo-jackson-154732/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -7778,15 +7824,11 @@
           "https://ohiostatebuckeyes.com/sports/football/roster/bo-jackson/13305"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Ohio State sophomore feature RB had 1,090 rushing yards and six touchdowns in 2025 plus receiving use. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; transfer, injury or changed usage adds pricing uncertainty.",
+      "marketReasoning": "On3 individual confirmed-deal-labeled NIL valuation published/updated 2026-10-09: $750,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,250,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider labels a confirmed deal, but neither contract schedule, terms, nor actual cash receipts independently verified.",
       "marketDecisionNote": "Ohio State sophomore feature RB had 1,090 rushing yards and six touchdowns in 2025 plus receiving use",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1250000
     },
     {
       "id": "ohio-state|brandoninniss",
@@ -7826,12 +7868,19 @@
       "playerName": "Chris Henry Jr.",
       "positionGroup": "WR",
       "year": 2026,
-      "year1NilEstimateUsd": 1100000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/chris-henry-jr-154123/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -7840,15 +7889,11 @@
           "https://ohiostatebuckeyes.com/sports/football/roster/chris-henry-jr/13356"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: True freshman Ohio State five-star-caliber wideout flashed two explosive TDs but has no full-season college sample. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual confirmed-deal-labeled NIL valuation published/updated 2026-10-09: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,100,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider labels a confirmed deal, but neither contract schedule, terms, nor actual cash receipts independently verified.",
       "marketDecisionNote": "True freshman Ohio State five-star-caliber wideout flashed two explosive TDs but has no full-season college sample",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1100000
     },
     {
       "id": "ohio-state|christianalliegro",
@@ -7919,12 +7964,19 @@
       "playerName": "Devin Sanchez",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 975000,
+      "year1NilEstimateUsd": 700000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 700000,
+        "url": "https://www.on3.com/rivals/devin-sanchez-150783/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -7933,15 +7985,11 @@
           "https://ohiostatebuckeyes.com/sports/football/roster/devin-sanchez/13330"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Young national-profile corner moving into bigger Ohio State 2026 role with multi-breakup games. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $700,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $975,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Young national-profile corner moving into bigger Ohio State 2026 role with multi-breakup games",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 975000
     },
     {
       "id": "ohio-state|earllittlejr",
@@ -9475,12 +9523,19 @@
       "playerName": "Suntarine Perkins",
       "positionGroup": "Front Seven",
       "year": 2026,
-      "year1NilEstimateUsd": 1050000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-02",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-02",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/suntarine-perkins-109281/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -9489,15 +9544,11 @@
           "https://olemisssports.com/sports/football/roster/suntarine-perkins/6496"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Ole Miss All-SEC pass-rush LB in 2025 had 12.5 tackles for loss and 4.5 sacks, preseason 2026 All-American. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual confirmed-deal-labeled NIL valuation published/updated 2026-10-02: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,050,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider labels a confirmed deal, but neither contract schedule, terms, nor actual cash receipts independently verified.",
       "marketDecisionNote": "Ole Miss All-SEC pass-rush LB in 2025 had 12.5 tackles for loss and 4.5 sacks, preseason 2026 All-American",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1050000
     },
     {
       "id": "ole-miss|traylonray",
@@ -9576,12 +9627,19 @@
       "playerName": "Will Echoles",
       "positionGroup": "Front Seven",
       "year": 2026,
-      "year1NilEstimateUsd": 1175000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/william-echoles-175322/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -9590,15 +9648,11 @@
           "https://olemisssports.com/sports/football/roster/will-echoles/6465"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: 2025 first-team All-SEC defensive tackle had 68 tackles, 11.5 TFL and five sacks across 15 starts. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual confirmed-deal-labeled NIL valuation published/updated 2026-10-09: $1,000,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,175,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider labels a confirmed deal, but neither contract schedule, terms, nor actual cash receipts independently verified.",
       "marketDecisionNote": "2025 first-team All-SEC defensive tackle had 68 tackles, 11.5 TFL and five sacks across 15 starts",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1175000
     },
     {
       "id": "oregon|aaronflowers",
@@ -9769,12 +9823,19 @@
       "playerName": "Dakorien Moore",
       "positionGroup": "WR",
       "year": 2026,
-      "year1NilEstimateUsd": 1175000,
+      "year1NilEstimateUsd": 750000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 750000,
+        "url": "https://www.on3.com/rivals/dakorien-moore-28026/nil/",
+        "sourceType": "confirmed-deal-valued-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -9783,15 +9844,11 @@
           "https://goducks.com/sports/football/roster/dakorien-moore/18319"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Young Oregon wide receiver had 497 yards and three scores despite 2025 injury, national-recruit recognition. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; transfer, injury or changed usage adds pricing uncertainty.",
+      "marketReasoning": "On3 individual confirmed-deal-labeled NIL valuation published/updated 2026-10-09: $750,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,175,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider labels a confirmed deal, but neither contract schedule, terms, nor actual cash receipts independently verified.",
       "marketDecisionNote": "Young Oregon wide receiver had 497 yards and three scores despite 2025 injury, national-recruit recognition",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1175000
     },
     {
       "id": "oregon|dantemoore",
@@ -11362,12 +11419,19 @@
       "playerName": "Amare Campbell",
       "positionGroup": "Front Seven",
       "year": 2026,
-      "year1NilEstimateUsd": 950000,
+      "year1NilEstimateUsd": 700000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 700000,
+        "url": "https://www.on3.com/rivals/amare-campbell-146629/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -11376,15 +11440,11 @@
           "https://utsports.com/sports/football/roster/amare-campbell/23060"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Penn State 2025 leading tackler had 103 stops and 9.5 TFL before SEC transfer to Tennessee. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $700,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $950,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Penn State 2025 leading tackler had 103 stops and 9.5 TFL before SEC transfer to Tennessee",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 950000
     },
     {
       "id": "tennessee|arioncarter",
@@ -12779,12 +12839,19 @@
       "playerName": "Cameron Dickey",
       "positionGroup": "RB",
       "year": 2026,
-      "year1NilEstimateUsd": 1150000,
+      "year1NilEstimateUsd": 650000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 650000,
+        "url": "https://www.on3.com/rivals/cameron-dickey-179900/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -12793,15 +12860,11 @@
           "https://texastech.com/sports/football/roster/cameron-dickey/14282"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Texas Tech lead RB rushed 1,124 yards and 14 TD in 2025 with All-Big 12 second-team award. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $650,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,150,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Texas Tech lead RB rushed 1,124 yards and 14 TD in 2025 with All-Big 12 second-team award",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1150000
     },
     {
       "id": "texas-tech|coyeakin",
@@ -13089,12 +13152,19 @@
       "playerName": "Terrance Carter Jr.",
       "positionGroup": "TE",
       "year": 2026,
-      "year1NilEstimateUsd": 1050000,
+      "year1NilEstimateUsd": 700000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 700000,
+        "url": "https://www.on3.com/rivals/terrance-carter-111321/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -13103,15 +13173,11 @@
           "https://texastech.com/sports/football/roster/terrance-carter-jr-/14275"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Second-team All-Big12 receiving tight end caught 55 balls for 624 yards/five TD in 2025. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $700,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,050,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "Second-team All-Big12 receiving tight end caught 55 balls for 624 yards/five TD in 2025",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1050000
     },
     {
       "id": "texas-tech|treywhite",
@@ -14064,12 +14130,19 @@
       "playerName": "King Miller",
       "positionGroup": "RB",
       "year": 2026,
-      "year1NilEstimateUsd": 1100000,
+      "year1NilEstimateUsd": 650000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 650000,
+        "url": "https://www.on3.com/rivals/king-miller-156529/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -14078,15 +14151,11 @@
           "https://usctrojans.com/sports/football/roster/king-miller/18739"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: USC Freshman All-American RB rushed 972 yards at six-plus per carry in 2025. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation published/updated 2026-10-06: $650,000, observed October 9, 2026. This replaces a separate earlier Octagon editorial estimate of $1,100,000; sourced number is deliberately not increased or discounted by Wheel/HQ ratings or budget. Actual paid amount and confidential contract terms not independently audited.",
+      "uncertaintyNote": "Provider-published market estimate, not a confirmed underlying athlete contract or audited payment.",
       "marketDecisionNote": "USC Freshman All-American RB rushed 972 yards at six-plus per carry in 2025",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 1100000
     },
     {
       "id": "usc|lukewafle",
@@ -14894,17 +14963,18 @@
     }
   ],
   "researchAudit": {
-    "individuallyReviewedAdditionalCases": 408,
+    "individuallyReviewedAdditionalCases": 385,
     "casePriceOverridesMissed": 0,
     "marketEstimateBasis": "Player-specific football biographies and market comparables, with documented case-specific editorial overrides; non-provider prices remain estimates and should never be presented as published NIL valuations",
     "constraint": "No HQ grades, development probabilities, Powerhouse/Builder budgets or salary cap coefficients used",
     "totalSourceOrCaseReviewed": 468,
-    "sourceBasedValuations": 60,
+    "sourceBasedValuations": 83,
     "footballEvidenceWithSource": 468,
-    "year1ValuationMethod": "No grades/budgets/cap optimization; 58 ranked or archived individual On3 records + 2 unranked current On3 player profiles, and 408 manually reviewed athlete-specific independent editorial market estimates, based on official player football performance, recruiting history and broad NIL transfer-market context.",
+    "year1ValuationMethod": "Independent of HQ/Wheel ratings and game budgets. 48 historical On3 NIL source ranks preserved; 52 October 9 current ranked board matches + six archived-only 2026-10-08 ranked matches; 25 separate current On3 athlete-specific profile values (confirmed-deal-labeled or market-based). The remaining 385 have separately reviewed editorial dollar estimates and individual sourced football evidence. On3 amounts are not independently audited cash transactions.",
     "statisticalGradeIndependence": "No HQ grades, future development probabilities, draft simulations, lineup budgets or Powerhouse/Builder salary caps used to derive dollar amounts.",
     "publishedPriceExceptions": "On3 athlete profiles viewed October 9, 2026: Ahmad Hardy $1M, 'Confirmed Deal'; Ellis Robinson IV $750K, 'Market-based'. Both override earlier higher independent editorial estimates. No audited underlying compensation disclosed.",
-    "sourceVerification": "On3 football board explicitly dated 2026-10-09. On3 direct Ahmad Hardy and Ellis Robinson IV pages both visibly state Updated 10/9/26; prior archived Oct 8 values separately recorded and not overwritten. CBS Sports 2025-12-30 2026 portal market analysis and Opendorse 2026 annual report landing page verified; report downloadable only via provider form and no paywalled numerical assertions extracted."
+    "sourceVerification": "On3 football board explicitly dated 2026-10-09. On3 direct Ahmad Hardy and Ellis Robinson IV pages both visibly state Updated 10/9/26; prior archived Oct 8 values separately recorded and not overwritten. CBS Sports 2025-12-30 2026 portal market analysis and Opendorse 2026 annual report landing page verified; report downloadable only via provider form and no paywalled numerical assertions extracted.",
+    "additionalProfileVerification": "23 player profiles added from October 9 NIL follow-up research, extending two previous direct player profile matches to 25 total. Sources and dates recorded on each athlete. All newly provider-matched records retain previously reviewed independent editorial estimate to show real price variation."
   },
   "marketReferenceCatalog": {
     "ON3_FOOTBALL_BOARD": {
