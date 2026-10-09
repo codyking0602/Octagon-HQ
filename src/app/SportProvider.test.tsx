@@ -97,10 +97,10 @@ describe("SportProvider", () => {
     expect(bottomNavigationSource).not.toContain("bottom-nav--football-team-");
   });
 
-  it("defaults the canonical selected sport to UFC", () => {
+  it("defaults the canonical selected sport to Football", () => {
     renderSportProvider();
 
-    expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("selected-sport")).toHaveTextContent("football");
   });
 
   it("restores the last selected sport between sessions", () => {
