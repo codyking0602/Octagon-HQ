@@ -27,7 +27,7 @@ describe("Football team-themed Daily packs", () => {
     expect(run).toHaveLength(8);
     expect(run.filter((question) => question.id.startsWith("theme-texas-ou-2026-"))).toHaveLength(7);
     expect(run[2]?.id).toBe("cfb-mike-ditka-memorial-2026-10-10-q3");
-    expect(run[2]?.choices.find((choice) => choice.id === run[2]?.correctChoiceId)?.text).toBe("Pittsburgh");
+    expect(run[2]?.choices.find((choice) => choice.id === run[2]?.correctChoiceId)?.text).toBe("1985");
     expect(run.map((question) => question.level)).toEqual([
       "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8",
     ]);
