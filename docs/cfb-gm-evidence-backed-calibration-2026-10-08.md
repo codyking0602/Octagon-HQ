@@ -1,14 +1,14 @@
-# CFB The GM — October 8, 2026 player research calibration (partial, isolated PR)
+# CFB The GM — October 8, 2026 player-development research complete (NIL and verification pending)
 
 ## Explicit quality status
 
-This PR does **not** complete the requested 468 individual performance/NIL/eligibility studies.
-The 468-player source roster is preserved and still playable; **468 specific players** have sourced individual development/departure calibration records, while **0** use clearly marked provisional development and/or market priors. These fallbacks must never be called researched.
+This PR **completes individual development and departure research for all 468 players**, but it does not establish 468 published NIL valuations, certify remaining eligibility, or pass final test/production gates.
+The 468-player source roster is preserved and still playable; **468 specific players** have sourced individual development/departure calibration records, while **0** retain unreviewed development priors. **420 players still use unsourced market estimates** for NIL pricing; those are not verified NIL deals or individual published valuation records.
 The existing Wheel of Football HQ grades are unchanged. There are **no new HQ grade proposals** in this isolated change.
 
-## Measured calibration distribution (partial population)
+## Measured calibration distribution (complete development population)
 
-These are computed from the ledger for the **468 individually researched** development profiles, **not** representative league-wide estimates for the remaining 0 generic-prior cases.
+These are computed from all **468 individually researched** development profiles; gameplay probabilities remain estimates separate from documented football evidence.
 
 | Primary group | Total CFB GM roster | Individual profiles completed |
 | --- | ---: | ---: |
@@ -66,8 +66,8 @@ All twenty-five completed schools retain the exact roster IDs and canonical Whee
 - 468/468 exact CFB GM ID/classification rows; 148 official school class overrides, including the correction of Arch Manning's 2026 official Texas **senior** designation.
 - 468 individual GM research entries in the **existing** `data/curated/football/cfb/gm-2026-classification-evidence.json` ledger, with dated source links and player-specific trajectory/risk judgments.
 - 468 individually assessed 2027 NFL timing fields, including six newer players modeled ineligible to enter the 2027 Draft after entering college in 2025. Drew Mestemaker is a redshirt sophomore whose 2024 college entry makes a 2027 draft possible despite the class label.
-- **88 assessed remaining-season fields:** 84 modeled terminal, 4 plausible 2027 return; specific 2026 school source URLs and game assumptions appear in the ledger. Not institutional eligibility determinations.
-- 0 unresearched players retain **null** for unresearched remaining seasons, draft timing and 2027 eligibility rather than a fabricated verified declaration.
+- **92 assessed remaining-season fields:** 88 modeled terminal, 4 plausible 2027 return; specific 2026 school source URLs and gameplay assumptions appear in the ledger. Not institutional eligibility determinations.
+- **376 remaining eligibility fields remain null/unknown**, despite all 468 players having individual draft-timing and development research. Unknown remaining college seasons must not be interpreted as automatic graduation.
 - **48 exact-ID On3 October 8, 2026 NIL valuations** sourced from its [football valuation board](https://www.on3.com/nil/rankings/player/college/football/). On3 changed its model on July 1, 2026 to a **deal-based valuation**. We use this published market reference as a gameplay Year 1 estimate, **not as audit-confirmed cash paid under a private contract**. All 48 entries carry the source URL, rank, quoted valuation, and an explicit provisional +10% Year 2 assumption.
 - Market shifts include Darian Mensah $6.5m, Dante Moore $5m, Trinidad Chambliss $5m, Jeremiah Smith $5m, Josh Hoover $4m, Cam Coleman $3m, Arch Manning $2.5m and Colin Simmons $2.5m. The 420 without On3 matched valuations retain either older named anchors or class/role/school estimates; **those are not independently verified NIL research**.
 - Pricing is identical in both game budgets, independent of HQ grades. The economics must be stress-tested after these wider updates.
@@ -175,15 +175,15 @@ The NCAA's June 23, 2026 [age-based eligibility model](https://www.ncaa.org/news
 
 NFL draft declaration odds are **game probability judgments**, not actual declarations or guaranteed draft outcomes. Individual source records distinguish public performance evidence from guessed likelihood.
 
-## Outstanding 468-player quality gate
+## Outstanding quality and deployment gates
 
-**This PR remains incomplete versus the owner-requested full calibration.** Development: 468/468 sourced. NIL: 48/468 sourced market anchors (source valuations are still estimates). Remaining work:
-1. Review all 0 additional existing IDs using official biographies/statistics and capture 2025/2026 production, transfers, position roles, years first enrolled, redshirt history and actual remaining eligibility where documented.
-2. Research 420 further personalized NIL price judgments, and independently evaluate the 48 market values against real game economics. Market-wide Year 2 10% baseline is still a placeholder, not a per-player prediction.
-3. Set 0 individual breakout/improve/steady/decline and gain/loss/volatility assessments, without generating superficially varied numbers from a generic formula.
-4. Research the remaining 0 per-player transfer and 2027 declaration risks; review all unusual sixth-to-eighth-year cases and NCAA transitional exceptions.
-5. Run extended affordability simulations for both budgets and full two-year playthroughs, reconcile the grade and price distributions and any proposed HQ grade flags separately.
-6. Run complete CI on exact PR head, then integration owner/owner decides on merge. This branch must not be deployed as a purported full 468-player research completion.
+Development: **468/468 individualized, evidence-informed profiles complete**. Published On3 NIL valuation matches: **48/468**. Unmatched NIL pricing is explicitly estimated from role/school prominence or manually reviewed anchors, not verified private NIL compensation.
+
+1. Conduct individual NIL market-pricing reviews for the remaining 420 without matched reported valuations, keeping source evidence and confidence distinct from game estimates. Examine price spread, affordability, and Year 2 re-pricing; the default +10% remains a provisional assumption.
+2. Review 376 unresolved remaining-eligibility fields, including exceptional extended-year and new NCAA age-model cases; retain null wherever specific information cannot be established.
+3. Run both game budgets, complete seven-slot draft paths and seeded full two-season offseason replacement simulations; check that forced exits and repricing do not produce blocked runs.
+4. Run full exact-head TypeScript, Vitest, production build and final CI after reconciling latest `main`. Previous successful runs and skipped checks do **not** verify this exact head.
+5. Obtain integration authorization before merge; verify production only if a green-checked merge is explicitly requested.
 
 ## Safety
 
