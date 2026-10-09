@@ -1,3 +1,5 @@
+> **Historical only (superseded October 9, 2026):** The earlier school/role-priced game estimator below is no longer used for any of the 468 College GM Year 1 values. The canonical individual market amounts, football sources and valuation rationale are now in `data/curated/football/cfb/gm-2026-first-party-nil-market.json`; the compact client projection is `data/generated/football/cfb-gm-first-party-nil-runtime-2026.json`. See `docs/cfb-gm-nil-first-party-integration-2026-10-09.md`. Published third-party NIL dollar observations remain in unmerged research-only PR #1816, not in gameplay.
+
 # CFB The GM — first-party college market gameplay prices (October 8, 2026)
 
 The game has a 7-player draft and two shared pricing modes: Powerhouse $11m and Builder $7.5m. Every monetary amount is an **Octagon game estimate**, not a reported NIL contract, salary, private payment, or independently published athlete valuation.

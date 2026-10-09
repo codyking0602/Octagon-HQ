@@ -3,10 +3,10 @@ import { wheelFootballCfbPriorityForSchoolId } from "./wheelFootballCfbPriority"
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
 import { cfbGmSimulateCollegeSeason, type CfbGmCollegeFinish } from "./footballCfbGmSimulation";
 import classEvidence from "../../../data/generated/football/cfb-gm-classification-runtime-2026.json";
-import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
+import firstPartyNil from "../../../data/generated/football/cfb-gm-first-party-nil-runtime-2026.json";
 import { cfbGmDevProfile, cfbGmDevelop, cfbGmDevelopmentLabel, type CfbGmClass } from "./footballCfbGmDevelopment";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v10-retention-chemistry";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v11-independent-nil";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -170,6 +170,20 @@ function collegeOutlook(id: string, grade: number, classification: CfbGmClass): 
   const p = cfbGmDevProfile(id, grade, classification);
   return cfbGmDevelopmentLabel(p, grade);
 }
+/** Single first-party, individual-year-one market authority; no HQ-derived or
+ * school-rank/role-rank pricing fallback is permitted for a missing player.
+ * The separate full research ledger is not shipped to the browser.
+ */
+const nilRows = (firstPartyNil.players as {id:string;year1USD:number}[]);
+if (firstPartyNil.population !== 468 || nilRows.length !== 468) throw new Error("College GM NIL population incomplete");
+const nilMarketById = new Map(nilRows.map(row => [row.id, row.year1USD]));
+if (nilMarketById.size !== nilRows.length) throw new Error("Duplicate CFB GM NIL source identity");
+function researchedNilMarket(id:string) {
+  const year1 = nilMarketById.get(id);
+  if (!Number.isFinite(year1) || !year1 || year1 <= 0 || year1 % 25_000 !== 0)
+    throw new Error("CFB GM missing individually researched Year 1 NIL estimate: "+id);
+  return {year1,year2Baseline:Math.round(year1*1.1/25_000)*25_000};
+}
 const playerMap = new Map<string, CfbGmPlayer>();
 const schoolPlayers = new Map<string, CfbGmPlayer[]>();
 const eligibleSchools = wheelFootballPoolTeams("AP_TOP_25").map((school) => school.code);
@@ -189,7 +203,7 @@ for (const schoolId of eligibleSchools) {
   for (const [group, family, slots] of groups) {
     const names = school[group];
     if (!Array.isArray(names)) continue;
-    for (const [positionRoleRank, name] of (names as readonly string[]).entries()) {
+    for (const name of (names as readonly string[])) {
       const nameKey = normalize(name);
       const id = schoolId + "|" + nameKey;
       const existing = teamMap.get(id);
@@ -200,8 +214,7 @@ for (const schoolId of eligibleSchools) {
       const grade = gradeIndex.get([normalize(school.school), family, nameKey].join("|"));
       if (grade === undefined) throw new Error("CFB GM ungraded candidate: " + school.school + " " + name + " " + family);
       const classification = playerClass(id);
-      const market = cfbGmEstimateNil({schoolId, name, family,
-        positionRoleRank, apRank: eligibleSchools.indexOf(schoolId) + 1});
+      const market = researchedNilMarket(id);
       const player: CfbGmPlayer = {
         id, schoolId, school: school.school, name, family,
         eligibleSlots: [...slots], currentGrade: grade, classification,
@@ -229,8 +242,7 @@ for (const schoolId of eligibleSchools) {
     if (!family) throw new Error("CFB GM Flex player missing grade: " + school.school + " " + name);
     const grade = gradeIndex.get([normalize(school.school), family, key].join("|"))!;
     const classification = playerClass(id);
-    const market = cfbGmEstimateNil({schoolId, name, family,
-      positionRoleRank: 4, apRank: eligibleSchools.indexOf(schoolId) + 1});
+    const market = researchedNilMarket(id);
     const player: CfbGmPlayer = {
       id, schoolId, school: school.school, name, family, eligibleSlots: ["FLEX"],
       currentGrade: grade, classification, classVerified: classification !== null,
@@ -246,6 +258,8 @@ for (const schoolId of eligibleSchools) {
 
 export const CFB_GM_AP_SCHOOLS = eligibleSchools;
 export const CFB_GM_PLAYERS = [...playerMap.values()];
+if (CFB_GM_PLAYERS.length !== nilMarketById.size || CFB_GM_PLAYERS.some(player => !nilMarketById.has(player.id)))
+  throw new Error("CFB GM individual NIL market identity mismatch");
 /** A seeded, fictional 2027 transfer market; NOT a claim that any real player
  * entered the portal. Guaranteed affordable depth avoids unwinnable cap states.
  */

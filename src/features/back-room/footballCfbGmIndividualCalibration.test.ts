@@ -103,8 +103,8 @@ describe("CFB GM evidence-backed player calibration integrity", () => {
       expect(game.nilYear1).toBeGreaterThanOrEqual(150_000);
       expect(game.nilYear2).toBeGreaterThan(game.nilYear1);
     }
-    expect(cfbGmPlayer("missouri|ahmadhardy")!.nilYear1).toBe(1_925_000);
-    expect(cfbGmPlayer("georgia|ellisrobinsoniv")!.nilYear1).toBe(1_625_000);
+    expect(cfbGmPlayer("missouri|ahmadhardy")!.nilYear1).toBe(1_725_000);
+    expect(cfbGmPlayer("georgia|ellisrobinsoniv")!.nilYear1).toBe(1_450_000);
   });
 
   it("honors actual NFL draft timing and forced final-year eligibility in every seeded result", () => {

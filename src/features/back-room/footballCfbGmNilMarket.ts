@@ -1,4 +1,8 @@
 /**
+ * HISTORICAL REFERENCE ONLY. This original generic prominence/role estimator is
+ * NOT USED to price any of the 468 live College GM prospects. The owner-preview
+ * engine reads the complete first-party, player-specific NIL authority instead.
+ *
  * College GM NIL market estimate, not reported contract compensation.
  * Deliberately separate from HQ grades and development probabilities.
  * Inputs are the manually audited 2026 CFB wheel role ranking, school context,

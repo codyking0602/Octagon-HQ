@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { cfbGmDevelop } from "./footballCfbGmDevelopment";
-import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
 import {
   CFB_GM_BUDGETS, CFB_GM_PLAYERS, cfbGmCandidates, cfbGmEffectiveGrade,
   cfbGmEligibleSchools, cfbGmEnterOffseason, cfbGmInitial, cfbGmPick,
@@ -45,9 +44,10 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     const arch = cfbGmPlayer("texas|archmanning")!;
     expect(arch.nilYear1).toBe(4_200_000);
     expect(arch.nilYear2).toBe(4_625_000);
-    const sameMarket = cfbGmEstimateNil({schoolId:"texas",name:"Arch Manning",
-      family:"QB",positionRoleRank:0,apRank:1});
-    expect(arch.nilYear1).toBe(sameMarket.year1);
+    // Year 1 comes exclusively from the 468-row independent football-market
+    // ledger. A historical school/rank position estimator is not runtime authority.
+    const firstParty=JSON.parse(readFileSync("data/curated/football/cfb/gm-2026-first-party-nil-market.json","utf8"));
+    expect(arch.nilYear1).toBe(firstParty.players.find((p:{id:string})=>p.id==="texas|archmanning").year1USD);
     expect(CFB_GM_BUDGETS.BUILDER).toBe(7_500_000);
     expect(CFB_GM_BUDGETS.POWERHOUSE).toBe(11_000_000);
   });
