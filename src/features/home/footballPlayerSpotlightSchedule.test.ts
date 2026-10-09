@@ -4,6 +4,8 @@ import {
   FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
   footballSpotlightKindAt,
+  footballDitkaMemorialIsActive,
+  FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT,
   footballSpotlightPairAt,
   footballSpotlightPairHasPhotos,
   type FootballSpotlightPhotoSources,
@@ -108,6 +110,16 @@ describe("Football Player Spotlight weekly schedule", () => {
       new Date("2026-09-29T05:00:00.000Z"),
       incompletePhotos,
     ).id).toBe("2026-09-22-trinidad-dak");
+  });
+
+  it("honors Ditka for precisely the Oct 10 Central day, then resumes scheduled players", () => {
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-10T04:59:59.999Z"))).toBe(false);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-10T05:00:00.000Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-11T04:59:59.999Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-11T05:00:00.000Z"))).toBe(false);
+    expect(FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT).toMatchObject({
+      name: "Mike Ditka", team: "Chicago Bears", position: "TE · HEAD COACH",
+    });
   });
 
   it("keeps the Central Time daily CFB/NFL rotation across the new pair", () => {
