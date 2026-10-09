@@ -10,7 +10,6 @@ import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/pic
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
 import { picksSeasonStandings } from "../picks/picksSeasonStandings";
 import type { DailyChallengeChampionshipSnapshot } from "../play/dailyChallengeChampionship";
-import { WeeklyGamesStandingLink } from "./WeeklyGamesStandingLink";
 import {
   FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
@@ -417,20 +416,13 @@ export function FootballHq({
             to="/championship/football?tab=picks"
             aria-label="Open Football Championship Picks leaderboard"
           >
-            <span>{season} PICKS STANDING</span>
-            <b>{signedIn && rank ? `${rank} OF ${standings.length}` : "—"}</b>
-            <small>{standing ? `${standing.totalPoints} PTS · ${pickRecord(summary)}` : signedIn ? pickRecord(summary) : "SIGN IN TO TRACK"}</small>
+            <span>{season} PICKS RECORD</span>
+            <b>{signedIn ? pickRecord(summary) : "—"}</b>
+            <small>{standing ? `${standing.totalPoints} PTS` : signedIn ? "NO RESULTS YET" : "SIGN IN TO TRACK"}</small>
           </Link>
         </div>
         <Link className="secondary-action" to="/football/picks">OPEN PICKS →</Link>
       </section>
-
-      <WeeklyGamesStandingLink
-        sport="football"
-        standing={weeklyGames}
-        loading={weeklyGamesLoading}
-        signedIn={signedIn}
-      />
 
       {dailyChallenge}
 
