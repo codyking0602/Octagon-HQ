@@ -1,8 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
-import { DailyChallengeStandings } from "./DailyChallengeStandings";
 import { DailyLeaderboardGameResult } from "./DailyLeaderboardGameResult";
 import {
   FootballSpecialDailyHubMark,
@@ -271,15 +270,6 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
     () => todayChallengeAdapter(projection?.gameType),
     [projection?.gameType],
   );
-  const focusChampionship = typeof window !== "undefined"
-    && new URLSearchParams(window.location.search).get("standings") === "me";
-
-  useEffect(() => {
-    if (!focusChampionship || !overview.standings) return;
-    window.requestAnimationFrame(() => {
-      document.getElementById("championship-standings")?.scrollIntoView?.({ block: "start" });
-    });
-  }, [focusChampionship, overview.standings]);
 
   if (!signedIn) {
     return (
@@ -330,13 +320,9 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
               <em>{previewAdapter.cta.toUpperCase()} →</em>
             </button>
           </div>
-          <DailyChallengeStandings
-            standings={overview.standings}
-            loading={overview.standingsLoading}
-            error={overview.error instanceof Error ? overview.error : null}
-            onRefresh={() => { void overview.refresh(); }}
-            focusCurrentUser={focusChampionship}
-          />
+          <Link className="home-weekly-games-row" to={"/championship/" + sport + "?tab=play"} aria-label="Open Championship Play standings">
+            <span className="home-weekly-games-row__copy"><small>PLAY LEADERBOARD</small><strong>Daily + Featured · Season standings</strong></span><b>VIEW →</b>
+          </Link>
         </section>
       );
     }
@@ -463,13 +449,9 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
         </button>
       </div>
 
-      <DailyChallengeStandings
-        standings={overview.standings}
-        loading={overview.standingsLoading}
-        error={overview.error instanceof Error ? overview.error : null}
-        onRefresh={() => { void overview.refresh(); }}
-        focusCurrentUser={focusChampionship}
-      />
+      <Link className="home-weekly-games-row" to={"/championship/" + sport + "?tab=play"} aria-label="Open Championship Play standings">
+            <span className="home-weekly-games-row__copy"><small>PLAY LEADERBOARD</small><strong>Daily + Featured · Season standings</strong></span><b>VIEW →</b>
+          </Link>
     </section>
   );
 }
