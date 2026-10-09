@@ -6,7 +6,7 @@ import classEvidence from "../../../data/generated/football/cfb-gm-classificatio
 import firstPartyNil from "../../../data/generated/football/cfb-gm-first-party-nil-runtime-2026.json";
 import { cfbGmDevProfile, cfbGmDevelop, cfbGmDevelopmentLabel, type CfbGmClass } from "./footballCfbGmDevelopment";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v11-independent-nil";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v12-independent-nil-weighted-flex";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -312,28 +312,50 @@ export function cfbGmOpenSlots(roster: readonly CfbGmRosterEntry[]) {
   const taken = new Set(roster.map((entry) => entry.slot));
   return CFB_GM_ROSTER_SLOTS.filter((slot) => !taken.has(slot));
 }
+/** Resolve all legal roster assignments and place the strongest player in the
+ * higher-value slot. Draft/pick order must never determine FLEX's weighted
+ * contribution. Only audited current grades and verified family eligibility
+ * are used; this does not alter Wheel ratings or reveal them in the UI.
+ */
 export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEntry[] | null {
-  if (roster.length > 7) return null;
-  const seen = new Set<string>();
-  const resolved: CfbGmRosterEntry[] = [];
-  const players = roster.map((r) => cfbGmPlayer(r.playerId));
-  if (players.some((p) => !p)) return null;
-  function place(index: number): boolean {
-    if (index === roster.length) return true;
-    const entry = roster[index]!, player = players[index]!;
-    if (seen.has(entry.playerId)) return false;
-    seen.add(entry.playerId);
-    const preferred = [...player.eligibleSlots].sort((a, b) => Number(b === entry.slot) - Number(a === entry.slot));
-    for (const slot of preferred) {
-      if (resolved.some((r) => r.slot === slot)) continue;
-      resolved.push({ ...entry, slot });
-      if (place(index + 1)) return true;
-      resolved.pop();
+  if (roster.length > CFB_GM_ROSTER_SLOTS.length) return null;
+  const players = roster.map((entry) => cfbGmPlayer(entry.playerId));
+  if (players.some((player) => !player)
+    || new Set(roster.map((entry) => entry.playerId)).size !== roster.length) return null;
+  const assigned: CfbGmRosterEntry[] = [];
+  let best: CfbGmRosterEntry[] | null = null;
+  let bestValue = -Infinity;
+  let bestStability = -Infinity;
+  const place = (index: number): void => {
+    if (index === roster.length) {
+      // The neutral 80-point baseline and certified FLEX family multipliers
+      // match the displayed College GM team-grade calculation exactly.
+      const value = assigned.reduce((sum, row) => {
+        const player = cfbGmPlayer(row.playerId)!;
+        return sum + (player.currentGrade - 80)
+          * CFB_GM_POSITION_WEIGHTS[row.slot]
+          * cfbGmRoleFit(player, row.slot).multiplier;
+      }, 0);
+      const stable = assigned.filter((row, i) => row.slot === roster[i]!.slot).length;
+      if (value > bestValue + 1e-9 || (Math.abs(value - bestValue) <= 1e-9 && stable > bestStability)) {
+        bestValue = value;
+        bestStability = stable;
+        best = [...assigned];
+      }
+      return;
     }
-    seen.delete(entry.playerId);
-    return false;
-  }
-  return place(0) ? [...resolved].sort((a,b) => CFB_GM_ROSTER_SLOTS.indexOf(a.slot) - CFB_GM_ROSTER_SLOTS.indexOf(b.slot)) : null;
+    const entry = roster[index]!, player = players[index]!;
+    const preferred = [...player.eligibleSlots].sort((a,b) => Number(b === entry.slot) - Number(a === entry.slot));
+    for (const slot of preferred) {
+      if (assigned.some((other) => other.slot === slot)) continue;
+      assigned.push({...entry,slot});
+      place(index + 1);
+      assigned.pop();
+    }
+  };
+  place(0);
+  const optimal = best as CfbGmRosterEntry[] | null;
+  return optimal ? [...optimal].sort((a,b) => CFB_GM_ROSTER_SLOTS.indexOf(a.slot) - CFB_GM_ROSTER_SLOTS.indexOf(b.slot)) : null;
 }
 function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>, portalSeed: string, offers: Readonly<Record<string, CfbGmRetentionAgreement>>) {
   if (roster.some((r) => r.playerId === player.id)) return false;
