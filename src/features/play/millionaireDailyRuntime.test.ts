@@ -53,13 +53,13 @@ describe("Millionaire official Daily runtime", () => {
     const previous = buildMillionaireDailySetup("football", "2026-10-07", "football-daily-v20-resume-v18-oct3");
     const memorial = buildMillionaireDailySetup("football", "2026-10-10", "football-daily-v20-resume-v18-oct3");
     const next = buildMillionaireDailySetup("football", "2026-10-26", "football-daily-v20-resume-v18-oct3");
-    expect(memorial.publicSetup.league).toBe("nfl");
+    expect(memorial.publicSetup.league).toBe("cfb");
     expect(memorial.publicSetup.question_count).toBe(8);
     const run = memorial.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
     expect(run.filter((question) => question.id.includes("ditka-memorial"))).toHaveLength(1);
-    const question = run[3]!;
+    const question = run[2]!;
     expect(question.prompt).toContain("Mike Ditka");
-    expect(question.choices.find((choice) => choice.id === question.correctChoiceId)?.text).toBe("Tight end");
+    expect(question.choices.find((choice) => choice.id === question.correctChoiceId)?.text).toBe("Pittsburgh");
     expect((previous.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
     expect((next.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
   });
