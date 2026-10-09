@@ -130,6 +130,6 @@ describe("SportProvider", () => {
 
     renderSportProvider();
 
-    expect(screen.getByTestId("selected-sport")).toHaveTextContent("ufc");
+    expect(screen.getByTestId("selected-sport")).toHaveTextContent("football");
   });
 });
