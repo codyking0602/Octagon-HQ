@@ -443,7 +443,7 @@ export default function FootballCfbGmPage() {
     const accepted = next.retentionOffers[playerId]?.accepted;
     setMessage((cfbGmPlayer(playerId)?.name ?? "Player") + (accepted
       ? " accepted the " + tier.toLowerCase() + " 2027 NIL offer."
-      : " rejected the offer. You will need to recruit a replacement.");
+      : " rejected the offer. You will need to recruit a replacement."));
   }
   function portalOut(playerId: string) {
     const next = cfbGmPortalOut(run, playerId);
