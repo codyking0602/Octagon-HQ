@@ -20,6 +20,8 @@ import {
   type WheelFootballGmMarketPosition,
 } from "./wheelFootballGmEconomy";
 
+import { footballGmActualRole, footballGmWeightedContribution, FOOTBALL_GM_NEUTRAL_GRADE } from "./footballGmPositionalValue";
+
 export const FOOTBALL_GM_VERSION = "football-gm-v1-playtest";
 export const FOOTBALL_GM_CAP = WHEEL_FOOTBALL_GM_CAP;
 export const FOOTBALL_GM_ROSTER_SLOTS = WHEEL_FOOTBALL_GM_ROSTER_SLOTS;
@@ -118,16 +120,6 @@ type GradeArtifact = {
   grades: Array<{ team: string; player: string; grade: number }>;
 };
 
-const POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
-  QB: 0.26,
-  RB: 0.08,
-  WR: 0.13,
-  FLEX: 0.08,
-  DL: 0.15,
-  LB: 0.15,
-  DB: 0.15,
-};
-
 function normalizeName(value: string) {
   return value
     .normalize("NFKD")
@@ -183,6 +175,7 @@ export const FOOTBALL_GM_PLAYER_POOL: readonly FootballGmPlayer[] = contracts.ma
     currentGrade,
     age: contract.age,
     position: marketPosition,
+    marketRole: footballGmActualRole(contract),
     draftYear: contract.draftYear,
     draftOverall: contract.draftOverall,
     projectionAdjustment,
@@ -578,6 +571,7 @@ export function footballGmProjectedExtensionForPlayer(player: FootballGmPlayer, 
     currentGrade: player.currentGrade,
     age: player.age,
     position: marketPosition,
+    marketRole: footballGmActualRole(player),
     draftYear: player.draftYear,
     draftOverall: player.draftOverall,
     projectionAdjustment: player.projectionAdjustment,
@@ -591,8 +585,8 @@ export function footballGmTeamGrade(roster: readonly FootballGmRosterEntry[], ye
   const score = roster.reduce((sum, entry) => {
     const player = footballGmPlayerById(entry.playerId);
     if (!player) return sum;
-    return sum + (footballGmProjectedGradeForPlayer(player, year) * POSITION_WEIGHTS[entry.slot]);
-  }, 0);
+    return sum + footballGmWeightedContribution(player, entry.slot, footballGmProjectedGradeForPlayer(player, year));
+  }, FOOTBALL_GM_NEUTRAL_GRADE);
   return Math.round(score * 10) / 10;
 }
 

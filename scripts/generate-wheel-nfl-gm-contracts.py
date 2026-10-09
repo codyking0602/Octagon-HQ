@@ -300,7 +300,7 @@ def main():
             )),
             "salaryApy": apy,
             "realContractEndSeason": int(end),
-            "gameContract": "3YR" if int(end) > WINDOW_END_SEASON else "1YR",
+            "gameContract": "3YR" if int(end) >= WINDOW_END_SEASON else "1YR",
             "source": {
                 "provider": "OverTheCap via nflverse",
                 "playerPage": row.get("player_page"),
@@ -353,8 +353,8 @@ def main():
         "snapshotDate": SNAPSHOT_DATE.isoformat(),
         "salaryBasis": "Current active contract APY from OverTheCap via nflverse",
         "gameContractRule": (
-            f"Real contract ending in {SNAPSHOT_DATE.year}, {SNAPSHOT_DATE.year + 1}, or {WINDOW_END_SEASON} "
-            f"=> 1YR; real contract controlled beyond {WINDOW_END_SEASON} => 3YR."
+            f"Real contract ending before {WINDOW_END_SEASON} => 1YR; "
+            f"real contract covering the full game through {WINDOW_END_SEASON} => 3YR."
         ),
         "threeYearWindow": [SNAPSHOT_DATE.year, SNAPSHOT_DATE.year + 1, WINDOW_END_SEASON],
         "populationSource": args.priority,

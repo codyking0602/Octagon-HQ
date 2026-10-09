@@ -3,7 +3,7 @@
   "version": "nfl-gm-contracts-2026-10-05-v1",
   "snapshotDate": "2026-10-05",
   "salaryBasis": "Current active contract APY from OverTheCap via nflverse",
-  "gameContractRule": "Real contract ending in 2026, 2027, or 2028 => 1YR; real contract controlled beyond 2028 => 3YR.",
+  "gameContractRule": "Real contracts ending in 2026 or 2027 => 1YR; contracts covering all three seasons through 2028 or later => 3YR.",
   "threeYearWindow": [
     2026,
     2027,
@@ -78,7 +78,7 @@
       "draftOverall": 130,
       "salaryApy": 19100000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/josh-sweat/7015/",
@@ -128,7 +128,7 @@
       "draftOverall": 16,
       "salaryApy": 4841888,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/walter-nolen/12376/",
@@ -331,7 +331,7 @@
       "draftOverall": 174,
       "salaryApy": 1130054,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/denzel-burke/12534/",
@@ -406,7 +406,7 @@
       "draftOverall": 47,
       "salaryApy": 2352692,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/will-johnson/12407/",
@@ -584,7 +584,7 @@
       "draftOverall": 15,
       "salaryApy": 5140593,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jalon-walker/12375/",
@@ -609,7 +609,7 @@
       "draftOverall": 26,
       "salaryApy": 4194719,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/james-pearce-jr/12386/",
@@ -761,7 +761,7 @@
       "draftOverall": 16,
       "salaryApy": 20250000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/a-j-terrell/8756/",
@@ -786,7 +786,7 @@
       "draftOverall": 118,
       "salaryApy": 1296538,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/billy-bowman-jr/12478/",
@@ -886,7 +886,7 @@
       "draftOverall": 96,
       "salaryApy": 1547139,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/xavier-watts/12456/",
@@ -911,7 +911,7 @@
       "draftOverall": 4,
       "salaryApy": 17666667,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kyle-pitts/9468/",
@@ -1291,7 +1291,7 @@
       "draftOverall": 27,
       "salaryApy": 4144915,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/malaki-starks/12387/",
@@ -1366,7 +1366,7 @@
       "draftOverall": 86,
       "salaryApy": 13089000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/mark-andrews/6971/",
@@ -1469,7 +1469,7 @@
       "draftOverall": 5,
       "salaryApy": 14500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/bradley-chubb/6890/",
@@ -1569,7 +1569,7 @@
       "draftOverall": 41,
       "salaryApy": 2661352,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/t-j-sanders/12401/",
@@ -1771,7 +1771,7 @@
       "draftOverall": null,
       "salaryApy": 5250000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/dee-alford/10033/",
@@ -1796,7 +1796,7 @@
       "draftOverall": 30,
       "salaryApy": 3814496,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/maxwell-hairston/12390/",
@@ -1949,7 +1949,7 @@
       "draftOverall": 7,
       "salaryApy": 24000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/derrick-brown/8747/",
@@ -1974,7 +1974,7 @@
       "draftOverall": 27,
       "salaryApy": 15000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/devin-lloyd/10072/",
@@ -2049,7 +2049,7 @@
       "draftOverall": 77,
       "salaryApy": 1625136,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/princely-umanmielen/12437/",
@@ -2100,7 +2100,7 @@
       "draftOverall": 126,
       "salaryApy": 8300000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/chuba-hubbard/9590/",
@@ -2201,7 +2201,7 @@
       "draftOverall": 122,
       "salaryApy": 1289279,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/lathan-ransom/12482/",
@@ -2353,7 +2353,7 @@
       "draftOverall": 8,
       "salaryApy": 6982598,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tetairoa-mcmillan/12368/",
@@ -2454,7 +2454,7 @@
       "draftOverall": 10,
       "salaryApy": 10000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/devin-bush/7801/",
@@ -2606,7 +2606,7 @@
       "draftOverall": 233,
       "salaryApy": 1082035,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kyle-monangai/12593/",
@@ -2681,7 +2681,7 @@
       "draftOverall": 39,
       "salaryApy": 13333333,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kyler-gordon/10084/",
@@ -2781,7 +2781,7 @@
       "draftOverall": 10,
       "salaryApy": 6659002,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/colston-loveland/12370/",
@@ -2833,7 +2833,7 @@
       "draftOverall": 39,
       "salaryApy": 2741009,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/luther-burden/12399/",
@@ -2884,7 +2884,7 @@
       "draftOverall": 119,
       "salaryApy": 1295529,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/barrett-carter/12479/",
@@ -2909,7 +2909,7 @@
       "draftOverall": 40,
       "salaryApy": 20000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/boye-mafe/10085/",
@@ -2934,7 +2934,7 @@
       "draftOverall": 49,
       "salaryApy": 2253125,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/demetrius-knight/12409/",
@@ -2959,7 +2959,7 @@
       "draftOverall": 17,
       "salaryApy": 28000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/dexter-lawrence/7808/",
@@ -3111,7 +3111,7 @@
       "draftOverall": 62,
       "salaryApy": 13416667,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/bryan-cook/10107/",
@@ -3314,7 +3314,7 @@
       "draftOverall": 33,
       "salaryApy": 28750000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tee-higgins/8773/",
@@ -3339,7 +3339,7 @@
       "draftOverall": 33,
       "salaryApy": 2950100,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/carson-schwesinger/12393/",
@@ -3439,7 +3439,7 @@
       "draftOverall": 5,
       "salaryApy": 10218548,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/mason-graham/12365/",
@@ -3515,7 +3515,7 @@
       "draftOverall": 126,
       "salaryApy": 1282641,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/dylan-sampson/12486/",
@@ -3541,7 +3541,7 @@
       "draftOverall": 36,
       "salaryApy": 2850529,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/quinshon-judkins/12396/",
@@ -3666,7 +3666,7 @@
       "draftOverall": 33,
       "salaryApy": 19125000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tyson-campbell/9497/",
@@ -3691,7 +3691,7 @@
       "draftOverall": 67,
       "salaryApy": 1685722,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/harold-fannin-jr/12427/",
@@ -3844,7 +3844,7 @@
       "draftOverall": 44,
       "salaryApy": 2538773,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/donovan-ezeiruaku/12404/",
@@ -3944,7 +3944,7 @@
       "draftOverall": 135,
       "salaryApy": 60000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/dak-prescott/4848/",
@@ -3970,7 +3970,7 @@
       "draftOverall": 35,
       "salaryApy": 8000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/javonte-williams/9499/",
@@ -4172,7 +4172,7 @@
       "draftOverall": 17,
       "salaryApy": 34000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/ceedee-lamb/8757/",
@@ -4324,7 +4324,7 @@
       "draftOverall": 178,
       "salaryApy": 6000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/justin-strnad/8918/",
@@ -4451,7 +4451,7 @@
       "draftOverall": 60,
       "salaryApy": 1839919,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/r-j-harvey/12420/",
@@ -4653,7 +4653,7 @@
       "draftOverall": 6,
       "salaryApy": 28250000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jaylen-waddle/9470/",
@@ -4705,7 +4705,7 @@
       "draftOverall": 74,
       "salaryApy": 1645270,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/pat-bryant/12434/",
@@ -4755,7 +4755,7 @@
       "draftOverall": 72,
       "salaryApy": 24250000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/alim-mcneill/9536/",
@@ -4855,7 +4855,7 @@
       "draftOverall": 28,
       "salaryApy": 4120023,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tyleik-williams/12388/",
@@ -4880,7 +4880,7 @@
       "draftOverall": 1,
       "salaryApy": 53000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jared-goff/4714/",
@@ -5108,7 +5108,7 @@
       "draftOverall": 112,
       "salaryApy": 30002500,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/amon-ra-st-brown/9576/",
@@ -5134,7 +5134,7 @@
       "draftOverall": 70,
       "salaryApy": 1666113,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/isaac-teslaa/12430/",
@@ -5335,7 +5335,7 @@
       "draftOverall": 26,
       "salaryApy": 55000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jordan-love/8766/",
@@ -5615,7 +5615,7 @@
       "draftOverall": 23,
       "salaryApy": 4393835,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/matthew-golden/12383/",
@@ -5690,7 +5690,7 @@
       "draftOverall": 167,
       "salaryApy": 8000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/henry-tootoo/10991/",
@@ -5842,7 +5842,7 @@
       "draftOverall": 116,
       "salaryApy": 1300942,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/woody-marks/12476/",
@@ -5917,7 +5917,7 @@
       "draftOverall": 37,
       "salaryApy": 13000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jalen-pitre/10082/",
@@ -5967,7 +5967,7 @@
       "draftOverall": null,
       "salaryApy": 8250000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/reed-blankenship/10500/",
@@ -6297,7 +6297,7 @@
       "draftOverall": 41,
       "salaryApy": 22000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jonathan-taylor/8781/",
@@ -6373,7 +6373,7 @@
       "draftOverall": 125,
       "salaryApy": 15000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/cam-bynum/9589/",
@@ -6423,7 +6423,7 @@
       "draftOverall": 80,
       "salaryApy": 1611004,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/justin-walley/12440/",
@@ -6473,7 +6473,7 @@
       "draftOverall": 14,
       "salaryApy": 5240163,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tyler-warren/12374/",
@@ -6677,7 +6677,7 @@
       "draftOverall": 7,
       "salaryApy": 28250000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/josh-hines-allen/7798/",
@@ -6778,7 +6778,7 @@
       "draftOverall": 104,
       "salaryApy": 1329063,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/bhayshul-tuten/12464/",
@@ -6904,7 +6904,7 @@
       "draftOverall": 222,
       "salaryApy": 10600000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/montaric-brown/10267/",
@@ -6929,7 +6929,7 @@
       "draftOverall": 2,
       "salaryApy": 11662278,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/travis-hunter/12362/",
@@ -7006,7 +7006,7 @@
       "draftOverall": null,
       "salaryApy": 20000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jakobi-meyers/8083/",
@@ -7058,7 +7058,7 @@
       "draftOverall": 2,
       "salaryApy": 11662278,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/travis-hunter/12362/",
@@ -7083,7 +7083,7 @@
       "draftOverall": 37,
       "salaryApy": 31750000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/chris-jones/4750/",
@@ -7285,7 +7285,7 @@
       "draftOverall": 41,
       "salaryApy": 14350000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kenneth-walker-iii/10086/",
@@ -7310,7 +7310,7 @@
       "draftOverall": 186,
       "salaryApy": 8000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/alohi-gilman/8926/",
@@ -7410,7 +7410,7 @@
       "draftOverall": 85,
       "salaryApy": 1583878,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/nohl-williams/12445/",
@@ -7638,7 +7638,7 @@
       "draftOverall": null,
       "salaryApy": 10000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/teair-tart/9303/",
@@ -7740,7 +7740,7 @@
       "draftOverall": 22,
       "salaryApy": 4443616,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/omarion-hampton/12382/",
@@ -7890,7 +7890,7 @@
       "draftOverall": 128,
       "salaryApy": 8100000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/charlie-kolar/10173/",
@@ -7993,7 +7993,7 @@
       "draftOverall": 55,
       "salaryApy": 1954423,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tre-harris/12415/",
@@ -8143,7 +8143,7 @@
       "draftOverall": null,
       "salaryApy": 7500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/nate-landman/10377/",
@@ -8220,7 +8220,7 @@
       "draftOverall": 164,
       "salaryApy": 11000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kyren-williams/10209/",
@@ -8245,7 +8245,7 @@
       "draftOverall": 243,
       "salaryApy": 17000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jaylen-watson/10288/",
@@ -8270,7 +8270,7 @@
       "draftOverall": 216,
       "salaryApy": 12000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kamren-curl/8956/",
@@ -8320,7 +8320,7 @@
       "draftOverall": 211,
       "salaryApy": 12750000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/quentin-lake/10256/",
@@ -8422,7 +8422,7 @@
       "draftOverall": 242,
       "salaryApy": 1077134,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/konata-mumpfield/12602/",
@@ -8498,7 +8498,7 @@
       "draftOverall": 21,
       "salaryApy": 16000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kwity-paye/9485/",
@@ -8548,7 +8548,7 @@
       "draftOverall": 83,
       "salaryApy": 12010000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/nakobe-dean/10128/",
@@ -8573,7 +8573,7 @@
       "draftOverall": 22,
       "salaryApy": 13500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/quay-walker/10067/",
@@ -8598,7 +8598,7 @@
       "draftOverall": 135,
       "salaryApy": 1216454,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tonka-hemingway/12495/",
@@ -8674,7 +8674,7 @@
       "draftOverall": 6,
       "salaryApy": 8973953,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/ashton-jeanty/12366/",
@@ -8725,7 +8725,7 @@
       "draftOverall": 29,
       "salaryApy": 10000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/eric-stokes/9493/",
@@ -8876,7 +8876,7 @@
       "draftOverall": 58,
       "salaryApy": 1889706,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jack-bech/12418/",
@@ -8902,7 +8902,7 @@
       "draftOverall": 191,
       "salaryApy": 11676667,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jalen-nailor/10236/",
@@ -9103,7 +9103,7 @@
       "draftOverall": 86,
       "salaryApy": 22500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/malik-willis/10131/",
@@ -9205,7 +9205,7 @@
       "draftOverall": 155,
       "salaryApy": 1153696,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/dante-trader-jr/12515/",
@@ -9230,7 +9230,7 @@
       "draftOverall": 150,
       "salaryApy": 1156323,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jason-marshall-jr/12510/",
@@ -9483,7 +9483,7 @@
       "draftOverall": null,
       "salaryApy": 7500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/eric-wilson/5904/",
@@ -9533,7 +9533,7 @@
       "draftOverall": 139,
       "salaryApy": 1169344,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tyrion-ingram-dawkins/12499/",
@@ -9735,7 +9735,7 @@
       "draftOverall": 205,
       "salaryApy": 12000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/josh-metellus/8945/",
@@ -9838,7 +9838,7 @@
       "draftOverall": 22,
       "salaryApy": 35000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/justin-jefferson/8762/",
@@ -9863,7 +9863,7 @@
       "draftOverall": 38,
       "salaryApy": 21000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/christian-barmore/9502/",
@@ -9888,7 +9888,7 @@
       "draftOverall": 71,
       "salaryApy": 12166667,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/dremont-jones/7862/",
@@ -9938,7 +9938,7 @@
       "draftOverall": 73,
       "salaryApy": 26000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/milton-williams/9537/",
@@ -10014,7 +10014,7 @@
       "draftOverall": 120,
       "salaryApy": 9000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/rhamondre-stevenson/9584/",
@@ -10040,7 +10040,7 @@
       "draftOverall": 38,
       "salaryApy": 2785815,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/treveyon-henderson/12398/",
@@ -10115,7 +10115,7 @@
       "draftOverall": 106,
       "salaryApy": 1316614,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/craig-woodson/12466/",
@@ -10165,7 +10165,7 @@
       "draftOverall": 85,
       "salaryApy": 12000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/marcus-jones/10130/",
@@ -10190,7 +10190,7 @@
       "draftOverall": 35,
       "salaryApy": 8000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/hunter-henry/4748/",
@@ -10419,7 +10419,7 @@
       "draftOverall": 244,
       "salaryApy": 11000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kaden-elliss/8035/",
@@ -10469,7 +10469,7 @@
       "draftOverall": 40,
       "salaryApy": 2701182,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tyler-shough/12400/",
@@ -10546,7 +10546,7 @@
       "draftOverall": 93,
       "salaryApy": 1561301,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jonas-sanker/12453/",
@@ -10646,7 +10646,7 @@
       "draftOverall": 131,
       "salaryApy": 1271809,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/quincy-riley/12491/",
@@ -10774,7 +10774,7 @@
       "draftOverall": 3,
       "salaryApy": 11313795,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/abdul-carter/12363/",
@@ -10824,7 +10824,7 @@
       "draftOverall": 16,
       "salaryApy": 28200000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/brian-burns/7807/",
@@ -10899,7 +10899,7 @@
       "draftOverall": 16,
       "salaryApy": 12000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/tremaine-edmunds/6901/",
@@ -10924,7 +10924,7 @@
       "draftOverall": 1,
       "salaryApy": 6500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jameis-winston/3849/",
@@ -10949,7 +10949,7 @@
       "draftOverall": 25,
       "salaryApy": 4244486,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jaxson-dart/12385/",
@@ -10975,7 +10975,7 @@
       "draftOverall": 105,
       "salaryApy": 1318260,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/cam-skattebo/12465/",
@@ -11088,7 +11088,7 @@
     {
       "team": "NYG",
       "family": "Secondary",
-      "player": "Jev\u00f3n Holland",
+      "player": "Jevón Holland",
       "normalizedName": "jevonholland",
       "position": "S",
       "gmEligibleSlots": [
@@ -11176,7 +11176,7 @@
       "draftOverall": 139,
       "salaryApy": 13333333,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/isaiah-likely/10184/",
@@ -11481,7 +11481,7 @@
       "draftOverall": 36,
       "salaryApy": 14500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/breece-hall/10081/",
@@ -11506,7 +11506,7 @@
       "draftOverall": 73,
       "salaryApy": 1648412,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/azareyeh-thomas/12433/",
@@ -11606,7 +11606,7 @@
       "draftOverall": 11,
       "salaryApy": 13333333,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/minkah-fitzpatrick/6896/",
@@ -11631,7 +11631,7 @@
       "draftOverall": 42,
       "salaryApy": 2616548,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/mason-taylor/12402/",
@@ -11784,7 +11784,7 @@
       "draftOverall": 31,
       "salaryApy": 3725894,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jihaad-campbell/12391/",
@@ -11884,7 +11884,7 @@
       "draftOverall": 53,
       "salaryApy": 51000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jalen-hurts/8793/",
@@ -11910,7 +11910,7 @@
       "draftOverall": 2,
       "salaryApy": 20600000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/saquon-barkley/6887/",
@@ -11961,7 +11961,7 @@
       "draftOverall": 64,
       "salaryApy": 1790135,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/andrew-mukuba/12424/",
@@ -12112,7 +12112,7 @@
       "draftOverall": 10,
       "salaryApy": 25000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/devonta-smith/9474/",
@@ -12239,7 +12239,7 @@
       "draftOverall": 21,
       "salaryApy": 4493401,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/derrick-harmon/12381/",
@@ -12314,7 +12314,7 @@
       "draftOverall": 30,
       "salaryApy": 41000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/t-j-watt/5614/",
@@ -12466,7 +12466,7 @@
       "draftOverall": 5,
       "salaryApy": 24100000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jalen-ramsey/4718/",
@@ -12491,7 +12491,7 @@
       "draftOverall": 94,
       "salaryApy": 12250000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jamel-dean/7885/",
@@ -12541,7 +12541,7 @@
       "draftOverall": 55,
       "salaryApy": 12100000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/pat-freiermuth/9519/",
@@ -12593,7 +12593,7 @@
       "draftOverall": 34,
       "salaryApy": 17500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/michael-pittman-jr/8774/",
@@ -12896,7 +12896,7 @@
       "draftOverall": null,
       "salaryApy": 8000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/josh-jobe/10312/",
@@ -12946,7 +12946,7 @@
       "draftOverall": 35,
       "salaryApy": 2900315,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/nick-emmanwori/12395/",
@@ -13099,7 +13099,7 @@
       "draftOverall": null,
       "salaryApy": 17000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/rashid-shaheed/10704/",
@@ -13199,7 +13199,7 @@
       "draftOverall": 11,
       "salaryApy": 6235839,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/mykel-williams/12371/",
@@ -13224,7 +13224,7 @@
       "draftOverall": 2,
       "salaryApy": 34000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/nick-bosa/7793/",
@@ -13249,7 +13249,7 @@
       "draftOverall": 75,
       "salaryApy": 20000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/osa-odighizuwa/9539/",
@@ -13426,7 +13426,7 @@
       "draftOverall": 160,
       "salaryApy": 1150594,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/marques-sigle/12520/",
@@ -13476,7 +13476,7 @@
       "draftOverall": 100,
       "salaryApy": 1540296,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/upton-stout/12460/",
@@ -13579,7 +13579,7 @@
       "draftOverall": 7,
       "salaryApy": 14166667,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/mike-evans/2946/",
@@ -13882,7 +13882,7 @@
       "draftOverall": 84,
       "salaryApy": 1587162,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jacob-parrish/12444/",
@@ -13957,7 +13957,7 @@
       "draftOverall": 157,
       "salaryApy": 16000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/zyon-mccollum/10202/",
@@ -13982,7 +13982,7 @@
       "draftOverall": 106,
       "salaryApy": 10000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/cade-otton/10151/",
@@ -14034,7 +14034,7 @@
       "draftOverall": 19,
       "salaryApy": 4543183,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/emeka-egbuka/12379/",
@@ -14211,7 +14211,7 @@
       "draftOverall": 135,
       "salaryApy": 21000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/john-franklin-myers/7020/",
@@ -14261,7 +14261,7 @@
       "draftOverall": 1,
       "salaryApy": 12209901,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/cam-ward/12361/",
@@ -14338,7 +14338,7 @@
       "draftOverall": 49,
       "salaryApy": 19333333,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/alontae-taylor/10094/",
@@ -14363,7 +14363,7 @@
       "draftOverall": 116,
       "salaryApy": 13500000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/amani-hooker/7907/",
@@ -14388,7 +14388,7 @@
       "draftOverall": 81,
       "salaryApy": 15000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/cordale-flott/10126/",
@@ -14413,7 +14413,7 @@
       "draftOverall": 82,
       "salaryApy": 1601248,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/kevin-winston-jr/12442/",
@@ -14438,7 +14438,7 @@
       "draftOverall": 183,
       "salaryApy": 1113254,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/marcus-harris/12543/",
@@ -14463,7 +14463,7 @@
       "draftOverall": 120,
       "salaryApy": 1293227,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/gunnar-helm/12480/",
@@ -14742,7 +14742,7 @@
       "draftOverall": 245,
       "salaryApy": 1076357,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/jacory-croskey-merritt/12605/",
@@ -14918,7 +14918,7 @@
       "draftOverall": 61,
       "salaryApy": 1820005,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/trey-amos/12421/",
@@ -14943,7 +14943,7 @@
       "draftOverall": 143,
       "salaryApy": 9000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/chigoziem-okonkwo/10188/",
@@ -15021,7 +15021,7 @@
       "draftOverall": 76,
       "salaryApy": 29000000,
       "realContractEndSeason": 2028,
-      "gameContract": "1YR",
+      "gameContract": "3YR",
       "source": {
         "provider": "OverTheCap via nflverse",
         "playerPage": "https://overthecap.com/player/terry-mclaurin/7867/",

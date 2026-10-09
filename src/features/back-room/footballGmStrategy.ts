@@ -16,18 +16,11 @@ import {
 import historicalFinalFour from "../../../data/generated/football/gm-historical-final-four-2021-2025.json";
 import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
 
+import { footballGmWeightedContribution, FOOTBALL_GM_NEUTRAL_GRADE } from "./footballGmPositionalValue";
+export { FOOTBALL_GM_POSITION_WEIGHTS } from "./footballGmPositionalValue";
+
 export const FOOTBALL_GM_VERSION = "football-gm-v11-seeded-development";
 export const FOOTBALL_GM_MAX_TRADE_PLAYERS = 2;
-
-export const FOOTBALL_GM_POSITION_WEIGHTS: Readonly<Record<FootballGmRosterSlot, number>> = {
-  QB: 0.26,
-  RB: 0.08,
-  WR: 0.13,
-  FLEX: 0.08,
-  DL: 0.15,
-  LB: 0.15,
-  DB: 0.15,
-};
 
 /**
  * Historical reference artifact derived from Pro Football Reference AV.
@@ -282,9 +275,9 @@ function rawWeightedGrade(roster: readonly FootballGmRosterEntry[], year: 1 | 2 
   const score = roster.reduce((sum, entry) => {
     const player = footballGmPlayerById(entry.playerId);
     return player
-      ? sum + (footballGmProjectedGradeForPlayer(player, year, seed) * FOOTBALL_GM_POSITION_WEIGHTS[entry.slot])
+      ? sum + footballGmWeightedContribution(player, entry.slot, footballGmProjectedGradeForPlayer(player, year, seed))
       : sum;
-  }, 0);
+  }, FOOTBALL_GM_NEUTRAL_GRADE);
   return Math.round(score * 10) / 10;
 }
 
