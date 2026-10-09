@@ -440,7 +440,7 @@ export function projectWheelFootballGmGrade(input: {
   return Math.round(clamp(grade, 70, 99) * 10) / 10;
 }
 
-function interpolateMarketApy(position: WheelFootballGmMarketPosition | FootballGmActualRole, grade: number) {
+function interpolateMarketApy(position: WheelFootballGmMarketPosition | Exclude<FootballGmActualRole, "TE">, grade: number) {
   const curve = MARKET_CURVES[position];
   const boundedGrade = clamp(grade, curve[0]![0], curve[curve.length - 1]![0]);
   for (let index = 1; index < curve.length; index += 1) {
