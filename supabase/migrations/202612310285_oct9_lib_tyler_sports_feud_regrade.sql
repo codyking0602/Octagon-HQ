@@ -5,11 +5,12 @@ do $oct9_lib_tyler_setup$
 declare
   v_setup uuid; v_evidence jsonb; v_pack jsonb; v_board jsonb; v_entities jsonb;
 begin
-  select d.setup_id into strict v_setup
+  select d.setup_id into v_setup
   from private.daily_challenges d
   join private.daily_challenge_schedule_versions s on s.version=d.schedule_version
   where d.central_day=date '2026-10-09' and s.sport='football' and d.game_type='sports_feud';
 
+  if v_setup is null then return; end if;
   select private_setup_evidence into v_evidence from private.daily_challenge_setups where id=v_setup;
   v_pack:=v_evidence->'pack';
   v_board:=v_pack->'mainBoards'->0;
@@ -77,24 +78,28 @@ declare
   v_guesses jsonb; v_attempts jsonb; v_revealed jsonb; v_submitted jsonb;
   v_fast jsonb; v_reason text;
 begin
-  select d.id into strict v_daily
+  select d.id into v_daily
   from private.daily_challenges d
   join private.daily_challenge_schedule_versions s on s.version=d.schedule_version
   where d.central_day=date '2026-10-09' and s.sport='football' and d.game_type='sports_feud';
 
+  if v_daily is null then return; end if;
   for v_who in select unnest(array['LIB','TYLER']) loop
-    select id into strict v_profile from public.profiles where normalized_name=v_who;
-    select id,normalized_score into strict v_attempt,v_old
+    select id into v_profile from public.profiles where normalized_name=v_who;
+    if v_profile is null then continue; end if;
+    select id,normalized_score into v_attempt,v_old
       from private.daily_challenge_attempts
       where daily_challenge_id=v_daily and profile_id=v_profile and attempt_kind='official_first';
+    if v_attempt is null then continue; end if;
     v_score:=case when v_who='LIB' then 39 else 81 end;
     if v_old=v_score then continue; end if;
     if v_old<>case when v_who='LIB' then 26 else 72 end
       then raise exception 'Oct 9 % score changed unexpectedly from %',v_who,v_old; end if;
 
-    select public_state,submission_state into strict v_public,v_submission
+    select public_state,submission_state into v_public,v_submission
       from private.daily_challenge_progress
       where daily_challenge_id=v_daily and profile_id=v_profile;
+    if v_public is null or v_submission is null then raise exception 'Missing Oct 9 % progress',v_who; end if;
     v_engine:=v_submission->'engine_state';
     v_board:=v_public->'main_boards'->0;
     v_engine_board:=v_engine->'mainBoards'->0;
@@ -177,12 +182,12 @@ begin
     end if;
 
     select coalesce(jsonb_agg(
-      case when row.value->'entity'->>'id' in ('nfl-main-19-5:a6','nfl-main-19-5:a4')
-        and (v_who='TYLER' or row.value->'entity'->>'id'='nfl-main-19-5:a6')
-      then row.value||jsonb_build_object('found',true) else row.value end
-      order by row.ordinality),'[]'::jsonb)
+      case when item.value->'entity'->>'id' in ('nfl-main-19-5:a6','nfl-main-19-5:a4')
+        and (v_who='TYLER' or item.value->'entity'->>'id'='nfl-main-19-5:a6')
+      then item.value||jsonb_build_object('found',true) else item.value end
+      order by item.ordinality),'[]'::jsonb)
       into v_reveal
-      from jsonb_array_elements(v_board->'answer_reveal') with ordinality row(value,ordinality);
+      from jsonb_array_elements(v_board->'answer_reveal') with ordinality item(value,ordinality);
 
     v_board:=v_board||jsonb_build_object(
       'slots',v_slots,'recorded_guesses',v_guesses,'answer_reveal',v_reveal,
