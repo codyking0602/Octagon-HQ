@@ -725,7 +725,7 @@ describe("Football GM strategy v7", () => {
     }
   });
 
-  it("uses only a zero to 2.5 percent CPU trade premium", () => {
+  it("uses only a zero to one percent CPU trade premium", () => {
     const roster = codyRunRoster();
     const thresholds = new Set<number>();
     for (let index = 0; index < 200; index += 1) {
@@ -741,10 +741,10 @@ describe("Football GM strategy v7", () => {
       });
       thresholds.add(evaluation.threshold);
       expect(evaluation.threshold).toBeGreaterThanOrEqual(1);
-      expect(evaluation.threshold).toBeLessThanOrEqual(1.025);
+      expect(evaluation.threshold).toBeLessThanOrEqual(1.01);
     }
     expect(thresholds.has(1)).toBe(true);
-    expect(thresholds.has(1.025)).toBe(true);
+    expect(thresholds.has(1.01)).toBe(true);
   });
 
   it("curates asking prices to non-dominated near-threshold packages with useful shape diversity", () => {
