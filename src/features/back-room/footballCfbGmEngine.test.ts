@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { wheelFootballPoolTeams } from "./wheelFootballModel";
 import {
-  CFB_GM_AP_SCHOOLS, CFB_GM_BUDGETS, CFB_GM_PLAYERS, CFB_GM_ROSTER_SLOTS,
+  CFB_GM_AP_SCHOOLS, CFB_GM_BUDGETS, CFB_GM_PLAYERS, CFB_GM_ROSTER_SLOTS, CFB_GM_POSITION_WEIGHTS, cfbGmDepartureRisk,
   cfbGmCandidates, cfbGmEligibleSchools, cfbGmEnterOffseason, cfbGmFinalResult,
   cfbGmInitial, cfbGmOpenSlots, cfbGmPick, cfbGmPlayer, cfbGmPortalOut,
   cfbGmReflow, cfbGmSeason, cfbGmSpent, cfbGmSpin, cfbGmTeamGrade,
@@ -68,7 +68,7 @@ describe("CFB The GM owner preview", () => {
     expect(cfbGmReflow([roster![0]!, roster![0]!])).toBeNull();
   });
 
-  it("weights both Front Seven spots equally at the latest NFL 15% standard", () => {
+  it("weights both Front Seven spots equally at the current NFL 14% baseline", () => {
     const fronts = CFB_GM_PLAYERS.filter((p) => p.family === "Front Seven" && p.currentGrade !== 85);
     const a = fronts[0]!, b = fronts.find((p) => p.currentGrade !== a.currentGrade)!;
     const entry = (playerId: string, slot: "FRONT_7_A" | "FRONT_7_B") =>
@@ -76,7 +76,21 @@ describe("CFB The GM owner preview", () => {
     const aFirst = cfbGmTeamGrade([entry(a.id, "FRONT_7_A"), entry(b.id, "FRONT_7_B")]);
     const bFirst = cfbGmTeamGrade([entry(b.id, "FRONT_7_A"), entry(a.id, "FRONT_7_B")]);
     expect(aFirst).toBe(bFirst);
-    expect(aFirst).toBe(Math.round((a.currentGrade + b.currentGrade) * .15 * 10) / 10);
+    expect(CFB_GM_POSITION_WEIGHTS).toEqual({ QB:.28, RB:.08, WR:.14, FLEX:.08, FRONT_7_A:.14, FRONT_7_B:.14, SECONDARY:.14 });
+    expect(aFirst).toBe(Math.round((80 + (a.currentGrade - 80 + b.currentGrade - 80) * .14) * 10) / 10);
+  });
+
+  it("scouts all 468 individual profiles and combines departures, class and portal risks honestly", () => {
+    expect(CFB_GM_PLAYERS).toHaveLength(468);
+    for (const p of CFB_GM_PLAYERS) {
+      expect(["HIGH UPSIDE", "RISING", "STEADY", "BOOM/BUST", "DECLINE RISK"]).toContain(p.outlook);
+      expect(cfbGmDepartureRisk(p.id,p.currentGrade,p.classification)).toBe(p.departureRisk);
+      expect(["LOW","MEDIUM","HIGH"]).toContain(p.departureRisk);
+    }
+    // A known final-year classification is not presented as low NFL-only draft risk.
+    const eighth = CFB_GM_PLAYERS.find(p=>p.classification==="8TH");
+    expect(eighth).toBeDefined();
+    expect(eighth!.departureRisk).toBe("HIGH");
   });
 
   it("has an affordable seven-round path in both budgets with no unfillable late slots", () => {
@@ -134,28 +148,31 @@ describe("CFB GM UI parity and owner gating", () => {
   it("reuses NFL wheel, headshot, roster, intro, and report components rather than inventing a second visual pattern", () => {
     expect(page).toContain('import { GmFootballWheel, PlayerHeadshot }');
     for (const token of ['football-gm__header','football-gm__intro-stages',
-      'football-gm__roster-grid','football-wheel-picker football-gm__picker',
-      'football-gm-report__evolution-row']) {
+      'football-gm__roster-grid','football-wheel-picker football-gm__picker']) {
       expect(page).toContain(token);
       expect(nfl + read("src/features/back-room/FootballGmFranchiseReport.tsx")).toContain(token);
     }
-    // The CFB final screen follows the locked compact NFL result hierarchy,
-    // but keeps its own two-year CFP seasons and college NIL figures.
+    // CFB now shares the locked NFL graphic final composition, with its own
+    // two-year results, NIL money, and transfer-portal descriptions.
     expect(page).toContain('football-gm__position-tabs');
     expect(page).toContain('setSelectedPosition');
     expect(page).toContain('football-gm__cfb-budget-modes');
     expect(page).toContain('data-cfb-gm="true"');
-    expect(read("src/features/back-room/footballCfbGmEngine.ts")).toContain('FRONT_7_A: "F7-1"')
-    const nflReport = read("src/features/back-room/FootballGmFranchiseReport.tsx");
-    for (const token of ["gm-result__summary","gm-result__scores","gm-result__season-comparison",
-      "gm-result__roster-card","gm-result__front-office","gm-result__final-roster",
-      "gm-result__scoring-card","gm-result__scoring","football-gm-report__evolution-rows"]) {
+    expect(read("src/features/back-room/footballCfbGmEngine.ts")).toContain('FRONT_7_A: "F7-1"');
+    const nflFinal = read("src/features/back-room/FootballGmFinalExperience.tsx");
+    expect(nflFinal).toContain("YOUR FINAL ROSTER");
+    for (const token of ["football-gm-final gm-final","gm-final__hero","gm-final__hero-main",
+      "gm-final__stats","gm-final__seasons","gm-final__highlights","gm-final__roster-list",
+      "gm-final__band-track","gm-final__band-start","gm-final__transactions",
+      "gm-final__disclosure","gm-final__math","gm-final__money"]) {
       expect(page).toContain(token);
-      expect(nflReport).toContain(token);
+      expect(nflFinal).toContain(token);
     }
-    expect(page).toContain("YOUR TWO-YEAR GM RESULT");
+    expect(page).toContain('style={{left: "50%"}}');
+    expect(page).toContain("EXIT RISK");
+    expect(page).toContain("TWO-YEAR RESULTS");
     expect(page).toContain("CFP RÉSUMÉ");
-    expect(page).not.toContain("football-gm-report__hero");
+    expect(page).not.toContain("gm-result__summary");
 
   });
   it("gates CFB owner route without changing existing public game library order", () => {
