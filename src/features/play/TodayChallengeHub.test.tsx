@@ -204,70 +204,16 @@ describe("generalized Today’s Challenge hub", () => {
     expect(navigate).toHaveBeenCalledWith("/football/today");
   });
 
-  it("opens Championship Standings with the current user expanded from the Home deep link", () => {
-    window.history.replaceState({}, "", "/play?standings=me#championship-standings");
+  it("opens unified Play Championship standings without old Daily-win titles", () => {
     useTodayChallengeRuntime.mockReturnValue({
       projection: projection("blind_resume"),
-      loading: false,
-      error: null,
-      busy: false,
-      configured: true,
-      advance: vi.fn(),
-      refresh: vi.fn(),
+      loading: false, error: null, busy: false, configured: true,
+      advance: vi.fn(), refresh: vi.fn(),
     });
-
     render(<TodayChallengeHub />);
-
-    const details = document.querySelector<HTMLDetailsElement>("#championship-standings");
-    expect(details).not.toBeNull();
-    expect(details).toHaveAttribute("open");
-
-    const codyRow = screen.getAllByText("Cody").find((node) => node.closest("button"))?.closest("button");
-    expect(codyRow).not.toBeNull();
-    expect(codyRow).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText("Average Score by Game")).toBeInTheDocument();
-  });
-
-  it("keeps cumulative standings collapsed, then reveals one-row member stats and game averages", () => {
-    useTodayChallengeRuntime.mockReturnValue({
-      projection: projection("blind_resume"),
-      loading: false,
-      error: null,
-      busy: false,
-      configured: true,
-      advance: vi.fn(),
-      refresh: vi.fn(),
-    });
-
-    render(<TodayChallengeHub />);
-
-    const summary = screen.getByText("Championship Standings").closest("summary");
-    expect(summary).toHaveTextContent("YOUR RANK #1 · 2 WEEKLY TITLES");
-    expect(summary?.parentElement).not.toHaveAttribute("open");
-
-    fireEvent.click(summary!);
-    const header = document.querySelector(".daily-standings__header");
-    expect(header).toHaveTextContent("CurrentStreak");
-    expect(header).toHaveTextContent("LongestStreak");
-    expect(screen.getAllByText("Cody").find((node) => node.closest("button"))?.parentElement?.querySelector("img")).toHaveAttribute(
-      "src",
-      "data:image/webp;base64,cody",
-    );
-
-    const codyRow = screen.getAllByText("Cody").find((node) => node.closest("button"))?.closest("button");
-    expect(codyRow).not.toBeNull();
-    expect(codyRow).toHaveAttribute("aria-expanded", "false");
-    fireEvent.click(codyRow!);
-    expect(codyRow).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText("Average Score by Game")).toBeInTheDocument();
-    const findLeaderAverage = screen
-      .getAllByText("Find the Leader")
-      .find((element) => element.tagName === "SMALL");
-    expect(findLeaderAverage?.parentElement).toHaveTextContent("84.1");
-    const blindResumeAverage = screen
-      .getAllByText("Blind Resume")
-      .find((element) => element.tagName === "SMALL");
-    expect(blindResumeAverage?.parentElement).toHaveTextContent("90.6");
+    expect(screen.queryByText("2 WEEKLY TITLES")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Open Championship Play standings" }));
+    expect(navigate).toHaveBeenCalledWith("/championship/ufc?tab=play");
   });
 
   it("keeps today’s leaderboard inside the swipeable challenge card and guarded until completion", () => {
