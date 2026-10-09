@@ -1,5 +1,8 @@
 # CFB GM — individual player development-stage audit (October 9, 2026)
 
+> **SUPERSEDED SCOUTING-LABEL PROPOSAL.** Owner has locked the **same five NFL labels** for CFB GM: HIGH UPSIDE, RISING, STEADY, BOOM/BUST and DECLINE RISK. The individual stage labels proposed in this historical research audit are **not approved UI terminology**. Refer to the [approved 468-player label decision](cfb-gm-development-labels-approved-2026-10-09.md) and [full approved mapping](cfb-gm-468-development-labels-approved-2026-10-09.csv) instead. Existing research and probability data remain intact.
+
+
 **Audit scope: 468 of 468 players, 25 schools. This is a REVIEW ARTIFACT ONLY. No live GM rules, NFL code, NIL prices, NCAA eligibility assumptions, or Wheel/HQ grades have been changed.**
 
 [Full 468-player source-linked audit table](cfb-gm-468-player-development-audit-2026-10-09.csv)
