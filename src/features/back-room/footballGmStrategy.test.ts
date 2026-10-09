@@ -163,12 +163,13 @@ function findAccessibleEliteFreeAgent() {
 describe("Football GM strategy v7", () => {
   it("keeps the calibrated $150M cap and locked position weights", () => {
     expect(FOOTBALL_GM_CAP).toBe(150_000_000);
+    expect(FOOTBALL_GM_POSITION_WEIGHTS.QB).toBe(0.28);
     expect(FOOTBALL_GM_POSITION_WEIGHTS.RB).toBe(0.08);
-    expect(FOOTBALL_GM_POSITION_WEIGHTS.WR).toBe(0.13);
+    expect(FOOTBALL_GM_POSITION_WEIGHTS.WR).toBe(0.14);
     expect(FOOTBALL_GM_POSITION_WEIGHTS.FLEX).toBe(0.08);
-    expect(FOOTBALL_GM_POSITION_WEIGHTS.DL).toBe(0.15);
-    expect(FOOTBALL_GM_POSITION_WEIGHTS.LB).toBe(0.15);
-    expect(FOOTBALL_GM_POSITION_WEIGHTS.DB).toBe(0.15);
+    expect(FOOTBALL_GM_POSITION_WEIGHTS.DL).toBe(0.14);
+    expect(FOOTBALL_GM_POSITION_WEIGHTS.LB).toBe(0.14);
+    expect(FOOTBALL_GM_POSITION_WEIGHTS.DB).toBe(0.14);
     expect(Object.values(FOOTBALL_GM_POSITION_WEIGHTS).reduce((sum, value) => sum + value, 0)).toBeCloseTo(1, 8);
   });
 

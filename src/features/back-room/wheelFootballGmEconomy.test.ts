@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { footballGmActualRole } from "./footballGmPositionalValue";
 import {
   WHEEL_FOOTBALL_GM_CAP,
   WHEEL_FOOTBALL_GM_ROSTER_SLOTS,
@@ -77,6 +78,7 @@ function extensionFor(contract: WheelFootballGmContractRow) {
     currentGrade,
     age: contract.age,
     position: wheelFootballGmMarketPositionForContract(contract),
+    marketRole: footballGmActualRole(contract),
     draftYear: contract.draftYear,
     draftOverall: contract.draftOverall,
     projectionAdjustment: contract.projectionAdjustment ?? 0,
@@ -95,8 +97,16 @@ describe("Wheel NFL GM contract authority", () => {
   it("applies the locked 1YR versus 3YR simplification literally", () => {
     for (const row of contracts) {
       expect(["1YR", "3YR"]).toContain(row.gameContract);
-      expect(row.gameContract).toBe(row.realContractEndSeason <= windowEndSeason ? "1YR" : "3YR");
+      expect(row.gameContract).toBe(row.realContractEndSeason < windowEndSeason ? "1YR" : "3YR");
     }
+  });
+
+  it("uses authentic contract coverage to arrive at 319 one-year and 275 three-year deals", () => {
+    expect(contracts.filter((player) => player.gameContract === "1YR")).toHaveLength(319);
+    expect(contracts.filter((player) => player.gameContract === "3YR")).toHaveLength(275);
+    expect(findContract("Matthew Stafford").gameContract).toBe("1YR");
+    expect(findContract("Cameron Heyward").gameContract).toBe("1YR");
+    expect(findContract("Fred Warner").gameContract).toBe("3YR");
   });
 
   it("maps the current Wheel population into the seven GM roster slots", () => {

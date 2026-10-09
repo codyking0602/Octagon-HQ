@@ -1986,6 +1986,11 @@ export default function FootballGmModePage({
             <span>HIDDEN GRADES</span>
           </div>
 
+          <details className="football-gm__position-guide">
+            <summary>HOW POSITION VALUE WORKS</summary>
+            <p>QB and WR carry a little more weight. EDGE and CB have a modest positional premium; linebackers, safeties and FLEX options are valued by their real role. Every match uses the same rules, and player HQ grades stay unchanged.</p>
+          </details>
+
           <button className="primary-action" type="button" onClick={() => patch({ phase: "draft" })}>START THE DRAFT</button>
         </section>
       ) : null}
