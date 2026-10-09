@@ -314,10 +314,10 @@ export function cfbGmOpenSlots(roster: readonly CfbGmRosterEntry[]) {
 }
 /** Resolve all legal roster assignments and place the strongest player in the
  * higher-value slot. Draft/pick order must never determine FLEX's weighted
- * contribution. Only audited current grades and verified family eligibility
+ * contribution. Use developed grades for 2027 while preserving verified eligibility
  * are used; this does not alter Wheel ratings or reveal them in the UI.
  */
-export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEntry[] | null {
+export function cfbGmReflow(roster: readonly CfbGmRosterEntry[], year: 1 | 2 = 1, seed = ""): CfbGmRosterEntry[] | null {
   if (roster.length > CFB_GM_ROSTER_SLOTS.length) return null;
   const players = roster.map((entry) => cfbGmPlayer(entry.playerId));
   if (players.some((player) => !player)
@@ -332,7 +332,7 @@ export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEnt
       // match the displayed College GM team-grade calculation exactly.
       const value = assigned.reduce((sum, row) => {
         const player = cfbGmPlayer(row.playerId)!;
-        return sum + (player.currentGrade - 80)
+        return sum + (cfbGmEffectiveGrade(player, year, seed) - 80)
           * CFB_GM_POSITION_WEIGHTS[row.slot]
           * cfbGmRoleFit(player, row.slot).multiplier;
       }, 0);
@@ -360,7 +360,7 @@ export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEnt
 function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>, portalSeed: string, offers: Readonly<Record<string, CfbGmRetentionAgreement>>) {
   if (roster.some((r) => r.playerId === player.id)) return false;
   if (year === 2 && !cfbGmPortalAvailable(player,portalSeed)) return false;
-  const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: player.id, acquired: year === 1 ? "draft" : "portal"}]);
+  const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: player.id, acquired: year === 1 ? "draft" : "portal"}], year, portalSeed);
   if (!next) return false;
   const spent = cfbGmSpent(next, year, portalSeed, offers);
   if (spent > budget) return false;
@@ -429,7 +429,7 @@ export function cfbGmEligibleSchools(roster: readonly CfbGmRosterEntry[], budget
 export function cfbGmPick(roster: readonly CfbGmRosterEntry[], id: string, budget: number, year: 1 | 2, excluded: ReadonlySet<string> = new Set(), portalSeed = "", offers: Readonly<Record<string, CfbGmRetentionAgreement>> = {}) {
   const player = cfbGmPlayer(id);
   if (!player || !cfbGmCandidates(player.schoolId, roster, budget, year, true, excluded, portalSeed, offers).some((p) => p.id === id)) return null;
-  const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: id, acquired: year === 1 ? "draft" : "portal"}]);
+  const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: id, acquired: year === 1 ? "draft" : "portal"}], year, portalSeed);
   return next;
 }
 export function cfbGmSpin(seed: string, index: number, schoolIds: readonly string[]) {
@@ -467,7 +467,7 @@ export function cfbGmEnterOffseason(run: CfbGmRun): CfbGmRun {
   const departures = cfbGmForcedDepartures(run);
   const leaving = new Set(departures.map((d) => d.playerId));
   return {...run, phase: "offseason", departures, retentionOffers: {},
-    finalRoster: run.roster.filter((r) => !leaving.has(r.playerId)),
+    finalRoster: cfbGmReflow(run.roster.filter((r) => !leaving.has(r.playerId)), 2, run.seed)!,
     pendingSchool: null};
 }
 /** Familiar teammates and stable returning starters create modest win-probability
