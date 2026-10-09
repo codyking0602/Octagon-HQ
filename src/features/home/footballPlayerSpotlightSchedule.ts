@@ -238,7 +238,7 @@ export function footballSpotlightNextPair(
 
 /** One Central-time day of remembrance; the established weekly pair resumes Oct. 11. */
 export const FOOTBALL_DITKA_MEMORIAL_DAY = "2026-10-10";
-export const FOOTBALL_DITKA_MEMORIAL_PHOTO = "https://images2.minutemediacdn.com/image/upload/c_fill,w_1200,ar_1:1,f_auto,q_auto/images/ImagnImages/mmsport/60/01h2rdtzkv214xnfwj7c.jpg";
+export const FOOTBALL_DITKA_MEMORIAL_PHOTO = "https://upload.wikimedia.org/wikipedia/commons/d/d5/Mike_Ditka_2008_NFL_Experience_48-DPA-02_01_02_08_%28cropped%29.jpg";
 export const FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT: FootballPlayerSpotlight = {
   name: "Mike Ditka",
   team: "Chicago Bears",
