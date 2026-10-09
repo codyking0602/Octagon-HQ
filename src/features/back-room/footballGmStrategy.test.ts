@@ -33,6 +33,7 @@ import {
   footballGmTeamOverall,
   footballGmThreeYearResumeScore,
   footballGmSignFreeAgent,
+  footballGmSwapDisplacedAsset,
   footballGmTargetOfferDominates,
   footballGmTitleOdds,
   footballGmTradeOfferAcceptanceSlack,
@@ -589,6 +590,75 @@ describe("Football GM strategy v7", () => {
     });
     expect(evaluation.reason).not.toBe("invalid");
     expect(evaluation.reason).not.toBe("roster");
+  });
+
+  it("lets the GM promote Tuten over Corum without an extra trade, cut, or cap change", () => {
+    // Reconstruct the dead end from the owner's Oct 9 solo run: the automatic
+    // trade resolution kept Corum in the core and stranded Tuten as a chip.
+    const roster: FootballGmRosterEntry[] = [
+      { slot: "QB", playerId: playerId("Matthew Stafford"), acquired: "replacement" },
+      { slot: "RB", playerId: playerId("Blake Corum"), acquired: "draft" },
+      { slot: "WR", playerId: playerId("Chris Olave"), acquired: "draft" },
+      { slot: "FLEX", playerId: playerId("Jaylen Wright"), acquired: "draft" },
+      { slot: "LB", playerId: playerId("Cameron Heyward"), acquired: "draft" },
+      { slot: "DB", playerId: playerId("Antonio Johnson"), acquired: "trade" },
+    ];
+    const tradeChipPlayerIds = [playerId("Bhayshul Tuten")];
+    const seed = "tuten-corum-owner-run:gmdev1";
+    const beforeIds = [...roster.map((entry) => entry.playerId), ...tradeChipPlayerIds];
+    const year2Cap = footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, 2, seed, {});
+    const year3Cap = footballGmAdjustedHoldingsCap(roster, tradeChipPlayerIds, 3, seed, {});
+    const swapped = footballGmSwapDisplacedAsset({
+      roster, tradeChipPlayerIds,
+      promotePlayerId: playerId("Bhayshul Tuten"),
+      displacePlayerId: playerId("Blake Corum"),
+      seed,
+    });
+    expect(swapped).not.toBeNull();
+    expect(swapped!.roster.some((entry) => entry.playerId === playerId("Bhayshul Tuten") && entry.slot === "RB")).toBe(true);
+    expect(swapped!.roster.some((entry) => entry.playerId === playerId("Blake Corum"))).toBe(false);
+    expect(swapped!.tradeChipPlayerIds).toEqual([playerId("Blake Corum")]);
+    expect(swapped!.roster).toHaveLength(roster.length);
+    expect([...swapped!.roster.map((entry) => entry.playerId), ...swapped!.tradeChipPlayerIds].sort()).toEqual(beforeIds.sort());
+    expect(footballGmAdjustedHoldingsCap(swapped!.roster, swapped!.tradeChipPlayerIds, 2, seed, {})).toBe(year2Cap);
+    expect(footballGmAdjustedHoldingsCap(swapped!.roster, swapped!.tradeChipPlayerIds, 3, seed, {})).toBe(year3Cap);
+
+    // Swapping does not consume a trade attempt: even the replacement chip
+    // remains a held asset available for an ordinary trade or release.
+    const restored = footballGmSwapDisplacedAsset({
+      roster: swapped!.roster,
+      tradeChipPlayerIds: swapped!.tradeChipPlayerIds,
+      promotePlayerId: playerId("Blake Corum"),
+      displacePlayerId: playerId("Bhayshul Tuten"),
+      seed,
+    });
+    expect(restored?.tradeChipPlayerIds).toEqual([playerId("Bhayshul Tuten")]);
+    expect(restored?.roster.some((entry) => entry.playerId === playerId("Blake Corum"))).toBe(true);
+  });
+
+  it("rejects swapping an unowned asset, illegal position, or duplicate holding", () => {
+    const roster: FootballGmRosterEntry[] = [
+      { slot: "QB", playerId: playerId("Matthew Stafford"), acquired: "draft" },
+      { slot: "RB", playerId: playerId("Blake Corum"), acquired: "draft" },
+      { slot: "WR", playerId: playerId("Chris Olave"), acquired: "draft" },
+      { slot: "FLEX", playerId: playerId("Jaylen Wright"), acquired: "draft" },
+      { slot: "LB", playerId: playerId("Cameron Heyward"), acquired: "draft" },
+      { slot: "DB", playerId: playerId("Antonio Johnson"), acquired: "trade" },
+    ];
+    const input = { roster, tradeChipPlayerIds: [playerId("Bhayshul Tuten")] };
+    expect(footballGmSwapDisplacedAsset({
+      ...input, promotePlayerId: playerId("Bhayshul Tuten"), displacePlayerId: playerId("Matthew Stafford"),
+    })).toBeNull(); // RB cannot fill the team's only QB slot
+    expect(footballGmSwapDisplacedAsset({
+      ...input, promotePlayerId: playerId("Bhayshul Tuten"), displacePlayerId: playerId("Antonio Johnson"),
+    })).toBeNull(); // would leave DB uncovered
+    expect(footballGmSwapDisplacedAsset({
+      ...input, promotePlayerId: playerId("Lamar Jackson"), displacePlayerId: playerId("Blake Corum"),
+    })).toBeNull(); // player is not in the displaced pool
+    expect(footballGmSwapDisplacedAsset({
+      roster, tradeChipPlayerIds: [playerId("Bhayshul Tuten"), playerId("Blake Corum")],
+      promotePlayerId: playerId("Bhayshul Tuten"), displacePlayerId: playerId("Blake Corum"),
+    })).toBeNull(); // same player cannot be held in both places
   });
 
   it("does not introduce a special post-FA trade limit or an invalid holding state", () => {

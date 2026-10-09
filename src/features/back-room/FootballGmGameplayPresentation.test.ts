@@ -72,6 +72,17 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain("any genuine vacancy can use free agency");
     expect(page).toContain("that player cannot be re-signed this offseason");
   });
+  it("offers a mobile-safe choice of the starter displaced by a held asset", () => {
+    expect(page).toContain("WHO MOVES TO TRADE ASSETS?");
+    expect(page).toContain("PUT IN LINEUP");
+    expect(page).toContain("onSwap={swapDisplacedAsset}");
+    expect(page).toContain("footballGmSwapDisplacedAsset({");
+    expect(page).toContain("No player is cut. Your total holdings and cap remain unchanged.");
+    expect(page).toContain("canSwap={!run.pendingFreeAgentTeam}");
+    expect(css).toContain(".football-gm__chip-swap-options");
+    expect(css).toContain("grid-template-columns: 1fr;");
+  });
+
   it("restores an unfinished standalone GM run after an app restart", () => {
     expect(page).toContain("activeStorageKey");
     expect(page).toContain("loadActivePersistedRun");

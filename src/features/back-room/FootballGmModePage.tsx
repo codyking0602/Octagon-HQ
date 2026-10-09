@@ -50,6 +50,7 @@ import {
   footballGmSeasonRecordLabel,
   footballGmTeamOverall,
   footballGmSignFreeAgent,
+  footballGmSwapDisplacedAsset,
   footballGmTradePartnerPlayers,
   type FootballGmNegotiationConsequences,
   type FootballGmSeasonResultV2,
@@ -946,33 +947,47 @@ export function FreeAgencyReleasePanel({
 
 export function TradeChipPanel({
   playerIds,
+  roster,
   seed,
   consequences,
   shoppedPlayerIds,
+  canSwap,
+  onSwap,
   onShop,
   onRelease,
 }: {
   playerIds: readonly string[];
+  roster?: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   shoppedPlayerIds: readonly string[];
+  canSwap?: boolean;
+  onSwap?: (promotePlayerId: string, displacePlayerId: string) => void;
   onShop: (playerId: string) => void;
   onRelease: (playerId: string) => void;
 }) {
+  const [swappingPlayerId, setSwappingPlayerId] = useState<string | null>(null);
   if (!playerIds.length) return null;
   return (
     <section className="football-gm__trade-cuts surface-card">
       <p className="eyebrow">DISPLACED ASSET{playerIds.length === 1 ? "" : "S"}</p>
       <h2>KEEP WORKING THE ROSTER</h2>
       <p>
-        A non-matching signing displaced {playerIds.length === 1 ? "an incumbent" : "incumbents"} from the active core.
-        These players are still your trade assets. Shop them through the normal Trade Room — there is no special one-for-one or position-match restriction.
+        These players are still yours. Choose which eligible starter to move out so a displaced player can join the active core.
+        Swapping is free and preserves your holdings; you can still shop or release the player you move out.
       </p>
       <div className="football-gm__trade-chip-list">
         {playerIds.map((playerId) => {
           const player = footballGmPlayerById(playerId);
           if (!player) return null;
           const shopped = shoppedPlayerIds.includes(playerId);
+          const legalSwaps = canSwap && onSwap && roster ? roster.filter((entry) => footballGmSwapDisplacedAsset({
+            roster,
+            tradeChipPlayerIds: playerIds,
+            promotePlayerId: playerId,
+            displacePlayerId: entry.playerId,
+            seed,
+          }) !== null) : [];
           return (
             <article className="football-gm__trade-chip" key={playerId}>
               <span>{player.team} · {player.position} · {player.gameContract}</span>
@@ -984,11 +999,40 @@ export function TradeChipPanel({
                 <PlayerDevelopmentNote player={player} seed={seed} />
               </span>
               <div className="football-gm__inline-actions">
+                {legalSwaps.length ? (
+                  <button type="button" aria-expanded={swappingPlayerId === playerId}
+                    onClick={() => setSwappingPlayerId(swappingPlayerId === playerId ? null : playerId)}>
+                    {swappingPlayerId === playerId ? "CANCEL SWAP" : "PUT IN LINEUP"}
+                  </button>
+                ) : null}
                 <button type="button" disabled={shopped} onClick={() => onShop(playerId)}>
                   {shopped ? "SHOPPED" : "SHOP NORMALLY"}
                 </button>
                 <button type="button" onClick={() => onRelease(playerId)}>RELEASE</button>
               </div>
+              {swappingPlayerId === playerId && canSwap ? (
+                <div className="football-gm__chip-swap">
+                  <small>WHO MOVES TO TRADE ASSETS?</small>
+                  <div className="football-gm__chip-swap-options">
+                    {legalSwaps.map((entry) => {
+                      const incumbent = footballGmPlayerById(entry.playerId);
+                      if (!incumbent) return null;
+                      return (
+                        <button type="button" key={incumbent.id}
+                          onClick={() => {
+                            onSwap?.(playerId, incumbent.id);
+                            setSwappingPlayerId(null);
+                          }}>
+                          <span>{footballGmSlotLabel(entry.slot)}</span>
+                          <strong>{incumbent.name}</strong>
+                          <em>SWAP</em>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <small>No player is cut. Your total holdings and cap remain unchanged.</small>
+                </div>
+              ) : null}
             </article>
           );
         })}
@@ -1831,6 +1875,25 @@ export default function FootballGmModePage({
     });
   }
 
+  function swapDisplacedAsset(promotePlayerId: string, displacePlayerId: string) {
+    if (run.phase !== "offseason" || run.pendingFreeAgentTeam || run.tradeAnchorPlayerId || run.pendingTradeResolution) return;
+    const next = footballGmSwapDisplacedAsset({
+      roster: run.finalRoster,
+      tradeChipPlayerIds: run.tradeChipPlayerIds,
+      promotePlayerId,
+      displacePlayerId,
+      seed: run.seed,
+    });
+    if (!next) return;
+    const incoming = footballGmPlayerById(promotePlayerId);
+    const outgoing = footballGmPlayerById(displacePlayerId);
+    patch({
+      finalRoster: [...next.roster],
+      tradeChipPlayerIds: [...next.tradeChipPlayerIds],
+      tradeMessage: `${incoming?.name ?? "Player"} moved into your lineup; ${outgoing?.name ?? "the former starter"} is now a trade asset. Neither was cut.`,
+    });
+  }
+
   function releaseTradeChip(playerId: string) {
     if (!run.tradeChipPlayerIds.includes(playerId)) return;
     const player = footballGmPlayerById(playerId);
@@ -2066,9 +2129,12 @@ export default function FootballGmModePage({
               {run.tradeChipPlayerIds.length ? (
                 <TradeChipPanel
                   playerIds={run.tradeChipPlayerIds}
+                  roster={run.finalRoster}
                   seed={run.seed}
                   consequences={run.negotiationConsequences}
                   shoppedPlayerIds={run.shoppedPlayerIds}
+                  canSwap={!run.pendingFreeAgentTeam}
+                  onSwap={swapDisplacedAsset}
                   onShop={beginTrade}
                   onRelease={releaseTradeChip}
                 />
@@ -2099,8 +2165,8 @@ export default function FootballGmModePage({
                   <p className="eyebrow">ROSTER WORK REQUIRED</p>
                   <h2>YOU HAVE A DISPLACED TRADE ASSET</h2>
                   <p>
-                    Your seven offseason assets include a player outside the active core. Shop or release the displaced player.
-                    Any trade still uses the normal package shapes; there is no forced one-for-one cleanup.
+                    Your seven offseason assets include a player outside the active core. Use PUT IN LINEUP to choose which eligible starter moves to the trade pool instead.
+                    You may then shop or release that asset. Swaps are not trades or extra free-agent openings.
                   </p>
                 </section>
               ) : (
