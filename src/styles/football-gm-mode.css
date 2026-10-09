@@ -4104,3 +4104,41 @@ details.gm-result__expander:not([open]) > :not(summary) { display: none !importa
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
+
+/* College GM owner preview: negotiable NIL, chemistry and role scouting. */
+[data-cfb-gm="true"] .football-gm__cfb-retention,
+[data-cfb-gm="true"] .football-gm__cfb-chemistry { min-width: 0; }
+[data-cfb-gm="true"] .football-gm__cfb-retention h2 { margin: .25rem 0 .5rem; }
+[data-cfb-gm="true"] .football-gm__cfb-retention-list { display: grid; gap: .65rem; margin-top: 1rem; }
+[data-cfb-gm="true"] .football-gm__cfb-retention-list > article {
+  display: flex; align-items: center; justify-content: space-between; gap: .8rem;
+  min-width: 0; padding: .7rem 0; border-top: 1px solid var(--border-subtle, rgba(128,128,128,.24));
+}
+[data-cfb-gm="true"] .football-gm__cfb-retention-list > article > div:first-child {
+  display: grid; gap: .2rem; min-width: 0;
+}
+[data-cfb-gm="true"] .football-gm__cfb-retention-list > article strong { overflow-wrap: anywhere; }
+[data-cfb-gm="true"] .football-gm__cfb-retention-list small { opacity: .75; }
+[data-cfb-gm="true"] .football-gm__cfb-retention-options { display: flex; flex-wrap: wrap; gap: .4rem; }
+[data-cfb-gm="true"] .football-gm__cfb-retention-options button {
+  display: grid; gap: .15rem; text-align: center; min-width: 5.8rem;
+  border: 1px solid currentColor; border-radius: .55rem; padding: .45rem .55rem;
+  background: transparent; color: inherit; cursor: pointer; font-size: .74rem;
+}
+[data-cfb-gm="true"] .football-gm__cfb-retention-options button:last-child {
+  border-color: var(--gm-team-primary, currentColor); font-weight: 700;
+}
+[data-cfb-gm="true"] .football-gm__cfb-chemistry {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; justify-content: space-between;
+}
+[data-cfb-gm="true"] .football-gm__cfb-chemistry > span { display: grid; }
+[data-cfb-gm="true"] .football-gm__cfb-chemistry > small { flex-basis: 100%; opacity: .75; }
+[data-cfb-gm="true"] .football-gm__cfb-role-fit {
+  display: inline-flex; max-width: 100%; white-space: normal; font-size: .65rem;
+  letter-spacing: .02em; font-weight: 700; opacity: .82;
+}
+@media (max-width: 650px) {
+  [data-cfb-gm="true"] .football-gm__cfb-retention-list > article { align-items: stretch; flex-direction: column; }
+  [data-cfb-gm="true"] .football-gm__cfb-retention-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  [data-cfb-gm="true"] .football-gm__cfb-retention-options button { min-width: 0; overflow-wrap: anywhere; }
+}

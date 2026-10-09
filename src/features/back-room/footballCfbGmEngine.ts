@@ -7,7 +7,7 @@ import classEvidence from "../../../data/generated/football/cfb-gm-classificatio
 import { cfbGmEstimateNil } from "./footballCfbGmNilMarket";
 import { cfbGmDevProfile, cfbGmDevelop, cfbGmDevelopmentLabel, type CfbGmClass } from "./footballCfbGmDevelopment";
 
-export const CFB_GM_VERSION = "cfb-gm-owner-preview-v9-portal-integrity";
+export const CFB_GM_VERSION = "cfb-gm-owner-preview-v10-retention-chemistry";
 export const CFB_GM_ROSTER_SLOTS = ["QB", "RB", "WR", "FLEX", "FRONT_7_A", "FRONT_7_B", "SECONDARY"] as const;
 export type CfbGmSlot = (typeof CFB_GM_ROSTER_SLOTS)[number];
 export type CfbGmBudget = "POWERHOUSE" | "BUILDER";
@@ -37,7 +37,9 @@ export type CfbGmPlayer = {
   outlook: "HIGH UPSIDE" | "RISING" | "STEADY" | "BOOM/BUST" | "DECLINE RISK";
 };
 export type CfbGmRosterEntry = { slot: CfbGmSlot; playerId: string; acquired: "draft" | "portal" };
-export type CfbGmDeparture = { playerId: string; slot: CfbGmSlot; reason: "NFL declaration" | "Eligibility" | "Transfer portal" };
+export type CfbGmDeparture = { playerId: string; slot: CfbGmSlot; reason: "NFL declaration" | "Eligibility" | "Transfer portal" | "NIL negotiation" };
+export type CfbGmRetentionTier = "VALUE" | "MARKET" | "PRIORITY";
+export type CfbGmRetentionAgreement = { tier: CfbGmRetentionTier; amount: number; accepted: boolean };
 export type CfbGmPhase = "intro" | "draft" | "year1" | "offseason" | "year2" | "final";
 export type CfbGmRun = {
   version: typeof CFB_GM_VERSION;
@@ -49,6 +51,7 @@ export type CfbGmRun = {
   finalRoster: CfbGmRosterEntry[];
   departures: CfbGmDeparture[];
   voluntaryPortalOuts: string[];
+  retentionOffers: Record<string, CfbGmRetentionAgreement>;
   pendingSchool: string | null;
   spinIndex: number;
   previousSchool: string | null;
@@ -56,7 +59,7 @@ export type CfbGmRun = {
   previousPortalSchool: string | null;
 };
 export type CfbGmFinish = CfbGmCollegeFinish;
-export type CfbGmSeason = { year: 1 | 2; teamGrade: number; overall: number; finish: CfbGmFinish; continuity: number; winOdds: number;
+export type CfbGmSeason = { year: 1 | 2; teamGrade: number; overall: number; finish: CfbGmFinish; continuity: number; chemistry: number; winOdds: number;
   wins:number; losses:number; cfpSeed:number|null; nationalChampion:string; };
 export type CfbGmResult = { seasons: [CfbGmSeason, CfbGmSeason]; score: number; rosterManagement: number; resumeScore: number; retained: number; forcedDepartures: number; voluntaryDepartures: number };
 
@@ -265,13 +268,32 @@ export function cfbGmPortalAvailable(player: CfbGmPlayer, seed: string) {
 
 export function cfbGmPlayer(id: string) { return playerMap.get(id) ?? null; }
 export function cfbGmPlayersAt(schoolId: string) { return schoolPlayers.get(schoolId) ?? []; }
-export function cfbGmPrice(player: CfbGmPlayer, year: 1 | 2) { return year === 1 ? player.nilYear1 : player.nilYear2; }
+/** Year 2 is negotiated against a player-specific simulated demand curve.
+ * The input baseline is the independently researched Year 1 market value;
+ * HQ grades NEVER set 2026 NIL values. Development affects 2027 only.
+ */
+export function cfbGmYear2Ask(player: CfbGmPlayer, seed: string) {
+  if (!seed) return player.nilYear2;
+  const delta = cfbGmDevelop(player.id, player.currentGrade, player.classification, seed).delta;
+  const playerMarket = (rate("nil:2027:demand:" + seed + ":" + player.id) - .5) * .16;
+  const developmentMarket = Math.max(-.12, Math.min(.22, delta * .038));
+  const multiplier = Math.max(.78, Math.min(1.52, 1.10 + playerMarket + developmentMarket));
+  return Math.max(125_000, Math.round(player.nilYear1 * multiplier / 25_000) * 25_000);
+}
+export function cfbGmPrice(player: CfbGmPlayer, year: 1 | 2, seed = "",
+  offers: Readonly<Record<string, CfbGmRetentionAgreement>> = {}) {
+  if (year === 1) return player.nilYear1;
+  const agreement = offers[player.id];
+  return agreement?.accepted ? agreement.amount : cfbGmYear2Ask(player, seed);
+}
 export function cfbGmEffectiveGrade(player: CfbGmPlayer, year: 1 | 2, seed: string) {
   return year === 1 ? player.currentGrade
     : cfbGmDevelop(player.id, player.currentGrade, player.classification, seed).after;
 }
-export function cfbGmSpent(roster: readonly CfbGmRosterEntry[], year: 1 | 2) {
-  return roster.reduce((sum, row) => sum + (cfbGmPlayer(row.playerId) ? cfbGmPrice(cfbGmPlayer(row.playerId)!, year) : 0), 0);
+export function cfbGmSpent(roster: readonly CfbGmRosterEntry[], year: 1 | 2, seed = "",
+  offers: Readonly<Record<string, CfbGmRetentionAgreement>> = {}) {
+  return roster.reduce((sum, row) => sum + (cfbGmPlayer(row.playerId) ?
+    cfbGmPrice(cfbGmPlayer(row.playerId)!, year, seed, offers) : 0), 0);
 }
 export function cfbGmOpenSlots(roster: readonly CfbGmRosterEntry[]) {
   const taken = new Set(roster.map((entry) => entry.slot));
@@ -300,12 +322,12 @@ export function cfbGmReflow(roster: readonly CfbGmRosterEntry[]): CfbGmRosterEnt
   }
   return place(0) ? [...resolved].sort((a,b) => CFB_GM_ROSTER_SLOTS.indexOf(a.slot) - CFB_GM_ROSTER_SLOTS.indexOf(b.slot)) : null;
 }
-function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>, portalSeed: string) {
+function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, budget: number, year: 1 | 2, reserve: boolean, excluded: ReadonlySet<string>, portalSeed: string, offers: Readonly<Record<string, CfbGmRetentionAgreement>>) {
   if (roster.some((r) => r.playerId === player.id)) return false;
   if (year === 2 && !cfbGmPortalAvailable(player,portalSeed)) return false;
   const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: player.id, acquired: year === 1 ? "draft" : "portal"}]);
   if (!next) return false;
-  const spent = cfbGmSpent(next, year);
+  const spent = cfbGmSpent(next, year, portalSeed, offers);
   if (spent > budget) return false;
   if (!reserve) return true;
   const missing = cfbGmOpenSlots(next);
@@ -314,23 +336,23 @@ function affordable(roster: readonly CfbGmRosterEntry[], player: CfbGmPlayer, bu
     let best = Infinity;
     for (const p of CFB_GM_PLAYERS) {
       if (!used.has(p.id) && !excluded.has(p.id) && p.eligibleSlots.includes(slot)
-        && (year === 1 || cfbGmPortalAvailable(p,portalSeed))) best = Math.min(best, cfbGmPrice(p, year));
+        && (year === 1 || cfbGmPortalAvailable(p,portalSeed))) best = Math.min(best, cfbGmPrice(p, year, portalSeed, offers));
     }
     return sum + best;
   }, 0);
   return spent + floor <= budget;
 }
-export function cfbGmCandidates(schoolId: string, roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, reserve = true, excluded: ReadonlySet<string> = new Set(), portalSeed = "") {
-  return cfbGmPlayersAt(schoolId).filter((p) => !excluded.has(p.id) && affordable(roster, p, budget, year, reserve, excluded, portalSeed));
+export function cfbGmCandidates(schoolId: string, roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, reserve = true, excluded: ReadonlySet<string> = new Set(), portalSeed = "", offers: Readonly<Record<string, CfbGmRetentionAgreement>> = {}) {
+  return cfbGmPlayersAt(schoolId).filter((p) => !excluded.has(p.id) && affordable(roster, p, budget, year, reserve, excluded, portalSeed, offers));
 }
-export function cfbGmEligibleSchools(roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, previous: string | null, pool: readonly string[] = CFB_GM_AP_SCHOOLS, excluded: ReadonlySet<string> = new Set(), portalSeed = "") {
-  const result = pool.filter((schoolId) => cfbGmCandidates(schoolId, roster, budget, year, true, excluded, portalSeed).length > 0);
+export function cfbGmEligibleSchools(roster: readonly CfbGmRosterEntry[], budget: number, year: 1 | 2, previous: string | null, pool: readonly string[] = CFB_GM_AP_SCHOOLS, excluded: ReadonlySet<string> = new Set(), portalSeed = "", offers: Readonly<Record<string, CfbGmRetentionAgreement>> = {}) {
+  const result = pool.filter((schoolId) => cfbGmCandidates(schoolId, roster, budget, year, true, excluded, portalSeed, offers).length > 0);
   const nonRepeat = result.filter((id) => id !== previous);
   return nonRepeat.length ? nonRepeat : result;
 }
-export function cfbGmPick(roster: readonly CfbGmRosterEntry[], id: string, budget: number, year: 1 | 2, excluded: ReadonlySet<string> = new Set(), portalSeed = "") {
+export function cfbGmPick(roster: readonly CfbGmRosterEntry[], id: string, budget: number, year: 1 | 2, excluded: ReadonlySet<string> = new Set(), portalSeed = "", offers: Readonly<Record<string, CfbGmRetentionAgreement>> = {}) {
   const player = cfbGmPlayer(id);
-  if (!player || !cfbGmCandidates(player.schoolId, roster, budget, year, true, excluded, portalSeed).some((p) => p.id === id)) return null;
+  if (!player || !cfbGmCandidates(player.schoolId, roster, budget, year, true, excluded, portalSeed, offers).some((p) => p.id === id)) return null;
   const next = cfbGmReflow([...roster, {slot: player.eligibleSlots[0]!, playerId: id, acquired: year === 1 ? "draft" : "portal"}]);
   return next;
 }
@@ -340,7 +362,7 @@ export function cfbGmSpin(seed: string, index: number, schoolIds: readonly strin
 }
 export function cfbGmInitial(seed: string, budget: CfbGmBudget = "POWERHOUSE"): CfbGmRun {
   return {version: CFB_GM_VERSION, seed, phase: "intro", budget, schoolIds: [...CFB_GM_AP_SCHOOLS],
-    roster: [], finalRoster: [], departures: [], voluntaryPortalOuts: [],
+    roster: [], finalRoster: [], departures: [], voluntaryPortalOuts: [], retentionOffers: {},
     pendingSchool: null, spinIndex: 0, previousSchool: null, portalSpins: 0, previousPortalSchool: null};
 }
 export function cfbGmForcedDepartures(run: CfbGmRun) {
@@ -368,9 +390,69 @@ export function cfbGmForcedDepartures(run: CfbGmRun) {
 export function cfbGmEnterOffseason(run: CfbGmRun): CfbGmRun {
   const departures = cfbGmForcedDepartures(run);
   const leaving = new Set(departures.map((d) => d.playerId));
-  return {...run, phase: "offseason", departures,
+  return {...run, phase: "offseason", departures, retentionOffers: {},
     finalRoster: run.roster.filter((r) => !leaving.has(r.playerId)),
     pendingSchool: null};
+}
+/** Familiar teammates and stable returning starters create modest win-probability
+ * chemistry, never displayed ability or hidden underlying HQ grades.
+ */
+export function cfbGmChemistry(roster: readonly CfbGmRosterEntry[], year: 1 | 2 = 1,
+  original: readonly CfbGmRosterEntry[] = roster) {
+  const players = roster.map(r => ({slot:r.slot, player:cfbGmPlayer(r.playerId)}))
+    .filter((r):r is {slot:CfbGmSlot;player:CfbGmPlayer} => Boolean(r.player));
+  let score = 43;
+  for (let a = 0; a < players.length; a++) for (let b = a + 1; b < players.length; b++) {
+    const x = players[a]!, y = players[b]!;
+    if (x.player.schoolId !== y.player.schoolId) continue;
+    score += 5;
+    if ((x.slot === "QB" && ["WR","FLEX"].includes(y.slot)) ||
+      (y.slot === "QB" && ["WR","FLEX"].includes(x.slot))) score += 3;
+    if (x.slot.startsWith("FRONT_7") && y.slot.startsWith("FRONT_7")) score += 2;
+  }
+  if (year === 2) {
+    const returning = new Set(original.map(r => r.playerId));
+    score += players.filter(p=>returning.has(p.player.id)).length * 2 - 6;
+  }
+  const meter = Math.max(15, Math.min(92, score));
+  return {meter, label: meter >= 76 ? "ELITE" : meter >= 63 ? "STRONG" : meter >= 46 ? "CONNECTED" : "BUILDING",
+    adjustment: Math.max(-.8, Math.min(1.1, (meter - 48) * .025))};
+}
+/** Each returner gets one binding 2027 offer. Undershooting can cost a player;
+ * a Priority offer buys certainty at a premium. No reroll or retry loop.
+ */
+export function cfbGmPendingRetentions(run: CfbGmRun) {
+  const forced = new Set(run.departures.map(d => d.playerId));
+  const released = new Set(run.voluntaryPortalOuts);
+  return run.roster.filter(r => !forced.has(r.playerId) && !released.has(r.playerId)
+    && !run.retentionOffers[r.playerId]).map(r => cfbGmPlayer(r.playerId)!).filter(Boolean);
+}
+export function cfbGmRetentionQuote(run: CfbGmRun, player: CfbGmPlayer) {
+  const ask = cfbGmYear2Ask(player, run.seed);
+  const chemistry = cfbGmChemistry(run.roster).meter;
+  const price = (factor:number) => Math.max(125_000, Math.round(ask * factor / 25_000) * 25_000);
+  // A fixed private minimum prevents unlimited retries and makes discounts real risks.
+  const threshold = ask * (.855 + rate("nil:2027:reservation:" + run.seed + ":" + player.id) * .195
+    - Math.max(0, chemistry - 55) * .0007);
+  return {ask, VALUE:price(.86), MARKET:price(1), PRIORITY:price(1.12), threshold};
+}
+export function cfbGmNegotiateRetention(run: CfbGmRun, playerId: string, tier: CfbGmRetentionTier): CfbGmRun | null {
+  if (run.phase !== "offseason" || run.pendingSchool || !["VALUE","MARKET","PRIORITY"].includes(tier)
+    || !cfbGmPendingRetentions(run).some(p => p.id === playerId)) return null;
+  const player = cfbGmPlayer(playerId)!;
+  const quote = cfbGmRetentionQuote(run, player);
+  const amount = quote[tier];
+  const accepted = tier === "PRIORITY" || amount >= quote.threshold;
+  const retentionOffers = {...run.retentionOffers, [playerId]:{tier,amount,accepted}};
+  if (accepted) return {...run, retentionOffers};
+  const row = run.finalRoster.find(r => r.playerId === playerId)!;
+  return {...run, retentionOffers, finalRoster:run.finalRoster.filter(r => r.playerId !== playerId),
+    departures:[...run.departures,{playerId,slot:row.slot,reason:"NIL negotiation"}]};
+}
+export function cfbGmOffseasonReady(run: CfbGmRun) {
+  return run.phase === "offseason" && cfbGmPendingRetentions(run).length === 0 &&
+    run.finalRoster.length === CFB_GM_ROSTER_SLOTS.length &&
+    cfbGmSpent(run.finalRoster, 2, run.seed, run.retentionOffers) <= CFB_GM_BUDGETS[run.budget];
 }
 export function cfbGmPortalOut(run: CfbGmRun, playerId: string): CfbGmRun | null {
   if (run.phase !== "offseason" || run.voluntaryPortalOuts.length >= 2 || run.pendingSchool) return null;
@@ -407,10 +489,11 @@ export function cfbGmTeamGrade(roster: readonly CfbGmRosterEntry[], year: 1 | 2 
 export function cfbGmSeason(run: CfbGmRun, year: 1 | 2): CfbGmSeason {
   const roster = year === 1 ? run.roster : run.finalRoster;
   const teamGrade = cfbGmTeamGrade(roster, year, run.seed);
-  const continuity = year === 1 ? 0 : cfbGmContinuity(run).adjustment;
+  const chemistry = cfbGmChemistry(roster, year, run.roster);
+  const continuity = (year === 1 ? 0 : cfbGmContinuity(run).adjustment) + chemistry.adjustment;
   const season = cfbGmSimulateCollegeSeason(run.seed, year, teamGrade + continuity);
   return {year, teamGrade, overall: footballGmTeamOverall(teamGrade), finish: season.finish,
-    continuity, winOdds: season.winOdds, wins:season.wins, losses:season.losses,
+    chemistry: chemistry.meter, continuity, winOdds: season.winOdds, wins:season.wins, losses:season.losses,
     cfpSeed:season.cfpSeed, nationalChampion:season.champion};
 }
 export function cfbGmFinalResult(run: CfbGmRun): CfbGmResult {
@@ -439,6 +522,7 @@ export function cfbGmValidateRun(value: unknown): CfbGmRun | null {
     || !Array.isArray(r.roster) || !Array.isArray(r.finalRoster)
     || !Array.isArray(r.schoolIds) || r.schoolIds.some((id) => !CFB_GM_AP_SCHOOLS.includes(id))
     || !["intro","draft","year1","offseason","year2","final"].includes(r.phase ?? "")) return null;
-  if (!cfbGmReflow(r.roster) || !cfbGmReflow(r.finalRoster)) return null;
+  if (!cfbGmReflow(r.roster) || !cfbGmReflow(r.finalRoster)
+    || !r.retentionOffers || typeof r.retentionOffers !== "object") return null;
   return r as CfbGmRun;
 }

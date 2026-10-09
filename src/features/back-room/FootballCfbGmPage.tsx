@@ -12,8 +12,10 @@ import {
   cfbGmFinalResult, cfbGmInitial, cfbGmMoney, cfbGmOpenSlots, cfbGmPick,
   cfbGmPlayer, cfbGmPortalOut, cfbGmSeason, cfbGmSpent, cfbGmSpin,
   cfbGmValidateRun, cfbGmEffectiveGrade, cfbGmExitSignal,
+  cfbGmPrice, cfbGmChemistry, cfbGmNegotiateRetention, cfbGmOffseasonReady,
+  cfbGmPendingRetentions, cfbGmRetentionQuote,
   type CfbGmBudget, type CfbGmPlayer, type CfbGmRosterEntry, type CfbGmRun,
-  type CfbGmSeason,
+  type CfbGmSeason, type CfbGmRetentionAgreement, type CfbGmRetentionTier,
 } from "./footballCfbGmEngine";
 import { cfbGmDevelop } from "./footballCfbGmDevelopment";
 import { footballGmDevelopmentResult, footballGmTalentTier } from "./footballGmScouting";
@@ -67,8 +69,15 @@ function ExitSignal({player}: {player: CfbGmPlayer}) {
     {signal.label}
   </small>;
 }
-function Cap({roster, year, budget}: {roster: readonly CfbGmRosterEntry[]; year: 1 | 2; budget: number}) {
-  const spent = cfbGmSpent(roster, year);
+function RoleFit({player, slot}: {player:CfbGmPlayer; slot?:string}) {
+  const label = slot === "FLEX" ? "FLEX FIT" : player.eligibleSlots.length > 1 ? "MULTI-SLOT" :
+    player.family === "Front Seven" ? "FRONT 7" : player.family === "Secondary" ? "SECONDARY" : "NATURAL FIT";
+  return <small className="football-gm__cfb-role-fit" title={"Verified scouting family: " + player.family + ". No unverified sub-position assigned."}>
+    {label}</small>;
+}
+function Cap({roster, year, budget, seed = "", offers = {}}: {roster: readonly CfbGmRosterEntry[];
+  year: 1 | 2; budget: number; seed?: string; offers?: Record<string,CfbGmRetentionAgreement>}) {
+  const spent = cfbGmSpent(roster, year, seed, offers);
   const remaining = budget - spent;
   const pct = Math.min(100, Math.max(0, spent / budget * 100));
   return (
@@ -81,13 +90,14 @@ function Cap({roster, year, budget}: {roster: readonly CfbGmRosterEntry[]; year:
     </section>
   );
 }
-function Roster({roster, year, seed, compact = false, onPortalOut, limited = false}: {
+function Roster({roster, year, seed, compact = false, onPortalOut, limited = false, offers = {}}: {
   roster: readonly CfbGmRosterEntry[];
   year: 1 | 2;
   seed: string;
   compact?: boolean;
   onPortalOut?: (playerId: string) => void;
   limited?: boolean;
+  offers?: Record<string,CfbGmRetentionAgreement>;
 }) {
   const bySlot = new Map(roster.map((r) => [r.slot, r]));
   return <section className={"football-gm__roster surface-card" + (compact ? " is-compact" : "")}>
@@ -103,12 +113,12 @@ function Roster({roster, year, seed, compact = false, onPortalOut, limited = fal
               <PlayerHeadshot player={{team: player.schoolId, name: player.name}} />
               <span><strong>{player.name}</strong><em>{player.school} · {player.family} · {player.classification ? "2026 " + player.classification : "CLASS UNVERIFIED"}</em>
                 <span className="football-gm__roster-scouting"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} />
-                  {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /></>
-                    : <DevelopmentNote player={player} seed={seed} />}</span>
+                  {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /><RoleFit player={player} slot={slot} /></>
+                    : <><DevelopmentNote player={player} seed={seed} /><RoleFit player={player} slot={slot} /></>}</span>
               </span>
             </div>
             <div className="football-gm__roster-contract">
-              <b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
+              <b>{cfbGmMoney(cfbGmPrice(player, year, seed, offers))}</b>
               <span>{year === 1 ? "2026 NIL" : row?.acquired === "portal" ? "PORTAL IN" : "2027 RETENTION"}</span>
             </div>
             {onPortalOut ? <button type="button" disabled={limited} onClick={() => onPortalOut(player.id)}>
@@ -133,18 +143,19 @@ function ScoutKey({close}: {close: () => void}) {
         <p><b>2026 NIL</b><span>Modeled player market prices, not verified NIL contracts; independent of HQ grades.</span></p>
         <p><b>2026 CLASS</b><span>Roster-listed FR/SO/JR/SR or extended-year class; unverified when the source has no reliable match. A class is not a confirmed draft decision.</span></p>
         <p><b>2027 DEVELOPMENT</b><span>Returning players can improve, break out, remain steady, or decline. Current HQ ratings stay unchanged; only modeled 2027 performance moves.</span></p>
-        <p><b>2027 REPRICE</b><span>Player NIL game prices use a projected 10% Year 2 increase; this is not a real contract or NFL 1YR/3YR exposure.</span></p>
+        <p><b>2027 NIL OFFERS</b><span>Year 2 asking prices respond to player-specific demand and development. Offer a discount, market value or priority premium. One binding choice per returning player; a rejected offer loses that player.</span></p>
         <p><b>TRANSFER WINDOW</b><span>Only modeled 2027-eligible recruits available in this game appear. This fictional recruitment pool is not a real-world portal listing. Up to two voluntary portal-outs.</span></p>
       </div>
     </section>
   </div>;
 }
-function Board({schoolId, roster, budget, year, seed, excluded, onPick}: {
+function Board({schoolId, roster, budget, year, seed, excluded, onPick, offers = {}}: {
   schoolId: string; roster: readonly CfbGmRosterEntry[]; budget: number; year: 1 | 2;
   seed: string; excluded: ReadonlySet<string>; onPick: (id: string) => void;
+  offers?: Record<string,CfbGmRetentionAgreement>;
 }) {
   const team = wheelFootballTeam(schoolId);
-  const candidates = cfbGmCandidates(schoolId, roster, budget, year, true, excluded, seed);
+  const candidates = cfbGmCandidates(schoolId, roster, budget, year, true, excluded, seed, offers);
   const [scoutKey, setScoutKey] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<CfbGmPlayer["family"] | null>(null);
   useEffect(() => {
@@ -176,11 +187,11 @@ function Board({schoolId, roster, budget, year, seed, excluded, onPick}: {
           <span className="football-gm__picker-player-copy">
             <strong>{player.name}</strong><small>{player.family} · {player.classification ? "2026 " + player.classification : "CLASS UNVERIFIED"} · {player.eligibleSlots.map((s) => CFB_GM_SLOT_LABELS[s]).join(" / ")}</small>
             <span className="football-gm__candidate-tags"><Quality grade={cfbGmEffectiveGrade(player, year, seed)} />
-              {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /></>
-                : <DevelopmentNote player={player} seed={seed} />}</span>
+              {year === 1 ? <><Outlook value={player.outlook} /><ExitSignal player={player} /><RoleFit player={player} /></>
+                : <><DevelopmentNote player={player} seed={seed} /><RoleFit player={player} /></>}</span>
           </span>
-          <span className="football-gm__picker-action"><b>{cfbGmMoney(year === 1 ? player.nilYear1 : player.nilYear2)}</b>
-            <em>{year === 1 ? "Y2 " + cfbGmMoney(player.nilYear2) : "SELECT"} →</em></span>
+          <span className="football-gm__picker-action"><b>{cfbGmMoney(cfbGmPrice(player, year, seed, offers))}</b>
+            <em>{year === 1 ? "2027 NEGOTIATE" : "SELECT"} →</em></span>
         </button>)}
       </div> : <p className="football-wheel-picker__message football-gm__position-prompt">
         {candidates.length ? "Choose a position to scout available players." : "No affordable legal recruit from this school. Continue the search."}
@@ -195,7 +206,7 @@ function Season({season}: {season: CfbGmSeason}) {
     <strong>{season.overall} OVR</strong>
     <span>REGULAR SEASON {season.wins}–{season.losses} · {season.cfpSeed ? "#" + season.cfpSeed + " CFP SEED" : "OUTSIDE CFP"}</span>
     <b>{season.finish}</b>
-    <small>{season.winOdds.toFixed(1)}% EST. TITLE CHANCE</small>
+    <small>CHEMISTRY {season.chemistry}/100 · {season.winOdds.toFixed(1)}% EST. TITLE CHANCE</small>
   </article>;
 }
 
@@ -227,7 +238,7 @@ function OutcomeBand({player, seed}: {player: CfbGmPlayer; seed: string}) {
 function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
   const result = cfbGmFinalResult(run);
   const budget = CFB_GM_BUDGETS[run.budget];
-  const yearTwoSpent = cfbGmSpent(run.finalRoster, 2);
+  const yearTwoSpent = cfbGmSpent(run.finalRoster, 2, run.seed, run.retentionOffers);
   const rows = CFB_GM_ROSTER_SLOTS.flatMap((slot) => {
     const entry = run.finalRoster.find((r) => r.slot === slot);
     const player = entry && cfbGmPlayer(entry.playerId);
@@ -303,7 +314,7 @@ function Final({run, replay}: {run: CfbGmRun; replay: () => void}) {
               {team?.logoSrc ? <img className="gm-final__team-logo" alt="" src={team.logoSrc} />
                 : <span className="gm-final__team-code">{team?.shortCode ?? "CFB"}</span>}
               <div className="gm-final__player-name"><strong>{row.player.name}</strong>
-                <small>{row.player.school} · {cfbGmMoney(row.player.nilYear2)} · 2027</small></div>
+                <small>{row.player.school} · {cfbGmMoney(cfbGmPrice(row.player,2,run.seed,run.retentionOffers))} · 2027</small></div>
               <span className={"gm-final__acquired" + (row.before?.id === row.player.id ? "" : " is-new")}>
                 {row.before?.id === row.player.id ? "RETAINED" : "PORTAL"}
               </span>
@@ -373,11 +384,12 @@ export default function FootballCfbGmPage() {
   const eligible = useMemo(() => run.phase === "draft" || run.phase === "offseason"
     ? cfbGmEligibleSchools(roster, budget, year,
       run.phase === "draft" ? run.previousSchool : run.previousPortalSchool, run.schoolIds,
-      run.phase === "offseason" ? excluded : new Set<string>(), run.seed)
+      run.phase === "offseason" ? excluded : new Set<string>(), run.seed, run.retentionOffers)
     : [], [run.phase, run.previousSchool, run.previousPortalSchool, run.schoolIds, roster, budget, year, excluded]);
   const wheelTeams = eligible.map((schoolId) => wheelFootballTeam(schoolId)).filter((t): t is WheelFootballTeam => Boolean(t));
   const pending = run.pendingSchool ? wheelFootballTeam(run.pendingSchool) : null;
-  const offseasonReady = run.phase === "offseason" && run.finalRoster.length === 7 && cfbGmSpent(run.finalRoster, 2) <= budget;
+  const pendingRetentions = run.phase === "offseason" ? cfbGmPendingRetentions(run) : [];
+  const offseasonReady = cfbGmOffseasonReady(run);
 
   useEffect(() => {
     if (identity.status !== "ready") return;
@@ -399,7 +411,7 @@ export default function FootballCfbGmPage() {
     setMessage("");
   }
   function spin() {
-    if (spinning || run.pendingSchool || !eligible.length) return;
+    if (spinning || run.pendingSchool || !eligible.length || (run.phase === "offseason" && pendingRetentions.length)) return;
     const index = run.phase === "draft" ? run.spinIndex : 100 + run.portalSpins;
     const school = cfbGmSpin(run.seed, index, eligible);
     if (!school) return;
@@ -415,7 +427,7 @@ export default function FootballCfbGmPage() {
     window.setTimeout(() => { patch({pendingSchool: school}); setSpinning(false); }, 1550);
   }
   function pick(id: string) {
-    const next = cfbGmPick(roster, id, budget, year, run.phase === "offseason" ? excluded : new Set(), run.seed);
+    const next = cfbGmPick(roster, id, budget, year, run.phase === "offseason" ? excluded : new Set(), run.seed, run.retentionOffers);
     if (!next) { setMessage("That roster or NIL budget fit is no longer legal."); return; }
     const school = cfbGmPlayer(id)?.schoolId ?? null;
     if (run.phase === "draft") patch({roster: next, pendingSchool: null, previousSchool: school,
@@ -423,6 +435,15 @@ export default function FootballCfbGmPage() {
     if (run.phase === "offseason") patch({finalRoster: next, pendingSchool: null, previousPortalSchool: school,
       portalSpins: run.portalSpins + 1});
     setMessage("");
+  }
+  function negotiate(playerId:string, tier:CfbGmRetentionTier) {
+    const next = cfbGmNegotiateRetention(run, playerId, tier);
+    if (!next) return;
+    setRun(next);
+    const accepted = next.retentionOffers[playerId]?.accepted;
+    setMessage((cfbGmPlayer(playerId)?.name ?? "Player") + (accepted
+      ? " accepted the " + tier.toLowerCase() + " 2027 NIL offer."
+      : " rejected the offer. You will need to recruit a replacement."));
   }
   function portalOut(playerId: string) {
     const next = cfbGmPortalOut(run, playerId);
@@ -487,7 +508,7 @@ export default function FootballCfbGmPage() {
     </> : null}
 
     {run.phase === "offseason" ? <>
-      <Cap roster={run.finalRoster} year={2} budget={budget} />
+      <Cap roster={run.finalRoster} year={2} budget={budget} seed={run.seed} offers={run.retentionOffers} />
       <section className="football-gm__offseason-status football-gm__cfb-portal-summary surface-card">
          <p className="eyebrow">THE OFFSEASON · 2027</p>
          <h2>THE TRANSFER WINDOW</h2>
@@ -497,18 +518,41 @@ export default function FootballCfbGmPage() {
            {run.departures.map((d) => <div key={d.playerId}>
              <strong>{cfbGmPlayer(d.playerId)?.name}</strong>
              <span>{d.reason === "NFL declaration" ? "NFL DECLARATION" :
-               d.reason === "Eligibility" ? "ELIGIBILITY EXPIRED" : "TRANSFERRED OUT"}</span>
+               d.reason === "Eligibility" ? "ELIGIBILITY EXPIRED" :
+               d.reason === "NIL negotiation" ? "NIL OFFER REJECTED" : "TRANSFERRED OUT"}</span>
            </div>)}
          </div> : <p>Your original core returned. You can still make up to two voluntary moves.</p>}
          <details className="football-gm__cfb-portal-help"><summary>HOW RETENTION & NIL WORK</summary>
-           <p>Forced exits don't directly penalize the management score. Continuity affects playoff odds, not displayed OVR. Returning players use 2027 NIL values; the transfer pool is fictional and eligibility-screened.</p>
+           <p>Recruiting chemistry and returning-player continuity modestly shape season outcomes, never the displayed talent OVR. Every remaining player needs a 2027 NIL decision; rejected offers create portal vacancies. The transfer pool is fictional and eligibility-screened.</p>
          </details>
        </section>
-       <Roster roster={run.finalRoster} year={2} seed={run.seed} compact
-        limited={run.voluntaryPortalOuts.length >= 2 || Boolean(run.pendingSchool)} onPortalOut={portalOut} />
+       <Roster roster={run.finalRoster} year={2} seed={run.seed} compact offers={run.retentionOffers}
+        limited={run.voluntaryPortalOuts.length >= 2 || Boolean(run.pendingSchool)}
+        onPortalOut={pendingRetentions.length ? undefined : portalOut} />
+       <section className="football-gm__cfb-chemistry surface-card" aria-label="Team chemistry">
+         <span><small>TEAM CHEMISTRY</small><strong>{cfbGmChemistry(run.finalRoster,2,run.roster).label}</strong></span>
+         <b>{cfbGmChemistry(run.finalRoster,2,run.roster).meter}/100</b>
+         <small>Familiar teammates and returning starters influence results, not the displayed OVR.</small>
+       </section>
+       {pendingRetentions.length ? <section className="football-gm__cfb-retention surface-card" aria-label="2027 NIL negotiations">
+         <p className="eyebrow">2027 RETENTION</p><h2>KEEP YOUR CORE</h2>
+         <p>{pendingRetentions.length} player{pendingRetentions.length===1?"":"s"} need a binding NIL offer. Discount is risky. Market may be declined. Priority secures a return at a premium.</p>
+         <div className="football-gm__cfb-retention-list">{pendingRetentions.map((player) => {
+           const quote=cfbGmRetentionQuote(run,player);
+           return <article key={player.id}>
+             <div><strong>{player.name}</strong><small>{player.school} · {player.family}</small>
+               <span>2027 ASK {cfbGmMoney(quote.ask)}</span></div>
+             <div className="football-gm__cfb-retention-options">
+               {(["VALUE","MARKET","PRIORITY"] as const).map((tier)=><button type="button" key={tier}
+                 onClick={()=>negotiate(player.id,tier)}><strong>{tier}</strong>
+                 <span>{cfbGmMoney(quote[tier])}</span></button>)}
+             </div>
+           </article>;
+         })}</div>
+       </section> : null}
       {message ? <section className="football-gm__trade-message surface-card" role="status">{message}</section> : null}
-      {run.pendingSchool ? <Board schoolId={run.pendingSchool} roster={run.finalRoster} budget={budget}
-        year={2} seed={run.seed} excluded={excluded} onPick={pick} /> :
+      {pendingRetentions.length===0 ? (run.pendingSchool ? <Board schoolId={run.pendingSchool} roster={run.finalRoster} budget={budget}
+        year={2} seed={run.seed} excluded={excluded} offers={run.retentionOffers} onPick={pick} /> :
       run.finalRoster.length < 7 ? <>
         <div className="football-gm__cfb-portal-step">
           <strong>RECRUIT {cfbGmOpenSlots(run.finalRoster).length} REPLACEMENT{cfbGmOpenSlots(run.finalRoster).length === 1 ? "" : "S"}</strong>
@@ -530,7 +574,7 @@ export default function FootballCfbGmPage() {
           : "Year 2 NIL commitments exceed the available budget. Release up to two players and replace them through the transfer portal."}</p>
         <button className="primary-action" type="button" disabled={!offseasonReady}
           onClick={() => patch({phase: "year2"})}>SIMULATE YEAR 2</button>
-      </section>}
+      </section>) : null}
     </> : null}
 
     {run.phase === "year2" ? <section className="football-gm__years23 surface-card">
