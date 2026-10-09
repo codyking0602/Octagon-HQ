@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyLeaderboardGameResult } from "./DailyLeaderboardGameResult";
 import {
@@ -320,9 +320,9 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
               <em>{previewAdapter.cta.toUpperCase()} →</em>
             </button>
           </div>
-          <Link className="home-weekly-games-row" to={"/championship/" + sport + "?tab=play"} aria-label="Open Championship Play standings">
+          <button className="home-weekly-games-row" type="button" onClick={() => navigate("/championship/" + sport + "?tab=play")} aria-label="Open Championship Play standings">
             <span className="home-weekly-games-row__copy"><small>PLAY LEADERBOARD</small><strong>Daily + Featured · Season standings</strong></span><b>VIEW →</b>
-          </Link>
+          </button>
         </section>
       );
     }
@@ -449,9 +449,9 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
         </button>
       </div>
 
-      <Link className="home-weekly-games-row" to={"/championship/" + sport + "?tab=play"} aria-label="Open Championship Play standings">
+      <button className="home-weekly-games-row" type="button" onClick={() => navigate("/championship/" + sport + "?tab=play")} aria-label="Open Championship Play standings">
             <span className="home-weekly-games-row__copy"><small>PLAY LEADERBOARD</small><strong>Daily + Featured · Season standings</strong></span><b>VIEW →</b>
-          </Link>
+          </button>
     </section>
   );
 }
