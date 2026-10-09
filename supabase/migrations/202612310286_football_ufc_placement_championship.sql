@@ -274,6 +274,12 @@ begin
       coalesce(picks.average_points, 0) as picks_rating,
       coalesce(daily.average_points, 0) as daily_rating,
       coalesce(featured.average_points, 0) as featured_rating,
+      round(
+        (
+          coalesce(daily.average_points, 0) * weight.daily_weight
+          + coalesce(featured.average_points, 0) * weight.featured_weight
+        ) / nullif(weight.daily_weight + weight.featured_weight, 0), 2
+      ) as play_rating,
       coalesce(picks.played, 0) as picks_played,
       coalesce(daily.played, 0) as daily_played,
       coalesce(featured.played, 0) as featured_played,
@@ -297,6 +303,7 @@ begin
       rank() over (order by championship_rating desc)::integer as overall_rank,
       rank() over (order by picks_rating desc)::integer as picks_rank,
       rank() over (order by daily_rating desc)::integer as daily_rank,
+      rank() over (order by play_rating desc)::integer as play_rank,
       rank() over (order by featured_rating desc)::integer as featured_rank
     from scored
   ),
@@ -311,9 +318,11 @@ begin
       'picks_rating', round(picks_rating, 2),
       'daily_rating', round(daily_rating, 2),
       'featured_rating', round(featured_rating, 2),
+      'play_rating', play_rating,
       'picks_rank', picks_rank,
       'daily_rank', daily_rank,
       'featured_rank', featured_rank,
+      'play_rank', play_rank,
       'picks_played', picks_played,
       'daily_played', daily_played,
       'featured_played', featured_played
