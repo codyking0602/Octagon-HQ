@@ -101,7 +101,7 @@ describe("CFB GM 2026 class + NIL + development runtime integration", () => {
     expect(cfbGmPlayer(player.id)?.currentGrade).toBe(initialGrade);
     const roster = [{slot: "WR" as const, playerId: player.id, acquired: "draft" as const}];
     expect(cfbGmTeamGrade(roster,2,"cfb-integrated-1"))
-      .toBe(Math.round(cfbGmEffectiveGrade(player,2,"cfb-integrated-1")*.13*10)/10);
+      .toBe(Math.round((80 + (cfbGmEffectiveGrade(player,2,"cfb-integrated-1") - 80)*.14)*10)/10);
   });
 
   it("version-gates existing owner runs so previous outcomes are never silently recalculated", () => {
