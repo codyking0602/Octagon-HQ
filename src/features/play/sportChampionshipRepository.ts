@@ -4,6 +4,16 @@ import { getSupabaseClient } from "../../lib/supabase";
 export const SPORT_CHAMPIONSHIP_PLACEMENTS = [100, 92, 85, 79, 74, 70] as const;
 export const SPORT_CHAMPIONSHIP_WEIGHTS = { picks: 60, daily: 30, featured: 10 } as const;
 
+const eventResultSchema = z.object({
+  type: z.enum(["picks", "daily", "featured"]),
+  date: z.string(),
+  label: z.string(),
+  rank: z.number().int().positive(),
+  points: z.number(),
+  played: z.boolean(),
+  raw_score: z.number().nullable().optional(),
+});
+
 const entrySchema = z.object({
   profile_id: z.string().uuid(),
   display_name: z.string(),
@@ -22,6 +32,7 @@ const entrySchema = z.object({
   picks_played: z.number().int().nonnegative(),
   daily_played: z.number().int().nonnegative(),
   featured_played: z.number().int().nonnegative(),
+  event_results: z.array(eventResultSchema).default([]),
 });
 const weightsSchema = z.object({
   picks: z.number().int().nonnegative(),
@@ -70,4 +81,38 @@ export async function loadSportChampionship(
   });
   if (error) throw new Error(error.message || "Championship standings could not load.");
   return parseSportChampionship(data);
+}
+
+const weekSchema = z.object({
+  week_start: z.string(),
+  week_end: z.string(),
+  winner: entrySchema,
+  entries: z.array(entrySchema),
+  weights: weightsSchema,
+  event_counts: countsSchema,
+});
+const weeklySchema = z.object({
+  sport: z.enum(["football", "ufc"]),
+  season: z.number().int(),
+  latest: weekSchema.nullable(),
+  weeks: z.array(weekSchema),
+});
+export type SportChampionshipWeek = z.infer<typeof weekSchema>;
+export type SportChampionshipWeekly = z.infer<typeof weeklySchema>;
+
+export async function loadSportChampionshipWeekly(
+  sport: SportChampionshipSport,
+  season = 2026,
+  suppliedClient?: ChampionshipClient | null,
+): Promise<SportChampionshipWeekly> {
+  const client = suppliedClient === undefined
+    ? getSupabaseClient() as unknown as ChampionshipClient | null
+    : suppliedClient;
+  if (!client) throw new Error("Weekly Championship is not connected.");
+  const { data, error } = await client.rpc("get_sport_championship_weekly", {
+    p_sport: sport,
+    p_season: season,
+  });
+  if (error) throw new Error(error.message || "Weekly Championship could not load.");
+  return weeklySchema.parse(data);
 }
