@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import {
@@ -22,6 +23,7 @@ import { useTodayChallengeRuntime } from "../play/useTodayChallengeRuntime";
 import { currentDailyChallengeChampionship } from "../play/dailyChallengeChampionship";
 import { allTime } from "../rankings/rankingModel";
 import { FootballHq } from "./FootballHq";
+import { OwnerChampionshipHome, type SportFilter } from "./OwnerChampionshipHome";
 import { MlbHomeHq } from "../mlb/MlbHomeHq";
 import { canViewMlbPlayoffs } from "../mlb/mlbPlayoffsConfig";
 import { useFootballHomeSpotlightPhotos } from "./homeFeatureMedia";
@@ -141,6 +143,8 @@ export default function HomePage() {
   const profileId = identity.profile?.id ?? "signed-out";
   const signedIn = Boolean(identity.profile?.id);
   const mlbVisible = canViewMlbPlayoffs(identity.profile);
+  const ownerPreview = identity.profile?.canControlPicks === true;
+  const [ownerSport, setOwnerSport] = useState<SportFilter>("all");
   const hqDailyStreak = useHqDailyChallengeStreak({ profileId, enabled: signedIn });
   const ufcDailyRuntime = useTodayChallengeRuntime({ profileId, enabled: signedIn, sport: "ufc" });
   const ufcDailyOverview = useTodayChallengeOverview({
@@ -343,6 +347,15 @@ export default function HomePage() {
 
   return (
     <div className="page home-page">
+      {ownerPreview ? (
+        <OwnerChampionshipHome
+          streak={hqDailyStreak.streak.currentStreak}
+          streakLoading={hqDailyStreak.loading}
+          showMlb={mlbVisible}
+          sport={ownerSport}
+          onSportChange={setOwnerSport}
+        />
+      ) : (
       <section
         className="home-section home-section--your-hq"
         data-testid="home-section"
@@ -413,9 +426,21 @@ export default function HomePage() {
           )}
         </section>
       </section>
+      )}
 
-      <HqImpostorHomeCard />
+      {(!ownerPreview || ownerSport === "all") ? <HqImpostorHomeCard /> : null}
 
+      {ownerPreview && ownerSport !== "all" ? (
+        ownerSport === "football" ? footballHq
+          : ownerSport === "ufc" ? ufcHq
+            : mlbVisible ? (
+              <MlbHomeHq
+                enabled={mlbVisible}
+                signedIn={signedIn}
+                previewMode={true}
+              />
+            ) : null
+      ) : (
       {isFootballSeason() ? (
         <>
           {footballHq}
@@ -440,6 +465,7 @@ export default function HomePage() {
             />
           ) : null}
         </>
+      )}
       )}
     </div>
   );
