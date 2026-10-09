@@ -36,7 +36,7 @@ const mocks = vi.hoisted(() => {
     emptySummary,
     emptyHistory,
     identity: {
-      profile: null as ChallengeProfile | null,
+      profile: null as (ChallengeProfile & { canControlPicks?: boolean }) | null,
       openDialog: vi.fn(),
     },
     picks: {
