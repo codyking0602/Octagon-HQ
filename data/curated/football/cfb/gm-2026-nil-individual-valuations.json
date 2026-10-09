@@ -9,9 +9,9 @@
     "schools": 25,
     "archivedOn3Recovered": 48,
     "currentOn3Matched": 52,
-    "publishedReferenceMatched": 83,
-    "independentCaseEstimates": 385,
-    "profileOnlyOn3Matched": 25
+    "publishedReferenceMatched": 87,
+    "independentCaseEstimates": 381,
+    "profileOnlyOn3Matched": 29
   },
   "sourcePolicy": "On3 published NIL valuation is an estimate, not verified cash compensation; all non-On3 amounts are player-specific editorial judgments based on sourced football evidence and market comparables, not HQ grades, in-game budgets, or an AP-rank pricing formula.",
   "marketReferenceUrls": [
@@ -3392,12 +3392,19 @@
       "playerName": "Makhi Hughes",
       "positionGroup": "RB",
       "year": 2026,
-      "year1NilEstimateUsd": 825000,
+      "year1NilEstimateUsd": 500000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-06",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-06",
+        "rank": null,
+        "valuationEstimateUsd": 500000,
+        "url": "https://www.on3.com/rivals/makhi-hughes-145512/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -3406,15 +3413,11 @@
           "https://uhcougars.com/sports/football/roster/makhi-hughes/10011"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Back-to-back 1,300-yard Tulane rushing years support meaningful price despite uncertain 2025 Oregon opportunity. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; transfer, injury or changed usage adds pricing uncertainty.",
+      "marketReasoning": "On3 individual market-based NIL valuation updated 2026-10-06: $500,000, checked Oct 9 2026. Replaces independent editorial estimate of $825,000. Neither compensation nor contract terms verified; no HQ player grade or game budget input.",
+      "uncertaintyNote": "Player-level third-party market-based estimate, not a confirmed NIL deal or audited payment.",
       "marketDecisionNote": "Back-to-back 1,300-yard Tulane rushing years support meaningful price despite uncertain 2025 Oregon opportunity",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 825000
     },
     {
       "id": "houston|patrickovermyer",
@@ -6312,12 +6315,19 @@
       "playerName": "Kelley Jones",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 975000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/kelley-jones-155990/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -6326,15 +6336,11 @@
           "https://hailstate.com/sports/football/roster/kelley-jones/12892"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: 2025 coaches All-SEC CB with 11 breakups, two picks and just 11 catches allowed on 38 targets. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation updated 2026-10-09: $1,000,000, checked Oct 9 2026. Replaces independent editorial estimate of $975,000. Neither compensation nor contract terms verified; no HQ player grade or game budget input.",
+      "uncertaintyNote": "Player-level third-party market-based estimate, not a confirmed NIL deal or audited payment.",
       "marketDecisionNote": "2025 coaches All-SEC CB with 11 breakups, two picks and just 11 catches allowed on 38 targets",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 975000
     },
     {
       "id": "mississippi-state|kolinwilson",
@@ -7998,12 +8004,19 @@
       "playerName": "Earl Little Jr.",
       "positionGroup": "Secondary",
       "year": 2026,
-      "year1NilEstimateUsd": 825000,
+      "year1NilEstimateUsd": 1000000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 1000000,
+        "url": "https://www.on3.com/rivals/earl-little-jr-40293/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -8012,15 +8025,11 @@
           "https://ohiostatebuckeyes.com/sports/football/roster/earl-little%20jr./13345"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: FSU 2025 four-interception 76-tackle safety with All-ACC honors. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation updated 2026-10-09: $1,000,000, checked Oct 9 2026. Replaces independent editorial estimate of $825,000. Neither compensation nor contract terms verified; no HQ player grade or game budget input.",
+      "uncertaintyNote": "Player-level third-party market-based estimate, not a confirmed NIL deal or audited payment.",
       "marketDecisionNote": "FSU 2025 four-interception 76-tackle safety with All-ACC honors",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 825000
     },
     {
       "id": "ohio-state|eddrickhouston",
@@ -11484,12 +11493,19 @@
       "playerName": "Braylon Staley",
       "positionGroup": "WR",
       "year": 2026,
-      "year1NilEstimateUsd": 975000,
+      "year1NilEstimateUsd": 750000,
       "asOf": "2026-10-09",
-      "sourceBasis": "player-evidence-informed-independent-estimate",
-      "confidence": "low",
+      "sourceBasis": "on3-individual-profile-2026-10-09",
+      "confidence": "medium",
       "reportedOrConfirmedCompensation": false,
-      "publishedNilReference": null,
+      "publishedNilReference": {
+        "provider": "On3",
+        "date": "2026-10-09",
+        "rank": null,
+        "valuationEstimateUsd": 750000,
+        "url": "https://www.on3.com/rivals/braylon-staley-173920/nil/",
+        "sourceType": "market-based-player-profile"
+      },
       "recovered20261008NilReference": null,
       "reviewedFootballEvidence": {
         "asOf": "2026-10-08",
@@ -11498,15 +11514,11 @@
           "https://utsports.com/sports/football/roster/braylon-staley/23047"
         ]
       },
-      "marketReasoning": "Individual editorial Year 1 market estimate: Tennessee 2025 starting receiver caught 68 passes for 837 yards and six TDs. Football basis and original source URL(s) are recorded separately; no actual player NIL payment is claimed.",
-      "uncertaintyNote": "No directly verified individual NIL valuation; published football production helps judge prominence, not compensation.",
+      "marketReasoning": "On3 individual market-based NIL valuation updated 2026-10-09: $750,000, checked Oct 9 2026. Replaces independent editorial estimate of $975,000. Neither compensation nor contract terms verified; no HQ player grade or game budget input.",
+      "uncertaintyNote": "Player-level third-party market-based estimate, not a confirmed NIL deal or audited payment.",
       "marketDecisionNote": "Tennessee 2025 starting receiver caught 68 passes for 837 yards and six TDs",
       "marketCaseReviewAsOf": "2026-10-09",
-      "marketContextSourceIds": [
-        "ON3_FOOTBALL_BOARD",
-        "CBS_2026_PORTAL_MARKET",
-        "OPENDORSE_2026_FOOTBALL_REPORT"
-      ]
+      "previouslyReviewedIndependentEstimateUsd": 975000
     },
     {
       "id": "tennessee|daevinhobbs",
@@ -14963,18 +14975,18 @@
     }
   ],
   "researchAudit": {
-    "individuallyReviewedAdditionalCases": 385,
+    "individuallyReviewedAdditionalCases": 381,
     "casePriceOverridesMissed": 0,
     "marketEstimateBasis": "Player-specific football biographies and market comparables, with documented case-specific editorial overrides; non-provider prices remain estimates and should never be presented as published NIL valuations",
     "constraint": "No HQ grades, development probabilities, Powerhouse/Builder budgets or salary cap coefficients used",
     "totalSourceOrCaseReviewed": 468,
-    "sourceBasedValuations": 83,
+    "sourceBasedValuations": 87,
     "footballEvidenceWithSource": 468,
-    "year1ValuationMethod": "Independent of HQ/Wheel ratings and game budgets. 48 historical On3 NIL source ranks preserved; 52 October 9 current ranked board matches + six archived-only 2026-10-08 ranked matches; 25 separate current On3 athlete-specific profile values (confirmed-deal-labeled or market-based). The remaining 385 have separately reviewed editorial dollar estimates and individual sourced football evidence. On3 amounts are not independently audited cash transactions.",
+    "year1ValuationMethod": "No Wheel/HQ grades or game budget optimization. 48 archived 2026-10-08 On3 ranked records kept; 52 current Oct 9 ranked On3 observations, six additional archived-only ranks, 29 dated individual direct On3 profiles, and 381 separately reviewed editorial market estimates with individual football sources. A provider-published estimated value is not audited NIL compensation.",
     "statisticalGradeIndependence": "No HQ grades, future development probabilities, draft simulations, lineup budgets or Powerhouse/Builder salary caps used to derive dollar amounts.",
     "publishedPriceExceptions": "On3 athlete profiles viewed October 9, 2026: Ahmad Hardy $1M, 'Confirmed Deal'; Ellis Robinson IV $750K, 'Market-based'. Both override earlier higher independent editorial estimates. No audited underlying compensation disclosed.",
     "sourceVerification": "On3 football board explicitly dated 2026-10-09. On3 direct Ahmad Hardy and Ellis Robinson IV pages both visibly state Updated 10/9/26; prior archived Oct 8 values separately recorded and not overwritten. CBS Sports 2025-12-30 2026 portal market analysis and Opendorse 2026 annual report landing page verified; report downloadable only via provider form and no paywalled numerical assertions extracted.",
-    "additionalProfileVerification": "23 player profiles added from October 9 NIL follow-up research, extending two previous direct player profile matches to 25 total. Sources and dates recorded on each athlete. All newly provider-matched records retain previously reviewed independent editorial estimate to show real price variation."
+    "additionalProfileVerification": "29 distinct dated direct On3 individual NIL market profiles checked October 9, 2026; where newly provider matched, retain previously reviewed independent editorial amount for price comparison."
   },
   "marketReferenceCatalog": {
     "ON3_FOOTBALL_BOARD": {
