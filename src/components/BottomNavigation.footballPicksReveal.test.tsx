@@ -23,9 +23,9 @@ afterEach(() => {
   cleanup();
 });
 
-describe("BottomNavigation Football Picks reveal", () => {
-  it("keeps the first UFC Picks tap in place when Football was persisted, then reveals on the second tap", () => {
-    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "football");
+describe("BottomNavigation Football Picks no-reveal navigation", () => {
+  it("switches UFC Picks directly to Football without injecting clip state", () => {
+    window.localStorage.setItem(SELECTED_SPORT_STORAGE_KEY, "ufc");
 
     render(
       <MemoryRouter initialEntries={["/picks"]}>
@@ -35,15 +35,10 @@ describe("BottomNavigation Football Picks reveal", () => {
         </SportProvider>
       </MemoryRouter>,
     );
-
     const picks = screen.getByRole("link", { name: "Picks" });
-    expect(picks).toHaveAttribute("href", "/football/picks");
-
     fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/picks|plain");
-
     fireEvent.click(picks);
-    expect(screen.getByTestId("location")).toHaveTextContent("/football/picks|picks");
-    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("football");
+    expect(screen.getByTestId("location")).toHaveTextContent("/mlb/picks|plain");
+    expect(window.localStorage.getItem(SELECTED_SPORT_STORAGE_KEY)).toBe("mlb");
   });
 });
