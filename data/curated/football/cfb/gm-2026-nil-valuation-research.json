@@ -4476,17 +4476,21 @@
         "RB",
         "Flex"
       ],
-      "year1USD": 525000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 800000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/players/fluff-bothwell",
+        "asOf": "2026-09-17"
+      },
       "footballEvidenceSources": [
         "https://hailstate.com/sports/football/roster/fluff-bothwell/12865"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 800000,
       "historicalOn3Rank": null,
-      "marketRationale": "Fluff Bothwell: evidenced high-volume output improves visibility; documented first-team role raises near-term market relevance; transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: Mississippi State 2025 sophomore South Alabama transfer RB rushed 142 times for 677 yards and six TD in 11 games/five starts, following 2024 third-team All-Sun Belt and 13 touchdown season. Started SEC games and has 1,500+ career yards by 2026; feature potential real but volatile workload/injury. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "Player-specific published model value $800,000 (Fluff Bothwell, mississippi-state); rounded to $25,000 for standalone Year 1. Player identity checked against roster and independent official team history. Not a verified contract or HQ grade-to-price mapping."
     },
     {
       "id": "mississippi-state|isaacsmith",
@@ -4496,17 +4500,21 @@
       "positionGroups": [
         "Secondary"
       ],
-      "year1USD": 300000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 600000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/players/isaac-smith-mississippi-state",
+        "asOf": "2026-10-09"
+      },
       "footballEvidenceSources": [
         "https://hailstate.com/sports/football/roster/isaac-smith/12919"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 607103,
       "historicalOn3Rank": null,
-      "marketRationale": "Isaac Smith: recognized conference impact supports a market premium; availability uncertainty discounts market demand. Individual 2025–26 football evidence: Mississippi State 2025 hybrid safety/linebacker 64 tackles in ten games/nine starts and second-team All-SEC safety from PFSN, after 2024 SEC tackle lead. 2026 senior began all five games with 2026 shoulder/injury interruption noted. High established defense ability, very little giant breakout runway, moderate durability downside. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "Player-specific published model value $607,103 (Isaac Smith, mississippi-state); rounded to $25,000 for standalone Year 1. Player identity checked against roster and independent official team history. Not a verified contract or HQ grade-to-price mapping."
     },
     {
       "id": "mississippi-state|jjhill",
@@ -8311,17 +8319,21 @@
         "RB",
         "Flex"
       ],
-      "year1USD": 450000,
-      "valuationKind": "individual-judgment-from-official-bio",
+      "year1USD": 525000,
+      "valuationKind": "published-independent-modeled-estimate",
       "asOf": "2026-10-09",
       "confidence": "low",
-      "primaryMarketSource": null,
+      "primaryMarketSource": {
+        "provider": "The NIL Standard",
+        "url": "https://thenilstandard.com/football/players/kendrick-raphael-smu",
+        "asOf": "2026-09-17"
+      },
       "footballEvidenceSources": [
         "https://smumustangs.com/sports/football/roster/kendrick-raphael/15625"
       ],
-      "publishedEstimateUSD": null,
+      "publishedEstimateUSD": 533352,
       "historicalOn3Rank": null,
-      "marketRationale": "Kendrick Raphael: recognized conference impact supports a market premium; transfer mobility indicates active recruiting demand. Individual 2025–26 football evidence: SMU 2026 senior RB transferred from Cal after 2025 All-ACC honorable mention: 232 carries for 943 yards/13 rushing TD and 31 catches/231 yards/one receiving TD in 12 games/11 starts. Proven feature workload should stabilize 2027 NFL market, while SEC/ACC workload and new offensive fit can cause efficiency variance; do not mechanically treat a new school as a skill breakout. Price is an independent, low-confidence editorial market judgment, not an NIL deal, market-provider valuation, HQ grade translation, or budget balancing."
+      "marketRationale": "Player-specific published model value $533,352 (Kendrick Raphael, smu); rounded to $25,000 for standalone Year 1. Player identity checked against roster and independent official team history. Not a verified contract or HQ grade-to-price mapping."
     },
     {
       "id": "smu|kevinjennings",
@@ -11222,5 +11234,17 @@
       "publishedUpgraded": 134,
       "On3CrossChecks": 22
     }
-  ]
+  ],
+  "rightsAndReleaseNote": {
+    "researchOnly": true,
+    "notAuthorizedForAutomaticRuntimeIngestion": true,
+    "note": "TNS data-use policy explicitly requires permission/license for incorporating its valuations in a product, internal dataset, systematic collection, or redistribution. Historical On3 values and independent source estimates also require reuse diligence. Integration owner MUST independently clear reuse rights or replace externally derived prices with genuinely independent estimates; this branch is NOT permission to publish provider values.",
+    "policyUrl": "https://thenilstandard.com/data-use"
+  },
+  "researchSummary": {
+    "allPlayers": 468,
+    "On3Sourced": 50,
+    "otherPublishedModel": 338,
+    "independentEditorialEstimates": 80
+  }
 }
