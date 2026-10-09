@@ -56,7 +56,8 @@ describe("CFB GM 2026-style 12-team CFP and regular-season simulator", () => {
   });
   it("versions the preview so old saved simulations cannot silently adopt the new college bracket", () => {
     const run=cfbGmInitial("sample-cfb-seed-2026");
-    expect(CFB_GM_VERSION).toContain("v8-nfl-parity");
+    expect(CFB_GM_VERSION).toContain("v9-portal-integrity");
+    expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v8-nfl-parity"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v7-first-party-market"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v2-cfp"})).toBeNull();
     expect(cfbGmValidateRun({...run,version:"cfb-gm-owner-preview-v3-market-development"})).toBeNull();
