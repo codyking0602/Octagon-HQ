@@ -35,6 +35,18 @@ TEAM_ALIASES = {
 }
 SNAPSHOT_DATE = date.today()
 WINDOW_END_SEASON = SNAPSHOT_DATE.year + 2
+ONE_YEAR_FINAL_SEASON_APY_MAX = 7_000_000
+
+
+def game_contract_term(real_end_season: int, salary_apy: int) -> str:
+    # Deliberate NFL GM game abstraction: affordable deals expiring at the end
+    # of the three-season window face offseason repricing, creating more moves.
+    # Preserve actual contract expiry and APY as separate factual fields.
+    if real_end_season < WINDOW_END_SEASON:
+        return "1YR"
+    if real_end_season == WINDOW_END_SEASON and salary_apy <= ONE_YEAR_FINAL_SEASON_APY_MAX:
+        return "1YR"
+    return "3YR"
 
 NAME_ALIASES = {
     "gregrousseau": "gregoryrousseau",
@@ -300,7 +312,7 @@ def main():
             )),
             "salaryApy": apy,
             "realContractEndSeason": int(end),
-            "gameContract": "3YR" if int(end) >= WINDOW_END_SEASON else "1YR",
+            "gameContract": game_contract_term(int(end), apy),
             "source": {
                 "provider": "OverTheCap via nflverse",
                 "playerPage": row.get("player_page"),
@@ -353,8 +365,10 @@ def main():
         "snapshotDate": SNAPSHOT_DATE.isoformat(),
         "salaryBasis": "Current active contract APY from OverTheCap via nflverse",
         "gameContractRule": (
-            f"Real contract ending before {WINDOW_END_SEASON} => 1YR; "
-            f"real contract covering the full game through {WINDOW_END_SEASON} => 3YR."
+            f"Real end before {WINDOW_END_SEASON} => 1YR; "
+            f"end in {WINDOW_END_SEASON} at <= $7M APY => 1YR game repricing; "
+            f"other deals through {WINDOW_END_SEASON} or later => 3YR locked. "
+            "Actual real-world term and salary remain separately sourced."
         ),
         "threeYearWindow": [SNAPSHOT_DATE.year, SNAPSHOT_DATE.year + 1, WINDOW_END_SEASON],
         "populationSource": args.priority,

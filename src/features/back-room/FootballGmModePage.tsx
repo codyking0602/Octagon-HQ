@@ -1623,7 +1623,7 @@ export default function FootballGmModePage({
     });
     const team = footballGmSpinTeam(`${run.seed}:free-agency`, run.freeAgentSpinIndex, teams);
     if (!team) {
-      patch({ tradeMessage: "No real 1YR free agent fits both future caps from the teams available to this spin." });
+      patch({ tradeMessage: "No eligible 1YR free agent fits both future caps from the teams available to this spin." });
       return;
     }
     patch({ pendingFreeAgentTeam: team, tradeMessage: "" });
@@ -2093,9 +2093,9 @@ export default function FootballGmModePage({
               ) : footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds) ? (
                 <section className="football-gm__wheel surface-card">
                   <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
-                  <h2>SPIN THE REAL 1YR MARKET</h2>
+                  <h2>SPIN THE 1YR MARKET</h2>
                   <p>
-                    Your offseason holdings are below seven. Spin an NFL team and see every real 1YR free agent from that team who fits both future caps.
+                    Your offseason holdings are below seven. Spin an NFL team and see every game-eligible 1YR free agent from that team who fits both future caps.
                     The signing is not position-locked; if you take someone at an occupied spot, that incumbent becomes a normal trade chip.
                   </p>
                   <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>

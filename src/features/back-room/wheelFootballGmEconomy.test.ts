@@ -97,16 +97,22 @@ describe("Wheel NFL GM contract authority", () => {
   it("applies the locked 1YR versus 3YR simplification literally", () => {
     for (const row of contracts) {
       expect(["1YR", "3YR"]).toContain(row.gameContract);
-      expect(row.gameContract).toBe(row.realContractEndSeason < windowEndSeason ? "1YR" : "3YR");
+      const isOneYear = row.realContractEndSeason < windowEndSeason
+        || (row.realContractEndSeason === windowEndSeason && row.salaryApy <= 7_000_000);
+      expect(row.gameContract).toBe(isOneYear ? "1YR" : "3YR");
     }
   });
 
-  it("uses authentic contract coverage to arrive at 319 one-year and 275 three-year deals", () => {
-    expect(contracts.filter((player) => player.gameContract === "1YR")).toHaveLength(319);
-    expect(contracts.filter((player) => player.gameContract === "3YR")).toHaveLength(275);
+  it("calibrates the 594-player market to 65% 1YR / 35% 3YR without changing real contract data", () => {
+    expect(contracts.filter((player) => player.gameContract === "1YR")).toHaveLength(386);
+    expect(contracts.filter((player) => player.gameContract === "3YR")).toHaveLength(208);
+    expect(contracts.filter((player) => player.gameContract === "1YR" && player.realContractEndSeason === windowEndSeason)).toHaveLength(67);
+    expect(contracts.filter((player) => player.gameContract === "1YR" && player.realContractEndSeason === windowEndSeason && player.salaryApy > 7_000_000)).toHaveLength(0);
     expect(findContract("Matthew Stafford").gameContract).toBe("1YR");
     expect(findContract("Cameron Heyward").gameContract).toBe("1YR");
     expect(findContract("Fred Warner").gameContract).toBe("3YR");
+    expect(findContract("Tetairoa McMillan").gameContract).toBe("1YR");
+    expect(findContract("Colston Loveland").gameContract).toBe("1YR");
   });
 
   it("maps the current Wheel population into the seven GM roster slots", () => {

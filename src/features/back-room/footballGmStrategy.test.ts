@@ -157,7 +157,7 @@ function findAccessibleEliteFreeAgent() {
       if (candidate) return { roster, candidate };
     }
   }
-  throw new Error("Expected cap room to expose at least one 90+ real 1YR free agent");
+  throw new Error("Expected cap room to expose at least one 90+ eligible 1YR free agent");
 }
 
 describe("Football GM strategy v7", () => {
@@ -453,7 +453,7 @@ describe("Football GM strategy v7", () => {
     expect(footballGmCanUseFreeAgency(fivePlayerRoster, [heldChip.id])).toBe(true);
   });
 
-  it("builds free agency only from real 1YR players outside the user's holdings", () => {
+  it("builds free agency only from game-eligible 1YR players outside the user's holdings", () => {
     const roster = cheapRosterMissing("LB");
     const rosterIds = new Set(roster.map((entry) => entry.playerId));
     const teams = footballGmEligibleFreeAgencyTeams({
