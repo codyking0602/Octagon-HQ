@@ -85,6 +85,62 @@ describe("Owner Championship Home preview", () => {
     expect(loader.mlb).toHaveBeenCalledWith(2026);
   });
 
+  it("renders trophy-case summaries using real, separate sport championship finishes", async () => {
+    render(<Preview />);
+    const cabinet = screen.getByRole("region", { name: "Your HQ" });
+    expect(await within(cabinet).findByText("2026 CHAMPIONSHIP HEADQUARTERS")).toBeInTheDocument();
+    expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("1");
+    expect(within(cabinet).getByText("LEAGUE LEAD")).toBeInTheDocument();
+    expect(within(cabinet).getByText("Across 3 championships")).toBeInTheDocument();
+    expect(within(cabinet).getByText("HQ DAILY STREAK")).toBeInTheDocument();
+    expect(within(cabinet).getByText("11 days")).toBeInTheDocument();
+    expect(within(cabinet).getByRole("link", { name: "Open football Championship standings" })).toHaveAttribute("href", "/championship/football?tab=overall");
+    expect(within(cabinet).getByRole("link", { name: "Open ufc Championship standings" })).toHaveAttribute("href", "/championship/ufc?tab=overall");
+    expect(within(cabinet).getByRole("link", { name: "Open MLB Postseason Championship standings" })).toHaveAttribute("href", "/championship/mlb");
+    const ranks = Array.from(cabinet.querySelectorAll(".home-champ-preview__summary > strong")).map((element) => element.textContent);
+    expect(ranks).toEqual(["#1", "#2", "#3"]);
+    expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon.is-leading")).toHaveLength(1);
+  });
+
+  it("counts MLB as a league lead only when MLB actually ranks first", async () => {
+    loader.mlb.mockResolvedValue({ own: { overall_rank: 1, total_points: 93 }, standings: [{}, {}, {}] });
+    loader.sport.mockImplementation(async (sport) => {
+      const data = projection(sport);
+      return { ...data, own: { ...data.own, rank: 1 } };
+    });
+    render(<Preview />);
+    const cabinet = screen.getByRole("region", { name: "Your HQ" });
+    expect(await within(cabinet).findByText("LEAGUE LEADS")).toBeInTheDocument();
+    expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("3");
+    expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon.is-leading")).toHaveLength(3);
+    expect(within(cabinet).getByText("93 PTS")).toBeInTheDocument();
+  });
+
+  it("retains the full three-person bar standings when switching into a sport", async () => {
+    const football = projection("football");
+    const shane = {
+      ...football.own, profile_id: "22222222-2222-4222-8222-222222222222",
+      display_name: "SHANE", initials: "S", rank: 2, rating: 89.2, is_current_user: false,
+    };
+    const troy = {
+      ...football.own, profile_id: "33333333-3333-4333-8333-333333333333",
+      display_name: "TROY", initials: "T", rank: 3, rating: 88.3, is_current_user: false,
+    };
+    loader.sport.mockImplementation(async (sport) => sport === "football"
+      ? { ...football, entries: [football.own, shane, troy] } : projection("ufc"));
+    render(<Preview />);
+    await screen.findByText("91.3 SEASON SCORE");
+    fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "football" } });
+    const hero = screen.getByRole("region", { name: "Your HQ" });
+    expect(within(hero).getByText("CHAMPIONSHIP STANDINGS")).toBeInTheDocument();
+    expect(hero.querySelectorAll(".home-champ-preview__competitor")).toHaveLength(3);
+    expect(hero.querySelectorAll(".home-champ-preview__meter")).toHaveLength(3);
+    expect(hero.querySelectorAll(".home-champ-preview__weight-track")).toHaveLength(2);
+    expect(within(hero).getByText("+2.0 over SHANE")).toBeInTheDocument();
+    expect(within(hero).getByRole("link", { name: "View TROY Championship standing" })).toHaveAttribute(
+      "href", "/championship/football?tab=overall&player=33333333-3333-4333-8333-333333333333");
+  });
+
   it("switches to a focused Football hero with 60% Picks / 40% Play", async () => {
     render(<Preview />);
     await screen.findByText("91.3 SEASON SCORE");
