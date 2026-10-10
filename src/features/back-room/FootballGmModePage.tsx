@@ -34,6 +34,9 @@ import {
 } from "./footballGmEngine";
 import {
   FOOTBALL_GM_VERSION,
+  FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT,
+  footballGmMarketVisitsUsed,
+  footballGmEmergencyFreeAgents,
   footballGmAcceptedTargetTradeOffers,
   footballGmAdjustedHoldingsCap,
   footballGmAdjustedRosterCap,
@@ -85,6 +88,8 @@ export interface PersistedRun {
   previousTeam: string | null;
   pendingTeam: string | null;
   freeAgentSpinIndex: number;
+  freeAgencyVisitsUsed: number;
+  releasedPlayerIds: string[];
   previousFreeAgentTeam: string | null;
   pendingFreeAgentTeam: string | null;
   voluntaryFreeAgencyUsed: boolean;
@@ -136,6 +141,8 @@ export function initialRun(seed: string): PersistedRun {
     previousTeam: null,
     pendingTeam: null,
     freeAgentSpinIndex: 0,
+    freeAgencyVisitsUsed: 0,
+    releasedPlayerIds: [],
     previousFreeAgentTeam: null,
     pendingFreeAgentTeam: null,
     voluntaryFreeAgencyUsed: false,
@@ -181,6 +188,11 @@ function parsePersistedRun(value: unknown) {
   return {
     ...parsed,
     version: FOOTBALL_GM_VERSION,
+    freeAgencyVisitsUsed: footballGmMarketVisitsUsed(parsed.freeAgencyVisitsUsed, parsed.freeAgentSpinIndex ?? 0),
+    releasedPlayerIds: [...new Set([
+      ...(Array.isArray(parsed.releasedPlayerIds) ? parsed.releasedPlayerIds : []),
+      ...(parsed.releasedFreeAgentPlayerId ? [parsed.releasedFreeAgentPlayerId] : []),
+    ])],
     resolvedSeasons: Array.isArray(parsed.resolvedSeasons) && parsed.resolvedSeasons.length === 3
       ? parsed.resolvedSeasons : [],
     roster,
@@ -788,6 +800,7 @@ export function FreeAgencyBoard({
   seed,
   consequences,
   onPick,
+  onPass,
   excludedPlayerIds = [],
   sharedMarket = false,
 }: {
@@ -797,6 +810,7 @@ export function FreeAgencyBoard({
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   onPick: (playerId: string, slot: FootballGmRosterSlot, displacedPlayerId?: string) => void;
+  onPass: () => void;
   excludedPlayerIds?: readonly string[];
   sharedMarket?: boolean;
 }) {
@@ -858,6 +872,61 @@ export function FreeAgencyBoard({
           </article>
         ))}
       </div>
+      <button type="button" className="gm-final__secondary-action" onClick={onPass}>
+        PASS ON THIS TEAM · VISIT ALREADY USED
+      </button>
+    </section>
+  );
+}
+
+/** A restricted, inexpensive depth pool for filling vacancies after five wheel visits. */
+export function EmergencyFreeAgencyBoard({
+  roster,
+  tradeChipPlayerIds,
+  seed,
+  consequences,
+  excludedPlayerIds,
+  onPick,
+}: {
+  roster: readonly FootballGmRosterEntry[];
+  tradeChipPlayerIds: readonly string[];
+  seed: string;
+  consequences: FootballGmNegotiationConsequences;
+  excludedPlayerIds: readonly string[];
+  onPick: (playerId: string, slot: FootballGmRosterSlot) => void;
+}) {
+  const candidates = footballGmEmergencyFreeAgents({
+    roster, tradeChipPlayerIds, seed, consequences, excludedPlayerIds,
+  });
+  return (
+    <section className="football-gm__market-picker surface-card">
+      <p className="eyebrow">FREE AGENCY · FIVE VISITS USED</p>
+      <h2>EMERGENCY ROSTER COMPLETION</h2>
+      <p>The regular market is closed. Only affordable depth players who fill an open position
+        and fit both remaining cap years are available. No starter replacement or extra spins.</p>
+      {candidates.length ? (
+        <div className="football-gm__market-list">
+          {candidates.map(({ player, legalSlots, salary }) => (
+            <article className="football-gm__market-player" key={player.id} style={playerStyle(player.team)}>
+              <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
+              <div className="football-gm__market-copy">
+                <strong>{player.name}</strong>
+                <small>{player.position} · {player.team} · 1YR</small>
+                <PlayerQualityPill player={player} year={2} seed={seed} />
+              </div>
+              <b>{footballGmMoney(salary)}</b>
+              <div className="football-gm__market-actions">
+                {legalSlots.map((slot) => (
+                  <button type="button" key={slot} onClick={() => onPick(player.id, slot)}>
+                    FILL {footballGmSlotLabel(slot)}
+                  </button>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : <p>No affordable depth player fits the current openings and both future caps.
+        Use the trade room to create a legal roster configuration.</p>}
     </section>
   );
 }
@@ -1654,6 +1723,7 @@ export default function FootballGmModePage({
   }
 
   function spinFreeAgency() {
+    if (run.pendingFreeAgentTeam || run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT) return;
     if (!footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)) {
       patch({ tradeMessage: "Free agency opens whenever normal roster work leaves fewer than seven held assets. The one-time limit applies only to deliberately releasing a settled starter." });
       return;
@@ -1664,20 +1734,43 @@ export default function FootballGmModePage({
       seed: run.seed,
       consequences: run.negotiationConsequences,
       previousTeam: run.previousFreeAgentTeam,
-      excludedPlayerIds: run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : [],
+      excludedPlayerIds: run.releasedPlayerIds,
     });
     const team = footballGmSpinTeam(`${run.seed}:free-agency`, run.freeAgentSpinIndex, teams);
     if (!team) {
       patch({ tradeMessage: "No eligible 1YR free agent fits both future caps from the teams available to this spin." });
       return;
     }
-    patch({ pendingFreeAgentTeam: team, tradeMessage: "" });
+    patch({
+      pendingFreeAgentTeam: team,
+      freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
+      freeAgencyVisitsUsed: run.freeAgencyVisitsUsed + 1,
+      tradeMessage: "",
+    });
+  }
+
+  function passFreeAgency() {
+    if (!run.pendingFreeAgentTeam) return;
+    patch({
+      previousFreeAgentTeam: run.pendingFreeAgentTeam,
+      pendingFreeAgentTeam: null,
+      tradeMessage: "Passed on this free-agent team. Your wheel visit was spent.",
+    });
   }
 
   function makeFreeAgentPick(playerId: string, slot: FootballGmRosterSlot, displacedPlayerId?: string) {
-    if (!run.pendingFreeAgentTeam) return;
+    const emergency = !run.pendingFreeAgentTeam
+      && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT;
     const player = footballGmPlayerById(playerId);
-    if (!player || player.team !== run.pendingFreeAgentTeam) return;
+    if (!player) return;
+    if (run.pendingFreeAgentTeam ? player.team !== run.pendingFreeAgentTeam : !emergency) return;
+    if (emergency && (displacedPlayerId || !footballGmEmergencyFreeAgents({
+      roster: run.finalRoster,
+      tradeChipPlayerIds: run.tradeChipPlayerIds,
+      seed: run.seed,
+      consequences: run.negotiationConsequences,
+      excludedPlayerIds: run.releasedPlayerIds,
+    }).some((candidate) => candidate.player.id === playerId && candidate.legalSlots.includes(slot)))) return;
     const next = footballGmSignFreeAgent({
       roster: run.finalRoster,
       tradeChipPlayerIds: run.tradeChipPlayerIds,
@@ -1686,7 +1779,7 @@ export default function FootballGmModePage({
       displacedPlayerId,
       seed: run.seed,
       consequences: run.negotiationConsequences,
-      excludedPlayerIds: run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : [],
+      excludedPlayerIds: run.releasedPlayerIds,
     });
     if (!next) {
       patch({ tradeMessage: "That free-agent signing is no longer legal under the roster and cap rules." });
@@ -1696,9 +1789,8 @@ export default function FootballGmModePage({
     patch({
       finalRoster: [...next.roster],
       tradeChipPlayerIds: [...next.tradeChipPlayerIds],
-      previousFreeAgentTeam: run.pendingFreeAgentTeam,
+      previousFreeAgentTeam: run.pendingFreeAgentTeam ?? player.team,
       pendingFreeAgentTeam: null,
-      freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
       tradeMessage: displaced
         ? `${player.name} signed at ${footballGmSlotLabel(slot)}. ${displaced.name} is now a normal trade chip; shop him through the regular Trade Room or release him.`
         : `${player.name} signed through free agency to fill ${footballGmSlotLabel(slot)}.`,
@@ -1715,7 +1807,7 @@ export default function FootballGmModePage({
       tradeChipPlayerIds: run.tradeChipPlayerIds,
       seed: run.seed,
       consequences: run.negotiationConsequences,
-      excludedPlayerIds: [playerId],
+      excludedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
     });
     if (!eligibleTeams.length) {
       patch({ tradeMessage: `Releasing ${player.name} does not leave a legal free-agency path under the cap.` });
@@ -1726,6 +1818,7 @@ export default function FootballGmModePage({
       finalRoster: stripped,
       voluntaryFreeAgencyUsed: true,
       releasedFreeAgentPlayerId: playerId,
+      releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
       pendingFreeAgentTeam: null,
       previousFreeAgentTeam: null,
       tradeMessage: `${player.name} released. Free-agency replacement budget: ${footballGmMoney(budget)}.`,
@@ -1900,11 +1993,12 @@ export default function FootballGmModePage({
     patch({
       tradeChipPlayerIds: run.tradeChipPlayerIds.filter((id) => id !== playerId),
       releasedFreeAgentPlayerId: playerId,
+      releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
       pendingFreeAgentTeam: null,
       previousFreeAgentTeam: null,
       tradeMessage: player
-        ? `${player.name} released from the displaced-asset pool. The open roster spot can return to free agency.`
-        : "Displaced asset released. The open roster spot can return to free agency.",
+        ? `${player.name} released from the displaced-asset pool. The opening remains, but market visits do not reset.`
+        : "Displaced asset released. Market visits do not reset.",
     });
   }
 
@@ -2147,16 +2241,27 @@ export default function FootballGmModePage({
                   tradeChipPlayerIds={run.tradeChipPlayerIds}
                   seed={run.seed}
                   consequences={run.negotiationConsequences}
-                  excludedPlayerIds={run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : []}
+                  excludedPlayerIds={run.releasedPlayerIds}
+                  onPick={makeFreeAgentPick}
+                  onPass={passFreeAgency}
+                />
+              ) : footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)
+                && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT ? (
+                <EmergencyFreeAgencyBoard
+                  roster={run.finalRoster}
+                  tradeChipPlayerIds={run.tradeChipPlayerIds}
+                  seed={run.seed}
+                  consequences={run.negotiationConsequences}
+                  excludedPlayerIds={run.releasedPlayerIds}
                   onPick={makeFreeAgentPick}
                 />
               ) : footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds) ? (
                 <section className="football-gm__wheel surface-card">
-                  <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
+                  <p className="eyebrow">FREE AGENCY · {run.freeAgencyVisitsUsed}/{FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT} VISITS USED · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
                   <h2>SPIN THE 1YR MARKET</h2>
                   <p>
                     Your offseason holdings are below seven. Spin an NFL team and see every game-eligible 1YR free agent from that team who fits both future caps.
-                    The signing is not position-locked; if you take someone at an occupied spot, that incumbent becomes a normal trade chip.
+                    Every spin uses one of five market visits, even if you pass. Signing may displace a starter into your trade pool, but releases do not restore visits.
                   </p>
                   <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>
                 </section>
