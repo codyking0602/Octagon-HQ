@@ -240,10 +240,10 @@ describe("CFB GM UI parity and owner gating", () => {
     expect(page).not.toContain("gm-result__summary");
 
   });
-  it("gates CFB owner route without changing existing public game library order", () => {
-    expect(router).toContain('path: "football/gm-cfb-preview"');
+  it("preserves CFB GM implementation while closing its route and removing its Play tile", () => {
+    expect(router).toContain('path: "football/gm-cfb-preview", element: <Navigate to="/football" replace />');
     expect(page).toContain('identity.profile?.canControlPicks !== true');
-    expect(landing).toContain('identity.profile?.canControlPicks === true');
-    expect(landing).toContain('OWNER PREVIEW');
+    expect(landing).toContain('<PlayV2Page sport="football" />');
+    expect(landing).not.toContain("OWNER PREVIEW");
   });
 });
