@@ -24,6 +24,7 @@ import "./MillionairePortrait.css";
 import "./MillionairePortraitRefine.css";
 import "./MillionaireFixedStage.css";
 import "../../styles/football-special-daily.css";
+import { footballSpecialDailyStyle, footballSpecialDailyThemeForDay } from "./footballSpecialDailyTheme";
 
 type JsonRecord = Record<string, unknown>;
 
@@ -108,7 +109,9 @@ export function OfficialMillionaireDailyView({
   const state = projection.publicState;
   const questions = records(setup.questions);
   const league = String(setup.league ?? (projection.sport === "football" ? "cfb" : "ufc")) as MillionaireLeague;
-  const redRiverDay = projection.sport === "football" && projection.centralDay === "2026-10-10";
+  const specialTheme = projection.sport === "football" ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
+  const redRiverDay = Boolean(specialTheme?.rivalryAccent);
+  const specialStageStyle = specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined;
   const status = String(state.status ?? "playing");
   const currentIndex = Math.min(7, Math.max(0, Number(state.current_question_index ?? 0)));
   const completedQuestions = Math.min(8, Math.max(0, Number(state.completed_questions ?? 0)));
@@ -276,12 +279,13 @@ export function OfficialMillionaireDailyView({
 
   if (rulesOpen) {
     return createPortal(
-      <div className="millionaire-shell millionaire-shell--rules" data-red-river={redRiverDay ? "true" : undefined}>
+      <div className="millionaire-shell millionaire-shell--rules" data-red-river={redRiverDay ? "true" : undefined}
+        data-special-daily={specialTheme ? "true" : undefined} style={specialStageStyle}>
         <div className="millionaire-arena" aria-hidden="true" />
         <div className="millionaire-crowd" aria-hidden="true" />
         <section className="millionaire-rules" aria-labelledby="millionaire-daily-rules-title">
           <header>
-            <span>{redRiverDay ? "RED RIVER SHOWDOWN · TEXAS vs OKLAHOMA" : `${millionaireLeagueLabel(league)} DAILY`}</span>
+            <span>{specialTheme ? `${specialTheme.eventLabel} · ${specialTheme.matchup}` : `${millionaireLeagueLabel(league)} DAILY`}</span>
             <h1 id="millionaire-daily-rules-title">MILLIONAIRE</h1>
             <p>8 questions. $500 to $1,000,000.</p>
           </header>
@@ -326,7 +330,8 @@ export function OfficialMillionaireDailyView({
   }
 
   return createPortal(
-    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${displayLevel.toLowerCase()} millionaire-shell--${visualPhase}${firstMissQuestionIndex !== null ? " millionaire-shell--eliminated" : ""}${redRiverDay ? " millionaire-shell--red-river" : ""}`}>
+    <div className={`millionaire-shell millionaire-shell--game millionaire-shell--fixed-stage millionaire-shell--${league} millionaire-shell--${displayLevel.toLowerCase()} millionaire-shell--${visualPhase}${firstMissQuestionIndex !== null ? " millionaire-shell--eliminated" : ""}${redRiverDay ? " millionaire-shell--red-river" : ""}${specialTheme ? " millionaire-shell--special-daily" : ""}`}
+      style={specialStageStyle}>
       <div className="millionaire-stage-canvas" style={{ transform: `translate(-50%, -50%) scale(${stageScale})` }}>
         <img className="millionaire-stage-background" src={stageBackground} alt="" aria-hidden="true" />
         {redRiverDay ? (
@@ -335,9 +340,15 @@ export function OfficialMillionaireDailyView({
             <span><strong>RED RIVER SHOWDOWN</strong><small>TEXAS · GOLDEN HAT · OKLAHOMA</small></span>
             <img src="https://a.espncdn.com/i/teamlogos/ncaa/500/201.png" alt="" referrerPolicy="no-referrer" />
           </div>
+        ) : specialTheme ? (
+          <div className="millionaire-special-event-plate" aria-label={`${specialTheme.eventLabel}: ${specialTheme.matchup}`}>
+            <img src={specialTheme.teamLogo} alt="" referrerPolicy="no-referrer" />
+            <span><strong>{specialTheme.eventLabel}</strong><small>{specialTheme.matchup}</small></span>
+            <img src={specialTheme.opponentLogo} alt="" referrerPolicy="no-referrer" />
+          </div>
         ) : null}
         <header className="millionaire-title">
-          <span>{redRiverDay ? "TEXAS vs OKLAHOMA" : `${millionaireLeagueLabel(league)} DAILY`}</span><strong>MILLIONAIRE</strong>
+          <span>{specialTheme ? specialTheme.matchup : `${millionaireLeagueLabel(league)} DAILY`}</span><strong>MILLIONAIRE</strong>
         </header>
         <section className="millionaire-stakes" aria-label={`Question ${displayIndex + 1} value`}>
           <strong>{millionaireMoneyLabel(Number(displayQuestion.money ?? MILLIONAIRE_MONEY_BY_LEVEL[displayLevel]))}</strong>
