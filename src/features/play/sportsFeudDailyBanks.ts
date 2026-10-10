@@ -483,7 +483,7 @@ export function buildSportsFeudPack(
     ? themedPack.fastMoney
     : useSep24UfcPrototype
       ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney
-      : selectFast(domain, day, authoredMain);
+      : selectFast(domain, day, domain === "ufc" && day === "2026-10-10" ? selectMain(domain, day) : authoredMain);
   const main = authoredMain.map((question) =>
     materializeQuestion(domain, question, MAIN_POINTS, entities));
   const fast = authoredFast.map((question) =>
