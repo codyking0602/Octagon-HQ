@@ -1,7 +1,7 @@
 .home-champ-preview {
   display: grid;
-  gap: 12px;
-  padding: 14px;
+  gap: 13px;
+  padding: 15px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -88,67 +88,122 @@
   color: var(--text-primary);
   font-size: 13px;
 }
+/* The selected sport uses the existing Your HQ surface—not a second panel. */
 .home-champ-preview__detail {
+  --champ-accent: var(--hq-neutral-accent);
+  --champ-accent-rgb: var(--hq-neutral-accent-rgb);
   display: grid;
   gap: 12px;
-  padding: 15px;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  background: var(--surface-raised);
+  padding: 0;
+  border: 0;
+  background: transparent;
   min-width: 0;
 }
-.home-champ-preview__detail[data-sport="football"] { border-color: rgba(var(--football-brand-blue-rgb),.42); }
-.home-champ-preview__detail[data-sport="ufc"] { border-color: var(--ufc-red); }
+.home-champ-preview__detail[data-sport="football"] {
+  --champ-accent: var(--football-brand-blue);
+  --champ-accent-rgb: var(--football-brand-blue-rgb);
+}
+.home-champ-preview__detail[data-sport="ufc"] {
+  --champ-accent: var(--ufc-red-strong);
+  --champ-accent-rgb: 210,10,10;
+}
+.home-champ-preview__detail[data-sport="mlb"] {
+  --champ-accent: var(--mlb-green-strong);
+  --champ-accent-rgb: var(--mlb-green-rgb);
+}
 .home-champ-preview__kicker {
-  color: var(--text-secondary);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--champ-accent);
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: .09em;
+  letter-spacing: .085em;
 }
-.home-champ-preview__headline { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.home-champ-preview__headline > a { display: grid; gap: 3px; min-width: 0; }
-.home-champ-preview__headline a {
+.home-champ-preview__kicker::before {
+  content: "";
+  display: block;
+  width: 3px;
+  height: 12px;
+  flex: none;
+  border-radius: 2px;
+  background: var(--champ-accent);
+}
+.home-champ-preview__headline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.home-champ-preview__headline > a {
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 64px;
+  padding: 2px 0;
   color: inherit;
   text-decoration: none;
-  border-radius: 10px;
-  padding: 5px;
-}
-.home-champ-preview__headline a:focus-visible,
-.home-champ-preview__lanes a:focus-visible,
-.home-champ-preview__summary:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+  border-radius: 6px;
 }
 .home-champ-preview__headline strong {
-  font-size: clamp(32px, 10vw, 44px);
+  font-size: clamp(33px, 10vw, 43px);
   letter-spacing: -.065em;
-  line-height: 1;
+  line-height: 1.04;
   font-variant-numeric: tabular-nums;
 }
 .home-champ-preview__headline span {
   color: var(--text-secondary);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
+  letter-spacing: .02em;
 }
-.home-champ-preview__lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.home-champ-preview__lanes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 18px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
 .home-champ-preview__lanes > a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 4px 6px;
+  align-content: center;
+  min-width: 0;
+  min-height: 55px;
+  padding: 2px 0;
   color: inherit;
   text-decoration: none;
-  display: grid;
-  gap: 3px;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  min-width: 0;
+  border-radius: 6px;
 }
-.home-champ-preview__lanes span { font-size: 10px; color: var(--text-secondary); font-weight: 850; }
-.home-champ-preview__lanes strong { font-size: 21px; letter-spacing: -.03em; line-height: 1.1; }
-.home-champ-preview__lanes small { color: var(--text-muted); font-size: 10px; }
-.home-champ-preview__weights {
-  margin: 0;
-  color: var(--text-muted);
+.home-champ-preview__lanes a > span:first-child {
+  grid-column: 1 / 3;
+  color: var(--text-secondary);
   font-size: 10px;
-  line-height: 1.3;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+.home-champ-preview__lanes strong {
+  font-size: 23px;
+  letter-spacing: -.035em;
+  line-height: 1;
+}
+.home-champ-preview__chevron {
+  color: var(--champ-accent);
+  font-size: 21px;
+  line-height: 1;
+  justify-self: end;
+}
+.home-champ-preview__headline a:hover,
+.home-champ-preview__lanes a:hover {
+  background: rgba(var(--champ-accent-rgb), .05);
+}
+.home-champ-preview__headline a:focus-visible,
+.home-champ-preview__lanes a:focus-visible,
+.home-champ-preview__summary:focus-visible {
+  outline: 2px solid var(--champ-accent, var(--hq-neutral-accent));
+  outline-offset: 3px;
 }
 .home-champ-preview__pending { min-height: 66px; display: grid; align-items: center; color: var(--text-secondary); font-size: 12px; }
 @media (max-width: 365px) {
@@ -158,5 +213,4 @@
   .home-champ-preview__summary > span { font-size: 8px; }
 }
 
-.home-champ-preview__detail[data-sport="mlb"] { border-color: rgba(var(--mlb-green-rgb), .46); }
-.home-champ-preview__summary:hover,.home-champ-preview__headline a:hover,.home-champ-preview__lanes a:hover { filter: brightness(1.12); }
+.home-champ-preview__summary:hover { filter: brightness(1.12); }
