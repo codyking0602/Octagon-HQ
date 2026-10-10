@@ -1,216 +1,442 @@
+/* The HQ — personal Championship command center */
 .home-champ-preview {
+  --champ-accent: var(--hq-neutral-accent, #c5cbd2);
+  --champ-accent-rgb: var(--hq-neutral-accent-rgb, 197,203,210);
   display: grid;
-  gap: 13px;
-  padding: 15px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  gap: 14px;
+  padding: 17px;
   min-width: 0;
+  border: 1px solid #36383e;
+  border-radius: 22px;
+  background: linear-gradient(157deg, #191a1d 0%, #121316 52%, #101114 100%);
+  color: #fff;
+  transition: border-color .32s ease, background-color .32s ease;
+}
+.home-champ-preview[data-sport="football"] {
+  --champ-accent: var(--football-brand-blue, #8ebce6);
+  --champ-accent-rgb: 142,188,230;
+  border-color: #37434e;
+  background: radial-gradient(ellipse at 75% 6%, rgba(49,92,128,.19), transparent 50%),
+              linear-gradient(155deg, #171d23 0%, #12151a 56%, #101114 100%);
+}
+.home-champ-preview[data-sport="ufc"] {
+  --champ-accent: #f2474e;
+  --champ-accent-rgb: 242,71,78;
+  border-color: #493137;
+  background: radial-gradient(ellipse at 75% 6%, rgba(149,24,31,.18), transparent 51%),
+              linear-gradient(155deg, #20181b 0%, #161416 56%, #111114 100%);
+}
+.home-champ-preview[data-sport="mlb"] {
+  --champ-accent: #75c69c;
+  --champ-accent-rgb: 117,198,156;
+  border-color: #35473d;
+}
+.home-champ-preview::before {
+  content: "";
+  position: absolute;
+  inset: 48px -30px auto;
+  height: 200px;
+  pointer-events: none;
+  opacity: .16;
+  z-index: -1;
+  background: repeating-linear-gradient(95deg, transparent 0 27px, rgba(var(--champ-accent-rgb), .13) 28px 29px, transparent 30px 56px);
+  mask-image: radial-gradient(ellipse at 50% 45%, black, transparent 75%);
+}
+.home-champ-preview[data-sport="ufc"]::before {
+  background: repeating-linear-gradient(60deg, transparent 0 37px, rgba(var(--champ-accent-rgb), .2) 38px 39px, transparent 40px 75px),
+              repeating-linear-gradient(-60deg, transparent 0 37px, rgba(var(--champ-accent-rgb), .2) 38px 39px, transparent 40px 75px);
 }
 .home-champ-preview__top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   min-width: 0;
 }
 .home-champ-preview__top h2 {
   margin: 0;
-  font-size: clamp(17px, 4.7vw, 22px);
-  letter-spacing: -.035em;
+  font-size: clamp(18px, 5vw, 23px);
+  letter-spacing: -.055em;
+  line-height: 1.1;
 }
 .home-champ-preview__top small {
-  color: var(--text-muted);
+  display: block;
+  margin-top: 4px;
+  color: #a3a8b1;
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: .08em;
+  letter-spacing: .10em;
 }
 .home-champ-preview__filter { position: relative; flex: none; }
 .home-champ-preview__filter select {
-  min-height: 35px;
-  width: 125px;
-  max-width: 38vw;
-  padding: 0 22px 0 10px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--surface-raised);
-  color: var(--text-primary);
+  width: 122px;
+  max-width: 40vw;
+  min-height: 36px;
+  padding: 0 24px 0 12px;
+  border: 1px solid #464a51;
+  border-radius: 12px;
+  background: #23252a;
+  color: #fff;
   font: inherit;
   font-size: 12px;
   font-weight: 800;
+  transition: border-color .2s ease;
 }
-.home-champ-preview__overview {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 7px;
+.home-champ-preview__filter select:focus-visible {
+  outline: 2px solid var(--champ-accent);
+  outline-offset: 3px;
 }
-.home-champ-preview__summary {
-  color: inherit;
-  text-decoration: none;
-  transition: border-color .15s ease, transform .15s ease;
-  display: grid;
-  align-content: center;
-  gap: 6px;
-  padding: 12px 8px;
-  min-width: 0;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface-raised);
-  text-align: center;
-}
-.home-champ-preview__summary[data-sport="football"] { border-top: 2px solid var(--football-brand-blue, #8EBCE6); }
-.home-champ-preview__summary[data-sport="ufc"] { border-top: 2px solid var(--ufc-red, #d20a0a); }
-.home-champ-preview__summary[data-sport="mlb"] { border-top: 2px solid var(--mlb-green, #2f855f); }
-.home-champ-preview__summary > span,
-.home-champ-preview__summary > small {
-  font-size: 9px;
-  line-height: 1.28;
-  color: var(--text-secondary);
-  font-weight: 800;
-}
-.home-champ-preview__summary > strong {
-  font-size: 30px;
-  letter-spacing: -.055em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-.home-champ-preview__streak {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 3px 1px;
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 800;
-}
-.home-champ-preview__streak strong {
-  color: var(--text-primary);
-  font-size: 13px;
-}
-/* The selected sport uses the existing Your HQ surface—not a second panel. */
 .home-champ-preview__detail {
-  --champ-accent: var(--hq-neutral-accent);
-  --champ-accent-rgb: var(--hq-neutral-accent-rgb);
   display: grid;
-  gap: 12px;
-  padding: 0;
-  border: 0;
-  background: transparent;
   min-width: 0;
-}
-.home-champ-preview__detail[data-sport="football"] {
-  --champ-accent: var(--football-brand-blue);
-  --champ-accent-rgb: var(--football-brand-blue-rgb);
-}
-.home-champ-preview__detail[data-sport="ufc"] {
-  --champ-accent: var(--ufc-red-strong);
-  --champ-accent-rgb: 210,10,10;
-}
-.home-champ-preview__detail[data-sport="mlb"] {
-  --champ-accent: var(--mlb-green-strong);
-  --champ-accent-rgb: var(--mlb-green-rgb);
+  gap: 12px;
+  animation: hq-champ-enter .38s ease-out both;
 }
 .home-champ-preview__kicker {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
   color: var(--champ-accent);
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: .085em;
+  letter-spacing: .13em;
 }
 .home-champ-preview__kicker::before {
   content: "";
-  display: block;
-  width: 3px;
-  height: 12px;
   flex: none;
-  border-radius: 2px;
+  width: 3px;
+  height: 14px;
+  border-radius: 3px;
   background: var(--champ-accent);
+  box-shadow: 0 0 11px rgba(var(--champ-accent-rgb), .3);
 }
-.home-champ-preview__headline {
+.home-champ-preview__hero {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  justify-items: center;
+  padding: 4px 0 6px;
+  gap: 4px;
+  text-align: center;
 }
-.home-champ-preview__headline > a {
+.home-champ-preview__honor {
   display: grid;
-  align-content: center;
-  gap: 3px;
-  min-width: 0;
-  min-height: 64px;
-  padding: 2px 0;
+  justify-items: center;
+  gap: 5px;
+  color: #e7c16f;
+  font-size: clamp(12px, 3.8vw, 15px);
+  font-weight: 900;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  text-shadow: 0 0 23px rgba(218,171,80,.11);
+}
+.home-champ-preview__trophy {
+  width: 31px;
+  height: 31px;
+  filter: drop-shadow(0 0 13px rgba(211,171,91,.23));
+}
+.home-champ-preview__detail:has(.home-champ-preview__honor) .home-champ-preview__rank-link {
+  margin-top: 2px;
+}
+.home-champ-preview__rank-link,
+.home-champ-preview__season-link {
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  padding: 0 8px;
   color: inherit;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 10px;
 }
-.home-champ-preview__headline strong {
-  font-size: clamp(33px, 10vw, 43px);
-  letter-spacing: -.065em;
-  line-height: 1.04;
+.home-champ-preview__rank-link strong {
+  font-size: clamp(41px, 12vw, 56px);
+  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -.075em;
   font-variant-numeric: tabular-nums;
 }
-.home-champ-preview__headline span {
-  color: var(--text-secondary);
-  font-size: 10px;
+.home-champ-preview__rank-link > span {
+  font-size: 9px;
+  color: #969eab;
+  font-weight: 850;
+  letter-spacing: .12em;
+}
+.home-champ-preview__season-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 5px;
+}
+.home-champ-preview__season-link strong {
+  font-size: clamp(30px, 8.5vw, 39px);
+  line-height: 1.08;
+  font-weight: 850;
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+}
+.home-champ-preview__season-link > span {
+  max-width: 55px;
+  text-align: left;
+  font-size: 9px;
+  line-height: 1.3;
   font-weight: 800;
-  letter-spacing: .02em;
+  letter-spacing: .12em;
+  color: var(--champ-accent);
+}
+.home-champ-preview__race {
+  display: grid;
+  gap: 8px;
+  padding: 11px 12px 10px;
+  border: 1px solid #333840;
+  border-radius: 13px;
+  background: rgba(27,30,36,.81);
+}
+.home-champ-preview__race-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 8px;
+}
+.home-champ-preview__race-top > div { display: grid; gap: 4px; min-width: 0; }
+.home-champ-preview__race-top > div > span {
+  color: #b3bac6;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .09em;
+}
+.home-champ-preview__race-top small {
+  color: var(--champ-accent);
+  font-size: 10px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+.home-champ-preview__race-top > a {
+  flex: none;
+  padding: 1px 0;
+  color: var(--champ-accent);
+  text-decoration: none;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+.home-champ-preview__race-list { display: grid; gap: 2px; }
+.home-champ-preview__competitor {
+  display: grid;
+  grid-template-columns: 17px 26px minmax(0,1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 4px 3px;
+  border-radius: 8px;
+  color: #d9dde5;
+  text-decoration: none;
+}
+.home-champ-preview__competitor.is-you { background: rgba(var(--champ-accent-rgb), .08); color: #fff; }
+.home-champ-preview__placing {
+  color: #b4b9c3;
+  font-size: 11px;
+  text-align: center;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.home-champ-preview__competitor:first-child .home-champ-preview__placing { color: #e7c16f; font-size: 15px; }
+.home-champ-preview__avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid #464d57;
+  border-radius: 9px;
+  background: #2f3540;
+  color: #d8e0eb;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: -.04em;
+}
+.home-champ-preview__competitor.is-you .home-champ-preview__avatar {
+  border-color: rgba(var(--champ-accent-rgb), .48);
+  background: rgba(var(--champ-accent-rgb), .15);
+  color: var(--champ-accent);
+}
+.home-champ-preview__competitor-main { display: grid; gap: 4px; min-width: 0; }
+.home-champ-preview__competitor-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 800;
+}
+.home-champ-preview__meter,
+.home-champ-preview__weight-track {
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #353b44;
+}
+.home-champ-preview__meter > span,
+.home-champ-preview__weight-track > i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--champ-accent);
+  box-shadow: 0 0 6px rgba(var(--champ-accent-rgb), .4);
+  transform-origin: left;
+  animation: hq-champ-bar-in .6s .12s ease-out both;
+}
+.home-champ-preview__competitor > strong {
+  min-width: 34px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
 }
 .home-champ-preview__lanes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0,1fr));
-  gap: 18px;
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
+  gap: 8px;
 }
 .home-champ-preview__lanes > a {
   display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  gap: 4px 6px;
-  align-content: center;
+  gap: 7px;
+  padding: 12px;
   min-width: 0;
-  min-height: 55px;
-  padding: 2px 0;
-  color: inherit;
+  border: 1px solid #333942;
+  border-radius: 12px;
+  background: rgba(26,29,35,.85);
+  color: #fff;
   text-decoration: none;
-  border-radius: 6px;
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
 }
 .home-champ-preview__lanes a > span:first-child {
-  grid-column: 1 / 3;
-  color: var(--text-secondary);
   font-size: 10px;
+  color: #aeb5c1;
   font-weight: 850;
-  letter-spacing: .04em;
+  letter-spacing: .07em;
 }
 .home-champ-preview__lanes strong {
-  font-size: 23px;
-  letter-spacing: -.035em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 29px;
   line-height: 1;
+  letter-spacing: -.06em;
+  font-variant-numeric: tabular-nums;
 }
 .home-champ-preview__chevron {
+  font-size: 18px;
+  font-weight: 600;
   color: var(--champ-accent);
-  font-size: 21px;
-  line-height: 1;
-  justify-self: end;
+  letter-spacing: 0;
+  transition: transform .18s ease;
 }
-.home-champ-preview__headline a:hover,
-.home-champ-preview__lanes a:hover {
-  background: rgba(var(--champ-accent-rgb), .05);
+.home-champ-preview__weight-track { height: 4px; margin-top: 2px; }
+.home-champ-preview__weight-track > i { background: var(--champ-accent); }
+.home-champ-preview__lanes > a:hover,
+.home-champ-preview__competitor:hover,
+.home-champ-preview__rank-link:hover,
+.home-champ-preview__season-link:hover {
+  background-color: rgba(var(--champ-accent-rgb), .13);
 }
-.home-champ-preview__headline a:focus-visible,
-.home-champ-preview__lanes a:focus-visible,
-.home-champ-preview__summary:focus-visible {
-  outline: 2px solid var(--champ-accent, var(--hq-neutral-accent));
-  outline-offset: 3px;
+.home-champ-preview__lanes > a:hover {
+  border-color: rgba(var(--champ-accent-rgb), .35);
+  transform: translateY(-1px);
 }
-.home-champ-preview__pending { min-height: 66px; display: grid; align-items: center; color: var(--text-secondary); font-size: 12px; }
+.home-champ-preview__lanes > a:hover .home-champ-preview__chevron { transform: translate(2px, -2px); }
+.home-champ-preview a:focus-visible { outline: 2px solid var(--champ-accent); outline-offset: 2px; }
+.home-champ-preview__pending {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  color: #aab2bf;
+  text-align: center;
+  font-size: 12px;
+}
+.home-champ-preview__overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 7px;
+}
+.home-champ-preview__summary {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px 7px;
+  border: 1px solid #39404a;
+  border-radius: 12px;
+  background: #1b1e23;
+  color: inherit;
+  text-decoration: none;
+  text-align: center;
+  transition: border-color .18s ease, transform .18s ease;
+}
+.home-champ-preview__summary[data-sport="football"] { border-top: 2px solid var(--football-brand-blue, #8ebce6); }
+.home-champ-preview__summary[data-sport="ufc"] { border-top: 2px solid #f2474e; }
+.home-champ-preview__summary[data-sport="mlb"] { border-top: 2px solid #75c69c; }
+.home-champ-preview__summary > span,
+.home-champ-preview__summary > small {
+  font-size: 9px;
+  line-height: 1.28;
+  color: #afb6c0;
+  font-weight: 800;
+}
+.home-champ-preview__summary > strong {
+  font-size: clamp(26px, 7vw, 33px);
+  font-weight: 850;
+  letter-spacing: -.06em;
+  font-variant-numeric: tabular-nums;
+}
+.home-champ-preview__summary:hover { border-color: #7a899b; transform: translateY(-1px); }
+.home-champ-preview__streak {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 1px;
+  color: #adb4be;
+  font-size: 11px;
+  font-weight: 800;
+}
+.home-champ-preview__streak strong { color: #fff; font-size: 13px; }
+.home-champ-preview__detail[data-sport="mlb"] .home-champ-preview__headline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+}
+.home-champ-preview__detail[data-sport="mlb"] .home-champ-preview__headline a {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  color: #fff;
+  text-decoration: none;
+}
+.home-champ-preview__detail[data-sport="mlb"] .home-champ-preview__headline strong {
+  font-size: clamp(30px, 8vw, 41px);
+  font-variant-numeric: tabular-nums;
+}
+.home-champ-preview__detail[data-sport="mlb"] .home-champ-preview__headline span { color: #b6bbc3; font-size: 9px; }
+@keyframes hq-champ-enter {
+  from { opacity: .35; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes hq-champ-bar-in {
+  from { transform: scaleX(.15); }
+  to { transform: scaleX(1); }
+}
 @media (max-width: 365px) {
-  .home-champ-preview { padding: 10px; }
+  .home-champ-preview { padding: 12px; gap: 11px; }
+  .home-champ-preview__race { padding: 10px 9px; }
+  .home-champ-preview__lanes > a { padding: 10px; }
   .home-champ-preview__summary { padding: 10px 4px; }
-  .home-champ-preview__summary > strong { font-size: 26px; }
   .home-champ-preview__summary > span { font-size: 8px; }
 }
-
-.home-champ-preview__summary:hover { filter: brightness(1.12); }
+@media (prefers-reduced-motion: reduce) {
+  .home-champ-preview *, .home-champ-preview *::before, .home-champ-preview *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
