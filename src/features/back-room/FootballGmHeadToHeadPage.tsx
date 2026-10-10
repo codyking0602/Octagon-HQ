@@ -27,6 +27,9 @@ import {
 } from "./footballGmEngine";
 import {
   FOOTBALL_GM_VERSION,
+  FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT,
+  footballGmEmergencyFreeAgents,
+  footballGmMarketVisitsUsed,
   footballGmAcceptedTargetTradeOffers,
   footballGmAdjustedHoldingsCap,
   footballGmAdjustedRosterCap,
@@ -58,6 +61,7 @@ import FootballGmSoloPage, {
   CandidateBoard,
   CapMeter,
   FreeAgencyBoard,
+  EmergencyFreeAgencyBoard,
   GmFootballWheel,
   PlayerHeadshot,
   PlayerDevelopmentNote,
@@ -119,6 +123,11 @@ function normalizedRun(seed: string, value: unknown): PersistedRun {
     tradeChipPlayerIds: Array.isArray(raw.tradeChipPlayerIds) ? raw.tradeChipPlayerIds : [],
     shoppedPlayerIds: Array.isArray(raw.shoppedPlayerIds) ? raw.shoppedPlayerIds : [],
     negotiationConsequences: raw.negotiationConsequences ?? {},
+    freeAgencyVisitsUsed: footballGmMarketVisitsUsed(raw.freeAgencyVisitsUsed, raw.freeAgentSpinIndex ?? 0),
+    releasedPlayerIds: [...new Set([
+      ...(Array.isArray(raw.releasedPlayerIds) ? raw.releasedPlayerIds : []),
+      ...(raw.releasedFreeAgentPlayerId ? [raw.releasedFreeAgentPlayerId] : []),
+    ])],
   };
 }
 
@@ -603,7 +612,7 @@ export default function FootballGmHeadToHeadPage() {
   const opponentHeldIds = heldPlayerIds(opponentRun);
   const exclusionIds = [...new Set([
     ...opponentHeldIds,
-    ...(run.releasedFreeAgentPlayerId ? [run.releasedFreeAgentPlayerId] : []),
+    ...run.releasedPlayerIds,
   ])];
 
   const currentDraftRoster = mode === "cpu" && localTurn === "cpu" ? cpuRun.roster : run.roster;
@@ -1016,7 +1025,8 @@ export default function FootballGmHeadToHeadPage() {
   }
 
   function spinFreeAgency() {
-    if (!canUseFreeAgency || faWheelSpinning || run.pendingFreeAgentTeam) return;
+    if (!canUseFreeAgency || faWheelSpinning || run.pendingFreeAgentTeam
+      || run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT) return;
     const teamCode = footballGmSpinTeam(
       `${run.seed}:free-agency`,
       run.freeAgentSpinIndex,
@@ -1028,7 +1038,12 @@ export default function FootballGmHeadToHeadPage() {
     }
     const index = freeAgencyWheelTeams.findIndex((team) => team.code === teamCode);
     if (index < 0 || !freeAgencyWheelTeams.length) {
-      patch({ pendingFreeAgentTeam: teamCode, tradeMessage: "" });
+      patch({
+        pendingFreeAgentTeam: teamCode,
+        freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
+        freeAgencyVisitsUsed: run.freeAgencyVisitsUsed + 1,
+        tradeMessage: "",
+      });
       return;
     }
 
@@ -1041,14 +1056,38 @@ export default function FootballGmHeadToHeadPage() {
     });
     window.setTimeout(() => {
       setFaWheelSpinning(false);
-      patch({ pendingFreeAgentTeam: teamCode, tradeMessage: "" });
+      patch({
+        pendingFreeAgentTeam: teamCode,
+        freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
+        freeAgencyVisitsUsed: run.freeAgencyVisitsUsed + 1,
+        tradeMessage: "",
+      });
     }, 1550);
   }
 
+  function passFreeAgency() {
+    if (!run.pendingFreeAgentTeam) return;
+    patch({
+      previousFreeAgentTeam: run.pendingFreeAgentTeam,
+      pendingFreeAgentTeam: null,
+      tradeMessage: "Passed on this team. One of your five visits was used.",
+    });
+  }
+
   function makeFreeAgentPick(playerId: string, slot: FootballGmRosterSlot, displacedPlayerId?: string) {
-    if (!run.pendingFreeAgentTeam || exclusionIds.includes(playerId)) return;
+    if (exclusionIds.includes(playerId)) return;
+    const emergency = !run.pendingFreeAgentTeam
+      && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT;
     const player = footballGmPlayerById(playerId);
-    if (!player || player.team !== run.pendingFreeAgentTeam) return;
+    if (!player) return;
+    if (run.pendingFreeAgentTeam ? player.team !== run.pendingFreeAgentTeam : !emergency) return;
+    if (emergency && (displacedPlayerId || !footballGmEmergencyFreeAgents({
+      roster: run.finalRoster,
+      tradeChipPlayerIds: run.tradeChipPlayerIds,
+      seed: run.seed,
+      consequences: run.negotiationConsequences,
+      excludedPlayerIds: exclusionIds,
+    }).some((candidate) => candidate.player.id === playerId && candidate.legalSlots.includes(slot)))) return;
     const next = footballGmSignFreeAgent({
       roster: run.finalRoster,
       tradeChipPlayerIds: run.tradeChipPlayerIds,
@@ -1067,9 +1106,8 @@ export default function FootballGmHeadToHeadPage() {
     patch({
       finalRoster: [...next.roster],
       tradeChipPlayerIds: [...next.tradeChipPlayerIds],
-      previousFreeAgentTeam: run.pendingFreeAgentTeam,
+      previousFreeAgentTeam: run.pendingFreeAgentTeam ?? player.team,
       pendingFreeAgentTeam: null,
-      freeAgentSpinIndex: run.freeAgentSpinIndex + 1,
       tradeMessage: displaced ? `${displaced.name} is now a trade asset.` : `${player.name} signed.`,
     });
   }
@@ -1093,6 +1131,7 @@ export default function FootballGmHeadToHeadPage() {
       finalRoster: stripped,
       voluntaryFreeAgencyUsed: true,
       releasedFreeAgentPlayerId: playerId,
+      releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
       pendingFreeAgentTeam: null,
       previousFreeAgentTeam: null,
       tradeMessage: `${player.name} released. Fill the opening through free agency.`,
@@ -1255,9 +1294,10 @@ export default function FootballGmHeadToHeadPage() {
     patch({
       tradeChipPlayerIds: run.tradeChipPlayerIds.filter((id) => id !== playerId),
       releasedFreeAgentPlayerId: playerId,
+      releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
       pendingFreeAgentTeam: null,
       previousFreeAgentTeam: null,
-      tradeMessage: player ? `${player.name} released. Free agency is open again.` : "Trade asset released.",
+      tradeMessage: player ? `${player.name} released. The vacancy remains, but your market visits do not reset.` : "Trade asset released. Market visits do not reset.",
     });
   }
 
@@ -1644,13 +1684,23 @@ export default function FootballGmHeadToHeadPage() {
                         excludedPlayerIds={exclusionIds}
                         sharedMarket
                         onPick={makeFreeAgentPick}
+                        onPass={passFreeAgency}
+                      />
+                    ) : canUseFreeAgency && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT ? (
+                      <EmergencyFreeAgencyBoard
+                        roster={run.finalRoster}
+                        tradeChipPlayerIds={run.tradeChipPlayerIds}
+                        seed={run.seed}
+                        consequences={run.negotiationConsequences}
+                        excludedPlayerIds={exclusionIds}
+                        onPick={makeFreeAgentPick}
                       />
                     ) : canUseFreeAgency ? (
                       <section className="football-gm__market-wheel">
                         <div className="football-gm__trade-stage-heading">
-                          <p className="eyebrow">FREE AGENCY · {footballGmOpenSlots(run.finalRoster).map(footballGmSlotLabel).join(" · ")} OPEN</p>
+                          <p className="eyebrow">FREE AGENCY · {run.freeAgencyVisitsUsed}/{FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT} VISITS USED · {footballGmOpenSlots(run.finalRoster).map(footballGmSlotLabel).join(" · ")} OPEN</p>
                           <h2>SPIN THE 1YR MARKET</h2>
-                          <span>Same NFL wheel. Players already held by {opponentDisplayName} are off the board.</span>
+                          <span>Five total team visits, including passes. Released players stay off the market. {opponentDisplayName}'s roster is unavailable.</span>
                         </div>
                         <GmFootballWheel
                           teams={freeAgencyWheelTeams}
