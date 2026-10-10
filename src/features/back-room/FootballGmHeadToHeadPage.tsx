@@ -1259,6 +1259,7 @@ export default function FootballGmHeadToHeadPage() {
     patch({
       finalRoster: [...next.roster],
       tradeChipPlayerIds: [...next.tradeChipPlayerIds],
+      releasedPlayerIds: [...new Set([...run.releasedPlayerIds, ...pending.cutPlayerIds])],
       pendingTradeResolution: null,
       tradeMessage: "Trade finalized.",
     });
