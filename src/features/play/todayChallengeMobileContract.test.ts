@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 const gameCss = readFileSync("src/styles/today-challenge.css", "utf8");
 const hubCss = readFileSync("src/styles/today-challenge-hub.css", "utf8");
 const hubPage = readFileSync("src/features/play/TodayChallengeHubPage.tsx", "utf8");
+const playV2 = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
 const landingPresentation = readFileSync("src/features/play/PlayLandingPresentation.tsx", "utf8");
 const playRegistry = readFileSync("src/features/play/playRegistry.ts", "utf8");
 
@@ -42,9 +43,12 @@ describe("Today’s Challenge 390×844 presentation contract", () => {
   });
 
   it("keeps the approved UFC Casual shelf compact without removing Daily game owners", () => {
-    expect(hubPage).toContain("<TodayChallengeHub />");
-    expect(hubPage).toContain("<ChallengeCenter />");
-    expect(hubPage).toContain('<PlayLandingGameLibrary sport="ufc"');
+    expect(hubPage).toContain('<PlayV2Page sport="ufc" />');
+    expect(playV2).toContain('<DailyCompact sport={sport} profileId={profileId} />');
+    expect(playV2).toContain('<MatchupsCompact sport={sport} />');
+    expect(playV2).toContain('<GameRoom sport={sport} />');
+    expect(playV2).toContain('playLandingGameIds(sport)');
+    expect(hubPage).not.toContain('<ChallengeCenter />');
     expect(landingPresentation).toContain('"wheel-ufc"');
     expect(landingPresentation).toContain('"auction"');
     expect(landingPresentation).toContain('"find-leader"');
