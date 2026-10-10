@@ -40,6 +40,7 @@ describe("The GM head-to-head presentation", () => {
     expect(page).toContain("freeAgentSpinIndex: run.freeAgentSpinIndex + 1");
     expect(page).toContain("onPass={passFreeAgency}");
     expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])]");
+    expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, ...pending.cutPlayerIds])]");
     expect(page).toContain("run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT");
     expect(page).toContain("<EmergencyFreeAgencyBoard");
     expect(page).toContain("excludedPlayerIds={exclusionIds}");
