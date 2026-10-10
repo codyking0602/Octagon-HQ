@@ -423,3 +423,169 @@
   letter-spacing: 1.1px;
   white-space: nowrap;
 }
+
+
+/* Reusable presentation for the scheduled Cowboys and Lone Star special days.
+   The Oct 10 Red River appearance remains scoped to its existing selectors. */
+.home-challenge-card[data-special-daily="team"] {
+  border-color: color-mix(in srgb, var(--special-daily-primary) 70%, var(--special-daily-opponent));
+  background:
+    radial-gradient(circle at 4% 0%, rgba(var(--special-daily-primary-rgb), .19), transparent 65%),
+    radial-gradient(circle at 98% 90%, rgba(var(--special-daily-opponent-rgb), .17), transparent 65%),
+    var(--surface);
+  box-shadow: inset 3px 0 var(--special-daily-primary), inset -3px 0 var(--special-daily-opponent);
+}
+
+.home-challenge-card[data-special-daily="team"] .football-special-daily-hub-mark,
+.today-hub[data-special-daily="true"] .today-hub-card.is-special-daily .football-special-daily-hub-mark {
+  border-color: color-mix(in srgb, var(--special-daily-primary) 65%, var(--special-daily-opponent));
+  background: linear-gradient(100deg, rgba(var(--special-daily-primary-rgb), .26), rgba(var(--special-daily-opponent-rgb), .18));
+}
+
+.today-hub[data-special-daily="true"] .today-hub-card.is-special-daily::before {
+  background: linear-gradient(90deg, var(--special-daily-primary) 0 50%, var(--special-daily-opponent) 50% 100%);
+}
+
+/* Official Millionaire rules and gameplay are rendered into a document.body portal.
+   Place variables and branding directly on that shell, not its Football page parent. */
+.millionaire-shell--rules[data-special-daily="true"]:not([data-red-river="true"]) {
+  background:
+    radial-gradient(ellipse at 18% 15%, rgba(var(--special-daily-primary-rgb), .26), transparent 60%),
+    radial-gradient(ellipse at 85% 66%, rgba(var(--special-daily-opponent-rgb), .27), transparent 60%),
+    #050913;
+}
+
+.millionaire-shell--rules[data-special-daily="true"]:not([data-red-river="true"]) .millionaire-rules {
+  box-shadow: 0 0 0 2px var(--special-daily-primary), 0 0 35px rgba(var(--special-daily-opponent-rgb), .18);
+}
+
+.millionaire-shell--rules[data-special-daily="true"]:not([data-red-river="true"]) .millionaire-rules > header > span {
+  color: var(--special-daily-secondary);
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.millionaire-shell--special-daily:not(.millionaire-shell--red-river) .millionaire-stage-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--special-daily-primary) 0 50%, var(--special-daily-opponent) 50% 100%) top / 100% 8px no-repeat;
+  box-shadow: inset 0 0 105px rgba(var(--special-daily-primary-rgb), .12);
+}
+
+.millionaire-shell--special-daily:not(.millionaire-shell--red-river) .millionaire-title span {
+  font-size: 18px;
+  letter-spacing: 2.6px;
+  color: #fff;
+}
+
+.millionaire-shell--special-daily:not(.millionaire-shell--red-river) .millionaire-title::after {
+  background: linear-gradient(90deg, var(--special-daily-primary), #f5d998 50%, var(--special-daily-opponent));
+}
+
+.millionaire-shell--special-daily .millionaire-special-event-plate {
+  position: absolute;
+  z-index: 26;
+  top: 26px;
+  left: 184px;
+  width: 398px;
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid color-mix(in srgb, var(--special-daily-primary) 52%, #c4d2e2);
+  border-top: 4px solid var(--special-daily-primary);
+  border-radius: 10px;
+  background: linear-gradient(110deg, rgba(var(--special-daily-primary-rgb), .88), rgba(20, 27, 36, .96) 50%, rgba(var(--special-daily-opponent-rgb), .65));
+  box-shadow: 0 6px 28px rgba(0, 0, 0, .45);
+  color: #fff;
+  text-align: center;
+  pointer-events: none;
+}
+
+.millionaire-shell--special-daily .millionaire-special-event-plate img {
+  width: 55px;
+  height: 55px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .58));
+}
+
+.millionaire-shell--special-daily .millionaire-special-event-plate span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.millionaire-shell--special-daily .millionaire-special-event-plate strong {
+  font-size: 17px;
+  font-weight: 950;
+  letter-spacing: .7px;
+  white-space: nowrap;
+}
+
+.millionaire-shell--special-daily .millionaire-special-event-plate small {
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .8px;
+  color: #e7eff8;
+  white-space: nowrap;
+}
+
+
+/* Sports Feud also portals to document.body. Keep the action board untouched;
+   add themed stage lighting and an event plate on the introductory scene only. */
+.family-feud-prototype.feud-special-day {
+  background:
+    radial-gradient(circle at 10% 4%, rgba(var(--special-daily-primary-rgb), .26), transparent 42%),
+    radial-gradient(circle at 91% 16%, rgba(var(--special-daily-opponent-rgb), .21), transparent 43%),
+    linear-gradient(180deg, #062153 0%, #03122f 46%, #010713 100%);
+}
+.family-feud-prototype.feud-special-day::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background: linear-gradient(90deg, var(--special-daily-primary) 0 50%, var(--special-daily-opponent) 50% 100%) top / 100% 5px no-repeat;
+  pointer-events: none;
+}
+.feud-special-day .feud-intro__special-event {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: min(350px, calc(100vw - 48px));
+  padding: 7px 11px;
+  margin-bottom: 15px;
+  border: 1px solid color-mix(in srgb, var(--special-daily-primary) 52%, var(--special-daily-opponent));
+  border-radius: 12px;
+  background: linear-gradient(105deg, rgba(var(--special-daily-primary-rgb), .31), rgba(var(--special-daily-opponent-rgb), .28));
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
+}
+.feud-special-day .feud-intro__special-event img {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.feud-special-day .feud-intro__special-event span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.feud-special-day .feud-intro__special-event strong {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+.feud-special-day .feud-intro__special-event small {
+  color: #e4edf8;
+  font-size: 9px;
+  font-weight: 800;
+}

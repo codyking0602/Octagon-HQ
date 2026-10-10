@@ -30,6 +30,8 @@ import {
 } from "./sportsFeudPresentation";
 import "./FamilyFeudPrototypePage.css";
 import "./SportsFeudRevealPass.css";
+import { footballSpecialDailyStyle, footballSpecialDailyThemeForDay } from "./footballSpecialDailyTheme";
+import "../../styles/football-special-daily.css";
 
 type JsonRecord = Record<string, unknown>;
 type Scene = "intro" | "main" | "fast-intro" | "fast" | "reveal" | "fast-recap" | "result";
@@ -556,19 +558,23 @@ export function OfficialSportsFeudDailyView({
     );
   }
 
+  const specialTheme = projection.sport === "football" ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
   const view = (
     <main
       className={[
         "family-feud-prototype",
+        specialTheme ? "feud-special-day" : "",
         "feud-scene--" + scene,
         keyboardOpen ? "is-keyboard-open" : "",
       ].filter(Boolean).join(" ")}
       data-scope={domain === "mlb" ? "mlb" : projection.sport === "football" ? "football" : "ufc"}
       data-scene={scene}
+      data-special-daily={specialTheme ? "true" : undefined}
       data-main-reveal={mainRevealPhase}
       style={{
         "--feud-keyboard-inset": keyboardInset + "px",
         "--feud-viewport-offset": viewportOffsetTop + "px",
+        ...(specialTheme ? footballSpecialDailyStyle(specialTheme) : {}),
       } as CSSProperties}
     >
       <StagePlate />
@@ -578,6 +584,13 @@ export function OfficialSportsFeudDailyView({
 
       {scene === "intro" ? (
         <section className="feud-intro" aria-labelledby="official-feud-intro-title">
+          {specialTheme ? (
+            <div className="feud-intro__special-event" aria-label={`${specialTheme.eventLabel}: ${specialTheme.matchup}`}>
+              <img src={specialTheme.teamLogo} alt="" referrerPolicy="no-referrer" />
+              <span><strong>{specialTheme.eventLabel}</strong><small>{specialTheme.matchup}</small></span>
+              <img src={specialTheme.opponentLogo} alt="" referrerPolicy="no-referrer" />
+            </div>
+          ) : null}
           <div className="feud-intro__eyebrow">{hqName} · {challengeLabel}</div>
           <Brand />
           <h1 id="official-feud-intro-title">Clear the board.</h1>
