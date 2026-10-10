@@ -109,7 +109,7 @@ function gameProgress(projection: TodayChallengeProjection) {
   }
 }
 
-function DailyAnswerDetail({
+export function DailyAnswerDetail({
   entry,
   projection,
   onClose,
