@@ -1,28 +1,44 @@
 import { Link, Navigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import { memberProfilePath, normalizeMemberName } from "../members/memberProfilesModel";
 import type { PlaySport } from "./playRegistry";
 import { playV2Score } from "./playV2Stats";
 import { usePlayV2History } from "./usePlayV2History";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import "../../styles/play-v2.css";
 
-export default function PlayV2StatsPage({ sport }: { sport: PlaySport }) {
+export default function PlayV2StatsPage({ sport, memberName }: { sport: PlaySport; memberName?: string }) {
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? "";
-  const history = usePlayV2History(sport, identity.profile?.canControlPicks === true ? profileId : "");
+  const isMemberView = memberName !== undefined;
+  const displayName = isMemberView ? normalizeMemberName(memberName) : "Your";
+  const history = usePlayV2History(
+    sport,
+    profileId && (isMemberView || identity.profile?.canControlPicks === true) ? profileId : "",
+    isMemberView ? displayName : undefined,
+  );
   if (identity.status === "loading") return <div className="page"><p>Loading account…</p></div>;
-  if (!profileId || identity.profile?.canControlPicks !== true) {
+  if (!profileId || (!isMemberView && identity.profile?.canControlPicks !== true)) {
     return <Navigate to={sport === "football" ? "/football" : "/play"} replace />;
   }
-  const back = sport === "football" ? "/football" : "/play";
+  const back = isMemberView ? memberProfilePath(displayName) : sport === "football" ? "/football" : "/play";
   const summary = history.performance;
   return (
     <div className="page play-v2 play-v2__stats-page" data-sport={sport}>
       <header className="play-v2__stats-heading">
-        <Link to={back}>← BACK TO PLAY</Link>
-        <span>MY PLAY STATS · {sport.toUpperCase()} · OFFICIAL DAILY</span>
-        <h1>Your Performance</h1>
-        <p>Normalized official scores out of 100. These are your actual game results, not Championship placement points.</p>
+        <Link to={back}>← {isMemberView ? "BACK TO PROFILE" : "BACK TO PLAY"}</Link>
+        <span>{isMemberView ? displayName + "'S" : "MY"} PLAY STATS · {sport.toUpperCase()} · OFFICIAL DAILY</span>
+        <h1>{isMemberView ? displayName + "'s Performance" : "Your Performance"}</h1>
+        <p>Actual official Daily results normalized out of 100, not Championship placement points.</p>
+        {isMemberView ? (
+          <nav className="play-v2__sport-tabs" aria-label="Member sport performance">
+            {(["football", "ufc"] as const).map((tab) => (
+              <Link key={tab} className={sport === tab ? "is-active" : ""}
+                aria-current={sport === tab ? "page" : undefined}
+                to={back + "/play-stats/" + tab}>{tab.toUpperCase()}</Link>
+            ))}
+          </nav>
+        ) : null}
       </header>
       {history.loading ? <div className="play-v2__performance" role="status">Loading official history…</div>
         : history.error ? <div className="play-v2__performance"><p>Official history could not be loaded.</p>
