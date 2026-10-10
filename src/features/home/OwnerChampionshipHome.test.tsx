@@ -88,7 +88,8 @@ describe("Owner Championship Home preview", () => {
   it("renders trophy-case summaries using real, separate sport championship finishes", async () => {
     render(<Preview />);
     const cabinet = screen.getByRole("region", { name: "Your HQ" });
-    expect(await within(cabinet).findByText("2026 CHAMPIONSHIP HEADQUARTERS")).toBeInTheDocument();
+    expect(await within(cabinet).findByText("91.3 SEASON SCORE")).toBeInTheDocument();
+    expect(within(cabinet).getByText("2026 CHAMPIONSHIP HEADQUARTERS")).toBeInTheDocument();
     expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("1");
     expect(within(cabinet).getByText("LEAGUE LEAD")).toBeInTheDocument();
     expect(within(cabinet).getByText("Across 3 championships")).toBeInTheDocument();
@@ -110,7 +111,8 @@ describe("Owner Championship Home preview", () => {
     });
     render(<Preview />);
     const cabinet = screen.getByRole("region", { name: "Your HQ" });
-    expect(await within(cabinet).findByText("LEAGUE LEADS")).toBeInTheDocument();
+    expect(await within(cabinet).findByText("93 PTS")).toBeInTheDocument();
+    expect(within(cabinet).getByText("LEAGUE LEADS")).toBeInTheDocument();
     expect(within(cabinet).getByTestId("hq-league-leads")).toHaveTextContent("3");
     expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon.is-leading")).toHaveLength(3);
     expect(within(cabinet).getByText("93 PTS")).toBeInTheDocument();
@@ -120,7 +122,7 @@ describe("Owner Championship Home preview", () => {
     const football = projection("football");
     const shane = {
       ...football.own, profile_id: "22222222-2222-4222-8222-222222222222",
-      display_name: "SHANE", initials: "S", rank: 2, rating: 89.2, is_current_user: false,
+      display_name: "SHANE", initials: "S", rank: 2, rating: 89.1, is_current_user: false,
     };
     const troy = {
       ...football.own, profile_id: "33333333-3333-4333-8333-333333333333",
@@ -136,7 +138,7 @@ describe("Owner Championship Home preview", () => {
     expect(hero.querySelectorAll(".home-champ-preview__competitor")).toHaveLength(3);
     expect(hero.querySelectorAll(".home-champ-preview__meter")).toHaveLength(3);
     expect(hero.querySelectorAll(".home-champ-preview__weight-track")).toHaveLength(2);
-    expect(within(hero).getByText("+2.0 over SHANE")).toBeInTheDocument();
+    expect(within(hero).getByText("+2.2 over SHANE")).toBeInTheDocument();
     expect(within(hero).getByRole("link", { name: "View TROY Championship standing" })).toHaveAttribute(
       "href", "/championship/football?tab=overall&player=33333333-3333-4333-8333-333333333333");
   });
