@@ -10,9 +10,10 @@ import {
 describe("Football special Daily theme", () => {
   it("maps only the four locked Cowboys and Longhorns event dates", () => {
     expect(footballSpecialDailyThemeForDay("2026-10-10")).toMatchObject({
-      eventLabel: "RED RIVER EDITION",
+      eventLabel: "RED RIVER SHOWDOWN",
       matchup: "TEXAS vs OKLAHOMA",
       teamName: "Texas",
+      opponentPrimary: "#841617",
     });
     expect(footballSpecialDailyThemeForDay("2026-10-26")).toMatchObject({
       eventLabel: "RIVALRY GAME EDITION",
@@ -35,6 +36,7 @@ describe("Football special Daily theme", () => {
     expect(footballSpecialDailyStyle(theme)).toMatchObject({
       "--special-daily-primary": "#BF5700",
       "--special-daily-secondary": "#F4E9DA",
+      "--special-daily-rival": "#841617",
     });
   });
 
