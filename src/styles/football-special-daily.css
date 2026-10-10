@@ -295,3 +295,141 @@
     animation: none;
   }
 }
+
+
+/* Red River is a single-day edition, not a replacement for Millionaire's
+   locked dark stage, lifelines, or answer-state colors. */
+.today-hub-card.is-red-river {
+  border-color: rgba(191, 87, 0, 0.72);
+  background:
+    radial-gradient(circle at 16% 4%, rgba(191, 87, 0, 0.18), transparent 52%),
+    radial-gradient(circle at 92% 90%, rgba(132, 22, 23, 0.2), transparent 45%),
+    linear-gradient(145deg, var(--surface-raised), var(--surface));
+  box-shadow:
+    inset 0 4px 0 #bf5700,
+    0 13px 34px rgba(80, 24, 9, 0.12);
+}
+
+.today-hub-card.is-red-river::before {
+  background: linear-gradient(90deg, #bf5700 0 50%, #841617 50% 100%);
+}
+
+.football-special-daily-hub-mark.is-red-river {
+  border-color: color-mix(in srgb, #bf5700 42%, #841617 58%);
+  background: linear-gradient(110deg, rgba(191, 87, 0, 0.16), rgba(132, 22, 23, 0.17));
+}
+
+.football-special-daily-hub-mark.is-red-river small {
+  color: var(--text-primary);
+}
+
+.today-hub-red-river-note {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 0.58rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+}
+
+.football-special-daily-page:has(.millionaire-shell--red-river) .football-special-daily-ribbon {
+  border-top: 3px solid #bf5700;
+}
+
+.football-special-daily-intro:has(+ .football-special-daily-ribbon) {
+  background:
+    radial-gradient(circle at center, rgba(9, 10, 13, 0.76), rgba(5, 7, 12, 0.97) 68%),
+    linear-gradient(90deg, #bf5700 0 50%, #841617 50% 100%);
+}
+
+/* The official Millionaire screen is portal-mounted under document.body.
+   These direct shell selectors intentionally cross that portal boundary. */
+.millionaire-shell--red-river.millionaire-shell--rules {
+  background:
+    radial-gradient(ellipse at 28% 28%, rgba(191, 87, 0, 0.32), transparent 55%),
+    radial-gradient(ellipse at 78% 65%, rgba(132, 22, 23, 0.36), transparent 60%),
+    #050913;
+}
+
+.millionaire-shell--red-river .millionaire-rules > header > span {
+  color: #fbd29d;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+}
+
+.millionaire-shell--red-river .millionaire-stage-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(90deg, #bf5700 0 50%, #841617 50% 100%) top / 100% 8px no-repeat;
+  box-shadow: inset 0 0 115px rgba(119, 36, 18, 0.17);
+}
+
+.millionaire-shell--red-river .millionaire-title span {
+  color: #fff0d9;
+  font-size: 18px;
+  letter-spacing: 3px;
+}
+
+.millionaire-shell--red-river .millionaire-title::after {
+  background: linear-gradient(90deg, #bf5700, #f7cd77 50%, #841617);
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate {
+  position: absolute;
+  z-index: 26;
+  top: 26px;
+  left: 184px;
+  width: 398px;
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid rgba(246, 205, 144, 0.55);
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, #bf5700 0 50%, #841617 50% 100%) 1;
+  border-radius: 10px;
+  background: linear-gradient(105deg, rgba(95, 38, 5, 0.86), rgba(23, 19, 22, 0.95) 50%, rgba(80, 11, 16, 0.88));
+  color: #fff5e5;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  pointer-events: none;
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate img {
+  flex: 0 0 auto;
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.6));
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate strong {
+  font-size: 17px;
+  font-weight: 950;
+  letter-spacing: 1.1px;
+  white-space: nowrap;
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate small {
+  color: #f9dba7;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.1px;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .millionaire-shell--red-river .millionaire-red-river-plate { transition: none; }
+}
