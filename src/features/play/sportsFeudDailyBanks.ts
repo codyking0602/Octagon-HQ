@@ -72,6 +72,63 @@ const UFC_FAST = [
   ...UFC_SPORTS_FEUD_FAST_5,
 ] as const;
 
+// One-time board replacement after auditing the Oct 10 first-play answers.
+// The replacement is objectively gradeable (unlike "fights fans recommend").
+const UFC_OCT10_SECOND_BOARD: SportsFeudAuthoredQuestion = {
+  id: "ufc-main-20261010-submissions",
+  category: "submission-finishes",
+  collisionGroup: "submission-finishes",
+  entityKind: "other",
+  prompt: "Name a submission hold that has finished a UFC fight.",
+  answers: [
+    { name: "Rear-naked choke", aliases: ["Rear naked choke", "RNC", "Rear naked", "Back choke"] },
+    { name: "Armbar", aliases: ["Arm bar", "Straight armbar", "Juji gatame"] },
+    { name: "Guillotine choke", aliases: ["Guillotine"] },
+    { name: "Triangle choke", aliases: ["Triangle"] },
+    { name: "Kimura", aliases: ["Kimura lock", "Double wrist lock"] },
+    { name: "Heel hook", aliases: ["Heelhook"] },
+    { name: "Arm-triangle choke", aliases: ["Arm triangle", "Head and arm choke", "Kata gatame"] },
+    { name: "D'Arce choke", aliases: ["Darce", "Darce choke", "Brabo choke"] },
+  ],
+  alsoAcceptedAnswers: [
+    { name: "Anaconda choke", aliases: ["Anaconda"] },
+    { name: "Kneebar", aliases: ["Knee bar"] },
+    { name: "Toe hold", aliases: ["Toe-hold"] },
+    { name: "Straight ankle lock", aliases: ["Ankle lock", "Achilles lock"] },
+    { name: "Calf slicer", aliases: ["Calf crusher"] },
+    { name: "Von Flue choke", aliases: ["Von Flue", "Von Preux choke"] },
+    { name: "Neck crank", aliases: ["Crank"] },
+    { name: "Omoplata", aliases: ["Omo plata"] },
+    { name: "Ezekiel choke", aliases: ["Ezekiel"] },
+    { name: "Gogoplata", aliases: ["Gogo plata"] },
+    { name: "Twister", aliases: ["Twister submission"] },
+    { name: "North-south choke", aliases: ["North south choke"] },
+    { name: "Peruvian necktie", aliases: ["Peruvian neck tie"] },
+    { name: "Bulldog choke", aliases: ["Bulldog"] },
+  ],
+};
+
+function oct10UfcMainBoards(): readonly SportsFeudAuthoredQuestion[] {
+  const first = selectMain("ufc", "2026-10-10")[0]!;
+  if (first.id !== "ufc-main-06-5") {
+    throw new Error("Oct 10 UFC board changed unexpectedly: re-audit before releasing.");
+  }
+  return [
+    {
+      ...first,
+      // Showmanship outside the cage isn't limited to trash-talk specialists.
+      alsoAcceptedAnswers: [
+        ...(first.alsoAcceptedAnswers ?? []),
+        { name: "Jon Jones", aliases: ["Bones", "Jon Bones Jones"] },
+        { name: "Brock Lesnar", aliases: ["Brock"] },
+        { name: "Ronda Rousey", aliases: ["Ronda"] },
+        { name: "Israel Adesanya", aliases: ["Izzy", "The Last Stylebender"] },
+      ],
+    },
+    UFC_OCT10_SECOND_BOARD,
+  ];
+}
+
 const BANKS = {
   cfb: { main: CFB_SPORTS_FEUD_MAIN, fast: CFB_FAST },
   nfl: { main: NFL_SPORTS_FEUD_MAIN, fast: NFL_FAST },
@@ -279,6 +336,9 @@ for (const question of [
 for (const themed of FOOTBALL_THEMED_SPORTS_FEUD_QUESTIONS) {
   CURRENT_QUESTION_INDEX.set(themed.question.id, themed);
 }
+for (const question of oct10UfcMainBoards()) {
+  CURRENT_QUESTION_INDEX.set(question.id, { domain: "ufc", question });
+}
 
 export function sportsFeudCurrentEntityMetadata(
   entityId: string,
@@ -416,7 +476,9 @@ export function buildSportsFeudPack(
     ? themedPack.main
     : useSep24UfcPrototype
       ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main
-      : selectMain(domain, day);
+      : domain === "ufc" && day === "2026-10-10"
+        ? oct10UfcMainBoards()
+        : selectMain(domain, day);
   const authoredFast = themedPack
     ? themedPack.fastMoney
     : useSep24UfcPrototype
