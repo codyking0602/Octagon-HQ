@@ -119,7 +119,7 @@ describe("The GM head-to-head presentation", () => {
 
   it("keeps one shared player market and hands the whole offseason to one GM at a time", () => {
     expect(page).toContain("excludedPlayerIds={opponentHeldIds}");
-    expect(page).toContain("Players already held by");
+    expect(page).toContain("Released players stay off the market.");
     expect(page).toContain("FINISH OFFSEASON");
     expect(page).toContain("They get their entire offseason first.");
     expect(migration).toContain("That player was already drafted in this match");
