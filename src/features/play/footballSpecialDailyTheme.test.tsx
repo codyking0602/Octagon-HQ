@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
+import { footballThemedMillionaireRunForDay, footballThemedSportsFeudPackForDay, footballThemedBarTriviaRunForDay } from "./footballTeamThemeDailyPacks";
 import { describe, expect, it } from "vitest";
 import {
   FootballSpecialDailyChrome,
@@ -68,6 +69,17 @@ describe("Football special Daily theme", () => {
       expect(hub).toContain(label.replaceAll("&", "&amp;"));
       expect(hub.match(/<img /g)).toHaveLength(2);
     }
+  });
+
+  it("pairs each future themed presentation with its already-authored game content", () => {
+    expect(footballThemedMillionaireRunForDay("2026-10-26")).toHaveLength(8);
+    expect(footballThemedMillionaireRunForDay("2026-11-27")).toBeNull();
+    const longhornFeud = footballThemedSportsFeudPackForDay("cfb", "2026-11-27");
+    expect(longhornFeud?.main).toHaveLength(2);
+    expect(longhornFeud?.fastMoney).toHaveLength(5);
+    expect(footballThemedSportsFeudPackForDay("nfl", "2026-11-27")).toBeNull();
+    expect(footballThemedBarTriviaRunForDay("2026-12-07")).toHaveLength(10);
+    expect(footballThemedBarTriviaRunForDay("2026-10-26")).toBeNull();
   });
 
   it("renders matchup branding and a score-aware result stamp", () => {
