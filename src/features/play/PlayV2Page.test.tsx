@@ -129,6 +129,33 @@ describe("public Football/UFC Play 2.0 release", () => {
     expect(within(daily).getByRole("button", { name: /today's standings/i })).toBeInTheDocument();
   });
 
+  it.each([
+    ["2026-10-26", "RIVALRY GAME EDITION: COWBOYS @ EAGLES", "#041E42", "#004C54", "millionaire"],
+    ["2026-11-27", "LONE STAR SHOWDOWN: TEXAS @ TEXAS A&M", "#BF5700", "#500000", "sports_feud"],
+    ["2026-12-07", "COWBOYS GAME DAY: COWBOYS @ SEAHAWKS", "#041E42", "#69BE28", "bar_trivia"],
+  ])("features %s on Football Play with its own two-team colors, not Red River", (day, label, primary, opponent, gameType) => {
+    mocked.runtime.mockReturnValue({
+      projection: { centralDay: day, gameType, progressRevision: 0,
+        officialAttempt: null, publicState: {} },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 1, average: 80, best: 80, recent: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    const view = preview("football");
+    const daily = within(view.container).getByRole("region", { name: "Today's Challenge" });
+    expect(daily).toHaveAttribute("data-special-daily", "team");
+    expect(daily).toHaveStyle({
+      "--special-daily-primary": primary,
+      "--special-daily-opponent": opponent,
+    });
+    expect(within(daily).getByLabelText(label)).toBeInTheDocument();
+    expect(within(daily).queryByText("RED RIVER EDITION")).not.toBeInTheDocument();
+    expect(within(daily).queryByRole("link", { name: /rivalry video/i })).not.toBeInTheDocument();
+    expect(within(daily).getByRole("button", { name: /play today/i })).toBeInTheDocument();
+  });
+
   it("does not carry Red River styling into UFC or another Football day", () => {
     mocked.runtime.mockReturnValue({
       projection: { centralDay: "2026-10-10", gameType: "sports_feud", progressRevision: 0,
