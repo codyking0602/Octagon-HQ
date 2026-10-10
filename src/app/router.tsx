@@ -36,6 +36,7 @@ const FootballWeeklySuperteamLabPage = lazy(() => import("../features/back-room/
 const FootballWeeklyNflTeamSeasonLabPage = lazy(() => import("../features/back-room/FootballWeeklyNflTeamSeasonLabPage"));
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
 const PlayV2StatsPage = lazy(() => import("../features/play/PlayV2StatsPage"));
+const MemberPlayStatsPage = lazy(() => import("../features/play/PlayV2StatsPage").then((module) => ({ default: module.MemberPlayStatsPage })));
 const OwnerAverageFanDailyPreviewPage = lazy(() => import("../features/play/OwnerAverageFanDailyPreviewPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
@@ -75,6 +76,7 @@ export const appRoutes: RouteObject[] = [
       { path: "intelligence", element: <IntelligencePage /> },
       { path: "members", element: <MemberDirectoryPage /> },
       { path: "members/:memberName", element: <MemberProfilePage /> },
+      { path: "members/:memberName/play-stats/:sport", element: <MemberPlayStatsPage /> },
       { path: "notifications", element: <NotificationCenterPage /> },
       { path: "impostor", element: <HqImpostorPage /> },
       { path: "play", element: <TodayChallengeHubPage /> },
