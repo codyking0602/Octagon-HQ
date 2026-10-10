@@ -119,7 +119,7 @@ describe("owner Play 2.0 preview", () => {
     mocked.profiles.push({ id: "22222222-2222-4222-8222-222222222222", displayName: "TYLER",
       initials: "T", avatarPhotoData: "data:image/png;base64,photo" });
     mocked.challenges.push({
-      code: "GMTEST", gameId: "gm-football", gameTitle: "The GM", gameVersion: "v1",
+      code: "GMTEST", gameId: "gm-football", gameTitle: "The GM", gameVersion: "football-gm-v1",
       creatorId: "11111111-1111-4111-8111-111111111111",
       recipientId: "22222222-2222-4222-8222-222222222222",
       createdAt: "2026-10-09T12:00:00Z", openedAt: null, completedAt: null, declinedAt: null,
@@ -127,7 +127,7 @@ describe("owner Play 2.0 preview", () => {
     });
     preview("football");
     const region = screen.getByRole("region", { name: "Your Matchups" });
-    expect(within(region).getByRole("img")).toHaveAttribute("src", "data:image/png;base64,photo");
+    expect(region.querySelector(".play-v2__matchup-avatar img")).toHaveAttribute("src", "data:image/png;base64,photo");
     expect(region).toHaveTextContent("Invitation pending");
     fireEvent.click(within(region).getByRole("button", { name: /view all/i }));
     expect(region).toHaveTextContent("1 total · 1 active");
