@@ -1963,6 +1963,7 @@ export default function FootballGmModePage({
     patch({
       finalRoster: [...nextAssets.roster],
       tradeChipPlayerIds: [...nextAssets.tradeChipPlayerIds],
+      releasedPlayerIds: [...new Set([...run.releasedPlayerIds, ...pending.cutPlayerIds])],
       pendingTradeResolution: null,
       tradeMessage: `Asking Price ${pending.offerNumber} from ${pending.partnerTeam} completed${cutNames ? `; cut ${cutNames}` : ""}.`,
     });
