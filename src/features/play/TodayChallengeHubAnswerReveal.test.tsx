@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import TodayChallengeHub from "./TodayChallengeHub";
 import { playFighters, type PlayFighter } from "./playFighterPool";
 import type { TodayChallengeProjection } from "./todayChallengeRepository";
@@ -165,12 +166,13 @@ describe("Today’s Challenge leaderboard answer reveal", () => {
   });
 
   it("opens another finisher in the same graded Daily Double result presentation used for your own result", () => {
-    render(<TodayChallengeHub />);
+    render(<MemoryRouter><TodayChallengeHub /></MemoryRouter>);
 
     fireEvent.click(screen.getByRole("button", { name: "View Shane's answers" }));
 
     const dialog = screen.getByRole("dialog", { name: "Shane official Daily result" });
     expect(within(dialog).getByText("DAILY DOUBLE · FINAL RESULT")).toBeInTheDocument();
+    expect(within(dialog).getByRole("link", { name: /full ufc stats/i })).toHaveAttribute("href", "/members/SHANE/play-stats/ufc");
     expect(within(dialog).getByText("BLIND RANK 5 · PART 1 RESULT")).toBeInTheDocument();
     expect(within(dialog).getByText("OCTAGON HQ ORDER")).toBeInTheDocument();
     expect(within(dialog).getByText("OCTAGON HQ TOP 4")).toBeInTheDocument();
