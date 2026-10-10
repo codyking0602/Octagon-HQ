@@ -77,6 +77,7 @@ function makeRepository(
     loadToday,
     advance,
     loadHistory: vi.fn().mockResolvedValue([]),
+    loadMemberHistory: vi.fn().mockResolvedValue([]),
     loadStreak: vi.fn().mockResolvedValue({ currentStreak: 0, bestStreak: 0 }),
     loadStandings: vi.fn().mockResolvedValue(emptyStandings),
     loadDailyLeaderboard: vi.fn().mockResolvedValue({ unlocked: false, playerCount: 0, entries: [] }),
