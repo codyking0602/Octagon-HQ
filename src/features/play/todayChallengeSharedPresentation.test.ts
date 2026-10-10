@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 const hub = readFileSync("src/features/play/TodayChallengeHub.tsx", "utf8");
 const css = readFileSync("src/styles/today-challenge-hub.css", "utf8");
 const footballPlay = readFileSync("src/features/back-room/FootballBackRoomPage.tsx", "utf8");
+const playV2 = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
 
 describe("Stage 11 shared Daily presentation polish", () => {
   it("renders one compact rank-name-score leaderboard for both sports without an inner scroller", () => {
@@ -28,7 +29,9 @@ describe("Stage 11 shared Daily presentation polish", () => {
   it("removes the stale Football games early-access banner from Play", () => {
     expect(footballPlay).not.toContain("FootballGamesEarlyAccessBanner");
     expect(footballPlay).not.toContain("Games and features are still being built and refined.");
-    expect(footballPlay).toContain('<TodayChallengeHub sport="football" />');
-    expect(footballPlay).toContain('<PlayLandingGameLibrary sport="football"');
+    expect(footballPlay).toContain('<PlayV2Page sport="football" />');
+    expect(playV2).toContain('<DailyCompact sport={sport} profileId={profileId} />');
+    expect(playV2).toContain('className="play-v2__leader-row"');
+    expect(playV2).toContain('<GameRoom sport={sport} />');
   });
 });
