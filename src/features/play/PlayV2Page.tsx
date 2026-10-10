@@ -192,7 +192,7 @@ function MatchupsCompact({ sport }: { sport: PlaySport }) {
               {relevant.length > 3 ? <p className="play-v2__more">{relevant.length - 3} more open matchups in Manage All</p> : null}
             </div>
       }
-      {detailsOpen ? <div className="play-v2__challenge-details"><ChallengeCenter sport={sport} /></div> : null}
+      <div className="play-v2__challenge-details" hidden={!detailsOpen}><ChallengeCenter sport={sport} /></div>
     </section>
   );
 }
