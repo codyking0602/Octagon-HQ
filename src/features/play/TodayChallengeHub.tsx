@@ -385,12 +385,13 @@ export default function TodayChallengeHub({ sport = "ufc" }: { sport?: PlaySport
         onScroll={updatePanelFromScroll}
         aria-label="Today’s Challenge and leaderboard"
       >
-        <button className={specialTheme ? "today-hub-card is-special-daily" : "today-hub-card"} type="button" onClick={() => navigate(dailyRoute)}>
+        <button className={specialTheme ? `today-hub-card is-special-daily${specialTheme.opponentPrimary ? " is-red-river" : ""}` : "today-hub-card"} type="button" onClick={() => navigate(dailyRoute)}>
           <div className="today-hub-card__topline">
             <span>{combo ? "TODAY’S DAILY DOUBLE" : "TODAY’S CHALLENGE"}</span>
             <b>{dayLabel(projection.centralDay).toUpperCase()}</b>
           </div>
           {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
+          {specialTheme?.opponentPrimary ? <span className="today-hub-red-river-note">THE GOLDEN HAT · COTTON BOWL · GAME DAY</span> : null}
           <div className="today-hub-card__body">
             <small>
               {completed && projection.officialAttempt
