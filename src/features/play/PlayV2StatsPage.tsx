@@ -1,4 +1,5 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
+import { memberProfilePath, normalizeMemberName } from "../members/memberProfilesModel";
 import { useIdentity } from "../identity/IdentityProvider";
 import type { PlaySport } from "./playRegistry";
 import { playV2Score } from "./playV2Stats";
@@ -6,23 +7,31 @@ import { usePlayV2History } from "./usePlayV2History";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import "../../styles/play-v2.css";
 
-export default function PlayV2StatsPage({ sport }: { sport: PlaySport }) {
+export default function PlayV2StatsPage({ sport, memberName }: { sport: PlaySport; memberName?: string }) {
   const identity = useIdentity();
   const profileId = identity.profile?.id ?? "";
-  const history = usePlayV2History(sport, identity.profile?.canControlPicks === true ? profileId : "");
+  const normalizedMember = memberName ? normalizeMemberName(memberName) : null;
+  const isOwn = Boolean(normalizedMember && identity.profile
+    && normalizedMember === normalizeMemberName(identity.profile.displayName));
+  const publicMemberView = Boolean(normalizedMember);
+  const requestedMember = publicMemberView && !isOwn ? normalizedMember : null;
+  const history = usePlayV2History(sport,
+    profileId && (publicMemberView || identity.profile?.canControlPicks === true) ? profileId : "",
+    requestedMember);
   if (identity.status === "loading") return <div className="page"><p>Loading account…</p></div>;
-  if (!profileId || identity.profile?.canControlPicks !== true) {
+  if (!profileId || (!publicMemberView && identity.profile?.canControlPicks !== true)) {
     return <Navigate to={sport === "football" ? "/football" : "/play"} replace />;
   }
-  const back = sport === "football" ? "/football" : "/play";
+  const back = publicMemberView ? memberProfilePath(normalizedMember!) : sport === "football" ? "/football" : "/play";
   const summary = history.performance;
   return (
     <div className="page play-v2 play-v2__stats-page" data-sport={sport}>
       <header className="play-v2__stats-heading">
-        <Link to={back}>← BACK TO PLAY</Link>
-        <span>MY PLAY STATS · {sport.toUpperCase()} · OFFICIAL DAILY</span>
-        <h1>Your Performance</h1>
-        <p>Normalized official scores out of 100. These are your actual game results, not Championship placement points.</p>
+        <Link to={back}>← BACK TO {publicMemberView ? "PROFILE" : "PLAY"}</Link>
+        <span>{requestedMember ?? "MY"} PLAY STATS · {sport.toUpperCase()} · OFFICIAL DAILY</span>
+        <h1>{requestedMember ? requestedMember + "’s Performance" : "Your Performance"}</h1>
+        <p>Normalized official Daily scores out of 100, not Championship placement points.
+          {requestedMember ? " Today’s scores are visible once you finish the same Daily challenge." : ""}</p>
       </header>
       {history.loading ? <div className="play-v2__performance" role="status">Loading official history…</div>
         : history.error ? <div className="play-v2__performance"><p>Official history could not be loaded.</p>
@@ -70,4 +79,12 @@ export default function PlayV2StatsPage({ sport }: { sport: PlaySport }) {
             )}
     </div>
   );
+}
+
+export function MemberPlayStatsPage() {
+  const { memberName, sport } = useParams();
+  if (!memberName || (sport !== "ufc" && sport !== "football")) {
+    return <Navigate to={memberName ? memberProfilePath(memberName) : "/members"} replace />;
+  }
+  return <PlayV2StatsPage sport={sport} memberName={memberName} />;
 }
