@@ -11,6 +11,7 @@ export interface FootballSpecialDailyTheme {
   secondary: string;
   teamLogo: string;
   opponentLogo: string;
+  opponentPrimary?: string;
 }
 
 const NFL_LOGO = (code: string) => `https://a.espncdn.com/i/teamlogos/nfl/500/${code}.png`;
@@ -19,8 +20,9 @@ const CFB_LOGO = (teamId: number) => `https://a.espncdn.com/i/teamlogos/ncaa/500
 const THEMES: Readonly<Record<string, FootballSpecialDailyTheme>> = {
   "2026-10-10": {
     day: "2026-10-10",
-    eventLabel: "RED RIVER EDITION",
+    eventLabel: "RED RIVER SHOWDOWN",
     matchup: "TEXAS vs OKLAHOMA",
+    opponentPrimary: "#841617",
     resultLabel: "RED RIVER RESULT",
     teamName: "Texas",
     opponentName: "Oklahoma",
@@ -82,12 +84,13 @@ export function footballSpecialDailyStyle(theme: FootballSpecialDailyTheme): CSS
     "--special-daily-primary": theme.primary,
     "--special-daily-primary-rgb": rgbChannels(theme.primary),
     "--special-daily-secondary": theme.secondary,
+    "--special-daily-rival": theme.opponentPrimary ?? theme.primary,
   } as CSSProperties;
 }
 
 export function FootballSpecialDailyHubMark({ theme }: { theme: FootballSpecialDailyTheme }) {
   return (
-    <div className="football-special-daily-hub-mark" aria-label={`${theme.eventLabel}: ${theme.matchup}`}>
+    <div className={theme.opponentPrimary ? "football-special-daily-hub-mark is-red-river" : "football-special-daily-hub-mark"} aria-label={`${theme.eventLabel}: ${theme.matchup}`}>
       <span className="football-special-daily-hub-mark__logos" aria-hidden="true">
         <img src={theme.teamLogo} alt="" loading="lazy" referrerPolicy="no-referrer" />
         <b>×</b>
@@ -121,7 +124,7 @@ export function FootballSpecialDailyChrome({
           </div>
           <small>{theme.eventLabel}</small>
           <strong>{theme.matchup}</strong>
-          <em>OCTAGON HQ · GAME DAY</em>
+          <em>{theme.opponentPrimary ? "GOLDEN HAT · OCTAGON HQ GAME DAY" : "OCTAGON HQ · GAME DAY"}</em>
         </div>
       ) : null}
 
