@@ -276,7 +276,7 @@ export function OfficialMillionaireDailyView({
 
   if (rulesOpen) {
     return createPortal(
-      <div className={`millionaire-shell millionaire-shell--rules${redRiverDay ? " millionaire-shell--red-river" : ""}`}>
+      <div className="millionaire-shell millionaire-shell--rules" data-red-river={redRiverDay ? "true" : undefined}>
         <div className="millionaire-arena" aria-hidden="true" />
         <div className="millionaire-crowd" aria-hidden="true" />
         <section className="millionaire-rules" aria-labelledby="millionaire-daily-rules-title">
