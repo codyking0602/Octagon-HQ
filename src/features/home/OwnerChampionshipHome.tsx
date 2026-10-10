@@ -19,12 +19,35 @@ function formatRating(rating: number | null | undefined) {
   return rating == null ? "—" : rating.toFixed(1);
 }
 
+function finishLabel(rank: number | null | undefined) {
+  if (rank == null) return "STANDING PENDING";
+  if (rank === 1) return "LEADER";
+  if (rank === 2) return "2ND PLACE";
+  if (rank === 3) return "3RD PLACE";
+  return "IN THE HUNT";
+}
+
+function MedalMark() {
+  return (
+    <svg className="home-champ-preview__medal" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M9 3h5l4 10-5 3L9 3ZM18 3h5l-4 13-5-3 4-10Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+      <circle cx="16" cy="21" r="8" stroke="currentColor" strokeWidth="2"/>
+      <path d="m16 16 1.5 3.3 3.5.4-2.6 2.4.7 3.5-3.1-1.6-3.1 1.6.7-3.5-2.6-2.4 3.5-.4L16 16Z" fill="currentColor"/>
+    </svg>
+  );
+}
+
 function Summary({ sport, result }: { sport: ChampionshipSport; result: SportChampionship | null }) {
   const own = result?.own ?? null;
+  const leading = own?.rank === 1;
   return (
     <Link className="home-champ-preview__summary" data-sport={sport} to={"/championship/" + sport + "?tab=overall"} aria-label={"Open " + sport + " Championship standings"}>
-      <span>{sport === "ufc" ? "UFC" : "FOOTBALL"} CHAMPIONSHIP</span>
+      <span className="home-champ-preview__summary-sport">{sport === "ufc" ? "UFC" : "FOOTBALL"}</span>
+      <span className={"home-champ-preview__summary-icon" + (leading ? " is-leading" : "")}>
+        {own ? leading ? <TrophyMark /> : <MedalMark /> : null}
+      </span>
       <strong>{formatRank(own?.rank)}</strong>
+      <span className={"home-champ-preview__summary-finish" + (leading ? " is-leading" : "")}>{finishLabel(own?.rank)}</span>
       <small>{own?.rating != null ? formatRating(own.rating) + " SEASON SCORE" : "STANDING PENDING"}</small>
     </Link>
   );
@@ -213,6 +236,9 @@ export function OwnerChampionshipHome({
   }, [showMlb]);
 
   const chosen = sport === "mlb" && !showMlb ? "all" : sport;
+  const knownRanks = [football?.own?.rank, ufc?.own?.rank, ...(showMlb ? [mlb?.own?.overall_rank] : [])];
+  const leagueLeads = knownRanks.filter((rank) => rank === 1).length;
+  const leagueLeadDisplay = loading && knownRanks.every((rank) => rank == null) ? "…" : leagueLeads;
   return (
     <section
       className="home-section home-section--your-hq home-champ-preview"
@@ -222,7 +248,7 @@ export function OwnerChampionshipHome({
       aria-label="Your HQ"
     >
       <div className="home-champ-preview__top">
-        <div><h2>Your HQ</h2>{chosen === "all" ? <small>CHAMPIONSHIP · 2026 SEASON</small> : null}</div>
+        <div><h2>Your HQ</h2>{chosen === "all" ? <small>2026 CHAMPIONSHIP HEADQUARTERS</small> : null}</div>
         <label className="home-champ-preview__filter">
           <span className="sr-only">Home sport</span>
           <select aria-label="Home sport" value={chosen} onChange={(event) => onSportChange(event.target.value as SportFilter)}>
@@ -235,20 +261,43 @@ export function OwnerChampionshipHome({
       </div>
       {chosen === "all" ? (
         <>
+          <div className="home-champ-preview__overview-hero" aria-label="Championship headquarters summary">
+            <div className="home-champ-preview__league-tally">
+              <TrophyMark />
+              <div>
+                <div className="home-champ-preview__league-leads">
+                  <strong data-testid="hq-league-leads">{leagueLeadDisplay}</strong>
+                  <span>LEAGUE {leagueLeads === 1 ? "LEAD" : "LEADS"}</span>
+                </div>
+                <small>Across {showMlb ? 3 : 2} championships</small>
+              </div>
+            </div>
+            <div className="home-champ-preview__overview-streak">
+              <span className="home-champ-preview__streak-count">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 2c1 4-3 5-2 9-2-1-3-3-3-5-3 4-5 7-5 10a9 9 0 0 0 18 0c0-5-4-8-8-14Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/><path d="M12 12c1 3-2 4-2 6a3 3 0 0 0 6 0c0-2-1-4-4-6Z" fill="currentColor"/></svg>
+                <strong>{streakLoading ? "…" : streak}</strong>
+                <span className="sr-only">days</span>
+              </span>
+              <small>HQ DAILY STREAK</small>
+              <span className="sr-only">{streakLoading ? "Loading daily streak" : streak + " days"}</span>
+            </div>
+          </div>
           <div className="home-champ-preview__overview">
             <Summary sport="football" result={football} />
             <Summary sport="ufc" result={ufc} />
             {showMlb ? (
               <Link className="home-champ-preview__summary" data-sport="mlb" to="/championship/mlb" aria-label="Open MLB Postseason Championship standings">
-                <span>MLB POSTSEASON</span>
+                <span className="home-champ-preview__summary-sport">MLB POSTSEASON</span>
+                <span className={"home-champ-preview__summary-icon" + (mlb?.own?.overall_rank === 1 ? " is-leading" : "")}>
+                  {mlb?.own ? mlb.own.overall_rank === 1 ? <TrophyMark /> : <MedalMark /> : null}
+                </span>
                 <strong>{formatRank(mlb?.own?.overall_rank)}</strong>
+                <span className={"home-champ-preview__summary-finish" + (mlb?.own?.overall_rank === 1 ? " is-leading" : "")}>
+                  {finishLabel(mlb?.own?.overall_rank)}
+                </span>
                 <small>{mlb?.own ? String(mlb.own.total_points) + " PTS" : "STANDING PENDING"}</small>
               </Link>
             ) : null}
-          </div>
-          <div className="home-champ-preview__streak">
-            <span>HQ DAILY STREAK</span>
-            <strong>{streakLoading ? "…" : streak} days</strong>
           </div>
         </>
       ) : chosen === "mlb" ? (
