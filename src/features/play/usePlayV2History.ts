@@ -4,11 +4,11 @@ import type { PlaySport } from "./playRegistry";
 import { createTodayChallengeRepository } from "./todayChallengeRepository";
 import { summarizePlayV2History } from "./playV2Stats";
 
-export function usePlayV2History(sport: PlaySport, profileId: string) {
+export function usePlayV2History(sport: PlaySport, profileId: string, memberName?: string) {
   const repository = useMemo(() => createTodayChallengeRepository(undefined, sport), [sport]);
   const query = useQuery({
-    queryKey: ["play-v2-official-history", sport, profileId],
-    queryFn: () => repository!.loadHistory(),
+    queryKey: ["play-v2-official-history", sport, memberName ? `member:${memberName.trim().toUpperCase()}` : `self:${profileId}`],
+    queryFn: () => memberName ? repository!.loadMemberHistory(memberName) : repository!.loadHistory(),
     enabled: Boolean(repository) && Boolean(profileId),
     staleTime: 0,
   });
