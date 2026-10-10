@@ -160,7 +160,8 @@ describe("UFC Sports Feud answer-acceptance hardening", () => {
       ...UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main,
       ...UFC_SPORTS_FEUD_SEP24_PROTOTYPE.fastMoney,
     ].map((question) => question.id));
-    expect(selected.size).toBe(UFC_ALL.length + prototypeIds.size);
+    expect(selected.size).toBe(UFC_ALL.length + prototypeIds.size + 1);
+    expect(selected.has("ufc-main-20261010-submissions")).toBe(true);
     for (const id of prototypeIds) expect(selected.has(id), id).toBe(true);
 
     for (const authored of UFC_ALL) {
