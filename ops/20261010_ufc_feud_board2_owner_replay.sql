@@ -6,6 +6,7 @@ do $repair$
 declare
   v_challenge uuid;
   v_setup private.daily_challenge_setups%rowtype;
+  v_setup_id uuid;
   v_owner uuid;
   v_count integer;
   v_public jsonb;
@@ -20,7 +21,7 @@ declare
   v_old_sig text := 'ufc-main-14-2:ufc-main-14-2:a1=10,ufc-main-14-2:a2=8,ufc-main-14-2:a3=7,ufc-main-14-2:a4=5,ufc-main-14-2:a5=5,ufc-main-14-2:a6=4,ufc-main-14-2:a7=4,ufc-main-14-2:a8=3';
   v_new_sig text := 'ufc-main-19-1:ufc-main-19-1:a1=10,ufc-main-19-1:a2=8,ufc-main-19-1:a3=7,ufc-main-19-1:a4=5,ufc-main-19-1:a5=5,ufc-main-19-1:a6=4,ufc-main-19-1:a7=4,ufc-main-19-1:a8=3';
 begin
-  select d.id, s into v_challenge, v_setup
+  select d.id, s.id into v_challenge, v_setup_id
     from private.daily_challenges d
     join private.daily_challenge_schedule_versions schedule
       on schedule.version = d.schedule_version
@@ -30,6 +31,7 @@ begin
       and d.game_type = 'sports_feud'
     order by d.published_at desc limit 1;
   if v_challenge is null then raise exception 'Oct 10 UFC Sports Feud publication missing'; end if;
+  select * into strict v_setup from private.daily_challenge_setups where id=v_setup_id;
   if v_setup.public_setup->>'pack_id' = v_new_pack then return; end if;
   if v_setup.public_setup->>'pack_id' is distinct from v_old_pack
      or v_setup.public_setup#>>'{main_boards,0,id}' <> 'ufc-main-06-5'
