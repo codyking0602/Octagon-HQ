@@ -8,6 +8,7 @@ const persistedRuntimeRepair = readFileSync("supabase/migrations/202612310099_fo
 const page = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
 const runtime = readFileSync("supabase/functions/daily-challenge-runtime/index.ts", "utf8");
 const hq = readFileSync("src/features/back-room/FootballBackRoomPage.tsx", "utf8");
+const playV2 = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
 const todayHub = readFileSync("src/features/play/TodayChallengeHub.tsx", "utf8");
 const backendTest = readFileSync("supabase/tests/football_daily_product_integration.sql", "utf8");
 
@@ -86,11 +87,13 @@ describe("Football Daily product integration", () => {
   });
 
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {
-    expect(hq).toContain('<TodayChallengeHub sport="football" />');
+    expect(hq).toContain('<PlayV2Page sport="football" />');
+    expect(playV2).toContain('sport === "football" ? "/football/today"');
+    expect(playV2).toContain('navigate(dailyRoute)');
     expect(todayHub).toContain('sport === "football" ? "/football/today"');
     expect(todayHub).not.toContain("<DailyChallengeStandings");
     expect(todayHub).toContain('/championship/" + sport + "?tab=play"');
-    expect(hq).toContain('<ChallengeCenter sport="football"');
+    expect(playV2).toContain('<MatchupsCompact sport={sport} />');
     expect(page).toContain("shareDailyChallengeResult");
     expect(page).toContain("SHARE RESULT");
     expect(page).not.toContain("<DailyChallengeStandings");

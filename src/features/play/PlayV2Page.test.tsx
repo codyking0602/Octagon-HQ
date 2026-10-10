@@ -6,6 +6,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import PlayV2Page from "./PlayV2Page";
 
 const mocked = vi.hoisted(() => ({
+  profile: { id: "11111111-1111-4111-8111-111111111111", displayName: "CODY", canControlPicks: true } as {
+    id: string; displayName: string; canControlPicks: boolean;
+  } | null,
+  status: "ready" as "ready" | "signed-out" | "loading",
+  openDialog: vi.fn(),
   runtime: vi.fn(),
   history: vi.fn(),
   profiles: [] as Record<string, unknown>[],
@@ -14,8 +19,9 @@ const mocked = vi.hoisted(() => ({
 }));
 vi.mock("../identity/IdentityProvider", () => ({
   useIdentity: () => ({
-    status: "ready",
-    profile: { id: "11111111-1111-4111-8111-111111111111", displayName: "CODY", canControlPicks: true },
+    status: mocked.status,
+    profile: mocked.profile,
+    openDialog: mocked.openDialog,
   }),
 }));
 vi.mock("../challenges/ChallengeProvider", () => ({
@@ -49,16 +55,21 @@ vi.mock("./useTodayChallengeOverview", () => ({
 vi.mock("./usePlayV2History", () => ({ usePlayV2History: (...args: unknown[]) => mocked.history(...args) }));
 
 function preview(sport: "football" | "ufc") {
-  return render(<MemoryRouter><PlayV2Page sport={sport} onClassic={vi.fn()} /></MemoryRouter>);
+  return render(<MemoryRouter><PlayV2Page sport={sport} /></MemoryRouter>);
 }
 
 beforeEach(() => {
+  mocked.profile = { id: "11111111-1111-4111-8111-111111111111", displayName: "CODY", canControlPicks: true };
+  mocked.status = "ready";
+  mocked.openDialog.mockClear();
+  mocked.runtime.mockClear();
+  mocked.history.mockClear();
   mocked.profiles.length = 0;
   mocked.challenges.length = 0;
   mocked.viewResults.mockClear();
 });
 
-describe("owner Play 2.0 preview", () => {
+describe("public Football/UFC Play 2.0 release", () => {
   it("preserves current weekly competition and shows compact official daily, score stats and live approved game routes", () => {
     mocked.runtime.mockReturnValue({
       projection: { gameType: "sports_feud", progressRevision: 4,
@@ -72,7 +83,7 @@ describe("owner Play 2.0 preview", () => {
       loading: false, error: null, refresh: vi.fn(),
     });
     preview("football");
-    const hub = screen.getByTestId("owner-play-v2");
+    const hub = screen.getByTestId("play-v2-hub");
     expect(within(hub).getByRole("region", { name: "Weekly Featured Championship" })).toHaveTextContent("Auction Center");
     expect(within(hub).getByRole("link", { name: /open current weekly/i })).toHaveAttribute("href", "/football/weekly-auction");
     expect(within(hub).getByRole("region", { name: "Today's Challenge" })).toHaveTextContent("Sports Feud");
@@ -80,7 +91,7 @@ describe("owner Play 2.0 preview", () => {
     expect(within(hub).getByText("81.3")).toBeInTheDocument();
     expect(within(hub).getByRole("link", { name: /full stats/i })).toHaveAttribute("href", "/football/play-stats");
     expect(within(hub).getByRole("button", { name: /wheel of football/i })).toBeInTheDocument();
-    expect(within(hub).getByRole("button", { name: /the gm · college/i })).toBeInTheDocument();
+    expect(within(hub).queryByRole("button", { name: /the gm · college/i })).not.toBeInTheDocument();
     expect(within(hub).queryByTestId("classic-center")).not.toBeInTheDocument();
     expect(within(hub).queryByText(/LAST 1 RESULTS/)).not.toBeInTheDocument();
     expect(within(hub).queryByText(/CLASSIC PLAY/)).not.toBeInTheDocument();
@@ -136,5 +147,52 @@ describe("owner Play 2.0 preview", () => {
     expect(within(region).getByRole("button", { name: /refresh/i })).toBeInTheDocument();
   });
 
+
+  it("offers the exact same Football and UFC experience to non-owner members", () => {
+    mocked.profile = { id: "11111111-1111-4111-8111-111111111111",
+      displayName: "SHANE", canControlPicks: false };
+    mocked.runtime.mockReturnValue({
+      projection: { gameType: "sports_feud", progressRevision: 0, officialAttempt: null, publicState: {} },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 1, average: 84, best: 84, recent: [], byGame: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    preview("football");
+    const hub = screen.getByTestId("play-v2-hub");
+    expect(within(hub).getByText("DAILY AVERAGE")).toBeInTheDocument();
+    expect(within(hub).getByText("84.0")).toBeInTheDocument();
+    expect(within(hub).getByRole("region", { name: "Your Matchups" })).toBeInTheDocument();
+    expect(within(hub).getByText("6 GAMES")).toBeInTheDocument();
+    expect(within(hub).queryByText(/College/)).not.toBeInTheDocument();
+    expect(within(hub).getByRole("link", { name: /full stats/i })).toHaveAttribute("href", "/football/play-stats");
+  });
+
+  it("shows signed-out visitors the public Game Room without leaking member-specific data", () => {
+    mocked.profile = null;
+    mocked.status = "signed-out";
+    preview("ufc");
+    const hub = screen.getByTestId("play-v2-hub");
+    expect(within(hub).getByRole("region", { name: "Game Room" })).toBeInTheDocument();
+    expect(within(hub).getByText("4 GAMES")).toBeInTheDocument();
+    expect(within(hub).getByText(/Sign in to compete in official Dailies/)).toBeInTheDocument();
+    expect(within(hub).queryByRole("region", { name: "Your Play Performance" })).not.toBeInTheDocument();
+    expect(within(hub).queryByRole("region", { name: "Your Matchups" })).not.toBeInTheDocument();
+    fireEvent.click(within(hub).getByRole("button", { name: /sign in or join/i }));
+    expect(mocked.openDialog).toHaveBeenCalledTimes(1);
+    expect(mocked.runtime).not.toHaveBeenCalled();
+    expect(mocked.history).not.toHaveBeenCalled();
+  });
+
+  it("keeps Football games accessible during guest profile loading and hides paused College GM", () => {
+    mocked.profile = null;
+    mocked.status = "loading";
+    preview("football");
+    const hub = screen.getByTestId("play-v2-hub");
+    expect(within(hub).getByText("Loading your HQ profile…")).toBeInTheDocument();
+    expect(within(hub).getByText("6 GAMES")).toBeInTheDocument();
+    expect(within(hub).queryByText(/The GM · College/)).not.toBeInTheDocument();
+  });
 
 });

@@ -3,21 +3,20 @@ import { describe, expect, it } from "vitest";
 
 const footballPlay = readFileSync("src/features/back-room/FootballBackRoomPage.tsx", "utf8");
 const footballToday = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
+const playV2 = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
 const router = readFileSync("src/app/router.tsx", "utf8");
-const styles = readFileSync("src/styles/play-landing-shared.css", "utf8");
+const styles = readFileSync("src/styles/play-v2.css", "utf8");
 
 describe("Football Weekly Auction Play quick access", () => {
-  it("uses the existing compact Play card as the permanent Auction Center entry", () => {
-    expect(footballPlay).toContain("FootballWeeklyAuctionQuickAccess");
-    expect(footballPlay).toContain("repository.loadHistory()");
-    expect(footballPlay).toContain("historyCount");
-    expect(footballPlay).toContain("WEEKLY AUCTION");
-    expect(footballPlay).toContain("AUCTION CENTER");
-    expect(footballPlay).not.toContain("<strong>EDIT BIDS</strong>");
-    expect(footballPlay).toContain('navigate("/football/weekly-auction")');
-    expect(footballPlay).toContain("state.owned_count");
-    expect(footballPlay).toContain("state.bankroll");
-    expect(footballPlay).not.toContain("!next.previous_final");
+  it("uses the approved Weekly Featured Play 2.0 card as the permanent Auction Center entry", () => {
+    expect(footballPlay).toContain('<PlayV2Page sport="football" />');
+    expect(playV2).toContain("<WeeklyCurrent />");
+    expect(playV2).toContain("WEEKLY FEATURED");
+    expect(playV2).toContain("Auction Center");
+    expect(playV2).toContain('to="/football/weekly-auction"');
+    expect(playV2).toContain('to="/championship/football?tab=play"');
+    expect(playV2).not.toContain("EDIT BIDS");
+    expect(playV2).not.toContain("previous_final");
   });
 
   it("routes Auction Center separately while preserving direct edit access to the submitted board", () => {
@@ -29,9 +28,10 @@ describe("Football Weekly Auction Play quick access", () => {
     expect(footballToday).toContain("setShowWeeklyAuction(true)");
   });
 
-  it("uses the established Football accent and stays compact on phones", () => {
-    expect(styles).toContain(".football-weekly-auction-quick");
-    expect(styles).toContain("var(--football-accent)");
-    expect(styles).toContain("@media (max-width: 390px)");
+  it("keeps the approved Football Weekly Featured treatment compact on phones", () => {
+    expect(styles).toContain(".play-v2__weekly");
+    expect(styles).toContain(".play-v2__weekly-actions");
+    expect(styles).toContain(".play-v2[data-sport=\"football\"]");
+    expect(styles).toContain("@media (max-width: 380px)");
   });
 });
