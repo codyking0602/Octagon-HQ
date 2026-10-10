@@ -185,6 +185,7 @@ describe("Sports Feud Daily Fast Money slow-network responsiveness", () => {
         loadToday: vi.fn().mockResolvedValue(initial),
         advance,
         loadHistory: vi.fn().mockResolvedValue([]),
+        loadMemberHistory: vi.fn().mockResolvedValue([]),
         loadStreak: vi.fn().mockResolvedValue({ currentStreak: 0, bestStreak: 0 }),
         loadStandings: vi.fn().mockResolvedValue({
           playerCount: 0,
