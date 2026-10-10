@@ -16,10 +16,10 @@ export default function PlayV2StatsPage({ sport, memberName }: { sport: PlaySpor
   const publicMemberView = Boolean(normalizedMember);
   const requestedMember = publicMemberView && !isOwn ? normalizedMember : null;
   const history = usePlayV2History(sport,
-    profileId && (publicMemberView || identity.profile?.canControlPicks === true) ? profileId : "",
+    profileId,
     requestedMember);
   if (identity.status === "loading") return <div className="page"><p>Loading account…</p></div>;
-  if (!profileId || (!publicMemberView && identity.profile?.canControlPicks !== true)) {
+  if (!profileId) {
     return <Navigate to={sport === "football" ? "/football" : "/play"} replace />;
   }
   const back = publicMemberView ? memberProfilePath(normalizedMember!) : sport === "football" ? "/football" : "/play";
