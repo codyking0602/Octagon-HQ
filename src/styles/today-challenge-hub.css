@@ -564,3 +564,6 @@
 .today-hub[data-sport="football"] .today-hub-leaderboard__row.is-current {
   border-color: color-mix(in srgb, var(--football-accent) 65%, var(--border));
 }
+
+.today-hub-official-result__full-stats { display: inline-block; width: fit-content; color: #9bcfff; font-size: 10px; font-weight: 900; letter-spacing: .03em; text-decoration: none; }
+.today-hub-official-result__full-stats:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }

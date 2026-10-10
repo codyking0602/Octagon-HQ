@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { memberProfilePath } from "../members/memberProfilesModel";
 import { useIdentity } from "../identity/IdentityProvider";
 import { DailyLeaderboardGameResult } from "./DailyLeaderboardGameResult";
 import {
@@ -152,6 +153,8 @@ export function DailyAnswerDetail({
           <span className="today-hub-official-result__identity-copy">
             <strong>{entry.displayName}</strong>
             <small>#{entry.rank} · {entry.normalizedScore}/100</small>
+            <Link className="today-hub-official-result__full-stats"
+              to={memberProfilePath(entry.displayName) + "/play-stats/" + sport}>FULL {sport.toUpperCase()} STATS ↗</Link>
           </span>
         </span>
       </header>
