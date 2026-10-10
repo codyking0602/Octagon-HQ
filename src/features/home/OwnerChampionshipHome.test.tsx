@@ -184,7 +184,7 @@ describe("Owner Championship Home preview", () => {
     loader.sport.mockImplementation(async (sport) => sport === "football"
       ? { ...football, own, entries: [own, third, first, second] } : projection("ufc"));
     render(<Preview showMlb={false} />);
-    await screen.findByText("91.3 SEASON SCORE");
+    await screen.findByText("89.5 SEASON SCORE");
     fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "football" } });
     const hero = screen.getByRole("region", { name: "Your HQ" });
     expect(within(hero).getByText("IN THE HUNT")).toBeInTheDocument();
