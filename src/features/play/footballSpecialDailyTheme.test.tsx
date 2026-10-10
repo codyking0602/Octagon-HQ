@@ -48,6 +48,28 @@ describe("Football special Daily theme", () => {
     });
   });
 
+  it("gives all three upcoming featured games their own team/opponent palettes", () => {
+    const locked = [
+      { day: "2026-10-26", primary: "#041E42", opponent: "#004C54", label: "COWBOYS @ EAGLES" },
+      { day: "2026-11-27", primary: "#BF5700", opponent: "#500000", label: "TEXAS @ TEXAS A&M" },
+      { day: "2026-12-07", primary: "#041E42", opponent: "#69BE28", label: "COWBOYS @ SEAHAWKS" },
+    ];
+    for (const { day, primary, opponent, label } of locked) {
+      const theme = footballSpecialDailyThemeForDay(day)!;
+      expect(theme.matchup).toBe(label);
+      expect(theme.opponentAccent).toBe(opponent);
+      expect(theme.videoUrl).toBeUndefined();
+      expect(footballSpecialDailyStyle(theme)).toMatchObject({
+        "--special-daily-primary": primary,
+        "--special-daily-opponent": opponent,
+      });
+      const hub = renderToStaticMarkup(<FootballSpecialDailyHubMark theme={theme} />);
+      expect(hub).toContain(theme.eventLabel);
+      expect(hub).toContain(label.replaceAll("&", "&amp;"));
+      expect(hub.match(/<img /g)).toHaveLength(2);
+    }
+  });
+
   it("renders matchup branding and a score-aware result stamp", () => {
     const theme = footballSpecialDailyThemeForDay("2026-10-26")!;
     const hub = renderToStaticMarkup(<FootballSpecialDailyHubMark theme={theme} />);
