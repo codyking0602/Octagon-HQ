@@ -34,6 +34,18 @@ const visualReport = readFileSync(resolve(process.cwd(), "src/features/back-room
 const visualCss = readFileSync(resolve(process.cwd(), "src/styles/football-gm-final.css"), "utf8");
 
 describe("The GM head-to-head presentation", () => {
+
+  it("shares the five-visit free agency budget and fallback with solo mode", () => {
+    expect(page).toContain("freeAgencyVisitsUsed: run.freeAgencyVisitsUsed + 1");
+    expect(page).toContain("freeAgentSpinIndex: run.freeAgentSpinIndex + 1");
+    expect(page).toContain("onPass={passFreeAgency}");
+    expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])]");
+    expect(page).toContain("run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT");
+    expect(page).toContain("<EmergencyFreeAgencyBoard");
+    expect(page).toContain("excludedPlayerIds={exclusionIds}");
+    expect(page).toContain("footballGmMarketVisitsUsed(raw.freeAgencyVisitsUsed, raw.freeAgentSpinIndex ?? 0)");
+  });
+
   it("keeps the approved intro and offers the original solo run or one-GM play", () => {
     expect(page).toContain("BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.");
     expect(page).toContain("<strong>SOLO RUN</strong>");
@@ -107,7 +119,7 @@ describe("The GM head-to-head presentation", () => {
 
   it("keeps one shared player market and hands the whole offseason to one GM at a time", () => {
     expect(page).toContain("excludedPlayerIds={opponentHeldIds}");
-    expect(page).toContain("Players already held by");
+    expect(page).toContain("Released players stay off the market.");
     expect(page).toContain("FINISH OFFSEASON");
     expect(page).toContain("They get their entire offseason first.");
     expect(migration).toContain("That player was already drafted in this match");

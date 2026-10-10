@@ -583,6 +583,55 @@ export function footballGmEligibleFreeAgencyTeams(input: {
   return teams;
 }
 
+/** Free-agency wheel access is a scarce offseason resource, not replenished by cuts. */
+export const FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT = 5;
+
+/** Keep old saved games fair: completed FA signings already consumed a visit. */
+export function footballGmMarketVisitsUsed(savedVisits: number | undefined, legacySignings: number) {
+  return Math.max(0, Number.isFinite(savedVisits) ? Math.floor(savedVisits!) : Math.floor(legacySignings || 0));
+}
+
+/**
+ * When the market is exhausted, offer only inexpensive depth players to fill
+ * actual vacancies. Never allow this safety net to displace a starter or
+ * replenish the main free-agent market. Every option uses normal 1YR/cap rules.
+ */
+export function footballGmEmergencyFreeAgents(input: {
+  roster: readonly FootballGmRosterEntry[];
+  tradeChipPlayerIds?: readonly string[];
+  seed: string;
+  consequences: FootballGmNegotiationConsequences;
+  excludedPlayerIds?: readonly string[];
+}): FootballGmFreeAgentCandidate[] {
+  if (!footballGmCanUseFreeAgency(input.roster, input.tradeChipPlayerIds)) return [];
+  const openings = FOOTBALL_GM_ROSTER_SLOTS.filter(
+    (slot) => !input.roster.some((entry) => entry.slot === slot),
+  );
+  const all = FOOTBALL_GM_TEAMS.flatMap((team) => footballGmFreeAgencyCandidatesForTeam({
+    ...input,
+    team,
+  }));
+  const selected = new Map<string, FootballGmFreeAgentCandidate>();
+  for (const slot of openings) {
+    const eligible = all.filter((candidate) => candidate.legalSlots.includes(slot));
+    if (!eligible.length) continue;
+    const grade = (candidate: FootballGmFreeAgentCandidate) =>
+      footballGmProjectedGradeForPlayer(candidate.player, 2, input.seed);
+    const bottomGrade = Math.min(...eligible.map(grade));
+    // The fallback is a depth pool, not a second unlimited shot at stars.
+    eligible.filter((candidate) => grade(candidate) <= bottomGrade + 2)
+      .sort((left, right) => left.salary - right.salary || grade(left) - grade(right))
+      .slice(0, 3)
+      .forEach((candidate) => selected.set(candidate.player.id, {
+        ...candidate,
+        legalSlots: candidate.legalSlots.filter((legalSlot) => legalSlot === slot),
+        displacementOptions: [],
+      }));
+  }
+  return [...selected.values()].sort((left, right) => left.salary - right.salary
+    || left.player.name.localeCompare(right.player.name));
+}
+
 export function footballGmSignFreeAgent(input: {
   roster: readonly FootballGmRosterEntry[];
   tradeChipPlayerIds?: readonly string[];

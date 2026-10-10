@@ -12,6 +12,19 @@ const css = readFileSync(
 );
 
 describe("Football GM gameplay presentation", () => {
+
+  it("counts every FA wheel visit, preserves all released IDs and provides legal emergency depth", () => {
+    expect(page).toContain("freeAgencyVisitsUsed: run.freeAgencyVisitsUsed + 1");
+    expect(page).toContain("freeAgentSpinIndex: run.freeAgentSpinIndex + 1");
+    expect(page).toContain("PASS ON THIS TEAM · VISIT ALREADY USED");
+    expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])]");
+    expect(page).toContain("run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT");
+    expect(page).toContain("footballGmEmergencyFreeAgents({");
+    expect(page).toContain("<EmergencyFreeAgencyBoard");
+    expect(page).toContain("excludedPlayerIds={run.releasedPlayerIds}");
+    expect(page).toContain("footballGmMarketVisitsUsed(parsed.freeAgencyVisitsUsed, parsed.freeAgentSpinIndex ?? 0)");
+  });
+
   it("shows the same outlook pill during draft, roster management, trade targeting, and asking prices", () => {
     expect(page).toContain('function PlayerOutlookPill');
     expect(page).toContain('<PlayerOutlookPill player={player} />');
@@ -69,7 +82,7 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain("if (run.voluntaryFreeAgencyUsed || run.tradeChipPlayerIds.length || run.finalRoster.length !== FOOTBALL_GM_ROSTER_SLOTS.length) return;");
     expect(page).toContain("footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)");
     expect(page).toContain("ONE VOLUNTARY RELEASE");
-    expect(page).toContain("any genuine vacancy can use free agency");
+    expect(page).toContain("vacancies can use any remaining wheel visits");
     expect(page).toContain("that player cannot be re-signed this offseason");
   });
   it("offers a mobile-safe choice of the starter displaced by a held asset", () => {
