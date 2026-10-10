@@ -8,6 +8,9 @@ import {
   type FootballGmRosterSlot,
 } from "./footballGmEngine";
 import {
+  FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT,
+  footballGmMarketVisitsUsed,
+  footballGmEmergencyFreeAgents,
   FOOTBALL_GM_HISTORICAL_ANCHORS,
   FOOTBALL_GM_HISTORICAL_FINAL_FOUR,
   FOOTBALL_GM_LIVE_OUTCOME_ANCHORS,
@@ -925,5 +928,56 @@ describe("The GM offseason continuity calibration", () => {
     const premium = footballGmAdjustedSalaryForPlayer(player, 2, "shop-salary", { [player.id]: 1 });
     expect(base).toBeGreaterThan(0);
     expect(premium).toBeGreaterThan(base);
+  });
+});
+
+describe("NFL GM five-visit free agency guardrails", () => {
+  it("counts actual market visits, preserving the used total when legacy saves resume", () => {
+    expect(FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT).toBe(5);
+    expect(footballGmMarketVisitsUsed(undefined, 3)).toBe(3);
+    expect(footballGmMarketVisitsUsed(undefined, 20)).toBe(20);
+    expect(footballGmMarketVisitsUsed(5, 1)).toBe(5);
+    expect(footballGmMarketVisitsUsed(4, 12)).toBe(4);
+  });
+
+  it("offers only low-end 1YR cap-legal signings into actual openings", () => {
+    const roster = rosterBySalary(FOOTBALL_GM_ROSTER_SLOTS.filter((slot) => slot !== "QB"));
+    const seed = "five-visits-used-emergency-qb";
+    const candidates = footballGmEmergencyFreeAgents({ roster, seed, consequences: {} });
+    expect(candidates.length).toBeGreaterThan(0);
+    expect(candidates.length).toBeLessThanOrEqual(3);
+    for (const candidate of candidates) {
+      expect(candidate.player.gameContract).toBe("1YR");
+      expect(candidate.legalSlots).toEqual(["QB"]);
+      expect(candidate.displacementOptions).toEqual([]);
+      const signed = footballGmSignFreeAgent({
+        roster, playerId: candidate.player.id, slot: "QB", seed, consequences: {},
+      });
+      expect(signed?.roster).toHaveLength(7);
+      expect(signed?.tradeChipPlayerIds).toHaveLength(0);
+    }
+  });
+
+  it("never offers any previously released asset, even after multiple subsequent releases", () => {
+    const roster = rosterBySalary(FOOTBALL_GM_ROSTER_SLOTS.filter((slot) => slot !== "QB"));
+    const seed = "all-releases-blacklisted";
+    const available = footballGmEmergencyFreeAgents({ roster, seed, consequences: {} });
+    expect(available.length).toBeGreaterThanOrEqual(2);
+    const releasedIds = available.slice(0, 2).map((candidate) => candidate.player.id);
+    const afterCuts = footballGmEmergencyFreeAgents({
+      roster, seed, consequences: {}, excludedPlayerIds: releasedIds,
+    });
+    expect(afterCuts.some((candidate) => releasedIds.includes(candidate.player.id))).toBe(false);
+    const availableTeams = footballGmEligibleFreeAgencyTeams({
+      roster, seed, consequences: {}, excludedPlayerIds: releasedIds,
+    });
+    for (const team of availableTeams) {
+      expect(footballGmFreeAgencyCandidatesForTeam({
+        team, roster, seed, consequences: {}, excludedPlayerIds: releasedIds,
+      }).every((candidate) => !releasedIds.includes(candidate.player.id))).toBe(true);
+    }
+    expect(footballGmEmergencyFreeAgents({
+      roster: codyRunRoster(), seed, consequences: {},
+    })).toHaveLength(0);
   });
 });
