@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ChallengeCenter } from "../challenges/ChallengeCenter";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { createFootballGmMatchRepository } from "./footballGmMatchRepository";
+import { createWheelFootballRepository } from "./wheelFootballRepository";
+import { DailyAnswerDetail } from "./TodayChallengeHub";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { challengeCounterpartId, challengeDirection, challengeStatus } from "../challenges/challengeModel";
 import { challengePlayRoute, challengeSport } from "../challenges/challengeRuntime";
@@ -46,6 +48,8 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
   const dailyRoute = sport === "football" ? "/football/today" : adapter?.dailyRoute ?? "/play";
   const ownPlace = overview.leaderboard?.entries.find((entry) => entry.isCurrentUser)?.rank;
   const [showResults, setShowResults] = useState(false);
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+  const selectedEntry = overview.leaderboard?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;
   return (
     <section className="play-v2__daily" aria-label="Today's Challenge" data-sport={sport}>
       <div className="play-v2__section-top">
@@ -90,13 +94,17 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
                 : !overview.leaderboard?.unlocked ? <p>Finish today's official game to unlock standings.</p>
                   : !overview.leaderboard.entries.length ? <p>No completed standings yet.</p>
                     : overview.leaderboard.entries.slice().sort((a, b) => a.rank - b.rank).map((entry) => (
-                      <div key={entry.profileId}>
+                      <button key={entry.profileId} type="button" className="play-v2__leader-row"
+                        aria-label={"View " + entry.displayName + "'s official Daily result"}
+                        onClick={() => setSelectedProfileId(entry.profileId)}>
                         <span><b>#{entry.rank}</b> {entry.isCurrentUser ? "You" : entry.displayName}</span>
                         <strong>{entry.normalizedScore}/100</strong>
-                      </div>
+                      </button>
                     ))}
             </div>
           ) : null}
+          {selectedEntry ? <DailyAnswerDetail entry={selectedEntry} projection={projection}
+            sport={sport} onClose={() => setSelectedProfileId(null)} /> : null}
         </>
       )}
     </section>
@@ -120,22 +128,7 @@ function PerformancePreview({ sport, profileId }: { sport: PlaySport; profileId:
                 <div><span>COMPLETED</span><strong>{performance.count}</strong><small>official games</small></div>
                 <div><span>PERSONAL BEST</span><strong>{performance.best}</strong><small>/100</small></div>
               </div>
-              <div className="play-v2__mini-history">
-                <div className="play-v2__trend-label">
-                  <span>LAST {performance.recent.length} RESULTS</span>
-                  <small>{performance.previousFiveAverage != null && performance.lastFiveAverage != null
-                    ? (performance.lastFiveAverage >= performance.previousFiveAverage ? "+" : "")
-                      + playV2Score(performance.lastFiveAverage - performance.previousFiveAverage) + " vs prior five"
-                    : "Official normalized scores"}</small>
-                </div>
-                <div className="play-v2__history-bars" role="img" aria-label={"Recent official scores, oldest first: " + performance.recent.slice().reverse().map((row) => row.normalizedScore).join(", ")}>
-                  {performance.recent.slice().reverse().map((attempt, index) => (
-                    <span key={attempt.day + ":" + attempt.gameType + ":" + attempt.completedAt + ":" + index}
-                      style={{ height: Math.max(3, attempt.normalizedScore) + "%" }}
-                      title={attempt.day + " · " + attempt.normalizedScore + "/100"} />
-                  ))}
-                </div>
-              </div>
+
             </>
           ) : <p className="play-v2__muted">No completed official dailies yet. Your stats will appear after your first result.</p>}
     </section>
@@ -143,56 +136,162 @@ function PerformancePreview({ sport, profileId }: { sport: PlaySport; profileId:
 }
 
 function MatchupsCompact({ sport }: { sport: PlaySport }) {
-  const { activeProfile, profiles, challenges, loading, error } = usePlayChallenges();
+  const { activeProfile, profiles, challenges, loading, error, refresh, markOpened, viewResults,
+    dismissChallenge, cancelPendingAuction } = usePlayChallenges();
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [busyCode, setBusyCode] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const handledCode = useRef("");
   const navigate = useNavigate();
-  const relevant = useMemo(() => challenges
+  const wheelRepository = useMemo(() => createWheelFootballRepository(), []);
+  const gmRepository = useMemo(() => createFootballGmMatchRepository(), []);
+  const requestedCode = searchParams.get("challenge")?.trim().toUpperCase() ?? "";
+  const allMatchups = useMemo(() => challenges
     .filter((challenge) => challengeSport(challenge) === sport
       && Boolean(activeProfile?.id)
-      && (challenge.creatorId === activeProfile?.id || challenge.recipientId === activeProfile?.id))
-    .filter((challenge) => {
-      const status = challengeStatus(challenge, activeProfile!.id);
-      return status !== "completed" && status !== "declined";
-    })
+      && (challenge.creatorId === activeProfile?.id || challenge.recipientId === activeProfile?.id)
+      && !challenge.hiddenFor.includes(activeProfile!.id))
     .sort((a, b) => {
       const priority = (c: typeof a) => {
-        const direction = challengeDirection(c, activeProfile!.id);
         const status = challengeStatus(c, activeProfile!.id);
-        return direction === "received" && status === "new" ? 0
-          : direction === "received" ? 1 : status === "opened" ? 2 : 3;
+        const direction = challengeDirection(c, activeProfile!.id);
+        return status === "completed" || status === "declined" ? 4
+          : direction === "received" && status === "new" ? 0
+            : direction === "received" ? 1 : status === "opened" ? 2 : 3;
       };
       return priority(a) - priority(b) || b.createdAt.localeCompare(a.createdAt);
     }), [challenges, sport, activeProfile]);
+  const openMatchups = allMatchups.filter((challenge) => {
+    const status = challengeStatus(challenge, activeProfile!.id);
+    return status !== "completed" && status !== "declined";
+  });
+  const visible = detailsOpen ? allMatchups : openMatchups.slice(0, 3);
+
+  // Preserve shared challenge deep links without mounting the old Challenge Center.
+  useEffect(() => {
+    if (!requestedCode || !activeProfile || loading) return;
+    const match = allMatchups.find((challenge) => challenge.code === requestedCode);
+    if (!match) return;
+    const key = activeProfile.id + ":" + requestedCode;
+    if (handledCode.current === key) return;
+    handledCode.current = key;
+    const status = challengeStatus(match, activeProfile.id);
+    const direction = challengeDirection(match, activeProfile.id);
+    if (status === "completed" && !["gm-football", "wheel-football", "wheel-ufc", "auction", "draft-room"].includes(match.gameId)) {
+      viewResults(match.code);
+    } else if (direction === "received" || ["gm-football", "wheel-football", "wheel-ufc", "auction", "draft-room"].includes(match.gameId)) {
+      if (direction === "received" && !["gm-football", "wheel-football", "wheel-ufc"].includes(match.gameId)) void markOpened(match.code);
+      navigate(challengePlayRoute(match), { replace: true });
+    } else {
+      setDetailsOpen(true);
+    }
+  }, [activeProfile, allMatchups, loading, markOpened, navigate, requestedCode, viewResults]);
+
+  function openMatch(challenge: typeof allMatchups[number]) {
+    if (!activeProfile) return;
+    const status = challengeStatus(challenge, activeProfile.id);
+    const direction = challengeDirection(challenge, activeProfile.id);
+    const serverOwned = ["gm-football", "wheel-football", "wheel-ufc", "auction", "draft-room"].includes(challenge.gameId);
+    if (status === "completed" && !serverOwned) {
+      viewResults(challenge.code);
+    } else if (serverOwned || direction === "received") {
+      if (direction === "received" && !["gm-football", "wheel-football", "wheel-ufc"].includes(challenge.gameId)) {
+        void markOpened(challenge.code);
+      }
+      navigate(challengePlayRoute(challenge));
+    } else {
+      setDetailsOpen(true);
+    }
+  }
+
+  async function removeMatch(challenge: typeof allMatchups[number]) {
+    if (!activeProfile || busyCode) return;
+    setBusyCode(challenge.code);
+    try {
+      const status = challengeStatus(challenge, activeProfile.id);
+      const direction = challengeDirection(challenge, activeProfile.id);
+      if (direction === "sent" && status === "waiting" && ["auction", "draft-room"].includes(challenge.gameId)) {
+        await cancelPendingAuction(challenge);
+      } else if (["gm-football", "wheel-football"].includes(challenge.gameId)
+        && (status === "waiting" && direction === "sent" || status === "new" && direction === "received")) {
+        if (challenge.gameId === "gm-football") await gmRepository?.cancel(challenge.code);
+        else await wheelRepository?.decline(challenge.code);
+        await refresh();
+      } else {
+        await dismissChallenge(challenge.code);
+      }
+    } finally {
+      setBusyCode(null);
+    }
+  }
+
+  function statusLabel(challenge: typeof allMatchups[number]) {
+    const status = challengeStatus(challenge, activeProfile!.id);
+    const direction = challengeDirection(challenge, activeProfile!.id);
+    const turnBased = ["gm-football", "wheel-football", "wheel-ufc"].includes(challenge.gameId);
+    if (status === "completed") return "Completed · view results";
+    if (status === "declined") return "Ended";
+    if (direction === "received" && status === "new") return "Your response needed · accept invitation";
+    if (turnBased && status === "opened") return "Match in progress · check whose turn";
+    if (direction === "received") return "Your turn · finish the challenge";
+    if (status === "waiting") return "Invitation pending · waiting for opponent";
+    return "Waiting for opponent's result";
+  }
+
   return (
-    <section className="play-v2__matchups" aria-label="Your Matchups">
+    <section id="challenge-center" className="play-v2__matchups" aria-label="Your Matchups">
       <div className="play-v2__section-top">
         <span>YOUR MATCHUPS</span>
-        <button type="button" onClick={() => setDetailsOpen((v) => !v)} aria-expanded={detailsOpen}>
-          {detailsOpen ? "CLOSE" : "MANAGE ALL"} ↗
+        <button type="button" onClick={() => setDetailsOpen((open) => !open)} aria-expanded={detailsOpen}>
+          {detailsOpen ? "SHOW LESS" : "VIEW ALL"} ↗
         </button>
       </div>
-      {loading ? <p className="play-v2__muted">Loading your matchups…</p> :
-        error ? <p className="play-v2__muted">Matchups could not be refreshed. Open Manage All to retry.</p> :
-          relevant.length === 0 ? <p className="play-v2__muted">No open matchups. Challenge a friend from the Game Room.</p> :
-            <div className="play-v2__matchup-list">
-              {relevant.slice(0, 3).map((challenge) => {
-                const partner = profiles.find((p) => p.id === challengeCounterpartId(challenge, activeProfile!.id));
-                const direction = challengeDirection(challenge, activeProfile!.id);
-                const status = challengeStatus(challenge, activeProfile!.id);
-                return (
-                  <button key={challenge.code} type="button" className="play-v2__matchup-row" onClick={() => navigate(challengePlayRoute(challenge))}>
-                    <span className="play-v2__matchup-avatar">{partner?.initials ?? "HQ"}</span>
-                    <span className="play-v2__matchup-copy"><strong>{challenge.gameTitle} vs {partner?.displayName ?? "Friend"}</strong>
-                      <small>{direction === "received" ? status === "new" ? "Your response is needed" : "Opened · see match"
-                        : status === "waiting" ? "Waiting for them to accept" : "Waiting for their result"}</small></span>
+      {detailsOpen ? (
+        <div className="play-v2__matchup-tools">
+          <span>{allMatchups.length} total · {openMatchups.length} active</span>
+          <button type="button" disabled={loading} onClick={() => void refresh()}>REFRESH ↻</button>
+        </div>
+      ) : null}
+      {error ? <p className="play-v2__muted" role="status">{error} <button type="button" onClick={() => void refresh()}>RETRY</button></p> : null}
+      {loading && !allMatchups.length ? <p className="play-v2__muted">Loading your matchups…</p> :
+        !visible.length ? <p className="play-v2__muted">{detailsOpen ? "No matchups yet." : "No open matchups. Challenge a friend from the Game Room."}</p> :
+          <div className="play-v2__matchup-list">
+            {visible.map((challenge) => {
+              const partner = profiles.find((p) => p.id === challengeCounterpartId(challenge, activeProfile!.id));
+              const status = challengeStatus(challenge, activeProfile!.id);
+              const direction = challengeDirection(challenge, activeProfile!.id);
+              const ended = status === "completed" || status === "declined";
+              const cancellable = status === "new" && direction === "received" || status === "waiting" && direction === "sent";
+              const canRemove = detailsOpen && (ended || cancellable || !["gm-football", "wheel-football", "wheel-ufc", "auction", "draft-room"].includes(challenge.gameId));
+              return (
+                <div className="play-v2__matchup-item" key={challenge.code}>
+                  <button type="button" className="play-v2__matchup-row" onClick={() => openMatch(challenge)}
+                    aria-label={challenge.gameTitle + " vs " + (partner?.displayName ?? "Friend") + " · " + statusLabel(challenge)}>
+                    <span className="play-v2__matchup-avatar">
+                      {partner?.avatarPhotoData ? <img src={partner.avatarPhotoData} alt="" /> : partner?.initials ?? "HQ"}
+                    </span>
+                    <span className="play-v2__matchup-copy">
+                      <strong>{challenge.gameTitle} vs {partner?.displayName ?? "Friend"}</strong>
+                      <small>{statusLabel(challenge)}</small>
+                    </span>
                     <span aria-hidden="true">↗</span>
                   </button>
-                );
-              })}
-              {relevant.length > 3 ? <p className="play-v2__more">{relevant.length - 3} more open matchups in Manage All</p> : null}
-            </div>
+                  {canRemove ? (
+                    <button type="button" className="play-v2__matchup-remove" disabled={busyCode === challenge.code}
+                      onClick={() => void removeMatch(challenge)}>
+                      {cancellable ? direction === "received" ? "DECLINE" : "CANCEL" : "REMOVE"}
+                    </button>
+                  ) : null}
+                </div>
+              );
+            })}
+            {!detailsOpen && openMatchups.length > 3 ? (
+              <button type="button" className="play-v2__more" onClick={() => setDetailsOpen(true)}>
+                VIEW {openMatchups.length - 3} MORE MATCHUPS →
+              </button>
+            ) : null}
+          </div>
       }
-      <div className="play-v2__challenge-details" hidden={!detailsOpen}><ChallengeCenter sport={sport} /></div>
     </section>
   );
 }
@@ -205,7 +304,7 @@ function WeeklyCurrent({}: Record<string, never>) {
         <span>FOOTBALL</span>
       </div>
       <h2>Auction Center</h2>
-      <p>Current Featured competition. Your weekly GM three-run championship is being developed separately.</p>
+      <p>Make your picks in this week’s featured football auction.</p>
       <div className="play-v2__weekly-actions">
         <Link to="/football/weekly-auction">OPEN CURRENT WEEKLY →</Link>
         <Link to="/championship/football?tab=play">PLAY STANDINGS ↗</Link>
@@ -216,19 +315,15 @@ function WeeklyCurrent({}: Record<string, never>) {
 
 function GameRoom({ sport }: { sport: PlaySport }) {
   const navigate = useNavigate();
-  const [showAll, setShowAll] = useState(false);
   const games = playLandingGameIds(sport).map((id) => playGameDefinition(id, sport));
-  const visible = showAll ? games : games.slice(0, 4);
   return (
     <section className="play-v2__room" aria-label="Game Room">
       <div className="play-v2__room-heading">
         <div><span>ALL GAMES</span><h2>Game Room</h2></div>
-        {games.length > 4 ? <button type="button" onClick={() => setShowAll((v) => !v)} aria-expanded={showAll}>
-          {showAll ? "SHOW LESS" : "VIEW ALL"} ↗
-        </button> : <span>{games.length} GAMES</span>}
+        <span>{games.length} GAMES</span>
       </div>
       <div className="play-v2__room-grid">
-        {visible.map((game) => (
+        {games.map((game) => (
           <button type="button" key={game.id} className="play-v2__game"
             onClick={() => navigate(playLandingDestination(sport, game.id))}>
             <span className="play-v2__game-mark" aria-hidden="true">{game.icon}</span>
@@ -249,7 +344,7 @@ function GameRoom({ sport }: { sport: PlaySport }) {
   );
 }
 
-export default function PlayV2Page({ sport, onClassic }: { sport: PlaySport; onClassic: () => void }) {
+export default function PlayV2Page({ sport }: { sport: PlaySport; onClassic: () => void }) {
   const identity = useIdentity();
   const profileId = identity.profile?.id;
   if (!profileId || identity.profile?.canControlPicks !== true) return null;
@@ -257,8 +352,7 @@ export default function PlayV2Page({ sport, onClassic }: { sport: PlaySport; onC
     <div className="page play-v2" data-sport={sport} data-testid="owner-play-v2">
       <WeeklyOverallChampionBanner sport={sport} />
       <header className="play-v2__heading">
-        <div><span>{sport === "football" ? "FOOTBALL" : "UFC"} HQ · OWNER PREVIEW</span><h1>Play</h1></div>
-        <button type="button" onClick={onClassic}>CLASSIC PLAY ↗</button>
+        <div><span>{sport === "football" ? "FOOTBALL" : "UFC"} PLAY</span><h1>Play</h1></div>
       </header>
       {sport === "football" ? <WeeklyCurrent /> : null}
       <DailyCompact sport={sport} profileId={profileId} />
