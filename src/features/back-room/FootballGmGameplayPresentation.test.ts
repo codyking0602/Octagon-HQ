@@ -12,6 +12,19 @@ const css = readFileSync(
 );
 
 describe("Football GM gameplay presentation", () => {
+
+  it("counts every FA wheel visit, preserves all released IDs and provides legal emergency depth", () => {
+    expect(page).toContain("freeAgencyVisitsUsed: run.freeAgencyVisitsUsed + 1");
+    expect(page).toContain("freeAgentSpinIndex: run.freeAgentSpinIndex + 1");
+    expect(page).toContain("PASS ON THIS TEAM · VISIT ALREADY USED");
+    expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])]");
+    expect(page).toContain("run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT");
+    expect(page).toContain("footballGmEmergencyFreeAgents({");
+    expect(page).toContain("<EmergencyFreeAgencyBoard");
+    expect(page).toContain("excludedPlayerIds={run.releasedPlayerIds}");
+    expect(page).toContain("footballGmMarketVisitsUsed(parsed.freeAgencyVisitsUsed, parsed.freeAgentSpinIndex ?? 0)");
+  });
+
   it("shows the same outlook pill during draft, roster management, trade targeting, and asking prices", () => {
     expect(page).toContain('function PlayerOutlookPill');
     expect(page).toContain('<PlayerOutlookPill player={player} />');
