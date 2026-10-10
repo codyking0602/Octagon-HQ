@@ -35,6 +35,7 @@ const FootballWeeklySuperteamPreviewPage = lazy(() => import("../features/back-r
 const FootballWeeklySuperteamLabPage = lazy(() => import("../features/back-room/FootballWeeklySuperteamLabPage"));
 const FootballWeeklyNflTeamSeasonLabPage = lazy(() => import("../features/back-room/FootballWeeklyNflTeamSeasonLabPage"));
 const TodayChallengeHubPage = lazy(() => import("../features/play/TodayChallengeHubPage"));
+const PlayV2StatsPage = lazy(() => import("../features/play/PlayV2StatsPage"));
 const OwnerAverageFanDailyPreviewPage = lazy(() => import("../features/play/OwnerAverageFanDailyPreviewPage"));
 const FindLeaderChallengeRoute = lazy(() => import("../features/challenges/FindLeaderChallengeRoute"));
 const TodayChallengeGameRoute = lazy(() => import("../features/play/TodayChallengeGameRoute"));
@@ -77,6 +78,7 @@ export const appRoutes: RouteObject[] = [
       { path: "notifications", element: <NotificationCenterPage /> },
       { path: "impostor", element: <HqImpostorPage /> },
       { path: "play", element: <TodayChallengeHubPage /> },
+      { path: "play/stats", element: <PlayV2StatsPage sport="ufc" /> },
       { path: "play/find-leader", element: <TodayChallengeGameRoute gameType="find_leader" casual={<FindLeaderChallengeRoute />} /> },
       { path: "play/wavelength", element: <TodayChallengeGameRoute gameType="wavelength" casual={<WavelengthPage />} /> },
       { path: "play/blind-resume", element: <TodayChallengeGameRoute gameType="blind_resume" casual={<BlindResumePage />} /> },
@@ -95,6 +97,7 @@ export const appRoutes: RouteObject[] = [
       { path: "play/average-fan-preview", element: <OwnerAverageFanDailyPreviewPage /> },
       { path: "back-room", element: <BackRoomPage /> },
       { path: "football", element: <FootballBackRoomPage /> },
+      { path: "football/play-stats", element: <PlayV2StatsPage sport="football" /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
       { path: "football/today", element: <FootballTodayChallengePage /> },
       { path: "football/weekly-auction", element: <FootballWeeklyAuctionCenterPage /> },
