@@ -416,7 +416,11 @@ export function buildSportsFeudPack(
     ? themedPack.main
     : useSep24UfcPrototype
       ? UFC_SPORTS_FEUD_SEP24_PROTOTYPE.main
-      : selectMain(domain, day);
+      : domain === "ufc" && day === "2026-10-10"
+        // Keep today's opening personality board and five Fast Money prompts,
+        // but replace the ambiguous classic-fights second board with finishes.
+        ? [selectMain(domain, day)[0]!, UFC_SPORTS_FEUD_MAIN.find((q) => q.id === "ufc-main-19-1")!]
+        : selectMain(domain, day);
   const authoredFast = themedPack
     ? themedPack.fastMoney
     : useSep24UfcPrototype
