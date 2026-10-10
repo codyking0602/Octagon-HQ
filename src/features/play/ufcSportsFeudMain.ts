@@ -2839,7 +2839,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Holloway-Kattar",
           "Holloway-Gaethje",
           "Whittaker-Romero 2",
-          "Gaethje-Topuria"
+          "Gaethje-Topuria",
+          "Prochazka-Teixeira"
         ]
       },
       {
@@ -2863,7 +2864,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Usman-Covington 1",
           "Holloway-Gaethje",
           "Whittaker-Romero 2",
-          "Gaethje-Topuria"
+          "Gaethje-Topuria",
+          "Prochazka-Teixeira"
         ]
       },
       {
@@ -2887,7 +2889,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Gaethje-Chandler",
           "Holloway-Kattar",
           "Whittaker-Romero 2",
-          "Gaethje-Topuria"
+          "Gaethje-Topuria",
+          "Prochazka-Teixeira"
         ]
       },
       {
@@ -2911,7 +2914,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Gaethje-Chandler",
           "Holloway-Kattar",
           "Holloway-Gaethje",
-          "Gaethje-Topuria"
+          "Gaethje-Topuria",
+          "Prochazka-Teixeira"
         ]
       },
       {
@@ -2935,7 +2939,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Holloway-Kattar",
           "Holloway-Gaethje",
           "Whittaker-Romero 2",
-          "Gaethje-Topuria"
+          "Gaethje-Topuria",
+          "Prochazka-Teixeira"
         ]
       }
     ],
@@ -3050,6 +3055,17 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Gaethje vs Topuria",
           "Justin vs Ilia",
           "Gaethje Topuria"
+        ]
+      },
+      {
+        "name": "Prochazka-Teixeira",
+        "aliases": [
+          "Jiri-Glover",
+          "Jiri Glover",
+          "Jiri vs Glover",
+          "Glover vs Jiri",
+          "Prochazka vs Teixeira",
+          "Jiří Procházka vs Glover Teixeira"
         ]
       }
     ]
