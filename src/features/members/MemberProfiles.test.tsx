@@ -353,6 +353,8 @@ describe("Member Profiles", () => {
 
     expect(await screen.findByRole("heading", { name: "SHANE" })).toBeInTheDocument();
     expect(screen.getByText("THE HQ MEMBER")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /FOOTBALL FULL STATS/i })).toHaveAttribute("href", "/members/SHANE/play-stats/football");
+    expect(screen.getByRole("link", { name: /UFC FULL STATS/i })).toHaveAttribute("href", "/members/SHANE/play-stats/ufc");
     expect(screen.queryByText("FAVORITE FIGHTER")).not.toBeInTheDocument();
     expect(screen.queryByRole("combobox", { name: "Favorite fighter" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "View Football Picks" })).not.toBeInTheDocument();
