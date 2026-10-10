@@ -106,6 +106,55 @@ describe("public Football/UFC Play 2.0 release", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("matches Home's October 10 Red River treatment on Football Play without changing the Daily result", () => {
+    mocked.runtime.mockReturnValue({
+      projection: { centralDay: "2026-10-10", gameType: "millionaire", progressRevision: 9,
+        officialAttempt: { normalizedScore: 83 }, publicState: {} },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 41, average: 76.9, best: 100, recent: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    const view = preview("football");
+    const daily = within(view.container).getByRole("region", { name: "Today's Challenge" });
+    expect(daily).toHaveAttribute("data-special-daily", "red-river");
+    expect(daily).toHaveStyle({ "--special-daily-primary": "#BF5700" });
+    expect(within(daily).getByLabelText("RED RIVER EDITION: TEXAS vs OKLAHOMA")).toBeInTheDocument();
+    expect(within(daily).getByRole("link", { name: /watch the red river rivalry video/i }))
+      .toHaveAttribute("href", "https://www.youtube.com/shorts/W4f0b2CwUGM");
+    expect(daily).toHaveTextContent("Who Wants to Be a Millionaire?");
+    expect(daily).toHaveTextContent("83");
+    expect(within(daily).getByRole("button", { name: /view result/i })).toBeInTheDocument();
+    expect(within(daily).getByRole("button", { name: /today's standings/i })).toBeInTheDocument();
+  });
+
+  it("does not carry Red River styling into UFC or another Football day", () => {
+    mocked.runtime.mockReturnValue({
+      projection: { centralDay: "2026-10-10", gameType: "sports_feud", progressRevision: 0,
+        officialAttempt: null, publicState: {} },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 1, average: 80, best: 80, recent: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    const ufc = preview("ufc");
+    const ufcDaily = within(ufc.container).getByRole("region", { name: "Today's Challenge" });
+    expect(ufcDaily).not.toHaveAttribute("data-special-daily");
+    expect(within(ufcDaily).queryByText("RED RIVER EDITION")).not.toBeInTheDocument();
+    ufc.unmount();
+    mocked.runtime.mockReturnValue({
+      projection: { centralDay: "2026-10-11", gameType: "sports_feud", progressRevision: 0,
+        officialAttempt: null, publicState: {} },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    const nextDay = preview("football");
+    const nextDaily = within(nextDay.container).getByRole("region", { name: "Today's Challenge" });
+    expect(nextDaily).not.toHaveAttribute("data-special-daily");
+    expect(within(nextDaily).queryByRole("link", { name: /watch the red river rivalry video/i })).not.toBeInTheDocument();
+  });
+
   it("does not manufacture a UFC weekly and explains missing official history", () => {
     mocked.runtime.mockReturnValue({
       projection: { gameType: "who_am_i", progressRevision: 0, officialAttempt: null, publicState: {} },

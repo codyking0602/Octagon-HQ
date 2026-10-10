@@ -12,11 +12,13 @@ import { WeeklyOverallChampionBanner } from "./WeeklyOverallChampionBanner";
 import { playLandingDestination, playLandingGameIds } from "./PlayLandingPresentation";
 import { playGameDefinition, type PlaySport } from "./playRegistry";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
+import { FootballSpecialDailyHubMark, footballSpecialDailyStyle, footballSpecialDailyThemeForDay } from "./footballSpecialDailyTheme";
 import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
 import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
 import { usePlayV2History } from "./usePlayV2History";
 import { playV2Score } from "./playV2Stats";
 import "../../styles/play-v2.css";
+import "../../styles/football-special-daily.css";
 
 const GAME_COPY: Record<string, string> = {
   "gm-football": "Build a three-year dynasty",
@@ -40,6 +42,7 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
     profileId, enabled: true, projection: runtime.projection, sport,
   });
   const projection = runtime.projection;
+  const specialTheme = sport === "football" && projection ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
   const adapter = todayChallengeAdapter(projection?.gameType);
   const title = projection && isDailyRankKeepCombo(projection)
     ? "Blind Rank + Keep/Cut" : adapter?.title ?? "Today's Challenge";
@@ -51,7 +54,9 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const selectedEntry = overview.leaderboard?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;
   return (
-    <section className="play-v2__daily" aria-label="Today's Challenge" data-sport={sport}>
+    <section className="play-v2__daily" aria-label="Today's Challenge" data-sport={sport}
+      data-special-daily={specialTheme?.rivalryAccent ? "red-river" : specialTheme ? "team" : undefined}
+      style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}>
       <div className="play-v2__section-top">
         <span>TODAY'S CHALLENGE</span>
         <span className="play-v2__daily-status">{completed ? "COMPLETE" : saved ? "IN PROGRESS" : "OFFICIAL DAILY"}</span>
@@ -66,6 +71,7 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
         </div>
       ) : (
         <>
+          {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
           <div className="play-v2__daily-row">
             <div className="play-v2__daily-title">
               <h2>{title}</h2>
@@ -88,6 +94,12 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
               {showResults ? "HIDE" : "TODAY'S STANDINGS"} ↗
             </button>
           </div>
+          {specialTheme?.videoUrl ? (
+            <a className="play-v2__rivalry-video" href={specialTheme.videoUrl}
+              target="_blank" rel="noopener noreferrer" aria-label="Watch the Red River rivalry video on YouTube">
+              <span>RED RIVER EDITION</span><strong>WATCH RIVALRY VIDEO ↗</strong>
+            </a>
+          ) : null}
           {showResults ? (
             <div id="play-v2-daily-leaders" className="play-v2__daily-leaders">
               {overview.leaderboardLoading ? <p>Loading standings…</p>

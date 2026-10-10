@@ -250,3 +250,112 @@
   .play-v2__stat-grid article { padding: 9px; }
 }
 @media (prefers-reduced-motion: reduce) { .play-v2 * { transition: none !important; animation: none !important; } }
+
+
+/* Match the Home event treatment on the refreshed Play tab without
+   changing the weekly feature, scoreboard actions, or UFC presentation. */
+.play-v2__daily[data-special-daily="team"] {
+  border-color: color-mix(in srgb, var(--special-daily-primary) 55%, #364251);
+  background:
+    radial-gradient(circle at 14% 0%, rgba(var(--special-daily-primary-rgb), .2), transparent 68%),
+    #191b20;
+}
+
+.play-v2__daily[data-special-daily="red-river"] {
+  --play2-accent: #f2a568;
+  --play2-accent-rgb: 191, 87, 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #90502f;
+  border-top: 3px solid transparent;
+  background:
+    radial-gradient(ellipse at 2% 0%, rgba(191, 87, 0, .22), transparent 64%),
+    radial-gradient(ellipse at 100% 85%, rgba(132, 22, 23, .23), transparent 66%),
+    linear-gradient(145deg, #221b1c, #171719);
+  box-shadow: inset 3px 0 0 rgba(191, 87, 0, .75), inset -3px 0 0 rgba(132, 22, 23, .72);
+}
+
+.play-v2__daily[data-special-daily="red-river"]::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -1px;
+  right: -1px;
+  height: 4px;
+  background: linear-gradient(90deg, #bf5700 0 50%, #841617 50% 100%);
+  pointer-events: none;
+}
+
+.play-v2__daily[data-special-daily] .football-special-daily-hub-mark {
+  max-width: 100%;
+  margin: 0;
+  padding: 6px 10px 6px 7px;
+  border-color: rgba(210, 133, 76, .65);
+  background: linear-gradient(100deg, rgba(191, 87, 0, .22), rgba(132, 22, 23, .22));
+}
+
+.play-v2__daily[data-special-daily] .football-special-daily-hub-mark__logos img {
+  width: 24px;
+  height: 24px;
+}
+
+.play-v2__daily[data-special-daily] .football-special-daily-hub-mark small {
+  color: #f9b777;
+  font-size: 9px;
+  letter-spacing: .08em;
+}
+
+.play-v2__daily[data-special-daily] .football-special-daily-hub-mark strong {
+  color: #f8f1e8;
+  font-size: 11px;
+  white-space: normal;
+}
+
+.play-v2__daily[data-special-daily="red-river"] .play-v2__daily-actions button:first-child {
+  color: #ffd7b2;
+  border-color: rgba(191, 87, 0, .65);
+  background: rgba(191, 87, 0, .23);
+}
+
+.play-v2__daily[data-special-daily="red-river"] .play-v2__daily-actions button:first-child:hover,
+.play-v2__daily[data-special-daily="red-river"] .play-v2__daily-actions button:first-child:focus-visible {
+  border-color: #f6b270;
+}
+
+.play-v2__rivalry-video {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid rgba(191, 87, 0, .4);
+  border-radius: 9px;
+  background: linear-gradient(100deg, rgba(191, 87, 0, .13), rgba(132, 22, 23, .16));
+  color: #f9e8d9;
+  text-decoration: none;
+}
+
+.play-v2__rivalry-video > span {
+  color: #c6a69a;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+
+.play-v2__rivalry-video > strong {
+  font-size: 10px;
+  font-weight: 900;
+  text-align: right;
+}
+
+.play-v2__rivalry-video:hover,
+.play-v2__rivalry-video:focus-visible {
+  border-color: #f1a463;
+}
+
+@media (max-width: 380px) {
+  .play-v2__rivalry-video { padding: 7px 8px; }
+  .play-v2__rivalry-video > span { font-size: 8px; }
+  .play-v2__rivalry-video > strong { font-size: 9px; }
+}
