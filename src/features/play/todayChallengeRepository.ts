@@ -394,9 +394,23 @@ export interface TodayChallengeRepository {
     clientActionId?: string,
   ): Promise<TodayChallengeProjection>;
   loadHistory(): Promise<TodayChallengeHistoryRow[]>;
+  loadMemberHistory(memberName: string): Promise<TodayChallengeHistoryRow[]>;
   loadStreak(): Promise<TodayChallengeStreak>;
   loadStandings(): Promise<TodayChallengeStandings>;
   loadDailyLeaderboard(day: string, scheduleVersion: string): Promise<TodayChallengeLeaderboard>;
+}
+
+function parseOfficialHistory(value: unknown): TodayChallengeHistoryRow[] {
+  const rows = z.array(historySchema).parse(value ?? []);
+  return rows.map((row) => ({
+    day: row.day,
+    scheduleVersion: row.schedule_version,
+    gameType: row.game_type,
+    nativeScore: row.native_score,
+    normalizedScore: row.normalized_score,
+    completedAt: row.completed_at,
+    publicResult: row.public_result,
+  }));
 }
 
 export function createTodayChallengeRepository(
@@ -427,20 +441,18 @@ export function createTodayChallengeRepository(
       }));
     },
     async loadHistory() {
-      const rows = z.array(historySchema).parse(await rpc(
+      return parseOfficialHistory(await rpc(
         client,
         "list_my_daily_challenge_history",
         { p_sport: sport },
-      ) ?? []);
-      return rows.map((row) => ({
-        day: row.day,
-        scheduleVersion: row.schedule_version,
-        gameType: row.game_type,
-        nativeScore: row.native_score,
-        normalizedScore: row.normalized_score,
-        completedAt: row.completed_at,
-        publicResult: row.public_result,
-      }));
+      ));
+    },
+    async loadMemberHistory(memberName) {
+      return parseOfficialHistory(await rpc(
+        client,
+        "list_member_daily_challenge_history",
+        { p_member_name: memberName, p_sport: sport },
+      ));
     },
     async loadStreak() {
       const row = streakSchema.parse(await rpc(
