@@ -359,3 +359,46 @@
   .play-v2__rivalry-video > span { font-size: 8px; }
   .play-v2__rivalry-video > strong { font-size: 9px; }
 }
+
+
+/* The same special-day card also supports Cowboys (navy) and Lone Star (orange).
+   Red River retains its previously approved two-color treatment above. */
+.play-v2__daily[data-special-daily="team"] {
+  --play2-accent: var(--special-daily-secondary);
+  --play2-accent-rgb: var(--special-daily-primary-rgb);
+  position: relative;
+  overflow: hidden;
+  border-top: 3px solid transparent;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(var(--special-daily-primary-rgb), .28), transparent 66%),
+    radial-gradient(ellipse at 100% 85%, rgba(var(--special-daily-opponent-rgb), .21), transparent 60%),
+    linear-gradient(145deg, #1c2129, #14171d);
+}
+
+.play-v2__daily[data-special-daily="team"]::before {
+  content: "";
+  position: absolute;
+  height: 4px;
+  left: -1px;
+  top: -3px;
+  right: -1px;
+  background: linear-gradient(90deg, var(--special-daily-primary) 0 50%, var(--special-daily-opponent) 50% 100%);
+  pointer-events: none;
+}
+
+.play-v2__daily[data-special-daily="team"] .football-special-daily-hub-mark {
+  border-color: color-mix(in srgb, var(--special-daily-primary) 60%, var(--special-daily-opponent));
+  background:
+    linear-gradient(110deg, rgba(var(--special-daily-primary-rgb), .31), rgba(var(--special-daily-opponent-rgb), .20));
+}
+
+.play-v2__daily[data-special-daily="team"] .football-special-daily-hub-mark small,
+.play-v2__daily[data-special-daily="team"] .play-v2__daily-status {
+  color: var(--special-daily-secondary);
+}
+
+.play-v2__daily[data-special-daily="team"] .play-v2__daily-actions button:first-child {
+  background: rgba(var(--special-daily-primary-rgb), .38);
+  border-color: var(--special-daily-primary);
+  color: #fff;
+}
