@@ -12,6 +12,7 @@ const FighterProfilePage = lazy(() => import("../features/rankings/FighterProfil
 const IntelligencePage = lazy(() => import("../features/intelligence/IntelligencePage"));
 const MemberDirectoryPage = lazy(() => import("../features/members/MemberDirectoryPage"));
 const MemberProfilePage = lazy(() => import("../features/members/MemberProfilePage"));
+const MemberPlayV2StatsPage = lazy(() => import("../features/play/MemberPlayV2StatsPage"));
 const NotificationCenterPage = lazy(() => import("../features/notifications/NotificationCenterPage"));
 const HqImpostorPage = lazy(() => import("../features/impostor/HqImpostorPage"));
 const BackRoomPage = lazy(() => import("../features/back-room/BackRoomPage"));
@@ -75,6 +76,7 @@ export const appRoutes: RouteObject[] = [
       { path: "intelligence", element: <IntelligencePage /> },
       { path: "members", element: <MemberDirectoryPage /> },
       { path: "members/:memberName", element: <MemberProfilePage /> },
+      { path: "members/:memberName/play-stats/:sport", element: <MemberPlayV2StatsPage /> },
       { path: "notifications", element: <NotificationCenterPage /> },
       { path: "impostor", element: <HqImpostorPage /> },
       { path: "play", element: <TodayChallengeHubPage /> },
