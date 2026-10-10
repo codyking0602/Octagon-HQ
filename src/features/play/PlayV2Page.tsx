@@ -96,8 +96,8 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
           </div>
           {specialTheme?.videoUrl ? (
             <a className="play-v2__rivalry-video" href={specialTheme.videoUrl}
-              target="_blank" rel="noopener noreferrer" aria-label="Watch the Red River rivalry video on YouTube">
-              <span>RED RIVER EDITION</span><strong>WATCH RIVALRY VIDEO ↗</strong>
+              target="_blank" rel="noopener noreferrer" aria-label={specialTheme.rivalryAccent ? "Watch the Red River rivalry video on YouTube" : `Watch ${specialTheme.eventLabel} video on YouTube`}>
+              <span>{specialTheme.eventLabel}</span><strong>{specialTheme.rivalryAccent ? "WATCH RIVALRY VIDEO ↗" : "WATCH EVENT VIDEO ↗"}</strong>
             </a>
           ) : null}
           {showResults ? (
