@@ -188,6 +188,27 @@ describe("Today’s Challenge runtime repository", () => {
         stale: true,
       });
   });
+  it("fetches member full stats by name and sport without changing the current user's private history RPC", async () => {
+    const { client } = clientWithResponses([]);
+    client.rpc = vi.fn().mockResolvedValue({
+      data: [{
+        day: "2026-10-09", schedule_version: "football-test",
+        game_type: "sports_feud", native_score: 80, normalized_score: 80,
+        completed_at: "2026-10-09T15:00:00Z", public_result: {},
+      }],
+      error: null,
+    });
+    const repository = createTodayChallengeRepository(client as never, "football")!;
+    const results = await repository.loadMemberHistory("SHANE");
+    expect(results).toEqual([{
+      day: "2026-10-09", scheduleVersion: "football-test", gameType: "sports_feud",
+      nativeScore: 80, normalizedScore: 80, completedAt: "2026-10-09T15:00:00Z", publicResult: {},
+    }]);
+    expect(client.rpc).toHaveBeenCalledExactlyOnceWith("list_member_daily_challenge_history", {
+      p_member_name: "SHANE", p_sport: "football",
+    });
+  });
+
   it("carries sanitized completed-game details through Daily leaderboard entries", async () => {
     const { client } = clientWithResponses([]);
     client.rpc = vi.fn().mockResolvedValue({
