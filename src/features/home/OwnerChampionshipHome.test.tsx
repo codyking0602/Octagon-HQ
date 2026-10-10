@@ -129,4 +129,68 @@ describe("Owner Championship Home preview", () => {
     expect(await screen.findByText("Championship standings unavailable")).toBeInTheDocument();
     expect(screen.queryByText("91.3")).not.toBeInTheDocument();
   });
+  it("shows a real rival chase and contextual lead without inventing scores", async () => {
+    const football = projection("football");
+    const shane = {
+      ...football.own,
+      profile_id: "22222222-2222-4222-8222-222222222222",
+      display_name: "SHANE",
+      initials: "SH",
+      is_current_user: false,
+      rank: 2,
+      rating: 89.1,
+    };
+    const troy = {
+      ...football.own,
+      profile_id: "33333333-3333-4333-8333-333333333333",
+      display_name: "TROY",
+      initials: "TR",
+      is_current_user: false,
+      rank: 3,
+      rating: 86.7,
+    };
+    loader.sport.mockImplementation(async (sport) => sport === "football"
+      ? { ...football, entries: [troy, football.own, shane] }
+      : projection("ufc"));
+    render(<Preview showMlb={false} />);
+    await screen.findByText("91.3 SEASON SCORE");
+    fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "football" } });
+    const hero = screen.getByRole("region", { name: "Your HQ" });
+    expect(within(hero).getByText("LEAGUE LEADER")).toBeInTheDocument();
+    expect(within(hero).getByText("+2.2 over SHANE")).toBeInTheDocument();
+    expect(within(hero).getByText("SHANE")).toBeInTheDocument();
+    expect(within(hero).getByText("TROY")).toBeInTheDocument();
+    expect(within(hero).getByRole("link", { name: "View SHANE Championship standing" }))
+      .toHaveAttribute("href", "/championship/football?tab=overall&player=22222222-2222-4222-8222-222222222222");
+    expect(within(hero).getByRole("link", { name: "View all Football Championship standings" }))
+      .toHaveAttribute("href", "/championship/football?tab=overall");
+  });
+
+  it("shows a chasing status and current user's real standing outside the top three", async () => {
+    const football = projection("football");
+    const first = {
+      ...football.own, profile_id: "22222222-2222-4222-8222-222222222222",
+      display_name: "SHANE", initials: "SH", rank: 1, rating: 94.5, is_current_user: false,
+    };
+    const second = {
+      ...football.own, profile_id: "33333333-3333-4333-8333-333333333333",
+      display_name: "TROY", initials: "TR", rank: 2, rating: 93.0, is_current_user: false,
+    };
+    const third = {
+      ...football.own, profile_id: "44444444-4444-4444-8444-444444444444",
+      display_name: "TYLER", initials: "TY", rank: 3, rating: 91.8, is_current_user: false,
+    };
+    const own = { ...football.own, rank: 4, rating: 89.5 };
+    loader.sport.mockImplementation(async (sport) => sport === "football"
+      ? { ...football, own, entries: [own, third, first, second] } : projection("ufc"));
+    render(<Preview showMlb={false} />);
+    await screen.findByText("91.3 SEASON SCORE");
+    fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "football" } });
+    const hero = screen.getByRole("region", { name: "Your HQ" });
+    expect(within(hero).getByText("IN THE HUNT")).toBeInTheDocument();
+    expect(within(hero).getByText("5.0 points from 1st")).toBeInTheDocument();
+    expect(within(hero).getByText("You")).toBeInTheDocument();
+    expect(within(hero).getByText("TYLER")).toBeInTheDocument();
+  });
+
 });
