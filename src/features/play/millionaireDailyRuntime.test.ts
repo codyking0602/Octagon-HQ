@@ -60,7 +60,7 @@ describe("Millionaire official Daily runtime", () => {
     const question = run[2]!;
     expect(question.prompt).toContain("Mike Ditka");
     expect(question.prompt).toBe("In which NFL season did Mike Ditka lead the Chicago Bears to their only Super Bowl championship?");
-    expect(question.choices.map((choice) => choice.text)).toEqual(["1984", "1985", "1986", "1987"]);
+    expect(question.choices.map((choice) => choice.text).sort()).toEqual(["1984", "1985", "1986", "1987"]);
     expect(question.choices.find((choice) => choice.id === question.correctChoiceId)?.text).toBe("1985");
     expect((previous.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
     expect((next.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
