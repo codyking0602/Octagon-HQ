@@ -3,7 +3,7 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { MemberPlayStatsPage } from "./PlayV2StatsPage";
+import PlayV2StatsPage, { MemberPlayStatsPage } from "./PlayV2StatsPage";
 
 const mocked = vi.hoisted(() => ({
   profile: null as null | { id: string; displayName: string; canControlPicks: boolean },
@@ -22,6 +22,8 @@ function visit(path: string) {
     <MemoryRouter initialEntries={[path]}>
       <Routes>
         <Route path="/members/:memberName/play-stats/:sport" element={<MemberPlayStatsPage />} />
+        <Route path="/football/play-stats" element={<PlayV2StatsPage sport="football" />} />
+        <Route path="/play/stats" element={<PlayV2StatsPage sport="ufc" />} />
         <Route path="/football" element={<p>Football sign-in destination</p>} />
         <Route path="/play" element={<p>UFC sign-in destination</p>} />
         <Route path="/members/:memberName" element={<p>Member profile destination</p>} />
@@ -77,4 +79,18 @@ describe("member Full Play Stats", () => {
     expect(screen.getByText("Member profile destination")).toBeInTheDocument();
     expect(mocked.history).not.toHaveBeenCalled();
   });
+  it("makes personal Full Stats available on both canonical routes without owner permissions", () => {
+    visit("/football/play-stats");
+    expect(screen.getByRole("heading", { name: "Your Performance" })).toBeInTheDocument();
+    expect(mocked.history).toHaveBeenCalledWith(
+      "football", "11111111-1111-4111-8111-111111111111", null,
+    );
+  });
+
+  it("keeps anonymous visitors away from personal Full Stats", () => {
+    mocked.profile = null;
+    visit("/play/stats");
+    expect(screen.getByText("UFC sign-in destination")).toBeInTheDocument();
+  });
+
 });
