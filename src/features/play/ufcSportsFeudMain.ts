@@ -1119,7 +1119,9 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Quinton Jackson",
           "Paddy Pimblett",
           "Sean O'Malley",
-          "Tony Ferguson"
+          "Tony Ferguson",
+          "Jon Jones",
+          "Brock Lesnar"
         ]
       },
       {
@@ -1140,7 +1142,9 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Derrick Lewis",
           "Tito Ortiz",
           "Quinton Jackson",
-          "Tony Ferguson"
+          "Tony Ferguson",
+          "Jon Jones",
+          "Brock Lesnar"
         ]
       },
       {
@@ -1161,7 +1165,9 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Quinton Jackson",
           "Paddy Pimblett",
           "Sean O'Malley",
-          "Tony Ferguson"
+          "Tony Ferguson",
+          "Jon Jones",
+          "Brock Lesnar"
         ]
       },
       {
@@ -1182,7 +1188,9 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Quinton Jackson",
           "Paddy Pimblett",
           "Sean O'Malley",
-          "Tony Ferguson"
+          "Tony Ferguson",
+          "Jon Jones",
+          "Brock Lesnar"
         ]
       },
       {
