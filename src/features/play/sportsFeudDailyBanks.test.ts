@@ -99,6 +99,25 @@ describe("Sports Feud authored Daily banks", () => {
     }
   });
 
+  it("refreshes the Oct. 10 UFC second board and fairly accepts the first board", () => {
+    const pack = buildSportsFeudPack("ufc", "2026-10-10");
+    expect(pack.mainBoards.map((board) => board.id)).toEqual(["ufc-main-06-5", "ufc-main-19-1"]);
+    expect(pack.mainBoards[1]?.prompt).toBe("Name a technique you might see finish a UFC fight.");
+    for (const answer of ["Jon Jones", "Brock Lesnar"]) {
+      expect(matchFamilyFeudAnswer(pack, pack.mainBoards[0]!, answer).status).toBe("matched");
+    }
+    for (const answer of ["Rear-naked choke", "Kimura"]) {
+      expect(matchFamilyFeudAnswer(pack, pack.mainBoards[1]!, answer).status).toBe("matched");
+    }
+    expect(pack.fastMoney.map((question) => question.id)).toEqual([
+      "ufc-fast2-07-3",
+      "ufc-fast3-06-5",
+      "ufc-fast4-06-2",
+      "ufc-fast1-05-1",
+      "ufc-fast2-04-3",
+    ]);
+  });
+
   it("accepts Royce Gracie and Gracie on the Oct. 6 UFC era board", () => {
     const pack = buildSportsFeudPack("ufc", "2026-10-06");
     const era = pack.mainBoards.find((row) => row.id === "ufc-main-01-2");
