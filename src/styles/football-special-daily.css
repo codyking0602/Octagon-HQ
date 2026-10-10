@@ -326,15 +326,100 @@
 .home-red-river-video span { color: var(--text-muted); font-size: .64rem; font-weight: 850; letter-spacing: .06em; }
 .home-red-river-video strong { color: var(--text-primary); font-size: .66rem; font-weight: 900; white-space: nowrap; }
 .home-red-river-video:hover, .home-red-river-video:focus-visible { border-color: #bf5700; }
-.football-special-daily-page[data-red-river="true"] .millionaire-shell::after {
-  box-shadow: inset 0 0 58px rgba(191,87,0,.11), inset 0 0 120px rgba(132,22,23,.075);
-  background: linear-gradient(90deg,#bf5700 0 50%,#841617 50% 100%) top/100% 5px no-repeat;
-}
-.football-special-daily-page[data-red-river="true"] .millionaire-rules {
-  box-shadow: 0 0 0 2px rgba(191,87,0,.35), 0 0 35px rgba(132,22,23,.12);
-}
 @media (max-width:420px) {
   .home-red-river-video { padding: 7px 9px; }
   .home-red-river-video span { font-size: .56rem; }
   .home-red-river-video strong { font-size: .58rem; }
+}
+
+
+/* Game/rules are portal-mounted at document.body, outside the Football page.
+   Target the date-scoped portal root directly; never alter answer verdict colors. */
+.millionaire-shell--rules[data-red-river="true"] {
+  background:
+    radial-gradient(ellipse at 24% 20%, rgba(191, 87, 0, .31), transparent 57%),
+    radial-gradient(ellipse at 77% 66%, rgba(132, 22, 23, .33), transparent 57%),
+    #050913;
+}
+
+.millionaire-shell--rules[data-red-river="true"] .millionaire-rules {
+  box-shadow: 0 0 0 2px rgba(191, 87, 0, .35), 0 0 35px rgba(132, 22, 23, .17);
+}
+
+.millionaire-shell--rules[data-red-river="true"] .millionaire-rules > header > span {
+  color: #f5c98f;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.millionaire-shell--red-river .millionaire-stage-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(90deg, #bf5700 0 50%, #841617 50% 100%) top / 100% 8px no-repeat;
+  box-shadow: inset 0 0 95px rgba(132, 35, 18, .14);
+}
+
+.millionaire-shell--red-river .millionaire-title span {
+  color: #fff0d9;
+  font-size: 18px;
+  letter-spacing: 3px;
+}
+
+.millionaire-shell--red-river .millionaire-title::after {
+  background: linear-gradient(90deg, #bf5700, #f8d17c 50%, #841617);
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate {
+  position: absolute;
+  z-index: 26;
+  top: 26px;
+  left: 184px;
+  width: 398px;
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 14px;
+  border: 1px solid rgba(247, 207, 155, .65);
+  border-top: 4px solid #dba44e;
+  border-radius: 10px;
+  background: linear-gradient(110deg, rgba(111, 45, 5, .92), rgba(27, 20, 23, .96) 50%, rgba(93, 11, 19, .92));
+  box-shadow: 0 6px 28px rgba(0, 0, 0, .43);
+  color: #fff5e5;
+  text-align: center;
+  pointer-events: none;
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate img {
+  flex: 0 0 auto;
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .6));
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate strong {
+  font-size: 17px;
+  font-weight: 950;
+  letter-spacing: 1.1px;
+  white-space: nowrap;
+}
+
+.millionaire-shell--red-river .millionaire-red-river-plate small {
+  color: #f9dba7;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 1.1px;
+  white-space: nowrap;
 }
