@@ -321,6 +321,22 @@ export function MemberProfileView({
         <article className="surface-card"><small>CHALLENGES</small><strong>{challengeState.loading ? "…" : challengeSummary.completed}</strong><span>{challengeSummary.open ? `${challengeSummary.open} open` : "Completed"}</span></article>
       </section>
 
+      <section className="surface-card member-profile-data-section member-profile-play-stats"
+        aria-labelledby="member-play-performance-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">OFFICIAL DAILY GAMES</p><h2 id="member-play-performance-title">Play Performance</h2></div>
+        </div>
+        <p>Career average, best scores, game-by-game performance and recent results.</p>
+        <div className="member-profile-play-links">
+          <Link className="secondary-action" to={memberProfilePath(member.displayName) + "/play-stats/football"}>
+            FOOTBALL FULL STATS ↗
+          </Link>
+          <Link className="secondary-action" to={memberProfilePath(member.displayName) + "/play-stats/ufc"}>
+            UFC FULL STATS ↗
+          </Link>
+        </div>
+      </section>
+
       <section className="surface-card member-profile-data-section" aria-labelledby="member-find-leader-title">
         <div className="section-heading">
           <div><p className="eyebrow">UFC DAILY HISTORY</p><h2 id="member-find-leader-title">Find the Leader</h2></div>
