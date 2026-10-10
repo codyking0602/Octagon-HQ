@@ -11,6 +11,8 @@ export interface FootballSpecialDailyTheme {
   secondary: string;
   teamLogo: string;
   opponentLogo: string;
+  rivalryAccent?: string;
+  videoUrl?: string;
 }
 
 const NFL_LOGO = (code: string) => `https://a.espncdn.com/i/teamlogos/nfl/500/${code}.png`;
@@ -26,6 +28,8 @@ const THEMES: Readonly<Record<string, FootballSpecialDailyTheme>> = {
     opponentName: "Oklahoma",
     primary: "#BF5700",
     secondary: "#F4E9DA",
+    rivalryAccent: "#841617",
+    videoUrl: "https://www.youtube.com/shorts/W4f0b2CwUGM",
     teamLogo: CFB_LOGO(251),
     opponentLogo: CFB_LOGO(201),
   },
@@ -82,6 +86,7 @@ export function footballSpecialDailyStyle(theme: FootballSpecialDailyTheme): CSS
     "--special-daily-primary": theme.primary,
     "--special-daily-primary-rgb": rgbChannels(theme.primary),
     "--special-daily-secondary": theme.secondary,
+    "--special-daily-rivalry-accent": theme.rivalryAccent ?? theme.primary,
   } as CSSProperties;
 }
 
