@@ -16,6 +16,7 @@ import {
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
 import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
+import { FootballSpecialDailyHubMark, footballSpecialDailyThemeForDay, footballSpecialDailyStyle } from "../play/footballSpecialDailyTheme";
 import {
   useHqDailyChallengeStreak,
   useTodayChallengeOverview,
@@ -33,6 +34,7 @@ import { RankingSpotlightCard } from "./RankingSpotlightCard";
 import { ShanesWatchlistCard } from "./ShanesWatchlistCard";
 import { HqImpostorHomeCard } from "../impostor/HqImpostorHomeCard";
 import "../../styles/home-football-hq.css";
+import "../../styles/football-special-daily.css";
 import "../../styles/home-ufc-hq.css";
 
 function readableError(error: unknown) {
@@ -91,11 +93,14 @@ function TodayChallengeCard({
                 ? "NOT PLAYED"
                 : "UNAVAILABLE";
   const sportLabel = sport === "ufc" ? "UFC" : "FOOTBALL";
+  const specialTheme = sport === "football" && projection ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
 
   return (
     <Link
       className="home-challenge-card"
       data-sport={sport}
+      data-special-daily={specialTheme?.rivalryAccent ? "red-river" : specialTheme ? "team" : undefined}
+      style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}
       to={to}
       aria-label={`Open ${sportLabel} Today’s Challenge`}
     >
@@ -104,6 +109,7 @@ function TodayChallengeCard({
           <span>{sportLabel} DAILY CHALLENGE</span>
           <small>{status}</small>
         </div>
+        {specialTheme ? <FootballSpecialDailyHubMark theme={specialTheme} /> : null}
         <h3>{title}</h3>
         {!signedIn ? (
           <p>Sign in to track today’s score and standing.</p>
@@ -249,7 +255,10 @@ export default function HomePage() {
     />
   );
 
+  const footballDailyTheme = footballDailyRuntime.projection
+    ? footballSpecialDailyThemeForDay(footballDailyRuntime.projection.centralDay) : null;
   const footballDailyChallenge = (
+    <>
     <TodayChallengeCard
       sport="football"
       title={footballDailyAdapter?.title ?? "Today’s Challenge"}
@@ -261,6 +270,12 @@ export default function HomePage() {
       leaderboard={footballDailyOverview.leaderboard}
       gatedPreview={footballDailyGatedPreview}
     />
+    {footballDailyTheme?.videoUrl ? (
+      <a className="home-red-river-video" href={footballDailyTheme.videoUrl} target="_blank" rel="noopener noreferrer" aria-label="Watch the Red River rivalry video on YouTube">
+        <span>RED RIVER EDITION</span><strong>WATCH RIVALRY VIDEO ↗</strong>
+      </a>
+    ) : null}
+    </>
   );
 
   const footballHq = (
