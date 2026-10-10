@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { playLandingGameIds } from "../play/PlayLandingPresentation";
 import playLandingSource from "../play/PlayLandingPresentation.tsx?raw";
+import playV2Source from "../play/PlayV2Page.tsx?raw";
+import ufcHomeSource from "../play/TodayChallengeHubPage.tsx?raw";
 import { playGameDefinition } from "../play/playRegistry";
 import todayHubSource from "../play/TodayChallengeHub.tsx?raw";
 import footballHomeSource from "./FootballBackRoomPage.tsx?raw";
@@ -14,7 +16,9 @@ import footballWavelengthPresentationSource from "./FootballWavelengthPresentati
 
 describe("Football HQ game library presentation", () => {
   it("uses the shared Play library while preserving distinct replayable game identities", () => {
-    expect(footballHomeSource).toContain('<PlayLandingGameLibrary sport="football"');
+    expect(footballHomeSource).toContain('<PlayV2Page sport="football" />');
+    expect(playV2Source).toContain("playLandingGameIds(sport)");
+    expect(playV2Source).toContain("playLandingDestination(sport, game.id)");
 
     const games = playLandingGameIds("football").map((id) => playGameDefinition(id, "football"));
     expect(games.map((game) => game.id)).toEqual([
@@ -69,7 +73,12 @@ describe("Football HQ game library presentation", () => {
   });
 
   it("uses the same Today Challenge presentation owner as UFC", () => {
-    expect(footballHomeSource).toContain('<TodayChallengeHub sport="football" />');
+    expect(footballHomeSource).toContain('<PlayV2Page sport="football" />');
+    expect(ufcHomeSource).toContain('<PlayV2Page sport="ufc" />');
+    expect(playV2Source).toContain('<DailyCompact sport={sport} profileId={profileId} />');
+    expect(playV2Source).toContain('useTodayChallengeRuntime({ profileId, enabled: true, sport })');
+    expect(playV2Source).toContain('useTodayChallengeOverview({');
+    expect(playV2Source).toContain('DailyAnswerDetail');
     expect(footballHomeSource).not.toContain("football-daily-hq");
     expect(footballHomeSource).not.toContain("useTodayChallengeRuntime");
     expect(footballHomeSource).not.toContain("useTodayChallengeOverview");
