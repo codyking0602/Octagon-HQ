@@ -109,6 +109,9 @@ describe("Sports Feud authored Daily banks", () => {
     for (const answer of ["Rear-naked choke", "Kimura"]) {
       expect(matchFamilyFeudAnswer(pack, pack.mainBoards[1]!, answer).status).toBe("matched");
     }
+    const iconicFight = UFC_SPORTS_FEUD_MAIN.find((question) => question.id === "ufc-main-14-2");
+    const jiri = iconicFight?.alsoAcceptedAnswers?.find((answer) => answer.name === "Prochazka-Teixeira");
+    expect(jiri?.aliases).toContain("Jiri-Glover");
     expect(pack.fastMoney.map((question) => question.id)).toEqual([
       "ufc-fast2-07-3",
       "ufc-fast3-06-5",
