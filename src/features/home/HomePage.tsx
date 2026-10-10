@@ -274,8 +274,8 @@ export default function HomePage() {
       gatedPreview={footballDailyGatedPreview}
     />
     {footballDailyTheme?.videoUrl ? (
-      <a className="home-red-river-video" href={footballDailyTheme.videoUrl} target="_blank" rel="noopener noreferrer" aria-label="Watch the Red River rivalry video on YouTube">
-        <span>RED RIVER EDITION</span><strong>WATCH RIVALRY VIDEO ↗</strong>
+      <a className="home-red-river-video" href={footballDailyTheme.videoUrl} target="_blank" rel="noopener noreferrer" aria-label={footballDailyTheme.rivalryAccent ? "Watch the Red River rivalry video on YouTube" : `Watch ${footballDailyTheme.eventLabel} video on YouTube`}>
+        <span>{footballDailyTheme.eventLabel}</span><strong>{footballDailyTheme.rivalryAccent ? "WATCH RIVALRY VIDEO ↗" : "WATCH EVENT VIDEO ↗"}</strong>
       </a>
     ) : null}
     </>
