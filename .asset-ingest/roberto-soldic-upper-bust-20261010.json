@@ -1,0 +1,12 @@
+{
+  "source_page_url": "https://www.ufc.com/athlete/roberto-soldic",
+  "fighter_name": "Roberto Soldić",
+  "destination": "public/assets/fighters/roberto-soldic-thumb.webp",
+  "kind": "thumb",
+  "crop": [
+    0,
+    0,
+    1,
+    0.42
+  ]
+}
