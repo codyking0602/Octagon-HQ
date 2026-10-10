@@ -237,6 +237,8 @@ describe("Football HQ Home summary", () => {
 
   it("shows tied first correctly and opens owner photo management only after a hold", () => {
     vi.useFakeTimers();
+    // Photo management is intentionally disabled during the temporary Ditka memorial.
+    vi.setSystemTime(new Date("2026-09-30T19:30:00Z"));
     const onManagePlayerPhoto = vi.fn();
     const tiedHistory: PickHistory = {
       ...history,

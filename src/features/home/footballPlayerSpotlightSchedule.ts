@@ -236,8 +236,8 @@ export function footballSpotlightNextPair(
   return FOOTBALL_PLAYER_SPOTLIGHT_PAIRS[activeIndex + 1] ?? null;
 }
 
-/** Three Central-time days of remembrance; the established spotlight rotation resumes Oct. 13. */
-export const FOOTBALL_DITKA_MEMORIAL_DAY = "2026-10-10";
+/** Active immediately Friday Oct. 9 through Monday Oct. 12 (Central); regular rotation resumes Tuesday. */
+export const FOOTBALL_DITKA_MEMORIAL_DAY = "2026-10-09";
 export const FOOTBALL_DITKA_MEMORIAL_LAST_DAY = "2026-10-12";
 /** 1985 sideline photo selected for the tribute; image remains hosted by its publisher (AP / Chicago Sun-Times). */
 export const FOOTBALL_DITKA_MEMORIAL_PHOTO = "https://cst.brightspotcdn.com/dims4/default/627787f/2147483647/strip/true/crop/3917x2700%2B0%2B0/resize/840x579%21/quality/90/?url=https%3A%2F%2Fchorus-production-cst-web.s3.us-east-1.amazonaws.com%2Fbrightspot%2Ffe%2Fdd%2F245f42d34d629afe6376b11e7c25%2Fbear-11-ap8512270185.jpg";

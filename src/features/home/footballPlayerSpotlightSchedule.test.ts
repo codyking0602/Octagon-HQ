@@ -112,8 +112,11 @@ describe("Football Player Spotlight weekly schedule", () => {
     ).id).toBe("2026-09-22-trinidad-dak");
   });
 
-  it("honors Ditka Saturday through Monday in Chicago, then resumes Tuesday", () => {
-    expect(footballDitkaMemorialIsActive(new Date("2026-10-10T04:59:59.999Z"))).toBe(false);
+  it("honors Ditka immediately Friday through Monday in Chicago, then resumes Tuesday", () => {
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-09T04:59:59.999Z"))).toBe(false);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-09T05:00:00.000Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-09T23:59:59.999Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-10T04:59:59.999Z"))).toBe(true);
     expect(footballDitkaMemorialIsActive(new Date("2026-10-10T05:00:00.000Z"))).toBe(true);
     expect(footballDitkaMemorialIsActive(new Date("2026-10-11T05:00:00.000Z"))).toBe(true);
     expect(footballDitkaMemorialIsActive(new Date("2026-10-12T05:00:00.000Z"))).toBe(true);
