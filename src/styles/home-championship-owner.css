@@ -440,3 +440,255 @@
     transition: none !important;
   }
 }
+
+/* Round two: keep the live, three-bar Championship standings untouched.
+   Reclaim vertical space from the ceremonial hero and Picks/Play tiles. */
+.home-champ-preview[data-sport="ufc"],
+.home-champ-preview[data-sport="football"] {
+  gap: 10px;
+  padding: 14px 16px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__detail,
+.home-champ-preview[data-sport="football"] .home-champ-preview__detail {
+  gap: 9px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__hero,
+.home-champ-preview[data-sport="football"] .home-champ-preview__hero {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 3px 8px;
+  padding: 0 0 2px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__honor,
+.home-champ-preview[data-sport="football"] .home-champ-preview__honor {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  letter-spacing: .11em;
+  line-height: 1.2;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__trophy,
+.home-champ-preview[data-sport="football"] .home-champ-preview__trophy {
+  width: 21px;
+  height: 21px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__rank-link,
+.home-champ-preview[data-sport="football"] .home-champ-preview__rank-link,
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__season-link,
+.home-champ-preview[data-sport="football"] .home-champ-preview__season-link {
+  margin: 0;
+  padding: 0 3px;
+  min-width: 0;
+  align-self: center;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__rank-link strong,
+.home-champ-preview[data-sport="football"] .home-champ-preview__rank-link strong {
+  font-size: clamp(37px, 10vw, 48px);
+  line-height: 1;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__rank-link > span,
+.home-champ-preview[data-sport="football"] .home-champ-preview__rank-link > span {
+  font-size: 8px;
+  letter-spacing: .06em;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__season-link,
+.home-champ-preview[data-sport="football"] .home-champ-preview__season-link {
+  flex-direction: column;
+  gap: 2px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__season-link strong,
+.home-champ-preview[data-sport="football"] .home-champ-preview__season-link strong {
+  font-size: clamp(30px, 8.8vw, 39px);
+  line-height: 1.08;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__season-link > span,
+.home-champ-preview[data-sport="football"] .home-champ-preview__season-link > span {
+  max-width: none;
+  text-align: center;
+  font-size: 8px;
+  letter-spacing: .09em;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__lanes > a,
+.home-champ-preview[data-sport="football"] .home-champ-preview__lanes > a {
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__lanes strong,
+.home-champ-preview[data-sport="football"] .home-champ-preview__lanes strong {
+  font-size: 24px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__lanes a > span:first-child,
+.home-champ-preview[data-sport="football"] .home-champ-preview__lanes a > span:first-child {
+  font-size: 9px;
+}
+.home-champ-preview[data-sport="ufc"] .home-champ-preview__weight-track,
+.home-champ-preview[data-sport="football"] .home-champ-preview__weight-track {
+  margin-top: 1px;
+}
+
+/* All Sports: equal-status trophy cabinet, with separate scores/denominators. */
+.home-champ-preview[data-sport="all"] {
+  gap: 14px;
+  padding: 16px;
+  border-color: #3b4048;
+  background: radial-gradient(ellipse at 25% 4%, rgba(219,178,99,.055), transparent 60%),
+              linear-gradient(160deg, #1a1c21, #111316 76%);
+}
+.home-champ-preview[data-sport="all"]::before {
+  opacity: .12;
+  background: repeating-linear-gradient(105deg, transparent 0 40px, rgba(213,180,113,.21) 41px 42px, transparent 43px 85px);
+}
+.home-champ-preview__overview-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  animation: hq-champ-enter .38s ease-out both;
+}
+.home-champ-preview__league-tally {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.home-champ-preview__league-tally > .home-champ-preview__trophy {
+  color: #e7c16f;
+  width: 37px;
+  height: 37px;
+  flex: none;
+}
+.home-champ-preview__league-tally > div {
+  display: grid;
+  gap: 3px;
+}
+.home-champ-preview__league-leads {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  color: #e7c16f;
+}
+.home-champ-preview__league-leads strong {
+  font-size: 38px;
+  line-height: 1;
+  letter-spacing: -.075em;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.home-champ-preview__league-leads > span {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .085em;
+}
+.home-champ-preview__league-tally small {
+  color: #acb3be;
+  font-size: 10px;
+}
+.home-champ-preview__overview-streak {
+  display: grid;
+  justify-items: end;
+  flex: none;
+  gap: 3px;
+}
+.home-champ-preview__streak-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #fff;
+}
+.home-champ-preview__streak-count svg {
+  width: 18px;
+  height: 18px;
+  color: #eba95d;
+}
+.home-champ-preview__streak-count strong {
+  font-size: 27px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.home-champ-preview__overview-streak > small {
+  color: #aab2bc;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__overview {
+  gap: 7px;
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary {
+  justify-items: center;
+  gap: 6px;
+  min-height: 155px;
+  padding: 11px 3px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #20242a, #171a20);
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary[data-sport="football"] {
+  border-color: #3e5062;
+  border-top: 3px solid #8ebce6;
+  background: linear-gradient(160deg, #1e2731, #181d25);
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary[data-sport="ufc"] {
+  border-color: #533942;
+  border-top: 3px solid #f2474e;
+  background: linear-gradient(160deg, #2c2026, #211a21);
+}
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary[data-sport="mlb"] {
+  border-color: #385449;
+  border-top: 3px solid #75c69c;
+  background: linear-gradient(160deg, #1d2b27, #18221f);
+}
+.home-champ-preview__summary-sport {
+  min-height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.16;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .02em;
+}
+.home-champ-preview__summary[data-sport="football"] .home-champ-preview__summary-sport { color: #a8d3fa; }
+.home-champ-preview__summary[data-sport="ufc"] .home-champ-preview__summary-sport { color: #fd7a83; }
+.home-champ-preview__summary[data-sport="mlb"] .home-champ-preview__summary-sport { color: #a8e8bf; }
+.home-champ-preview__summary-icon {
+  display: grid;
+  place-items: center;
+  height: 21px;
+  color: #bdc4d1;
+}
+.home-champ-preview__summary-icon.is-leading { color: #e7c16f; }
+.home-champ-preview__summary-icon svg { width: 21px; height: 21px; }
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary > strong {
+  font-size: clamp(28px, 8vw, 37px);
+  line-height: 1;
+}
+.home-champ-preview__summary-finish {
+  color: #c0c8d3;
+  font-weight: 900;
+  font-size: 9px;
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+.home-champ-preview__summary-finish.is-leading { color: #e7c16f; }
+.home-champ-preview[data-sport="all"] .home-champ-preview__summary > small {
+  font-size: 9px;
+  color: #b7bdc7;
+  font-weight: 750;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+@media (max-width: 365px) {
+  .home-champ-preview[data-sport="all"] { padding: 12px; }
+  .home-champ-preview__league-tally { gap: 6px; }
+  .home-champ-preview__league-tally > .home-champ-preview__trophy { width: 30px; height: 30px; }
+  .home-champ-preview__league-leads strong { font-size: 33px; }
+  .home-champ-preview__league-leads > span { font-size: 9px; }
+  .home-champ-preview[data-sport="all"] .home-champ-preview__summary > small { font-size: 8px; }
+  .home-champ-preview__summary-finish { font-size: 8px; }
+}
