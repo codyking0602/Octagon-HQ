@@ -81,6 +81,18 @@ export function footballSpecialDailyThemeForDay(day: string) {
   return THEMES[day] ?? null;
 }
 
+export function footballSpecialDailyThemeForCentralToday(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const part = (type: string) => parts.find((value) => value.type === type)?.value ?? "";
+  return footballSpecialDailyThemeForDay(`${part("year")}-${part("month")}-${part("day")}`);
+}
+
+
 export function footballSpecialDailyStyle(theme: FootballSpecialDailyTheme): CSSProperties {
   return {
     "--special-daily-primary": theme.primary,
