@@ -332,32 +332,50 @@ function GameRoom({ sport }: { sport: PlaySport }) {
             <span className="play-v2__game-arrow" aria-hidden="true">↗</span>
           </button>
         ))}
-        {sport === "football" ? (
-          <button type="button" className="play-v2__game is-preview" onClick={() => navigate("/football/gm-cfb-preview")}>
-            <span className="play-v2__game-mark" aria-hidden="true">GM</span>
-            <strong>The GM · College</strong><small>Owner playtest · CFB dynasty</small>
-            <span className="play-v2__game-arrow" aria-hidden="true">↗</span>
-          </button>
-        ) : null}
       </div>
     </section>
   );
 }
 
-export default function PlayV2Page({ sport }: { sport: PlaySport; onClassic: () => void }) {
+export default function PlayV2Page({ sport }: { sport: PlaySport }) {
   const identity = useIdentity();
-  const profileId = identity.profile?.id;
-  if (!profileId || identity.profile?.canControlPicks !== true) return null;
+  const profileId = identity.status === "ready" ? identity.profile?.id : null;
   return (
-    <div className="page play-v2" data-sport={sport} data-testid="owner-play-v2">
-      <WeeklyOverallChampionBanner sport={sport} />
+    <div className="page play-v2" data-sport={sport} data-testid="play-v2-hub">
+      {profileId ? <WeeklyOverallChampionBanner sport={sport} /> : null}
       <header className="play-v2__heading">
         <div><span>{sport === "football" ? "FOOTBALL" : "UFC"} PLAY</span><h1>Play</h1></div>
       </header>
       {sport === "football" ? <WeeklyCurrent /> : null}
-      <DailyCompact sport={sport} profileId={profileId} />
-      <PerformancePreview sport={sport} profileId={profileId} />
-      <MatchupsCompact sport={sport} />
+      {profileId ? (
+        <>
+          <DailyCompact sport={sport} profileId={profileId} />
+          <PerformancePreview sport={sport} profileId={profileId} />
+          <MatchupsCompact sport={sport} />
+        </>
+      ) : (
+        <section className="play-v2__daily" aria-label="Today's Challenge" data-sport={sport}>
+          <div className="play-v2__section-top">
+            <span>TODAY'S CHALLENGE</span>
+            <span className="play-v2__daily-status">OFFICIAL DAILY</span>
+          </div>
+          {identity.status === "loading" ? (
+            <p className="play-v2__muted" role="status">Loading your HQ profile…</p>
+          ) : (
+            <>
+              <h2>Play today's challenge</h2>
+              <p className="play-v2__muted">Sign in to compete in official Dailies, see standings, and track your career results.</p>
+              {identity.status === "unconfigured" ? (
+                <p className="play-v2__muted">Profiles are temporarily unavailable.</p>
+              ) : (
+                <div className="play-v2__daily-actions">
+                  <button type="button" onClick={identity.openDialog}>SIGN IN OR JOIN →</button>
+                </div>
+              )}
+            </>
+          )}
+        </section>
+      )}
       <GameRoom sport={sport} />
     </div>
   );
