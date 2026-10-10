@@ -5,6 +5,7 @@ import {
   FootballSpecialDailyHubMark,
   footballSpecialDailyStyle,
   footballSpecialDailyThemeForDay,
+  footballSpecialDailyThemeForCentralToday,
 } from "./footballSpecialDailyTheme";
 
 describe("Football special Daily theme", () => {
@@ -28,6 +29,15 @@ describe("Football special Daily theme", () => {
       matchup: "COWBOYS @ SEAHAWKS",
     });
     expect(footballSpecialDailyThemeForDay("2026-10-11")).toBeNull();
+  });
+
+  it("keeps the Red River event visible on Home before sign-in using Central time", () => {
+    expect(footballSpecialDailyThemeForCentralToday(new Date("2026-10-10T05:30:00Z"))).toMatchObject({
+      eventLabel: "RED RIVER EDITION",
+      rivalryAccent: "#841617",
+      videoUrl: "https://www.youtube.com/shorts/W4f0b2CwUGM",
+    });
+    expect(footballSpecialDailyThemeForCentralToday(new Date("2026-10-11T05:30:00Z"))).toBeNull();
   });
 
   it("provides reusable team-color variables without changing the game template", () => {
