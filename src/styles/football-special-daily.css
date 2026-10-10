@@ -295,3 +295,46 @@
     animation: none;
   }
 }
+
+/* Oct 10 only: opposing halves, while retaining the approved Millionaire stage. */
+.home-challenge-card[data-special-daily="red-river"] {
+  border-color: color-mix(in srgb, #bf5700 55%, #841617 45%);
+  background: linear-gradient(114deg, rgba(191,87,0,.15), rgba(132,22,23,.16) 63%, var(--surface));
+  box-shadow: inset 3px 0 #bf5700, inset -3px 0 #841617;
+}
+.home-challenge-card[data-special-daily="red-river"] .football-special-daily-hub-mark {
+  border-color: color-mix(in srgb, #bf5700 50%, #841617);
+  background: linear-gradient(100deg, rgba(191,87,0,.24), rgba(132,22,23,.23));
+}
+.home-challenge-card[data-special-daily] .football-special-daily-hub-mark {
+  padding: 5px 8px;
+  margin: 0 0 5px;
+}
+.home-challenge-card[data-special-daily] .football-special-daily-hub-mark img { width: 20px; height: 20px; }
+.home-red-river-video {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: -4px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(191,87,0,.38);
+  background: linear-gradient(100deg, rgba(191,87,0,.12), rgba(132,22,23,.12));
+  text-decoration: none;
+}
+.home-red-river-video span { color: var(--text-muted); font-size: .64rem; font-weight: 850; letter-spacing: .06em; }
+.home-red-river-video strong { color: var(--text-primary); font-size: .66rem; font-weight: 900; white-space: nowrap; }
+.home-red-river-video:hover, .home-red-river-video:focus-visible { border-color: #bf5700; }
+.football-special-daily-page[data-red-river="true"] .millionaire-shell::after {
+  box-shadow: inset 0 0 58px rgba(191,87,0,.11), inset 0 0 120px rgba(132,22,23,.075);
+  background: linear-gradient(90deg,#bf5700 0 50%,#841617 50% 100%) top/100% 5px no-repeat;
+}
+.football-special-daily-page[data-red-river="true"] .millionaire-rules {
+  box-shadow: 0 0 0 2px rgba(191,87,0,.35), 0 0 35px rgba(132,22,23,.12);
+}
+@media (max-width:420px) {
+  .home-red-river-video { padding: 7px 9px; }
+  .home-red-river-video span { font-size: .56rem; }
+  .home-red-river-video strong { font-size: .58rem; }
+}
