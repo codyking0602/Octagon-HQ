@@ -16,7 +16,7 @@ import {
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
 import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
-import { FootballSpecialDailyHubMark, footballSpecialDailyThemeForDay, footballSpecialDailyStyle } from "../play/footballSpecialDailyTheme";
+import { FootballSpecialDailyHubMark, footballSpecialDailyThemeForDay, footballSpecialDailyThemeForCentralToday, footballSpecialDailyStyle } from "../play/footballSpecialDailyTheme";
 import {
   useHqDailyChallengeStreak,
   useTodayChallengeOverview,
@@ -93,7 +93,9 @@ function TodayChallengeCard({
                 ? "NOT PLAYED"
                 : "UNAVAILABLE";
   const sportLabel = sport === "ufc" ? "UFC" : "FOOTBALL";
-  const specialTheme = sport === "football" && projection ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
+  const specialTheme = sport === "football"
+    ? projection ? footballSpecialDailyThemeForDay(projection.centralDay) : footballSpecialDailyThemeForCentralToday()
+    : null;
 
   return (
     <Link
@@ -256,7 +258,8 @@ export default function HomePage() {
   );
 
   const footballDailyTheme = footballDailyRuntime.projection
-    ? footballSpecialDailyThemeForDay(footballDailyRuntime.projection.centralDay) : null;
+    ? footballSpecialDailyThemeForDay(footballDailyRuntime.projection.centralDay)
+    : footballSpecialDailyThemeForCentralToday();
   const footballDailyChallenge = (
     <>
     <TodayChallengeCard
