@@ -12,6 +12,7 @@ export interface FootballSpecialDailyTheme {
   teamLogo: string;
   opponentLogo: string;
   rivalryAccent?: string;
+  opponentAccent?: string;
   videoUrl?: string;
 }
 
@@ -40,6 +41,7 @@ const THEMES: Readonly<Record<string, FootballSpecialDailyTheme>> = {
     resultLabel: "COWBOYS GAME DAY RESULT",
     teamName: "Dallas Cowboys",
     opponentName: "Philadelphia Eagles",
+    opponentAccent: "#004C54",
     primary: "#041E42",
     secondary: "#A7B4C3",
     teamLogo: NFL_LOGO("dal"),
@@ -52,6 +54,7 @@ const THEMES: Readonly<Record<string, FootballSpecialDailyTheme>> = {
     resultLabel: "LONE STAR SHOWDOWN RESULT",
     teamName: "Texas",
     opponentName: "Texas A&M",
+    opponentAccent: "#500000",
     primary: "#BF5700",
     secondary: "#F4E9DA",
     teamLogo: CFB_LOGO(251),
@@ -64,6 +67,7 @@ const THEMES: Readonly<Record<string, FootballSpecialDailyTheme>> = {
     resultLabel: "COWBOYS GAME DAY RESULT",
     teamName: "Dallas Cowboys",
     opponentName: "Seattle Seahawks",
+    opponentAccent: "#69BE28",
     primary: "#041E42",
     secondary: "#A7B4C3",
     teamLogo: NFL_LOGO("dal"),
@@ -99,6 +103,8 @@ export function footballSpecialDailyStyle(theme: FootballSpecialDailyTheme): CSS
     "--special-daily-primary-rgb": rgbChannels(theme.primary),
     "--special-daily-secondary": theme.secondary,
     "--special-daily-rivalry-accent": theme.rivalryAccent ?? theme.primary,
+    "--special-daily-opponent": theme.opponentAccent ?? theme.rivalryAccent ?? theme.primary,
+    "--special-daily-opponent-rgb": rgbChannels(theme.opponentAccent ?? theme.rivalryAccent ?? theme.primary),
   } as CSSProperties;
 }
 
