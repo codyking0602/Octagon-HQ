@@ -93,9 +93,11 @@ describe("Owner Championship Home preview", () => {
     });
     expect(screen.getByTestId("active-sport")).toHaveTextContent("football");
     const hero = screen.getByRole("region", { name: "Your HQ" });
-    expect(within(hero).getByText("PICKS · 60% ↗")).toBeInTheDocument();
-    expect(within(hero).getByText("PLAY · 40% ↗")).toBeInTheDocument();
-    expect(within(hero).getByText("Play: 30% Daily · 10% Featured Weekly")).toBeInTheDocument();
+    expect(within(hero).getByText("PICKS · 60%")).toBeInTheDocument();
+    expect(within(hero).getByText("PLAY · 40%")).toBeInTheDocument();
+    expect(within(hero).queryByText(/Featured Weekly/)).not.toBeInTheDocument();
+    expect(within(hero).getByRole("link", { name: "Open Football Picks leaderboard" })).toHaveAttribute("href", "/championship/football?tab=picks");
+    expect(within(hero).getByRole("link", { name: "Open Football Play leaderboard" })).toHaveAttribute("href", "/championship/football?tab=play");
     expect(within(hero).queryByText("UFC CHAMPIONSHIP")).not.toBeInTheDocument();
   });
 
@@ -106,7 +108,16 @@ describe("Owner Championship Home preview", () => {
     fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), {
       target: { value: "ufc" },
     });
-    expect(screen.getByText("Play: 40% Daily · Featured Weekly not active")).toBeInTheDocument();
+    expect(screen.queryByText(/Featured Weekly not active/)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Open UFC overall leaderboard" })).toHaveAttribute("href", "/championship/ufc?tab=overall");
+  });
+
+  it("keeps MLB postseason standings clickable and omits redundant scoring text", async () => {
+    render(<Preview />);
+    await screen.findByText("MLB POSTSEASON");
+    fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "mlb" } });
+    expect(screen.getByRole("link", { name: "Open MLB Postseason Championship leaderboard" })).toHaveAttribute("href", "/championship/mlb");
+    expect(screen.queryByText(/MLB retains its existing/)).not.toBeInTheDocument();
   });
 
   it("does not manufacture ratings when the standings RPC is unavailable", async () => {

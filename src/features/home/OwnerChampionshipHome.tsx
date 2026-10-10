@@ -51,21 +51,20 @@ function Detail({ sport, result, loading, error }: {
         <>
           <div className="home-champ-preview__headline">
             <Link to={"/championship/" + sport + "?tab=overall"} aria-label={"Open " + label + " overall leaderboard"}>
-              <strong>{formatRank(own.rank)}</strong><span>OF {result?.field_size ?? 0} · OVERALL</span>
+              <strong>{formatRank(own.rank)}</strong><span>OF {result?.field_size ?? 0} COMPETITORS</span>
             </Link>
             <Link to={"/championship/" + sport + "?tab=overall&player=" + own.profile_id} aria-label={"View your " + label + " Season Score breakdown"}>
               <strong>{formatRating(own.rating)}</strong><span>SEASON SCORE</span>
             </Link>
           </div>
           <div className="home-champ-preview__lanes">
-            <Link to={"/championship/" + sport + "?tab=picks"}><span>PICKS · 60% ↗</span><strong>{formatRank(own.picks_rank)}</strong><small>{formatRating(own.picks_rating)} placement score</small></Link>
-            <Link to={"/championship/" + sport + "?tab=play"}><span>PLAY · 40% ↗</span><strong>{formatRank(own.play_rank)}</strong><small>{formatRating(own.play_rating)} placement score</small></Link>
+            <Link to={"/championship/" + sport + "?tab=picks"} aria-label={"Open " + label + " Picks leaderboard"}>
+              <span>PICKS · 60%</span><strong>{formatRank(own.picks_rank)}</strong><span className="home-champ-preview__chevron" aria-hidden="true">›</span>
+            </Link>
+            <Link to={"/championship/" + sport + "?tab=play"} aria-label={"Open " + label + " Play leaderboard"}>
+              <span>PLAY · 40%</span><strong>{formatRank(own.play_rank)}</strong><span className="home-champ-preview__chevron" aria-hidden="true">›</span>
+            </Link>
           </div>
-          <p className="home-champ-preview__weights">
-            {result?.weights.featured
-              ? "Play: 30% Daily · 10% Featured Weekly"
-              : "Play: 40% Daily · Featured Weekly not active"}
-          </p>
         </>
       )}
     </div>
@@ -119,10 +118,11 @@ export function OwnerChampionshipHome({
       className="home-section home-section--your-hq home-champ-preview"
       data-testid="home-section"
       data-home-section="your-hq"
+      data-sport={chosen}
       aria-label="Your HQ"
     >
       <div className="home-champ-preview__top">
-        <div><h2>Your HQ</h2><small>CHAMPIONSHIP · 2026 SEASON</small></div>
+        <div><h2>Your HQ</h2>{chosen === "all" ? <small>CHAMPIONSHIP · 2026 SEASON</small> : null}</div>
         <label className="home-champ-preview__filter">
           <span className="sr-only">Home sport</span>
           <select aria-label="Home sport" value={chosen} onChange={(event) => onSportChange(event.target.value as SportFilter)}>
@@ -155,10 +155,9 @@ export function OwnerChampionshipHome({
         <div className="home-champ-preview__detail" data-sport="mlb">
           <div className="home-champ-preview__kicker">MLB POSTSEASON CHAMPIONSHIP</div>
           <div className="home-champ-preview__headline">
-            <Link to="/championship/mlb"><strong>{formatRank(mlb?.own?.overall_rank)}</strong><span>OF {mlb?.standings.length ?? 0}</span></Link>
-            <Link to="/championship/mlb"><strong>{mlb?.own?.total_points ?? "—"}</strong><span>CHAMPIONSHIP POINTS</span></Link>
+            <Link to="/championship/mlb" aria-label="Open MLB Postseason Championship leaderboard"><strong>{formatRank(mlb?.own?.overall_rank)}</strong><span>OF {mlb?.standings.length ?? 0} COMPETITORS</span></Link>
+            <Link to="/championship/mlb" aria-label="View MLB Championship Points breakdown"><strong>{mlb?.own?.total_points ?? "—"}</strong><span>CHAMPIONSHIP POINTS</span></Link>
           </div>
-          <p className="home-champ-preview__weights">MLB retains its existing postseason scoring rules.</p>
         </div>
       ) : (
         <Detail sport={chosen} result={chosen === "football" ? football : ufc} loading={loading} error={errors[chosen]} />

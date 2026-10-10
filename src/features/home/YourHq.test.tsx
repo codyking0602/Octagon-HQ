@@ -493,7 +493,8 @@ describe("Home Your HQ", () => {
     const ownerProfile = { ...cody, canControlPicks: true };
     mocks.identity.profile = ownerProfile;
     renderHome();
-    expect(screen.getByText("CHAMPIONSHIP · 2026 SEASON")).toBeInTheDocument();
+    expect(screen.getByText("FOOTBALL CHAMPIONSHIP · 2026")).toBeInTheDocument();
+    expect(screen.queryByText("CHAMPIONSHIP · 2026 SEASON")).not.toBeInTheDocument();
     const sport = screen.getByRole("combobox", { name: "Home sport" });
     expect(sport).toHaveValue("football");
     fireEvent.change(sport, { target: { value: "all" } });

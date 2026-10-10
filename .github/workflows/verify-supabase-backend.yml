@@ -131,7 +131,8 @@ jobs:
             supabase/tests/home_football_spotlight_media.sql \
             supabase/tests/who_am_i_authored_two_rounds.sql \
             supabase/tests/mlb_playoffs_foundation.sql \
-            supabase/tests/sport_championship_weekly_winners.sql
+            supabase/tests/sport_championship_weekly_winners.sql \
+            supabase/tests/sport_championship_2026_season_starts.sql
           do
             echo "Executing $test_file"
             psql "$db_url" --set ON_ERROR_STOP=on --file "$test_file"
