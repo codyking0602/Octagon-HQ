@@ -5,6 +5,7 @@ import { ChallengeCenter } from "../challenges/ChallengeCenter";
 import { useIdentity } from "../identity/IdentityProvider";
 import { PlayLandingGameLibrary, PlayLandingHeader } from "../play/PlayLandingPresentation";
 import TodayChallengeHub from "../play/TodayChallengeHub";
+import PlayV2Page from "../play/PlayV2Page";
 import { WeeklyOverallChampionBanner } from "../play/WeeklyOverallChampionBanner";
 import {
   createFootballWeeklyAuctionRepository,
@@ -67,9 +68,14 @@ function FootballWeeklyAuctionQuickAccess({ onOpen }: { onOpen: () => void }) {
 export default function FootballBackRoomPage() {
   const navigate = useNavigate();
   const identity = useIdentity();
+  const [classic, setClassic] = useState(false);
+  if (identity.status === "ready" && identity.profile?.canControlPicks === true && !classic) {
+    return <PlayV2Page sport="football" onClassic={() => setClassic(true)} />;
+  }
 
   return (
     <div className="page football-room-page">
+      {identity.profile?.canControlPicks === true ? <button type="button" className="secondary-action" onClick={() => setClassic(false)}>OPEN PLAY 2.0 PREVIEW →</button> : null}
       <PlayLandingHeader sport="football" />
       {identity.status === "ready" && identity.profile?.id ? <WeeklyOverallChampionBanner sport="football" /> : null}
       <TodayChallengeHub sport="football" />
