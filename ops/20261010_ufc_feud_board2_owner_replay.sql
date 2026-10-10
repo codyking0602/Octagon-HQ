@@ -20,7 +20,7 @@ declare
   v_old_sig text := 'ufc-main-14-2:ufc-main-14-2:a1=10,ufc-main-14-2:a2=8,ufc-main-14-2:a3=7,ufc-main-14-2:a4=5,ufc-main-14-2:a5=5,ufc-main-14-2:a6=4,ufc-main-14-2:a7=4,ufc-main-14-2:a8=3';
   v_new_sig text := 'ufc-main-19-1:ufc-main-19-1:a1=10,ufc-main-19-1:a2=8,ufc-main-19-1:a3=7,ufc-main-19-1:a4=5,ufc-main-19-1:a5=5,ufc-main-19-1:a6=4,ufc-main-19-1:a7=4,ufc-main-19-1:a8=3';
 begin
-  select d.id, s.* into v_challenge, v_setup
+  select d.id, s into v_challenge, v_setup
     from private.daily_challenges d
     join private.daily_challenge_schedule_versions schedule
       on schedule.version = d.schedule_version
