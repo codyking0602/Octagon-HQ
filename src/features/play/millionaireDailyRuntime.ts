@@ -226,6 +226,29 @@ export function millionaireDailyHostNumber(sport: "ufc" | "football", day: strin
   return ((appearance % 3) + 3) % 3 + 1;
 }
 
+/** One moderate-difficulty memorial question; preserve the eight-question ladder and lifelines. */
+function withDitkaMemorialQuestion(run: MillionaireRun): MillionaireRun {
+  return run.map((question, index) => index !== 2 ? question : {
+    ...question,
+    id: "cfb-mike-ditka-memorial-2026-10-10-q3",
+    type: "college-football-history",
+    prompt: "In which NFL season did Mike Ditka lead the Chicago Bears to their only Super Bowl championship?",
+    choices: [
+      { id: "A", text: "1984" },
+      { id: "B", text: "1985" },
+      { id: "C", text: "1986" },
+      { id: "D", text: "1987" },
+    ],
+    correctChoiceId: "B",
+    explanation: "Ditka led the 1985 Chicago Bears to a 15–1 season and victory in Super Bowl XX, played in January 1986.",
+    statSheet: "Under Ditka, Chicago defeated New England 46–10 in Super Bowl XX, capping an iconic 15–1 regular season.",
+    fiftyFifty: {
+      survivorChoiceIds: ["B", "C"],
+      removalChoiceIds: ["A", "D"],
+    },
+  }) as unknown as MillionaireRun;
+}
+
 function proofFor(run: MillionaireRun, league: MillionaireLeague, day: string, scheduleVersion: string) {
   return [
     MILLIONAIRE_DAILY_CONTENT_VERSION,
@@ -349,7 +372,13 @@ export function buildMillionaireDailySetup(
   const runIndex = millionaireDailyRunIndex(sport, day);
   const hostNumber = millionaireDailyHostNumber(sport, day);
   const themedRun = sport === "football" ? footballThemedMillionaireRunForDay(day) : null;
-  const run = balanceRun(themedRun ?? millionaireDailyRun(league, runIndex), runIndex);
+  const baseRun = themedRun ?? millionaireDailyRun(league, runIndex);
+  const run = balanceRun(
+    sport === "football" && day === "2026-10-10" && league === "cfb"
+      ? withDitkaMemorialQuestion(baseRun)
+      : baseRun,
+    runIndex,
+  );
   assertMillionaireRun(run);
   const state = createMillionaireState(run);
   const proof = proofFor(run, league, day, scheduleVersion);

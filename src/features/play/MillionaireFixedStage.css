@@ -894,3 +894,35 @@ body.millionaire-daily-active .bottom-nav {
     transition: none;
   }
 }
+
+/* The tribute appears only while the Oct. 10 memorial question is on screen. */
+.millionaire-shell--fixed-stage .millionaire-question.is-ditka-memorial {
+  flex-direction: column;
+  gap: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.millionaire-shell--fixed-stage .millionaire-question.is-ditka-memorial strong {
+  font-size: 29px;
+}
+.millionaire-shell--fixed-stage .millionaire-ditka-tribute {
+  position: relative;
+  z-index: 4;
+  padding: 3px 16px;
+  border: 1px solid rgba(255, 192, 132, 0.75);
+  border-radius: 30px;
+  background: rgba(17, 27, 43, 0.88);
+  color: #ffc795;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-shadow: none;
+  animation: millionaire-ditka-drop-in 420ms ease-out both;
+}
+@keyframes millionaire-ditka-drop-in {
+  from { opacity: 0; transform: translateY(-18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .millionaire-shell--fixed-stage .millionaire-ditka-tribute { animation: none; }
+}

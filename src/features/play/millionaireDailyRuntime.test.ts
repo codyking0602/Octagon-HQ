@@ -49,6 +49,23 @@ function advance(context: OfficialDailyRuntimeContext, action: Record<string, un
 }
 
 describe("Millionaire official Daily runtime", () => {
+  it("features one accurate Ditka question in Oct 10 CFB Millionaire only", () => {
+    const previous = buildMillionaireDailySetup("football", "2026-10-07", "football-daily-v20-resume-v18-oct3");
+    const memorial = buildMillionaireDailySetup("football", "2026-10-10", "football-daily-v20-resume-v18-oct3");
+    const next = buildMillionaireDailySetup("football", "2026-10-26", "football-daily-v20-resume-v18-oct3");
+    expect(memorial.publicSetup.league).toBe("cfb");
+    expect(memorial.publicSetup.question_count).toBe(8);
+    const run = memorial.privateSetupEvidence.run as MillionaireRuntimeQuestion[];
+    expect(run.filter((question) => question.id.includes("ditka-memorial"))).toHaveLength(1);
+    const question = run[2]!;
+    expect(question.prompt).toContain("Mike Ditka");
+    expect(question.prompt).toBe("In which NFL season did Mike Ditka lead the Chicago Bears to their only Super Bowl championship?");
+    expect(question.choices.map((choice) => choice.text).sort()).toEqual(["1984", "1985", "1986", "1987"]);
+    expect(question.choices.find((choice) => choice.id === question.correctChoiceId)?.text).toBe("1985");
+    expect((previous.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
+    expect((next.privateSetupEvidence.run as MillionaireRuntimeQuestion[]).some((item) => item.id.includes("ditka-memorial"))).toBe(false);
+  });
+
   it("debuts CFB for Football and UFC for UFC on September 19", () => {
     expect(millionaireDailyLeague("football", "2026-09-19")).toBe("cfb");
     expect(millionaireDailyLeague("ufc", "2026-09-19")).toBe("ufc");

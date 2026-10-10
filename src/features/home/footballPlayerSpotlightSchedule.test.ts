@@ -4,6 +4,8 @@ import {
   FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
   FOOTBALL_PLAYER_SPOTLIGHT_PAIRS,
   footballSpotlightKindAt,
+  footballDitkaMemorialIsActive,
+  FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT,
   footballSpotlightPairAt,
   footballSpotlightPairHasPhotos,
   type FootballSpotlightPhotoSources,
@@ -108,6 +110,25 @@ describe("Football Player Spotlight weekly schedule", () => {
       new Date("2026-09-29T05:00:00.000Z"),
       incompletePhotos,
     ).id).toBe("2026-09-22-trinidad-dak");
+  });
+
+  it("honors Ditka Saturday through Monday in Chicago, then resumes Tuesday", () => {
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-10T04:59:59.999Z"))).toBe(false);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-10T05:00:00.000Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-11T05:00:00.000Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-12T05:00:00.000Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-13T04:59:59.999Z"))).toBe(true);
+    expect(footballDitkaMemorialIsActive(new Date("2026-10-13T05:00:00.000Z"))).toBe(false);
+    expect(FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT).toMatchObject({
+      name: "Mike Ditka", team: "Chicago Bears", position: "TE · HEAD COACH",
+      highlightUrl: "https://youtu.be/o_dkBAx0oek?is=M67Cloq3KcMcmESt",
+      stats: [
+        { value: "89", label: "RETIRED NO." },
+        { value: "5×", label: "PRO BOWL" },
+        { value: "XX", label: "SUPER BOWL" },
+        { value: "1988", label: "HALL OF FAME" },
+      ],
+    });
   });
 
   it("keeps the Central Time daily CFB/NFL rotation across the new pair", () => {

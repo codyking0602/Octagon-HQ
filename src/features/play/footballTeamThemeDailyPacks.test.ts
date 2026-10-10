@@ -16,7 +16,7 @@ import {
 } from "./footballTodayChallengeSession";
 
 describe("Football team-themed Daily packs", () => {
-  it("keeps the normal rotation and swaps only the Oct. 10 Texas-Oklahoma Millionaire content", () => {
+  it("preserves seven Texas-Oklahoma Millionaire questions while honoring Ditka at Q3 on Oct. 10", () => {
     expect(footballTodayGameForDay("2026-10-10")).toBe("millionaire");
 
     const setup = buildFootballTodayPersistenceSetup("2026-10-10");
@@ -25,7 +25,9 @@ describe("Football team-themed Daily packs", () => {
     expect(setup.gameType).toBe("millionaire");
     expect(setup.publicSetup.league).toBe("cfb");
     expect(run).toHaveLength(8);
-    expect(run.every((question) => question.id.startsWith("theme-texas-ou-2026-"))).toBe(true);
+    expect(run.filter((question) => question.id.startsWith("theme-texas-ou-2026-"))).toHaveLength(7);
+    expect(run[2]?.id).toBe("cfb-mike-ditka-memorial-2026-10-10-q3");
+    expect(run[2]?.choices.find((choice) => choice.id === run[2]?.correctChoiceId)?.text).toBe("1985");
     expect(run.map((question) => question.level)).toEqual([
       "Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7", "Q8",
     ]);

@@ -429,7 +429,12 @@ export function OfficialMillionaireDailyView({
           </section>
         ) : (
           <>
-            <section className={`millionaire-question${answerFeedback?.phase === "locked" ? " is-locked" : ""}`} aria-live="polite"><strong>{String(displayQuestion.prompt ?? "")}</strong></section>
+            <section className={`millionaire-question${answerFeedback?.phase === "locked" ? " is-locked" : ""}${String(displayQuestion.id ?? "") === "cfb-mike-ditka-memorial-2026-10-10-q3" ? " is-ditka-memorial" : ""}`} aria-live="polite">
+              {String(displayQuestion.id ?? "") === "cfb-mike-ditka-memorial-2026-10-10-q3"
+                ? <span className="millionaire-ditka-tribute">IN HONOR OF MIKE DITKA · 1939–2026</span>
+                : null}
+              <strong>{String(displayQuestion.prompt ?? "")}</strong>
+            </section>
             <div className="millionaire-answers" aria-label="Answer choices">
               {displayChoices.map((choice) => {
                 const id = String(choice.id ?? "") as MillionaireChoiceId;
