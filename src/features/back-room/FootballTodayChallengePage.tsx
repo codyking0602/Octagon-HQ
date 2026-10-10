@@ -998,6 +998,7 @@ export default function FootballTodayChallengePage() {
       <div
         className={specialTheme ? "official-daily-page football-special-daily-page" : "official-daily-page"}
         style={specialStyle}
+        data-red-river={specialTheme?.rivalryAccent ? "true" : undefined}
       >
         {specialChrome}
         {weeklyEditControl}
