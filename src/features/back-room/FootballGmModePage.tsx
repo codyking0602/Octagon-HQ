@@ -2119,7 +2119,7 @@ export default function FootballGmModePage({
         </header>
       ) : (
         <header className="football-gm__header">
-          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <button type="button" onClick={() => weeklyRun ? weeklyRun.onBack() : navigate("/football")}>← {weeklyRun ? "WEEKLY GM" : "FOOTBALL HQ"}</button>
           <span><small>NFL FRONT OFFICE</small><strong>THE GM</strong></span>
           <b>3 YEARS</b>
         </header>

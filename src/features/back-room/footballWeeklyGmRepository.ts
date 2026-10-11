@@ -44,7 +44,7 @@ export function createFootballWeeklyGmRepository() {
     load: () => rpc<WeeklyGmState>("get_my_football_weekly_gm"),
     start: (scenario: WeeklyGmScenario) =>
       rpc<WeeklyGmAttempt>("start_my_football_weekly_gm", { p_scenario: scenario }),
-    result: (profileId: string, scenario: WeeklyGmScenario) =>
+    result: (profileId: string | null, scenario: WeeklyGmScenario) =>
       rpc<WeeklyGmResult>("get_football_weekly_gm_result", { p_profile_id: profileId, p_scenario: scenario }),
     save: (scenario: WeeklyGmScenario, seed: string, state: PersistedRun, score: number | null) => {
       const request = queue.then(async () => {

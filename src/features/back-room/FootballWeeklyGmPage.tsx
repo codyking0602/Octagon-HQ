@@ -54,7 +54,7 @@ export default function FootballWeeklyGmPage() {
     }
   }
 
-  async function inspect(profileId: string, scenario: WeeklyGmScenario) {
+  async function inspect(profileId: string | null, scenario: WeeklyGmScenario) {
     if (!repository) return;
     setError("");
     try {
@@ -126,7 +126,7 @@ export default function FootballWeeklyGmPage() {
               <p>{scenario.development} · $150M cap · Three seasons</p>
               <p><strong>{item?.completed ? item.score?.toFixed(1) + " / 100" : item ? "IN PROGRESS" : "NOT STARTED"}</strong></p>
               {item?.completed ? (
-                <button type="button" onClick={() => void inspect("", scenario.id)}>VIEW YOUR FRANCHISE RESULT</button>
+                <button type="button" onClick={() => void inspect(null, scenario.id)}>VIEW YOUR FRANCHISE RESULT</button>
               ) : state.status === "active" ? (
                 <button className="primary-action" disabled={busy} type="button" onClick={() => void open(scenario.id)}>
                   {item ? "RESUME OFFICIAL FRANCHISE" : "START OFFICIAL FRANCHISE"}

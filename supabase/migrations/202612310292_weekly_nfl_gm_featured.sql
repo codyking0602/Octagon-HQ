@@ -72,7 +72,7 @@ begin
         'rank',ranked.rank
       ) order by ranked.rank,ranked.display_name)
       from (
-        select row_number() over (order by scores.total_score desc,scores.completed_runs desc,profile.display_name,scores.profile_id)::integer as rank,
+        select rank() over (order by scores.total_score desc)::integer as rank,
           scores.profile_id,profile.display_name,scores.elite_score,scores.young_score,
           scores.total_score,scores.completed_runs
         from (
