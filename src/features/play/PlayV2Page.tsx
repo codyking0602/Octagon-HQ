@@ -12,6 +12,7 @@ import { WeeklyOverallChampionBanner } from "./WeeklyOverallChampionBanner";
 import { playLandingDestination, playLandingGameIds } from "./PlayLandingPresentation";
 import { playGameDefinition, type PlaySport } from "./playRegistry";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
+import { TodayChallengeRepositoryError } from "./todayChallengeRepository";
 import { FootballSpecialDailyHubMark, footballSpecialDailyStyle, footballSpecialDailyThemeForDay } from "./footballSpecialDailyTheme";
 import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
 import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
@@ -44,8 +45,15 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
   const projection = runtime.projection;
   const specialTheme = sport === "football" && projection ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
   const adapter = todayChallengeAdapter(projection?.gameType);
+  // The backend intentionally enforces Weekly Auction bids before an unstarted
+  // Football Daily. Treat its typed gate as the next step, never a load failure.
+  const weeklyAuctionGate = sport === "football" && !projection
+    && runtime.error instanceof TodayChallengeRepositoryError
+    && runtime.error.code === "WEEKLY_AUCTION_REQUIRED"
+    ? runtime.error : null;
+  const gatedAdapter = todayChallengeAdapter(weeklyAuctionGate?.previewGameType);
   const title = projection && isDailyRankKeepCombo(projection)
-    ? "Blind Rank + Keep/Cut" : adapter?.title ?? "Today's Challenge";
+    ? "Blind Rank + Keep/Cut" : adapter?.title ?? gatedAdapter?.title ?? "Today's Challenge";
   const completed = Boolean(projection?.officialAttempt);
   const saved = !completed && Boolean(projection?.progressRevision);
   const dailyRoute = sport === "football" ? "/football/today" : adapter?.dailyRoute ?? "/play";
@@ -59,10 +67,23 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
       style={specialTheme ? footballSpecialDailyStyle(specialTheme) : undefined}>
       <div className="play-v2__section-top">
         <span>TODAY'S CHALLENGE</span>
-        <span className="play-v2__daily-status">{completed ? "COMPLETE" : saved ? "IN PROGRESS" : "OFFICIAL DAILY"}</span>
+        <span className="play-v2__daily-status">{completed ? "COMPLETE" : saved ? "IN PROGRESS" : weeklyAuctionGate ? "WEEKLY FIRST" : "OFFICIAL DAILY"}</span>
       </div>
       {runtime.loading && !projection ? (
         <p className="play-v2__muted" role="status">Loading today's official game…</p>
+      ) : weeklyAuctionGate && gatedAdapter ? (
+        <>
+          <div className="play-v2__daily-row" data-daily-gate="weekly-auction">
+            <div className="play-v2__daily-title">
+              <h2>{title}</h2>
+              <span>Today's Football Daily is published and ready.</span>
+            </div>
+          </div>
+          <p className="play-v2__muted">Submit today's Weekly Auction bids first to unlock your official Daily attempt.</p>
+          <div className="play-v2__daily-actions">
+            <button type="button" onClick={() => navigate("/football/today")}>COMPLETE WEEKLY BIDS →</button>
+          </div>
+        </>
       ) : !projection || !adapter ? (
         <div className="play-v2__error">
           <p>{runtime.error instanceof Error ? runtime.error.message : "Today's official game is unavailable."}</p>
