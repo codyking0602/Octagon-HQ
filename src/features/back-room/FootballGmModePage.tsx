@@ -879,7 +879,7 @@ export function FreeAgencyBoard({
   );
 }
 
-/** A restricted, inexpensive depth pool for filling vacancies after five wheel visits. */
+/** A restricted, inexpensive depth pool for filling vacancies after four wheel visits. */
 export function EmergencyFreeAgencyBoard({
   roster,
   tradeChipPlayerIds,
@@ -900,7 +900,7 @@ export function EmergencyFreeAgencyBoard({
   });
   return (
     <section className="football-gm__market-picker surface-card">
-      <p className="eyebrow">FREE AGENCY · FIVE VISITS USED</p>
+      <p className="eyebrow">FREE AGENCY · FOUR VISITS USED</p>
       <h2>EMERGENCY ROSTER COMPLETION</h2>
       <p>The regular market is closed. Only affordable depth players who fill an open position
         and fit both remaining cap years are available. No starter replacement or extra spins.</p>
@@ -980,7 +980,7 @@ export function FreeAgencyReleasePanel({
       <h2>CREATE ONE EXTRA FA OPENING</h2>
       <p>
         You may deliberately cut one settled starter during the offseason. His salary plus any existing cap room becomes your free-agent budget.
-        Normal trades and releasing displaced assets can leave a vacancy, but they never restore your five market visits. After those visits, only affordable depth options can fill open slots.
+        Normal trades and releasing displaced assets can leave a vacancy, but they never restore your four market visits. After those visits, only affordable depth options can fill open slots.
       </p>
       <div className="football-gm__cut-list">
         {rows.map(({ entry, player, budget, eligibleTeams }) => {
@@ -1752,7 +1752,7 @@ export default function FootballGmModePage({
   function spinFreeAgency() {
     if (run.pendingFreeAgentTeam || run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT) return;
     if (!footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)) {
-      patch({ tradeMessage: "Free agency requires a real roster vacancy. You get five wheel visits total, and releasing an asset does not replenish them." });
+      patch({ tradeMessage: "Free agency requires a real roster vacancy. You get four wheel visits total, and releasing an asset does not replenish them." });
       return;
     }
     const teams = footballGmEligibleFreeAgencyTeams({
@@ -2293,7 +2293,7 @@ export default function FootballGmModePage({
                   <h2>SPIN THE 1YR MARKET</h2>
                   <p>
                     Your offseason holdings are below seven. Spin an NFL team and see every game-eligible 1YR free agent from that team who fits both future caps.
-                    Every spin uses one of five market visits, even if you pass. Signing may displace a starter into your trade pool, but releases do not restore visits.
+                    Every spin uses one of four market visits, even if you pass. Signing may displace a starter into your trade pool, but releases do not restore visits.
                   </p>
                   <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>
                 </section>
@@ -2314,7 +2314,7 @@ export default function FootballGmModePage({
                     <p>
                       {offseasonReady
                         ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now, keep shopping trades, or use your one voluntary release if it is still available.`
-                        : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Keep shopping players; vacancies can use any remaining wheel visits, or only restricted depth signings after the fifth visit. One voluntary starter release is allowed.`}
+                        : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Keep shopping players; vacancies can use any remaining wheel visits, or only restricted depth signings after the fourth visit. One voluntary starter release is allowed.`}
                     </p>
                     <button
                       className="primary-action"

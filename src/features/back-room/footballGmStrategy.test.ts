@@ -931,9 +931,14 @@ describe("The GM offseason continuity calibration", () => {
   });
 });
 
-describe("NFL GM five-visit free agency guardrails", () => {
+describe("NFL GM four-visit free agency guardrails", () => {
+  it("recognizes Jaylen Wright as eligible for both RB and FLEX", () => {
+    const wright = footballGmPlayerById(playerId("Jaylen Wright"));
+    expect(wright?.position).toBe("RB");
+    expect(wright?.eligibleSlots).toEqual(["RB", "FLEX"]);
+  });
   it("counts actual market visits, preserving the used total when legacy saves resume", () => {
-    expect(FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT).toBe(5);
+    expect(FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT).toBe(4);
     expect(footballGmMarketVisitsUsed(undefined, 3)).toBe(3);
     expect(footballGmMarketVisitsUsed(undefined, 20)).toBe(20);
     expect(footballGmMarketVisitsUsed(5, 1)).toBe(5);

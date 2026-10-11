@@ -584,7 +584,7 @@ export function footballGmEligibleFreeAgencyTeams(input: {
 }
 
 /** Free-agency wheel access is a scarce offseason resource, not replenished by cuts. */
-export const FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT = 5;
+export const FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT = 4;
 
 /** Keep old saved games fair: completed FA signings already consumed a visit. */
 export function footballGmMarketVisitsUsed(savedVisits: number | undefined, legacySignings: number) {

@@ -1070,7 +1070,7 @@ export default function FootballGmHeadToHeadPage() {
     patch({
       previousFreeAgentTeam: run.pendingFreeAgentTeam,
       pendingFreeAgentTeam: null,
-      tradeMessage: "Passed on this team. One of your five visits was used.",
+      tradeMessage: "Passed on this team. One of your four visits was used.",
     });
   }
 
@@ -1701,7 +1701,7 @@ export default function FootballGmHeadToHeadPage() {
                         <div className="football-gm__trade-stage-heading">
                           <p className="eyebrow">FREE AGENCY · {run.freeAgencyVisitsUsed}/{FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT} VISITS USED · {footballGmOpenSlots(run.finalRoster).map(footballGmSlotLabel).join(" · ")} OPEN</p>
                           <h2>SPIN THE 1YR MARKET</h2>
-                          <span>Five total team visits, including passes. Released players stay off the market. {opponentDisplayName}'s roster is unavailable.</span>
+                          <span>Four total team visits, including passes. Released players stay off the market. {opponentDisplayName}'s roster is unavailable.</span>
                         </div>
                         <GmFootballWheel
                           teams={freeAgencyWheelTeams}
