@@ -13,6 +13,7 @@ create or replace function private.publish_combined_daily_closing_reminder(
   p_title text,
   p_summary text,
   p_route text,
+  p_action_label text,
   p_occurred_at timestamptz
 )
 returns jsonb
@@ -32,6 +33,7 @@ declare
   v_title text;
   v_summary text;
   v_route text;
+  v_action_label text;
 begin
   -- Old single-sport messages from earlier on the deployment day must not
   -- cause a second push after this migration goes live.
@@ -122,6 +124,7 @@ begin
     v_title := p_title;
     v_summary := p_summary;
     v_route := p_route;
+    v_action_label := p_action_label;
   else
     v_names := case
       when v_total = 2 then v_sports[1] || ' and ' || v_sports[2]
@@ -130,17 +133,21 @@ begin
     v_title := 'Daily challenges close soon';
     v_summary := 'Your ' || v_names || ' challenges close at midnight Central. Play them before the next challenges go live.';
     v_route := '/';
+    v_action_label := 'PLAY TODAY';
   end if;
 
   return private.publish_notification_to_profile_ufc_recap_core(
     p_recipient_profile_id,
     'daily-closing-combined:' || v_day::text || ':' || p_recipient_profile_id::text,
     'daily-closing-combined',
-    'daily_challenge_four_hours',
+    case when v_total = 1 and v_sports[1] = 'MLB'
+      then 'mlb_challenge_four_hours'
+      else 'daily_challenge_four_hours'
+    end,
     v_title,
     left(v_summary, 280),
     v_route,
-    'PLAY TODAY',
+    v_action_label,
     p_occurred_at
   );
 end;
@@ -177,6 +184,7 @@ begin
       p_title,
       p_summary,
       p_route,
+      p_action_label,
       coalesce(p_occurred_at, now())
     );
   end if;
