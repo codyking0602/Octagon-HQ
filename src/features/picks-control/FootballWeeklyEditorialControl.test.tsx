@@ -21,7 +21,7 @@ const base: FootballWeeklyContentPackage = {
   status: "draft", cfb_spotlight: null, nfl_spotlight: null,
   cfb_game_of_week: null, nfl_game_of_week: null,
   proposals: { cfb: { players, games }, nfl: { players, games } },
-  choices: {},
+  choices: {}, production: {},
   approved_at: null, ready_at: null, published_at: null,
   created_at: "2026-10-11T00:00:00Z", updated_at: "2026-10-11T00:00:00Z",
 };
