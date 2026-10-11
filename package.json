@@ -28,7 +28,8 @@
     "test:whoami:fast": "vitest run src/features/games/whoAmISemanticQuality.test.ts src/features/games/whoAmIRevealArchitecture.test.ts src/features/games/whoAmIFastQualityGate.test.ts src/features/games/whoAmICfbPr3PopulationQuality.test.ts src/features/games/whoAmIFootballRevealCoordinateQuality.test.ts src/app/fastPrFeedbackWorkflow.contract.test.ts",
     "verify:artifact": "node scripts/verify-production-artifact.mjs",
     "export:verdict": "node scripts/export-octagon-verdict.mjs",
-    "generate:football-who-am-i-daily-universes": "node scripts/generate-football-who-am-i-daily-universes.mjs"
+    "generate:football-who-am-i-daily-universes": "node scripts/generate-football-who-am-i-daily-universes.mjs",
+    "generate:gm-mode-contracts": "node scripts/generate-gm-mode-nfl-contracts.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.110.7",
