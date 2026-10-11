@@ -626,7 +626,6 @@ export default function FootballTodayChallengePage() {
   const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
   const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
   const [weeklyBusy, setWeeklyBusy] = useState(false);
-  const [weeklyRetryKey, setWeeklyRetryKey] = useState(0);
   const [weeklyError, setWeeklyError] = useState<string | null>(null);
   const [impostorState, setImpostorState] = useState<HqImpostorState | null>(null);
   const [impostorLoading, setImpostorLoading] = useState(false);
@@ -658,7 +657,7 @@ export default function FootballTodayChallengePage() {
 
   useEffect(() => {
     let active = true;
-    if (weeklyGmWeek || impostorWindow.active) {
+    if (weeklyGmWeek || impostorWindow.active || !editWeeklyAuction) {
       setWeeklyState(null);
       setShowWeeklyAuction(false);
       setWeeklyBusy(false);
@@ -696,7 +695,7 @@ export default function FootballTodayChallengePage() {
       .finally(() => { if (active) setWeeklyBusy(false); });
 
     return () => { active = false; };
-  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active, weeklyGmWeek, weeklyRetryKey]);
+  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active, weeklyGmWeek]);
 
   useEffect(() => {
     let active = true;
