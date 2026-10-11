@@ -153,6 +153,13 @@ begin
   if (p_state->>'spinIndex') !~ '^[0-9]+$' then raise exception 'invalid spin count'; end if;
   v_spin := (p_state->>'spinIndex')::integer;
   v_previous_spin := coalesce((v_attempt.state->>'spinIndex')::integer,1);
+  if v_attempt.state is null and (
+       v_spin <> 1 or p_state->>'phase'<>'draft'
+       or jsonb_typeof(p_state->'roster')<>'array'
+       or jsonb_array_length(p_state->'roster')<>1
+       or p_state->'roster'->0->>'playerId' is distinct from
+          case when p_scenario='elite' then 'BUF|QB|joshallen' else 'NYG|QB|jaxsondart' end
+     ) then raise exception 'Official draft must begin with the assigned quarterback'; end if;
   if v_spin < v_previous_spin or v_spin < 1 or v_spin > 7 then raise exception 'Official wheel progress cannot rewind'; end if;
   if p_completed then
     if p_state->>'phase'<>'final' or v_spin<>7
