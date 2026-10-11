@@ -46,8 +46,8 @@ export const FOOTBALL_GM_LIVE_OUTCOME_ANCHORS = {
 } as const;
 
 export const FOOTBALL_GM_SCORE_WEIGHTS = {
-  rosterManagement: 0.55,
-  threeYearResume: 0.45,
+  rosterManagement: 0.90,
+  threeYearResume: 0.10,
 } as const;
 
 const FOOTBALL_GM_TEAM_OVR_ANCHORS = [

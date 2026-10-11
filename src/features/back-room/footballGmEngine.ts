@@ -544,6 +544,14 @@ export function footballGmProjectedGradeForPlayer(
   year: 1 | 2 | 3,
   seed?: string,
 ) {
+  // Official October 13 GM event fixes only its designated QBs\' offseason paths.
+  // Everyone else, including every Casual run, retains the authored development model.
+  if (year > 1 && seed?.includes(":weekly-gm-elite:") && player.id === "BUF|QB|joshallen") {
+    return player.currentGrade;
+  }
+  if (year > 1 && seed?.includes(":weekly-gm-young:") && player.id === "NYG|QB|jaxsondart") {
+    return Math.min(99, player.currentGrade + 5); // DEPTH 82 -> STARTER 87; a BREAKOUT.
+  }
   const marketPosition = player.marketPosition;
   return projectWheelFootballGmGrade({
     currentGrade: player.currentGrade,
