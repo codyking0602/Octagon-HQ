@@ -861,31 +861,7 @@ async function advanceExistingAverageFan(
   context = await finalizePending(userClient, admin, context, profileId);
   if (context.gameType !== "average_fan") return null;
 
-  if (sport === "football") {
-    const hasStartedFootballDaily = Number(context.progress_revision ?? 0) > 0
-      || Boolean(asRecord(context.official_attempt));
-    if (!hasStartedFootballDaily) {
-      const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
-        p_profile_id: profileId,
-      });
-      if (weeklyGate.error) {
-        throw new Error("Football Weekly Auction gate could not be checked.");
-      }
-      const weeklyGateState = requiredRecord(weeklyGate.data, "Football Weekly Auction gate");
-      if (weeklyGateState.required === true) {
-        return safeError(
-          409,
-          "WEEKLY_AUCTION_REQUIRED",
-          "Submit today’s Weekly Auction bids before starting Football Daily.",
-          {
-            central_day: requiredString(preview.central_day, "Football preview Central day"),
-            schedule_version: requiredString(preview.schedule_version, "Football preview schedule version"),
-            game_type: requiredString(preview.expected_game, "Football preview game"),
-          },
-        );
-      }
-    }
-  }
+  // The Weekly Auction is a separate featured game, not a Daily prerequisite.
 
   const clientActionId = requestedClientActionId(body);
   if (clientActionId && dailyClientActionIds(context).includes(clientActionId)) {
@@ -1340,45 +1316,13 @@ Deno.serve(async (request) => {
     if (averageFanFastResponse) return averageFanFastResponse;
 
     if (body.sport === "football") {
-      const previewRequest = await admin.rpc("get_daily_challenge_materialization_request", {
-        p_sport: "football",
-      });
-      if (previewRequest.error) {
-        throw new Error("The Football Daily preview request failed.");
-      }
-      const preview = requiredRecord(previewRequest.data, "Football Daily preview");
-      const previewDay = requiredString(preview.central_day, "Football preview Central day");
-      const previewScheduleVersion = requiredString(preview.schedule_version, "Football preview schedule version");
-      const previewGame = requiredString(preview.expected_game, "Football preview game");
-
+      // Daily can load immediately, irrespective of Weekly Auction participation.
       const materialized = await materializeFootballToday(admin);
       let context = await getContext(admin, materialized.dailyChallengeId, profileId);
       context = await finalizePending(userClient, admin, context, profileId);
       context = await continueTwoGameWithoutIntermission(admin, context, profileId);
 
-      const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0
-        || Boolean(asRecord(context.official_attempt));
-      if (!continuingFootballDaily) {
-        const weeklyGate = await admin.rpc("football_weekly_auction_daily_gate", {
-          p_profile_id: profileId,
-        });
-        if (weeklyGate.error) {
-          throw new Error("Football Weekly Auction gate could not be checked.");
-        }
-        const weeklyGateState = requiredRecord(weeklyGate.data, "Football Weekly Auction gate");
-        if (weeklyGateState.required === true) {
-          return safeError(
-            409,
-            "WEEKLY_AUCTION_REQUIRED",
-            "Submit today’s Weekly Auction bids before starting Football Daily.",
-            {
-              central_day: previewDay,
-              schedule_version: previewScheduleVersion,
-              game_type: previewGame,
-            },
-          );
-        }
-      }
+      // Preserve independently earned Weekly Auction results; no gate here.
 
       if (body.mode === "get-today" || body.mode === undefined) {
         return json(footballPublicPayload(context));
