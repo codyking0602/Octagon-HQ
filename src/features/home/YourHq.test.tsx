@@ -482,11 +482,14 @@ describe("Home Your HQ", () => {
     renderHome();
 
     fireEvent.change(screen.getByRole("combobox", { name: "Home sport" }), { target: { value: "all" } });
-    expect(within(yourHqSection()).getByText("7 days")).toBeInTheDocument();
-    expect(within(yourHqSection()).getByRole("link", { name: "Open football Championship standings" })).toHaveAttribute("href", "/championship/football?tab=overall");
-    expect(within(yourHqSection()).getByRole("link", { name: "Open ufc Championship standings" })).toHaveAttribute("href", "/championship/ufc?tab=overall");
+    expect(screen.getByText("7 DAY DAILY STREAK")).toBeInTheDocument();
+    const championship = screen.getByRole("region", { name: "Championship standings" });
+    expect(within(championship).getByRole("link", { name: "Open football Championship standings" })).toHaveAttribute("href", "/championship/football?tab=overall");
+    expect(within(championship).getByRole("link", { name: "Open ufc Championship standings" })).toHaveAttribute("href", "/championship/ufc?tab=overall");
     expect(screen.getByRole("region", { name: "Football HQ" })).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "UFC HQ" })).toBeInTheDocument();
+    const homeSections = document.querySelectorAll('[data-testid="home-section"]');
+    expect(homeSections[homeSections.length - 1]).toBe(championship);
 
   });
   it("uses the Championship Home for all signed-in users and filters HQs", () => {

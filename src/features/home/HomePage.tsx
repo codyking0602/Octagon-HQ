@@ -36,6 +36,7 @@ import { HqImpostorHomeCard } from "../impostor/HqImpostorHomeCard";
 import "../../styles/home-football-hq.css";
 import "../../styles/football-special-daily.css";
 import "../../styles/home-ufc-hq.css";
+import "../../styles/home-sport-chooser.css";
 
 function readableError(error: unknown) {
   return error instanceof Error && error.message ? error.message : "";
@@ -368,13 +369,21 @@ export default function HomePage() {
   return (
     <div className="page home-page">
       {ownerPreview ? (
-        <OwnerChampionshipHome
-          streak={hqDailyStreak.streak.currentStreak}
-          streakLoading={hqDailyStreak.loading}
-          showMlb={mlbVisible}
-          sport={ownerSport}
-          onSportChange={setOwnerSport}
-        />
+        <header className="home-sport-chooser" aria-label="Your HQ dashboard">
+          <div className="home-sport-chooser__identity">
+            <h2>Your HQ</h2>
+            <small>{hqDailyStreak.loading ? "STREAK LOADING" : `${hqDailyStreak.streak.currentStreak} DAY DAILY STREAK`}</small>
+          </div>
+          <label className="home-champ-preview__filter home-sport-chooser__filter">
+            <span className="sr-only">Home sport</span>
+            <select aria-label="Home sport" value={ownerSport} onChange={(event) => setOwnerSport(event.target.value as SportFilter)}>
+              <option value="all">All sports</option>
+              <option value="football">Football</option>
+              <option value="ufc">UFC</option>
+              {mlbVisible ? <option value="mlb">MLB</option> : null}
+            </select>
+          </label>
+        </header>
       ) : (
       <section
         className="home-section home-section--your-hq"
@@ -448,6 +457,17 @@ export default function HomePage() {
       </section>
       )}
 
+      {ownerPreview && ownerSport === "mlb" ? (
+        <OwnerChampionshipHome
+          streak={hqDailyStreak.streak.currentStreak}
+          streakLoading={hqDailyStreak.loading}
+          showMlb={mlbVisible}
+          sport={ownerSport}
+          onSportChange={setOwnerSport}
+          showSportSelector={false}
+        />
+      ) : null}
+
       {(!ownerPreview || ownerSport === "all") ? <HqImpostorHomeCard /> : null}
 
       {ownerPreview && ownerSport !== "all" ? (
@@ -489,6 +509,16 @@ export default function HomePage() {
       )}
         </>
       )}
+      {ownerPreview && ownerSport !== "mlb" ? (
+        <OwnerChampionshipHome
+          streak={hqDailyStreak.streak.currentStreak}
+          streakLoading={hqDailyStreak.loading}
+          showMlb={mlbVisible}
+          sport={ownerSport}
+          onSportChange={setOwnerSport}
+          showSportSelector={false}
+        />
+      ) : null}
     </div>
   );
 }
