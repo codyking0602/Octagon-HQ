@@ -25,7 +25,7 @@ begin
     where season = 2026
       and public_enabled = true
       and field_ready = true
-      and current_round = 'division_series'
+      and current_round = 'championship_series'
       and bracket_lock_at = timestamptz '2026-09-29 12:00:00-05'
       and jsonb_array_length(coalesce(bracket_template -> 'teams', '[]'::jsonb)) = 12
       and jsonb_array_length(coalesce(bracket_template -> 'nodes', '[]'::jsonb)) = 11
@@ -39,6 +39,51 @@ begin
 
   if (select count(*) from public.mlb_playoff_series where season = 2026 and round = 'division_series') <> 4 then
     raise exception '2026 MLB field must contain four Division Series';
+  end if;
+
+  if (select count(*) from public.mlb_playoff_series
+      where season = 2026 and round = 'division_series'
+        and status = 'complete' and winner_team_id is not null) <> 4 then
+    raise exception '2026 MLB Division Series results must all be finalized';
+  end if;
+
+  if not exists (
+    select 1 from public.mlb_playoff_series
+    where series_id = 'al-ds-1' and winner_team_id = 'tb' and series_score = 'TB 3–0 NYY'
+  ) or not exists (
+    select 1 from public.mlb_playoff_series
+    where series_id = 'al-ds-2' and winner_team_id = 'cle' and series_score = 'CLE 3–2 CWS'
+  ) or not exists (
+    select 1 from public.mlb_playoff_series
+    where series_id = 'nl-ds-1' and winner_team_id = 'mil' and series_score = 'MIL 3–1 SD'
+  ) or not exists (
+    select 1 from public.mlb_playoff_series
+    where series_id = 'nl-ds-2' and winner_team_id = 'lad' and series_score = 'LAD 3–1 ATL'
+  ) then
+    raise exception '2026 MLB official Division Series winners/scores drifted';
+  end if;
+
+  if (select count(*) from public.mlb_playoff_series
+      where season = 2026 and round = 'championship_series'
+        and status = 'scheduled' and winner_team_id is null
+        and picks_lock_at = timestamptz '2026-10-11 19:00:00-05'
+        and team_a_moneyline is not null and team_b_moneyline is not null
+        and jsonb_array_length(schedule) = 7) <> 2 then
+    raise exception 'ALCS/NLCS or their frozen lines/7pm CT lock missing';
+  end if;
+
+  if not exists (
+    select 1 from public.mlb_playoff_series
+     where series_id = 'nl-cs' and team_a_id = 'lad' and team_b_id = 'mil'
+       and starts_at = timestamptz '2026-10-11 19:00:00-05'
+       and team_a_moneyline = -160 and team_b_moneyline = 130
+  ) or not exists (
+    select 1 from public.mlb_playoff_series
+     where series_id = 'al-cs' and team_a_id = 'cle' and team_b_id = 'tb'
+       and starts_at = timestamptz '2026-10-12 19:00:00-05'
+       and team_a_moneyline = 140 and team_b_moneyline = -170
+  ) then
+    raise exception '2026 LCS official matchups, starts or DraftKings lines drifted';
   end if;
 
   if (select featured_challenge ->> 'route' from public.mlb_playoff_seasons where season = 2026) <> '/mlb/challenge' then
