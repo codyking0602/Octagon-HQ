@@ -23,6 +23,7 @@ import {
   createTodayChallengeRepository,
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
+import { footballDailyFindLeaderIdentity } from "../play/footballDailyFindLeaderIdentity";
 import {
   useTodayChallengeRuntime,
   type TodayChallengeAdvanceOptions,
@@ -178,21 +179,11 @@ function FindLeader({ projection, advance }: GameProps) {
     const id = String(candidate.id ?? "");
     const name = String(candidate.name ?? "");
     const revealedCandidate = revealedById.get(id);
-    // Older immutable Daily setups only stored a combined label. Recover
-    // their year for the dedicated untruncated season pill as well.
-    const suffix = name.match(/^(.*) (\d{4})$/);
-    const prefix = name.match(/^(\d{4}) (.*)$/);
-    const season = typeof candidate.season === "number"
-      ? candidate.season
-      : suffix ? Number(suffix[2]) : prefix ? Number(prefix[1]) : null;
-    const displayName = typeof candidate.displayName === "string"
-      ? candidate.displayName
-      : suffix ? suffix[1] : prefix ? prefix[2] : name;
+    const identity = footballDailyFindLeaderIdentity(name, candidate.displayName, candidate.season);
     return {
       id,
       name,
-      displayName,
-      ...(season !== null ? { season } : {}),
+      ...identity,
       subtitle: String(candidate.subtitle ?? ""),
       ...(typeof revealedCandidate?.value === "number" ? { value: revealedCandidate.value } : {}),
     };
