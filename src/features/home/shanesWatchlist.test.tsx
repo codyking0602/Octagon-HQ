@@ -10,7 +10,7 @@ describe("Shane's ranked watchlist", () => {
   it("keeps one ordered Top 15 model and the approved fight-highlight links", () => {
     expect(shanesWatchlist.capacity).toBe(15);
     expect(shanesWatchlist.lastUpdated).toBe("October 2026");
-    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(shanesWatchlist.fighters.map((fighter) => fighter.rank)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     expect(shanesWatchlist.fighters.map((fighter) => fighter.id)).toEqual([
       "quillan-salkilld",
       "raul-rosas-jr",
@@ -22,6 +22,7 @@ describe("Shane's ranked watchlist", () => {
       "ty-miller",
       "ateba-gautier",
       "gable-steveson",
+      "alice-pereira",
     ]);
 
     const salkilld = shanesWatchlist.fighters[0];
@@ -133,6 +134,25 @@ describe("Shane's ranked watchlist", () => {
     });
     expect(existsSync("public/assets/fighters/gable-steveson-thumb.webp")).toBe(true);
     expect(watchMovement(gable)).toEqual({ label: "↓1", direction: "down" });
+
+    const alice = shanesWatchlist.fighters[10];
+    expect(alice).toMatchObject({
+      id: "alice-pereira",
+      rank: 11,
+      previousRank: null,
+      nickname: "Golden Girl",
+      division: "Women’s Bantamweight",
+      status: "Rising",
+      age: 20,
+      country: "Brazil",
+      ufcRecord: "2–1",
+      ufcWinStreak: "2",
+      ufcFinishes: "2",
+      videoUrl: "https://www.sherdog.com/videos/highlightreels/UFC-Vegas-122-highlight-video-Alice-Pereira-opens-up-nasty-cut-on-Darya-Zheleznyakova-23840",
+    });
+    expect(alice.scoutingSnapshot).toContain("8–1 professional record");
+    expect(alice.scoutingSnapshot).toContain("#15 Daria Zhelezniakova");
+    expect(watchMovement(alice)).toEqual({ label: "NEW", direction: "new" });
   });
 
   it("keeps the Home preview to a compact top-three board", () => {
@@ -158,11 +178,11 @@ describe("Shane's ranked watchlist", () => {
 
     expect(screen.getByRole("heading", { name: "Shane King’s Contender Series" })).toBeInTheDocument();
     expect(screen.getByText("A living Top 15 of UFC prospects to watch as their careers develop.")).toBeInTheDocument();
-    expect(screen.getByText("10 OF 15 SPOTS FILLED")).toBeInTheDocument();
+    expect(screen.getByText("11 OF 15 SPOTS FILLED")).toBeInTheDocument();
     expect(screen.getByText("Gable Steveson")).toBeInTheDocument();
     expect(screen.getByText("Quillan Salkilld")).toBeInTheDocument();
     expect(screen.getByText("Bilal Hasan")).toBeInTheDocument();
-    expect(screen.getByText("5 SPOTS OPEN")).toBeInTheDocument();
+    expect(screen.getByText("4 SPOTS OPEN")).toBeInTheDocument();
     expect(screen.getByText("Nobody else has earned a place on Shane’s board yet.")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(container.querySelectorAll("details")).toHaveLength(0);
@@ -171,7 +191,7 @@ describe("Shane's ranked watchlist", () => {
     expect(within(movementSummary).getByText("NEW")).toBeInTheDocument();
     expect(within(movementSummary).getByText("MOVED")).toBeInTheDocument();
     expect(within(movementSummary).getByText("HELD")).toBeInTheDocument();
-    expect(within(movementSummary).getByText("1")).toBeInTheDocument();
+    expect(within(movementSummary).getByText("2")).toBeInTheDocument();
     expect(within(movementSummary).getByText("4")).toBeInTheDocument();
     expect(within(movementSummary).getByText("5")).toBeInTheDocument();
   });
