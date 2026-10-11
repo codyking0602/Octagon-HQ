@@ -613,6 +613,7 @@ export default function FootballTodayChallengePage() {
   const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
   const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
   const [weeklyBusy, setWeeklyBusy] = useState(false);
+  const [weeklyRetryKey, setWeeklyRetryKey] = useState(0);
   const [weeklyError, setWeeklyError] = useState<string | null>(null);
   const [impostorState, setImpostorState] = useState<HqImpostorState | null>(null);
   const [impostorLoading, setImpostorLoading] = useState(false);
@@ -686,7 +687,7 @@ export default function FootballTodayChallengePage() {
       .finally(() => { if (active) setWeeklyBusy(false); });
 
     return () => { active = false; };
-  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active, weeklyGmWeek]);
+  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active, weeklyGmWeek, weeklyRetryKey]);
 
   useEffect(() => {
     let active = true;
@@ -842,7 +843,15 @@ export default function FootballTodayChallengePage() {
         <section className="football-today-shell">
           <p className="eyebrow">FOOTBALL HQ</p>
           <h1>{loading ? "Building today’s board…" : "Today’s Challenge"}</h1>
-          {message ? <p>{message}</p> : null}
+          {message ? (
+            <>
+              <p>{message}</p>
+              <button type="button" onClick={() => {
+                if (weeklyError) setWeeklyRetryKey((value) => value + 1);
+                else void dailyRuntime.refresh();
+              }}>TRY AGAIN →</button>
+            </>
+          ) : null}
         </section>
       </div>
     );
