@@ -1455,6 +1455,7 @@ function FinalScreen({
   isRecipient,
   onChallenge,
   onReplay,
+  weeklyOfficial = false,
 }: {
   run: PersistedRun;
   gmName: string;
@@ -1463,6 +1464,7 @@ function FinalScreen({
   isRecipient: boolean;
   onChallenge: () => void;
   onReplay: () => void;
+  weeklyOfficial?: boolean;
 }) {
   return (
     <>
@@ -1471,7 +1473,7 @@ function FinalScreen({
         {!isRecipient && opponentName ? (
           <button className="primary-action" type="button" onClick={onChallenge}>CHALLENGE {opponentName}</button>
         ) : null}
-        <button type="button" onClick={onReplay}>NEW GM RUN</button>
+        <button type="button" onClick={onReplay}>{weeklyOfficial ? "BACK TO WEEKLY GM" : "NEW GM RUN"}</button>
         <button type="button" className="gm-final__secondary-action" onClick={() => {
           const details = document.getElementById("gm-full-roster");
           if (details instanceof HTMLDetailsElement) {
@@ -2389,6 +2391,7 @@ export default function FootballGmModePage({
           isRecipient={profileMatch.isRecipient}
           onChallenge={() => void challengeOpponent()}
           onReplay={replay}
+          weeklyOfficial={Boolean(weeklyScenario)}
         />
       ) : null}
     </div>

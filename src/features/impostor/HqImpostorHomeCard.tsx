@@ -69,7 +69,7 @@ export function HqImpostorHomeCard() {
     };
   }, [signedIn, repository]);
 
-  if (rollout.before || (rollout.after && !state?.event)) return null;
+  if (rollout.before || rollout.active || (rollout.after && !state?.event)) return null;
 
   const copy = signedIn
     ? statusCopy(state)
