@@ -64,6 +64,22 @@ export interface FootballFindLeaderPresentationCandidate {
   value?: number;
 }
 
+/**
+ * Older persisted Football Dailies only stored name ("Peyton Manning 2008")
+ * rather than the explicit season field. Recover the year for display without
+ * mutating the official candidate ID, answer, or published board.
+ */
+export function footballFindLeaderVisibleIdentity(candidate: FootballFindLeaderPresentationCandidate) {
+  if (candidate.season != null) {
+    return { displayName: candidate.displayName ?? candidate.name, season: candidate.season };
+  }
+  const suffix = /^(.*?)\\s+((?:19|20)\\d{2})$/.exec(candidate.name);
+  if (suffix) return { displayName: candidate.displayName ?? suffix[1]!, season: Number(suffix[2]) };
+  const prefix = /^((?:19|20)\\d{2})\\s+(.+)$/.exec(candidate.name);
+  if (prefix) return { displayName: candidate.displayName ?? prefix[2]!, season: Number(prefix[1]) };
+  return { displayName: candidate.displayName ?? candidate.name, season: null };
+}
+
 export interface FootballFindLeaderPresentationResult {
   score: number;
   perfect: boolean;
@@ -222,6 +238,7 @@ export function FootballFindLeaderPresentation({
       <section className="football-find-grid" aria-label="Football Find the Leader candidates">
         {candidates.map((candidate, index) => {
           const safe = eliminatedSet.has(candidate.id);
+          const identity = footballFindLeaderVisibleIdentity(candidate);
           return (
             <button
               className={`football-find-card${safe ? " is-safe" : ""}`}
@@ -235,8 +252,8 @@ export function FootballFindLeaderPresentation({
               <span className="football-find-card__copy">
                 {showCandidateContext ? <small>{candidate.subtitle}</small> : null}
                 <span className="football-find-card__identity">
-                  <strong>{candidate.displayName ?? candidate.name}</strong>
-                  {candidate.season != null ? <b className="football-find-card__season">{candidate.season}</b> : null}
+                  <strong>{identity.displayName}</strong>
+                  {identity.season != null ? <b className="football-find-card__season">{identity.season}</b> : null}
                 </span>
               </span>
               <em>{safe
