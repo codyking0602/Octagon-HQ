@@ -4,6 +4,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import PlayV2Page from "./PlayV2Page";
+import { TodayChallengeRepositoryError } from "./todayChallengeRepository";
 
 const mocked = vi.hoisted(() => ({
   profile: { id: "11111111-1111-4111-8111-111111111111", displayName: "CODY", canControlPicks: true } as {
@@ -180,6 +181,53 @@ describe("public Football/UFC Play 2.0 release", () => {
     const nextDaily = within(nextDay.container).getByRole("region", { name: "Today's Challenge" });
     expect(nextDaily).not.toHaveAttribute("data-special-daily");
     expect(within(nextDaily).queryByRole("link", { name: /watch the red river rivalry video/i })).not.toBeInTheDocument();
+  });
+
+  it("shows an actionable published Football Daily instead of a false load error when Weekly Auction bids are required", () => {
+    mocked.runtime.mockReturnValue({
+      projection: null,
+      loading: false,
+      error: new TodayChallengeRepositoryError(
+        "WEEKLY_AUCTION_REQUIRED",
+        "Submit today's Weekly Auction bids before starting Football Daily.",
+        { central_day: "2026-10-11", schedule_version: "football-daily-v20-resume-v18-oct3", game_type: "find_leader" },
+      ),
+      refresh: vi.fn(),
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 0, average: null, recent: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    const view = preview("football");
+    const daily = within(view.container).getByRole("region", { name: "Today's Challenge" });
+    expect(daily).toHaveTextContent("Find the Leader");
+    expect(daily).toHaveTextContent("WEEKLY FIRST");
+    expect(daily).toHaveTextContent("Today's Football Daily is published and ready.");
+    expect(daily).toHaveTextContent("Submit today's Weekly Auction bids first");
+    expect(daily.querySelector('[data-daily-gate="weekly-auction"]')).toBeInTheDocument();
+    expect(within(daily).queryByText(/unavailable|did not load/i)).not.toBeInTheDocument();
+    const cta = within(daily).getByRole("button", { name: /complete weekly bids/i });
+    expect(cta).toBeInTheDocument();
+    fireEvent.click(cta);
+  });
+
+  it("does not disguise a genuine Daily runtime failure as a Weekly Auction gate", () => {
+    const refresh = vi.fn();
+    mocked.runtime.mockReturnValue({
+      projection: null, loading: false,
+      error: new TodayChallengeRepositoryError("DAILY_RUNTIME_FAILED", "Daily backend unavailable."),
+      refresh,
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 0, average: null, recent: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    const view = preview("football");
+    const daily = within(view.container).getByRole("region", { name: "Today's Challenge" });
+    expect(daily).toHaveTextContent("Daily backend unavailable.");
+    expect(within(daily).queryByRole("button", { name: /complete weekly bids/i })).not.toBeInTheDocument();
+    fireEvent.click(within(daily).getByRole("button", { name: /try again/i }));
+    expect(refresh).toHaveBeenCalledTimes(1);
   });
 
   it("does not manufacture a UFC weekly and explains missing official history", () => {
