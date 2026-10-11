@@ -187,17 +187,17 @@ export default function FootballWeeklyAuctionCenterPage() {
             <div className="football-weekly-auction-center__current-title">
               <div>
                 <small>OCT 13–19 · FEATURED CHALLENGE</small>
-                <strong>HQ IMPOSTOR</strong>
+                <strong>WEEKLY NFL GM</strong>
               </div>
               <span>THIS WEEK</span>
             </div>
-            <p>HQ Impostor replaces Weekly Auction for this featured week.</p>
+            <p>Two official GM franchises replace Weekly Auction for this featured week.</p>
             <button
               className="football-weekly-auction-center__primary"
               type="button"
-              onClick={() => navigate("/impostor")}
+              onClick={() => navigate("/football/weekly-gm")}
             >
-              OPEN HQ IMPOSTOR →
+              OPEN WEEKLY GM →
             </button>
           </section>
         ) : activeState ? (

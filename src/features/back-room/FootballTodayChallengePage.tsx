@@ -608,6 +608,7 @@ export default function FootballTodayChallengePage() {
   const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const impostorRepository = useMemo(() => createHqImpostorRepository(), []);
   const impostorWindow = hqImpostorV1Window();
+  const weeklyGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z") && Date.now() < Date.parse("2026-10-20T05:00:00Z");
   const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
   const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
   const [weeklyBusy, setWeeklyBusy] = useState(false);
@@ -617,14 +618,14 @@ export default function FootballTodayChallengePage() {
   const [impostorError, setImpostorError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
   const weeklyGateActive = Boolean(
-    !impostorWindow.active
+    !weeklyGmWeek && !impostorWindow.active
     && weeklyState?.available
     && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
   );
-  const impostorGateActive = impostorWindow.active
+  const impostorGateActive = !weeklyGmWeek && impostorWindow.active
     && !impostorLoading
     && hqImpostorDailyGateRequired(impostorState);
-  const featuredGateLoaded = impostorWindow.active ? !impostorLoading : weeklyState !== null;
+  const featuredGateLoaded = weeklyGmWeek || (impostorWindow.active ? !impostorLoading : weeklyState !== null);
   const dailyRuntime = useTodayChallengeRuntime({
     profileId: identity.profile?.id ?? "signed-out",
     enabled: signedIn && featuredGateLoaded && !weeklyGateActive && !impostorGateActive,
@@ -645,7 +646,7 @@ export default function FootballTodayChallengePage() {
 
   useEffect(() => {
     let active = true;
-    if (impostorWindow.active) {
+    if (impostorWindow.active || weeklyGmWeek) {
       setWeeklyState(null);
       setShowWeeklyAuction(false);
       setWeeklyBusy(false);
@@ -683,11 +684,11 @@ export default function FootballTodayChallengePage() {
       .finally(() => { if (active) setWeeklyBusy(false); });
 
     return () => { active = false; };
-  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active]);
+  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active, weeklyGmWeek]);
 
   useEffect(() => {
     let active = true;
-    if (!signedIn || !impostorWindow.active) {
+    if (!signedIn || weeklyGmWeek || !impostorWindow.active) {
       setImpostorState(null);
       setImpostorLoading(false);
       setImpostorError(null);
@@ -713,7 +714,7 @@ export default function FootballTodayChallengePage() {
       });
 
     return () => { active = false; };
-  }, [signedIn, impostorRepository, impostorWindow.active]);
+  }, [signedIn, impostorRepository, impostorWindow.active, weeklyGmWeek]);
 
   async function submitWeeklyBids(bids: Record<number, FootballWeeklyAuctionBidInput>) {
     if (!weeklyRepository || weeklyBusy) return;
@@ -785,7 +786,7 @@ export default function FootballTodayChallengePage() {
     );
   }
 
-  if (impostorWindow.active && (impostorLoading || impostorGateActive || impostorError)) {
+  if (!weeklyGmWeek && impostorWindow.active && (impostorLoading || impostorGateActive || impostorError)) {
     return (
       <div className="page football-today-page">
         <section className="football-today-shell today-hub-gate">
@@ -832,7 +833,7 @@ export default function FootballTodayChallengePage() {
   }
 
   if (!projection) {
-    const loading = busy || weeklyBusy || weeklyState === null;
+    const loading = busy || weeklyBusy || (!weeklyGmWeek && weeklyState === null);
     const message = weeklyError ?? error;
     return (
       <div className="page football-today-page">
