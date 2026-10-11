@@ -44,6 +44,56 @@ export const footballWeeklyDraftPatchSchema = z.strictObject({
   nfl_game_of_week: footballWeeklyGameSchema.nullable().optional(),
 }).refine((patch) => Object.keys(patch).length > 0, "Draft patch cannot be empty");
 
+// Weekly recommendations are lightweight; the owner chooses IDs before full art/editorial prep.
+const candidateId = z.string().regex(/^[a-z0-9][a-z0-9-]{0,79}$/);
+export const footballWeeklyPlayerCandidateSchema = z.strictObject({
+  id: candidateId,
+  name: z.string().trim().min(1),
+  team: z.string().trim().min(1),
+  position: z.string().trim().min(1),
+  summary: z.string().trim().min(1),
+});
+export const footballWeeklyGameCandidateSchema = z.strictObject({
+  id: candidateId,
+  home_team: z.string().trim().min(1),
+  away_team: z.string().trim().min(1),
+  kickoff_at: z.iso.datetime({ offset: true }),
+  summary: z.string().trim().min(1),
+}).refine((game) => game.home_team !== game.away_team, "Featured opponents must differ");
+
+export const footballWeeklyCandidateSetSchema = z.strictObject({
+  players: z.array(footballWeeklyPlayerCandidateSchema).length(5).refine(
+    (items) => new Set(items.map((item) => item.id)).size === 5, "Each player ID must be unique",
+  ),
+  games: z.array(footballWeeklyGameCandidateSchema).length(5).refine(
+    (items) => new Set(items.map((item) => item.id)).size === 5, "Each game ID must be unique",
+  ),
+});
+
+const candidateLists = z.strictObject({
+  cfb: footballWeeklyCandidateSetSchema.optional(),
+  nfl: footballWeeklyCandidateSetSchema.optional(),
+}).default({});
+const choice = z.strictObject({
+  player: footballWeeklyPlayerCandidateSchema,
+  game: footballWeeklyGameCandidateSchema,
+  selected_at: z.iso.datetime({ offset: true }),
+  selected_by: z.uuid(),
+});
+const choiceLists = z.strictObject({ cfb: choice.optional(), nfl: choice.optional() }).default({});
+
+// The upcoming content week is always the NEXT local Tuesday, even on Tuesday.
+export function nextFootballEditorialTuesday(now = new Date()): string {
+  const pieces = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(now);
+  const part = (name: string) => Number(pieces.find((piece) => piece.type === name)?.value);
+  const localNoonUtc = new Date(Date.UTC(part("year"), part("month") - 1, part("day"), 12));
+  const delta = (2 - localNoonUtc.getUTCDay() + 7) % 7 || 7;
+  localNoonUtc.setUTCDate(localNoonUtc.getUTCDate() + delta);
+  return localNoonUtc.toISOString().slice(0, 10);
+}
+
 export const footballWeeklyContentPackageSchema = z.object({
   week_of: footballEditorialTuesdaySchema,
   release_at: z.iso.datetime({ offset: true }),
@@ -52,6 +102,8 @@ export const footballWeeklyContentPackageSchema = z.object({
   nfl_spotlight: footballWeeklySpotlightSchema.nullable(),
   cfb_game_of_week: footballWeeklyGameSchema.nullable(),
   nfl_game_of_week: footballWeeklyGameSchema.nullable(),
+  proposals: candidateLists,
+  choices: choiceLists,
   approved_at: z.string().nullable(),
   ready_at: z.string().nullable(),
   published_at: z.string().nullable(),
@@ -65,6 +117,8 @@ export type FootballWeeklyContentPackage = z.infer<typeof footballWeeklyContentP
 export interface FootballWeeklyContentRepository {
   load: (weekOf: string) => Promise<FootballWeeklyContentPackage | null>;
   saveDraft: (weekOf: string, patch: FootballWeeklyDraftPatch) => Promise<FootballWeeklyContentPackage>;
+  stageCandidates: (weekOf: string, sport: "cfb" | "nfl", candidates: z.infer<typeof footballWeeklyCandidateSetSchema>) => Promise<FootballWeeklyContentPackage>;
+  selectChoices: (weekOf: string, sport: "cfb" | "nfl", playerId: string, gameId: string) => Promise<FootballWeeklyContentPackage>;
 }
 
 // Phase 1: owner-only persistence, not a live content publishing path.
@@ -83,6 +137,25 @@ export function createFootballWeeklyContentRepository(): FootballWeeklyContentRe
       const { data, error } = await client.rpc("save_football_weekly_content_draft", {
         p_week_of: footballEditorialTuesdaySchema.parse(weekOf),
         p_patch: footballWeeklyDraftPatchSchema.parse(patch),
+      });
+      if (error) throw new Error(error.message);
+      return footballWeeklyContentPackageSchema.parse(data);
+    },
+    async stageCandidates(weekOf, sport, candidates) {
+      const { data, error } = await client.rpc("stage_football_weekly_editorial_candidates", {
+        p_week_of: footballEditorialTuesdaySchema.parse(weekOf),
+        p_sport: sport,
+        p_candidates: footballWeeklyCandidateSetSchema.parse(candidates),
+      });
+      if (error) throw new Error(error.message);
+      return footballWeeklyContentPackageSchema.parse(data);
+    },
+    async selectChoices(weekOf, sport, playerId, gameId) {
+      const { data, error } = await client.rpc("select_football_weekly_editorial_choices", {
+        p_week_of: footballEditorialTuesdaySchema.parse(weekOf),
+        p_sport: sport,
+        p_player_id: candidateId.parse(playerId),
+        p_game_id: candidateId.parse(gameId),
       });
       if (error) throw new Error(error.message);
       return footballWeeklyContentPackageSchema.parse(data);
