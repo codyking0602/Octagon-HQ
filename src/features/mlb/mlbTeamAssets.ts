@@ -79,18 +79,18 @@ export function mlbTeamColor(
 }
 
 export const MLB_OWNER_PLAYER_SPOTLIGHT = {
-  name: "Jacob Misiorowski",
-  team: "Milwaukee Brewers",
+  name: "Gavin Williams",
+  team: "Cleveland Guardians",
   position: "SP",
-  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/694819/headshot/67/current",
-  teamColor: "#12284B",
+  photoUrl: "https://img.mlbstatic.com/mlb-photos/image/upload/w_426,d_people:generic:headshot:silo:current.png,q_auto:best,f_auto/v1/people/668909/headshot/67/current",
+  teamColor: "#E50022",
   stats: [
-    { label: "W-L", value: "16-5" },
-    { label: "ERA", value: "1.80" },
-    { label: "SO", value: "252" },
-    { label: "WHIP", value: "0.80" },
+    { label: "K", value: "12" },
+    { label: "IP", value: "6.0" },
+    { label: "H", value: "1" },
+    { label: "R", value: "0" },
   ],
-  meta: "2026 REGULAR SEASON · MLB LEADER IN ERA, SO & WHIP",
-  profileUrl: "https://www.baseball-reference.com/players/m/misioja01.shtml",
-  highlightUrl: "https://youtube.com/shorts/dee400BODnI?is=OTGX2PKN7O9mKG9D",
+  meta: "2026 ALDS GAME 5 · 12 K IN SIX SCORELESS INNINGS",
+  profileUrl: "https://www.baseball-reference.com/players/w/williga01.shtml",
+  highlightUrl: "https://youtube.com/shorts/2hCQQ8GjrXE?is=Zh0UXfg_FOz1WGrO",
 } as const;
