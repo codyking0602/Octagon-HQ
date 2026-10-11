@@ -151,11 +151,12 @@ describe("Football Weekly Auction live contract", () => {
     expect(day1JoinWindowMigration).not.toContain("profile.created_at >= v_previous_lock_at");
   });
 
-  it("gates every official Football Daily runtime request behind today's submission", () => {
-    expect(runtime).toContain("football_weekly_auction_daily_gate");
-    expect(runtime).toContain("WEEKLY_AUCTION_REQUIRED");
+  it("preserves Weekly Auction as a separate featured game without blocking Football Daily", () => {
+    expect(runtime).not.toContain("football_weekly_auction_daily_gate");
+    expect(runtime).not.toContain("WEEKLY_AUCTION_REQUIRED");
     expect(page).toContain("createFootballWeeklyAuctionRepository");
     expect(page).toContain("FootballWeeklyAuctionGate");
+    expect(page).toContain("editWeeklyAuction && weeklyState?.available && showWeeklyAuction");
     expect(page).toContain('"EDIT BIDS"');
     expect(page).toContain('"EDIT WILDCARD"');
   });
