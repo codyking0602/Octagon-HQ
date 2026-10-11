@@ -32,8 +32,9 @@ export interface WeeklyGmResult {
 }
 
 export function createFootballWeeklyGmRepository() {
-  const client = getSupabaseClient();
-  if (!client) return null;
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+  const client = supabase;
   let queue: Promise<void> = Promise.resolve();
   async function rpc<T>(name: string, args?: Record<string, unknown>): Promise<T> {
     const { data, error } = await client.rpc(name, args);
