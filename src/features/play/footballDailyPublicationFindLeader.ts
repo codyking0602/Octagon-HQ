@@ -1,9 +1,11 @@
 import {
   buildFootballFindLeaderBoard,
+  footballFindLeaderMetricRows,
   footballFindLeaderQuestions,
+  type FootballFindLeaderBoard,
 } from "../back-room/footballFindLeaderModel";
 import { footballFindLeaderLeagueForDomain } from "../back-room/footballFindLeaderStats";
-import { stableLineupHash } from "./lineupModel";
+import { seededLineupRandom, shuffleLineup, stableLineupHash } from "./lineupModel";
 import { OFFICIAL_SCORE_CONTRACT_VERSION } from "./officialScoreContract";
 import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
 import { buildTwoGameDailyPublication } from "./dailyTwoGameRuntime";
@@ -19,6 +21,43 @@ import {
 function dailyLeague(day: string, gameIndex = 0) {
   const first = stableLineupHash(`${FOOTBALL_DAILY_RUNTIME_VERSION}|find-leader|${day}`) % 2 === 0 ? "NFL" : "CFB";
   return gameIndex === 0 ? first : first === "NFL" ? "CFB" : "NFL";
+}
+
+/**
+ * Official NFL QB season volume boards should compare genuine landmark seasons,
+ * not random mid-pack 4,000-yard seasons. Keep one top season per QB so the year
+ * stays part of the identity and the all-time standard is always represented.
+ *
+ * This is Daily-only: never change seeded Casual/Profile Challenge replays.
+ */
+export function curateOfficialQbSeasonBoard(board: FootballFindLeaderBoard, seed: string): FootballFindLeaderBoard {
+  if (board.domainId !== "nfl-qb-season"
+    || (board.metricId !== "qb-season-passing-yards" && board.metricId !== "qb-season-passing-touchdowns")) {
+    return board;
+  }
+  const uniquePlayers = new Set<string>();
+  const topSeasons: FootballFindLeaderBoard["candidates"] = [];
+  for (const row of footballFindLeaderMetricRows(board.metricId)) {
+    const player = (row.displayName ?? row.name.replace(/\\s+\\d{4}$/, "")).toLowerCase();
+    if (uniquePlayers.has(player) || row.season == null) continue;
+    uniquePlayers.add(player);
+    topSeasons.push({
+      id: row.id,
+      name: row.name,
+      displayName: row.displayName,
+      season: row.season,
+      subtitle: row.subtitle,
+      value: row.value,
+    });
+    if (topSeasons.length === 10) break;
+  }
+  if (topSeasons.length < 10) return board;
+  return {
+    ...board,
+    leaderId: topSeasons[0]!.id,
+    leaderValue: topSeasons[0]!.value,
+    candidates: shuffleLineup(topSeasons, seededLineupRandom("football-daily-elite-qb-seasons-v1", seed, board.definitionId)),
+  };
 }
 
 function buildFindLeaderSetup(day: string, scheduleVersion: string, gameIndex = 0): OfficialDailySetupPublication {
@@ -41,6 +80,7 @@ function buildFindLeaderSetup(day: string, scheduleVersion: string, gameIndex = 
     if (board) break;
   }
   if (!board) throw new Error("Football Find the Leader could not build the official board.");
+  board = curateOfficialQbSeasonBoard(board, `${scheduleVersion}|${day}|${gameIndex}`);
   const candidates = board.candidates.map(({ id, name, subtitle }) => ({ id, name, subtitle }));
   return {
     setupKey: gameIndex === 0
