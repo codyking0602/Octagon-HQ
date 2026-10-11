@@ -102,7 +102,7 @@ export default function FootballWeeklyEditorialControl({
           <div className="football-editorial__sport" key={sport}>
             <div className="football-editorial__sport-heading">
               <h3>{sport === "cfb" ? "College Football" : "NFL"}</h3>
-              <span>{saved ? "SELECTIONS SAVED" : candidates ? "READY TO SELECT" : "AWAITING RECOMMENDATIONS"}</span>
+              <span>{content?.production[sport] ? "EDITORIAL PREPARED" : saved ? "SELECTIONS SAVED" : candidates ? "READY TO SELECT" : "AWAITING RECOMMENDATIONS"}</span>
             </div>
             {candidates ? (
               <>
@@ -151,6 +151,7 @@ export default function FootballWeeklyEditorialControl({
                   {busy === sport ? "SAVING…" : saved ? "UPDATE " + sport.toUpperCase() + " PICKS" : "SAVE " + sport.toUpperCase() + " PICKS"}
                 </button>
                 {saved ? <p className="football-editorial__saved">Saved: {saved.player.name} · {saved.game.away_team} at {saved.game.home_team}</p> : null}
+                {content?.production[sport] ? <p className="football-editorial__saved">Four-stat Spotlight, matchup editorial, and image asset references prepared for production. Publication remains separate.</p> : null}
               </>
             ) : (
               <p className="football-editorial__waiting">

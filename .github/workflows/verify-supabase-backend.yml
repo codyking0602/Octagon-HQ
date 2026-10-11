@@ -134,6 +134,7 @@ jobs:
             supabase/tests/home_football_spotlight_media.sql \
             supabase/tests/football_weekly_content_packages.sql \
             supabase/tests/football_weekly_editorial_approval.sql \
+            supabase/tests/football_weekly_editorial_preparation.sql \
             supabase/tests/who_am_i_authored_two_rounds.sql \
             supabase/tests/mlb_playoffs_foundation.sql \
             supabase/tests/sport_championship_weekly_winners.sql \

@@ -60,6 +60,14 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --silent --no-audit --no-fund
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate deterministic Football editorial photo templates
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python -m unittest scripts/test_football_editorial_assets.py
+
       - name: Typecheck
         id: typecheck
         run: npm run typecheck 2>&1 | tee typecheck.log

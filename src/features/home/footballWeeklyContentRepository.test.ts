@@ -5,6 +5,9 @@ import {
   footballWeeklyDraftPatchSchema,
   footballWeeklyCandidateSetSchema,
   nextFootballEditorialTuesday,
+  footballWeeklyPreparedSpotlightSchema,
+  footballWeeklyPreparedGameSchema,
+  footballWeeklyEditorialProofSchema,
 } from "./footballWeeklyContentRepository";
 import migration from "../../../supabase/migrations/202612310297_football_weekly_content_packages.sql?raw";
 
@@ -116,6 +119,84 @@ describe("Phase 2 editorial approvals", () => {
     expect(parsed.choices.cfb?.player.id).toBe("player-1");
     expect(parsed.proposals.nfl?.games).toHaveLength(5);
     expect(parsed.choices.nfl).toBeUndefined();
+    expect(parsed.status).toBe("draft");
+  });
+});
+
+
+describe("Phase 3 verified media and Football editorial", () => {
+  const spotlight = {
+    name: "Approved Player", team: "Approved School", position: "QB",
+    result: "W 38–21", measurements: "6ft 2in", team_color: "#123456",
+    highlight_url: "https://youtu.be/real-example",
+    photo_source: "https://a.espncdn.com/photo/2026/real.jpg",
+    photo_asset_path: "/assets/football/weekly/2026-10-13/cfb/spotlight.webp",
+    photo_kind: "action" as const,
+    stats: [
+      { value: "325", label: "PASS YDS" }, { value: "3", label: "PASS TD" },
+      { value: "85", label: "RUSH YDS" }, { value: "1", label: "RUSH TD" },
+    ],
+  };
+  const game = {
+    home_team: "Home", away_team: "Away", kickoff_at: "2026-10-17T19:30:00Z",
+    header_asset_path: "/assets/football/weekly/2026-10-13/cfb/game-header.webp",
+    header_photo_sources: ["https://a.espncdn.com/away.jpg", "https://a.espncdn.com/home.jpg"],
+  };
+  const paragraph = "A real team-specific matchup can turn on protection, pressure, and who wins the early downs.";
+  const editorial = {
+    source_urls: ["https://www.espn.com/example", "https://www.sports-reference.com/example"],
+    breakdown: {
+      setup: [paragraph, paragraph],
+      things: [
+        { title: "Protection", body: paragraph, edge: "Away" },
+        { title: "Explosives", body: paragraph, edge: "Home" },
+        { title: "Run fits", body: paragraph, edge: "Even" },
+      ],
+      paths_to_win: [{ team: "Away", body: paragraph }, { team: "Home", body: paragraph }],
+      players_to_watch: ["Away", "Home"].map((team) => ({
+        team, players: ["QB", "WR", "DB"].map((position) => ({ name: team + " Star", position, body: paragraph })),
+      })),
+      unit_edges: [
+        { title: "Away offense vs Home defense", body: paragraph, edge: "Away" },
+        { title: "Home offense vs Away defense", body: paragraph, edge: "Home" },
+      ],
+    },
+  };
+
+  it("accepts a complete four-stat real-photo Spotlight with the canonical 720x900 asset binding", () => {
+    expect(footballWeeklyPreparedSpotlightSchema.parse(spotlight).photo_kind).toBe("action");
+    expect(() => footballWeeklyPreparedSpotlightSchema.parse({
+      ...spotlight, photo_asset_path: "/assets/fighters/placeholder.webp",
+    })).toThrow();
+    expect(() => footballWeeklyPreparedSpotlightSchema.parse({
+      ...spotlight, stats: spotlight.stats.map((s) => ({ ...s, label: "PASS YDS" })),
+    })).toThrow();
+    expect(() => footballWeeklyPreparedSpotlightSchema.parse({
+      ...spotlight, highlight_url: "https://example.com/pretend-video",
+    })).toThrow();
+  });
+
+  it("requires the real matchup header references and established complete editorial form", () => {
+    expect(footballWeeklyPreparedGameSchema.parse(game).header_photo_sources).toHaveLength(2);
+    expect(() => footballWeeklyPreparedGameSchema.parse({
+      ...game, header_photo_sources: [game.header_photo_sources[0]],
+    })).toThrow();
+    expect(footballWeeklyEditorialProofSchema.parse(editorial).breakdown.things).toHaveLength(3);
+    expect(() => footballWeeklyEditorialProofSchema.parse({
+      ...editorial, breakdown: { ...editorial.breakdown, things: editorial.breakdown.things.slice(1) },
+    })).toThrow();
+  });
+
+  it("allows unprepared packages to remain readable without inventing completed production", () => {
+    const parsed = footballWeeklyContentPackageSchema.parse({
+      week_of: "2026-10-13", release_at: "2026-10-13T05:00:00Z",
+      status: "draft", cfb_spotlight: null, nfl_spotlight: null,
+      cfb_game_of_week: null, nfl_game_of_week: null,
+      proposals: {}, choices: {},
+      approved_at: null, ready_at: null, published_at: null,
+      created_at: "2026-10-11T00:00:00Z", updated_at: "2026-10-11T00:00:00Z",
+    });
+    expect(parsed.production).toEqual({});
     expect(parsed.status).toBe("draft");
   });
 });

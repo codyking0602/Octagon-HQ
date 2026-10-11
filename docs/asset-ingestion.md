@@ -39,3 +39,7 @@ Direct source hosts remain restricted to ESPN/ESPN CDN and UFC. For `source_page
 Destinations are restricted to `public/assets/fighters/` and must end in `-thumb.webp` or `-spotlight.webp`. Thumbs are exactly 320×320; Spotlights are exactly 626×800. Approved ESPN/UFC source imagery may be opaque. When needed, the ingest processor removes the source background and must still produce real visible transparency in the finished WebP. If background removal cannot produce valid transparency, the job fails closed rather than inventing or substituting imagery.
 
 This is a transport/processing primitive, not a provenance bypass. Sport-specific source rules still apply.
+
+## Football weekly asset support (Phase 3)
+
+The SAME Asset Ingest workflow also routes Football weekly manifest kinds football-spotlight and football-game-header to scripts/football_editorial_assets.py. UFC thumb/spotlight processing remains unchanged. Football photos must be verified real ESPN/CDN images with a corresponding ESPN player profile reference and a checked team identity. Approved fallback order is action → portrait → approved manual image, without synthetic/redrawn faces. Canonical paths are public/assets/football/weekly/<Tuesday YYYY-MM-DD>/<cfb|nfl>/{spotlight.webp,game-header.webp}; spotlight output is 720x900, matchup header 1600x900 WebP with ESPN team marks. An action running without usable source assets fails closed. Image-asset deployment alone does NOT publish the weekly content package; a later release phase controls activation.
