@@ -238,8 +238,8 @@ describe("Football GM strategy v7", () => {
   });
 
   it("makes championships matter in the three-year GM résumé without replacing roster quality", () => {
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement).toBe(0.55);
-    expect(FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(0.45);
+    expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement).toBe(0.90);
+    expect(FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(0.10);
     expect(FOOTBALL_GM_SCORE_WEIGHTS.rosterManagement + FOOTBALL_GM_SCORE_WEIGHTS.threeYearResume).toBe(1);
 
     const titleAndTwoMisses = footballGmThreeYearResumeScore(["Champion", "Missed Playoffs", "Missed Playoffs"]);
@@ -262,7 +262,7 @@ describe("Football GM strategy v7", () => {
   it("puts playoff résumé on the same high-end scale as normalized Team OVR", () => {
     const resume = footballGmThreeYearResumeScore(["Champion", "Divisional", "Wild Card"]);
     expect(resume).toBe(91);
-    expect(footballGmScoreFromComponents(93.3, resume)).toBe(92.3);
+    expect(footballGmScoreFromComponents(93.3, resume)).toBe(93.1);
   });
 
   it("keeps shared-roll postseason floors monotonic from 89 through 98", () => {
