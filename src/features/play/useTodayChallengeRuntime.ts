@@ -61,6 +61,24 @@ function retryableDailyError(error: unknown) {
     && error.code !== "WEEKLY_AUCTION_REQUIRED";
 }
 
+function isPermanentDailyLoadError(error: unknown) {
+  return error instanceof TodayChallengeRepositoryError
+    && (error.signInRequired
+      || error.code === "WEEKLY_AUCTION_REQUIRED"
+      || error.code === "INVALID_DAILY_ACTION");
+}
+
+function centralDayNow() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const value = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
 function delay(ms: number) {
   return new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 }
@@ -112,11 +130,31 @@ export function useTodayChallengeRuntime({
       return repository.loadToday();
     },
     enabled: enabled && Boolean(profileId) && Boolean(repository),
-    retry: (failureCount, error) => {
-      if (error instanceof TodayChallengeRepositoryError && error.signInRequired) return false;
-      return failureCount < 1;
-    },
+    retry: (failureCount, error) => !isPermanentDailyLoadError(error) && failureCount < 5,
+    retryDelay: (failureCount) => Math.min(500 * (failureCount + 1), 2500),
+    // A transient failure at 00:00 must never strand the Daily page until manual refresh.
+    refetchInterval: (activeQuery) =>
+      activeQuery.state.error && !isPermanentDailyLoadError(activeQuery.state.error)
+        ? 15_000
+        : false,
+    refetchOnWindowFocus: "always",
   });
+
+  // Date-scoped invalidation without an always-on network poll. An open tab
+  // must advance to the next Central-day Daily after the midnight cutover.
+  useEffect(() => {
+    let seenDay = centralDayNow();
+    const interval = window.setInterval(() => {
+      const nextDay = centralDayNow();
+      if (nextDay === seenDay) return;
+      seenDay = nextDay;
+      void queryClient.invalidateQueries({
+        queryKey: todayChallengeRuntimeQueryKey(profileId, sport),
+        exact: true,
+      });
+    }, 5_000);
+    return () => window.clearInterval(interval);
+  }, [profileId, queryClient, sport]);
 
   const authoritativeRef = useRef<TodayChallengeProjection | null>(null);
   const queueRef = useRef<QueuedDailyAction[]>([]);
