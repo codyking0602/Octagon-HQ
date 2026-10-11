@@ -19,11 +19,19 @@ describe("MLB team visual assets", () => {
     expect(mlbTeamAssetByName("Los Angeles Dodgers")?.abbreviation).toBe("LAD");
   });
 
-  it("ships a visual player spotlight with four season stats", () => {
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Jacob Misiorowski");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("694819");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.stats).toHaveLength(4);
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toContain("baseball-reference.com/players/m/misioja01.shtml");
-    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toContain("youtube.com/shorts/dee400BODnI");
+  it("ships the verified Gavin Williams ALDS Game 5 spotlight", () => {
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.name).toBe("Gavin Williams");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.team).toBe("Cleveland Guardians");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.teamColor).toBe("#E50022");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.photoUrl).toContain("/people/668909/headshot/");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.stats).toEqual([
+      { label: "K", value: "12" },
+      { label: "IP", value: "6.0" },
+      { label: "H", value: "1" },
+      { label: "R", value: "0" },
+    ]);
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.meta).toContain("2026 ALDS GAME 5");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.profileUrl).toContain("baseball-reference.com/players/w/williga01.shtml");
+    expect(MLB_OWNER_PLAYER_SPOTLIGHT.highlightUrl).toBe("https://youtube.com/shorts/2hCQQ8GjrXE?is=Zh0UXfg_FOz1WGrO");
   });
 });
