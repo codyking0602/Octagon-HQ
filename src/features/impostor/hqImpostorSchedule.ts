@@ -1,9 +1,13 @@
 import type { HqImpostorState } from "./hqImpostorRepository";
 
+export const HQ_IMPOSTOR_V1_PAUSED = true;
 export const HQ_IMPOSTOR_V1_LAUNCH_AT = "2026-10-13T05:00:00.000Z";
 export const HQ_IMPOSTOR_V1_CLOSE_AT = "2026-10-20T05:00:00.000Z";
 
 export function hqImpostorV1Window(now = new Date()) {
+  // The October 13 Featured slot was reassigned to Weekly NFL GM.
+  // Keep Impostor built but dormant until a new date is explicitly approved.
+  if (HQ_IMPOSTOR_V1_PAUSED) return { before: true, active: false, after: false };
   const time = now.getTime();
   const opens = new Date(HQ_IMPOSTOR_V1_LAUNCH_AT).getTime();
   const closes = new Date(HQ_IMPOSTOR_V1_CLOSE_AT).getTime();

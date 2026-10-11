@@ -18,6 +18,7 @@ const BackRoomPage = lazy(() => import("../features/back-room/BackRoomPage"));
 const FootballBackRoomPage = lazy(() => import("../features/back-room/FootballBackRoomPage"));
 const FootballTodayChallengePage = lazy(() => import("../features/back-room/FootballTodayChallengePage"));
 const FootballWeeklyAuctionCenterPage = lazy(() => import("../features/back-room/FootballWeeklyAuctionCenterPage"));
+const FootballWeeklyGmPage = lazy(() => import("../features/back-room/FootballWeeklyGmPage"));
 const FootballRankFivePage = lazy(() => import("../features/back-room/FootballRankFivePage"));
 const FootballKeepCutPage = lazy(() => import("../features/back-room/FootballKeepCutPage"));
 const FootballWavelengthPage = lazy(() => import("../features/back-room/FootballWavelengthPage"));
@@ -101,7 +102,8 @@ export const appRoutes: RouteObject[] = [
       { path: "football/play-stats", element: <PlayV2StatsPage sport="football" /> },
       { path: "football/picks", element: <FootballPicksRoute /> },
       { path: "football/today", element: <FootballTodayChallengePage /> },
-      { path: "football/weekly-auction", element: <FootballWeeklyAuctionCenterPage /> },
+      { path: "football/weekly-auction", element: Date.now() >= Date.parse("2026-10-13T05:00:00Z") && Date.now() < Date.parse("2026-10-20T05:00:00Z") ? <Navigate to="/football/weekly-gm" replace /> : <FootballWeeklyAuctionCenterPage /> },
+      { path: "football/weekly-gm", element: <FootballWeeklyGmPage /> },
       {
         path: "football/rank-five",
         element: <DailyOnlyGameRoute dailyRoute="/football/today" casual={<FootballRankFivePage />} />,

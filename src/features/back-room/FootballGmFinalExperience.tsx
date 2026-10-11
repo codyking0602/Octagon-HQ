@@ -381,8 +381,8 @@ export function FootballGmFinalExperience({
       <div className="gm-final__bottom">
         <section className="gm-final__section surface-card" aria-label="GM score breakdown">
           <header className="gm-final__heading"><h2>GM SCORE BREAKDOWN</h2></header>
-          <div className="gm-final__math"><span>Roster (55%)</span><i><b style={{ width: result.rosterManagementScore + "%" }} /></i><strong>{result.rosterManagementScore.toFixed(1)}</strong></div>
-          <div className="gm-final__math is-playoff"><span>Playoffs (45%)</span><i><b style={{ width: result.resumeScore + "%" }} /></i><strong>{result.resumeScore.toFixed(1)}</strong></div>
+          <div className="gm-final__math"><span>Roster (90%)</span><i><b style={{ width: result.rosterManagementScore + "%" }} /></i><strong>{result.rosterManagementScore.toFixed(1)}</strong></div>
+          <div className="gm-final__math is-playoff"><span>Playoffs (10%)</span><i><b style={{ width: result.resumeScore + "%" }} /></i><strong>{result.resumeScore.toFixed(1)}</strong></div>
         </section>
         <section className="gm-final__section surface-card" aria-label="Year 3 finances">
           <header className="gm-final__heading"><h2>FINANCIALS · YEAR 3</h2></header>

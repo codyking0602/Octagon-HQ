@@ -608,6 +608,8 @@ export default function FootballTodayChallengePage() {
   const weeklyRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
   const impostorRepository = useMemo(() => createHqImpostorRepository(), []);
   const impostorWindow = hqImpostorV1Window();
+  const weeklyGmWeek = Date.now() >= Date.parse("2026-10-13T05:00:00Z")
+    && Date.now() < Date.parse("2026-10-20T05:00:00Z");
   const [weeklyState, setWeeklyState] = useState<FootballWeeklyAuctionState | null>(null);
   const [showWeeklyAuction, setShowWeeklyAuction] = useState(false);
   const [weeklyBusy, setWeeklyBusy] = useState(false);
@@ -617,14 +619,15 @@ export default function FootballTodayChallengePage() {
   const [impostorError, setImpostorError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
   const weeklyGateActive = Boolean(
-    !impostorWindow.active
+    !weeklyGmWeek
+    && !impostorWindow.active
     && weeklyState?.available
     && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
   );
-  const impostorGateActive = impostorWindow.active
+  const impostorGateActive = !weeklyGmWeek && impostorWindow.active
     && !impostorLoading
     && hqImpostorDailyGateRequired(impostorState);
-  const featuredGateLoaded = impostorWindow.active ? !impostorLoading : weeklyState !== null;
+  const featuredGateLoaded = weeklyGmWeek || (impostorWindow.active ? !impostorLoading : weeklyState !== null);
   const dailyRuntime = useTodayChallengeRuntime({
     profileId: identity.profile?.id ?? "signed-out",
     enabled: signedIn && featuredGateLoaded && !weeklyGateActive && !impostorGateActive,
@@ -645,7 +648,7 @@ export default function FootballTodayChallengePage() {
 
   useEffect(() => {
     let active = true;
-    if (impostorWindow.active) {
+    if (weeklyGmWeek || impostorWindow.active) {
       setWeeklyState(null);
       setShowWeeklyAuction(false);
       setWeeklyBusy(false);
@@ -683,7 +686,7 @@ export default function FootballTodayChallengePage() {
       .finally(() => { if (active) setWeeklyBusy(false); });
 
     return () => { active = false; };
-  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active]);
+  }, [editWeeklyAuction, signedIn, weeklyRepository, impostorWindow.active, weeklyGmWeek]);
 
   useEffect(() => {
     let active = true;
@@ -832,7 +835,7 @@ export default function FootballTodayChallengePage() {
   }
 
   if (!projection) {
-    const loading = busy || weeklyBusy || weeklyState === null;
+    const loading = busy || (!weeklyGmWeek && (weeklyBusy || weeklyState === null));
     const message = weeklyError ?? error;
     return (
       <div className="page football-today-page">
