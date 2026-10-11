@@ -73,14 +73,14 @@ export const footballWeeklyCandidateSetSchema = z.strictObject({
 const candidateLists = z.strictObject({
   cfb: footballWeeklyCandidateSetSchema.optional(),
   nfl: footballWeeklyCandidateSetSchema.optional(),
-});
+}).default({});
 const choice = z.strictObject({
   player: footballWeeklyPlayerCandidateSchema,
   game: footballWeeklyGameCandidateSchema,
   selected_at: z.iso.datetime({ offset: true }),
   selected_by: z.uuid(),
 });
-const choiceLists = z.strictObject({ cfb: choice.optional(), nfl: choice.optional() });
+const choiceLists = z.strictObject({ cfb: choice.optional(), nfl: choice.optional() }).default({});
 
 // The upcoming content week is always the NEXT local Tuesday, even on Tuesday.
 export function nextFootballEditorialTuesday(now = new Date()): string {
