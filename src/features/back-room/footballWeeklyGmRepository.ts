@@ -31,7 +31,7 @@ export interface WeeklyGmResult {
   state: PersistedRun;
 }
 
-export function createFootballWeeklyGmRepository() {
+export function createFootballWeeklyGmRepository(preview = false) {
   const supabase = getSupabaseClient();
   if (!supabase) return null;
   const client = supabase;
@@ -42,11 +42,15 @@ export function createFootballWeeklyGmRepository() {
     return data as T;
   }
   return {
-    load: () => rpc<WeeklyGmState>("get_my_football_weekly_gm"),
+    load: () => rpc<WeeklyGmState>(preview ? "get_my_football_weekly_gm_preview" : "get_my_football_weekly_gm"),
     start: (scenario: WeeklyGmScenario) =>
-      rpc<WeeklyGmAttempt>("start_my_football_weekly_gm", { p_scenario: scenario }),
+      rpc<WeeklyGmAttempt>(preview ? "start_my_football_weekly_gm_preview" : "start_my_football_weekly_gm", { p_scenario: scenario }),
     result: (profileId: string | null, scenario: WeeklyGmScenario) =>
-      rpc<WeeklyGmResult>("get_football_weekly_gm_result", { p_profile_id: profileId, p_scenario: scenario }),
+      rpc<WeeklyGmResult>(preview ? "get_football_weekly_gm_preview_result" : "get_football_weekly_gm_result", { p_profile_id: profileId, p_scenario: scenario }),
+    resetPreview: () => {
+      if (!preview) throw new Error("Only owner test attempts may be reset.");
+      return rpc<boolean>("reset_my_football_weekly_gm_preview");
+    },
     save: (scenario: WeeklyGmScenario, seed: string, state: PersistedRun, score: number | null) => {
       const request = queue.then(async () => {
         await rpc("save_my_football_weekly_gm", {

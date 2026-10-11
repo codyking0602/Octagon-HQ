@@ -104,6 +104,7 @@ export const appRoutes: RouteObject[] = [
       { path: "football/today", element: <FootballTodayChallengePage /> },
       { path: "football/weekly-auction", element: Date.now() >= Date.parse("2026-10-13T05:00:00Z") && Date.now() < Date.parse("2026-10-20T05:00:00Z") ? <Navigate to="/football/weekly-gm" replace /> : <FootballWeeklyAuctionCenterPage /> },
       { path: "football/weekly-gm", element: <FootballWeeklyGmPage /> },
+      { path: "football/weekly-gm-test", element: <FootballWeeklyGmPage preview /> },
       {
         path: "football/rank-five",
         element: <DailyOnlyGameRoute dailyRoute="/football/today" casual={<FootballRankFivePage />} />,
