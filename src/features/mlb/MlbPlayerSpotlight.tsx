@@ -21,7 +21,7 @@ export function MlbPlayerSpotlight() {
           </a>
         </h3>
         <strong>{player.team.toUpperCase()} · {player.position}</strong>
-        <div className="football-player-spotlight__stats" aria-label={`${player.name} 2026 season stats`}>
+        <div className="football-player-spotlight__stats" aria-label={`${player.name} featured game stats`}>
           {player.stats.map((stat) => (
             <span key={stat.label}><b>{stat.value}</b><small>{stat.label}</small></span>
           ))}
