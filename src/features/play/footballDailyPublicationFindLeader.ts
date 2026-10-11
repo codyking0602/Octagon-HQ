@@ -38,7 +38,7 @@ export function curateOfficialQbSeasonBoard(board: FootballFindLeaderBoard, seed
   const uniquePlayers = new Set<string>();
   const topSeasons: FootballFindLeaderBoard["candidates"] = [];
   for (const row of footballFindLeaderMetricRows(board.metricId)) {
-    const player = (row.displayName ?? row.name.replace(/\\s+\\d{4}$/, "")).toLowerCase();
+    const player = (row.displayName ?? row.name.replace(/\s+\d{4}$/, "")).toLowerCase();
     if (uniquePlayers.has(player) || row.season == null) continue;
     uniquePlayers.add(player);
     topSeasons.push({
