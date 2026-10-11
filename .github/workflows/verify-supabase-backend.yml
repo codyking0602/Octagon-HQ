@@ -121,6 +121,7 @@ jobs:
             supabase/tests/stage20_nfl_divisions_simulation.sql \
             supabase/tests/football_weekly_auction_field_lock.sql \
             supabase/tests/football_weekly_gm.sql \
+            supabase/tests/football_weekly_gm_owner_preview.sql \
             supabase/tests/football_weekly_nfl_team_season_runtime.sql \
             supabase/tests/football_weekly_nfl_team_season_wildcard_engine.sql \
             supabase/tests/football_weekly_nfl_team_season_full_flow.sql \
