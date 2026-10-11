@@ -259,15 +259,24 @@ export function footballGmReflowRoster(
   const used = new Set<FootballGmRosterSlot>();
   const assignments: FootballGmRosterEntry[] = [];
   let best: FootballGmRosterEntry[] | null = null;
+  let bestCoreSlotsFilled = -1;
   let bestValue = Number.NEGATIVE_INFINITY;
   let bestStability = -1;
 
   function place(index: number, value: number, stability: number) {
     if (index === ordered.length) {
-      if (value > bestValue + 1e-9 ||
-          (Math.abs(value - bestValue) <= 1e-9 && stability > bestStability)) {
+      // In an incomplete roster, fill an available primary RB/WR slot before
+      // FLEX. A sub-80 player otherwise scores slightly higher at FLEX and can
+      // leave his actual position open even when he is the only eligible fit.
+      const coreSlotsFilled = assignments.filter(({ slot }) => slot !== "FLEX").length;
+      if (coreSlotsFilled > bestCoreSlotsFilled ||
+          (coreSlotsFilled === bestCoreSlotsFilled && (
+            value > bestValue + 1e-9 ||
+            (Math.abs(value - bestValue) <= 1e-9 && stability > bestStability)
+          ))) {
         best = assignments.map(entry => ({ ...entry })).sort(
           (a,b) => FOOTBALL_GM_ROSTER_SLOTS.indexOf(a.slot) - FOOTBALL_GM_ROSTER_SLOTS.indexOf(b.slot));
+        bestCoreSlotsFilled = coreSlotsFilled;
         bestValue = value;
         bestStability = stability;
       }
