@@ -291,5 +291,4 @@ begin
     perform private.finalize_football_weekly_auction_week(v_week.week_start,p_at);
   end loop;
 end;
-$function$
-
+$function$;
