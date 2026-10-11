@@ -34,6 +34,7 @@ export const footballWeeklyGameSchema = z.strictObject({
   event_id: z.string().trim().min(1).optional(),
   breakdown_id: z.string().trim().min(1).optional(),
   header_storage_path: z.string().trim().min(1).optional(),
+  header_asset_path: z.string().trim().min(1).optional(),
   header_photo_sources: z.array(z.url()).max(4).optional(),
 }).refine((game) => game.home_team !== game.away_team, "Featured opponents must differ");
 
@@ -94,6 +95,53 @@ export function nextFootballEditorialTuesday(now = new Date()): string {
   return localNoonUtc.toISOString().slice(0, 10);
 }
 
+
+const editorialText = z.string().trim().min(35);
+const editorialBattle = z.strictObject({
+  title: z.string().trim().min(1), body: editorialText, edge: z.string().trim().min(1),
+});
+const editorialTeamPath = z.strictObject({ team: z.string().trim().min(1), body: editorialText });
+const editorialPlayer = z.strictObject({
+  name: z.string().trim().min(1), position: z.string().trim().min(1),
+  body: z.string().trim().min(1),
+});
+const editorialPlayerTeam = z.strictObject({
+  team: z.string().trim().min(1), players: z.array(editorialPlayer).length(3),
+});
+
+export const footballWeeklyEditorialProofSchema = z.strictObject({
+  source_urls: z.array(z.url().refine((url) => url.startsWith("https://"))).min(2),
+  breakdown: z.strictObject({
+    setup: z.array(z.string().trim().min(40)).length(2),
+    things: z.array(editorialBattle).length(3),
+    paths_to_win: z.array(editorialTeamPath).length(2),
+    players_to_watch: z.array(editorialPlayerTeam).length(2),
+    unit_edges: z.array(editorialBattle).length(2),
+  }),
+});
+const preparedEditorial = footballWeeklyEditorialProofSchema.extend({
+  prepared_at: z.iso.datetime({ offset: true }),
+  player_id: candidateId,
+  game_id: candidateId,
+});
+const editorialProductions = z.strictObject({
+  cfb: preparedEditorial.optional(),
+  nfl: preparedEditorial.optional(),
+}).default({});
+
+export const footballWeeklyPreparedSpotlightSchema = footballWeeklySpotlightSchema.safeExtend({
+  photo_source: z.url().refine((url) => url.startsWith("https://")),
+  photo_asset_path: z.string().regex(/^\/assets\/football\/weekly\/\d{4}-\d{2}-\d{2}\/(cfb|nfl)\/spotlight[.]webp$/),
+  photo_kind: z.enum(["action", "portrait", "manual"]),
+  highlight_url: z.url().refine((url) => /^https:\/\/(www\.)?(youtube\.com|youtu\.be)\//.test(url)),
+}).refine((item) => new Set(item.stats.map((stat) => stat.label.trim().toUpperCase())).size === 4,
+  "Spotlight stats must use four distinct labels");
+
+export const footballWeeklyPreparedGameSchema = footballWeeklyGameSchema.safeExtend({
+  header_asset_path: z.string().regex(/^\/assets\/football\/weekly\/\d{4}-\d{2}-\d{2}\/(cfb|nfl)\/game-header[.]webp$/),
+  header_photo_sources: z.array(z.url().refine((url) => url.startsWith("https://"))).length(2),
+});
+
 export const footballWeeklyContentPackageSchema = z.object({
   week_of: footballEditorialTuesdaySchema,
   release_at: z.iso.datetime({ offset: true }),
@@ -104,6 +152,7 @@ export const footballWeeklyContentPackageSchema = z.object({
   nfl_game_of_week: footballWeeklyGameSchema.nullable(),
   proposals: candidateLists,
   choices: choiceLists,
+  production: editorialProductions,
   approved_at: z.string().nullable(),
   ready_at: z.string().nullable(),
   published_at: z.string().nullable(),
@@ -119,6 +168,7 @@ export interface FootballWeeklyContentRepository {
   saveDraft: (weekOf: string, patch: FootballWeeklyDraftPatch) => Promise<FootballWeeklyContentPackage>;
   stageCandidates: (weekOf: string, sport: "cfb" | "nfl", candidates: z.infer<typeof footballWeeklyCandidateSetSchema>) => Promise<FootballWeeklyContentPackage>;
   selectChoices: (weekOf: string, sport: "cfb" | "nfl", playerId: string, gameId: string) => Promise<FootballWeeklyContentPackage>;
+  prepareEditorial: (weekOf: string, sport: "cfb" | "nfl", spotlight: z.infer<typeof footballWeeklyPreparedSpotlightSchema>, game: z.infer<typeof footballWeeklyPreparedGameSchema>, editorial: z.infer<typeof footballWeeklyEditorialProofSchema>) => Promise<FootballWeeklyContentPackage>;
 }
 
 // Phase 1: owner-only persistence, not a live content publishing path.
@@ -156,6 +206,17 @@ export function createFootballWeeklyContentRepository(): FootballWeeklyContentRe
         p_sport: sport,
         p_player_id: candidateId.parse(playerId),
         p_game_id: candidateId.parse(gameId),
+      });
+      if (error) throw new Error(error.message);
+      return footballWeeklyContentPackageSchema.parse(data);
+    },
+    async prepareEditorial(weekOf, sport, spotlight, game, editorial) {
+      const { data, error } = await client.rpc("prepare_football_weekly_editorial", {
+        p_week_of: footballEditorialTuesdaySchema.parse(weekOf),
+        p_sport: sport,
+        p_spotlight: footballWeeklyPreparedSpotlightSchema.parse(spotlight),
+        p_game: footballWeeklyPreparedGameSchema.parse(game),
+        p_editorial: footballWeeklyEditorialProofSchema.parse(editorial),
       });
       if (error) throw new Error(error.message);
       return footballWeeklyContentPackageSchema.parse(data);
