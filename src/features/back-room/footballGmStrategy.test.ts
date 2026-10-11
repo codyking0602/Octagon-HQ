@@ -4,6 +4,7 @@ import {
   FOOTBALL_GM_PLAYER_POOL,
   FOOTBALL_GM_ROSTER_SLOTS,
   footballGmPlayerById,
+  footballGmReflowRoster,
   type FootballGmRosterEntry,
   type FootballGmRosterSlot,
 } from "./footballGmEngine";
@@ -936,6 +937,16 @@ describe("NFL GM four-visit free agency guardrails", () => {
     const wright = footballGmPlayerById(playerId("Jaylen Wright"));
     expect(wright?.position).toBe("RB");
     expect(wright?.eligibleSlots).toEqual(["RB", "FLEX"]);
+  });
+
+  it("keeps Wright at RB when the primary RB slot opens and FLEX is optional", () => {
+    const roster: FootballGmRosterEntry[] = [
+      { slot: "FLEX", playerId: playerId("Jaylen Wright"), acquired: "draft" },
+      { slot: "WR", playerId: playerId("CeeDee Lamb"), acquired: "draft" },
+    ];
+    const normalized = footballGmReflowRoster(roster);
+    expect(normalized?.find((entry) => entry.playerId === playerId("Jaylen Wright"))?.slot).toBe("RB");
+    expect(normalized?.find((entry) => entry.playerId === playerId("CeeDee Lamb"))?.slot).toBe("WR");
   });
   it("counts actual market visits, preserving the used total when legacy saves resume", () => {
     expect(FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT).toBe(4);
