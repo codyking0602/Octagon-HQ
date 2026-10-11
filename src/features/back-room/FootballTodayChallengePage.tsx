@@ -618,19 +618,14 @@ export default function FootballTodayChallengePage() {
   const [impostorLoading, setImpostorLoading] = useState(false);
   const [impostorError, setImpostorError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
-  const weeklyGateActive = Boolean(
-    !weeklyGmWeek
-    && !impostorWindow.active
-    && weeklyState?.available
-    && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
-  );
+  // Weekly Auction is a separate featured event, not a requirement for Daily.
   const impostorGateActive = !weeklyGmWeek && impostorWindow.active
     && !impostorLoading
     && hqImpostorDailyGateRequired(impostorState);
-  const featuredGateLoaded = weeklyGmWeek || (impostorWindow.active ? !impostorLoading : weeklyState !== null);
+  const featuredGateLoaded = !impostorWindow.active || !impostorLoading;
   const dailyRuntime = useTodayChallengeRuntime({
     profileId: identity.profile?.id ?? "signed-out",
-    enabled: signedIn && featuredGateLoaded && !weeklyGateActive && !impostorGateActive,
+    enabled: signedIn && featuredGateLoaded && !impostorGateActive,
     repository,
     sport: "football",
   });
@@ -648,7 +643,7 @@ export default function FootballTodayChallengePage() {
 
   useEffect(() => {
     let active = true;
-    if (weeklyGmWeek || impostorWindow.active) {
+    if (weeklyGmWeek || impostorWindow.active || !editWeeklyAuction) {
       setWeeklyState(null);
       setShowWeeklyAuction(false);
       setWeeklyBusy(false);
@@ -811,7 +806,7 @@ export default function FootballTodayChallengePage() {
     );
   }
 
-  if (weeklyState?.available && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today)) {
+  if (editWeeklyAuction && weeklyState?.available && showWeeklyAuction) {
     return (
       <div className="page football-today-page">
         <FootballWeeklyAuctionGate
@@ -835,14 +830,19 @@ export default function FootballTodayChallengePage() {
   }
 
   if (!projection) {
-    const loading = busy || (!weeklyGmWeek && (weeklyBusy || weeklyState === null));
-    const message = weeklyError ?? error;
+    const loading = busy || dailyRuntime.loading;
+    const message = error;
     return (
       <div className="page football-today-page">
         <section className="football-today-shell">
           <p className="eyebrow">FOOTBALL HQ</p>
           <h1>{loading ? "Building today’s board…" : "Today’s Challenge"}</h1>
-          {message ? <p>{message}</p> : null}
+          {message ? (
+            <>
+              <p>{message}</p>
+              <button type="button" onClick={() => void dailyRuntime.refresh()}>TRY AGAIN →</button>
+            </>
+          ) : null}
         </section>
       </div>
     );
