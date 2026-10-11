@@ -466,7 +466,7 @@ async function averageFanPublicationHistory(
   return response.data;
 }
 
-async function materializeToday(admin: SupabaseClient) {
+async function materializeToday(admin: SupabaseClient, at?: string) {
   const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "ufc" });
   if (prepared.error) {
     throw new Error("The UFC two-game Daily cutover could not be prepared safely.");
@@ -477,7 +477,7 @@ async function materializeToday(admin: SupabaseClient) {
     throw new Error("The September 24 UFC Sports Feud relaunch reset failed.");
   }
 
-  const requested = await admin.rpc("get_daily_challenge_materialization_request", {});
+  const requested = await admin.rpc("get_daily_challenge_materialization_request", at ? { p_at: at } : {});
   if (requested.error) throw new Error("The official daily materialization request failed.");
   const request = requiredRecord(requested.data, "Daily materialization request");
   const day = requiredString(request.central_day, "Central day");
@@ -558,7 +558,7 @@ async function materializeToday(admin: SupabaseClient) {
   };
 }
 
-async function materializeFootballToday(admin: SupabaseClient) {
+async function materializeFootballToday(admin: SupabaseClient, at?: string) {
   const prepared = await admin.rpc("prepare_daily_two_game_cutover", { p_sport: "football" });
   if (prepared.error) {
     throw new Error("The Football two-game Daily cutover could not be prepared safely.");
@@ -566,6 +566,7 @@ async function materializeFootballToday(admin: SupabaseClient) {
 
   const requested = await admin.rpc("get_daily_challenge_materialization_request", {
     p_sport: "football",
+    ...(at ? { p_at: at } : {}),
   });
   if (requested.error) throw new Error("The official Football daily materialization request failed.");
   const request = requiredRecord(requested.data, "Football daily materialization request");
@@ -1286,10 +1287,30 @@ Deno.serve(async (request) => {
       const materialized = scheduledSport === "football"
         ? await materializeFootballToday(admin)
         : await materializeToday(admin);
+
+      // Prepublish tomorrow's immutable board before the Central midnight rollover.
+      // The +30 minute window accommodates DST without assuming a UTC offset.
+      const now = new Date();
+      const soon = new Date(now.getTime() + 30 * 60 * 1000);
+      const centralDay = (date: Date) => {
+        const parts = new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit",
+        }).formatToParts(date);
+        const value = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+        return `${value("year")}-${value("month")}-${value("day")}`;
+      };
+      let nextDay: { central_day: string; created: boolean } | null = null;
+      if (centralDay(now) !== centralDay(soon)) {
+        const next = scheduledSport === "football"
+          ? await materializeFootballToday(admin, soon.toISOString())
+          : await materializeToday(admin, soon.toISOString());
+        nextDay = { central_day: next.centralDay, created: next.created };
+      }
       return json({
         status: materialized.created ? "materialized" : "already_materialized",
         sport: scheduledSport,
         ...materialized,
+        next_day: nextDay,
         deployment_sha: DEPLOYED_SOURCE_SHA,
       });
     }
