@@ -24,14 +24,10 @@ describe("HQ Impostor Oct 13 rollout", () => {
     expect(hqImpostorV1Window(new Date("2026-10-10T17:00:00Z")).active).toBe(false);
   });
 
-  it("owns exactly the Oct 13-19 Featured Challenge window", () => {
-    expect(hqImpostorV1Window(new Date("2026-10-13T05:00:00Z")).active).toBe(true);
-    expect(hqImpostorV1Window(new Date("2026-10-20T04:59:59Z")).active).toBe(true);
-    expect(hqImpostorV1Window(new Date("2026-10-20T05:00:00Z"))).toEqual({
-      before: false,
-      active: false,
-      after: true,
-    });
+  it("defers Impostor so the October 13 Featured slot belongs to NFL GM", () => {
+    for (const date of ["2026-10-13T05:00:00Z", "2026-10-20T04:59:59Z", "2026-10-20T05:00:00Z"]) {
+      expect(hqImpostorV1Window(new Date(date))).toEqual({ before: true, active: false, after: false });
+    }
   });
 
   it("blocks Football Daily only when the player has an actionable Impostor step", () => {

@@ -651,10 +651,10 @@ export default function HqImpostorPage() {
       <div className="page hq-impostor-page">
         <header className="hq-impostor-page__top">
           <button type="button" aria-label="Back home" onClick={() => navigate("/")}>←</button>
-          <div><span>FEATURED CHALLENGE</span><h1>HQ IMPOSTOR</h1><small>OPENS OCTOBER 13</small></div>
+          <div><span>FEATURED CHALLENGE</span><h1>HQ IMPOSTOR</h1><small>FUTURE FEATURED ROTATION</small></div>
         </header>
-        <Panel eyebrow="OCT 13–19 · FEATURED CHALLENGE" title="NOT OPEN YET">
-          <p>Weekly Auction remains the featured requirement through October 12. HQ Impostor takes over the next Tuesday–Monday slot.</p>
+        <Panel eyebrow="FUTURE FEATURED CHALLENGE" title="ON HOLD">
+          <p>HQ Impostor is paused until a later Featured rotation. NFL GM takes the October 13–19 competition slot.</p>
           <button type="button" className="hq-impostor-secondary" onClick={() => navigate("/football/today")}>BACK TO FOOTBALL DAILY</button>
         </Panel>
       </div>
