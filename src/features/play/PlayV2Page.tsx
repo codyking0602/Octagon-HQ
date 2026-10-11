@@ -51,7 +51,7 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
     && runtime.error instanceof TodayChallengeRepositoryError
     && runtime.error.code === "WEEKLY_AUCTION_REQUIRED"
     ? runtime.error : null;
-  const gatedAdapter = todayChallengeAdapter(weeklyAuctionGate?.previewGameType);
+  const gatedAdapter = todayChallengeAdapter(weeklyAuctionGate?.previewGameType ?? undefined);
   const title = projection && isDailyRankKeepCombo(projection)
     ? "Blind Rank + Keep/Cut" : adapter?.title ?? gatedAdapter?.title ?? "Today's Challenge";
   const completed = Boolean(projection?.officialAttempt);
