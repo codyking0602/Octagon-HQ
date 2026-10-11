@@ -45,8 +45,8 @@ begin
        max(e.score) filter(where e.scenario='young') as young_score,
        coalesce(sum(e.score),0)::numeric as total,
        count(e.completed_at)::integer as completed,
-       max(e.result::text)::jsonb filter(where e.scenario='elite') as elite_result,
-       max(e.result::text)::jsonb filter(where e.scenario='young') as young_result
+       (max(e.result::text) filter(where e.scenario='elite'))::jsonb as elite_result,
+       (max(e.result::text) filter(where e.scenario='young'))::jsonb as young_result
      from private.football_weekly_gm_entries e join public.profiles p on p.id=e.profile_id
      where e.week_start=date '2026-10-13'
        and not private.football_weekly_auction_is_reserved_test_profile(p.id)
