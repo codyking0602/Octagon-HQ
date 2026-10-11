@@ -25,6 +25,36 @@ function renderCandidate(candidate: FootballFindLeaderPresentationCandidate) {
 }
 
 describe("Football Find the Leader candidate identity presentation", () => {
+  it("restores the Peyton Manning season year from a previously published Daily without season metadata", () => {
+    const html = renderCandidate({
+      id: "nflverse-player-season-00-0010346-2008",
+      name: "Peyton Manning 2008",
+      subtitle: "NFL quarterback season",
+    });
+    expect(html).toContain(
+      '<span class="football-find-card__identity"><strong>Peyton Manning</strong><b class="football-find-card__season">2008</b></span>',
+    );
+    expect(html).not.toContain("<strong>Peyton Manning 2008</strong>");
+  });
+
+  it("keeps long current NFL and historical CFB season identities readable in old published boards", () => {
+    const trevor = renderCandidate({
+      id: "nflverse-player-season-00-0036971-2023",
+      name: "Trevor Lawrence 2023",
+      subtitle: "NFL quarterback season",
+    });
+    expect(trevor).toContain("<strong>Trevor Lawrence</strong>");
+    expect(trevor).toContain('class="football-find-card__season">2023</b>');
+
+    const cfb = renderCandidate({
+      id: "2022-georgia",
+      name: "2022 Georgia",
+      subtitle: "CFB team season",
+    });
+    expect(cfb).toContain("<strong>Georgia</strong>");
+    expect(cfb).toContain('class="football-find-card__season">2022</b>');
+  });
+
   it("keeps a long NFL quarterback season year outside the truncatable name", () => {
     const html = renderCandidate({
       id: "peyton-manning-2013",
