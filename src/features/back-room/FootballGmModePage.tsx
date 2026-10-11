@@ -1456,6 +1456,7 @@ function FinalScreen({
   onChallenge,
   onReplay,
   weeklyOfficial = false,
+  weeklyResultSaved = false,
 }: {
   run: PersistedRun;
   gmName: string;
@@ -1465,6 +1466,7 @@ function FinalScreen({
   onChallenge: () => void;
   onReplay: () => void;
   weeklyOfficial?: boolean;
+  weeklyResultSaved?: boolean;
 }) {
   return (
     <>
@@ -1473,7 +1475,7 @@ function FinalScreen({
         {!isRecipient && opponentName ? (
           <button className="primary-action" type="button" onClick={onChallenge}>CHALLENGE {opponentName}</button>
         ) : null}
-        <button type="button" onClick={onReplay}>{weeklyOfficial ? "BACK TO WEEKLY GM" : "NEW GM RUN"}</button>
+        <button type="button" disabled={weeklyOfficial && !weeklyResultSaved} onClick={onReplay}>{weeklyOfficial ? (weeklyResultSaved ? "BACK TO WEEKLY GM" : "SAVING OFFICIAL RESULT…") : "NEW GM RUN"}</button>
         <button type="button" className="gm-final__secondary-action" onClick={() => {
           const details = document.getElementById("gm-full-roster");
           if (details instanceof HTMLDetailsElement) {
@@ -1520,6 +1522,7 @@ export default function FootballGmModePage({
   const [runRepository] = useState(() => createFootballGmRunRepository());
   const [soloHydrated, setSoloHydrated] = useState(() => !standalone && !weeklyScenario);
   const [weeklyError, setWeeklyError] = useState("");
+  const [weeklySubmitted, setWeeklySubmitted] = useState(false);
   const weeklyRevision = useRef(0);
   const weeklySaveQueue = useRef<Promise<void>>(Promise.resolve());
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
@@ -1613,6 +1616,7 @@ export default function FootballGmModePage({
         spinIndex: 1,
       };
       weeklyRevision.current = entry.revision;
+      setWeeklySubmitted(Boolean(entry.completed_at));
       setSeed(entry.seed);
       setRun(restored);
       setSoloHydrated(true);
@@ -1686,6 +1690,7 @@ export default function FootballGmModePage({
     weeklySaveQueue.current = weeklySaveQueue.current.then(async () => {
       const saved = await weeklyGmRepository.save(weeklyScenario, snapshot, result, weeklyRevision.current);
       weeklyRevision.current = saved.revision;
+      if (saved.completed_at) setWeeklySubmitted(true);
     }).catch((error) => {
       console.error("Weekly GM official save failed", error);
       setWeeklyError(error instanceof Error ? error.message : "Official GM progress could not be saved.");
@@ -2386,12 +2391,13 @@ export default function FootballGmModePage({
         <FinalScreen
           run={run}
           gmName={identity.profile?.displayName ?? "YOU"}
-          challengeStatus={challengeStatus}
+          challengeStatus={weeklyScenario ? (weeklyError || (weeklySubmitted ? "OFFICIAL RESULT SAVED" : "SAVING OFFICIAL RESULT…")) : challengeStatus}
           opponentName={standalone ? null : opponentName}
           isRecipient={profileMatch.isRecipient}
           onChallenge={() => void challengeOpponent()}
           onReplay={replay}
           weeklyOfficial={Boolean(weeklyScenario)}
+          weeklyResultSaved={weeklySubmitted}
         />
       ) : null}
     </div>
