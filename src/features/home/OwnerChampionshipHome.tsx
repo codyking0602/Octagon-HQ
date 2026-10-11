@@ -200,12 +200,14 @@ export function OwnerChampionshipHome({
   showMlb,
   sport,
   onSportChange,
+  showSportSelector = true,
 }: {
   streak: number;
   streakLoading: boolean;
   showMlb: boolean;
   sport: SportFilter;
   onSportChange: (nextSport: SportFilter) => void;
+  showSportSelector?: boolean;
 }) {
   const [football, setFootball] = useState<SportChampionship | null>(null);
   const [ufc, setUfc] = useState<SportChampionship | null>(null);
@@ -243,21 +245,23 @@ export function OwnerChampionshipHome({
     <section
       className="home-section home-section--your-hq home-champ-preview"
       data-testid="home-section"
-      data-home-section="your-hq"
+      data-home-section={showSportSelector ? "your-hq" : "championship-standings"}
       data-sport={chosen}
-      aria-label="Your HQ"
+      aria-label={showSportSelector ? "Your HQ" : "Championship standings"}
     >
       <div className="home-champ-preview__top">
-        <div><h2>Your HQ</h2>{chosen === "all" ? <small>2026 CHAMPIONSHIP HEADQUARTERS</small> : null}</div>
-        <label className="home-champ-preview__filter">
-          <span className="sr-only">Home sport</span>
-          <select aria-label="Home sport" value={chosen} onChange={(event) => onSportChange(event.target.value as SportFilter)}>
-            <option value="all">All sports</option>
-            <option value="football">Football</option>
-            <option value="ufc">UFC</option>
-            {showMlb ? <option value="mlb">MLB</option> : null}
-          </select>
-        </label>
+        <div><h2>{showSportSelector ? "Your HQ" : "Championship standings"}</h2>{chosen === "all" ? <small>2026 CHAMPIONSHIP HEADQUARTERS</small> : null}</div>
+        {showSportSelector ? (
+          <label className="home-champ-preview__filter">
+            <span className="sr-only">Home sport</span>
+            <select aria-label="Home sport" value={chosen} onChange={(event) => onSportChange(event.target.value as SportFilter)}>
+              <option value="all">All sports</option>
+              <option value="football">Football</option>
+              <option value="ufc">UFC</option>
+              {showMlb ? <option value="mlb">MLB</option> : null}
+            </select>
+          </label>
+        ) : null}
       </div>
       {chosen === "all" ? (
         <>
@@ -272,7 +276,7 @@ export function OwnerChampionshipHome({
                 <small>Across {showMlb ? 3 : 2} championships</small>
               </div>
             </div>
-            <div className="home-champ-preview__overview-streak">
+            {showSportSelector ? <div className="home-champ-preview__overview-streak">
               <span className="home-champ-preview__streak-count">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13 2c1 4-3 5-2 9-2-1-3-3-3-5-3 4-5 7-5 10a9 9 0 0 0 18 0c0-5-4-8-8-14Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"/><path d="M12 12c1 3-2 4-2 6a3 3 0 0 0 6 0c0-2-1-4-4-6Z" fill="currentColor"/></svg>
                 <strong>{streakLoading ? "…" : streak}</strong>
@@ -280,7 +284,7 @@ export function OwnerChampionshipHome({
               </span>
               <small>HQ DAILY STREAK</small>
               <span className="sr-only">{streakLoading ? "Loading daily streak" : streak + " days"}</span>
-            </div>
+            </div> : null}
           </div>
           <div className="home-champ-preview__overview">
             <Summary sport="football" result={football} />

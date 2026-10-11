@@ -103,6 +103,26 @@ describe("Owner Championship Home preview", () => {
     expect(cabinet.querySelectorAll(".home-champ-preview__summary-icon.is-leading")).toHaveLength(1);
   });
 
+  it("supports a standalone bottom-of-page championship without a duplicated sport selector", async () => {
+    render(
+      <MemoryRouter>
+        <OwnerChampionshipHome
+          streak={11}
+          streakLoading={false}
+          showMlb={true}
+          sport="football"
+          onSportChange={vi.fn()}
+          showSportSelector={false}
+        />
+      </MemoryRouter>,
+    );
+    const standings = screen.getByRole("region", { name: "Championship standings" });
+    expect(await within(standings).findByText("CHAMPIONSHIP STANDINGS")).toBeInTheDocument();
+    expect(standings).toHaveAttribute("data-home-section", "championship-standings");
+    expect(within(standings).getByRole("heading", { name: "Championship standings" })).toBeInTheDocument();
+    expect(within(standings).queryByRole("combobox", { name: "Home sport" })).not.toBeInTheDocument();
+  });
+
   it("counts MLB as a league lead only when MLB actually ranks first", async () => {
     loader.mlb.mockResolvedValue({ own: { overall_rank: 1, total_points: 93 }, standings: [{}, {}, {}] });
     loader.sport.mockImplementation(async (sport) => {
