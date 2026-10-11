@@ -12,9 +12,9 @@ begin
   insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_user_meta_data)
   values
     (v_owner_id,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
-      'football-editorial-owner@login.octagon-hq.app','',now(),now(),now,'{}'::jsonb),
+      'football-editorial-owner@login.octagon-hq.app','',now(),now(),now(),'{}'::jsonb),
     (v_member_id,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
-      'football-editorial-member@login.octagon-hq.app','',now(),now(),now,'{}'::jsonb);
+      'football-editorial-member@login.octagon-hq.app','',now(),now(),now(),'{}'::jsonb);
   perform public.register_unclaimed_pin_profile(v_owner_id,'Football Editorial Owner','FE');
   perform public.register_unclaimed_pin_profile(v_member_id,'Football Editorial Member','FM');
   insert into public.pick_control_owners(profile_id) values(v_owner_id);
