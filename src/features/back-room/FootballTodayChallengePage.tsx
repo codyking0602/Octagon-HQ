@@ -632,19 +632,15 @@ export default function FootballTodayChallengePage() {
   const [impostorLoading, setImpostorLoading] = useState(false);
   const [impostorError, setImpostorError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
-  const weeklyGateActive = Boolean(
-    !weeklyGmWeek
-    && !impostorWindow.active
-    && weeklyState?.available
-    && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today),
-  );
+  // Weekly Auction is available separately; only an explicit ?weekly=edit
+  // opens its overlay. Never block the official Daily behind Weekly state.
   const impostorGateActive = !weeklyGmWeek && impostorWindow.active
     && !impostorLoading
     && hqImpostorDailyGateRequired(impostorState);
-  const featuredGateLoaded = weeklyGmWeek || (impostorWindow.active ? !impostorLoading : weeklyState !== null);
+  const featuredGateLoaded = !impostorWindow.active || !impostorLoading;
   const dailyRuntime = useTodayChallengeRuntime({
     profileId: identity.profile?.id ?? "signed-out",
-    enabled: signedIn && featuredGateLoaded && !weeklyGateActive && !impostorGateActive,
+    enabled: signedIn && featuredGateLoaded && !impostorGateActive,
     repository,
     sport: "football",
   });
@@ -825,7 +821,7 @@ export default function FootballTodayChallengePage() {
     );
   }
 
-  if (weeklyState?.available && (showWeeklyAuction || weeklyState.previous_final || !weeklyState.submitted_today)) {
+  if (editWeeklyAuction && weeklyState?.available && showWeeklyAuction) {
     return (
       <div className="page football-today-page">
         <FootballWeeklyAuctionGate
@@ -849,8 +845,8 @@ export default function FootballTodayChallengePage() {
   }
 
   if (!projection) {
-    const loading = busy || (!weeklyGmWeek && (weeklyBusy || weeklyState === null));
-    const message = weeklyError ?? error;
+    const loading = busy || dailyRuntime.loading;
+    const message = error;
     return (
       <div className="page football-today-page">
         <section className="football-today-shell">
@@ -859,10 +855,7 @@ export default function FootballTodayChallengePage() {
           {message ? (
             <>
               <p>{message}</p>
-              <button type="button" onClick={() => {
-                if (weeklyError) setWeeklyRetryKey((value) => value + 1);
-                else void dailyRuntime.refresh();
-              }}>TRY AGAIN →</button>
+              <button type="button" onClick={() => void dailyRuntime.refresh()}>TRY AGAIN →</button>
             </>
           ) : null}
         </section>
