@@ -148,7 +148,7 @@ describe("Shane's ranked watchlist", () => {
       ufcRecord: "2–1",
       ufcWinStreak: "2",
       ufcFinishes: "2",
-      videoUrl: "https://www.sherdog.com/videos/highlightreels/UFC-Vegas-122-highlight-video-Alice-Pereira-opens-up-nasty-cut-on-Darya-Zheleznyakova-23840",
+      videoUrl: "https://youtu.be/dmy6pJde63I?is=hq9sEjQwy3VGtds4",
     });
     expect(alice.scoutingSnapshot).toContain("8–1 professional record");
     expect(alice.scoutingSnapshot).toContain("#15 Daria Zhelezniakova");
