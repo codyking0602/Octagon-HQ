@@ -81,15 +81,13 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(runtime).not.toContain('import("./football-publication-hit-the-number.generated.mjs")');
     expect(runtime).not.toContain('import("./football-publication-comparison.generated.mjs")');
     const footballBranch = runtime.indexOf('if (body.sport === "football") {');
-    const weeklyGate = runtime.indexOf('football_weekly_auction_daily_gate', footballBranch);
     const footballMaterialization = runtime.indexOf('const materialized = await materializeFootballToday(admin);', footballBranch);
     const footballContext = runtime.indexOf('let context = await getContext(admin, materialized.dailyChallengeId, profileId);', footballBranch);
-    const continuingDaily = runtime.indexOf('const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0', footballBranch);
     expect(footballBranch).toBeGreaterThan(-1);
     expect(footballMaterialization).toBeGreaterThan(footballBranch);
     expect(footballContext).toBeGreaterThan(footballMaterialization);
-    expect(continuingDaily).toBeGreaterThan(footballContext);
-    expect(weeklyGate).toBeGreaterThan(continuingDaily);
+    expect(runtime).not.toContain('WEEKLY_AUCTION_REQUIRED');
+    expect(runtime).not.toContain('football_weekly_auction_daily_gate');
     expect(runtime).toContain('if (request.required !== true)');
     expect(runtime).toContain('loadFootballPublicationRuntime(expectedGame as OfficialDailyGameType)');
     expect(runtime).toContain('buildFootballDailyPersistenceSetup(');
@@ -122,6 +120,37 @@ describe("daily challenge runtime cold-start isolation", () => {
     expect(footballSchedulerMigration).toContain('{"mode":"scheduled","sport":"football"}');
     expect(footballSchedulerMigration.match(/functions\/v1\/daily-challenge-runtime/g)).toHaveLength(2);
     expect(footballSchedulerMigration).toContain("active := true");
+  });
+
+  it("prepublishes both sports ahead of midnight and automatically recovers transient read failures", () => {
+    const hook = readFileSync("src/features/play/useTodayChallengeRuntime.ts", "utf8");
+    const play = readFileSync("src/features/play/PlayV2Page.tsx", "utf8");
+    const footballPage = readFileSync("src/features/back-room/FootballTodayChallengePage.tsx", "utf8");
+
+    // The same canonical publisher handles today and the upcoming Central day.
+    expect(runtime).toContain("async function materializeToday(admin: SupabaseClient, at?: string)");
+    expect(runtime).toContain("async function materializeFootballToday(admin: SupabaseClient, at?: string)");
+    expect(runtime).toContain('at ? { p_at: at } : {}');
+    expect(runtime).toContain("...(at ? { p_at: at } : {})");
+    expect(runtime).toContain('timeZone: "America/Chicago"');
+    expect(runtime).toContain("now.getTime() + 30 * 60 * 1000");
+    expect(runtime).toContain("centralDay(now) !== centralDay(soon)");
+    expect(runtime).toContain("await materializeFootballToday(admin, soon.toISOString())");
+    expect(runtime).toContain("await materializeToday(admin, soon.toISOString())");
+    expect(runtime.indexOf('if (centralDay(now) !== centralDay(soon))')).toBeGreaterThan(
+      runtime.indexOf('const materialized = scheduledSport === "football"'),
+    );
+
+    // No new server polling during normal play. Transient failures self-heal,
+    // including the moment when a new day appears in an already-open browser tab.
+    expect(hook).toContain("failureCount < 5");
+    expect(hook).toContain("refetchInterval:");
+    expect(hook).toContain("activeQuery.state.error && !isPermanentDailyLoadError");
+    expect(hook).toContain("queryClient.invalidateQueries({");
+    expect(hook).toContain("seenDay = nextDay;");
+    expect(footballPage).toContain("const featuredGateLoaded = !impostorWindow.active || !impostorLoading;");
+    expect(footballPage).toContain("editWeeklyAuction && weeklyState?.available && showWeeklyAuction");
+    expect(play).toContain("OPEN DAILY PAGE →");
   });
 
   it("keeps Football Hit the Number generation and quality work out of ordinary Daily actions", () => {
