@@ -315,12 +315,21 @@ function WeeklyCurrent({}: Record<string, never>) {
         <span><span aria-hidden="true">🏆 </span> WEEKLY FEATURED</span>
         <span>FOOTBALL</span>
       </div>
-      <h2>Auction Center</h2>
-      <p>Make your picks in this week’s featured football auction.</p>
-      <div className="play-v2__weekly-actions">
-        <Link to="/football/weekly-auction">OPEN CURRENT WEEKLY →</Link>
-        <Link to="/championship/football?tab=play">PLAY STANDINGS ↗</Link>
-      </div>
+      {new Date() >= new Date("2026-10-13T05:00:00Z") && new Date() < new Date("2026-10-20T05:00:00Z") ? <>
+        <h2>Weekly GM Championship</h2>
+        <p>Two official franchises. Josh Allen and Jaxson Dart. Six random spins each.</p>
+        <div className="play-v2__weekly-actions">
+          <Link to="/football/weekly-gm">OPEN WEEKLY GM →</Link>
+          <Link to="/championship/football?tab=play">PLAY STANDINGS ↗</Link>
+        </div>
+      </> : <>
+        <h2>Auction Center</h2>
+        <p>Make your picks in this week’s featured football auction.</p>
+        <div className="play-v2__weekly-actions">
+          <Link to="/football/weekly-auction">OPEN CURRENT WEEKLY →</Link>
+          <Link to="/championship/football?tab=play">PLAY STANDINGS ↗</Link>
+        </div>
+      </>}
     </section>
   );
 }

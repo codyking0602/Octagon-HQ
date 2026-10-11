@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/football-wheel.css";
 import "../../styles/football-gm-mode.css";
@@ -7,6 +7,7 @@ import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import type { ChallengeJson } from "../challenges/challengeModel";
 import { useIdentity } from "../identity/IdentityProvider";
 import { createFootballGmRunRepository } from "./footballGmRunRepository";
+import { weeklyGmRepository, type WeeklyGmScenario } from "../play/weeklyGmRepository";
 import {
   loadWheelFootballRoster,
   wheelFootballTeam,
@@ -1489,9 +1490,11 @@ function FinalScreen({
 export default function FootballGmModePage({
   startImmediately = false,
   standalone = false,
+  weeklyScenario,
 }: {
   startImmediately?: boolean;
   standalone?: boolean;
+  weeklyScenario?: WeeklyGmScenario;
 } = {}) {
   const navigate = useNavigate();
   const identity = useIdentity();
@@ -1513,7 +1516,10 @@ export default function FootballGmModePage({
   });
   const [challengeStatus, setChallengeStatus] = useState("");
   const [runRepository] = useState(() => createFootballGmRunRepository());
-  const [soloHydrated, setSoloHydrated] = useState(() => !standalone);
+  const [soloHydrated, setSoloHydrated] = useState(() => !standalone && !weeklyScenario);
+  const [weeklyError, setWeeklyError] = useState("");
+  const weeklyRevision = useRef(0);
+  const weeklySaveQueue = useRef<Promise<void>>(Promise.resolve());
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
   const [draftWheelRotation, setDraftWheelRotation] = useState(0);
   const opponentName: string | null = null;
@@ -1544,7 +1550,7 @@ export default function FootballGmModePage({
   }, [identity.profile?.id, seed, startImmediately, storedSeed]);
 
   useEffect(() => {
-    if (!standalone || soloHydrated || !identity.ready) return;
+    if (!standalone || weeklyScenario || soloHydrated || !identity.ready) return;
     if (!identity.profile?.id) {
       setSoloHydrated(true);
       return;
@@ -1593,8 +1599,29 @@ export default function FootballGmModePage({
   ]);
 
   useEffect(() => {
+    if (!weeklyScenario || soloHydrated || !identity.ready || !identity.profile?.id) return;
+    let active = true;
+    void weeklyGmRepository.start(weeklyScenario).then((entry) => {
+      if (!active) return;
+      const qb = weeklyScenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart";
+      const restored = entry.state ?? {
+        ...initialRun(entry.seed),
+        phase: "draft" as const,
+        roster: [{ slot: "QB" as const, playerId: qb, acquired: "draft" as const }],
+        spinIndex: 1,
+      };
+      weeklyRevision.current = entry.revision;
+      setSeed(entry.seed);
+      setRun(restored);
+      setSoloHydrated(true);
+    }).catch((error) => { if (active) setWeeklyError(error instanceof Error ? error.message : "Weekly GM is unavailable."); });
+    return () => { active = false; };
+  }, [identity.profile?.id, identity.ready, soloHydrated, weeklyScenario]);
+
+  useEffect(() => {
     if (
-      typeof window === "undefined"
+      weeklyScenario
+      || typeof window === "undefined"
       || !identity.profile?.id
       || (standalone && !soloHydrated)
     ) return;
@@ -1612,6 +1639,7 @@ export default function FootballGmModePage({
     if (
       !identity.profile?.id
       || !identity.profile.displayName
+      || weeklyScenario
       || !runRepository
       || (standalone && !soloHydrated)
     ) return;
@@ -1650,6 +1678,19 @@ export default function FootballGmModePage({
   );
 
   useEffect(() => {
+    if (!weeklyScenario || !soloHydrated || !identity.profile?.id) return;
+    const snapshot = run;
+    const result = finalResult;
+    weeklySaveQueue.current = weeklySaveQueue.current.then(async () => {
+      const saved = await weeklyGmRepository.save(weeklyScenario, snapshot, result, weeklyRevision.current);
+      weeklyRevision.current = saved.revision;
+    }).catch((error) => {
+      console.error("Weekly GM official save failed", error);
+      setWeeklyError(error instanceof Error ? error.message : "Official GM progress could not be saved.");
+    });
+  }, [identity.profile?.id, finalResult, run, soloHydrated, weeklyScenario]);
+
+  useEffect(() => {
     if (
       !finalResult
       || !profileMatch.isRecipient
@@ -1670,7 +1711,8 @@ export default function FootballGmModePage({
       <div className="page football-gm-page">
         <section className="surface-card">
           <p className="eyebrow">THE GM</p>
-          <h1>RESTORING YOUR FRONT OFFICE…</h1>
+          <h1>{weeklyError || "RESTORING YOUR FRONT OFFICE…"}</h1>
+          {weeklyError ? <button type="button" onClick={() => navigate("/football/weekly-gm")}>BACK TO WEEKLY GM</button> : null}
         </section>
       </div>
     );
@@ -2028,6 +2070,7 @@ export default function FootballGmModePage({
   }
 
   function replay() {
+    if (weeklyScenario) { navigate("/football/weekly-gm"); return; }
     const nextSeed = freshSeed();
     setSeed(nextSeed);
     setRun(initialRun(nextSeed));
@@ -2094,6 +2137,12 @@ export default function FootballGmModePage({
         </header>
       )}
 
+      {weeklyScenario ? <section className="challenge-game-banner">
+        <span>OFFICIAL WEEKLY GM · {weeklyScenario === "elite" ? "JOSH ALLEN" : "JAXSON DART"}</span>
+        <strong>One attempt · six random wheel spins · 200-point weekly championship.</strong>
+        <small>90% team quality · 10% season results. {weeklyScenario === "elite" ? "Josh Allen: steady development." : "Jaxson Dart: guaranteed breakout."}</small>
+        {weeklyError ? <p role="alert">{weeklyError}</p> : null}
+      </section> : null}
       {profileMatch.creator ? (
         <section className="challenge-game-banner">
           <span>PROFILE CHALLENGE</span>
@@ -2344,4 +2393,10 @@ export default function FootballGmModePage({
       ) : null}
     </div>
   );
+}
+
+export function WeeklyGmRunRoute() {
+  const scenario = window.location.pathname.split("/").at(-1);
+  if (scenario !== "elite" && scenario !== "young") return <section className="page surface-card">Unknown Weekly GM challenge.</section>;
+  return <FootballGmModePage key={scenario} standalone startImmediately weeklyScenario={scenario} />;
 }
