@@ -14,6 +14,7 @@ import { playGameDefinition, type PlaySport } from "./playRegistry";
 import { todayChallengeAdapter } from "./todaysChallengeAdapters";
 import { FootballSpecialDailyHubMark, footballSpecialDailyStyle, footballSpecialDailyThemeForDay } from "./footballSpecialDailyTheme";
 import { useTodayChallengeRuntime } from "./useTodayChallengeRuntime";
+import { TodayChallengeRepositoryError } from "./todayChallengeRepository";
 import { useTodayChallengeOverview } from "./useTodayChallengeOverview";
 import { usePlayV2History } from "./usePlayV2History";
 import { playV2Score } from "./playV2Stats";
@@ -42,6 +43,8 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
     profileId, enabled: true, projection: runtime.projection, sport,
   });
   const projection = runtime.projection;
+  const weeklyRequired = runtime.error instanceof TodayChallengeRepositoryError
+    && runtime.error.code === "WEEKLY_AUCTION_REQUIRED";
   const specialTheme = sport === "football" && projection ? footballSpecialDailyThemeForDay(projection.centralDay) : null;
   const adapter = todayChallengeAdapter(projection?.gameType);
   const title = projection && isDailyRankKeepCombo(projection)
@@ -66,8 +69,10 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
       ) : !projection || !adapter ? (
         <div className="play-v2__error">
           <p>{runtime.error instanceof Error ? runtime.error.message : "Today's official game is unavailable."}</p>
-          <button type="button" onClick={() => void runtime.refresh()}>TRY AGAIN ↗</button>
-          <Link to={sport === "football" ? "/football/today" : "/play"}>OPEN DAILY PAGE →</Link>
+          {!weeklyRequired ? <button type="button" onClick={() => void runtime.refresh()}>TRY AGAIN ↗</button> : null}
+          <Link to={sport === "football" ? "/football/today" : "/play"}>
+            {weeklyRequired ? "FINISH WEEKLY AUCTION →" : "OPEN DAILY PAGE →"}
+          </Link>
         </div>
       ) : (
         <>
