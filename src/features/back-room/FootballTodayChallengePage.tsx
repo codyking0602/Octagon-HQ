@@ -180,8 +180,8 @@ function FindLeader({ projection, advance }: GameProps) {
     const revealedCandidate = revealedById.get(id);
     // Older immutable Daily setups only stored a combined label. Recover
     // their year for the dedicated untruncated season pill as well.
-    const suffix = name.match(/^(.*) (\\d{4})$/);
-    const prefix = name.match(/^(\\d{4}) (.*)$/);
+    const suffix = name.match(/^(.*) (\d{4})$/);
+    const prefix = name.match(/^(\d{4}) (.*)$/);
     const season = typeof candidate.season === "number"
       ? candidate.season
       : suffix ? Number(suffix[2]) : prefix ? Number(prefix[1]) : null;
