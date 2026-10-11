@@ -20,11 +20,42 @@ export type MlbSeriesBreakdownContent = {
 };
 
 /**
- * The postseason hub intentionally features one full Series Breakdown at a time.
- * The 2026 Division Series feature is White Sox-Guardians: the AL Central race
- * continuing into October after a 7-6 season series separated by one total run.
+ * Keep published series analysis available after each round advances.
+ * The current featured League Championship Series is Dodgers-Brewers.
  */
 export const MLB_OWNER_PREVIEW_SERIES_BREAKDOWNS: Readonly<Record<string, MlbSeriesBreakdownContent>> = {
+  "nl-cs": {
+    series:
+      "The National League's two 100-win clubs meet again for the pennant. Milwaukee won 103 games and took the 2026 head-to-head series 4-3, but Los Angeles swept the Brewers in last October's NLCS. Both earned this rematch with four-game Division Series wins.",
+    decisions: [
+      {
+        title: "Home-field advantage",
+        body: [
+          {
+            text: "Milwaukee finished with the best record in baseball and hosts the opening two games. That matters in a rematch where early momentum could reshape a seven-game series.",
+          },
+        ],
+      },
+      {
+        title: "The rematch",
+        body: [
+          {
+            text: "The Dodgers swept the Brewers in the 2025 NLCS. Milwaukee has the regular-season edge this year, so the question is whether its lineup can turn those narrow advantages into October wins.",
+          },
+        ],
+      },
+      {
+        title: "Game 1 pitching",
+        body: [
+          {
+            text: "Tarik Skubal starts for Los Angeles opposite Jacob Misiorowski for Milwaukee. The opener will set the tone before the series shifts west for Game 3.",
+          },
+        ],
+      },
+    ],
+    hqRead:
+      "The Brewers earned the home field and have the stronger regular-season résumé. The Dodgers bring the championship experience and won last year's matchup decisively. Milwaukee has to make this a different series early.",
+  },
   "al-ds-2": {
     series:
       "Chicago won the season series 7-6 and outscored Cleveland 58-57, but the Guardians took the AL Central by one game. Eleven of their 13 meetings were decided by three runs or fewer, so the division race is essentially continuing in October.",
