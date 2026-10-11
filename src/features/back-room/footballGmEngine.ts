@@ -544,6 +544,10 @@ export function footballGmProjectedGradeForPlayer(
   year: 1 | 2 | 3,
   seed?: string,
 ) {
+  // Weekly Featured's assigned QB has a fixed, transparent development result.
+  // Other players and all Casual GM seeds retain the authored random model.
+  if (year > 1 && seed?.startsWith("weekly-gm:2026-10-13:elite:") && player.id === "BUF|QB|joshallen") return player.currentGrade;
+  if (year > 1 && seed?.startsWith("weekly-gm:2026-10-13:young:") && player.id === "NYG|QB|jaxsondart") return Math.min(99, player.currentGrade + 4);
   const marketPosition = player.marketPosition;
   return projectWheelFootballGmGrade({
     currentGrade: player.currentGrade,

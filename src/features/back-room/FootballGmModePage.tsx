@@ -1454,7 +1454,9 @@ function FinalScreen({
   isRecipient,
   onChallenge,
   onReplay,
+  replayLabel = "NEW GM RUN",
 }: {
+  replayLabel?: string;
   run: PersistedRun;
   gmName: string;
   challengeStatus: string;
@@ -1470,7 +1472,7 @@ function FinalScreen({
         {!isRecipient && opponentName ? (
           <button className="primary-action" type="button" onClick={onChallenge}>CHALLENGE {opponentName}</button>
         ) : null}
-        <button type="button" onClick={onReplay}>NEW GM RUN</button>
+        <button type="button" onClick={onReplay}>{replayLabel}</button>
         <button type="button" className="gm-final__secondary-action" onClick={() => {
           const details = document.getElementById("gm-full-roster");
           if (details instanceof HTMLDetailsElement) {
@@ -1489,17 +1491,32 @@ function FinalScreen({
 export default function FootballGmModePage({
   startImmediately = false,
   standalone = false,
+  weeklyRun,
 }: {
   startImmediately?: boolean;
   standalone?: boolean;
+  weeklyRun?: {
+    scenario: "elite" | "young";
+    seed: string;
+    savedState: PersistedRun | null;
+    save: (state: PersistedRun, score: number | null) => Promise<void>;
+    onBack: () => void;
+  };
 } = {}) {
   const navigate = useNavigate();
   const identity = useIdentity();
   const challenges = usePlayChallenges();
   const profileMatch = useProfileChallengeMatch("gm-football");
-  const storedSeed = challengeSeed(profileMatch.challenge?.setup);
-  const [seed, setSeed] = useState(() => storedSeed ?? freshSeed());
+  const storedSeed = weeklyRun ? null : challengeSeed(profileMatch.challenge?.setup);
+  const [seed, setSeed] = useState(() => weeklyRun?.seed ?? storedSeed ?? freshSeed());
   const [run, setRun] = useState<PersistedRun>(() => {
+    if (weeklyRun) {
+      const persisted = weeklyRun.savedState ? parsePersistedRun(weeklyRun.savedState) : null;
+      if (persisted && persisted.seed === weeklyRun.seed) return persisted;
+      const qbId = weeklyRun.scenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart";
+      return { ...initialRun(weeklyRun.seed), phase: "draft", spinIndex: 1,
+        roster: [{ slot: "QB", playerId: qbId, acquired: "draft" }] };
+    }
     const persisted = typeof window === "undefined"
       ? null
       : loadPersistedRun(identity.profile?.id, seed);
@@ -1513,7 +1530,7 @@ export default function FootballGmModePage({
   });
   const [challengeStatus, setChallengeStatus] = useState("");
   const [runRepository] = useState(() => createFootballGmRunRepository());
-  const [soloHydrated, setSoloHydrated] = useState(() => !standalone);
+  const [soloHydrated, setSoloHydrated] = useState(() => !standalone || Boolean(weeklyRun));
   const [draftWheelSpinning, setDraftWheelSpinning] = useState(false);
   const [draftWheelRotation, setDraftWheelRotation] = useState(0);
   const opponentName: string | null = null;
@@ -1530,7 +1547,7 @@ export default function FootballGmModePage({
   const pendingDraftWheelTeam = run.pendingTeam ? wheelFootballTeam(run.pendingTeam) ?? null : null;
 
   useEffect(() => {
-    if (!storedSeed || storedSeed === seed) return;
+    if (weeklyRun || !storedSeed || storedSeed === seed) return;
     setSeed(storedSeed);
     const persisted = loadPersistedRun(identity.profile?.id, storedSeed);
     if (persisted) {
@@ -1544,7 +1561,7 @@ export default function FootballGmModePage({
   }, [identity.profile?.id, seed, startImmediately, storedSeed]);
 
   useEffect(() => {
-    if (!standalone || soloHydrated || !identity.ready) return;
+    if (weeklyRun || !standalone || soloHydrated || !identity.ready) return;
     if (!identity.profile?.id) {
       setSoloHydrated(true);
       return;
@@ -1596,6 +1613,7 @@ export default function FootballGmModePage({
     if (
       typeof window === "undefined"
       || !identity.profile?.id
+      || weeklyRun
       || (standalone && !soloHydrated)
     ) return;
     window.localStorage.setItem(storageKey(identity.profile.id, run.seed), JSON.stringify(run));
@@ -1613,6 +1631,7 @@ export default function FootballGmModePage({
       !identity.profile?.id
       || !identity.profile.displayName
       || !runRepository
+      || weeklyRun
       || (standalone && !soloHydrated)
     ) return;
     const snapshot = gmAuditSnapshot(run, {
@@ -1648,6 +1667,14 @@ export default function FootballGmModePage({
       : null,
     [finalRoster, run.phase, run.seed, run.resolvedSeasons, yearOneRoster],
   );
+
+  useEffect(() => {
+    if (!weeklyRun || !identity.profile?.id) return;
+    void weeklyRun.save(run, run.phase === "final" ? finalResult?.score ?? null : null)
+      .catch((error) => setChallengeStatus(error instanceof Error ? error.message : "Weekly save failed"));
+  // Saving follows actual run changes, not a freshly created callback prop.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [run, finalResult?.score, weeklyRun?.scenario, identity.profile?.id]);
 
   useEffect(() => {
     if (
@@ -2028,6 +2055,10 @@ export default function FootballGmModePage({
   }
 
   function replay() {
+    if (weeklyRun) {
+      weeklyRun.onBack();
+      return;
+    }
     const nextSeed = freshSeed();
     setSeed(nextSeed);
     setRun(initialRun(nextSeed));
@@ -2066,7 +2097,7 @@ export default function FootballGmModePage({
     <div className="page football-gm-page">
       {run.phase === "final" ? (
         <header className="football-gm__header is-final">
-          <button type="button" onClick={() => navigate("/football")}>← FOOTBALL HQ</button>
+          <button type="button" onClick={() => weeklyRun ? weeklyRun.onBack() : navigate("/football")}>← {weeklyRun ? "WEEKLY GM" : "FOOTBALL HQ"}</button>
           <span><strong>THE GM</strong><small>3 YEARS</small></span>
           <button type="button" className="football-gm__share-result" disabled={!finalResult} onClick={() => {
             if (!finalResult) return;
@@ -2104,7 +2135,7 @@ export default function FootballGmModePage({
 
       {run.phase === "intro" ? (
         <section className="football-gm__intro surface-card">
-          <p className="eyebrow">NFL FRONT OFFICE CHALLENGE</p>
+          <p className="eyebrow">{weeklyRun ? "WEEKLY NFL GM · OFFICIAL ATTEMPT" : "NFL FRONT OFFICE CHALLENGE"}</p>
           <h1>BUILD IT. SURVIVE THE OFFSEASON. SEE IF IT WINS.</h1>
           <p className="football-gm__intro-lede">Build a 7-man NFL core under a {footballGmMoney(FOOTBALL_GM_CAP)} cap.</p>
 
@@ -2340,6 +2371,7 @@ export default function FootballGmModePage({
           isRecipient={profileMatch.isRecipient}
           onChallenge={() => void challengeOpponent()}
           onReplay={replay}
+          replayLabel={weeklyRun ? "BACK TO WEEKLY GM" : "NEW GM RUN"}
         />
       ) : null}
     </div>
