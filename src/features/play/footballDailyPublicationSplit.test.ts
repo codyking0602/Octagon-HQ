@@ -72,7 +72,7 @@ describe("split Football Daily publication runtimes", () => {
     expect(curated.candidates).toHaveLength(10);
     expect(new Set(curated.candidates.map((candidate) => candidate.id)).size).toBe(10);
     expect(new Set(curated.candidates.map((candidate) => candidate.displayName)).size).toBe(10);
-    expect(curated.candidates.every(({ name }) => /\\s\\d{4}$/.test(name))).toBe(true);
+    expect(curated.candidates.every(({ name }) => /\s\d{4}$/.test(name))).toBe(true);
     expect(curated.candidates.map(({ name }) => name)).toContain("Peyton Manning 2013");
     expect(curated.leaderId).toBe(topRecord?.id);
     expect(curated.leaderValue).toBe(topRecord?.value);
