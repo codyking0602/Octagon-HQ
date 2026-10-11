@@ -15,8 +15,8 @@ begin
       'football-editorial-owner@login.octagon-hq.app','',now(),now(),now(),'{}'::jsonb),
     (v_member_id,'00000000-0000-0000-0000-000000000000','authenticated','authenticated',
       'football-editorial-member@login.octagon-hq.app','',now(),now(),now(),'{}'::jsonb);
-  perform public.register_unclaimed_pin_profile(v_owner_id,'Football Editorial Owner','FE');
-  perform public.register_unclaimed_pin_profile(v_member_id,'Football Editorial Member','FM');
+  perform public.register_unclaimed_pin_profile(v_owner_id,'Editorial Owner','FE');
+  perform public.register_unclaimed_pin_profile(v_member_id,'Editorial Member','FM');
   insert into public.pick_control_owners(profile_id) values(v_owner_id);
 
   if has_table_privilege('anon','public.football_weekly_content_packages','SELECT')
