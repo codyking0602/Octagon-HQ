@@ -64,26 +64,19 @@ describe("Football Daily product integration", () => {
     expect(runtime).not.toContain("buildFootballTodayRuntimeSnapshot(materialized.centralDay");
   });
 
-  it("never lets the Weekly Auction gate strand an already-started Football Daily", () => {
-    const legacyFootballStart = runtime.indexOf('if (body.sport === "football") {');
-    const legacyFootball = runtime.slice(legacyFootballStart);
-    expect(legacyFootball).toContain("const continuingFootballDaily = Number(context.progress_revision ?? 0) > 0");
-    expect(legacyFootball).toContain("|| Boolean(asRecord(context.official_attempt))");
-    expect(legacyFootball).toContain("if (!continuingFootballDaily) {");
-    expect(legacyFootball.indexOf("let context = await getContext(admin, materialized.dailyChallengeId, profileId)"))
-      .toBeLessThan(legacyFootball.indexOf("const continuingFootballDaily"));
-    expect(legacyFootball.indexOf("const continuingFootballDaily"))
-      .toBeLessThan(legacyFootball.indexOf('football_weekly_auction_daily_gate'));
-
+  it("allows Football Daily independently of Weekly Auction for first-time and returning players", () => {
+    const footballBranch = runtime.slice(runtime.indexOf('if (body.sport === "football") {'));
     const averageFanFastStart = runtime.indexOf("async function advanceExistingAverageFan(");
     const averageFanFastEnd = runtime.indexOf("async function continueTwoGameWithoutIntermission(", averageFanFastStart);
     const averageFanFastPath = runtime.slice(averageFanFastStart, averageFanFastEnd);
-    expect(averageFanFastPath).toContain("const hasStartedFootballDaily = Number(context.progress_revision ?? 0) > 0");
-    expect(averageFanFastPath).toContain("if (!hasStartedFootballDaily) {");
-    expect(averageFanFastPath.indexOf("let context = await getContext(admin, requestedDailyId, profileId)"))
-      .toBeLessThan(averageFanFastPath.indexOf("const hasStartedFootballDaily"));
-    expect(averageFanFastPath.indexOf("const hasStartedFootballDaily"))
-      .toBeLessThan(averageFanFastPath.indexOf('football_weekly_auction_daily_gate'));
+
+    expect(footballBranch).toContain("let context = await getContext(admin, materialized.dailyChallengeId, profileId)");
+    expect(footballBranch).toContain("return json(footballPublicPayload(context))");
+    expect(averageFanFastPath).toContain("let context = await getContext(admin, requestedDailyId, profileId)");
+    expect(runtime).not.toContain("football_weekly_auction_daily_gate");
+    expect(runtime).not.toContain("WEEKLY_AUCTION_REQUIRED");
+    expect(page).toContain("editWeeklyAuction && weeklyState?.available && showWeeklyAuction");
+    expect(page).toContain("enabled: signedIn && featuredGateLoaded && !impostorGateActive");
   });
 
   it("keeps Football HQ and completed result actions on the canonical Today route", () => {
