@@ -175,3 +175,72 @@ grant execute on function public.get_my_football_weekly_gm_preview() to authenti
 grant execute on function public.start_my_football_weekly_gm_preview(text) to authenticated;
 grant execute on function public.get_football_weekly_gm_preview_result(text,uuid) to authenticated;
 grant execute on function public.reset_my_football_weekly_gm_preview() to authenticated;
+
+
+-- Keep the ordinary official RPCs pointed only at actual Featured events.
+-- Without this, the earlier open 1980 playtest event could be picked by
+-- the official start endpoint before October 13.
+create or replace function public.start_my_football_weekly_gm(p_scenario text)
+returns jsonb
+language plpgsql volatile security definer
+set search_path = ''
+as $$
+declare
+  v_profile uuid := auth.uid();
+  v_event private.football_weekly_gm_events%rowtype;
+  v_attempt private.football_weekly_gm_attempts%rowtype;
+begin
+  if v_profile is null then raise exception 'sign in required'; end if;
+  if p_scenario not in ('elite','young') or p_scenario is null then
+    raise exception 'invalid Weekly GM scenario';
+  end if;
+  select * into v_event from private.football_weekly_gm_events
+    where subject_key='nfl-gm-championship'
+      and opens_at <= now() and closes_at > now()
+    order by week_start desc limit 1;
+  if not found then raise exception 'Weekly GM is not open'; end if;
+  insert into private.football_weekly_gm_attempts (week_start,profile_id,scenario,seed)
+  values (v_event.week_start,v_profile,p_scenario,
+    'weekly-gm:'||v_event.week_start::text||':'||p_scenario||':'||gen_random_uuid()::text||':gmdev1')
+  on conflict (week_start,profile_id,scenario) do nothing;
+  select * into v_attempt from private.football_weekly_gm_attempts
+    where week_start=v_event.week_start and profile_id=v_profile and scenario=p_scenario;
+  return jsonb_build_object(
+    'seed',v_attempt.seed,'state',v_attempt.state,
+    'completed',v_attempt.completed_at is not null,'score',v_attempt.score
+  );
+end;
+$$;
+
+create or replace function public.get_football_weekly_gm_result(
+  p_scenario text, p_profile_id uuid default null
+)
+returns jsonb
+language plpgsql stable security definer
+set search_path = ''
+as $$
+declare
+  v_viewer uuid := auth.uid();
+  v_profile uuid := coalesce(p_profile_id,auth.uid());
+  v_result jsonb;
+begin
+  if v_viewer is null then raise exception 'sign in required'; end if;
+  if p_scenario not in ('elite','young') then
+    raise exception 'invalid Weekly GM scenario';
+  end if;
+  select jsonb_build_object(
+    'display_name',profile.display_name,'score',attempt.score,'state',attempt.state
+  )
+  into v_result
+  from private.football_weekly_gm_attempts attempt
+  join private.football_weekly_gm_events event on event.week_start=attempt.week_start
+  join public.profiles profile on profile.id=attempt.profile_id
+  where attempt.profile_id=v_profile and attempt.scenario=p_scenario
+    and event.subject_key='nfl-gm-championship'
+    and attempt.completed_at is not null
+    and now()>=event.opens_at
+  order by attempt.week_start desc limit 1;
+  if v_result is null then raise exception 'This franchise result is not complete'; end if;
+  return v_result;
+end;
+$$;
