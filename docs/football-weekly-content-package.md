@@ -25,3 +25,20 @@ Each Spotlight stores player name, team, position, exactly four labeled stats, r
 - src/features/home/footballWeeklyContentRepository.ts provides typed schema validation, draft saving, and owner-only loading.
 - Verify Supabase Backend runs supabase/tests/football_weekly_content_packages.sql on the current full migration chain. TypeScript contract tests cover field validation and safety.
 - **Phase 1 does not change the active Home/Picks renderers, cron schedules, images, existing Spotlight pairs, or production Picks data.** Phases 2–4 will implement user selections/approval, approved real-image ingestion, readiness gates, and atomic midnight activation using established product paths.
+
+## Phase 2: shortlisted recommendations and owner approval
+
+- Five vetted Player Spotlight candidates and five Game of the Week candidates per sport are staged for the next Tuesday week. They are never selected implicitly.
+- The owner-only RPC stage_football_weekly_editorial_candidates(date, sport, candidates) accepts exactly five unique player records and five unique game records. Each candidate has a stable lowercase ID, descriptive summary, and either player identity/team/position or game opponents/kickoff.
+- Staging the CFB set does not overwrite the NFL set. The current sport's shortlisted choices cannot be replaced after the owner selects one.
+- On the existing Football Picks owner control-center page, the new Weekly Football Editorial panel displays five player and five game options. The owner picks one of each and taps Save.
+- The owner-only RPC select_football_weekly_editorial_choices(date, sport, player_id, game_id) verifies both IDs against the stored shortlist, then saves the full immutable-option snapshots and an audit timestamp/owner ID into the weekly package choices.
+- The selected choices do not change the package draft status, release any content, edit existing code-based Spotlights, or mutate Football Picks. Later phases generate full editorials and imagery and separately authorize exact midnight activation.
+- The conversation's recommendation task can deliver candidate lists; it must explicitly stage them through an authorized connected backend operation to make them appear in the app. Never tell the owner a chat-only recommendation was saved to the package if it was not.
+- If a reply in chat identifies picks, reconcile them against this same canonical stored candidate list before any authorized save. The in-app owner panel remains a simple fallback.
+
+### Candidate staging shape
+
+Each sport's candidate object contains a players array and games array, each with exactly five entries. Players: id, name, team, position, summary. Games: id, home_team, away_team, kickoff_at as an offset-aware ISO timestamp, summary. No dummy or inferred result values should be staged in production.
+
+Phase 2 verification is in supabase/tests/football_weekly_editorial_approval.sql and the frontend repository/selection panel tests.

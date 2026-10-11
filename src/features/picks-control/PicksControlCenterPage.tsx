@@ -14,6 +14,7 @@ import {
   type PickSetupRepository,
 } from "../picks-setup/pickSetupRepository";
 import FootballHomeSpotlightPhotoControl from "./FootballHomeSpotlightPhotoControl";
+import FootballWeeklyEditorialControl from "./FootballWeeklyEditorialControl";
 import FootballPushControl from "./FootballPushControl";
 import OpenPicksDashboard from "./OpenPicksDashboard";
 import PickEventHeaderControl from "./PickEventHeaderControl";
@@ -312,6 +313,11 @@ export default function PicksControlCenterPage({
     return (
       <div className="picks-control-center">
         {ownerSportSwitch}
+        {identity.profile?.canControlPicks ? (
+          <section id="weekly-editorial" className="picks-control-center__section" aria-label="Weekly Football editorial choices">
+            <FootballWeeklyEditorialControl />
+          </section>
+        ) : null}
         {identity.profile?.canControlPicks ? (
           <section id="home-spotlight" className="picks-control-center__section" aria-label="Manage Football Home Player Spotlight">
             <FootballHomeSpotlightPhotoControl />
