@@ -73,9 +73,9 @@ export function footballFindLeaderVisibleIdentity(candidate: FootballFindLeaderP
   if (candidate.season != null) {
     return { displayName: candidate.displayName ?? candidate.name, season: candidate.season };
   }
-  const suffix = /^(.*?)\\s+((?:19|20)\\d{2})$/.exec(candidate.name);
+  const suffix = /^(.*?)\s+((?:19|20)\d{2})$/.exec(candidate.name);
   if (suffix) return { displayName: candidate.displayName ?? suffix[1]!, season: Number(suffix[2]) };
-  const prefix = /^((?:19|20)\\d{2})\\s+(.+)$/.exec(candidate.name);
+  const prefix = /^((?:19|20)\d{2})\s+(.+)$/.exec(candidate.name);
   if (prefix) return { displayName: candidate.displayName ?? prefix[2]!, season: Number(prefix[1]) };
   return { displayName: candidate.displayName ?? candidate.name, season: null };
 }
