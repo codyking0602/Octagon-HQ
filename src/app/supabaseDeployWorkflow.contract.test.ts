@@ -16,7 +16,10 @@ describe("Supabase deployment migration verification", () => {
     expect(workflow).toContain("--retry 5");
     expect(workflow).toContain("--retry-all-errors");
     expect(workflow).toContain("--retry-delay 2");
-    expect(workflow.match(/\blive_curl\b/g)?.length).toBe(9);
+    // The private Football publisher adds a deployment-SHA and denied-request proof.
+    expect(workflow.match(/\blive_curl\b/g)?.length).toBe(11);
+    expect(workflow).toContain("football-weekly-publisher");
+    expect(workflow).toContain("football-weekly-denied.json");
     expect(workflow).toContain("daily-runtime-response.json");
     expect(workflow).toContain("deployment_sha");
   });
