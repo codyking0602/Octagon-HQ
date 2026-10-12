@@ -5,6 +5,7 @@ import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuild
 import { footballGmSpinTeam, footballGmMoney, FOOTBALL_GM_TEAMS } from "./footballGmEngine";
 import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
 import { GmFootballWheel } from "./FootballGmModePage";
+import { LongCapMeter, LongRosterGrid, LongCandidateBoard } from "./FootballGmLongDraftPresentation";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 import {
   NFL_GM_LONG_CAP, NFL_GM_LONG_SLOTS, NFL_GM_LONG_SLOT_LABELS,
@@ -13,8 +14,7 @@ import {
 } from "./footballGmLongFoundation";
 import {
   NFL_GM_LONG_BY_ID, NFL_GM_LONG_PLAYER_POOL,
-  nflGmLongEligibleTeams, nflGmLongOpenSlots, nflGmLongTeamCandidates,
-  type NflGmLongPlayer,
+  nflGmLongEligibleTeams, nflGmLongOpenSlots, nflGmLongAutoAddPick,
 } from "./footballGmLongCatalog";
 import {
   NFL_GM_LONG_COACHES, NFL_GM_LONG_COACH_BUCKETS,
@@ -35,9 +35,6 @@ const CATEGORY: Record<NflGmLongCoachBucket, { title: string; copy: string; colo
   developer: { title: "PLAYER DEVELOPER", copy: "Give genuine young talent additional growth opportunities.", color: "#30b69a" },
   culture: { title: "CULTURE & LEADERSHIP", copy: "Build trust, resilience and a steady program.", color: "#a98cdf" },
 };
-function tier(grade: number) {
-  return grade >= 94 ? "ELITE" : grade >= 88 ? "STAR" : grade >= 82 ? "CORE" : grade >= 77 ? "ROTATION" : "WILDCARD";
-}
 function playerRow(pick: NflGmLongPick) {
   const player = NFL_GM_LONG_BY_ID.get(pick.playerId);
   return player ? { slot: pick.slot, grade: player.currentGrade, age: player.age } : null;
@@ -115,7 +112,6 @@ export default function FootballGmLongPage() {
   const wheelTeams = useMemo(() => eligibleTeams
     .map(wheelFootballTeam).filter((team): team is WheelFootballTeam => team != null), [eligibleTeams]);
   const pending = run?.pendingTeam ? wheelFootballTeam(run.pendingTeam) : null;
-  const candidates = run?.pendingTeam ? nflGmLongTeamCandidates(run.pendingTeam, run.picks) : [];
   const spent = run ? nflGmLongSpend(run.picks, NFL_GM_LONG_BY_ID) : 0;
   const open = run ? nflGmLongOpenSlots(run.picks) : [...NFL_GM_LONG_SLOTS];
   const hired = run?.selectedCoach ? NFL_GM_LONG_COACHES.find(c => c.name === run.selectedCoach) ?? null : null;
@@ -127,7 +123,6 @@ export default function FootballGmLongPage() {
     const teamCode = footballGmSpinTeam(run.runId, run.teamWheelSpinCount, eligibleTeams);
     const index = wheelTeams.findIndex(team => team.code === teamCode);
     if (!teamCode || index < 0) return;
-    setRun(prev => prev ? { ...prev, pendingTeam: teamCode } : prev);
     const slice = 360 / wheelTeams.length;
     setWheelRotation(cur => {
       const current = ((cur % 360) + 360) % 360;
@@ -135,15 +130,25 @@ export default function FootballGmLongPage() {
       return cur + 1080 + ((target - current + 360) % 360);
     });
     setSpinningTeam(true);
-    window.setTimeout(() => setSpinningTeam(false), 1550);
+    window.setTimeout(() => {
+      setRun(prev => prev && prev.phase === "draft" && !prev.pendingTeam
+        ? { ...prev, pendingTeam: teamCode } : prev);
+      setSpinningTeam(false);
+    }, 1550);
   }
-  function selectPlayer(player: NflGmLongPlayer, slot: NflGmLongPick["slot"]) {
-    if (!run || !run.pendingTeam || spinningTeam || !candidates.some(c => c.player.id === player.id && c.slots.includes(slot))) return;
-    const picks = [...run.picks, { slot, playerId: player.id }];
-    if (!nflGmLongValidRoster(picks, NFL_GM_LONG_BY_ID)) return;
+  function selectPlayer(playerId: string) {
+    if (!run || !run.pendingTeam || spinningTeam) return;
+    let picks: NflGmLongPick[];
+    try {
+      picks = nflGmLongAutoAddPick(run.picks, playerId);
+    } catch {
+      setError("That selection doesn't fit the roster and cap. Choose another eligible player.");
+      return;
+    }
+    setError("");
     setRun({ ...run, picks, pendingTeam: null, previousTeam: run.pendingTeam,
       teamWheelSpinCount: run.teamWheelSpinCount + 1,
-      phase: picks.length === 9 ? "coach-bucket" : "draft" });
+      phase: picks.length === NFL_GM_LONG_SLOTS.length ? "coach-bucket" : "draft" });
   }
   function pickBucket(bucket: NflGmLongCoachBucket) {
     if (!run || run.phase !== "coach-bucket" || run.picks.length !== 9) return;
@@ -174,59 +179,42 @@ export default function FootballGmLongPage() {
     setWheelRotation(0); setCoachRotation(0);
   }
 
-  if (!identity.ready) return <main className="page gm-long"><section className="surface-card">Loading NFL GM Long…</section></main>;
-  if (!owner) return <main className="page gm-long"><section className="surface-card gm-long__gate">
+  if (!identity.ready) return <main className="page football-gm-page gm-long"><section className="surface-card">Loading NFL GM Long…</section></main>;
+  if (!owner) return <main className="page football-gm-page gm-long"><section className="surface-card gm-long__gate">
     <p className="eyebrow">NFL GM LONG · PRIVATE PLAYTEST</p>
     <h1>OWNER-ONLY BUILD</h1>
     <p>This early Long GM mode is reserved for the Octagon HQ owner. Short GM remains available to everyone.</p>
     {!identity.profile ? <button onClick={identity.openDialog} type="button">SIGN IN</button> : null}
     <Link to="/football/gm-mode">OPEN SHORT GM →</Link>
   </section></main>;
-  if (!run || initializedFor !== profileId) return <main className="page gm-long"><section className="surface-card">Restoring your Long GM franchise…</section></main>;
+  if (!run || initializedFor !== profileId) return <main className="page football-gm-page gm-long"><section className="surface-card">Restoring your Long GM franchise…</section></main>;
 
   const coachOptions = run.selectedCoachBucket ? nflGmLongCoachesInBucket(run.selectedCoachBucket) : [];
   const futureSpent = nflGmLongSpend(run.picks, NFL_GM_LONG_BY_ID, 2);
-  return <main className="page gm-long">
-    <header className="gm-long__header">
+  return <main className="page football-gm-page gm-long">
+    <header className="football-gm__header">
       <button type="button" onClick={() => navigate("/football/gm-mode")}>← THE GM</button>
-      <div><span>OWNER PLAYTEST · PHASE 1</span><h1>NFL GM <b>LONG</b></h1></div>
-      <strong>$205M CAP</strong>
+      <span><small>NFL FRONT OFFICE · OWNER PLAYTEST</small><strong>THE GM · LONG</strong></span>
+      <b>$205M</b>
     </header>
-    <section className="surface-card gm-long__scorestrip">
-      <div><small>ROSTER</small><strong>{run.picks.length} / 9</strong></div>
-      <div><small>SPENT</small><strong>{footballGmMoney(spent)}</strong></div>
-      <div><small>AVAILABLE</small><strong>{footballGmMoney(NFL_GM_LONG_CAP - spent)}</strong></div>
-      <div><small>YEAR 2 EST.</small><strong>{footballGmMoney(futureSpent)}</strong></div>
-      <div className="gm-long__meter"><span style={{ width: Math.min(100, spent / NFL_GM_LONG_CAP * 100) + "%" }} /></div>
-    </section>
+    <LongCapMeter picks={run.picks} />
+    <LongRosterGrid picks={run.picks} />
     {error && <p role="alert" className="gm-long__error">{error}</p>}
-    {run.phase === "draft" && <section className="gm-long__stage">
-      <div className="gm-long__intro"><p className="eyebrow">STAGE 1 · WHEEL DRAFT</p><h2>BUILD YOUR NINE-PLAYER CORE</h2>
-        <p>Spin the full NFL wheel. Pick one player from the team it lands on. Keep your cap and remaining slots in mind.</p></div>
-      <div className="gm-long__draft">
-        <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={spinningTeam}
-          pendingTeam={spinningTeam ? null : pending} canSpin={!run.pendingTeam && eligibleTeams.length > 0}
-          onSpin={spinTeam} />
-        <section className="surface-card gm-long__board">
-          {run.pendingTeam ? <>
-            <div className="gm-long__pending"><TeamMark code={run.pendingTeam}/><div><small>THE WHEEL LANDED ON</small><h3>{pending?.name ?? run.pendingTeam}</h3></div></div>
-            {spinningTeam ? <p role="status">Selecting your team…</p> : <>
-              <small className="gm-long__eyebrow">CHOOSE ONE PLAYER · TAP THE OPEN POSITION</small>
-              <div className="gm-long__candidate-list">{candidates.map(({ player, slots }) =>
-                <article key={player.id} className="gm-long__candidate">
-                  <div><strong>{player.name}</strong><small>{player.position} · {tier(player.currentGrade)} · {player.gameContract}</small><em>{footballGmMoney(player.salaryWindow[0])} / year</em></div>
-                  <div className="gm-long__slot-options">{slots.map(slot => <button key={slot} type="button"
-                    onClick={() => selectPlayer(player, slot)}>{NFL_GM_LONG_SLOT_LABELS[slot]} +</button>)}</div>
-                </article>)}</div>
-            </>}
-          </> : <div className="gm-long__prompt">
-            <span>ROUND {run.picks.length + 1} / 9</span><h3>SPIN FOR YOUR NEXT PLAYER</h3>
-            <p>{open.length} open positions · {eligibleTeams.length} eligible NFL teams</p>
-            <button type="button" disabled={!eligibleTeams.length} onClick={spinTeam}>SPIN NFL WHEEL →</button>
-          </div>}
-        </section>
+    {run.phase === "draft" && <>
+      <div className="football-gm__draft-context" aria-label="Draft round and open roster spots">
+        <span>ROUND {run.picks.length + 1} OF 9</span>
+        <strong>{open.map(slot => NFL_GM_LONG_SLOT_LABELS[slot]).join(" · ")}</strong>
       </div>
-    </section>}
+      <GmFootballWheel teams={wheelTeams} rotation={wheelRotation} spinning={spinningTeam}
+        pendingTeam={spinningTeam ? null : pending} canSpin={!run.pendingTeam && eligibleTeams.length > 0}
+        onSpin={spinTeam} />
+      {run.pendingTeam && !spinningTeam
+        ? <LongCandidateBoard teamCode={run.pendingTeam} picks={run.picks} onPick={selectPlayer} />
+        : null}
+      {!eligibleTeams.length && !run.pendingTeam
+        ? <p role="alert">No eligible NFL teams remain under the current cap. Start a new run to rebuild.</p>
+        : null}
+    </>}
     {run.phase === "coach-bucket" && <section className="surface-card gm-long__coach-stage">
       <p className="eyebrow">STAGE 2 · HIRE A HEAD COACH</p><h2>CHOOSE YOUR COACHING PHILOSOPHY</h2>
       <p>Your roster is built. Pick the kind of coach you want, then take one random spin from that bucket. You cannot choose the name.</p>
@@ -267,18 +255,6 @@ export default function FootballGmLongPage() {
       </div>
       <p>Next phase: midseason standings, provisional development, and the optional trade deadline. Your existing draft and coach are saved.</p>
     </section>}
-    <section className="surface-card gm-long__roster">
-      <div className="gm-long__roster-header"><h2>YOUR ROSTER</h2><small>{run.picks.length} OF 9 FILLED</small></div>
-      <div className="gm-long__roster-grid">{NFL_GM_LONG_SLOTS.map(slot => {
-        const picked = run.picks.find(p => p.slot === slot);
-        const player = picked ? NFL_GM_LONG_BY_ID.get(picked.playerId) : null;
-        return <article key={slot} className={player ? "is-filled" : ""}><small>{NFL_GM_LONG_SLOT_LABELS[slot]}</small>
-          {player ? <><div className="gm-long__roster-person"><TeamMark code={player.team} size={38}/>
-            <div><strong>{player.name}</strong><span>{player.position} · {tier(player.currentGrade)}</span></div></div>
-            <em>{footballGmMoney(player.salaryWindow[0])} · {player.gameContract}</em></> : <strong>OPEN</strong>}
-        </article>;
-      })}</div>
-    </section>
     <footer className="gm-long__footer"><button type="button" onClick={restart}>NEW LONG GM RUN</button>
       <Link to="/football/gm-mode">PLAY SHORT GM →</Link>
       <small>Private owner preview · Short GM, Weekly, multiplayer and existing saves remain unchanged</small></footer>
