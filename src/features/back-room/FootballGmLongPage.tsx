@@ -2,18 +2,18 @@ import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
-import { footballGmSpinTeam, footballGmMoney, FOOTBALL_GM_TEAMS } from "./footballGmEngine";
+import { footballGmSpinTeam, footballGmMoney } from "./footballGmEngine";
 import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
 import { GmFootballWheel } from "./FootballGmModePage";
 import { LongCapMeter, LongRosterGrid, LongCandidateBoard } from "./FootballGmLongDraftPresentation";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 import {
-  NFL_GM_LONG_CAP, NFL_GM_LONG_SLOTS, NFL_GM_LONG_SLOT_LABELS,
-  nflGmLongValidRoster, nflGmLongOverall, nflGmLongSpend,
+  NFL_GM_LONG_SLOTS, NFL_GM_LONG_SLOT_LABELS,
+  nflGmLongOverall, nflGmLongSpend,
   type NflGmLongPick,
 } from "./footballGmLongFoundation";
 import {
-  NFL_GM_LONG_BY_ID, NFL_GM_LONG_PLAYER_POOL,
+  NFL_GM_LONG_BY_ID,
   nflGmLongEligibleTeams, nflGmLongOpenSlots, nflGmLongAutoAddPick,
 } from "./footballGmLongCatalog";
 import {
@@ -112,7 +112,6 @@ export default function FootballGmLongPage() {
   const wheelTeams = useMemo(() => eligibleTeams
     .map(wheelFootballTeam).filter((team): team is WheelFootballTeam => team != null), [eligibleTeams]);
   const pending = run?.pendingTeam ? wheelFootballTeam(run.pendingTeam) : null;
-  const spent = run ? nflGmLongSpend(run.picks, NFL_GM_LONG_BY_ID) : 0;
   const open = run ? nflGmLongOpenSlots(run.picks) : [...NFL_GM_LONG_SLOTS];
   const hired = run?.selectedCoach ? NFL_GM_LONG_COACHES.find(c => c.name === run.selectedCoach) ?? null : null;
   const outlook = useMemo(() => run?.phase === "outlook" && run.selectedCoach
