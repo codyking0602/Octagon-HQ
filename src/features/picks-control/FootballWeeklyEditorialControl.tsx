@@ -6,6 +6,7 @@ import {
   type FootballWeeklyContentRepository,
 } from "../home/footballWeeklyContentRepository";
 import "../../styles/football-weekly-editorial-control.css";
+import { verifyFootballWeeklyMedia } from "./footballWeeklyMediaReadiness";
 
 type Sport = "cfb" | "nfl";
 type PendingSelection = { playerId: string; gameId: string };
@@ -77,6 +78,23 @@ export default function FootballWeeklyEditorialControl({
     }
   }
 
+  async function arm(sport: Sport) {
+    if (!repository || !content || busy || !content.production[sport]) return;
+    setBusy(sport);
+    setError("");
+    setNotice("");
+    try {
+      const verification = await verifyFootballWeeklyMedia(content, sport);
+      const next = await repository.armEditorial(weekOf, sport, verification);
+      setContent(next);
+      setNotice(sport.toUpperCase() + " verified and armed for Tuesday 12:00 AM Central.");
+    } catch (nextError) {
+      setError(errorText(nextError));
+    } finally {
+      setBusy(null);
+    }
+  }
+
   return (
     <section className="surface-card football-editorial" aria-label="Football weekly editorial approval">
       <div className="football-editorial__header">
@@ -102,11 +120,11 @@ export default function FootballWeeklyEditorialControl({
           <div className="football-editorial__sport" key={sport}>
             <div className="football-editorial__sport-heading">
               <h3>{sport === "cfb" ? "College Football" : "NFL"}</h3>
-              <span>{content?.production[sport] ? "EDITORIAL PREPARED" : saved ? "SELECTIONS SAVED" : candidates ? "READY TO SELECT" : "AWAITING RECOMMENDATIONS"}</span>
+              <span>{content?.production[sport]?.ready_at ? "ARMED FOR MIDNIGHT" : content?.production[sport] ? "EDITORIAL PREPARED" : saved ? "SELECTIONS SAVED" : candidates ? "READY TO SELECT" : "AWAITING RECOMMENDATIONS"}</span>
             </div>
             {candidates ? (
               <>
-                <fieldset className="football-editorial__group" disabled={Boolean(busy) || content?.status !== "draft"}>
+                <fieldset className="football-editorial__group" disabled={Boolean(busy) || content?.status !== "draft" || Boolean(content?.production[sport]?.ready_at)}>
                   <legend>Player Spotlight</legend>
                   <div className="football-editorial__options">
                     {candidates.players.map((candidate) => (
@@ -124,7 +142,7 @@ export default function FootballWeeklyEditorialControl({
                     ))}
                   </div>
                 </fieldset>
-                <fieldset className="football-editorial__group" disabled={Boolean(busy) || content?.status !== "draft"}>
+                <fieldset className="football-editorial__group" disabled={Boolean(busy) || content?.status !== "draft" || Boolean(content?.production[sport]?.ready_at)}>
                   <legend>Game of the Week</legend>
                   <div className="football-editorial__options">
                     {candidates.games.map((candidate) => (
@@ -145,13 +163,27 @@ export default function FootballWeeklyEditorialControl({
                 <button
                   className="primary-action football-editorial__save"
                   type="button"
-                  disabled={Boolean(busy) || content?.status !== "draft" || !chosen.playerId || !chosen.gameId}
+                  disabled={Boolean(busy) || content?.status !== "draft" || Boolean(content?.production[sport]?.ready_at) || !chosen.playerId || !chosen.gameId}
                   onClick={() => void approve(sport)}
                 >
                   {busy === sport ? "SAVING…" : saved ? "UPDATE " + sport.toUpperCase() + " PICKS" : "SAVE " + sport.toUpperCase() + " PICKS"}
                 </button>
                 {saved ? <p className="football-editorial__saved">Saved: {saved.player.name} · {saved.game.away_team} at {saved.game.home_team}</p> : null}
-                {content?.production[sport] ? <p className="football-editorial__saved">Four-stat Spotlight, matchup editorial, and image asset references prepared for production. Publication remains separate.</p> : null}
+                {content?.production[sport] ? (
+                  <>
+                    <p className="football-editorial__saved">
+                      {content.production[sport]?.ready_at
+                        ? "Prepared images verified. Automatic Central-midnight activation armed."
+                        : "Editorial prepared. Artwork must be verified before midnight activation."}
+                    </p>
+                    {!content.production[sport]?.ready_at ? (
+                      <button className="secondary-action football-editorial__save" type="button"
+                        disabled={Boolean(busy)} onClick={() => void arm(sport)}>
+                        {busy === sport ? "VERIFYING…" : "VERIFY ART & ARM MIDNIGHT"}
+                      </button>
+                    ) : null}
+                  </>
+                ) : null}
               </>
             ) : (
               <p className="football-editorial__waiting">

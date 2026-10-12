@@ -5,6 +5,7 @@ import { footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMe
 import { footballTeamAssets } from "../back-room/footballSubjectAssets";
 import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
 import { footballMatchupBreakdownsForEvent } from "../picks/footballMatchupBreakdowns";
+import { footballPublishedSpotlight, publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "./footballWeeklyPublication";
 import { footballDateTimeLabel } from "../picks/footballTime";
 import type { PickBout, PickEvent, PickHistory, PickSummary } from "../picks/picksModel";
 import { eventPicksLocked, groupRankLabel, pickProgress, pickRecord } from "../picks/picksModel";
@@ -276,6 +277,7 @@ function FeaturedGameRow({
       to={`/football/picks?matchup=${encodeURIComponent(breakdown.id)}`}
       aria-label={`Open matchup breakdown for ${breakdown.title}`}
     >
+      {breakdown.headerAssetPath ? <img className="football-hq-game-row__art" src={breakdown.headerAssetPath} alt="" loading="lazy" /> : null}
       <div className="football-hq-game-row__main">
         <span>{label}</span>
         <div className="football-hq-game-row__teams">
@@ -341,6 +343,7 @@ export function FootballHq({
   onManagePlayerPhoto?: () => void;
 }) {
   const [spotlightNow, setSpotlightNow] = useState(() => new Date());
+  const published = usePublishedFootballWeek();
 
   useEffect(() => {
     const timer = window.setInterval(() => setSpotlightNow(new Date()), 1_000);
@@ -358,8 +361,13 @@ export function FootballHq({
       ? alternateSpotlightKind
       : scheduledSpotlightKind;
   const memorial = footballDitkaMemorialIsActive(spotlightNow);
-  const activeSpotlight = memorial ? FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT : activePair.spotlights[activeSpotlightKind];
-  const activeSpotlightPhoto = memorial ? FOOTBALL_DITKA_MEMORIAL_PHOTO : activePairPhotos[activeSpotlightKind] ?? null;
+  const publishedSport = published?.[activeSpotlightKind] ?? null;
+  const activeSpotlight = memorial ? FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT
+    : publishedSport ? footballPublishedSpotlight(publishedSport)
+    : activePair.spotlights[activeSpotlightKind];
+  const activeSpotlightPhoto = memorial ? FOOTBALL_DITKA_MEMORIAL_PHOTO
+    : publishedSport ? publishedSport.spotlight.photo_asset_path
+    : activePairPhotos[activeSpotlightKind] ?? null;
 
   const progress = pickProgress(event, selections);
   const progressPercent = progress.total ? Math.round(progress.completed / progress.total * 100) : 0;
@@ -368,7 +376,11 @@ export function FootballHq({
   const standings = picksSeasonStandings(history, "football");
   const standing = standings.find((item) => item.isCurrentUser) ?? null;
   const rank = standing ? standingLabel(standing.rank, standings) : "";
-  const matchupBreakdowns = event ? footballMatchupBreakdownsForEvent(event) : [];
+  const matchupBreakdowns = event ? [
+    ...publishedFootballMatchupsForEvent(event, published),
+    ...footballMatchupBreakdownsForEvent(event).filter((staticBreakdown) => !publishedFootballMatchupsForEvent(event, published).some((current) =>
+      current.teams.every((team) => staticBreakdown.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase())))),
+  ] : [];
   const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
     const game = featuredGameForBreakdown(event, breakdown.id);
     return game ? [{ breakdown, game }] : [];

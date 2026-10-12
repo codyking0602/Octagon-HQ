@@ -204,6 +204,11 @@ export function FootballMatchupBreakdowns({
           </nav>
         ) : null}
 
+        {active.headerAssetPath ? (
+          <img className="football-matchup-breakdown-weekly-art" src={active.headerAssetPath}
+            alt={active.title + " Game of the Week artwork"} loading="lazy" />
+        ) : null}
+
         {active.compact ? (
           <div
             className="football-matchup-breakdown-sheet__body football-matchup-breakdown-sheet__body--compact"

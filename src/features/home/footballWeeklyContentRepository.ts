@@ -123,6 +123,14 @@ const preparedEditorial = footballWeeklyEditorialProofSchema.extend({
   prepared_at: z.iso.datetime({ offset: true }),
   player_id: candidateId,
   game_id: candidateId,
+  ready_at: z.iso.datetime({ offset: true }).optional(),
+  published_at: z.iso.datetime({ offset: true }).optional(),
+  armed_by: z.uuid().nullable().optional(),
+  media_verification: z.strictObject({
+    spotlight_url: z.url(),
+    header_url: z.url(),
+    deployed_sha: z.string().regex(/^[0-9a-f]{40}$/),
+  }).optional(),
 });
 const editorialProductions = z.strictObject({
   cfb: preparedEditorial.optional(),
@@ -160,6 +168,12 @@ export const footballWeeklyContentPackageSchema = z.object({
   updated_at: z.string(),
 });
 
+export const footballWeeklyMediaVerificationSchema = z.strictObject({
+  spotlight_url: z.url(),
+  header_url: z.url(),
+  deployed_sha: z.string().regex(/^[0-9a-f]{40}$/),
+});
+
 export type FootballWeeklyDraftPatch = z.infer<typeof footballWeeklyDraftPatchSchema>;
 export type FootballWeeklyContentPackage = z.infer<typeof footballWeeklyContentPackageSchema>;
 
@@ -169,6 +183,7 @@ export interface FootballWeeklyContentRepository {
   stageCandidates: (weekOf: string, sport: "cfb" | "nfl", candidates: z.infer<typeof footballWeeklyCandidateSetSchema>) => Promise<FootballWeeklyContentPackage>;
   selectChoices: (weekOf: string, sport: "cfb" | "nfl", playerId: string, gameId: string) => Promise<FootballWeeklyContentPackage>;
   prepareEditorial: (weekOf: string, sport: "cfb" | "nfl", spotlight: z.infer<typeof footballWeeklyPreparedSpotlightSchema>, game: z.infer<typeof footballWeeklyPreparedGameSchema>, editorial: z.infer<typeof footballWeeklyEditorialProofSchema>) => Promise<FootballWeeklyContentPackage>;
+  armEditorial: (weekOf: string, sport: "cfb" | "nfl", verified: z.infer<typeof footballWeeklyMediaVerificationSchema>) => Promise<FootballWeeklyContentPackage>;
 }
 
 // Phase 1: owner-only persistence, not a live content publishing path.
@@ -217,6 +232,15 @@ export function createFootballWeeklyContentRepository(): FootballWeeklyContentRe
         p_spotlight: footballWeeklyPreparedSpotlightSchema.parse(spotlight),
         p_game: footballWeeklyPreparedGameSchema.parse(game),
         p_editorial: footballWeeklyEditorialProofSchema.parse(editorial),
+      });
+      if (error) throw new Error(error.message);
+      return footballWeeklyContentPackageSchema.parse(data);
+    },
+    async armEditorial(weekOf, sport, verified) {
+      const { data, error } = await client.rpc("arm_football_weekly_editorial", {
+        p_week_of: footballEditorialTuesdaySchema.parse(weekOf),
+        p_sport: sport,
+        p_verified_assets: footballWeeklyMediaVerificationSchema.parse(verified),
       });
       if (error) throw new Error(error.message);
       return footballWeeklyContentPackageSchema.parse(data);
