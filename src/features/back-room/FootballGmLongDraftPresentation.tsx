@@ -179,14 +179,18 @@ export function LongCandidateBoard({ teamCode, picks, onPick }: {
         ? <div className="football-wheel-picker__candidates football-gm__picker-candidates"
           aria-label={`${selectedPosition} candidates`}>
           {visible.map(({ player }) =>
-            <button type="button" onClick={() => onPick(player.id)} key={player.id}>
-              <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
-              <span className="football-gm__picker-player-copy">
-                <strong>{player.name}</strong>
-                <small>{player.position}{player.age != null ? ` · AGE ${player.age}` : ""}</small>
-                <PlayerTags player={player} />
+            <button type="button" className="gm-long__candidate-choice"
+              onClick={() => onPick(player.id)} key={player.id}
+              aria-label={`Select ${player.name} for ${footballGmMoney(player.salaryWindow[0])}`}>
+              <span className="gm-long__candidate-identity">
+                <PlayerHeadshot player={player} className="football-wheel-picker__headshot" />
+                <span className="football-gm__picker-player-copy">
+                  <strong>{player.name}</strong>
+                  <small>{player.position}{player.age != null ? ` · AGE ${player.age}` : ""}</small>
+                  <PlayerTags player={player} />
+                </span>
               </span>
-              <span className="football-gm__picker-action">
+              <span className="football-gm__picker-action gm-long__candidate-select">
                 <b>{footballGmMoney(player.salaryWindow[0])}</b>
                 <em>SELECT →</em>
               </span>

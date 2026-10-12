@@ -209,85 +209,128 @@
   .gm-long .football-gm__roster-contract { width: 66px; }
 }
 
-/* Long draft market: the four familiar scouting pills must stay inside their
-   OWN card, including when the final chip wraps to another line on iPhone. */
-.gm-long .football-gm__picker-candidates > button {
-  box-sizing: border-box;
-  height: auto;
-  min-height: 98px;
-  align-items: start;
-  overflow: hidden;
-  padding: 12px 10px;
-  row-gap: 9px;
-}
-.gm-long .football-gm__picker-player-copy {
-  display: grid;
-  align-content: start;
-  gap: 2px;
+/* Long draft candidate list: keep ALL four scouting chips and the price/
+   Select affordance within each card. The shared Wheel picker intentionally
+   has a 410px scrolling grid; that constraint compresses six-option Long lists
+   and clips the chips. Long instead uses the page scroll and intrinsic rows.
+   Scoped to Long only: Short GM / CFB / other Wheel remain unchanged. */
+.gm-long .football-wheel-picker__candidates.football-gm__picker-candidates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
   min-width: 0;
+  max-height: none;
+  height: auto;
+  overflow: visible;
+  overscroll-behavior: auto;
+  padding-bottom: 4px;
 }
-.gm-long .football-gm__picker-player-copy > strong {
+.gm-long .football-gm__picker-candidates > button.gm-long__candidate-choice {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  flex: 0 0 auto;
+  gap: 9px;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  padding: 12px;
+  text-align: left;
+}
+.gm-long .gm-long__candidate-identity {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+.gm-long .gm-long__candidate-identity > .football-wheel-picker__headshot {
+  width: 44px;
+  height: 44px;
+  flex: none;
+}
+.gm-long .gm-long__candidate-identity .football-gm__picker-player-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  overflow: visible;
+}
+.gm-long .gm-long__candidate-identity .football-gm__picker-player-copy > strong {
+  display: block;
+  line-height: 1.2;
   white-space: normal;
   overflow-wrap: break-word;
-  line-height: 1.22;
 }
-.gm-long .football-gm__picker-player-copy .football-gm__candidate-tags {
+.gm-long .gm-long__candidate-identity .football-gm__candidate-tags {
+  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   align-items: flex-start;
-  align-content: start;
-  position: static;
+  gap: 5px;
   width: 100%;
-  height: auto;
   min-width: 0;
-  margin: 8px 0 0;
-  column-gap: 5px;
-  row-gap: 5px;
+  height: auto;
+  margin: 7px 0 0;
+  padding: 0 0 1px;
+  overflow: visible;
 }
-.gm-long .football-gm__picker-player-copy .football-gm__candidate-tags > span {
+.gm-long .gm-long__candidate-identity .football-gm__candidate-tags > span {
   box-sizing: border-box;
   display: inline-flex;
-  flex: 0 0 auto;
   align-items: center;
+  flex: 0 0 auto;
   width: auto;
-  min-height: 23px;
   max-width: 100%;
+  min-height: 21px;
   margin: 0;
   padding: 4px 7px;
   line-height: 1.15;
   white-space: nowrap;
 }
-.gm-long .football-gm__picker-action {
-  min-width: 65px;
-  align-self: center;
+.gm-long .football-gm__picker-candidates .football-gm__picker-action.gm-long__candidate-select {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  justify-items: stretch;
+  gap: 10px;
+  align-self: stretch;
+  width: calc(100% - 54px);
+  min-width: 0;
+  margin-left: 54px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,.09);
+  white-space: nowrap;
 }
-@media (max-width: 600px) {
-  .gm-long .football-gm__picker-candidates > button {
-    grid-template-columns: 44px minmax(0,1fr);
-    grid-template-areas: "photo player" ". action";
-    column-gap: 11px;
-    row-gap: 9px;
-    min-height: 0;
+.gm-long .gm-long__candidate-select b { font-size: 12px; }
+.gm-long .gm-long__candidate-select em { font-size: 11px; }
+@media (max-width: 420px) {
+  .gm-long .football-gm__picker-candidates > button.gm-long__candidate-choice { padding: 11px 9px; }
+  .gm-long .gm-long__candidate-identity { gap: 9px; }
+  .gm-long .football-gm__picker-candidates .football-gm__picker-action.gm-long__candidate-select {
+    margin-left: 53px;
+    width: calc(100% - 53px);
   }
-  .gm-long .football-gm__picker-candidates .football-wheel-picker__headshot {
-    grid-area: photo;
-    align-self: start;
+}
+@media (max-width: 350px) {
+  .gm-long .gm-long__candidate-identity { grid-template-columns: 38px minmax(0,1fr); gap: 7px; }
+  .gm-long .gm-long__candidate-identity > .football-wheel-picker__headshot { width: 38px; height: 38px; }
+  .gm-long .football-gm__picker-candidates .football-gm__picker-action.gm-long__candidate-select {
+    margin-left: 45px;
+    width: calc(100% - 45px);
   }
-  .gm-long .football-gm__picker-candidates .football-gm__picker-player-copy { grid-area: player; }
-  .gm-long .football-gm__picker-candidates .football-gm__picker-action {
-    grid-area: action;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    justify-self: stretch;
-    gap: 12px;
-    width: 100%;
-    min-width: 0;
-    padding-top: 5px;
-    border-top: 1px solid rgba(255,255,255,.055);
-  }
-  .gm-long .football-gm__picker-action b,
-  .gm-long .football-gm__picker-action em { font-size: 11px; }
 }
 
 /* Coaching: preserve the four approved identities while removing excess height. */

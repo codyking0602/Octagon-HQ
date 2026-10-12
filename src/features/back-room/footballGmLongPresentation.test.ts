@@ -77,7 +77,10 @@ describe("Long owner playtest mobile and coach presentation", () => {
     expect(css).toContain(".gm-long .football-gm__roster-grid");
     expect(css).toContain("grid-template-columns: minmax(0,1fr);");
     expect(css).toContain(".gm-long .football-gm__picker-candidates > button");
-    expect(css).toContain('grid-template-areas: "photo player" ". action"');
+    expect(css).toContain(".gm-long .football-wheel-picker__candidates.football-gm__picker-candidates");
+    expect(css).toContain("max-height: none;");
+    expect(css).toContain(".gm-long__candidate-identity");
+    expect(css).toContain(".gm-long__candidate-select");
     expect(css).toContain(".gm-long__coach-wheel-frame::before");
     expect(css).toContain(".gm-long__cap-alert");
     expect(css).not.toContain(".football-gm-page:not(.gm-long)");
