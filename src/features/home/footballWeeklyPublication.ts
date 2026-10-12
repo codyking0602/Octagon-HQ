@@ -54,9 +54,9 @@ export function publishedFootballMatchup(
     teams: [{ name: away, aliases: [away] }, { name: home, aliases: [home] }],
     setup: proof.setup,
     keyMatchups: proof.things,
-    pathsToWin: proof.paths_to_win,
-    playersToWatch: proof.players_to_watch,
-    unitEdges: proof.unit_edges,
+    pathsToWin: [proof.paths_to_win[0]!, proof.paths_to_win[1]!],
+    playersToWatch: [proof.players_to_watch[0]!, proof.players_to_watch[1]!],
+    unitEdges: [proof.unit_edges[0]!, proof.unit_edges[1]!],
   };
 }
 
