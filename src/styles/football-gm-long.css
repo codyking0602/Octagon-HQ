@@ -1,0 +1,68 @@
+.gm-long{max-width:1140px;margin:0 auto;padding:12px clamp(12px,3vw,28px) 52px;color:var(--text-primary,#f4f7fb)}
+.gm-long .surface-card{border:1px solid rgba(172,197,221,.16);background:linear-gradient(145deg,rgba(22,35,53,.97),rgba(12,24,39,.97));border-radius:16px}
+.gm-long__header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}
+.gm-long__header button,.gm-long__footer button{border:1px solid #38506a;background:#192f46;border-radius:9px;color:#d6e6f3;padding:9px 11px;cursor:pointer}
+.gm-long__header div{flex:1;text-align:center}.gm-long__header div span{font:700 10px/1.3 system-ui;letter-spacing:.15em;color:#9ab4c8}
+.gm-long__header h1{font-size:clamp(22px,4vw,32px);line-height:1.1;letter-spacing:.04em;margin:2px 0}.gm-long__header h1 b{color:#ecb75b}
+.gm-long__header>strong{font-size:12px;color:#f8d896;white-space:nowrap}
+.gm-long__scorestrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:13px 16px;margin-bottom:15px}
+.gm-long__scorestrip>div:not(.gm-long__meter){display:flex;flex-direction:column;gap:4px}
+.gm-long__scorestrip small,.gm-long__outlook-stats small{font-size:10px;color:#9dafc0;letter-spacing:.09em}
+.gm-long__scorestrip strong{font-size:clamp(14px,2.5vw,19px);font-variant-numeric:tabular-nums}
+.gm-long__meter{grid-column:1/-1;height:7px;background:#21364b;border-radius:99px;overflow:hidden;margin-top:4px}.gm-long__meter span{display:block;height:100%;background:linear-gradient(90deg,#41a5d2,#e4b861);border-radius:inherit;transition:width .25s}
+.gm-long__intro{text-align:center;margin:12px auto 14px;max-width:720px}.gm-long__intro h2,.gm-long__coach-stage h2,.gm-long__outlook h2{font-size:clamp(20px,3vw,28px);margin:6px 0}
+.gm-long__intro p:not(.eyebrow),.gm-long__coach-stage>p:not(.eyebrow),.gm-long__outlook>p{color:#afc2d3;line-height:1.5}
+.gm-long__draft{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:14px;align-items:start}
+.gm-long__draft>.football-wheel{margin:0;min-width:0}.gm-long__board{padding:16px;min-height:330px;min-width:0}
+.gm-long__prompt{display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;text-align:center;min-height:300px}
+.gm-long__prompt span{color:#edc177;letter-spacing:.15em;font-size:11px;font-weight:800}.gm-long__prompt h3{margin:0;font-size:22px}
+.gm-long__prompt p{color:#abc0d2;margin:0}
+.gm-long button{font-family:inherit}.gm-long__prompt button,.gm-long__primary,.gm-long__hired button{padding:13px 19px;border:0;border-radius:10px;background:#e7bc6b;color:#132237;font-weight:900;cursor:pointer}
+.gm-long button:disabled{cursor:not-allowed;opacity:.5}.gm-long__pending{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.gm-long__pending small{font-size:10px;color:#a9bacc}.gm-long__pending h3{margin:2px 0;font-size:19px}.gm-long__team-mark{object-fit:contain;flex-shrink:0;vertical-align:middle}.gm-long__team-fallback{font-weight:900;color:#d9e6ef}
+.gm-long__eyebrow{font-size:10px;color:#e7b96c;letter-spacing:.1em;font-weight:800}
+.gm-long__candidate-list{display:flex;flex-direction:column;gap:8px;max-height:530px;overflow-y:auto;margin-top:10px;padding-right:2px}
+.gm-long__candidate{padding:11px;border:1px solid #33465d;background:#182c42;border-radius:11px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.gm-long__candidate>div:first-child{display:flex;flex-direction:column;gap:3px;min-width:0}.gm-long__candidate strong{font-size:14px;line-height:1.2}
+.gm-long__candidate small{color:#b9c9d9;font-size:10px}.gm-long__candidate em{font-size:11px;color:#e8ba75;font-style:normal;font-weight:800}
+.gm-long__slot-options{display:flex;flex-direction:column;gap:5px;align-items:stretch;flex-shrink:0}
+.gm-long__slot-options button{background:#2a597c;border:1px solid #427fa0;border-radius:7px;color:#fff;font-size:10px;font-weight:800;max-width:142px;padding:8px;cursor:pointer}
+.gm-long__coach-stage,.gm-long__outlook{padding:22px;margin-top:8px}.gm-long__buckets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.gm-long__bucket{text-align:left;display:flex;flex-direction:column;gap:9px;border:1px solid color-mix(in srgb,var(--bucket-color) 45%,#33465d);border-left:4px solid var(--bucket-color);border-radius:11px;background:#192d44;color:white;padding:17px;cursor:pointer}
+.gm-long__bucket strong{font-size:15px}.gm-long__bucket span{color:#b8c8d8;font-size:12px;line-height:1.4}
+.gm-long__bucket small{font-size:10px;font-weight:800;color:var(--bucket-color);margin-top:4px}
+.gm-long__coach-wheel-area{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:22px;align-items:center;margin:16px auto;max-width:790px}
+.gm-long__coach-disc{aspect-ratio:1;border:9px solid #7693a8;border-radius:50%;position:relative;transition:transform 1.55s cubic-bezier(.2,.9,.2,1);box-shadow:0 12px 45px #0007}
+.gm-long__coach-disc:before{content:"HC";position:absolute;inset:34%;display:grid;place-items:center;border-radius:50%;background:#10243b;color:#efc67e;font-weight:900;font-size:26px;z-index:1;border:3px solid #a2b4c5}
+.gm-long__coach-disc>span{position:absolute;left:50%;top:50%;transform:rotate(calc(var(--i)*360deg/var(--n))) translateY(-115px) rotate(calc(var(--i)*-360deg/var(--n)));transform-origin:center;font-size:10px;white-space:nowrap;color:white;font-weight:800}
+.gm-long__coach-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.gm-long__coach-list div{display:flex;align-items:center;gap:5px;font-size:12px;min-width:0;padding:6px;border-radius:8px;background:#1a324a}.gm-long__coach-list span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gm-long__hired{border:1px solid #385c70;border-radius:12px;padding:16px;margin-top:16px;background:#112b3c}
+.gm-long__hired>small{color:#eac075;font-weight:800;letter-spacing:.12em}.gm-long__hired h3{font-size:26px;margin:5px 0 8px}
+.gm-long__hired p{color:#b8cadb;line-height:1.5;margin:5px 0}.gm-long__hired b{color:#fff}
+.gm-long__roster{margin-top:15px;padding:14px}.gm-long__roster-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.gm-long__roster-header h2{margin:0;font-size:15px;letter-spacing:.1em}.gm-long__roster-header small{font-size:10px;color:#9db6c8}
+.gm-long__roster-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.gm-long__roster-grid article{min-width:0;min-height:100px;padding:12px;border-radius:10px;background:#14273c;border:1px dashed #36506a;display:flex;flex-direction:column;gap:6px}
+.gm-long__roster-grid article.is-filled{border-style:solid;background:#1a3347}
+.gm-long__roster-grid article>small{font-size:10px;letter-spacing:.08em;color:#ebc179;font-weight:800}
+.gm-long__roster-grid article>strong{font-size:13px;color:#6f8497}.gm-long__roster-person{display:flex;align-items:center;gap:9px;min-width:0}
+.gm-long__roster-person div{display:flex;flex-direction:column;gap:3px;min-width:0}.gm-long__roster-person strong{font-size:13px;line-height:1.2;overflow-wrap:anywhere}
+.gm-long__roster-person span{font-size:10px;color:#adc1d2}.gm-long__roster-grid em{font-size:10px;font-style:normal;color:#9ebfd0}
+.gm-long__outlook-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}
+.gm-long__outlook-stats div{padding:13px;background:#1b3248;border-radius:10px;display:flex;flex-direction:column;gap:6px}
+.gm-long__outlook-stats strong{font-size:clamp(16px,3vw,26px);font-variant-numeric:tabular-nums}
+.gm-long__outlook-note{font-size:12px}.gm-long__effects{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}.gm-long__effects span{font-size:10px;padding:8px 9px;background:#2a4c64;color:#d9eefc;border-radius:6px;font-weight:800}
+.gm-long__footer{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;padding:20px 0}
+.gm-long__footer a{color:#e6b66f;font-size:12px;font-weight:900}.gm-long__footer small{flex:1 0 100%;text-align:center;color:#8ea8bd;font-size:11px}.gm-long__error{padding:10px;border:1px solid #be7e7e;border-radius:10px;color:#ffb1b1}
+@media (max-width:760px){.gm-long__draft{grid-template-columns:1fr}.gm-long__board{min-height:240px}.gm-long__roster-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.gm-long__coach-wheel-area{grid-template-columns:1fr}.gm-long__coach-disc{max-width:290px;width:100%;margin:0 auto}.gm-long__coach-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+.gm-long__header>strong{font-size:11px}.gm-long__header button{font-size:11px}
+}
+@media (max-width:430px){.gm-long__header{gap:7px}.gm-long__header h1{font-size:22px}.gm-long__scorestrip{gap:8px;padding:12px 9px}
+.gm-long__scorestrip small{font-size:9px}.gm-long__scorestrip strong{font-size:12px}.gm-long__buckets{grid-template-columns:1fr}
+.gm-long__roster-grid{grid-template-columns:1fr 1fr}.gm-long__roster-grid article{padding:10px;min-height:106px}
+.gm-long__roster-person{gap:4px}.gm-long__roster-person strong{font-size:11px}
+.gm-long__roster-person .gm-long__team-mark{width:29px!important;height:29px!important}
+.gm-long__candidate{flex-direction:column;align-items:stretch}.gm-long__slot-options{flex-direction:row;flex-wrap:wrap}
+.gm-long__slot-options button{flex:1;max-width:none}.gm-long__outlook-stats{grid-template-columns:1fr 1fr}
+}

@@ -5,6 +5,7 @@ import { ChallengeMemberPicker } from "../challenges/ChallengeMemberPicker";
 import "../../styles/football-gm-mode.css";
 import { usePlayChallenges } from "../challenges/ChallengeProvider";
 import { useIdentity } from "../identity/IdentityProvider";
+import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import {
   createFootballGmMatchRepository,
   type FootballGmMatchState,
@@ -1479,6 +1480,13 @@ export default function FootballGmHeadToHeadPage() {
             <span><small>PLAY NOW</small><strong>SOLO RUN</strong><em>The original standalone GM game. Build your roster, manage your offseason, and chase the best three-year score.</em></span>
             <b>PLAY →</b>
           </button>
+          {isFootballWeeklyBuildQbPreviewOwner(identity.profile) ? (
+            <button className="football-gm__mode-option" type="button" onClick={() => navigate("/football/gm-long")}>
+              <span><small>OWNER-ONLY PLAYTEST · PHASE 1</small><strong>NFL GM LONG · NINE-PLAYER DRAFT</strong>
+                <em>$205M cap, real offensive linemen, then pick a coaching philosophy and spin once for your head coach. Separate from Short GM.</em></span>
+              <b>TEST →</b>
+            </button>
+          ) : null}
           <div className="football-gm__challenge-picker">
             <span><small>HEAD TO HEAD</small><strong>CHALLENGE ANOTHER GM</strong><em>Alternate every draft pick, then the worse Year 1 team gets the first full offseason.</em></span>
             {identity.profile?.id ? (
