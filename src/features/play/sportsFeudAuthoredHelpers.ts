@@ -66,7 +66,12 @@ export function standardSportsFeudAliases(name: string): readonly string[] {
 }
 
 function answer(value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer {
-  if (typeof value !== "string") return value;
+  if (typeof value !== "string") {
+    const extra = STANDARD_ALIASES[value.name] ?? [];
+    return extra.length
+      ? { ...value, aliases: [...new Set([...(value.aliases ?? []), ...extra])] }
+      : value;
+  }
   const aliases = STANDARD_ALIASES[value];
   return aliases ? { name: value, aliases } : { name: value };
 }
