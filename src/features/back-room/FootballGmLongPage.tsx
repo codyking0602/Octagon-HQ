@@ -5,6 +5,7 @@ import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuild
 import { footballGmSpinTeam, footballGmMoney } from "./footballGmEngine";
 import { footballGmSimulateLeagueSeason } from "./footballGmLeagueSimulation";
 import { GmFootballWheel } from "./FootballGmModePage";
+import { nflGmLongCoachFit, nflGmLongCoachPointerRotation, nflGmLongYearTwoCapOverage } from "./footballGmLongPresentation";
 import { LongCapMeter, LongRosterGrid, LongCandidateBoard } from "./FootballGmLongDraftPresentation";
 import { wheelFootballTeam, type WheelFootballTeam } from "./wheelFootballModel";
 import {
@@ -97,6 +98,11 @@ export default function FootballGmLongPage() {
     if (!owner || !profileId) return;
     const saved = nflGmLongLoadSave(window.localStorage, profileId, NFL_GM_LONG_BY_ID);
     setRun(saved ?? newSave(profileId));
+    if (saved?.selectedCoach && saved.selectedCoachBucket) {
+      const coaches = nflGmLongCoachesInBucket(saved.selectedCoachBucket);
+      const index = coaches.findIndex(coach => coach.name === saved.selectedCoach);
+      if (index >= 0) setCoachRotation(nflGmLongCoachPointerRotation(0, index, coaches.length, 0));
+    }
     setInitializedFor(profileId);
   }, [owner, profileId]);
   useEffect(() => {
@@ -159,8 +165,7 @@ export default function FootballGmLongPage() {
     const coach = nflGmLongSpinCoach(run.selectedCoachBucket, draw);
     const options = nflGmLongCoachesInBucket(run.selectedCoachBucket);
     const index = options.findIndex(c => c.name === coach.name);
-    const slice = 360 / options.length;
-    setCoachRotation(cur => cur + 1440 + (((-index * slice - (cur % 360)) % 360 + 360) % 360));
+    setCoachRotation(cur => nflGmLongCoachPointerRotation(cur, index, options.length));
     // Store the hired coach and exact draw immediately: refreshing cannot reroll.
     setRun({ ...run, selectedCoach: coach.name, coachWheelDraw: draw });
     setSpinningCoach(true);
@@ -190,6 +195,13 @@ export default function FootballGmLongPage() {
 
   const coachOptions = run.selectedCoachBucket ? nflGmLongCoachesInBucket(run.selectedCoachBucket) : [];
   const futureSpent = nflGmLongSpend(run.picks, NFL_GM_LONG_BY_ID, 2);
+  const yearTwoOverage = nflGmLongYearTwoCapOverage(futureSpent, 205_000_000);
+  const coachFit = hired && outlook
+    ? nflGmLongCoachFit(hired, run.picks.map(pick => {
+        const player = NFL_GM_LONG_BY_ID.get(pick.playerId)!;
+        return { slot: pick.slot, name: player.name, grade: player.currentGrade, age: player.age };
+      }), outlook.effects)
+    : null;
   return <main className="page football-gm-page gm-long">
     <header className="football-gm__header">
       <button type="button" onClick={() => navigate("/football/gm-mode")}>← THE GM</button>
@@ -216,7 +228,7 @@ export default function FootballGmLongPage() {
     </>}
     {run.phase === "coach-bucket" && <section className="surface-card gm-long__coach-stage">
       <p className="eyebrow">STAGE 2 · HIRE A HEAD COACH</p><h2>CHOOSE YOUR COACHING PHILOSOPHY</h2>
-      <p>Your roster is built. Pick the kind of coach you want, then take one random spin from that bucket. You cannot choose the name.</p>
+      <p>Choose a philosophy, then spin once for a real NFL coach. Your roster stays yours.</p>
       <div className="gm-long__buckets">{NFL_GM_LONG_COACH_BUCKETS.map(bucket => <button
         key={bucket} type="button" className="gm-long__bucket" onClick={() => pickBucket(bucket)}
         style={{ "--bucket-color": CATEGORY[bucket].color } as CSSProperties}>
@@ -228,10 +240,11 @@ export default function FootballGmLongPage() {
       <p className="eyebrow">STAGE 3 · ONE SPIN, ONE COACH</p><h2>{CATEGORY[run.selectedCoachBucket].title}</h2>
       <p>Every name in the category has an equal chance. Your selected coach will stay with this saved franchise.</p>
       <div className="gm-long__coach-wheel-area">
+        <div className="gm-long__coach-wheel-frame" aria-label="Coach wheel with a fixed pointer at the top">
         <div className="gm-long__coach-disc" style={{ transform: `rotate(${coachRotation}deg)`,
           background: `conic-gradient(${coachOptions.map((_, i) => `${i % 2 ? "#24384a" : "#36516b"} ${i * 100 / coachOptions.length}% ${(i + 1) * 100 / coachOptions.length}%`).join(",")})` }}>
-          {coachOptions.map((coach, i) => <span key={coach.name} style={{ "--i": i, "--n": coachOptions.length } as CSSProperties}>{coach.name.split(" ").slice(-1)[0]}</span>)}
-        </div>
+          {coachOptions.map((coach, i) => <span key={coach.name} style={{ "--i": i + 0.5, "--n": coachOptions.length } as CSSProperties}>{coach.name.split(" ").slice(-1)[0]}</span>)}
+        </div></div>
         <div className="gm-long__coach-list">{coachOptions.map(coach => <div key={coach.name}>
           <TeamMark code={coach.team} size={28}/><span>{coach.name}</span></div>)}</div>
       </div>
@@ -245,12 +258,19 @@ export default function FootballGmLongPage() {
       <p className="eyebrow">PHASE 1 COMPLETE · FRANCHISE SNAPSHOT</p><h2>YOUR NINE-PLAYER FRANCHISE</h2>
       <div className="gm-long__outlook-stats"><div><small>TEAM CORE GRADE</small><strong>{outlook.grade.toFixed(1)}</strong></div>
         <div><small>SEASON 1 FORECAST</small><strong>{outlook.avgWins.toFixed(1)} W</strong></div>
-        <div><small>YEAR 2 CAP EST.</small><strong>{footballGmMoney(futureSpent)}</strong></div></div>
-      <p className="gm-long__outlook-note">Forecast averages 16 simulated league seasons against the existing GM opponent pool; not an actual season result. Coaching affects win probabilities, not player grades. No injuries.</p>
+        <div className={yearTwoOverage > 0 ? "is-over-cap" : ""}><small>YEAR 2 CAP EST.</small><strong>{footballGmMoney(futureSpent)}</strong></div></div>
+      {yearTwoOverage > 0 ? <div className="gm-long__cap-alert" role="status">
+        <strong>YEAR 2 CAP WATCH · {footballGmMoney(yearTwoOverage)} OVER</strong>
+        <span>Your current Year 2 estimate exceeds the $205M cap. One-year contracts may reprice after Year 1; you'll need to make room in the offseason. This is a projection, not a current penalty.</span>
+      </div> : null}
+      <p className="gm-long__outlook-note">Projected from 16 league simulations, not an actual season result. Coaching changes matchup and growth opportunities, never player grades. No injuries.</p>
       <div className="gm-long__hired"><small>HEAD COACH · {CATEGORY[hired.bucket].title}</small><h3>{hired.name}</h3>
-        <p><b>{hired.strengths}</b></p><p>Limitation: {hired.limitation}</p>
-        <div className="gm-long__effects">{Object.entries(outlook.effects).filter(([, value]) => value > 0).map(([key, value]) =>
-          <span key={key}>{key.replace(/Pct$/, "").replace(/([A-Z])/g, " $1").toUpperCase()} · {value.toFixed(1)} pp</span>)}</div>
+        {coachFit ? <>
+          <strong className="gm-long__fit-title">{coachFit.headline}</strong>
+          <p>{coachFit.explanation}</p>
+          <p className="gm-long__fit-watch"><b>Watch for:</b> {coachFit.limitation}</p>
+          <div className="gm-long__fit-tags" aria-label="Main coaching influences">{coachFit.influences.map(influence => <span key={influence}>{influence}</span>)}</div>
+        </> : null}
       </div>
       <p>Next phase: midseason standings, provisional development, and the optional trade deadline. Your existing draft and coach are saved.</p>
     </section>}
