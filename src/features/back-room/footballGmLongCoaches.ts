@@ -77,7 +77,7 @@ export interface NflGmLongCoachingRosterEntry {
   slot: NflGmLongSlot;
   grade: number;
   age: number | null;
-  role?: "T" | "G" | "C" | "RB" | "WR" | "TE" | "EDGE" | "IDL" | "LB" | "CB" | "S";
+  role?: "T" | "G" | "C" | "QB" | "RB" | "WR" | "TE" | "EDGE" | "IDL" | "LB" | "CB" | "S";
 }
 
 function clamp(n: number, lo: number, hi: number) {
