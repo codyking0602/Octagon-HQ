@@ -73,7 +73,7 @@ describe("Long owner playtest mobile and coach presentation", () => {
   });
 
   it("scopes the one-column phone roster, flowing chips and wheel pointer to Long only", () => {
-    const css = readFileSync(new URL("../../styles/football-gm-long.css", import.meta.url), "utf8");
+    const css = readFileSync("src/styles/football-gm-long.css", "utf8");
     expect(css).toContain(".gm-long .football-gm__roster-grid");
     expect(css).toContain("grid-template-columns: minmax(0,1fr);");
     expect(css).toContain(".gm-long .football-gm__picker-candidates > button");
