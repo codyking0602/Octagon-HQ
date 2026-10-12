@@ -112,7 +112,12 @@ export function nflGmLongTeamCandidates(team: string, picks: readonly NflGmLongP
   }).sort((a, b) => b.player.currentGrade - a.player.currentGrade || a.player.name.localeCompare(b.player.name));
 }
 export function nflGmLongEligibleTeams(picks: readonly NflGmLongPick[], previousTeam: string | null) {
-  return FOOTBALL_GM_TEAMS.filter(team => team !== previousTeam && nflGmLongTeamCandidates(team, picks).length > 0);
+  const teams = FOOTBALL_GM_TEAMS.filter(team => nflGmLongTeamCandidates(team, picks).length > 0);
+  // Mirror Short GM: avoid an immediate repeat only while alternatives exist.
+  // Never strand an otherwise playable franchise because one team remains.
+  return previousTeam && teams.length > 1
+    ? teams.filter(team => team !== previousTeam)
+    : teams;
 }
 
 
