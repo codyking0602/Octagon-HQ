@@ -34,7 +34,7 @@ describe("Long GM parity with proven Short GM draft", () => {
     expect(container.querySelector(".football-gm__roster")).not.toBeNull();
     expect(container.querySelectorAll(".football-gm__roster-grid article")).toHaveLength(9);
     expect(screen.getByText("9-MAN CORE")).toBeTruthy();
-    expect(screen.getByText("$205M")).toBeTruthy();
+    expect(screen.getByText("$205M LEFT")).toBeTruthy();
     expect(screen.getByText("0/9")).toBeTruthy();
   });
 
