@@ -5,6 +5,7 @@ import { FootballFuturesCard } from "./FootballFuturesCard";
 import { FootballMatchupBreakdowns } from "./FootballMatchupBreakdowns";
 import { footballLockAllowance, gradeFootballAts, type AtsOutcome } from "./footballPicksScoring";
 import { footballMatchupBreakdownsForEvent } from "./footballMatchupBreakdowns";
+import { publishedFootballMatchupsForEvent, usePublishedFootballWeek } from "../home/footballWeeklyPublication";
 import { footballDateTimeLabel } from "./footballTime";
 import { GroupPickProgress } from "./GroupPickProgress";
 import { GroupPickReveal } from "./GroupPickReveal";
@@ -54,6 +55,7 @@ function TeamLogo({ logoUrl }: { logoUrl?: string | null }) {
 
 export default function FootballPicksPage() {
   const identity = useIdentity();
+  const published = usePublishedFootballWeek();
   const picks = usePicks();
   const event = picks.event?.sport === "football" ? picks.event : null;
   const games = useMemo(() => event?.bouts
@@ -100,7 +102,12 @@ export default function FootballPicksPage() {
     return { outcomes, wins, losses, pushes, settled: wins + losses + pushes };
   }, [games, picks.selections, picks.footballLocks]);
   const posters = useMemo(() => pickEventPosters(event), [event]);
-  const matchupBreakdowns = useMemo(() => footballMatchupBreakdownsForEvent(event), [event]);
+  const matchupBreakdowns = useMemo(() => {
+    const current = publishedFootballMatchupsForEvent(event, published);
+    const legacy = footballMatchupBreakdownsForEvent(event).filter((old) => !current.some((recent) =>
+      recent.teams.every((team) => old.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase()))));
+    return [...current, ...legacy];
+  }, [event, published]);
   const poster = posters[0] ?? null;
   const [activePosterIndex, setActivePosterIndex] = useState(0);
   const spreadSources = Array.from(new Set(games

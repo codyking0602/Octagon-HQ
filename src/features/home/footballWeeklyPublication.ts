@@ -1,0 +1,125 @@
+import { useEffect, useState } from "react";
+import { z } from "zod";
+import { getSupabaseClient } from "../../lib/supabase";
+import {
+  footballWeeklyPreparedGameSchema,
+  footballWeeklyPreparedSpotlightSchema,
+  footballWeeklyEditorialProofSchema,
+} from "./footballWeeklyContentRepository";
+import type { FootballPlayerSpotlight, FootballSpotlightKind } from "./footballPlayerSpotlightSchedule";
+import type { FootballMatchupBreakdown } from "../picks/footballMatchupBreakdowns";
+import type { PickEvent } from "../picks/picksModel";
+
+const publishedSport = z.object({
+  week_of: z.iso.date(),
+  release_at: z.iso.datetime({ offset: true }),
+  spotlight: footballWeeklyPreparedSpotlightSchema,
+  game: footballWeeklyPreparedGameSchema,
+  breakdown: footballWeeklyEditorialProofSchema.shape.breakdown,
+});
+const publishedSchema = z.object({
+  cfb: publishedSport.nullable(),
+  nfl: publishedSport.nullable(),
+});
+
+export type PublishedFootballWeek = z.infer<typeof publishedSchema>;
+export type PublishedFootballSport = NonNullable<PublishedFootballWeek["cfb"]>;
+
+export function footballPublishedSpotlight(item: PublishedFootballSport): FootballPlayerSpotlight {
+  return {
+    name: item.spotlight.name,
+    team: item.spotlight.team,
+    position: item.spotlight.position,
+    stats: item.spotlight.stats,
+    result: item.spotlight.result,
+    measurements: item.spotlight.measurements,
+    teamColor: item.spotlight.team_color,
+    highlightUrl: item.spotlight.highlight_url,
+  };
+}
+
+export function publishedFootballMatchup(
+  sport: FootballSpotlightKind,
+  item: PublishedFootballSport,
+): FootballMatchupBreakdown {
+  const away = item.game.away_team;
+  const home = item.game.home_team;
+  const proof = item.breakdown;
+  return {
+    id: "weekly-" + item.week_of + "-" + sport,
+    title: away + " at " + home,
+    venue: "",
+    kickoffAt: item.game.kickoff_at,
+    headerAssetPath: item.game.header_asset_path,
+    teams: [{ name: away, aliases: [away] }, { name: home, aliases: [home] }],
+    setup: proof.setup,
+    keyMatchups: proof.things,
+    pathsToWin: [proof.paths_to_win[0]!, proof.paths_to_win[1]!],
+    playersToWatch: [proof.players_to_watch[0]!, proof.players_to_watch[1]!],
+    unitEdges: [proof.unit_edges[0]!, proof.unit_edges[1]!],
+  };
+}
+
+function normTeam(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+// Prefer a current, owner-approved weekly editorial only when the live Picks event
+// actually contains the same matchup and kickoff date. Never display a stale game.
+export function publishedFootballMatchupsForEvent(
+  event: PickEvent | null,
+  published: PublishedFootballWeek | null,
+): FootballMatchupBreakdown[] {
+  if (!event || event.sport !== "football" || !published) return [];
+  const output: FootballMatchupBreakdown[] = [];
+  for (const sport of ["cfb", "nfl"] as const) {
+    const week = published[sport];
+    if (!week) continue;
+    const home = normTeam(week.game.home_team);
+    const away = normTeam(week.game.away_team);
+    const kickoff = Date.parse(week.game.kickoff_at);
+    if (!Number.isFinite(kickoff)) continue;
+    const matched = event.bouts.some((bout) => {
+      const candidateHome = normTeam(bout.homeTeamSlug ?? bout.redFighterSlug);
+      const candidateAway = normTeam(bout.awayTeamSlug ?? bout.blueFighterSlug);
+      const names = [normTeam(bout.redFighterName), normTeam(bout.blueFighterName),
+        normTeam(bout.homeTeamSlug ?? ""), normTeam(bout.awayTeamSlug ?? "")];
+      const sameTeams = (candidateHome === home && candidateAway === away)
+        || (names.includes(home) && names.includes(away));
+      const boutStart = Date.parse(bout.locksAt ?? event.startsAt);
+      return sameTeams && Number.isFinite(boutStart)
+        && Math.abs(kickoff - boutStart) < 36 * 60 * 60 * 1000;
+    });
+    if (matched) output.push(publishedFootballMatchup(sport, week));
+  }
+  return output;
+}
+
+export function parsePublishedFootballWeek(raw: unknown): PublishedFootballWeek {
+  return publishedSchema.parse(raw);
+}
+
+// The database alone decides exactly when an armed week becomes visible.
+// A 15s refresh makes a page already open at midnight update without a reload.
+export function usePublishedFootballWeek(): PublishedFootballWeek | null {
+  const [client] = useState(() => getSupabaseClient());
+  const [published, setPublished] = useState<PublishedFootballWeek | null>(null);
+  useEffect(() => {
+    if (!client) return undefined;
+    let active = true;
+    async function refresh() {
+      const { data, error } = await client!.rpc("get_live_football_weekly_editorial");
+      if (error || !active) return;
+      try {
+        const next = parsePublishedFootballWeek(data);
+        if (active) setPublished(next);
+      } catch {
+        // Keep the existing published content if the new projection is malformed.
+      }
+    }
+    void refresh();
+    const timer = window.setInterval(() => { void refresh(); }, 15_000);
+    return () => { active = false; window.clearInterval(timer); };
+  }, [client]);
+  return published;
+}

@@ -1,4 +1,5 @@
 .football-picks-owner-tools { align-items: center; justify-content: flex-start; gap: 10px; }
+.football-matchup-breakdown-weekly-art { display: block; width: 100%; max-height: 210px; object-fit: cover; object-position: center 35%; }
 .football-picks-owner-tools .picks-control-entry { margin: 0 0 0 auto; }
 .football-matchup-breakdown-entry { min-height: 24px; padding: 4px 2px; border: 0; background: transparent; color: #d9dcdd; font-size: .55rem; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
 .football-matchup-breakdown-entry::before { content: "▤ "; color: #e9aa7e; }

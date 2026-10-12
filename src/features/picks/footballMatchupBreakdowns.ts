@@ -62,6 +62,7 @@ export interface FootballMatchupBreakdown {
   title: string;
   venue: string;
   kickoffAt?: string;
+  headerAssetPath?: string;
   teams: [FootballMatchupTeam, FootballMatchupTeam];
   eventBindings?: Array<[FootballMatchupTeam, FootballMatchupTeam]>;
   compact?: FootballMatchupCompactContent;

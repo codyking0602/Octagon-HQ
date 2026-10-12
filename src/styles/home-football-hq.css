@@ -1,4 +1,5 @@
 .home-section--football-hq {
+.football-hq-game-row__art { width: 92px; max-height: 90px; object-fit: cover; object-position: center; border-radius: 8px; flex: 0 0 auto; align-self: center; }
   --football-hq-navy: var(--home-football-blue, var(--football-brand-blue, #8EBCE6));
 }
 
