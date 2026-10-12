@@ -25,7 +25,8 @@ export interface NflGmLongOlRow {
   team: string;
   name: string;
   role: NflGmLongOlRole;
-  age: number;
+  /** Audited OL CSV did not record birth dates. Keep unknown, never invent ages. */
+  age: number | null;
   currentGrade: number;
   salaryApy: number;
   realContractEndSeason: number;
@@ -59,7 +60,7 @@ export function nflGmLongOlAuditErrors(
     if (unique.has(key)) errors.push(`Duplicate OL identity: ${key}`);
     unique.add(key);
     if (!["T", "G", "C"].includes(row.role)) errors.push(`Unsupported OL role: ${key}`);
-    if (!Number.isInteger(row.age) || row.age < 20 || row.age > 44) errors.push(`Unverified OL age: ${key}`);
+    if (row.age !== null && (!Number.isInteger(row.age) || row.age < 20 || row.age > 44)) errors.push(`Invalid OL age: ${key}`);
     if (!Number.isFinite(row.currentGrade) || row.currentGrade < 70 || row.currentGrade > 99) errors.push(`Invalid grade: ${key}`);
     if (!Number.isFinite(row.salaryApy) || row.salaryApy < 500_000 || row.salaryApy > 45_000_000) errors.push(`Invalid OL APY: ${key}`);
     if (!Number.isInteger(row.realContractEndSeason) || row.realContractEndSeason < 2026) errors.push(`Invalid contract end season: ${key}`);
