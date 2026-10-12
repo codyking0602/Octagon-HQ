@@ -19,8 +19,8 @@ begin
            (case when v_sport='cfb' then old.cfb_game_of_week else old.nfl_game_of_week end)
         or new.choices->v_sport is distinct from old.choices->v_sport
         or new.proposals->v_sport is distinct from old.proposals->v_sport
-        or (new.production->v_sport - 'published_at') is distinct from
-           (old.production->v_sport - 'published_at') then
+        or ((new.production->v_sport) - 'published_at') is distinct from
+           ((old.production->v_sport) - 'published_at') then
         raise exception 'Armed Football editorial % is immutable',v_sport;
       end if;
     end if;
