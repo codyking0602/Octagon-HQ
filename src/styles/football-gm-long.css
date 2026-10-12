@@ -86,3 +86,273 @@
 @media(max-width:350px){
   .gm-long .football-gm__roster-grid{grid-template-columns:1fr}
 }
+
+/* Long-only mobile acceptance: never squeeze a three-column Short roster
+   inside the previous two-column Long grid. Each of nine slots gets its own
+   readable row; no Short, Weekly, H2H or CFB selectors are changed. */
+.gm-long .football-gm__roster-grid {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+.gm-long .football-gm__roster-grid > article,
+.gm-long .football-gm__roster-grid > article.is-filled {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 90px;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 67px;
+  padding: 10px 13px;
+  align-items: center;
+}
+.gm-long .football-gm__roster-grid > article > small {
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.gm-long .football-gm__roster-player {
+  min-width: 0;
+  align-items: center;
+}
+.gm-long .football-gm__roster-player > span {
+  min-width: 0;
+  max-width: 100%;
+}
+.gm-long .football-gm__roster-player strong {
+  display: block;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: break-word;
+  font-size: 13px;
+  line-height: 1.23;
+}
+.gm-long .football-gm__roster-player em {
+  display: block;
+  overflow-wrap: break-word;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+.gm-long .football-gm__roster-contract {
+  width: 90px;
+  max-width: 100%;
+  min-width: 0;
+  justify-self: end;
+  justify-items: end;
+  gap: 3px;
+  text-align: right;
+}
+.gm-long .football-gm__roster-contract b { font-size: 12px; white-space: nowrap; }
+.gm-long .football-gm__roster-contract span {
+  text-align: right;
+  white-space: normal;
+  line-height: 1.2;
+  font-size: 8px;
+}
+.gm-long .football-gm__roster-reprice {
+  display: block;
+  max-width: 100%;
+  white-space: normal;
+  text-align: right;
+  font-size: 8px;
+  line-height: 1.2;
+}
+.gm-long .football-gm__roster-scouting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  margin-top: 5px;
+}
+.gm-long .football-gm__roster-scouting > :is(.football-gm__quality-pill, .football-gm__outlook-pill) {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+  font-size: 8px;
+  line-height: 1.2;
+  padding: 3px 6px;
+  max-width: 100%;
+  white-space: normal;
+}
+.gm-long .football-gm__roster-grid > article:not(.is-filled) .football-gm__open {
+  grid-column: 2 / -1;
+  justify-self: start;
+}
+@media (min-width: 960px) {
+  .gm-long .football-gm__roster-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 600px) {
+  .gm-long .football-gm__roster-grid { grid-template-columns: minmax(0,1fr); }
+  .gm-long .football-gm__roster-grid > article,
+  .gm-long .football-gm__roster-grid > article.is-filled {
+    grid-template-columns: 36px minmax(0, 1fr) 76px;
+    gap: 8px;
+    min-height: 68px;
+    padding: 9px 10px;
+  }
+  .gm-long .football-gm__roster-player { gap: 7px; }
+  .gm-long .football-gm__player-headshot { width: 31px; height: 31px; }
+  .gm-long .football-gm__roster-contract { width: 76px; }
+  .gm-long .football-gm__roster-player strong { font-size: 12px; }
+}
+@media (max-width: 350px) {
+  .gm-long .football-gm__roster-grid { grid-template-columns: minmax(0,1fr); }
+  .gm-long .football-gm__roster-grid > article,
+  .gm-long .football-gm__roster-grid > article.is-filled {
+    grid-template-columns: 31px minmax(0,1fr) 66px;
+    gap: 5px;
+    padding: 8px;
+  }
+  .gm-long .football-gm__roster-contract { width: 66px; }
+}
+
+/* Long draft market: the four familiar scouting pills must stay inside their
+   OWN card, including when the final chip wraps to another line on iPhone. */
+.gm-long .football-gm__picker-candidates > button {
+  box-sizing: border-box;
+  height: auto;
+  min-height: 98px;
+  align-items: start;
+  overflow: hidden;
+  padding: 12px 10px;
+  row-gap: 9px;
+}
+.gm-long .football-gm__picker-player-copy {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+}
+.gm-long .football-gm__picker-player-copy > strong {
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.22;
+}
+.gm-long .football-gm__picker-player-copy .football-gm__candidate-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: start;
+  position: static;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  margin: 8px 0 0;
+  column-gap: 5px;
+  row-gap: 5px;
+}
+.gm-long .football-gm__picker-player-copy .football-gm__candidate-tags > span {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  width: auto;
+  min-height: 23px;
+  max-width: 100%;
+  margin: 0;
+  padding: 4px 7px;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.gm-long .football-gm__picker-action {
+  min-width: 65px;
+  align-self: center;
+}
+@media (max-width: 600px) {
+  .gm-long .football-gm__picker-candidates > button {
+    grid-template-columns: 44px minmax(0,1fr);
+    grid-template-areas: "photo player" ". action";
+    column-gap: 11px;
+    row-gap: 9px;
+    min-height: 0;
+  }
+  .gm-long .football-gm__picker-candidates .football-wheel-picker__headshot {
+    grid-area: photo;
+    align-self: start;
+  }
+  .gm-long .football-gm__picker-candidates .football-gm__picker-player-copy { grid-area: player; }
+  .gm-long .football-gm__picker-candidates .football-gm__picker-action {
+    grid-area: action;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-self: stretch;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding-top: 5px;
+    border-top: 1px solid rgba(255,255,255,.055);
+  }
+  .gm-long .football-gm__picker-action b,
+  .gm-long .football-gm__picker-action em { font-size: 11px; }
+}
+
+/* Coaching: preserve the four approved identities while removing excess height. */
+.gm-long__coach-stage { padding: 16px 14px; }
+.gm-long__coach-stage > p:not(.eyebrow) { margin: 8px 0 12px; line-height: 1.4; font-size: 13px; }
+.gm-long__coach-stage h2 { font-size: clamp(18px, 3vw, 25px); margin: 4px 0 7px; }
+.gm-long__buckets { gap: 8px; margin-top: 12px; }
+.gm-long__bucket { gap: 5px; padding: 12px 14px; min-height: 0; }
+.gm-long__bucket strong { font-size: 13px; line-height: 1.3; }
+.gm-long__bucket span { font-size: 11px; line-height: 1.35; }
+.gm-long__bucket small { font-size: 9px; margin-top: 3px; }
+.gm-long__coach-wheel-frame {
+  position: relative;
+  width: min(100%, 300px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+.gm-long__coach-wheel-frame::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 19px solid #efbf6a;
+  z-index: 3;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.65));
+}
+.gm-long__coach-wheel-frame .gm-long__coach-disc {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 760px) {
+  .gm-long__coach-wheel-frame { width: min(100%, 290px); }
+  .gm-long__coach-stage { padding: 15px 13px; }
+  .gm-long__coach-list { gap: 5px; }
+}
+
+/* Communicate actual modeled coach/roster interactions, not debug pp chips. */
+.gm-long__fit-title { display: block; margin-top: 8px; font-size: 14px; color: #e9f1f8; }
+.gm-long__fit-watch { margin-top: 10px !important; }
+.gm-long__fit-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 11px; }
+.gm-long__fit-tags span {
+  font-size: 10px;
+  font-weight: 800;
+  color: #c2e2f3;
+  border: 1px solid rgba(144,193,220,.24);
+  border-radius: 7px;
+  background: rgba(68,124,165,.16);
+  padding: 7px 9px;
+}
+.gm-long__cap-alert {
+  display: grid;
+  gap: 5px;
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-left: 3px solid #f0c276;
+  border-radius: 6px;
+  background: rgba(240,194,118,.075);
+  color: #d4dfeb;
+  line-height: 1.4;
+  font-size: 12px;
+}
+.gm-long__cap-alert strong { color: #f0c276; font-size: 12px; letter-spacing: .04em; }
+.gm-long__outlook-stats .is-over-cap strong { color: #f0c276; }
