@@ -1,5 +1,5 @@
 .gm-long{max-width:1140px;margin:0 auto;padding:12px clamp(12px,3vw,28px) 52px;color:var(--text-primary,#f4f7fb)}
-.gm-long .surface-card{border:1px solid rgba(172,197,221,.16);background:linear-gradient(145deg,rgba(22,35,53,.97),rgba(12,24,39,.97));border-radius:16px}
+.gm-long__coach-stage.surface-card,.gm-long__outlook.surface-card,.gm-long__gate.surface-card{border:1px solid rgba(172,197,221,.16);background:linear-gradient(145deg,rgba(22,35,53,.97),rgba(12,24,39,.97));border-radius:16px}
 .gm-long__header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0 18px}
 .gm-long__header button,.gm-long__footer button{border:1px solid #38506a;background:#192f46;border-radius:9px;color:#d6e6f3;padding:9px 11px;cursor:pointer}
 .gm-long__header div{flex:1;text-align:center}.gm-long__header div span{font:700 10px/1.3 system-ui;letter-spacing:.15em;color:#9ab4c8}
@@ -65,4 +65,24 @@
 .gm-long__roster-person .gm-long__team-mark{width:29px!important;height:29px!important}
 .gm-long__candidate{flex-direction:column;align-items:stretch}.gm-long__slot-options{flex-direction:row;flex-wrap:wrap}
 .gm-long__slot-options button{flex:1;max-width:none}.gm-long__outlook-stats{grid-template-columns:1fr 1fr}
+}
+/* Long draft inherits the exact Short GM card, cap, roster and wheel styling. */
+.gm-long.football-gm-page{max-width:1140px;min-width:0}
+.gm-long .football-gm__roster-grid,
+.gm-long .football-gm__roster-grid article,
+.gm-long .football-gm__picker,
+.gm-long .football-gm__picker-candidates button{min-width:0}
+.gm-long .football-gm__roster-player>span{min-width:0}
+.gm-long .football-gm__roster-player strong{overflow-wrap:anywhere}
+.gm-long .football-gm__candidate-tags{flex-wrap:wrap}
+@media(max-width:600px){
+  .gm-long.football-gm-page{padding:10px 12px 36px}
+  .gm-long .football-gm__roster-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gm-long .football-gm__roster-grid article{min-width:0}
+  .gm-long .football-gm__picker-candidates button{min-width:0}
+  .gm-long .football-gm__picker-player-copy{min-width:0}
+  .gm-long .football-gm__draft-context strong{overflow-wrap:anywhere}
+}
+@media(max-width:350px){
+  .gm-long .football-gm__roster-grid{grid-template-columns:1fr}
 }
