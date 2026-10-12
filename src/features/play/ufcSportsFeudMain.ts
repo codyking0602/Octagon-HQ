@@ -1782,7 +1782,8 @@ export const UFC_SPORTS_FEUD_MAIN = expandSportsFeudFamilies("ufc-main", [
           "Jack Della Maddalena",
           "BJ Penn",
           "Matt Serra",
-          "Shavkat Rakhmonov"
+          "Shavkat Rakhmonov",
+          "Conor McGregor"
         ]
       },
       {
