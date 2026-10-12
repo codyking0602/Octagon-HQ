@@ -223,7 +223,16 @@ describe("UFC Sports Feud full-bank acceptance quality", () => {
     ];
     // Narrower historical/categorical questions intentionally exclude otherwise
     // related entries: the gym-versus-nickname question, PRIDE-to-UFC fighters and punch-only attacks.
-    const scoped = new Set(["ufc-main-12-1", "ufc-main-12-2", "ufc-main-12-3", "ufc-main-12-4", "ufc-main-12-5", "ufc-fast3-06-1", "ufc-fast3-06-3", "ufc-fast4-03-1"]);
+    const scoped = new Set([
+      "ufc-main-12-1", "ufc-main-12-2", "ufc-main-12-3", "ufc-main-12-4", "ufc-main-12-5",
+      "ufc-fast3-06-1", "ufc-fast3-06-3", "ufc-fast4-03-1",
+      // A fighter with three 170-lb appearances fits the broad "170-pound fighter"
+      // wording but not necessarily the four career-welterweight prompts.
+      "ufc-main-09-1", "ufc-main-09-2", "ufc-main-09-3", "ufc-main-09-5",
+      // An historic double-champion is valid for the historical-reign prompt,
+      // not for the four stricter long-reign / many-defenses prompts.
+      "ufc-fast3-01-1", "ufc-fast3-01-2", "ufc-fast3-01-3", "ufc-fast3-01-4",
+    ]);
     let audited = 0;
     for (const bank of banks) {
       expect(bank.length % 5).toBe(0);
