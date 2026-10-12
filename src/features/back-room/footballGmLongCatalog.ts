@@ -1,5 +1,5 @@
 import { FOOTBALL_GM_PLAYER_POOL, FOOTBALL_GM_TEAMS, type FootballGmPlayer } from "./footballGmEngine";
-import { NFL_GM_LONG_CAP, NFL_GM_LONG_SLOTS, nflGmLongOlAuditErrors,
+import { NFL_GM_LONG_CAP, NFL_GM_LONG_SLOTS, NFL_GM_LONG_POSITION_WEIGHTS, nflGmLongValidRoster, nflGmLongOlAuditErrors,
   type NflGmLongOlRow, type NflGmLongPlayerFit, type NflGmLongPick, type NflGmLongSlot } from "./footballGmLongFoundation";
 import { NFL_GM_LONG_OL_DATA_A } from "./footballGmLongOlDataA";
 import { NFL_GM_LONG_OL_DATA_B } from "./footballGmLongOlDataB";
@@ -112,5 +112,66 @@ export function nflGmLongTeamCandidates(team: string, picks: readonly NflGmLongP
   }).sort((a, b) => b.player.currentGrade - a.player.currentGrade || a.player.name.localeCompare(b.player.name));
 }
 export function nflGmLongEligibleTeams(picks: readonly NflGmLongPick[], previousTeam: string | null) {
-  return FOOTBALL_GM_TEAMS.filter(team => team !== previousTeam && nflGmLongTeamCandidates(team, picks).length > 0);
+  const teams = FOOTBALL_GM_TEAMS.filter(team => nflGmLongTeamCandidates(team, picks).length > 0);
+  // Mirror Short GM: avoid an immediate repeat only while alternatives exist.
+  // Never strand an otherwise playable franchise because one team remains.
+  return previousTeam && teams.length > 1
+    ? teams.filter(team => team !== previousTeam)
+    : teams;
+}
+
+
+/**
+ * The same one-tap automatic roster fitting as Short GM.
+ * FLEX, the two Front Seven spots and two DB spots are interchangeable;
+ * new high-value players can displace weaker players to the lower-weight slot.
+ * Candidates are still checked against the $205M reserve before entry.
+ */
+export function nflGmLongAutoAddPick(picks: readonly NflGmLongPick[], playerId: string): NflGmLongPick[] {
+  const incoming = NFL_GM_LONG_BY_ID.get(playerId);
+  if (!incoming || !nflGmLongTeamCandidates(incoming.team, picks).some(item => item.player.id === playerId)) {
+    throw new Error("That Long GM player cannot be drafted under the remaining cap or slots.");
+  }
+  const rows = [...picks.map(pick => ({
+    player: NFL_GM_LONG_BY_ID.get(pick.playerId)!,
+    previousSlot: pick.slot,
+  })), { player: incoming, previousSlot: null }]
+    .sort((a, b) => a.player.eligibleSlots.length - b.player.eligibleSlots.length);
+  let best: NflGmLongPick[] | null = null;
+  let bestCoreSlots = -1;
+  let bestScore = Number.NEGATIVE_INFINITY;
+  let bestStability = -1;
+  const assigned: NflGmLongPick[] = [];
+  const occupied = new Set<NflGmLongSlot>();
+
+  function visit(index: number, value: number, stability: number) {
+    if (index >= rows.length) {
+      const core = assigned.filter(entry => entry.slot !== "FLEX").length;
+      if (core > bestCoreSlots ||
+        (core === bestCoreSlots && (value > bestScore + 1e-9 ||
+          (Math.abs(value - bestScore) < 1e-9 && stability > bestStability)))) {
+        best = assigned.map(entry => ({ ...entry }));
+        bestCoreSlots = core;
+        bestScore = value;
+        bestStability = stability;
+      }
+      return;
+    }
+    const row = rows[index]!;
+    for (const slot of row.player.eligibleSlots) {
+      if (occupied.has(slot)) continue;
+      assigned.push({ slot, playerId: row.player.id });
+      occupied.add(slot);
+      const premium = NFL_GM_LONG_POSITION_WEIGHTS[slot] * (row.player.currentGrade - 80);
+      visit(index + 1, value + premium, stability + Number(row.previousSlot === slot));
+      occupied.delete(slot);
+      assigned.pop();
+    }
+  }
+  visit(0, 0, 0);
+  if (!best || !nflGmLongValidRoster(best, NFL_GM_LONG_BY_ID)) {
+    throw new Error("Long GM could not find an affordable roster arrangement.");
+  }
+  return (best as NflGmLongPick[]).sort((a, b) =>
+    NFL_GM_LONG_SLOTS.indexOf(a.slot) - NFL_GM_LONG_SLOTS.indexOf(b.slot));
 }
