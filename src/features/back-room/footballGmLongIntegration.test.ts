@@ -26,7 +26,7 @@ describe("NFL GM Long Phase 1 integrated roster", () => {
     expect(FOOTBALL_GM_ROSTER_SLOTS).toHaveLength(7);
     expect(NFL_GM_LONG_CAP).toBe(205_000_000);
     expect(NFL_GM_LONG_SLOTS).toHaveLength(9);
-    expect(FOOTBALL_GM_PLAYER_POOL.every(p => p.family !== "OL")).toBe(true);
+    expect(FOOTBALL_GM_PLAYER_POOL.every(p => String(p.family) !== "OL")).toBe(true);
   });
 
   it("offers every team an OL option, and never duplicates a roster name or slot", () => {
