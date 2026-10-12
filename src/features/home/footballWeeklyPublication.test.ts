@@ -82,6 +82,6 @@ describe("public Football weekly release projection", () => {
     expect(() => parsePublishedFootballWeek({ cfb: {
       ...sport, breakdown: { ...sport.breakdown, things: [] },
     }, nfl: null })).toThrow();
-    expect(() => parsePublishedFootballWeek({ cfb: null, nfl: null }).cfb).toBeNull();
+    expect(parsePublishedFootballWeek({ cfb: null, nfl: null }).cfb).toBeNull();
   });
 });
