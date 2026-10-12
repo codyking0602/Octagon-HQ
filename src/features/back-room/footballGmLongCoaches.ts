@@ -76,7 +76,7 @@ export function nflGmLongSpinCoach(bucket: NflGmLongCoachBucket, draw: number): 
 export interface NflGmLongCoachingRosterEntry {
   slot: NflGmLongSlot;
   grade: number;
-  age: number;
+  age: number | null;
   role?: "T" | "G" | "C" | "RB" | "WR" | "TE" | "EDGE" | "IDL" | "LB" | "CB" | "S";
 }
 
@@ -103,8 +103,8 @@ export function nflGmLongCoachEffects(coach: NflGmLongCoach, roster: readonly Nf
   const passUnit = qb * 0.5 + weapons * 0.3 + line * 0.2;
   const frontUnit = quality(roster, ["DL", "LB"]);
   const secondary = quality(roster, ["DB", "DB2"]);
-  const young = roster.length ? roster.filter(row => row.age <= 26).length / roster.length : 0;
-  const stable = roster.length ? roster.filter(row => row.age >= 27 && row.age <= 32).length / roster.length : 0;
+  const young = roster.length ? roster.filter(row => row.age !== null && row.age <= 26).length / roster.length : 0;
+  const stable = roster.length ? roster.filter(row => row.age !== null && row.age >= 27 && row.age <= 32).length / roster.length : 0;
   const round = (value: number) => Math.round(value * 10) / 10;
   return {
     passingMatchupPct: round(pass * passUnit * 5),
