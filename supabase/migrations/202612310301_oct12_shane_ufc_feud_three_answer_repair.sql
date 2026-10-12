@@ -31,16 +31,19 @@ declare
   v_tag constant text := '2026-10-12-shane-ufc-three-answer-fairness';
   v_rows integer;
 begin
-  select d.id, d.setup_id into strict v_daily,v_setup
+  select d.id, d.setup_id into v_daily,v_setup
   from private.daily_challenges d
   join private.daily_challenge_schedule_versions s on s.version=d.schedule_version
   where d.central_day=date '2026-10-12' and s.sport='ufc' and d.game_type='sports_feud';
+  if v_daily is null then return; end if;
 
-  select id into strict v_profile from public.profiles where normalized_name='SHANE';
-  select a.id,a.normalized_score into strict v_attempt,v_score
+  select id into v_profile from public.profiles where normalized_name='SHANE';
+  if v_profile is null then return; end if;
+  select a.id,a.normalized_score into v_attempt,v_score
   from private.daily_challenge_attempts a
   where a.daily_challenge_id=v_daily and a.profile_id=v_profile
     and a.attempt_kind='official_first';
+  if v_attempt is null then return; end if;
 
   if v_score=79 then
     return; -- Already corrected by this exact release.
