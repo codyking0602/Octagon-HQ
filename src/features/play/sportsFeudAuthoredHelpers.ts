@@ -23,6 +23,7 @@ export interface SportsFeudQuestionFamily {
 }
 
 const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  "Give instructions": ["Advice", "Give advice"],
   "Arrowhead Stadium": ["Arrowhead", "Chiefs", "Kansas City", "Kansas City Chiefs"],
   "Lumen Field": ["Lumen", "Seahawks", "Seattle", "Seattle Seahawks"],
   "Lambeau Field": ["Lambeau", "Lambo Field", "Lambo", "Packers", "Green Bay", "Green Bay Packers"],
@@ -65,7 +66,12 @@ export function standardSportsFeudAliases(name: string): readonly string[] {
 }
 
 function answer(value: string | SportsFeudAuthoredAnswer): SportsFeudAuthoredAnswer {
-  if (typeof value !== "string") return value;
+  if (typeof value !== "string") {
+    const extra = STANDARD_ALIASES[value.name] ?? [];
+    return extra.length
+      ? { ...value, aliases: [...new Set([...(value.aliases ?? []), ...extra])] }
+      : value;
+  }
   const aliases = STANDARD_ALIASES[value];
   return aliases ? { name: value, aliases } : { name: value };
 }

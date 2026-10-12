@@ -108,7 +108,8 @@ export const UFC_SPORTS_FEUD_FAST_3 = expandSportsFeudFamilies("ufc-fast3", [
           "Kamaru Usman",
           "Matt Hughes",
           "Ronda Rousey",
-          "Islam Makhachev"
+          "Islam Makhachev",
+          "Conor McGregor"
         ]
       }
     ],
