@@ -33,11 +33,12 @@ describe("Long owner playtest mobile and coach presentation", () => {
       const count = nflGmLongCoachesInBucket(bucket).length;
       for (let index = 0; index < count; index++) {
         const degrees = nflGmLongCoachPointerRotation(27, index, count);
-        const winningCenter = (degrees + (index + 0.5) * 360 / count) % 360;
-        expect(Math.abs(winningCenter)).toBeLessThan(1e-7);
+        const winningCenter = ((degrees + (index + 0.5) * 360 / count) % 360 + 360) % 360;
+        expect(Math.min(winningCenter, 360 - winningCenter)).toBeLessThan(1e-7);
         expect(degrees).toBeGreaterThan(27 + 3 * 360);
         const resumed = nflGmLongCoachPointerRotation(0, index, count, 0);
-        expect(Math.abs((resumed + (index + 0.5) * 360 / count) % 360)).toBeLessThan(1e-7);
+        const resumedCenter = ((resumed + (index + 0.5) * 360 / count) % 360 + 360) % 360;
+        expect(Math.min(resumedCenter, 360 - resumedCenter)).toBeLessThan(1e-7);
       }
     }
     expect(() => nflGmLongCoachPointerRotation(0, -1, 5)).toThrow();
