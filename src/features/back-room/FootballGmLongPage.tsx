@@ -40,7 +40,7 @@ function tier(grade: number) {
 }
 function playerRow(pick: NflGmLongPick) {
   const player = NFL_GM_LONG_BY_ID.get(pick.playerId);
-  return player ? { slot: pick.slot, grade: player.currentGrade, age: player.age, role: player.role } : null;
+  return player ? { slot: pick.slot, grade: player.currentGrade, age: player.age } : null;
 }
 function randomDraw() {
   if (typeof crypto !== "undefined" && "getRandomValues" in crypto) {
