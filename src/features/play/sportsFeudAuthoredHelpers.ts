@@ -23,6 +23,7 @@ export interface SportsFeudQuestionFamily {
 }
 
 const STANDARD_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  "Give instructions": ["Advice", "Give advice"],
   "Arrowhead Stadium": ["Arrowhead", "Chiefs", "Kansas City", "Kansas City Chiefs"],
   "Lumen Field": ["Lumen", "Seahawks", "Seattle", "Seattle Seahawks"],
   "Lambeau Field": ["Lambeau", "Lambo Field", "Lambo", "Packers", "Green Bay", "Green Bay Packers"],
