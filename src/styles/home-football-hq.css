@@ -1,5 +1,4 @@
 .home-section--football-hq {
-.football-hq-game-row__art { width: 92px; max-height: 90px; object-fit: cover; object-position: center; border-radius: 8px; flex: 0 0 auto; align-self: center; }
   --football-hq-navy: var(--home-football-blue, var(--football-brand-blue, #8EBCE6));
 }
 
@@ -138,15 +137,16 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 }
 
 .football-player-spotlight__meta {
-  margin: 1px 0 0;
-  overflow: hidden;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  margin: 2px 0 0;
   color: #a6b2be;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: .025em;
-  line-height: 1.15;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  letter-spacing: .02em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .football-player-spotlight__copy a {
@@ -452,4 +452,16 @@ button.football-player-spotlight__media.is-manageable:focus-visible {
 }
 .football-player-spotlight--memorial .football-player-spotlight__media {
   background: #101e30;
+}
+
+/* Locked mobile arrangement: two readable team pills with kickoff on its own line. */
+@media (max-width: 430px) {
+  .football-hq-game-row { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 9px; }
+  .football-hq-game-row__teams strong { font-size: 10px; line-height: 1.14; overflow-wrap: anywhere; -webkit-line-clamp: 3; }
+  .football-hq-game-row__meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 0 0; border-top: 1px solid var(--border); border-left: 0; }
+  .football-hq-game-row__meta > strong { font-size: 9px; white-space: normal; }
+  .football-hq-game-row__meta > b { font-size: 8px; white-space: nowrap; }
+}
+@media (max-width: 360px) {
+  .football-player-spotlight__meta { font-size: 9px; }
 }
