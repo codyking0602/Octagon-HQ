@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from PIL import Image
 from scripts.football_editorial_assets import (
     AssetError, checked_destination, checked_source,
-    choose_photo, game_header, render_manifest, spotlight,
+    choose_photo, checked_seatgeek_header_source, publisher_game_header, render_manifest, spotlight,
 )
 
 REF = "https://www.espn.com/nfl/player/_/id/12345/example"
@@ -73,24 +73,50 @@ class FootballEditorialAssetTests(unittest.TestCase):
         self.assertEqual(result["sources"][0]["kind"], "action")
         self.assertEqual(spotlight(self.photo).size, (720, 900))
 
-    def test_gotw_composition_uses_actual_photos_and_team_identity(self):
+    def test_game_header_keeps_real_seatgeek_artwork_uncropped(self):
+        art = Image.new("RGB", (600, 450), (17, 64, 120))
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(art)
+        draw.rectangle((0, 0, 40, 40), fill=(250, 210, 12))
+        draw.rectangle((560, 410, 599, 449), fill=(13, 20, 230))
+        url = "https://seatgeekimages.com/matchup/example/600x450.jpg"
         spec = {
             "week_of": "2026-10-13", "sport": "cfb",
             "kind": "football-game-header",
             "destination": "public/assets/football/weekly/2026-10-13/cfb/game-header.webp",
             "away_team": "Notre Dame", "home_team": "BYU",
-            "away_color": "#0C2340", "home_color": "#002E5D",
-            "away_logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
-            "home_logo_url": "https://a.espncdn.com/i/teamlogos/ncaa/500/252.png",
-            "away_photos": [source(ACTION, "action")],
-            "home_photos": [source(PROFILE, "portrait")],
+            "source_publisher": "SeatGeek", "header_source_url": url,
         }
-        result = render_manifest(spec, loader=lambda _: self.photo, write=False)
+        result = render_manifest(spec, loader=lambda _: art, write=False)
         self.assertEqual(result["dimensions"], [1600, 900])
-        self.assertEqual(result["sources"][1]["kind"], "portrait")
-        self.assertEqual(game_header(spec, self.photo, self.photo).size, (1600, 900))
+        self.assertEqual(result["sources"], [{"kind": "publisher-matchup", "publisher": "SeatGeek", "source": url}])
+        rendered = publisher_game_header(art)
+        self.assertEqual(rendered.size, (1600, 900))
+        self.assertEqual(rendered.getpixel((200, 0)), (250, 210, 12))
+        self.assertEqual(rendered.getpixel((1399, 899)), (13, 20, 230))
+        self.assertEqual(checked_seatgeek_header_source(url), url)
+
+    def test_rejects_other_publishers_and_legacy_composites(self):
+        spec = {
+            "week_of": "2026-10-13", "sport": "cfb",
+            "kind": "football-game-header",
+            "destination": "public/assets/football/weekly/2026-10-13/cfb/game-header.webp",
+            "away_team": "Notre Dame", "home_team": "BYU",
+            "source_publisher": "SeatGeek",
+            "header_source_url": "https://seatgeekimages.com/matchup/real/600x450.jpg",
+        }
+        for bad in ("http://seatgeekimages.com/matchup/foo.jpg",
+                    "https://seatgeekimages.com.evil.org/matchup/foo.jpg",
+                    "https://seatgeekimages.com/not-matchup/foo.jpg",
+                    "https://other.example/matchup/foo.jpg"):
+            with self.assertRaises(AssetError):
+                checked_seatgeek_header_source(bad)
         with self.assertRaises(AssetError):
-            game_header({**spec, "away_color": "red"}, self.photo, self.photo)
+            render_manifest({**spec, "away_photos": [source(ACTION, "action")]},
+                            loader=lambda _: self.photo, write=False)
+        with self.assertRaises(AssetError):
+            render_manifest({**spec, "source_publisher": "Other"},
+                            loader=lambda _: self.photo, write=False)
 
 
 if __name__ == "__main__":

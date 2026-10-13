@@ -42,4 +42,23 @@ This is a transport/processing primitive, not a provenance bypass. Sport-specifi
 
 ## Football weekly asset support (Phase 3)
 
-The SAME Asset Ingest workflow also routes Football weekly manifest kinds football-spotlight and football-game-header to scripts/football_editorial_assets.py. UFC thumb/spotlight processing remains unchanged. Football photos must be verified real ESPN/CDN images with a corresponding ESPN player profile reference and a checked team identity. Approved fallback order is action → portrait → approved manual image, without synthetic/redrawn faces. Canonical paths are public/assets/football/weekly/<Tuesday YYYY-MM-DD>/<cfb|nfl>/{spotlight.webp,game-header.webp}; spotlight output is 720x900, matchup header 1600x900 WebP with ESPN team marks. An action running without usable source assets fails closed. Image-asset deployment alone does NOT publish the weekly content package; a later release phase controls activation.
+The SAME Asset Ingest workflow also routes Football weekly manifest kinds football-spotlight and football-game-header to scripts/football_editorial_assets.py. UFC thumb/spotlight processing remains unchanged. Football **player Spotlight** photos use verified real ESPN/CDN imagery and the player's ESPN profile reference, with action → portrait → approved manual fallback. No synthetic likenesses. Canonical paths: `public/assets/football/weekly/<Tuesday YYYY-MM-DD>/<cfb|nfl>/{spotlight.webp,game-header.webp}`. Spotlights are 720×900 WebP.
+
+Football **Game of the Week headers** now use only original owner-approved SeatGeek matchup art (no ESPN two-player montages). Example manifest after verifying the real selected game and the publisher-hosted image:
+
+```json
+{
+  "kind": "football-game-header",
+  "sport": "cfb",
+  "week_of": "2026-10-20",
+  "destination": "public/assets/football/weekly/2026-10-20/cfb/game-header.webp",
+  "away_team": "Verified Away Team",
+  "home_team": "Verified Home Team",
+  "source_publisher": "SeatGeek",
+  "header_source_url": "https://seatgeekimages.com/matchup/verified/600x450.jpg"
+}
+```
+
+The source must be a real publicly served `https://seatgeekimages.com/matchup/...` image representing those two teams. The processor preserves the full artwork and adds only neutral side padding as necessary for a 1600×900 WebP; it never crops team logos, invents player images, or composites unrelated ESPN portraits. The manifest's publisher source URL must be stored as the **single** `header_photo_sources` entry in the canonical prepared GOTW package. The generated WebP must be reviewed, pass exact-head green, be deployed and verified on production **before** the owner-selected editorial can be armed. If artwork is unavailable or cannot be used, fail closed and retain the previous approved material.
+
+Production art is shown only in Football Picks' roughly eight-second carousel. The Tuesday midnight Central release remains a database time gate, independent for NFL and CFB. Image-asset deployment alone never publishes the weekly package.

@@ -16,6 +16,8 @@ import {
   type TodayChallengeProjection,
 } from "../play/todayChallengeRepository";
 import { todayChallengeAdapter } from "../play/todaysChallengeAdapters";
+import { dailyTwoGameOfficialAverageScore } from "../play/DailyTwoGameStatus";
+import { dailyUsesTwoGameAverage } from "../play/dailyTwoGameContract";
 import { FootballSpecialDailyHubMark, footballSpecialDailyThemeForDay, footballSpecialDailyThemeForCentralToday, footballSpecialDailyStyle } from "../play/footballSpecialDailyTheme";
 import {
   useHqDailyChallengeStreak,
@@ -77,7 +79,17 @@ function TodayChallengeCard({
   gatedPreview?: boolean;
 }) {
   const attempt = projection?.officialAttempt ?? null;
+  const ownLeaderboardEntry = leaderboard?.entries.find((entry) => entry.isCurrentUser);
   const rank = todayRank(leaderboard);
+  const isTwoGameDaily = projection
+    ? dailyUsesTwoGameAverage(projection.gameType, projection.centralDay)
+    : false;
+  const displayedScore = attempt
+    ? (isTwoGameDaily
+      ? dailyTwoGameOfficialAverageScore(projection!)
+        ?? ownLeaderboardEntry?.normalizedScore
+      : null) ?? attempt.normalizedScore
+    : null;
   const status = !signedIn
     ? "SIGN IN"
     : gatedPreview
@@ -132,7 +144,7 @@ function TodayChallengeCard({
       </div>
       <div className="home-challenge-card__result">
         {attempt ? (
-          <strong>{attempt.normalizedScore}<small>/100</small></strong>
+          <strong>{displayedScore}<small>/100</small></strong>
         ) : gatedPreview ? (
           <strong>PLAY NOW</strong>
         ) : (

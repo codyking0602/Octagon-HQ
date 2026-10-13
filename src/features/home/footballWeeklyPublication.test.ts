@@ -26,7 +26,7 @@ const sport = {
   game: {
     home_team: "BYU", away_team: "Notre Dame", kickoff_at: "2026-10-17T21:00:00Z",
     header_asset_path: "/assets/football/weekly/2026-10-13/cfb/game-header.webp",
-    header_photo_sources: ["https://a.espncdn.com/away.webp", "https://a.espncdn.com/home.webp"],
+    header_photo_sources: ["https://seatgeekimages.com/matchup/v3_4901d84e/5585/5570/600x450.jpg"],
   },
   breakdown: {
     setup: [paragraph, paragraph],
@@ -66,6 +66,16 @@ describe("public Football weekly release projection", () => {
     expect(match[0]?.headerAssetPath).toContain("game-header.webp");
     expect(match[0]?.keyMatchups).toHaveLength(3);
     expect(match[0]?.unitEdges).toHaveLength(2);
+    // Real Picks displays school + mascot (the owner selects the school name).
+    const fullNames = {
+      ...event, bouts: [{ ...event.bouts[0],
+        redFighterSlug: "byu-cougars", redFighterName: "BYU Cougars",
+        blueFighterSlug: "notre-dame-fighting-irish",
+        blueFighterName: "Notre Dame Fighting Irish",
+        homeTeamSlug: "byu-cougars", awayTeamSlug: "notre-dame-fighting-irish",
+      }],
+    };
+    expect(publishedFootballMatchupsForEvent(fullNames, item)).toHaveLength(1);
     expect(publishedFootballMatchupsForEvent({
       ...event, bouts: [{ ...event.bouts[0], redFighterSlug: "texas",
         redFighterName: "Texas", homeTeamSlug: "texas" }],

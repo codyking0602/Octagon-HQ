@@ -50,7 +50,7 @@ begin
     'kickoff_at','2026-10-17T19:30:00Z',
     'header_asset_path','/assets/football/weekly/2026-10-13/cfb/game-header.webp',
     'header_photo_sources',jsonb_build_array(
-      'https://a.espncdn.com/away.jpg','https://a.espncdn.com/home.jpg'));
+      'https://seatgeekimages.com/matchup/verified/600x450.jpg'));
   v_editorial := jsonb_build_object(
     'source_urls',jsonb_build_array('https://www.espn.com/football/game/1',
       'https://www.sports-reference.com/cfb/schools/example/2026.html'),
@@ -124,6 +124,27 @@ begin
       v_spotlight||jsonb_build_object('stats',(v_spotlight->'stats') - 3),v_game,v_editorial);
   exception when others then v_blocked := true; end;
   if not v_blocked then raise exception 'Accepted incomplete spotlight stats'; end if;
+
+  -- The rejected player-composite sources or arbitrary external art must fail closed.
+  v_blocked := false;
+  begin
+    perform public.prepare_football_weekly_editorial(date '2026-10-13','cfb',
+      v_spotlight,
+      v_game || jsonb_build_object('header_photo_sources',
+        jsonb_build_array('https://a.espncdn.com/away.jpg',
+                          'https://a.espncdn.com/home.jpg')),
+      v_editorial);
+  exception when others then v_blocked := true; end;
+  if not v_blocked then raise exception 'Accepted obsolete ESPN composite header'; end if;
+  v_blocked := false;
+  begin
+    perform public.prepare_football_weekly_editorial(date '2026-10-13','cfb',
+      v_spotlight,
+      v_game || jsonb_build_object('header_photo_sources',
+        jsonb_build_array('https://untrusted.example/matchup/600x450.jpg')),
+      v_editorial);
+  exception when others then v_blocked := true; end;
+  if not v_blocked then raise exception 'Accepted unapproved publisher'; end if;
 
   v_result := public.prepare_football_weekly_editorial(date '2026-10-13','cfb',
     v_spotlight,v_game,v_editorial);
