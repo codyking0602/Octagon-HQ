@@ -40,7 +40,7 @@ function verifiedPublisherSource(item: ApprovedUfcPoster): boolean {
     return page.protocol === "https:" && page.hostname === "www.mmamania.com"
       && image.protocol === "https:" && image.hostname === "platform.mmamania.com"
       && image.pathname.includes("/wp-content/uploads/")
-      && /^\\d+ \\/ \\d+$/.test(item.aspectRatio);
+      && /^[0-9]+ \/ [0-9]+$/.test(item.aspectRatio);
   } catch {
     return false;
   }
