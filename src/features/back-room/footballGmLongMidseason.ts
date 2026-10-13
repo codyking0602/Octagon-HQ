@@ -111,8 +111,12 @@ export function nflGmLongCreateMidseason(
   const effects = coachBonuses(picks, coach);
   const grade = NFL_GM_LONG_NEUTRAL_GRADE + picks.reduce((sum, pick) =>
     sum + NFL_GM_LONG_POSITION_WEIGHTS[pick.slot] * (NFL_GM_LONG_BY_ID.get(pick.playerId)!.currentGrade - NFL_GM_LONG_NEUTRAL_GRADE), 0);
+  // Eight distinct opponents from the same 32-club authority as the GM wheel.
+  // A locked snapshot will remain unchanged by later deadline decisions.
+  const opponentOrder = [...FOOTBALL_GM_TEAMS].sort((a, b) =>
+    hash(runId + ":opponent:" + a) - hash(runId + ":opponent:" + b));
   const games = Array.from({ length: NFL_GM_LONG_MIDSEASON_GAMES }, (_, i): NflGmLongGame => {
-    const opponent = FOOTBALL_GM_TEAMS[hash(runId + ":opponent:" + i) % FOOTBALL_GM_TEAMS.length]!;
+    const opponent = opponentOrder[i]!;
     const otherGrade = round(82.5 + roll(runId + ":npc-grade:" + i) * 7);
     return {
       opponent, grade: otherGrade,
