@@ -211,6 +211,13 @@ export default function MlbPicksPage() {
     });
   }, [hub?.brackets]);
 
+  const eliminatedTeamIds = useMemo(() => new Set(
+    (hub?.series ?? []).flatMap((series) => {
+      if (series.status !== "complete" || !series.winner_team_id) return [];
+      return [series.team_a_id, series.team_b_id].filter((teamId) => teamId !== series.winner_team_id);
+    }),
+  ), [hub?.series]);
+
   const championshipStandings = championship?.standings ?? [];
   const ownChampionship = championship?.own ?? null;
   const championshipPlayerCount = championshipStandings.length || Math.max(hub?.roundPickEntries.length ?? 0, bracketStandings.length);
@@ -301,13 +308,6 @@ export default function MlbPicksPage() {
     const next = (current + offset + bracketViewers.length) % bracketViewers.length;
     setViewedProfileId(bracketViewers[next]!.profile_id);
   };
-
-  const eliminatedTeamIds = useMemo(() => new Set(
-    (hub?.series ?? []).flatMap((series) => {
-      if (series.status !== "complete" || !series.winner_team_id) return [];
-      return [series.team_a_id, series.team_b_id].filter((teamId) => teamId !== series.winner_team_id);
-    }),
-  ), [hub?.series]);
 
   const renderMiniNode = (node: MlbBracketNode) => {
     const [left, right] = nodeParticipants(node, displayedPicks, hub.bracketTemplate);
