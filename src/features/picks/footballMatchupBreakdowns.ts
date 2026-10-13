@@ -1,4 +1,5 @@
 import type { PickBout, PickEvent, PickWatchMoment } from "./picksModel";
+import { FOOTBALL_OCTOBER_13_FEATURED } from "./footballWeekOct13Featured";
 
 export interface FootballMatchupTeam {
   name: string;
@@ -785,7 +786,7 @@ function boutIncludesTeam(bout: PickBout, team: FootballMatchupTeam) {
 export function footballMatchupBreakdownsForEvent(event: PickEvent | null) {
   if (event?.sport !== "football") return [];
 
-  return FOOTBALL_MATCHUP_BREAKDOWNS.filter((breakdown) => event.bouts.some((bout) => {
+  return [...FOOTBALL_MATCHUP_BREAKDOWNS, ...FOOTBALL_OCTOBER_13_FEATURED].filter((breakdown) => event.bouts.some((bout) => {
     const teamSets = [breakdown.teams, ...(breakdown.eventBindings ?? [])];
     return teamSets.some((teams) => teams.every((team) => boutIncludesTeam(bout, team)));
   }));
