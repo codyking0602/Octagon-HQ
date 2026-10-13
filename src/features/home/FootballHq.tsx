@@ -105,9 +105,18 @@ function isCollegeGame(weightClass: string) {
   return value.includes("COLLEGE") || value === "CFB";
 }
 
-function featuredGameForBreakdown(event: PickEvent, breakdownId: string) {
-  return event.bouts.find((game) => footballMatchupBreakdownsForEvent({ ...event, bouts: [game] })
-    .some((breakdown) => breakdown.id === breakdownId)) ?? null;
+function featuredGameForBreakdown(event: PickEvent, breakdown: FootballMatchupBreakdown) {
+  // Prepared weeks use publisher-generated IDs, not the frozen legacy breakdown registry.
+  // Match real Picks candidates by both canonical opponent identities instead.
+  return event.bouts.find((game) => {
+    const participants = [
+      game.redFighterSlug, game.redFighterName,
+      game.blueFighterSlug, game.blueFighterName,
+      game.homeTeamSlug ?? "", game.awayTeamSlug ?? "",
+    ].map(normalizeTeamIdentity);
+    return breakdown.teams.every((team) => team.aliases.some((alias) =>
+      participants.includes(normalizeTeamIdentity(alias))));
+  }) ?? null;
 }
 
 function normalizeTeamIdentity(value: string) {
@@ -382,7 +391,7 @@ export function FootballHq({
       current.teams.every((team) => staticBreakdown.teams.some((other) => other.name.toLowerCase() === team.name.toLowerCase())))),
   ] : [];
   const featuredMatchups = event ? matchupBreakdowns.flatMap((breakdown) => {
-    const game = featuredGameForBreakdown(event, breakdown.id);
+    const game = featuredGameForBreakdown(event, breakdown);
     return game ? [{ breakdown, game }] : [];
   }) : [];
   const season = event?.season ?? history?.season ?? new Date().getFullYear();
