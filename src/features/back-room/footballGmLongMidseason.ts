@@ -286,6 +286,7 @@ export function nflGmLongValidMidseason(
     if (state.stage !== "complete" || t.outgoingId !== state.shoppedPlayerId
       || t.partnerTeam !== state.partnerTeam
       || typeof t.incomingId !== "string"
+      || Object.prototype.hasOwnProperty.call(t, "futurePickRound")
       || !nflGmLongTradeTargets(picks, t.outgoingId, t.partnerTeam)
         .some(player => player.id === t.incomingId)) return false;
     // No partial teams or future compensation can be loaded as a valid trade.
