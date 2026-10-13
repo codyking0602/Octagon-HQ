@@ -1,5 +1,4 @@
--- Owner-approved authentic SeatGeek matchup art replaces the rejected ESPN player composites.
--- Preserve the canonical static WebP path and all existing Tuesday midnight gates.
+-- Use genuine approved SeatGeek game artwork; preserve all Tuesday release gates.
 create or replace function public.prepare_football_weekly_editorial(
   p_week_of date, p_sport text, p_spotlight jsonb, p_game jsonb, p_editorial jsonb
 ) returns jsonb
@@ -78,104 +77,13 @@ begin
      or jsonb_typeof(p_game->'header_photo_sources') is distinct from 'array' then
     raise exception 'Featured matchup does not match owner choice or prepared header asset';
   end if;
-  -- SeatGeek's authentic composite contains both teams; no invented ESPN player montage.
+  -- Approved SeatGeek graphic includes both teams; no synthetic photo montages.
   if jsonb_array_length(p_game->'header_photo_sources') <> 1 then
     raise exception 'Featured header must cite one approved SeatGeek source';
   end if;
   for v_stat in select value from jsonb_array_elements(p_game->'header_photo_sources') loop
     if jsonb_typeof(v_stat) <> 'string'
-       or (v_stat#>>'{}') !~ '^https://(www[.])?seatgeekimages[.]com/matchup/[^?#]+[.](jpg|jpeg|png|webp)([?][^#]*)?
-    end if;
-  end loop;
-
-  -- Full HQ editorial structure: two setup paragraphs, 3 deciding battles,
-  -- each team's victory path and 3 players, plus two unit-vs-unit edges.
-  v_section := p_editorial->'breakdown';
-  if jsonb_typeof(v_section) is distinct from 'object'
-    or jsonb_typeof(v_section->'setup') is distinct from 'array'
-    or jsonb_typeof(v_section->'things') is distinct from 'array'
-    or jsonb_typeof(v_section->'paths_to_win') is distinct from 'array'
-    or jsonb_typeof(v_section->'players_to_watch') is distinct from 'array'
-    or jsonb_typeof(v_section->'unit_edges') is distinct from 'array'
-    or jsonb_typeof(p_editorial->'source_urls') is distinct from 'array' then
-    raise exception 'Full HQ matchup editorial is required';
-  end if;
-  if jsonb_array_length(v_section->'setup') <> 2
-    or jsonb_array_length(v_section->'things') <> 3
-    or jsonb_array_length(v_section->'paths_to_win') <> 2
-    or jsonb_array_length(v_section->'players_to_watch') <> 2
-    or jsonb_array_length(v_section->'unit_edges') <> 2
-    or jsonb_array_length(p_editorial->'source_urls') < 2 then
-    raise exception 'Editorial must include 2 setup, 3 battles, 2 win paths, 6 players, 2 edges, 2 sources';
-  end if;
-  for v_thing in select value from jsonb_array_elements(v_section->'setup') loop
-    if jsonb_typeof(v_thing) <> 'string' or length(trim(v_thing#>>'{}')) < 40 then
-      raise exception 'Matchup setup paragraph incomplete';
-    end if;
-  end loop;
-  for v_thing in select value from jsonb_array_elements(v_section->'things') loop
-    if coalesce(trim(v_thing->>'title'),'') = ''
-      or length(trim(coalesce(v_thing->>'body',''))) < 35
-      or coalesce(trim(v_thing->>'edge'),'') = '' then
-      raise exception 'Missing deciding-matchup title, explanation or edge';
-    end if;
-  end loop;
-  for v_thing in select value from jsonb_array_elements(v_section->'paths_to_win') loop
-    if coalesce(trim(v_thing->>'team'),'') = ''
-      or length(trim(coalesce(v_thing->>'body',''))) < 35 then
-      raise exception 'Missing team win path';
-    end if;
-  end loop;
-  for v_thing in select value from jsonb_array_elements(v_section->'players_to_watch') loop
-    if coalesce(trim(v_thing->>'team'),'') = ''
-      or jsonb_typeof(v_thing->'players') is distinct from 'array' then
-      raise exception 'Missing team players';
-    end if;
-    if jsonb_array_length(v_thing->'players') <> 3 then
-      raise exception 'Each team must have exactly three featured players';
-    end if;
-    for v_player in select value from jsonb_array_elements(v_thing->'players') loop
-      if coalesce(trim(v_player->>'name'),'') = ''
-        or coalesce(trim(v_player->>'position'),'') = ''
-        or coalesce(trim(v_player->>'body'),'') = '' then
-        raise exception 'Incomplete matchup player identity or role';
-      end if;
-    end loop;
-  end loop;
-  for v_thing in select value from jsonb_array_elements(v_section->'unit_edges') loop
-    if coalesce(trim(v_thing->>'title'),'') = ''
-      or coalesce(trim(v_thing->>'edge'),'') = ''
-      or length(trim(coalesce(v_thing->>'body',''))) < 35 then
-      raise exception 'Missing unit-vs-unit HQ edge';
-    end if;
-  end loop;
-  for v_thing in select value from jsonb_array_elements(p_editorial->'source_urls') loop
-    if jsonb_typeof(v_thing) <> 'string' or (v_thing#>>'{}') not like 'https://%' then
-      raise exception 'Verified editorial sources need secure URLs';
-    end if;
-  end loop;
-
-  -- Production references stay drafts; later Phase 4 separately verifies live URLs
-  -- and atomically transitions the whole completed package at the intended midnight.
-  update public.football_weekly_content_packages p
-  set cfb_spotlight = case when p_sport='cfb' then p_spotlight else p.cfb_spotlight end,
-      nfl_spotlight = case when p_sport='nfl' then p_spotlight else p.nfl_spotlight end,
-      cfb_game_of_week = case when p_sport='cfb' then p_game else p.cfb_game_of_week end,
-      nfl_game_of_week = case when p_sport='nfl' then p_game else p.nfl_game_of_week end,
-      production = p.production || jsonb_build_object(p_sport,
-        p_editorial || jsonb_build_object('prepared_at',now(), 'player_id',v_choice->'player'->>'id',
-        'game_id',v_choice->'game'->>'id')),
-      updated_at = now()
-  where p.week_of=p_week_of and p.status='draft'
-  returning p.* into v_package;
-  if not found then raise exception 'Editorial package was modified during preparation'; end if;
-  return to_jsonb(v_package) || jsonb_build_object(
-    'release_at',v_package.week_of::timestamp at time zone 'America/Chicago');
-end;
-$$;
-revoke all on function public.prepare_football_weekly_editorial(date,text,jsonb,jsonb,jsonb) from public, anon;
-grant execute on function public.prepare_football_weekly_editorial(date,text,jsonb,jsonb,jsonb) to authenticated;
- then
+       or (v_stat#>>'{}') !~ '^https://(www[.])?seatgeekimages[.]com/matchup/[^?#]+[.](jpg|jpeg|png|webp)([?][^#]*)?$' then
       raise exception 'Only approved SeatGeek matchup image sources are allowed';
     end if;
   end loop;
