@@ -274,6 +274,19 @@ export default function MlbFeaturedChallengePage() {
           best_streak: result.bestStreak,
           double_round: result.doubleRound,
           wager: result.wager,
+          answers: result.answers.map((answer) => ({
+            question_id: answer.questionId,
+            choice: answer.choice,
+            correct: answer.correct,
+            points: answer.points,
+            raw_points: answer.rawPoints,
+            base_points: answer.basePoints,
+            double_round_bonus: answer.doubleRoundBonus,
+            streak_bonus: answer.streakBonus,
+            wager_delta: answer.wagerDelta,
+            round_multiplier: answer.roundMultiplier,
+            streak_multiplier: answer.streakMultiplier,
+          })),
         },
       });
       await reloadOverview();
