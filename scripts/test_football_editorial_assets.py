@@ -75,8 +75,10 @@ class FootballEditorialAssetTests(unittest.TestCase):
 
     def test_game_header_keeps_real_seatgeek_artwork_uncropped(self):
         art = Image.new("RGB", (600, 450), (17, 64, 120))
-        art.putpixel((0, 0), (250, 210, 12))
-        art.putpixel((599, 449), (13, 20, 230))
+        from PIL import ImageDraw
+        draw = ImageDraw.Draw(art)
+        draw.rectangle((0, 0, 40, 40), fill=(250, 210, 12))
+        draw.rectangle((560, 410, 599, 449), fill=(13, 20, 230))
         url = "https://seatgeekimages.com/matchup/example/600x450.jpg"
         spec = {
             "week_of": "2026-10-13", "sport": "cfb",
