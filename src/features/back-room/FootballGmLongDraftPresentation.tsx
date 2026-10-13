@@ -31,7 +31,7 @@ function teamStyle(teamCode: string): CSSProperties | undefined {
 }
 
 /** Short keeps its existing picture component; only OL needs an ESPN lookup. */
-function LongPlayerPortrait({ player, className = "football-gm__player-headshot" }: {
+export function LongPlayerPortrait({ player, className = "football-gm__player-headshot" }: {
   player: NflGmLongPlayer;
   className?: string;
 }) {
@@ -68,6 +68,14 @@ function longScouting(player: NflGmLongPlayer) {
   return { tier, outlook };
 }
 
+/** Reuse existing Short scouting tiers; OL uses its audited current grade. */
+export function LongPlayerTier({ player }: { player: NflGmLongPlayer }) {
+  const shortPlayer = footballGmPlayerById(player.id);
+  if (shortPlayer) return <PlayerQualityPill player={shortPlayer} />;
+  const tier = footballGmTalentTier(player.currentGrade);
+  return <span className={`football-gm__quality-pill quality-${tier.toLowerCase()}`}>{tier}</span>;
+}
+
 function LongQualityAndOutlook({ player }: { player: NflGmLongPlayer }) {
   const shortPlayer = footballGmPlayerById(player.id);
   if (shortPlayer) {
@@ -100,7 +108,7 @@ function PlayerTags({ player }: { player: NflGmLongPlayer }) {
   </span>;
 }
 
-function label(slot: NflGmLongSlot) {
+export function longSlotLabel(slot: NflGmLongSlot) {
   return slot === "DL" ? "F7-1" : slot === "LB" ? "F7-2"
     : slot === "DB" ? "DB-1" : slot === "DB2" ? "DB-2" : NFL_GM_LONG_SLOT_LABELS[slot];
 }
@@ -128,7 +136,7 @@ export function LongRosterGrid({ picks }: { picks: readonly NflGmLongPick[] }) {
         const entry = bySlot.get(slot);
         const player = entry ? NFL_GM_LONG_BY_ID.get(entry.playerId) : null;
         return <article key={slot} className={player ? "is-filled" : ""} style={player ? teamStyle(player.team) : undefined}>
-          <small>{label(slot)}</small>
+          <small>{longSlotLabel(slot)}</small>
           {player ? <>
             <div className="football-gm__roster-player">
               <LongPlayerPortrait player={player} />
