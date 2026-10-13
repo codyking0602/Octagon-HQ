@@ -15,7 +15,7 @@ export const FOOTBALL_OCTOBER_13_FEATURED: FootballMatchupBreakdown[] = [
     compact: {
       rankingSource: "AP",
       setup: [
-        { text: "No. 2 Notre Dame visits No. 8 BYU in a matchup of unbeaten teams at LaVell Edwards Stadium. The Irish are 6–0, the Cougars 5–0, and ESPN College GameDay returns to Provo for the first time since 2009. Saturday's 6:30 p.m. Central kickoff airs on ABC." },
+        { text: "CJ Carr's timing and Notre Dame's passing rhythm face a BYU defense intent on closing intermediate windows and creating third-and-long. Bear Bachmeier's ability to escape and run adds a second challenge for the Irish's defensive front." },
       ],
       things: [
         { title: "Carr's timing vs. the BYU defense", body: [
@@ -32,11 +32,7 @@ export const FOOTBALL_OCTOBER_13_FEATURED: FootballMatchupBreakdown[] = [
         ] },
       ],
       bottomLine: [
-        { text: "Notre Dame owns the stronger early-season résumé, but Bachmeier's mobility and a raucous Provo atmosphere make this anything but routine. Game graphic: " },
-        { text: "SeatGeek", href: "https://seatgeek.com/" },
-        { text: ". Matchup information: " },
-        { text: "BYU Athletics", href: "https://byucougars.com/news/2026/10/12/byu-football-game-week-2026-notre-dame" },
-        { text: "." },
+        { text: "The central question is whether Notre Dame can keep Carr on schedule while containing Bachmeier without opening up its coverage. BYU's quarterback movement and the Irish's passing tempo create two very different ways to sustain drives." },
       ],
     },
   },
@@ -53,7 +49,7 @@ export const FOOTBALL_OCTOBER_13_FEATURED: FootballMatchupBreakdown[] = [
     compact: {
       leagueLabel: "NFL",
       setup: [
-        { text: "Dallas heads to Lambeau Field for Sunday Night Football at 7:20 p.m. Central. Green Bay enters off a convincing win over Chicago, while the Cowboys are looking for a response after a Thursday loss to Tampa Bay. A familiar matchup now features a former Cowboys superstar on the Packers' injured list." },
+        { text: "Jordan Love's quick reads and vertical passing threaten a Dallas defense trying to contain explosive plays. Dak Prescott counters with CeeDee Lamb and George Pickens, whose contrasting routes will test Green Bay's coverage and the time its pass rush gives them." },
       ],
       things: [
         { title: "Love's rhythm vs. Dallas' coverage", body: [
@@ -70,9 +66,7 @@ export const FOOTBALL_OCTOBER_13_FEATURED: FootballMatchupBreakdown[] = [
         ] },
       ],
       bottomLine: [
-        { text: "Love's efficient passing game against Dallas' defensive discipline is the central matchup. Prescott needs enough protection to let the Cowboys' receiving talent change the contest. Game graphic: " },
-        { text: "SeatGeek", href: "https://seatgeek.com/" },
-        { text: "." },
+        { text: "Love's timing against Dallas's coverage discipline is matched by Prescott's protection battle with Green Bay's front. The game will turn on which offense creates downfield space without repeatedly putting its quarterback under immediate pressure." },
       ],
     },
   },
