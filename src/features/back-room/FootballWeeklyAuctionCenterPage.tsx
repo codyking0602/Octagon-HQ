@@ -68,7 +68,7 @@ export default function FootballWeeklyAuctionCenterPage() {
       return () => { active = false; };
     }
 
-    const request = impostorWindow.active
+    const request = (impostorWindow.active || openLatestResults)
       ? repository.loadHistory().then((nextHistory) => {
           if (!active) return;
           setState(null);
