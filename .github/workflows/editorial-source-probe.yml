@@ -7,15 +7,15 @@ jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
-      - name: See actual CDN images
+      - name: Verify both Octagon HQ live origins
         shell: python
         run: |
-          import urllib.request,base64
-          urls = {
-            "CFB": "https://seatgeekimages.com/matchup/v3_4901d84e/5585/5570/600x450.jpg",
-            "NFL": "https://seatgeekimages.com/matchup/v3_4901d84e/2066/2083/600x450.jpg",
-          }
-          for name,url in urls.items():
-            with urllib.request.urlopen(url,timeout=15) as r:
-              image = r.read(50000)
-              print("VISUAL_"+name+"="+base64.b64encode(image).decode(),flush=True)
+          import urllib.request
+          for origin in ("https://octagon.hq-app.workers.dev", "https://the.hq-app.workers.dev"):
+            for path in ("/deployment.json","/assets/football/weekly/2026-10-13/cfb/spotlight.webp","/assets/football/weekly/2026-10-13/nfl/spotlight.webp"):
+              url=origin+path
+              try:
+                with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'}),timeout=14) as r:
+                  body=r.read(400) if path.endswith('json') else r.read(20)
+                  print(url,r.status,r.headers.get("Content-Type"),body[:400],flush=True)
+              except Exception as e: print(url,type(e).__name__,str(e)[:150],flush=True)
