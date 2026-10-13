@@ -946,7 +946,7 @@ export function FootballWeeklyNflTeamSeasonFinalResult({
         </div>
       ) : null}
 
-      <details className="football-weekly-nfl-team-season__final-wildcard">
+      <details className="football-weekly-nfl-team-season__final-wildcard" open={!showNewWeekAction}>
         <summary>DAY 7 · WILDCARD RESULT</summary>
         <WheelResult wildcard={result.wildcard} />
       </details>
