@@ -828,10 +828,6 @@
 .gm-long__deadline-offers small { font-size: 10px; color: #a4c0d4; line-height: 1.35; }
 .gm-long__deadline-offers button > b { font-size: 10px; white-space: nowrap; color: #8cc8eb; }
 .gm-long__deadline-offers .football-gm__quality-pill { width: auto; position: static; margin: 0; padding: 4px 6px; font-size: 9px; white-space: nowrap; }
-.gm-long__deadline-future { border-color: rgba(226,187,115,.40) !important; }
-.gm-long__deadline-future-icon { display: grid; place-items: center; width: 36px; height: 36px;
-  border-radius: 8px; background: rgba(231,190,114,.15); color: #edc377; font-size: 18px; }
-.gm-long__deadline-future > span:nth-child(2) { grid-column: 2 / 4; }
 .gm-long__deadline-rejected { color: #f1b0a3 !important; font-weight: 800; font-size: 11px !important; }
 .gm-long__deadline-complete { padding: 10px 12px; border-radius: 9px; border: 1px solid rgba(92,190,145,.4); background: rgba(46,123,99,.13); }
 .gm-long__deadline-complete strong { color: #91e2b4; font-size: 13px; }
@@ -855,5 +851,4 @@
   .gm-long__deadline-offers button { grid-template-columns: 33px minmax(0,1fr) auto; gap: 6px; padding: 9px 7px; }
   .gm-long__deadline-offers .football-gm__quality-pill { display: none; }
   .gm-long__deadline-offers button > b { font-size: 9px; }
-  .gm-long__deadline-future > span:nth-child(2) { grid-column: 2; }
 }
