@@ -331,10 +331,10 @@ export function FootballMatchupBreakdowns({
       ) : null}
       {canControl && footballEvent ? (
         <details className="football-picks-admin-menu">
-          <summary>⚙ OWNER TOOLS</summary>
+          <summary>OWNER TOOLS ⚙</summary>
           <div>
             <FootballPushControl eventId={footballEvent.eventId} repository={controlRepository} />
-            <a href={`/picks/control?sport=football&event=${encodeURIComponent(footballEvent.eventId)}#header`}>MANAGE EVENT / HEADERS ↗</a>
+            <a href={`/picks/control?sport=football&event=${encodeURIComponent(footballEvent.eventId)}#header`}>MANAGE HEADERS →</a>
           </div>
         </details>
       ) : null}
