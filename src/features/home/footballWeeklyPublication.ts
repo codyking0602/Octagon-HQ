@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import { footballTeamSchoolMetadata, footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMetadata";
 import {
   footballWeeklyPreparedGameSchema,
   footballWeeklyPreparedSpotlightSchema,
@@ -61,7 +62,19 @@ export function publishedFootballMatchup(
 }
 
 function normTeam(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const token = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const exact = footballTeamSchoolMetadataFor(name);
+  if (exact) return exact.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+  // Picks commonly includes the school's mascot while the owner-selection
+  // package stores the school's short name. Resolve the LONGEST known program
+  // first (Texas Tech before Texas, Michigan State before Michigan).
+  const expanded = footballTeamSchoolMetadata
+    .filter((team) => {
+      const root = team.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+      return token.length > root.length && token.startsWith(root);
+    })
+    .sort((a, b) => b.name.length - a.name.length)[0];
+  return expanded ? expanded.name.toLowerCase().replace(/[^a-z0-9]/g, "") : token;
 }
 
 // Prefer a current, owner-approved weekly editorial only when the live Picks event
