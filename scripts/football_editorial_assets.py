@@ -18,6 +18,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageFilter
 
 ROOT = Path("public/assets/football/weekly")
 ALLOWED_HOSTS = {"a.espncdn.com", "espncdn.com", "cdn.espn.com", "www.espn.com"}
+SEATGEEK_HEADER_HOSTS = {"seatgeekimages.com", "www.seatgeekimages.com"}
 SPOTLIGHT_SIZE = (720, 900)
 HEADER_SIZE = (1600, 900)
 MAX_BYTES = 20 * 1024 * 1024
@@ -34,7 +35,7 @@ class AssetError(ValueError):
 
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
-        raise AssetError("Image source redirect rejected; supply its final verified ESPN URL")
+        raise AssetError("Image source redirect rejected; supply the final verified publisher URL")
 
 
 def checked_source(url):
@@ -47,8 +48,23 @@ def checked_source(url):
     return url
 
 
+def checked_seatgeek_header_source(url):
+    """Only approved genuine SeatGeek matchup artwork; never arbitrary external imagery."""
+    parsed = urlparse(url)
+    if (parsed.scheme != "https" or parsed.hostname not in SEATGEEK_HEADER_HOSTS
+            or parsed.username or parsed.password or parsed.port not in (None, 443)
+            or not parsed.path.startswith("/matchup/")
+            or not parsed.path.lower().endswith((".jpg", ".jpeg", ".png", ".webp"))
+            or any(marker in url.lower() for marker in PLACEHOLDERS)):
+        raise AssetError("Weekly header must be genuine SeatGeek HTTPS matchup artwork")
+    return url
+
+
 def download_photo(url):
-    checked_source(url)
+    if urlparse(url).hostname in SEATGEEK_HEADER_HOSTS:
+        checked_seatgeek_header_source(url)
+    else:
+        checked_source(url)
     req = Request(url, headers={"User-Agent": "Mozilla/5.0 OctagonHQEditorial/1.0", "Accept": "image/*"})
     try:
         with build_opener(NoRedirect).open(req, timeout=22) as response:
@@ -204,6 +220,17 @@ def game_header(spec, away_photo, home_photo, away_logo=None, home_logo=None):
     return image.convert("RGB")
 
 
+def publisher_game_header(photo):
+    """Fit the ENTIRE SeatGeek artwork to 16:9, without cutting logos or inventing graphics."""
+    if photo.width < 500 or photo.height < 280:
+        raise AssetError("Publisher header resolution too small")
+    original = ImageOps.contain(photo.convert("RGB"), HEADER_SIZE, Image.Resampling.LANCZOS)
+    canvas = Image.new("RGB", HEADER_SIZE, (12, 17, 27))
+    canvas.paste(original, ((HEADER_SIZE[0] - original.width) // 2,
+                            (HEADER_SIZE[1] - original.height) // 2))
+    return canvas
+
+
 def render_manifest(spec, loader=download_photo, write=True):
     dest = checked_destination(spec)
     kind = spec["kind"]
@@ -214,18 +241,17 @@ def render_manifest(spec, loader=download_photo, write=True):
         rendered = spotlight(photo)
         sources = [{"kind": chosen["kind"], "source": chosen["url"]}]
     else:
-        away_photo, a = choose_photo(spec.get("away_photos"), loader)
-        home_photo, b = choose_photo(spec.get("home_photos"), loader)
-        spec = dict(spec, away_photo_kind=a["kind"], home_photo_kind=b["kind"])
-        if not spec.get("away_logo_url") or not spec.get("home_logo_url"):
-            raise AssetError("Both team logos are required for the approved GOTW treatment")
-        away_logo = loader(checked_source(spec["away_logo_url"]))
-        home_logo = loader(checked_source(spec["home_logo_url"]))
-        rendered = game_header(spec, away_photo, home_photo, away_logo, home_logo)
-        sources = [{"team": "away", "kind": a["kind"], "source": a["url"]},
-                   {"team": "home", "kind": b["kind"], "source": b["url"]},
-                   {"team": "away", "kind": "team-logo", "source": spec["away_logo_url"]},
-                   {"team": "home", "kind": "team-logo", "source": spec["home_logo_url"]}]
+        # The prior ESPN athlete photo-composite treatment was explicitly rejected.
+        if any(key in spec for key in ("away_photos", "home_photos", "away_logo_url", "home_logo_url")):
+            raise AssetError("Rejected team-photo composite header manifest")
+        for team in ("away_team", "home_team"):
+            if not isinstance(spec.get(team), str) or not (1 <= len(spec[team].strip()) <= 45):
+                raise AssetError("Verified home and away identities are required")
+        if spec.get("source_publisher") != "SeatGeek":
+            raise AssetError("Only approved SeatGeek matchup art may be published")
+        url = checked_seatgeek_header_source(spec.get("header_source_url"))
+        rendered = publisher_game_header(loader(url))
+        sources = [{"kind": "publisher-matchup", "publisher": "SeatGeek", "source": url}]
     if write:
         dest.parent.mkdir(parents=True, exist_ok=True)
         rendered.save(dest, "WEBP", quality=85, method=6)
