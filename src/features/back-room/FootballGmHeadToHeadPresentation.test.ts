@@ -35,16 +35,18 @@ const visualCss = readFileSync(resolve(process.cwd(), "src/styles/football-gm-fi
 
 describe("The GM head-to-head presentation", () => {
 
-  it("shares the five-visit free agency budget and fallback with solo mode", () => {
+  it("shares the three-plus-one free agency budget and fallback with solo mode", () => {
     expect(page).toContain("freeAgencyVisitsUsed: run.freeAgencyVisitsUsed + 1");
     expect(page).toContain("freeAgentSpinIndex: run.freeAgentSpinIndex + 1");
     expect(page).toContain("onPass={passFreeAgency}");
     expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])]");
     expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, ...pending.cutPlayerIds])]");
-    expect(page).toContain("run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT");
+    expect(page).toContain("run.freeAgencyVisitsUsed >= freeAgencyVisitLimit");
     expect(page).toContain("<EmergencyFreeAgencyBoard");
     expect(page).toContain("excludedPlayerIds={exclusionIds}");
     expect(page).toContain("footballGmMarketVisitsUsed(raw.freeAgencyVisitsUsed, raw.freeAgentSpinIndex ?? 0)");
+    expect(page).toContain("freeAgencyVisitCeiling: footballGmReleaseVisitCeiling(run)");
+    expect(page).toContain("requireDirectFit: run.freeAgencyRules === \"three-plus-one\"");
   });
 
   it("keeps the approved intro and offers the original solo run or one-GM play", () => {

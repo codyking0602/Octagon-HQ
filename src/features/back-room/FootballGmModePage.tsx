@@ -34,7 +34,9 @@ import {
 } from "./footballGmEngine";
 import {
   FOOTBALL_GM_VERSION,
-  FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT,
+  footballGmFreeAgencyVisitLimit,
+  footballGmReleaseVisitCeiling,
+  type FootballGmFreeAgencyRules,
   footballGmMarketVisitsUsed,
   footballGmEmergencyFreeAgents,
   footballGmAcceptedTargetTradeOffers,
@@ -89,6 +91,8 @@ export interface PersistedRun {
   pendingTeam: string | null;
   freeAgentSpinIndex: number;
   freeAgencyVisitsUsed: number;
+  freeAgencyRules: FootballGmFreeAgencyRules;
+  freeAgencyVisitCeiling: number | null;
   releasedPlayerIds: string[];
   previousFreeAgentTeam: string | null;
   pendingFreeAgentTeam: string | null;
@@ -129,7 +133,7 @@ function freshSeed() {
   return `${id}${FOOTBALL_GM_DEVELOPMENT_SEED_TAG}`;
 }
 
-export function initialRun(seed: string): PersistedRun {
+export function initialRun(seed: string, freeAgencyRules: FootballGmFreeAgencyRules = "three-plus-one"): PersistedRun {
   return {
     version: FOOTBALL_GM_VERSION,
     seed,
@@ -142,6 +146,8 @@ export function initialRun(seed: string): PersistedRun {
     pendingTeam: null,
     freeAgentSpinIndex: 0,
     freeAgencyVisitsUsed: 0,
+    freeAgencyRules,
+    freeAgencyVisitCeiling: null,
     releasedPlayerIds: [],
     previousFreeAgentTeam: null,
     pendingFreeAgentTeam: null,
@@ -189,6 +195,8 @@ function parsePersistedRun(value: unknown) {
     ...parsed,
     version: FOOTBALL_GM_VERSION,
     freeAgencyVisitsUsed: footballGmMarketVisitsUsed(parsed.freeAgencyVisitsUsed, parsed.freeAgentSpinIndex ?? 0),
+    freeAgencyRules: parsed.freeAgencyRules === "three-plus-one" ? "three-plus-one" : "legacy",
+    freeAgencyVisitCeiling: typeof parsed.freeAgencyVisitCeiling === "number" ? parsed.freeAgencyVisitCeiling : null,
     releasedPlayerIds: [...new Set([
       ...(Array.isArray(parsed.releasedPlayerIds) ? parsed.releasedPlayerIds : []),
       ...(parsed.releasedFreeAgentPlayerId ? [parsed.releasedFreeAgentPlayerId] : []),
@@ -879,7 +887,7 @@ export function FreeAgencyBoard({
   );
 }
 
-/** A restricted, inexpensive depth pool for filling vacancies after four wheel visits. */
+/** A restricted, inexpensive depth pool for filling vacancies after market visits expire. */
 export function EmergencyFreeAgencyBoard({
   roster,
   tradeChipPlayerIds,
@@ -900,7 +908,7 @@ export function EmergencyFreeAgencyBoard({
   });
   return (
     <section className="football-gm__market-picker surface-card">
-      <p className="eyebrow">FREE AGENCY · FOUR VISITS USED</p>
+      <p className="eyebrow">FREE AGENCY · MARKET VISITS EXHAUSTED</p>
       <h2>EMERGENCY ROSTER COMPLETION</h2>
       <p>The regular market is closed. Only affordable depth players who fill an open position
         and fit both remaining cap years are available. No starter replacement or extra spins.</p>
@@ -949,11 +957,13 @@ export function FreeAgencyReleasePanel({
   seed,
   consequences,
   onRelease,
+  requireDirectFit = false,
 }: {
   roster: readonly FootballGmRosterEntry[];
   seed: string;
   consequences: FootballGmNegotiationConsequences;
   onRelease: (playerId: string) => void;
+  requireDirectFit?: boolean;
 }) {
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
   const rows = footballGmRosterPlayers(roster).map(({ entry, player }) => {
@@ -964,6 +974,7 @@ export function FreeAgencyReleasePanel({
       consequences,
       tradeChipPlayerIds: [],
       excludedPlayerIds: [player.id],
+      requireDirectFit,
     });
     return {
       entry,
@@ -980,7 +991,7 @@ export function FreeAgencyReleasePanel({
       <h2>CREATE ONE EXTRA FA OPENING</h2>
       <p>
         You may deliberately cut one settled starter during the offseason. His salary plus any existing cap room becomes your free-agent budget.
-        Normal trades and releasing displaced assets can leave a vacancy, but they never restore your four market visits. After those visits, only affordable depth options can fill open slots.
+        Normal trades and releasing displaced assets can leave a vacancy, but they never reset your market visits. After those visits, only affordable depth options can fill open slots.
       </p>
       <div className="football-gm__cut-list">
         {rows.map(({ entry, player, budget, eligibleTeams }) => {
@@ -1501,6 +1512,7 @@ export default function FootballGmModePage({
     savedState: PersistedRun | null;
     save: (state: PersistedRun, score: number | null) => Promise<void>;
     onBack: () => void;
+    legacyFreeAgency?: boolean;
   };
 } = {}) {
   const navigate = useNavigate();
@@ -1514,7 +1526,7 @@ export default function FootballGmModePage({
       const persisted = weeklyRun.savedState ? parsePersistedRun(weeklyRun.savedState) : null;
       if (persisted && persisted.seed === weeklyRun.seed) return persisted;
       const qbId = weeklyRun.scenario === "elite" ? "BUF|QB|joshallen" : "NYG|QB|jaxsondart";
-      return { ...initialRun(weeklyRun.seed), phase: "draft", spinIndex: 1,
+      return { ...initialRun(weeklyRun.seed, weeklyRun.legacyFreeAgency ? "legacy" : "three-plus-one"), phase: "draft", spinIndex: 1,
         roster: [{ slot: "QB", playerId: qbId, acquired: "draft" }] };
     }
     const persisted = typeof window === "undefined"
@@ -1659,6 +1671,7 @@ export default function FootballGmModePage({
     standalone,
   ]);
 
+  const freeAgencyVisitLimit = footballGmFreeAgencyVisitLimit(run);
   const yearOneRoster = run.roster;
   const finalRoster = run.finalRoster.length ? run.finalRoster : run.roster;
   const finalResult = useMemo(
@@ -1750,9 +1763,9 @@ export default function FootballGmModePage({
   }
 
   function spinFreeAgency() {
-    if (run.pendingFreeAgentTeam || run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT) return;
+    if (run.pendingFreeAgentTeam || run.freeAgencyVisitsUsed >= freeAgencyVisitLimit) return;
     if (!footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)) {
-      patch({ tradeMessage: "Free agency requires a real roster vacancy. You get four wheel visits total, and releasing an asset does not replenish them." });
+      patch({ tradeMessage: "Free agency requires a real roster vacancy. You get ${freeAgencyVisitLimit} market visits total, and releasing an asset never resets them." });
       return;
     }
     const teams = footballGmEligibleFreeAgencyTeams({
@@ -1762,6 +1775,7 @@ export default function FootballGmModePage({
       consequences: run.negotiationConsequences,
       previousTeam: run.previousFreeAgentTeam,
       excludedPlayerIds: run.releasedPlayerIds,
+      requireDirectFit: run.freeAgencyRules === "three-plus-one",
     });
     const team = footballGmSpinTeam(`${run.seed}:free-agency`, run.freeAgentSpinIndex, teams);
     if (!team) {
@@ -1787,7 +1801,7 @@ export default function FootballGmModePage({
 
   function makeFreeAgentPick(playerId: string, slot: FootballGmRosterSlot, displacedPlayerId?: string) {
     const emergency = !run.pendingFreeAgentTeam
-      && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT;
+      && run.freeAgencyVisitsUsed >= freeAgencyVisitLimit;
     const player = footballGmPlayerById(playerId);
     if (!player) return;
     if (run.pendingFreeAgentTeam ? player.team !== run.pendingFreeAgentTeam : !emergency) return;
@@ -1835,6 +1849,7 @@ export default function FootballGmModePage({
       seed: run.seed,
       consequences: run.negotiationConsequences,
       excludedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
+      requireDirectFit: run.freeAgencyRules === "three-plus-one",
     });
     if (!eligibleTeams.length) {
       patch({ tradeMessage: `Releasing ${player.name} does not leave a legal free-agency path under the cap.` });
@@ -1844,6 +1859,7 @@ export default function FootballGmModePage({
     patch({
       finalRoster: stripped,
       voluntaryFreeAgencyUsed: true,
+      freeAgencyVisitCeiling: footballGmReleaseVisitCeiling(run),
       releasedFreeAgentPlayerId: playerId,
       releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])],
       pendingFreeAgentTeam: null,
@@ -2278,7 +2294,7 @@ export default function FootballGmModePage({
                   onPass={passFreeAgency}
                 />
               ) : footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds)
-                && run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT ? (
+                && run.freeAgencyVisitsUsed >= freeAgencyVisitLimit ? (
                 <EmergencyFreeAgencyBoard
                   roster={run.finalRoster}
                   tradeChipPlayerIds={run.tradeChipPlayerIds}
@@ -2289,11 +2305,11 @@ export default function FootballGmModePage({
                 />
               ) : footballGmCanUseFreeAgency(run.finalRoster, run.tradeChipPlayerIds) ? (
                 <section className="football-gm__wheel surface-card">
-                  <p className="eyebrow">FREE AGENCY · {run.freeAgencyVisitsUsed}/{FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT} VISITS USED · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
+                  <p className="eyebrow">FREE AGENCY · {run.freeAgencyVisitsUsed}/{freeAgencyVisitLimit} VISITS USED · {footballGmOpenSlots(run.finalRoster).join(" · ")}</p>
                   <h2>SPIN THE 1YR MARKET</h2>
                   <p>
                     Your offseason holdings are below seven. Spin an NFL team and see every game-eligible 1YR free agent from that team who fits both future caps.
-                    Every spin uses one of four market visits, even if you pass. Signing may displace a starter into your trade pool, but releases do not restore visits.
+                    Every spin uses one of your {freeAgencyVisitLimit} market visits, even if you pass. After a voluntary release you have at most one more spin. Releases never reset visits.
                   </p>
                   <button className="primary-action" type="button" onClick={spinFreeAgency}>SPIN FREE AGENCY WHEEL</button>
                 </section>
@@ -2314,7 +2330,7 @@ export default function FootballGmModePage({
                     <p>
                       {offseasonReady
                         ? `Your seven-man core fits Years 2 and 3 under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. You can advance now, keep shopping trades, or use your one voluntary release if it is still available.`
-                        : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Keep shopping players; vacancies can use any remaining wheel visits, or only restricted depth signings after the fourth visit. One voluntary starter release is allowed.`}
+                        : `Years 2 and 3 must both fit under the ${footballGmMoney(FOOTBALL_GM_CAP)} cap. Keep shopping players; vacancies can use any remaining wheel visits, or only restricted depth signings once market visits run out. One voluntary starter release is allowed.`}
                     </p>
                     <button
                       className="primary-action"
@@ -2329,6 +2345,7 @@ export default function FootballGmModePage({
                       seed={run.seed}
                       consequences={run.negotiationConsequences}
                       onRelease={releaseToFreeAgency}
+                      requireDirectFit={run.freeAgencyRules === "three-plus-one"}
                     />
                   ) : null}
                 </>

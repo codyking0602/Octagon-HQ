@@ -553,6 +553,7 @@ export function footballGmEligibleFreeAgencyTeams(input: {
   consequences: FootballGmNegotiationConsequences;
   previousTeam?: string | null;
   excludedPlayerIds?: readonly string[];
+  requireDirectFit?: boolean;
 }) {
   const candidateTeams = FOOTBALL_GM_TEAMS.map((team) => ({
     team,
@@ -572,9 +573,9 @@ export function footballGmEligibleFreeAgencyTeams(input: {
   const directFitTeams = candidateTeams
     .filter((row) => row.candidates.some((candidate) => candidate.legalSlots.length > 0))
     .map((row) => row.team);
-  let teams = directFitTeams.length
+  let teams = input.requireDirectFit
     ? directFitTeams
-    : candidateTeams.map((row) => row.team);
+    : directFitTeams.length ? directFitTeams : candidateTeams.map((row) => row.team);
 
   if (input.previousTeam && teams.length > 1) {
     const withoutRepeat = teams.filter((team) => team !== input.previousTeam);
@@ -583,8 +584,33 @@ export function footballGmEligibleFreeAgencyTeams(input: {
   return teams;
 }
 
-/** Free-agency wheel access is a scarce offseason resource, not replenished by cuts. */
-export const FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT = 4;
+/** New GM runs share three regular free-agency visits across the entire offseason. */
+export const FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT = 3;
+export type FootballGmFreeAgencyRules = "three-plus-one" | "legacy";
+
+/** Previously started franchises (and the October 13 weekly field) retain four visits. */
+export function footballGmFreeAgencyVisitLimit(run: {
+  freeAgencyRules?: FootballGmFreeAgencyRules;
+  freeAgencyVisitCeiling?: number | null;
+  freeAgencyVisitsUsed: number;
+}) {
+  if (run.freeAgencyRules !== "three-plus-one") return 4;
+  return run.freeAgencyVisitCeiling == null
+    ? FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT
+    : Math.max(run.freeAgencyVisitsUsed, Math.min(FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT + 1, Math.floor(run.freeAgencyVisitCeiling)));
+}
+
+/** Once a real voluntary cut is made, only ONE further market spin is possible.
+ * A pre-market release still receives the normal three visits. Never reset used visits. */
+export function footballGmReleaseVisitCeiling(run: {
+  freeAgencyRules?: FootballGmFreeAgencyRules;
+  freeAgencyVisitsUsed: number;
+}) {
+  if (run.freeAgencyRules !== "three-plus-one") return null;
+  return run.freeAgencyVisitsUsed === 0
+    ? FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT
+    : run.freeAgencyVisitsUsed + 1;
+}
 
 /** Keep old saved games fair: completed FA signings already consumed a visit. */
 export function footballGmMarketVisitsUsed(savedVisits: number | undefined, legacySignings: number) {

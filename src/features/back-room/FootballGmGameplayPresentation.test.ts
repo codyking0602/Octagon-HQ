@@ -19,11 +19,13 @@ describe("Football GM gameplay presentation", () => {
     expect(page).toContain("PASS ON THIS TEAM · VISIT ALREADY USED");
     expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, playerId])]");
     expect(page).toContain("releasedPlayerIds: [...new Set([...run.releasedPlayerIds, ...pending.cutPlayerIds])]");
-    expect(page).toContain("run.freeAgencyVisitsUsed >= FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT");
+    expect(page).toContain("run.freeAgencyVisitsUsed >= freeAgencyVisitLimit");
     expect(page).toContain("footballGmEmergencyFreeAgents({");
     expect(page).toContain("<EmergencyFreeAgencyBoard");
     expect(page).toContain("excludedPlayerIds={run.releasedPlayerIds}");
     expect(page).toContain("footballGmMarketVisitsUsed(parsed.freeAgencyVisitsUsed, parsed.freeAgentSpinIndex ?? 0)");
+    expect(page).toContain("freeAgencyVisitCeiling: footballGmReleaseVisitCeiling(run)");
+    expect(page).toContain("requireDirectFit: run.freeAgencyRules === \"three-plus-one\"");
   });
 
   it("shows the same outlook pill during draft, roster management, trade targeting, and asking prices", () => {

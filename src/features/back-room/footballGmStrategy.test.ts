@@ -10,6 +10,8 @@ import {
 } from "./footballGmEngine";
 import {
   FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT,
+  footballGmFreeAgencyVisitLimit,
+  footballGmReleaseVisitCeiling,
   footballGmMarketVisitsUsed,
   footballGmEmergencyFreeAgents,
   FOOTBALL_GM_HISTORICAL_ANCHORS,
@@ -932,7 +934,7 @@ describe("The GM offseason continuity calibration", () => {
   });
 });
 
-describe("NFL GM four-visit free agency guardrails", () => {
+describe("NFL GM three-plus-one free agency guardrails", () => {
   it("recognizes Jaylen Wright as eligible for both RB and FLEX", () => {
     const wright = footballGmPlayerById(playerId("Jaylen Wright"));
     expect(wright?.position).toBe("RB");
@@ -949,11 +951,27 @@ describe("NFL GM four-visit free agency guardrails", () => {
     expect(normalized?.find((entry) => entry.playerId === playerId("CeeDee Lamb"))?.slot).toBe("WR");
   });
   it("counts actual market visits, preserving the used total when legacy saves resume", () => {
-    expect(FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT).toBe(4);
+    expect(FOOTBALL_GM_FREE_AGENCY_VISIT_LIMIT).toBe(3);
     expect(footballGmMarketVisitsUsed(undefined, 3)).toBe(3);
     expect(footballGmMarketVisitsUsed(undefined, 20)).toBe(20);
     expect(footballGmMarketVisitsUsed(5, 1)).toBe(5);
     expect(footballGmMarketVisitsUsed(4, 12)).toBe(4);
+  });
+
+  it("gives three shared market visits and only one visit after a cut, without resetting prior spins", () => {
+    const newRun = { freeAgencyRules: "three-plus-one" as const, freeAgencyVisitsUsed: 0 };
+    expect(footballGmFreeAgencyVisitLimit(newRun)).toBe(3);
+    expect(footballGmReleaseVisitCeiling(newRun)).toBe(3);
+    const earlySigning = { ...newRun, freeAgencyVisitsUsed: 1 };
+    expect(footballGmReleaseVisitCeiling(earlySigning)).toBe(2);
+    expect(footballGmFreeAgencyVisitLimit({ ...earlySigning, freeAgencyVisitCeiling: 2 })).toBe(2);
+    expect(footballGmFreeAgencyVisitLimit({ ...earlySigning, freeAgencyVisitsUsed: 2, freeAgencyVisitCeiling: 2 })).toBe(2);
+    const exhausted = { ...newRun, freeAgencyVisitsUsed: 3 };
+    expect(footballGmReleaseVisitCeiling(exhausted)).toBe(4);
+    expect(footballGmFreeAgencyVisitLimit({ ...exhausted, freeAgencyVisitCeiling: 4 })).toBe(4);
+    expect(footballGmFreeAgencyVisitLimit({ ...exhausted, freeAgencyVisitsUsed: 4, freeAgencyVisitCeiling: 4 })).toBe(4);
+    expect(footballGmFreeAgencyVisitLimit({ freeAgencyRules: "legacy", freeAgencyVisitsUsed: 4 })).toBe(4);
+    expect(footballGmReleaseVisitCeiling({ freeAgencyRules: "legacy", freeAgencyVisitsUsed: 3 })).toBeNull();
   });
 
   it("offers only low-end 1YR cap-legal signings into actual openings", () => {
