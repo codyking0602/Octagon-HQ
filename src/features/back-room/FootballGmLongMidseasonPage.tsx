@@ -22,7 +22,7 @@ export function FootballGmLongMidseasonPage({
   onExplore: () => void;
   onShop: (playerId: string) => void;
   onSpin: () => string;
-  onOffer: (incomingId: string | null) => void;
+  onOffer: (incomingId: string) => void;
   onSkip: () => void;
 }) {
   const { wins, losses } = nflGmLongRecord(midseason);
@@ -41,8 +41,6 @@ export function FootballGmLongMidseasonPage({
   const targets = midseason.partnerTeam && outgoing
     ? nflGmLongTradeTargets(picks, outgoing.id, midseason.partnerTeam)
     : [];
-  const futureRound = outgoing ? outgoing.currentGrade >= 92 ? 1
-    : outgoing.currentGrade >= 84 ? 2 : 3 : 3;
   const status = midseason.stage;
 
   function spinPartner() {
@@ -136,8 +134,9 @@ export function FootballGmLongMidseasonPage({
           {partner.logoSrc && <img src={partner.logoSrc} alt="" />}
           <span><small>YOUR WHEEL PARTNER</small><strong>{partner.name}</strong></span>
         </div>
-        <p>You are offering <b>{outgoing.name}</b>. Choose one legal replacement or trade for a future draft pick.
-          Each offer can be rejected; you have <b>{2 - midseason.rejectedOfferIds.length} attempt(s)</b> left.</p>
+        <p>You are offering <b>{outgoing.name}</b>. Choose a replacement from {partner.name}.
+          Your nine-player starting core stays intact, and the $205M cap still applies.
+          You have <b>{2 - midseason.rejectedOfferIds.length} offer attempt(s)</b> left.</p>
         <div className="gm-long__deadline-offers">
           {targets.filter(p => !midseason.rejectedOfferIds.includes(p.id)).map(player => <button
             key={player.id} type="button" onClick={() => onOffer(player.id)}>
@@ -145,14 +144,10 @@ export function FootballGmLongMidseasonPage({
             <span><strong>{player.name}</strong><small>{player.team} · {player.position} · {footballGmMoney(player.salaryWindow[0])}</small></span>
             <LongPlayerTier player={player} /><b>OFFER →</b>
           </button>)}
-          {!midseason.rejectedOfferIds.includes("future") && <button type="button" className="gm-long__deadline-future"
-            onClick={() => onOffer(null)}>
-            <span className="gm-long__deadline-future-icon">★</span>
-            <span><strong>FUTURE ROUND {futureRound} PICK</strong>
-              <small>Give up {outgoing.name} now; your {picks.find(p => p.playerId === outgoing.id)?.slot === "OL" ? "OL" : "starter"} slot stays vacant for the second half.</small>
-            </span><b>OFFER →</b>
-          </button>}
         </div>
+        {targets.every(player => midseason.rejectedOfferIds.includes(player.id)) && <p className="gm-long__deadline-rejected">
+          No available player-for-player offers remain with this team. Keep your original roster.
+        </p>}
         {midseason.rejectedOfferIds.length > 0 && <p className="gm-long__deadline-rejected" role="status">
           {midseason.rejectedOfferIds.length} offer rejected. You can still walk away with your original lineup.
         </p>}
@@ -163,11 +158,11 @@ export function FootballGmLongMidseasonPage({
         <strong>{midseason.trade ? "TRADE AGREED" : "DEADLINE CLOSED · ROSTER RETAINED"}</strong>
         {midseason.trade ? <>
           <p>{NFL_GM_LONG_BY_ID.get(midseason.trade.outgoingId)?.name} traded to {midseason.trade.partnerTeam}.
-            {midseason.trade.incomingId
-              ? " Incoming: " + NFL_GM_LONG_BY_ID.get(midseason.trade.incomingId)?.name + "."
-              : " Acquired a future Round " + midseason.trade.futurePickRound + " pick. One starting spot remains vacant."}</p>
+            Incoming: {NFL_GM_LONG_BY_ID.get(midseason.trade.incomingId)?.name}. Your starting core remains nine players.</p>
           <small>Completed games stay locked. Updated roster and cap affect the remaining-season outlook only.</small>
-        </> : <p>Your original nine starters remain together for the second half.</p>}
+        </> : <p>{midseason.retiredDraftPickTrade
+          ? "The earlier future-pick trade option was retired. Your original starter has been restored, and your first eight games remain unchanged."
+          : "Your original nine starters remain together for the second half."}</p>}
       </div>}
     </section>
 
