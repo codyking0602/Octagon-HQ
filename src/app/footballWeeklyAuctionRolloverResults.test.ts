@@ -18,6 +18,7 @@ describe("Football featured weekly rollover results", () => {
   it("deep-links directly to the newest finalized auction even with no current auction", () => {
     expect(archive).toContain('new URLSearchParams(location.search).get("results") === "latest"');
     expect(archive).toContain("setSelectedResult(nextHistory[0] ?? null)");
+    expect(archive).toContain("impostorWindow.active || openLatestResults");
     expect(repository).toContain("get_my_football_weekly_auction_history");
   });
 
