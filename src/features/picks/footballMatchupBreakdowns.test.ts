@@ -145,4 +145,19 @@ describe("football matchup breakdowns", () => {
       expect(breakdown).not.toHaveProperty("prediction");
     }
   });
+  it("uses published SeatGeek team graphics for the two owner-selected October 13 games", () => {
+    const event = footballEvent([
+      ["byu-cougars", "BYU Cougars", "notre-dame-fighting-irish", "Notre Dame Fighting Irish"],
+      ["green-bay-packers", "Green Bay Packers", "dallas-cowboys", "Dallas Cowboys"],
+    ]);
+    const matches = footballMatchupBreakdownsForEvent(event);
+    expect(matches.map((game) => game.id)).toEqual([
+      "2026-oct13-nd-byu", "2026-oct13-cowboys-packers",
+    ]);
+    for (const game of matches) {
+      expect(game.headerAssetPath).toMatch(/^https:\/\/seatgeekimages[.]com\/matchup\//);
+      expect(game.compact?.things).toHaveLength(3);
+      expect(game.compact?.bottomLine.some((part) => part.href === "https://seatgeek.com/")).toBe(true);
+    }
+  });
 });
