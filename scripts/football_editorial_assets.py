@@ -50,6 +50,8 @@ def checked_source(url):
 
 def checked_seatgeek_header_source(url):
     """Only approved genuine SeatGeek matchup artwork; never arbitrary external imagery."""
+    if not isinstance(url, str):
+        raise AssetError("SeatGeek source URL is required")
     parsed = urlparse(url)
     if (parsed.scheme != "https" or parsed.hostname not in SEATGEEK_HEADER_HOSTS
             or parsed.username or parsed.password or parsed.port not in (None, 443)
