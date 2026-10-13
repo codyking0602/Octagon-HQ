@@ -148,7 +148,9 @@ export function nflGmLongTradePartners(outgoingId: string): string[] {
 export function nflGmLongSpinTradePartner(runId: string, outgoingId: string) {
   const teams = nflGmLongTradePartners(outgoingId);
   if (!teams.length) throw new Error("No trading partner.");
-  return footballGmSpinTeam("nfl-long-deadline:" + runId + ":" + outgoingId, 0, teams);
+  const selected = footballGmSpinTeam("nfl-long-deadline:" + runId + ":" + outgoingId, 0, teams);
+  if (!selected) throw new Error("No eligible NFL trade partner.");
+  return selected;
 }
 
 /** Show competitive 1-for-1 deals from the spun partner, not arbitrary upgrades. */
