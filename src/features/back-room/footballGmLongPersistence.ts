@@ -4,12 +4,13 @@ import {
   type NflGmLongPick,
   type NflGmLongPlayerFit,
 } from "./footballGmLongFoundation";
+import { nflGmLongValidMidseason, type NflGmLongMidseason } from "./footballGmLongMidseason";
 import {
   NFL_GM_LONG_COACH_BUCKETS, NFL_GM_LONG_COACHES,
   type NflGmLongCoachBucket,
 } from "./footballGmLongCoaches";
 
-export type NflGmLongPhase = "draft" | "coach-bucket" | "coach-wheel" | "outlook";
+export type NflGmLongPhase = "draft" | "coach-bucket" | "coach-wheel" | "outlook" | "midseason";
 
 export interface NflGmLongSave {
   version: typeof NFL_GM_LONG_VERSION;
@@ -23,6 +24,8 @@ export interface NflGmLongSave {
   selectedCoachBucket: NflGmLongCoachBucket | null;
   selectedCoach: string | null;
   coachWheelDraw: number | null;
+  /** Optional on previously deployed Phase 1 saves; never lose the old run. */
+  midseason: NflGmLongMidseason | null;
 }
 
 export function nflGmLongStorageKey(profileId: string): string {
@@ -44,6 +47,7 @@ export function nflGmLongInitialSave(profileId: string, runId: string): NflGmLon
     selectedCoachBucket: null,
     selectedCoach: null,
     coachWheelDraw: null,
+    midseason: null,
   };
 }
 
@@ -61,7 +65,7 @@ export function nflGmLongParseSave(
   const raw = value as Partial<NflGmLongSave>;
   if (raw.version !== NFL_GM_LONG_VERSION || raw.profileId !== profileId
     || typeof raw.runId !== "string" || raw.runId.length < 8
-    || !["draft", "coach-bucket", "coach-wheel", "outlook"].includes(String(raw.phase))
+    || !["draft", "coach-bucket", "coach-wheel", "outlook", "midseason"].includes(String(raw.phase))
     || !Array.isArray(raw.picks) || !raw.picks.every(pick =>
       pick && typeof pick.playerId === "string" && typeof pick.slot === "string")
     || !nflGmLongValidRoster(raw.picks, players)
@@ -77,7 +81,11 @@ export function nflGmLongParseSave(
   if (draw != null && (!Number.isFinite(draw) || draw < 0 || draw >= 1)) return null;
   if (raw.phase !== "draft" && raw.picks.length !== 9) return null;
   if ((raw.phase === "coach-wheel" || raw.phase === "outlook") && !bucket) return null;
-  if (raw.phase === "outlook" && (!coach || draw == null)) return null;
+  if ((raw.phase === "outlook" || raw.phase === "midseason") && (!coach || draw == null)) return null;
+  const mid = raw.midseason ?? null;
+  if (mid !== null && !nflGmLongValidMidseason(mid, raw.picks)) return null;
+  if (raw.phase === "midseason" && mid === null) return null;
+  if (mid !== null && raw.phase !== "midseason") return null;
   return {
     version: NFL_GM_LONG_VERSION,
     profileId,
@@ -90,6 +98,7 @@ export function nflGmLongParseSave(
     selectedCoachBucket: bucket ?? null,
     selectedCoach: coach ?? null,
     coachWheelDraw: draw ?? null,
+    midseason: mid,
   };
 }
 
