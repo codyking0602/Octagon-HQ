@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { getSupabaseClient } from "../../lib/supabase";
+import { footballTeamSchoolMetadata, footballTeamSchoolMetadataFor } from "../back-room/footballTeamSchoolMetadata";
 import {
   footballWeeklyPreparedGameSchema,
   footballWeeklyPreparedSpotlightSchema,
@@ -64,6 +65,17 @@ function normTeam(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+/** Stable CFB school identity even when Picks includes the team mascot. */
+export function footballWeeklyTeamKey(name: string): string {
+  const school = footballTeamSchoolMetadataFor(name);
+  if (school) return normTeam(school.name);
+  const token = normTeam(name);
+  const prefix = footballTeamSchoolMetadata
+    .filter((row) => row.level === "CFB" && token.startsWith(normTeam(row.name)))
+    .sort((a, b) => normTeam(b.name).length - normTeam(a.name).length)[0];
+  return prefix ? normTeam(prefix.name) : token;
+}
+
 // Prefer a current, owner-approved weekly editorial only when the live Picks event
 // actually contains the same matchup and kickoff date. Never display a stale game.
 export function publishedFootballMatchupsForEvent(
@@ -75,15 +87,15 @@ export function publishedFootballMatchupsForEvent(
   for (const sport of ["cfb", "nfl"] as const) {
     const week = published[sport];
     if (!week) continue;
-    const home = normTeam(week.game.home_team);
-    const away = normTeam(week.game.away_team);
+    const home = footballWeeklyTeamKey(week.game.home_team);
+    const away = footballWeeklyTeamKey(week.game.away_team);
     const kickoff = Date.parse(week.game.kickoff_at);
     if (!Number.isFinite(kickoff)) continue;
     const matched = event.bouts.some((bout) => {
-      const candidateHome = normTeam(bout.homeTeamSlug ?? bout.redFighterSlug);
-      const candidateAway = normTeam(bout.awayTeamSlug ?? bout.blueFighterSlug);
-      const names = [normTeam(bout.redFighterName), normTeam(bout.blueFighterName),
-        normTeam(bout.homeTeamSlug ?? ""), normTeam(bout.awayTeamSlug ?? "")];
+      const candidateHome = footballWeeklyTeamKey(bout.homeTeamSlug ?? bout.redFighterSlug);
+      const candidateAway = footballWeeklyTeamKey(bout.awayTeamSlug ?? bout.blueFighterSlug);
+      const names = [footballWeeklyTeamKey(bout.redFighterName), footballWeeklyTeamKey(bout.blueFighterName),
+        footballWeeklyTeamKey(bout.homeTeamSlug ?? ""), footballWeeklyTeamKey(bout.awayTeamSlug ?? "")];
       const sameTeams = (candidateHome === home && candidateAway === away)
         || (names.includes(home) && names.includes(away));
       const boutStart = Date.parse(bout.locksAt ?? event.startsAt);
