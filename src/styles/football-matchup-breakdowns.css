@@ -1,5 +1,4 @@
 .football-picks-owner-tools { align-items: center; justify-content: flex-start; gap: 10px; }
-.football-matchup-breakdown-weekly-art { display: block; width: 100%; max-height: 210px; object-fit: cover; object-position: center 35%; }
 .football-picks-owner-tools .picks-control-entry { margin: 0 0 0 auto; }
 .football-matchup-breakdown-entry { min-height: 24px; padding: 4px 2px; border: 0; background: transparent; color: #d9dcdd; font-size: .55rem; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
 .football-matchup-breakdown-entry::before { content: "▤ "; color: #e9aa7e; }
@@ -239,3 +238,10 @@
   .football-matchup-breakdown-sheet__body--compact > section { padding: 18px 22px; }
   .football-matchup-breakdown-grid, .football-matchup-breakdown-edges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Keep public editorial navigation separate from tucked-away owner administration. */
+.football-picks-admin-menu { position: relative; margin-left: auto; }
+.football-picks-admin-menu > summary { list-style: none; cursor: pointer; padding: 7px 9px; color: #9fa4a6; font-size: .58rem; font-weight: 900; letter-spacing: .06em; }
+.football-picks-admin-menu > summary::-webkit-details-marker { display: none; }
+.football-picks-admin-menu[open] > div { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 9px; background: #171a1d; border: 1px solid #34383d; border-radius: 10px; }
+.football-picks-admin-menu a { color: #8ebce6; font-size: .6rem; font-weight: 900; text-decoration: none; }
