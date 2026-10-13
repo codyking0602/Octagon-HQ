@@ -24,6 +24,7 @@ import { buildFamilyFeudDailySetup } from "../play/familyFeudDailyRuntime";
 import type { TodayChallengeProjection } from "../play/todayChallengeRepository";
 import { mlbMillionaireProductionRun } from "./mlbMillionaireProduction";
 import { mlbSportsFeudProductionConfig } from "./mlbSportsFeudProduction";
+import { mlbBarTriviaResultProjection } from "./mlbBarTriviaResult";
 import "../../styles/play-landing-shared.css";
 import "../../styles/today-challenge-hub.css";
 import "../../styles/daily-leaderboard-result-page.css";
@@ -653,8 +654,14 @@ function MlbPlayResultDetail({
     : null;
   const barTrivia = barTriviaResultSummary(entry);
   const averageFan = averageFanResultSummary(entry);
+  const sharedBarTrivia = isBarTrivia
+    ? mlbBarTriviaResultProjection(entry, challengeKey, challengeDate)
+    : null;
+  const sharedResult = sharedSportsFeud ?? (sharedBarTrivia
+    ? { projection: sharedBarTrivia, resultDetail: entry.resultDetail }
+    : null);
 
-  if (isSportsFeud && sharedSportsFeud) {
+  if (sharedResult) {
     return (
       <div
         className="today-hub-official-result"
@@ -675,8 +682,8 @@ function MlbPlayResultDetail({
         </header>
         <div className="today-hub-official-result__body official-daily-page">
           <DailyLeaderboardGameResult
-            projection={sharedSportsFeud.projection}
-            resultDetail={sharedSportsFeud.resultDetail}
+            projection={sharedResult.projection}
+            resultDetail={sharedResult.resultDetail}
           />
         </div>
       </div>
