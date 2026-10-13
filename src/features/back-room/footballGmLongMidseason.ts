@@ -318,7 +318,8 @@ export function nflGmLongNormalizeLegacyDeadline(mid: unknown): unknown {
       return { ...raw, rejectedOfferIds, trade: replacement };
     }
   }
-  if (Array.isArray(rejections) && rejections.length !== rejectedOfferIds.length) {
+  if (Array.isArray(rejections) && Array.isArray(rejectedOfferIds)
+    && rejections.length !== rejectedOfferIds.length) {
     return { ...raw, rejectedOfferIds };
   }
   return mid;
