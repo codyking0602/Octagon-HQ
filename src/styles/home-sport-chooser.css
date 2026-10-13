@@ -21,7 +21,8 @@
 .home-sport-chooser__identity small {
   display: block;
   margin-top: 5px;
-  color: #8ebce6;
+  /* Your HQ is universal: never inherit the Football/UFC brand accent. */
+  color: #bdc4cd;
   font-size: 9px;
   font-weight: 850;
   letter-spacing: .08em;
