@@ -58,7 +58,7 @@ describe("NFL GM Long completed Phase 1 presentation", () => {
       expect(rows[i]?.querySelector(".gm-long__summary-headshot")).not.toBeNull();
     }
     expect(screen.getByRole("heading", { name: "Dan Campbell" })).toBeTruthy();
-    expect(screen.getByText(/coming in Phase 2/i)).toBeTruthy();
+    expect(screen.getByText(/ready for the first eight games/i)).toBeTruthy();
     expect(container.textContent).not.toMatch(/SEASON 1 FORECAST|PROJECTED WINS|16 LEAGUE SIMULATIONS|14\.6 W/i);
     expect(screen.queryByRole("button", { name: /CONTINUE TO MIDSEASON/i })).toBeNull();
   });
