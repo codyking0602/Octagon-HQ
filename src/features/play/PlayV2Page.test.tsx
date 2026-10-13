@@ -112,6 +112,29 @@ describe("public Football/UFC Play 2.0 release", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("shows the two-round Daily average on Play even if the projection score holds the last game", () => {
+    mocked.runtime.mockReturnValue({
+      projection: {
+        available: true,
+        centralDay: "2026-10-13", gameType: "find_leader", progressRevision: 14,
+        officialAttempt: { normalizedScore: 100, publicResult: {} },
+        publicState: {
+          format_version: "daily-two-game-average-v1", complete: true,
+          round_index: 1, round_scores: [10, 100], score: 55,
+        },
+      },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    mocked.history.mockReturnValue({
+      performance: { count: 1, average: 55, best: 55, recent: [], byGame: [] },
+      loading: false, error: null, refresh: vi.fn(),
+    });
+    const view = preview("football");
+    const daily = within(view.container).getByRole("region", { name: "Today's Challenge" });
+    expect(daily.querySelector(".play-v2__daily-score")).toHaveTextContent("55/100");
+    expect(daily.querySelector(".play-v2__daily-score")).not.toHaveTextContent("100/100");
+  });
+
   it("matches Home's October 10 Red River treatment on Football Play without changing the Daily result", () => {
     mocked.runtime.mockReturnValue({
       projection: { centralDay: "2026-10-10", gameType: "millionaire", progressRevision: 9,

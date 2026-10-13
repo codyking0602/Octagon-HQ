@@ -63,7 +63,7 @@ export function dailyTwoGameSeriesState(
     ?? (projection.publicState.format_version === "daily-two-game-average-v1"
       ? projection.publicState
       : null);
-  const final = record(projection.officialAttempt?.publicResult.daily_series);
+  const final = record(projection.officialAttempt?.publicResult?.daily_series);
   const source = final ?? live;
   if (!source || source.format_version !== "daily-two-game-average-v1") return null;
 
@@ -71,7 +71,7 @@ export function dailyTwoGameSeriesState(
   const rawIndex = Number(source.game_index ?? Math.max(0, roundScores.length - 1));
   const gameIndex = Number.isInteger(rawIndex) && rawIndex >= 0 && rawIndex <= 1 ? rawIndex : 0;
   const rawAverage = source.average_score;
-  const averageScore = Number.isFinite(Number(rawAverage)) ? Number(rawAverage) : null;
+  const averageScore = rawAverage != null && Number.isFinite(Number(rawAverage)) ? Number(rawAverage) : null;
 
   return {
     gameIndex,
@@ -83,6 +83,17 @@ export function dailyTwoGameSeriesState(
     roundScores,
     averageScore,
   };
+}
+
+/** The completed Daily is the average of both rounds, never the final round's score. */
+export function dailyTwoGameOfficialAverageScore(projection: TodayChallengeProjection): number | null {
+  if (!projection.officialAttempt) return null;
+  const series = dailyTwoGameSeriesState(projection);
+  if (!series?.complete) return null;
+  if (series.roundScores.length === 2) {
+    return Math.round((series.roundScores[0]! + series.roundScores[1]!) / 2);
+  }
+  return series.averageScore;
 }
 
 export function dailyTwoGameActiveScore(projection: TodayChallengeProjection) {

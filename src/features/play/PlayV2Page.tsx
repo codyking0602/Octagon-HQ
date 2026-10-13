@@ -8,6 +8,8 @@ import { challengeCounterpartId, challengeDirection, challengeStatus } from "../
 import { challengePlayRoute, challengeSport } from "../challenges/challengeRuntime";
 import { useIdentity } from "../identity/IdentityProvider";
 import { isDailyRankKeepCombo } from "./DailyRankKeepComboStatus";
+import { dailyTwoGameOfficialAverageScore } from "./DailyTwoGameStatus";
+import { dailyUsesTwoGameAverage } from "./dailyTwoGameContract";
 import { WeeklyOverallChampionBanner } from "./WeeklyOverallChampionBanner";
 import { playLandingDestination, playLandingGameIds } from "./PlayLandingPresentation";
 import { playGameDefinition, type PlaySport } from "./playRegistry";
@@ -57,7 +59,14 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
   const completed = Boolean(projection?.officialAttempt);
   const saved = !completed && Boolean(projection?.progressRevision);
   const dailyRoute = sport === "football" ? "/football/today" : adapter?.dailyRoute ?? "/play";
-  const ownPlace = overview.leaderboard?.entries.find((entry) => entry.isCurrentUser)?.rank;
+  const ownLeaderboardEntry = overview.leaderboard?.entries.find((entry) => entry.isCurrentUser);
+  const ownPlace = ownLeaderboardEntry?.rank;
+  const isTwoGameDaily = projection ? dailyUsesTwoGameAverage(projection.gameType, projection.centralDay) : false;
+  const officialDailyScore = projection?.officialAttempt
+    ? (isTwoGameDaily
+      ? dailyTwoGameOfficialAverageScore(projection) ?? ownLeaderboardEntry?.normalizedScore
+      : null) ?? projection.officialAttempt.normalizedScore
+    : null;
   const [showResults, setShowResults] = useState(false);
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const selectedEntry = overview.leaderboard?.entries.find((entry) => entry.profileId === selectedProfileId) ?? null;
@@ -101,7 +110,7 @@ function DailyCompact({ sport, profileId }: { sport: PlaySport; profileId: strin
                 : saved ? "Your progress is saved" : "One official attempt · save as you play"}</span>
             </div>
             {completed ? (
-              <div className="play-v2__daily-score"><strong>{projection.officialAttempt?.normalizedScore}</strong><span>/100</span></div>
+              <div className="play-v2__daily-score"><strong>{officialDailyScore}</strong><span>/100</span></div>
             ) : (
               <span className="play-v2__daily-arrow" aria-hidden="true">↗</span>
             )}
