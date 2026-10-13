@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useIdentity } from "../identity/IdentityProvider";
+import {
+  createFootballWeeklyAuctionRepository,
+  type FootballWeeklyFinal,
+} from "../play/footballWeeklyAuctionRepository";
 import { isFootballWeeklyBuildQbPreviewOwner } from "../play/footballWeeklyBuildQbPreviewAccess";
 import FootballGmModePage from "./FootballGmModePage";
 import { FootballGmFranchiseReport } from "./FootballGmFranchiseReport";
@@ -17,6 +21,8 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
   const identity = useIdentity();
   const isOwner = isFootballWeeklyBuildQbPreviewOwner(identity.profile);
   const repository = useMemo(() => createFootballWeeklyGmRepository(preview), [preview]);
+  const auctionRepository = useMemo(() => createFootballWeeklyAuctionRepository(), []);
+  const [previousAuction, setPreviousAuction] = useState<FootballWeeklyFinal | null>(null);
   const [state, setState] = useState<WeeklyGmState | null>(null);
   const [playing, setPlaying] = useState<WeeklyGmScenario | null>(null);
   const [detail, setDetail] = useState<WeeklyGmResult | null>(null);
@@ -41,6 +47,21 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
     });
     return () => { active = false; };
   }, [repository, identity.ready, preview, isOwner]);
+
+  useEffect(() => {
+    if (!identity.ready || preview || !auctionRepository || !state?.week_start) return;
+    let active = true;
+    // Preserve and surface the completed auction even though this week's
+    // featured competition is GM. Archives remain server-owned/read-only.
+    void auctionRepository.loadHistory().then((history) => {
+      if (!active) return;
+      setPreviousAuction(history.find((result) => result.week_start < state.week_start) ?? null);
+    }).catch(() => {
+      // A weekly GM run must stay playable if the unrelated recap cannot load.
+      if (active) setPreviousAuction(null);
+    });
+    return () => { active = false; };
+  }, [auctionRepository, identity.ready, preview, state?.week_start]);
 
   async function open(scenario: WeeklyGmScenario) {
     if (!repository || !state || busy) return;
@@ -112,6 +133,7 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
     </section></div>
   );
   const myTotal = (state.attempts.elite?.score ?? 0) + (state.attempts.young?.score ?? 0);
+  const lastChampion = previousAuction?.standings.find((entry) => entry.is_winner) ?? null;
   return (
     <div className="page football-gm-page">
       <section className="surface-card" style={{ padding: 18, marginBottom: 12 }}>
@@ -132,6 +154,24 @@ export default function FootballWeeklyGmPage({ preview = false }: { preview?: bo
             .finally(() => setBusy(false));
         }}>RESET OWNER TEST ATTEMPTS</button></p> : null}
       </section>
+
+      {!preview && previousAuction ? (
+        <section className="surface-card" style={{ padding: 16, marginBottom: 12 }}>
+          <p className="eyebrow">LAST WEEK’S AUCTION · {previousAuction.week_start}</p>
+          <h2>FINAL RESULTS ARE IN</h2>
+          <p>
+            {lastChampion
+              ? <><strong>{lastChampion.display_name}</strong> won with <strong>{lastChampion.final_score?.toFixed(1) ?? "—"}</strong> points.</>
+              : "The previous auction has been finalized."}
+            {previousAuction.my_result.final_rank
+              ? <> Your finish: <strong>#{previousAuction.my_result.final_rank}</strong>.</>
+              : null}
+          </p>
+          <Link className="primary-action" to="/football/weekly-auction?results=latest">
+            VIEW WINNER · COLLECTIONS · ALL GRADES · WILDCARD WHEEL →
+          </Link>
+        </section>
+      ) : null}
 
       <div style={{ display: "grid", gap: 12, marginBottom: 12 }}>
         {scenarios.map((scenario) => {
