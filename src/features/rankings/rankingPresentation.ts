@@ -1,5 +1,6 @@
 import { canonicalRankingInputs } from "./data/rankingInputs";
 import { profileSignatureFightUrlFor } from "./profileSignatureFightUrls";
+import { isYouTubeVideoUrl } from "../../lib/youtubeVideoUrl";
 
 const presentationBySlug = new Map(
   canonicalRankingInputs.fighters.map((fighter) => [fighter.presentation.slug, fighter.presentation]),
@@ -15,7 +16,7 @@ export function resolveWatchMomentAction(slug: string): ProfileWatchAction | nul
   const presentation = presentationBySlug.get(slug);
   if (!presentation) throw new Error(`Missing ranking presentation metadata for ${slug}.`);
 
-  if (!presentation.watchUrl) return null;
+  if (!presentation.watchUrl || !isYouTubeVideoUrl(presentation.watchUrl)) return null;
 
   return {
     label: presentation.watchLabel ?? "Watch Moment",
@@ -33,7 +34,7 @@ export function resolveProfileWatchAction(slug: string): ProfileWatchAction | nu
     return { label: "Watch Signature Fight", url: signatureFightUrl, source: "signature" };
   }
 
-  if (presentation.watchUrl) {
+  if (presentation.watchUrl && isYouTubeVideoUrl(presentation.watchUrl)) {
     return {
       label: presentation.watchLabel ?? "Watch Moment",
       url: presentation.watchUrl,
@@ -47,6 +48,8 @@ export function resolveProfileWatchAction(slug: string): ProfileWatchAction | nu
 export function watchMomentFor(slug: string) {
   const presentation = presentationBySlug.get(slug);
   if (!presentation) throw new Error(`Missing ranking presentation metadata for ${slug}.`);
-  if (!presentation.watchUrl) throw new Error(`Missing watch URL for ${slug}.`);
+  if (!presentation.watchUrl || !isYouTubeVideoUrl(presentation.watchUrl)) {
+    throw new Error(`Missing direct YouTube watch URL for ${slug}.`);
+  }
   return presentation.watchUrl;
 }
