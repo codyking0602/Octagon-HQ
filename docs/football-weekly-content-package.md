@@ -14,7 +14,7 @@ Phase 1: canonical storage for the CFB/NFL Player Spotlight + Game of the Week s
 
 The four independent JSON slots are cfb_spotlight, nfl_spotlight, cfb_game_of_week, and nfl_game_of_week.
 
-Each Spotlight stores player name, team, position, exactly four labeled stats, result, measurements, team color, highlight link, and optional approved image source/path/type. Each GOTW stores opponent identities, kickoff, and optional bindings into the existing Football Picks event, matchup breakdown and 1–4 header photos. Individual slots may remain empty during research; a CFB patch does not delete NFL content.
+Each Spotlight stores player name, team, position, exactly four labeled stats, result, measurements, team color, highlight link, and optional approved image source/path/type. **Every Player Spotlight highlight must link directly to a YouTube video or YouTube Short (youtu.be or youtube.com), never to an NFL.com, publisher, news site, or other web player.** This applies to both manually scheduled Spotlights and future monitored/prepared/published weekly Spotlights; reject non-YouTube links during content preparation. Each GOTW stores opponent identities, kickoff, and optional bindings into the existing Football Picks event, matchup breakdown and 1–4 header photos. Individual slots may remain empty during research; a CFB patch does not delete NFL content.
 
 **Approved photo fallback:** real action image, then correct real headshot/portrait, then owner-approved manual image. No invented player identities. Keep established Football Spotlight and GOTW visual treatments.
 

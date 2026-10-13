@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { isYouTubeVideoUrl } from "../../lib/youtubeVideoUrl";
 import {
   FOOTBALL_BASE_SPOTLIGHT_PAIR_ID,
   FOOTBALL_DEFAULT_SPOTLIGHT_PHOTO_SOURCES,
@@ -296,6 +297,18 @@ describe("Football Player Spotlight weekly schedule", () => {
         { value: "13.7", label: "YDS/REC" },
       ],
     });
+  });
+
+  it("requires direct YouTube links for every CFB/NFL Spotlight and memorial", () => {
+    for (const pair of FOOTBALL_PLAYER_SPOTLIGHT_PAIRS) {
+      for (const sport of ["cfb", "nfl"] as const) {
+        expect(isYouTubeVideoUrl(pair.spotlights[sport].highlightUrl), `${pair.id} ${sport}`).toBe(true);
+      }
+    }
+    expect(isYouTubeVideoUrl(FOOTBALL_DITKA_MEMORIAL_SPOTLIGHT.highlightUrl)).toBe(true);
+    expect(FOOTBALL_PLAYER_SPOTLIGHT_PAIRS.at(-1)?.spotlights.nfl.highlightUrl).toBe(
+      "https://youtu.be/kKFOB4YyTOY?is=WLZg0tkVul-xdQSm",
+    );
   });
 
   it("preloads and atomically activates this week's owner-selected Sellers/Maye Spotlights at Tuesday midnight Chicago", () => {

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   footballEditorialTuesdaySchema,
   footballWeeklyContentPackageSchema,
+  footballWeeklySpotlightSchema,
   footballWeeklyDraftPatchSchema,
   footballWeeklyCandidateSetSchema,
   nextFootballEditorialTuesday,
@@ -35,6 +36,12 @@ describe("Football weekly editorial package Phase 1", () => {
     expect(footballWeeklyDraftPatchSchema.parse({ cfb_spotlight: {
       ...player, photo_kind: "portrait", photo_source: "https://example.com/photo.webp",
     } }).cfb_spotlight?.stats).toHaveLength(4);
+    expect(() => footballWeeklyDraftPatchSchema.parse({ nfl_spotlight: {
+      ...player, highlight_url: "https://www.nfl.com/videos/clip",
+    } })).toThrow();
+    expect(footballWeeklySpotlightSchema.parse({
+      ...player, highlight_url: "https://www.youtube.com/watch?v=kKFOB4YyTOY",
+    }).highlight_url).toContain("youtube.com");
     expect(() => footballWeeklyDraftPatchSchema.parse({ nfl_spotlight: {
       ...player, stats: player.stats.slice(1),
     } })).toThrow();

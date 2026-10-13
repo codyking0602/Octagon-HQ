@@ -198,7 +198,7 @@ export const FOOTBALL_PLAYER_SPOTLIGHT_PAIRS: readonly FootballPlayerSpotlightPa
         result: "VS LAS VEGAS · W 45–17",
         measurements: "6'4\" · 225 LB",
         teamColor: "#002244",
-        highlightUrl: "https://www.nfl.com/videos/drake-maye-s-best-plays-from-5-td-game-vs-raiders-week-5",
+        highlightUrl: "https://youtu.be/kKFOB4YyTOY?is=WLZg0tkVul-xdQSm",
       },
     },
   },
